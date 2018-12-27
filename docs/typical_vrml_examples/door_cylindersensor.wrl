@@ -1,0 +1,32 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+DEF Transform1 Transform 
+  {
+  center -1 0 0
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Box 
+	{
+	size 2 4 0.100000
+	}
+      }
+    DEF CylinderSensor1 CylinderSensor 
+      {
+      maxAngle 1.570000
+      }
+    ]
+  }
+
+ROUTE CylinderSensor1.rotation_changed TO Transform1.set_rotation
+

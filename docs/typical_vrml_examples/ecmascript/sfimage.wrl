@@ -1,0 +1,90 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF Script1 Script 
+  {
+  eventIn SFFloat float1_in
+  eventOut SFImage image1_out
+  field MFInt32 intarray 
+    [
+    ]
+  url 
+    [
+    "javascript:
+
+ // field MFInt32 intarray //
+
+ // eventOut SFImage image1_out //
+
+ function initialize()
+    {
+    intarray = new MFInt32(0,0,0,0);
+    image1_out = new SFImage(2, 2, 3, intarray);
+    }
+
+ function float1_in(value)
+    {
+    // value  SFFloat
+    if (value > 0.5)
+       {
+       intarray[0]=0xffff00;
+       intarray[1]=0x00ff00;
+       intarray[2]=0xff00ff;
+       intarray[3]=0x00ffff;
+       image1_out = new SFImage(2, 2, 3, intarray);
+       }
+    else
+       {
+       intarray[0]=0x0000ff;
+       intarray[1]=0x00ff00;
+       intarray[2]=0xffff00;
+       intarray[3]=0xff0000;
+       image1_out = new SFImage(2, 2, 3, intarray);
+       }
+    }
+
+"
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	texture 	DEF PixelTexture1 PixelTexture 
+	  {
+          image 
+            2 2 3
+            0x0000ff
+            0x00ff00
+            0xffff00
+            0xff0000
+	  }
+	}
+      geometry       Cylinder 
+	{
+	}
+      }
+    ]
+  }
+
+ROUTE Script1.image1_out TO PixelTexture1.set_image
+
+DEF TimeSensor1 TimeSensor 
+  {
+  loop TRUE
+  }
+
+ROUTE TimeSensor1.fraction_changed TO Script1.float1_in
+

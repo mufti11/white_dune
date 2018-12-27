@@ -1,0 +1,85 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+EXTERNPROTO ParticleSource
+[
+  eventIn SFVec3f force_in
+  field SFNode particle_node
+  field SFInt32 number_particles
+  field SFVec3f force 
+  field SFVec2f energyRange 
+  field SFVec2f angleRangeDEG 
+  field SFFloat startHeight 
+  field SFVec2f allowedHeightRange 
+  field SFVec2f sizeRange 
+  field SFFloat density 
+  field SFFloat gravitation
+  field SFFloat jetRadius
+]
+[
+"../../../lib/VRML97protos/ParticleSourcePROTO.wrl"
+"ParticleSourcePROTO.wrl"
+"/usr/lib/VRML97protos/ParticleSourcePROTO.wrl"
+"/usr/local/lib/VRML97protos/ParticleSourcePROTO.wrl"
+]
+
+WorldInfo 
+  {
+  info 
+    [
+    "Copyright (C) 2003 J. \"MUFTI\" Scheurich"
+    " This program is free software; you can redistribute it and/or modify"
+    " it under the terms of the GNU General Public License"
+    ]
+  title "Waterfall"
+  }
+
+Transform 
+  {
+  children 
+    [
+    DEF PARTICLES ParticleSource 
+      {
+      particle_node       Transform 
+	{
+	children 
+	  [
+	  Shape 
+	    {
+	    appearance 	    Appearance 
+	      {
+	      material 	      Material 
+		{
+		ambientIntensity 0.639999
+		diffuseColor 0.403921 0.403921 0.403921
+		shininess 0.160000
+		specularColor 0.643137 0.898039 0.956862
+		transparency 0.599999
+		}
+	      }
+	    geometry 	    Sphere 
+	      {
+	      }
+	    }
+	  ]
+	rotation 1 0 0 -1.570000
+	scale 0.500000 1 1
+	}
+      number_particles 12
+      energyRange 2 3
+      angleRangeDEG 0 90
+      allowedHeightRange -5 1
+      sizeRange 0.500000 0.800000
+      density 1
+      gravitation 9.810000
+      }
+    ]
+  rotation -1 0 0 3.119999
+  translation 0 -2 0
+  }
+
+

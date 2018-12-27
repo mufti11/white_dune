@@ -1,0 +1,146 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+COMPONENT Rendering:3 
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+WorldInfo
+  {
+  info 
+    [
+    "elephant_smooth_triangle_set.x3dv is based on"
+    "https://openlibraries.svn.sourceforge.net/svnroot/openlibraries/trunk/media/models/glittering.x3d"
+    "It was simplified by hand (to leave only simple IndexedTriangleSet"
+    "with coordIndex and Coordinates) and convertex to classic encoding"
+    "by view3dscene. OpenLibraries is under LGPL"
+    "(http://openlibraries.org/wiki/OpenLibraries,"
+    "https://openlibraries.svn.sourceforge.net/svnroot/openlibraries/trunk/COPYING)"
+    "so this example should also fall under LGPL."
+    ]
+  }
+
+Transform
+  {
+  translation -5 0 0
+  children 
+    Shape
+      {
+      appearance DEF Col2App Appearance
+	{
+	material Material
+	  {
+	  diffuseColor 1 1 0
+	  }
+	}
+      geometry IndexedTriangleFanSet
+	{
+	coord DEF FanSetCoord Coordinate
+	  {
+	  point 
+	    [
+	    0 0 0 
+	    1 0 0 
+	    1 1 0 
+	    0.500000 1.899999 4 
+	    0 2 0 
+	    1 2 0 
+	    1 3 0 
+	    0.500000 3.900000 4 
+	    ]
+	  }
+	solid FALSE
+	index 
+	  [
+	  0 1 2 3 -1 
+	  4 5 6 7 -1 
+	  ]
+	}
+      }
+  }
+
+Transform
+  {
+  translation -5 5 0
+  children 
+    Shape
+      {
+      appearance USE Col2App
+      geometry TriangleFanSet
+	{
+	coord USE FanSetCoord
+	fanCount 
+	  [
+	  4 
+	  4 
+	  ]
+	solid FALSE
+	}
+      }
+  }
+
+Transform
+  {
+  translation 5 0 0
+  children 
+    Shape
+      {
+      appearance USE Col2App
+      geometry IndexedTriangleStripSet
+	{
+	coord DEF StripSetCoord Coordinate
+	  {
+	  point 
+	    [
+	    0 0 0 
+	    1 0 0 
+	    1 1 0 
+	    1.899999 0.500000 4 
+	    0 2 0 
+	    1 2 0 
+	    1 3 0 
+	    1.899999 2.500000 4 
+	    ]
+	  }
+	solid FALSE
+	index 
+	  [
+	  0 1 2 3 -1 
+	  4 5 6 7 -1 
+	  ]
+	}
+      }
+  }
+
+Transform
+  {
+  translation 5 5 0
+  children 
+    Shape
+      {
+      appearance USE Col2App
+      geometry TriangleStripSet
+	{
+	coord USE StripSetCoord
+	stripCount 
+	  [
+	  4 
+	  4 
+	  ]
+	solid FALSE
+	}
+      }
+  }
+

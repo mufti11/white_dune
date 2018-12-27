@@ -1,0 +1,187 @@
+
+#	Path_3
+		color(-184);
+		bgnpolygon();
+			vertex(75.00, 47.50);
+			vertex(54.46, 29.57);
+			vertex(75.00, 47.50);
+			vertex(75.00, 47.50);
+			vertex(75.00, 47.50);
+			vertex(75.00, 47.50);
+		endpolygon();
+
+#	Path_9
+		color(0);
+		bgnpolygon();
+			vertex(73.18, 58.34);
+			vertex(76.69, 57.60);
+			vertex(78.30, 56.65);
+			vertex(80.26, 54.23);
+			vertex(81.61, 50.04);
+			vertex(81.40, 46.34);
+			vertex(80.90, 43.24);
+			vertex(79.99, 40.88);
+			vertex(80.68, 38.42);
+			vertex(65.95, 37.75);
+			vertex(66.58, 40.20);
+			vertex(66.16, 43.02);
+			vertex(65.49, 46.54);
+			vertex(65.96, 51.26);
+			vertex(67.31, 55.10);
+			vertex(69.87, 57.54);
+		endpolygon();
+
+#	Path_10
+		bgnpolygon();
+			vertex(65.95, 37.75);
+			vertex(80.68, 38.42);
+			vertex(86.20, 30.28);
+			vertex(89.53, 22.32);
+			vertex(89.12, 14.11);
+			vertex(86.39, 5.40);
+			vertex(83.04, 2.04);
+			vertex(73.20, -0.09);
+			vertex(64.40, 3.00);
+			vertex(61.32, 7.39);
+			vertex(58.91, 12.67);
+			vertex(58.28, 17.62);
+			vertex(59.33, 22.65);
+			vertex(61.32, 28.95);
+		endpolygon();
+
+#	Path_11
+		color(-119);
+		bgnpolygon();
+			vertex(70.61, 36.25);
+			vertex(73.16, 41.52);
+			vertex(76.91, 36.58);
+			vertex(82.89, 27.29);
+			vertex(83.91, 20.92);
+			vertex(84.91, 14.11);
+			vertex(82.23, 8.05);
+			vertex(74.72, 5.12);
+			vertex(68.13, 6.72);
+			vertex(64.30, 13.68);
+			vertex(64.63, 20.66);
+			vertex(66.96, 28.62);
+		endpolygon();
+
+#	Path_12
+		color(-161);
+		bgnpolygon();
+			vertex(69.42, 41.06);
+			vertex(71.14, 39.84);
+			vertex(72.75, 39.14);
+			vertex(74.37, 38.76);
+			vertex(76.06, 39.76);
+			vertex(77.58, 40.67);
+			vertex(79.30, 43.47);
+			vertex(73.39, 43.05);
+			vertex(66.90, 43.35);
+			vertex(68.35, 41.90);
+		endpolygon();
+
+#	Path_20
+		color(0);
+		bgnpolygon();
+			vertex(52.26, 23.81);
+			vertex(50.50, 14.57);
+			vertex(53.36, 18.31);
+			vertex(55.12, 21.61);
+			vertex(59.41, 26.59);
+			vertex(60.93, 27.72);
+			vertex(64.04, 34.11);
+			vertex(58.87, 31.51);
+			vertex(55.57, 28.21);
+		endpolygon();
+
+#	Path_21
+		bgnpolygon();
+			vertex(97.14, 23.02);
+			vertex(99.11, 15.53);
+			vertex(96.02, 19.05);
+			vertex(94.05, 22.36);
+			vertex(89.67, 25.79);
+			vertex(87.64, 26.85);
+			vertex(83.82, 33.80);
+			vertex(90.31, 30.71);
+			vertex(94.19, 27.41);
+		endpolygon();
+
+#	Path_0
+		color(-119);
+		bgnoutlinepolygon();
+			vertex(79.65, 48.11);
+			vertex(78.31, 45.34);
+			vertex(76.25, 44.61);
+			vertex(72.44, 44.29);
+			vertex(69.69, 44.65);
+			vertex(68.33, 45.95);
+			vertex(67.63, 47.89);
+			vertex(67.73, 50.39);
+			vertex(68.42, 52.23);
+			vertex(69.36, 53.32);
+			vertex(72.33, 54.47);
+			vertex(74.13, 54.47);
+			vertex(75.84, 53.88);
+			vertex(77.85, 52.88);
+			vertex(79.22, 51.18);
+		endoutlinepolygon(outlinecolor);
+
+#	Path_5
+		color(0);
+		bgnpolygon();
+			vertex(71.08, 51.07);
+			vertex(70.66, 48.84);
+			vertex(71.75, 47.04);
+			vertex(73.55, 46.20);
+			vertex(75.33, 46.87);
+			vertex(76.36, 48.74);
+			vertex(76.44, 49.02);
+			vertex(75.98, 51.24);
+			vertex(74.29, 52.41);
+			vertex(72.74, 52.41);
+		endpolygon();
+
+#	Path_24
+		color(-248);
+		bgnpolygon();
+			vertex(68.42, 52.23);
+			vertex(69.36, 53.32);
+			vertex(72.33, 54.47);
+			vertex(74.13, 54.47);
+			vertex(75.84, 53.88);
+			vertex(77.85, 52.88);
+			vertex(75.83, 52.14);
+			vertex(74.13, 51.73);
+			vertex(71.27, 51.93);
+		endpolygon();
+
+#	Path_6
+		color(-49);
+		bgnpolygon();
+			vertex(73.42, 47.23);
+			vertex(73.42, 47.23);
+			vertex(77.01, 46.24);
+			vertex(80.25, 44.00);
+			vertex(79.53, 43.47);
+			vertex(78.44, 42.57);
+			vertex(75.92, 41.59);
+			vertex(73.16, 41.52);
+			vertex(70.26, 42.13);
+			vertex(66.90, 43.35);
+			vertex(69.18, 45.53);
+		endpolygon();
+
+#	Path_26
+		color(-119);
+		bgnpolygon();
+			vertex(73.04, 50.20);
+			vertex(73.68, 50.28);
+			vertex(74.21, 49.95);
+			vertex(74.37, 49.24);
+			vertex(73.99, 48.65);
+			vertex(73.19, 48.46);
+			vertex(73.04, 49.04);
+			vertex(72.50, 49.83);
+		endpolygon();

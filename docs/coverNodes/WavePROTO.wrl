@@ -1,0 +1,28 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+PROTO Wave[
+ exposedField SFFloat fraction 0 
+ exposedField SFFloat freq1 0.18
+ exposedField SFFloat height1 0.1
+ exposedField SFFloat damping1 1.0
+ exposedField SFVec3f dir1 1 1 0
+ exposedField SFFloat freq2 3.0
+ exposedField SFFloat height2 0.1
+ exposedField SFFloat damping2 1.0
+ exposedField SFVec3f dir2 1 0 0
+ exposedField SFFloat speed1 1.0
+ exposedField SFFloat speed2 1.0
+ exposedField SFRotation coeffSin 1 -0.166667 0.00833333 -0.000198413
+ exposedField SFRotation coeffCos 1 -0.5 0.0416667 -0.00138889
+ exposedField SFString fileName "cg_water.cg"
+ ]
+{
+# the whole life is a quiz....
+  Group {}
+}
+

@@ -1,0 +1,48 @@
+#VRML V2.0 utf8
+
+PROTO CoordinateDeformer
+#
+# provisional version, nothing is rendered
+#
+# Copyright (C) 2004 J. "MUFTI" Scheurich
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+[
+  eventIn      MFNode   addChildren
+  eventIn      MFNode   removeChildren
+  exposedField MFNode   children          []
+  exposedField MFVec3f  controlPoint      []         # (-,)
+  exposedField MFNode   inputCoord        []
+  exposedField MFNode   inputTransform    []
+  exposedField MFNode   outputCoord       []
+  exposedField MFFloat  weight            []         # (-,)
+  field        SFVec3f  bboxCenter        0 0 0      # (-,)
+  field        SFVec3f  bboxSize          -1 -1 -1   # (0,) or (-1,-1,-1)
+  field        SFInt32  uDimension        0          # [0,)
+  field        MFFloat  uKnot             []         # (-,)
+  field        SFInt32  uOrder            2          # [2,)
+  field        SFInt32  vDimension        0          # [0,)
+  field        MFFloat  vKnot             []         # (-,)
+  field        SFInt32  vOrder            2          # [2,)
+  field        SFInt32  wDimension        0          # [0,)
+  field        MFFloat  wKnot             []         # (-,)
+  field        SFInt32  wOrder            2          # [2,)
+]
+{
+   Group {}
+}
+

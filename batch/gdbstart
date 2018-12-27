@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if test "$1" = "--help" ; then
+   echo Usage: $0 -x gdbcommand vrmlfile 1>&2
+   exit 1
+fi
+
+COMMANDFILE=/tmp/gdbstart_$$
+touch $COMMANDFILE
+while test "$1" = "-x" ; do
+   echo "$2" >> $COMMANDFILE
+   shift
+   shift
+done
+
+echo set args $* >> $COMMANDFILE
+echo run >> $COMMANDFILE
+
+if test "X_$DUNE_BINARY" = "X_" ; then
+   DUNE_BINARY=dune
+fi
+
+gdb -x $COMMANDFILE `dirname $0`/../bin/$DUNE_BINARY
+rm -f $COMMANDFILE

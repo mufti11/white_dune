@@ -1,0 +1,367 @@
+#VRML V2.0 utf8
+
+Viewpoint
+  {
+  orientation -0.56715863 -0.59877294 0.56551045 0.24366745
+  position 1.17912065 3.57069182 19.21557998
+  }
+
+DEF HUEFTE Transform
+  {
+  rotation 0.75738877 0.62805539 -0.17863005 2.46861428e-2
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Box
+	{
+	}
+      }
+    DEF Ruecken Transform
+      {
+      rotation 0.96962249 4.56076934e-2 0.24031673 0.51680868
+      translation 0 1.90246605 0
+      center 0 -1 0
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Box
+	    {
+	    size 1.22348856 1.65924274 1.44021177
+	    }
+	  }
+	DEF Oberkoerper Transform
+	  {
+	  translation 0 1.25342476 0
+	  center 0 -1 0
+	  children 
+	    [
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  }
+		}
+	      geometry Box
+		{
+		size 2.15409517 1.08880639 1.67588496
+		}
+	      }
+	    DEF linker_oberarm Transform
+	      {
+	      rotation -0.57608753 -0.52132534 -0.62955778 1.56095254
+	      translation 0.81995129 1.09672510 0.33871588
+	      center 0 -1 0
+	      children 
+		[
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      }
+		    }
+		  geometry Box
+		    {
+		    size 0.56523025 2 0.69034737
+		    }
+		  }
+		Transform
+		  {
+		  rotation -0.55499923 0.81765037 -0.15304793 -0.65553396
+		  translation 0 2.04320025 0
+		  center 0 -1 0
+		  children 
+		    [
+		    Shape
+		      {
+		      appearance Appearance
+			{
+			material Material
+			  {
+			  }
+			}
+		      geometry Box
+			{
+			size 0.68855744 1.85603046 0.54658210
+			}
+		      }
+		    Transform
+		      {
+		      rotation 0.98494416 -0.16649338 4.65290732e-2 0.78536152
+		      translation 0 1.58947491 0
+		      center 0 -0.63979184 0
+		      children 
+			Shape
+			  {
+			  appearance Appearance
+			    {
+			    material Material
+			      {
+			      }
+			    }
+			  geometry Box
+			    {
+			    size 0.20221905 1.27958369 0.80880314
+			    }
+			  }
+		      }
+		    ]
+		  }
+		]
+	      }
+	    DEF rechter_oberarm Transform
+	      {
+	      rotation 0.65333032 -0.61275422 -0.44462540 3.24238204
+	      translation -0.81995129 1.09672510 0.33871588
+	      center 0 -1 0
+	      children 
+		[
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      }
+		    }
+		  geometry Box
+		    {
+		    size 0.56523025 2 0.69034737
+		    }
+		  }
+		DEF rechter_unterarm Transform
+		  {
+		  rotation -0.53690284 -0.82084321 0.19481222 2.52192974
+		  translation 0 2.04320025 0
+		  center 0 -1 0
+		  children 
+		    [
+		    Shape
+		      {
+		      appearance Appearance
+			{
+			material Material
+			  {
+			  }
+			}
+		      geometry Box
+			{
+			size 0.68855744 1.85603046 0.54658210
+			}
+		      }
+		    Transform
+		      {
+		      rotation -0.98494416 -0.16649338 4.65290732e-2 -0.78536152
+		      translation 0 1.58947491 0
+		      center 0 -0.63979184 0
+		      children 
+			Shape
+			  {
+			  appearance Appearance
+			    {
+			    material Material
+			      {
+			      }
+			    }
+			  geometry Box
+			    {
+			    size 0.20221905 1.27958369 0.80880314
+			    }
+			  }
+		      }
+		    ]
+		  }
+		]
+	      }
+	    DEF Hals Transform
+	      {
+	      translation 0 0.64577472 0
+	      center 0 -0.31925213 0
+	      children 
+		[
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      }
+		    }
+		  geometry Box
+		    {
+		    size 0.57967662 0.75244504 1.05571866
+		    }
+		  }
+		Transform
+		  {
+		  translation 0 0.85908544 0
+		  center 0 -0.71691060 0
+		  children 
+		    Shape
+		      {
+		      appearance Appearance
+			{
+			material Material
+			  {
+			  }
+			}
+		      geometry Box
+			{
+			size 2 1.13878226 1.84085786
+			}
+		      }
+		  }
+		]
+	      }
+	    ]
+	  }
+	]
+      }
+    DEF rechter_oberschenkel Transform
+      {
+      rotation 0.97946006 -0.12952755 -0.15453344 2.66482043
+      translation -0.48739397 0.18544611 -0.20608529
+      center 0 -1 0
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Box
+	    {
+	    size 1 2 1
+	    }
+	  }
+	Transform
+	  {
+	  rotation 0.55499923 0.81765037 -0.15304793 0.65553396
+	  translation -6.71539753e-2 1.70939481 -0.11196582
+	  center 0 -1 0
+	  children 
+	    [
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  }
+		}
+	      geometry Box
+		{
+		size 1 2 1
+		}
+	      }
+	    Transform
+	      {
+	      rotation -0.99444127 0.10512655 -5.91448135e-3 1.40247404
+	      translation 0 2.04320025 0
+	      center 6.46568927e-3 -1.01407265 7.81089961e-2
+	      children 
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      }
+		    }
+		  geometry Box
+		    {
+		    size 0.87224161 1.80516803 0.64217931
+		    }
+		  }
+	      }
+	    ]
+	  }
+	]
+      }
+    DEF linker_oberschenkel Transform
+      {
+      rotation -0.97946006 -0.12952755 -0.15453344 -2.66482043
+      translation 0.48739397 0.18544611 -0.20608529
+      center 0 -1 0
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Box
+	    {
+	    size 1 2 1
+	    }
+	  }
+	DEF linkes_knie Transform
+	  {
+	  rotation -0.55499923 0.81765037 -0.15304793 -0.65553396
+	  translation 6.71539753e-2 1.70939481 -0.11196582
+	  center 0 -1 0
+	  children 
+	    [
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  }
+		}
+	      geometry Box
+		{
+		size 1 2 1
+		}
+	      }
+	    Transform
+	      {
+	      rotation 0.99444127 0.10512655 -5.91448135e-3 -1.40247404
+	      translation 0 2.04320025 0
+	      center -6.46568927e-3 -1.01407265 7.81089961e-2
+	      children 
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      }
+		    }
+		  geometry Box
+		    {
+		    size 0.87224161 1.80516803 0.64217931
+		    }
+		  }
+	      }
+	    ]
+	  }
+	]
+      }
+    ]
+  }
+

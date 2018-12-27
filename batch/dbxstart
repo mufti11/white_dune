@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# This file is free software; the Free Software Foundation    
+# gives unlimited permission to copy, distribute and modify it.
+
+if test "$1" = "--help" ; then
+   echo Usage: $0 -x dbxcommand vrmlfile 1>&2
+   exit 1
+fi
+
+COMMANDFILE=/tmp/dbxstart_$$
+touch $COMMANDFILE
+while test "$1" = "-x" ; do
+   echo "$2" >> $COMMANDFILE
+   shift
+   shift
+done
+
+echo run $* >> $COMMANDFILE
+
+dbx -c $COMMANDFILE `dirname $0`/../bin/dune 
+rm -f $COMMANDFILE

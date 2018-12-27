@@ -1,0 +1,64 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO PositionInterpolator2D [
+ eventIn SFFloat set_fraction
+ exposedField MFFloat key
+ exposedField MFVec2f keyValue
+ eventOut SFVec2f value_changed
+ ]
+"PositionInterpolator2DPROTO.wrl"
+
+DEF PositionInterpolator2D1 PositionInterpolator2D
+  {
+  key 
+    [
+    0 
+    0.294294 
+    0.533033 
+    0.745495 
+    0.960960 
+    ]
+  keyValue 
+    [
+    0 0 
+    0 0.944099 
+    0.881987 0.944099 
+    0.105590 0.944099 
+    0.919254 -0.588820 
+    ]
+  }
+
+DEF TimeSensor1 TimeSensor
+  {
+  loop TRUE
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator2D1.set_fraction
+
+Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	texture ImageTexture
+	  {
+	  url 	    "../../logo/flow2.jpg"
+	  }
+	textureTransform DEF TextureTransform1 TextureTransform
+	  {
+	  translation 9.146035e-2 0.944099
+	  }
+	}
+      geometry Cylinder
+	{
+	}
+      }
+  }
+
+ROUTE PositionInterpolator2D1.value_changed TO TextureTransform1.set_translation
+

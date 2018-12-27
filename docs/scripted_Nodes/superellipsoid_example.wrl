@@ -1,0 +1,144 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO SuperEllipsoid
+  [
+  field SFBool bottom
+  field SFBool ccw
+  field SFFloat creaseAngle
+  field SFBool solid
+  field SFNode texCoord
+  field SFBool top
+  exposedField SFFloat n1
+  exposedField SFFloat n2
+  exposedField SFFloat border
+  exposedField SFFloat bottomBorder
+  exposedField SFVec3f size
+  exposedField SFInt32 uTessellation
+  exposedField SFInt32 vTessellation
+  ]
+  [
+  "SuperEllipsoidPROTO.wrl"
+  "http://wdune.ourproject.org/docs/scripted_Nodes/SuperEllipsoidPROTO.wrl"
+  ]
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+Transform
+  {
+  rotation -0.49130946 -0.86026185 -0.13625213 0.62370502
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry DEF SuperEllipsoid1 SuperEllipsoid
+        {
+        n1 0.71957898
+        border 1.39041197
+        bottom TRUE
+        bottomBorder -1.45483505
+        top TRUE
+        uTessellation 16
+        vTessellation 16
+        }
+      }
+  }
+
+DEF TimeSensor1 TimeSensor
+  {
+  cycleInterval 20
+  loop TRUE
+  }
+
+DEF ScalarInterpolator1 ScalarInterpolator
+  {
+  key 
+    [
+    0
+    0.29959401
+    0.70310300
+    0.99730002
+    ]
+  keyValue 
+    [
+    1
+    1
+    0.05485162
+    1
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator1.set_fraction
+ROUTE ScalarInterpolator1.value_changed TO SuperEllipsoid1.set_n2
+
+Viewpoint
+  {
+  orientation 0.49571239 0.86795711 -3.03235445e-2 7.03568086e-2
+  position 0.62067723 -0.34257405 5.22495889
+  }
+
+DEF ScalarInterpolator2 ScalarInterpolator
+  {
+  key 
+    [
+    0
+    0.17543800
+    0.29419600
+    0.50000000
+    0.62348002
+    0.82995802
+    0.99460101
+    ]
+  keyValue 
+    [
+    0.02999999
+    0.96894401
+    0.18633300
+    1
+    0.02484470
+    0.04347826
+    0.97515302
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator2.set_fraction
+ROUTE ScalarInterpolator2.value_changed TO SuperEllipsoid1.set_n1
+
+DEF ScalarInterpolator3 ScalarInterpolator
+  {
+  key 
+    [
+    0
+    1
+    ]
+  keyValue 
+    [
+    1.57079601
+    0.17079600
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator3.set_fraction
+ROUTE ScalarInterpolator3.value_changed TO SuperEllipsoid1.set_border
+
+DEF ScalarInterpolator4 ScalarInterpolator
+  {
+  key 
+    [
+    0
+    1
+    ]
+  keyValue 
+    [
+    -1.57079601
+    -0.67079502
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator4.set_fraction
+ROUTE ScalarInterpolator4.value_changed TO SuperEllipsoid1.set_bottomBorder
+

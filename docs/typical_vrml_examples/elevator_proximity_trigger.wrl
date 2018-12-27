@@ -1,0 +1,191 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+DEF ProximitySensor1 ProximitySensor 
+  {
+  size 2 8 5
+  }
+
+DEF Transform1 Transform 
+  {
+  translation 0 1.463413e-2 0
+  children Shape 
+      {
+      appearance Appearance 
+	{
+	material Material 
+	  {
+	  }
+	}
+      geometry Box 
+	{
+	size 2 2 5
+	}
+      }
+  }
+
+DEF TimeSensor1 TimeSensor 
+  {
+  }
+
+ROUTE ProximitySensor1.enterTime TO TimeSensor1.set_startTime
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    -3.671969e-3 
+    1 
+    ]
+  keyValue 
+    [
+    0 0 0 
+    0 4 0 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+
+Transform 
+  {
+  translation -2.605782 2.806178 0
+  children Shape 
+      {
+      appearance Appearance 
+	{
+	material Material 
+	  {
+	  }
+	}
+      geometry Text 
+	{
+	string 	  "Proximity Trigger for Elevator"
+	}
+      }
+  }
+
+Transform 
+  {
+  translation 0.300000 1.799998 0
+  children 
+    [
+Shape 
+      {
+      appearance Appearance 
+	{
+	material Material 
+	  {
+	  diffuseColor 1 0 0
+	  }
+	}
+      geometry Text 
+	{
+	string 	  "go here"
+	}
+      }
+NavigationInfo 
+      {
+      type 	"WALK"
+      }
+    ]
+  }
+
+Collision 
+  {
+  children Group 
+      {
+      children 
+	[
+Transform 
+	  {
+	  rotation 0.998955 -4.562548e-2 2.391200e-3 0.384366
+	  translation -2.792555 5.234639 -7.680729
+	  children Shape 
+	      {
+	      appearance Appearance 
+		{
+		material Material 
+		  {
+		  diffuseColor 1 0.200000 0.800000
+		  transparency 0.400000
+		  }
+		}
+	      geometry IndexedFaceSet 
+		{
+		coord Coordinate 
+		  {
+		  point 
+		    [
+		    0 0 0 
+		    15 0 0 
+		    0 0 20 
+		    15 0 20 
+		    ]
+		  }
+		texCoord TextureCoordinate 
+		  {
+		  point 
+		    [
+		    0 0 
+		    1 0 
+		    0 1 
+		    1 1 
+		    ]
+		  }
+		convex FALSE
+		coordIndex 
+		  [
+		  0 3 1 -1 
+		  0 2 3 -1 
+		  ]
+		texCoordIndex 
+		  [
+		  0 3 1 -1 
+		  0 2 3 -1 
+		  ]
+		}
+	      }
+	  }
+Transform 
+	  {
+	  rotation 0 0 1 3.140000
+	  translation -5.781117e-2 2.502264 0
+	  scale 0.500000 0.500000 0.500000
+	  children Shape 
+	      {
+	      appearance Appearance 
+		{
+		material Material 
+		  {
+		  diffuseColor 1 0 0
+		  }
+		}
+	      geometry Cone 
+		{
+		}
+	      }
+	  }
+Transform 
+	  {
+	  translation -5.525489e-2 3.703175 0
+	  children Shape 
+	      {
+	      appearance Appearance 
+		{
+		material Material 
+		  {
+		  diffuseColor 1 0 0
+		  }
+		}
+	      geometry Cylinder 
+		{
+		radius 0.200000
+		}
+	      }
+	  }
+	]
+      }
+  }
+

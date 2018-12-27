@@ -1,0 +1,153 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF Script1 Script 
+  {
+  eventOut MFInt32 coordindex_out
+  eventOut MFVec3f vertices_out
+  field SFFloat ua 1
+  field SFFloat va 1
+  field SFFloat ub 1
+  field SFFloat vb 1
+  field SFFloat um 7
+  field SFFloat vm 1
+  field SFFloat un1 0.1
+  field SFFloat vn1 0.3
+  field SFFloat un2 1.7
+  field SFFloat vn2 0.5
+  field SFFloat un3 1.7
+  field SFFloat vn3 0.5
+  field SFInt32 uTessellation 60
+  field SFInt32 vTessellation 60
+  url 
+    [
+    "javascript:
+
+ function r(angle, a, b, m, n1, n2, n3)
+    {
+    var f=m*angle/4.0;
+    var c=Math.cos(f);
+    var s=Math.sin(f);
+    return Math.pow(Math.pow(Math.abs(c/a),n2)+Math.pow(Math.abs(s/b),n3),-1.0/n1);
+    }
+
+ function account()
+    {
+    var inc1=Math.PI/(uTessellation-1)*2.0;
+    var inc2=Math.PI/(vTessellation-1);
+    coordindex_out=new MFInt32();
+//    coordindex_out[uTessellation*vTessellation*6]=0;
+    vertices_out=new MFVec3f();
+//    vertices_out[uTessellation*vTessellation].x=0.0;
+//    vertices_out[uTessellation*vTessellation].y=0.0;
+//    vertices_out[uTessellation*vTessellation].z=0.0;
+    var index=0;
+    var cindex=0;
+    var angle1;
+    var angle2;
+    var i;
+    var a1=0;
+    var a2=0;
+    var r1=new MFFloat();
+    var c1=new MFFloat();
+    var s1=new MFFloat();
+    var r2=new MFFloat();
+    var c2=new MFFloat();
+    var s2=new MFFloat();
+//    r1[uTessellation]=0;
+//    c1[uTessellation]=0;
+//    s1[uTessellation]=0;
+    angle1=-Math.PI;
+    for (a1=0;a1<uTessellation;a1++)
+       {
+       r1[a1]=r(angle1,ua,ub,um,un1,un2,un3);
+       c1[a1]=Math.cos(angle1);
+       s1[a1]=Math.sin(angle1);
+       angle1+=inc1;
+       }
+//    r2[vTessellation]=0;
+//    c2[vTessellation]=0;
+//    s2[vTessellation]=0;
+    angle2=-Math.PI/2.0;
+    for (a2=0;a2<vTessellation;a2++)
+       {
+       r2[a2]=r(angle2,va,vb,vm,vn1,vn2,vn3);
+       c2[a2]=Math.cos(angle2);
+       s2[a2]=Math.sin(angle2);
+       angle2+=inc2;
+       }
+    for (a1=0;a1<uTessellation;a1++)
+       {
+       for (a2=0;a2<vTessellation;a2++)
+          {
+          vertices_out[index].x = r1[a1]*c1[a1]*r2[a2]*c2[a2];
+          vertices_out[index].y = r1[a1]*s1[a1]*r2[a2]*c2[a2];
+          vertices_out[index].z = r2[a2]*s2[a2];
+
+          vertices_out[index+1].x = r1[a1+1]*c1[a1+1]*r2[a2]*c2[a2];
+          vertices_out[index+1].y = r1[a1+1]*s1[a1+1]*r2[a2]*c2[a2];
+          vertices_out[index+1].z = r2[a2]*s2[a2];
+
+          vertices_out[index+2].x = r1[a1+1]*c1[a1+1]*r2[a2+1]*c2[a2+1];
+          vertices_out[index+2].y = r1[a1+1]*s1[a1+1]*r2[a2+1]*c2[a2+1];
+          vertices_out[index+2].z = r2[a2+1]*s2[a2+1];
+
+          vertices_out[index+3].x = r1[a1]*c1[a1]*r2[a2+1]*c2[a2+1];
+          vertices_out[index+3].y = r1[a1]*s1[a1]*r2[a2+1]*c2[a2+1];
+          vertices_out[index+3].z = r2[a2+1]*s2[a2+1];
+
+          for (i=0;i<4;i++)
+             {
+             coordindex_out[cindex+i]=index+i;
+             }
+          coordindex_out[cindex+4]=index;
+          coordindex_out[cindex+5]=-1;
+          index+=4;
+          cindex+=6;
+          }
+       }
+//    vertices_out=new MFVec3f(vertices_out);
+//    coordindex_out=new MFInt32(coordindex_out);
+    }
+
+ function initialize()
+    {
+    account();
+    }
+
+"
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       DEF IndexedFaceSet1 IndexedFaceSet 
+	{
+	coord 	DEF Coordinate1 Coordinate 
+	  {
+	  }
+	ccw FALSE
+	creaseAngle 0.709999
+	solid FALSE
+	}
+      }
+    ]
+  }
+
+ROUTE Script1.vertices_out TO Coordinate1.set_point
+ROUTE Script1.coordindex_out TO IndexedFaceSet1.set_coordIndex
+

@@ -1,0 +1,174 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+Transform
+  {
+  translation -4 1 0
+  children 
+    [
+    DEF Transform1 Transform
+      {
+      children 
+        Shape
+          {
+          appearance Appearance
+            {
+            material Material
+              {
+              diffuseColor 1 0 0
+              }
+            }
+          geometry Box
+            {
+            }
+          }
+      }
+    DEF PlaneSensor1 PlaneSensor
+      {
+      maxPosition 0 1
+      }
+    ]
+  }
+
+ROUTE PlaneSensor1.translation_changed TO Transform1.set_translation
+
+Transform
+  {
+  translation 0 1 0
+  children 
+    [
+    DEF Transform2 Transform
+      {
+      children 
+        Shape
+          {
+          appearance Appearance
+            {
+            material Material
+              {
+              diffuseColor 0 1 0
+              }
+            }
+          geometry Box
+            {
+            }
+          }
+      }
+    DEF PlaneSensor2 PlaneSensor
+      {
+      maxPosition 1 0
+      }
+    ]
+  }
+
+ROUTE PlaneSensor2.translation_changed TO Transform2.set_translation
+
+Transform
+  {
+  translation 4 1 0
+  children 
+    [
+    DEF Transform3 Transform
+      {
+      children 
+        Shape
+          {
+          appearance Appearance
+            {
+            material Material
+              {
+              diffuseColor 0 0 1
+              }
+            }
+          geometry Box
+            {
+            }
+          }
+      }
+    DEF PlaneSensor3 PlaneSensor
+      {
+      maxPosition 0 1
+      }
+    ]
+  }
+
+ROUTE PlaneSensor3.translation_changed TO Transform3.set_translation
+
+Transform
+  {
+  translation 1.73799502 3.25547027 1.04857659
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material DEF Material1 Material
+          {
+          }
+        }
+      geometry Sphere
+        {
+        radius 1.10031688
+        }
+      }
+  }
+
+DEF Script1 Script 
+  {
+  inputOnly SFVec3f vec3f1_in
+  inputOnly SFVec3f vec3f2_in
+  inputOnly SFVec3f vec3f3_in
+  outputOnly SFColor color1_out
+  url 
+    [
+    "ecmascript:
+
+ // field SFFloat red //
+ // field SFFloat green //
+ // field SFFloat blue //
+
+ // eventOut SFColor color1_out //
+
+ function sendcolor() 
+    {
+    color1_out = new SFColor(red, green, blue);
+    }
+
+ function vec3f1_in(value)
+    {
+    // value  SFVec3f
+    red = value[1];
+    sendcolor();
+    }
+
+
+ function vec3f2_in(value)
+    {
+    green = value[0];
+    sendcolor();
+    }
+
+ function vec3f3_in(value)
+    {
+    blue = value[1];
+    sendcolor();
+    }
+
+"
+    "java:
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+    script.color1_out[0] = script.vec3f1_in[1];
+    script.color1_out[1] = script.vec3f2_in[0];
+    script.color1_out[2] = script.vec3f3_in[1];
+"
+    ]
+  initializeOnly SFFloat red 0
+  initializeOnly SFFloat green 0
+  initializeOnly SFFloat blue 0
+  }
+
+ROUTE PlaneSensor1.translation_changed TO Script1.vec3f1_in
+ROUTE PlaneSensor2.translation_changed TO Script1.vec3f2_in
+ROUTE PlaneSensor3.translation_changed TO Script1.vec3f3_in
+ROUTE Script1.color1_out TO Material1.set_diffuseColor
+

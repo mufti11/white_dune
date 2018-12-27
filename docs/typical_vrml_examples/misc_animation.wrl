@@ -1,0 +1,284 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 0 0.200000 0
+	  specularColor 1 0.699998 0.699998
+	  }
+	}
+      geometry       Sphere 
+	{
+	radius 4
+	}
+      }
+    ]
+  translation 0.157727 -1.603296 0
+  }
+
+DEF Fog1 Fog 
+  {
+  color 0.200000 0.200000 0.200000
+  fogType "EXPONENTIAL"
+  }
+
+DEF ScalarInterpolator1 ScalarInterpolator 
+  {
+  key 
+    [
+    0 
+    0.699999 
+    0.800000 
+    0.899999 
+    1 
+    ]
+  keyValue 
+    [
+    0 
+    0 
+    0 
+    9.999999e-5 
+    0 
+    ]
+  }
+
+ROUTE ScalarInterpolator1.value_changed TO Fog1.set_visibilityRange
+
+DEF TimeSensor1 TimeSensor 
+  {
+  cycleInterval 20
+  loop TRUE
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator1.set_fraction
+
+DEF NavigationInfo1 NavigationInfo 
+  {
+  speed 0.161490
+  }
+
+DEF ScalarInterpolator2 ScalarInterpolator 
+  {
+  key 
+    [
+    0.152734 
+    0.268317 
+    0.345717 
+    0.459236 
+    0.610939 
+    ]
+  keyValue 
+    [
+    0.167701 
+    0.627329 
+    0.788819 
+    0.590062 
+    0.161490 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator2.set_fraction
+ROUTE ScalarInterpolator2.value_changed TO NavigationInfo1.set_speed
+
+DEF DirectionalLight1 DirectionalLight 
+  {
+  direction -2.342728e-2 0.174785 -0.122691
+  intensity 0.699227
+  }
+
+DEF ScalarInterpolator3 ScalarInterpolator 
+  {
+  key 
+    [
+    4.889973e-3 
+    2.270381e-2 
+    9.081527e-2 
+    0.314179 
+    0.323013 
+    0.352077 
+    0.417956 
+    0.469556 
+    0.553147 
+    0.623323 
+    0.697626 
+    0.742052 
+    0.837408 
+    0.989680 
+    ]
+  keyValue 
+    [
+    0.957274 
+    0.900293 
+    0.904719 
+    0.395348 
+    0.334672 
+    0.266860 
+    0.924387 
+    0.910672 
+    0.986855 
+    0.360248 
+    0.813664 
+    0.971660 
+    0.365177 
+    0.880383 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator3.set_fraction
+ROUTE ScalarInterpolator3.value_changed TO DirectionalLight1.set_intensity
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    0 
+    0.153766 
+    0.206398 
+    0.410757 
+    0.508771 
+    0.550051 
+    0.760577 
+    0.806845 
+    0.948655 
+    0.968008 
+    1.021671 
+    ]
+  keyValue 
+    [
+    0 0 0 
+    0 0.477750 -0.694095 
+    0 0.488371 -0.606694 
+    0 0 -1 
+    -5.895078e-2 0.186046 0.966529 
+    1.345268 0.186046 -0.825197 
+    -2.201062e-2 0.186046 -0.359057 
+    -2.470700e-2 0.164614 9.082329e-2 
+    -4.663740e-2 -9.697256e-3 -0.345506 
+    -2.201062e-2 0.186046 -0.679528 
+    -2.201062e-2 -3.432402e-2 -0.242522 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO DirectionalLight1.set_direction
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	texture 	ImageTexture 
+	  {
+	  url 
+	    [
+	    "image.gif"
+	    ]
+	  }
+	textureTransform 	DEF TextureTransform1 TextureTransform 
+	  {
+	  rotation 17.445600
+	  }
+	}
+      geometry       Cylinder 
+	{
+	height 20
+	radius 10
+	}
+      }
+    ]
+  rotation 1 0 0 0.699998
+  translation -50 -0.258673 -100
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    ]
+  translation 3.307862 -1.032297 6.390796
+  }
+
+NavigationInfo 
+  {
+  headlight FALSE
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Text 
+	{
+	string 
+	  [
+	  "misc animation"
+	  ]
+	}
+      }
+    ]
+  translation -6.787540 2.795941 0
+  }
+
+DEF ScalarInterpolator4 ScalarInterpolator 
+  {
+  key 
+    [
+    9.287925e-3 
+    0.146542 
+    0.361054 
+    0.574819 
+    0.618163 
+    0.862066 
+    0.973630 
+    ]
+  keyValue 
+    [
+    10.173755 
+    8.335124 
+    19.734634 
+    11.310965 
+    14.979386 
+    18.587272 
+    2.753669 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator4.set_fraction
+ROUTE ScalarInterpolator4.value_changed TO TextureTransform1.set_rotation
+

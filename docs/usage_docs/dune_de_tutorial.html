@@ -1,0 +1,716 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * Copyright (C) 2007 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<head>
+ <title>Tutorial f&uuml;r den VRML-Editor "dune"</title> 
+<meta name="GENERATOR" content="amaya V1.4">
+</head> 
+<body>
+<h2>Tutorial f&uuml;r den VRML-Editor "dune"</h2> 
+<p> 
+http://wdune.ourproject.org/docs/usage_docs/dune_de_tutorial.html
+</p>
+<p>
+Downloaden Sie die neuste Version von "dune/white_dune" (zur Zeit 0.29beta) von
+<a href=http://wdune.ourproject.org/>
+http://wdune.ourproject.org/</a> 
+</p>
+<p> 
+white_dune ist ein Programm, um VRML97/VRML2-Dateien zu ver&auml;ndern oder zu 
+erstellen.<br>
+In der Beschreibungssprache VRML (Virtual Reality Modelling Language) 
+werden 3D-Graphikobjekte ("Nodes", Knoten) in einer Baumstruktur 
+("Scenegraph", Szenengraph) dargestellt. Dazu kommen noch Nachrichtenwege 
+(ROUTEs) zwischen den einzelnen Knoten um das Laufzeitverhalten 
+festzulegen. <br>
+Im VRML-Editor "dune" wird versucht, diese Informationen vollst&auml;ndig in 
+einer graphischen Oberfl&auml;che darzustellen.
+</p>
+<h3><a name="fenster">Die 5 Fenster von "dune"</a></h3> 
+<p>
+<img src=windows.png><br>
+Neben diversen Toolbars f&uuml;r Icons und Nachrichten besteht "dune" im 
+wesentlichen aus 5 Fenstern. Ausser dem "3D Preview" Fenster lassen
+sich die Fenster &uuml;ber den Men&uuml;punkt
+"View" angepasst an den jeweiligen Arbeitsschritt
+ein- und ausschalten. 
+<ul>
+ <li>
+  <b>Scene Tree</b><br>
+  Dieses Fenster enth&auml;lt den Szenengraphen, und zeigt damit
+  die Struktur einer VRML Datei (die Information, wie 
+  einzelne VRML Nodes (Knoten) angeordnet sind).
+ </li>
+ <li>
+  <b>Field View</b><br>
+  Dieses Fenster enth&auml;lt die Fieldwerte, die Zahlen
+  (bzw. Zeichenketten usw.) in einer VRML Datei. Angezeigt
+  werden jeweils die Fields des aktuell ausgew&auml;hlten
+  Knoten. 
+ </li>
+ <li>
+  <b>Route View</b><br>
+  Dieses Fenster enth&auml;lt die ROUTE's, die 
+  Informationswege mit denen sich verschiedene 
+  VRML Knoten beim Programmlauf verschiedene Nachrichten
+  austauschen k&ouml;nnen.
+ </li>
+ <li>
+  <b>Channel View</b><br>
+  Dieses Fenster besch&auml;ftigt sich ausschliesslich
+  mit Interpolatorknoten. Interpolatorknoten sind in VRML97
+  vor allem wichtig f&uuml;r Animationen.
+ <li>
+  <b>3D Preview</b><br>
+  Dieses Fenster zeigt eine Vorschau auf das graphische Entresultat
+  des VRML Files. Im Gegensatz zu den anderen Fenstern
+  ist im entsprechenden Programmteil die Umsetzung
+  des VRML97 Standards noch l&uuml;ckenhaft.<br>
+  Einige Knotentypen wie "PixelTexture", "MovieTexture" und selbst 
+  definierte "PROTO" bzw. "EXTERNPROTO" Knoten
+  werden &uuml;berhaupt (noch) nicht dargestellt. VRML Scripting und
+  VRML Interaktionen werden ebenfalls (noch) nicht dargestellt.
+  Bei einigen Knoten werden (noch) nicht alle Fieldwerte richtig dargestellt
+  (z.B. IndexedFaceSet.ColorPerVertex oder Extrusion). Im Zweifelsfall 
+  sollten Sie mit dem Men&uuml;punkt <em> File -> Preview </em> 
+  einen richtigen VRML-Browser benutzen um die Lage zu &uuml;berpr&uuml;fen.
+ </li>
+</ul>
+</p>
+<h3><a name="crash">"dune" abgest&uuml;rzt, bisherige Arbeit verloren ?</a></h3>
+<p>
+Dune ist noch in der Entwicklungsphase und es l&auml;uft noch nicht so
+stabil, wie es sollte.<br><br>
+<b>Wenn dune abst&uuml;rzt, ist dann die bisherige Arbeit verloren ?</b>
+<br><br>
+<font color="#FF0000"> Nein, nicht automatisch.</font>
+<br><br>
+"dune" versucht noch, das 
+ VRML97 File kurz vor dem Absturz zu speichern. Wenn das erfolgreich ist,
+ wird dune unter Linux/UNIX/MacOSX so etwas wie 
+<pre>
+  Internal Crash !
+  Try to save Files
+  attempt to write file to /home/someone/.dune_crash_NUMBER_NUMBER.wrl
+  write sucessful
+</pre>
+in die Standartfehlerausgabe des dune starteten Fensters und auf
+die Systemkonsole (z.B. das Fenster der "xconsole" Anwendung) schreiben.<br> 
+Unter M$Windows erscheint eine entsprechende Messagebox<br>
+<img src=crash.jpg><br>
+Benutzt werden unter M$Windows die Systemvariablen "%HOMEDRIVE%" und 
+"%HOMEPATH%", unter Linux/UNIX/MacOSX die Systemvariable "$HOME".<br>
+Wenn Sie dann dune neu starten und das file Men&uuml; &ouml;ffnen, 
+sollten Sie den Dateinamen des .dune_crash Files sehen.<br>
+<img src=crashrestore.jpg><br>
+Klicken Sie darauf um die Datei zu laden und speichern Sie in eine andere Datei.
+</p>
+<p>
+Wenn der Fehler, der zum Absturz gef&uuml;hrt hat, die interne Datenstruktur
+im Programm besch&auml;digt hat, kann diese Methode versagen.<br>
+In diesem Fall lohnt es sich nach tempor&auml;ren Daten (".dune_*") im 
+Verzeichnis der VRML-Datei zu suchen, die bei der Ausf&uuml;hrung von
+<em>File->Preview</em> oder <em>File->Textedit</em> entstanden sind.<br>
+Diese Dateien werden bei einem normalen Programmende gel&ouml;scht, nicht
+aber bei einem Programmabsturz.
+</p>
+<h3>Animation</h3> 
+<p>
+Wenn umfangreiche VRML-Dateien bearbeitet werden, kann das Arbeiten in
+white_dune sehr m&uuml;hselig werden, weil zum Beispiel der RouteView 
+&uuml;berf&uuml;llt und dadurch sehr un&uuml;bersichtlich geworden ist.<br>
+Als Ausgleich besitzt white_dune die M&ouml;glichkeit, den VRML-Knoten
+"Inline" zu benutzen. Damit kann man umfangreiche VRML-Dateien in einem
+einzigen VRML-Knoten verpacken.<br>
+So kann es zum Beispiel sehr sinnvoll sein, Objekte f&uuml;r den Hintergrund
+oder ein starres, umfangreiches Objekt, das bei einer Animation bewegt 
+werden soll, in einer eigenen Datei zu verpacken.<br>
+Eine Reihe von CAD- bzw. 3D-Modeller-Programmen unterst&uuml;zen diese
+Arbeitsweise, indem sie eine Option anbieten, nur selektierte oder nicht
+versteckte 3D-Objekte als VRML-Datei zu exportieren.<br>
+Zum Beispiel unterst&uuml;tzt der freie 3D-Modeller 
+<a href=http://www.wings3d.com>
+Wings3D</a> den Export von selektierten 3D-Objekten.
+<br>
+<br>
+<img src=xwings.png>
+<br>
+<br>
+Die Benutzung des "Inline" Knotens ist auch der Schl&uuml;ssel, um 
+verschiedene Werkzeuge gleichzeitig als 3D-Modeller einzusetzen, ohne
+dass nach jedem Ver&auml;nderungsschritt umfangreiche Arbeiten anfallen,
+um die VRML-Datei der Gesamtwelt auf den neuesten Stand zu bringen.
+</p>
+<p>
+Wenn Sie 3D-Daten besitzen,
+versuchen Sie jetzt VRML97/VRML2 Dateien aus Ihrem Lieblings-3D-Programm
+zu exportieren, oder erzeigen Sie schnell einige kleine VRML-Dateien. 
+Achten Sie darauf, dass m&ouml;glichst wenige Fl&auml;chen
+(Polygone) erzeugt werden. Oft unterst&uuml;tzen die neusten Versionen 
+der fortgeschrittenen 3D-Modeller die Reduzierung von Fl&auml;chen als
+Arbeitsschritt oder beim Export.
+<br><br>
+Wenn es der Modeller erlaubt, sollten Sie in diesem Modeller
+mehrere 3D-Objekte erzeugen und einzeln in VRML-Dateien exportieren.
+</p>
+<p>
+Wenn Sie gerade keinen 3D-Modeller zur Hand haben, k&ouml;nnen Sie die 
+VRML Dateien des <a href=xwings.wings>Wings3D-Beispiels</a> f&uuml;r 
+<a href=xwings.wrl>Vordergrund</a> und 
+<a href=xwing_planet.wrl>Hintergrund</a> oder einfach 
+white_dune selbst benutzen. Mit dem Men&uuml;punkt 
+<em> Create -> Shape -> Sphere </em>
+k&ouml;nnen Sie zum Beispiel eine Kugel zu erzeugen.
+<br>
+<br>
+<img src=spherefaceset1.jpg>
+<br>
+<br>
+Danach benutzen Sie <em> File -> Save As... </em>, um das Objekt in ein
+VRML-File zu exportieren.<br>
+</p>
+<p>
+Starten Sie jetzt white_dune und benutzen Sie 
+<em>Create -> WWW -> Inline</em>, um ihre VRML-Dateien als "Inline"-Knoten
+einzuf&uuml;gen.
+<br>
+<br>
+<img src=inlines.png>
+</p>
+<p>
+Bei der Benutzung des Inline Knotens muss unbedingt darauf geachtet werden,
+dass sich eine Datei nicht selbst inlined (auch nicht indirekt). In diesem
+Fall fordern die meisten Werkzeuge beim Laden der Datei immer mehr Speicher
+an (weil sich die Datei immer wieder selbst l&auml;dt) und st&uuml;rtzen 
+irgendwann ab. Sollte das bei white_dune passieren, muss man entweder das 
+"Limit number of loaded inlines" beim 
+<em> Options -> Preferences... </em> Dialog auf niedrige Werte zu setzen,
+oder die ge-inline-te Datei umbenennen, um das Problem reparieren zu 
+k&ouml;nnen.
+</p>
+<p>
+Benutzen Sie den Men&uuml;punkt 
+<em>Actions -> Show Polygons/Primitives in StatusBar</em> um zu 
+&uuml;berpr&uuml;fen, ob Ihr 3D-Objekt zu viele Fl&auml;chen hat.
+Wenn Ihre Graphikkarte keine 3D-Beschleunigung hat, sollte Ihr 3D-Objekt
+weniger als einige Tausend Polygone umfassen.
+</p>
+<p>
+Sie werden feststellen, dass Sie ihre 3D-Objekte innerhalb white_dune
+noch nicht bewegen k&ouml;nnen.<br>
+Dazu ben&ouml;tigen Sie einen Transform-Knoten, den Sie mit 
+<em> Create -> Grouping Node -> Transform </em> erzeugen k&ouml;nnen.<br>
+Der Transform-Knoten ist in VRML f&uuml;r Verschiebung, Drehung,
+Skalierung usw. von starren K&ouml;rpern zust&auml;ndig. Das l&auml;sst 
+sich z.B. im 
+VRML97 Standard <a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html#Transform>
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html#Transform
+</a> (zu erreichen &uuml;ber den Men&uuml;punkt <em> Help -> Transform </em>
+bei angew&auml;hltem Transform-Knoten) nachlesen.<br>
+Um Festzulegen, f&uuml;r welches 3D-Objekt ein Transform-Knoten zust&auml;ndig
+ist, muss man andere VRML-Knoten in sein Icon im SceneTree schieben.<br> 
+<br>
+<br>
+<img src=inlinetransform1.png>
+<br>
+<br>
+W&auml;hlen Sie den Transform-Knoten im SceneTree Fenster an.
+<br>
+<br>
+<img src=inlinetransform2.png>
+<br>
+<br>
+Beachten Sie, dass Sie jetzt im FieldView Fenster die Werte der Felder
+dieses Transformknotens ver&auml;ndern 
+k&ouml;nnen,
+auch durch Verschieben der Maus im FieldViewFenster bei festgehaltener 
+Maustaste.
+</p>
+<p>
+Benutzen Sie (immer noch bei angew&auml;hltem Transform-Knoten) den 
+Men&uuml;punkt <em> Actions -> Animate </em>. Daraufhin erscheint ein
+Dialogfenster
+<br>
+<br>
+<a name=dialog>
+<img src=animationdialog.jpg>
+</a>
+<br>
+<br>
+in dem Sie neben der Animationsdauer (und ggf. der Zeitquelle) auch
+das die Ziel-Felder (bzw. EventIn ("Eingabenachricht")) des Ziel-Knotens
+(hier Transform) ausw&auml;hlen k&ouml;nnen.<br>
+Die Felder "set_translation" und "set_rotation" beschreiben Verschiebung
+und Drehung und sind identisch zu den Feldern "translation" und "rotation"
+im FieldView Fenster. 
+Um mit diese Daten mit der Maus im 3DView Fenster eingeben zu 
+k&ouml;nnen, ben&ouml;tigen Sie die Einstellungen der Men&uuml;punkte
+<em> Mode -> Move </em> bzw. <em> Mode -> Rotate </em>. Benutzen Sie jetzt
+<em> Mode -> Move </em> f&uuml;r Verschiebungen.<br> 
+Klappen Sie ggf. mit <em> View -> Channel View </em> das ChannelView 
+Fenster auf und klicken Sie auf den PositionInterpolator Knoten im SceneTree 
+Fenster.<br>
+Animation bedeutet, dass sich Werte (zum Beispiel f&uuml;r Verschiebung,
+aber auch Drehung, Farbe, Transparenz, Lichtst&auml;rke usw.) mit der
+Zeit &auml;ndern. Im ChannelView Fenster bedeutet die Position des
+blinkenden schwarzen Balken die Zeit, die farbigen Linien den sich
+&auml;ndernden Wert.<br>
+<br>
+<br>
+<img src=animation_single_recording.png>
+<br>
+<br>
+<ul>
+  <li>
+  Klicken Sie auf das rote Aufnahme-Icon in der VCR-Toolbar.
+  </li>
+  <li>
+  Klicken Sie in das ChannelView Fenster, um einen neuen Zeitpunkt 
+  auszuw&auml;hlen.
+  </li>
+  <li>
+  Schieben Sie dann mit der Maus auf dem Dreibein das 3D-Objekt in eine
+  andere Richtung oder w&auml;hlen Sie den Transform-Knoten im 
+  SceneTree-Fenster
+  </li>
+</ul>
+
+<br>
+<br>
+<img src=animation_single_recorded.png>
+<br>
+<br>
+Klicken Sie jetzt die beiden "Kassettenrekorder-Symbole" f&uuml;r 
+Aufnahme und Wiedergabe in der N&auml;he der unteren Kante des 
+"dune"-Fensters an 
+<br>
+<br>
+<img src=recording.jpg>
+<br>
+<br>
+und benutzen Sie das Dreibein
+im 3DView Fenster um die Kugel herumzuschieben.<br> 
+Jetzt sollte die aufgenommene Bewegung abgespielt werden.<br>
+Klappen Sie ggf. mit <em> View -> Channel View </em> das ChannelView 
+Fenster auf und klicken Sie auf den PositionInterpolator Knoten im SceneTree 
+Fenster.
+<br>
+<br>
+<img src=channelview.jpg>
+<br>
+<br>
+Klicken Sie auf das Kassettenrekorder-Symbol f&uuml;r "stop".
+Die Animationsdaten lassen sich mit der Maus im ChannelView Fenster
+nachbearbeiten, zum Beispiel
+lassen sich Wert-Spitzen durch einf&uuml;gen neuer Werte etwas abrunden.<br>
+Es l&auml;sst sich
+auch ein Zeitbereich l&ouml;schen, indem man im ChannelView Fenster
+einen schwarzen Balken aufzieht und mit <em> edit -> delete </em>
+die im Balken liegenden Punkte entfernt.
+<br>
+<br>
+<img src=routeview_animation.jpg>
+<br>
+<br>
+Klappen Sie ggf. mit <em> View -> Route View </em> das RouteView 
+Fenster auf und schieben Sie sich die einzelnen Knoten zurecht.<br>
+Zeigen Sie mit der Maus auf die Eing&auml;nge des Transform-Knotens
+im RouteView. Vergleichen Sie sie mit dem <a href=#dialog>Bild des Dialogfensters
+am Anfang dieses Tutorials</a>.
+</p>
+<h3>Z-fighting/"D&uuml;nne Wand"-Probleme</h3> 
+<p>
+Benutzen Sie zwei mal 
+<em> Create -> Shape -> Box </em>. Jetzt liegen 2 Objekte genau
+&uuml;bereinander.<br>
+Klicken Sie im Scene Tree Fenster auf das "Plus"-Zeichen beim Appearance 
+("Erscheinung") eines dieser Objekte und w&auml;hlen Sie den Material 
+Knoten an, der f&uuml;r Farbeffekte zust&auml;ndig ist.
+<br>
+<br>
+<img src=doubleobject.jpg>
+<br>
+<br>
+&Auml;ndern Sie die Farbwerte f&uuml;r das Feld "diffuseColor", zum Beispiel
+&uuml;ber den Men&uuml;punkt <em> Actions -> Color Circle </em>.<br>
+Schieben Sie jetzt das eine Objekt etwas nach Oben und betrachten Sie
+die resultierenden Effekte.
+<br>
+<br>
+<img src=zfight.jpg>
+<br>
+<br>
+Wie Sie sehen, erzeugen 2 nah aufeinanderliegende Fl&auml;chen bei 
+Echtzeit-3D-Verfahren Probleme. Diese Probleme kommen auch bei anderen
+Programmen vor, zum Beispiel in 3D-Computerspielen oder im 3D-Fenster 
+eines Movie-3D-Modellers.
+Allerdings k&ouml;nnen diese Probleme beim Movie-Modeller ignoriert
+werden: beim langwierigen Bilderzeugungsschritt ("rendern") eines
+Movie-Modellers wird sehr genau berechnet, welche der beiden Fl&auml;chen
+vorne liegt und in der Bilderfolge des Endprodukts ist nichts von 
+Z-Fighting Problemen zu entdecken.<br>
+Anders bei VRML, bei dem die Bilderzeugung im VRML-Viewer ebenfalls 
+&uuml;ber ein Echtzeit-3D-Verfahren funktioniert, bei der ein Bild in
+ca. 1/25 Sekunde gerendert werden muss. Benutzen Sie 
+<em> File -> Preview </em>, um Ihre VRML-Datei mit Hilfe eines 
+VRML-Browser-Plugins zu betrachten.<br>
+Das Z-fighting Problem ist sehr t&uuml;ckisch, da seine Auswirkungen von
+der verwendeten Software (VRML-Viewer und Graphiktreiber) und von
+der verwendeten Hardware (Graphikkarten mit 3D-Beschleunigung) abh&auml;ngen
+k&ouml;nnen.
+</p>
+<h3>Interaktion</h3> 
+<p>
+Schieben Sie die beiden Objekte weit genug auseinander.<br>
+Benutzen Sie den Men&uuml;punkt <em> Create -> Sensor -> SphereSensor </em>
+um einen Kugelsensor einzuf&uuml;gen.
+<br>
+<br> 
+<img src=sphere_sensor.jpg>
+<br>
+<br>
+Verschieben Sie jetzt den SphereSensor in einen Zweig des Scenengraphen,
+der zur einen Box geh&ouml;rt,
+<br>
+<br> 
+<img src=sphere_sensor2.jpg>
+<br>
+<br>
+und suchen Sie im RouteView Fenster nach dem Transform-Knoten der anderen 
+Box. Im RouteView Fenster werden angew&auml;hlte Knoten blau beschriftet
+<br>
+<br> 
+<img src=sphere_sensor_routes.jpg>
+<br>
+<br>
+Legen Sie jetzt eine Route von SphereSensor.rotation_changed nach 
+Transform.set_rotation
+<br>
+<br> 
+<img src=sphere_sensor_mkroute.jpg>
+<br>
+<br>
+Leider ist "dune/white_dune" nur ein VRML Editor und noch lange kein 
+vollwertiger VRML Browser. F&uuml;r Interaktionen muss man auf einen
+"richtigen" VRML Browser zur&uuml;ckgreifen:<br>
+Benutzen Sie <em> File -> preview </em> um einen VRML Browser zu starten.
+<br>
+<br> 
+<img src=preview1.jpg>
+<br>
+<br>
+Der Wechsel des Cursors zeigt eine Interaktionsm&ouml;glichkeit an,
+so dass Sie mit Klicken und Ziehen der Maus in die Welt eingreifen
+k&ouml;nnen.
+<br>
+<br> 
+<img src=preview2.jpg>
+<br>
+<br>
+</p>
+<p>
+F&uuml;r sp&auml;ter: Eine Liste mit Beispielen &uuml;ber einfache Interaktion 
+findet sich in 
+<a href=http://wdune.ourproject.org/docs/typical_vrml_examples/index.html>
+http://wdune.ourproject.org/docs/typical_vrml_examples/index.html</a>
+</p>
+<h3>Einfache 3D Modellierung</h3> 
+<p>
+"dune/white_dune" ist hat auch einige einfache NURBS modeller Features.
+
+NURBS ist Bestandteil einer VRML-Erweiterung (ISO/IEC 14772:2002),
+aber nicht Teil des "klassischen" VRML97 (ISO/IEC 14772:1997) und
+wird deswegen nicht von allen VRML-Viewern unterst&uuml;tzt.
+Unter anderem unterst&uml;tzt der VRML-Viewer COVER keine NURBS.
+Da bei NURBS-Fl&auml;chen die Polygonreduktion sehr einfach ist
+und white_dune die Konvertierung von NURBS- zu normalen 
+IndexedFaceSet-(Mesh-)Objekten beherrscht, ist NURBS f&uuml;r den
+n&auml;chsten Absatz von Bedeutung. 
+
+Erzeugen Sie eine Nurbsfl&auml;che entweder mit den Men&uuml;punkten 
+<em> Create -> VRML 200x -> NurbsSurface -> Plain/Box/Sphere/Cone/Cylinder</em>
+oder konvertieren Sie ein entsprechdes angew&auml;hltes 
+Box/Sphere/Cone/Cylinder (oder NurbsCurve) Objekt mit dem
+Men&uuml;punkt <em> Actions -> Convert to NurbsSurface </em>.<br>
+ 
+Am sinnvollsten ist der Einsatz von symetrischer Modellierung: die eine Seite
+des Objekts soll so aussehen, wie die andere Seite.
+Benutzen Sie dazu den Men&uuml;punkt <em>Actions -> X symetric modelling</em> 
+Wenn dieser Men&uuml;punkt aktiviert ist, wird jede Bewegung von den
+Kontrollpunkten (den weissen K&auml;stchen) der einen Seite
+<br><br><img src=symetric1.jpg><br><br>
+auf die andere Seite &uuml;bertragen,
+<br><br><img src=symetric2.jpg><br><br>
+F&uuml;r sp&auml;ter: Eine Einf&uuml;hrung zum Thema NURBS finden Sie unter
+<a href=http://wdune.ourproject.org/docs/usage_docs/dune_de.html#nurbs>
+http://wdune.ourproject.org/docs/usage_docs/dune_de.html#nurbs</a>.
+Weitere Informationen zum Arbeiten mit NURBS in "dune/white_dune" finden sich
+unter <a href=http://wdune.ourproject.org/docs/usage_docs/dune_de.html#nurbssymetric>
+http://wdune.ourproject.org/docs/usage_docs/dune_de.html#nurbssymetric</a>
+</p>
+<h3>Viel zu viele Polygone</h3> 
+<p>
+Klicken Sie den NurbsSurface Knoten an und ver&auml;ndern Sie die
+Felder u/vTesselation
+<br><br><img src=nurbs0.jpg><br><br>
+Ausser sehr kleinen Werten
+<br><br><img src=nurbssmall.jpg><br><br>
+sollten Sie auch grosse Werte ausprobieren. Die Anzahl der Polygone
+liegt ungef&auml;hr bei "uTesselation * vTesselation".<br> 
+Probieren Sie aus, wie es beim Verschieben des Objekts ruckelt, wenn
+diese Werte in der Gr&ouml;ssenordung von einigen 100 bzw. 1000 liegen.
+Speichern Sie jetzt Ihr VRML File (am Besten nach "C:\temp") mit
+dem Men&uuml;punkt <em>File -> save as</em>. 
+Wenn eine NURBS Form zu einer mesh (IndexedFaceSet in VRML)
+konvertiert wird, werden bei grossen uTesselation/vTesselation Werten
+unn&ouml;tigerweise sehr viele Daten erzeugt.
+Das Speichern solche einer Mesh w&uuml;rde dazu f&uuml;hren, dass sehr viele
+Daten geschrieben und damit (besonders beim Schreiben auf ein M$Windows 
+Netzlaufwerk) Ihre Geduld auf eine zu harte Probe gestellt werden w&uuml;rde.
+<br>
+Automatische Konversion von NURBS zu IndexedFaceSet treten auf bei der
+Benutzung von
+<em> File -> Export as... -> pure VRML97 </em> 
+oder bei einem
+unbedachter Klick auf den Men&uuml;punkt <em>File -> Preview</em> 
+wenn im Dialog <em> Options -> Preview Settings...</em> das Flag
+<em>pure VRML97</em> angeklickt ist
+(was gebraucht wird, wenn Ihr VRML Browser nicht ISO/IEC 14992:2002 
+(VRML97 Amendment 1) unterst&uuml;tzt).
+</p>
+<h3>Superformula Modellierung</h3>
+<p>
+White_dune unterst&uuml;tzt 3D-modelling, die auf der sogenannten
+"superformula" ("Superformel") basiert.<br>
+Diese Formel wurde vor einigen Jahren von einem Biologen gefunden und
+kann benutzt werden, um n-symetrische Formen zu erzeugen, die Dingen aus der
+Natur wie Blumen, Blaettern, Insektenk&ouml;rper, Muscheln 
+oder Seesternen &auml;hnlich sehen.
+<br><br><img src=supershapes.jpg><br><br>
+Diese <a href="supershapes.wrl" target="_blank">Formen</a>
+wurden alle mit dem SuperShape PROTO erzeugt.
+<br><br>
+Superformula basierte Formen sind nicht von sich aus Teil von VRML97,
+sondern sind &uuml;ber ein PROTO (selbst definierter VRML Knoten)
+mit Scriptcode ("scripted PROTO") implementiert.<br>
+ <ul>
+  <li>
+   <h4><a name="superextrusion">SuperExtrusion</a></h4>
+   
+   Das SuperExtrusion PROTO benutzt die Superformel um ein 2D Polygon
+   in der X-Z-Fl&auml;che zu berechnen und formt daraus einen K&ouml;rper
+   indem dieses Polygon in der Y-Richtung entlang einer Kurve wiederholt
+   wird.
+   Diese Kurve funktioniert entsprechend einer NurbsCurve und kann
+   ver&auml;ndert werden, indem man die Kontrollpunkte bewegt.<br> 
+   Dieser K&ouml;rper kann in eine Extrusion umgewandelt werden und 
+   einige seiner Parameter funktionieren wie bei einer Extrusion.
+   Anders als bei einer Extrusion werden die scale Parameter nicht
+   pro spine Punkt angewandt sondern &uuml;ber den ganzen spine 
+   verschmiert.
+   <br><br><img src=superextrusion.png><br><br>
+  </li>
+  <li>
+   <h4><a name="supershape">SuperShape</a></h4>
+   
+   Das SuperShape PROTO benutzt die Superformel um ein 2D Polygon
+   in der X-Z-Fl&auml;che zu berechnen und formt einen K&ouml;rper
+   indem die Superformel auch in der Y-Z-Fl&auml;che &auml;hnlich
+   wie bei Kugelkoordinaten berechnet wird.<br> 
+   <br><br><img src=supershape.png><br><br>
+   Dieser K&ouml;rper kann in ein IndexedFaceSet umgewandelt 
+   oder in ein NurbsSurface angen&auml;hert werden.
+   <br><br><img src=supershape_menu.png><br><br>
+  </li>
+  <li>
+   <h4><a name="superellipsoid">SuperEllipsoid</a></h4>
+   
+   White_dune hat auch ein PROTO f&uuml;r ein Superellipsoid, 
+   das ist ein spezieller Fall des SuperShape und verh&auml;lt sich 
+   genau gleich. Es kann benutzt werden, um eine Kugel, 
+   <br><br><img src=superellipsoid_sphere.jpg><br><br>
+   eine Box, ein Zylinder, 
+   <br><br><img src=superellipsoid_cylinder.jpg><br><br>
+   ein Oktaeder und abgerundete Formen dieser K&uuml;rper    
+   <br><br><img src=superellipsoid_box_smooth.jpg><br><br>
+   <br><br><img src=superellipsoid_cylinder_smooth.jpg><br><br>
+   mit nur 2 Parametern zu erzeugen.<br> 
+   Wie das SuperShape PROTO hat das SuperEllpsoid PROTO ein Feld "border",
+   um z.B. auch Halbkugeln modellieren zu k&ouml;nnen.
+   <br><br><img src=superellipsoid_sphere_half.jpg><br><br>
+   Das Feld "creaseAngle", das bei allen Superformula basierten PROTOs
+   enthalten ist, funktioniert wie bei IndexedFaceSet oder Extrusion 
+   Knoten, um Kanten zu zeigen oder zu verwischen.
+   <br><br><img src=superellipsoid_tesselation_creaseangle.jpg><br><br>
+   Dieser K&ouml;rper kann in ein IndexedFaceSet umgewandelt werden
+   <br><br><img src=superellipsoid2indexedfaceset.jpg><br><br>
+   oder in ein NurbsSurface angen&auml;hert werden.
+   <br><br><img src=superellipsoid2nurbssurface_dialog.png><br><br>
+   Eine zur NurbsSurface konvertierte Superformula Form verliert zwar etwas
+   von der &auml;usseren Form,
+   <br><br><img src=superellipsoid2nurbssurface_inexact.jpg><br><br>
+   kann aber &uuml;ber die Kontrollpunkte weiter ver&auml;ndert werden.
+   <br><br><img src=superellipsoid2nurbssurface.jpg><br><br>  </li>
+ </ul>
+ Superformula basierte PROTOs haben genau wie NURBS Knoten Felder f&uuml;r
+ Tessellierung und kann &uuml;ber 
+ <em> File -> Export as... -> pure VRML97 </em> oder beim Preview f&uuml;r
+ "klassische" (ISO/IEC 14772:1997) VRML97 Browser automatisch in ein
+ IndexedFaceSet bzw. Extrusion umgewandelt werden.
+</p>
+<h3>Nachbearbeitung von VRML Modellen </h3> 
+<p>
+Verbreitete 3D Modelling Programme wie catia, 3D Studio Max, Cinema4D, maya,
+formZ, blender usw. besitzen die M&ouml;glichkeit VRML97 zu exportieren (oder
+zumindest konvertierbare Dateiformate zu schreiben). Allerdings wird man
+mit den Resultaten nicht immer wirklich gl&uuml;cklich, Sp&ouml;tter reden
+von "schwarzen L&ouml;chern aus maya".<br>
+Der Grund daf&uuml;r hat nicht unbedingt mit Programmfehlern zu tun. Man 
+sollte sich
+immer vor Augen halten, dass viele dieser Programme nicht prim&auml;r zur
+Erzeugung von Echtzeit-3D-Daten gedacht sind, sondern z.B. zur Erzeugung
+von Movie-Daten, so dass an einem Bild Minuten/Stunden (oder mehr) gerechnet
+werden kann. So gibt es in diesen Programmen Effekte wie zum Beispiel 
+"richtige" Mehrfachspiegelungen, 
+die auf einem normalen Rechnersystem nicht innerhalb einer 1/25 Sekunde 
+berechnet werden k&ouml;nnen.<br>
+Die entsprechenden Materialeigenschaften k&ouml;nnen daher nicht so einfach
+in ein Echtzeit-3D-Format &uuml;bersetzt werden.
+</p>
+<p>
+Erzeugen Sie ein (einfaches ?) VRML File mit einem anderen 3D Modeller
+(z.B. Wings3D, Art of Illusion, ac3d, maya, usw...).
+Benutzen Sie den Men&uuml;punkt <em>File -> Import</em>, um das 3D Modell
+in Ihre 3D Welt einzuf&uuml;gen.
+Die meisten 3D Modeller exportieren lediglich IndexedFaceSet Knoten
+(aus Einzelfl&auml;chen zusammengesetzte K&ouml;rper)
+f&uuml;r die Geometrie.<br>
+</p>
+<p>
+Im einfachsten Fall liegen nur die "rohen" Geometriedaten vor:
+<br><br><img src=indexedfacesetonly.jpg><br><br>
+Im Notfall k&ouml;nnen Sie versuchen, diese Situation zu erreichen, indem 
+Sie alle anderen Knoten in einem VRML File l&ouml;schen.<br>
+Klicken Sie auf den "Shape" Knoten und benutzen Sie <em> Create -> 
+Material/Texture -> Appearance </em>
+<br><br><img src=indexedfacesetappearance.jpg><br><br>
+Klicken Sie auf den "Appearance" Knoten und benutzen Sie <em> Create -> 
+Material/Texture -> Material </em>
+<br><br><img src=indexedfacesetmaterial.jpg><br><br>
+so dass Sie die Farbe des gesamten Objekts (nicht die Farbe der einzelnen 
+Polygone wie mit dem Color Knoten) ver&auml;ndern k&ouml;nnen.<br>
+Um ein Bild (Textur) auf das Objekt zu kleben, 
+klicken Sie auf den "Appearance" Knoten, benutzen Sie <em> Create -> 
+Material/Texture -> ImageTexture </em>
+und w&auml;hlen Sie eine Bilddatei aus. Der VRML Standard fordert 
+ausschliesslich
+die Unterst&uuml;tzung der offenen Bildformate ".jpg" und ".png", bei anderen
+Bildformaten kann es zu Problemen kommen.
+<br><br><img src=indexedfacesettexture.jpg><br><br>
+</p>
+<p>
+H&auml;ufig werden Textur-Dateien (auch MovieTexturen (.mpeg (MPEG1)) zwar
+exportiert, aber mit einem falschen oder ungeeigneten Pfad. Wird die VRML Datei 
+an eine andere Stelle kopiert, kann der Pfad ung&uuml;ltig werden. 
+Wird die VRML Datei auf einen UNIX/Linux-basierten Webserver &uuml;bertragen,
+erweisen sich Laufwerksbuchstaben, Leerzeichen und nicht ASCII Buchstaben 
+(wie z.B. Umlaute) im Pfad (und Dateinamen) als echtes Problem.<br>
+Die wenigsten Handlingprobleme ergeben sich, wenn man alle Dateien
+in den gleichen Pfad wie die VRML Datei kopiert und mit dem Menupunkt
+<em> Actions -> Set Path of all URLs to </em> alle Pfade mit dem relativen 
+Pfad . ("." bedeutet aktueller Pfad) ersetzt.
+</p>
+<p>
+Wenn Sie Pech haben, wurde das Objekt mit der 
+falschen Seiteninformation exportiert.
+<br><br><img src=indexedfacesetwrongside.jpg><br><br>
+&Auml;ndern Sie die Felder "ccw" ("andere Seite") oder 
+"solid" ("einseitig"/"zweiseitig") um das Problem zu l&ouml;sen.<br> 
+Vorsichtig bei zweiseitigen d&uuml;nnen K&ouml;rpern, da dann
+aufgrund von Z-fighting/"d&uuml;nne Wand"-Problemen die R&uuml;ckseite 
+"durchscheinen" kann.<br>
+</p>
+<p>
+Um Kanten verwischen zu lassen, k&ouml;nnen Sie das Feld "creaseAngle"
+benutzen. Dazu muss der Winkel der Kante im Bogenmass (1.57 sind ungef&auml;hr 
+90 Grad, 3.14 ("Pi") sind ungef&auml;hr 180 Grad) kleiner als der 
+"creaseAngle" Wert sein. <br>
+Das Verwischen von Kanten erlaubt es, das Aussehen von 3D-Objekte mit
+sehr wenigen Fl&auml;chen stark zu verbessern.
+<br><br><img src=smooth1.png><br><br>
+3D-Objekte mit sehr wenigen Kanten sind f&uuml;r eine hohe 
+Darstellungsgeschwindigkeit bei
+Echtzeit-3D sehr wichtig.
+<br><br><img src=smooth2.jpg><br><br>
+</p>
+<p>
+Einige 3D-Modeller mit VRML-Export haben das Problem, dass Sie den
+Drehpunkt eines Objekts (symbolisiert durch ein Dreibein oder durch 3 farbige
+Ringe in white_dune, Feld Transform.center) weit entfernt vom Objekt selbst 
+anordnen.<br>
+&Uuml;blicherweise ist dabei der Drehpunkt im Nullpunkt der VRML-Welt
+angeordnet.
+<br>
+<br> 
+<img src=wrong_center.png>
+<br>
+<br>
+Versucht man dann, das Objekt &uuml;ber seinen Transformknoten zu drehen,
+k&ouml;nnen schon kleine Drehwinkel dazu f&uuml;hren, dass das Objekt seinen
+Platz verl&auml;sst. Besonders bei grossem Abstand zum Nullpunkt kann
+diese Orbitbewegung um den Nullpunkt f&auml;schlich als Verschiebungsbewegung 
+wahrgenommen werden. &Auml;hnliche Effekte lassen sich auch beim
+Vergr&ouml;ssern/Verkleinern erzielen.<br>
+Die Lage des Drehpunkts wird durch das Feld "center" des Transformknotens
+bestimmt. 
+<br><br>
+Ausser &uuml;ber den Fieldview kann das Feld "center" auch im 3D-Preview
+Fenster gezielt ver&auml;ndert werden, indem man den Men&uuml;punkt
+<em> Mode -> Center</em> benutzt und das Dreibein im 3D Fenster benutzt.
+</p>
+<p>
+Allerdings hat die Ver&auml;nderung des Wertes f&uuml;r "center"
+auch Auswirkungen auf die Drehung und die Skalierung des K&ouml;rpers.
+Die Reihenfolge der Graphikoperationen in VRML ist so festgelegt, dass
+bei einer Drehung ungleich Null (bzw. einer Skalierung ungleich Eins)
+eine Verschiebung des Drehpunkts im 3D-Preview Fenster dazu f&uuml;hren kann,
+dass der K&ouml;rper dem Drehpunkt auszuweichen scheint.
+</p>
+<p>
+Um dieses Problem zu vereinfachen wurde in white_dune ein Men&uuml;punkt
+<em> Actions -> Set center to (need Transform ->Shape ->geometry) -> 
+mid of boundingBox </em> eingef&uuml;hrt.<br>
+Dabei muss ein Geometrie-Knoten (zum Beispiel IndexedFaceSet, PointSet,
+Box usw.) angew&auml;hlt werden, der in einem Shape-Knoten enthalten ist,
+welcher wiederrum in einem Transform-Knoten enthalten ist.<br>
+Bei Ausf&uuml;rung des <em> Actions -> Set center to...</em> Befehls wird
+dann der Drehpunkt in den Mittelpunkt des Kastens gelegt, der den 
+Geometrie-Knoten umschliesst.
+<br>
+<br> 
+<img src=mid_center.png>
+<br>
+<br>
+</p>
+</body>
+

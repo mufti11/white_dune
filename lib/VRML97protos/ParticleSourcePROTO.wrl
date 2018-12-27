@@ -1,0 +1,241 @@
+#VRML V2.0 utf8
+
+PROTO ParticleSource
+[
+  eventIn SFVec3f force_in
+  field SFNode particle_node NULL
+  field SFInt32 number_particles 1
+  field SFVec3f force 0 0 0
+  field SFVec2f energyRange 0.5 0.6
+  field SFVec2f angleRangeDEG -90 90
+  field SFFloat startHeight 0
+  field SFVec2f allowedHeightRange -3 3 
+  field SFVec2f sizeRange 0.3 0.5
+  field SFFloat density 0.75
+  field SFFloat gravitation 9.81
+  field SFFloat jetRadius 0
+]
+{
+# School physics based particle source scripting example
+#
+# This PROTO creates "number_particles" copies of the node in "particle_node" 
+# and start this objects to a movement accounted by school physics.
+# The energy of the particle is selected randomly from "energyRange".
+# The angle (in degree) of the initial movement is selected randomly 
+# from "angleRangeDEG".
+# The weight of the particle is accounted via sizeRange and density.
+# A particle start at "startHeight" and is reused, if its height
+# get out of "allowedHeightRange".
+# The particle is driven by "graviation" and can be influenced by
+# a external "force_in" vector.
+#
+# If you want to use a lot of ParticleSources, it may be usefull to
+# move the TimeSensor outside of the PROTO...
+# 
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+# 
+# Special thanks to Braden McDaniel 
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+# Cambridge, MA 02139, USA.
+
+  DEF GROUP Group 
+   {
+   }
+   
+  DEF Script1 Script 
+    {
+    eventIn SFFloat t
+    eventIn SFVec3f force_in IS force_in
+    directOutput TRUE
+    field SFNode particle_node IS particle_node
+    field SFInt32 number_particles IS number_particles
+    field SFVec3f force IS force
+    field SFVec2f energyRange IS energyRange
+    field SFVec2f angleRangeDEG IS angleRangeDEG
+    field SFFloat startHeight IS startHeight
+    field SFVec2f allowedHeightRange IS allowedHeightRange
+    field SFVec2f sizeRange IS sizeRange
+    field SFFloat density IS density
+    field SFFloat gravitation IS gravitation
+    field SFFloat jetRadius IS jetRadius
+    field SFNode group   USE GROUP
+    field MFNode internNode 
+      [
+      ]
+    field MFNode particles 
+      [
+      ]
+    field MFVec3f internPosition 
+      [
+      ]
+    field MFVec3f internVector 
+      [
+      ]
+    field SFFloat internT 0
+    field MFFloat internMass 
+      [
+      ]
+    field SFFloat internSize 0
+    url 
+      [
+      "javascript:
+ 
+ // field SFNode particle_node //
+
+ // field SFInt32 number_particles //
+
+ // field SFVec3f force //
+
+ // field SFVec2f energyRange //
+
+ // field SFVec2f angleRangeDEG //
+
+ // field SFFloat startHeight //
+
+ // field SFVec2f allowedHeightRange //
+
+ // field SFVec2f sizeRange //
+
+ // field SFFloat density //
+
+ // field SFFloat gravitation //
+
+ // field SFNode group //
+
+ // field MFNode internNode //
+
+ // field MFVec3f internPosition //
+
+ // field MFVec3f internVector //
+
+ // field SFFloat internT //
+
+ // field MFFloat internMass //
+
+ // field SFFloat internSize //
+
+ function newParticle(i)
+    {
+    internSize = sizeRange[0] + Math.random() * (sizeRange[1]-sizeRange[0]);
+
+    internMass[i] = internSize * internSize * internSize * density;
+
+    internPosition[i] = new SFVec3f();
+    internVector[i] = new SFVec3f();
+//    particles[i] = new SFNode();
+
+    internPosition[i].x = jetRadius * (2*Math.random()-1);
+    internPosition[i].y = startHeight; 
+    internPosition[i].z = jetRadius * (2*Math.random()-1);
+    }
+
+ function startNewParticle(i)
+    {
+    newParticle(i);
+    energy = energyRange[0] + Math.random() * (energyRange[1] - energyRange[0]);
+    v = 0.5 * energy / internMass[i];
+    alpha = Math.random() * 2.0 * Math.PI;
+    angle = angleRangeDEG[0];
+    angle +=  Math.random() * (angleRangeDEG[1]-angleRangeDEG[0]);
+    angle *= 2.0* Math.PI / 360.0; 
+    internVector[i].x = v * Math.cos(angle) * Math.cos(alpha);
+    internVector[i].y = v * Math.sin(angle);
+    internVector[i].z = v * Math.cos(angle) * Math.sin(alpha);
+    }
+
+ function  initialize()
+    {
+//    var particles;
+    var i;
+    var vrmlstring = '';
+    if (allowedHeightRange[0] > startHeight) 
+       {
+       print('error: allowedHeightRange[0] must be bigger than startHeight');
+       number_particles = 0;
+       }
+    if (allowedHeightRange[1] < startHeight) 
+       {
+       print('error: allowedHeightRange[1] must be smaller than startHeight');
+       number_particles = 0;
+       }
+    internPosition.length = number_particles;
+    internVector.length = number_particles;
+    for (i = 0; i < number_particles; i++)
+       {
+       startNewParticle(i);
+       vrmlstring += 'Transform { scale ' + internSize + ' ' + internSize + ' ' + internSize + ' }';
+       } 
+    particles = Browser.createVrmlFromString(vrmlstring);
+    for (i = 0; i < number_particles; i++)
+       {
+       particles[i].addChildren = new MFNode(particle_node);
+       }
+    group.addChildren = particles;
+    }
+
+ function  t(value)
+    {
+    // value  SFTime
+    var i;
+    if (value > internT) 
+       delta = value - internT;
+    else
+       delta = value - internT + 1.0;
+    for (i = 0; i < number_particles; i++) 
+        {
+        if (group.children[i].translation[1] < allowedHeightRange[0])
+            startNewParticle(i);
+        else if (group.children[i].translation[1] > allowedHeightRange[1])
+            startNewParticle(i);
+        else 
+           {
+           internVector[i].y -= delta * gravitation;
+
+           internVector[i].x += delta * force.x;
+           internVector[i].y += delta * force.y;
+           internVector[i].z += delta * force.z;
+
+
+           internPosition[i].x += internVector[i].x * delta;
+           internPosition[i].y += internVector[i].y * delta;
+           internPosition[i].z += internVector[i].z * delta;
+           }
+        group.children[i].translation[0] = internPosition[i].x;
+        group.children[i].translation[1] = internPosition[i].y;
+        group.children[i].translation[2] = internPosition[i].z;
+        }
+    internT = value;
+    }
+
+ function  force_in(value)
+    {
+    // value  SFVec3f
+    force = value;
+    }
+
+  "
+  ]
+}
+
+DEF TimeSensor1 TimeSensor 
+  {
+#    cycleInterval 100000
+  loop TRUE
+  }
+
+ ROUTE TimeSensor1.fraction_changed TO Script1.t
+}
+

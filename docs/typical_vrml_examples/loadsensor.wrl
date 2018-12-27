@@ -1,0 +1,72 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+EXTERNPROTO LoadSensor[
+ exposedField SFBool enabled
+ exposedField SFNode metadata
+ exposedField SFTime timeOut
+ exposedField MFNode watchList
+ eventOut SFBool isActive
+ eventOut SFBool isLoaded
+ eventOut SFTime loadTime
+ eventOut SFFloat progress
+ ]
+[
+ "urn:web3d:x3d:node:LoadSensor",
+ "LoadSensorPROTO.wrl"
+ "http://wdune.ourproject.org/docs/x3dDraft/LoadSensorPROTO.wrl"
+]
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	texture 	DEF MovieTexture1 MovieTexture 
+	  {
+	  url 
+	    [
+	    "movie.mpg"
+	    ]
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    ]
+  }
+
+Sound 
+  {
+  source   DEF AudioClip1 AudioClip 
+    {
+    url 
+      [
+      "bubble.wav"
+      ]
+    }
+  }
+
+DEF LoadSensor2 LoadSensor 
+  {
+  watchList 
+    [
+    USE AudioClip1
+    USE MovieTexture1
+    ]
+  }
+
+ROUTE LoadSensor2.isLoaded TO AudioClip1.set_loop
+ROUTE LoadSensor2.isLoaded TO MovieTexture1.set_loop
+ROUTE LoadSensor2.loadTime TO MovieTexture1.set_startTime
+ROUTE LoadSensor2.loadTime TO AudioClip1.set_startTime
+

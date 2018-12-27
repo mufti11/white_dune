@@ -1,0 +1,69 @@
+Authors:
+
+- elephant_smooth_triangle_set.x3dv is based on
+    https://openlibraries.svn.sourceforge.net/svnroot/openlibraries/trunk/media/models/glittering.x3d
+  It was simplified by hand (to leave only simple IndexedTriangleSet
+  with coordIndex and Coordinates) and convertex to classic encoding
+  by view3dscene. OpenLibraries is under LGPL
+  (http://openlibraries.org/wiki/OpenLibraries,
+  https://openlibraries.svn.sourceforge.net/svnroot/openlibraries/trunk/COPYING)
+  so this example should also fall under LGPL.
+
+- test_texture.png based on this photo:
+  http://gimp-savvy.com/cgi-bin/img.cgi?ufwsMV1VJR1LXOE702
+  from Copyright-Free Photo Archive:
+  http://gimp-savvy.com/PHOTO-ARCHIVE/
+  Public domain.
+
+- Everything else by Michalis Kamburelis aka Kambi, VRML / X3D written by hand,
+  texture created in GIMP. Some of this is a subset of
+  [http://vrmlengine.sourceforge.net/kambi_vrml_test_suite.php].
+  Free to modify and redistribute under GNU GPL >= 2.
+
+So everything should be compatible with GPL 2.
+
+White_dune problems:
+- triangle_fan_strips_smoothing.x3dv: dune doesn't smooth normals on
+  [Indexed]TriangleFanSet and [Indexed]TriangleStripSet.
+- elephant_smooth_triangle_set.x3dv: like above (larger test,
+  and on IndexedTriangleSet).
+- cylinder_texture_mapping.wrl (the VRML 97 version) and
+  cylinder_texture_mapping_nosolid.x3dv (analogous test but with solid
+  field set to FALSE (Cylinder.solid field is available only since X3D)).
+  Problems:
+  - dune doesn't handle texture alpha channel
+  - VRML 97 version has texture stretched on the sides, it seems
+    applied two times in S direction.
+  - VRML 97 lacks texture on bottom and top caps.
+- background_z_oriented.wrl: dune doesn't rotate Background node.
+- background_pure_white.wrl: when you look around in dune, strange yellow-black
+  colored background appears. While background should clearly be just white,
+  proved by placing clear pure_white.png texture.
+  Strangely, the yellow color seems to come from
+  triangle's material color... (when you change it e.g. to red, the sky
+  also gets red...).
+- non_convex_face.wrl: dune doesn't handle non-convex faces.
+- text_textured.wrl: dune doesn't texture text.
+
+All screenshots were captured with view3dscene, so you can recreate them
+and investigate models by view3dscene. They show rendering correct with
+respect to X3D spec, assuming view3dscene and xj3d (yes, checked with xj3d
+everything here) are correct.
+
+As fas as I know, view3dscene (SVN as of today, 2008-08-03)
+results are correct for all of these models.
+
+(Xj3d notes: note that Xj3d also doesn't render it all perfectly,
+although it fails in other places and I'm pretty sure these are
+unrelated xj3d faults:
+- cylinder_texture_mapping_nosolid gets Z-order problems in Xj3d.
+  Most probably because they use blending for rendering.
+  (view3dscene detects simple yes/no alpha channel and uses alpha_test
+  for such textures, as alpha_test avoids Z order problems).
+- background_z_oriented has inverted zenith and groud direction
+  (seems they have a bug and treat skyAngle wrong, spec says clearly
+  it's an angle from the zenith). Anyway, it shows correctly that
+  groun-zenith are oriented on Z axis, so Background is correctly
+  rotated.
+- textured text doesn't seem to be supported by xj3d.
+)

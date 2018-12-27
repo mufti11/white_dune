@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/* 
+ * dune_java_export.html
+ *
+ * Copyright (C) 2009 J. "MUFTI" Scheurich                       
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */  
+  
+ last update: white_dune-0.29beta1331
+-->   
+<head>
+ <title>White_dune export to java</title> 
+</head> 
+<body>
+<h2><a name="javaexport">White_dune export to java</a></h2>
+<p>
+White_dune supports the export of java source code from X3DV/VRML files 
+since version 0.29 beta 1331.<br>
+A simple example of the usage as a java source code exporter can be found 
+<a href="../export_example_java/jme">at the directory of a example</a> for 
+usage with the <a href="http://www.jmonkeyengine.com/"> java monkey engine</a>.
+<br>
+Unfortunatly, some important java based 3D engines like java3d or the 
+java monkey engine do not support the rendering of polygons with varying 
+number of edges, like it is possible with OpenGL (or 
+<a href="http://jogl.dev.java.net">jogl</a>).<br>
+To use the triangle based 3D objects in the 3D engines, mesh based X3D nodes
+(like IndexedFaceSet) needs to be converted either to the X3D nodes 
+IndexedTriangleSet or TriangleSet.<br>
+Of course it would be possible to account the mesh of X3D nodes like 
+Extrusion or NurbsPatchSurface in java, but this may get complicated.<br>
+Instead it may be wise, to convert this nodes in white_dune to 
+IndexedTriangleSet or TriangleSet as well.<br>
+
+</p>
+</body>
+
+ 
+

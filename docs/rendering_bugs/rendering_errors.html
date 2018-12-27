@@ -1,0 +1,89 @@
+<!--
+Authors:
+
+- test_texture.png based on this photo:
+  http://gimp-savvy.com/cgi-bin/img.cgi?ufwsMV1VJR1LXOE702
+  from Copyright-Free Photo Archive:
+  http://gimp-savvy.com/PHOTO-ARCHIVE/
+  Public domain.
+
+- Everything else by Michalis Kamburelis aka Kambi, VRML / X3D written by hand,
+  texture created in GIMP. Some of this is a subset of
+  [http://vrmlengine.sourceforge.net/kambi_vrml_test_suite.php].
+  Free to modify and redistribute under GNU GPL >= 2.
+
+So everything should be compatible with GPL 2.
+-->
+
+<html>
+<body>
+<ul>
+White_dune problems:
+<li>
+  triangle_fan_strips_smoothing.x3dv: dune doesn't smooth normals on
+  [Indexed]TriangleFanSet and [Indexed]TriangleStripSet.
+  <br>
+  <img src="white_dune_triangle_fan_strips_smoothing.png" width="400" heigth="300">
+  <img src="triangle_fan_strips_smoothing.png" width="400" heigth="300">
+</li>
+<li>
+  background_z_oriented.wrl: dune doesn't rotate Background node.
+  <br>
+  <img src="white_dune_background_z_oriented.png" width="400" heigth="300">
+  <img src="background_z_oriented.png" width="400" heigth="300">
+</li>
+<li>
+  background_pure_white.wrl: when you look around in dune, strange yellow-black
+  colored background appears. While background should clearly be just white,
+  proved by placing clear pure_white.png texture.
+  Strangely, the yellow color seems to come from
+  triangle's material color... (when you change it e.g. to red, the sky
+  also gets red...).
+  <br>
+  <img src="white_dune_background_pure_white.png" width="400" heigth="300">
+  <img src="background_pure_white.png" width="400" heigth="300">
+</li>
+<li>
+  non_convex_face.wrl: dune doesn't handle non-convex faces.
+  text_textured.wrl: dune doesn't texture text.
+  <br>
+  <img src="white_dune_non_convex_face.png" width="400" heigth="300">
+  <img src="non_convex_face.png" width="400" heigth="300">
+</li>
+<ul>
+All screenshots were captured with view3dscene, so you can recreate them
+and investigate models by view3dscene. They show rendering correct with
+respect to X3D spec, assuming view3dscene and xj3d are correct.<br><br>
+
+As fas as I know, view3dscene (SVN as of today, 2008-08-03)
+results are correct for all of these models.<br><br>
+
+(Xj3d notes: note that Xj3d also doesn't render it all perfectly,
+although it fails in other places and I'm pretty sure these are
+unrelated xj3d faults:
+<ul>
+ <li>
+  cylinder_texture_mapping_nosolid gets Z-order problems in Xj3d.
+  Most probably because they use blending for rendering.
+  (view3dscene detects simple yes/no alpha channel and uses alpha_test
+  for such textures, as alpha_test avoids Z order problems).
+ </li>
+ <li>
+  background_z_oriented has inverted zenith and groud direction
+  (seems they have a bug and treat skyAngle wrong, spec says clearly
+  it's an angle from the zenith). Anyway, it shows correctly that
+  groun-zenith are oriented on Z axis, so Background is correctly
+  rotated.
+ </li>
+ <li>
+  textured text doesn't seem to be supported by xj3d.
+  The reason is that rendered text is handled as lines, not faces.
+ </li>
+ <li>
+  A second animated PROTO instance is not rendering animation
+ </li>
+</ul>
+)
+</body>
+</html>
+

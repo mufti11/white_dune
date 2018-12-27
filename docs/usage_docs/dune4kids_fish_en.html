@@ -1,0 +1,619 @@
+<!--
+/*
+ * Copyright (C) 2011 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h1>How to build a fish (not easy)</h1>
+<br>
+<h2>First a few informations to read</h2>
+<br>
+On some systems (Linux KDE/Gnome and SGI IRIX 4dwm), there is a 
+programm icon fuer "dune4kids", it lools soemthing like this:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+On systems like Micro$oft Windows or MacOSX there is only one (other)
+programm icon:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normally, the program of this icon starts with the english full version,
+usually with very much icons and too much menues.
+<br>
+<a href="dune4kids_start_en.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+In this case, you have to switch to dune4kids.<br> 
+You have to <a href="dune4kids_start_en.html" target="_blank"> 
+click here</a> to switch to the right version.<br>
+<img src="frog01_en.png">
+<br><br>
+<h2>What to do, if the program crashes ?</h2>
+With a bit of luck, you can load the last situation, if there is a
+new ".dune_crash" file in the list of recent files.
+<br>
+<img src="frog00_en.png">
+<br>
+<h1>Navigation</h1>
+Navigation means the movment in the 3D modell.<br>
+This is important, cause it can happen very easily, that you get inside or
+behind your peace of work and see therefore nothing.<br><br>
+When you see nothing there are two way to continue, ofthen you use this
+ways together:
+<ul>
+<li> <b>Move backwards</b><br>
+     You can go forwards and backwards, if you press together the 
+     left mouse button and the "Shift" key on the keyboard and move the
+     mouse up and down.
+     If you use "Examine" (when the icon <img src="examine.png"> is pressed)
+     this also works with the middle button of a 3-button mouse.
+     If there is a mouse with a scroll wheel, you have to press the mouse
+     wheel.
+</li>
+<li> <b>Turn the 3D world</b><br>
+     If you press both the left mouse button and the "Control" key on the 
+     keyboard and then move the mouse, the whole 3D world turns around.
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Additionally there you can press together the left mouse button, the "Shift" 
+key and the "Control" key and move the mouse (or use the icon 
+<img src="move_along_screen.png">). This results in the movement in direction
+of the screen plane: up, down, left and right.
+<br>
+<br>
+After you find the object and moved near to it, you should press again the
+"Examine" icon <img src="examine.png"> in order to continue to work normally.
+<br>
+<h1>Icons for changes</h1>
+In Order to show, how things are changed, a box is created.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, to changed whole objects:
+<ul>
+<li>Move: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Rotate: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Scale: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>uniform scale: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>move center of rotation: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+With small white boxes you can change the objects itself.
+With the single arrow icons <img src="xyz.png"> you can select the direction.
+<br>
+For example if only the green arrow is pushed,
+<img src="y_only.jpg"> you can move the little box<br> 
+<br>
+<img src="yonly_1.jpg"> 
+<br>
+only into the direction of the green arrow.<br>
+<br>
+<img src="yonly_2.jpg">. 
+<br>
+In the same way as arrows grabed by the stem to move inside a plane,
+you can also push two arrows <img src="xz_only.jpg"> in one time
+to move a little box in one plane. 
+<br>
+<h1>How to build a fish (not easy)</h1>
+<br>
+You don't have to obey the following description exactly, but should 
+(at least at the first reading) stick to the clue.<br>
+<br>
+A fish will be constructed from a several parts: a torso with a mouth,
+several fins and two eyes.
+<br>
+<h2>Torso</h2>
+The torso consists of a mathematical cone.<br>
+You have to use <em><b>New -&gt; Cone</b></em>
+<br>
+<img src="fish1.png"/>
+<br>
+If "Cone" is selected, you can change the height and the width of the cone
+with the move of the small white boxes (click to the small boxes, keep the mouse 
+button pressed and move the mouse).<br>
+<br>
+<img src="fish1a.png"/>
+<br>
+Later the low circle of the cone will be folded and forms the mouth.
+A lot of fishs have a small mouth, therefor the width of the cone should
+be rather small. The decision if it will be a thin fish or a fat fish will
+be done later.<br>
+In order to fold the lower circle of the cone, the cone must be deformable.
+Therefore the next command (after <b>"cone" was selected</b> in the left
+window)
+<br><em><b>Change -&gt; Make deformable (NURBS)</b></em>
+<br>
+<img src="fish1b.png"/>
+<br>
+In the next window you can simply click "OK".
+<br>
+<img src="fish2.png"/>
+<br>
+Despite the body itself did not change, the little boxes have been changed.
+If you move a small box, the body can be changed more exactly (if you 
+moved now at a white box (<b>only if you moved</b>) you should use
+<em>Edit -&gt; Undo</em>, the box moves back).
+<br>
+The white_dune program prefers certian directions.
+For examble you can steer a object with the joystick, if the object is in the 
+right direction.
+There is also a matching 
+<em>Movement -&gt; Stand up</em> command.<br>
+Unfortunatly, the torso of the fish is not in the right direction, therefore
+<b>"NurbsSurface" has to be selected in the left window</b>. You can use then
+<br><em><b>Change -&gt; Swap -&gt; y (green) and z(blue)</b></em>.
+<br>
+<img src="fish3.png"/>
+<br>
+You should now save the intermediate result into a file.
+If you exit the program (or switch the power off) anything is lost, if you
+did not saved into a file. To save you must use <br><em>File -&gt; Save</em>.
+<br> 
+A window you can type in something near the lower edge is opened.
+Best you type in the word "fish", then a underscore (this character: _),
+then the first name, then a underscore (this character: _), then the last name
+then a underscore (this character: _), then the age.
+<br>
+<image src="fish_save.png">
+<br>
+If your name is "Max Mustermann" and you are 11 years old: 
+fish_Max_Mustermann_11<br>
+With this you know at the construction of a film, that the file contains
+a 3D model of a fish and you have to write "Max Mustermann, 11 Jahre" 
+together with image of the fish into the credits.
+<br>
+<br>
+Tou need to use (especially at the end !) <em>File -&gt; Save</em>
+often later, otherwise the work is lost.
+<br>
+<br>
+Now the "Examine" icon <img src="examine.png"> should be pressed.
+Additionly the icon <img src="symetric_pressed.png"> for
+"X mirrored Modelling" should be pressed (you can change it with 
+ggf. mit <em>Change -&gt; X mirrored Modelling</em>).
+<br>
+<br>
+Click to the torso of the fish. White boxes will appear.
+Now you turn your object in a way that you can select with the middle mouse
+button (often: the mouse wheel) the small white boxes. The boxes change
+their color into green.
+The right boxes are the upper (in direction of the green arrow) small boxes
+at the circle of the mouth of the fish and the small box beside it.
+<br>
+<img src="fish4_en.png"/>
+<br>
+Now you need a calm hand to hit one of the little green boxes (press the 
+right mouse button) and move the mouse. Now both green small boxes move
+together with the x (red arrow) mirrored boxes. The upper part of the 
+jaw of the fish is created.
+<br>
+<img src="fish5.png"/>
+<br>
+The lower part of the jaw is created the same way.
+First you click into the void, to end the selection of the green boxes.
+Then you select the lower small box (inverse direction of the green arrow)
+at the fish mouth circle and the small box beside it.
+<br>
+<img src="fish6.png"/>
+<br>
+With the pull of the outer small box the lower part of the jaw created.
+<br>
+<img src="fish7.png"/>
+<br>
+Now you can set the width of the fish. The way is similar to the
+upper and lower part of the jaw, you only need to select the small
+boxes in the mid of the fish.
+<br>
+<img src="fish8_en.png"/>
+<br>
+<br>
+<img src="fish9.png"/>
+<br>
+The lower part of the fish is modified in the same way.
+<br>
+<img src="fish10_en.png"/>
+<br>
+<br>
+<img src="fish11.png"/>
+<br>
+<br>
+You can also pull at other little boxes (best multiple small boxes at same time)
+and look. if the fish gets more beautiful (in worst case you can revert the 
+changes with <em>Edit -&gt; Undo</em>).
+You can also use the scale icon <img src="scale.jpg"> to build a flat fish
+(after this you have to switch back to the move icon <img src="schieb.png">).
+<br>
+<h2>Fins</h2>
+<br>
+Next object is the tail fin. In order you want to move the whole fish 
+(not move torso and fins by itself) you have to select the "Transform"
+command of the torso in the left window before the next step.
+<br>
+<img src="fish12.png"/>
+<br>
+Now you can use <em><b>New -> Plain -> y (green) and z (blue))</b></em>. 
+Then a window opens. The size of the plane is asked, you can simply click
+<em>OK</em>.
+<br>
+<img src="fish13.png"/>
+<br>
+Next you have to move the fin with the blue arraw top at the right place.
+<br>
+<img src="fish15.png"/>
+<br>
+The form of the fin is changed with the move of the small white boxes.
+<br>
+<img src="fish16.png"/>
+<br>
+For the back fin and the ventral fin a little trick is used: 
+they are created from a copy of the back fin. 
+To do so, you have to select the "Transform" command of the
+tail fin,
+<br>
+<img src="fish17.png"/>
+<br>
+then use <br><em><b>Edit -&gt; copy</b></em><br> immediately followed
+by <br><em><b>Edit -&gt; Paste symetric -&gt; x (red)</b></em>.
+<br>
+<img src="fish18.png"/>
+<br>
+In the first moment, it looks like nothing changed, but the tail
+fin exists twice. Cause the second copy is in place of the first,
+you see it only in the left window. Now the second copy needs to be
+moved into the mid of the fish (with the blue arrow top).
+<br>
+<img src="fish19_en.png"/>
+<br>
+After this, the form of the fin can be changed with the small white
+boxes.
+<br>
+<img src="fish21.png"/>
+<br>
+<h2>Augen</h2>
+<br>
+Next is the construction of the eyes.<br>
+First, the left window is cleaned. You clicked to the + icons of the 
+Transforms of the fins.
+<br>
+<img src="fish22.png"/>
+<br>
+You have to select the "Transform" command of the torso (to most upper
+Transform in the left window).
+<br>
+<img src="fish23.png"/>
+<br>
+With <br><em><b>New &gt; Sphere</b></em><br> the outer part of the eye
+is created.
+<br>
+<img src="fish24.png"/>
+<br>
+But this part is too big. With the little small white boxes you make it
+smaller and with the arrows you move it to the right place. 
+<br>
+<img src="fish25.png"/>
+<br>
+Now it time to construct the eyeball. First you have to select the 
+Transform of the outer part of the eye.
+<br>
+<img src="fish26.png"/>
+<br>
+<em><b>New &gt; Sphere</b></em><br> is used again.
+<br>
+<img src="fish27.png"/>
+<br>
+Again, the eyeball is too big. Again it can be scaled with the small white
+boxes and can be moved with the arrows (there is no problem if the eyeball 
+disappear into the eye. Simply select the right "Sphere" in the left
+window and the small white boxes and the arrows appear again, dispite the
+eyeball is still not visible). 
+<br>
+<img src="fish28.png"/>
+<br>
+Next we use color. In the left window, a "Material" icon has to be selected
+(in case you don't see a "Material" icon, it is hidden in a "Appearance"
+icon: you have to click to the + icon of "Appearance").<br>
+Now <br><em><b>Change -&gt; Color (need Material or Color) -&gt; Normal
+</b></em><br> is used. A right window opens. With it you can select a color
+and light/dark.
+<br>
+<img src="fish29.png"/>
+<br>
+After "OK" has been clicked, you should use
+<br><em><b>Change -&gt; Color (need Material or Color) -&gt; Gloss</b></em>.
+<br>
+In order to have a good gloss color, you should select a bright color.
+<br>
+<img src="fish31.png"/>
+<br>
+If you like it, you can change the form of the eyes and the eyeball 
+with <em>Change -&gt; Make deformable (NURBS)</em>.<br>
+When the eye is ready, you should copy it mirrored.<br>
+You need to select the outer part of the eye.
+<br>
+<img src="fish32.png"/>
+<br>
+You need to use <br><em><b>Edit -&gt; Copy</b></em><br> and use immediately
+<br><em><b>Edit -&gt; Paste symetrc -&gt; x (red)</b></em><br>.
+A second eye at the other side have been created.
+<br>
+<img src="fish33.png"/>
+<br>
+<h2>A deeper mouth</h2>
+<br>
+A little problem was forgotten and needs to be repaired:<br>
+The mouth of the fish looks not natural, if you look inside the mouth.<br>
+You have to push back the point in the middle of the mouth.
+<br>
+<img src="fish33a.png"/>
+<br>
+You can do this after the eyes have been created. Outerwise the spheres of
+the eyes become visible if the fish opens his mouth.
+<br>
+<img src="fish33b.png"/>
+<br>
+<h2>Don't paint it normal gray</h2>
+<br>
+In principle, the fish is ready.<br>
+Next you can change the color of the torso and the fins. 
+This is done like the coloring of the eyes, you have to select the 
+"Material" of the torso in the left window and then use
+<em><b> Change -&gt; Color (need Material or Color) -&gt; Normal / Glow / Gloss</b></em>.
+If you select "Glow" a sort of fluorescent paint is used, you should 
+use a dark color, otherwise the fish is so light/white, that the rotundities
+are not visible.
+<br>
+<img src="fish34.png"/>
+<br>
+<h2>Animation</h2>
+<br>
+First, the wiggle of the fish is done (if you would make the movement of the
+whole fish first, the fish would swim away from the mouse).
+<br>
+The wiggle movement comes from the torso, therefore the torso needs to
+be selected. It is sufficient, to click to the torso.<br>
+It is wise to turn the world in a way, that the torso is seen from above.
+<br>
+<img src="fish35.png"/>
+<br>
+Now use
+<br><em><b>Animation -&gt; Animate (select object e.g. Transform)</b></em><br>
+<br>A dialog window opens:
+<br>
+<img src="fish36.png"/>
+<br>
+This window asks the duration of the animation, before it repeats.
+The default value is 5 seconds, what is far to much for the wiggle.
+Useful is a value of 1 second of a half second (a half is written
+as 0.5).<br>
+Beside this, the window asks what is animated (the points the torso was
+made of), but this already selected, so you only have to click "OK".
+<br>
+<img src="fish37.png"/>
+<br>
+Now the animation window appears. It shows, what is done at what time.<br>
+In the animation window points must be set in the middle and at the end 
+(click to the line), three points must be seen.<br> So the points of the 
+torso are on the same position as the beginning at the half of the time 
+and at the end of the animation.<br>
+Beside that, in the skirting under the animation window, the "record" icon
+needs to be pressed, now the changes of the animated object will be recorded
+as a part of the animation.<br>
+<br>
+<img src="fish38.png"/>
+<br>
+Till here, all changes of the side have been applied to both side.
+This is not working for a wiggle. Therefore 
+<em>Change -> x mirrored modelling</em> has to be clocked, till the small box
+before <em>x mirrored modelling</em> is not shown anymore.<br>
+In stead of 
+<br>
+<img src="not_xsymetric_en.png"/>
+<br>
+it should look like this:
+<br>
+<img src="xsymetric_en.png"/>
+<br>
+A stingray, a plaice, a dolphin or a whale do not make a wiggle to the side
+they make a wiggle up and down. Therefore the small box should be pressed
+if you want to make a stingray, whale etc.<br>
+<br>
+<img src="fish39.png"/>
+<br>
+Next, the animation window has to be clicked between the left side and the
+mid. A black line blinks the in the first quarter (from left) of the
+animation window. The changes are recorded at the position of the black line.
+<br>
+Now you have to catch all points of a ring in the rear part of the fish.<br>
+This is done with the right mouse button. You have to position the mouse
+left/below the first point you want to select, press the right mouse button
+and hold down the button while you move it right/above the last point.
+If you release the mouse button, all points between the imaginary square
+of press and release are selected and become green.<br>
+Then you can move all points if you pull one green point with the left
+mouse button.<br>
+The animation window changes.
+<br>
+<img src="fish40.png"/>
+<br>
+After the the reversal of the movement at a later moment must be done.<br>
+First the blinking black line needs to be set at the next time.
+To do this, you have click into the animation window between the mid
+and the right side. The fish becomes straight-lined (this is a result of
+the point in the mid of the animation window).
+After this you (select) and move the already used points of the rings to
+the other side.
+<br>
+<img src="fish41.png"/>
+<br>
+The first wiggle animation is ready. You can play the animation, if you
+click the blue square in the strip with the record icon (to end the record)
+and the click the blue triangle (to play the animation).
+After you have seen the animation you need to press the blue square to
+end the animation.
+<br>
+Unfortunatly the rigid fins do not match the wiggle movement. You have to 
+animate them too. This is nearly done in the same way as the first animation.
+You click to the fin and use<br>
+<em><b>Animation -&gt; Animate (select object e.g. Transform)</b></em>
+<br>
+<img src="fish41a.png"/>
+<br>
+Now a dialog window opens, that asks for the amount of seconds.
+At this point, there is a single difference as yet. Instead of 1 second
+you select in the top selection "TimeSensor1" instead of "new TimeSensor". 
+With this, the old movement and the new movement is dupped and run
+at the same time.<br>
+<br>
+<img src="fish41b.png"/>
+<br>
+After this anything works as the old animation. You click the 3 points in
+the animation window 
+<br>
+<img src="fish38.png"/>
+<br>
+and so on, and so on...
+<h2>Vorw&auml;rts</h2>
+After you end the wiggle, the can swim forward.
+First you have to set the turn point into the right place, otherwise the 
+fish moves though the curve in a unnatural way.<br>
+To do so, the upper Transform in the left window is selected and
+click to the icon <img src="center.jpg"> for change center.
+<br>
+<img src="fish42.png"/>
+<br>
+Then you move the center at the right place with the mouse on the top of the 
+light blue arrow.
+<br>
+<img src="fish43.png"/>
+<br>
+There are two methods, to create a animation:
+<ul>
+<li>with the mouse, a curve will be animated</li>
+<li>with a joystick, the curve will be remote-controlled</li>
+</ul>
+Cause a lot of people do not have a joystick (or a gamepad with sicks) first
+the method with the mouse.
+This method is more simple to learn and the remote-control with the joystick
+requires experience (when the object moves into direction of you, you have to 
+steer to the left to make a curve to the right).
+Diese Methode ist einfacher zu lernen, denn das
+The first Transform must be selected.
+<br>
+<img src="fish44a.png"/>
+<br>
+You need to use <em>Animation -> Create Curve Animation (need Tranform)</em>
+<br>
+<img src="fish45a.png"/>
+<br>
+A window occures, with it you can change the lengh of the animation in
+seconds, the number of points in the curve and the default direction
+of the curve. It is sufficient to click to <em>OK</em>.
+<br>
+<img src="fish46a.png"/>
+<br>
+When you press the blue triangle below the windows (that means "Play animation)
+you notice, that the fish is moving backward.
+You have to mirror the fish in the blue direction
+<br>
+<img src="fish47a.png"/>
+<br>
+You have to select the Transform of the fish.
+<br>
+<img src="fish48a.png"/>
+<br>
+With <em> Change -> Flip -> z (blue)</em> the directions are corrected.
+<br>
+<img src="fish49a.png"/>
+<br>
+Now you can change the points of the curve. In order to build a plane curve
+you should click to <em>Movement -> x only (red)</em> und
+<em>Movement -> z only (blue)</em> benutzen. 
+In this case, the boxes in the first strip show that the red and the blue 
+arrow is pushed.
+<br>
+<img src="fish50a.png"/>
+<br>
+Here 3 snapshots show, that the fish follows the curve.
+<br>
+<img src="fish51a.png"/>
+<br>
+In order to create a robust VRML97 animation, the CurveAnimation node
+should be selected and use <em>Change -> Change to -> to Standard Interpolators
+</em>, to let te file displayed in any VRML97 browser. A solution exist in
+almost all VRML97 browsers, but not in freewrl.
+<br>
+For the second method, you use a joystick (or a gamepad with 2 thumbsticks).
+It has to be installed with <em>Options -&gt InputDevice Settings</em> in 
+the full version of white_dune. In this case there are a few more non gray
+icons in the upper strip. The best configuration for the movement with
+the joystick is the icon that meas "hover" and looks a bit like a hovercraft. 
+<br>
+<img src="fish44.png"/>
+<br>
+Now you click to the upper Transform in the left window and use
+<br>
+<em><b>Animation -&gt; Animate (select object e.g. Transform)</b></em>
+<br>
+<img src="fish45.png"/>
+<br>
+In the following dialog window, "translation" and "rotation" are already
+selected, so you only have to click "OK".<br>
+Now you only need to push the icons in the lower strip for "record"
+(red circle) and "play animation". You can record the movement of the
+fish, which is remoely controlled by the joystick.<br>
+You should fill only one animation window with animation data and not
+overwrite old animation data, cause on slow machines you can get easily into
+jerking.
+<br>
+<img src="fish46.png"/>
+<br>
+When something got wrong (happens often) you can select a range in the
+animation window (with press and hold down the left mouse button and
+move the mouse in direction of the width of the window) to use
+<b>at once</b> <em>Edit -&gt; Delete</em> to erase the range of the
+animation. If you do not use at once <em>Edit -&gt; Delete</em> but click 
+to anything diffent, something may be lost (try <em>Edit -&gt; Undo</em>
+in case).
+<br>
+Done !
+

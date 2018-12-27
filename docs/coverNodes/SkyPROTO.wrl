@@ -1,0 +1,39 @@
+#VRML V2.0 utf8
+
+PROTO Sky [
+# a better than nothing emulation of the Cover/Covise COVER node
+# 
+# Copyright (C) 2006 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#   
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+  eventIn SFTime set_time
+  exposedField SFBool enabled TRUE
+  exposedField SFBool timeLapse FALSE
+  exposedField SFBool currentTime TRUE
+  exposedField SFInt32 year 2006
+  exposedField SFInt32 month 4
+  exposedField SFInt32 day 7
+  exposedField SFInt32 hour 13
+  exposedField SFInt32 minute 12
+  exposedField SFFloat radius 800
+  exposedField SFFloat latitude 48.6
+  exposedField SFFloat longitude 9.0008
+  exposedField SFFloat altitude 400.0
+  ]
+{
+  Group {}
+}

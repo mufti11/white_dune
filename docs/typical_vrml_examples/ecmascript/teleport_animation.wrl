@@ -1,0 +1,209 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+Group 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 1 1
+	  emissiveColor 1 0 0
+	  shininess 7.812500e-2
+	  specularColor 0.500000 0.500000 0.500000
+	  }
+	}
+      geometry       IndexedLineSet 
+	{
+	coord 	Coordinate 
+	  {
+	  point 
+	    [
+	    -2 -2 -2 
+	    -2 2 -2 
+	    2 2 -2 
+	    2 -2 -2 
+	    -2 -2 2 
+	    -2 2 2 
+	    2 2 2 
+	    2 -2 2 
+	    ]
+	  }
+	coordIndex 
+	  [
+	  0 1 2 3 0 -1 
+	  6 7 3 2 6 -1 
+	  7 6 5 4 7 -1 
+	  4 5 1 0 4 -1 
+	  1 5 6 2 1 -1 
+	  4 0 3 7 4 -1 
+	  ]
+	}
+      }
+    DEF ProximitySensor1 ProximitySensor 
+      {
+      size 4 4 4
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "Proximity"
+	      ]
+	    }
+	  }
+	]
+      translation -1.961966 -3.549376 0
+      }
+    ]
+  }
+
+DEF Viewpoint2 Viewpoint 
+  {
+  description "start viewpoint"
+  }
+
+DEF Viewpoint1 Viewpoint 
+  {
+  orientation 0 1 0 0
+  description "animated viewpoint"
+  }
+
+ROUTE ProximitySensor1.isActive TO Viewpoint1.set_bind
+
+DEF Script1 Script 
+  {
+  eventIn SFBool bool1_in
+  eventOut SFBool bool1_out
+  url 
+    [
+    "javascript:
+
+// insert program code only into functions
+
+ // eventOut SFBool bool1_out //
+   // allowed values:
+      // true false
+   // example usage:
+      // bool1_out = true;
+
+ function bool1_in(value)
+    {
+    // value  SFBool
+      // allowed values:
+         // true false
+      // example usage:
+         // if (value)
+         //    {
+         //    }
+
+    bool1_out = !value;
+    }
+
+ function initialize()
+    {
+    
+    }
+
+"
+    ]
+  }
+
+ROUTE ProximitySensor1.isActive TO Script1.bool1_in
+ROUTE Script1.bool1_out TO Viewpoint2.set_bind
+
+DEF TimeSensor1 TimeSensor 
+  {
+  cycleInterval 3
+  }
+
+ROUTE ProximitySensor1.enterTime TO TimeSensor1.set_startTime
+
+DEF OrientationInterpolator1 OrientationInterpolator 
+  {
+  }
+
+ROUTE TimeSensor1.fraction_changed TO OrientationInterpolator1.set_fraction
+ROUTE OrientationInterpolator1.value_changed TO Viewpoint1.set_orientation
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    0 
+    0.924016 
+    ]
+  keyValue 
+    [
+    0 0 10 
+    0 0 5.279500 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Viewpoint1.set_position
+
+DEF Script2 Script 
+  {
+  eventIn SFFloat float1_in
+  eventOut SFBool bool1_out
+  url 
+    [
+    "javascript:
+
+// insert program code only into functions
+
+ // eventOut SFBool bool1_out //
+   // allowed values:
+      // true false
+   // example usage:
+      // bool1_out = true;
+
+ function float1_in(value)
+    {
+    // value  SFFloat
+      // allowed values:
+         // single-precision floating point number
+      // related Math Object constants:
+         // Math.PI Math.SQRT1_2 Math.SQRT_2 Math.E
+         // Math.LN2 Math.LN10 Math.LOG2E Math.LOG10E
+      // example usage:
+         // float_number = value;
+         // float_number = Math.abs(value);
+
+    bool1_out = true;
+    }
+
+ function initialize()
+    {
+    
+    }
+
+"
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO Script2.float1_in
+ROUTE Script2.bool1_out TO Viewpoint1.set_bind
+

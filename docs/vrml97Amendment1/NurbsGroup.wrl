@@ -1,0 +1,29 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO NurbsGroup[
+#
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+#
+# urn collection 
+# Copyright (C) 2003 Braden McDaniel, Paul Aslin
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+   eventIn       MFNode   addChildren
+   eventIn       MFNode   removeChildren
+   exposedField  MFNode   children      
+   exposedField  SFFloat  tessellationScale  
+   field         SFVec3f  bboxCenter         
+   field         SFVec3f  bboxSize           
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsGroup",
+ "urn:inet:blaxxun.com:node:NurbsGroup",
+ "urn:ParaGraph:NurbsGroup",
+ "NurbsGroupPROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml200x_nurbssurface/NurbsSurfacePROTO.wrl",
+]
+

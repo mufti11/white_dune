@@ -1,0 +1,75 @@
+#VRML V2.0 utf8
+
+PROTO COVER [
+# a better than nothing emulation of the Cover/Covise COVER node
+# simply using a Proximity Sensor
+# 
+# Copyright (C) 2005 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#   
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# According to a short interview of Uwe Woessner, the meaning of the 
+# fields/events are:
+#
+# The localKeyPressed/localKeyReleased can be used to read letters from
+# the keyboard, if you have a keyboard and if you don't want to press the
+# letter 'q' which quits cover 8-(
+#
+# The fields localPosition and localOrientation act like a ProximitySensor,
+# but unlike a ProximitySensor it deliver the data of the tracking system,
+# not the data of the virtual camera: turning the head in a CAVE do not 
+# change the Proximitity data but change the localPosition/localOrientation
+# data 
+#   
+# The fields position1 - position8 and orientation1 - orientation8 are 
+# related to some covise plugins they are "not important"
+#
+# The meaning of the other fields are not known yet
+#
+ exposedField SFVec3f position1 0 0 0
+ exposedField SFVec3f position2 0 0 0
+ exposedField SFVec3f position3 0 0 0
+ exposedField SFVec3f position4 0 0 0
+ exposedField SFVec3f position5 0 0 0
+ exposedField SFVec3f position6 0 0 0
+ exposedField SFVec3f position7 0 0 0
+ exposedField SFVec3f position8 0 0 0
+ exposedField SFRotation orientation1 0 0 1 0
+ exposedField SFRotation orientation2 0 0 1 0
+ exposedField SFRotation orientation3 0 0 1 0
+ exposedField SFRotation orientation4 0 0 1 0
+ exposedField SFRotation orientation5 0 0 1 0
+ exposedField SFRotation orientation6 0 0 1 0
+ exposedField SFRotation orientation7 0 0 1 0
+ exposedField SFRotation orientation8 0 0 1 0
+ exposedField SFInt32 soundEnvironment 26
+ eventOut SFString localKeyPressed
+ eventOut SFString localKeyReleased
+ eventOut SFString keyPressed
+ eventOut SFString keyReleased
+ eventOut SFVec3f avatar1Position
+ eventOut SFRotation avatar1Orientation
+ eventOut SFVec3f localPosition
+ eventOut SFRotation localOrientation
+ ]
+{
+ProximitySensor 
+  {
+  position_changed IS localPosition
+  orientation_changed IS localOrientation
+  size 1e38 1e38 1e38
+  }
+}

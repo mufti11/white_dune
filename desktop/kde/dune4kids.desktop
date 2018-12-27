@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=Graphics;3DGraphics
+Encoding=UTF-8
+Name=White Dune 4 kids
+GenericName=White Dune 4 kids
+Comment=simple VRML97 modeller for kids
+Icon=dune4kids.png
+MimeType=model/vrml
+#FilePattern=*.wrl
+#Patterns=*.wrl;*.wrz;
+Exec=dune -4kids -fn 9x15bold -x3dv %F
+

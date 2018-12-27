@@ -1,0 +1,331 @@
+#VRML V2.0 utf8
+
+PROTO NurbsCurve
+#
+# use with SGI cosmoplayer Cosmo Player 2.1.5 (browserdependend ?)
+#
+# Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
+# Copyright (C) 1999 Stephen F. White
+#
+# PROTO interface and javascript port
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+   [
+   exposedField MFVec3f controlPoint    []     # (&infin;,&infin;)
+
+   exposedField SFInt32 tessellation   0      # (-&infin;,&infin;)
+   exposedField MFFloat weight          []     # (0,&infin;)
+
+   field        MFFloat knot           []     # (-&infin;,&infin;)
+   field        SFInt32 order          3      # [2,&infin;) 
+   ]
+{
+
+DEF NURBS_INDEXED_LINE_SET IndexedLineSet
+  {
+  coord Coordinate { point [] }
+  coordIndex []
+  } 
+
+# nodes switched off, not rendered cause not part of the scenegraph anyway ....
+Switch 
+  {
+  choice 
+    [
+    Shape 
+      {
+      geometry PointSet 
+	{
+        coord DEF NURBS_CONTROLPOINT_CONTAINER 
+              Coordinate { point IS controlPoint } 
+	}
+      }
+    DEF NURBS_TESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS tessellation
+      }
+    DEF NURBS_WEIGHT_CONTAINER ScalarInterpolator
+      {
+      # same number of key and keyvalue....
+      key IS weight
+      keyValue IS weight
+      }
+    ]
+  }
+
+DEF NURBS_SCRIPT Script 
+  {
+  directOutput TRUE  
+  field SFNode lineset USE NURBS_INDEXED_LINE_SET
+
+  field SFNode controlPoint_container USE NURBS_CONTROLPOINT_CONTAINER
+  eventIn MFVec3f controlPoint_in
+  eventOut MFVec3f controlPoint_out 
+  field MFVec3f controlPoint [] 
+
+  field SFNode tessellation_container USE NURBS_TESSELLATION_CONTAINER
+  eventIn SFInt32 tessellation_in 
+  eventOut SFInt32 tessellation_out 
+  field SFInt32 Tessellation 0
+
+  field SFNode weight_container USE NURBS_WEIGHT_CONTAINER
+  eventIn MFFloat weight_in
+  eventOut MFFloat weight_out
+  field MFFloat weight []
+
+  field MFFloat knot IS knot
+  field SFInt32 order IS order
+
+  field MFFloat weights []
+  field MFVec3f tess []
+  field MFFloat w []
+  field MFVec2f tc []
+  field MFInt32 ci []
+
+  field MFFloat basis []
+  field MFFloat deriv []
+
+  field SFVec3f s 0 0 0
+  field SFVec3f u 0 0 0
+
+  field SFVec3f n 0 0 0
+
+  field MFFloat left []
+  field MFFloat right []
+
+  field SFInt32 dimension 0
+  url 
+    [
+    "javascript:
+
+    function findSpan(dimension, order, u, knots)
+       {
+       var low;
+       var mid;
+       var high;
+       var n;
+
+       n = dimension + order - 1;
+
+       if (u >= knots[n]) {
+	  return n - order;
+       }
+       low = order - 1;	high = n - order + 1;
+
+       mid = Math.floor((low + high) / 2);
+
+       while (u < knots[mid] || u >= knots[mid+1]) {
+	   if (u < knots[mid]) {
+	      high = mid;
+	   } else {
+	      low = mid;
+	   }
+	   mid = Math.floor((low + high) / 2);
+       }
+       return Math.floor(mid);
+    }
+
+    function basisFuns(span, u, order, knots, basis, deriv)
+       {
+       var j;
+       var saved;
+       var dsaved;
+       var r;
+       var temp;
+
+       basis[0] = 1.0;
+       for (j = 1; j < order; j++) {
+	   left[j] = u - knots[span+1-j];
+	   right[j] = knots[span+j]-u;
+	   saved = 0.0;
+           dsaved = 0.0;
+	   for (r = 0; r < j; r++) {
+	       temp = basis[r] / (right[r+1] + left[j-r]);
+	       basis[r] = saved + right[r+1] * temp;
+	       deriv[r] = dsaved - j * temp;
+	       saved = left[j-r] * temp;
+	       dsaved = j * temp;
+	   }
+	   basis[j] = saved;
+	   deriv[j] = dsaved;
+       }
+    }
+
+
+    function linePoint(weight,u,ind)
+       {
+       var i;
+       var j;
+
+       var span;
+
+       var base;
+
+       var index;
+
+       var w;
+       var dw;
+
+       var gain;
+       var dgain;
+
+       span = findSpan(dimension, order, u, knot);
+
+       basisFuns(span, u, order, knot, basis, deriv);
+
+       base = span-order+1;
+
+       index = base;
+
+       s=new SFVec3f(0.0, 0.0, 0.0);
+       du=new SFVec3f(0.0, 0.0, 0.0);
+       dv=new SFVec3f(0.0, 0.0, 0.0);
+       w = 0.0;
+       dw = 0.0;
+       for (i = 0; i < order; i++) {
+	       gain = basis[i];
+	       dgain = deriv[i];
+	       s.x += controlPoint[index].x * gain;
+	       s.y += controlPoint[index].y * gain;
+	       s.z += controlPoint[index].z * gain;
+	       w += weight[index] * gain;
+	       du.x += controlPoint[index].x * dgain;
+	       du.y += controlPoint[index].y * dgain;
+	       du.z += controlPoint[index].z * dgain;
+	       dw += weight[index] * dgain;
+	       index++;
+       }
+       s.x = s.x / w;
+       s.y = s.y / w;
+       s.z = s.z / w;
+       n.x = (du.x - s.x * dw) / w;
+       n.y = (du.y - s.y * dw) / w;
+       n.z = (du.z - s.z * dw) / w;
+       return s;
+       }
+
+    function makeLine()
+       {
+       var size;
+       var i;
+       var j;
+       var index;
+       var u;
+       var inv;
+       var inc;
+       var uTess;        
+
+       index=0;
+
+       weights = new MFFloat();
+   
+       dimension = controlPoint.length;
+
+       if (dimension == 0) return;
+
+       if (knot.length != order + dimension) {
+           print('no NurbsCurve: knot.length!=order+dimension');
+           return;
+       }
+   
+       if (weight.length == 0) {
+   	   weights = new MFFloat();
+   	   for (i = 0; i < dimension; i++) {
+   	        weights[i] = 1.0;
+   	   }
+       } else if (weight.length != dimension) {
+           print('no NurbsCurve: weight.length!=dimension');
+   	   return;
+       }
+   
+       uTess=tessellation;
+
+// from the orignal white_dune sources
+//       if (uTess <= 0) uTess = 32;
+
+// changed to increase performance
+       if (uTess <= 0) uTess = 16;
+
+       tess = new MFVec3f();
+
+       size = (uTess + 1);
+   
+       inc = (knot[knot.length-1] - knot[0]) / uTess;
+   
+       index = 0;
+       w = (weight.length == 0) ? weights : weight;
+       for (i = 0, u = knot[0]; i <= uTess; i++, u += inc) {
+   	   tess[index] = linePoint(w,u,index);
+   	   index++;
+       }
+   
+       index = 0;
+       ci = new MFInt32();
+       index = 0;
+       for (i = 0; i < uTess; i++) {
+ 	   ci[index++] =  i;
+   	   ci[index++] =  i+1;
+           ci[index++] = -1;
+
+       }
+
+       lineset.coord.set_point=tess;
+       lineset.set_coordIndex=ci;
+    }
+
+    function initialize()
+       {
+       controlPoint=controlPoint_container.point;
+       weight=weight_container.key;
+       tessellation=tessellation_container.whichChoice;
+       makeLine();
+       }
+
+    function controlPoint_in(value, time)
+       {
+       controlPoint=value;
+       controlPoint_out=value;
+       makeLine();
+       }    
+
+    function weight_in(value, time)
+       {
+       weight=value;
+       weight_out=value;
+       makeLine();
+       }
+    
+    function tessellation_in(value, time)
+       {
+       tessellation=value;
+       tessellation_out=value;
+       makeLine();
+       }
+    "
+   ]
+   }
+
+   ROUTE NURBS_CONTROLPOINT_CONTAINER.point TO NURBS_SCRIPT.controlPoint_in
+   ROUTE NURBS_WEIGHT_CONTAINER.keyValue TO NURBS_SCRIPT.weight_in
+   ROUTE NURBS_TESSELLATION_CONTAINER.whichChoice TO NURBS_SCRIPT.tessellation_in
+
+   ROUTE NURBS_SCRIPT.controlPoint_out TO NURBS_CONTROLPOINT_CONTAINER.point
+   ROUTE NURBS_SCRIPT.weight_out TO NURBS_WEIGHT_CONTAINER.keyValue
+   ROUTE NURBS_SCRIPT.tessellation_out TO NURBS_TESSELLATION_CONTAINER.whichChoice
+}
+

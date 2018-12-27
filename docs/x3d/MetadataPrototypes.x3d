@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <meta content='MetadataPrototypes.x3d' name='title'/>
+    <meta content='New X3D Metadata nodes in Core component (MetadataDouble MetadataFloat MetadataInteger MetadataSet MetadataString) implemented as prototypes for backwards compatibility with VRML 97.' name='description'/>
+    <meta content='Don Brutzman' name='creator'/>
+    <meta content='17 November 2003' name='created'/>
+    <meta content='5 July 2014' name='modified'/>
+    <meta content='MetadataExamples.x3d' name='reference'/>
+    <meta content='Metadata nodes, X3D Core component (MetadataBoolean MetadataDouble MetadataFloat MetadataInteger MetadataSet MetadataString)' name='subject'/>
+    <meta content='http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html#Metadata' name='reference'/>
+    <meta content='http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html#X3DMetadataObject' name='reference'/>
+    <meta content='http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html#Nodereference' name='reference'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Basic/development/MetadataPrototypes.x3d' name='identifier'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../license.html' name='license'/>
+  </head>
+  <Scene>
+    <!-- ==================== -->
+    <ProtoDeclare appinfo='MetadataBoolean contains a list of booleans in the value field.' name='MetadataString'>
+      <ProtoInterface>
+        <field accessType='inputOutput' name='name' type='SFString'/>
+        <field accessType='inputOutput' name='value' type='MFBool'/>
+        <field accessType='inputOutput' name='reference' type='SFString'/>
+        <field accessType='inputOutput' appinfo='Metadata node only' name='metadata' type='SFNode'>
+          <!-- initialization node (if any) goes here -->
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <WorldInfo info='"WorldInfo as first node in the ProtoBody precludes any possible rendering of further nodes in this prototype"'/>
+        <Group>
+          <IS>
+            <connect nodeField='metadata' protoField='metadata'/>
+          </IS>
+          <!-- name holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='name'/>
+            </IS>
+          </Viewpoint>
+          <!-- value holder; IS/connect possibilities are limited since no MFBool fields exist in other VRML/X3D nodes -->
+          <!-- Alternative: no metadata holder, since there is no exposedField SFNode in VRML 97. metadata SFNode simply sits in the ProtoInterface. Run-time instantiation support may vary. -->
+          <Script url='"ignoreWarning.js" "http://www.web3d.org/x3d/content/examples/Basic/development/ignoreWarning.js"'>
+            <field accessType='inputOutput' name='booleanArray' type='MFBool'/>
+            <IS>
+              <connect nodeField='booleanArray' protoField='value'/>
+            </IS>
+          </Script>
+          <!-- reference holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='reference'/>
+            </IS>
+          </Viewpoint>
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <!-- ==================== -->
+    <ProtoDeclare appinfo='MetadataDouble contains a list of double-precision floating-point numbers in the value field.' name='MetadataDouble'>
+      <ProtoInterface>
+        <field accessType='inputOutput' name='name' type='SFString'/>
+        <field accessType='inputOutput' name='value' type='MFDouble'/>
+        <field accessType='inputOutput' name='reference' type='SFString'/>
+        <field accessType='inputOutput' appinfo='[X3DMetadataObject]' name='metadata' type='SFNode'>
+          <!-- Specification initialization: NULL node -->
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <WorldInfo info='"WorldInfo as first node in the ProtoBody precludes any possible rendering of further nodes in this prototype"'/>
+        <Group>
+          <IS>
+            <connect nodeField='metadata' protoField='metadata'/>
+          </IS>
+          <!-- name holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='name'/>
+            </IS>
+          </Viewpoint>
+          <!-- value holder: X3D MFDouble maps to VRML 97MFFloat -->
+          <Shape>
+            <Text string='""'>
+              <IS>
+                <connect nodeField='length' protoField='value'/>
+              </IS>
+            </Text>
+            <Appearance DEF='HideWarnings2'>
+              <!-- note that each Prototype has an independent DEF/USE namespace, and thus must avoid re-using identical DEF names within multiple prototype declarations in order to pass all validation requirements. -->
+              <Material/>
+            </Appearance>
+          </Shape>
+          <!-- reference holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='reference'/>
+            </IS>
+          </Viewpoint>
+          <!-- no metadata holder, since there is no exposedField SFNode in VRML 97. metadata SFNode simply sits in the ProtoInterface. Run-time instantiation support may vary. -->
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <!-- ==================== -->
+    <ProtoDeclare appinfo='MetadataFloat contains a list of floating-point numbers in the value field.' name='MetadataFloat'>
+      <ProtoInterface>
+        <field accessType='inputOutput' name='name' type='SFString'/>
+        <field accessType='inputOutput' name='value' type='MFFloat'/>
+        <field accessType='inputOutput' name='reference' type='SFString'/>
+        <field accessType='inputOutput' appinfo='[X3DMetadataObject]' name='metadata' type='SFNode'>
+          <!-- Specification initialization: NULL node -->
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <WorldInfo info='"WorldInfo as first node in the ProtoBody precludes any possible rendering of further nodes in this prototype"'/>
+        <Group>
+          <IS>
+            <connect nodeField='metadata' protoField='metadata'/>
+          </IS>
+          <!-- name holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='name'/>
+            </IS>
+          </Viewpoint>
+          <!-- value holder -->
+          <Shape>
+            <Text string='""'>
+              <IS>
+                <connect nodeField='length' protoField='value'/>
+              </IS>
+            </Text>
+            <Appearance DEF='HideWarnings3'>
+              <!-- note that each Prototype has an independent DEF/USE namespace, and thus must avoid re-using identical DEF names within multiple prototype declarations in order to pass all validation requirements. -->
+              <Material/>
+            </Appearance>
+          </Shape>
+          <!-- reference holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='reference'/>
+            </IS>
+          </Viewpoint>
+          <!-- no metadata holder, since there is no exposedField SFNode in VRML 97. metadata SFNode simply sits in the ProtoInterface. Run-time instantiation support may vary. -->
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <!-- ==================== -->
+    <ProtoDeclare appinfo='MetadataInteger contains a list of 32-bit integer numbers in the value field.' name='MetadataInteger'>
+      <ProtoInterface>
+        <field accessType='inputOutput' name='name' type='SFString'/>
+        <!-- VRML 97 has no native exposedField MFInt32, and so must split value accessors to match available accessTypes. -->
+        <field accessType='initializeOnly' name='value' type='MFInt32'/>
+        <field accessType='inputOnly' name='set_value' type='MFInt32'/>
+        <field accessType='inputOutput' name='reference' type='SFString'/>
+        <field accessType='inputOutput' appinfo='[X3DMetadataObject]' name='metadata' type='SFNode'>
+          <!-- Specification initialization: NULL node -->
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <WorldInfo info='"WorldInfo as first node in the ProtoBody precludes any possible rendering of further nodes in this prototype"'/>
+        <Group>
+          <IS>
+            <connect nodeField='metadata' protoField='metadata'/>
+          </IS>
+          <!-- name holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='name'/>
+            </IS>
+          </Viewpoint>
+          <!-- value holder -->
+          <Shape>
+            <IndexedLineSet>
+              <IS>
+                <connect nodeField='colorIndex' protoField='value'/>
+                <connect nodeField='set_colorIndex' protoField='set_value'/>
+              </IS>
+            </IndexedLineSet>
+            <Appearance DEF='HideWarnings4'>
+              <!-- note that each Prototype has an independent DEF/USE namespace, and thus must avoid re-using identical DEF names within multiple prototype declarations in order to pass all validation requirements. -->
+              <Material emissiveColor='0.8 0.8 0.8'/>
+            </Appearance>
+          </Shape>
+          <!-- reference holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='reference'/>
+            </IS>
+          </Viewpoint>
+          <!-- no metadata holder, since there is no exposedField SFNode in VRML 97. metadata SFNode simply sits in the ProtoInterface. Run-time instantiation support may vary. -->
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <!-- ==================== -->
+    <ProtoDeclare appinfo='MetadataSet contains a list of Metadata nodes in the value field. MetadataSet can contain other MetadataSet nodes.' name='MetadataSet'>
+      <ProtoInterface>
+        <field accessType='inputOutput' name='name' type='SFString'/>
+        <field accessType='inputOutput' name='value' type='MFNode'>
+          <!-- Specification initialization: NULL node -->
+        </field>
+        <field accessType='inputOutput' name='reference' type='SFString'/>
+        <field accessType='inputOutput' appinfo='[X3DMetadataObject]' name='metadata' type='SFNode'>
+          <!-- Specification initialization: NULL node -->
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <WorldInfo info='"WorldInfo as first node in the ProtoBody precludes any possible rendering of further nodes in this prototype"'/>
+        <Group>
+          <IS>
+            <connect nodeField='metadata' protoField='metadata'/>
+          </IS>
+          <!-- name holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='name'/>
+            </IS>
+          </Viewpoint>
+          <!-- value holder -->
+          <Group>
+            <IS>
+              <connect nodeField='children' protoField='value'/>
+            </IS>
+          </Group>
+          <!-- reference holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='reference'/>
+            </IS>
+          </Viewpoint>
+          <!-- no metadata holder, since there is no exposedField SFNode in VRML 97. metadata SFNode simply sits in the ProtoInterface. Run-time instantiation support may vary. -->
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <!-- ==================== -->
+    <ProtoDeclare appinfo='MetadataString contains a list of strings in the value field.' name='MetadataString'>
+      <ProtoInterface>
+        <field accessType='inputOutput' name='name' type='SFString'/>
+        <field accessType='inputOutput' name='value' type='MFString'/>
+        <field accessType='inputOutput' name='reference' type='SFString'/>
+        <field accessType='inputOutput' appinfo='Metadata node only' name='metadata' type='SFNode'>
+          <!-- Specification initialization: NULL node -->
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <WorldInfo info='"WorldInfo as first node in the ProtoBody precludes any possible rendering of further nodes in this prototype"'/>
+        <Group>
+          <IS>
+            <connect nodeField='metadata' protoField='metadata'/>
+          </IS>
+          <!-- name holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='name'/>
+            </IS>
+          </Viewpoint>
+          <!-- value holder -->
+          <Shape>
+            <Text>
+              <IS>
+                <connect nodeField='string' protoField='value'/>
+              </IS>
+            </Text>
+            <Appearance DEF='HideWarnings5'>
+              <!-- note that each Prototype has an independent DEF/USE namespace, and thus must avoid re-using identical DEF names within multiple prototype declarations in order to pass all validation requirements. -->
+              <Material/>
+            </Appearance>
+          </Shape>
+          <!-- reference holder -->
+          <Viewpoint>
+            <IS>
+              <connect nodeField='description' protoField='reference'/>
+            </IS>
+          </Viewpoint>
+          <!-- no metadata holder, since there is no exposedField SFNode in VRML 97. metadata SFNode simply sits in the ProtoInterface. Run-time instantiation support may vary. -->
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <!-- ==================== -->
+    <Background groundColor='0.25 0.25 0.25' skyColor='0.25 0.25 0.25'/>
+    <Anchor DEF='LinkToExamples' description='link to examples' url='"MetadataExamples.x3d" "http://www.web3d.org/x3d/content/examples/Basic/development/MetadataExamples.x3d" "MetadataExamples.wrl" "http://www.web3d.org/x3d/content/examples/Basic/development/MetadataExamples.wrl"'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0.6 0.2'/>
+        </Appearance>
+        <Text string='"MetadataPrototypes" "is a developmental file." "Click this text to view" "MetadataExamples"'>
+          <FontStyle justify='"MIDDLE" "MIDDLE"' size='0.75'/>
+        </Text>
+      </Shape>
+    </Anchor>
+  </Scene>
+</X3D>

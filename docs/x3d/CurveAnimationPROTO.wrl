@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.2//EN" "http://www.web3d.org/specifications/x3d-3.2.dtd">
+<X3D profile='Interchange'>
+<head>
+</head>
+
+<Scene>
+  <ProtoDeclare name='CurveAnimation'>
+    <ProtoInterface>
+      <field name='knot' type='MFFloat' accessType='initializeOnly' value='' />
+      <field name='order' type='SFInt32' accessType='initializeOnly' value='3' />
+      <field name='set_fraction' type='SFFloat' accessType='inputOnly'/>
+      <field name='position_changed' type='SFVec3f' accessType='outputOnly'/>
+      <field name='orientation_changed' type='SFRotation' accessType='outputOnly'/>
+      <field name='controlPoint' type='MFVec3f' accessType='inputOutput' value='' />
+      <field name='tessellation' type='SFInt32' accessType='inputOutput' value='0' />
+      <field name='weight' type='MFFloat' accessType='inputOutput' value='' />
+      <field name='rotationAxis' type='SFVec3f' accessType='inputOutput' value='0 1 0' />
+      <field name='enableRotation' type='SFBool' accessType='inputOutput' value='true' />
+      <field name='hover' type='SFBool' accessType='inputOutput' value='true' />
+    </ProtoInterface>
+    <ProtoBody>
+      <Group >
+        <PositionInterpolator DEF='POSITION_INTERPOLATOR'  >
+          <IS>
+            <connect nodeField='value_changed' protoField='position_changed' />
+          </IS>
+        </PositionInterpolator>
+        <OrientationInterpolator DEF='ORIENTATION_INTERPOLATOR'  >
+          <IS>
+            <connect nodeField='value_changed' protoField='orientation_changed' />
+          </IS>
+        </OrientationInterpolator>
+      </Group>
+      <Switch >
+        <Shape >
+          <IndexedFaceSet >
+            <Coordinate DEF='NURBS_CONTROLPOINT_CONTAINER'  >
+              <IS>
+                <connect nodeField='point' protoField='controlPoint' />
+              </IS>
+            </Coordinate>
+          </IndexedFaceSet>
+        </Shape>
+        <Switch DEF='NURBS_TESSELLATION_CONTAINER'  >
+          <IS>
+            <connect nodeField='whichChoice' protoField='tessellation' />
+          </IS>
+        </Switch>
+        <Text DEF='NURBS_WEIGHT_CONTAINER'  >
+          <IS>
+            <connect nodeField='length' protoField='weight' />
+          </IS>
+        </Text>
+        <Collision DEF='BOOL_CONTAINER'  >
+          <IS>
+            <connect nodeField='enabled' protoField='enableRotation' />
+          </IS>
+        </Collision>
+        <Transform DEF='AXIS_CONTAINER'  >
+          <IS>
+            <connect nodeField='translation' protoField='rotationAxis' />
+          </IS>
+        </Transform>
+      </Switch>
+      <Script DEF='NURBS_SCRIPT'  directOutput='true' >
+        <field name='controlPoint_container' type='SFNode' accessType='initializeOnly'>
+          <Coordinate containerField='controlPoint_container' USE='NURBS_CONTROLPOINT_CONTAINER'/>
+        </field>
+        <field name='controlPoint' type='MFVec3f' accessType='initializeOnly' value='' />
+        <field name='tessellation_container' type='SFNode' accessType='initializeOnly'>
+          <Switch containerField='tessellation_container' USE='NURBS_TESSELLATION_CONTAINER'/>
+        </field>
+        <field name='tessellation' type='SFInt32' accessType='initializeOnly' value='0' />
+        <field name='weight_container' type='SFNode' accessType='initializeOnly'>
+          <Text containerField='weight_container' USE='NURBS_WEIGHT_CONTAINER'/>
+        </field>
+        <field name='weight' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='knot' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='order' type='SFInt32' accessType='initializeOnly' value='0' />
+        <field name='axis_container' type='SFNode' accessType='initializeOnly'>
+          <Transform containerField='axis_container' USE='AXIS_CONTAINER'/>
+        </field>
+        <field name='rotationAxis' type='SFVec3f' accessType='initializeOnly' value='0 1 0' />
+        <field name='bool_container' type='SFNode' accessType='initializeOnly'>
+          <Collision containerField='bool_container' USE='BOOL_CONTAINER'/>
+        </field>
+        <field name='enableRotation' type='SFBool' accessType='initializeOnly' value='true' />
+        <field name='weights' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='tess' type='MFVec3f' accessType='initializeOnly' value='' />
+        <field name='w' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='tc' type='MFVec2f' accessType='initializeOnly' value='' />
+        <field name='ci' type='MFInt32' accessType='initializeOnly' value='' />
+        <field name='basis' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='deriv' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='s' type='SFVec3f' accessType='initializeOnly' value='0 0 0' />
+        <field name='u' type='SFVec3f' accessType='initializeOnly' value='0 0 0' />
+        <field name='n' type='SFVec3f' accessType='initializeOnly' value='0 0 0' />
+        <field name='left' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='right' type='MFFloat' accessType='initializeOnly' value='' />
+        <field name='dimension' type='SFInt32' accessType='initializeOnly' value='0' />
+        <field name='set_fraction' type='SFFloat' accessType='inputOnly'/>
+        <field name='controlPoint_in' type='MFVec3f' accessType='inputOnly'/>
+        <field name='tessellation_in' type='SFInt32' accessType='inputOnly'/>
+        <field name='weight_in' type='MFFloat' accessType='inputOnly'/>
+        <field name='rotationAxis_in' type='SFVec3f' accessType='inputOnly'/>
+        <field name='enableRotation_in' type='SFBool' accessType='inputOnly'/>
+        <field name='set_fraction_out' type='SFFloat' accessType='outputOnly'/>
+        <field name='controlPoint_out' type='MFVec3f' accessType='outputOnly'/>
+        <field name='tessellation_out' type='SFInt32' accessType='outputOnly'/>
+        <field name='weight_out' type='MFFloat' accessType='outputOnly'/>
+        <field name='rotationAxis_out' type='SFVec3f' accessType='outputOnly'/>
+        <field name='enableRotation_out' type='SFBool' accessType='outputOnly'/>
+        <field name='positionKey' type='MFFloat' accessType='outputOnly'/>
+        <field name='positionKeyValue' type='MFVec3f' accessType='outputOnly'/>
+        <field name='orientationKey' type='MFFloat' accessType='outputOnly'/>
+        <field name='orientationKeyValue' type='MFRotation' accessType='outputOnly'/>
+        <![CDATA[
+        javascript:
+
+    function findSpan(dimension, order, u, knots) {
+       var low;
+       var mid;
+       var high;
+       var n;
+
+       n = dimension + order - 1;
+
+       if (u >= knots[n]) {
+           return n - order;
+       }
+       low = order - 1;
+       high = n - order + 1;
+
+       mid = Math.floor((low + high) / 2);
+
+       while ((u < knots[mid]) || (u >= knots[mid+1])) {
+           if (u < knots[mid])
+               high = mid;
+           else
+               low = mid;
+           mid = Math.floor((low + high) / 2);
+       }
+
+       return Math.floor(mid);
+    }
+
+    function basisFuns(span, u, order, knots, basis, deriv) {
+       var j;
+       var saved;
+       var dsaved;
+       var r;
+       var temp;
+
+       basis[0] = 1.0;
+       for (j = 1; j < order; j++) {
+           left[j] = u - knots[span+1-j];
+           right[j] = knots[span+j]-u;
+           saved = 0.0;
+           dsaved = 0.0;
+           for (r = 0; r < j; r++) {
+               temp = basis[r] / (right[r+1] + left[j-r]);
+               basis[r] = saved + right[r+1] * temp;
+               deriv[r] = dsaved - j * temp;
+               saved = left[j-r] * temp;
+               dsaved = j * temp;
+           }
+	   basis[j] = saved;
+	   deriv[j] = dsaved;
+       }
+    }
+
+
+    function linePoint(weight,u,ind) {
+       var i;
+       var j;
+
+       var span;
+
+       var base;
+
+       var index;
+
+       var w;
+       var dw;
+
+       var gain;
+       var dgain;
+
+       span = findSpan(dimension, order, u, knot);
+
+       basisFuns(span, u, order, knot, basis, deriv);
+
+       base = span-order+1;
+
+       index = base;
+
+       s=new SFVec3f(0.0, 0.0, 0.0);
+       du=new SFVec3f(0.0, 0.0, 0.0);
+       dv=new SFVec3f(0.0, 0.0, 0.0);
+       w = 0.0;
+       dw = 0.0;
+       for (i = 0; i < order; i++) {
+           gain = basis[i];
+           dgain = deriv[i];
+           s.x += controlPoint[index].x * gain;
+           s.y += controlPoint[index].y * gain;
+           s.z += controlPoint[index].z * gain;
+           w += weight[index] * gain;
+           du.x += controlPoint[index].x * dgain;
+           du.y += controlPoint[index].y * dgain;
+           du.z += controlPoint[index].z * dgain;
+           dw += weight[index] * dgain;
+           index++;
+       }
+       s.x = s.x / w;
+       s.y = s.y / w;
+       s.z = s.z / w;
+       n.x = (du.x - s.x * dw) / w;
+       n.y = (du.y - s.y * dw) / w;
+       n.z = (du.z - s.z * dw) / w;
+       return s;
+    }
+
+
+    function newQuat(x, y, z, a) {
+       var r;
+       r = new MFFloat();
+       r[0] = x;
+       r[1] = y;
+       r[2] = z;
+       r[3] = a;
+       return r;
+    }
+
+    function quatNorm(quat) {
+       var rlen;
+       rlen = Math.sqrt(quat[0] * quat[0] + quat[1] * quat[1] + 
+                        quat[2] * quat[2] + quat[3] * quat[3]);
+       if (rlen > 0.000001)
+          rlen = 1.0 / rlen;
+       else
+          rlen = 1.0;
+       quat[0] *= rlen;
+       quat[1] *= rlen;
+       quat[2] *= rlen;
+       quat[3] *= rlen;
+    }
+
+    function quatMult(q1, q2) {
+       var r;
+       r = newQuat(0, 0, 1, 0);
+       r[0] = q2[3] * q1[0] + q2[0] * q1[3] + q2[1] * q1[2] - q2[2] * q1[1];
+       r[1] = q2[3] * q1[1] + q2[1] * q1[3] + q2[2] * q1[0] - q2[0] * q1[2];
+       r[2] = q2[3] * q1[2] + q2[2] * q1[3] + q2[0] * q1[1] - q2[1] * q1[0];
+       r[3] = q2[3] * q1[3] - q2[0] * q1[0] - q2[1] * q1[1] - q2[2] * q1[2];
+       quatNorm(r);
+       return r;
+    }
+
+    function accountAngle(vec1, vec2) {
+       var vec1len;
+       var vec2len;
+       var sinangle;
+       var cosangle;
+       var angle;
+      
+       vec1len = vec1.length();
+       vec2len = vec2.length();
+       if ((vec1len == 0) || (vec2len == 0))
+          return 0;
+       sinangle = vec1.cross(vec2).length() / vec1len / vec2len;
+       cosangle = vec1.dot(vec2) / vec1len / vec2len;
+       if (sinangle < 1e-9)
+          return 0;
+       angle = Math.atan2(sinangle, cosangle);
+
+       return angle;
+    }
+
+
+    function accountProjection(vector, normal) {
+       var angle;
+       var mult;
+
+       angle = accountAngle(vector, normal);
+       mult = vector.length() * Math.cos(angle);
+       return new SFVec3f(vector.x - normal.x * mult,
+                          vector.y - normal.y * mult,
+                          vector.z - normal.z * mult);
+    }
+
+    function accountQuat(vec1, vec2) {
+       var rotAxis;
+       var axis;
+       var axisLength;
+       var rot;
+       var angle;
+       var sinAngle;
+
+       rotAxis = vec1.cross(vec2);
+       axisLength = rotAxis.length;
+       if (axisLength == 0)
+          axis = new SFVec3f(0, 0, 0);
+       else 
+          axis = new SFVec3f(rotAxis.x / axisLength, 
+                             rotAxis.y / axisLength, 
+                             rotAxis.z / axisLength);
+       angle = accountAngle(vec1, vec2);
+       sinAngle = Math.sin(0.5 * angle);
+       rot = newQuat(axis.x * sinAngle, axis.y * sinAngle, axis.z * sinAngle, 
+                     Math.cos(0.5 * angle));
+       quatNorm(rot);
+       return rot;
+    }
+
+    function sendToOrientationInterpolator() {
+       var i;
+       var j;
+       var chainLength;
+       var chainRot;
+       var oldQuat;
+       var correctionX;
+       var correctionY;
+       var normal;
+       var vector1;
+       var point3;
+       var point2;
+       var vector2;
+       var vec1;
+       var vec2
+       var quat;
+       var rlen;
+       var axis;
+       var rot;
+
+       if (tess.length == 0) 
+          makeChain();
+
+       chainLength = tess.length;
+       if (chainLength < 1)
+          return;
+       chainRot = new MFFloat(chainLength * 4);
+       correctionX = newQuat(1, 0, 0, Math.cos(0.5 * Math.PI));
+       correctionY = newQuat(0, 1, 0, Math.cos(0.5 * Math.PI));
+       oldQuat = newQuat(0, 0, 1, 0);
+       for (j = 0; j < (chainLength - 1); j++) {
+          normal = rotationAxis;
+          vector1 = new SFVec3f(0, 0, 1);
+          point3 = new SFVec3f (tess[j + 1].x,  tess[j + 1].y, tess[j + 1].z);
+          point2 = new SFVec3f (tess[j    ].x,  tess[j    ].y, tess[j    ].z);
+          if (j > 0) {
+             point1 = new SFVec3f(tess[j - 1].x,  tess[j - 1].y, tess[j - 1].z);
+             vector1 = new SFVec3f(point2.x - point1.x,
+                                   point2.y - point1.y,
+                                   point2.z - point1.z);
+          }
+          vector2 = new SFVec3f(point3.x - point2.x,
+                                point3.y - point2.y,
+                                point3.z - point2.z);
+          vec1 = accountProjection(vector1, normal);
+          vec2 = accountProjection(vector2, normal);
+          quat = accountQuat(vec1, vec2);
+          quat = quatMult(quat, oldQuat);
+          if (j == 0) {
+             quat = quatMult(quat, correctionY); 
+             quat = quatMult(quat, correctionX); 
+          }
+          rlen = Math.sqrt(quat[0] * quat[0] + quat[1] * quat[1] + 
+                           quat[2] * quat[2]);
+          axis = new SFVec3f(quat[0], quat[1], quat[2]); 
+          axis.normalize();
+          rot = new SFRotation(axis, 2.0 * Math.acos(quat[3]));
+          for (i = 0; i < 4; i++)
+             chainRot[j * 4 + i] = rot[i];
+          oldQuat = quat;
+       }    
+
+       if (chainLength > 0) {
+          for (i = 0; i < 4; i++)
+             chainRot[(chainLength - 1) * 4 + i] =  oldQuat[i];
+       }
+       orientationInterpolator.key = new MFFloat();
+       orientationInterpolator.keyValue = new MFRotation();
+       for (i = 0; i < tess.length; i++) {
+           if (tess.length == 1)
+               orientationKey[i] = 0;
+           else
+               orientationKey[i] = (1.0 / (tess.length - 1)) * i;
+           orientationKeyValue[i].x = chainRot[i * 4];
+           orientationKeyValue[i].y = chainRot[i * 4 + 1];
+           orientationKeyValue[i].z = chainRot[i * 4 + 2];
+           orientationKeyValue[i].angle = chainRot[i * 4 + 3];
+
+       }
+    }
+
+    function sendToPositionInterpolator() {
+       positionKey = new MFFloat();
+       positionKeyValue = new MFVec3f();
+       for (i = 0; i < tess.length; i++) {
+           if (tess.length == 1)
+               positionKey[i] = 0;
+           else
+               positionKey[i] = (1.0 / (tess.length - 1)) * i;
+           positionKeyValue[i].x = tess[i].x;
+           positionKeyValue[i].y = tess[i].y;
+           positionKeyValue[i].z = tess[i].z;
+       }
+    }
+  
+    function makeChain() {
+       var size;
+       var i;
+       var j;
+       var index;
+       var u;
+       var inv;
+       var inc;
+       var uTess;        
+
+       index=0;
+
+       weights = new MFFloat();
+
+       dimension = order;
+
+       if (dimension == 0) return;
+
+/*
+       if (knot.length != order + dimension) {
+           print('no NurbsCurve: knot.length!=order+dimension');
+           return;
+       }
+*/
+   
+       if (weight.length == 0) {
+          weights = new MFFloat();
+          for (i = 0; i < controlPoint.length; i++) {
+               weights[i] = 1.0;
+          }
+       } else if (weight.length != controlPoint.length) {
+           print('no NurbsCurve: weight.length!=controlPoint.length');
+           return;
+       }
+   
+       uTess=tessellation;
+
+       if (uTess <= 0) uTess = 32;
+
+       tess = new MFVec3f();
+
+       size = (uTess + 1);
+   
+       if (knot.length != 0)
+           inc = (knot[knot.length-1] - knot[0]) / uTess;
+       else
+           print('knot.length = 0 ');
+
+       w = (weight.length == 0) ? weights : weight;
+       u = knot[0];
+
+       for (i = 0; i <= uTess; i++) {
+           tess[i] = linePoint(w,u,i);
+           index++;
+           u += inc;
+       }
+
+       sendToPositionInterpolator();
+       sendToOrientationInterpolator();
+    }
+
+    function initialize() {
+       controlPoint=controlPoint_container.point;
+       weight=weight_container.length;
+       tessellation=tessellation_container.whichChoice;
+       makeChain();
+    }
+
+    function controlPoint_in(value, time) {
+       controlPoint=value;
+       controlPoint_out=value;
+       makeChain();
+    }    
+
+    function weight_in(value, time) {
+       weight=value;
+       weight_out=value;
+       makeChain();
+    }
+    
+    function tessellation_in(value, time) {
+       tessellation=value;
+       tessellation_out=value;
+       makeChain();
+    }
+
+    function set_fraction(value, time) {
+       rotation_axis = axis_container.translation;
+       enableRotationField = bool_container.collide;
+       set_fraction_out = value;
+    }
+
+    function rotationAxis_in(value, time) {
+       rotationAxis = value;
+       rotationAxis_out=value;
+       makeChain();
+    }
+
+    function enableRotation_in(value, time) {
+       enableRotation = value;
+       enableRotation_out=value;
+       makeChain();
+    }
+    
+        ]]>
+        <IS>
+          <connect nodeField='knot' protoField='knot' />
+          <connect nodeField='order' protoField='order' />
+          <connect nodeField='set_fraction' protoField='set_fraction' />
+        </IS>
+      </Script>
+
+      <ROUTE fromNode='NURBS_CONTROLPOINT_CONTAINER' fromField='point_changed' toNode='NURBS_SCRIPT' toField='controlPoint_in'/>
+      <ROUTE fromNode='NURBS_TESSELLATION_CONTAINER' fromField='whichChoice_changed' toNode='NURBS_SCRIPT' toField='tessellation_in'/>
+      <ROUTE fromNode='NURBS_WEIGHT_CONTAINER' fromField='length_changed' toNode='NURBS_SCRIPT' toField='weight_in'/>
+      <ROUTE fromNode='AXIS_CONTAINER' fromField='translation_changed' toNode='NURBS_SCRIPT' toField='rotationAxis_in'/>
+      <ROUTE fromNode='BOOL_CONTAINER' fromField='collide_changed' toNode='NURBS_SCRIPT' toField='enableRotation_in'/>
+      <ROUTE fromNode='NURBS_SCRIPT' fromField='set_fraction_out' toNode='POSITION_INTERPOLATOR' toField='set_fraction'/>
+      <ROUTE fromNode='NURBS_SCRIPT' fromField='set_fraction_out' toNode='ORIENTATION_INTERPOLATOR' toField='set_fraction'/>
+      <ROUTE fromNode='NURBS_SCRIPT' fromField='positionKey' toNode='POSITION_INTERPOLATOR' toField='set_key'/>
+      <ROUTE fromNode='NURBS_SCRIPT' fromField='positionKeyValue' toNode='POSITION_INTERPOLATOR' toField='set_keyValue'/>
+      <ROUTE fromNode='NURBS_SCRIPT' fromField='orientationKey' toNode='ORIENTATION_INTERPOLATOR' toField='set_key'/>
+      <ROUTE fromNode='NURBS_SCRIPT' fromField='orientationKeyValue' toNode='ORIENTATION_INTERPOLATOR' toField='set_keyValue'/>
+
+    </ProtoBody>
+  </ProtoDeclare>
+
+</Scene>
+</X3D>

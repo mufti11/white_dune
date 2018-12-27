@@ -1,0 +1,404 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+COMPONENT RigidBodyPhysics:2 
+
+DEF RigidBodyCollection1 RigidBodyCollection
+  {
+  bodies 
+    [
+    DEF RigidBody1 RigidBody
+      {
+      angularVelocity -3 0 0
+      forces 0.30000001 0 -1
+      geometry 
+	DEF CollidableShape13 CollidableShape
+	  {
+	  rotation 1 0 0 1.57099902
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Sphere
+	      {
+	      }
+	    }
+	  }
+      linearVelocity 0 0 0.20000000
+      position 2 2.09999895 8.15999698
+      torques -8 0 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape1 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 0 2.06142401 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape2 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 2.01999902 2.00049901 -1
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape3 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 4.00399923 2.00049901 -1
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape4 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 6.05999803 2.00049901 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape5 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 1.00999903 4.00199604 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape6 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 3.02999901 4.00199604 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape7 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 5.05000019 4.00199604 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape8 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 2.01999902 6.00299501 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape9 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 4.03999900 6.00299501 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape10 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 3.02999901 8.00399303 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape11 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      texture ImageTexture
+		{
+		url "../../../logo/whitesand.jpg"
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 0 -1 0
+      }
+    RigidBody
+      {
+      geometry 
+	DEF CollidableShape12 CollidableShape
+	  {
+	  shape Shape
+	    {
+	    appearance Appearance
+	      {
+	      material Material
+		{
+		}
+	      }
+	    geometry Box
+	      {
+	      }
+	    }
+	  }
+      position 0 -4 0
+      }
+    ]
+  contactSurfaceThickness 0.99999701
+  collider DEF CollisionCollection1 CollisionCollection
+    {
+    bounce 0.10000000
+    collidables 
+      [
+      USE CollidableShape1
+      USE CollidableShape2
+      USE CollidableShape3
+      USE CollidableShape4
+      USE CollidableShape5
+      USE CollidableShape6
+      USE CollidableShape7
+      USE CollidableShape8
+      USE CollidableShape9
+      USE CollidableShape10
+      USE CollidableShape11
+      USE CollidableShape12
+      DEF GROUND CollidableShape
+	{
+	shape Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    texture ImageTexture
+	      {
+	      url "../../../logo/flow2.jpg"
+	      }
+	    textureTransform TextureTransform
+	      {
+	      scale 3 3
+	      }
+	    }
+	  geometry Box
+	    {
+	    size 100 2 100
+	    }
+	  }
+	}
+      USE CollidableShape13
+      ]
+    frictionCoefficients 1 1
+    }
+  }
+
+DEF CollisionSensor1 CollisionSensor
+  {
+  collider USE CollisionCollection1
+  }
+
+ROUTE CollisionSensor1.contacts TO RigidBodyCollection1.set_contacts
+
+Viewpoint
+  {
+  orientation -0.60500955 -0.77377367 -0.18771715 0.71079802
+  position -14.11330413 18.80772781 29.20312881
+  }
+
+Group
+  {
+  children 
+    [
+    USE CollidableShape1
+    USE CollidableShape2
+    USE CollidableShape3
+    USE CollidableShape4
+    USE CollidableShape5
+    USE CollidableShape6
+    USE CollidableShape7
+    USE CollidableShape8
+    USE CollidableShape9
+    USE CollidableShape10
+    USE CollidableShape11
+    USE CollidableShape12
+    USE GROUND
+    USE CollidableShape13
+    ]
+  }
+

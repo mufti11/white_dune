@@ -1,0 +1,24 @@
+#VRML V2.0 utf8
+
+Inline {
+  url "nxtdials.wrl.gz"
+}
+
+Transform 
+  {
+  rotation -0.380509 -0.880289 -0.283378 1.848526
+  translation -43.316818 26.212619 -11.020110
+  children Shape 
+      {
+      appearance Appearance 
+	{
+	material Material 
+	  {
+	  }
+	}
+      geometry Text 
+	{
+	string 	  "Turn the wheels"
+	}
+      }
+  }

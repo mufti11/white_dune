@@ -1,0 +1,121 @@
+#VRML V2.0 utf8
+
+PROTO InlineLoadControl 
+#
+# provisional version
+#
+# Copyright (C) 2004 J. "MUFTI" Scheurich
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+[
+  exposedField SFBool    load         TRUE
+  exposedField MFString  url          []
+  field        SFVec3f   bboxCenter   0 0 0       # (-,)
+  field        SFVec3f   bboxSize     -1 -1 -1    # [0,) or (-1,-1,-1)
+  eventOut     MFNode    children
+]
+{
+DEF GROUP Group
+  {
+  bboxCenter IS bboxCenter
+  bboxSize IS bboxSize
+  }
+
+# nodes switched off, not rendered cause not part of the scenegraph anyway ....
+Switch 
+  {
+  choice 
+    [
+    Shape 
+      {
+      geometry DEF URL_CONTAINER Text
+	{
+        string IS url
+	}
+      }
+    DEF LOAD_CONTAINER Collision
+      {
+      collide IS load
+      }
+    ]
+  }
+
+DEF SCRIPT Script 
+  {
+  directOutput TRUE  
+  mustEvaluate TRUE  
+  field SFNode group USE GROUP
+  eventOut MFNode children IS children
+
+  field SFNode url_container USE URL_CONTAINER
+  eventIn MFString url_in
+  eventOut MFString url_out 
+  field MFString url2 [] 
+
+  field SFNode load_container USE LOAD_CONTAINER
+  eventIn SFBool load_in 
+  eventOut SFBool load_out 
+  field SFBool load FALSE
+  url 
+    [
+    "javascript:
+
+    function checkLoad()
+       {
+       if (load) 
+          {
+          Browser.createVrmlFromURL(url2, group, 'children');
+          children = group.children;
+          } 
+       else 
+          {
+          group.children = new MFNode();
+          children = group.children;
+          }
+       }
+
+    function initialize()
+       {
+       url2=url_container.string;
+       load=load_container.collide;
+       checkLoad();
+       }
+
+    function url_in(value, time)
+       {
+       url2=value;
+       url_out=value;
+       checkLoad();
+       }    
+
+    function load_in(value, time)
+       {
+       load=value;
+       load_out=value;
+       checkLoad();
+       }
+    "
+   ]
+   }
+
+   ROUTE URL_CONTAINER.string TO SCRIPT.url_in
+   ROUTE LOAD_CONTAINER.collide TO SCRIPT.load_in
+
+   ROUTE SCRIPT.url_out TO URL_CONTAINER.string
+   ROUTE SCRIPT.load_out TO LOAD_CONTAINER.collide
+}
+

@@ -1,0 +1,808 @@
+#VRML V2.0 utf8
+
+PROTO SuperExtrusion
+#
+# works at least with SGI Cosmo Player 2.1.5, cc3dglut 4.3
+#
+# A VRML Proto to account the data of a SuperExtrusion shape with scripting 
+# (slow)
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+#
+# Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
+# Copyright (C) 1999 Stephen F. White
+#
+# exampe use
+#
+# EXTERNPROTO SuperExtrusion
+#    [
+#    exposedField SFFloat a 
+#    exposedField SFFloat b 
+#    exposedField SFFloat m 
+#    exposedField SFFloat n1 
+#    exposedField SFFloat n2 
+#    exposedField SFFloat n3 
+#    exposedField SFFloat border 
+#    exposedField SFFloat bottomBorder 
+#    field SFFloat creaseAngle 
+#    exposedField SFInt32 superTessellation 
+#    exposedField SFInt32 spineTessellation 
+#    exposedField MFVec3f controlPoint    
+#    exposedField MFFloat weight          
+#    field        MFFloat knot           
+#    field        SFInt32 order          
+#    field        SFBool  beginCap
+#    field        SFBool  endCap
+#    field        SFBool  solid
+#    exposedField MFVec2f scale
+#    ]
+# [
+# "SuperExtrusionPROTO.wrl"
+# ]
+# 
+# Transform 
+#   {
+#   children 
+#     [
+#     Shape 
+#       {
+#       appearance       Appearance 
+# 	{
+# 	material 	Material 
+# 	  {
+# 	  }
+# 	}
+#       geometry       SuperExtrusion 
+# 	{
+# 	a 1
+# 	b 1
+# 	m 3
+# 	n1 0.100000
+# 	n2 1.700000
+# 	n3 1.700000
+# 	border 3.089998
+# 	spineTessellation 32
+# 	controlPoint 
+# 	  [
+# 	  0 0 0 
+# 	  0.895434 0.871842 0 
+# 	  0 2 0 
+# 	  0.938359 2.971822 0 
+# 	  -2.918766e-2 3.925251 0.251201 
+# 	  ]
+# 	weight 
+# 	  [
+# 	  1 
+# 	  1 
+# 	  1 
+# 	  1 
+# 	  1 
+# 	  ]
+# 	knot 
+# 	  [
+# 	  0 
+# 	  0 
+# 	  0 
+# 	  1 
+# 	  2 
+# 	  3 
+# 	  3 
+# 	  3 
+# 	  ]
+# 	beginCap FALSE
+# 	endCap FALSE
+# 	scale 
+# 	  [
+# 	  0.200000 0.200000 
+# 	  1 1 
+# 	  0.300000 0.300000 
+# 	  1 1 
+# 	  0.200000 0.200000 
+# 	  ]
+# 	}
+#       }
+#     ]
+#   }
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+# Cambridge, MA 02139, USA.
+#
+   [
+   exposedField SFFloat a 1
+   exposedField SFFloat b 1
+   exposedField SFFloat m 0
+   exposedField SFFloat n1 1
+   exposedField SFFloat n2 1
+   exposedField SFFloat n3 1
+   exposedField SFFloat border 3.14159265358979323846
+   exposedField SFFloat bottomBorder -3.14159265358979323846
+   field SFFloat creaseAngle 0.78539816339744830962
+   exposedField SFInt32 superTessellation 0
+   exposedField SFInt32 spineTessellation 0    # (-&infin;,&infin;)
+   exposedField MFVec3f controlPoint    []     # (&infin;,&infin;)
+   exposedField MFFloat weight          []     # (0,&infin;)
+   field        MFFloat knot           []     # (-&infin;,&infin;)
+   field        SFInt32 order          3      # [2,&infin;) 
+   field        SFBool  beginCap       TRUE
+   field        SFBool  endCap         TRUE
+   field        SFBool  solid          TRUE
+   exposedField MFVec2f scale          [ 1 1 ]
+   ]
+{
+
+    DEF Extrusion1 Extrusion
+      {
+      creaseAngle IS creaseAngle
+      solid FALSE
+      convex FALSE
+      beginCap IS beginCap
+      endCap IS endCap
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF A_CONTAINER TextureTransform 
+              {
+              rotation IS a
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF B_CONTAINER TextureTransform 
+              {
+              rotation IS b
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF M_CONTAINER TextureTransform 
+              {
+              rotation IS m
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF N1_CONTAINER TextureTransform 
+              {
+              rotation IS n1
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF N2_CONTAINER TextureTransform 
+              {
+              rotation IS n2
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF N3_CONTAINER TextureTransform 
+              {
+              rotation IS n3
+              }
+            }
+          }
+        ]
+      }
+
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF BORDER_CONTAINER TextureTransform 
+              {
+              rotation IS border
+              }
+            }
+          }
+        ]
+      }
+
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF BOTTOM_BORDER_CONTAINER TextureTransform 
+              {
+              rotation IS bottomBorder
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          geometry PointSet 
+	    {
+            coord DEF NURBS_CONTROLPOINT_CONTAINER 
+              Coordinate { point IS controlPoint } 
+	    }
+          }
+        ]
+      }
+       
+    DEF SUPER_TESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS superTessellation
+      }
+    
+    DEF NURBS_WEIGHT_CONTAINER ScalarInterpolator
+      {
+      # same number of key and keyvalue....
+      key IS weight
+      keyValue IS weight
+      }
+
+    DEF Script1 Script 
+      {
+      eventOut MFVec2f crossSection_out
+      eventOut MFVec3f spine_out
+      field SFFloat a 1
+      field SFFloat b 1
+      field SFFloat m 0
+      field SFFloat n1 1
+      field SFFloat n2 1
+      field SFFloat n3 1
+
+      field MFFloat r1 []
+      field MFFloat c1 []
+      field MFFloat s1 []
+
+      eventIn SFFloat a_in
+      eventIn SFFloat b_in
+      eventIn SFFloat m_in
+      eventIn SFFloat n1_in
+      eventIn SFFloat n2_in
+      eventIn SFFloat n3_in
+
+      field SFFloat border 3.14159265358979323846
+      eventIn SFFloat border_in
+
+      field SFFloat bottomBorder 3.14159265358979323846
+      eventIn SFFloat bottomBorder_in
+
+      eventIn SFInt32 spineTessellation_in 
+      field SFInt32 spineTessellation 0
+      eventIn SFInt32 superTessellation_in 
+      field SFInt32 superTessellation 0
+
+      field SFNode aContainer USE A_CONTAINER
+      field SFNode bContainer USE B_CONTAINER
+      field SFNode mContainer USE M_CONTAINER
+      field SFNode n1Container USE N1_CONTAINER
+      field SFNode n2Container USE N2_CONTAINER
+      field SFNode n3Container USE N3_CONTAINER
+
+      field SFNode borderContainer USE BORDER_CONTAINER
+
+      field SFNode superTessContainer USE SUPER_TESSELLATION_CONTAINER
+      url 
+        [
+        "javascript:
+    
+     // field SFInt32 superTessellation //
+     // eventOut MFVec3f crossSection_out //
+    
+      function r(angle, a, b, m, n1, n2, n3)
+         {
+         var f=m*angle/4.0;
+         var c=Math.cos(f);
+         var s=Math.sin(f);
+         return Math.pow(Math.pow(Math.abs(c/a),n2)+Math.pow(Math.abs(s/b),n3),-1.0/n1);
+         }
+
+      function account()
+         {
+         var superTess=(superTessellation==0)?33:superTessellation+1;
+         var inc1=(border-bottomBorder)/(superTess-1);
+         var angle1;
+         var index;
+         var a1=0;
+         crossSection=new MFVec2f();
+         angle1=bottomBorder;
+         for (a1=0;a1<superTess;a1++)
+            {
+            r1[a1]=r(angle1,a,b,m,n1,n2,n3);
+            c1[a1]=Math.cos(angle1);
+            s1[a1]=Math.sin(angle1);
+            angle1+=inc1;
+            }
+         index=0;
+         for (a1=0;a1<superTess;a1++)
+            {
+            crossSection[index].x = r1[a1]*c1[a1];
+            crossSection[index].y = r1[a1]*s1[a1];
+            index++;
+            }
+         crossSection_out=crossSection;
+         }
+
+     
+     function initialize()
+        {
+        a=aContainer.rotation;
+        b=bContainer.rotation;
+        m=mContainer.rotation;
+        n1=n1Container.rotation;
+        n2=n2Container.rotation;
+        n3=n3Container.rotation;
+        border=borderContainer.rotation;
+        superTessellation=superTessContainer.whichChoice;
+        account();
+        }
+    
+     function a_in(value)
+        {
+        a = value;
+        account();
+        }
+
+     function b_in(value)
+        {
+        b = value;
+        account();
+        }
+
+     function m_in(value)
+        {
+        m = value;
+        account();
+        }
+
+     function n1_in(value)
+        {
+        n1 = value;
+        account();
+        }
+
+     function n2_in(value)
+        {
+        n2 = value;
+        account();
+        }
+    
+     function n3_in(value)
+        {
+        n3 = value;
+        account();
+        }
+
+     function border_in(value)
+        {
+        border = value;
+        account();
+        }
+
+     function bottomBorder_in(value)
+        {
+        bottomBorder = value;
+        account();
+        }
+
+     function superTessellation_in(value)
+        {
+        superTessellation = value;
+        account();
+        }
+     "
+        ]
+      }
+
+ROUTE A_CONTAINER.rotation TO Script1.a_in
+ROUTE B_CONTAINER.rotation TO Script1.b_in
+ROUTE M_CONTAINER.rotation TO Script1.m_in
+ROUTE N1_CONTAINER.rotation TO Script1.n1_in
+ROUTE N2_CONTAINER.rotation TO Script1.n2_in
+ROUTE N3_CONTAINER.rotation TO Script1.n3_in
+
+ROUTE BORDER_CONTAINER.rotation TO Script1.border_in
+ROUTE BOTTOM_BORDER_CONTAINER.rotation TO Script1.bottomBorder_in
+    
+ROUTE SUPER_TESSELLATION_CONTAINER.whichChoice TO Script1.superTessellation_in
+    
+ROUTE Script1.crossSection_out TO Extrusion1.set_crossSection
+
+Switch 
+  {
+  choice 
+    [
+    Shape 
+      {
+      geometry PointSet 
+	{
+        coord DEF NURBS_CONTROLPOINT_CONTAINER 
+              Coordinate { point IS controlPoint } 
+	}
+      }
+    DEF NURBS_TESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS spineTessellation
+      }
+    Shape 
+      {
+      geometry IndexedFaceSet 
+	{
+        texCoord DEF SCALE_CONTAINER 
+              TextureCoordinate { point IS scale } 
+	}
+      }
+    ]
+  }
+
+DEF NURBS_SCRIPT Script 
+  {
+  directOutput TRUE  
+
+  field SFNode controlPoint_container USE NURBS_CONTROLPOINT_CONTAINER
+  eventIn MFVec3f controlPoint_in
+  eventOut MFVec3f controlPoint_out 
+  field MFVec3f controlPoint [] 
+
+  field SFNode tessellation_container USE NURBS_TESSELLATION_CONTAINER
+  eventIn SFInt32 tessellation_in 
+  eventOut SFInt32 tessellation_out 
+  field SFInt32 Tessellation 0
+
+  field SFNode weight_container USE NURBS_WEIGHT_CONTAINER
+  eventIn MFFloat weight_in
+  eventOut MFFloat weight_out
+  field MFFloat weight []
+
+  field MFFloat knot IS knot
+  field SFInt32 order IS order
+
+  field MFFloat weights []
+  eventOut MFVec3f tess
+  field MFFloat w []
+  field MFVec2f tc []
+
+  field MFFloat basis []
+  field MFFloat deriv []
+
+  field SFVec3f S 0 0 0
+  field SFVec3f u 0 0 0
+
+  field SFVec3f n 0 0 0
+
+  field MFFloat left []
+  field MFFloat right []
+
+  field SFInt32 dimension 0
+
+  field SFNode scale_container USE SCALE_CONTAINER
+  eventIn MFVec2f scale_in
+  eventOut MFVec2f scale_out
+  field MFVec2f scale [] 
+
+  url 
+    [
+    "javascript:
+
+    function findSpan(dimension, order, u, knots)
+       {
+       var low;
+       var mid;
+       var high;
+       var n;
+
+       n = dimension + order - 1;
+
+       if (u >= knots[n]) {
+	  return n - order;
+       }
+       low = order - 1;	high = n - order + 1;
+
+       mid = Math.floor((low + high) / 2);
+
+       while (u < knots[mid] || u >= knots[mid+1]) {
+	   if (u < knots[mid]) {
+	      high = mid;
+	   } else {
+	      low = mid;
+	   }
+	   mid = Math.floor((low + high) / 2);
+       }
+       return Math.floor(mid);
+    }
+
+    function basisFuns(span, u, order, knots, basis, deriv)
+       {
+       var j;
+       var saved;
+       var dsaved;
+       var r;
+       var temp;
+
+       basis[0] = 1.0;
+       for (j = 1; j < order; j++) {
+	   left[j] = u - knots[span+1-j];
+	   right[j] = knots[span+j]-u;
+	   saved = 0.0;
+           dsaved = 0.0;
+	   for (r = 0; r < j; r++) {
+	       temp = basis[r] / (right[r+1] + left[j-r]);
+	       basis[r] = saved + right[r+1] * temp;
+	       deriv[r] = dsaved - j * temp;
+	       saved = left[j-r] * temp;
+	       dsaved = j * temp;
+	   }
+	   basis[j] = saved;
+	   deriv[j] = dsaved;
+       }
+    }
+
+
+    function linePoint(weight,u,ind)
+       {
+       var i;
+       var j;
+
+       var span;
+
+       var base;
+
+       var index;
+
+       var w;
+       var dw;
+
+       var gain;
+       var dgain;
+
+       span = findSpan(dimension, order, u, knot);
+
+       basisFuns(span, u, order, knot, basis, deriv);
+
+       base = span-order+1;
+
+       index = base;
+
+       S=new SFVec3f(0.0, 0.0, 0.0);
+       du=new SFVec3f(0.0, 0.0, 0.0);
+       dv=new SFVec3f(0.0, 0.0, 0.0);
+       w = 0.0;
+       dw = 0.0;
+       for (i = 0; i < order; i++) {
+	       gain = basis[i];
+	       dgain = deriv[i];
+	       S.x += controlPoint[index].x * gain;
+	       S.y += controlPoint[index].y * gain;
+	       S.z += controlPoint[index].z * gain;
+	       w += weight[index] * gain;
+	       du.x += controlPoint[index].x * dgain;
+	       du.y += controlPoint[index].y * dgain;
+	       du.z += controlPoint[index].z * dgain;
+	       dw += weight[index] * dgain;
+	       index++;
+       }
+       S.x = S.x / w;
+       S.y = S.y / w;
+       S.z = S.z / w;
+       n.x = (du.x - S.x * dw) / w;
+       n.y = (du.y - S.y * dw) / w;
+       n.z = (du.z - S.z * dw) / w;
+       return S;
+       }
+
+    function makeLine()
+       {
+       var size;
+       var i;
+       var j;
+       var index;
+       var u;
+       var inv;
+       var inc;
+       var uTess;        
+
+       var scale_next_index;
+       var tess_inc;
+       var scale_inc;
+       var scale_diff_x;
+       var scale_diff_y;
+
+       index=0;
+
+       weights = new MFFloat();
+   
+       dimension = controlPoint.length;
+
+       if (dimension == 0) return;
+
+       if (knot.length != order + dimension) {
+           print('no NurbsCurve: knot.length!=order+dimension');
+           return;
+       }
+   
+       if (weight.length == 0) {
+   	   weights = new MFFloat();
+   	   for (i = 0; i < dimension; i++) {
+   	        weights[i] = 1.0;
+   	   }
+       } else if (weight.length != dimension) {
+           print('no NurbsCurve: weight.length!=dimension');
+   	   return;
+       }
+   
+       uTess=tessellation;
+
+// from the orignal white_dune sources
+//       if (uTess <= 0) uTess = 32;
+
+// changed to increase performance
+       if (uTess <= 0) uTess = 16;
+
+       tess = new MFVec3f();
+
+       size = (uTess + 1);
+   
+       inc = (knot[knot.length-1] - knot[0]) / uTess;
+   
+       index = 0;
+       w = (weight.length == 0) ? weights : weight;
+       for (i = 0, u = knot[0]; i <= uTess; i++, u += inc) {
+   	   tess[index] = linePoint(w,u,index);
+   	   index++;
+       }
+       // adjust scale values to the length of the spine (== tesselation)
+       var s = new MFVec2f();
+       if (scale.length > 0) {
+          s[0].x = scale[0].x;
+          s[0].y = scale[0].y;
+          if (scale.length > 1) {
+             tess_inc = 1.0 / (uTess);
+             scale_inc = 1.0 / (scale.length - 1);
+             scale_left = 0.0;
+             scale_next_index = 1;
+             for (i = 1; i <= uTess; i++) {
+                  scale_diff_x = scale[scale_next_index].x - 
+                                 scale[scale_next_index-1].x;
+                  s[i].x = scale[scale_next_index-1].x + scale_diff_x * 
+                           ((i * tess_inc - scale_left) / scale_inc);
+
+                  scale_diff_y = scale[scale_next_index].y - 
+                                 scale[scale_next_index-1].y;
+                  s[i].y = scale[scale_next_index-1].y + scale_diff_y * 
+                           ((i * tess_inc - scale_left) / scale_inc);
+
+                  if ( (i * tess_inc) >= (scale_next_index * scale_inc)) {
+                      scale_next_index++;
+                      scale_left += scale_inc;
+                  }
+             }
+          }
+          scale_out = s;
+       }
+    }
+
+    function initialize()
+       {
+       controlPoint=controlPoint_container.point;
+       weight=weight_container.key;
+       tessellation=tessellation_container.whichChoice;
+       scale=scale_container.point;
+       makeLine();
+       }
+
+    function controlPoint_in(value, time)
+       {
+       controlPoint=value;
+       controlPoint_out=value;
+       makeLine();
+       }    
+
+    function weight_in(value, time)
+       {
+       weight=value;
+       weight_out=value;
+       makeLine();
+       }
+    
+    function tessellation_in(value, time)
+       {
+       tessellation=value;
+       tessellation_out=value;
+       makeLine();
+       }
+
+    function scale_in(value, time)
+       {
+       scale=value;
+       makeLine();
+       }
+    "
+   ]
+   }
+
+   ROUTE NURBS_CONTROLPOINT_CONTAINER.point TO NURBS_SCRIPT.controlPoint_in
+   ROUTE NURBS_WEIGHT_CONTAINER.keyValue TO NURBS_SCRIPT.weight_in
+   ROUTE NURBS_TESSELLATION_CONTAINER.whichChoice TO NURBS_SCRIPT.tessellation_in
+
+   ROUTE NURBS_SCRIPT.controlPoint_out TO NURBS_CONTROLPOINT_CONTAINER.point
+   ROUTE NURBS_SCRIPT.weight_out TO NURBS_WEIGHT_CONTAINER.keyValue
+   ROUTE NURBS_SCRIPT.tessellation_out TO NURBS_TESSELLATION_CONTAINER.whichChoice
+
+   ROUTE NURBS_SCRIPT.tess TO Extrusion1.set_spine
+   ROUTE NURBS_SCRIPT.scale_out TO Extrusion1.set_scale
+}
+

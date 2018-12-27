@@ -1,0 +1,261 @@
+Content-type: text/html; charset=UTF-8
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of illegal2vrml</TITLE>
+</HEAD><BODY>
+<H1>illegal2vrml</H1>
+Section: User Commands  (1)<BR>Updated: 2017-09-20<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>illegal2vrml</B> - convert VRML97 files with illegal extensions
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<BR>
+
+<B>illegal2vrml</B>
+[<B>
+-prefix prefix
+</B>] 
+<B>
+protofile.wrl
+</B>
+<B>
+file.wrl
+</B>
+<P>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<B>illegal2vrml</B>
+
+convert Virtual Reality Modeling Language (VRML97) files with illegal 
+extensions to valid VRML97, according to ISO/IEC 14772 Annex F.
+Annex F decribe, how extensions to the VRML language should be
+implemented: using a EXTERNPROTO with a &quot;urn&quot; (fake URL) that sign the
+VRML browser the extension and not to use the following URL.
+<P>
+
+<B>illegal2vrml</B>
+
+read the file 
+<B>protofile.wrl</B>
+
+which should contain such EXTERNPROTOs. 
+The names of the EXTERNPROTOs should start with the same prefix.
+The prefix is needed to deal with additional illegal field names
+in valid VRML97 nodes.
+<BR>
+
+In the next step
+<B>illegal2vrml</B>
+
+read the file 
+<B>file.wrl</B>
+
+and replace all node names which are identical to the EXTERNPROTOs
+without the prefix with the names of the EXTERNPROTOs (with the prefix).
+<BR>
+
+In the last step, the result is written to standard output.
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-prefix prefix </B> 
+
+<DD>
+<P>
+set the name of the prefix of the EXTERNPROTOs. If this option is not
+used, the prefix is calculated from the proto names in 
+<B>protofile.wrl</B>
+
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLE</H2>
+
+<P>
+
+Imagine a VRML97 file with a illegal extension to the WorldInfo node
+<P>
+
+<DL COMPACT>
+<DT>$ cat $HOME/worldinfo.wrl<DD>
+<BR>
+
+#VRML V2.0 utf8
+<P>
+WorldInfo 
+<BR>
+
+{ 
+<BR>
+
+<BR>&nbsp;&nbsp;copyright&nbsp;&quot;(C)&nbsp;illegal&nbsp;extension&nbsp;Inc.&quot;
+<BR>
+
+<BR>&nbsp;&nbsp;info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;a&nbsp;existing&nbsp;VRML97&nbsp;node&nbsp;with&nbsp;a&nbsp;illegal&nbsp;extension&quot;
+<BR>
+
+}
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>A matching file with a EXTERNPROTO would be<DD>
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>$ cat $HOME/protofile.wrl<DD>
+<BR>
+
+#VRML V2.0 utf8
+<P>
+EXTERNPROTO PrefixWorldInfo
+<BR>
+
+[
+<BR>
+
+field SFString copyright
+<BR>
+
+field MFString info
+<BR>
+
+field SFString title
+<BR>
+
+]
+<BR>
+
+[&quot;urn:inet:browser.com:library:PrefixWorldInfo&quot; &quot;PrefixWorldInfo.wrl&quot;]
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>To convert to a valid VRML97 file, use<DD>
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>$ illegal2vrml -prefix Prefix  $HOME/protofile.wrl $HOME/worldinfo.wrl<DD>
+<BR>
+
+#VRML V2.0 utf8
+<P>
+EXTERNPROTO PrefixWorldInfo
+<BR>
+
+[
+<BR>
+
+field SFString copyright
+<BR>
+
+field MFString info
+<BR>
+
+field SFString title
+<BR>
+
+]
+<BR>
+
+[&quot;urn:inet:browser.com:library:PrefixWorldInfo&quot; &quot;PrefixWorldInfo.wrl&quot;]
+<P>
+PrefixWorldInfo 
+<BR>
+
+<BR>&nbsp;&nbsp;{
+<BR>
+
+<BR>&nbsp;&nbsp;copyright&nbsp;&quot;(C)&nbsp;illegal&nbsp;extension&nbsp;Inc.&quot;
+<BR>
+
+<BR>&nbsp;&nbsp;info&nbsp;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;[
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&quot;a&nbsp;existing&nbsp;VRML97&nbsp;node&nbsp;with&nbsp;a&nbsp;illegal&nbsp;extension&quot;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;]
+<BR>
+
+<BR>&nbsp;&nbsp;}
+</DL>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;illegal2vrml&nbsp;convert&nbsp;VRML97&nbsp;files&nbsp;with&nbsp;illegal&nbsp;extensions&nbsp;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;2000-2003&nbsp;&nbsp;J.&nbsp;&quot;MUFTI&quot;&nbsp;Scheurich,&nbsp;Stephen&nbsp;F.&nbsp;White
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;and/or&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;2&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;version.
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS</H2>
+
+Inside PROTOs, the conversion program do not parse for node names (yet).
+Therefore only a string based replacement is made inside PROTOs.
+<A NAME="lbAI">&nbsp;</A>
+<H2>DIAGNOSTICS</H2>
+
+Exit status is 0 for sucessfull operation,
+1 if inputfiles can not be sucessfully read or other error 
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<DL COMPACT>
+<DT>VRML97 International Standard<DD>
+<BR>
+
+<A HREF="http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1">http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1</A>
+<DT>VRML97 International Standard Annex F<DD>
+<BR>
+
+<A HREF="http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/extensions.html">http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/extensions.html</A>
+<P>
+</DL>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">EXAMPLE</A><DD>
+<DT><A HREF="#lbAG">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAH">BUGS</A><DD>
+<DT><A HREF="#lbAI">DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 14:53:20 GMT, December 02, 2018
+</BODY>
+</HTML>

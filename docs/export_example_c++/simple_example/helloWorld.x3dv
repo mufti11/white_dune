@@ -1,0 +1,47 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+PROTO Test
+  [
+  initializeOnly SFColor diffuseColor 0 0 0
+  inputOutput MFString string "Hello PROTO"
+  ]
+{
+Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry Text
+        {
+        string IS string
+        }
+      }
+  }
+
+}
+
+Anchor
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry Text
+        {
+        string "Hello World"
+        }
+      }
+  }
+

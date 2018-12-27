@@ -1,0 +1,390 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO SuperExtrusion
+  [
+  field MFFloat knot
+  field SFInt32 order
+  field SFFloat creaseAngle
+  field SFBool beginCap
+  field SFBool endCap
+  field SFBool solid
+  field MFVec2f scale
+  exposedField SFFloat a
+  exposedField SFFloat b
+  exposedField SFFloat m
+  exposedField SFFloat n1
+  exposedField SFFloat n2
+  exposedField SFFloat n3
+  exposedField SFFloat border
+  exposedField SFFloat bottomBorder
+  exposedField SFInt32 superTessellation
+  exposedField SFInt32 spineTessellation
+  exposedField MFVec3f controlPoint
+  exposedField MFFloat weight
+  ]
+  [
+  "SuperExtrusionPROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperExtrusionPROTO.wrl"
+  "http://wdune.ourproject.org/docs/scriptedNodes/SuperExtrusionPROTO.wrl"
+  ]
+
+EXTERNPROTO SuperRevolver
+  [
+  field MFFloat knot
+  field SFInt32 order
+  field SFFloat creaseAngle
+  field SFBool ccw
+  field SFBool solid
+  field SFBool pieceOfCake
+  exposedField SFFloat a
+  exposedField SFFloat b
+  exposedField SFFloat m
+  exposedField SFFloat n1
+  exposedField SFFloat n2
+  exposedField SFFloat n3
+  exposedField SFFloat border
+  exposedField SFFloat bottomBorder
+  exposedField SFInt32 superTessellation
+  exposedField SFInt32 nurbsTessellation
+  exposedField MFVec2f controlPoint
+  exposedField MFFloat weight
+  ]
+  [
+  "SuperRevolverPROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperRevolverPROTO.wrl"
+  "http://wdune.ourproject.org/docs/scripted_Nodes/SuperRevolverPROTO.wrl"
+  ]
+
+Transform
+  {
+  rotation 0.90740197 0.41586089 6.06741458e-2 0.36641508
+  translation 0.28619220 -0.52421522 1.42405724
+  children 
+    [
+    Transform
+      {
+      translation 7.16444626e-2 -0.16309064 0.10276958
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      diffuseColor 1 0.65882354 0.92549020
+	      }
+	    }
+	  geometry Sphere
+	    {
+	    radius 1.37269377
+	    }
+	  }
+	Transform
+	  {
+	  translation 3.94104719e-2 -1.86765956 -9.46092128
+	  children 
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  diffuseColor 0.55686277 0.23137255 0.21960784
+		  specularColor 0.94901961 0.92941176 1
+		  }
+		}
+	      geometry SuperExtrusion
+		{
+		a 0.59160995
+		controlPoint 
+		  [
+		  0 0 0
+		  -1.08382368 1.24424028 -0.42623329
+		  0.38351222 2.31735277 -0.20598712
+		  1.40121424 1.56073153 0.27996313
+		  1.52815270 2.69913244 0.13905084
+		  ]
+		weight 
+		  [
+		  1
+		  1
+		  1
+		  1
+		  1
+		  ]
+		knot 
+		  [
+		  0
+		  0
+		  0
+		  1
+		  2
+		  3
+		  3
+		  3
+		  ]
+		beginCap FALSE
+		endCap FALSE
+		scale 
+		  [
+		  0.96619975 1.43754804
+		  0 0
+		  ]
+		}
+	      }
+	  }
+	Transform
+	  {
+	  translation -0.84711009 0.91147196 1.16562187
+	  children 
+	    [
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  diffuseColor 1 0.97647058 0.99215686
+		  }
+		}
+	      geometry Sphere
+		{
+		radius 0.39715078
+		}
+	      }
+	    Transform
+	      {
+	      translation -4.17241081e-2 9.58654880e-2 0.31452918
+	      children 
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      diffuseColor 0.43921568 0.44313725 1
+		      specularColor 0.97647058 0.94901961 1
+		      }
+		    }
+		  geometry Sphere
+		    {
+		    radius 0.25434598
+		    }
+		  }
+	      }
+	    ]
+	  }
+	Transform
+	  {
+	  translation 3.38837814 -1.80886816 -8.70668220
+	  children 
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  diffuseColor 0.55686277 0.23137255 0.21960784
+		  specularColor 0.94901961 0.92941176 1
+		  }
+		}
+	      geometry SuperExtrusion
+		{
+		a 0.59160995
+		controlPoint 
+		  [
+		  0 0 0
+		  1.08382368 1.24424028 -0.42623329
+		  -0.38351222 2.31735277 -0.20598712
+		  -1.40121424 1.56073153 0.27996313
+		  -1.52815270 2.69913244 0.13905084
+		  ]
+		weight 
+		  [
+		  1
+		  1
+		  1
+		  1
+		  1
+		  ]
+		knot 
+		  [
+		  0
+		  0
+		  0
+		  1
+		  2
+		  3
+		  3
+		  3
+		  ]
+		beginCap FALSE
+		endCap FALSE
+		scale 
+		  [
+		  0.96619975 1.43754804
+		  0 0
+		  ]
+		}
+	      }
+	  }
+	Transform
+	  {
+	  rotation -0.15076753 -0.91136115 0.38300132 0.28133520
+	  translation 0.44231766 0.92255222 1.13419246
+	  children 
+	    [
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  diffuseColor 1 0.97647058 0.99215686
+		  }
+		}
+	      geometry Sphere
+		{
+		radius 0.39715078
+		}
+	      }
+	    Transform
+	      {
+	      translation 4.17241081e-2 9.58654880e-2 0.31452918
+	      children 
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      diffuseColor 0.43921568 0.44313725 1
+		      specularColor 0.97647058 0.94901961 1
+		      }
+		    }
+		  geometry Sphere
+		    {
+		    radius 0.25434598
+		    }
+		  }
+	      }
+	    ]
+	  }
+	]
+      }
+    Transform
+      {
+      translation -0.36479523 0.58233028 2.97984957
+      scale 0.48520112 0.61662757 1
+      children 
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      diffuseColor 1 0.13333334 0.18039216
+	      emissiveColor 3.92156885e-3 3.92156885e-3 3.92156885e-3
+	      specularColor 0.93333333 0.89803922 1
+	      }
+	    }
+	  geometry SuperExtrusion
+	    {
+	    a 0.16503523
+	    controlPoint 
+	      [
+	      -1 0 0
+	      -0.47514808 -0.30040928 -0.14224052
+	      0 0 0
+	      0.47514808 -0.30040928 -0.14224052
+	      1 0 0
+	      ]
+	    weight 
+	      [
+	      1
+	      1
+	      1
+	      1
+	      1
+	      ]
+	    knot 
+	      [
+	      0
+	      0
+	      0
+	      1
+	      2
+	      3
+	      3
+	      3
+	      ]
+	    }
+	  }
+      }
+    Transform
+      {
+      rotation -0.99996900 -7.64899607e-3 1.87343882e-3 2.01567053
+      translation -0.27731311 0.86359125 2.29604673
+      scale 0.59110665 1 0.56281381
+      children 
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      diffuseColor 1 0.65882354 0.92549020
+	      }
+	    }
+	  geometry SuperRevolver
+	    {
+	    m 2.50000000
+	    n1 0.46000000
+	    n2 1.79999995
+	    n3 0.87999999
+	    controlPoint 
+	      [
+	      0 -0.30000001
+	      0.60000002 -0.30000001
+	      1 0
+	      0.60000002 0.30000001
+	      0 0.30000001
+	      ]
+	    weight 
+	      [
+	      1
+	      1
+	      1
+	      1
+	      1
+	      ]
+	    knot 
+	      [
+	      0
+	      0
+	      0
+	      1
+	      2
+	      3
+	      3
+	      3
+	      ]
+	    }
+	  }
+      }
+    ]
+  }
+
+Viewpoint
+  {
+  orientation 0 -1 0 8.73464718e-3
+  position -8.72653499e-2 0 9.99961853
+  }
+
+Viewpoint
+  {
+  orientation -8.79579484e-2 -0.99589586 -2.13254410e-2 0.62164926
+  position -5.79635524 0.55197858 8.13004207
+  }
+

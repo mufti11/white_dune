@@ -1,0 +1,108 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+COMPONENT KeyDeviceSensor:2 
+
+DEF Script1 Script 
+  {
+  inputOnly SFString string1_in
+  inputOnly SFString string2_in
+  outputOnly MFString mstring1_out
+  outputOnly MFString mstring2_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring2_out //
+
+ function string1_in(value)
+    {
+    mstring1_out = new MFString(value);
+    }
+
+ function string2_in(value)
+    {
+    // value  SFString
+    mstring2_out = new MFString(value);
+    }
+
+"
+    "java:
+
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+    if (event.equals(\"string1_in\")) {
+        script.mstring1_out = new String[1];
+        script.mstring1_out[0] = script.string1_in;
+    } else {
+        script.mstring2_out = new String[1];
+        script.mstring2_out[0] = script.string2_in;
+    }
+"
+    ]
+  }
+
+Transform
+  {
+  translation -2.96995329 -2.26498842 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text1 Text
+	{
+	string "final text"
+	}
+      }
+  }
+
+ROUTE Script1.mstring1_out TO Text1.set_string
+
+Transform
+  {
+  translation -2.39050626 1.69758915 -4.01679563
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text2 Text
+	{
+	string "type text"
+	}
+      }
+  }
+
+ROUTE Script1.mstring2_out TO Text2.set_string
+
+DEF StringSensor1 StringSensor
+  {
+  }
+
+ROUTE StringSensor1.enteredText TO Script1.string2_in
+ROUTE StringSensor1.finalText TO Script1.string1_in
+
+Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Sphere
+	{
+	}
+      }
+  }
+

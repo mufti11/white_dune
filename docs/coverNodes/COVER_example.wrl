@@ -1,0 +1,158 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+EXTERNPROTO COVER[
+ exposedField SFVec3f position1
+ exposedField SFVec3f position2
+ exposedField SFVec3f position3
+ exposedField SFVec3f position4
+ exposedField SFVec3f position5
+ exposedField SFVec3f position6
+ exposedField SFVec3f position7
+ exposedField SFVec3f position8
+ exposedField SFRotation orientation1
+ exposedField SFRotation orientation2
+ exposedField SFRotation orientation3
+ exposedField SFRotation orientation4
+ exposedField SFRotation orientation5
+ exposedField SFRotation orientation6
+ exposedField SFRotation orientation7
+ exposedField SFRotation orientation8
+ exposedField SFInt32 soundEnvironment
+ eventOut SFString localKeyPressed
+ eventOut SFString localKeyReleased
+ eventOut SFString keyPressed
+ eventOut SFString keyReleased
+ eventOut SFVec3f avatar1Position
+ eventOut SFRotation avatar1Orientation
+ eventOut SFVec3f localPosition
+ eventOut SFRotation localOrientation
+ ]
+[
+ "urn:inet:www.hlrs.de:library:COVER"
+ "COVERPROTO.wrl"
+ "http://wdune.ourproject.org/docs/CoverNodes/COVERPROTO.wrl"
+]
+
+
+DEF COVER1 COVER 
+  {
+  }
+
+DEF Transform1 Transform 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  DEF Text1 Text 
+	    {
+	    string 
+	      [
+	      "tippen !"
+	      ]
+	    }
+	  }
+	]
+      translation -1.449061 0.167067 -5.003674
+      }
+    ]
+  }
+
+ROUTE COVER1.localOrientation TO Transform1.set_rotation
+ROUTE COVER1.localPosition TO Transform1.set_translation
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    ]
+  translation -2.005228 0 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    ]
+  translation 1.517309 0 0
+  }
+
+Viewpoint 
+  {
+  orientation 3.096001e-2 0.665134 -0.746081 0.119374
+  position 0.790515 -7.216981e-2 9.968447
+  }
+
+NavigationInfo 
+  {
+  visibilityLimit 1000
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFString string1_in
+  eventOut MFString mstring1_out
+  url 
+    [
+    "javascript:
+
+// insert program code only into functions
+
+ // eventOut MFString mstring1_out //
+
+ function string1_in(value)
+    {
+    // value  SFString
+    mstring1_out = new MFString(value); 
+    }
+"
+    ]
+  }
+
+ROUTE COVER1.localKeyPressed TO Script1.string1_in
+ROUTE Script1.mstring1_out TO Text1.set_string
+
+Transform 
+  {
+  translation -5.317057 0 0
+  }
+

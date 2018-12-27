@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * dune_de.html 
+ *
+ * Copyright (C) 2006 J. "MUFTI" Scheurich
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ 
+ last update: white_dune-0.29beta535
+-->
+ <head>
+  <title>
+   "white_dune" Dokumentation f&uum;r kommandozeilenorientierte Verarbeitung
+  </title> 
+ </head> 
+ <body>
+  <h3>
+   <a name="kommandozeilenorientiert">
+    Kommandozeilenorientierte Verarbeitung (nicht Kommandozeilenoptionen)
+   </a>
+  </h3>
+  <p>
+   Dieses Dokument beschreibt nicht die allgemeinen Kommandozeilenoptionen 
+   von white_dune, sondern nur die M&ouml;glichkeiten wie man white_dune
+   ohne die interaktive Eingabe (&uuml;ber Maus, Tastatur und andere
+   Eingabeger&auml;te) in der UNIX- bzw. M$Windows-Kommandozeile benutzen
+   kann. Zur Zeit besch&auml;ftigen sich alle diese M&ouml;glichkeiten
+   im weiteren Sinne mit der Konvertierung von Dateien.
+  </p> 
+  <ul>
+   <li>
+    <a href="#vrml97">-vrml97</a>
+   </li>
+   <li>
+    <a href="#vrml97levelx3dv">-vrml97levelx3dv</a>
+   </li>
+   </li>
+   <li>
+    <a href="#x3d4wonderland">-x3d4wonderland</a>
+   </li>
+   <li>
+    <a href="#illegal2vrml">-illegal2vrml</a>
+   </li>
+   <li>
+    <a href="#ac3d">-ac3d</a>
+   </li>
+   <li>
+    <a href="#catt8geo">-catt8geo</a>
+   </li>
+  </ul>
+  <h2>
+   <a name="vrml97">
+    -vrml97
+   </a>
+  </h2>
+  <p>
+   White_dune unterst&uuml;tzt Erweiterungen des VRML97 ISO/IEC 14772-1:2002
+   (VRML97 Amendment 1) Standards, z.B. NurbsSurface oder NurbsCurve.<br>
+   Diese Knotentypen werden nicht von allen VRML Viewern unterst&uuml;tzt,
+   k&ouml;nnen aber zu Knoten des &auml;lteren VRML97 ISO/IEC 14772-1:1997
+   Standards wie IndexedFaceSet oder IndexedLineSet konvertiert werden.<br>
+   Diese Konviertierung kann mit der <b>-vrml97</b> Option vorgenommen werden.
+   Dabei wird eine Datei eingelesen und auf die Standardausgabe geschrieben.
+   <br><br>
+   Eine Kommandozeile in der Form<br><br>
+   <code>dune -vrml97 eingabedatei &gt; ausgabedatei.wrl</code><br><br>
+   konvertiert eine Eingabedatei (entweder eine VRML97 oder eine X3DV Datei)
+   zu VRML97 ISO/IEC 14772-1:1997 und schreibt sie in die Datei 
+   <b>ausgabedatei.wrl</b>.<br>
+   Diese Option konvertiert auch die PROTO-Knotentypen SuperEllipsoid,
+   SuperShape und SuperExtrusion, die normalerweise mit Hilfe des VRML 
+   Scriptknotens berechnet und dargestellt werden, in IndexedFaceSet Knoten.
+  </p>
+  <h2>
+   <a name="vrml97levelx3dv">
+    -vrml97levelx3dv
+   </a>
+  </h2>
+  <p>
+   Diese Option funktioniert genauso wie die <b>-vrml97</b> Option, sie
+   schreibt aber eine X3DV Datei (X3D classic VRML encoding 
+   ISO/IEC ISO/IEC 19776-2:2005). Dabei werden die gleichen Konvertierungen
+   wie bei der <b>-vrml97</b> Option (Umwandlung von NurbsPatchSurface,
+   NurbsCurve, usw. SuperEllipsoid, SuperShape, SuperExtrusion).<br><br>
+   Eine Kommandozeile in der Form<br><br>
+   <code>dune -vrml97vrml97levelx3dv eingabedatei &gt; ausgabedatei.x3dv</code>
+   <br><br>
+   konvertiert eine Eingabedatei (entweder eine VRML97 oder eine X3DV Datei)
+   zu ISO/IEC ISO/IEC 19776-2:2005 und schreibt sie in die Datei 
+   <b>ausgabedatei.x3dv</b>.<br>
+  </p>
+  <h2>
+   <a name="x3d4wonderland">
+    -x3d4wonderland
+   </a>
+  </h2>
+  <p>
+   Diese Option funktioniert genauso wie die <b>-vrml97</b> Option, sie
+   schreibt aber eine X3D Datei (X3D XML encoding 
+   ISO/IEC ISO/IEC 19776-1:2005), speciell f&uuml;r die Multiuserwelt
+   SUN wonderworld 0.4. Dabei werden auf die Schw&auml;chen des
+   wonderworld X3D importers (keine Unterst&uuml;tzung f&uuml;r Zahlen
+   in der Form 1E-3, Fl&auml;chen nur als IndexedFaceSet, Farben nur
+   mit colorPerVertex true und als Color Knoten mit mehreren Farben) 
+   R&uuml;cksicht genommen.<br>
+   Allerdings gibt es (noch) keine Unterst&uuml;tzung f&uuml;r Knoten
+   mit colorPerVertex false.
+  </p>
+  <h2>
+   <a name="illegal2vrml">
+    -illegal2vrml
+   </a>
+  </h2>
+  <p>
+   Diese Option konvertiert eine VRML97 Datei mit illegalen Erweiterungen in
+   eine legale VRML97 Datei.<br>
+   Im Annex F des VRML97 Standards ist beschrieben, wie ein Hersteller
+   eines VRML Viewers legale Erweiterungen einbauen kann, ohne dass
+   andere VRML Viewer die Datei als illegal ablehnen m&uuml;ssen.<br>
+   Trotzdem gibt es Hersteller von VRML Viewern, die illegale Erweiterungen
+   einbauen. Illegale Erweiterungen, die neue Nichtstandard-Felder in bisher 
+   standardisierte VRML-Knotentypen einbauen, lassen sich reparieren.<br>
+   Eine Kommandozeile in der Form<br><br>
+   <code>dune -illegal2vrml -prefix prefix protofile.wrl illegal.wrl &gt; legal.wrl</code>
+   <br><br>
+   liest eine Datei <b>protofile.wrl</b> ein, die EXTERNPROTOs nach dem 
+   Vorbild des Annex F des VRML97 Standards enthalten.
+   Die Namen der EXTERNPROTOs sollten mit der gleichen Zeichenkette (im
+   Beispiel <b>prefix</b>) anfangen.<br>
+   Im n&auml;chsten Schritt wird die Datei <b>illegal.wrl</b> eingelesen
+   und alle Knotennamen, die identisch mit den Namen der EXTERNPROTOs
+   ohne die Zeichenkette sind, durch die Namen der EXTERNPROTOs mit
+   der Zeichenkette ersetzt. Das Ergebnis wird auf die Standardausgabe
+   geschrieben und landet im Beispiel in der Datei <b>legal.wrl</b>.
+   <br><br>
+   Ein Beispiel: Eine VRML97 Datei enth&auml;lt eine illegal Erweiterung
+   des VRML97 WorldInfo Knotens (dabei beschreibt die Zeile 
+   <code>$ cat datei</code> einen Befehl zum eine Datei auszugeben).<br>
+   <pre>
+
+       $ cat $HOME/worldinfo.wrl
+	      #VRML V2.0 utf8
+
+	      WorldInfo
+	      {
+		copyright "(C) illegal extension Inc."
+		info	  "a existing VRML97 node with a illegal extension"
+	      }
+
+   </pre> 
+   Dabei ist das Feld <b>copyright</b> eine illegale Erweiterung und kann
+   VRML Viewer abst&uuml;rtzen lassen.<br>
+   Eine passende EXTERNPROTO Datei ist:<br>
+   <pre>
+
+       $ cat $HOME/protofile.wrl
+	      #VRML V2.0 utf8
+
+	      EXTERNPROTO PrefixWorldInfo
+	      [
+	         field SFString copyright
+	         field MFString info
+	         field SFString title
+	      ]
+	      [
+               "urn:inet:browser.com:library:PrefixWorldInfo"
+               "PrefixWorldInfo.wrl"
+              ]
+
+   </pre>
+   und der Aufruf zur Umwandlung in eine legale VRML97 Datei lautet:
+   <pre>
+
+       $ illegal2vrml -prefix Prefix  $HOME/protofile.wrl $HOME/worldinfo.wrl
+	      #VRML V2.0 utf8
+
+	      EXTERNPROTO PrefixWorldInfo
+	      [
+	         field SFString copyright
+	         field MFString info
+	         field SFString title
+	      ]
+	      [
+               "urn:inet:browser.com:library:PrefixWorldInfo"
+               "PrefixWorldInfo.wrl"
+              ]
+
+	      PrefixWorldInfo
+		{
+		copyright "(C) illegal extension Inc."
+		info
+		  [
+		  "a existing VRML97 node with a illegal extension"
+		  ]
+		}
+
+   </pre>
+   Die Datei <b>PrefixWorldInfo.wrl</b> kann dann ein PROTO enthalten,
+   das den legalen VRML Knoten nachbildet:
+   <pre>
+
+       $ cat PrefixWorldInfo.wrl
+	      #VRML V2.0 utf8
+
+	      PROTO PrefixWorldInfo
+	      [
+	         field SFString copyright ""
+	         field MFString info ""
+	         field SFString title ""
+	      ]
+	      {
+                 WorldInfo 
+                 {
+                    info IS info
+                    title IS title
+                 }
+              }
+
+   </pre>
+  </p>
+  <h2>
+   <a name="ac3d">   
+    -ac3d  
+   </a>
+  </h2> 
+  <p>   
+   Diese Option &ouml;ffnet ein Graphikfenster, konvertiert die Datei ins
+   AC3D file format (Version AC3Db) und schreibt das Ergebnis auf die 
+   Standartausgabe.<br>
+   Das AC3D file format ist das Eingabe/Ausgabe Datei-Format
+   des 3D modellers ac3d. Der ac3d 3d modeller unterst&uuml;tzt einige
+   Features von VRML/X3D nicht (zum Beispiel keine Animation/Interaktion,
+   der VRML-Knoten PointSet oder das Feld IndexedFaceSet.colorPerVertex).
+   Deshalb kann das AC3D file Format im allgemeinen die Informationen, die
+   in einer VRML97/X3D Datei sind, im allgemeinen nicht speichern.
+  </p>  
+  <h2>
+   <a name="catt8geo">   
+    -catt8geo
+   </a>
+  </h2> 
+  <p>   
+   Diese Option &ouml;ffnet ein Graphikfenster, konvertiert die Datei ins
+   Catt geo format (Version 8), und schreibt das Ergebnis in verschiedene
+   Dateien des in der Kommandozeile angegebenen Verzeichnisses.
+   Eine Kommandozeile in der Form<br><br>
+   <code>dune -catt8geo verzeichnis eingabe.wrl</code>
+   <br><br>
+   schreibt die Ergebnisdatei Master.geo (die INCLUDE Befehle der anderen
+   .geo Ausgabe-Dateien enth&auml;lt) ins Verzeichnis <b>verzeichnis</b>,
+   das die Datei material.geo enthalten muss.<br>
+   Die Datei material.geo wird genauso per INCLUDE-Befehl von Master.geo
+   benutzt und enth&auml;lt die Zuordnung von Soundeigenschaften und 
+   den Namen der Objekte in der VRML97 Datei ("DEF Namen"). 
+   Hat ein Objekt in der VRML97 Datei keinen Namen, wird im Szenenbaum 
+   (ausgehend vom Material Knoten des Objekts) nach einem Namen gesucht.
+   Gibt es bis zur Wurzel des Szenenbaums keinen Namen, wird der Name 
+   "TOTREF" angenommen, der in CATT 8 f&uuml;r Totalreflektion fest eingebaut ist.
+   <br>
+   Eine minimale material.geo Datei k&ouml;nnte so aussehen:
+   <pre>
+
+   ; material.GEO
+
+   ABS unknown  = < 10 10 10 10 10 10 > L < 10 10 10 10 10 10> {128 128 128}
+
+   CORNERS
+   ; section is empty
+
+   PLANES
+   ; section is empty
+
+   </pre>
+   Da CATT Dateien nur aus einem einzigen Verzeichnis lesen kann, m&uuml;ssen
+   seine Dateien src.loc und res.loc ebenfalls im Verzeichnis 
+   <b>verzeichnis</b> liegen.<br><br>
+   
+   VRML97 kann von vielen Programmen direkt erzeugt werden 
+   (3D Studio Max, Cinema 4D, Rhino 3D, Blender, Catia, Wings3D, Catt8 usw.), 
+   die Sitten und Gebr&auml;uche beim Exportieren der DEF Namen unterscheiden 
+   sich dabei betr&auml;chtlich. 
+   <br><br>
+   Deshalb kann mit dem Men&uuml;punkt<br><br>
+
+   <em>Options -> Output Settings -> Material name generation on non 
+   VRML/X3D export</em><br><br>
+
+   gew&auml;lt werden, ob man den ganzen Namen oder den ersten bzw. letzten mit
+   "_" abgetrennten Teil des Namens verwenden soll.<br><br>
+
+   Man kann auch DEF Namen f&uuml;r Objektb&auml;ume mit dem Men&uuml;punkt
+   <br><br>
+
+   <em>Actions -> Rest of Scenegraph Branch -> remove -> DEF Name</em><br><br>
+
+   l&ouml;schen, allerdings nur wenn der Name nicht f&uuml;r eine 
+   Route-Informations-Verbindung gebraucht wird (z.B. bei Animation 
+   oder Interaktion).<br><br>
+
+   CATT Version 8 unterst&uuml;tzt wohl nur einseitige Objekte.
+   Um Einseitigkeit eines Teilbaums des VRML-Modells zu erzwingen, kann man
+   man die Sequenz<br><br>
+
+   Actions -> Rest of Scenegraph Branch -> set -> solid</em><br>
+   true<br><br>
+
+   benutzen. In VRML97 kann man beim Knoten f&uuml;r Meshes (IndexedFaceSet) 
+   die Einseitigkeit &uuml;ber das Feld "solid" an- bzw. ausschalten. 
+   Zwischen Innen- und Aussenseite schaltet man mit dem Feld "ccw" um.
+
+   Manche Objekte wie Primitive (Kugel, Kegel, Zylinder usw.) muss man erst
+   mit dem Men&uuml;punkt<br><br>
+
+   <em>Convert -> Convert to IndexedFaceSet</em><br><br>
+
+   umwandeln, um z.B. ccw benutzen zu k&ouml;nnen.
+  </p>
+<!--
+  <p>
+   <small>
+    AC3D und CATT sind eingetragene Markenzeichen.<br>
+    Fuer weitere Informationen wenden Sie sich an den jeweiligen Inhaber 
+    dieser Markenzeichen.
+   </small>
+-->
+  </p>
+ </body>
+</html>

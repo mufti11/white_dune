@@ -1,0 +1,225 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+EXTERNPROTO GEH_MESS [
+  outputOnly SFFloat fraction_changed
+  outputOnly SFRotation vl5_rotation_changed
+  outputOnly SFRotation l_hip_rotation_changed
+  outputOnly SFRotation r_hip_rotation_changed
+  outputOnly SFRotation l_knee_rotation_changed
+  outputOnly SFRotation r_knee_rotation_changed
+  outputOnly SFRotation l_ankle_rotation_changed
+  outputOnly SFRotation r_ankle_rotation_changed
+  outputOnly SFRotation thorax_rotation_changed
+  outputOnly SFRotation l_shoulder_rotation_changed
+  outputOnly SFRotation r_shoulder_rotation_changed
+  outputOnly SFRotation l_elbow_rotation_changed
+  outputOnly SFRotation r_elbow_rotation_changed
+]
+"gehmess_proto.x3dv"
+
+DEF GEH_MESS1 GEH_MESS {
+}
+
+DEF vl5 Transform {
+  center 0 1.440839 0
+  children [
+    DEF r_hip Transform {
+      rotation -0.993789 8.755671e-2 6.868960e-2 0.908082
+      translation 0.500000 0 0
+      center 0 1.221470 0
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Box {
+            size 0.536387 2.442940 0.951947
+          }
+        }
+        DEF l_knee Transform {
+          rotation 1 0 0 0.399629
+          translation 0 -2.422641 0
+          center 0 1.221470 0
+          children [
+            Shape {
+              appearance Appearance {
+                material Material {
+                }
+              }
+              geometry Box {
+                size 0.536387 2.442940 0.951947
+              }
+            }
+            DEF l_ankle Transform {
+              rotation -1 0 0 0.185271
+              translation -0.229003 -1.806411 0.482462
+              center 0 0 -0.515563
+              children 
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                  }
+                  geometry Box {
+                    size 0.928830 0.791525 1.849375
+                  }
+                }
+            }
+          ]
+        }
+      ]
+    }
+    DEF l_hip Transform {
+      rotation -0.991857 -9.631909e-2 -8.332039e-2 0.888472
+      translation -0.500000 0 0
+      center 0 1.221470 0
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Box {
+            size 0.536387 2.442940 0.951947
+          }
+        }
+        DEF r_knee Transform {
+          rotation 1 0 0 1.030355
+          translation 0 -2.422641 0
+          center 0 1.221470 0
+          children [
+            Shape {
+              appearance Appearance {
+                material Material {
+                }
+              }
+              geometry Box {
+                size 0.536387 2.442940 0.951947
+              }
+            }
+            DEF r_ankle Transform {
+              rotation -1 0 0 0.234337
+              translation -0.229003 -1.806411 0.482462
+              center 0 0 -0.515563
+              children 
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                  }
+                  geometry Box {
+                    size 0.928830 0.791525 1.849375
+                  }
+                }
+            }
+          ]
+        }
+      ]
+    }
+    DEF Transform1 Transform {
+      rotation 0 -0.707107 -0.707107 0.877259
+      translation -6.281046e-2 0.200000 0
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Box {
+            size 2.185481 0.833180 2
+          }
+        }
+        Transform {
+          translation 0 2.000806 -5.079650e-2
+          children [
+            Shape {
+              appearance Appearance {
+                material Material {
+                }
+              }
+              geometry Box {
+                size 1.417411 3.215056 1.533625
+              }
+            }
+            DEF l_shoulder Transform {
+              rotation 7.673684e-2 -0.729528 -0.679633 1.050908
+              translation 1.541875 1.445696 0
+              center -1.082546 0 0
+              children [
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                  }
+                  geometry Box {
+                    size 2.165092 0.576475 0.833508
+                  }
+                }
+                DEF l_elbow Transform {
+                  rotation -1 0 0 0.315536
+                  translation 2.128079 3.449835e-2 -0.175739
+                  center -1.021214 0 0.272269
+                  children 
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                        }
+                      }
+                      geometry Box {
+                        size 2.042428 1.064517 0.989234
+                      }
+                    }
+                }
+              ]
+            }
+            DEF r_shoulder Transform {
+              rotation 0.128843 0.706584 0.695801 0.910781
+              translation -1.541875 1.445696 0
+              center 1.082546 0 0
+              children [
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                  }
+                  geometry Box {
+                    size 2.165092 0.576475 0.833508
+                  }
+                }
+                DEF r_elbow Transform {
+                  translation -2.032754 3.449835e-2 -0.175739
+                  center 1.021214 0 0.272269
+                  children 
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                        }
+                      }
+                      geometry Box {
+                        size 2.042428 1.064517 0.989234
+                      }
+                    }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+ROUTE GEH_MESS1.l_ankle_rotation_changed TO l_ankle.set_rotation
+ROUTE GEH_MESS1.l_knee_rotation_changed TO l_knee.set_rotation
+ROUTE GEH_MESS1.r_hip_rotation_changed TO r_hip.set_rotation
+ROUTE GEH_MESS1.r_ankle_rotation_changed TO r_ankle.set_rotation
+ROUTE GEH_MESS1.r_knee_rotation_changed TO r_knee.set_rotation
+ROUTE GEH_MESS1.l_hip_rotation_changed TO l_hip.set_rotation
+ROUTE GEH_MESS1.l_elbow_rotation_changed TO l_elbow.set_rotation
+ROUTE GEH_MESS1.l_shoulder_rotation_changed TO l_shoulder.set_rotation
+ROUTE GEH_MESS1.r_elbow_rotation_changed TO r_elbow.set_rotation
+ROUTE GEH_MESS1.r_shoulder_rotation_changed TO r_shoulder.set_rotation
+ROUTE GEH_MESS1.vl5_rotation_changed TO Transform1.set_rotation
+

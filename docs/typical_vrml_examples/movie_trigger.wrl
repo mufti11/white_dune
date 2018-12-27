@@ -1,0 +1,283 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+Group 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 1 1
+	  emissiveColor 1 0 0
+	  shininess 7.812500e-2
+	  specularColor 0.500000 0.500000 0.500000
+	  }
+	}
+      geometry       IndexedLineSet 
+	{
+	coord 	Coordinate 
+	  {
+	  point 
+	    [
+	    -2 -2 -2 
+	    -2 2 -2 
+	    2 2 -2 
+	    2 -2 -2 
+	    -2 -2 2 
+	    -2 2 2 
+	    2 2 2 
+	    2 -2 2 
+	    ]
+	  }
+	coordIndex 
+	  [
+	  0 1 2 3 0 -1 
+	  6 7 3 2 6 -1 
+	  7 6 5 4 7 -1 
+	  4 5 1 0 4 -1 
+	  1 5 6 2 1 -1 
+	  4 0 3 7 4 -1 
+	  ]
+	}
+      }
+    DEF ProximitySensor1 ProximitySensor 
+      {
+      size 4 4 4
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "Proximity"
+	      ]
+	    }
+	  }
+	]
+      translation -1.961966 -3.549376 0
+      }
+    ]
+  }
+
+Group 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 0 1 0
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "visibility"
+	      ]
+	    }
+	  }
+	]
+      translation -1.076274 3.002321 0
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 0 1 0
+	      }
+	    }
+	  geometry 	  Sphere 
+	    {
+	    radius 0.100000
+	    }
+	  }
+	DEF VisibilitySensor1 VisibilitySensor 
+	  {
+	  }
+	]
+      translation -7.062146e-2 3.848006 0
+      }
+    ]
+  }
+
+Group 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 1 0
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "collision"
+	      ]
+	    }
+	  }
+	]
+      translation -5.862153 -1.798491 0
+      }
+    DEF Collision1 Collision 
+      {
+      children 
+	[
+	Transform 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  diffuseColor 1 1 0
+		  }
+		}
+	      geometry 	      Cone 
+		{
+		}
+	      }
+	    ]
+	  translation -3.958260 0.400797 0
+	  }
+	]
+      }
+    ]
+  }
+
+Group 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 0 0 1
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "touch"
+	      ]
+	    }
+	  }
+	Transform 
+	  {
+	  children 
+	    [
+	    DEF TouchSensor1 TouchSensor 
+	      {
+	      }
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  diffuseColor 0 0 1
+		  }
+		}
+	      geometry 	      Cylinder 
+		{
+		}
+	      }
+	    ]
+	  translation 3.907305 0.619911 0
+	  }
+	]
+      translation 3.666011 -2.963000 0
+      }
+    ]
+  }
+
+Shape 
+  {
+  appearance   Appearance 
+    {
+    material     Material 
+      {
+      }
+    texture     DEF MovieTexture1 MovieTexture 
+      {
+      url 
+	[
+	"movie.mpg"
+	]
+      }
+    }
+  geometry   Box 
+    {
+    }
+  }
+
+ROUTE TouchSensor1.touchTime TO MovieTexture1.set_startTime
+ROUTE Collision1.collideTime TO MovieTexture1.set_startTime
+ROUTE VisibilitySensor1.exitTime TO MovieTexture1.set_startTime
+ROUTE ProximitySensor1.enterTime TO MovieTexture1.set_startTime
+
+Viewpoint 
+  {
+  description "goto next viewpoint"
+  }
+
+DEF Viewpoint1 Viewpoint 
+  {
+  orientation -1 0 1 0
+  description "movie_start_viewpoint"
+  }
+
+ROUTE Viewpoint1.bindTime TO MovieTexture1.set_startTime
+

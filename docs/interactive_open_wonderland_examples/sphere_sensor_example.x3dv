@@ -1,0 +1,47 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+DEF SphereSensor3 SphereSensor
+  {
+  }
+
+Transform
+  {
+  translation -1.94220292 1.55350410 0
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry Text
+        {
+        string "drag me"
+        }
+      }
+  }
+
+DEF Transform4 Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry Box
+        {
+        }
+      }
+  }
+
+ROUTE SphereSensor3.rotation_changed TO Transform4.set_rotation
+

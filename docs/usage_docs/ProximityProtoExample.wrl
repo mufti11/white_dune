@@ -1,0 +1,164 @@
+#VRML V2.0 utf8
+
+PROTO programmierter_Umschalter
+  [
+  field MFNode eingeschaltet 
+  [
+  ]
+  field MFNode ausgeschaltet 
+  [
+  ]
+  field SFNode proximitySensorUmschalten NULL
+  field SFNode proximitySensorZurueckschalten NULL
+  ]
+{
+Group
+  {
+  children 
+    [
+    DEF Switch1 Switch
+      {
+      choice IS eingeschaltet
+      whichChoice 0
+      }
+    DEF Switch2 Switch
+      {
+      choice IS ausgeschaltet
+      whichChoice 1
+      }
+    ]
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFTime umschalten_time_in
+  eventIn SFTime zurueckschalten_time_in
+  eventOut SFInt32 eingeschaltet_out
+  eventOut SFInt32 ausgeschaltet_out
+  url "javascript:
+
+ // eventOut SFInt32 eingeschaltet_out //
+ // eventOut SFInt32 ausgeschaltet_out //
+
+ function umschalten_time_in(value)
+    {
+    // value  SFTime
+    eingeschaltet_out = 1;
+    ausgeschaltet_out = 0;
+    }
+
+ function zurueckschalten_time_in(value)
+    {
+    // value  SFTime
+    eingeschaltet_out = 0;
+    ausgeschaltet_out = 1;
+    }
+"
+  }
+
+ROUTE Script1.eingeschaltet_out TO Switch1.set_whichChoice
+ROUTE Script1.ausgeschaltet_out TO Switch2.set_whichChoice
+
+DEF Script2 Script 
+  {
+  url "javascript:
+
+  function initialize( )
+     {
+     Browser.addRoute(proximitySensorUmschalten, 'enterTime',
+                      script, 'umschalten_time_in');
+     Browser.addRoute(proximitySensorZurueckschalten, 'enterTime',
+                      script, 'zurueckschalten_time_in');
+     }
+
+"
+  field SFNode script USE Script1
+  field SFNode proximitySensorUmschalten IS proximitySensorUmschalten
+  field SFNode proximitySensorZurueckschalten IS proximitySensorZurueckschalten
+  }
+
+ROUTE Script1.eingeschaltet_out TO Switch1.set_whichChoice
+ROUTE Script1.ausgeschaltet_out TO Switch2.set_whichChoice
+
+}
+
+NavigationInfo
+  {
+  type "WALK"
+  }
+
+Viewpoint
+  {
+  orientation -0.14764733 0.98863929 -2.81540006e-2 3.10146737
+  position 0.47967255 -0.49723720 -9.97609519
+  }
+
+programmierter_Umschalter
+  {
+  eingeschaltet 
+    DEF Transform1 Transform
+      {
+      children 
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Sphere
+	    {
+	    }
+	  }
+      }
+  ausgeschaltet 
+    [
+    DEF Transform2 Transform
+      {
+      translation -2.95658016 0.20575550 0
+      children 
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Box
+	    {
+	    }
+	  }
+      }
+    DEF Transform3 Transform
+      {
+      translation 3.12484025 0 0
+      children 
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Box
+	    {
+	    size 0.90969049 1.05935001 1.81154370
+	    }
+	  }
+      }
+    ]
+  proximitySensorUmschalten DEF ProximitySensor1 ProximitySensor
+    {
+    center -3.04546356e-2 0.71899992 0.13281595
+    size 3.45901083 5.13927650 10.77243232
+    }
+  proximitySensorZurueckschalten DEF ProximitySensor2 ProximitySensor
+    {
+    center -2.95000004 0.20000000 0
+    size 1.36929118 2.98758745 2.88191604
+    }
+  }
+

@@ -1,0 +1,47 @@
+#VRML V2.0 utf8
+
+PROTO CubeTexture[
+# a better than nothing emulation of the Cover/Covise CubeTexture node
+# simply using a "CubeTexture not portable" ImageTexture
+# 
+# Copyright (C) 2005 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#   
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# The COVER CubeTexture node implements environment mapping 
+# ("fake realtime mirror"). 
+# Mirror images are simples mapped as Texture to a object. 
+# If the object rotates, the Texture on the object rotate accordingly.
+#
+# The urlXP, urlXN etc. urls similar to the texture fields in the 
+# VRML97 Background node
+#
+ exposedField MFString urlXP ""
+ exposedField MFString urlXN ""
+ exposedField MFString urlYP ""
+ exposedField MFString urlYN ""
+ exposedField MFString urlZP ""
+ exposedField MFString urlZN ""
+ exposedField SFBool repeatS TRUE
+ exposedField SFBool repeatT TRUE
+ exposedField SFInt32 blendMode 0
+ ]
+{
+  DEF ImageTexture1 ImageTexture
+    {
+    url "CubeTexture.png"
+    }
+}

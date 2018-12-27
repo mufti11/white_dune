@@ -1,0 +1,76 @@
+#VRML V2.0 utf8
+
+DEF Transform1 Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Cylinder
+	{
+	}
+      }
+  }
+
+DEF TimeSensor1 TimeSensor
+  {
+  cycleInterval 10
+  loop TRUE
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFFloat float1_in
+  eventOut SFVec3f vec3f1_out
+  url 
+    [
+    "javascript:
+
+ // eventOut SFVec3f vec3f1_out //
+
+ function float1_in(value)
+    {
+    // value  SFFloat
+    vec3f1_out = new SFVec3f(value, 0, 0);
+    print(\"hello world\");
+    }
+    "
+
+    "c:
+    /* does the same as the javascript part */
+    struct X3dScript_Script1 *self = node;
+    self->vec3f1_out[0] = self->float1_in;
+    self->vec3f1_out[1] = 0;
+    self->vec3f1_out[2] = 0;
+    printf(\"hello World\n\");
+    "
+
+    "c++:
+    /* does the same as the javascript part */
+    X3dScript_Script1 *self = (X3dScript_Script1 *)node;
+    self->vec3f1_out[0] = self->float1_in;
+    self->vec3f1_out[1] = 0;
+    self->vec3f1_out[2] = 0;
+    printf(\"hello World\n\");
+    "
+
+    "java:
+    /* does the same as the javascript part */
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+
+    script.vec3f1_out[0] = script.float1_in;
+    script.vec3f1_out[1] = 0;
+    script.vec3f1_out[2] = 0;
+    System.out.println(\"hello World\n\");
+    "
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO Script1.float1_in
+ROUTE Script1.vec3f1_out TO Transform1.set_translation
+

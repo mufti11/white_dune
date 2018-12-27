@@ -1,0 +1,94 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO SuperExtrusion
+  [
+  field MFFloat knot
+  field SFInt32 order
+  field SFFloat creaseAngle
+  field SFBool beginCap
+  field SFBool endCap
+  field SFBool solid
+  field MFVec2f scale
+  exposedField SFFloat a
+  exposedField SFFloat b
+  exposedField SFFloat m
+  exposedField SFFloat n1
+  exposedField SFFloat n2
+  exposedField SFFloat n3
+  exposedField SFFloat border
+  exposedField SFFloat bottomBorder
+  exposedField SFInt32 superTessellation
+  exposedField SFInt32 spineTessellation
+  exposedField MFVec3f controlPoint
+  exposedField MFFloat weight
+  ]
+  [
+  "SuperExtrusionPROTO.wrl"
+  "http://wdune.ourproject.org/docs/scriptedNodes/SuperExtrusionPROTO.wrl"
+  ]
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry SuperExtrusion
+        {
+        controlPoint 
+          [
+          0 0 -0.27999800
+          -0.19798900 0 -0.19798900
+          -0.27999800 0 0.00000001
+          -0.19798900 0 0.19798900
+          0.00000003 0 0.27999800
+          0.19798900 0 0.19798900
+          0.27999800 0 -0.00000001
+          0.19798900 0 -0.19798900
+          -0.00000005 0 -0.27999800
+          ]
+        weight 
+          [
+          1
+          0.70710402
+          1
+          0.70710402
+          1
+          0.70710402
+          1
+          0.70710402
+          1
+          ]
+        knot 
+          [
+          0
+          0
+          0
+          0.25000000
+          0.25000000
+          0.50000000
+          0.50000000
+          0.75000000
+          0.75000000
+          1
+          1
+          1
+          ]
+        scale 0.10000000 0.10000000
+        }
+      }
+  }
+
+Viewpoint
+  {
+  orientation -0.99105668 -0.13336116 -4.64660907e-3 0.51951169
+  position -3.73810678e-2 0.87380594 1.49192357
+  }
+

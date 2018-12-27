@@ -1,0 +1,999 @@
+This file is free software; the Free Software Foundation    
+gives unlimited permission to copy, distribute and modify it.
+
+
+BINARY INSTALLATION FOR Linux/UNIX/MacOSX
+=========================================
+
+You may want to check, if you can get installable packages/binaries for 
+your operation system under 
+http://wdune.ourproject.org/
+To get rid of deprecated configuration information after installation, you
+may need to remove $HOME/.dunerc (Linux/UNIX/MacOSX) as user or start
+wdune-0.99????? -uninstall (from the Micro$oft Windows commandline).
+
+
+BINARY INSTALLATION FOR M$Windows
+=================================
+
+white_dune under M$Windows do not have a installation procedure. 
+It should run on all win32 compatible windows versions from scratch (except 
+early versions of Windows 95, which requires the installation of OpenGL first). 
+
+white_dune under M$Windows usually stores some configuration information in 
+the user section of the registry. It is possible to remove this information 
+with the commandline argument "-uninstall", eg. by typing
+    dune.exe -uninstall
+on the commandline.
+You may need to run this after installation to get rid of deprecated 
+configuration information.
+
+If you want to store the configuration information in a file instead of the
+windows registry, you can set the environment variable DUNERC.
+This makes it possible to run white_dune from a CD/USB-Stick without touching 
+the windows registry with a additional batchfile like
+
+set DUNERC=%~d0:\dune.rc 
+%~d0:\dune.exe
+
+This is also usefull on (misconfigured ?) M$Windows installations which 
+forbid the modification of the windows registry completely.
+
+
+BUILD INSTRUCTIONS FOR UNIX/Linux:
+----------------------------------
+
+The installation procedure of white_dune do not contain a "make install"
+process. This is intentional. 
+Instead, if you have root, a systemdependend binary package should be build 
+and installed, so white_dune is available to the systemdependend 
+installer/packing mechanism. 
+If there is no systemdependend installer/packing mechanism, white_dune
+can be installed with "./configure && make" and the source directory should
+not be deleted, as it contains the help/PROTO files.
+
+The building of systemdependend binary packages is done in the "packager" 
+directory.
+
+Systems supported by "packager" directory
+=========================================
+
+ For MacOSX 10.2 "jaguar"/MacOSX 10.3 "Panther" you need "X11 for MacOSX" and 
+ the matching X11 SDK package. 
+ More modern MacOSX systems usually install "X11 for MacOSX" and the X11 SDK 
+ package is available on installation media.
+ For MacOSX use:
+     (cd packager/macosx && sh mksit.sh)
+
+ For IRIX 6.5 use (as root):
+     (cd packager/irix && sh mkpkg.sh)
+
+ For SUN (Open)Solaris use:
+     (cd packager/solaris && sh mkpkg.sh)
+
+ For FreeBSD use (as root):
+     (cd packager/freebsd && sh mkpkg.sh)
+
+ For Redhat Linux (and possibly other rpm based systems) use (as root):
+     (cd packager/rpm && sh mkrpm.sh)
+
+ For Fedora Linux like Scientific Linux 7.x (and possibly other rpm based systems) use (as root):
+     (cd packager/rpm && sh mkrpm_sl7.sh)
+
+ For Debian Linux (stable) use:
+     (cd packager/debian && sh mkdeb.sh)
+
+ For Debian Linux (testing) you can try:
+     (cd packager/debian && sh mkdeb_testing.sh)
+
+ For Slackware Linux use:
+     (cd packager/slackware && sh mkpkg.sh)
+
+ For gentoo Linux use:
+     (cd packager/gentoo && sh mkebuild.sh)
+
+ For Arch Linux use:
+     (cd packager/archlinux && mkpacman.sh)
+
+ For AIX 4.3 (RS/6000) you need mklpp from the bull freeware collection 
+    http://www.bullfreeware.com/download/aix43/bull.mklpp-1.2.9.0.exe
+ use:
+     (cd packager/aix && sh mkbff.sh)
+     
+You will find the binary package files either in /tmp or in the usual 
+systemdependend place like /usr/src/Redhat or $HOME/lppdir/bff 
+
+Non root or if your Systems is not (yet) supported by the packager directory
+============================================================================
+
+To compile under Unix, you need at least to the development versions of
+
+- OpenGL/Mesa3D 
+- Motif/OpenMotif/Lesstif 
+
+There is a minor difference between some older versions of motif and modern 
+versions of openmotif and lesstif.
+This problem occured first with some lesstif versions and was solved with a 
+configure option "--with-buginlesstif". 
+This has now be changed to a compatibility option for old motif version:
+"--with-oldmotif".
+
+For example if you use the "--with-oldmotif" option with 
+lesstif 0.92.26 version delivered at /opt/sfw under Solaris 8 or some 
+versions of openmotif, this can cause problems. The most common problem 
+is that nothing works if you click to a icon.
+
+Under IRIX 6.5 use the "--with-oldmotif" option.
+
+Someone reported problems with the fileselector in debians lesstif 0.93.18-4
+version. Use openmotif instead.
+
+There is also a problem with openmotif 2.3.4 (dune crashes (harmless) if the 
+tab character is pressed). Use lesstif instead.
+
+It is recommended to have the development version of libjpeg, libpng, zlib,
+expat and freetype2 installed. If white_dune is linked with libjpeg, this 
+software is based in part on the work of the Independent JPEG Group.
+
+Additionally, the CGAL and VCGlib libraries are used for the convex hull,
+CSG and polygon reducer functionality. The headers only version of this 
+libraries are sufficent.
+
+Another library is the cURL library, it can be used to download VRML/X3D
+files from the internet (and matching texture files, sound files, Inlines 
+and EXTERPROTOs).
+
+It is not recommended to link the "freeglut" libraries, cause the program 
+will can exit with a emergency save to the file named "$HOME/.dune_crash*.wrl" \
+when try to display a VRML97 Text node.
+As a workaround, white_dune included a few routines from the OpenGLUT
+library as sources, so you do not need to link any GLUT libraries any more.
+
+A matching library is the freetype2 library, it is used for Text/Text3D
+rendering.
+
+If you have a spaceball device connected to the serial port, it is 
+recommended to have the development version of libsball installed.
+
+If you own a Mindstorms NXT device, you can attach a wheel/gear to each of
+3 Mindstorm NXT motors and use the system as USB driven dials device. 
+To use it, you need the development version of libusb (e.g. version 0.1).
+libusb by itself may need additional configuration, eg. a pseudo-filesystem 
+known as 'usbdevfs` or 'usbfs` mounted under /proc/bus/usb under Linux.
+To access the libusb functions, you may need additional configurations, e.g.
+a modification of the udev configuration under Linux (google for the terms
+"usblib udev nxt") to get access to the USB device without root rights.
+You can also try tools/nxt_udev.sh as root.
+
+For a complete selftest, it is recommended to have bmptopnm from the netpbm
+package installed.
+
+Note, that dune may fail to compile/run with buggy gcc CVS snapshots called 
+"gcc-2.96" (to find out run "gcc -v") which is delivered with some older 
+Redhat/Linux distributions. See "--with-kgcc" option below.
+
+Dune also may fail to compile with some (all ?) "ecgs" g++ compilers, 
+g++ 2.91.66 is the last "ecgs" compiler (to find out run "g++ -v") 
+
+Dune has been successfully compiled with
+- gcc/g++ 7.2.1
+- gcc/g++ 4.3.2
+- gcc/g++ 4.0.0 (MacOSX)
+- gcc/g++ 3.3.6
+- gcc/g++ 3.2.1
+- gcc/g++ 2.95.3
+- gcc/g++ 2.95.2
+- gcc/g++ 2.8.1
+- MIPSpro 7.30 (SGI IRIX)
+- Sun WorkShop 6 update 2 C/C++ 5.3 (SUN SOLARIS) (make depend fails (harmless))
+- HP ANSI C++ B3910B A.03.55/HP92453-01 B.11.11.10 HP C Compiler (HP-UX)
+- DEC cxx compiler
+
+It is unknown, if dune compiles with the AIX xlc/xlC compilers, but it
+compiles with AIX gcc/g++.
+
+On some versions of the MacOSX development system ("Xcode") it is important
+to click to the "UNIX Development Support" button during the installation
+of the MacOSX development/Xcode package. Otherwise it gets difficult to
+compile even simple things with gcc/g++ on the commandline.
+
+UNIX/Linux compile procedure
+============================
+
+If you got a .tar.gz file then you can extract it with
+
+$ gzip -cd white_dune-whatever.tar.gz | tar -xvf -
+
+and change into the main directory with
+
+$ cd white_dune-whatever
+
+To compile run 
+
+$ rm -f config.cache
+$ sh ./configure --with-somethingbelow --without-somethingbelow 
+$ make
+
+You can then use bin/dune or copy it to a folder of you own. The docs
+directory should remain at the current location.
+
+A typical configure line when compiling on a typical UNIX/Linux system is
+
+$ sh ./configure --with-optimization --without-devil
+
+There are a few build*.sh scripts in the main directory of white_dune.
+
+If the "configure" command fail mysterically, it is strongly recommended to 
+read the file config.log
+Under some circumstances, the "configure" command "lie": e.g. when your 
+disk is full a test for a library routine can fail cause the compiler can not 
+write it's internal files.
+
+After compilation, you can run some internal selftests for white_dune with
+
+$ make selftest
+
+A note for the compile with the OLPC
+------------------------------------
+
+The OLPC ("One Laptop Per Child") is a computer especially special tailored
+for school usage in third world countries. It's Linux based operation system
+is not comparable to conventional Linux distributions.
+It is possible to build white_dune binary packages for and on the usual 
+Linux version of the OLPC, but you have to struggle with some unusual 
+problems (at least on the "XO-1" model of the OLPC):
+
+- The original OLPC system do not have development tools like gcc, g++ etc.
+  Each OLPC version is based on a matching Fedora Linux version, often older
+  then the current Fedora version. e.g. for OLPC Linux version 11.3.0
+  the matching Fedora version is 14, while the current Fedora version
+  at the same time is 15 or 16. 
+  For OLPC Linux version 11.3.0 you need to install Fedora Linux 14 
+  development packages.
+  To create a proper development and testing environment, the libraries
+  of the original OLPC system should remain untouched. 
+  Most simplest solution:
+  - become the "root" user with "su"
+  - Get two USB harddisks. 
+  - Format the harddisks with a fullfeatured Linux filesystem like ext2 
+    (eg. with something like "mkfs -t ext2 /dev/sdb1").
+  - plug out the harddisks
+  - plug in the first harddisk, it get mounted under /media/something
+  - copy /lib/* to the root level of the first harddisk 
+  - umount your first harddisk
+  - mount your first harddisk to /lib (e.g. "mount /dev/sda1 /lib")
+  - plug in the second harddisk, it get mounted under /media/somethingother
+  - copy /usr/lib/* to the root level of the second harddisk 
+  - umount your second harddisk
+  - mount your second harddisk to /usr/lib (e.g. "mount /dev/sdb1 /usr/lib")
+  - you are now ready to install additional development tools
+    (e.g. via matching fedora RPM-files from the net or from a USB 
+    cdrom/dvd drive). Sometimes the version of the development RPM (header)
+    files from fedora do not match the version of the RPM files from the
+    OLPC system. In this case you can try to install the development package
+    without version checking ("using the argument "--nodeps" for "rpm -i")
+  - later you can unmount the library directories and test against the
+    usual libraries
+
+- The fedora shared OpenGL libraries (at least several) are not working
+  on the OLPC Linux. Like other modern Linux-OpenGL versions, this 
+  libraries depend on code placed in the X-lib libraries. On the OLPC, this 
+  code has been optimized away, making this OpenGL libraries useless.
+  Solution:
+  - compile a older version of the Mesa3D library, that do not use code
+    in the X-lib libraries eg. Mesa 6.4.2 
+  - compile only to static libraries (via "./configure")
+  - link white_dune with this static libraries
+
+- The OLPC XO-1 model do not have enought virtual memory for the final
+  link step when creating the white_dune binary. This can easily result
+  in a system crash of the OLPC system.
+  Solutions:
+  - either run "telinit single" before compile to switch off the memory 
+    consuming processes of the default system and compile on a virtual
+    console (with very small fonts)
+  - or mount a USB hard disk, create a large swap file on it and activate
+    this swap file
+    WARNING: It is not a good idea to create a swap file on the OLPC
+             SSD "harddisk". This type of media do only support a limited
+             number of write accesses. Using a often written swapfile on
+             this type of media can decrease the lifetime of the SSD "disk".
+
+A note for people who want to generate a own white_dune package from scratch:
+----------------------------------------------------------------------------
+
+ The configure procedure will set the defaults for documentation and
+ needed VRML proto files to the current source directory.
+ If you want to delete the source directory after package generation, it would
+ be a good idea to use the --with-helpurl and --with-protobaseurl configure 
+ options according to the location of the installed documentation directory.
+
+Additionally you may want to download the ISO 14772 (VRML97) document 
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
+and use the configure option --with-vrmlnodesurl
+
+"sh ./configure --help" gives you a list of available options.
+
+There are some unusual options for running configure
+
+--with-oldmotif            used for compatibility with old motif/lesstif versions
+--without-devil 	   do not use DevIL library to load textureimages
+--without-cgal             do not use CGAL library e.g. to use convex hull
+--without-png_handle_unknown  use if link fails cause of png_handle_unknown
+--with-sdljoystick         use SDL joystick code
+--with-helpurl=\"helpurl\"   URL of the \"docs\" directory
+--with-vrmlnodesurl=\"vrmlnodesurl\" URL of ISO standard vrml97 node list e.g. downloaded version of  http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
+--with-protobaseurl=\"url\"  URL of base directory of PROTOs for needed EXTERNPROTO statements
+--with-coverwave           allow creation of deprecated cover node Wave
+--with-covertuimap         allow creation of incomplete cover node TUIMap
+--with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla
+--with-vrmlbrowser=vrmlbrowser  VRML browser eg. netscape freewrl lookat...
+--with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp kolourpaint xpaint imgworks...
+--with-soundeditor=soundeditor  object editor for sound (.wav) files eg. audacity rezound wavesurfer gnusound sweep soundeditor...
+--with-movieeditor=movieeditor  object editor for movie (.mpeg) files eg. cinelerra avidemux2 avidemux moviemaker...
+--with-checkincommand=checkincommand  check in command of a revision control system
+--without-usrlocalinclude  use when the compiler refuse -I/usr/local/include
+--with-kgcc 	  	   use to avoid the buggy Redhat/SuSE Linux \"gcc 2.96\"
+--with-eulerrotation 	   use for euler angles instead of VRML like rotations
+--with-routeatend 	   write route statement at end into file
+--with-uninstallcomment=\"uninstallcomment\"  use to document a uninstall command
+--with-dontreplacevrmlscript  do not replace vrmlscript: in URLs with javascript:
+--without-stereo 	   use if you do not have shutterglases
+--with-stereocommand=\"stereocommand\"  how to switch to stereomode (e.g. \"/usr/gfx/setmon -n 1024x768_96s\" on some SGI IRIX systems)
+--with-updatedebug        use debug messages for updates between views   
+--with-aflockdebug         use debug messages for Ascention Flock of birds
+--with-coredump 	   switch off emergencysave signalhandling
+--with-fpuinterrupts 	   switch on interrupts on invalid fpu operations
+--with-efence 	           use the efence malloc debugging routines
+--with-duma 	           use the duma malloc debugging routines
+--without-gif              avoid code to render gif textures
+--without-usb              avoid code to use libusb/NXT inputdevice
+--with-testinmenu 	   insert a extra menupoint for testing of developers
+--with-cut                 currently you better use copy/paste/delete instead...
+--without-textedit         disable file -> textedit cause it would do not return
+--with-nebula 	           use if you want to convert to The Nebula Device
+--with-textureimagemode    use nonstandard mode field in TextureImage node
+--with-optimization 	   optimize for speed
+--without-optbigfiles      do not optimize compiling of big files
+--with-gprof               compile with support for the gprof analyser
+--with-gcov                compile with support for the gcov analyser
+--with-archives            link via archives
+--with-static              link with the -static option
+--without-ranlib           avoid the usage of the ranlib command 
+--with-debug               set -DDEBUG=1 to enable debugging code
+
+Former configuration options, not supported anymore:
+
+--with-buginlesstif               negation moved to --with-oldmotif
+--with-dontcarefocus              moved into commandline parameters
+--with-aflock                     now always true
+--with-krlikeindent               moved into preferences
+--with-nurbssurfaceprotourl="url" moved to --with-protobaseurl/vrml97Amendment1
+--with-nurbscurveprotourl="url"   moved to --with-protobaseurl/vrml97Amendment1
+--with-nurbsgroupprotourl="url"   moved to --with-protobaseurl/vrml97Amendment1
+--with-menugerman                 moved into commandline parameters
+--with-blacknwhiteicons           moved into commandline parameters
+--with-vrml97am1url=\"url\"       moved to --with-protobaseurl/vrml97Amendment1
+--with-x3ddrafturl=\"url\"        moved to --with-protobaseurl/x3d
+--with-scriptednodes=\"url\"      moved to --with-protobaseurl/scriptedNodes
+--with-covernodes=\"url\"         moved to --with-protobaseurl/coverNodes
+--with-ode                        check for ODE library (code was in early 
+                                                         development)
+
+===============
+--with-oldmotif
+===============
+
+Used for compatibility with old motif/lesstif versions. 
+Newer versions of openmotif/lesstif differ from older motif versions.
+The negation of this configure option was formerly --with-buginlesstif.        
+--with-buginlesstif was needed, if a click to a icon did not work.
+
+===============
+--without-devil
+===============
+
+Do not use DevIL library to load textureimages.
+The DevIL library is a wrapper library, it can be used to load different 
+imageformats like TIFF, BMP, TGA, MNG, XPM, PCX, PNM, etc.
+It is not sure, if your target VRML browser support this imageformats,
+cause the VRML97 standard only demand support for JPEG and PNG image file 
+formats and recommend GIF. 
+It looks like some of the supported imageformats of the DevIL library
+do not work on big endian machines (e.g. Apple PowerMac, Sun SPARC, SGI MIPS)
+
+==============
+--without-cgal
+==============
+
+Do not use the CGAL library. CGAL is used for important modelling functions
+like "convex hull". It is usefull to compile without CGAL cause a lot of
+CGAL implemantations crashes the valgrind memory debugger.
+
+============================
+--without-png_handle_unknown 
+============================
+
+In some cases, the usage of png_handle_unknown cause linkerproblems, or
+the usage itself is not recommended. 
+
+==================
+--with-sdljoystick      
+==================
+
+Use SDL joystick code. In some cases, the code borrowed from the
+SDL library to handle joystick events causes problems.
+
+========================
+--with-helpurl="helpurl"
+========================               
+
+URL of the "docs" directory. 
+Default: "docs" directory of the source package.
+also available at http://wdune.ourproject.org/docs/
+
+==================================
+--with-vrmlnodesurl="vrmlnodesurl"     
+==================================
+
+URL of ISO standard vrml97 node list. 
+
+Default: 
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
+Download the ISO standard vrml97 pages to avoid unnecessary internet
+communication costs.
+
+==============================
+--with-protobaseurl="protourl"
+==============================
+
+URL of base directory of PROTOs for needed EXTERNPROTO statements.
+dune use per default the URL of the local directory "docs" containing
+as "protourl". 
+You can replace this URL of the PROTO with a other location.
+
+Under the url "protourl" the following directories are expected (currently):
+
+- vrml97Amendment1
+
+Currently, the VRML97 Amendment1 NURBS nodes (e.g. NurbsSurface, 
+NurbsCurve or NurbsGroup) are not supported by all VRML97 browsers. 
+There are working NurbsSurface implementations in the cc3d (blaxxun contact) 
+and cortona VRML97 browsers.
+In the docs/vrml97Amendment1 directory of the white_dune sources,
+there is a javascript implementation of the NurbsSurface, NurbsCurve
+and NurbsGroup node that works (at least) with the cosmoplayer 2.? VRML97 
+browser.
+When using the Amendment1 NurbsSurface, NurbsCurve or NurbsGroup node, 
+dune additionally write a reference to the urn's of cc3d and cortona
+to the EXTERNPROTO statement.
+
+- x3d
+
+Similar to the vrml97Amendment1 directory, for a VRML97 implementation for
+nodes orginating from the X3D standard.
+In the docs/x3dDraft directory of the white_dune sources,
+there is a javascript implementation of the LoadSensor node that works
+(at least) with the cosmoplayer 2.? VRML97 browser. This is only a weak
+emulation of the X3D draft LoadSensor node, it do not work with all 
+VRML97 browser.
+
+- ScriptedNodes
+
+Similar to the vrml97Amendment1 directory, for nodes which are only implemented
+via script Nodes. 
+In the docs/scriptedNodes directory of the white_dune sources,
+there are the javascript implementation of this nodes that work
+(at least) with the cosmoplayer 2.? and cc3dglut 4.3 browser.
+For the SuperEllipsoid and SuperShape it is not very useful, to 
+use the javascript implementation for morping animations. 
+
+- scriptedNodes
+
+This directory is needed for compatibility with older versions 
+(< white_dune-029beta546) of the script Nodes. 
+This directory holds the PROTO interfaces for old scripted nodes.
+Old files using the old script nodes can be read by a newer white_dune
+version and will be converted to the newer format.
+
+- coverNodes
+
+Somewhat similar to the vrml97Amendment1 directory, but for unportable 
+nodes of the immersive cover/covise VRML browser (only useable when
+dune is started with the "-cover" option.
+The PROTOs in the matching directory are only placeholders, they do nothing.
+
+- exportContainers      
+
+Somewhat similar to the vrml97Amendment1 directory, for nodes which act
+as containers for data needed for other fileformats than VRML/X3D 
+(e.g. catt 8).
+
+================
+--with-coverwave
+================
+
+Allow creation of deprecated nonstandard extension node Wave of the cover 
+browser.
+
+==================
+--with-covertuimap
+==================
+ 
+Allow creation of incomplete nonstandard extension node TUIMap the cover 
+browser.
+
+============================
+--with-wwwbrowser=wwwbrowser
+============================
+
+Use this to configure your default wwwbrowser to view HTML (help) files. 
+Examples are netscape mozilla opera etc.
+
+==============================
+--with-vrmlbrowser=vrmlbrowser
+==============================
+
+Use this to configure your default vrmlbrowser to view VRML files.
+This can be needed if your default wwwbrowser (like netscape) has no 
+vrml plugin (like the one from FreeWRL) installed and you use a 
+standalone vrml browser program (like lookat) instead.
+
+==============================
+--with-imageeditor=imageeditor 
+==============================
+
+Use this to configure your default program to change JPEG and PNG bitmap 
+(.jpg/.png/.gif) files 
+eg. gimp kolourpaint xpaint imgworks...
+
+==============================
+--with-soundeditor=soundeditor
+==============================
+
+Use this to configure your default program to change for WAVe sound 
+(.wav) files 
+eg. audacity rezound wavesurfer gnusound sweep soundeditor...
+
+==============================
+--with-movieeditor=movieeditor 
+==============================
+
+Use this to configure your default program to change MPEG 1 movie 
+(.mpeg) files 
+eg. cinelerra avidemux2 avidemux moviemaker...
+
+====================================
+--with-checkincommand=checkincommand 
+====================================
+
+Default check in command of a revision control system.
+The check command of a revision control system stores repetitive new versions 
+of a file. Later all versions can be restored.
+If a check in command is present and the use of the check in command 
+is enabled via "Options -> output settings", white_dune use a check in
+command for every store of a VRML/X3D file.
+Via "Options -> output settings" a user can change the check in command.
+A check in command must be either noninteractive or must open a graphics
+window. You need to replace the filename to store with %s.
+Currently configure search for the ci command of the RCS revision control 
+system and use "ci -l -q -f %s < /dev/null"
+
+================
+--without-stereo
+================
+
+If your system is capable to do quadbuffer stereo, but you do not have
+shutterglases or a similar technology, use --without-stereo to disable
+the default stereomode.
+
+====================================
+--with-stereocommand="stereocommand"
+====================================
+
+On some systems, you need a extra command to switch to a quadbuffer stereo
+capable visual.
+
+To see your if the current visual is capable for stereo, use the "glxinfo" 
+command and look at the "st" column (for details see the manpage).
+
+On some systems, a 1280x1024 resolution mode is not stereo capable.
+
+To switch on a SGI from a 1280x1024 mode to a stereocabable 1024x768 mode, 
+use a command like "/usr/gfx/setmon -n 1024x768_96s" or 
+"/usr/gfx/setmon -x 1024x768_96s". On some older systems, setmon commands
+to switch resolution ("setmon -x") are only accepted from root and the 
+X server must be restarted to complete the operation.
+
+For example a SGI Indigo2 IMPACT/1/1/1 ("High Impact") system in 1024x678_76 
+videomode can find a visual with quadbuffer stereo, but the monitor must be 
+switched to a matching mode with the command: 
+"/usr/gfx/setmon -n 1024x768_96s"
+Using the --with-stereocommand option, this can be done by starting dune.
+
+=========================
+--without-usrlocalinclude  
+=========================
+
+Some of the gcc 3.X compiler versions refuse to accept the -I/usr/local/include 
+option. In this case a lot of configure tests will fail mysterically if
+you do not read config.log
+
+===========
+--with-kgcc
+===========
+
+ If you have the buggy Redhat Linux compilers (gcc CVS snapshot aka "gcc-2.96")
+ or buggy SuSE Linux compilers (gcc CVS snapshot aka "gcc-2.96"), use
+
+ $ rm -f config.cache
+ $ sh ./configure --with-kgcc
+ $ make
+ 
+ The fake "gcc-2.96" compilers have problems to successfull compile code
+ with variable argument list (stdarg).
+
+ To install on Linux redhat 7.1 you will find kgcc in a package called 
+ "compat-egcs", which need the compat-glibc package (BTW: the lesstif package
+ is in the "powertools" directory).
+
+===================
+--with-krlikeindent
+===================
+
+ Use if you want this 
+
+ Transform {
+   children [
+     Shape {
+       appearance Appearance {
+         material Material {
+         }
+       }
+       geometry Cone {
+       }
+     }
+   ]
+ }
+
+ Kernigan/Richie like indent (from their C book) instead of this 
+
+ Transform 
+   {
+   children 
+     [
+     Shape 
+       {
+       appearance Appearance 
+         {
+         material Material 
+           {
+           }
+         }
+       geometry Cone 
+         {
+         }
+       }
+     ]
+   }
+
+ indent.
+
+=================
+--with-routeatend
+=================
+
+Write ROUTE statements at the end of the VRML file. 
+Otherwise (default) ROUTE statements are written at the first possible
+place outside nodes.
+
+============================================
+--with-uninstallcomment=\"uninstallcomment\" 
+============================================
+
+Allows to document a uninstall command for the -uninstall commandline
+option, e.g. 
+
+--with-uninstallcomment=\"dpkg -P whitedune\"
+
+====================
+--with-eulerrotation
+====================
+
+Use if you want to input euler angles (in degrees) as fieldvalues instead 
+of VRML like rotations. 
+Of course, this option only affects interactive input, not the export or 
+import of VRML files.
+
+============================
+--with-dontreplacevrmlscript
+============================
+
+Some older VRML editors (like cosmoworlds 1.02) use "vrmlscript:"
+instead of "javascript:" to sign URL with inlined javascript in Scriptnodes.
+If this configure option is not set, white_dune will replace "vrmlscript:" 
+with "javascript:" in URLs (to avoid problems with modern VRML browsers).
+
+==================
+--with-updatedebug
+================== 
+
+Use debug messages to show updates between views/windows. 
+Unnecessary updates are a potential performance problem for commands with lots of operations.
+
+==================
+--with-aflockdebug         
+==================
+
+Use debug messages for the Ascention Flock of birds magnetic headtracker.
+
+===============
+--with-coredump
+===============
+
+Switch off emergencysave signalhandling.
+Useful for testing, or if the signalhandling code do not match your system. 
+
+====================
+--with-fpuinterrupts
+====================
+
+Switch on interrupts for invalid fpu operations. 
+Useful to find numeric errors together with "--with-coredump".
+
+=============
+--with-efence
+=============
+             
+Use the efence malloc debugging routines. 
+This is useful to find hard to find bugs related to memory allocation. 
+Efence requires to start bin/dune from the debugger and the debugger
+will stop on problems like writing over a malloced/new memory block.
+bin/dune needs very much swapspace when linked to efence.
+When the configure command is able to locate the static version of the
+efence library, it may be wise to use a other binary build with 
+"cd src && make ../bin/efencedune". 
+In this case, efence checks only the memory malloced by white_dune itself, 
+not the memory malloced by linked libraries like OpenGL, X11 or image reading 
+libraries. Therefore the program use remarkable less swapscape and run
+remarkable faster as the program linked with --with-efence.
+
+===========
+--with-duma
+===========
+             
+Duma is a advanced/already maintained fork of efence. 
+For more information see --with-efence.
+The matching make command is "cd src && make ../bin/dumadune"
+
+=============
+--without-gif
+=============
+
+Avoid code to render gif textures. This is useful to support the creation of
+true standard conform VRML/X3DV files, despite the GIF format is mentioned 
+in the standards as "Support for the GIF format is also recommended".
+
+=============
+--without-usb
+=============
+
+Avoid code to use libusb, currently only used for the Lego NXT dials 
+inputdevice.
+This is currently used on SUN Solaris.
+
+=================
+--with-testinmenu
+=================
+
+This option is only intented for developers of new code, who want to check new 
+but do not want to take care about the menu mechanisms.
+Look for MainWindow::testInMenu() in MainWindow.cpp to see how to use this 
+menupoint.
+
+==========
+--with-cut
+==========
+
+Tries to make use of the "edit -> cut" menupoint in dune. This is known
+to cause problems. Currently you better use the copy/paste/delete 
+menupoints instead. Use this option only, if you want to try to write a bugfix.
+
+====================
+--without-textedit  
+====================
+
+Use this as a workaround, if disable file -> textedit do not return. 
+This problem has been occured with glXDestroyContext on a radeon graphics 
+card on FreeBSD 5.0-RELEASE (possibly this is a bug in the file -> textedit
+implementation itself).
+
+=============
+--with-nebula              
+=============
+
+Use if you want to convert to The Nebula Device 3D engine.
+With this feature, white_dune joined forces with "SAND dune"
+(Save As Nebula Device) by Aaron Cram (based on Stephen F. Whites dune 0.13). 
+Unfortunatly, it looks like the convertion to The Nebula Device 3D engine 
+only works with some VRML files exported from the Maya modeller.
+For more information see http://www.ori.org/~aaronc/code/nebula/
+
+=======================
+--with-textureimagemode
+=======================
+
+Dune can use a nonstandard "mode" field in the TextureImage node.
+
+===================
+--with-optimization
+===================
+
+Optimize for speed.
+
+=====================
+--without-optbigfiles
+=====================
+
+Like --with-optimization, but without optimization of some big files. This
+is only usefull on machines with low memory and systems with compilation
+errors in this situation (like the default Sony Playstation 2 Linux 
+configuration).
+
+============
+--with-gprof
+============
+
+Compile with support for the gprof analyser to messure how much time
+has been spend in various regions of the code.
+After run, a file gmon.out will occure. See the messure with "gprof dune".
+
+===========
+--with-gcov
+===========
+
+Compile with support for the gprof analyser to messure how much time
+has been spend in various line of the code and test if a test procedure
+touched or missed some execution paths.
+
+===============
+--with-archives
+===============
+
+Link via archives. This option is used for machines with very limited RAM 
+memory and enough disk space to store the object files in archives.
+The resulting archives are are rather useless beside few optimizing compiling
+speed on some older hardware. 
+White_dune as a OpenGL program is usually not started twice on a machine, 
+building shared libraries (which require additional processorpower on
+program startup) out of this archives would be a waste of energy
+resources.
+
+=============
+--with-static
+=============
+
+Link with the -static option. 
+You may think about using this option on machines where the installation of
+some libraries (like lesstif/motif or glut) is not easy (like MacOSX or
+Sony Playstation 2 Linux) and you want to distribute a binary.
+But in this situtation it is better to create static versions of the needed
+libraries and configure the usage of this libraries with the CFLAGS, CXXFLAGS 
+and LDFLAGS compiler and linker flags.
+
+================
+--without-ranlib
+================           
+
+Avoid the usage of the ranlib command.
+
+==========================================================================
+BUILD INSTRUCTIONS FOR WIN32 (Micro$oft Visual C++ 6.0):
+--------------------------------------------------------
+
+Run one of the following scripts in white_dune_directory\batch (you may
+need to run this file from the "cmd" program may need to "cd" into
+the white_dune_directory\batch directory first)
+
+jpg_png_zlib.bat (recommended, version which need the expat, jpeg, libpng 
+                  and zlib libraries)
+nt.bat           (version without the need of a noncommon library)
+
+The usage of jpg_png_zlib.bat is recommended. You get a version, which can 
+display ImageTextures, but can only use image formats really supported by 
+the VRML97 standard (jpeg and png). If white_dune is linked with libjpeg, 
+this software is based in part on the work of the Independent JPEG Group.
+
+When not using jpg_png_zlib.bat, you get a version, which can not display 
+ImageTextures and can not load XML encoded X3D files, but do not need any 
+additional library. 
+
+When you try to install a development version, you are often forced to use 
+batch\jpg_png_zlib.bat.
+
+You can find sources, binaries and needed Micro$oft Visual C++ project 
+files of the needed libraries at
+ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win32static11.zip
+for windows 7 32Bit or
+ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win64static13.zip
+for windows 10 64Bit
+
+The later version also includes a updated libGLU library for 
+NurbsTrimmedSurface compatibility.
+The later version also includes a updated freetype2 library for 
+string rendering.
+
+If you want to change the parser.y/lexer.l files, you need to install the
+cygwin programs "bash", "flex" and "bison" from http://www.cygwin.com/
+and need to customise the batch files white_dune_directory\batch\usebison.bat 
+and white_dune_directory\batch\useflex.bat
+
+In case of the build command finds no bash, flex and bison tools, the output
+previously generated under Linux/Unix/MacOSX (files lexer.cpp and parser.cpp) 
+will be used. 
+If you use the Linux/Unix/MacOSX files, you should avoid to use the 
+"rebuild all" menupoint, otherwise lexer.cpp and parser.cpp would be removed 
+and you would need another copy of this files.
+
+If you want to read and write X3D Files via the java translators from
+Qiming Wang, you need to download the files from 
+   http://ovrt.nist.gov/v2_x3d.html 
+and extract them into the directories ./v2x3d and ./x3dv2
+
+Another (better ?) source for this files is from the X3Dedit distribution 
+http://www.web3d.org/x3d/content/README.X3D-Edit.html
+
+There is also a solution based on Windows Scripting Host in the tools 
+directory (see tools/xsl_js.bat).
+
+Open the dune.dsw workspace file, and custumise the include/link paths
+to needed libaries. 
+
+The defaults are: 
+
+for jpeg_png_zlib version:
+   /I include paths for jpg_png_zlib
+      white_dune_directory\..\jpeg-8b
+      white_dune_directory\..\libpng-1.4.4
+      white_dune_directory\..\libpng-1.2.5
+  libaries:
+      white_dune_directory\..\jpeg-8b/jpeg/Debug/jpeg.lib
+      white_dune_directory\..\libpng-1.4.4/libpng/Debug/libpng.lib
+      white_dune_directory\..\zlib-1.2.5/zlib/Debug/zlib.lib
+
+Then select "build dune.exe" from the build menu.
+You will find the executable in the directory Debug (or X64/Debug on 
+64Bit Machines).
+
+
+==========================================================================
+BUILD INSTRUCTIONS FOR WIN32 (Visual Studio Community versions):
+--------------------------------------------------------------
+
+It is possible to build white_dune with at least some Visual Studio Express
+and Visual Studio Community compilers. This is very similar to the build with 
+Micro$oft Visual C++ 6.0, with the following differences:
+
+- instead of opening dune.dsw, open dune.vc(x)proj
+
+When building excutables for Windows XP and above, it could be usefull to
+run batch/jpg_png_zlib.bat to write src/config.h, install
+ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win32static11.zip
+to add needed libraries and open dune.vcxproj
+ 
+
+==========================================================================
+BUILD INSTRUCTIONS FOR GNU CYGWIN (WIN32) system):
+--------------------------------------------------
+
+It is possible to compile and run white_dune with the GNU CYGWIN system
+using the free gcc/g++ compilers, but currently (August 2005) you need to use
+a WIN32 based X11 system. 
+Currently, the OpenGL system shipped with CYGWIN is rather slow compared
+with the native WIN32 version.
+For build instructions for the GNU CYGWIN system see 
+"BUILD INSTRUCTIONS FOR UNIX/Linux".
+==========================================================================
+
+MUFTI (rusmufti@helpdesk.bera.rus.uni-stuttgart.de)
+

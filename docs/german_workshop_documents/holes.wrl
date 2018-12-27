@@ -1,0 +1,79 @@
+#VRML V2.0 utf8
+
+Transform
+  {
+  rotation -2.76976265e-2 -0.99908536 3.25776338e-2 0.88171714
+  translation 22.66661453 0 22.66658020
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	texture ImageTexture
+	  {
+	  url "holes.png"
+	  }
+	}
+      geometry IndexedFaceSet
+	{
+	coord Coordinate
+	  {
+	  point 
+	    [
+	    -1 1 1
+	    -1 -1 1
+	    1 1 1
+	    1 -1 1
+	    1 1 -1
+	    1 -1 -1
+	    -1 1 -1
+	    -1 -1 -1
+	    ]
+	  }
+	texCoord TextureCoordinate
+	  {
+	  point 
+	    [
+	    0 1
+	    0 0
+	    1 1
+	    1 0
+	    ]
+	  }
+	convex FALSE
+	coordIndex 
+	  [
+	  0 1 3 2 -1 
+	  4 5 7 6 -1 
+	  6 0 2 4 -1 
+	  1 7 5 3 -1 
+	  6 7 0 -1 
+	  7 1 0 -1 
+	  2 5 4 -1 
+	  2 3 5 -1 
+	  ]
+	solid FALSE
+	texCoordIndex 
+	  [
+	  0 1 3 2 -1 
+	  0 1 3 2 -1 
+	  0 1 3 2 -1 
+	  0 1 3 2 -1 
+	  0 1 2 -1 
+	  1 3 2 -1 
+	  0 3 2 -1 
+	  0 1 3 -1 
+	  ]
+	}
+      }
+  }
+
+Viewpoint
+  {
+  orientation -0.99332594 -2.70342063e-2 -0.11212784 0.61839109
+  position 23.01332092 3.30676198 27.19891548
+  }
+

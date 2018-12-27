@@ -1,0 +1,455 @@
+<!--
+/*
+ * Copyright (C) 2018 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h1>How to build a space glider (not difficult)</h1>
+<br>
+<h2>First a few informations to read</h2>
+<br>
+On some systems (Linux KDE/Gnome and SGI IRIX 4dwm), there is a 
+programm icon fuer "dune4kids", it lools soemthing like this:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+On systems like Micro$oft Windows or MacOSX there is only one (other)
+programm icon:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normally, the program of this icon starts with the english full version,
+usually with very much icons and too much menues.
+<br>
+<a href="dune4kids_start_en.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+In this case, you have to switch to dune4kids.<br> 
+You have to <a href="dune4kids_start_en.html" target="_blank"> 
+click here</a> to switch to the right version.<br>
+<img src="frog01_en.png">
+<br><br>
+<h2>What to do, if the program crashes ?</h2>
+With a bit of luck, you can load the last situation, if there is a
+new ".dune_crash" file in the list of recent files.
+<br>
+<img src="frog00_en.png">
+<br>
+<h1>Navigation</h1>
+Navigation means the movment in the 3D modell.<br>
+This is important, cause it can happen very easily, that you get inside or
+behind your peace of work and see therefore nothing.<br><br>
+When you see nothing there are two way to continue, ofthen you use this
+ways together:
+<ul>
+<li> <b>Move backwards</b><br>
+     You can go forwards and backwards, if you press together the 
+     left mouse button and the "Shift" key on the keyboard and move the
+     mouse up and down.
+     If you use "Examine" (when the icon <img src="examine.png"> is pressed)
+     this also works with the middle button of a 3-button mouse.
+     If there is a mouse with a scroll wheel, you have to press the mouse
+     wheel.
+</li>
+<li> <b>Turn the 3D world</b><br>
+     If you press both the left mouse button and the "Control" key on the 
+     keyboard and then move the mouse, the whole 3D world turns around.
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Additionally there you can press together the left mouse button, the "Shift" 
+key and the "Control" key and move the mouse (or use the icon 
+<img src="move_along_screen.png">). This results in the movement in direction
+of the screen plane: up, down, left and right.
+<br>
+<br>
+After you find the object and moved near to it, you should press again the
+"Examine" icon <img src="examine.png"> in order to continue to work normally.
+<br>
+<h1>Icons for changes</h1>
+In Order to show, how things are changed, a box is created.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, to changed whole objects:
+<ul>
+<li>Move: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Rotate: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Scale: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>uniform scale: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>move center of rotation: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+With small white boxes you can change the objects itself.
+With the single arrow icons <img src="xyz.png"> you can select the direction.
+<br>
+For example if only the green arrow is pushed,
+<img src="y_only.jpg"> you can move the little box<br> 
+<br>
+<img src="yonly_1.jpg"> 
+<br>
+only into the direction of the green arrow.<br>
+<br>
+<img src="yonly_2.jpg">. 
+<br>
+In the same way as arrows grabed by the stem to move inside a plane,
+you can also push two arrows <img src="xz_only.jpg"> in one time
+to move a little box in one plane. 
+<br>
+<h1>How to build a glider model (not difficult)</h1>
+<br>
+You don't have to obey the following description exactly, but should 
+(at least at the first reading) stick to the clue.<br>
+It is important that <em> Change -&gt; X mirred modelling</em> is alway 
+seletected.
+<br>
+Thw glider model will be constructed from a several parts: a torso with a 
+fin and airfoils.
+<br>
+<h2>Torso</h2>
+The torso consists of a mathematical sphere.<br>
+You have to use <em><b>New -&gt; Sphere</b></em>
+<br>
+<img src="glider1.png"/>
+<br>
+If "Sphere" is selected, you can change the radius of the sphere with the move of the
+small white boxes (click to the small boxes, keep the mouse button pressed
+and move the mouse) 
+
+<br><em><b>Change -&gt; Make deformable (NURBS)</b></em>
+<br>
+<img src="glider2.png"/>
+<br>
+In the next window you can simply click "OK".
+<br>
+<img src="glider3.png"/>
+<br>
+Despite the body itself did not change, the little boxes have been changed.
+If you move a small box, the body can be changed more exactly (if you 
+moved now at a white box (<b>only if you moved</b>) you should use
+<em>Edit -&gt; Undo</em>, the box moves back).
+<br>
+The icon <img src="symetric_pressed.png"> for
+"X mirrored Modelling" should be pressed (you can change it with 
+ggf. mit <em>Change -&gt; X mirrored Modelling</em>).
+<br>
+<br>
+Click to the torso of the glider. White boxes will appear.
+Now you turn your object in a way that you can select with the middle mouse
+button (often: the mouse wheel) the small white boxes. The boxes change
+their color into green.
+<br>
+<img src="glider4.png"/>
+<br>
+Now you need a calm hand to hit one of the little green boxes (press the 
+right mouse button) and move the mouse. 
+<br>
+<img src="glider5.png"/>
+<br>
+Now use <b><em>New -&gt; empty Group</em></b> and move the Transform in the Group. 
+<br>
+<img src="glider6.png"/>
+<br>
+Select the NurbsSurface 
+<br>
+<img src="glider7.png"/>
+<br>
+and use <b><em> Change -&gt; Rebuild controlpoints</em></b> and press OK.
+<br>
+<img src="glider8.png"/>
+<br>
+<br>
+<h2>Fin</h2>
+<br>
+Use the right mouse button and drag a box on the front part of the glider
+<br>
+<img src="glider9.png"/>
+<br>
+Use <b><em>Selection -&gt; Hide Vertices</em></b>
+<br>
+<img src="glider10.png"/>
+<br>
+The number of vertices are reduced, you are not confused by vertices of the front
+part of the glider.
+<br>
+<img src="glider11.png"/>
+<br>
+Navigate to see the glider from behind.
+<br>
+<img src="glider12.png"/>
+<br>
+Select the the shown vertices with the middle mousebutton.
+<br>
+<img src="glider13.png"/>
+<br>
+Use <b><em>Change -&gt; Scale selected points  -&gt; x</em></b> and enter the
+number 0.1
+<br>
+<img src="glider11a.png"/>
+<br>
+Next you have to selected the fin vertices and move the fin in the green direction.
+<br>
+<img src="glider15.png"/>
+<br>
+The form of the fin is changed with the move of the small white boxes.
+<br>
+<img src="glider16.png"/>
+<br>
+Navigate and restore the <b><em>Movement -&gt; y only (green)</em></b> setting
+<br>
+<img src="glider17.png"/>
+<br>
+Now you can drag the fin vertices in both the y and z direction.
+<br>
+<img src="glider18.png"/>
+<br>
+<br>
+<h2>Airfoils</h2>
+<br>
+First select the Group.
+<br>
+<img src="glider19.png"/>
+<br>
+Use <b><em>New -&gt; Sphere</em></b> and click to the scale navigation.
+<br>
+<img src="glider21.png"/>
+<br>
+Use the scale navigation to increase x size and decrease y size.
+<br>
+<img src="glider22.png"/>
+<br>
+Use <b><em>Change -&gt; Make deformable (NURBS)</em></b>
+<br>
+<img src="glider23.png"/>
+<br>
+And press OK
+<br>
+<img src="glider24.png"/>
+<br>
+Use the right mouse button to drag the mouse and select a box aroud the outer
+middle airfoil vertices.
+<br>
+<img src="glider25.png"/>
+<br>
+Use <em>Movement -&gt; z only (blue)</em> to restrict the movement to the z direction
+and drag the boxes to a point near to the other boxes (but not wider...).
+<br>
+<img src="glider26.png"/>
+<br>
+Now select the Group.
+<br>
+<img src="glider27.png"/>
+<br>
+Now try <b><em>(IndexedFace)Set -&gt; Boolean Operations -&gt; 
+Union (needs Group with two meshes)</em></b>. This can fail cause the airfoils needs
+the be more in front. The reason of the fail is unknown, it has somthing to do with
+internals of the used CGAL graphics library. 
+<br>
+<img src="glider28.png"/>
+<br>
+So move the airfoils forwards,
+<br>
+<img src="glider29.png"/>
+<br>
+select Group
+<br>
+<img src="glider30.png"/>
+<br>
+and try again <b><em>(IndexedFace)Set -&gt; Boolean Operations -&gt; 
+Union (needs Group with two meshes)</em></b>.
+<br>
+<img src="glider31.png"/>
+<br>
+The Group has been converted to a IndexedFaceSet.<br>
+Now select the Transform node. 
+<br>
+<img src="glider31a.png"/>
+<br>
+Now use <em>Change -&gt; Set start values</em>
+to restore the orientation of the IndexedFaceSet.
+<br>
+<img src="glider31b.png"/>
+<br>
+Unfortunatly the vertices are visible.<br>
+Select the IndexedFaceSet and use <b><em>Change  -&gt; Show (sometimes) numbers</em></b>
+and increase "creaseAngle"</b>
+<br>
+<img src="glider32.png"/>
+<br>
+Select "Scene"
+<br>
+<img src="glider33.png"/>
+<br>
+and use <b><em>New -&gt; empty Group</em></b>  and move the Transform in the Group
+<br>
+<img src="glider34.png"/>
+<br>
+Select the Group
+<br>
+<img src="glider35.png"/>
+<br>
+Use <b><em>New -&gt; Sphere</em></b>
+<br>
+<img src="glider36.png"/>
+<br>
+Reset <b><em>Movement -&gt; z only (blue)</em></b> and move the Sphere to a matching point.
+<br>
+<img src="glider37.png"/>
+<br>
+Select a white box 
+<br>
+<img src="glider38.png"/>
+<br>
+and drag it, to change the radius.
+<br>
+<img src="glider39.png"/>
+<br>
+Select the sphere and use <b><em>Change -&gt; Change to -&gt; IndexedFaceSet</em></b>.
+<br>
+Enter 8 and press OK.
+<br>
+<img src="glider40.png"/>
+<br>
+Select Group
+<br>
+<img src="glider41.png"/>
+<br>
+And use <b><em>(IndexedFace)Set -&gt; Boolean Operations -&gt; 
+Union (needs Group with two meshes)</em></b>.<br>
+The Group has been converted to a IndexedFaceSet.<br>
+<br>
+<img src="glider41a.png"/>
+<br>
+Now select the Transform node. 
+<br>
+<img src="glider31a.png"/>
+<br>
+Now use <em>Change -&gt; Set start values</em>
+to restore the orientation of the IndexedFaceSet.
+<br>
+<img src="glider42.png"/>
+<br>
+Select the IndexedFaceSet and use <b><em>Change  -&gt; Show (sometimes) numbers</em></b>
+and increase "creaseAngle"</b>.<br>
+<br>
+<img src="glider42a.png"/>
+<br>
+Use <b><em>File -&gt; Save As...</em></b> to save to "something.x3dv". 
+The ".x3dv" is important to convert the modell to X3D, we need now a 
+X3D feature.<br>
+Select IndexedFaceSet and use <b><em>New -&gt; ColorRGBA</em></b>
+<br>
+<img src="glider45.png"/>
+<br>
+Now you need <b><em>Selection -&gt; Faces</em></b> to selected the faces
+that needs to be colored. Drag the mouse with the right button pressed
+over the faces, you want to select. You can use <b><em>Selection -&gt; 
+Deselect</em></b> if you accidently selected too much faces.
+<br>
+<img src="glider46.png"/>
+<br>
+Now use <b><em>Change -&gt; Color (needs Material or Color or ColorRBGA)
+ -&gt; Color per selected vertex (need Color or ColorRBGA)</em></b>,
+a colorwheel will appear<br>
+<img src="glider47.png"/>
+<br>
+Select the color and the needed transparency (with the lower slider) and press
+OK.
+<br>
+<img src="glider48.png"/>
+<br>
+Select Material (inside Apperance)
+<br>
+<img src="glider48a.png"/>
+<br>
+Use <em>Change -&gt; Color (need Material or Color or ColorRGBA) -&gt; Gloss
+</em>and select a white color.
+<br>
+<img src="glider48b.png"/>
+<br>
+Select the Transform.
+<br>
+<img src="glider49.png"/>
+<br>
+Use <b><em>Animation -&gt; Create Curve Animation (need Transform)</em></b>.
+<br>
+<img src="glider50.png"/>
+<br>
+Enter Point 33 and select ring of the radio buttons.
+<br>
+<img src="glider51.png"/>
+<br>
+A circle path of the animation will occure.
+<br><img src="glider52.png"/><br>
+Select CurveAnimation1 and select all points by dragging a box with the mouse
+right button pressed. 
+<br><img src="glider53.png"/><br>
+Use <b><em>Change -&gt; Scale selected points -&gt; x (red)</em></b>
+and <b><em>Change -&gt; Scale selected points -&gt; z (blue)</em></b>
+and enter 4 for each dialog.
+<br><img src="glider54.png"/><br>
+The animation path is wider, but if you start the animation (with the 
+Play Animation icon <img src="run.png"/>), the glider model is moved sidewards. 
+<br><img src="glider55.png"/> and rotation jumps at one point<br>
+Select Shape and use <b><em>Change -&gt; Swap -&gt; x (red) and y (green)</em>
+</b>.
+<br><img src="glider56.png"/><br>
+Select CurveAnimation1 and use <b><em>Change -&gt; Change to  -&gt; 
+Standard interpolators (need CurveAnimation)</em>. Select 
+OrientaionInterpolator1
+</b>.
+<br><img src="glider57.png"/><br>
+In the channel view, drag the last pink point a little bit up, to avoid
+the small jump in the circle.
+<br><img src="glider58.png"/><br>
+Your animation is ready. You can use <em>File -&gt; Preview</em> to view
+it in your Webgl enabled webbrowser
+<br><img src="glider60.png"/><br>
+You can use e.g. <em>File -&gt; Export X3DOM html</em> to export the file
+into a HTML file, that can be edited with your favorite HTML editor.<br>
+With aqsis and mencoder (e.g. under Ubuntu Linux) you can create the
+following video<br> <video src="glider_movie.mp4" controls>Video problem</video>
+<pre>
+rm -rf RibExport*.tif && dune -o RibExport.rib -rib file.x3dv && 
+aqsis RibExport.rib && 
+mencoder "mf://RibExport*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -o movie.mp4 -mf type=tif:fps=24
+</pre>
+

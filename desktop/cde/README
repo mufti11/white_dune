@@ -1,0 +1,21 @@
+# The following files are free software; the Free Software Foundation    
+# gives unlimited permission to copy, distribute and modify it.
+
+icons/VRML97.m.bm
+icons/VRML97.m.pm
+icons/VRML97.m_m.bm
+icons/VRML97.t.bm
+icons/VRML97.t.pm
+icons/VRML97.t_m.bm
+icons/white_dune.l.bm
+icons/white_dune.l.pm
+icons/white_dune.m.bm
+icons/white_dune.m.pm
+icons/white_dune.t.bm
+icons/white_dune.t.pm
+os/aix/usr_local_bin_white_dune.dt
+os/aix/white_dune
+os/solaris/opt_White_Dune_bin_white_dune.dt
+os/solaris/white_dune
+types/white_dune.dt
+README

@@ -1,0 +1,95 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF TimeSensor1 TimeSensor 
+  {
+  loop TRUE
+  }
+
+DEF TouchSensor1 TouchSensor 
+  {
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       DEF Text1 Text 
+	{
+	string 
+	  [
+	  "not started"
+	  ]
+	}
+      }
+    ]
+  translation -0.904124 -2.298555 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    ]
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFTime time1_in
+  eventIn SFTime time2_in
+  eventOut MFString mstring1_out
+  field SFTime starttimeStore 0
+  field SFBool startedStore FALSE
+  url 
+    [
+    "javascript:
+
+ // field SFTime starttimeStore //
+ // field SFBool startedStore //
+ // eventOut MFString mstring1_out //
+
+ function time1_in(value)
+    {
+    if (startedStore)
+       mstring1_out = new MFString((Math.round((value - starttimeStore) * 100)/100).toString());
+    }
+
+ function time2_in(value)
+    {
+    if (!startedStore)
+        starttimeStore = value;
+    startedStore = !startedStore;
+    }
+
+"
+    ]
+  }
+
+ROUTE TimeSensor1.time TO Script1.time1_in
+ROUTE TouchSensor1.touchTime TO Script1.time2_in
+ROUTE Script1.mstring1_out TO Text1.set_string
+

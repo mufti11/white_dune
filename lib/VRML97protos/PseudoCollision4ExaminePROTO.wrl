@@ -1,0 +1,99 @@
+#VRML V2.0 utf8
+
+PROTO PseudoCollision4Examine
+[
+  eventOut SFFloat toNavigationInfoSpeed
+  field SFVec3f outerProximitySize 0 0 0
+  field SFVec3f innerProximitySize 0 0 0
+  field SFFloat defaultSpeed 1
+]
+{
+# ProxyimitySensor "PseudoCollsion"
+# if the User is inside the Proto, toNavigationInfoSpeed is reduced 
+#
+# 
+# toNavigationInfoSpeed must be routed to the field "speed" of a
+# NavigationInfo node to reduce the movement of the user.
+#
+# Copyright (C) 2004 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+# Cambridge, MA 02139, USA.
+Group 
+  {
+  children 
+    [
+    DEF innerProximitySensor1 ProximitySensor 
+      {
+      size IS innerProximitySize
+      }
+    DEF outerProximitySensor1 ProximitySensor 
+      {
+      size IS outerProximitySize
+      }
+
+    DEF Script1 Script 
+      {
+      eventIn SFVec3f positionFromOuterProxy
+      eventIn SFVec3f positionFromInnerProxy
+      eventIn SFBool isActiveFromInnerProxy
+      eventOut SFFloat toNavigationInfoSpeed IS toNavigationInfoSpeed
+      field SFFloat defaultSpeed IS defaultSpeed
+      field SFBool isInInnerProxy FALSE
+      field SFVec3f positionOuterProxy 0 0 0
+      field SFFloat oldDistance 0
+      field SFFloat distance 0
+      url "javascript:
+    
+        function positionFromOuterProxy(value)
+           {
+           if (!isInInnerProxy)
+              positionOuterProxy = new SFVec3f(value[0], value[1], value[2]);
+           }
+    
+        function positionFromInnerProxy(value)
+           {
+           if (isInInnerProxy)
+              {
+              distance = positionOuterProxy.subtract(value).length();
+              if (distance > oldDistance)
+                  toNavigationInfoSpeed = defaultSpeed / 1000.0;
+              else
+                 toNavigationInfoSpeed = defaultSpeed;
+              oldDistance = distance;
+              }
+           else
+              {
+              oldDistance = 0;
+              toNavigationInfoSpeed = defaultSpeed;
+              positionOuterProxy = new SFVec3f(value[0], value[1], value[2]);
+              }
+           }
+    
+        function isActiveFromInnerProxy(value)
+           {
+           isInInnerProxy = value;
+           if (!value)
+              toNavigationInfoSpeed = defaultSpeed;
+           }
+      "
+      }
+    ]
+  }
+
+ROUTE outerProximitySensor1.position_changed TO Script1.positionFromOuterProxy
+ROUTE innerProximitySensor1.position_changed TO Script1.positionFromInnerProxy
+ROUTE innerProximitySensor1.isActive TO Script1.isActiveFromInnerProxy
+}

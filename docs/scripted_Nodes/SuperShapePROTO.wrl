@@ -1,0 +1,744 @@
+#VRML V2.0 utf8
+
+PROTO SuperShape
+#
+# works at least with SGI Cosmo Player 2.1.5, cc3dglut 4.3
+#
+# A VRML Proto to account the data of a SuperShape shape with scripting
+# (slow)
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+#
+# exampe use
+#
+# EXTERNPROTO SuperShape
+#   [
+#   exposedField SFFloat ua 
+#   exposedField SFFloat va 
+#   exposedField SFFloat ub 
+#   exposedField SFFloat vb 
+#   exposedField SFFloat um 
+#   exposedField SFFloat vm 
+#   exposedField SFFloat un1 
+#   exposedField SFFloat vn1 
+#   exposedField SFFloat un2 
+#   exposedField SFFloat vn2 
+#   exposedField SFFloat un3 
+#   exposedField SFFloat vn3 
+#   exposedField SFFloat border
+#   field SFBool bottom
+#   exposedField SFFloat bottomBorder
+#   field SFBool ccw
+#   field SFFloat creaseAngle
+#   exposedField SFVec3f size
+#   field SFBool solid
+#   field SFBool top
+#   exposedField SFNode texCoord
+#   exposedField SFInt32 uTessellation 
+#   exposedField SFInt32 vTessellation 
+#   ]
+# [
+# "SuperShapePROTO.wrl"
+# ]
+# Shape 
+#   {
+#   appearance Appearance 
+#      {
+#      material Material 
+#	  {
+#	  }
+#      }
+#   geometry SuperShape 
+#     {
+#     ua 2
+#     }
+#   }
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+# Cambridge, MA 02139, USA.
+#
+   [
+   exposedField SFFloat ua 1
+   exposedField SFFloat va 1
+   exposedField SFFloat ub 1
+   exposedField SFFloat vb 1
+   exposedField SFFloat um 0
+   exposedField SFFloat vm 0
+   exposedField SFFloat un1 1
+   exposedField SFFloat vn1 1
+   exposedField SFFloat un2 1
+   exposedField SFFloat vn2 1
+   exposedField SFFloat un3 1
+   exposedField SFFloat vn3 1
+   exposedField SFFloat border 1.57079632679489661923
+   field SFBool bottom FALSE
+   exposedField SFFloat bottomBorder -1.57079632679489661923
+   field SFBool ccw FALSE
+   field SFFloat creaseAngle 3.14159265358979323846
+   exposedField SFVec3f size 1 1 1
+   field SFBool solid FALSE
+# the FreeWrl browser do not accept the exposedField in connection with the IS
+# in the later IndexedFaceSet, so field is used instead
+#   exposedField SFNode texCoord NULL
+   field SFNode texCoord NULL
+   field SFBool top FALSE
+   exposedField SFInt32 uTessellation 0
+   exposedField SFInt32 vTessellation 0
+   ]
+{
+
+    DEF IndexedFaceSet1 IndexedFaceSet 
+      {
+      coord 	DEF Coordinate1 Coordinate 
+        {
+        }
+      creaseAngle IS creaseAngle
+      solid IS solid
+      ccw IS ccw
+      texCoord IS texCoord
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF UA_CONTAINER TextureTransform 
+              {
+              rotation IS ua
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF UB_CONTAINER TextureTransform 
+              {
+              rotation IS ub
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF UM_CONTAINER TextureTransform 
+              {
+              rotation IS um
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF UN1_CONTAINER TextureTransform 
+              {
+              rotation IS un1
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF UN2_CONTAINER TextureTransform 
+              {
+              rotation IS un2
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF UN3_CONTAINER TextureTransform 
+              {
+              rotation IS un3
+              }
+            }
+          }
+        ]
+      }
+
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF VA_CONTAINER TextureTransform 
+              {
+              rotation IS va
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF VB_CONTAINER TextureTransform 
+              {
+              rotation IS vb
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF VM_CONTAINER TextureTransform 
+              {
+              rotation IS vm
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF VN1_CONTAINER TextureTransform 
+              {
+              rotation IS vn1
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF VN2_CONTAINER TextureTransform 
+              {
+              rotation IS vn2
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF VN3_CONTAINER TextureTransform 
+              {
+              rotation IS vn3
+              }
+            }
+          }
+        ]
+      }
+
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF BORDER_CONTAINER TextureTransform 
+              {
+              rotation IS border
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF BOTTOM_BORDER_CONTAINER TextureTransform 
+              {
+              rotation IS bottomBorder
+              }
+            }
+          }
+        ]
+      }
+    
+
+    DEF UTESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS uTessellation
+      }
+    
+    DEF VTESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS vTessellation
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        DEF SIZE_CONTAINER Transform 
+          {
+          translation IS size
+          }
+        ]
+      }
+
+    DEF Script1 Script 
+      {
+      eventOut MFInt32 coordindex_out
+      eventOut MFVec3f vertices_out
+      field SFFloat ua 1
+      field SFFloat ub 1
+      field SFFloat um 0
+      field SFFloat un1 1
+      field SFFloat un2 1
+      field SFFloat un3 1
+
+      eventIn SFFloat ua_in
+      eventIn SFFloat ub_in
+      eventIn SFFloat um_in
+      eventIn SFFloat un1_in
+      eventIn SFFloat un2_in
+      eventIn SFFloat un3_in
+
+      field SFFloat va 1
+      field SFFloat vb 1
+      field SFFloat vm 0
+      field SFFloat vn1 1
+      field SFFloat vn2 1
+      field SFFloat vn3 1
+
+      eventIn SFFloat va_in
+      eventIn SFFloat vb_in
+      eventIn SFFloat vm_in
+      eventIn SFFloat vn1_in
+      eventIn SFFloat vn2_in
+      eventIn SFFloat vn3_in
+
+      field SFFloat border 1.57079632679489661923
+      eventIn SFFloat border_in
+      field SFBool bottom IS bottom
+      field SFFloat bottomBorder -1.57079632679489661923
+      eventIn SFFloat bottomBorder_in
+      field SFVec3f size 1 1 1
+      eventIn SFVec3f size_in
+      field SFBool top IS top
+
+      eventIn SFInt32 uTessellation_in 
+      field SFInt32 uTessellation 0
+      eventIn SFInt32 vTessellation_in 
+      field SFInt32 vTessellation 0
+
+      field MFInt32 ci []
+      field MFVec3f vert []
+
+      field SFNode uaContainer USE UA_CONTAINER
+      field SFNode ubContainer USE UB_CONTAINER
+      field SFNode umContainer USE UM_CONTAINER
+      field SFNode un1Container USE UN1_CONTAINER
+      field SFNode un2Container USE UN2_CONTAINER
+      field SFNode un3Container USE UN3_CONTAINER
+
+      field SFNode vaContainer USE VA_CONTAINER
+      field SFNode vbContainer USE VB_CONTAINER
+      field SFNode vmContainer USE VM_CONTAINER
+      field SFNode vn1Container USE VN1_CONTAINER
+      field SFNode vn2Container USE VN2_CONTAINER
+      field SFNode vn3Container USE VN3_CONTAINER
+
+      field SFNode uTessContainer USE UTESSELLATION_CONTAINER
+      field SFNode vTessContainer USE VTESSELLATION_CONTAINER
+
+      field SFNode bottomBorderContainer USE BOTTOM_BORDER_CONTAINER
+      field SFNode borderContainer USE BORDER_CONTAINER
+
+      field SFNode sizeContainer USE SIZE_CONTAINER
+
+      field SFInt32 defaultTessellation 32
+
+      field MFFloat r1 []
+      field MFFloat c1 []
+      field MFFloat s1 []
+      field MFFloat r2 []
+      field MFFloat c2 []
+      field MFFloat s2 []
+ 
+      url 
+        [
+        "javascript:
+    
+      // field SFInt32 uTessellation //
+      // field SFInt32 vTessellation //
+  
+      // eventOut MFInt32 coordindex_out //
+      // eventOut MFVec3f vertices_out //
+    
+      function r(angle, a, b, m, n1, n2, n3)
+         {
+         f=m*angle/4.0;
+         c=Math.cos(f);
+         s=Math.sin(f);
+         return Math.pow(Math.pow(Math.abs(c/a),n2)+Math.pow(Math.abs(s/b),n3),-1.0/n1);
+         }
+
+      function account()
+         {
+         uTess=(uTessellation==0)?defaultTessellation+1:uTessellation+1;
+         vTess=(vTessellation==0)?defaultTessellation+1:vTessellation+1;
+         needTop=top;
+         if (border==(Math.PI/2.0))
+            needTop=false;
+         needBottom=bottom;
+         if (bottomBorder==(-Math.PI/2.0))
+            needBottom=false;
+         low=bottomBorder;
+         high=border;
+         if (high<low) 
+            {
+            temp=high;
+            high=low;
+            low=temp;
+            }
+
+         inc1=Math.PI/(uTess-1)*2.0;
+         inc2=(high-low)/(vTess-1);
+         for (a1=0;a1<uTess;a1++)
+            {
+            angle1=-Math.PI+a1*inc1;
+            r1[a1]=r(angle1,ua,ub,um,un1,un2,un3);
+            c1[a1]=Math.cos(angle1);
+            s1[a1]=Math.sin(angle1);
+            }
+         for (a2=0;a2<vTess;a2++)
+            {
+            angle2=low+a2*inc2;
+            r2[a2]=r(angle2,va,vb,vm,vn1,vn2,vn3);
+            c2[a2]=Math.cos(angle2);
+            s2[a2]=Math.sin(angle2);
+            }
+         index=0;
+         cindex=0;
+         for (a2=0;a2<vTess;a2++)
+            for (a1=0;a1<uTess;a1++)
+               {
+               x=0;
+               y=0;
+               z=0;
+               if ((r1[a1]==0) || (r2[a2]==0) || (c2[a2]==0)) 
+                  {
+                  z=0;
+                  x=0;
+                  } 
+               else 
+                  {                
+                  if (c1[a1]==0)
+                     z=0;
+                  else
+                     z=size[2]*r1[a1]*c1[a1]*r2[a2]*c2[a2];
+                  if (s1[a1]==0)
+                     x=0;
+                  else
+                     x=size[0]*r1[a1]*s1[a1]*r2[a2]*c2[a2];
+                  }
+               if ((r2[a2]==0) || (s2[a2]==0))
+                  y=0;
+               else
+                  y=size[1]*r2[a2]*s2[a2];
+               vert[index]=new SFVec3f(x,y,z);
+               index++;
+               n1=a1+1;
+               if (n1==uTess)
+                  n1=0;
+               n2=a2+1;
+               if (n2<vTess)
+                  {
+                  ci[cindex++]=a1+a2*uTess;
+                  ci[cindex++]=a1+n2*uTess;
+                  ci[cindex++]=n1+n2*uTess;
+                  ci[cindex++]=n1+a2*uTess;
+                  ci[cindex++]=-1;
+                  }
+               }
+            if (needTop) 
+               {
+               if ((r2[vTess-1]==0) || (s2[vTess-1]==0))
+                  vert[index]=new SFVec3f(0,0,0);
+               else
+                  vert[index]=new SFVec3f(0,
+                                          data.size[1]*r2[vTess-1]*s2[vTess-1],
+                                          0);
+               for (a2=0; a2<uTess; a2++)
+                  {
+                  ci[cindex++]=index;           
+                  ci[cindex++]=index-1-a2;
+                  if (a2==uTess-1)
+                     ci[cindex++]=index-1;
+                  else
+                     ci[cindex++]=index-2-a2;
+                  ci[cindex++]=-1;
+                  }
+               index++;
+               }
+            if (needBottom) 
+               {
+               if ((r2[0]==0) || (s2[0]==0))
+                  vert[index]=new SFVec3f(0,0,0);
+               else
+                  vert[index]=new SFVec3f(0,size[1]*r2[0]*s2[0],0);
+               for (a2=0; a2<uTess; a2++) 
+                  {
+                  ci[cindex++]=index;           
+                  ci[cindex++]=a2;
+                  if (a2+1==uTess)
+                     ci[cindex++]=0;
+                  else 
+                     ci[cindex++]=a2+1;
+                  ci[cindex++]=-1;
+               }
+               index++;
+            }
+         coordindex_out=ci;
+         vertices_out=vert;
+         }
+     
+      function initialize()
+         {
+         ua=uaContainer.rotation;
+         ub=ubContainer.rotation;
+         um=umContainer.rotation;
+         un1=un1Container.rotation;
+         un2=un2Container.rotation;
+         un3=un3Container.rotation;
+         va=vaContainer.rotation;
+         vb=vbContainer.rotation;
+         vm=vmContainer.rotation;
+         vn1=vn1Container.rotation;
+         vn2=vn2Container.rotation;
+         vn3=vn3Container.rotation;
+         bottomBorder=bottomBorderContainer.rotation;
+         border=borderContainer.rotation;
+         uTessellation=uTessContainer.whichChoice;
+         vTessellation=vTessContainer.whichChoice;
+         size=sizeContainer.translation;
+         account();
+         }
+    
+      function ua_in(value)
+         {
+         ua = value;
+         account();
+         }
+
+      function ub_in(value)
+         {
+         ub = value;
+         account();
+         }
+
+      function um_in(value)
+         {
+         um = value;
+         account();
+         }
+
+      function un1_in(value)
+         {
+         un1 = value;
+         account();
+         }
+
+      function un2_in(value)
+         {
+         un2 = value;
+         account();
+         }
+    
+      function un3_in(value)
+         {
+         un3 = value;
+         account();
+         }
+
+      function va_in(value)
+         {
+         va = value;
+         account();
+         }
+
+      function vb_in(value)
+         {
+         vb = value;
+         account();
+         }
+
+      function vm_in(value)
+         {
+         vm = value;
+         account();
+         }
+
+      function vn1_in(value)
+         {
+         vn1 = value;
+         account();
+         }
+
+      function vn2_in(value)
+         {
+         vn2 = value;
+         account();
+         } 
+    
+      function vn3_in(value)
+         {
+         vn3 = value;
+         account();
+         }
+
+      function border_in(value)
+         {
+         border = value;
+         account();
+         }
+
+      function bottomBorder_in(value)
+         {
+         bottomBorder = value;
+         account();
+         } 
+
+      function size_in(value)
+         {
+         size = value;
+         account();
+         }
+
+      function uTessellation_in(value)
+         {
+         uTessellation = value;
+         account();
+         }
+    
+      function vTessellation_in(value)
+         {
+         vTessellation = value;
+         account();
+         }
+        "
+        ]
+      }
+
+ROUTE UA_CONTAINER.rotation TO Script1.ua_in
+ROUTE UB_CONTAINER.rotation TO Script1.ub_in
+ROUTE UM_CONTAINER.rotation TO Script1.um_in
+ROUTE UN1_CONTAINER.rotation TO Script1.un1_in
+ROUTE UN2_CONTAINER.rotation TO Script1.un2_in
+ROUTE UN3_CONTAINER.rotation TO Script1.un3_in
+
+ROUTE VA_CONTAINER.rotation TO Script1.va_in
+ROUTE VB_CONTAINER.rotation TO Script1.vb_in
+ROUTE VM_CONTAINER.rotation TO Script1.vm_in
+ROUTE VN1_CONTAINER.rotation TO Script1.vn1_in
+ROUTE VN2_CONTAINER.rotation TO Script1.vn2_in
+ROUTE VN3_CONTAINER.rotation TO Script1.vn3_in
+
+ROUTE BORDER_CONTAINER.rotation TO Script1.border_in
+ROUTE BOTTOM_BORDER_CONTAINER.rotation TO Script1.bottomBorder_in
+
+ROUTE SIZE_CONTAINER.translation TO Script1.size_in
+    
+ROUTE UTESSELLATION_CONTAINER.whichChoice TO Script1.uTessellation_in
+ROUTE VTESSELLATION_CONTAINER.whichChoice TO Script1.vTessellation_in
+    
+ROUTE Script1.vertices_out TO Coordinate1.set_point
+ROUTE Script1.coordindex_out TO IndexedFaceSet1.set_coordIndex
+}
+    
+    
+  

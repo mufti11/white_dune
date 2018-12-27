@@ -1,0 +1,181 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF Script1 Script 
+  {
+  eventIn SFBool bool1_in
+  eventIn SFBool bool2_in
+  eventOut SFInt32 int321_out
+  url 
+    [
+    "javascript:
+
+ // eventOut SFInt32 int321_out //
+
+ function bool1_in(value)
+    {
+    // value  SFBool
+    if (value)
+       {
+       int321_out=0;
+       }
+
+    }
+
+ function bool2_in(value)
+    {
+    if (value)
+       {
+       int321_out=-1;
+       }
+
+    }
+
+ function initialize()
+    {
+    
+    }
+
+"
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    Billboard 
+      {
+      children 
+	[
+	Transform 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "on"
+		  ]
+		}
+	      }
+	    ]
+	  translation 0 -2.871046 0
+	  }
+	]
+      }
+    DEF TouchSensor1 TouchSensor 
+      {
+      }
+    ]
+  translation -2.323970 0 0
+  }
+
+ROUTE TouchSensor1.isActive TO Script1.bool1_in
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    Billboard 
+      {
+      children 
+	[
+	Transform 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "off"
+		  ]
+		}
+	      }
+	    ]
+	  translation 0 -2.871046 0
+	  }
+	]
+      }
+    DEF TouchSensor2 TouchSensor 
+      {
+      }
+    ]
+  translation 2.323966 0 0
+  }
+
+ROUTE TouchSensor2.isActive TO Script1.bool2_in
+
+DEF Switch1 Switch 
+  {
+  choice 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Cylinder 
+	    {
+	    }
+	  }
+	]
+      }
+    ]
+  }
+
+ROUTE Script1.int321_out TO Switch1.set_whichChoice
+

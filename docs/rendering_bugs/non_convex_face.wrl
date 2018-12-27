@@ -1,0 +1,34 @@
+#VRML V2.0 utf8
+
+# base test of non-convex faces handling
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Shape {
+  geometry IndexedFaceSet {
+    convex FALSE
+    solid FALSE
+    coord Coordinate {
+	  point [ +0.000000000e+00 +5.000000000e-01 +0.000000000e+00,
+	          +2.500000000e+00 +5.000000000e-01 +0.000000000e+00,
+	          +2.500000000e+00 +1.850000000e+00 +0.000000000e+00,
+	          +2.850000000e+00 +1.850000000e+00 +0.000000000e+00,
+	          +2.850000000e+00 +1.500000000e-01 +0.000000000e+00,
+		  +0.000000000e+00 +1.500000000e-01 +0.000000000e+00 ]
+    }
+    coordIndex [ 0, 1, 2, 3, 4, 5 ]
+  }
+}

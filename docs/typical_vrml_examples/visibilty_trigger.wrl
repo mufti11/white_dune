@@ -1,0 +1,182 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+DEF Transform1 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Cylinder 
+	{
+	}
+      }
+    ]
+  translation 1.289903 0.295843 2.502840e-2
+  }
+
+DEF TimeSensor1 TimeSensor 
+  {
+  }
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    2.444986e-3 
+    0.177260 
+    0.370415 
+    0.837408 
+    0.947431 
+    0.965770 
+    0.986552 
+    ]
+  keyValue 
+    [
+    0 0 4.098216e-2 
+    2.459907 1.533036 2.885766 
+    1.967038 -1.147369 -0.351653 
+    1.189744 0.509316 8.074533e-2 
+    0.885980 0.734098 0.506273 
+    8.074533e-2 6.211179e-2 0.759411 
+    8.074533e-2 6.211179e-2 0.759411 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Text 
+	{
+	string 
+	  [
+	  "visibiltiysensor animation trigger"
+	  ]
+	}
+      }
+    ]
+  translation -5.452226 2.124099 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	radius 0.200000
+	}
+      }
+    DEF VisibilitySensor1 VisibilitySensor 
+      {
+      }
+    ]
+  translation -4 4 0
+  }
+
+ROUTE VisibilitySensor1.exitTime TO TimeSensor1.set_startTime
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 0 0
+	  }
+	}
+      geometry       Text 
+	{
+	string 
+	  [
+	  "do not look at this"
+	  ]
+	}
+      }
+    ]
+  translation -2.403848 3.522625 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Cone 
+	    {
+	    }
+	  }
+	]
+      rotation 0 0 1 1.570000
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Cylinder 
+	    {
+	    radius 0.200000
+	    }
+	  }
+	]
+      rotation 0 0 1 1.570000
+      translation 1.706852 7.275957e-12 0
+      }
+    ]
+  scale 0.200000 0.200000 0.200000
+  translation -3.452280 3.957292 0
+  }
+

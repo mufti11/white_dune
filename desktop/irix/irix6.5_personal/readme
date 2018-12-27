@@ -1,0 +1,15 @@
+This file is free software; the Free Software Foundation
+gives unlimited permission to copy, distribute and modify it.
+
+To install white_dune on the desktop of a IRIX 6.5 system 
+fill out the wanted options in the file "duneoptions.h" and the type "make".
+
+The file duneoptions.h is made for use with cpp.
+
+Example: To start dune as "dune -xinput magellan -allxyz=5,100 -allrot=1,10"
+         put into the "duneoptions.h" file:
+
+/* insert your options to start dune here */
+#define DUNEOPTIONS -xinput magellan -allxyz=5,100 -allrot=1,10 
+
+

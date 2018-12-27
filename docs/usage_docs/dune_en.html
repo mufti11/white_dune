@@ -1,0 +1,3516 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/* 
+ * dune_en.html
+ *
+ * Copyright (C) 2006-2018 J. "MUFTI" Scheurich                       
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */  
+  
+ last update: white_dune-0.99pl1111
+-->   
+<head>
+ <title>"White_dune" documentation</title> 
+</head> 
+<h1>Contents</h1>
+<ul>
+ <li>
+  <h2><a href="#White_dune">"White_dune", what's that ?</a></h2> 
+ </li>
+ <li>
+  <h2><a href="#crash">"White_dune" crashed, work lost ?</a></h2>
+ </li>
+ <li>
+  <h3><a href="#languages">Starting "White_dune" with foreign menues</a></h3>
+ </li>
+ <li>
+  <h3><a href="#vrml">What is scenegraph, fieldvalues, routes etc. about ?</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#wonderland">X3D-compiler and Open Wonderland support</a>(new in Version 0.31beta)</h3> 
+ </li>
+ <li>
+  <h3><a href="#waskann">What "white_dune" can not do/can do</a></h3>
+ </li>
+ <li>
+  <h3><a href="#fenster">The 5 windows of "white_dune"</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#menue">Menu overview</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#navigation">Navigation</a></h3>
+ </li>
+ <li>
+  <h3><a href="#scenegraph">Changing the scenegraph</a></h3>
+  <ul>
+   <li>
+    <h4><a href="#use">Using USE</a> (new in version 0.29beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#scenegraphoperations">Scenegraph Operations</a> (new in version 0.27beta)</h4>
+   </li>
+  </ul>
+ </li>
+ <li>
+  <h3><a href="#route">Input/erase of ROUTEs</a></h3>
+ </li>
+ <li>
+ <h3><a href="#fields">Changing FieldValues</a></h3>
+  <ul>
+   <li>
+    <h4><a href="#keyboard">Keyboard Input</a></h4>
+   </li>
+   <li>
+    <h4><a href="#mouse">Mouse Input</a></h4>
+   </li>
+   <li>
+    <h4><a href="#MF">Changing "MF"-FieldValues</a> (new in version 0.27beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#3DWindow">Changing FieldValues in the 3D Preview window</a></h4>
+   </li>
+   <li>
+    <h4><a href="#6D">6D Input</a> (new in Version 0.19beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#6Dlocal">6D Local Mode Input</a> (new in Version 0.19beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#nxtdials">Mindstorms NXT dials Input</a> (new in Version 0.29beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#joystick">Linux Joystick Input</a> (new in Version 0.20beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#joystick_windows">M$Windows Joystick Input</a> (new in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#joystick_macosx">MacOSX Joystick Input</a> (neu in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#channelview">Changing FieldValues in the ChannelView Window</a></h4>
+   </li>
+   <li>
+    <h4><a href="#colorcircle">Color Circle</a> (new in Version 0.19beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#scriptedit">Script Editor</a> (new in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#urledit">URL Editor</a> (new in Version 0.22beta)</h4>
+   </li>
+   <li>
+     <h4><a href="#fieldpipe">Field pipe</a> (new in version 0.29beta)</h4>
+   </li>
+  </ul>
+ </li>
+ <li>
+  <h3><a href="#simplescript">Simplified Scriptbuilding</a> (new in Version 0.22beta)</h3>
+ </li>
+ <li>
+  <h3><a href="#x3domscript">X3DOM scripting</a> (new in Version 0.99pl1084)</h3>
+ </li>
+ <li>
+  <h3><a href="#nurbs">NURBS Modelling</a> 
+                                          (partitially new in Version 0.25beta)</h3>
+   <ul>
+    <li>
+     <h4><a href="#nurbsbasics">NURBS basics</a></h4>
+    </li>
+    <li>
+     <h4><a href="#nurbssymetric">X symetric modelling</a>
+                                          (new in Version 0.25beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#nurbsconversion">NURBS conversion</a>
+                                          (new in Version 0.25beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#elevatedegree">Degree elevate</a>
+                                         (new in Version 0.27beta)</h4>
+    </li>
+    <li>
+    <h4><a href="#nurbsrebuild">NURBS rebuild</a>
+                                         (new in Version 0.99pl1090)</h4>
+    </li>
+    <li>
+     <h4><a href="#nurbsindexedfaceset">Building IndexedFaceSet</a>
+                                          (new in Version 0.25beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#nurbsanimation">Animation with the help of NURBS</a>
+                                          (new in Version 0.99)</h4>
+    </li>
+    <li>
+     <h4><a href="#nurbstrimmed">NURBS Trimming</a>
+                                          (new in Version 0.99pl1050)</h4>
+    </li>
+   </ul>
+  </li>
+  <li>
+   <h3><a href="#super">Superformula Modelling</a> 
+                                          (new in Version 0.27beta)</h3>
+    <ul>
+    <li>
+     <h4><a href="#superformula">Superformula basics</a></h4>
+    </li>
+    <li>
+     <h4><a href="#superextrusion">SuperExtrusion</a></h4>
+    </li>
+    <li>
+     <h4><a href="#supershape">SuperShape</a></h4>
+    </li>
+    <li>
+     <h4><a href="#superellipsoid">SuperEllipsoid</a></h4>
+    </li>
+    <li>
+     <h4><a href="#superRevolver">SuperRevolver</a></h4>
+    </li>
+   </ul>
+  </li>
+  <li>
+   <h3><a href="#subdivide">Subdivide Modelling</a> 
+                                          (new in Version 0.99pl624)</h3>
+  </li>
+  <li>
+   <h3><a href="#extrusion">IndexedFaceSet Extrusion</a> 
+                                          (new in Version 0.99pl654)</h3>
+  </li>
+  <li>
+   <h3>other 3D-Modellierung related commands</a></h3>
+   <ul>
+    <li>
+     <h4><a href="#coordinate">Changing coordinate based nodes</a> (new in Version 0.29beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#convexhull">Convex hull</a> (new in Version 0.99pl812)</h4>
+    </li>
+    <li>
+     <h4><a href="#meshreducer">Mesh reducer</a> (new in Version 0.99pl850)</h4>
+    </li>
+    <li>
+     <h4><a href="#symetric">Symetric Modelling</a></h4>
+    </li>
+    <li>
+     <h4><a href="#skinbones">Skin and bones modelling</a></h4>
+    </li>
+    <li>
+     <h4><a href="#boolean">Boolean modelling</a></h4>
+    </li>
+    <li>
+     <h4><a href="#array">Array tool</a> (new in Version 0.27beta)</h4>
+    </li>
+   </ul>
+   <h3>Repair commands in the "Actions" menue</a></h3>
+   <ul>
+    <li>
+     <h4><a href="#remove_invalid">Remove invalid children nodes</a> (new in Version 0.27beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#triangulate">Triangulate IndexedFaceSet</a> (new in Version 0.29beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#set_path">Set path of all URLs to</a> (new in Version 0.27beta)</h4>
+    </li>
+   </ul>
+   <h3>Other commands in the "Actions" menue</a></h3>
+   <ul>
+    <li>
+     <h4><a href="#object_url_edit">Edit object/URL</a> (new in Version 0.29beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#set_default">Set default values (keep scenegraph)</a> (new in Version 0.27beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#xray">xray rendering</a> (new in Version 0.27beta)</h4>
+    </li>
+   </ul>
+  </li>
+  <li>
+   <h3><a href="#proto">PROTO creation/editing</a> (new in Version 0.99pl444)</h3>
+  </li>
+  <li>
+   <h3><a href="#vrmlcut">VrmlCut scripted Proto</a> (new in Version 0.29beta)</h3>
+  </li>
+  <li>
+   <h3><a href="#upload"><em>File -&gt; upload</em></a> (new in Version 0.27beta)</h3>
+  </li>
+ 
+</ul>
+
+<body>
+<h2><a name="White_dune">"White_dune", what's that ?</a></h2>
+<p>
+White_dune is a graphical VRML97 editor, simple (NURBS) 3D modeller and 
+animationtool in development.
+It can read VRML97/X3DV files, display and let the user change the 
+scenegraph, fields and routes.
+This can be used to improve or make VRML97/X3DV 3D-worlds, animations and 
+interactions. <br>
+The modelling features of white_dune are not strong enough (yet), to use
+it alone. It makes sense, to let it work together with a 3D modelling tool
+with static VRML97 export (like for example wings3D or Art Of Illusion).<br>
+In difference to most 3D modelling tools the lightning/coloring and the
+interal structure of white_dune is based on the VRML97/X3D standards.
+This leads to a better support of the possibilities of VRML97/X3DV, when
+you create or postprocess 3D models with white_dune.<br>
+Compared with the general purpose 3D modellers (which often  support
+only the export of mesh (IndexedFaceSet) and interpolator nodes)
+white_dune supports all VRML97 nodes and all of the nodes
+of the X3D standard X3D Standard "X3D 3.3" (ISO/IEC 19775-1:2013),
+event not all nodes are rendered.
+<br>
+white_dune is a open source program, this means that anyone 
+may copy and change the program. The offical version is available at
+<a href="https://wdune.ourproject.org">https://wdune.ourproject.org</a>.
+</p>
+<h3><a name="crash">"White_dune" crashed, work lost ?</a></h3>
+<p>
+White_dune is work in development and it is not always as stable as it 
+should be.
+<br><br>
+<b>If white_dune crashed, is your work lost ?</b>
+<br><br>
+<font color="#FF0000">No not automatically !</font>
+<br><br> 
+ "White_dune" will try to save the 
+ VRML97 file short before crash. This is not always successful e.g. when the
+ error which caused the crash destroyed the internal data structure (this
+ occures seldom). 
+ If the file is written sucessfully, white_dune will write under 
+ Unix/Linux something like
+<pre>
+   Internal Crash !
+   Try to save Files
+   attempt to write file to /home/someone/.dune_crash_NUMBER_NUMBER.wrl
+   write sucessful
+</pre>
+to standard error of the starting window and to system console 
+(eg. to the window of the xconsole application).<br> 
+The important line is the line "write successfull".<br>
+Under M$Windows you get (possibly after clicking "ignore", if you are asked
+about using a debugger) a similar Messagebox<br>
+<img src=crash.jpg><br>
+When you restart white_dune and use the file menu, you should see the filename
+of this .dune_crash file.<br>
+<img src=crashrestore.jpg><br>
+Just click to it and save to another file.<br>
+This Method can fail, if the error that led to crash
+has damaged the internal data structure of the program.<br>
+In this case it is worth to search in directory of VRML-files for
+temporary files (".dune_*"), that are produced during the execution of 
+<em>File-&gt;Preview</em> or <em>File-&gt;Textedit.</em><br>
+These Files will be deleted at a normal program end, but not in case of a
+program crash.<br>
+When white_dune often crashes but all data can be restored successfully, 
+it can be usefull to search this intermediate files and delete them
+in order to recover diskspace.<br>
+Beside files for preview and textedit, white_dune also stores the content of
+edited scriptnodes in a temporary textfile for use by a texteditor.
+</li>
+</ul>
+</p>
+<h3><a name="languages">Starting "White_dune" with foreign menues</a></h3>
+<p>
+White_dune can be started with menues in foreign languages.<br>
+For example, to start white_dune with the german language, the 
+commandlineoption "-german" must be used.<br>
+Currently 4 commandlineoptions for languages are available:<br>
+<ul>
+  <li>
+    -english
+  </li>
+  <li>
+    -german
+  </li>
+  <li>
+    -italian
+  </li>
+  <li>
+    -french
+  </li>
+</ul>
+Beside that, there is a also a -portuguese option for portuguese,
+but is works only for the 4kids menus.
+<br>  
+Cause it is not very usefull, always to type this in a commandline, 
+there is a second way, to select the language. Under Linux/UNIX
+this is done via the LANG environment variable. If the first 
+2 characters of this environment variable is set to "de", german menus are 
+used, if they are set to "it", italien menus are used ("fr" for french).<br>
+If you want to work in a foreign language environment with $LANG set, but 
+want to use the english menus for white_dune, you must use the -english
+option.<br>
+This can be done with a shellscript (Linux/UNIX/MacOSX) or batchfile 
+(Micro$oft Windows).<br>
+If you can not find a matching file (e.g. germandune for the german 
+language), you can create one (e.g. for the german language) with the 
+commandlines:
+<ul>
+ <li>
+  For Linux/UNIX:<br>
+  <pre>
+     echo dune -german > germandune.sh
+     chmod +x germandune.sh
+  </pre>
+ </li>
+ <li>
+  For Micro$oft Windows:<br>
+  <pre>
+     echo drive:\pathto\white_dune_version.exe -german > germandune.bat
+  </pre>
+ </li>
+</ul>
+For MacOSX you can modify in the file
+white_dune.app/Contents/MacOS/dunestarter the lines with the 
+options for the program start:<br>
+<pre>
+   DUNEOPTIONS=" "
+   export DUNEOPTIONS
+</pre>
+and add e.g. the -german option for the german language:<br>
+<pre>
+   DUNEOPTIONS="-german "
+   export DUNEOPTIONS
+</pre>
+For other exotic UNIX desktops you will find similar options in the following
+files
+<ul>
+ <li>
+  SGI IRIX/4Dwm: desktop/irix*/duneoptions.m4<br>
+  Read the file README_IRIX.desktop for more information
+ </li>
+ <li>
+  IBM AIX/cde: /usr/local/bin/white_dune.dt
+ </li>
+ <li>
+  Sun Solaris/cde: /opt/White_Dune/bin/white_dune.dt
+ </li>
+ <li>
+  Redhat Linux/kde: /usr/share/applications/dune.desktop
+ </li>
+</ul>
+In a similar way, it is possible to include other commandlineoptions
+of white_dune. See <a href="dune.1.html" target="_blank"> the man page 
+of white_dune</a> for other options. <br>
+The most important options are:
+<ul>
+  <li>
+  Options for 3D inputdevices<br>
+  Supported inputdevices differ on different operationsystems. They include
+  joystick, spaceball, dials or magnetic trackers.
+  </li>
+  <li>
+  Options for stereoscopic view<br>
+  This options (like "-stereo") are usefull for stereoscopic view with
+  shutterglasses (or beamers).
+  </li>
+  <li>
+  Options for white_dune variants:<br>
+  Currently, there are 4 different variants of white_dune available.
+  These variants can select either a completely different GUI or
+  minor differences in the usable menus/toolbars.
+  <ul>
+    <li> 
+     The -x3dv option<br>
+     This option starts white_dune with support for a X3DV file from
+     begin on. Without this option, a VRML97 file is created, that
+     can be stored to a X3DV file (via the menupoint 
+     <em>File -&gt; save as...</em>) later.
+    </li>
+    <li> 
+     <a name="4kids">
+      The -4kids option
+     </a><br>
+     This option starts white_dune with a total different, simplified
+     menu. This menu is intended for total beginners. Is has been used
+     in courses for children and juveniles.
+    </li>
+    <li> 
+     The -4catt option<br>
+     This option starts white_dune with a total different menu, intended
+     for users of the 3D-soundsimulationsprogram Catt Acoustics 8.
+     </li>
+    <li> 
+     The -cover option<br>
+     This options supports some additional VRML nodes and extensions for the
+     immersive VRML-Browser "cover/cover".
+    </li>
+    <li> 
+     The -kambi option<br>
+     This options supports some additional X3D nodes and extensions for the
+     X3D based gameengine "kambi".
+    </li>
+  </ul> 
+  </li>
+  <li>
+   The -tessellation option<br>
+   The argument of the -tessellation option is a integer.
+   It influences the number of vertices of a surface for nodes like
+   Sphere, Cylinder, Cone and NURBS- or Superformula-nodes (with 
+   u/vTessellation not zero) during rendering.<br>
+   Therefore the -tessellation option is crucial for the usage of computers
+   with missing 3D hardware-acceleration (and/or a slow processor).<br>
+   With the -tessellation option is it possible to create and work with
+   3D objects on under-performing computers. The objects will displayed
+   coarse on the under-performing computer, but will be displayed complete
+   on a powerfull computer. When the -tessellation option is missing,
+   a default value of 32 will be used. The minimal possible value is 8.<br>
+   The -tessellation Option do not help, when nodes like IndexedFaceSet,
+   *Triangle*Set, Extrusion or ElevationGrid need to be displayed, cause
+   the vertices of this nodes are defined from beginning.
+   Therefore it should be avoided to convert from not nodes with not exactly
+   defined vertices (e.g. Sphere or Cylinder) to this nodes on a 
+   slow performing computer. 
+  </li>
+</ul>
+The menus and dialogs of white_dune can be translated to foreign language
+without programming skills.<br>
+If you are interested to translate the white_dune menus and errormessages
+into a new foreign language (no programming skills required), please read the 
+<a href="../developer_docs/dune_developer.html#localisation"> 
+step by step instructions about localisation</a> in the developer documentation.
+</p>
+<h3><a name="vrml">What is scenegraph, fieldvalues, routes etc. about ?</a></h3> 
+<p>
+White_dune (without -4kids or -4catt option)
+is a lowlevel tool to make/change VRML97 or X3DV Files.
+The user needs to knows the basic structure of VRML97/X3D.<br>
+Of course white_dune can also be used to learn and explore the basics of 
+VRML97/X3D. <br>
+A good startpoint is of course the <a href="#4kids">
+"-4kids" commandline argument, but then the features are limited to building
+3D-Objects and Animation. The more interesting VRML/X3D features about
+interaction and scripting are not available in the "-4kids" variant.
+</p>
+<p>
+You can find some typical VRML/X3D examples (you can load into white_dune)
+<a href=../typical_vrml_examples/index.html>here</a>, but take care about
+the fact, this examples do not show modelling or animation features, they 
+show mainly VRML97 examples about interaction and scripting. These are 
+features, which can be not shown in white_dune directly (yet).<br>
+The examples are a start base to build interactive 3D worlds with white_dune,
+which are showed later with a "real" VRML/X3D browser.<br>
+The route view and the scripting code is most interesting for a beginner.
+</p>
+<p> 
+You can find detailed technical information about VRML97 
+in the official ISO specification at
+<a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1>
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1
+</a>.
+
+For the use of white_dune, especially the node reference
+<a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html>
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
+</a>
+is important.<br>
+A good, simple tutorial about VRML97 for beginners you can find
+(beside in a range of books) at
+<a href=http://web3d.vapourtech.com/tutorials/vrml97/>
+http://web3d.vapourtech.com/tutorials/vrml97/</a>.<br>
+X3D is the sucessor of VRML97. Despite some minor technical differences
+(which are handled automatically by white_dune) are alle commands of
+the VRML97 standard still available in X3D.<br>
+This is not the case for the "forgotten" VRML97 Amendment 1 Standard from
+2002. Sone VRML97 Amendment 1 commands like e.g the CoordinateDeformer 
+node do not exist anymore, but all still existing VRML97 Amendment 1 
+commands are handled automatically by white_dune, when a VRML97 file is
+stored as X3D(V) file.
+</p>
+<h2><a name="wonderland">X3D compiler und Open Wonderland Unterst&uml;tzung
+    </a>
+</h2> 
+<p>
+White_dune can export the data of the VRML97/X3DV scenengraph to the
+programing languages C, C++ or java ("X3D-compiler").<br>
+You will find the details in the <a href="dune_1.html#sect12">manpage of
+white_dune</a>.<br>
+There is a library in development for the programing language C 
+to render 3D objects and animation with OpenGL. You will find examples
+in the directory <a href="../export_example_c">docs/export_example_c</a> 
+of the source archive. The similar example for the programing language C++
+can be found in the directory 
+<a href="../export_example_c++">docs/export_example_c++</a>.
+<br>
+For the programing language java there is a possiblity to render 3D objects
+and animation with the Java Monkey Engine (JME, Version 2).<br>
+The matching examples can be found in the directory 
+<a href="../export_example_java">docs/export_example_java</a>.<br>
+The export to sourcecode of a module of <a href="openwonderland.org">
+Open Wonderland</a>(a internet 3d multiuser environment).<br>
+Beside the rendering of 3D objects and animation there is also interaction
+(via the VRML97/X3D sensornodes) possible. But not all X3D nodes and not the
+wohl runtime behaviour) are supported (yet).<br>
+In difference to VRML/X3D and traditional OpenGL supports 
+Open Wonderland no graphical 3D objects, which are made from polygons
+with more the 3 or 4 edges (despite Open Wonderland internally uses OpenGL).
+Therefore white_dune trianglulates this objects before the wonderland export.
+<br>
+This is not so easy for morphing animation of 3D objects made of polygons
+with more than 4 edges. This 3d objects do not support morphing animation
+in the Open Wonderland export.<br>
+To find out, if a X3D node is supported in Open Wonderland, you need 
+to look at the right, lower side of its icons: there is a small blue point
+(as at the icon for Box)<br>
+<img src="box_wonderland.jpg"/>
+<br>
+if the node is supported in Open Wonderland.<br>
+The question about which interactions are possible is decided in the 
+RouteView window. For sensornodes and interpolators (only this nodes)
+the supported events are marked with colors.<br>
+A blue or lila mark of the events of a node in the routeview means
+the support of the event in the Open Wonderland exporter, while a
+red or no mark means no Open Wonderland support (yet).
+A red mark means a often used event, a lila mark should show a mix of 
+red and blue: these events are often used as well as supported by the
+Open Wonderland exporter.<br>
+<img src="wonderland_sensor_routeview.jpg"/>
+In the example above, the TouchSensor node is shown in the routeview 
+together with some of it's eventnames.  
+<ul>
+  <li>
+      The event "set_enabled" and "isActive" are marked blue: they are 
+      supported by the Open Wonderland Exporter.
+  </li>
+  <li>
+      The event "hitPoint_changed" is marked red: it is not supported by
+      the Open Wonderland Exporter (yet).
+  </li>
+  <li>
+      The event "touchTime" is marked lila: it is supported by
+      the Open Wonderland Exporter.
+  </li>
+</ul>
+For example a route information way can be built from the 
+TouchSensor.isActive event (blue marked) to a script node. At the script
+node a small, self written java program build a new event, that another
+route information way lead in a event of another Open Wonderland supported
+node.<br>
+For example a route information way can also built from the 
+TouchSensor.touchTime (lila marked) to a TimeSensor.set_startTime event
+(also lila marked), to start a simple animation (cause simple animation in
+X3D are made from the ROUTE commands "TimeSensor (e.g. with field loop FALSE)
+-&gt; interpolator &gt; animated node").<br>
+The event TouchSensor.hitPoint_changed (red marked) is often used in
+X3D, but is not supported by the Open Wonderland exporter.
+</p>
+<h3><a name="waskann">What "white_dune" can not do/can do</a></h3>
+<p>
+<ul>
+  <li>
+  <strong>White_dune is not a full featured VRML browser (yet) (and is still
+  very wide away from a fulll featured X3D browser) and can not display 
+  all Features of VRML/X3D</strong><br>
+  It has features to create interactions and script programming, but you still 
+  need <em>File -&gt; Preview</em>
+  (or you have to save the file and open it in a VRML Browser) to test
+  the results.
+  </li>
+  <li>
+  <strong>White_dune is not a general purpose modelling tool</strong> (yet)<br>
+  It has easy input features for primitive VRML97 shapes like Box, Sphere, 
+  Cone and Cylinder and shapes like ElevationGrid and Extrusion, but not for
+  other shapenodes like IndexedFaceSet (a shape made of multiple
+  facets), IndexedLineSet and PointSet.<br>
+  The most common shape in 3D modelling is the "mesh". Most 3D modelling 
+  programs currently export "mesh" data to VRML97 as IndexedFaceSets.<br>
+  </li>
+  <li> 
+  A also common object in 3D modelling is the "NURBS" object, which can
+  be used in white_dune.
+  Nodes like NurbsSurface, NurbsGroup or NurbsCurve are not part of 
+  the traditional VRML97 standard from 1997, but they are part of the VRML97 
+  Amendment 1 Standard from 2002. A VRML97 Amendment 1 incompatible NURBS 
+  implementation is available in the X3D standard. 
+  White_dune can convert automatically from VRML97 Amendment 1 NURBS to 
+  X3D NURBS and vice versa. This depends from file extension at the save of 
+  a file (.wrl for VRML97 Amendment 1, .x3d or .x3dv for X3D)<br>
+  You can find a introduction to NURBS in a <a href="#nurbsbasics">
+  later section</a>.
+  Currently, VRML97 Amendment 1 is supported by VRML97 browsers like 
+  bitmanagement/blaxxun cc3d/contact, but not implemented in no longer
+  supported VRML browsers like cosmoplayer 2.1.<br> 
+  </li>
+  <li>
+  White_dune finally allows the conversion of all surface shapes to
+  a IndexedFaceSet (at least all surfaces which can be rendered by
+  white_dune itself, with the exception of Text).
+  A IndexedFaceSet can be converted to a 
+  IndexedLineSet, a IndexedLineSet can be converted to a PointSet.<br>
+  But take care about the fact, that these convertions are working
+  in only one way. A conversion back is not possible inside white_dune
+  (except <a href="#convexhull"><em>Actions -&gt; Convex hull</em></a>, which 
+  creates a IndexedFaceSet from the points of several objects).
+  Thereforen a menupoint  <em>File -&gt; Export as ... -&gt; 
+  PureVRML97</em> exists.<br>
+  Animated Surfaces (simple Timer and Interpolator Animation)
+  like NURBS or Superformula nodes will be changed to a Timer and 
+  Interpolator Animation of a IndexedFaceSet on a export to 
+  "PureVRML97", but via a conversion to a IndexedFaceSet.
+  A problem is the accounting of values between two times for 
+  NURBS/Superformula nodes. 
+  The accounting is different from the CoordinateInterpolator node, 
+  which is needed
+  for IndexedFaceSet. Therefore a successfull conversion of such a
+  animation need enough keyframes, more keyframes than a NURBS/Superformula
+  based animation.
+  </li>
+</ul>
+</p>
+<h3><a name="fenster">The 5 windows of "white_dune"</a></h3> 
+<p>
+<img src=windows.png><br>
+Beside some toolbars with icons and messages "white_dune" (without the
+"-4kids" or "-4catt" startoptions) essentially contains 
+5 windows. Beside the "3D Preview" window you can switch on/switch off
+this windows via the menu "View". Switch this windows on and off to 
+match your current work status.
+<ul>
+ <li>
+  <b>Scene Tree</b><br>
+  This window contains the scenegraph. This shows the structure
+  of a VRML/X3D file, the information, how the VRML/X3D nodes are arranged.
+ </li>
+ <li>
+  <b>Field View</b><br>
+  This window contains the fieldvalues, the numbers (or
+  character strings) in a VRML/X3D file. Only the fields
+  of the current selected node are shown.
+ </li>
+ <li>
+  <b>Route View</b><br>
+  This windows contains the ROUTEs, the ways of information
+  different VRML/X3D nodes can send messages between them.<br>
+  According to the Settings in <em>options -&gt; RouteView Settings</em>
+  there are either only the current ROUTEs are shown (like ROUTEs are
+  stored in a VRML/X3D file) or the Routes and all existing nodes are shown.
+  To show all nodes makes it easier to build new ROUTEs in small VRML/X3D files,
+  but can be very confusing in very big VRML/X3D files.
+ </li>
+ <li>
+  <b>Channel View</b><br>
+  This window is only valid for interpolator nodes.
+  Interpolator nodes are most important for animations
+  in VRML97 and X3D.
+ </li>
+ <li>
+  <b>3D Preview window</b><br>
+  This Window can not be switched off and shows a
+  preview of the graphical output of a VRML file.
+  In difference to the other windows, the implementation
+  of the VRML97 standard in this window is (still) incomplete.<br>
+  Some VRML97 nodes like "MovieTexture", nodes are not shown at all. 
+  The icons of not shown nodes are surrounded by a black frame.<br>
+  The nodes from the not widely used VRML97 Amendment 1 Standard 
+  (ISO/IEC 14772:2002) has the most failures, despite the fact that the
+  nodes NurbsSurface, NurbsCurve and NurbsGroup from Amendment 1 are currently 
+  responsible for the most powerfull 3D modelling features of white_dune.<br> 
+  The support for X3D nodes is also not complete.<br>
+  Not all fields are shown correctly, e.g.  the "Text" node under 
+  Linux/UNIX/MacOSX should be seen as "better than nothing" (especially, 
+  if the program is compiled without support from the GLUT library).
+  The fieldvalues of the "FontStyle" node (which belongs to the "Text" node
+  is also not correct (yet).<br>
+  The field "convex" is (still) ignored too. When "convex" is set to "false",
+  nonconvex polygons are displayed correctly.<br>
+  <img src=convex_freewrl.png>
+  <img src=convex_dune.png><br>
+  Correct and false image of a IndexedFaceSet with nonconvex polygons
+  with "convex false" in FreeWRL (links)
+  and white_dune (rechts)<br>
+  The problem with "convex false" exist also in Extrusion-based
+  nodes. The are more rendering errors when using Extrusions.<br>
+  The display of multiple transparent shapes is also errornous.<br>
+  <a href="rendering_bugs/rendering_errors.html">Here</a> are detailed
+  descriptions by Michalis Kamburelis (the author of the kambi VRML gameengine)
+  of further errors in the 3D preview window.<br>
+  <b> Of course, such a false image of a VRML object in the 3D Preview
+  do not mean, there is a error in the VRML file</b>.<br>
+  If in doubt, use <em>File-&gt;Preview</em> to start a VRML browser.
+ </li>
+</ul>
+</p>
+<h3><a name="menue">Menu overview</a></h3> 
+<p>
+ The main menu of white_dune is seperated into the following submenus:
+ <ul>
+  <li>
+   File<br>
+   This submenu is intended for handling files, like loading, inserting
+   and saving VRML/X3D files. It has can also be used to export to various 
+   variants of VRML/X3D files and some other 3D file formats.<br>
+   The File submenu also contain a way to edit the current file in
+   text form without extra load/save dialogs.
+  </li>
+  <li>
+   Edit<br>
+   This submenu is used to copy, paste, delete or search objects.<br>
+   It also contain a menupoint for the VRML/X3D "DEF" command. This command
+   is used to assign a name to a VRML/X3D object. This can be used in
+   a "ROUTE" statement to exchange messages between VRML/X3D objects.
+   It can also be used for the "USE" command (also available in the "Edit"
+   submenu), which creates a indistinguishable pointer to the object, 
+   similar to a UNIX hard link.
+  </li>
+  <li>
+   Selection<br>
+   This submenu is used to control the selection.<br>
+   The vertices of mesh objects, faces and lines of IndexedFaceSet and 
+   the weights of HanimJoint can be selected.<br>
+   "Range" refers to the vertices of IndexedFaceSet and Nurbs(Patch)Surface. 
+   To use this, a first vertex has to be selected before
+   <em>Selection -&gt; Range</em> is used. After this, a second vertex 
+   has to be selected. All vertices become selected, that have a shorter
+   distance to the first vertex than the distance between the first
+   vertex and the second distance.<br>
+   The menupoint "get old selection" restores the former selection, if
+   possible.<br>
+   The menupoint "Deselect" is used to reduce the current selection.<br>
+   The menupoints "Show only selected Vertices", "Hide Vertices" and 
+   "Unhide Vertices" can be used to temporary hide/unhide vertices from the 
+   selection. This is usefull if the look a lot of vertices confuses the user.
+  </li>
+  <li>
+   View<br>
+   This submenu is intented for setting the used windows and toolbars.<br>
+   Beside the possibility, to switch on or off single windows and toolbars
+   there is also a menupoint <em> View -&gt; FullScreen</em>, which switchs
+   off als toolbars beside the standard toolbar (e.g. with icons for
+   open and save) and shows the 3D preview window as only window.
+   This is very usefull to modell a 3D object or navigate inside the 3D world.
+  </li>
+  <li>
+   Create<br>
+   This submenu is intented for the creation of new VRML/X3D nodes.<br>
+   The menu is orginised somewhat similar to the components of the X3D
+   standard, but only VRML97 nodes are organised this way. 
+   VRML97 Amendment 1 nodes, X3D nodes, X3D draft nodes and extension
+   nodes for browsers like cover, kambi or x3dom are seperated in own submenus.
+  </li>
+  <li>
+   Animation<br>
+    This submenu is used to create and control animation.
+  </li>
+  <li>
+   Actions<br>
+   This submenu contains functions to change the VRML/X3D file.<br>
+   A mayor part of this functions were designed cause they are not
+   available in a lot of 3D modellers (or not supported by their
+   VRML/X3D Export).
+  </li>
+  <li>
+   Convert<br>
+   This submenu is intended to support the conversion between 3D objects.<br>
+   There are two classes of conversions:
+   <ul>
+    <li>
+     Shape conversion:<br>
+     The conversion of shapes means the loss of information in almost
+     all cases. In a typical case, you start with a shape with only
+     few parameters like a sphere with only one parameter (radius)
+     or a scripted PROTO like SuperShape (with less than 20 parameters for
+     a complex object). The next step may be the conversion to a 
+     Nurbs(Patch)Surface. A typical Nurbs(Patch)Surface has much more 
+     parameters then a primitive or scripted PROTO (if you don't count
+     huge array of values as only one parameter). But unlike a 
+     primitive etc., you can change small details of a Nurbs(Patch)Surface
+     easily.<br>
+     The next step could be the conversion to a IndexFaceSet (mesh).
+     This also increases the possibilities to change details. 
+     While a Nurbs(Patch)Surface can be changed via a few controlpoints,
+     a IndexFaceSet has usually much more vertices as details, that can be 
+     changed. But the conversion also looses control, cause the change
+     of a controlpoint in a Nurbs(Patch)Surface can control a lot of
+     vertices of a shape.<br>
+     The next possible steps only loose information: the conversion to
+     a IndexedLineSet only loose information about faces and the next
+     possible step, the conversion to a PointSet only loose information 
+     about the connections between the vertices.
+    </li>
+    <li>
+     Interpolator creation:<br>
+     This menupoints creates Position- and OrientationInterpolators from
+     a NurbsCurve. Unlike the conversion of shapes, the new created 
+     interpolator do not replace the NurbsCurve. The new created interpolator
+     is not connected to other nodes. To use it for a animation, it
+     need to be connected to a TimeSensor and a target node with the
+     following Routes menu.
+    </li>
+   </ul>
+  </li>
+  <li>
+   Routes<br>
+   This submenu is used for VRML/X3D ROUTE commands.<br>
+   The chapter about <a href="#route">Input/erase of ROUTEs</a>
+   discribe this submenu.
+  </li>
+  <li>
+   Mode<br>
+   This submenu is used to set navigation and input modes.
+  </li>
+  <li>
+   Options<br>
+   This submenu is used to change settings.
+  </li>
+  <li>
+   Help<br>
+   This submenu shows helppages with a HTML webbrowser.
+  </li>
+  <li>
+   ! (optional "teacher menu")<br>
+   This submenu is only available, when the program was compiled with this
+   option. It is used to mark right and wrong constructs.
+  </li>
+ </ul>
+</p>
+<h3><a name="navigation">Navigation</a></h3>
+<p>
+  To navigate in the 3D Preview Window, you have two differ between
+  different walk modes.
+  <ul>
+   <li>
+   Shift-Mouse 1: Zoom View
+   </li>
+   <li>
+   Ctrl-Mouse 1: Rotate View
+   </li>
+   <li>
+   Shift-Ctrl-Mouse 1: Move View
+   </li>
+  </ul>
+  Additional you have from version 0.16 a SGI like navigation.
+  Please note, that is it not seldom, that a similar configured windowmanager 
+  interpret all mouse input, that uses the Alt key but itself....
+  <ul>
+   <li>
+   Alt-Mouse1: Rotate View
+   </li>
+   <li>
+   Alt-Mouse2: Move View
+   </li>
+   <li>
+   Alt-Mouse1-Mouse2: Zoom View
+   </li>
+  </ul>
+  When a 6D inputdevice is active and the Scene icon 
+  <img src=sceneicon.jpg> is selected in the Scene Tree
+  you can navigate depending on the transform icons <img src=schieb.png> 
+  <img src=rot.png> <img src=6d.png> 
+  <img src=rocket.png> <img src=hover.png>
+  in the VRML file.<br>
+  The Scene icon is selected, wenn you klickt into the void of the 3D preview
+  window.<br>
+  Additionally, there is each a Icon that forces navigation with the mouse
+  <img src="mouse_navigation.png"> or the inputdevice
+  <img src="inputdevice_navigation.png">.
+</p>
+<h3><a name="scenegraph">Changing the scenegraph</a></h3>
+<p>
+The most simple way to change the scenegraph is to add new node
+by clicking to the matching VRML node icon.<br>
+To identify a VRML node icon, move the mouse to it and wait. A descriptive
+text will occure in the status bar at the bottom of the white_dune window.<br>
+White_dune tries either to include the new node at the point of selection in
+the scenegraph,<br> 
+<img src=node_add_valid.jpg><br>
+or to the root of the scenegraph ("Scene" icon).<br>
+White_dune will gray out all node icons, that are impossible to add.<br>
+<img src=node_add_invalid.jpg><br><br>
+The following table shows the requirements for this nodes in the 
+VRML97 standard:<br>
+<ul>
+<li>Appearance need Shape
+<li>Material need Appearance
+<li>ImageTexture need Appearance
+<li>MovieTexture need Appearance (or Sound)
+<li>PixelTexture need Appearance
+<li>TextureTransform need Appearance
+<li>Coordinate need IndexedFaceSet or IndexedLineSet or PointSet
+<li>Color need IndexedFaceSet or IndexedLineSet or PointSetor or ElevationGrid
+<li>Normal need IndexedFaceSet
+<li>TextureCoordinate need IndexedFaceSet
+<li>FontStyle need Text
+<li>AudioClip need Sound
+</ul>
+For example a Appearence node need to be selected, to include a
+ImageTexture node, or a Shape node need to be selected to include
+a Appearence node.<br>
+All of the matching node fields in the VRML97 are of type SFNode,
+therefore only one node can be inserted. A icon is also grayed,
+if there is already a matching node.<br>
+For example you can not include two ImageTexture Nodes
+to a Appearence node. Therefore the ImageTexture is also grayed,
+if a Appearence node is selected, but a ImageTexture node is already there.
+<br> 
+According to the VRML97 Standard the shape nodes Box, Sphere, Cone,
+Cylinder, IndexedFaceSet, IndexedLineSet, PointSet, ElevationGrid, 
+Extrusion and Text need a Shape node. The needed structure
+for the usage of this Shape.geometry nodes is clear.
+Therefor the click on the icons and the usage of the 
+<em> Create -&gt; Shape -&gt; </em> menuitems build a complete Shape-structure
+(including default Appearance/Material nodes and a surrounding Transform node).
+<br>
+(New in Version 0.29beta) If the selection in case of a creation of such
+a node is not a node a Shape node can be part of, the surrounding Transform
+node is filled in a way, that the new node is shown directly in front of the
+actual viewpoint.
+<br>
+For the new, but now deprecated nodes of the VRML97 Amendment 1 standard 
+(CoordinateDeformer, NurbsSurface) there are additional rules.
+<ul>
+ <li>
+  Coordinate need CoordinateDeformer 
+ </li>
+ <li>
+  NurbsSurface need either Shape or NurbsGroup
+ </li>
+ <li>
+  Contour2D need TrimmedSurface
+ </li>
+ <li>
+  NurbsTexutureCoordinate need NurbsSurface
+ </li>
+ <li>
+  TextureCoordinate need either VRML2 nodes or NurbsSurface
+ </li>
+</ul>
+The extensions and extra nodes of the immersive Cover VRML97 browser 
+also need additional rules.
+<ul>
+ <li>
+  Wave need Shape
+ </li>
+ <li>
+  VirtualSoundSource need VirtualAcoustics
+ </li>
+</ul>
+The extensions and extra nodes of the kambi VRML game engine 
+also need a additional rule.
+<ul>
+ <li>
+ ImageTexture, PixelTexture and MovieTexture nodes need either their
+ VRML97 nodes or KambiAppearance
+ </li>
+</ul>
+White_dune itself also has a scripted PROTO extensions, which has 
+also a additional rule.
+<ul>
+ <li>
+  VrmlScene need VrmlCut
+ </li>
+</ul>
+Cause there are much more X3D nodes than VRML97 nodes, the list of
+needed nodes is very much longer:
+<ul>
+ <li>
+  MultiTexture need Appearance
+ </li>
+ <li>
+  ImageTexture need Appearance or MultiTexture
+ </li>
+ <li> 
+  MovieTexture need Appearance or MultiTexture
+ </li>
+ <li>
+  PixelTexture need Appearance or MultiTexture
+ </li>  
+ <li>
+  MultiTextureTransform need Appearance 
+ </li>
+ <li>
+  TextureTransform need Appearance or MultiTextureTransform
+ </li>
+ <li>
+  MultiTextureCoordinate need IndexedFaceSet or NurbsPatchSurface
+ </li>
+ <li>
+  FillProperties need Appearance
+ </li>
+ <li>
+  LineProperties need Appearance
+ </li>
+ <li>
+  NurbsTextureCoordinate need NurbsPatchSurface
+ </li>
+ <li>
+  TextureCoordinate need either the need nodes for VRML97 nodes or 
+  or IndexedTriangleFanSet or IndexedTriangleSet or IndexedTriangleStripSet  
+  or TriangleFanSet or TriangleSet or TriangleStripSet
+  or MultiTextureCoordinate
+ </li>
+ <li>
+  Coordinate or CoordinateDouble need either the VRML97 nodes for 
+  Coordinate or LineSet or IndexedTriangleFanSet or IndexedTriangleSet or 
+  IndexedTriangleStripSet or TriangleFanSet or TriangleSet or 
+  TriangleStripSet or NurbsPatchSurface or NurbsCurve or 
+  NurbsPositionInterpolator or NurbsOrientationInterpolator or
+  NurbsSurfaceInterpolator or NurbsTrimmedSurface
+  or HAnimHumanoid or HAnimSegment
+  or NurbsOrientationInterpolator
+ </li>
+ <li>
+  Normal need either the needed VRML97 nodes or HAnimHumanoid or 
+  IndexedTriangleSet or IndexedTriangleFanSet or IndexedTriangleStripSet
+  or TriangleFanSet or TriangleSet or TriangleStripSet
+ </li>
+ <li>
+  Color need either the needed VRML97 nodes
+  or GeoElevationGrid or LineSet
+  or IndexedTriangleFanSet or IndexedTriangleSet or 
+  IndexedTriangleStripSet or TriangleFanSet or TriangleSet or 
+  TriangleStripSet
+ </li>
+ <li>
+  ColorRGBA need either the needed VRML97 nodes for Color
+  or GeoElevationGrid
+  or IndexedTriangleFanSet or IndexedTriangleSet or 
+  IndexedTriangleStripSet or TriangleFanSet or TriangleSet or 
+  TriangleStripSet
+ </li>
+ <li>
+  NurbsCurve2D need Contour2D or NurbsSweptSurface
+ </li>
+ <li>
+  ContourPolyline2D need Contour2D
+ </li>
+ <li>
+  Contour2D need NurbsTrimmedSurface
+ </li>
+ <li>
+  HAnimSegment need HAnimHumanoid or HAnimJoint
+ </li>
+ <li>
+  HAnimJoint need HAnimHumanoid or HAnimJoint
+ </li>
+ <li>
+  HAnimSite need HAnimHumanoid or HAnimJoint
+ </li>
+ <li>
+  HAnimDisplacer need HAnimJoint or HAnimSegment
+ </li>
+</ul>
+Additionally, there are rules for the X3D nodes of the 
+Rigid Body Physics component, which is listed seperatly, cause this
+rules alone are not sufficent for a sensefull use:
+<ul>
+ <li>
+  RigidBody need BallJoint or DoubleAxisHingeJoint or SingleAxisHingeJoint
+  or UniversalJoint or SliderJoint or MotorJoint or RigidBodyCollection or
+  Contact
+ </li>
+ <li>
+  CollideableOffset need RigidBody or CollidableOffset or CollisionCollection
+  or CollisionSpace or Contact
+ </li>
+ <li>
+  CollideableShape need RigidBody or CollidableOffset or CollisionCollection
+  or CollisionSpace or Contact
+ </li>
+ <li>
+  CollisionSpace need CollisionCollection or CollisionSpace
+ </li>
+ <li>
+  CollisionCollection need CollisionSensor
+ </li>
+</ul>
+This rules are not sufficent, cause only a structure make sense, where
+CollideableShape and CollideableOffset nodes are in the root nodes
+or the scenengraph and get USE-ed in several other nodes, which are
+USE-ed again. To simplify the creation of this structure, there is
+<a href="physics">a similar operation for scenegraph branchs</a>.
+</p>
+<p>
+The commands <em>Edit -&gt; copy</em>, <em>Edit -&gt; paste</em> and
+<em>Edit -&gt; delete</em> work similar to the same commands in many programs.
+<br>
+Of course only changes of the scenegraph are possible, which match
+the rules above about "node A needs node B".
+Depending on the selected node in the scenegraph (the target of a 
+<em>Edit -&gt; paste</em> command) the menupoint <em>Edit -&gt; paste</em>
+can be grayed out or not.<br>
+In a unchanged scenegraph it can occured, that it is not possible to
+insert a copied node at once, cause a node needed to inserted the copied
+node is missing. The missing node must be created first, before the
+copy action can be completed successfully.
+</p>
+<p>
+A unusual command is the <em>Edit -&gt; copy branch to root</em> command. 
+It copies all nodes along the path to the root of the current scenegraph branch
+into the paste buffer.<br>
+This can be very handy, if you need to double and split a scenegraph branch.
+</p>
+<p>
+Another way to change the scenegraph is to drag parts of it with the
+mouse.<br>
+White_dune will show you with a icon of a stop sign, 
+if the target node is not possible cause of the "missing node rules".
+<br>
+<img src=scenegraphchange_invalid.jpg><br>    
+If the target node is possible, white_dune will show the normal mousepointer.<br>
+<img src=scenegraphchange_valid.jpg><br>
+The target is not possible, if there are multiple SF/MFNode fields of the
+target node.<br>
+<img src=scenegraph_multiple_target.png><br>
+Nodes with multiple fields of type SF/MFNode (e.g. the collision node)
+always display the field names in the scenetree (despite a opposite setting in 
+the <em>Options -&gt; Preferences</em> dialog), so you can use the field names 
+as targets in this case.<br>
+<img src=scenegraph_multiple_fields.png>
+</p>
+<p>
+Similar to the local copy/move in the explorer program of 
+M$Windows2000 and similar filemanagers it is possible to change
+the behaviour, if the keyboard is used when the mouse is still dragged:<br>
+<ul>
+ <li>
+  Move: <br>
+  no key pressed or Shift key pressed (icon do not change)
+  <br><img src=scenegraphchange_move.jpg><br>
+ </li>
+ <li> Copy: 
+  <br><img src=scenegraphchange_copy_ptr.jpg><br>  
+  Crtl key pressed (icon add "+" picture)
+  <br><img src=scenegraphchange_copy.jpg><br>  
+ </li>
+ <li>
+  DEF/USE: 
+  <br><img src=scenegraphchange_link_ptr.jpg><br>  
+  Crtl key and Shift key pressed together (icon add "arrow" picture)
+  <br><img src=scenegraphchange_link.jpg><br>  
+  The USE construct is something like a undistinctable pointer,
+  the reuse of a already existing node.<br>
+  In a DEF/USE construct it is impossible to identify orginal and copy.
+  <ul>
+   <li>
+    When you change the orginial, the copy changes too.
+   </li>
+   <li>
+    When you change the copy, the original changes too.
+   </li>
+   <li>
+    It has no consequences to the orginal, when you delete the copy.
+   </li>
+   <li>
+    It has no consequences to the copy, when you delete the orginal.
+   </li>
+  </ul>
+  This is similar to the hardlinks in a UNIX filesystem.
+ </li>
+</ul>
+</p>
+<p>
+<b><h4><a name="use">Using USE</a></h4></b><small>(new in Version 0.29beta)</small><br>
+ Beside the drag and drop method above, there is a additional way to use the 
+ USE construct. The node to be USEd need a DEF name
+ which can be applied with <em>Edit -&gt; DEF</em>. The usage of 
+ <em>Edit -&gt; USE</em> (if possible) adds a new USE of the last DEFd node
+ at the point of the selected node.<br>
+ In white_dune (unlike when using a text editor on a VRML97 file), you can 
+ legally delete the DEFd node. The first written formerly USEd node becomes 
+ the new DEFd node.
+ pointers.
+ <br>
+ Using USE is useful for keeping VRML files small (faster downloadable), 
+ it increases maintainabilty and it can maybe used for faster rendering by a 
+ smart VRML browser (e.g. by using glLists on OpenGL rendering).<br>
+ Additional commands, that can create USE constructs are the <a href="#array">
+ array tool</a> and some of the "create" scenegraph operations following. 
+</p>
+<p>
+ <b><h4><a name="scenegraphoperations">Scenegraph Operations</a></b></h4><small>(new in Version 0.27beta)</small><br>
+ There is no way to move multiple nodes in the scenegraph (yet).
+ As a workaround there are operations to rearrange the current scenegraph 
+ branch (<em>Actions -&gt; Move Sibling -&gt; up/down/to first/last 
+ position</em>)
+ and operations which can be applied to all nodes
+ in the scenegraph branch following the selection (including the
+ selection itself). <br>
+ <img src=scenegraphbranch_start.png><br>
+ The are commands available via <em>Actions -&gt; Rest of scenegraph branch</em>:
+ <ul>
+  <li>
+   <em>Move to </em><br>
+   This command move the nodes into a grouping node (like Group, 
+   Transfrom etc.)<br>
+   <img src=scenegraphbranch_transform.png> <br>
+   It is also possible, to bring nodes into a new VRML97 file and
+   use this file via the Inline command, but only if there is no
+   ROUTE has one of this nodes as target or a USE is used.
+  <li>
+   <em> Move 1 level up </em><br>
+   This command moves the nodes into the same scenegraph branch as
+   the parent of the selected node.<br>
+   <img src=scenegraphbranch_up1.png> <br>
+   <img src=scenegraphbranch_up2.png> 
+  </li>
+  <li>
+   <em> Move to Transform selection</em><br>
+   This command works only with a selected Transform node.
+   It moves the nodes which follow the selected nodes into the 
+   Transform node. In difference to the similar command to move
+   into a new Transform node the position, orientation and scale of
+   the nodes are important.<br> 
+   In the selected node will be up to 7 (depending from the fields of
+   the selected transform) new Transform nodes created. This up to
+   7 Transform nodes equalize the position, orientation and scale
+   of the moved nodes, so the global position, orientation and scale
+   of the moved nodes do not change.<br>
+   <img src=scenegraphchange_move_transform1.png><br>
+   <br>
+   <img src=scenegraphchange_move_transform2.png><br>
+   This command is often used, to create multipart symetric objects.<br>
+   In the first step, the most upper of the new inserted Transform
+   node is selected and the menupoint <em> edit -&gt; copy </em> is used.
+   <br>
+   <img src=scenegraphchange_move_transform3.png><br>
+   In the next step, the original selected Transform node is selected
+   again<br>
+   <img src=scenegraphchange_move_transform4.png><br>
+   to duplicate the nodes with the menupoint <em> edit -&gt; paste </em>.
+   <br>
+   <img src=scenegraphchange_move_transform5.png><br>
+   With a command like <em> actions -&gt; flip -&gt; x </em> the 
+   duplicated nodes are mirrored.
+   <img src=scenegraphchange_move_transform6.png><br>
+   This procedure to create symetric objects only works, when the
+   scaleOrientation field of the original selected Transform node
+   do not make its contained object unsymetric.
+  </li>
+  <li>
+   <em>Create</em><br>
+   This command creates the new node 
+   (ImageTexture, Material, Appearance, Normal etc.)
+   at every possible place in the scenegraph branch.
+   The created nodes are all belong to the Shape node.
+   It has to be differed between nodes, which belong to the appearance
+   field of Shape (ImageTexture, Material und Appearance) and nodes, 
+   which belong to the geometry field of Shape (Normal, TextureCoordinate).
+   For nodes, which to the appearance field, a new node is created at the
+   first possibility in the scenegraph and for all following possibilities
+   the node is reused via USE.<br>
+   <img src=scenegraphbranch_create1.png><br>
+   <img src=scenegraphbranch_create2.png><br> 
+   This makes it possible to change the color, the material and the 
+   texture of a whole scenegraph branch with little effort.
+   Nodes which belong to the geometry field of shape will be generated
+   according to the data of the Shape (e.g. a IndexedFaceSet).<br>
+   To create any type of node at some places in the scenegraph, see the 
+   <a href="#scenegraph_branch_fieldpipe"><em> special -&gt; field pipe </em> 
+   </a> subcommand.
+  </li>
+  <li>
+   <em>Set</em><br>
+   This command changes some fields (creaseAngle, transparency, etc.) in the
+   scenegraph branch, which influence the view of a shape.
+  </li>
+  <li>
+   <em>Convert</em><br>
+   This command converts some nodes into other nodes. This is very similar
+   to the main <em>Convert</em> menupoint, but currently only conversion to
+   IndexedFaceSet and TriangleSet is implemented.
+  </li>
+  <li>
+   <em>Remove</em><br>
+   This command remove some nodetypes
+   (ImageTexture, Material, Appearance, Normal etc.) or general nodes 
+   (depending on their name or DEF name) in the scenegraph branch.<br>
+   Most of the nodetypes are corresponding to the nodes in the
+   <em>Create</em> command, because the <em>Create</em> Command can only insert
+   nodes, if the matching field is not blocked by a already existing node.<br>
+   Somethings it is usefull, to remove the nodes in the first step and
+   create them new in the next step.<br>
+   For example, you have a lot of textured objects in a scenegraph branch and
+   want to give them the same texture.
+   In the first step, you remove the texture node everywhere and in the 
+   next step you create a texture node everywhere. Cause the new texture
+   node is always the USE "clone" of the first texture node, any change of
+   this texture node will be result in the change of all created texture
+   nodes<br>
+   The removal of some of the nodes (e.g. Normal or TextureCoordinate) also
+   has consequences to the remaining parent node, cause some of the fields
+   of the parent node (e.g. normalIndex or texCoordIndex of the IndexedFaceSet
+   node) should be removed too. In this cases, white_dune also removes
+   this fields.<br>
+   <img src=scenegraphchange_delete1.png><br>
+   <img src=scenegraphchange_delete2.png><br>
+   <img src=scenegraphchange_delete3.png>
+  </li>
+  <li>
+   <em>special:</em><br>
+   This category collects all things, that do not match into the other
+   categories.
+   <ul>
+    <li>
+     <a name="scenegraph_branch_fieldpipe"><em>Use field pipe</em><br></a>
+     The <a href="#fieldpipe">concept of fieldpipe</a> 
+     is discribed in a later capter. In this case is used for every
+     node in the scenegraph branch with the name or DEF-name matching
+     the nodefilter fields in the dialog.
+    </li>
+    <li>
+     <a name="show_polygons">
+      <em>Show polygons/primitives in status bar</em>
+     </a>
+     This command is a informational command and do not change anything in
+     the Scenegraph. It can be used to find the part of the scenegraph,
+     which contain the biggest number of polygons/primitives. This is
+     very important for finding performance problems in realtime 3D data.<br>
+     Primitives are nodes like Box, Cone, Cylinder and Sphere. For Primitives, 
+     the number of polygons used in the VRML Browser depends from 
+     the VRML Browser itself. For example, a VRML Browser can use 16 Polygons
+     to draw the top surface of a Cylinder of a low quality view with
+     sharp edges or can use 32 Polygons for better quality.<br>
+     A Sphere usually use very much more polygons than a Box.<br>
+     To find the part of the scenegraph, that contain the biggest number
+     of polygons/primitives, you can use a binary search algorithm:<br>
+     <ul>
+      <nl> 
+       Click to the scene icon at the root of the scenegraph and use
+       <em>Actions -&gt; Rest of scenegraph branch -&gt; 
+       Show polygons/primitives in status bar</em>.
+       The result are the number of polygons/primitives in the whole VRML file.
+      </nl>
+      <nl>
+       Select a node approximatly in the mid of the current level of the 
+       scenegraph branch and use 
+       <em>Actions -&gt; Rest of scenegraph branch -&gt; 
+       Show polygons/primitives in status bar</em>.<br>
+       If the number is greater than the half of the result of the last
+       command, the majority of polygons/primitives is in the upper part
+       of the current level of the scenegraph branch. Continue with the
+       command at the approximatly mid of the upper part of the current 
+       level of the scenegraph branch. <br>
+       If the number is less than the half of the result of the last
+       command, the majority of polygons/primitives is in the lower part
+       of the current level of the scenegraph branch. Continue with the
+       command at the approximatly mid of the lower part of the current 
+       level of the scenegraph branch.<br>
+       Continue with this scheme of using the mid of the remaining range of 
+       the last command, till you find either a node or a range of nodes
+       which contain the most polygons/primitives in your file.
+      </nl>
+      <nl>
+       The node (or range of nodes) (e.g. if it is a Group or Transform node)
+       can itself contain multiple other nodes. If you click to the plus
+       sign in the Scene Tree of such a node you open a new level of the
+       scenegraph branch. If you need to continue the search for the 
+       part with the most polygons/primitives of the scenegraph branch,
+       use <em>Actions -&gt; Rest of scenegraph branch -&gt; 
+       Show polygons/primitives in status bar</em> and continue with the
+       second step.
+      </nl>
+     </ul>
+    </li>
+    <li>
+     <a name="build_physics">
+      <em>Build RigidBodyCollection/CollisionSensor</em>
+     </a><br>
+     This command only is usefull for the X3D Rigid Body Physics component.
+     In this case a complicated structure of nodes has to be build, full
+     of DEF/USE constructs. This command collects CollideableShape and
+     CollidableOffset nodes in the current scenegraph branch and builds
+     the needed structure for Rigid Body Physics simulation. 
+     Beside simulation parameters you only may need to add joint nodes, 
+     and USE the RigidBody nodes in this joints.
+    </li>
+    <li>
+     <em>Show polygons for Catt 8 in status bar</em><br>
+     This command is similar to the <a href="#show_polygons">
+     similar command to display the number of polygons/primitives</a>.
+     The difference is the fact, that this command ist made for 
+     the export into the Catt8 fileformat. The format for Catt8
+     do not know primitives. Additionally Catt8 do not know doublesided
+     surfaces, so the front and backfaces has to be exported 
+     (and counted) twice.
+    </li>
+   </ul>
+  </li>
+ </ul>
+ Unfortunatly some of these operations are (still) very slow.
+</p>
+<h3><a name="route">Input/erase of ROUTEs</a></h3>
+<p>
+In white_dune, there are two different settings, which drive the way to
+insert a ROUTE.
+<ul>
+ <li>
+  In <em> Options -&gt; RouteView Settings...</em> the checkbox for
+  "Show all nodes in Routeview" is set:<br>
+  All nodes in the scene are shown in the routeview.<br>
+  This is usefull for working with small VRML files, but for VRML files
+  with a lot of nodes, it can be horrible to find the right icon. 
+ </li>
+ <li>
+  In <em> Options -&gt; RouteView Settings...</em> the checkbox for
+  "Show all nodes in Routeview" is not set:<br>
+  Only nodes with already existing routes are shown in the routeview.<br>
+  To let a node without ROUTEs occure in the Routeview, you need to select 
+  the node in the scene tree window and use the 
+  <em>Route -&gt; show node on top</em> command.
+ </li>
+</ul>
+</p>
+<p>
+ROUTEs are made in white_dune by finding the right icon in the
+RouteView Window (if you click to the icons, the matching
+icon in the scene tree windows is selected) or useing
+<em>Route -&gt; Move node to top</em> to add the node to the RouteView 
+Window and click to the boxes of the matching events. The name of the matching
+event is shown, and you can draw a line to the next icon/event.
+<br>
+<img src=routemake1.jpg><img src=routemake2.jpg> <br>
+As required by the VRML standard, only events with the same
+type (same color of boxes) can be connected.<br>
+To erase ROUTEs, simply cut the line.<br>
+<img src=routecut1.jpg><img src=routecut2.jpg><br>
+As a sugestion for beginners, some event boxes are marked with a small
+red point. The red point marks a important/often used event.<br>
+Of course the importance/usage of events differ with the task of your
+VRML world. All sensor nodes (the original source of most eventprocessing)
+have event boxes with red points. 
+</p> 
+<p>
+In complex VRML worlds with a lot of objects (for example the VRML export
+from a 3D-Modelling program like Wings3D, Blender, AOI, Catia, 
+3D Studio Max, Maya etc.) it can be difficult to find the wanted VRML nodes
+in the RouteView window.
+<br><img src=routeview_full.png><br>
+There are operations to jump to the selected node (with 
+<em> Routes -&gt; Unzoom/jump to selection </em>)
+<br><img src=routeview_jump.png><br>
+or zoom out of the Routeview (with <em> Routes -&gt; Zoom out</em>)
+<br><img src=routeview_zoom.png><br>
+but in such cases, the usage of the Inline VRML node
+is recommended. It can be used to put static objects (for example parts
+of the environment or parts of rigid shapes) in their own VRML files.
+In result the complete VRML world can only consist of very few VRML nodes.
+<br><img src=routeview_inline.png><br>
+</p> 
+<p>
+<b>Commands with automatic generation of ROUTEs</b><br>
+There are two commands to automatically generate new ROUTEs.
+<ul> 
+<li>
+  <em> Action -&gt; animate </em><br>
+  With this commands the ROUTEs for<br>
+  TimeSensor -&gt; *Interpolator -&gt; selected node<br>
+  will be generated. After using the command, a Dialog is opening, which
+  ask for a new TimeSensor should be build or a already existing TimeSensor
+  should be used.
+  The dialog also asks what target event (field) in the selected node should
+  be used. Depending on the Type of the target event a new Interpolator 
+  is generated.
+  <ul>
+   <li>
+    SFFloat: ScalarInterpolator
+   </li>
+   <li>
+    SFVec3f: PositionInterpolator
+   </li>
+   <li>
+    SFRotation: OrientationInterpolator
+   </li>
+   <li>
+    SFColor: ColorInterpolator
+   </li>
+   <li>
+    MFVec3f: CoordinateInterpolator (except the target node is
+             a Normal node, then a NormalInterpolator is generated)
+   </li>
+   <li>
+    In the X3D Standard there are additional Interpolators:
+    <ul>
+     <li>
+      SFVec2f: PositionInterpolator2D
+     </li>
+     <li>
+      MFVec2f: CoordinateInterpolator2D
+     </li>
+    </ul>
+   </li>
+  </ul>
+  When the value of the target event can be read, a new first key/keyValue
+  pair with key=0.0 and keyValue=value_target_field will be set.
+ </li>
+ <li>
+  <em> Action -&gt; add Interaction</em><small>(new in Version 0.29beta)</small><br>
+  In this case, the ROUTE<br>
+  Sensor -&gt; selected node<br>
+  will be generated.<br>
+  Cause there are more than one possible target events in the selected
+  node and different to the Interpolators, the assignment between
+  target event type and sensor is ambigious. There are very much possibilities,
+  a lot of them make seldom sense. Therefore there are two Listboxes:
+  one Listbox you can use to select between recommended events and
+  all events and a listbox, you can select already existing sensors.<br>
+  In a window there are checkboxes will all sensor events/target events
+  combinations for a new interaction, according to the selection of the 
+  listboxes.
+ </li>
+</ul>
+</p>
+<h3><a name="fields">Changing fieldvalues</a></h3>
+<p>
+There is more than one way to change fieldvalues:<br>
+<ul>
+ <li> 
+  <b><a name="keyboard">Keyboard input</a></b><br>
+  By clicking with the mouse to the matching value and releasing the
+  button. A text input window will open to input values from
+  the keyboard.
+ </li>
+ <li>
+   <b><a name="mouse">Mouse input</a></b><br>
+   By pressing the left mousebutton on the matching value and not releasing the
+   button, but moving the mousepointer to left or right. This will 
+   decrease or increase the value. <br>
+   <img src=fieldchange.jpg><br>
+ </li>
+ <li>
+  <b><a name="MF">Changing "MF"-FieldValues</a></b><small>(new in version 0.27beta)</small><br>
+  In the fieldview Window, a "+"-sign at the left side mark a "MF"-field 
+  like MFFloat, MFInt32, MFVec3f, MFRotation, MFString etc.
+  "MF"-Fields are arrays of data, you can count their content: first,
+  second, third, etc.<br>
+  To show/change the content of a "MF"-field, you need to click on the 
+  "+"-character on the left side.<br>
+  As in a VRML file a "MF"-field with only one data is shown similar
+  a normal single data "SF"-field.<br>
+  To add data to a "MF"-field, you need to click to the second column of 
+  "+"-characters. New data is inserted at the next point of the array.<br>
+  To insert at the first point, click to the right side of the fieldview
+  before the first of a opened "MF"-field.<br>
+  To delete from a "MF"-Field, click on the left side of the fieldview
+  at the row with the data you want to delete and use the menuitem 
+  <em>Edit -&gt; delete</em>.
+ </li>
+ <li>
+  <b><a name="3DWindow">Changing FieldValues in the 3D Preview window</a></b><br>
+   Changing in the 3D Preview window is also a chainging of the fieldvalues.
+   Often transform nodes are changed.<br>
+   During interactive work with the mouse in the 3D Preview window, the icons
+   <img src=transform.jpg> select between a 
+   <ul>
+    <li> translation <img src=schieb.png> </li>
+    <li> rotation <img src=rot.png> </li>
+    <li> scale <img src=scale.jpg> </li>
+    <li> uniform scale <img src=uniform_scale.png> 
+         <small>(new in version 0.29beta)</small> </li>
+    <li> changing center <img src=center.jpg>
+         <small>(new in version 0.19beta)</small> </li>
+   </ul>
+   <br>
+   <strong>Please note, you can not use this tools, when there
+   is no transform node <img src=transform2.jpg> in the branch
+   of the scenegraph</strong>.<br>
+   Beside the Transformnode, other fieldvalues can be changed in
+   the 3D Preview window. Most nodes have small white boxes ("handles"), 
+   which belong to the "geometry" field of a shape node. 
+   The moving boxes are e.g.
+   connected with a edgepoint or a curve. Examples for such nodes with
+   handles are
+   Box, Cone, Cylinder, Sphere, ElevationGrid, Extrusion, PointLight,
+   (Indexed)*Set, the X3DV/VRML97 Amendment 1 Nurb(Patch)Surface/NurbsCurve 
+   Nodes or nodes, which are generated via scripting ("scripted PROTOs")
+   from NURBS curves (z.B. SuperExtrusion, SuperRevolver)
+ </li>
+ <li>
+  <b><a name="6D">6D Input</a></b> <small>(new in version 0.19beta)</small><br>
+  Since version 0.19beta white_dune supports 6D inputdevices
+  (6D is about the 6 degrees of freedom) under Unix/Linux.<br>
+  is pressed, you can move a Transform node (and the containing objects)
+  in all 6 degrees of freedom. The icon <img src=schieb.png> 
+  limits the movement to translations, the icon <img src=rot.png> 
+  limits to rotations.
+  <br>
+  The classic 
+  6D inputdevice is the spaceball, a sort of joystick (which a sphere instead
+  of a stick) which allows 
+  only small excursions, but in all directions, including rotations.<br>
+  <img src=spaceball.jpg><br>
+  If you press the top of the spaceball for example, the object moves
+  down. When you twist the spaceball, the object will follow this
+  movement.<br>
+  Similar devices are Magellan spacemouse and spacenavigator, they use
+  a ergonomic plate instead a sphere.<br>
+  The configuration of 6D inputdevices (still) works exclusively
+  via commandlineparameters. Beside the type of the 6D inputdevices
+  a scale of the inputvalues is needed for example:
+<br>
+<pre>
+   white_dune -xinput spaceball -allxyz=20,200 -allrot=40,400
+</pre>
+<br>
+  It is also possible to change the scale of the inputdevices when
+  the program is running. Use 
+  <em> Mode -&gt; Inputdevice -&gt; Increase input device </em>
+  (icon <img src=faster.png>) or 
+  <em> Mode -&gt; Inputdevice -&gt; Decrease input device </em>
+  (icon <img src=slower.png>).
+  <br>
+  If you limit the movement to translations (<img src=schieb.png>), only 
+  the "allxyz" scale
+  is changed. If you limit to rotations <img src=rot.png>, 
+  only the "allrot" scale is changed. 
+<br>
+  Beside the support via the Xinput protocol, Linux joystick and
+  libsball are also supported. For details to the commandlineparameters
+  see <a href=dune_1.html>the man page</a>. <br>
+  Another 6D inputdevice are the dials (e.g. available under SGI IRIX).
+  Per default, the inputaxes are awkward placed.<br>
+  <img src=dials_default.jpg><br>
+  Via Commandlineparameters
+<br>
+<pre>
+     dune -xinput dialbox-1 -x=0 -y=2 -z=4 -xrot=1 -yrot=3 -zrot=5 -all=100,100,wheel
+</pre>
+<br>
+  you can exchange the axes.<br>
+  <img src=dials_normal.jpg><br>
+ </li>
+ <li>
+  <b><a name="nxtdials">Mindstorms NXT dials Input:</a></b><br>
+  A selfmade device very similar to the SGI dials can be build easily 
+  with the Mindstorms NXT set.<br>
+  <a href="nxtdials_en.wrl"><img src=nxtdials.png></a><br>
+  Just attach a wheel/gear to each of 3 Mindstorm NXT motors, connect the 
+  motors with the NXT brick, connect the NXT brick with your Computer 
+  via USB and and you can use the result as a USB driven dials device. 
+  <br>
+  The access is done with libusb, which may need additional configuration, 
+  <br>
+  To use e.g. libusb functions unter Linux, a script like 
+  <a href="../../tools/nxt_udev.sh">tools/nxt_udev.sh</a> is usefull.<br>
+  The matching commandline to use the first ("0") brick connected to the 
+  USB port is<br>
+<pre>
+     dune -nxtdials 0 -all=,,wheel
+</pre>
+ </li>
+ <li>
+  <b><a name="6Dlocal">6D Local Mode Input:</a></b><small> 
+  Do you know RC planes ? 
+  (new in version 0.19beta)</small><br>
+  When the 6Dlocal icon <img src=6dloc.png> is pressed, you can steer via
+  the local axes of a transform node.<br>
+  For example, if you move a spaceball into z-direction ("into the screen")
+  the transform node (and the containing objects) move to the direction
+  of it's local z axis, it follows the blue z-arrow.
+  For example, if you move a spaceball into y-direction ("up")
+  the transform node (and the containing objects) move to the direction
+  of it's local y axis, it follows the green y-arrow.<br>
+  <img src=6dlocal_right3.jpg><br>
+  This is usefull, when object and transformnode are similar arranged.
+  Normally the object is not in the direction of the arrows of it's
+  transform node.<br>
+  <img src=6dlocal_wrong.jpg><br>
+  Therefore the transform node should be put into another and the
+  transform node of the object should be rotated accordingly.<br>
+  <img src=6dlocal_right1.jpg><br>
+  <img src=6dlocal_right2.jpg><br>
+  When you use this type of steering, you will see a effect, which
+  is not surprising for users of RC planes:
+  If the object is moving "toward you", a roll to the left of the 
+  spaceball leads to a roll to the right of the object.<br>
+  A similar transformnode is the rocket <img src=rocket.png> mode.
+  In rocket mode, translations are only in the local z-direction allowed.
+  This is useful, if you want to steer a object on a path while allowing
+  all types of rotation.<br>
+  A other similar transformmode is the hover <img src=hover.png> mode.
+  In hover mode, rotations are allowed only around the local y-axis. 
+  This is usefull, if you want to steer a object in-plane.<br>
+  Other transformmodes, that work in a local mode (changes in direction of
+  the local axes) are the scale <img src=scale.jpg> and
+  changing center <img src=center.jpg> modes.
+ </li>
+ <li>
+  <b><a name="joystick">Linux joystick Input:</a></b><br>
+  Unfortunatly, "real" 6D inputdevices are not very widespread.
+  So white_dune under Linux has support for joysticks.<br>
+  There are a lot of different devices (including the spaceball), that
+  can be used under Linux as joystick. <br>
+  Joysticks are the natural inputdevices for the 
+  <a href="#6Dlocal">6D local mode</a> or the "hover" mode.
+  <br>
+  You have to differ between 6D (e.g. gamepads with 2 thumbsticks and a 
+  digital axescross, Labtec Spaceball, Magellan spacemouse), 
+  4D (e.g. gamepads with 2 thumbsticks), 
+  3D (z.B. joystick with a twisting stick (e.g. 
+  Micro$oft Sidewinder Pro))
+  and "normal" 2D joysticks.
+  <ul>
+  <li>
+  6D joysticks (e.g. gamepads with 2 thumbsticks and a 
+  digital axescross, Labtec Spaceball, Magellan spacemouse) are used like 
+  all other 6D inputdevices.<br>
+  For Gamepads gamepads with 2 thumbsticks and a 
+  digital axescross it can be usefull to swap axes, when the digital
+  axescross (which only allow movement with constant speed)
+  is assigned to "important" directions (e.g. the forward/backward movement).
+  </li>
+  <li>
+  4D joysticks (e.g. gamepads with 2 thumbsticks) do not allow 6D and
+  6D Local mode. Beside translation <img src=schieb.png>, 
+  rotation <img src=rot.png>, scaling <img src=scale.jpg> and
+  changing of the center <img src=center.jpg> they support the 
+  hover <img src=hover.png>
+  mode and the rocket <img src=rocket.png> mode.<br>
+  Depending from the mode, rotation and translation will be
+  assigned to the appropriate axes.
+  </li>
+  <li>
+  When using 3D joysticks (e.g. joystick with a twisting stick) things
+  are more complicated. In the default configuration, a input via the
+  3. axis (a twist of the stick) cause a movement assigned to the z-axis.<br>
+  <img src=joystick_3D_move.jpg> <img src=joystick_3D_rot.jpg>
+  </li>
+  <li>
+  When using a 2D joystick, there are not enough axes to make
+  3D input data. Therefore you have to switch between the
+  interpretation of the 2. axis as z-direction (near/far 
+  <img src=near_far.png> mode) and as y-direction
+  (up/down <img src=up_down.png> mode) via the icons.<br>
+  On rotations the near/far <img src=near_far.png> mode is interpreted
+  as rotation around the y-axis, the up/down <img src=up_down.png> 
+  mode is interpreted as a rotation around the z-axis.<br>
+  </li>
+  <li>
+  The rocket <img src=rocket.png> mode need 4 axes in a sense.
+  To make it available with a 3D joystick, the rotationinformation of
+  the near/far  
+  <img src=near_far.png> Mode and up/down <img src=up_down.png>
+  mode is used here.<br>
+  Beim 2D Joystick steht der
+  The rocket <img src=rocket.png> mode is not available for 2D joysticks.
+  </li>
+  </ul><br>
+  Sometimes, a joystick axis looks not very useful
+  (e.g. the extra controler of the Micro$oft Sidewinder Pro). <br>
+  <img src=joystick_sidewinder.jpg><br>
+  Therefore, the number of axes can be limited. To use e.g. the
+  Micro$oft Sidewinder Pro as 3 axis joystick, you can use the 
+  -axis option in the commandline.
+<br>
+<pre>
+   white_dune -joystick /dev/input/js0 -axes=3
+</pre>
+<br>
+  Gamepads are often overcrowded with less useful axes.
+  For example the Logitech Wingman Cordless Gamepad report 9 axes when
+  testing with the jstest programm. To use the 6 good axes
+  (2 thumbsticks and the cross-hairs), you need to change the
+  assignment of axes in the commandline.
+<br>
+<pre>
+   white_dune -joystick /dev/input/js0 -y=4 -z=-1 -xrot=6 -yrot=3 -zrot=5
+</pre>
+<br>
+  You have to interpret the option "-z=-1" in this way:
+  the z-axes will be assigned to axis number 1 (this is the 2. axes, 
+  counting begins with 0), but the inputdirection is reverted.
+ </li>
+ <li>
+  <b><a name="joystick_windows">M$Windows joystick Input:</a></b><br>
+  The support of a M$Windows joystick is very similar to a Linux
+  joystick.<br>
+  The special qualities of joystick drivers delivered with M$Windows
+  should not make you wonder, if e.g. the 2. thumbstick of a gamepad
+  do not deliver values or a joystick axis will be reported, but 
+  can deliver only errors.<br>
+  Beside this, the wisdom of the authors of the M$Windows joystick
+  API leaded to the fact, a error of a axis must be interpreted
+  as full turn (a similar problem leaded to the explosion of the 
+  first Ariane 5 rocket....).<br>
+  Therefore you should begin to test under M$Windows with only 2 axes.
+  For the first M$Windows joystick (number 0) the commandline may look
+  like:
+<br>
+<pre>
+   white_dune.exe -joystick 0 -axes=2 -none=2 -allxyz=20,,,0.000001 -allrot=0.2,,,0.0000001
+</pre>
+ </li>
+ <li>
+  <b><a name="joystick_macosx">MacOSX joystick Input:</a></b><br>
+  A typical commandline for the joystick usage under MacOSX would be
+<pre>
+  dune -startX11aqua -SDLjoystick 0 -all=,,,0.000004 -y=-1 -xrot=2 -z=-3 -none=2 -allrot=0.2
+</pre>
+  but it is not common to use (but possible) the commandline under MacOSX.<br>
+  Therefore white_dune is packaged in a MacOSX application named 
+  white_dune.app.
+  From the view of the commandline, white_dune.app is a usual directory,
+  it is possible to enter it with a normal "cd" command.
+  It is also possible to open the white_dune.app package with the "finder"
+  program.
+  There is a file "dunestarter", in the directory 
+  white_dune.app/Contents/MacOS . It can be changed with a normal Texteditor.
+  <br> 
+  In this file there are the options for the programstart
+<pre>
+   DUNEOPTIONS=" "
+   export DUNEOPTIONS
+</pre>
+  which can be extended with the options for the joystickusage, for example<br>
+<pre>
+   DUNEOPTIONS="-SDLjoystick 0 -all=,,,0.000004 -y=-1 -xrot=2 -z=-3 -none=2 -allrot=0.2"
+   export DUNEOPTIONS
+</pre>
+ </li>
+ <li>
+   <b><a name="channelview">Changing FieldValues in the ChannelView Window</a></b><br>
+   The ChannelView Window is used to show or change 
+   interpolator nodes.
+   In a interpolator node, input values between 0 and 1 are assigned to
+   a range of output values.<br>
+   Interpolators are used in VRML for simple animations in the form
+<br>
+<pre>
+   ROUTE TimeSensorDEFNAME.fraction_changed TO ??InterpolatorDEFNAME.set_fraction
+   ROUTE ??InterpolatorDEFNAME.value_changed TO ??DEFNAME.set_??
+</pre>
+<br>
+   The output "fraction_changed" of a TimeSensor node 
+   (deliver values between 0 and 1) ist routed into the "set_fraction" 
+   input event of a interpolator node. The interpolator node select a 
+   matching intermediate value between the output values. The 
+   result can be routed into a another VRML node, this leads to
+   a animation without jerk.
+  <br>
+   In the following example:<br>
+   <img src=interpolator.jpg><br>
+   the output of a PositionInterpolators with the input values
+   0, 0.3, 1 and the output values x=1 y=0 z=3, x=1 y=2 z=3, x=3 y=3 z=0
+   is routed to the set_translation Input for a transform node.
+   For example, the transform node (and the containing object) will 
+   move in the timecycle from 0 to 0.3 from y=0 to y=2 (to the top).<br>
+  <ul>
+   <li>
+   Easy usable are all SF-interpolators:
+   <ul>
+    <li>
+     ColorInterpolator:<br>
+     Interpolate between Colors.<br>
+     Route targets for colors you will find at Shape-&gt;Appearance-&gt;Material    
+    </li>
+    <li>
+     PositionInterpolator:<br>
+     Interpolate between Positions.<br>
+     Route target can be Transform.set_translation for example.
+    </li>
+    <li>
+     OrientationInterpolator:<br>
+     Interpolate between rotations.<br>
+     Route target can be Transform.set_rotation for example.
+    </li>
+    <li>
+     ScalarInterpolator:<br>
+     Interpolate between single (floating point) numbers.<br> 
+     Single numbers are possible EventIn's of multiple VRML Nodes.<br>
+     There are multiple possibilities of usage.
+    </li>
+   </ul>
+   </li>
+   <li>
+   The following MF-interpolators are not easy to display in the ChannelView,
+   there is a lot data that can simply flood the window. Therefore only
+   changes of the MF-Values over the time is displayed. If there are not
+   changes, the first value is always displayed <br>
+   <img src=morphing_start.png><br>
+   to allow to set additional 
+   keys with the mouse <br>
+   <img src=morphing_last.png><br>
+   (e.g. to repeat the first timestep as last timestep)<br>.
+   <img src=morphing_result.png><br>
+   There is a upper
+   limit in the number of displayed values. See "Limit keys in Channelview"
+   in the <em>Options -&gt; Preferences</em> dialog. Set this limit 
+   accordingly to the speed of your system.
+    <ul>
+     <li>
+      CoordinateInterpolator:<br>
+      Interpolates typically between points in a IndexFaceSet.<br>
+      Animations, which use the CoordinateInterpolator are usually called 
+      "morphing".
+     </li>
+     <li>
+     NormalInterpolator:<br>
+     Interpolate between the Normales of a IndexFaceSet.<br>
+    </ul>
+   </li>
+  </li>
+ </ul> 
+ <br>
+ <br>
+  Some interpolator animation can be created in white_dune via
+  changes in the 3D Preview window. 
+  PositionInterpolator/Transform.set_translation
+  and OrientationInterpolator/Transform.set_rotation based animations
+  can also created with the recording of 6D inputdevices.<br><br>
+  If you want to work with the tools <img src=recording.jpg>
+  like a VCR recorder (record and playback animations) the following
+  must be true:
+  <ul>
+  <li>
+  The ROUTEs must have the form
+  <br>
+<pre>
+   ROUTE TimeSensor.fraction_changed TO ??Interpolator.set_fraction
+   ROUTE ??Interpolator.value_changed TO ??.set_??
+</pre>
+  </li>
+  <li>
+  In the Timesensor-Knoten the fieldvalue "loop" must be "TRUE".
+  (the Animation will start again and again). 
+  </li>
+  <br><img src=timesensor.jpg><br>
+  <li>
+  The fieldvalue "starttime" of the Timesensor must be greater or equal
+  to the fieldvalue "stoptime" of the Timesensor-Knoten.
+  </li>
+  </ul><br>
+  Since ersion 0.27beta there is a menuitem 
+  <em> Actions -&gt; Animate</em> in white_dune, which create this structure
+  for the selected node. The menuitem is only available, 
+  when the node has EventIns/ExposedFields of a type-matching intepolator.
+  In the <em> Actions -&gt;Animate</em> dialog is asked
+  <br><img src=animationdialog.jpg><br>
+  if a new TimeSensor with what animation time should be created or
+  a already existing TimeSensor should be used and what fields should
+  be animated.
+  <br>
+  When only the recordbutton is pressed <img src="recording_one.jpg">, 
+  during the creation of a animation, you have to change the timecursor 
+  first and then input a value (via
+  keyboard, mouse or 6D inputdevice).<br>
+  <img src="animation_onetime.png">
+  <br><br>
+  <img src="animation_onetime2.png">
+  <br><br>
+  When the recordbutton is pressed together with the playbutton 
+  <img src="recording.jpg">, the change of the values
+  (via <a href="#mouse">mouseinput</a> or 6D inputdevice) is recorded
+   continuesly. 
+  <br>
+  <img src="animation_recording.jpg">
+  <br>
+  The recording of the mouseinput require a calm hand.
+  It is not uncommon to want to delete some of the recorded values.
+  <br>
+  <img src="delete_keys1.jpg">
+  <br>
+  You need to select a time range by pressing the left mousebutton and 
+  dragging the mouse left/right in the channelview window and then use 
+  either the 
+  <em> Edit -&gt; delete </em> menuitem or the delete icon.
+  <br>
+  <img src="delete_keys2.jpg">
+  <br>
+  The matching values will be deleted. 
+  <br>
+  <img src="delete_keys3.jpg">
+  <br>
+  When deleting things, you have to take care about the last mouseclick
+  you made.
+  When you click to a object in the 3D preview window after the selection, 
+  this object will be selected in the scene tree.
+  The following <em>Edit -&gt; delete</em> command will then delete
+  the object, not the range in the channelview.
+  When you click to a element of a MF-field after the selection in the
+  channelview, a following <em>Edit -&gt; delete</em> command will 
+  then delete the element of the MF-Field.
+ </li>
+ <li>
+  <b><a name="colorcircle">ColorCircle</a></b> <small>(new in Version 0.19beta)</small><br>
+  There is a special inputwindow for colors, it takes place of the
+  fieldView Window. To get it, a colorfield must be selected in the
+  fieldView Window and the Colorcircle Icon must be pressed.<br>
+  <img src=colorcircle1.png><br>
+  With a mouseclick, you can select a color in the color circle and
+  in the bar beside it, you can select a darker variant.<br>
+  <img src=colorcircle2.png><br>
+  Currently, when not using a true/directcolor display on Unix/Linux,
+  the display of the color circle is slow (today, this occures only
+  with very old graphiccards).<br>
+  When the "OK" button is pressed, the normal fieldView window returns.
+ </li>
+ <li>
+  <b><a name="scriptedit">Script Editor</a></b> <small>(new in Version 0.22beta)</small><br>
+  There are two ways to start the scripteditor:<br>
+  <img src=scriptedit_icon1.jpg><br>
+  <ul>
+    <li>
+      To create a new scriptnode:<br>
+      Via the "Script" icon (menuitem <em>Create -&gt; Programming -&gt; Script</em>), 
+    </li>
+    <li>
+      To change a existing scriptnode.<br>
+      If a script node is selected, via the "Object Edit" icon 
+      (menuitem <em>Actions -&gt; Object edit</em>), 
+    </li>
+  </ul>
+  The scripteditor dialog<br>
+  <img src=scripteditor.jpg><br>
+  allows it, to add new fields/events to the scriptnode (add),
+  to change them (change), to copy them (copy) or to delete them (delete).<br>
+  Additionally it is possible to add special functions like
+  Initialize, Shutdown and Eventsprocessed.<br>
+  Press "OK" to finish the work on the script node.
+ </li>
+ <li>
+  <b><a name="urledit">URL Editor</a></b> <small>(new in Version 0.22beta)</small><br>
+  The "url"-field (it can contain the ECMAscript (javascript) code 
+  of a scriptnode) can be changed in a texteditor.<br>
+  Via the menuitem <em>options -&gt; Texteditor Settings</em>
+  it is possible to select the texteditor.<br>
+  When the "url"-field is empty, a scheme of a ECMAscripts will be created.<br>
+  To start the textedit, select a Script Node and use the "URL Edit" icon
+  (menuitem <em>Actions -&gt; Url edit</em>).<br>
+  <img src=urledit.jpg><br>  
+  The URL editor can also bei used to change the file content of a URL
+  for local movie files (".mpeg") of MovieTexture nodes,
+  for local sound files (".wav") of Audioclip nodes and
+  for local picture files (".jpg"/".png") of ImageTexture nodes.<br>
+  Often, a matching program to change files has already been selected
+  during compiletime configuration (e.g. gimp for image files or audacity
+  for soundfiles). If not, a dialog will ask first for a matching program.<br>
+  The programs can be changed with
+  <em>Options -&gt; Text/Object Editor settings...</em>.
+ </li>
+ <li>
+  <b><a name="fieldpipe">Field pipe</a></b><small>(new in version 0.29beta)</small><br>
+  One of the most powerfull ways to change field values is the field pipe.
+  It allows you to change field values by any external program.<br>
+  Usually there is no matching external program yet, so the field pipe is 
+  mainly important for a user with programming capabilities.<br> 
+  Beside the field pipe for single fields it is also possible to use
+  the <a href="#scenegraph_branch_fieldpipe"> field pipe for scenegraph 
+  branches </a>.<br> 
+  If you select a SFField or MFField in the fieldview window and use
+  <em>Actions -&gt; field pipe</em> one line with the fieldvalue is written to 
+  a file in case of a SFField. In case of a MFField as much lines as the 
+  number of SF-values in the MFField are written to the file.<br>
+  For example, if you select the following TextureTransform.scale field 
+<br>
+  <img src=sffieldpipeselect.jpg><br>  
+  (a SFVec2f field) the values<br>
+  <pre>
+      1 1
+  </pre> 
+  are written to the file.<br>
+  For example, if you select the following Color.color field<br>
+  <img src=mffieldpipeselect.jpg><br>  
+  (a MFColor field) the values<br>
+  <pre>
+      0 0.5 0
+      0.5 0 0
+      0 0 0.5
+      0.5 0.5 0
+      0.5 0 0.5
+      0 0.5 0.5
+  </pre> 
+  are written to the file.<br>
+  The file ends with a newline character.<br>
+  When using <em>Actions -&gt; field pipe</em>, a dialog is opened, that asks
+  the user for a commandline. This commandline can be used to start a
+  compiled program (e.g. written in programming languages like Ada, C, C++ 
+  or Fortran) or a interpreter with a program in a interpreted language 
+  (e.g. written in programming languages like awk, perl or python).<br>
+  The given commandline is internally started with<br>
+  <pre>
+  commandline &lt; file &gt; outputfile
+  </pre>
+  which processes each line of the file as standard input with the given 
+  commandline and writes the standard output result to the outputfile.<br>
+  If the written outputfile has the same/matching structure as the 
+  processed field/inputfile (e.g. for the SFVec2f example<br>
+  <pre>
+      2 1  
+  </pre> 
+  or for the MFColor example<br>
+  <pre>
+      1 0.5 0
+      0.5 1 0
+      0 0 0.5
+      0.5 0.5 0
+      0.5 0 0.5
+      0 0.5 0.5
+  </pre>
+  where it is important, that Color values are floating point values 
+  in the range between 0 and 1. The content of the outputfile is 
+  used as new fieldvalue and the intermediate input/output files are 
+  removed.<br>
+  The most simple example of a field pipe is simply using the "echo" system
+  command.<br>
+  The commandline<br>
+  <pre>
+       echo some th ing
+  </pre> 
+  simply writes back the arguments<br>
+  <pre>
+       some th ing
+  </pre> 
+  In a very simple example, this can be used to change the values "1 1" to
+  "2 1" by useing<br>
+  <pre>
+       echo 2 1
+  </pre> 
+  as the commandline in the field pipe dialog.<br>
+  For the following more complicated (but more realistic) example, the 
+  awk programming language is 
+  used, a interpreted language rather similar to the C language. Awk is
+  very handy for this task, cause it splits a input line automatically into 
+  values and accepts complete programs given on the command line.<br>
+  If you use the following commandline<br> 
+  <pre>
+       awk '{print $1 + 0.1 , $2 + 0.2 , $3 + 0.35}'
+  </pre> 
+  as field pipe for the following MFColor field<br>
+  <pre>
+      0 0.5 0
+      0.5 0 0
+      0 0 0.5
+      0.5 0.5 0
+      0.5 0 0.5
+      0 0.5 0.5
+  </pre> 
+  the result would be<br>
+  <pre>
+      0.1 0.7 0.35
+      0.6 0.2 0.35
+      0.1 0.2 0.85
+      0.6 0.7 0.35
+      0.6 0.2 0.85
+      0.1 0.7 0.85
+  </pre>
+  E.g. if this MFColor field would be used as the colors of the corners
+  of a IndexedFaceSet Box, the command would make all the corner colors a bit
+  more bright, a bit more green and more blue.<br>
+  The same example in the C language would require to write a program like
+  the following:<br>
+<pre>
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
+   while(!feof(stdin)) {
+      float c1, c2, c3;
+      scanf("%f %f %f", &c1, &c2, &c3);
+      printf("%g %g %g\n", c1 + 0.1, c2 + 0.2, c3 + 0.35); 
+   }
+   return 0;
+}
+</pre>
+  If this file is named main.c you would need to compile the file (e.g. with
+  a command like<br>
+  <pre>
+      cc -o /tmp/a.exe main.c
+  </pre> 
+  on the commandline) and you would have to use something like
+<br>
+  <pre>
+   /tmp/a.exe
+  </pre> 
+  in the field pipe dialog.<br>  
+  One of the most simplest usage of the UNIX echo command in a filepipe is the
+  remove of nodes by simply using
+  <pre>
+      echo
+  </pre> 
+  for the matching parent node/parent field.
+ </li>
+</ul>
+</p> 
+<h3><a name="simplescript">Simplified scriptbuilding</a> <small>(new in Version 0.22beta)</small></h3>
+<p>
+Before you can use the scripteditor dialog, you need plan what 
+are the datatypes and eventIn/eventOut informations of the nodes 
+you want to connect. To do this, you need to read the
+node description of the 
+<a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html>
+VRML standard</a> (e.g. you can use the menuitem 
+<em>Help -&gt; <i>name of currently selected Node</i></em> or use 
+a advanced book).<br>
+For fast experimenting, you may find it more convenient to use a
+simplified scriptbuilding method.<br>
+Create a new "empty" scriptnode with the "Script" icon (or the 
+menuitem <em>Create -&gt; Programming -&gt; Script</em>).<br>
+Following the 
+<a href="http://dune.sourceforge.net/philosophy.html" target="new">
+"get out of the way!" philosophy</a> of the orginal dune project,
+simply press "OK" on the scripteditor dialog (see above).<br>
+Now you can use the RouteView window for further work. 
+<br><br><img src=simple_scriptbuild1.jpg><br><br>
+Scriptnodes have a special "connect anything" eventOut. 
+If you click and drag this with the mouse, a white route will be drawn.
+<br><br><img src=simple_scriptbuild2.jpg><br><br>
+Keep the mousebutton pressed while routing and you see (like "normal" routing), 
+you can connect this route to eventIns of other nodes,
+<br><br><img src=simple_scriptbuild3.jpg><br><br>
+but (unlike "normal" routing) the color of the route (marking the datatype) 
+can change with the probed eventIn.
+<br><br><img src=simple_scriptbuild4.jpg><br><br>
+When you release the mousebutton, the route will be established.
+<br><br><img src=simple_scriptbuild5.jpg><br><br>
+In a similar way, you can use the special "connect anything" eventIn
+of the scriptnode
+<br><br><img src=simple_scriptbuild6.jpg><br><br>
+and connect it to a eventOut of a other node.
+<br><br><img src=simple_scriptbuild7.jpg><br><br>
+Now you need to edit the "url" field of the script node. 
+Beside using <a href="#urledit">urledit</a> you can also
+select the script node in the SceneTree window, the "url" field in
+the FieldView. 
+<br><br><img src=simple_scriptbuild8.jpg><br><br>
+and  press the "Object Edit" icon (or use the menuitem 
+<em>Actions -&gt; Object edit</em>). 
+<br><br><img src=simple_scriptbuild9.jpg><br><br>
+Now "white_dune" will try to start a external editor - UNIX die-hards use
+"xterm -e vi", this is the default under Linux/UNIX ("xedit" for MacOSX,
+"edit" for M$Windows)
+if $WINEDITOR was not set at first run. You can change the editor with the 
+<em>Options -&gt; Texteditor Settings ...</em> menuitem. <br>
+In the editor window, you will see a schema of the needed 
+javascript code.<br>
+<img src=simple_scriptbuild10.jpg><br><br>
+<br>
+Use the editor to complete the javascript code and save/quit the
+editor - in case of the vi editor use the keystrokes :wq 
+<br> Use <em>Options -&gt; ECMAscript settings</em> to control, if you want
+extended comments in the schema. 
+<br> A lot of comments are written per per default. This is usefull for
+beginners, they only have to select from the possible commands for the
+used datatypes. But unfortunatly, this makes larger scripts difficult 
+to read.<br>
+User with experience tend to uncheck anything in the
+<em>Options -&gt; ECMAscript settings</em> window, so only the hardwired
+comments about the used datatypes remain.
+</p> 
+<h3><a name="x3domscript">X3DOM scripting</a> <small>
+                                    (new in Version 0.99pl1084)</small></h3>
+<p>
+<a href='https://www.x3dom.org/'>X3DOM</a>, a X3D browser inside of the 
+webbrowser, supports no X3D Script-nodes, but only
+javascript nodes. Nevertheless, in X3DOM mode (initialised by the 
+"Start next time with X3DOM support" option or the 
+Commandlineoption "-x3dom") the  
+<a href="#simplescript">simplified scriptbuilding</a> 
+can be used.<br>
+It works like the simplified scriptbuilding, only a new 
+"x3domscript:"-entry in the script-URL has been created.<br>
+<img src="x3domscript.png"><br>
+Cause X3DOM supports only scripting analog "directOutput", a access
+via the "DEF" name (or rather "id") of the target-node and the 
+target-fieldname must be used instead of the eventOut-variable.<br>
+<img src="x3domscript2.png"><br>
+At the preview/export to X3DOM all necessary entries in the X3D-file
+will be adjusted.
+</p>
+<h3><a name="nurbs">NURBS Modelling</a> <small>
+                          (partitially new in Version 0.25beta)</small></h3>
+<ul>
+<li> <h4><a name="nurbsbasics">NURBS basics</a></h4>
+<p>
+When used in computergraphics, the term NURBS means a
+complicated mathematical formula,
+which can be used to store random surfaces and curves in a very compact way.<br>
+Especially for a networkstandard like VRML the suppport of NURBS is a 
+great advantage, cause it avoids the transfer of the data of all 
+vertices of a surface mesh. Instead only a relative small amount
+of numbers have to be transfered. The numbers can be used to account
+the data of the vertices. <br>
+This is a advantage, cause accounting power raised very much more than
+network speed (for example: the computer which sended 1969 the
+first Character ("L" from "LOGIN") over the Internetprotocol
+was a Honeywell DDP-516 minicomputer with 12KB memory,
+a clock of 1.1 Mhz (but needed much clockticks for one assemblercommand)
+and the weight of a half ton. This computer used a networkconnection
+with 50000 baud. This is approximatly the same as the computerpower of
+a simple calculator and the networkconnection of a modern telephon modem.<br>
+Therefore NURBS support was added not only to the X3D standard.
+It was also added to the VRML97 standard in 2002 (VRML97 amendment 1).
+</p>
+<p>
+According to "The NURBS book" (by Pigel/Tiller) NURBS reads as 
+"Noone Understands nonuniform Rational Basis Splines".<br>
+You do not need to understand completely this mathematics to work with a NURBS
+modeller. But it can be useful for the usage of a programm like
+white_dune (which has access to all numbers of NURBS surfaces and 
+curves) to understand the basics.
+</p>
+<p>
+When you produce a NURBS curve (with
+<em> Create-&gt;VRML97 Amendment 1 Node-&gt;NurbsCurve </em>/OK) and move the little 
+white boxes and open all numbers in the fieldView
+<br><br><img src=nurbscurve.jpg><br><br>
+you can see, that a NURBS curve use essentially 4 types of data.
+<ul>
+<li>
+controlPoints:<br>
+This is the main part of the positions of the points marked with white boxes 
+(the other part of the positions is the weight).<br>
+When you move a box, a part of the curve moves similarly.
+<br><br><img src=controlpoint.jpg><br><br>
+controlPoints are the most important elements in white_dune, to 
+influence NURBS.
+</li>
+<li>
+weight:<br>
+These values is responsible for the influence of each controlpoint to the 
+whole
+curve. The word "weight" remembers to the time before the computerage
+as curves were made with thin pieces of wood and weights.
+When the controllpoint stays at place and the weight is increased,
+<br><br><img src=weight.jpg><br><br>
+the curve will be pulled nearer to the controlpoint.<br>
+Despite the controlpoint is a the same place, its value has been
+changed. The reason is related to the fact there are two equivalent 
+mathematical
+formulas to store NURBS (homogeneous and inhomogeneous form).
+</li>
+<li>
+knot: <br>
+Knot values are responsible (among other things) if a controlpoint
+hits a line and if there is edge. To force this, the values
+has to be repeated "degree" "(order - 1)" times.
+<br><br><img src=knot.jpg><br><br>
+</li>
+<li>
+order: (also (degree+1))<br>
+This number is responsible how far reaches the influence of a
+controlpoint.
+<br><br><img src=order.jpg><br><br>
+</li>
+</ul>
+The remaining value "tessellation" has no mathematical, but a
+practical background. It is responsible for the number of points/edges
+the curve is shown.
+<br><br><img src=tess3.jpg><br><br>
+The change of this value allows a easy fitting to the graphicspower
+of a computer.
+<br><br><img src=tess11.jpg><br><br>
+Per default (value "0"), white_dune (which should also run on weak computers)
+uses too small values of "tessellation".<br>
+A example shows a Nurbs(Patch)Surface, that was converted from a sphere.
+Some controlpoints were pulled out.
+<br><br><img src=tess0.jpg><br><br>
+Only with a high value of "tessellation" you see the "real" shape of the object.
+<br><br><img src=tess181.jpg><br><br>
+</p> 
+</li>
+<li> <h4><a name="nurbssymetric">X symetric modelling</a>
+<small>(new in Version 0.25beta)</small></h4>
+<p>
+White_dune let you create a Nurbs(Patch)Surface (e.g. with 
+<em> Create -&gt; VRML97 Amendment 1 -&gt; NurbsSurface -&gt; plain/OK</em>). 
+You can change this surface with the mouse,simply drag the white boxes 
+around.<br>
+<br><br><img src=nurbsurface1.jpg><br><br>
+This changes the controlpoints of the Nurbs(Patch)Surface.
+<br><br><img src=nurbsurface2.jpg><br><br>
+In this type of operation white_dune is most useful to form landscape with 
+dunes
+<br><br><img src=dunes.jpg><br><br>
+but is not very useful for most other tasks.
+</p>
+<p>
+A lot of objects to model require some symetric modelling, 
+one half of the object should look similar to the other side of the object.
+In white_dune, this can be done with <em>Actions -&gt; X symetric modelling</em>.
+When this is active, any movement of the controlpoints of one side 
+<br><br><img src=symetric1.jpg><br><br>
+will be also applied to the other side,
+<br><br><img src=symetric2.jpg><br><br>
+and it is rather easy to build a rather complicated symetric 
+Nurbs(Patch)Surface.
+<br><br><img src=mantasurface.jpg><br><br>
+The X direction for symetric modelling has been choosen cause of the
+<a href="#6Dlocal">local input modes</a>.
+</p>
+<p>
+It is possible to limit the movement of the controlpoints to a line or
+a plain.<br>
+With only one of the settings <em>Mode -&gt; only x</em>, 
+<em>Mode -&gt; only y</em>
+or <em>Mode -&gt; only z</em> (or their icons with one arrow in x (red), y (green)
+or z (blue) direction) the movement of the points is limited into this
+direction. The direction is not the direction in the global space, it is
+the direction of the matching geometry. Only the x, the y or the z value
+of the moving controlpoint is changed.<br>
+If for example only the <em>Modus -&gt; only y</em> (the second of the 
+arrow icons) ist used
+<br><br><img src=yonly.jpg><br><br>
+the movement of the controlpoints is limited to the y-direction.
+This is the direction the green arrow of the last Transform node which
+match the geometry is pointing to.
+<br><br><img src=yonly1.jpg>&nbsp;&nbsp;<img src=yonly2.jpg><br><br>
+When two of the settings <em>Mode -&gt; only x</em>, <em>Mode -&gt; only y</em>
+or <em>Mode -&gt; only z</em> (its icons with only one arrow to x (red), y (green)
+or z (blue) is used, the points can be moved in the matching plain.<br>
+If for example only the <em>Mode -&gt; only x</em> and  <em>Mode -&gt; only z</em> 
+or the first and the third of the arrow icons is used
+<br><br><img src=xzonly.jpg><br><br>
+the movement of the the controlpoints is limited to the xz-plain.<br>
+When all or no icon is used,
+<br><br><img src=no_only.jpg>&nbsp;&nbsp;<img src=xyzonly.jpg><br><br>
+there is no limit, the movement of the point with the mouse can change
+the x, y or z values.
+</p>
+<p>
+The decision if to move the symetric part of a Nurbs(Patch)Surface is driven
+by the decision if the values of the symetric controlpoints/weights is 
+nearly the same.
+They are nearly the same, if the distance of the absolute values is
+smaller then a value "Epsilon". The value of "Epsilon" can be set
+in the <em>Options -&gt; Preferences</em> dialog.<br>
+When symetric modelling has been choosen, multiple points at nearly the
+same place snap together and move together. 
+This can be used to close open Nurbs(Patch)Surfaces,
+but multiple controlpoints at one place of a NurbsSurface result in a edge/peak.
+<br><br><img src=closedpeak.jpg><br><br>
+
+It is also possible, to move more than one controlpoints together.<br>
+This is done with a click of the middle mousebotton to a white box,
+the white box becomes green.<br>
+When additional boxes have been clicked with the middle mousebutton,
+they also change their color into green.<br>
+<br><br><img src=middle_mouse.jpg><img src=middle_mouse2.jpg><br><br>
+When one of the green boxes is moved via the left mousebotton, the other
+boxes will follow.<br>
+When <em>actions -&gt; X symetric modelling</em> is activated, the matching
+controlpoints one the other side will be moved accordingly.
+<br><br><img src=multihandle.jpg><br><br>
+When <em>actions -&gt; X symetric modelling</em> is activated, it is not
+possible to select two symetric boxes (on the exact matching position on the
+other side).
+<br><br><img src=xsymetric_mouse.jpg><br><br>
+The second middle mouseclick would have no effect.
+<br><br><img src=xsymetric_mouse2.jpg><br><br>
+It is also possible to select multiple small boxes in one time.
+You have to use the right mouse button to drag a invisible box.
+To do so, you have to position the mouspointer e.g. to the left upper
+corner of the invisible box,<br>  
+<br><br><img src=multiselect1.png><br><br>
+push the right mouse button and hold down the botton, put the mouse pointer 
+into the right lower of the invisible box and release the right mouse button.
+After the mouse button was released, all white small boxes in the invisible 
+box become green, that means selekted.<br>
+<br><br><img src=multiselect2.png><br><br>
+If <em>actions -&gt; x symetric modelling</em> is active, only one side of the
+each selected white boxes become selected.<br>
+A new created nurbssurface exists (according to the
+VRML standards) per default only one sided (which is important, when the
+surface is not closed): field "solid" is TRUE.
+<br><br><img src=mantasurface1side.jpg><br><br>
+In most cases this is not very useful. 
+Change the field "solid" in the FieldView to FALSE, to 
+make the surface double sided.
+<br><br><img src=mantasurface2side.jpg><br><br>
+Often even a two sided surface is not useful to form a shape with a volume.
+In this case it is recommended to create a NurbsGroup node
+<br><br><img src=nurbsgroup1.jpg><br><br>
+Move the Shape with the Nurbs(Patch)Surface into the NurbsGroup node.
+<br><br><img src=nurbsgroup2.jpg><br><br>
+Then copy the Shape with the Nurbs(Patch)Surface once again into the 
+NurbsGroup. 
+To do this, drag the Shape icon into the NurbsGroup icon and then 
+hold down the control-key ("Ctrl") while the mousebutton is still pressed.
+<br><br><img src=nurbsgroup3.jpg><br><br>
+Cause the field "solid" is still FALSE in this example, a common problem of 
+realtime 3D can be demonstrated when the color of one shape is changed:
+<br><br><img src=zfight1.jpg><br><br>
+<b>Too thin walls</b> (also called "z-fighting"). <br>
+When you move one controlpoint of one Nurbs(Patch)Surface a bit upward, 
+to give the shape
+more volume, your rendering hardware and software is not capable to
+decide, which of the close two surfaces with which color face the viewer.
+<br><br><img src=zfight2.jpg><br><br>
+This effect is not predictable, it can change with the viewing angle,
+the used software (e.g. VRML browser or used graphics driver) and even 
+with the used graphics hardware (graphics card).
+<br>
+To avoid the problem, you have to switch back the both "solid" field to 
+TRUE and use the "ccw" field ("Counter Clock Wise") to differ between 
+the upper side and lower side of a one sided surface.
+<br><br><img src=zfightok.jpg><br><br>
+Now you can now move the nonborder controlpoints of the lower 
+Nurbs(Patch)Surface to give the shape more volume.
+<br><br><a href="../../logo/manta.wrl"><img src=nurbsgroup4.jpg></a><br><br>
+The NurbsGroup node is in the VRML standard responsible to draw the borders 
+of the contained 
+Nurbs(Patch)Surfaces connected, when the controlpoints of the border of the
+Nurbs(Patch)Surfaces are identical.<br>
+In white_dune, a NurbsGroup also allow X symetric modelling. Changes of
+a controlpoint are distributed to all Nurbs(Patch)Surfaces that are directly
+(or via a shape node) contained in a NurbsGroup.<br>
+This allows to move the controlpoints on the border of one Nurbs(Patch)Surface
+and keep the whole thing closed, course the matching controlpoints of
+the neighbour Nurbs(Patch)Surface nodes are moved accordingly.
+<br><br><a href="../../logo/manta2.wrl"><img src=nurbsgroup5.jpg></a><br><br>
+At the end, you should take care that the NurbsGroup is contained in a 
+Transform node, otherwise you can not move/rotation/scale etc. 
+the object.
+<br><br><img src=nurbsgroup6.jpg><br><br>
+</p> 
+</li>
+<li> <h4><a name="nurbsconversion">NURBS conversion</a>
+<small>(new in Version 0.25beta)</small></h4>
+<p>
+When building closed Nurbs(Patch)Surfaces, it can be usefull to start with 
+a already close shape. White_dune do not allow to convert a mesh 
+(a IndexedFaceSet node) to a Nurbs(Patch)Surface (yet), but allows 
+you to convert the VRML primitives (box, cone, cylinder and sphere) 
+to a Nurbs(Patch)Surface. It also allows
+you to convert a NurbsCurve to a Nurbs(Patch)Surface (by revolve).<br> 
+Since version 0.27beta it also allows to convert a NurbsCurve to a
+Superextrusion PROTO (see below) and it allows to convert a SuperEllipsoid
+PROTO or SuperShape PROTO (see below) to a Nurbs(Patch)Surface by approximation.
+</li>
+<ul>
+<li>
+box<br>
+To convert a box to a Nurbs(Patch)Surface, first select a box in the 
+Scenegraph
+<br><br><img src=box.jpg><br><br>
+and use the menuitem <em>Convert -&gt; Convert to Nurbs(Patch)Surface</em>.
+<br><br><img src=box2nurbsdialog.jpg><br><br>
+If you switch off the "6 Plains" checkbox, you get a single Nurbs(Patch)Surface.
+<br><br><img src=oneboxnurbs.jpg><br><br>
+If the "6 Plains" checkbox is pressed, you get 6 plains in a NurbsGroup 
+forming a box.
+<br><br><img src=sixboxnurbs.jpg><br><br>
+</li>
+<li>
+cone, cylinder and sphere<br>
+Convertion of this primitives is similar to the convertion of a box,
+but the objects are build internally with a revolving line (better NurbsCurve).
+For example, in the result of a cylinder conversion 
+<br><br><img src=cylinder.jpg><br><br>
+you see that there are controlpoints that reach the surface. This
+has been done by the repeat of values in the knotvectors. As a consequence,
+a edge will be created at the matching places when the controlpoints are
+moved.
+<br><br><img src=cylinderedge.jpg><br><br>
+</li>
+<li>
+Creating a Nurbs(Patch)Surface via a revolving NurbsCurve<br>
+First a NurbsCurve node has to be selected in the scenegraph
+<br><br><img src=nurbscurve_scenegraph.jpg><br><br>
+When creating a NurbsCurve (e.g. via 
+<em> Create -&gt; VRML97 Amendment 1 -&gt; NurbsCurve </em>) 
+you should take into account, if you want to
+continue with X symetric modelling or not.<br>
+The NurbsCurve creation dialog 
+<br><br><img src=nurbscurvedialog.jpg><br><br>
+offers you three options: Curve along x, along y, along z axis.
+Only if you revolve a curve along the y or z axis, x-symetric modelling 
+is possible. So you may prefer to create a NurbsCurve only along the
+y or z axis. <br>
+<a name="rotating_nurbscurve"></a>
+<br><br><img src=nurbscurverotationy.jpg><br><br>
+Drag now the curve points to form the side view of the revolved shape.
+<br><br><img src=nurbscurverotation2.jpg><br><br>
+Now use <em> Convert -&gt; Convert to Nurbs(Patch)Surface</em> to continue.
+<br><br><img src=nurbsrotationdialog.jpg><br><br>
+To make X symetric modelling possible, you should keep the checkbox 
+"Flatten Curve before rotation" pressed. It moves all points into one
+plain, but keeps the distance from the origin.
+<br><br><img src=nurbsrotationsurface.jpg><br><br>
+As with a converted Sphere, Cylinder and Cone a edge may be created, 
+when the controlpoints are moved.
+<br><br><img src=nurbsrotationsurface2.jpg><br><br>
+Rather similar to the NurbsCurve rotation is the <a href="#superrevolver">
+scripted SuperRevolver PROTO</a>. The SuperRevolver node generates a 
+NURBS surface based shape on each change of a ("flattend") 2D curve, but as a 
+scripted PROTO, it is only a indirect part of the Standard.
+</li>
+</ul>
+</p>
+<li> <h4><a name="elevatedegree">Degree elevate</a>
+<small>(new in Version 0.27beta)</small></h4>
+<p>
+During modelling with NURBS nodes you may wish to insert new
+controlpoints in one direction.
+<br><br><img src=elevate_before.jpg><br><br>
+With the menuitem 
+<em> Actions -&gt NURBS operations -&gt; Elevate (U/V) Degree up </em> 
+is this possible, without changing the shape. 
+<br><br><img src=elevate_after.jpg><br><br>
+With the new controlpoints you can make a new notch.
+<br><br><img src=elevate_target.jpg><br><br>
+</p>
+</li>
+<h4><a name="nurbsrebuild">NURBS rebuild</a>
+                                <small>(new in Version 0.99pl1090)</small></h4>
+<li>
+Unfortunatly the Degree elevate is not sufficent, to build
+complex NURBS shapes. It can happen, that you need a lot of new
+controlpoints.<br> 
+In a simple example a sphere (<em>Create -&gt; Shape
+-&gt; Sphere</em>) is converted to a NURBS object (<em> Convert -&gt;
+Convert to Nurbs(Patch)Surface</em> OK). 
+<br><br><img src=sonne1.png><br><br>
+45 new controlpoints are  created (some of them cover itself).<br>
+This is too few, to model a oldfashioned sun and draw single
+sunbeams.<br>
+With the select of Nurbs(Patch)Surface 
+and <em>Actions -&gt; NURBS operations -&gt; Rebuild controlpoints</em>
+a lot of controlpoint can be created
+<br><br><img src=sonne2.png><br><br>
+and
+<br><br><img src=sonne3.png><br><br>
+drawn out.
+<br><br><img src=sonne4.png><br><br>
+</li>
+<li> <h4><a name="nurbsindexedfaceset">Building IndexedFaceSet</a>
+<small>(new in Version 0.25beta)</small></h4>
+<p>
+NURBS surfaces are often seen as rounded faces. But beside multiple
+controlpoints and knotvector values, the setting of 
+u/vTesselation values
+can easily be used to build a object with edges (IndexedFaceSet).<br>
+
+<br><br><img src=spherefaceset1.jpg><br><br>
+For example, if you convert a sphere node with 
+<em>Convert -&gt; Convert to Nurbs(Patch)Surface</em> 
+<br><br><img src=spherefaceset2.jpg><br><br>
+and set u/vTesselation to low values, you get a only a few faces.
+<br><br><img src=spherefaceset3.jpg><br><br>
+With <em>Convert -&gt; Convert nurbs to IndexedFaceSet</em> you can can
+convert the result to a IndexedFaceSet node.
+<br><br><img src=spherefaceset4.jpg><br><br>
+To get rid of the normalssetting, which smooth the colors of the
+faces, you need to delete the Normal node from the IndexedFaceSet.
+<br><br><img src=spherefaceset5.jpg><br><br>
+</p>
+<p>
+The following table shows what basic-like shapes can be converted from
+primitives, when setting u/vTesselation in Nurbs(Patch)Surface 
+<table>
+<tr><td>Shape</td><td>Converted</td><td>uTesselation</td><td>vTesselation</td></tr>
+<tr><td>Tetraeder</td><td>Cone</td><td>3</td><td>4</td></tr>
+<tr><td>4-edged Pyramid</td><td>Cone</td><td>4</td><td>4</td></tr>
+<tr><td>Hexaeder</td><td>Sphere/Cylinder</td><td>3</td><td>2</td></tr>
+<tr><td>Octaeder</td><td>Sphere/Cylinder</td><td>4</td><td>2</td></tr>
+<tr><td>n-egded prism</td><td>Cylinder</td><td>n</td><td>&gt;1</td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+</table>
+</p>
+<p>
+When you create a Nurbs(Patch)Surface plain (<em>Convert -&gt; 
+VRML97 Amendment 1 -&gt; NurbsSurface -&gt; Plain (Nurbs)</em>)
+with degree 1 
+<br><br><img src=degree1faceset1.jpg><br><br>
+and set the uTesselation to uDimension-1 and set vTesselation to vDimension-1,
+the visible edges and the position of the handles (of the nurbsSurface)
+are identical, exactly as in a IndexedFaceSet.
+<br><br><img src=degree1faceset2.jpg><br><br>
+With <em>Convert -&gt; Convert nurbs to IndexedFaceSet</em> you can can
+convert the result to a IndexedFaceSet node.
+<br><br><img src=degree1faceset3.jpg><br><br>
+To get rid of the normalssetting, which smooth the colors of the
+faces, you need to delete the normals node from the IndexedFaceSet.
+<br><br><img src=degree1faceset4.jpg><br><br>
+Unfortunatly, 
+the convertion from a IndexedFaceSet back to a Nurbs(Patch)Surface is
+not implement yet...
+</p>
+</li>
+<h4><a name="nurbsanimation">Animation with the help of NURBS</a></h4>
+<li>
+<p>
+It is possible to create animation data from a NurbsCurve.
+To do so, you need a NURBS curve and animatable Objekt.<br>
+<br><br><img src=nurbsanimation1.png><br><br>
+If you select the NURBS curve,<br>
+<br><br><img src=nurbsanimation2.png><br><br>
+you can use <em>convert -> copy to 
+PositionInterpolator</em> and <em>convert -> copy to 
+OrientationInterpolator XZ/XY/YZ plane</em> to create a 
+PositionInterpolator/OrientationInterpolator pair. In doing so
+you have to select a plane, which is orthographic to the rotation axis.<br>
+<br><br><img src=nurbsanimation3.png><br><br>
+To create an true VRML animation, a TimeSensor node has to be added.
+(<em>Create -> Sensor -> TimeSensor</em>).<br> 
+After that, you have to use <em>Routes -> Show node on top</em> 
+to connect the TimeSensor node, the Interpolators and the Transform node
+this way<br>
+<br><br><img src=nurbsanimation4.png><br><br>
+with routes.<br>
+When TimeSensor.loop is TRUE gestellt, the animation follows the NurbsCurve.
+</p>
+<p>
+The Menupoint <em>Animation -> create Curve Animation</em> accommodate all
+this steps together. A special EXTERNPROTO will be created, that includes
+all information of a NURBS curve (the VRML97:2002 variant). This EXTERNPROTO 
+uses javascript nodes to be displayed in a standard VRML browser as
+the same animation. For non standard VRML browsers like X3DOM, which do not
+support Script nodes, the CurveAnimation can be converted to a
+PositionInterpolator and a OrientationInterpolator. This is done
+automatically when you export to C/C++ sourcecode.<br>
+The CurveAnimation node contains additionally the axis of rotation and
+the field "hover", which discribe the rotation is either in direction of
+the roation axis or turns additionally in the direction of the NURBS curve
+(for a not flat NURBS curve in the direction of the rise of the NurbsCurve).
+</p>
+</li>
+</ul>
+</p>
+<h3><a name="nurbstrimmed">NURBS Trimming</a> 
+                                  <small>(new in Version 0.99pl1050)</small></h3>
+<p>
+In version 0.99pl1050 the NurbsTrimmedSurface Knoten node is really useable.
+<br>
+The defaults and the behaviour of NurbsCurve2D is designed for it.<br>
+When want to try NURBS Trimming, <a href="door.x3dv">
+this example</a> is available.<br>
+The abbreviation "ccw" in the NurbsCurve2D dialog means that the created
+closed curve is oriented Counter Clock Wise.
+If the curve is clock wise, the content of the curve is cut off, overwise
+the rest is cut off.
+By the way: this curve musst be always closed, otherwise a crash in the
+grphic library "libGLU" can occure 8-(.
+When the curve is changed via handles in white_dune, the curve keeps closed.
+</p>
+<h3><a name="super">Superformula Modelling</a> 
+                                  <small>(new in Version 0.27beta)</small></h3>
+
+<h4><a name="superformula">Superformula basics</a></h4>
+<p>
+ White_dune has support for 3D-modelling based
+ on the so called "superformula"
+ <br>
+<pre>
+        pow(pow(fabs(cos(m * angle / 4.0) / a), n2) + 
+            pow(fabs(sin(m * angle / 4.0) / b), n3), -1.0 / n1)
+</pre>
+<br>
+This formula has been found by a biologist a few years ago and can be used to 
+form n-symetric shapes similar to shapes in nature like flowers, leafs, insect
+bodies, shells or starfishs.
+<br><br><img src=supershapes.jpg><br><br>
+See this <a href="supershapes.wrl" target="_blank">range of shapes</a>, 
+which are all done with the SuperShape PROTO.
+<br><br>
+Superformula based shapes are not part of VRML97 by itself and are 
+implemented by a PROTO (self defined VRML97 node) with scripting 
+("scripted PROTO").<br>
+Superformula based shapes can be converted either to a 
+Extrusion node or to a IndexedFaceSet node. IndexedFaceSet based scripted 
+shapes can also be approximated to a Nurbs(Patch)Surface node as a starting 
+point for further NURBS-modelling.
+ <ul>
+  <li>
+   <h4><a name="superextrusion">SuperExtrusion</a></h4>
+   
+   The SuperExtrusion PROTO uses the superformula to account a 2D polygon
+   in the X-Z-plane and form a shape by repeating this polygon in the
+   Y direction along a curve. The curve is similar to a NurbsCurve and can 
+   be changed by moving the controlpoints. This shape can be converted to
+   a Extrusion and some of its parameter work similar to a Extrusion.
+   Unlike the Extrusion node, the scale parameters are not applied to
+   each spine point, they are smeared over the whole spine. 
+   <br><br><img src=superextrusion.png>
+  </li>
+  <li>
+   <h4><a name="supershape">SuperShape</a></h4>
+   
+   The SuperShape PROTO uses the superformula to account a 2D polygon
+   in the X-Z-plane and form a shape using the superformula also in
+   the Y-Z-plane similar to spherical coordinates. 
+   <br><br><img src=supershape.png><br><br>
+   This shape can be converted to a IndexedFaceSet.
+  </li>
+  <li>
+   <h4><a name="superellipsoid">SuperEllipsoid</a></h4>
+   
+   White_dune also has a PROTO for the superellipsoid, a special case of a 
+   supershape. It can be used to form a sphere, 
+   <br><br><img src=superellipsoid_sphere.jpg><br><br>
+   a box, a cylinder, 
+   <br><br><img src=superellipsoid_cylinder.jpg><br><br>
+   a octaeder and rounded forms of this shapes 
+   <br><br><img src=superellipsoid_box_smooth.jpg><br><br>
+   <br><br><img src=superellipsoid_cylinder_smooth.jpg><br><br>
+   with only 2 parameters.
+   Like the SuperShape PROTO the SuperEllpsoid PROTO has a field "border",
+   e.g. to form a half sphere.
+   <br><br><img src=superellipsoid_sphere_half.jpg><br><br>
+   This shape can be converted to a IndexedFaceSet.  
+  <li>
+   <h4><a name="superrevolver">SuperRevolver</a></h4>
+    The SuperRevolver PROTO works similar to the 
+    <a href="#rotating_nurbscurve">rotation of a NurbsCurve</a>,
+    but uses the superformula instead of a rotation and a two dimensional
+    curve instead of a three dimensional curve.
+    <br>
+    The default values of the super formula (a=1, b=1, m=0,
+    n1=1, n2=1, n3=1) form a circle on a 2D plain.
+    This form can be also seen, if a SuperRevolver is seen from above.
+    <br>
+    Unlike the rotation of a NurbsCurve, the usage of a SuperRevolver
+    do not require the conversion between different types of objects. 
+    Instead the 2D nurbscurve can be changed interactivly at any time 
+    and the SuperRevolver shape is changed accordingly.
+    <br><br><img src="superrevolver.png"><br><br>
+    There is also a field "pieceOfCake", which allows it to cut "cake pieces"
+    out of the shape.
+    <br><br><img src="superrevolver_pieceofcake.png"><br><br>
+  </li>
+ </ul>
+</p>
+<h3><a name="subdivide">Subdivide Modelling</a> <small>(new in Version 0.99pl624)</small></h3>
+<p>
+Subdivide Modelling is available via the 
+<em>(IndexedFace)Set -&gt; subdivide</em>
+command or pressing "s" if a mesh based node (e.g. IndexedFaceSet, Box
+or NurbsSurface) is selected. Subdivide uses the Catmull-Clark Algorithm
+to make objects smoother. <br>
+You can start with a selected box:
+<br><br><img src="box.png"><br><br>
+Use <em>(IndexedFace)Set -&gt; subdivide</em> or press "s"
+<br><br><img src="box2.png"><br><br>
+Use <em>selection -&gt; faces</em> and drag the clicked face out with
+the left mouse button still pressed.
+<br><br><img src="box3.png"><br><br>
+To get it smoother again, use <em>(IndexedFace)Set -&gt; subdivide</em> or press
+"s"
+<br><br><img src="box4.png"><br><br>
+To hide the faces, you can set creaseAngle of the IndexedFaceSet.
+<br><br><img src="box5.png"><br><br>
+Be aware that ist no unsmooth command in white_dune, except the tessellation
+fields in Nurbs(Patch)Surface or superformula based nodes.
+<br><br><img src="box6.png"><br><br>
+So it is usefull to often use <em>edit -&gt; undo</em> to test and modify the
+subdivided object.
+<br>
+Unfortunatly Subdive do not work with all faces, it works only with closed
+objects. Therefore is Subdivide gray when a SuperExtrusion node is selekted.
+<br>
+In the same way as faces, lines can be selected with <em>selection -&gt; lines
+</em>.
+<br><br><img src="extrusion9.png"><br><br>
+Selected lines can be moved with the mouse.
+<br><br><img src="extrusion10.png"><br><br>
+</p>
+<h3><a name="extrusion">IndexedFaceSet Extrusion</a> <small>(new in Version 0.99pl654)</small></h3>
+<p>
+When the selected X3D-Command is a IndexedFaceSet (or has been converted
+to a IndexedFaceSet) a special way of extrusion is available.
+One or more faces of a IndexedFaceSet can be pulled out or pushed in.
+<br>
+You have to select <em>Selection -&gt; Faces</em> and Coordinate of
+IndexedFaceSet.
+With the middle mousebutton you can select one or more faces.
+<br><br><img src="extrusion2.png"><br><br>
+When the X Symetric icon <img src="symetric_pressed.png"> is selected,
+faces on the other side are also selected.
+<br><br><img src="extrusion3.png"><br><br>
+In the same way faces can be pushed into a body.
+<br><br><img src="extrusion4.png"><br><br>
+This makes sense with
+<a href="#subdivide">Subdivide Modelling</a>.
+<em>(IndexedFace)Set -&gt; (IndexedFace)Set -&gt; Extrude Face </em>
+<br><br><img src="extrusion5.png"><br><br>
+<em>(IndexedFace)Set -&gt; Subdivide</em>
+<br><br><img src="extrusion6.png"><br><br>
+<em>(IndexedFace)Set -&gt; Subdivide</em>
+<br><br><img src="extrusion7.png"><br><br>
+The same with matching IndexedFaceSet.creaseAngle 
+<br><br><img src="extrusion8.png"><br><br>
+</p>
+<h3><a name="coordinate">Changing coordinate based nodes</a><small> (new in Version 0.29beta)</small></h3>
+<p>
+Since version 0.29beta also Coordinate based nodes 
+(like IndexedFaceSet ("Mesh"), IndexedLineSet or PointSet)
+can be changed interactivly in the 3D preview window in the same way
+as changing the controlpoints of a NURBS shape.<br>
+For nodes with very much vertices, this is (still) only usefull to 
+change small details.
+</p>
+<h3><a name="flip">Flip/swap and set center actions</a></h3>
+<p>
+There are a few handy modelling actions in the <em>Action</em> menu:
+<ul>
+ <li>
+  <em>Flip (x/y/z)</em><br>
+  The Flip command can be used for whole scenegraph branches. It changes
+  all values of the Transform and Shape (sub-)nodes from x to -x, y to -y
+  or z to -z. This is usefull to mirror a branch of objects after doubling
+  the branch. When used on difficult objects like Cone or IndexedFaceSets,
+  flip tries keep things constistent. A Cone can not be flipped in the
+  y-direction, therefore the cone of a y-flip command is converted to a 
+  Nurbs(Patch)Surface first. For a Surface node like the IndexedFaceSet, flip 
+  takes care about the normal and ccw fields. A Coordinate node in the 
+  IndexedFaceSet also support the <em>Flip</em> command, but you have
+  to take care about the normal and ccw field by yourself.
+ </li>
+ <li>
+  <em>Swap (xy/yz/xz)</em><br>
+  The Swap command can also be used for whole scenegraph branches. 
+  E.g. the xy command exchanges the x and y values in all matching nodes.
+ </li>
+ <li>
+  <em>move to (x/y/z)</em><br>
+  This command only works for NURBS and Coordinate nodes. It 
+  sets all points in the x, y or z direction to the asked value.
+ </li>
+ <li>
+  <em>Set Center to (mid min/max x/y/z)</em><br>
+  This command requires the combination<br>
+  Transform -&gt; Shape -&gt; geometrynode<br>
+  where the geometrynode (e.g. Box, Sphere, IndexedFaceSet etc.) is selected.
+  The command set the center (rotation point) of the Transform node to the 
+  mid or the borders of the bounding box of the geometry. This is usefull
+  when working with modelling tools, which export VRML objects with the
+  rotation point wide away from the object.
+ </li>
+</ul>
+</p>
+<h4><a name="convexhull">Convex hull</a><small>(new in Version 0.99pl812)</small></h4>
+<p>
+<em>Actions -&gt; Convex hull</em> creates a convex IndexedFaceSet from
+objects in a Scenegraph branch (it can also be used for a whole scenegraph,
+but this often not very usefull). Only the Transform node data, mesh points, 
+line points and PointSet node points are used to create a new IndexedFaceSet.
+<br>
+In the following example a sphere and a PointSet with 2 points is shown:<br>
+<a href="convex_hull_before.wrl"><img src="convex_hull_before.png"></a><br>
+Usage of <em>Actions -&gt; Convex hull</em> results in<br>
+<img src="convex_hull_after.png"><br>
+Adding 2 symetric NurbsSurfaces and 2 symetric NurbsCurves<br>
+<img src="convex_hull_before2.png"><br>
+Usage of <em>Actions -&gt; Convex hull</em> results in<br>
+<img src="convex_hull_after2.png"><br>
+Do not forget to fit IndexedFaceSet.creaseAngle:<br>
+<img src="convex_hull_after3.png"><br>
+</p>
+<h4><a name="meshreducer">Mesh reducer</a> (new in Version 0.99pl850)</h4>
+<p>
+If you work with <a href="#subdivide">Subdivide Modelling</a> (or
+a 3D-Scanner), the number of resulting faces can explode.
+As a little help, a mesh reducer exists.
+As a example, the result of a convex hull operation is used:
+<br>
+<img src="meshreducer_before.png"><br>
+Select a IndexedFaceSet, so <em>(IndexedFace)Set -&gt; Mesh reduce</em> 
+becomes available.
+<br>
+<img src="meshreducer_dialog.png"><br>
+If you click it, a dialog with the question about the percent of the
+remaining faces occures.
+When e.g. 5 percent is used, a 1/20 of the faces remain.
+<br>
+<img src="meshreducer_after.png"><br>
+Take care that the Mesh reducer (like the convex hull tool) do not
+deliver symetic resuls.
+The only way out is symetric modelling.
+</p>
+<h4><a name="symetric">Symetric modelling</a></h4>
+<p>
+With <em>(IndexedFace)Set -&gt; make symetric</em> you can mirror the
+one (plus) or orther (plus deselected) side of a IndexedFaceSet.
+</p>
+<h4><a name="skinbones">Skin and bones modelling</a>(new in Version 0.99pl972)</small></h4>
+<p>
+"Skin and bones" means that you have a surface as skin and joints/bones to
+manipulate the surface. Skin and bones technics in X3D are connected
+to the HAnimHumanoid node, cause the main application is human animation.<br>
+But human animation require a lot of joints, so a flower with two
+joints is shown.<br>
+First we start with a IndexedFaceSet of a flower (created with a SuperRevolver,
+converted to a modified Nurbs(Patch)Surface converted to IndexedFaceSet).
+<br>
+<img src="flower1.png"><br>
+Next we create a HAnimHumanoid node with <em>Create -&gt; X3D misc components
+-&gt; H-Anim -&gt; HAnimHumanoid</em> and move the Shape node to
+HAnimHumanoid.skin.
+<br>
+<img src="flower2.png"><br>
+Do not worry, the flower disappears from the preview 3D-window.<br>
+Now select the Coordinate node and use <em>Selection -&gt; Vertices</em>
+ (or better: <em>Selection -&gt; HAnimJoint weight</em>).<br>
+<img src="flower3.png"><br>
+If <em>Actions -&gt;X symetric Modelling</em> is set, click to the
+<img src="frog08.png"> icon.<br>
+Use the right mouse button to pull a box around the half of the flower.
+<br>
+<img src="flower4.png"><br>
+Use <em>Create -&gt; X3D misc components -&gt; H-Anim -&gt; HAnimJoint</em>.
+<br>A dialog opens:
+<br>
+<img src="flower5.png"><br>
+Click to OK.
+<br>
+<img src="flower6.png"><br>
+A DEF dialog opens. Click to OK.
+<br>
+<img src="flower7.png"><br>
+Select the HAnimHumanoid.skeleton field. Use <em>Edit -&gt; USE.</em>
+<br>
+<img src="flower8.png"><br>
+Select "Scene".
+<br>
+<img src="flower8a.png"><br>
+Select the Coordinate node and use the right mouse button to pull a 
+box around the rest of the flower.
+<br>
+<img src="flower9.png"><br>
+<br>
+<br>A dialog opens:<br>
+<img src="flower5.png"><br>
+Click to OK.
+<br>
+A DEF dialog opens. Click to OK.
+<br>
+<img src="flower10.png"><br>
+Select the HAnim_Humanoid.skeleton.HAnimJoint1.children field.
+Use <em>Edit -&gt; USE.</em>
+<br>
+<img src="flower11.png"><br>
+The flower and its joint is complete. Use <em>Mode -&gt; center</em>
+to move the center of the joint. 
+<br>
+<img src="flower12.png"><br>
+Use <em>Mode -&gt; rotate</em> then use the rotation handle to rotate the
+upper part of the flower.
+<br>
+<img src="flower13.png"><br>
+To set HAnimJoint.skinCoordWeight less than 1, select the matching 
+HAnimJoint (select "Scene" to forget this selection), then select the 
+Coordinate node.
+<br>
+<img src="flower14.png"><br>
+Use the right mouse button to pull a box around the vertices you want to
+set the weights.
+<br>
+<img src="flower15.png"><br>
+Set the weight value in the dialog, the "node" and "parent" dialog element
+has been set from the former HAnimJoint selection. Click OK.
+<br>
+<img src="flower16.png"><br>
+The flower is ready, but HAnimHumanoid.skinCoord needs to be set.
+<br>
+<img src="flower17.png"><br>
+You have to select HAnimHumanoid.skin.Shape.IndexedFaceSet.Coordinate and
+use <em>edit -&gt; DEF</em>.
+<br>
+<img src="flower18.png"><br>
+Click OK.<br>
+Select HAnimHumanoid.skinCoord and use <em>edit -&gt; USE</em>.  
+<br>
+<img src="flower19.png"><br>
+</p>
+<h4><a name="boolean">Boolean modelling</a><small>(new in Version 0.99pl999)</small></h4>
+<p>
+White_dune allows the boolean modelling of IndexedFaceSets.<br>
+To do this, a Group of 2 meshes (graphic object except Text (and other faces))
+is subtracted, intersected or unioned.
+A new IndexedFaceSet is created. Only closed objects are allowed, which
+may not intersects self.<br>
+<br>
+It starts with a Box<br>
+<img src="bool1.png"><br>
+Next "Scene" has to be selected.<br>
+<img src="bool2.png"><br>
+Then a Sphere is added. It is not visible, but the handles are still
+visible.<br>
+<img src="bool3.png"><br>
+The sphere is scaled up by dragging the handles.<br>
+<img src="bool4.png"><br>
+Next the first Transform has to be selected.<br>
+<img src="bool5.png"><br>
+Next <em>Actions -&gt; Rest of scenegraph branch -&gt;
+move to -&gt; Group</em> is used. Of course there are simpler ways to
+create a Group with 2 meshes.<br>
+Next the Group has to be selected.<br>
+<img src="bool6.png"><br>
+Next <em>(IndexedFace)Set -&gt; Boolean operations -&gt; Intersection</em> 
+is used.<br>
+<img src="bool7.png"><br>
+A IndexedFaceSet with the intersection has be created.<br>
+Next "Scene" has to be selected.<br>
+<img src="bool8.png"><br>
+Next another sphere is added...<br>
+<img src="bool9.png"><br>
+... and scaled up<br>
+<img src="bool10.png"><br>
+Next the first Transform has to be selected.<br>
+<img src="bool11.png"><br>
+Next <em>Actions -&gt; Rest of scenegraph branch -&gt;
+move to -&gt; Group</em> is used.<br>
+Next the Group has to be selected.<br>
+<img src="bool12.png"><br>
+Next <em>(IndexedFace)Set -&gt; Boolean operations -&gt; Intersection</em> 
+is used. A IndexedFaceSet is created.<br>
+<img src="bool13.png"><br>
+</p>
+<h4><a name="array">Array tool</a><small>(new in Version 0.27beta)</small></h4>
+<p>
+White_dune allows to multiply objects. In difference to similar functions
+in some 3D-Modellers (like the "Art of Illusion" program) it do not create
+N copies of the same object. It creates N VRML Transform nodes (for 
+translation, rotation etc. in respect to the Array dialog below.) 
+with a VRML USE construct. A USE construct is a compact way to repeat
+things in VRML. It is a sort of "pointer without difference" similar
+to a hardlink to a UNIX file (if you know only M$Windows: a more smart way
+of a shortcut to a file). A USEd node also changes, when it orginal 
+changes.<br>
+<br>
+To use the Array tool, select the object you want to multiply
+<br><br><img src=array_start.png><br><br>
+and use <em>Actions -&gt; Array</em>. A dialog will occure
+<br><br><img src=array_dialog.png><br><br>
+where you can input the number of objects and the parameters for the 
+transform node.
+<br><br><img src=array_result.png><br><br>
+When you change the orginal, all USEd nodes change too.
+<br><br><img src=array_changed.png><br><br>
+</p>
+<h3>Repair commands in the "Actions" menue</a></h3>
+<p>
+The following commands are usefull, when you work with VRML/X3D files
+made by other tools. The commands are made to correct some minor errors
+and problems.
+<ul>
+ <li>
+  <h4><a name="remove_invalid">Remove invalid children nodes</a> (new in Version 0.27beta)</h4>
+  <br>
+  In some cases tools export files with invalid children nodes.<br>
+  You have to differ between two cases when useing the remove command
+  for invalid children nodes.
+  <ul>
+   <li>
+    The programmer of the tools confused the meaning of DEF/USE with
+    a macro usage like the usage of "#define" in the programming language
+    C. Cause there is a additional matching USE command, the invalid
+    children node can be removed inside white_dune without loosing 
+    information in this case.
+   </li>
+   <li>
+    The programmer of the tools made another mistake. In this case
+    the remove of the invalid children node means a true data loss.
+   </li>
+  </ul>
+ </li>
+ <li>
+  <h4><a name="triangulate">Triangulate IndexedFaceSet</a> (new in Version 0.29beta)</h4>
+  <br>
+  A IndexedFaceSet is a shape made of polygons. In general, this means
+  there may be faces with 3, 4, 5, 6, 7 etc. edges. Unfortunatly, the
+  task to render general polygons in realtime 3D is not easy.<br>
+  There may be three major problems if a face have more then 3 edges:
+  <ul>
+   <li>
+    The polygon is self-intersecting. <br>
+    There is a matching rule about a IndexedFaceSet in the VRML97 standard:<br>
+    "Each face of the IndexedFaceSet shall have: ... vertices that define a
+    non-self-intersecting polygon."<br>
+    A self-intersecting polygons is usually seen as defect. Often it
+    has been created by a true programming error with accidently 
+    swaped edges of the polygon.<br>
+    In any case, this polygons are not displayed as they are defined.<br>
+    <img src="self_intersecting.png">
+    <img src="triangulated_intersection.png"><br>
+    Left a self-intersecting polygon, right the triangulated polygon
+   </li>
+   <li>
+    The polygon is not flat. <br>
+    There is a matching rule about a IndexedFaceSet in the VRML97 standard:<br>
+    "Each face of the IndexedFaceSet shall have: ... vertices that define a 
+    planar polygon."<br> 
+    But unfortunatly, it is not very uncommon that this rule ignored, 
+    despite there are at least two different ways to render 
+    nonplanar polyons.<br>
+    For example a polygon with edges 1, 2, 3, 4 can be rendered either
+    as a triangle with edges 1, 2, 3 and a triangle with edges 3, 4, 1
+    or rendered as a triangle with edges 4, 1, 2 and a triangle with edges 
+    2, 3, 4. In the nonplanar case, this triangles look different.<br>
+    <img src="nonflat1.png">
+    <img src="nonflat2.png">
+   </li>
+   <li>
+    The polygon not convex.<br>
+    Unlike the two other cases, it is legal to have a IndexedFaceSet with 
+    non-convex polygons, but its "convex" field must be set to "FALSE".
+    In general, it is simpler/faster to render convex polygons than to render
+    non-convex polygons. If the algorithm to render convex polygons is
+    used to render non-convex polygons, the result may look very ugly.<br>
+    <img src="nonconvex1.png">
+    <img src="nonconvex2.png"><br>
+    Left a non-convex polygon, rendered with "convex TRUE", 
+    right the triangulated polygon.
+   </li>
+  </ul>
+  All of this problems can be avoided by converting the polygons with more
+  than 3 edges into triangles. This is called "triangulation".<br>
+  In general, the triangulation of a polygon may require the creation
+  of new vertices, so using triangulation for a IndexedFaceSet with 
+  morphing animation is usually not a good idea.
+ </li>
+ <li>
+  <h4><a name="set_path">Set path of all URLs to</a> (new in Version 0.27beta)</h4>
+  <br>
+  Some tools, which write VRML/X3D Files produce paths in the "url" field
+  (e.g. when using images/bitmaps for the ImageTexture node), which are
+  only valid on the creating computer itself (e.g. "C:\temp\beispiel.png").
+  But VRML/X3D files will be often transfered to a webserver.
+  Even when the files has been transfered too to the webserver, it is
+  not sure, that the paths in the VRML/X3D File is true.<br>
+  The command "Set path of all URLs to" allows it, to change all paths
+  at once. Very usefull is the defaultpath ".". This means that all
+  image-, sound- and moviefiles are in the same directory as the the
+  VRML/X3D file itself.
+ </li>
+</ul>
+</p>
+<h3>Other commands in the "Actions" menue</a></h3>
+<p>
+<ul>
+ <li>
+  <h4><a name="object_url_edit">Edit object/URL</a> (new in Version 0.29beta)</h4>
+  <br>
+  The usage of the "Edit Object"/"Edit URL" action has been already 
+  described in the chapter about <a href="#simplescript">script editing</a>.
+  Beside the usage of a Texteditor to change the "url" field of a Script
+  node ("Edit URL") it also describe the usage of a special tool ("Edit object")
+  to change the Script node by itself.<br>
+  The same principles apply to some of the other nodes with "url" fields:
+  the ImageTexture, the AudioClip and the MovieTexture node.<br>  
+  The usage of <em>Action -&gt; object edit</em> starts depending from
+  the selected node of type
+  <ul>
+   <li>
+    <b>ImageTexture</b> 
+    a program to change imagefiles/bitmapfiles (.jpg/.png)
+    (e.g. gimp or xpaint)
+   </li>
+   <li>
+    <b>AudioClip</b> 
+    a program to change soundfiles (.wav)
+    (e.g. audacity or wavesurfer)
+   </li>
+   <li>
+    <b>MovieTexture</b> 
+    a program to change moviefiles (.mpeg)
+    (e.g. avidemux)
+   </li>
+  </ul>
+  The Linux/UNIX version of white_dune searches in the configuration step
+  of the compilation for already known programs, that can be used for
+  <em>Edit object</em>.<br>
+  When there is no matching program available, a Dialog will ask at
+  the first usage for a program.
+  It is possible to exchange the programs via a dialog at
+  <em>Options -&gt; Text/object Editor settings ...</em>.<br>
+  A important hint for MacOSX users: the programm used to edit text or
+  objects may not return a once to the commandline. This is often the case 
+  for usual ".app" MacOSX programs. You can either try to use the
+  binary program of a something.app MacOSX program in the directory
+  something.app/Content/MacOS or you can prefer to use ported UNIX/X11 
+  programs like gimp.
+ </li>
+ <li>
+  <h4><a name="set_default">Set default values (keep scenegraph)</a> (new in Version 0.27beta)</h4>
+  <br>
+  Sometimes it is usefull, to reset all changed values of a node
+  back to the default values. But the nodes in the VRML/X3D scenegraph tree 
+  often contain other nodes, so a reset to the default values would
+  cause the deletion of hole subtrees.<br?
+  Fields of node types (SFNode or MFNode) will be therefore left unchanged 
+  when setting default values.
+ </li>
+ <li>
+  <h4><a name="xray">xray rendering</a> (new in Version 0.27beta)</h4>
+  <br>
+  Xray rendering is a experimental functions, which let you look through
+  all solid surfaces of a scene. In general this can be very confusing, 
+  but it is sometimes rather usefull.
+ </li>
+</ul>
+</p>
+<h4><a name="proto"><em>PROTO creation/editing</em></a></h4> <small> (new in Version 0.99pl444)</small>
+<p>
+To create a PROTO, a scenegraph branch has to be created first. The nodes of 
+the scenegraph branch are the major part of the PROTO.<br>
+In this example, the nodes of a Shape/Box, Shape/Sphere and Viewpoint are
+in the scenegraph branch.
+<br><br><img src=proto_creation1.png><br><br>
+To create a PROTO with this nodes you must click <em>Actions-&gt;Rest of 
+scenegraph branch-&gt;Move to-&gt;new PROTO</em>.<br>
+<br><br><img src=proto_creation2.png><br><br>
+This is followed by a dialog, that asks for the name of be PROTO, here
+you select "DOME".
+<br><br><img src=proto_creation3.png><br><br>
+As next follows a dialog, which let you select the arguments of the PROTO.
+Later you select this Dialog by selecting the PROTO and use
+<em>Edit -&gt; Object edit</em>.
+As field argument you select SFColor color and press "Add".<br>
+<br><br><img src=proto_creation4.png><br><br>
+Then you press "ok" to end the Dialog.<br>
+<br><br><img src=proto_creation5.png><br><br>
+Next opens the RouteView/IS-Fenster, the PROTO "DOME" is selected.
+<br><br><img src=proto_creation6.png><br><br>
+It is now possible to add/change nodes of the PROTO with the rest of the
+scenegraph. In this case, the Viewpoint node is moved out of the PROTO into
+the scene.<br>
+Next <em> Create -&gt; PROTO usage -&gt; DOME</em>
+is used to display the DOME in the scenegraph.
+<br><br><img src=proto_creation7.png><br><br>
+Next you select a Material node in the PROTO and
+use <em> Routes/IS -&gt Show node on top </em>.
+<br><br><img src=proto_creation8.png><br><br>
+Next you move Material node and PROTO in the Route/IS view to connect
+color and diffuseColor zu.
+<br><br><img src=proto_creation9.png><br><br>
+Next you select the other Material node in the PROTO and
+use <em> Routes/IS -&gt Show node on top </em>.
+<br><br><img src=proto_creation10.png><br><br>
+Next you move the other Material node and PROTO in the Route/IS view to connect
+color and diffuseColor zu.
+<br><br><img src=proto_creation11.png><br><br>
+After that you can change "color" in the DOME node and insert another
+Transform and DOME pair.
+<br><br><img src=proto_creation12.png><br><br>
+</p>
+<h4><a name="vrmlcut"><em>VrmlCut scripted Proto</em></a></h4> <small> (new in Version 0.29beta)</small>
+<p>
+In VRML/X3D it is amaizingly different to build sequences of animations, 
+usually called "movie". According to the realtime 3D nature of VRML/X3D
+animations can be started interactivly and independendly from each, so
+it there is difficult to define a overall timeline, just like the cutting
+of a movie.<br>
+One approach to ease this problem in white_dune is the usage of the 
+scripted PROTO node VrmlCut. It has a Field "scenes", where single 
+animation VRML/X3D data can be put into other scripted PROTO nodes named
+VrmlScene. The content of such a VrmlScene node can be seen similar to
+a single scene in a movie. The VrmlCut node switches from one VrmlScene to the 
+next VrmlScene and try to jump to the first camera viewpoint and try to start
+all the animations in the current VrmlScene node.<br>
+Just like the SuperShape, SuperEllipsoid, etc. node the VrmlCut node is not a
+buildin VRML node. It is a PROTO, a sequence of VRML nodes, that is composed
+by a Switch node and a Script node and TimeSensor node.<br>
+Like a Script node it has a changable set of fields/events. Cause multiple 
+VrmlCut nodes would have multiple different sets of fields/events, you can 
+have only one Proto definition of VrmlCut and therefore you can have only
+one VrmlCut node per VRML-file.<br>
+The VrmlCut switches between a sequence of VrmlScene nodes (basically a
+Group-like node with some scripting for routing) driven by the internal
+TimeSensor and the Script.<br>
+All information between the VrmlCut, VrmlScene, TimeSensors (for animations)
+and Viewpoints (cameras) are passed via ROUTE commands. This makes the
+concept flexible (for example the ROUTE sources can be reused to drive other
+nodes like Sound or Fog) but building much ROUTEs is much work.<br>
+To reduce the work, the following method can be used:
+<ul>
+ <li>
+  Build single scenes, each in one VRML file
+ </li>
+ <li>
+  Open a VRML file with common background (or empty)
+ </li>
+ <li>
+  Use <em>Create -&gt; Scripted PROTOs -&gt; VrmlCut</em> to create a VrmlCut node
+ </li>
+ <li>
+  Directly use <em>Create -&gt; Scripted PROTOs -&gt; VrmlScene</em> to create a 
+  VrmlScene node 
+ </li>
+ <li>
+  Directly use <em>File -&gt; Import</em> to include a VRML file into the
+  scene. All timesensors and the first viewpoint gets ROUTEs from the VrmlScene
+  node. The loop field in the timersensors are switched off. The longest
+  cycleTime of the timesensors are copied into the matching offset of the
+  scenelengths field of the VrmlCut
+ </li>
+ <li>
+  Directly use <em>Create -&gt; Scripted PROTOs -&gt; VrmlScene</em> to create
+  the next VrmlScene node.
+ </li>
+ <li>
+  Directly use <em>File -&gt; Import</em> to include the next VRML file.
+ </li>
+ <li>
+  Continue with this steps 
+ </li>
+</ul>
+At the end, you can use the "play" icon or <em>File-&gt;preview</em>to start the 
+sequence of animations.<br>
+With the sceneNumber, numberPreviousScenes and numberNextScenes fields of
+VrmlCut can be used play a reduced range of scenes. This is usefull to optimize
+the lengths of the scenes in the sceneLengths field of VrmlCut.
+</p>
+<h4><a name="upload"><em>File -&gt; upload</em></a> </h4> <small>(new in Version 0.27beta)</small>
+<p>
+White_dune has a command (menuitem <em>File -&gt; Upload</em>) to upload a VRML 
+file to a internet server.<br>
+When you upload files to the internet, you are usually ask about a access
+password. White_dune has the ability to store the password in a memory 
+protected from swapspace by mlock/vlock calls.<br> 
+The swapspace is a 
+region on the disk where the content of the computer memory can be
+swapped out to make space for other running programs. 
+A intruder can inspect
+the swapspace to search for passwords.<br>
+Passing a password from one application (white_dune) to a other application 
+(the upload command) in a secure way is not a easy task in respect to things
+like swapspace.<br>
+In the upload settings dialog (see <em>Options -&gt; Upload settings...</em>)
+<br><br><img src=upload.png><br><br>
+the upload command can have two parameters. Each parameter of the upload
+commandline is set with the characters "%s". 
+<ul>
+<li>
+In case of one "%s", this parameter
+is replaced by the path of the VRML file, which is created from the 
+the current white_dune data.<br>
+If no password is used, the upload program can either ask for a 
+password each upload or use a advanced authentication mechanism like
+ssh passphrase.
+</li>
+<li>
+If there is one "%s" and there is a password, this password is sended
+via standardin to the upload program. Usually the content of
+standartin/standardout is not protected from spacespace, so there
+is possibly a security risk when using this option.
+</li>
+<li>
+Using two "%s" send the password via a commandline option. On most 
+Operationsystems, this is a high security risk, cause commandline 
+options can be read by any other user on the same system.
+</li>
+</ul>
+The last line in the upload settings dialog gives you the ability 
+to reload a HTML-webpage after the upload. To use it, you have to
+type in the HTML tags that will be copied into a HTML file.<br>
+For example, the following dialog will copy the data by 
+white_dune to a VRML file with a static name and will display this
+VRML file together with the string "hello" in the webbrowser on the next 
+<em>File -&gt; upload</em> command. 
+<br><br><img src=upload_copy.png><br><br>
+The HTML tags line can contain "%s" characters, which would be replaced
+by the password. This would result in a HTML file with the password in it. 
+This is a very high security risk, do not use
+this feature without knowing exactly what you are doing !
+</p>
+</body>
+
+ 
+

@@ -1,0 +1,2073 @@
+Content-type: text/html; charset=UTF-8
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of dune</TITLE>
+</HEAD><BODY>
+<H1>dune</H1>
+<A HREF="#index">Index</A>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dune - graphical vrml97/x3d editor and animation tool
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<BR>
+
+<B>dune</B>
+
+[
+<I>variantoptions</I>
+
+]
+[
+<I>stereoviewoptions</I>
+
+] 
+[
+<I>inputdeviceoptions</I>
+
+[ 
+<I>axisoptions</I>
+
+]
+[
+<I>miscoptions</I>
+
+] 
+[
+<I>file.wrl</I>
+
+<I>file.x3dv</I>
+
+<I>file.x3d</I>
+
+<I>url </I>
+
+<I>...</I>
+
+] 
+<P>
+
+<BR>
+
+<B>dune</B>
+
+[
+<I>conversionoption</I>
+
+] 
+<I>filename</I>
+
+<P>
+
+<BR>
+
+<B>dune </B>
+
+<I>-illegal2vrml </I>
+
+[
+<I>-prefix prefix</I>
+
+] 
+<I>protofile.wrl file.wrl </I>
+
+<I>...</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<B>dune</B>
+
+/ white_dune is a graphical editor for the Virtual Reality Modeling Language 
+(VRML97), ISO/IEC 14772-1:1997 and X3D.
+<BR>
+
+Additionally it has support for the NurbsSurface Node described in VRML97 
+Amendment 1.
+<BR>
+
+It can also load X3D files with XML encoding, if it has been compiled
+with the expat XML parser library.
+<BR>
+
+It can also download files from the internet (to ~/Downloads (default),
+see &quot;options-&gt;output setting&quot;), if it has been compiled with the curl 
+library.
+<BR>
+
+A filename of <B>-</B> means standart input.
+<BR>
+
+Dune has some basic support for stereographic view usually with 
+shutterglases in OpenGL &quot;quadbuffer&quot; mode.
+<BR>
+
+When used with the conversionoptions or the <B> -illegal2vrml </B> commandline
+argument, white_dune is a non graphical commandline program.
+<BR>
+
+The conversionoptions are used to convert the VRML/X3DV/X3D file into 
+sourcecode or a other 3D graphics format. This options are used in the 
+commandline, but some options require a graphics context (e.g. in the 
+simplest case a usage within a 
+<I>xterm</I>
+
+command), cause some of the conversion options 
+require the usage of OpenGL commands. To create a OpenGL context, there are 
+3 different ways.
+<BR>
+
+First open a temporay graphics window, do the conversion and close 
+the graphics window and exit. This is currently used under M$Windows.
+<BR>
+
+Second is to use Mesa off screen rendering (the program was
+compiled with the --with-osmesa configure option). With Mesa off screen
+rendering it is possible to use OpenGL commands in a pure commandline program.
+<BR>
+
+Third is to use glx based off screen rendering under Linux/UNIX/MacOSX.
+In this case, the program do not open a graphics window, but requires 
+a working X11 display anyway. On a text console the
+<I>Xvfb</I>
+
+X11 server program can be used to get a working X11 display.
+<BR>
+
+The <B> -illegal2vrml </B> option is used to repair VRML97 files with 
+illegal extensions.
+<BR>
+
+See the <A HREF="/cgi-bin/man/man2html?1+illegal2vrml">illegal2vrml</A>(1) manpage for more information.
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>VARIANTOPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-4kids</B>
+
+<DD>
+start dune with a simplified GUI as simple 3D modeller for kids.
+<DT><B>-x3dv</B>
+
+<DD>
+if no file is loaded, start dune with a new X3DV file.
+<BR>
+
+Per default, dune is started with a new VRML97 file.
+<DT><B>-kambi</B>
+
+<DD>
+start dune with support for unportable extension nodes only usable with
+the kambi VRML gameengine.
+<DT><B>-cover</B>
+
+<DD>
+start dune with support for unportable extension nodes only usable with
+the special immersive VRML97 viewer cover/covise.
+<DT><B>-x3dom</B>
+
+<DD>
+start dune with support for unportable extensions only usable with
+the X3DOM viewer.
+<DT><B>-4catt</B>
+
+<DD>
+start dune with a simplified GUI as a exporter/converter for users of the 
+CATT 8 sound simulation software.
+<DT><B>-german</B>
+
+<DD>
+Use german menu, dialogs and errormessages
+<DT><B>-italian</B>
+
+<DD>
+Use italian menu and dialogs, errormessages are still in english language
+<DT><B>-french</B>
+
+<DD>
+Use french menu and dialogs, errormessages are still in english language
+<DT><B>-portuguese</B>
+
+<DD>
+Use portuguese 4kids menu, only helpfull with -4kids option, otherwise all
+in english
+<DT><B>-english</B>
+
+<DD>
+Use english menu, dialogs and errormessages. This is the default, it can be
+used to overwrite the setting of the LANG environment variable.
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONVERSIONOPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-vrml97</B>
+
+<DD>
+Convert file to VRML97 ISO/IEC 14772-1:1997, write it to standart output
+and exit.
+<DT><B>-vrml97levelx3dv</B>
+
+<DD>
+Convert file to VRML97 ISO/IEC 14772-1:1997 compatible parts of 
+X3D classic VRML encoding ISO/IEC ISO/IEC 19776-2:2005, write 
+it to standart output and exit.
+<DT><B>-x3d</B>
+
+<DD>
+Convert file to XML encoded X3D, write it to standard output and exit.
+<DT><B>-X3DOM</B>
+
+<DD>
+Convert file to X3DOM html, write it to standard output and exit.
+<DT><B>-download</B>
+
+<DD>
+Download file from the internet, write filenames to standard error and exit.
+<DT><B>-kanim filenamepattern</B>
+
+<DD>
+Convert file to the kanim fileformat and write it to standard output.
+<BR>
+
+The kanim fileformat is a XML file with references to different VRML 
+files. The VRML files are generated too, their name is generated based on
+<B>filenamepattern</B>: The filenamepattern is shortend from the fileextension
+and then extended with a underscore, a increasing number and the .wrl
+extension.
+<BR>
+
+All VRML files describe the same VRML scene with same the nodes, 
+but some numeric fields are animated.
+<BR>
+
+This type of file is used by the open source VRML based Kambi gameengine.
+It makes no sense to export a kanim file, if the exported VRML file do not 
+contain timesensor/interpolator based animation.
+<DT><B>-wonderland moduleDirectory</B>
+
+<DD>
+Convert file to a java source file included in a directory structure needed
+to build a SUN wonderland version 0.5 module and exit.
+<BR>
+
+If the root directory of the module is build from the input <B>filename</B> 
+(without extension) as <B>moduleDirectory</B>/exportX3dv/<B>filename</B>
+<BR>
+
+If this directory and the other needed files do not exists, this files
+are also created. If the other files exist, they are not overwritten,
+only the target java source itself is overwritten.
+The name of the target java source file is 
+<B>moduleDirectory</B>/exportX3dv/<B>filename</B>/src/classes/org/jdesktop/wonderland/modules/<B>filename</B>/client/jme/cellrenderer/<B>filename</B>.java
+The first character of the target java source file is uppercase.
+<BR>
+
+To get a wonderland module from the 
+<B>moduleDirectory</B>/exportX3dv/<B>filename</B> directory, chance into
+this directory and run the <B>ant</B> command. A usual jar file of the
+wonderland module can then be found in the 
+<B>moduleDirectory</B>/exportX3dv/<B>filename</B>/dist directory.
+<BR>
+
+When compiling the output of the wonderland java source export with the
+command <B>ant</B>, the java compiler may get out of memory resources.
+<BR>
+
+To fix the problem, you can either set the memory limits via the NT_OPTS
+environment variable to something like (bash/sh/ksh)
+<BR>
+
+<PRE>
+
+   ANT_OPTS=&quot;-Xms256m -Xmx1024m&quot;
+   export ANT_OPTS
+
+</PRE>
+
+<BR>
+
+or (M$Windows)
+<BR>
+
+<PRE>
+
+   set ANT_OPTS=&quot;-Xms256m -Xmx1024m&quot;
+
+</PRE>
+
+<BR>
+
+or set the memory limits by extending the javac tag in the file 
+wonderland/build-tools/build-scripts/build-setup.xml e.g.
+<BR>
+
+<PRE>
+
+  &lt;javac ...
+         ...
+         fork=&quot;true&quot;
+         memoryinitialsize=&quot;256m&quot;
+         memorymaximumsize=&quot;1024m&quot;
+  &gt;
+
+</PRE>
+
+<BR>
+
+This option uses OpenGL commands and can not be used in a commandline only 
+environment.
+<DT><B>-x3d4wonderland</B>
+
+<DD>
+Convert file to XML encoded X3D for import in SUN wonderland 0.4, write it 
+to standard output and exit.
+<BR>
+
+SUN wonderland 0.4 only support IndexedFaceSets with colorPerVertex and
+fullsize Color nodes. This exporter tries to convert other nodes to this
+IndexedFaceSets, but can (currently) not correctly convert nodes with 
+colorPerVertex false and fullsize Color nodes.
+<BR>
+
+This option uses OpenGL commands and can not be used in a commandline only 
+environment.
+<DT><B>-rib</B>
+
+<DD>
+Convert file to the RIB format (Renderman Image Bytestream), write it to 
+standart output and exit. This option uses OpenGL commands and can not be used 
+in a commandline only environment.
+<BR>
+
+The RIB file format is the input file format of movie renderers like renderman
+or aqsis. 
+<BR>
+
+The RIB exporter do not support several features of VRML/X3D 
+(e.g. TextureTransform).
+<DT><B>-files</B>
+
+<DD>
+integer
+<BR>
+
+Only useful with the -rib option.
+<BR>
+
+Instead of writing the whole animation into the -o option file, create
+integer files with parts of the animation. This is usefull to run the
+renderman renderer (e.g. aqsis) parallel.
+<BR>
+
+A example:
+<BR>
+
+<BR>&nbsp;$&nbsp;dune&nbsp;-o&nbsp;RibExport.rib&nbsp;-files&nbsp;4&nbsp;-rib&nbsp;Untitled.wrl
+<BR>
+
+<BR>&nbsp;$&nbsp;for&nbsp;i&nbsp;in&nbsp;RibExport*.rib&nbsp;;&nbsp;do&nbsp;(aqsis&nbsp;$i&nbsp;&amp;);&nbsp;done
+<BR>
+
+<DT><B>-ac3d</B>
+
+<DD>
+Convert file to the AC3D format (Version AC3Db), write it to standart output 
+and exit. This option uses OpenGL commands and can not be used in a 
+commandline only environment.
+<BR>
+
+The AC3D file format is the input/output file format of the 3D modeller
+ac3d.
+<BR>
+
+The ac3d 3d modeller do not support several features of VRML/X3D 
+(e.g. the ac3d 3d modeller do not support animation or interaction).
+Therefore the AC3D file format can not keep the complete information of a 
+VRML/X3D file in general.
+<DT><B>-catt8geo outputdir_with_material_geo</B>
+
+<DD>
+Convert file to the catt geo format 
+(Version 8), write it to several .geo formats to the directory
+<B>outputdir_with_material_geo</B> and exit.
+<BR>
+
+The catt geo file format is the input geometry file format of the 
+catt acustic simulation program.
+<BR>
+
+The master.geo file in this directory <B>outputdir_with_material_geo</B> 
+will hold include commands for the other produced .geo files.
+<BR>
+
+In the directory, a file material.geo with the needed ABS commands
+must exist before conversion.
+The material names for the ABS names are generated from the DEF names of the 
+VRML nodes.
+<BR>
+
+If the material.geo file do not exist in the 
+<B>outputdir_with_material_geo</B> directory, white_dune fails
+with a errormessage.
+<BR>
+
+Despite the catt programm can export VRML97 files, it do not support several 
+features of VRML/X3D.
+<BR>
+
+Therefore the catt geo file format can not keep the information of a 
+VRML/X3D file in general.
+<BR>
+
+This option uses OpenGL commands and can not be used in a commandline only 
+environment.
+<DT><B>-ldraw</B>
+
+<DD>
+Convert file to the major part of the ldraw fileformat and write it to
+standard output.
+<BR>
+
+The header of the ldraw file is not generated. The header is a important 
+part of a ldraw file and should have been written to standard output
+earlier (typically this is done from a batch script).
+<BR>
+
+The ldraw fileformat is a ASCII fileformat which is used to exchange 3D data 
+between several open source plastic brick description programs. A example 
+for such a program is LeoCAD.
+<DT><B>-prefix prefix</B>
+
+<DD>
+The <B>-prefix</B> option in conjunction with conversion is only used for the
+following options to create source code. It can be used to define a leading
+prefix for the name of the data structures in the source code output.
+<BR>
+
+For example, the source code creates data types named &quot;Node&quot;, &quot;Scenegraph&quot;
+and &quot;Callback&quot;. To avoid problems with other libraries, adding options like
+for example &quot;<B>-prefix</B> X3d&quot; would change the names to &quot;X3dNode&quot;,
+&quot;X3dSceneGraph&quot; and &quot;X3dCallback&quot;.
+<DT><B>-c</B>
+
+<DD>
+Converts file to a C header/source file, write it to standard output and exit.
+<BR>
+
+See section <B>C/C++/JAVA SOURCE EXPORT</B> for more information.
+<DT><B>-3c</B>
+
+<DD>
+This option is similar to the <B>-c</B> option, but surfaces are first 
+triangulated and then exported as TriangleSet nodes.
+<BR>
+
+This option uses OpenGL commands and can not be used in a commandline only 
+environment.
+<DT><B>-c++</B>
+
+<DD>
+Converts file to a C++ header/source file, write it to standard output and 
+exit.
+<BR>
+
+See section <B>C/C++/JAVA SOURCE EXPORT</B> for more information.
+<DT><B>-3c++</B>
+
+<DD>
+This option is similar to the <B>-c++</B> option, but surfaces are first 
+triangulated and then exported as TriangleSet nodes.
+<BR>
+
+This option uses OpenGL commands and can not be used in a commandline only 
+environment.
+<DT><B>-java</B>
+
+<DD>
+Converts file to a java source file, write it to standard output and exit.
+<BR>
+
+See section <B>C/C++/JAVA SOURCE EXPORT</B> for more information.
+<DT><B>-3java</B>
+
+<DD>
+This option is similar to the <B>-java</B> option, but surfaces are first 
+triangulated and then exported as TriangleSet nodes.
+<BR>
+
+This option uses OpenGL commands and can not be used in a commandline only 
+environment.
+<DT><B>-manyclasses</B>
+
+<DD>
+Only valid after the <B>-java</B>, <B>-3java</B> or <B>-wonderland</B> options.
+<BR>
+
+This option is a brute force attempt to fight against the &quot;too much constants&quot;
+problem in java. It may be impossible to compile the output of a normal 
+java based source code export, cause the current format of java class files 
+are limited to 64K so called &quot;constants&quot;. Not only real constants like 1, 2 
+or 3 are counted, but also things like member variable definitions in 
+classes etc.
+<BR>
+
+With the <B>-manyclasses</B> option, all data is distributed into many
+seperated classes.
+<BR>
+
+The <B>-manyclasses</B> option should help, if you run into the 
+&quot;too much constants&quot; problem. In case of a large number of DEF commands
+in the vrml/x3dv file, you can still run into &quot;too much constants&quot; problem,
+cause each DEF commands leads to extra member variable in the main
+scenegraph class. In this case, you should reduce the number of DEF commands
+with the menupoint
+<I>actions ... rest of scenegraph branch ... remove ... DEF name</I>
+
+<BR>
+
+Beside the need to increase the memory limits of the 
+<I>javac</I>
+
+compiler (<B>-Xms</B>/<B>-Xmx</B>) options, you may also need to increase
+the <B>PermSize</B> memory limits (<B>-XX:PermSize=</B>/<B>-XX:MaxPermSize=</B>)
+of the 
+<I>java </I>
+
+interpreter. 
+<DT><B>-o outputfile</B>
+
+<DD>
+Writes the converted file to <B>outputfile</B>.
+<BR>
+
+This is important if the converted X3D/VRML file is not in the same
+directory as the orignal file (cause of relative paths in URLs like
+in ImageTexture or EXTERNPROTOs).
+<BR>
+
+Note that <B>-o outputfile</B> must be used before the inputfile 
+(<B>filename</B>).
+</DL>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>STEREOVIEWOPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-nostereo</B>
+
+<DD>
+force non stereoview mode on Linux/UNIX (e.g. if you do not own shutterglases)
+<DT><B>-stereo</B>
+
+<DD>
+force stereoview mode.
+<BR>
+
+Stereo is only supported for hardware/software 
+combinations, that allow quadbuffer stereo (&quot;stereo in a window&quot;), 
+NOT splitscreen stereo (eg. &quot;OpenGlVR&quot;).
+<BR>
+
+Examples for hardware/software combinations with support for 
+quadbuffer stereo are graphicscards with support for 
+shutterglasses or &quot;stereo cloneview&quot; to connect beamers 
+of a onewall.
+<DT><B>-anaglyph glassestype</B>
+
+<DD>
+force expermential stereoview mode for use with colored anaglyph glasses.
+<BR>
+
+<B>glassestype</B> can be red_green, green_red, red_blue or blue_red.
+<BR>
+
+This option uses the OpenGL accumulation buffer. This is not hardware-supported 
+by a lot of graphics cards/graphics drivers and can result in miserable 
+performance.
+<DT><B>-eyedist eyedistinmeter</B>
+
+<DD>
+Distance between the two eyes of the viewer.
+<BR>
+
+Default <B>eyedistinmeter</B> is 0.06, it can be negative to swap eyes 
+(no need to reconfigure your hardware if eye swapping problems occure).
+<DT><B>-screendist screendistinmeter</B>
+
+<DD>
+Distance between the eyes of the viewer and the mid of the monitor screen.
+<BR>
+
+Default <B>screendistinmeter</B> is 0.8.
+<DT><B>-fieldofview fieldofviewindegree</B>
+
+<DD>
+Overwrite Field of View field in VRML viewpoints and set to 
+fieldofviewindegree in degree.
+<BR>
+
+Good stereoviewing may want need to ignore the fieldOfView field 
+of viewpoints. The fieldOfView of the human eye is about 18 degrees,
+the VRML default is 45 degrees.
+</DL>
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>INPUTDEVICEOPTIONS</H2>
+
+The following options are only valid, if dune was compiled with matching
+inputdevice driver support (e.g. there is not support for a Linux joystick 
+under IRIX).
+<DL COMPACT>
+<DT><B>-joystick joystickdevice </B> 
+
+<DD>
+Only valid under Linux or M$Windows.
+<BR>
+
+Under Linux, <B>joystickdevice</B> is the device of a Linux joystick 
+(usually something like /dev/input/js0 or /dev/js0).
+<BR>
+
+Under M$Windows, the <B>joystickdevice</B> is a number. Depending from
+the M$Windows version, this number is either 0, 1 or a number from
+0 to 15.
+<DT><B>-SDLjoystick joystickdevice </B> 
+
+<DD>
+Currently only valid under MacOSX.
+The <B>joystickdevice</B> is a number (e.g. 0, 1, 2, ...).
+<DT><B>-spaceball spaceballdevice </B> 
+
+<DD>
+<B>spaceballdevice</B> is the serial device connected to the spaceball
+(usually something like /dev/ttyd2 or /dev/ttyS0).
+<BR>
+
+Only valid if binary was compiled with libsball support.
+<DT><B>-nxtdials usbdevice </B> 
+
+<DD>
+This option support a dials like inputdevice made of mindstorms nxt motors.
+Just attach a wheel or gear to each of 3 motors, connect them to the brick
+and connect the brick to the computer via USB.
+<BR>
+
+This option is only valid, if white_dune was compiled with support of the
+libusb library e.g. available under Linux.
+<BR>
+
+<B>usbdevice</B> is the number of the mindstorms nxt brick connected via
+USB (0 for the first nxt brick, 1 for the second nxt brick, etc).
+<BR>
+
+The <B>-nxtdials</B> option automatically set the wheel axisoption.
+<DT><B>-xinput xinputname </B> 
+
+<DD>
+<B>xinputname</B> is the devicename supported by the Xinput Protocol
+(usually something like magellan or dialbox).
+<BR>
+
+Valid on most Unix/X11 implementations.
+<DT><B>-xinputlist </B>
+
+<DD>
+Print a list of Xinput devicenames that can be possibly used as 
+<B>xinputname</B> for the <B>-xinput</B> option and exit.
+<BR>
+
+Valid on most Unix/X11 implementations.
+<DT><B>-xinputlistlong </B>
+
+<DD>
+Print a list of Xinput devicenames with axis information and exit.
+<BR>
+
+Valid on most Unix/X11 implementations.
+<DT><B>-aflock&nbsp;aflockdevice&nbsp;</B>&nbsp;[<B>&nbsp;aflockoptions&nbsp;</B>]&nbsp;<B>&nbsp;-tracker&nbsp;birdaddr&nbsp;-wand&nbsp;birdaddr</B>
+
+<DD>
+<BR>
+
+<B>aflockdevice</B> is the serial device connected to the 
+Ascension Flock of Birds master transmitter 
+(usually something like /dev/ttyd2 or /dev/ttyS0).
+<BR>
+
+Dune assumes the following configuration:
+<BR>
+
+Multiple FOBs with single RS232 Interface to Host Computer
+(see &quot;The flock of Birds, Installation and Operation Guide, 
+Standalone and Multiple Transmitter/Multiple Sensors Configurations&quot;, 
+Page 3 (chapter &quot;Introduction&quot;), Figure 2).
+<BR>
+
+<B>birdaddr</B> is the adress of the Bird Unit of the magnetic head tracker
+(<B>-tracker</B>) or &quot;3D Mouse&quot; (<B>-wand</B>) in the Fast Bird Bus 
+(FBB adress) as configured with the dipswitches on the Bird Unit.
+<BR>
+
+This program need to have the Flock of Birds configured in the Normal 
+Address Mode only (see Page 12, Figure 4 of the manual decribed above).
+<DT><B>-headnavigation</B>
+
+<DD>
+Use current transformmode (including rotations) when using a headtracker.
+<BR>
+
+Default without -headnavigation is using only the translation mode.
+This default gives you a very natural reaction, when your head moves, 
+the virtual world moves, but if your head only rotates, the virtual world 
+stand still. With the headnavigation option, the virtual world reacts to 
+head rotations, depending of the current transform mode. Be carefull when 
+you use this feature while talking to a audience. Talking cause small and 
+fast head rotations and will cause small and fast rotations of the virtual 
+world.
+Your audience may get a impression like in a earthquake and is more in danger
+to get motion sickness.
+<DT><B>-sendalways</B>
+
+<DD>
+Tell dune that the device sends (almost) always values. This values will
+then not be interpreted automatically as transform commands.
+<BR>
+
+Automatically used for Ascension Flock of Birds device (-aflock).
+<DT><B>-dontcarefocus</B>
+
+<DD>
+Inputdevice actions dont care about the window focus.
+<BR>
+
+This can be useful in situations, when you only work with one dune window,
+e.g. when using a onewall.
+</DL>
+<P>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>AXISOPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-x|-y|-z|-xrot|-yrot|-zrot=[-][integer_axisnumber]</B>
+
+<DD>
+<B>[,[factor][,[accel][,[wheel][,ignore]]]]</B>
+
+<DT><B>-all|-allxyz|-allrot=[factor][,[accel][,[wheel][,ignore]]]</B>
+
+<DD>
+<DT><B>-none=integer_axisnumber</B>
+
+<DD>
+<DT><B>-axes=max_number_axes</B>
+
+<DD>
+</DL>
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>AXISLEGEND</H2>
+
+<DL COMPACT>
+<DT><B>- </B>
+
+<DD>
+used to swap sign of value from axis 
+<DT><B>integer_axisnumber </B>
+
+<DD>
+Integer with the number of the axis, that should be used for the 
+x y z xrot yrot zrot directions.
+<BR>
+
+This number may not be greater than the number of axes of the 
+inputdevice.
+<BR>
+
+The integer_axisnumber in the none option is used to disable this axis.
+<DT><B>factor </B>
+
+<DD>
+Float with a multiplicator for the axes
+<BR>
+
+The factors of the all, allrot and allxyz options are independend of the 
+factors of the single axes.
+<DT><B>accel </B>
+
+<DD>
+Float with a expotential accelerator for the axes
+<DT><B>wheel </B>
+
+<DD>
+The string &quot;wheel&quot; means this axis of the inputdevice will not deliver zero 
+if released
+<DT><B>ignore </B>
+
+<DD>
+Float with the value (relative to the maximal value
+from the device) which will be ignored (insensitivity)
+<DT><B>max_number_axes </B>
+
+<DD>
+Number of used axes, one of (2,3,4,5).
+<BR>
+
+This must be equal or less to the physical available 
+axes of a device. Main usage of this option is to disable 
+bad designed or mechanical defect axes e.g. when you wish, 
+this axis on a joystick would not exist
+</DL>
+<P>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>AFLOCKOPTIONS</H2>
+
+This options are only valid for the Ascension flock of birds magnetic
+tracking system.
+<DL COMPACT>
+<DT><B>-baud baudrate</B>
+
+<DD>
+Baudrate of the serial line communicating with the transmitter.
+<BR>
+
+According to the flock of bird manual, the following baudrates are
+valid for serial line communication: 2400, 4800, 9600, 19200, 38400,
+57600 and 115200.
+<BR>
+
+Default: 38400
+<DT><B>-numbirds numberbirds</B>
+
+<DD>
+Number of &quot;data delivering&quot; birds attached to the transmitter (e.g. not 
+counting the transmitter itself, if it is a Extended Range Controller (ERC)).
+<BR>
+
+Default: 2 (tracker and wand).
+<DT><B>-master birdaddr</B>
+
+<DD>
+Adress of the master transmitter in the Fast Bird Bus (FBB adress) as 
+configured with the dipswitches on the transmitter unit.
+<BR>
+
+Default: 1
+<DT><B>-masterIsErc</B>
+
+<DD>
+Used to differ between configurations, where the master is a ERC 
+(Extended Range Controller) or not. If the master is not a ERC,
+the FBB adress is the same as the FBB adress of the tracker or the wand.
+<BR>
+
+Default: not set
+<DT><B>-hemisphere&nbsp;FRONT_HEM|AFT_HEM|UPPER_HEM|LOWER_HEM|LEFT_HEM|RIGHT_HEM</B>
+
+<DD>
+Hemisphere used. Sit on the antenna block (with the legs near 
+on the side of the text) to see, what is left or right 8-)
+<BR>
+
+Default: RIGHT_HEM
+<DT><B>-sync 0|1</B>
+
+<DD>
+Synchronise (1) or not (0) data output to a CRT (Monitor) or 
+your host computer.
+<BR>
+
+Synchronisation is used to elimiate magnetic effects of a Monitor 
+using the CRT sync cable.
+<BR>
+
+Default: 0
+<DT><B>-block 0|1</B>
+
+<DD>
+Set (1) or do not set (0) the FNDELAY flag to the filedescriptor of
+the serial port.
+<BR>
+
+Default: 0
+<P>
+<DT><B>-filter AC_NARROW | AC_WIDE | DC_FILTER</B>
+
+<DD>
+Enable different filters. Read the Flock of Birds manuals for more 
+information.
+<BR>
+
+This option can be repeated to use multiple filters.
+<BR>
+
+Default: no filter set, using filter set by Flock autoconfiguration.
+<DT><B>-suddenchangelock 0|1</B>
+
+<DD>
+Allow (0) or disallow (1) setting of messured position and orientation 
+when a sudden large messurement occure.
+<BR>
+
+Default: 1
+<DT><B>-calfile calibrationfile</B>
+
+<DD>
+Use a VR Juggler style file to calibrate position messurement.
+<DT><B>-ignoresize delta</B>
+
+<DD>
+Ignore position jumps from flock bigger than delta.
+This is much like suddenchangelock, but pure software based.
+<BR>
+
+Default: 0
+</DL>
+<P>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>MISCOPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-tessellation integer</B>
+
+<DD>
+Set the default tessellation of NURBS and superformula based parametric
+shapes to <B>integer</B>.
+<BR>
+
+The meaning of tessellation decide how many edges are generated in one 
+direction.
+<BR>
+
+A low default tessellation result in faster rendering of related shapes with 
+tessellation set to 0 inside the white_dune application, but can give a 
+reduced view, so details of a shape may be hidden.
+<BR>
+
+If no <B>-tessellation</B> option is used, the default tessellation is 32.
+<DT><B>-indirect</B>
+
+<DD>
+Forces indirect OpenGL rendering, even when 3D hardware rendering 
+accelleration is available. In case of possible 3D hardware rendering 
+accelleration this option can drastically slow down the program.
+<BR>
+
+This option is most usefull on machines with problematic graphic drivers
+or halfbaken 3D desktop features like compiz.
+<DT><B>-nogllist</B>
+
+<DD>
+Forces OpenGL to render without glList commands.
+<BR>
+
+The use of glList commands can increase the rendering speed of static objects
+(without morphing) dramatically.
+<BR>
+
+This option is only usefull on machines with errors in glList commands or
+insufficent memory on the graphics card, so the use of glList commands 
+would uselessly fail.
+<DT><B>-hidestandardtoolbar</B>
+
+<DD>
+Hide the standard toolbar.
+This option is usefull on machines with small displays.
+<DT><B>-uninstall</B>
+
+<DD>
+Output information (if available) on the commandline, how the white_dune 
+application can be uninstalled and exit.
+<BR>
+
+Under Micro$oft Windows it additionally clears all information activly set 
+by white_dune (under HKEY_CURRENT_USER) in the Windows registry.
+<DT><B>-checkSimpleCyclicSceneGraph</B>
+
+<DD>
+A cyclic scenegraph is caused by a node, which contains itself (in form
+of a USE command of itself) in its scenegraph branch.
+<BR>
+
+Cyclic scenegraphs are illegal in VRML97/X3D, tools reading such a file
+may loop infinitely or eat up all the memory and then crash.
+Nevertheless some tools (or people) tend to generate such cyclic scenegraphs. 
+White_dune is able to detect one depth cyclic scenegraphs,
+but the detection can result in a performance problem when loading huge
+VRML97/X3D files. Therefore white_dune do not check for cyclic scenegraphs
+by default. If white_dune loops infinitely or crashes after a long time
+while loading a VRML/X3D file, a cyclic scenegraph shoud be supposed and
+this option should be used. 
+<DT><B>-scriptHeaderC header</B>
+
+<DD>
+It is possible to use Script nodes in C source export. The url field in
+Script nodes ships code from computer languages. If one string points to
+a file (e.g. a java class file), this file is executed to process events.
+Beside that, it is also possible to inline source code below a header.
+The default header for inlined code for the C source export is &quot;c:&quot;.
+The VRML/X3D standard do not restrict the usage of various programming 
+languages in the Script node.
+<BR>
+
+This option changes this <B>header</B> to avoid name clashes with other
+tools using the default header in a different context.
+<DT><B>-scriptHeaderC++ header</B>
+
+<DD>
+It is possible to use Script nodes in C++ source export. The url field in
+Script nodes ships code from computer languages. If one string points to
+a file (e.g. a java class file), this file is executed to process events.
+Beside that, it is also possible to inline source code below a header.
+The default header for inlined code for the C++ source export is &quot;c++:&quot;.
+The VRML/X3D standard do not restrict the usage of various programming 
+languages in the Script node.
+<BR>
+
+This option changes this <B>header</B> to avoid name clashes with other
+tools using the default header in a different context.
+<DT><B>-scriptHeaderJava header</B>
+
+<DD>
+It is possible to use Script nodes in java source export. The url field in
+Script nodes ships code from computer languages. If one string points to
+a file (e.g. a java class file), this file is executed to process events.
+Beside that, it is also possible to inline source code below a header.
+The default header for inlined code for the java source export is &quot;java:&quot;.
+The VRML/X3D standard do not restrict the usage of various programming 
+languages in the Script node.
+<BR>
+
+This option changes this <B>header</B> to avoid name clashes with other
+tools using the default header in a different context.
+<DT><B>-psn_???</B>
+
+<DD>
+Only valid under MacOSX.
+<BR>
+
+Options starting with the string &quot;-psn_&quot; are generated by the Aqua 
+desktop under on some versions of MacOSX and are silently ignored.
+<DT><B>-fn font</B>
+
+<DD>
+Only valid under Linux/UNIX/MacOSX.
+<BR>
+
+Set the unix font. Check for valid fonts with the <A HREF="/cgi-bin/man/man2html?1+xlsfonts">xlsfonts</A>(1) command.
+<DT><B>-demomode timeout</B>
+
+<DD>
+This options is intended for running the program as eyecatcher eg. on a fair.
+<BR>
+
+The option is only usefull, if a viewpoint animation is running.
+In case of input from the mouse (mouseclick), keyboard or a 3D inputdevice, 
+the animation is stopped an the user can navigate through the 3D world.
+<BR>
+
+<B>timeout</B> seconds after the last input, the viewpoint animation is not
+supressed anymore.
+<DT><B>-filedialogdir directory</B>
+
+<DD>
+Change to a specific <B>directory</B> before opening a filedialog.
+<DT><B>-proto category protofile</B>
+
+<DD>
+Adds the VRML PROTO in the file <B>protofile</B> to the list of available
+PROTOs in the create =&gt; proto menu in the <B>category</B> submenu and exit.
+<DT><B>-renderslower</B>
+
+<DD>
+This option uses a slower render mode.
+<DT><B>--version</B>
+
+<DD>
+Print out version information and exit.
+<DT><B>--copyrightdetails</B>
+
+<DD>
+Print out detailed copyright informations and exit.
+</DL>
+<P>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>MOUSE/KEYS</H2>
+
+In the 3D view, dune support the following mouse / keyboard commands:
+<DL COMPACT>
+<DT>Mouse Button 1 click:<DD>
+<BR>
+
+Select objects/3D handlers (e.g. arrows or white boxes) under the cursor 
+(or under the top of 3D cursor in stereoview)
+<BR>
+
+<DT>Mouse Button 2 click:<DD>
+<BR>
+
+Additionly select white box 3D handlers under the cursor 
+(or under the top of 3D cursor in stereoview)
+<BR>
+
+<DT>Mouse Button 1 drag:<DD>
+<BR>
+
+Drag objects/3D handles around
+<BR>
+
+<DT>Mouse Button 3 drag:<DD>
+<BR>
+
+Select multiple 3D handles
+<BR>
+
+<DT>CTRL-Mouse Button 1 drag:<DD>
+<BR>
+
+Virtual trackball navigation 
+<BR>
+
+<DT>SHIFT-Mouse Button 1 drag:<DD>
+<BR>
+
+Forward/backward navigation 
+<BR>
+
+<DT>CTRL+SHIFT-Mouse Button 1 drag:<DD>
+<BR>
+
+up/down/left/right navigation 
+<BR>
+
+<DT>ALT-Mouse Button 1 drag: (SGI style)<DD>
+<BR>
+
+Virtual trackball navigation 
+<BR>
+
+<DT>ALT-Mouse Button 2 drag: (SGI style)<DD>
+<BR>
+
+up/down/left/right navigation 
+<BR>
+
+<DT>ALT-Mouse Button 1+2 drag: (SGI style)<DD>
+<BR>
+
+forward/backward navigation 
+<BR>
+
+<DT>Navigation icon pressed-Mouse Button 1 drag: <DD>
+<BR>
+
+Virtual trackball navigation 
+<BR>
+
+<DT>Navigation icon pressed-Mouse Button 2 drag:<DD>
+<BR>
+
+forward/backward navigation 
+<BR>
+
+<DT>Navigation icon-Mouse Button 1+2 drag:<DD>
+<BR>
+
+up/down/left/right navigation 
+<BR>
+
+<DT>In the route view, dune support the following mouse / keyboard commands:<DD>
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>Mouse Button 1 click to event socket of a node and drag to a matching event <DD>
+socket:
+<BR>
+
+create a ROUTE connection
+<DT>Mouse Button 1 click to nothing and drag:<DD>
+<BR>
+
+cut a ROUTE connection
+<DT>Mouse Button 1 click to a node and drag:<DD>
+<BR>
+
+move node in the route view
+<DT>Mouse Button 1 click to a node, hold Mouse Button1, pressing Page Up/Down key<DD>
+move node in the route view by one page
+(works only on correct motif/lesstif implementations)
+<BR>
+
+<DT>Information about other keyboard usage can be found in the toolbar.<DD>
+<DT>Tips how to use dune can be found in the docs directory of dune<DD>
+</DL>
+<A NAME="lbAN">&nbsp;</A>
+<H2>C/C++/JAVA SOURCE EXPORT</H2>
+
+<P>
+
+<P>
+
+The export to source code is a mainly a export of the information (numbers 
+and strings) of the VRML/X3D scenegraph tree.
+<BR>
+
+White_dune do not export something like C source with OpenGL commands.
+The exported code is independend of any rendering engine, but should be
+usable with any 3D API.
+<BR>
+
+Additional code is needed to render the scenegraph with a 3D API.
+Currently white_dune comes with only two sets of such additinal code for the 
+Java Monkey Engine (JME) and C/C++ OpenGL. 
+This code can be used as a model for writing code for additional renderengines.
+<BR>
+
+The information of the scenegraph is written into a class/struct with a
+name concatinated from the string of the <B>prefix</B> argument (default &quot;X3d&quot;)
+and the string &quot;SceneGraph&quot;. The scenegraph class/struct is filled with
+references to the different VRML/X3D commands (&quot;nodes&quot;). The name of the
+type of such a node is concatinated from the string of the <B>prefix</B> 
+argument (default &quot;X3d&quot;) and &quot;Node&quot;. Each node type contains the data
+of the VRML/X3D node in variables named in the same way as the VRML/X3D
+fields.
+<BR>
+
+The following table shows the mapping from the VRML/X3D field type to the 
+C, C++ and java datatypes:
+<P>
+<TABLE>
+<TR VALIGN=top><TD><BR>&nbsp;VRML/X3D&nbsp;datatype</TD><TD>C datatype</TD><TD>C++ datatype</TD><TD>java datatype <BR></TD></TR>
+<TR VALIGN=top><TD COLSPAN=4><HR><HR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFBool</TD><TD>short</TD><TD>bool</TD><TD>boolean<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFInt32</TD><TD>int</TD><TD>int</TD><TD>int<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFImage</TD><TD>int*</TD><TD>int*</TD><TD>int[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFFloat</TD><TD>float</TD><TD>float</TD><TD>float<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFVec2f</TD><TD>float[2]</TD><TD>float[2]</TD><TD>float[2]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFVec3f</TD><TD>float[3]</TD><TD>float[3]</TD><TD>float[3]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFVec4f</TD><TD>float[4]</TD><TD>float[4]</TD><TD>float[4]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFRotation</TD><TD>float[4]</TD><TD>float[4]</TD><TD>float[4]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFMatrix3f</TD><TD>float[9]</TD><TD>float[9]</TD><TD>float[9]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFMatrix4f</TD><TD>float[16]</TD><TD>float[16]</TD><TD>float[16]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFColor</TD><TD>float[3]</TD><TD>float[3]</TD><TD>float[3]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFColorRGBA</TD><TD>float[4]</TD><TD>float[4]</TD><TD>float[4]<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT><BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFDouble</TD><TD>double</TD><TD>double</TD><TD>double<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFVec3d</TD><TD>double[3]</TD><TD>double[3]</TD><TD>double[3]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFTime</TD><TD>double</TD><TD>double</TD><TD>double<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFString</TD><TD>const char*</TD><TD>const char*</TD><TD>String<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;SFNode&nbsp;(***)</TD><TD>X3dNode*</TD><TD>X3dNode*</TD><TD>X3dNode<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFBool</TD><TD>short*</TD><TD>bool*</TD><TD>boolean[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFInt32</TD><TD>int*</TD><TD>int*</TD><TD>int[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFFloat</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFVec2f</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFVec3f</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFVec4f</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFRotation</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFMatrix3f</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFMatrix4f</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFColor</TD><TD>float*</TD><TD>float*</TD><TD>float[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFColorRGBA</TD><TD>float*</TD><TD>float*</TD><TD>float[]<TT>&nbsp;</TT><BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFDouble</TD><TD>double*</TD><TD>double*</TD><TD>double[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFVec3d</TD><TD>double*</TD><TD>double*</TD><TD>double[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFTime</TD><TD>double*</TD><TD>double*</TD><TD>double[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFString</TD><TD>const char**</TD><TD>const char**</TD><TD>String[]<BR></TD></TR>
+<TR VALIGN=top><TD><BR>&nbsp;MFNode&nbsp;(***)</TD><TD>X3dNode**</TD><TD>X3dNode**</TD><TD>X3dNode[]<BR></TD></TR>
+</TABLE>
+
+<BR>
+
+(***) The &quot;X3d&quot; part of the name is the default, it can be replaced by the <BR>
+string of the <B>prefix</B> argument.
+<BR>
+
+For any MF* type field (and a SFImage type field) the number of int, float 
+etc. values in the array is stored in a variable of the X3dNode 
+struct/class composed from &quot;m_&quot;, the name of the field and &quot;_length&quot; in 
+case of a C/C++ export.
+Java do not need such a variable, cause the length of a array is always 
+available as the .length component of the array.
+<P>
+
+The scenegraph is a tree of nodes. The root of the scenegraph is
+(similar to the white_dune internals) a VRML/X3D Group node named &quot;root&quot;.
+<BR>
+
+In a Group node, the contained nodes are attached via a field named 
+&quot;children&quot; of type MFNode.
+<BR>
+
+For example imagine the following VRML file:
+<P>
+
+<PRE>
+#VRML V2.0 utf8
+
+Group
+  {
+  children
+    [
+    Group
+      {
+      }
+    Group
+      {
+      }
+    DEF NAME_OF_FOGNODE Fog
+      {
+      color 1 0.50000000 1
+      }
+    ]
+  }
+</PRE>
+
+<P>
+
+If no <B>prefix</B> argument is used, the first node in a 
+VRML/X3D file is represended in the exported C source as 
+&quot;root-&gt;children[0]&quot; in the &quot;X3dSceneGraph&quot; struct.
+<BR>
+
+If the first node in the VRML/X3D file is also a Group node and contain
+three other nodes, the third of this nodes is represended as 
+&quot;root-&gt;children[0]-&gt;children[2]&quot; in the &quot;X3dSceneGraph&quot; struct.
+<BR>
+
+If the third of this nodes is a Fog node, the &quot;color&quot; field of the Fog node
+is represended in the exported C source as 
+&quot;root-&gt;children[0]-&gt;children[2]-&gt;color&quot; in the &quot;X3dSceneGraph&quot; struct.
+<BR>
+
+The type of the &quot;color&quot; field of the Fog node is SFColor. The SFColor type
+is represented as a array of 3 floating point values in the C source, used
+to store the red, green and blue part of the color.
+<BR>
+
+So the green part of the fog color is represended in the exported C source as
+&quot;root-&gt;children[0]-&gt;children[2]-&gt;color[1]&quot; in the &quot;X3dSceneGraph&quot; struct.
+<BR>
+
+A C++ export would also use &quot;root-&gt;children[0]-&gt;children[2]-&gt;color[1]&quot;
+in the  &quot;X3dSceneGraph&quot; class.
+<BR>
+
+A java export would similarly use &quot;root.children[0].children[2].color[1]&quot;
+in the &quot;X3dSceneGraph&quot; class.
+<P>
+
+There is a second way to access the fields of the Fog node.
+<BR>
+
+In VRML/X3D it is possible to name nodes with a &quot;DEF&quot; command. The string
+behind the DEF command (&quot;NAME_OF_FOGNODE&quot; in the example) also occures
+in the in the &quot;X3dSceneGraph&quot; struct and can be directly used to 
+access the matching VRML/X3D data.
+<BR>
+
+So the green part of the fog color is represended in the exported C source as
+&quot;NAME_OF_FOGNODE-&gt;color[1]&quot; in the &quot;X3dSceneGraph&quot; struct.
+<BR>
+
+A C++ export would also use &quot;NAME_OF_FOGNODE-&gt;color[1]&quot; in the 
+&quot;X3dSceneGraph&quot; class.
+<BR>
+
+A java export would use similarly &quot;NAME_OF_FOGNODE.color[1]&quot; in the 
+&quot;X3dSceneGraph&quot; class.
+<BR>
+
+A problem can occure, if the string behind the DEF command is a reserved
+keyword in the target language. For example, the 3D modeller wings3d often
+uses the DEF name &quot;default&quot; when exporting VRML97 files.
+<BR>
+
+In this case, the DEF name will be renamed (e.g. to &quot;default1&quot;) and a warning 
+would be written to standard error during the export.
+<P>
+
+Beside the access of node data directly, there are also 2 sets of callbacks
+to handle the data of a whole scenegraph (or a branch of it): 
+a set of callbacks to render the content of the scenegraph branch 
+(&quot;*RenderCallback&quot;) and a additional set of callbacks for other tasks
+(&quot;*DoWithDataCallback&quot;).
+<BR>
+
+There are also callbacks to replace the functions, which per default
+alltogether traverse the Scenegraph 
+(&quot;*TreeRenderCallback&quot; and &quot;*TreeDoWithDataCallback&quot;).
+<BR>
+
+The callback mechanism and the scenegraph initialization differs from 
+programming language to programming language.
+<P>
+
+C:
+<BR>
+
+The scenegraph (default argument &quot;X3d&quot; for prefix) can be declarated with
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;struct&nbsp;X3dSceneGraph&nbsp;sceneGraph;
+<BR>
+
+and initialized with
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dSceneGraphInit(&amp;sceneGraph);
+<BR>
+
+A callback function for any X3D node type (like Fog, Text, IndexedFaceSet etc.)
+has the declaration
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;void&nbsp;mycallbackFunction(X3dNode&nbsp;*self,&nbsp;void&nbsp;*data)
+<BR>
+
+To access the fields of the X3D node, you usually cast the X3dNode pointer
+to a pointer to the type build from the string of the <B>prefix</B> argument 
+(default &quot;X3d&quot;) and the name of the X3D node type you access with this 
+callback (e.g. X3dFog, X3dText, X3dIndexedFaceSet etc.).
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dFog&nbsp;*node&nbsp;=&nbsp;(X3dFog&nbsp;*)self;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dText&nbsp;*node&nbsp;=&nbsp;(X3dText&nbsp;*)self;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dIndexedFaceSet&nbsp;*node&nbsp;=&nbsp;(X3dIndexedFaceSet&nbsp;*)self;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;etc.
+<BR>
+
+With this variable &quot;node&quot; the fields the X3D node can be accessed.
+<BR>
+
+To install the callback, simply assign you function pointer to 
+&quot;callbackFunction&quot; to a variable  build from the string of the 
+<B>prefix</B> argument (default &quot;X3d&quot;), the the name of the X3D node
+and the string &quot;RenderCallback&quot; or &quot;DoWithDataCallback&quot;. E.g.
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dFogRenderCallback&nbsp;=&nbsp;mycallbackFunction;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dTextDoWithDataCallback&nbsp;=&nbsp;mycallbackFunction;
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dIndexedFaceSetRenderCallback&nbsp;=&nbsp;mycallbackFunction;
+<BR>
+
+To run the Render or DoWithData functions with the scenegraph tree, just use
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dGroupTreeDoWithData(&amp;sceneGraph.root,&nbsp;NULL);
+<BR>
+
+Instead of using NULL, other data can be passed to the &quot;data&quot; argument of
+the callback functions.
+<P>
+
+C++:
+<BR>
+
+The callback mechanism is very similar to the C mechanism.
+<BR>
+
+The main difference is the storage of the callback functions. While the
+callbackfunctions in C are stored in global space, the C++ callbackfunctions
+are stored in the static part of the matching node type.
+<BR>
+
+Instead of using 
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dFogRenderCallback&nbsp;=&nbsp;mycallbackFunction;&nbsp;//&nbsp;C
+<BR>
+
+a C++ program would use
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dFog::renderCallback&nbsp;=&nbsp;mycallbackFunction;&nbsp;//&nbsp;C++
+<BR>
+
+In C++ there is no need to call a initialization function for &quot;sceneGraph&quot;. 
+A constructor is called when the
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dSceneGraph&nbsp;sceneGraph;
+<BR>
+
+declaration is used.
+<BR>
+
+To run the Render or DoWithData functions with the scenegraph 
+tree &quot;sceneGraph.render(NULL);&quot; or &quot;sceneGraph.doWithData(NULL);&quot; is used.
+<BR>
+
+NULL can be replaced by other data, that will be passed to the &quot;data&quot; argument 
+of the callback function.
+<P>
+
+java:
+<BR>
+
+The java callback mechanism is a bit different, it is based on inheritance.
+<BR>
+
+The callback function is part of a class, that extends a matching 
+class:
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;class&nbsp;&nbsp;MyCallbackClass&nbsp;extends&nbsp;X3dFogRenderCallback&nbsp;{
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;render(X3dNode&nbsp;node)&nbsp;{
+<BR>
+
+The new class is used in the following example:
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;MyCallbackClass&nbsp;myCallback&nbsp;=&nbsp;new&nbsp;MyCallbackClass();
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dSceneGraph&nbsp;sceneGraph&nbsp;=&nbsp;new&nbsp;X3dSceneGraph();
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;X3dText.setX3dTextRenderCallback(myCallback);
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;sceneGraph.render();
+<P>
+
+With the the <B>-manyclasses</B> option, the last line changes to 
+&quot;X3dSceneGraph.render();&quot;. The access to a node with a DEF command in
+the x3dv/vrml file changes also to a static variable in a similar way.
+<P>
+
+Finally there are additional callbacks (&quot;*ProcessEventCallback&quot;) to process
+events distributed by VRML/X3D ROUTE commands.
+<BR>
+
+A example: a usual animation of a moving Sphere, is driven by a event from
+a TimeSensor node. There is a ROUTE command to send the event into a 
+PositionInterpolator node, which calculate the matching translation of the
+Sphere. There is also a ROUTE command to send the translation event to
+a Transform node.
+<BR>
+
+In the source code export, the inputOnly/outputOnly events are stored as
+usual variables. The functions used for *ProcessEventCallbacks should
+read the inputOnly event variables and write the outputOnly event 
+variables. 
+<BR>
+
+Similar to the sceneGraph. render() function, there is a 
+sceneGraph. X3dProcessEvent() function.
+<BR>
+
+During the source code export, white_dune searches for the node (and similar
+nodes) with output events, but no input event. 
+<BR>
+
+The exported code calls 
+X3dProcessEvent() with this first node of a ROUTE. This should generate 
+data in the outputOnly event variables of this first node of a ROUTE. 
+<BR>
+
+By following the ROUTE, the exported code copies the data from the 
+outputOnly event variable of the first node to the inputOnly event variable
+of the second node of a ROUTE.  
+<BR>
+
+The exported code calls X3dProcessEvents() with the second node of a ROUTE 
+to create data in the outputOnly event variable of the second node.
+<BR>
+
+By following the ROUTE, the exported code copies the data from the
+outputOnly event variable of the second node to the inputOnly event variable
+of the third node of a ROUTE.
+<BR>
+
+And so on.
+<BR>
+
+At the end of the ROUTE chain, X3dProcessEvent() should process the 
+inputOnly event varibles of the last node in the ROUTE chain.
+<BR>
+
+In a simple example, the following X3DV file is exported:
+<P>
+
+<PRE>
+#X3D V3.0 utf8
+PROFILE Interchange
+
+DEF Transform1 Transform {
+  children
+    Shape {
+      appearance Appearance {
+        material Material {
+        }
+      }
+      geometry Box {
+      }
+    }
+}
+
+DEF TimeSensor1 TimeSensor {
+  cycleInterval 5
+  loop TRUE
+}
+
+DEF PositionInterpolator1 PositionInterpolator {
+  key [
+    0
+    1
+  ]
+  keyValue [
+    0 0 0
+    1 0 0
+  ]
+}
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+</PRE>
+
+<P>
+
+The most simple code, that could be used to implement this (exactly this)
+PositionInterpolator would be in C (with prefix &quot;X3d&quot;):
+<P>
+
+<PRE>
+int PositionInterpolatorCallback(X3dNode *node, const char *eventName,
+                                 void* extraData)
+{
+   struct X3dPositionInterpolator *data = (struct X3dPositionInterpolator*)node;
+   data-&gt;value_changed[0] = data-&gt;set_fraction;
+   data-&gt;value_changed[0] = 0;
+   data-&gt;value_changed[0] = 0;
+   return 1;
+}
+</PRE>
+
+<P>
+
+Just like the Render callback functions, the callback is used with
+<BR>
+
+X3dPositionInterpolatorProcessEventCallback = PositionInterpolatorCallback;
+<BR>
+
+The matching code in C++ is rather similar
+<P>
+
+<PRE>
+bool PositionInterpolatorCallback(X3dNode *node, const char *eventName,
+                                  void* extraData)
+{
+   X3dPositionInterpolator *data = (X3dPositionInterpolator*)node;
+   data-&gt;value_changed[0] = data-&gt;set_fraction;
+   data-&gt;value_changed[0] = 0;
+   data-&gt;value_changed[0] = 0;
+   return true;
+}
+</PRE>
+
+<P>
+
+The callback is used with
+<BR>
+
+X3dPositionInterpolator::processEventCallback = PositionInterpolatorCallback;
+<BR>
+
+The matching code in java uses inheritance
+<P>
+
+<PRE>
+class PositionInterpolatorCallback extends X3dPositionInterpolatorProcessEventCallback {
+    public boolean processEvent(X3dNode node, String eventName) {
+        X3dPositionInterpolator data = (X3dPositionInterpolator)node;
+        data-&gt;value_changed[0] = data-&gt;set_fraction;
+        data-&gt;value_changed[0] = 0;
+        data-&gt;value_changed[0] = 0;
+        return true;
+    }
+}
+</PRE>
+
+<P>
+
+The callback is used with
+<P>
+
+<PRE>
+PositionInterpolatorCallback callback = new PositionInterpolatorCallback();
+X3dPositionInterpolator.setX3dPositionInterpolatorProcessEventCallback(callback);
+</PRE>
+
+<P>
+
+The return value of the ProcessEventCallbacks (1/0 for C, true/false for 
+C++/java) tells the event distributing system (VRML/X3D ROUTE commands)
+if there is a generated event that needs to be distributed to the next
+VRML/X3D node or not.
+<P>
+
+It is possible to use a VRML/X3D Script node to process data in C, C++ or
+java. 
+<BR>
+
+Similar to inlined javascript/ecmascript code, the &quot;url&quot; field of a Script 
+node contains strings with a header.
+<BR>
+
+The syntax of the code in C/C++/java is very similar to the code in a
+ProcessEvent callback. The only difference is the node name 
+(PositionInterpolator in the callbacks above). Each Script node in a 
+VRML/X3D file has another set of events and fields. A Script node is useless
+without a DEF name, therefore the node name is replaced by the concatenation
+of the String &quot;Script_&quot; and the DEF name of the Script node.
+<P>
+
+If no <B>-scriptHeaderC</B>/<B>-scriptHeaderC++</B>/<B>-scriptHeaderJava</B>
+option is used, the Script node that replaces the PositionInterpolator
+in the examples above would be:
+<P>
+
+<PRE>
+DEF Script1 Script {
+  eventIn SFFloat float1_in
+  eventOut SFVec3f vec3f1_out
+  url [
+    &quot;javascript:
+    // eventOut SFVec3f vec3f1_out //
+    function float1_in(value) {
+       // value  SFFloat
+       vec3f1_out = new SFVec3f(value, 0, 0);
+    }
+    &quot;
+
+    &quot;c:
+    struct X3dScript_Script1 *self = node;
+    self-&gt;vec3f1_out[0] = self-&gt;float1_in;
+    self-&gt;vec3f1_out[1] = 0;
+    self-&gt;vec3f1_out[2] = 0;
+    &quot;
+
+    &quot;c++:
+    X3dScript_Script1 *self = (X3dScript_Script1 *)node;
+    self-&gt;vec3f1_out[0] = self-&gt;float1_in;
+    self-&gt;vec3f1_out[1] = 0;
+    self-&gt;vec3f1_out[2] = 0;
+    &quot;
+
+    &quot;java:
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+    script.vec3f1_out[0] = script.float1_in;
+    script.vec3f1_out[1] = 0;
+    script.vec3f1_out[2] = 0;
+    &quot;
+    ]
+  }
+</PRE>
+
+<P>
+
+When you use a Script node in the Wonderland module export and the java
+code needs a extra &quot;import&quot; statement, create a special 
+WonderlandImportJava export data container node and add the import 
+statement to the &quot;code&quot; field.
+<P>
+
+See the directories docs/export_example_c, docs/export_example_c++ and
+docs/export_example_java of the white_dune source archive for examples.
+<A NAME="lbAO">&nbsp;</A>
+<H2>EXAMPLES</H2>
+
+<P>
+
+<P>
+
+<DL COMPACT>
+<DT>dune -nostereo<DD>
+<BR>
+
+start dune this way, if you have a stereo capable visual,
+but no shutterglases or other quadbuffer based technology.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>dune -xinput magellan -allxyz=10,100,,0.0000002 -xinput dialbox-1 -x=0 -y=2 -z=4 -xrot=1 -yrot=3 -zrot=5 -all=1000,,wheel<DD>
+<BR>
+
+starts dune with a magellan xinputdevice with factor 10, acceleration 100 
+and a ignore value of 0.0000002 on the xyz axes 
+and a dialbox device with 
+<BR>
+
+x axis = 0. axis 
+<BR>
+
+y axis = 2. axis 
+<BR>
+
+z axis = 4. axis
+<BR>
+
+rotation around x axis = 1. axis 
+<BR>
+
+rotation around y axis = 3. axis 
+<BR>
+
+rotation around y axis = 5. axis
+<BR>
+
+all axes use factor 1000 and all to not deliver zero if released
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>dune -joystick /dev/input/js0 -z=,3 -axes=3<DD>
+<BR>
+
+starts dune with a linux joystick, set acceleration of the z axis to 3
+and disables the 4. (5., 6., ...) axis.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>dune -xinput magellan -z=3 -xrot=2 -none=2<DD>
+<BR>
+
+starts dune with a xinput/magellan device, swapping axis number 2 and
+axis number 3, with axis number 2 disabled.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>dune -nxtdials<DD>
+<BR>
+
+starts dune with a mindstorms nxt usb device, all axes are automatic handled
+as wheels.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>dune -aflock /dev/ttyS1 -numbirds 2 -master 1 -wand 2 -tracker 3<DD>
+<BR>
+
+starts dune with a Ascension Flock of Birds.
+Master transmitter (a Extended Range Controller (ERC)) at FBB adress 1 
+is connected to the serial device /dev/ttyS1, use 2 Birds, 
+one attached to a &quot;3D Mouse&quot; device at FBB adress 2 and one attached 
+to a head tracking device at FBB adress 3.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT>dune -wonderland wonderland/modules -manyclasses Test.x3dv<DD>
+<BR>
+
+Exports the content of Test.x3dv as java source for wonderland 0.5 to the
+directory wonderland/modules/exportX3dv/test.
+<BR>
+
+To compile the java source to a wonderland module 
+wonderland/modules/exportX3dv/test/dist/test.jar change to the directory
+wonderland/modules/exportX3dv/test and use &quot;ant&quot; or &quot;ant deploy&quot;.
+</DL>
+<A NAME="lbAP">&nbsp;</A>
+<H2>FILES</H2>
+
+<P>
+
+<PRE>
+
+<B>$HOME/.dunerc</B>
+default file to load/store settings 
+(see <B>DUNERC</B> environment variable for more information)
+<DL COMPACT>
+<DT><B>$HOME/.dune_crash_*_*.wrl</B>
+<DD>stores the vrml file in case of a crash
+</DL>
+
+</PRE><A NAME="lbAQ">&nbsp;</A>
+<H2>ENVIRONMENT</H2>
+
+<DL COMPACT>
+<DT><B>DUNERC</B> filename to load/store details of dunes screen layout and <DD>
+settings of the &quot;options&quot; menupoint.
+<BR>
+
+If this filename is not writable, settings are only loaded, not stored.
+<BR>
+
+If <B>DUNERC</B> is not set, the file <B>$HOME/.dunerc</B> is used under 
+Linux/UNIX/MacOSX or the registry under Micro$oft Windows.
+<DT><B>DUNEDOCS</B>  path to documentation directory<DD>
+<DT><B>LANG</B>  the first two characters of then environment variable <B>LANG</B> <DD>
+are compared to the ISO 3166 country shortcut of the supported 
+languages.
+For example, if <B>LANG</B> is set to de_DE, german menu, dialogs and 
+errormessages are used.
+</DL>
+<P>
+
+<A NAME="lbAR">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;Dune,&nbsp;graphical&nbsp;vrml97&nbsp;editor&nbsp;and&nbsp;animation&nbsp;tool
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;2000-2002&nbsp;&nbsp;Stephen&nbsp;F.&nbsp;White&nbsp;and&nbsp;others
+<BR>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;and/or&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;2&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;version.
+<P>
+
+<A NAME="lbAS">&nbsp;</A>
+<H2>BUGS</H2>
+
+Dune need valid vrml97/x3dv code to work, it can not load a invalid 
+VRML97/X3DV file.
+<BR>
+
+White_dune can load XML encoded X3D files via a translator.
+<BR>
+
+Use the menupoint Options -&gt; Input Settings... to configure a
+X3D/XML to X3DV translator.
+<BR>
+
+dune is software in development, it is not 100% free of bugs.
+Unsucessful crashes should be rare, lucky crashes allow to get 
+back the data. (see &quot;EXIT STATUS&quot;).
+<BR>
+
+Currently not all VRML97/X3D nodes are displayed (e.g. MovieTexture, 
+NurbsSweptSurface or NurbsSwungSurface) or displayed correctly 
+(e.g. Text or Viewpoint).
+<BR>
+
+<A NAME="lbAT">&nbsp;</A>
+<H2>DIAGNOSTICS</H2>
+
+Exit status is 0 for sucessfull operation.
+<BR>
+
+Exit status is 1 if inputfile can not be sucessfully read or 
+other initialisation error.
+<BR>
+
+Exit status is 2 in case of a X11 server crash.
+<BR>
+
+Exit status is 11 in case of a X11 initialisation error.
+<BR>
+
+Exit status is 97 in case one of the inputfiles is a VRML 1 file (the VRML 1
+format is not supported).
+<BR>
+
+In case of a coredump/crash, the exit status can be undefined.
+<A NAME="lbAU">&nbsp;</A>
+<H2>EXIT STATUS</H2>
+
+In case of a crash (e.g. X11 server crash or signal (coredump) in case of a 
+internal error), dune tries to write it's contence to the file 
+$HOME/.dune_crash_*_*.wrl. This works in most cases, but not if the 
+internal data structure has been destroyed. When white_dune is restarted, 
+the filename is shown in the &quot;recent files&quot; part of the program menu.
+<BR>
+
+Intermediate files .dune* files (e.g. for preview) are only deleted when
+white_dune exits normally. In case of a crash, this files remain.
+<A NAME="lbAV">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+illegal2vrml">illegal2vrml</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+javac">javac</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+java">java</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+Xvfb">Xvfb</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+xterm">xterm</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+FreeWRL">FreeWRL</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+cosmoplayer">cosmoplayer</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+cosmoworlds">cosmoworlds</A>(1),
+<DL COMPACT>
+<DT>
+ISO/IEC 14772 &lt;URL: <A HREF="http://www.web3d.org/x3d/specifications/vrml/">http://www.web3d.org/x3d/specifications/vrml/</A> &gt;
+
+<DD>
+<DT>
+ISO/IEC 19776-2 &lt;URL: <A HREF="http://www.web3d.org/specifications/">http://www.web3d.org/specifications/</A> &gt;
+
+<DD>
+</DL>
+<A NAME="lbAW">&nbsp;</A>
+<H2>AUTHORS</H2>
+
+Stephen F. White and others
+<BR>
+
+See README file for details
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">VARIANTOPTIONS</A><DD>
+<DT><A HREF="#lbAF">CONVERSIONOPTIONS</A><DD>
+<DT><A HREF="#lbAG">STEREOVIEWOPTIONS</A><DD>
+<DT><A HREF="#lbAH">INPUTDEVICEOPTIONS</A><DD>
+<DT><A HREF="#lbAI">AXISOPTIONS</A><DD>
+<DT><A HREF="#lbAJ">AXISLEGEND</A><DD>
+<DT><A HREF="#lbAK">AFLOCKOPTIONS</A><DD>
+<DT><A HREF="#lbAL">MISCOPTIONS</A><DD>
+<DT><A HREF="#lbAM">MOUSE/KEYS</A><DD>
+<DT><A HREF="#lbAN">C/C++/JAVA SOURCE EXPORT</A><DD>
+<DT><A HREF="#lbAO">EXAMPLES</A><DD>
+<DT><A HREF="#lbAP">FILES</A><DD>
+<DT><A HREF="#lbAQ">ENVIRONMENT</A><DD>
+<DT><A HREF="#lbAR">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAS">BUGS</A><DD>
+<DT><A HREF="#lbAT">DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAU">EXIT STATUS</A><DD>
+<DT><A HREF="#lbAV">SEE ALSO</A><DD>
+<DT><A HREF="#lbAW">AUTHORS</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 14:53:20 GMT, December 02, 2018
+</BODY>
+</HTML>

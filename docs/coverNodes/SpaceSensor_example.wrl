@@ -1,0 +1,79 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+EXTERNPROTO SpaceSensor[
+ exposedField SFBool autoOffset
+ exposedField SFBool enabled
+ exposedField SFBool rotationEnabled
+ exposedField SFVec3f maxPosition
+ exposedField SFVec3f minPosition
+ exposedField SFVec3f offset
+ eventOut SFBool isActive
+ eventOut SFVec3f translation_changed
+ eventOut SFVec3f trackPoint_changed
+ eventOut SFVec3f rotation_changed
+ ]
+[
+ "urn:inet:www.hlrs.de:library:SpaceSensor"
+ "SpaceSensorPROTO.wrl"
+ "http://wdune.ourproject.org/docs/CoverNodes/SpaceSensorPROTO.wrl"
+]
+
+
+DEF Transform1 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    DEF SpaceSensor1 SpaceSensor 
+      {
+      }
+    ]
+  }
+
+DEF Transform2 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Box 
+	{
+	}
+      }
+    ]
+  translation -2.074526 0 0
+  }
+
+ROUTE SpaceSensor1.translation_changed TO Transform2.set_translation
+
+VisibilitySensor 
+  {
+  }
+
+NavigationInfo 
+  {
+  visibilityLimit 1000
+  }
+

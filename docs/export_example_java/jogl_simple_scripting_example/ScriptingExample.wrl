@@ -1,0 +1,115 @@
+#VRML V2.0 utf8
+
+DEF Transform1 Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Cylinder
+	{
+	}
+      }
+  }
+
+DEF TimeSensor1 TimeSensor
+  {
+  loop TRUE
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFFloat float1_in
+  eventOut SFVec3f vec3f1_out
+  eventOut MFString text_out
+  url 
+    [
+    "javascript:
+
+ // eventOut MFString text_out //
+ // eventOut SFVec3f vec3f1_out //
+
+ function float1_in(value)
+    {
+    // value  SFFloat
+    vec3f1_out = new SFVec3f(value, 0, 0);
+    if (value > 0.5)
+        text_out = new MFString(\"> 0.5\");
+    else
+        text_out = new MFString(\"< 0.5\");
+    print(\"hello world\\n\");
+    }
+    "
+    "c:
+    /* does the same as the javascript part */
+    struct X3dScript_Script1 *self = node;
+    self->vec3f1_out[0] = self->float1_in;
+    self->vec3f1_out[1] = 0;
+    self->vec3f1_out[2] = 0;
+    self->text_out = new char*[1];
+    if (self->float1_in > 0.5)
+        self->text_out[0] = \"> 0.5\";
+    else
+        self->text_out[0] = \"< 0.5\";
+    printf(\"hello World\n\");
+    "
+    "c++:
+    /* does the same as the javascript part */
+    X3dScript_Script1 *self = (X3dScript_Script1 *)node;
+    self->vec3f1_out[0] = self->float1_in;
+    self->vec3f1_out[1] = 0;
+    self->vec3f1_out[2] = 0;
+    self->text_out = new char*[1];
+    if (self->float1_in > 0.5)
+        self->text_out[0] = \"> 0.5\";
+    else
+        self->text_out[0] = \"< 0.5\";
+    printf(\"hello World\n\");
+    "
+    "java:
+    /* does the same as the javascript part */
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+
+    script.vec3f1_out[0] = script.float1_in;
+    script.vec3f1_out[1] = 0;
+    script.vec3f1_out[2] = 0;
+    script.text_out = new String[1];
+    if (script.float1_in > 0.5)
+        script.text_out[0] = \"> 0.5\";
+    else
+        script.text_out[0] = \"< 0.5\";
+    System.out.println(\"hello World\n\");
+    "
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO Script1.float1_in
+ROUTE Script1.vec3f1_out TO Transform1.set_translation
+
+Transform
+  {
+  rotation -0.95736473 -0.28855121 1.38194411e-2 0.83915889
+  translation -0.29999999 -2.13672137 2.17682266
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text1 Text
+	{
+	string "?"
+	}
+      }
+  }
+
+ROUTE Script1.text_out TO Text1.set_string
+

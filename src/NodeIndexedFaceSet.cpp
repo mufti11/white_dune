@@ -1,0 +1,2076 @@
+/*
+ * NodeIndexedFaceSet.cpp
+ *
+ * Copyright (C) 1999 Stephen F. White, 2018 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+ * Cambridge, MA 02139, USA.
+ */
+
+// if this file is compiled with CGAL: CGAL is licenced under different
+// licences including GNU General Public License 3
+
+// if this file is compiled with VCG: VCG is licenced under
+// GNU General Public License 3
+
+#include <stdio.h>
+#include <string.h>
+#include "stdafx.h"
+
+#include "NodeIndexedFaceSet.h"
+#include "Proto.h"
+#include "Scene.h"
+#include "FieldValue.h"
+#include "Node.h"
+#include "MyMesh.h"
+#include "FaceData.h"
+#include "Vec3f.h"
+#include "NodeColor.h"
+#include "NodeColorRGBA.h"
+#include "NodeCoordinate.h"
+#include "NodeNormal.h"
+#include "NodeTextureCoordinate.h"
+#include "NodeIndexedLineSet.h"
+#include "NodeShape.h"
+#include "Util.h"
+#include "MoveCommand.h"
+#include "Field.h"
+#include "resource.h"
+
+ProtoIndexedFaceSet::ProtoIndexedFaceSet(Scene *scene)
+  : GeometryProto(scene, "IndexedFaceSet")
+{
+    color.set(
+          addExposedField(SFNODE, "color", new SFNode(NULL), COLOR_NODE));
+    coord.set(
+          addExposedField(SFNODE, "coord", new SFNode(NULL), COORDINATE_NODE));
+    normal.set(
+          addExposedField(SFNODE, "normal", new SFNode(NULL), VRML_NORMAL));
+    texCoord.set(
+          addExposedField(SFNODE, "texCoord", new SFNode(NULL), 
+                          TEXTURE_COORDINATE_NODE));
+    if (TheApp->getCoverMode()) {
+        // non standard Covise/COVER extensions
+        texCoord2.set(
+          addExposedField(SFNODE, "texCoord2", new SFNode(NULL), 
+                          TEXTURE_COORDINATE_NODE));
+        setFieldFlags(texCoord2, FF_COVER_ONLY);
+        texCoord3.set(
+          addExposedField(SFNODE, "texCoord3", new SFNode(NULL), 
+                          TEXTURE_COORDINATE_NODE));
+        setFieldFlags(texCoord3, FF_COVER_ONLY);
+        texCoord4.set(
+          addExposedField(SFNODE, "texCoord4", new SFNode(NULL), 
+                          TEXTURE_COORDINATE_NODE));
+        setFieldFlags(texCoord4, FF_COVER_ONLY);
+    }
+    ccw.set(
+          addExposedField(SFBOOL, "ccw", new SFBool(true)));
+    setFieldFlags(ccw, FF_4KIDS);
+    colorIndex.set(
+          addField(MFINT32, "colorIndex", new MFInt32(), new SFInt32(-1)));
+    colorPerVertex.set(
+          addField(SFBOOL, "colorPerVertex", new SFBool(true)));
+    convex.set(
+          addField(SFBOOL, "convex", new SFBool(true)));
+    coordIndex.set(
+          addField(MFINT32, "coordIndex", new MFInt32(), new SFInt32(-1)));
+    creaseAngle.set(
+          addField(SFFLOAT, "creaseAngle", new SFFloat(0.0), 
+                   new SFFloat(0.0f)));
+    setFieldFlags(creaseAngle, FF_4KIDS);
+    normalIndex.set(
+          addField(MFINT32, "normalIndex", new MFInt32(), new SFInt32(-1)));
+    normalPerVertex.set(
+          addField(SFBOOL, "normalPerVertex", new SFBool(true)));
+    solid.set(
+          addField(SFBOOL, "solid", new SFBool(true)));
+    setFieldFlags(solid, FF_4KIDS);
+    texCoordIndex.set(
+          addField(MFINT32, "texCoordIndex", new MFInt32(), new SFInt32(-1)));
+    if (TheApp->getCoverMode()) {
+        // non standard Covise/COVER extensions
+        texCoordIndex2.set(
+          addField(MFINT32, "texCoordIndex2", new MFInt32(), new SFInt32(-1)));
+        setFieldFlags(texCoordIndex2, FF_COVER_ONLY);
+        texCoordIndex3.set(
+          addField(MFINT32, "texCoordIndex3", new MFInt32(), new SFInt32(-1)));
+        setFieldFlags(texCoordIndex3, FF_COVER_ONLY);
+        texCoordIndex4.set(
+          addField(MFINT32, "texCoordIndex4", new MFInt32(), new SFInt32(-1)));
+        setFieldFlags(texCoordIndex4, FF_COVER_ONLY);
+    }
+    ComposedGeometryElements()
+    x3domGeometryCommonFields()
+    normalUpdateMode.set(
+      addExposedField(SFSTRING, "normalUpdateMode", new SFString("fast")));
+    setFieldFlags(normalUpdateMode, FF_X3DOM_ONLY);
+    addEventIn(MFINT32, "set_colorIndex", 0, colorIndex);
+    addEventIn(MFINT32, "set_coordIndex", 0, coordIndex);
+    addEventIn(MFINT32, "set_normalIndex", 0, normalIndex);
+    addEventIn(MFINT32, "set_texCoordIndex", 0, texCoordIndex);
+}
+
+Node *
+ProtoIndexedFaceSet::create(Scene *scene)
+{ 
+      Node *node = new NodeIndexedFaceSet(scene, this);
+      return node;
+}
+
+NodeIndexedFaceSet::NodeIndexedFaceSet(Scene *scene, Proto *def)
+  : MeshBasedNode(scene, def)
+{
+}
+
+NodeIndexedFaceSet::~NodeIndexedFaceSet()
+{
+}
+
+void 
+NodeIndexedFaceSet::draw()
+{
+    Node *ncoord = coord()->getValue();
+    if (ncoord != NULL) {
+        glPushName(coord_Field());       // field coord
+        glPushName(0);                   // index 0
+        ((NodeCoordinate *)ncoord)->draw(this);
+        glPopName();
+        glPopName();
+    }
+}
+
+void
+NodeIndexedFaceSet::setField(int index, FieldValue *value, int cf)
+{
+    m_meshDirty = true;
+    Node::setField(index, value, cf);
+}
+
+void
+NodeIndexedFaceSet::addToConvertedNodes(int flags)
+{
+    if (flags & TRIANGULATE) {
+        if (!canSimpleTriangulate() || !hasBranchInputs()) {
+            MeshBasedNode::addToConvertedNodes(flags);
+            m_meshDirty = true;
+            return;
+        }
+    } else
+        return;
+        
+    NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)this->copy();
+    node->setVariableName(strdup(this->getVariableName()));
+    m_scene->copyRoutes(node, this);
+    if (coord()->getValue() != NULL) {
+        Node *target = node->coord()->getValue();
+        m_scene->copyRoutes(target, this->coord()->getValue());
+        target->addParent(node, node->coord_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
+        
+    }
+    if (normal()->getValue() != NULL) {
+        Node *target = node->normal()->getValue();
+        m_scene->copyRoutes(target, this->normal()->getValue());
+        target->addParent(node,  node->normal_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
+    }
+    if (color()->getValue() != NULL) {
+        Node *target = node->color()->getValue();
+        m_scene->copyRoutes(target, this->color()->getValue());
+        target->addParent(node,  node->color_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
+    }
+    if (texCoord()->getValue() != NULL) {
+        Node *target = node->texCoord()->getValue();
+        m_scene->copyRoutes(target, this->texCoord()->getValue());
+        target->addParent(node,  node->texCoord_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
+    }
+    if (fogCoord()->getValue() != NULL) {
+        Node *target = node->fogCoord()->getValue();
+        m_scene->copyRoutes(target, this->fogCoord()->getValue());
+        target->addParent(node,  node->fogCoord_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
+    }
+    if (m_convertedNodes.size() != 0)
+        return;
+    m_meshDirty = true;
+    m_mesh = NULL;
+
+    node->createMesh(false);
+    if (normal()->getValue() == NULL) {
+        MFVec3f *smoothNormals = node->getSmoothNormals();
+        if (smoothNormals && (smoothNormals->getValues() != NULL)) {
+            NodeNormal *normals = (NodeNormal *)m_scene->createNode("Normal");
+            normals->vector(new MFVec3f((MFVec3f *)smoothNormals->copy()));
+            m_scene->setField(node, normal_Field(), new SFNode(normals));
+            normals->setVariableName(strdup(normals->getVariableName()));
+            MFInt32 *smoothNormalIndex = node->getSmoothNormalIndex();
+            m_scene->setField(node, normalIndex_Field(), 
+                             new MFInt32((MFInt32 *)smoothNormalIndex->copy()));
+        }
+    }
+    MyMesh *mesh = node->simpleQuadTriangulateMesh();
+    MFInt32 *mfcoordIndex = mesh->getCoordIndex();
+    if (mfcoordIndex && (mfcoordIndex->getValues() != NULL)) {
+        mfcoordIndex = (MFInt32 *)mfcoordIndex->copy();
+        m_scene->setField(node, coordIndex_Field(), new MFInt32(mfcoordIndex));
+    }
+    MFInt32 *mfnormalIndex = mesh->getNormalIndex();
+    if (mfnormalIndex && (mfnormalIndex->getValues() != NULL)) {
+        mfnormalIndex = (MFInt32 *)mfnormalIndex->copy();
+        m_scene->setField(node, normalIndex_Field(), new MFInt32(mfnormalIndex));
+    }
+    MFInt32 *mfcolorIndex = mesh->getColorIndex();
+    if (mfcolorIndex && (mfcolorIndex->getValues() != NULL) &&
+        (mfcolorIndex != mesh->getCoordIndex())) {
+        mfcolorIndex = (MFInt32 *)mfcolorIndex->copy();
+        m_scene->setField(node, colorIndex_Field(), new MFInt32(mfcolorIndex));
+    }
+    MFInt32 *mftexCoordIndex = mesh->getTexCoordIndex();
+    if (mftexCoordIndex && (mftexCoordIndex->getValues() != NULL) &&
+        (mftexCoordIndex != mesh->getCoordIndex())) {
+        mftexCoordIndex = (MFInt32 *)mftexCoordIndex->copy();
+        m_scene->setField(node, texCoordIndex_Field(), 
+                         new MFInt32(mftexCoordIndex));
+    }
+    m_convertedNodes.append(node);
+    node->addParent(getParent(), getParentField());
+    m_meshDirty = true;
+    return;
+}
+
+
+MFVec3f *
+NodeIndexedFaceSet::getCoordinates() 
+{
+    Node *ncoord = coord()->getValue();
+    if (ncoord == NULL)
+        return NULL;
+    else
+        return ((NodeCoordinate *)ncoord)->point();
+}
+
+MFInt32 *
+NodeIndexedFaceSet::getCoordIndex()
+{
+    return coordIndex();
+}
+
+MFInt32 *
+NodeIndexedFaceSet::getColorIndex()
+{
+    return colorIndex();
+}
+
+MFInt32 *
+NodeIndexedFaceSet::getNormalIndex()
+{
+    return normalIndex();
+}
+
+MFVec2f *
+NodeIndexedFaceSet::getTextureCoordinates()
+{
+    Node *ntexCoord = texCoord()->getValue();
+    if (ntexCoord == NULL)
+        return NULL;
+    else
+        return ((NodeTextureCoordinate *)ntexCoord)->point();
+}
+
+MFInt32 *
+NodeIndexedFaceSet::getTexCoordIndex()
+{
+    return texCoordIndex();
+}
+
+void
+NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
+{
+    Node *coord = ((SFNode *) getField(coord_Field()))->getValue();
+    bool bcolorPerVertex = colorPerVertex()->getValue();
+    bool bnormalPerVertex = normalPerVertex()->getValue();
+    MFInt32 *colorIndex = getColorIndex();
+    MFInt32 *coordIndex = getCoordIndex();
+    MFInt32 *normalIndex = getNormalIndex();
+    MFInt32 *texCoordIndex = getTexCoordIndex();
+   
+    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
+        return;
+
+    MFVec3f *coords = ((NodeCoordinate *)coord)->point();
+    MFVec3f *normals = NULL;
+    MFFloat *colors = NULL;
+
+    if (normal()->getValue())
+        if (normal()->getValue()->getType() == VRML_NORMAL)
+            normals = ((NodeNormal *)(normal()->getValue()))->vector();
+    
+    int meshFlags = 0;
+    if (color()->getValue()) {
+        if (color()->getValue()->getType() == VRML_COLOR) 
+            colors = ((NodeColor *)(color()->getValue()))->color();
+        else if (color()->getValue()->getType() == X3D_COLOR_RGBA) {
+            colors = ((NodeColorRGBA *)(color()->getValue()))->color();
+            meshFlags |= MESH_COLOR_RGBA;
+        }
+    }    
+
+    Array<MFVec2f *> texCoords;
+    Util::getTexCoords(texCoords, texCoord()->getValue());    
+
+    if (bcolorPerVertex)
+        if (colorIndex->getSize() != coordIndex->getSize())
+            colorIndex = NULL;
+    if (texCoordIndex->getSize() != coordIndex->getSize())
+        texCoordIndex = NULL;
+    if (bnormalPerVertex)
+        if (normalIndex->getSize() != coordIndex->getSize())
+            normalIndex = NULL;
+    float transparency = 0;
+    if (hasParent())
+        transparency = getParent()->getTransparency();
+    if (ccw()->getValue())
+        meshFlags |= MESH_CCW;
+    if (solid()->getValue())
+        meshFlags |= MESH_SOLID;
+    if (convex()->getValue())
+        meshFlags |= MESH_CONVEX;
+    if (bcolorPerVertex)
+        meshFlags |= MESH_COLOR_PER_VERTEX;
+    if (bnormalPerVertex)
+        meshFlags |= MESH_NORMAL_PER_VERTEX;
+
+    m_mesh = new MyMesh(this, coords, coordIndex, normals, normalIndex, colors, 
+                        colorIndex, texCoords, texCoordIndex,
+                        creaseAngle()->getFixedAngle(m_scene->getUnitAngle()), 
+                        meshFlags, transparency);
+}
+
+Node * 
+NodeIndexedFaceSet::toIndexedLineSet(void)
+{
+    if (m_mesh == NULL)
+        return NULL;
+    NodeCoordinate *ncoord = (NodeCoordinate *)m_scene->createNode("Coordinate");
+    ncoord->point(new MFVec3f((MFVec3f *)m_mesh->getVertices()->copy()));
+    NodeIndexedLineSet *node = (NodeIndexedLineSet *)
+                               m_scene->createNode("IndexedLineSet");
+    node->coord(new SFNode(ncoord));
+    node->coordIndex(new MFInt32((MFInt32 *)m_mesh->getCoordIndex()->copy()));
+    return node;
+}
+
+void
+NodeIndexedFaceSet::flip(int index)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord)
+        if (ncoord->getType() == VRML_COORDINATE)
+            ncoord->flip(index);
+    NodeNormal *nnormal = (NodeNormal *)normal()->getValue();
+    if (nnormal)
+        if (nnormal->getType() == VRML_NORMAL)
+            nnormal->flip(index);
+    SFBool *bccw = new SFBool(!(ccw()->getValue()));
+    ccw(bccw);
+    m_meshDirty = true;
+}
+
+void
+NodeIndexedFaceSet::swap(int fromTo)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord)
+        if (ncoord->getType() == VRML_COORDINATE) 
+             ncoord->swap(fromTo);
+    NodeNormal *nnormal = (NodeNormal *)normal()->getValue();
+    if (nnormal)
+        if (nnormal->getType() == VRML_NORMAL)
+            nnormal->swap(fromTo);
+    SFBool *bccw = new SFBool(!(ccw()->getValue()));
+    ccw(bccw);
+    m_meshDirty = true;
+}
+
+void
+NodeIndexedFaceSet::setNormalFromMesh(Node *nnormal)
+{
+    if (nnormal->getType() != VRML_NORMAL)
+        return;
+
+    if (meshDirty() || (m_mesh == NULL)) {
+        createMesh(this);
+        m_meshDirty = false;
+    }
+
+    if (m_mesh == NULL)
+        return;
+
+    MFVec3f *v = m_mesh->getNormals();
+    if (v != NULL) {
+        ((NodeNormal *)nnormal)->vector(v);
+        MFInt32 *ni = m_mesh->getNormalIndex();
+        if (ni != NULL)
+            normalIndex(ni);
+        normalPerVertex(new SFBool(true));
+    }
+}
+
+void
+NodeIndexedFaceSet::setTexCoordFromMesh(Node *ntexCoord)
+{
+    if (ntexCoord->getType() != VRML_TEXTURE_COORDINATE)
+        return;
+    if (m_mesh == NULL)
+        return;
+    MFVec2f *v = m_mesh->generateTextureCoordinates();
+    if (v != NULL) {
+        ((NodeTextureCoordinate *)ntexCoord)->point(v);
+        MFInt32 *ni = (MFInt32 *)getTexCoordIndex()->copy();
+        if (ni != NULL)
+            texCoordIndex(ni);
+    }
+}
+
+void            
+NodeIndexedFaceSet::optimize(void)
+{
+    MFVec3f *mfVertices = NULL;
+    MFInt32 *mfCoordIndex = NULL;
+    optimizeMesh(&mfVertices, &mfCoordIndex);
+    if (mfVertices && mfCoordIndex) {
+        NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+        m_scene->backupFieldsStart();
+        m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+        m_scene->backupFieldsAppend(this, coordIndex_Field());
+        m_scene->backupFieldsDone();
+
+        ncoord->point(new MFVec3f(*mfVertices));
+        coordIndex(new MFInt32(*mfCoordIndex));
+    }
+}
+
+void
+NodeIndexedFaceSet::optimizeCoordIndex(void)
+{
+    MyMesh *mesh = getMesh();
+    mesh->optimizeCoordIndex();
+    m_scene->backupField(this, coordIndex_Field());
+    MFInt32 *ci = new MFInt32((MFInt32 *)mesh->getCoordIndex()->copy());    
+    m_scene->setField(this, coordIndex_Field(), ci);    
+    m_meshDirty = true;
+}
+
+NodeIndexedFaceSet *
+NodeIndexedFaceSet::splitSelectedFaces(void)
+{
+    bool bccw = ccw()->getValue();
+    bool bsolid = solid()->getValue();
+    bool bconvex = convex()->getValue();
+    float fcreaseAngle = creaseAngle()->getValue();
+    if (m_scene->getSelectionMode() != SELECTION_MODE_FACES)
+        return NULL;
+    MFVec3f *newVertices = new MFVec3f();
+    MFInt32 *newCoordIndex = new MFInt32();
+    MFVec3f *splitVertices = new MFVec3f();
+    MFInt32 *splitCoordIndex = new MFInt32();
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return NULL;
+    int numNewCoordIndex = 0;
+    int numSplitCoordIndex = 0;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        FaceData *face = getMesh()->getFace(i);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        bool addedNew = false;
+        bool addedSplit = false;
+        for (int j = 0; j < numVertices; j++) {
+            int ci = coordIndex()->getValue(offset + j);
+            if (m_scene->isInSelectedHandles(i)) {
+                newVertices->appendSFValue(ncoord->point()->getValue(ci));
+                newCoordIndex->appendSFValue(numNewCoordIndex++);
+                addedNew = true;
+            } else {
+                splitVertices->appendSFValue(ncoord->point()->getValue(ci));
+                splitCoordIndex->appendSFValue(numSplitCoordIndex++);
+                addedSplit = true;
+            }
+        }
+        if (addedNew)
+            newCoordIndex->appendSFValue(-1);
+        if (addedSplit)
+            splitCoordIndex->appendSFValue(-1);
+    }
+    if (newVertices && newCoordIndex && hasParent()) {
+        Node *parent = getParent();
+        NodeShape *shape = NULL;
+        if (parent->getType() == VRML_SHAPE)
+            shape = (NodeShape *)parent;
+        Node *grandParent = parent->getParent();
+        if (grandParent == NULL)
+            return NULL;
+        int grandParentField = parent->getParentField();
+        if (grandParent->getProto()->getField(grandParentField)->getType() != 
+            MFNODE)
+            return NULL;
+        NodeIndexedFaceSet *newFaceSet = (NodeIndexedFaceSet *) 
+                                         m_scene->createNode("IndexedFaceSet");
+        NodeCoordinate *coord = (NodeCoordinate *)
+                                m_scene->createNode("Coordinate");
+        coord->point(new MFVec3f(newVertices));
+
+        newFaceSet->coordIndex(new MFInt32(newCoordIndex));
+        newFaceSet->ccw(new SFBool(bccw));
+        newFaceSet->solid(new SFBool(bsolid));
+        newFaceSet->convex(new SFBool(bconvex));
+        newFaceSet->creaseAngle(new SFFloat(fcreaseAngle));
+
+        NodeIndexedFaceSet *splitFaceSet = (NodeIndexedFaceSet *) 
+                                           m_scene->createNode("IndexedFaceSet");
+        NodeCoordinate *ncoord = (NodeCoordinate *)
+                                 m_scene->createNode("Coordinate");
+        splitFaceSet->coord(new SFNode(ncoord));
+        ncoord->point(new MFVec3f(splitVertices));
+        splitFaceSet->coordIndex(new MFInt32(splitCoordIndex));
+
+        MFVec3f *mfVertices = NULL;
+        MFInt32 *mfCoordIndex = NULL;
+        splitFaceSet->optimizeMesh(&mfVertices, &mfCoordIndex);
+        if (mfVertices && mfCoordIndex) {
+            ncoord->point(new MFVec3f(*mfVertices));
+            splitFaceSet->coordIndex(new MFInt32(*mfCoordIndex));
+            splitFaceSet->ccw(new SFBool(bccw));
+            splitFaceSet->solid(new SFBool(bsolid));
+            splitFaceSet->convex(new SFBool(bconvex));
+            splitFaceSet->creaseAngle(new SFFloat(fcreaseAngle));
+            NodeShape *newShape = (NodeShape *) m_scene->createNode("Shape");
+            NodeMaterial *newMaterial = (NodeMaterial *) 
+                                        m_scene->createNode("Material");
+            NodeAppearance *newAppearance = (NodeAppearance *) 
+                                            m_scene->createNode("Appearance");
+            newFaceSet->coord(new SFNode(coord));
+
+            m_scene->execute(new MoveCommand(newShape, NULL, -1, 
+                                             grandParent, grandParentField));
+            m_scene->execute(new MoveCommand(newAppearance, NULL, -1, 
+                                             newShape, 
+                                             newShape->appearance_Field())); 
+            m_scene->execute(new MoveCommand(newMaterial, NULL, -1, 
+                                             newAppearance, 
+                                             newAppearance->material_Field())); 
+            m_scene->execute(new MoveCommand(newFaceSet, NULL, -1, 
+                                             newShape, 
+                                             newShape->geometry_Field())); 
+            return splitFaceSet;
+        }
+    }
+    return NULL;
+}
+
+bool
+NodeIndexedFaceSet::checkBorderMidPoint(int icoordIndex, Array<int> symFaces)
+{
+    int verticesCount = 0;
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return true;
+    if (icoordIndex < 0)
+        return true;
+    Vec3f vec1(ncoord->point()->getVec(icoordIndex));
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        if (!(m_scene->isInSelectedHandles(i) || symFaces.contains(i)))
+            continue;
+        FaceData *face = getMesh()->getFace(i);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        for (int j = offset; j < offset + numVertices; j++) {
+            int ci = coordIndex()->getValue(j);
+            Vec3f vec2(ncoord->point()->getVec(ci));
+            if ((vec1 - vec2).length() == 0.0f)
+                verticesCount++;
+        }
+    }
+    return verticesCount > 3;
+}
+
+bool
+NodeIndexedFaceSet::checkBorderFace(Array<int> innerBorder, 
+                                    Array<int> outerBorder, MFInt32 *coordIndex,
+                                    int borderIndex1, int borderIndex2,
+                                    Array<int> symFaces, bool sym)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return false;
+    if (checkBorderMidPoint(outerBorder[borderIndex1], symFaces) ||
+        checkBorderMidPoint(outerBorder[borderIndex2], symFaces))
+        return false;
+    if (outerBorder[borderIndex1] < 0)
+        return true;
+    if (outerBorder[borderIndex2] < 0)
+        return true;
+    Vec3f vec11(ncoord->point()->getVec(outerBorder[borderIndex1]));
+    Vec3f vec12(ncoord->point()->getVec(outerBorder[borderIndex2]));
+    for (int j = 0; j < innerBorder.size() - 1; j++) {
+        int n = j + 1;
+        if (innerBorder[j] == -1)
+            continue;
+        if (innerBorder[n] == -1)
+            continue;
+        if ((j != borderIndex2) && (n != borderIndex1)) {
+            Vec3f vec21(ncoord->point()->getVec(outerBorder[j]));
+            Vec3f vec22(ncoord->point()->getVec(outerBorder[n]));
+            if (((vec22 - vec11).length() == 0) &&
+                ((vec21 - vec12).length() == 0))
+                return false;     
+        }
+    }
+    return true;
+}
+
+int
+NodeIndexedFaceSet::symetricFace(int iface, bool sameFace)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return -1;
+    float epsilon = TheApp->GetHandleEpsilon();
+    FaceData *face = getMesh()->getFace(iface);
+    int offset = face->getOffset();
+    int numVertices = face->getNumVertices();
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        if (i == iface)
+            continue;
+        FaceData *face2 = getMesh()->getFace(i);
+        int offset2 = face2->getOffset();
+        int numVertices2 = face2->getNumVertices();
+        bool iSymetric2 = (numVertices2 > 0);
+        for (int j = 0; j < numVertices2; j++) {
+             int ci = coordIndex()->getValue(offset2 + j);
+             Vec3f vec = ncoord->point()->getValue(ci);
+             bool iSymetric = false;
+             for (int n = 0; n < numVertices; n++) {
+                 int ci2 = coordIndex()->getValue(offset + n);
+                 Vec3f vec2 = ncoord->point()->getValue(ci2);
+                 bool sameX;
+                 if (sameFace)
+                     sameX = (fabs(vec.x - vec2.x) < epsilon);
+                 else
+                     sameX = (fabs(vec.x + vec2.x) < epsilon);
+                 if ( sameX &&
+                     (fabs(vec.y - vec2.y) < epsilon) &&
+                     (fabs(vec.z - vec2.z) < epsilon)) {
+                     iSymetric = true;    
+                     break;
+                 }
+             } 
+             if (!iSymetric) {
+                 iSymetric2 = false;
+                 break;
+             }                 
+         }
+         if (iSymetric2)
+             return i;
+    }    
+    return -1;
+}
+
+void
+NodeIndexedFaceSet::deleteFaces(MFInt32 *coordIndex, Array<int> *facesToDelete)
+{
+    Array<int> sortedFaces;
+    int facesToDeleteSize = (*facesToDelete).size();
+    for (int i = 0; i < facesToDeleteSize; i++) {
+        int k = 0;
+        while (k < sortedFaces.size()) {
+            if ((*facesToDelete)[i] > sortedFaces[k]) {
+                sortedFaces.insert((*facesToDelete)[i], k);
+                break;
+            }
+            k++;
+        }
+        if (k >= sortedFaces.size()) {
+            sortedFaces.append((*facesToDelete)[i]);
+        }
+    }
+
+    for (int i = 0; i < sortedFaces.size(); i++) {
+        FaceData *face = getMesh()->getFace(sortedFaces[i]);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        for (int j = offset; j < offset + numVertices; j++)
+            coordIndex->removeSFValue(offset);
+        coordIndex->removeSFValue(offset);
+    }
+}
+
+void
+NodeIndexedFaceSet::extrudeFaces(float dist)
+{
+    if (m_scene->getSelectionMode() != SELECTION_MODE_FACES)
+        return;
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return;
+    MFVec3f *newVertices = new MFVec3f((MFVec3f *)ncoord->point()->copy());
+    MFInt32 *newCoordIndex = new MFInt32((MFInt32 *)coordIndex()->copy());
+    int numNewCoordIndex = newVertices->getSFSize();
+    int borderCount = 0;
+    Array<int> innerBorder;
+    Array<int> outerBorder;
+    Array<bool> symBorder;
+    Array<bool> validBorder;
+    int numFaces = 0;
+    Array<int> newFaces;
+    Array<int> symFaces;
+    for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+        int iface = symetricFace(m_scene->getSelectedHandle(i));
+        if (iface > -1)
+            if (!m_scene->isInSelectedHandles(iface))
+                symFaces.append(iface);
+    }
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        FaceData *face = getMesh()->getFace(i);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        bool sym = m_scene->getXSymetricMode();
+        if (sym)
+            if (!symFaces.contains(i))
+                sym = false;
+        int ci2 = -1;
+        int oldBorderCount = borderCount;        
+        for (int j = offset; j < offset + numVertices; j++) {
+            int ci = coordIndex()->getValue(j);
+            if (m_scene->isInSelectedHandles(i)) {
+                Vec3f vec = ncoord->point()->getValue(ci);
+                vec.y = vec.y + dist;
+                vec.z = vec.z + dist;
+                newVertices->appendSFValue(vec.x, vec.y, vec.z);
+                if (j == offset)
+                    ci2 = numNewCoordIndex;
+                innerBorder[borderCount] = numNewCoordIndex++;
+                outerBorder[borderCount] = ci;
+                symBorder[borderCount] = false;
+                validBorder[borderCount] = true;
+                borderCount++;
+            } 
+        }
+        if (m_scene->isInSelectedHandles(i)) {
+            int ci3 = coordIndex()->getValue(offset + numVertices - 1);
+            int ci4 = coordIndex()->getValue(offset);
+            if ((ncoord->point()->getVec(ci3) -
+                 ncoord->point()->getVec(ci4)).length() != 0) {
+                innerBorder[borderCount] = ci2;
+                outerBorder[borderCount] = ci4;
+                symBorder[borderCount] = false;
+                validBorder[borderCount] = false;
+                borderCount++;
+            }
+        }
+        if (borderCount > oldBorderCount) {
+            newFaces[numFaces] = getMesh()->getNumFaces() + numFaces;
+            numFaces++;
+            innerBorder[borderCount] = -1;
+            outerBorder[borderCount] = -1;
+            symBorder[borderCount] = false;
+            validBorder[borderCount] = true;
+            borderCount++;
+        }
+
+        if (sym) {
+            oldBorderCount = borderCount;        
+            for (int j = offset; j < offset + numVertices; j++) {
+                int ci = coordIndex()->getValue(j);
+                Vec3f vec = ncoord->point()->getValue(ci);
+                vec.y = vec.y + dist;
+                vec.z = vec.z + dist;
+                newVertices->appendSFValue(vec.x, vec.y, vec.z);
+                if (j == offset)
+                    ci2 = numNewCoordIndex;
+                innerBorder[borderCount] = numNewCoordIndex++;
+                outerBorder[borderCount] = ci;
+                symBorder[borderCount] = true;
+                validBorder[borderCount] = true;
+                borderCount++;
+            }
+            int ci5 = coordIndex()->getValue(offset + numVertices - 1);
+            int ci6 = coordIndex()->getValue(offset);
+            if ((ncoord->point()->getVec(ci5) -
+                 ncoord->point()->getVec(ci6)).length() != 0) {
+                innerBorder[borderCount] = ci2;
+                outerBorder[borderCount] = ci6;
+                symBorder[borderCount] = true;
+                validBorder[borderCount] = false;
+                borderCount++;
+            }
+            if (borderCount > oldBorderCount) {        
+                innerBorder[borderCount] = -1;
+                outerBorder[borderCount] = -1;
+                symBorder[borderCount] = true;
+                validBorder[borderCount] = true;
+                borderCount++;
+            }
+        }
+    }
+
+    for (int i = 0; i < borderCount; i++)
+        if (validBorder[i] && !symBorder[i])
+            newCoordIndex->appendSFValue(innerBorder[i]);
+    for (int i = 0; i < borderCount; i++)
+        if (validBorder[i] && symBorder[i])
+            newCoordIndex->appendSFValue(innerBorder[i]);
+
+    if (newCoordIndex->getValue(newCoordIndex->getSFSize() - 1) > -1)
+        newCoordIndex->appendSFValue(-1);
+
+    Array<int> facesToDelete;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++)
+        if (m_scene->isInSelectedHandles(i)) {
+            int facesToDeleteSize = facesToDelete.size();
+            bool inserted = false;
+            for (int j = 0; j < facesToDeleteSize; j++)
+                if (i > facesToDelete[j]) {
+                    facesToDelete.insert(i, j);
+                    inserted = true;
+                    break;
+                }
+            if (!inserted)
+                facesToDelete.append(i);    
+        }       
+
+    for (int i = 0; i < symFaces.size(); i++) {
+        int facesToDeleteSize = facesToDelete.size();
+        bool inserted = false;
+        for (int j = 0; j < facesToDeleteSize; j++)
+            if (symFaces[i] > facesToDelete[j]) {
+                facesToDelete.insert(symFaces[i], j);
+                inserted = true;
+                break;
+            }
+        if (!inserted)
+            facesToDelete.append(symFaces[i]);    
+    }
+
+    int facesToDeleteSize = facesToDelete.size();
+    for (int i = 0; i < facesToDeleteSize; i++) {
+        for (int j = 0; j < newFaces.size(); j++)
+            newFaces[j] = newFaces[j] - 1;
+    }
+    deleteFaces(newCoordIndex, &facesToDelete);
+
+    int face1[4];
+    int face1Count = 0;
+    int face2[4];
+    int face2Count = 0;
+    for (int i = 0; i < borderCount - 1; i++) {
+        int n = i + 1;
+    
+        if (!checkBorderFace(innerBorder, outerBorder, newCoordIndex, i, n,
+                             symFaces, symBorder[i]))
+            continue;
+        if (symBorder[i]) {
+            if ((innerBorder[i] < 0) || (!symBorder[n])) {
+                continue;
+            } else {
+                face1[face1Count++] = innerBorder[i];
+            }
+            if (outerBorder[i] < 0) {
+                continue;
+            } else {
+                face1[face1Count++] = outerBorder[i];
+            }
+        
+            if (outerBorder[n] < 0) {
+                continue;
+            } else {
+                face1[face1Count++] = outerBorder[n];
+            }
+            if (innerBorder[n] < 0) {
+                continue;
+            } else {
+                face1[face1Count++] = innerBorder[n];
+            }
+        } else {
+            if ((innerBorder[i] < 0) || (symBorder[n])) {
+                continue;
+            } else {
+                face2[face2Count++] = innerBorder[i];
+            }
+            if (outerBorder[i] < 0) {
+                continue;
+            } else {
+                face2[face2Count++] = outerBorder[i];
+            }
+        
+            if (outerBorder[n] < 0) {
+                continue;
+            } else {
+                face2[face2Count++] = outerBorder[n];
+            }
+            if (innerBorder[n] < 0) {
+                continue;
+            } else {
+                face2[face2Count++] = innerBorder[n];
+            }
+        }
+        if (face1Count >= 4) {
+            for (int j = 0; j < 4; j++)
+                newCoordIndex->appendSFValue(face1[j]);
+            newCoordIndex->appendSFValue(-1);
+            face1Count = 0;
+        }
+        if (face2Count >= 4) {
+            for (int j = 0; j < 4; j++)
+                newCoordIndex->appendSFValue(face2[j]);
+            newCoordIndex->appendSFValue(-1);
+            face2Count = 0;
+        }    
+    }
+    m_scene->backupFieldsStart();
+    m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+    ncoord->point(new MFVec3f(newVertices));
+    m_scene->backupFieldsAppend(this, coordIndex_Field());
+    coordIndex(new MFInt32(newCoordIndex));
+    m_scene->backupFieldsDone();
+    m_scene->execute(new MoveCommand(normal()->getValue(), this, normal_Field(),
+                                     NULL, -1));
+    this->createMesh(false);
+    ncoord->drawHandles();
+    m_scene->setSelection(ncoord);
+    m_scene->removeSelectedHandles();
+    for (int i = 0; i < numFaces; i++)
+        m_scene->addSelectedHandle(newFaces[i]);
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+}
+
+bool            
+NodeIndexedFaceSet::buildQuad(void)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return false;
+    MFVec3f *point = ncoord->point();
+    MFInt32 *ci = coordIndex();
+    int iface1 = m_scene->getSelectedHandle(0);
+    int iface2 = m_scene->getSelectedHandle(1);
+    if (iface1 == iface2)
+        return false;
+    FaceData *face1 = getMesh()->getFace(iface1);
+    int offset1 = face1->getOffset();
+    int numVertices1 = face1->getNumVertices();
+    FaceData *face2 = getMesh()->getFace(iface2);
+    int offset2 = face2->getOffset();
+    int numVertices2 = face2->getNumVertices();
+    if ((numVertices1 != 3) || (numVertices2 != 3))
+        return false;
+    for (int i = offset1; i < offset1 + numVertices1; i++) {
+        int first = i;
+        Vec3f firstVertex = point->getVec(ci->getValue(first));
+        int first2 = i + 1 < offset1 + numVertices1 ? i + 1 : offset1;
+        Vec3f firstVertex2 = point->getVec(ci->getValue(first2));
+        for (int j = offset2; j < offset2 + numVertices2; j++) {
+             if (firstVertex == point->getVec(ci->getValue(j))) {
+                 int second = -1;
+                 bool validSecond = false;
+                 second = j + 1 < offset2 + numVertices2 ? j + 1 : offset2;
+                 Vec3f secondVertex = point->getVec(ci->getValue(second));
+                 if (secondVertex == firstVertex2)
+                     validSecond = true;
+                 else {
+                     second = j - 1 >= offset2 ? j - 1 : 
+                                                 offset2 + numVertices2 - 1;
+                     Vec3f secondVertex = point->getVec(ci->getValue(second));
+                     if (secondVertex == firstVertex2)
+                         validSecond = true;
+                 }
+                 if (validSecond) {
+                     for (int n = offset1; n < offset1 + numVertices1; n++)
+                         if (((point->getVec(ci->getValue(first))) !=
+                              (point->getVec(ci->getValue(n)))) &&
+                             ((point->getVec(ci->getValue(second))) !=
+                              (point->getVec(ci->getValue(n))))) {
+                             ci->appendSFValue(ci->getValue(n));
+                             break;
+                         }
+                     ci->appendSFValue(ci->getValue(first));
+                     for (int n = offset2; n < offset2 + numVertices2; n++)
+                         if (((point->getVec(ci->getValue(first))) !=
+                              (point->getVec(ci->getValue(n)))) &&
+                             ((point->getVec(ci->getValue(second))) !=
+                              (point->getVec(ci->getValue(n))))) { 
+                             ci->appendSFValue(ci->getValue(n));
+                             break;
+                         }
+                     ci->appendSFValue(ci->getValue(second));
+                     ci->appendSFValue(-1);
+                     Array<int> facesToDelete;
+                     if (iface1 < iface2) {
+                         facesToDelete.append(iface2);
+                         facesToDelete.append(iface1);
+                     } else {
+                         facesToDelete.append(iface1);                       
+                         facesToDelete.append(iface2);
+                     }
+                     deleteFaces(ci, &facesToDelete);
+                     m_scene->removeSelectedHandles();
+                     m_scene->setSelectedHandle(getMesh()->getNumFaces() - 2);
+                     m_scene->backupFieldsStart();
+                     m_scene->backupFieldsAppend(this, coordIndex_Field());
+                     coordIndex(new MFInt32(ci));
+                     m_scene->backupFieldsDone();
+                     m_meshDirty = true;
+                     return true;    
+                 }
+             }
+        }            
+    }
+    return false;
+}
+
+void
+NodeIndexedFaceSet::snapTogether(void)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return;
+    MFVec3f *point = ncoord->point();
+    MFInt32 *ci = coordIndex();
+    int numVertices = m_scene->getSelectedHandlesSize();
+    Vec3f sum(0, 0, 0);
+    for (int i = 0; i < numVertices; i++) {
+        int vertex = m_scene->getSelectedHandle(i);
+        sum = sum + point->getVec(vertex); 
+    }
+    sum = sum / numVertices;
+    for (int i = 0; i < numVertices; i++) {
+        int vertex = m_scene->getSelectedHandle(i);
+        point->setVec(vertex, sum); 
+    }        
+    m_scene->backupFieldsStart();
+    m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+    ncoord->point(new MFVec3f(point));
+    m_scene->backupFieldsDone();
+    m_meshDirty = true;
+}
+
+bool
+NodeIndexedFaceSet::canSplitFace(int iface)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return false;
+    MFVec3f *point = ncoord->point();
+    MFInt32 *ci = coordIndex();
+    bool has4Edges = false;
+    FaceData *face = getMesh()->getFace(iface);
+    int offset = face->getOffset();
+    if (face->getNumVertices() == 4)
+        if (point->getValue(ci->getValue(offset)) !=
+            point->getValue(ci->getValue(offset + face->getNumVertices() - 1)))
+            has4Edges = true;
+    if (face->getNumVertices() == 5)
+        if (point->getValue(ci->getValue(offset)) ==
+            point->getValue(ci->getValue(offset + face->getNumVertices() - 1)))
+        has4Edges = true;
+    return has4Edges;
+}
+
+class CoordIndexMapper {
+public:
+    int count;
+    int coordIndex;
+    int edgeCoordIndex;
+    int offset;
+    CoordIndexMapper() {
+        count = -1;
+        coordIndex = -1;
+        edgeCoordIndex = -1;
+        offset = -1;
+    }
+    CoordIndexMapper(int i, int c, int e, int o) {
+        count = i;
+        coordIndex = c;
+        edgeCoordIndex = e;
+        offset = o;
+    }
+};
+
+bool
+NodeIndexedFaceSet::checkMidpoint(Vec3f midPoint, int jLoop, int nLoop,
+                                  int point1, int point2, 
+                                  int uPieces, int vPieces)
+{
+    MFInt32 *ci = coordIndex();
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return false;
+    MFVec3f *vertices = new MFVec3f(ncoord->point());
+    Vec3f v1 = vertices->getValue(ci->getValue(point1));
+    Vec3f v2 = vertices->getValue(ci->getValue(point2));
+    float loop = -1;
+    float maxLoop = -1;
+    if ((jLoop == 0) || (jLoop == uPieces -1)) {
+        loop = nLoop;
+        if (uPieces == 1)
+            maxLoop = vPieces;
+        else
+            maxLoop = uPieces;
+    } else if ((nLoop == 0) || (nLoop == vPieces -1)) {
+        loop = jLoop;
+        if (vPieces == 1)
+            maxLoop = uPieces;
+        else
+            maxLoop = vPieces;
+    }
+    if (loop == -1)
+        return false;
+    if (loop == 0) 
+        loop = 1;
+    if (loop == maxLoop)
+        loop = 1;
+    Vec3f v = v1 + (v2 - v1) * loop / maxLoop;
+    if ((fabs(v.x - midPoint.x) < floatEpsilon()) &&   
+        (fabs(v.y - midPoint.y) < floatEpsilon()) &&   
+        (fabs(v.z - midPoint.z) < floatEpsilon()))
+        return true;
+    return false;
+}
+
+bool
+NodeIndexedFaceSet::canSplitFaces(void)
+{
+    for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+        int iface = m_scene->getSelectedHandle(i);
+        if (canSplitFace(iface))
+            return true;
+    }
+    return false;
+}
+
+static int isInVertices(MFVec3f *newVertices, Vec3f v)
+{
+    MFVec3f *vertices = newVertices;
+    for (int i = 0; i < vertices->getSFSize(); i++)
+        if (v == vertices->getValue(i))
+            return i;
+    return -1;
+}
+
+int
+NodeIndexedFaceSet::getEgdeCoordIndex(int iface, Vec3f midPoint,
+                                      int uLoop, int vLoop,
+                                      int uPieces, int vPieces)
+{
+    int ret = -1;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        if (iface == i)
+            continue;
+        FaceData *face = getMesh()->getFace(i);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        for (int j = offset + 1; j < offset + numVertices; j++) {
+            if (checkMidpoint(midPoint, uLoop, vLoop, j - 1, j, 
+                              uPieces, vPieces))
+                return j;
+        }        
+        if (checkMidpoint(midPoint, uLoop, vLoop, 
+                          offset, offset + numVertices -1, uPieces, vPieces))
+            return offset;
+    }    
+    return -1;
+}
+
+void            
+NodeIndexedFaceSet::splitIntoPieces(int u, int v)
+{
+    if (!canSplitFaces())
+        return;
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return;
+    MFVec3f *newVertices = new MFVec3f((MFVec3f *)ncoord->point()->copy());
+    MFInt32 *newCoordIndex = new MFInt32((MFInt32 *)coordIndex()->copy());
+    Array<int> symFaces;
+    if (m_scene->getXSymetricMode())
+        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+            int iface = symetricFace(m_scene->getSelectedHandle(i));
+            if (iface > -1)
+                if (!m_scene->isInSelectedHandles(iface))
+                    symFaces.append(iface);
+    }
+    Array<CoordIndexMapper> coordIndexToAdded;
+    int numAddedVertices = 0;
+    int numNewVertices = newVertices->getSFSize();
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        FaceData *face = getMesh()->getFace(i);
+        if ((!m_scene->isInSelectedHandles(i)) && (!symFaces.contains(i)))
+            continue;
+        int offset = face->getOffset();
+        if (canSplitFace(i)) {
+            int piecesU = u; 
+            int piecesV = v;
+            if (symFaces.contains(i)) {
+                piecesV = u;
+                piecesU = v;
+            }
+            int numCoordIndex = newCoordIndex->getSize();
+            int off = newCoordIndex->getValue(offset);
+            Vec3f vec = newVertices->getValue(off);
+            int off1 = newCoordIndex->getValue(offset + 1);
+            Vec3f s = newVertices->getValue(off1);
+            int off2 = newCoordIndex->getValue(offset + 2);
+            Vec3f t = newVertices->getValue(off2);
+            int off3 = newCoordIndex->getValue(offset + 3);
+            Vec3f r = newVertices->getValue(off3);
+            for (int j = 0; j < piecesU; j++) {
+                for (int n = 0; n < piecesV; n++) {
+                    if ((n > 0) && (n == piecesV - 1))
+                        continue;
+
+                    Vec3f p1 = vec + (r - vec) * j / piecesU;
+                    Vec3f p2 = s + (t - s) * j / piecesU;
+                    Vec3f q1 = vec + (r - vec) * (j + 1) / piecesU; 
+                    Vec3f q2 = s + (t - s) * (j + 1) / piecesU;
+
+                    Vec3f v1 = p1 + (p2 - p1) * n / piecesV;
+                    int n1 = isInVertices(newVertices, v1);
+                    if (n1 < 0) {
+                        CoordIndexMapper coordIndexMap(numAddedVertices++,
+                            newVertices->getSFSize(), 
+                            getEgdeCoordIndex(i, v1, j, n, piecesU, piecesV), 
+                            off);
+                        newVertices->appendSFValue(v1.x, v1.y, v1.z);
+                        coordIndexToAdded.append(coordIndexMap);
+                    }
+                    Vec3f v2 = p1 + (p2 - p1) * (n + 1) / piecesV;
+                    int n2 = isInVertices(newVertices, v2);
+                    if (n2 < 0) {
+                        CoordIndexMapper coordIndexMap(numAddedVertices++,
+                            newVertices->getSFSize(),
+                            getEgdeCoordIndex(i, v2, j, n + 1,
+                                              piecesU, piecesV), 
+                            off1);
+                        newVertices->appendSFValue(v2.x, v2.y, v2.z);
+                        coordIndexToAdded.append(coordIndexMap);
+                    }
+                    Vec3f v3 = q1 + (q2 - q1) * (n + 1) / piecesV;
+                    int n3 = isInVertices(newVertices, v3);
+                    if (n3 < 0) {
+                        CoordIndexMapper coordIndexMap(numAddedVertices++,
+                            newVertices->getSFSize(),
+                            getEgdeCoordIndex(i, v3, j + 1, n + 1,
+                                              piecesU, piecesV), 
+                            off2);
+                        newVertices->appendSFValue(v3.x, v3.y, v3.z);
+                        coordIndexToAdded.append(coordIndexMap);
+                    }
+                    Vec3f v4 = q1 + (q2 - q1) * n / piecesV;
+                    int n4 = isInVertices(newVertices, v4);
+                    if (n4 < 0) {
+                        CoordIndexMapper coordIndexMap(numAddedVertices++,
+                            newVertices->getSFSize(),
+                            getEgdeCoordIndex(i, v4, j + 1, n,
+                                              piecesU, piecesV), 
+                            off3);
+                        newVertices->appendSFValue(v4.x, v4.y, v4.z);
+                        coordIndexToAdded.append(coordIndexMap);
+                    }
+               }
+            }
+            for (int j = 0; j < piecesU; j++) {
+                Vec3f p1 = vec + (r - vec) * j / piecesU;
+                Vec3f p2 = s + (t - s) * j / piecesU;
+                Vec3f q1 = vec + (r - vec) * (j + 1) / piecesU; 
+                Vec3f q2 = s + (t - s) * (j + 1) / piecesU;
+                for (int n = 0; n < piecesV; n++) {
+                    Vec3f v1 = p1 + (p2 - p1) * n / piecesV;
+                    int n1 = isInVertices(newVertices, v1);
+                    if (n1 < 0) {
+                        n1 = newVertices->getSFSize();
+                        newVertices->appendSFValue(v1.x, v1.y, v1.z);
+                    }
+                    Vec3f v2 = p1 + (p2 - p1) * (n + 1) / piecesV;
+                    int n2 = isInVertices(newVertices, v2);
+                    if (n2 < 0) {
+                        n2 = newVertices->getSFSize();
+                        newVertices->appendSFValue(v2.x, v2.y, v2.z);
+                    }
+                    Vec3f v3 = q1 + (q2 - q1) * (n + 1) / piecesV;
+                    int n3 = isInVertices(newVertices, v3);
+                    if (n3 < 0) {
+                        n3 = newVertices->getSFSize();
+                        newVertices->appendSFValue(v3.x, v3.y, v3.z);
+                    }
+                    Vec3f v4 = q1 + (q2 - q1) * n / piecesV;
+                    int n4 = isInVertices(newVertices, v4);
+                    if (n4 < 0) {
+                        n4 = newVertices->getSFSize();
+                        newVertices->appendSFValue(v4.x, v4.y, v4.z);
+                    }
+                    newCoordIndex->appendSFValue(n1);
+                    newCoordIndex->appendSFValue(n2);
+                    newCoordIndex->appendSFValue(n3);
+                    newCoordIndex->appendSFValue(n4);
+                    newCoordIndex->appendSFValue(-1);
+                }
+            }
+        }
+    }
+    Array<int> sortedM;
+    Array<int> sortedL;
+    Array<int> sortedO;
+    for (int n = 0; n < coordIndexToAdded.size(); n++) {
+        int m = coordIndexToAdded[n].edgeCoordIndex;
+        int l = coordIndexToAdded[n].coordIndex;
+        int o = coordIndexToAdded[n].offset;
+        int k = 0;
+        while (k < sortedM.size()) {
+            if ((m > sortedM[k]) && (m > -1)) {
+                sortedM.insert(m, k);
+                sortedL.insert(l, k);
+                sortedO.insert(o, k);
+                break;
+            }
+            k++;
+        }
+        if ((k >= sortedM.size()) && (m > -1)) {
+            sortedM.append(m);
+            sortedL.append(l);
+            sortedO.append(o);
+        }
+    }
+    Array<int> sortedFaces;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        if (m_scene->isInSelectedHandles(i) || symFaces.contains(i)) {
+            int k = 0;
+            while (k < sortedFaces.size()) {
+                if ((i > sortedFaces[k])) {
+                    sortedFaces.insert(i, k);
+                    break;
+                }
+                k++;
+            }
+            if (k >= sortedFaces.size()) {
+                sortedFaces.append(i);
+            }
+        }
+    }
+    for (int i = 0; i < sortedFaces.size(); i++) {
+        FaceData *face = getMesh()->getFace(sortedFaces[i]);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        for (int j = offset; j < offset + numVertices; j++)
+            newCoordIndex->removeSFValue(offset);
+        newCoordIndex->removeSFValue(offset);
+        for (int j = 0; j < sortedM.size(); j++)
+            if (sortedM[j] >= offset)
+                sortedM[j] -= (numVertices + 1); 
+    }    
+    for (int j = 0; j < sortedM.size(); j++) {
+        newCoordIndex->insertSFValue(sortedM[j], sortedL[j]);
+    }
+    m_scene->backupFieldsStart();
+    m_scene->setField(this, normal_Field(), new SFNode(NULL));
+    m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+    ncoord->point(new MFVec3f(newVertices));
+    m_scene->backupFieldsAppend(this, coordIndex_Field());
+    coordIndex(new MFInt32(newCoordIndex));
+    m_scene->backupFieldsDone();
+    m_meshDirty = true;
+}
+
+float*  
+NodeIndexedFaceSet::intersectVector0Plane(Vec3f endPoint, Vec3f startPoint, 
+                                          int direction)
+{
+    static float ret[3];
+    Vec3f normal;
+    switch (direction) {
+      case 0:
+        normal.x = 1;
+        normal.y = 0;
+        normal.z = 0;
+        break;
+      case 1:
+        normal.x = 0;
+        normal.y = 1;
+        normal.z = 0;
+        break;
+      case 2:
+        normal.x = 0;
+        normal.y = 0;
+        normal.z = 1;
+        break;
+    }
+    Vec3f pointOfPlane(0.0f, 0.0f, 0.0f);
+    Vec3f direct = (endPoint - startPoint);
+    Vec3f diff = (endPoint - pointOfPlane);
+    float len = diff.dot(normal);
+    float a = direct.dot(normal);
+    if (a == 0) 
+        return NULL;
+    Vec3f result = endPoint - direct * len / a;
+    if ((result.x == 0) && (result.y == 0) && (result.z == 0))
+        if ((endPoint.x != 0) || (endPoint.y != 0) || (endPoint.z != 0))
+            return NULL;
+    ret[0] = result.x;
+    ret[1] = result.y;
+    ret[2] = result.z;
+    return ret;
+}
+
+void            
+NodeIndexedFaceSet::makeSymetric(int direction, bool plus)
+{
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return;
+    MFVec3f *vertices = new MFVec3f((MFVec3f *)ncoord->point());
+    Array<float> halfVertices;
+    Array<float> startVertices;
+    Array<int> halfCoordIndex;
+    int newCi = 0;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        FaceData *face = getMesh()->getFace(i);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        int wrongVertices = 0;
+        for (int j = offset; j < offset + numVertices; j++) {
+            const float *vert = vertices->getValue(coordIndex()->getValue(j));
+            if (plus) {
+                if (vert[direction] < 0)
+                    wrongVertices++; 
+            } else {
+                if (vert[direction] > 0)
+                    wrongVertices++; 
+            }
+        }
+        if ((wrongVertices >= 0) && (wrongVertices < numVertices)) {
+            for (int j = offset; j < offset + numVertices; j++) {
+                int ci = coordIndex()->getValue(j);
+                const float *vert = vertices->getValue(ci);
+                halfVertices.append(vert[0]);
+                halfVertices.append(vert[1]);
+                halfVertices.append(vert[2]);
+                halfCoordIndex.append(newCi++); 
+                int j2 = j;
+                if (j == offset) {
+                    j2 = offset + numVertices - 1;
+                    int ci2 = coordIndex()->getValue(j2);
+                    if (vertices->getValue(ci2) == 
+                        vertices->getValue(coordIndex()->getValue(offset)))
+                        j2--;
+                } else
+                    j2--;
+                int ci2 = coordIndex()->getValue(j);
+                const float *startVert = vertices->getValue(ci2);
+                startVertices.append(startVert[0]);
+                startVertices.append(startVert[1]);
+                startVertices.append(startVert[2]);
+            }
+            halfCoordIndex.append(-1); 
+        }
+    }
+    int halfVerticesSize = halfVertices.size() / 3;
+    int halfCoordIndexSize = halfCoordIndex.size();
+    for (int i = 0; i < halfVerticesSize; i++)
+        if (plus) {
+            if (halfVertices[3 * i + direction] < 0) {
+                Vec3f endPoint(halfVertices[3 * i],
+                               halfVertices[3 * i + 1],
+                               halfVertices[3 * i + 2]);
+                Vec3f startPoint(startVertices[3 * i],
+                                 startVertices[3 * i + 1],
+                                 startVertices[3 * i + 2]);
+                float *result = intersectVector0Plane(endPoint, startPoint, 
+                                                      direction);
+                if (result != NULL) {
+                    for (int j = 0; j < 3; j++)
+                         halfVertices[3 * i + j] = result[j];
+                }
+            }
+        } else {
+            if (halfVertices[3 * i + direction] > 0) {
+                Vec3f startPoint(startVertices[3 * i],
+                                 startVertices[3 * i + 1],
+                                 startVertices[3 * i + 2]);
+                Vec3f endPoint(halfVertices[3 * i],
+                               halfVertices[3 * i + 1],
+                               halfVertices[3 * i + 2]);
+                float *result = intersectVector0Plane(endPoint, startPoint, 
+                                                      direction);
+                if (result != NULL) {
+                    for (int j = 0; j < 3; j++)
+                         halfVertices[3 * i + j] = result[j];
+                }
+            }
+        }
+    MFVec3f *newVertices = new MFVec3f();
+    MFInt32 *newCoordIndex = new MFInt32();
+    for (int i = 0; i < halfVerticesSize; i++) {
+        newVertices->appendSFValue(halfVertices[3 * i + 0],
+                                   halfVertices[3 * i + 1],
+                                   halfVertices[3 * i + 2]);
+    }
+    for (int i = 0; i < halfVerticesSize; i++) {
+        halfVertices[3 * i + direction] *= -1;
+        newVertices->appendSFValue(halfVertices[3 * i + 0],
+                                   halfVertices[3 * i + 1],
+                                   halfVertices[3 * i + 2]);
+    }
+    for (int i = 0; i < halfCoordIndexSize; i++)
+        newCoordIndex->appendSFValue(halfCoordIndex[i]);
+    for (int i = halfCoordIndexSize -1; i > -1; i--) {
+        if (halfCoordIndex[i] > -1)
+            halfCoordIndex[i] += newCi;
+        if ((i != 0) || (halfCoordIndex[i] > -1))
+            newCoordIndex->appendSFValue(halfCoordIndex[i]);
+    }
+    newCoordIndex->appendSFValue(-1);
+    m_scene->backupFieldsStart();
+    m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+    ncoord->point(new MFVec3f(newVertices));
+    m_scene->backupFieldsAppend(this, coordIndex_Field());
+    coordIndex(new MFInt32(newCoordIndex));
+    m_scene->backupFieldsAppend(this, color_Field());
+    color(new SFNode());
+    m_scene->backupFieldsAppend(this, normal_Field());
+    normal(new SFNode());
+    m_scene->backupFieldsAppend(this, texCoord_Field());
+    texCoord(new SFNode());
+    m_scene->backupFieldsAppend(this, colorIndex_Field());
+    colorIndex(new MFInt32);
+    m_scene->backupFieldsAppend(this, colorIndex_Field());
+    normalIndex(new MFInt32);
+    m_scene->backupFieldsAppend(this, texCoordIndex_Field());
+    texCoordIndex(new MFInt32);
+    m_scene->backupFieldsDone();
+    m_meshDirty = true;
+}
+
+void            
+NodeIndexedFaceSet::insetFace(float factor)
+{
+    if (m_mesh == NULL)
+        return;
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return;
+    MFVec3f *vertices = new MFVec3f((MFVec3f *)ncoord->point()->copy());
+    MFInt32 *ci = (MFInt32 *)coordIndex()->copy();
+    Array<int> facesToDelete;
+    for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+         facesToDelete.append(m_scene->getSelectedHandle(i));
+    }
+    if (m_scene->getXSymetricMode())
+        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+            int iface = symetricFace(m_scene->getSelectedHandle(i));
+            if (iface > -1)
+                if (!m_scene->isInSelectedHandles(iface))
+                    facesToDelete.append(iface);
+    }
+    int inc = m_scene->getSelectedHandlesSize();
+    int numFace = m_mesh->getNumFaces() - 1;
+    m_scene->removeSelectedHandles();
+    for (int i = 0; i < facesToDelete.size(); i++) {
+        FaceData *face = getMesh()->getFace(facesToDelete[i]);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        Vec3f mid(0, 0, 0);
+        for (int j = offset; j < offset + numVertices; j++) {
+            mid += vertices->getVec(ci->getValue(j));
+        }
+        mid /= numVertices;
+        int start = vertices->getSFSize();
+        for (int j = offset; j < offset + numVertices; j++) {
+            Vec3f newVertex = mid + (vertices->getVec(ci->getValue(j)) - mid) * 
+                                    factor;
+            vertices->setVec(vertices->getSFSize(), newVertex);
+        }
+        for (int j = offset; j < offset + numVertices; j++) {
+            int k = j - offset;
+            ci->appendSFValue(ci->getValue(j));
+            if (j + 1 >= offset + numVertices)
+                ci->appendSFValue(ci->getValue(offset));
+            else
+                ci->appendSFValue(ci->getValue(j + 1));
+            if (k + 1 >= numVertices)
+                ci->appendSFValue(start);
+            else
+                ci->appendSFValue(start + k + 1);
+            ci->appendSFValue(start + k);
+            ci->appendSFValue(-1);
+            numFace++;
+        }
+        for (int j = offset; j < offset + numVertices; j++)
+            ci->appendSFValue(start + j - offset);
+        ci->appendSFValue(-1);
+        numFace++;
+        if (inc == 1)
+            m_scene->addSelectedHandle(numFace - 1);
+        else
+            m_scene->addSelectedHandle(numFace - 2 * inc);
+    }
+    deleteFaces(ci, &facesToDelete);
+
+    m_scene->backupFieldsStart();
+    m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+    m_scene->backupFieldsAppend(this, coordIndex_Field());
+    m_scene->backupFieldsDone();
+
+    ncoord->point(new MFVec3f(*vertices));
+    coordIndex(new MFInt32(*ci));
+
+    m_meshDirty = true;
+}
+    
+int 
+NodeIndexedFaceSet::getProfile(void) const
+{ 
+    // TODO:
+    // X3D each face is terminated with coordIndex = -1, even the last
+    // X3D check repeating coordIndex
+    
+    /* the following criteria are required from each IndexedFaceSet 
+       "otherwise the results are undefined" in ISO/IEt 19775:2005 13.3.6
+    
+       - X3D check planar polygons
+       - X3D check 3 non-coincident vertices
+       - X3D check self-intersection polygon
+      
+       In ISO/IEC 19775:2005 table B3 (incerchange profile) this criteria are
+       repeated as requirement for the interchange profile, but they are not 
+       repeated in ISO/IEc 19775:2005 table E.3 (immersive profile) and
+       ISO/IEC 19775:2005 table F.3 (full profile).
+       
+    conclusion: IndexedFaceSets in X3D files using the full or immersive
+    profile may produce undefined results, while in the interchange
+    profile it may not produce undefined results 8-(
+    
+       TODO: find out what is going on 8-(
+    */
+    MFInt32* coords = coordIndex();          
+    if (coords) 
+        if (coords->getSize() > 0) {
+            if (coords->getValue(coords->getSize() - 1) != -1)
+                return PROFILE_IMMERSIVE;
+            int vertexCounter = 0;
+            for (int i = 0; i < coords->getSize(); i++)
+                if (coords->getValue(i) == -1) {
+                    if (vertexCounter < 3)
+                        return PROFILE_IMMERSIVE;
+                    else
+                        vertexCounter = 0;
+                    vertexCounter++;
+                }
+        }
+    if (m_mesh != NULL)
+        if (!(m_mesh->onlyPlanarFaces()))
+            return PROFILE_IMMERSIVE;
+    if (hasInput("set_colorIndex"))
+        return PROFILE_IMMERSIVE;
+    if (hasInput("set_normalIndex"))
+        return PROFILE_IMMERSIVE;
+    if (!isDefault(ccw_Field()))
+        return PROFILE_IMMERSIVE;
+    if (!isDefault(normal_Field()))
+        return PROFILE_IMMERSIVE;
+    if (!isDefault(convex_Field()))
+        return PROFILE_IMMERSIVE;
+    if (!isDefault(normalIndex_Field()))
+        return PROFILE_IMMERSIVE;
+    float fcreaseAngle = creaseAngle()->getFixedAngle(m_scene->getUnitAngle());
+    if ((fcreaseAngle != 0) && (fcreaseAngle != M_PI))
+        return PROFILE_IMMERSIVE;         
+    return PROFILE_INTERCHANGE; 
+}
+
+    
+#ifdef HAVE_LIBCGAL
+#undef max
+#include <CGAL/Simple_cartesian.h>
+typedef CGAL::Simple_cartesian<double> Kernel;
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Surface_mesh.h>
+#include <CGAL/Polygon_mesh_processing/corefinement.h>
+#include <CGAL/Polygon_mesh_processing/self_intersections.h>
+#include <CGAL/Polygon_mesh_processing/triangulate_faces.h>
+#include <CGAL/boost/graph/dijkstra_shortest_paths.h>
+#include <CGAL/exceptions.h>
+#include <boost/graph/prim_minimum_spanning_tree.hpp>
+#include <boost/foreach.hpp>
+typedef Kernel::Point_3 Point;
+typedef CGAL::Surface_mesh<Point> Surface;
+typedef Surface::Vertex_index vertex_index;
+typedef boost::graph_traits<Surface>::vertex_descriptor vertex_descriptor;
+typedef boost::graph_traits<Surface>::face_descriptor face_descriptor;
+typedef boost::graph_traits<Surface>::halfedge_descriptor halfedge_descriptor;
+
+namespace params = CGAL::Polygon_mesh_processing::parameters;
+
+static void
+build_mesh(Surface *meshOut, MyMesh *mesh, Matrix matrix)
+{
+    Array<vertex_index> u;    
+    for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
+        Vec3f v = mesh->getVertices()->getVec(i);
+        v = matrix * v;
+        u.append(meshOut->add_vertex(Kernel::Point_3(v.x, v.y, v.z)));
+    }
+    MFInt32 *meshCoords = mesh->getCoordIndex();
+    int vert = 0;
+    vertex_index v1;
+    vertex_index v2;
+    vertex_index v3;
+
+    for (int i = 0; i < meshCoords->getSFSize(); i++) {
+         int face = meshCoords->getValue(i);
+         Vec3f v = mesh->getVertices()->getVec(face);
+         if (face > -1) {
+             switch (vert) {
+               case 0:
+                 v1 = u[face];
+                 break;  
+               case 1:
+                 v2 = u[face];
+                 break;  
+               case 2:
+                 v3 = u[face];
+                 break;
+             }
+             if (vert++ == 2) {
+                 vert = 0;
+                 meshOut->add_face(v1, v2, v3);
+             }  
+         }
+    }
+};
+
+NodeIndexedFaceSet * 
+NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation, 
+                        Matrix matrix1, Matrix matrix2)
+{
+    try {
+        MyMesh *mesh = m_mesh;
+        if (mesh->getVertices()->getSFSize() == 0)
+            return NULL;
+        
+        Surface surface1;
+        build_mesh(&surface1, mesh, matrix1);
+        Surface surface2;
+        build_mesh(&surface2, face->getMesh(), matrix2);
+        Surface surfaceMesh;
+
+        CGAL::Polygon_mesh_processing::triangulate_faces(surface1);
+        CGAL::Polygon_mesh_processing::triangulate_faces(surface2);
+    
+        CGAL::Polygon_mesh_processing::parameters::all_default();
+    /*
+        if (CGAL::Polygon_mesh_processing::does_self_intersect(surface1)) {
+            char str[256], title[256], message[256];
+            swLoadString(IDS_DUNE, title, 255);
+            swLoadString(IDS_MESH_INTERSECT_SELF, str, 255);
+            mysnprintf(message, 255, str, 1);
+            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
+                         SW_MB_ERROR);
+            return NULL;
+        }
+    
+        if (CGAL::Polygon_mesh_processing::does_self_intersect(surface2)) {
+            char str[256], title[256], message[256];
+            swLoadString(IDS_DUNE, title, 255);
+            swLoadString(IDS_MESH_INTERSECT_SELF, str, 255);
+            mysnprintf(message, 255, str, 2);
+            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
+                         SW_MB_ERROR);
+            return NULL;
+        }
+    */
+    /*
+        if (!CGAL::Polygon_mesh_processing::does_bound_a_volume(surface1)) {
+            char str[256], title[256], message[256];
+            swLoadString(IDS_DUNE, title, 255);
+            swLoadString(IDS_NOT_A_VOLUME, str, 255);
+            mysnprintf(message, 255, str, 1);
+            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
+                         SW_MB_ERROR);
+            return NULL;
+        }
+    
+        if (!CGAL::Polygon_mesh_processing::does_bound_a_volume(surface2)) {
+            char str[256], title[256], message[256];
+            swLoadString(IDS_DUNE, title, 255);
+            swLoadString(IDS_NOT_A_VOLUME, str, 255);
+            mysnprintf(message, 255, str, 2);
+            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
+                         SW_MB_ERROR);
+            return NULL;
+        }
+    */
+        switch (operation) {
+          case UNION:
+            if (!CGAL::Polygon_mesh_processing::corefine_and_compute_union(
+                surface1, surface2, surfaceMesh, params::all_default(),
+                                                 params::all_default(),
+                                                 params::all_default())
+               ) return NULL;
+            break;
+          case INTERSECTION:
+            if (!CGAL::Polygon_mesh_processing::corefine_and_compute_intersection(
+                surface1, surface2, surfaceMesh, params::all_default(),
+                                                 params::all_default(),
+                                                 params::all_default())
+               ) return NULL;
+            break;
+          case SUBTRACT:
+            if (!CGAL::Polygon_mesh_processing::corefine_and_compute_difference(
+                surface1, surface2, surfaceMesh, params::all_default(),
+                                                 params::all_default(),
+                                                 params::all_default())
+               ) return NULL;
+            break;
+        }
+        NodeCoordinate *ncoord = (NodeCoordinate *)
+                                 m_scene->createNode("Coordinate");
+        NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
+                                       m_scene->createNode("IndexedFaceSet");
+        faceSet->coord(new SFNode(ncoord));
+    
+        MFVec3f *newVertices = new MFVec3f();
+        MFInt32 *newCoordIndex = new MFInt32();
+    
+        BOOST_FOREACH(vertex_descriptor vd, vertices(surfaceMesh)){
+            newVertices->appendSFValue(surfaceMesh.point(vd).x(), 
+                                       surfaceMesh.point(vd).y(), 
+                                       surfaceMesh.point(vd).z()); 
+        }
+        BOOST_FOREACH(face_descriptor fd, faces(surfaceMesh)) {
+            Surface::Halfedge_index hf = surfaceMesh.halfedge(fd);
+            BOOST_FOREACH(halfedge_descriptor hi, 
+                          halfedges_around_face(hf, surfaceMesh)) {
+                Surface::Vertex_index vi = target(hi, surfaceMesh);
+                newCoordIndex->appendSFValue((std::size_t)vi);
+            }
+            newCoordIndex->appendSFValue(-1);
+        }
+        ncoord->point(new MFVec3f(newVertices));
+        faceSet->coordIndex(new MFInt32(newCoordIndex));
+        return faceSet;
+    } catch(CGAL::Assertion_exception e) {
+        char str[256], title[256], message[256];
+        swLoadString(IDS_DUNE, title, 255);
+        swLoadString(IDS_CGAL_EXCEPTION, str, 255);
+        mysnprintf(message, 255, str, e.expression().c_str());
+        swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
+                     SW_MB_ERROR);
+    }    
+    return NULL;
+}
+
+NodeIndexedFaceSet *
+NodeIndexedFaceSet::readOff(const char *filename)
+{
+    std::ifstream input(filename);
+    Surface mesh;
+
+    if (!input || !(input >> mesh)) {
+        myperror(filename);
+        return NULL;
+    }
+
+    NodeCoordinate *ncoord = (NodeCoordinate *)
+                             m_scene->createNode("Coordinate");
+    NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
+                                   m_scene->createNode("IndexedFaceSet");
+    faceSet->coord(new SFNode(ncoord));
+
+    MFVec3f *newVertices = new MFVec3f();
+    MFInt32 *newCoordIndex = new MFInt32();
+
+    BOOST_FOREACH(vertex_descriptor vd, vertices(mesh)){
+        newVertices->appendSFValue(mesh.point(vd).x(), 
+                                   mesh.point(vd).y(), 
+                                   mesh.point(vd).z()); 
+    }
+    BOOST_FOREACH(face_descriptor fd, faces(mesh)) {
+        Surface::Halfedge_index hf = mesh.halfedge(fd);
+        BOOST_FOREACH(halfedge_descriptor hi, 
+                      halfedges_around_face(hf, mesh)) {
+            Surface::Vertex_index vi = target(hi, mesh);
+            newCoordIndex->appendSFValue((std::size_t)vi);
+        }
+        newCoordIndex->appendSFValue(-1);
+    }
+
+    ncoord->point(new MFVec3f(newVertices));
+    faceSet->coordIndex(new MFInt32(newCoordIndex));
+    return faceSet;
+}
+
+
+int
+NodeIndexedFaceSet::writeOff(const char *filename)
+{
+    Matrix matrix = Matrix::identity();
+    MyMesh *mesh = this->triangulateMesh();
+    m_meshDirty = true;
+
+    if (mesh->getVertices()->getSFSize() == 0)
+        return -1;
+    
+    Surface surface;
+    build_mesh(&surface, mesh, matrix);
+
+    std::ofstream os1(filename);
+    if (!os1 || os1 << surface) {
+        return 0;
+    } else {
+        myperror(filename);
+        return -1;
+    }
+}
+#endif
+    
+#ifdef HAVE_LIBVCG
+#undef max
+#undef min
+// stuff to define the mesh
+#include <vcg/complex/complex.h>
+#include <vcg/complex/algorithms/edge_collapse.h>
+
+using namespace vcg;
+using namespace tri;
+
+// local optimization
+#include "quadric_simp.h"
+
+typedef typename CMeshO::VertexPointer VertexPointer;
+typedef typename CMeshO::VertexIterator VertexIterator;
+typedef typename CMeshO::FaceIterator FaceIterator;
+typedef typename CMeshO::CoordType CoordType;
+
+static bool QCallBack(const int pos, const char * str)
+{
+    return true;
+}
+
+NodeIndexedFaceSet *
+NodeIndexedFaceSet::meshReduce(float percent)
+{
+    CMeshO m;
+    MyMesh *trimesh = triangulateMesh();
+    NodeIndexedFaceSet *indexedFaceSet = (NodeIndexedFaceSet *)
+                                         m_scene->createNode("IndexedFaceSet");
+    NodeCoordinate *ncoordinate = (NodeCoordinate *)
+                                  m_scene->createNode("Coordinate");
+    indexedFaceSet->coord(new SFNode(ncoordinate));
+    ncoordinate->point(trimesh->getVertices());
+    indexedFaceSet->coordIndex(trimesh->getCoordIndex());
+    indexedFaceSet->optimize();
+    MyMesh *mesh = indexedFaceSet->getMesh();
+    
+    if (mesh->getVertices()->getSFSize() == 0)
+        return NULL;
+  
+    Allocator<CMeshO>::AddVertices(m, mesh->getVertices()->getSFSize());
+    VertexPointer *ivp = new VertexPointer[mesh->getVertices()->getSFSize()];
+
+    VertexIterator vi=m.vert.begin();
+    for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
+        const float *v = mesh->getVertices()->getValue(i);
+        ivp[i]=&*vi;
+        (*vi).P()=CoordType(v[0], v[1], v[2]); 
+        vi++;
+    }
+
+    MFInt32 *meshCoords = mesh->getCoordIndex();
+    for (int i = 0; i < meshCoords->getSFSize(); i += 4) {
+         int f1 = meshCoords->getValue(i);
+         int f2 = meshCoords->getValue(i + 1);
+         int f3 = meshCoords->getValue(i + 2);
+         Allocator<CMeshO>::AddFace(m, ivp[f1], ivp[f2], ivp[f3]);
+    }
+
+    delete [] ivp; 
+
+    int finalSize = percent * 0.01f * m.fn ;
+
+    TriEdgeCollapseQuadricParameter qparams;
+    qparams.QualityThr = 0.3;
+    double TargetError = std::numeric_limits<double>::max();
+    bool cleaningFlag = true;
+    qparams.QualityCheck = true;
+    qparams.NormalCheck = true;
+    qparams.OptimalPlacement = true;
+    qparams.ScaleIndependent = true;
+    qparams.PreserveBoundary = true;
+    qparams.PreserveTopology = true;
+    qparams.QualityQuadric = true;
+    qparams.QualityWeight = false;
+    
+    if (cleaningFlag) {
+        int dup = tri::Clean<CMeshO>::RemoveDuplicateVertex(m);
+        int unref = tri::Clean<CMeshO>::RemoveUnreferencedVertex(m);
+    }
+
+    vcg::tri::UpdateBounding<CMeshO>::Box(m);
+
+//    m.updateDataMask( MeshModel::MM_VERTFACETOPO | MeshModel::MM_VERTMARK);
+//    tri::UpdateFlags<CMeshO>::FaceBorderFromVF(m);
+
+    QuadricSimplification(m, finalSize, false, qparams, QCallBack);
+
+    Allocator<CMeshO>::CompactEveryVector(m);
+
+    NodeCoordinate *ncoord = (NodeCoordinate *)
+                             m_scene->createNode("Coordinate");
+    NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
+                                   m_scene->createNode("IndexedFaceSet");
+    faceSet->coord(new SFNode(ncoord));
+
+    MFVec3f *newVertices = new MFVec3f();
+    MFInt32 *newCoordIndex = new MFInt32();
+    
+    vi = m.vert.begin();
+    for (int vertex = 0; vertex < m.vn; vertex++) {
+        newVertices->appendSFValue((*vi).P().V(0), 
+                                   (*vi).P().V(1), 
+                                   (*vi).P().V(2));
+        vi++;
+    }
+
+    FaceIterator fi = m.face.begin();
+    for (int face = 0; face < m.fn; face++) {
+         int d0 = vcg::tri::Index(m, fi->cV(0));
+         newCoordIndex->appendSFValue(d0);
+         int d1 = vcg::tri::Index(m, fi->cV(1));
+         newCoordIndex->appendSFValue(d1);
+         int d2 = vcg::tri::Index(m, fi->cV(2));
+         newCoordIndex->appendSFValue(d2);
+         newCoordIndex->appendSFValue(-1);
+         fi++;
+    }
+
+    ncoord->point(new MFVec3f(newVertices));
+    faceSet->coordIndex(new MFInt32(newCoordIndex));
+
+    return faceSet;
+
+}
+#endif

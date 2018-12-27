@@ -1,0 +1,255 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 0 0
+	  emissiveColor 1 0 0
+	  shininess 7.812500e-2
+	  specularColor 0.500000 0.500000 0.500000
+	  }
+	}
+      geometry       IndexedLineSet 
+	{
+	coord 	Coordinate 
+	  {
+	  point 
+	    [
+	    -2 -2 -2 
+	    -2 2 -2 
+	    2 2 -2 
+	    2 -2 -2 
+	    -2 -2 2 
+	    -2 2 2 
+	    2 2 2 
+	    2 -2 2 
+	    ]
+	  }
+	coordIndex 
+	  [
+	  0 1 2 3 0 -1 
+	  6 7 3 2 6 -1 
+	  7 6 5 4 7 -1 
+	  4 5 1 0 4 -1 
+	  1 5 6 2 1 -1 
+	  4 0 3 7 4 -1 
+	  ]
+	}
+      }
+    DEF ProximitySensor1 ProximitySensor 
+      {
+      size 4 4 4
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "Proximity"
+	      ]
+	    }
+	  }
+	]
+      translation -2 -3.549376 0
+      }
+    ]
+  translation 0 0 3.355746
+  }
+
+Viewpoint 
+  {
+  }
+
+DEF increaseSwitch Script 
+  {
+  eventIn SFBool bool_in
+  eventOut SFInt32 choice_out
+  field SFInt32 currentValue -1
+  field SFInt32 maxValue 3
+  url 
+    [
+    "javascript:
+
+ // field SFInt32 currentValue //
+ // field SFInt32 maxValue //
+ // eventOut SFInt32 choice_out //
+
+ function bool_in(value)
+    {
+    // value  SFBool
+    if (value)
+       if (currentValue < maxValue)
+          {
+          currentValue++;
+          choice_out = currentValue;
+          }
+    }
+
+
+"
+    ]
+  }
+
+ROUTE ProximitySensor1.isActive TO increaseSwitch.bool_in
+
+DEF Switch1 Switch 
+  {
+  choice 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Cylinder 
+	    {
+	    }
+	  }
+	]
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Sphere 
+	    {
+	    }
+	  }
+	]
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Cone
+	    {
+	    }
+	  }
+	]
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Box
+	    {
+	    }
+	  }
+	]
+      }
+    ]
+  }
+
+ROUTE increaseSwitch.choice_out TO Switch1.set_whichChoice
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	radius 0.360000
+	}
+      }
+    DEF TouchSensor1 TouchSensor 
+      {
+      }
+    ]
+  translation 3.785829 0 0
+  }
+
+ROUTE TouchSensor1.isActive TO increaseSwitch.bool_in
+
+Viewpoint 
+  {
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	radius 0.360000
+	}
+      }
+    DEF TouchSensor2 TouchSensor 
+      {
+      }
+    ]
+  translation -3.964207 0 0
+  }
+
+ROUTE TouchSensor2.isActive TO increaseSwitch.bool_in
+

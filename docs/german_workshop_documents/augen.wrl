@@ -1,0 +1,101 @@
+#VRML V2.0 utf8
+
+Transform
+  {
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Sphere
+	{
+	}
+      }
+    Transform
+      {
+      translation 0.42364481 6.24315030e-2 0.65072518
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Sphere
+	    {
+	    radius 0.43086454
+	    }
+	  }
+	Transform
+	  {
+	  translation 0 0 0.28249776
+	  children 
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  diffuseColor 0.11764705 0.20000000 1
+		  specularColor 0.94901961 0.98431372 1
+		  }
+		}
+	      geometry Sphere
+		{
+		radius 0.24420374
+		}
+	      }
+	  }
+	]
+      }
+    Transform
+      {
+      translation -0.42364481 6.24315030e-2 0.65072518
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Sphere
+	    {
+	    radius 0.43086454
+	    }
+	  }
+	Transform
+	  {
+	  translation 0 0 0.28249776
+	  children 
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  diffuseColor 0.11764705 0.20000000 1
+		  specularColor 0.94901961 0.98431372 1
+		  }
+		}
+	      geometry Sphere
+		{
+		radius 0.24420374
+		}
+	      }
+	  }
+	]
+      }
+    ]
+  }
+

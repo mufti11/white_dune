@@ -1,0 +1,340 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO NurbsSurface[
+#
+# Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
+# Copyright (C) 1999 Stephen F. White
+#
+# PROTO interface and javascript port
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+#
+# urn collection 
+# Copyright (C) 2003 Paul Aslin
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+ field SFInt32 uDimension
+ field SFInt32 vDimension
+ field MFFloat uKnot
+ field MFFloat vKnot
+ field SFInt32 uOrder
+ field SFInt32 vOrder
+ exposedField MFVec3f controlPoint
+ exposedField MFFloat weight
+ exposedField SFInt32 uTessellation
+ exposedField SFInt32 vTessellation
+ exposedField SFNode texCoord
+ field SFBool ccw
+ field SFBool solid
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsSurface",
+ "urn:inet:blaxxun.com:node:NurbsSurface",
+ "urn:ParaGraph:NurbsSurface",
+ "NurbsSurfacePROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml200x_nurbssurface/NurbsSurfacePROTO.wrl"
+]
+
+EXTERNPROTO InlineLoadControl[
+ exposedField SFBool    load
+ exposedField MFString  url
+ field         SFVec3f  bboxCenter
+ field         SFVec3f  bboxSize
+ eventOut      MFNode   children
+ ]
+[
+ "urn:web3d:vrml97:node:InlineLoadControl",
+ "InlineLoadControlPROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml97Amendment1/InlineLoadControlPROTO.wrl"
+]
+
+EXTERNPROTO NurbsCurve[
+ exposedField MFVec3f controlPoint
+ exposedField SFInt32 tessellation
+ exposedField MFFloat weight
+ field MFFloat knot
+ field SFInt32 order
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsCurve",
+ "urn:inet:blaxxun.com:node:NurbsCurve",
+ "urn:ParaGraph:NurbsCURVE",
+ "NurbsCurvePROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml97Amendment1/NurbsCurvePROTO.wrl"
+]
+
+EXTERNPROTO NurbsGroup[
+ eventIn       MFNode   addChildren
+ eventIn       MFNode   removeChildren
+ exposedField  MFNode   children
+ exposedField  SFFloat  tessellationScale
+ field         SFVec3f  bboxCenter
+ field         SFVec3f  bboxSize
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsGroup",
+ "urn:inet:blaxxun.com:node:NurbsGroup",
+ "urn:ParaGraph:NurbsGROUP",
+ "NurbsGroupPROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml97Amendment1/NurbsGroupPROTO.wrl"
+]
+
+
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  emissiveColor 0.800000 0.800000 0.800000
+	  }
+	}
+      geometry       NurbsCurve 
+	{
+	controlPoint 
+	  [
+	  0 0 0 
+	  -2.325886 2.314438 0 
+	  3.067785 1.078949e-2 0 
+	  4.142870 1.069635 0 
+	  0 4 0 
+	  ]
+	weight 
+	  [
+	  1 
+	  1 
+	  1 
+	  1 
+	  1 
+	  ]
+	knot 
+	  [
+	  0 
+	  0 
+	  0 
+	  1 
+	  2 
+	  3 
+	  3 
+	  3 
+	  ]
+	}
+      }
+    ]
+  }
+
+NurbsGroup 
+  {
+  children 
+    [
+    DEF Transform1 Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  NurbsSurface 
+	    {
+	    uDimension 4
+	    vDimension 4
+	    uKnot 
+	      [
+	      0 
+	      0 
+	      0 
+	      0 
+	      1 
+	      1 
+	      1 
+	      1 
+	      ]
+	    vKnot 
+	      [
+	      0 
+	      0 
+	      0 
+	      0 
+	      1 
+	      1 
+	      1 
+	      1 
+	      ]
+	    uOrder 4
+	    vOrder 4
+	    controlPoint 
+	      [
+	      -1.500000 0 3 
+	      -0.500000 0 3 
+	      0.500000 0 3 
+	      1.500000 0 3 
+	      -1.500000 0 2 
+	      -7.065702 -6.080788 2.918514 
+	      7.065702 -6.080788 2.918514 
+	      1.500000 0 2 
+	      -1.500000 0 1 
+	      -0.500000 0 1 
+	      0.500000 0 1 
+	      1.500000 0 1 
+	      -1.500000 0 0 
+	      -0.501541 -1.447086e-2 0 
+	      0.500000 0 0 
+	      1.500000 0 0 
+	      ]
+	    weight 
+	      [
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      ]
+	    solid FALSE
+	    }
+	  }
+	]
+      }
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       TrimmedSurface 
+	{
+	trimmingContour 
+	  [
+	  Contour2D 
+	    {
+	    children 
+	      [
+	      NurbsCurve2D 
+		{
+		}
+	      Polyline2D 
+		{
+		}
+	      ]
+	    }
+	  ]
+	surface 	NurbsSurface 
+	  {
+	  uDimension 4
+	  vDimension 4
+	  uKnot 
+	    [
+	    0 
+	    0 
+	    0 
+	    0 
+	    1 
+	    1 
+	    1 
+	    1 
+	    ]
+	  vKnot 
+	    [
+	    0 
+	    0 
+	    0 
+	    0 
+	    1 
+	    1 
+	    1 
+	    1 
+	    ]
+	  uOrder 4
+	  vOrder 4
+	  controlPoint 
+	    [
+	    -1.500000 0 3 
+	    -0.500000 0 3 
+	    0.500000 0 3 
+	    1.500000 0 3 
+	    -1.500000 0 2 
+	    1.945546 5.644958 -0.294207 
+	    -1.945546 5.644958 -0.294207 
+	    1.500000 0 2 
+	    -1.500000 0 1 
+	    -0.500000 0 1 
+	    0.500000 0 1 
+	    1.500000 0 1 
+	    -1.500000 0 0 
+	    -0.500000 0 0 
+	    0.500000 0 0 
+	    1.500000 0 0 
+	    ]
+	  weight 
+	    [
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    1 
+	    ]
+	  }
+	}
+      }
+    ]
+  }
+
+CoordinateDeformer 
+  {
+  }
+
+NurbsPositionInterpolator 
+  {
+  }
+
+InlineLoadControl 
+  {
+  url 
+    [
+    "NurbsSurface_example.wrl"
+    ]
+  }
+

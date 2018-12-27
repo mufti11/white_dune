@@ -1,0 +1,110 @@
+#VRML V2.0 utf8
+
+Transform
+  {
+  rotation 0.20303878 -0.97572642 -8.20563882e-2 2.74177575
+  center 0 -1 0
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Box
+	{
+	size 1 2 1
+	}
+      }
+    Transform
+      {
+      rotation 0.65287309 -1.73752158e-2 0.75726795 1.05647301
+      translation 0 2.04320025 0
+      center 0 -1 0
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Box
+	    {
+	    size 1 2 1
+	    }
+	  }
+	Transform
+	  {
+	  translation 0 -0.93968069 0
+	  children 
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  }
+		}
+	      geometry DEF Sphere1 Sphere
+		{
+		radius 0.79078876
+		}
+	      }
+	  }
+	Transform
+	  {
+	  rotation -0.45178058 3.69285121e-2 -0.89136445 1.51782548
+	  translation 0 2.04320025 0
+	  center 0 -1 0
+	  children 
+	    [
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  }
+		}
+	      geometry Box
+		{
+		size 1 2 1
+		}
+	      }
+	    Transform
+	      {
+	      translation 0 -0.80597686 0
+	      children 
+		Shape
+		  {
+		  appearance Appearance
+		    {
+		    material Material
+		      {
+		      }
+		    }
+		  geometry DEF Sphere1_5 Sphere
+		    {
+		    radius 0.79078876
+		    }
+		  }
+	      }
+	    ]
+	  }
+	]
+      }
+    ]
+  }
+
+Viewpoint
+  {
+  orientation -0.63084542 0.77587133 -7.59535469e-3 0.60416734
+  position 4.36183452 6.13483476 7.21121788
+  }
+

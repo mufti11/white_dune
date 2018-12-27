@@ -1,0 +1,126 @@
+#VRML V2.0 utf8
+
+PROTO ARSensor
+# a better than nothing emulation of the Cover/Covise ARSensor 
+# simply using a PlaneSensor
+# 
+# Copyright (C) 2005 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#   
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#   
+ [
+ exposedField SFBool trackObjects FALSE
+ exposedField SFBool freeze FALSE
+ exposedField SFBool enabled TRUE
+ exposedField SFBool currentCamera TRUE
+ exposedField SFBool headingOnly FALSE
+ exposedField SFVec3f maxPosition -1.0 -1.0 -1.0
+ exposedField SFVec3f minPosition -1.0 -1.0 -1.0
+ exposedField SFFloat orientationThreshold 15.0
+ exposedField SFFloat positionThreshold 0.3
+ exposedField SFVec3f invisiblePosition 100000 100000 100000
+ exposedField SFVec3f cameraPosition 0 0 24
+ exposedField SFVec3f cameraOrientation 90 90 0
+ exposedField SFString markerName ""
+ eventOut SFBool isVisible
+ eventOut SFVec3f translation_changed
+ eventOut SFRotation rotation_changed
+ eventOut SFVec3f scale_changed
+ ]
+{
+   DEF PlaneSensor1 PlaneSensor 
+      {
+      enabled IS enabled
+      isActive IS isVisible
+      translation_changed IS translation_changed
+      }
+ 
+   Switch   
+      {
+      choice   
+        [
+        DEF MAXPOSITION_CONTAINER Transform   
+          {  
+          translation IS maxPosition
+          }
+        ]
+      }
+
+   Switch   
+      {
+      choice   
+        [
+        DEF MINPOSITION_CONTAINER Transform   
+          {  
+          translation IS minPosition
+          }
+        ]
+      }
+
+    DEF Script1 Script   
+      {
+      field SFVec3f maxPosition -1.0 -1.0 -1.0
+      field SFVec3f minPosition 0 0 0
+      
+      eventIn SFVec3f maxPosition_in
+      eventIn SFVec3f minPosition_in
+
+      field SFNode maxPositionContainer USE MAXPOSITION_CONTAINER
+      field SFNode minPositionContainer USE MINPOSITION_CONTAINER
+
+      eventOut SFVec2f maxPosition_out
+      eventOut SFVec2f minPosition_out
+
+      url
+        [
+        "javascript:
+
+      function initialize()
+        {
+        maxPosition = maxPositionContainer.translation;
+        minPosition = minPositionContainer.translation;
+        maxPosition_out.x = maxPosition.x;
+        maxPosition_out.y = maxPosition.y;
+        // avoid defect senseless (default ARSensor) maxPosition/minPosition setting
+        if ((maxPosition.x != -1) || (maxPosition.y != -1) || (minPosition.x != -1) || (minPosition.y != -1)) 
+           {
+           minPosition_out.x = minPosition.x;
+           minPosition_out.y = minPosition.y;                
+           }
+        }
+
+      function maxPosition_in(value)
+        {
+        maxPosition_out.x = value.x;
+        maxPosition_out.y = value.y;
+        }
+
+      function minPosition_in(value)
+        {
+
+        minPosition_out.x = value.x;
+        minPosition_out.y = value.y;
+        }
+    "
+        ]
+      }
+
+ROUTE MAXPOSITION_CONTAINER.translation TO Script1.maxPosition_in
+ROUTE MINPOSITION_CONTAINER.translation TO Script1.minPosition_in
+
+ROUTE Script1.maxPosition_out TO PlaneSensor1.maxPosition
+ROUTE Script1.minPosition_out TO PlaneSensor1.minPosition
+}

@@ -1,0 +1,71 @@
+#VRML V2.0 utf8
+
+PROTO DOME
+  [
+  field SFColor color 1 1 1
+  ]
+{
+Group
+  {
+  children 
+    [
+    Transform
+      {
+      children 
+        Shape
+          {
+          appearance Appearance
+            {
+            material Material
+              {
+              diffuseColor IS color
+              }
+            }
+          geometry Box
+            {
+            }
+          }
+      }
+    Transform
+      {
+      translation 0 0.483019 0
+      children 
+        Shape
+          {
+          appearance Appearance
+            {
+            material Material
+              {
+              diffuseColor IS color
+              }
+            }
+          geometry Sphere
+            {
+            }
+          }
+      }
+    ]
+  }
+
+}
+
+Viewpoint
+  {
+  orientation -0.878521 -0.477538 1.257811e-2 0.740593
+  position -3.251017 5.911873 7.381100
+  }
+
+DOME
+  {
+  color 1 0.770000 0.585000
+  }
+
+Transform
+  {
+  translation 2.717382 0 0
+  children 
+    DOME
+      {
+      }
+  }
+

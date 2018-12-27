@@ -1,0 +1,792 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * Copyright (C) 2007 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<head>
+ <title>White_dune developer documentation</title> 
+</head> 
+<body>
+<h1>White_dune developer documentation</h1>
+<ul>
+ <li>
+  <a href="#overview">white_dune program overview</a>
+ </li>
+ <li>
+  <a href="#gui_overview">white_dune GUI overview</a>
+ </li>
+ <li>
+  <a href="#vrml_implementation_overview"> VRML/X3D implementation overview</a>
+ </li>
+ <li>
+  <a href="#vrml_parser">VRML97/X3D parser</a>
+ </li>
+ <li>
+  <a href="#dangerous">Dangerous constructs</a>
+ </li>
+ <li>
+  <a href="#new_node_cookbook">"Adding a new node to white_dune"-cookbook</a>
+ </li>
+ <li>
+  <a href="#wonderland_export">Open Wonderland export</a>
+ </li>
+ <li>
+  <a href="#localisation">Localisation: translating the program to foreign
+    languages</a>
+ </li>
+ <li>
+  <a href="#programmer_localisation">Localisation from a programmers point of view</a>
+ </li>
+ <li>
+  <a href="#class_overview">class overview</a>
+ </li>
+</ul>  
+<h2>"white_dune", what's that ?</h2> 
+<p>
+"white_dune" is a continuation of the "dune" project by Stephan F. White.<br>
+"dune" is a graphical VRML97/X3D Editor, simple NURBS modeller and animation 
+tool with some OpenGL scene rendering capabilities.
+</p>
+<h2><a name="overview">white_dune program overview</a></h2>
+<p>
+In princple, the structure of the white_dune program can be written as:
+<ol>
+ <li> 
+  evaluate commandline parameters
+ </li>
+ <li>
+  enter GUI (Grapical User Interface) mainloop
+ </li>
+</ol>
+For details, see the file <b>main.cpp</b>
+</p>
+<h2><a name="gui_overview">white_dune GUI overview</a></h2>
+<p>
+The GUI of white_dune consists of 2 parts:
+<ol>
+ <li>
+  2D GUI<br>
+  This handles two dimensional operations like opening windows,
+  display icons, menus, buttons etc.<br>
+  2D GUI operations are seperated in a extra programming level,
+  called swt (Stephan White Toolkit).<br>
+  Currently, there are two different implementations of swt written in C,
+  one for Motif/Lesstif (Unix/Linux) and one for Win32 (M$Windows).<br>
+  For details, see the directory <b>swt</b>.
+  swt use M$Windows rc files. For details about the implementation 
+  on M$Windows machines see the directory <b>swt/rc</b>.<br>
+ </li>
+ <li>3D GUI<br>
+  This handles three dimensional operations. This is displaying 3D data
+  (rendering, implemented in OpenGL) and manipulating 3D Objects.<br>
+  Some 3D operations, like mouseinput and reaction to desktop events
+  (e.g. resize of Windows) are handled in connection with the 2D GUI
+  (see the file <b>Scene3DView.cpp</b> for details).<br>
+  Additional, there are other sources of information for manipulating 
+  3D Objects (also handled in <b>Scene3DView.cpp</b>): input from
+  devices like joystick, dialbox or spaceball. Code for input
+  from this devices is located in the file <b>InputDevice.cpp</b>.
+ </li>
+</ol>
+</p>
+<p>
+The 2D GUI mainloop of white_dune is event driven. Typical events are
+mouse-movement, mouse-click, resize of window and so on.<br>
+Additionally the mainloop can produce timer events.<br>
+When a event occures, the matching callback function is started.
+The callbacks work for every subwindow of white_dune.<br>
+The following image shows the subwindows (red text) of the mainwindow.<br>
+<center>
+<img src=dune.png alt="subwindows of the mainwindow" align="top">
+</center><br>
+Some 2D GUI events are distributed to the different subwindows.
+The distribution of this events is based on inheritance.<br>
+The class <b>SceneView</b> define inheritable 2D GUI callbacks like 
+<i>OnMouseMove</i> and is parent class to the classes 
+<b>ChannelView</b>, <b>FieldView</b>, <b>Scene3DView</b>, 
+<b>SceneGraphView</b>, <b>SceneTreeView</b>, <b>StatusBar</b>,
+<b>ToolbarWindow</b> and <b>PanedWindow</b>. <b>PanedWindow</b> is 
+parent class to the class <b>MainWindow</b>.
+</p> 
+<p>
+A additional callback <i>OnUpdate</i> is used to distribute 
+messages like <i>UPDATE_FIELD</i> or <i>UPDATE_ADD_NODE</i> to the 
+child classes of <b>SceneView</b>. <i>OnUpdate</i> is started by
+the function <i>UpdateViews</i> of class <b>Scene</b>.<br>
+</p> 
+<p>
+Some operations require additional input of data. Then a "Dialog" 
+is opened, that block the data input to all other windows.<br>
+<center>
+<img src=dialog.jpg alt="a example of a dialog" align="top">
+</center><br>
+*Dialog classes are all inheritable from the class <b>Dialog</b>,
+which implements functions like SaveData() and Validate().<br>
+The layout of Dialogs (as well as the layout of the menues) is defined 
+in the dune*.rc files.
+</p>
+<h2><a name="vrml_implementation_overview">VRML/X3D implementation overview</a></h2>
+<p>
+The class <b>Scene</b> (Scene.h/cpp) can be identified with one VRML/X3D file. 
+For example Scene.write() writes the VRML/X3D file to disk.
+</p> 
+<p>
+The global variable <i>TheApp</i> of class <b>DuneApp</b> (DuneApp.h/cpp)
+can be identified with things that are global to all VRML/X3D files.
+</p>
+<h4>Node overfield</h4>
+<p>
+The internals of each VRML/X3D Node are implemented in the files named
+Node<b>NodeName</b> (for example Node<b>Transform</b> (NodeTransform.h/cpp), 
+Node<b>Shape</b> (NodeShape.h/cpp) or Node<b>Box</b> (NodeBox.h/cpp)).
+</p>
+<p>
+Every Node<b>NodeName</b>.h file contain 2 classes: the 
+class Node<b>NodeName</b> which contain functionality 
+like draw() for 3D rendering of shapes and the class
+Proto<b>NodeName</b> which are used to build the definitions
+of the VRML97 standard.<br>
+For example, the definiton of the Transform Node in
+the ISO/IEC 14772 standard <br>
+<img src=standard.jpg alt="example from vrml standard" align="top"><br>
+is implemented in the constructor of the class Proto<b>Transform</b>
+(in file NodeTransform.cpp):<br>
+<pre>
+ProtoTransform::ProtoTransform(Scene *scene)
+  : Proto(scene, "Transform")
+{
+    addEventIn(MFNODE, "addChildren");
+    addEventIn(MFNODE, "removeChildren");
+    center.set(addExposedField(SFVEC3F, "center", new SFVec3f(0.0f, 0.0f, 0.0f)));
+    children.set (addExposedField(MFNODE, "children", new MFNode(), CHILD_NODE));
+    rotation.set(addExposedField(SFROTATION, "rotation", new SFRotation(0.0f, 0.0f, 1.0f, 0.0f)));
+    scale.set(addExposedField(SFVEC3F, "scale", new SFVec3f(1.0f, 1.0f, 1.0f), new SFFloat(0.0f)));
+    scaleOrientation.set(addExposedField(SFROTATION, "scaleOrientation",new SFRotation(0.0f, 0.0f, 1.0f, 0.0f)));
+    translation.set(addExposedField(SFVEC3F, "translation", new SFVec3f(0.0f, 0.0f, 0.0f)));
+    bboxCenter.set(addField(SFVEC3F, "bboxCenter", new SFVec3f(0, 0, 0)));
+    bboxSize.set(addField(SFVEC3F, "bboxSize", new SFVec3f(-1, -1, -1), new SFFloat(-1.0f)));
+}
+</pre>
+Different fields are internally handled as integer values.<br>
+The variables center, children, rotation, scale, scaleOrientation, translation,
+bboxCenter and bboxSize are of type "fieldIndex", something like a readonly
+integer, that can be only set once.<br>
+There are NodeTransform memberfunctions to get and set field values.
+For example, the memberfunctions for the field "center" of class 
+"NodeTransform" are:<br><br>
+<table border=0 cellpadding=0 cellspacing=0>
+<tr><td nowrap align=right valign=top><a href="doxygen_out_html/html/classSFVec3f.html">SFVec3f</a> *&nbsp;</td><td valign=bottom><a  href="doxygen_out_html/html/classNodeTransform.html#a17">center</a> (void)</td></tr>
+<tr><td nowrap align=right valign=top>void&nbsp;</td><td valign=bottom><a  href="doxygen_out_html/html/classNodeTransform.html#a18">center</a> (<a  href="doxygen_out_html/html/classSFVec3f.html">SFVec3f</a> *value)</td></tr>
+<tr><td nowrap align=right valign=top>void&nbsp;</td><td valign=bottom><a  href="doxygen_out_html/html/classNodeTransform.html#a19">center</a> (<a  href="doxygen_out_html/html/classSFVec3f.html">SFVec3f</a> &amp;value)</td></tr>
+<tr><td nowrap align=right valign=top>int&nbsp;</td><td valign=bottom><a  href="doxygen_out_html/html/classNodeTransform.html#a20">center_Field</a> (void)</td></tr>
+</table>
+<br>
+The memberfunctions "something_Field()" deliver the integer number of a field 
+that is needed for example for a 
+<a href="doxygen_out_html/html/classMoveCommand.html#a0">
+MoveCommand</a> to move nodes in the scenegraph.
+</p>
+<p>
+Functionality common to all Nodes (like writing a Node to a file (Node.write())
+is in the class Node (file Node.h/cpp). All Node<b>NodeName</b> classes are
+subclasses of the class Node.<br>
+Some of the memberfunctions of the class Node are virtual and can be
+overwritten by the Node<b>NodeName</b> classes (for example, the
+class NodeScript need a special version of Node.write()).<br>
+Here is a list of important virtual Node memberfunctions:
+<ul>
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a17>getType()</a></b><br>
+      deliver a <a href=doxygen_out_html/html/Node_8h.html#a83>
+      value</a> needed to identify different nodes. For example,
+      the transform node deliver VRML_TRANSFORM.<br>
+      The result of getType() is either beginning
+      <ul>
+         <li>"VRML_" for nodes which exist in VRML97</li>
+         <li> "X3D_" for nodes which exist in X3D</li>
+         <li>"COVER_" for nodes which are extensions in the 
+             cover VRML browser</li>
+         <li>"KAMBI_" for nodes which are extensions in the 
+             kambi VRML gameengine</li>
+         <li>"DUNE_" for nodes which only exist in white_dune 
+             (scripted PROTOs and export data container nodes)</li>
+      </ul>
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a2>write</a></b><br>
+      write the node to a VRML/X3D file.
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a30>update</a></b><br>
+      update a node after a field change.
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a63>setHandle</a></b><br>
+      change a node field from handles (e.g. white boxes in the Scene3DView, 
+      that can be moved around with the mouse).
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a62>getHandle</a></b><br>
+      get the value of a handle.
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a61>drawHandles</a></b><br>
+      draw the handle in the Scene3DView.
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a55>preDraw</a></b><br>
+      do operations that prepare the drawing of nodes in the Scene3DView.
+  <li><b><a href=doxygen_out_html/html/classNodeData.html#a58>draw</a></b><br>
+      drawing the nodes in the Scene3DView (and internally to find
+      mouse hits).      
+</ul>
+Some geometry nodes (like ElevationGrid) are implemented as a subclass of
+<b>MeshBasedNode</b>. The MeshBasedNode class is used for geometry that
+can implemented as a IndexedFaceSet type of mesh. The MeshBasedNode class 
+provides important virtual Node memberfunctions like <b>draw</b>.
+The creation of the mesh in a MeshBasedNode is done via the virtual
+function <b>createMesh</b>.<br>
+Some geometry nodes (like NodeSuperShape) are implemented as a subclass
+of <b>MeshMorphingNode</b> which is a subclass of MeshBasedNode by itself.
+A MeshMorphingNode can write a morphing animation of a IndexedFaceSet,
+when "File-&gt;Export As...-&gt;Export as &Pure VRML97..." or
+"File-&gt;Export As...-&gt;Export as VRML level &X3DV..." is used.<br>
+For templates of a MeshBased/MeshMorphing geometry node see 
+<a href="NodeGeometryExample.cpp">NodeGeometryExample.cpp</a>/
+<a href="NodeGeometryExample.h">NodeGeometryExample.h</a>.<br>
+For templates for the rest of nodes see
+<a href="NodeExample.cpp">NodeExample.cpp</a>/
+<a href="NodeExample.h">NodeExample.h</a>.<br>
+</p>
+<h4>FieldValue overfield</h4>
+<p>
+The class "FieldValue" is used to set the data of the nodes.
+The wellknown VRML/X3D types like SFFloat, MFVec3f, SFString etc. are 
+subclasses of the "FieldValue" class.<br>
+When setting data of the nodes, it is important that the old data is
+always deallocated using the "delete" command.<br>
+The constructor of "MF-type" data (like MFVec3f, MFInt32, MFString etc.)
+never copy the data array, it reuses the data via a pointer.<br>
+<a name="wrong_field_data">Therefore</a>
+it is not possible to use "automatic" variables (like 
+"float data[30]") to initalise MF-type data directly. When the 
+automatic variable is removed from the memory, the data inside the
+node is also lost and it is likely, that a crash would occure.<br>
+Wrong example:<br>
+<pre>
+   {
+       float data[20];
+       ...
+       MFFloat data4node = new MFFloat(data, 20);
+       ...
+       someNode->setField(fieldName_Field(), data4node);
+       ...
+   } // someNode.fieldName gets invalid cause memory is freed at this point
+</pre>
+A other example of automatic variable usage uses a internal white_dune 
+data type like "array", "list" etc.:<br>
+<pre>
+   {
+       Array<float> data;
+       ...
+       data.append(1.0f);
+       ...
+       data.append(42.0f);
+       ...
+       MFFloat data4node = new MFFloat(data.getData(), data.size());
+       ...
+       someNode->setField(fieldName_Field(), data4node);
+       ...
+   } // someNode.fieldName gets invalid cause memory is freed at this point
+</pre>
+The correct way uses "new"
+<pre>
+   {
+       float* data = new float[20];
+       ...
+       MFFloat data4node = new MFFloat(data, 20);
+       ...
+       someNode->setField(fieldName_Field(), data4node);
+       ...
+   } // someNode.fieldName ok
+</p>
+<h4>Path overview</h4>
+<p>
+As Path is a class that holds the path to a node in the Scenegraph or
+in a PROTO. The path in the Scenegraph is mainly a integer array of
+the fields containing the SFNode or MFNode field of the next node
+(one integer) and the index of the next MFNode field (or 0 in case of a
+SNode field) (another integer).<br>
+If path[0] is less than zero, the path is inside a PROTO. A path[0] == -1
+is inside the first PROTO, a path[0] == -2 is inside the second proto,
+a path[0] == -3 is inside the third PROTO etc. <br>
+In case of a PROTO, path[1] contains the number of the root node of the PROTO:
+path[1] == 0 is the path beginning with the first root node, path[1] == 1 is 
+the path beginning with the second root node, path[1] == 2 is the path 
+beginning with the third root node.
+</p>
+<h4>PROTO overview</h4>
+<p>
+Proto is the PROTO interface (ProtoDeclare or ExternProtoDeclare) or 
+Node interface. Node::getProto() gets the node interface.
+<br>
+NodePROTO is a ProtoInstance or ExternProtoInstance.
+ExternProtoDeclare is a ProtoDeclare with variable "url" set.
+</p>
+<h2><a name="vrml_parser">VRML97/X3D parser</a></h2>
+<p>
+Dune need to read and parse ("understand") VRML97 or X3DV files.<br>
+This is done with using the tools lex/yacc (it looks like, the advanced 
+tools flex and bison from the GNU project are needed). <br>
+The file lexer.l do the lexical analysis (detect things like "what is
+a string", "what is a number", "what is that VRML97 or X3D keyword").<br>
+The file parser.y do the grammatical analysis (detect and prove, if the
+tokens found by the lexical analysis form valid VRML/X3DV contructions 
+(like Node or ROUTE statements). If some tokens of the grammar are valid,
+the action part of the command in the parser.y file create the matching
+VRML Nodes, Numbers etc.
+</p>
+<p>
+Thanks to Doug Sanden, white_dune can also parse XML encoded X3D files.
+This is done via the expat library.
+</p>
+<h2><a name="dangerous">Dangerous constructs</a></h2>
+<p>
+The buildin stringtype ("MyString") can be misleading, it act very
+pointerlike. For example be carefull about constructs like the following:
+<br>
+<pre>
+  MyString str = node->getProto()->getName();
+  str += "something";                         // also appended to the name... 
+</pre>
+This do not only copy the name of a Proto of "node" to str and append
+"something" to it, it also appends "something" to the name of a Proto !
+<p>
+</p>
+In this situation, it is better to use something like
+<pre>
+  MyString str = strdup(node->getProto()->getName());
+  str += "something"; 
+</pre>
+or
+<pre>
+  MyString str = "";
+  str += node->getProto()->getName();
+  str += "something"; 
+</pre>
+</p>
+<p>
+Another dangerous constructs are the constructors for MF* types with pointers
+to multiple data of the basic datatype. This is already described 
+<a href="#wrong_field_data">in a chapter above</a>.
+</p>
+<h2><a name="new_node_cookbook">"Adding a new node to white_dune"-cookbook</a></h2>
+<p>
+<ul>
+<li>Select a name of the new node (here "Something")
+<br><br>
+<li> add a ID_NEW_SOMETHING to resource.h.m4, usually via adding a new m4 macro
+     M4_ID(SOMETHING) 
+<br><br>
+<li> Add
+<br><pre> 
+  MENUITEM "Something",                  ID_NEW_SOMETHING
+</pre>
+  in the matching submenu of the POPUP "&Create" menu and and
+<br><pre> 
+      ID_NEW_SOMETHING      "Create a new Something Scripted PROTO\nSomething Scripted"
+</pre>
+  to all src/dune.*.rc files. See <a href="#localisation">the chapter about 
+  localisation</a> for more informations about handling the needed language 
+  translations.
+<br><br>
+<li>
+  add a 
+  <ul>
+    <li>VRML_SOMETHING for VRML97 nodes</li>
+    <li>X3D_SOMETHING for X3D nodes</li>
+    <li>COVER_SOMETHING for extensions of the cover VRML browser</li>
+    <li>KAMBI_SOMETHING for extensions of the kambi VRML gameengine</li>
+    <li>DUNE_SOMETHING for scripted protos and all other extension nodes</li>
+  </ul>
+  to the matching 
+  place (sorted by SOMETHING in the alphabet) to the matching enum in Node.h
+
+<br><br>
+<li> add a
+<br><pre>
+   addOrReplace(protos, "Something", new ProtoSomething(scene), add);
+</pre>
+  in a matching place (sorted by the alphabet of the SOMETHING in the list 
+  in Node.h) in the function SceneProtoMap::createProtoMap and add
+<br><pre>
+  #include "NodeSomething.h"
+</pre>
+  to SceneProtoMap.cpp
+<br><br>
+<li> copy a similar Node*.h/cpp to NodeSomething.h/cpp and change
+  the fields/EventIns and draw, setHandle etc. functions.<br>
+  Do not forget to change the getType() function.
+<br><br>
+<li> in case the new node is always insertable (as a usual geometry node) add a
+<br><pre>
+  { DUNE_SOMETHING,       ID_NEW_SOMETHING, true, true },
+</pre>
+  (you may replace DUNE_SOMETHING with VRML_SOMETHING or X3D_SOMETHING)
+  to the matching NodeButton arrays in MainWindow.cpp<br>
+  In case the new node is not always insertable (like a texture node, which
+  requires a Appearance node) add something similar to 
+<br><pre>
+  { DUNE_SOMETHING,       ID_NEW_SOMETHING, false, true },
+</pre>
+  to MainWindows.cpp and add something like
+<br><pre>
+          case DUNE_SOMETHING:
+            valid = node->findValidFieldType(VRML_REQUIRED_BY_SOMETHING) != -1;
+            break;
+</pre>
+  to the swich in MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, 
+  int field, NodeButton *buttons, int count) 
+<br><br>
+<li>Use gimp to include a new icon (16 pixels width) of your node 
+     (nodenames need to be sorted by the alphabet) into res/node_icons.bmp
+     (or res_color/node_icons.bmp for UNIX type compilation with configure)
+     <br><br>
+  Warning: DO NOT change the numbers of colors in this bitmap file !
+     <br><br>
+  When you have gimp version 1.2 installed as "gimp", you can 
+  use the script "batch/inserticon.sh" under Linux/UNIX/MacOSX by typing
+<BR><pre>
+         sh batch/inserticon.sh DUNE_SOMETHING
+</pre>
+  or
+<BR><pre>
+         sh batch/inserticon.sh X3D_SOMETHING
+</pre>
+  gimp will then open and select the matching node icons that has to be
+  moved 16 pixels to left. Use "edit->cut" and "edit->paste" then move
+  the icons to the left border of the gimp window. Draw your new icon
+  in the new 16 pixels wide white gap.   
+<br><br>
+<li> add a
+<BR><pre>
+        case ID_NEW_SOMETHING:
+          CreateNode("Something");
+          break;
+</pre>
+  to MainWindow::OnCommand(int id) in MainWindow.cpp<br>
+  You may need to replace CreateNode("Something"); by 
+  CreateGeometryNode("Something"); for a geometry node or you need to
+  replace it with InsertNode(DUNE_SOMETHING, "Something"); for a node,
+  that can only be inserted depending on the current node.
+<br><br>
+<li> In case of a new scripted node: it makes only sense with a VRML97 PROTO 
+     statement.
+     Put your PROTO into the docs/scriptedNodes directory. 
+<br><br>
+<li> add the name of NodeSomething.o file into the matching place
+     in the src/Makefile.in file.
+     Add NodeSomething.cpp to the M$Windows project or add it as a include
+     into src/FilesMissingInWindowsProjects.cpp
+<br><br>
+<li> Do not forget the GPL license, which forces you to public somehow
+     the complete sources, if you want to redistribute a modified version 
+     of white_dune...
+</ul>
+</p>
+<h2><a name="wonderland_export">Open Wonderland export</a></h2>
+<p>
+White_dune is able to write the VRML97/X3D scenegraph data in the programming 
+languages C, C++ and java. The resulting data can be used in other programs, 
+e.g. to render the data with a own OpenGL program. There are a lot of visable 
+nodes in VRML97/X3D, so there is away to convert primitive (e.g. Box) or 
+parametric (e.g. NurbsPatchSurface) shapes to mesh data. It is also possible 
+to convert to triangulated mesh data. All visible shapes classes (except 
+shape classes not rendered by white_dune yet and the class of the "Text" node)
+are children of the MeshBasedNode class, which handles the conversion.
+Animateable shapes (like Nurbs(Patch)Surface) are children of the 
+MeshMorphingNode class, which is able to create morphing animation data
+for the resulting mesh data. The MeshMorphingNode class is also a child
+of the MeshBasedNode class.<br>
+White_dune can also directly write the needed java sourcecode to render
+VRML97/X3D data in the Open Wonderland multiuser server.<br>
+This includes features like animation, scripting and interaction.<br>
+See the <a href="../usage_docs/dune_1.html">man page of white_dune</a> 
+for more information.<br>
+Unfortunatly, there are a lot of nodes, which are not supported by
+the wonderland exporter. Each node can be written as a java class, but it
+makes a remarkable difference to the java compiler (with respect to 
+memory usage and compile time) if the classes of the unsupported nodes
+are written or not. Therefore, the optimization option to avoid unsupported
+nodes is now per default in use. Unsupported nodes found in the X3D file 
+are also written, but developers who wish to implement the support for
+such a node may need either always switch off the optimization or 
+mark this node as supported by the Wonderland exporter in the white_dune 
+sources.<br>
+The interface of a node is defined in class named e.g. "ProtoSomeNodeName"
+in the file NodeSomeNodeName.cpp.<br>
+The "ProtoSomeNodeName" class is a (direct or indirect) child of a class named 
+"Proto". To mark a node as supported by the Wonderland exporter replace the 
+"Proto" class name in the ProtoSomeNodeName definition
+<br>
+<pre>
+    class SomeNodeName : public Proto {
+</pre>
+<br>
+with the class name "WonderlandExportProto" 
+<br>
+<pre>
+    class SomeNodeName : public WonderlandExportProto {
+</pre>
+<br>
+</p>
+<h2><a name="localisation">Localisation: translating the program to foreign 
+    languages</a></h2>
+<p>
+It requires absolute no programming skills to translate the program to a 
+foreign language, if the foreign languages uses ASCII characters:<br>
+you only need to copy the file "src/dune.english.rc" into a similar file,
+use a texteditor with search and replace und at end translate the strings
+in this file to the foreign language.<br>
+</p>
+<p>
+The problems when trying to translate the program to a foreign
+language with non ASCII characters (like chinease UTF8 characters) are
+untested/unknown.
+</p>
+<p>
+To complete the task to create a new runnable program a compatible compiler
+is needed. Of course, this task can be done (after publicing the main
+translation file src/dune.something.rc) by a programmer later, it do not need to 
+be done by the translator.<br>
+All "src/dune.*.rc" files are copied together into one src/dune.rc file during the 
+run of "configure" and "make".<br>
+This means, that for creating a new runnable program, you need either a 
+UNIX like system (e.g. Linux or MacOSX) or a bunch of unixtools:<br>
+m4, make, cat, grep and sh (e.g. bash or ksh).<br>
+A complete free/opensource installable collection of unixtools for M$Windows 
+is called cygwin and is available for free from the internet.<br>
+</p>
+<p>
+For Translaton, first search the ISO 3166 two characters of your language
+(e.g. "en" for english, "de" for german, "it" for italian, etc...)
+and build the uppercase version of this characters (e.g. EN for english,
+DE for german, IT for italian, etc).
+</p>
+<p>
+Second, select a src/dune.something.rc file. In the simpler case, do not select
+"src/dune.english.rc" cause this requires more complicated search and replace
+commands.<br>
+<ul>
+ <li>
+  In case of translating "src/dune.english.rc", you have to replace the following
+  characters in the whole file:<br>
+  <ul>
+   <li>IDR_ with IDR_DE_ for german, IDR_ with IDR_IT_ for italian etc</li>
+   <li>IDD_ with IDD_DE_ for german, IDD_ with IDD_IT_ for italian etc</li>
+   <li>IDS_ with IDS_DE_ for german, IDS_ with IDS_IT_ for italian etc</li>
+  </ul>
+  Now search for the first occurance of STRINGTABLE DISCARDABLE in 
+  src/dune.english.rc and replace (starting at this point)<br>
+  <ul>
+   <li>ID_ with ID_DE_ for german, ID_ with ID_IT_ for italian etc</li>
+  </ul>
+ </li>
+ <li>
+  In case of translating a other "src/dune.*.rc" than "src/dune.english.rc", you 
+  simply have to replace the term _??_ in the whole file, where ?? marks
+  the uppercase ISO 3166 two characters. E.g. if you translate 
+  "src/dune.german.rc" to "src/dune.italian.rc", you have to replace _DE_ with
+  _IT_ in the whole file, thats all.
+ </li>
+</ul>
+</p>
+<p>
+Third you need to translate all the strings in the new src/dune.something.rc file.
+A so called string is a term that starts with a " and ends with a "<br>
+For example, the translation of the line from src/dune.english.rc
+<BR><pre>
+    POPUP "&File"
+</pre>
+to german language in src/dune.german.rc would result in
+<BR><pre>
+    POPUP "&Datei"
+</pre>
+where the german word Datei is the translation of the english word File.
+The "&" sign marks the keyboard shortcut. The next character after "&"
+should not be ambient in the same level of a menu.
+</p>
+<p>
+After the translation of the strings is ready, the translation step is
+ready. On a Linux/UNIX/MacOSX/cygwin system with the gawk (GNU awk) program 
+you can use 
+<BR><pre>
+sh test/testmenus.sh
+</pre>
+one the commandline to use some consistency testing of the new rc file.
+</p>
+<p>
+The new file src/dune.something.rc can be now publiced (e.g. in a usenet
+group like comp.lang.vrml, or at 
+<a href="http://sourceforge.net/tracker/?group_id=3356&atid=103356">the 
+sourceforge site for the original dune project</a>).
+</p>
+<p>
+For a recompilation, you first need to extend the list of lanugages, 
+white_dune understands.<br>
+Currently you need to extend the list of known languages in the file
+src/swt/include/languages.m4. E.g. to extend the list of known 
+languages from english (empty default) and german (DE) in 
+src/swt/include/languages.m4
+<BR><pre>
+define(`M4_LANGUAGES_CONFIG',`
+DE,german')
+</pre>
+to english, italian (IT) and german, then change the list to
+<BR><pre>
+define(`M4_LANGUAGES_CONFIG',`
+IT,italian,
+DE,german')
+</pre>
+or extent to english, italian and spanish (ES) and german, then change the list
+to
+<BR><pre>
+define(`M4_LANGUAGES_CONFIG',`
+IT,italian,
+ES,spanish,
+DE,german')
+</pre>
+Take care that the last language line (here with "DE,german") do not end
+with a comma.
+</p>
+<p>
+It is also possible to change the yes/no strings in Linux/UNIX messageboxes.
+E.g. you extend the yes/no strings from english and german in 
+src/swt/include/languages.m4 
+<BR><pre>
+define(M4_YES_english,"yes")
+define(M4_YES_german,"Ja")
+
+define(M4_NO_english,"no")
+define(M4_NO_german,"Nein")
+</pre>
+with the yes/no strings of italian, you have to change 
+src/swt/include/languages.m4 to
+<BR><pre>
+define(M4_YES_english,"yes")
+define(M4_YES_italian,"si")
+define(M4_YES_german,"Ja")
+
+define(M4_NO_english,"no")
+define(M4_NO_italian,"no")
+define(M4_NO_german,"Nein")
+</pre>
+</p>
+<p>
+The final step is rebuilding the needed files for compilation. On a 
+Linux/UNIX/MacOSX/cygwin system, this is done automatically by using 
+"sh build.sh"<br>
+(or "configure && make").<br>
+On other systems, at least a text editor and a port of the m4 program is 
+required.<br>
+With the texteditor, copy all dune.*.rc files together and store the
+result in the file "dune.rc"<br>
+With m4 you need to execute the following commands in the src directory:<br>
+<br>
+m4 resource.h.m4 &gt; resource.h<br>
+m4 CommandlineLanguages.h.m4 &gt; CommandlineLanguages.h<br>
+</p>
+<p>
+After recompilation (see the file INSTALL for details), the new language can 
+be used with a commandline parameter.
+The name of the new commandline parameter is the minus sign followed by
+the second word in the new line in M4_LANGUAGES_CONFIG.<br>
+E.g. if you added "IT,italian," to M4_LANGUAGES_CONFIG, the new commandline
+parameter to switch to the italien language is -italien
+</p>
+<p>
+All that have to be done now is to add the new commandline parameter to the 
+documentation in the manpage file man/dune.1
+</p>
+<h2><a name="programmer_localisation">Localisation from a programmers point 
+of view </a></h2>
+<p>
+When handling text messages from a programmers point of view, always try to 
+use the function "swLoadString" to get a language related string (e.g. for a 
+errormessage) from the "src/dune.rc" file. The first argument of the 
+swLoadString file is a identifier, like IDS_INTERNAL_ERROR, which refers to 
+the message in the default (english) language. To get the current language 
+translation, add the term TheApp->getLang() to the idenifier, e.g . with 
+swLoadString(IDS_INTERNAL_ERROR + TheApp->getLang(),...
+</p>
+<p>
+As a programmer, take care about the fact, that each program code 
+modification (e.g. addition of new menu items) in one of the 
+src/dune.something.rc 
+files requires the change of a all other "src/dune.somelanguage.rc" files.<br>
+Cause a programmer is usually not a multilingual genius, the addition of
+a new menuitem, icon tooltip or errormessage comes with a translation 
+problem. There are two possible solutions: either use a dictionary/internet 
+translation service like babelfish.altavista.com, or leave the english 
+word in the src/dune.something.rc file and hope for modification by users.<br>
+To leave the line blank cause of a unknown foreign word is not a option,
+cause this can result in a crash of the program when used in this foreign
+language.<br>
+The addition of a new icon tooltip or errormessage also requires the
+inclusion of a new "#define" command which can be usually found in the 
+resource.h file.<br>
+Do not change the resource.h file directly. The file resource.h is a 
+autogenerated file, that could be overwritten at each run of the "make" 
+command or "configure" command.<br>
+</p>
+<h2><a name="class_overview">class overview</a></h2>
+<p>
+The name of most sourcefiles in the "src" directory is identical 
+to the name of the major contained class.
+</p>
+<p>
+The following class/filenames have special meanings:
+<ul>
+  <li>
+     <b>Node</b>SomeName:<br>
+        Implement details for the VRML Node "SomeName"  
+  </li>
+  <li>
+     SomeName<b>Node</b>:<br>
+        Parentclass of other <b>Node</b>SomeName classes
+  </li>
+  <li>
+     Something<b>Dialog</b>, Something<b>Window</b>, Something<b>View</b>:<br>
+        Implement details for the graphical user interface (GUI) 
+  </li>
+  <li>
+     Something<b>App</b>:<br>
+        Implement details for data global to the whole application
+  </li>
+  <li>
+     Something<b>Command</b>:<br>
+        Implement details for sending internal commands 
+  </li>
+  <li>
+     <b>SF</b>Something/<b>MF</b>Something:<br>
+        Implement details for VRML/X3D datatypes
+  </li>
+</ul>
+</p>
+<p>
+If <a href=http://www.stack.nl/~dimitri/doxygen>doxygen</a>
+is installed, a class hierarchy of white_dune can be produced by typing <br>
+<br>
+<pre>
+         make documentation
+</pre>
+and can then be found <a href=doxygen_out_html/html/hierarchy.html>here</a>.
+</p>
+</body>
+
+

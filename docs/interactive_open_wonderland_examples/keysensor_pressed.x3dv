@@ -1,0 +1,306 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+COMPONENT KeyDeviceSensor:1 
+
+DEF KeySensor1 KeySensor
+  {
+  }
+
+Transform
+  {
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Sphere
+	{
+	}
+      }
+    DEF TouchSensor3 TouchSensor
+      {
+      }
+    ]
+  }
+
+DEF Script1 Script 
+  {
+  inputOnly SFBool bool1_in
+  outputOnly MFString mstring1_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring1_out //
+ function bool1_in(value)
+    {
+    // value  SFBool
+    if (value)
+       {
+       mstring1_out = new MFString('pressed');
+       }
+    else
+       {
+       mstring1_out = new MFString('released');
+       }
+    }
+
+"
+    "java:
+
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+    if (event.equals(\"bool1_in\")) {
+        script.mstring1_out = new String[1];
+        if (script.bool1_in)
+            script.mstring1_out[0] = \"pressed\";
+        else
+            script.mstring1_out[0] = \"released\";
+    }
+"
+    ]
+  }
+
+ROUTE TouchSensor3.isActive TO Script1.bool1_in
+
+DEF Script2 Script 
+  {
+  inputOnly SFString string1_in
+  outputOnly MFString mstring2_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring2_out //
+
+ function string1_in(value)
+    {
+    mstring2_out = new MFString(value);
+    }
+"
+    "java:
+
+    X3dScript_Script2 script = (X3dScript_Script2)node;
+    if (event.equals(\"string1_in\")) {
+        script.mstring2_out = new String[1];
+        script.mstring2_out[0] = script.string1_in;
+    }
+"
+    ]
+  }
+
+ROUTE KeySensor1.keyPress TO Script2.string1_in
+
+DEF Script3 Script 
+  {
+  inputOnly SFBool bool2_in
+  outputOnly MFString mstring3_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring3_out //
+
+ function bool2_in(value)
+    {
+    // value  SFBool
+    if (value)
+        mstring3_out = new MFString(\"control TRUE\");
+    else
+        mstring3_out = new MFString(\"control FALSE\");
+    }
+"
+    "java:
+
+    X3dScript_Script3 script = (X3dScript_Script3)node;
+    if (event.equals(\"bool2_in\")) {
+        script.mstring3_out = new String[1];
+        if (script.bool2_in)
+            script.mstring3_out[0] = \"control TRUE\";
+        else
+            script.mstring3_out[0] = \"control FALSE\";
+    } 
+"
+    ]
+  }
+
+ROUTE KeySensor1.controlKey TO Script3.bool2_in
+
+DEF Script4 Script 
+  {
+  inputOnly SFBool bool3_in
+  outputOnly MFString mstring4_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring4_out //
+
+ function bool3_in(value)
+    {
+    // value  SFBool
+    if (value)
+        mstring4_out = new MFString(\"alt TRUE\");
+    else
+        mstring4_out = new MFString(\"alt FALSE\");
+
+    }
+"
+    "java:
+
+    X3dScript_Script4 script = (X3dScript_Script4)node;
+    if (event.equals(\"bool3_in\")) {
+        script.mstring4_out = new String[1];
+        if (script.bool3_in)
+            script.mstring4_out[0] = \"alt TRUE\";
+        else
+            script.mstring4_out[0] = \"alt FALSE\";
+    }
+"
+    ]
+  }
+
+ROUTE KeySensor1.altKey TO Script4.bool3_in
+
+DEF Script5 Script 
+  {
+  inputOnly SFBool bool4_in
+  outputOnly MFString mstring5_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring5_out //
+
+ function bool4_in(value)
+    {
+    // value  SFBool
+    if (value)
+        mstring5_out = new MFString(\"shift TRUE\");
+    else
+        mstring5_out = new MFString(\"shift FALSE\");
+
+    }
+"
+    "java:
+
+    X3dScript_Script5 script = (X3dScript_Script5)node;
+    if (event.equals(\"bool4_in\")) {
+        script.mstring5_out = new String[1];
+        if (script.bool4_in)
+            script.mstring5_out[0] = \"shift TRUE\";
+        else
+            script.mstring5_out[0] = \"shift FALSE\";
+    }
+"
+    ]
+  }
+
+ROUTE KeySensor1.shiftKey TO Script5.bool4_in
+
+Transform
+  {
+  translation -2.96995329 -2.26498842 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text1 Text
+	{
+	string "click sphere"
+	}
+      }
+  }
+
+ROUTE Script1.mstring1_out TO Text1.set_string
+
+Transform
+  {
+  translation -2.39050626 3.11905860 -4.01679563
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text2 Text
+	{
+	string "type key "
+	}
+      }
+  }
+
+ROUTE Script2.mstring2_out TO Text2.set_string
+
+Transform
+  {
+  translation 2.14937686 -0.20701819 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text3 Text
+	{
+	}
+      }
+  }
+
+ROUTE Script3.mstring3_out TO Text3.set_string
+
+Transform
+  {
+  translation -6.11738014 0.78982162 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text4 Text
+	{
+	}
+      }
+  }
+
+ROUTE Script4.mstring4_out TO Text4.set_string
+
+Transform
+  {
+  translation -5.90557098 -1.39684319 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text5 Text
+	{
+	}
+      }
+  }
+
+ROUTE Script5.mstring5_out TO Text5.set_string
+

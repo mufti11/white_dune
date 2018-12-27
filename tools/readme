@@ -1,0 +1,23 @@
+This file is free software; the Free Software Foundation
+gives unlimited permission to copy, distribute and modify it.
+
+This directory contains various UNIX shell script commandline tools.
+They depend (beside on common unix shell commands like sh, cp or rm) on the 
+following programs:
+
+collectViewpoints.sh  (collect viewpoints to Transform animations)
+                      awk           (GNU Awk 3.1.1 is known working)
+
+creaseangleChange.sh
+                      awk           (GNU Awk 3.1.1 is known working)
+
+img2pixeltexture.sh
+                      awk           (GNU Awk 3.1.1 is known working)
+                      anytopnm      (netpbm 9.24 is known working)
+                      pnmtoplainpnm (netpbm 9.24 is known working)
+
+povray_mkskybox.sh
+                      m4            (GNU m4 1.4.1 is known working)
+                      x-povray      
+                      convert       (ImageMagick 5.4.7 is known working)
+

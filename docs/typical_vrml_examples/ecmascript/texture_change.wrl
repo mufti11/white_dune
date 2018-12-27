@@ -1,0 +1,63 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+Group 
+  {
+  children 
+    [
+    DEF TEXTUR_TAUSCHER Script 
+      {
+      eventIn SFBool bool_in
+      eventOut MFString textur_out
+      url 
+	[
+	"javascript:
+         function bool_in(value, time)
+            {
+            if (value)
+               textur_out=new MFString('test2.jpg');
+            else
+               textur_out=new MFString('test1.jpg');
+            }
+        "
+	]
+      }
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    DEF TouchSensor1 TouchSensor 
+      {
+      }
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	texture 	DEF ImageTexture1 ImageTexture 
+	  {
+	  url 
+	    [
+	    "test1.jpg"
+	    ]
+	  }
+	}
+      geometry       Cone 
+	{
+	}
+      }
+    ]
+  }
+
+ROUTE TouchSensor1.isOver TO TEXTUR_TAUSCHER.bool_in
+ROUTE TEXTUR_TAUSCHER.textur_out TO ImageTexture1.set_url
+

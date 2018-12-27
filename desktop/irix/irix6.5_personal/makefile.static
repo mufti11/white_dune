@@ -1,0 +1,77 @@
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+DATA=../data
+INSTDIRS=$(INSTALLDIR) $(INSTALLDIR)/filetype $(INSTALLDIR)/iconlib
+INSTFILES=$(INSTALLDIR)/filetype/Dune.ftr \
+          $(INSTALLDIR)/filetype/Makefile.personal \
+          $(INSTALLDIR)/iconlib/Dunebackground.fti \
+          $(INSTALLDIR)/iconlib/Dune.fti \
+          $(INSTALLDIR)/iconlib/Dune.open.fti \
+          $(INSTALLDIR)/iconlib/Dune4kids.fti \
+          $(INSTALLDIR)/iconlib/Dune4kids.open.fti \
+          $(INSTALLDIR)/iconlib/nostereoDune.fti \
+          $(INSTALLDIR)/iconlib/nostereoDune.open.fti \
+          $(INSTALLDIR)/iconcatalog/pages/WebTools/dune \
+          $(INSTALLDIR)/iconcatalog/pages/WebTools/nostereodune \
+          $(INSTALLDIR)/iconcatalog/pages/WebTools/fm_cosmo2vrml97
+
+$(INSTALLDIR)/filetype/desktop.otr: $(INSTFILES)
+	sh -c "(cd $(INSTALLDIR)/filetype;make -f Makefile.personal)"
+#
+#same as
+#	sh -c "(cd $(INSTALLDIR)/filetype;/usr/sbin/fftr -o $@ *.ftr)"
+$(INSTALLDIR)/filetype/Makefile.personal: /usr/lib/filetype/Makefile.personal
+	cp /usr/lib/filetype/Makefile.personal $(INSTALLDIR)/filetype
+
+Dune.ftr: Dune.ftr.m4 duneoptions.m4
+	m4 duneoptions.m4 Dune.ftr.m4 > Dune.ftr
+
+$(INSTALLDIR)/filetype/Dune.ftr: Dune.ftr $(INSTDIRS) 
+	cp Dune.ftr $(INSTALLDIR)/filetype
+
+$(INSTALLDIR)/iconlib/Dunebackground.fti: $(DATA)/Dunebackground.fti $(INSTDIRS)
+	cp $(DATA)/Dunebackground.fti $(INSTALLDIR)/iconlib
+
+$(INSTALLDIR)/iconlib/Dune.fti: $(DATA)/Dune.fti $(INSTDIRS)
+	cp $(DATA)/Dune.fti $(INSTALLDIR)/iconlib
+
+$(INSTALLDIR)/iconlib/Dune.open.fti: $(DATA)/Dune.open.fti $(INSTDIRS)
+	cp $(DATA)/Dune.open.fti $(INSTALLDIR)/iconlib
+
+$(INSTALLDIR)/iconlib/Dune4kids.fti: $(DATA)/Dune4kids.fti $(INSTDIRS)
+	cp $(DATA)/Dune4kids.fti $(INSTALLDIR)/iconlib
+
+$(INSTALLDIR)/iconlib/Dune4kids.open.fti: $(DATA)/Dune4kids.open.fti $(INSTDIRS)
+	cp $(DATA)/Dune4kids.open.fti $(INSTALLDIR)/iconlib
+	
+$(INSTALLDIR)/iconlib/nostereoDune.fti: $(DATA)/nostereoDune.fti $(INSTDIRS)
+	cp $(DATA)/nostereoDune.fti $(INSTALLDIR)/iconlib
+
+$(INSTALLDIR)/iconlib/nostereoDune.open.fti: $(DATA)/nostereoDune.open.fti $(INSTDIRS)
+	cp $(DATA)/nostereoDune.open.fti $(INSTALLDIR)/iconlib
+	
+$(INSTALLDIR)/filetype:
+	mkdir -p $(INSTALLDIR)/filetype
+
+$(INSTALLDIR)/iconlib:
+	 mkdir -p $(INSTALLDIR)/iconlib
+
+$(INSTALLDIR):
+	mkdir -p $(INSTALLDIR)
+
+$(INSTALLDIR)/iconcatalog/pages/WebTools/dune:
+        mkdir -p $(INSTALLDIR)/iconcatalog/pages/WebTools
+	ln -sf /usr/freeware/bin/dune $@
+
+$(INSTALLDIR)/iconcatalog/pages/WebTools/dune4kids:
+        mkdir -p $(INSTALLDIR)/iconcatalog/pages/WebTools
+	ln -sf /usr/freeware/bin/dune4kids $@
+
+$(INSTALLDIR)/iconcatalog/pages/WebTools/nostereodune:
+        mkdir -p $(INSTALLDIR)/iconcatalog/pages/WebTools
+	ln -sf /usr/freeware/bin/nostereodune $@
+
+$(INSTALLDIR)/iconcatalog/pages/WebTools/fm_cosmo2vrml97:
+        mkdir -p $(INSTALLDIR)/iconcatalog/pages/WebTools
+	ln -sf /usr/freeware/bin/fm_cosmo2vrml97 $@

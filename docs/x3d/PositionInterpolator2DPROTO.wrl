@@ -1,0 +1,97 @@
+#VRML V2.0 utf8
+
+PROTO PositionInterpolator2D [
+#
+# Copyright (C) 2007 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+ eventIn SFFloat set_fraction
+ exposedField MFFloat key []
+ exposedField MFVec2f keyValue []
+ exposedField SFNode metadata NULL
+ eventOut SFVec2f value_changed
+ ]
+{
+  DEF INTERPOLATOR_3D PositionInterpolator
+    {
+    set_fraction IS set_fraction
+    key IS key
+    }
+
+  Switch 
+    {
+    choice 
+      [
+      Shape 
+        {
+        geometry IndexedFaceSet
+          {
+          texCoord DEF KEY_VALUE_CONTAINER 
+            TextureCoordinate { point IS keyValue } 
+          }
+        }
+      ]
+    }
+
+  DEF SCRIPT Script 
+   {
+      field SFNode keyValue_container USE KEY_VALUE_CONTAINER
+      eventIn MFVec2f keyValue_in
+      eventOut MFVec3f vec3fKeyValue_out
+
+      eventIn SFVec3f value_in
+      eventOut SFVec2f value_changed IS value_changed
+      
+      url
+        "javascript:
+    
+        function initialize()
+           {
+           vec3fKeyValue_out = new MFVec3f();
+           for (i = 0; i < keyValue_container.point.length; i++) 
+              {
+              vec3fKeyValue_out[i].x=keyValue_container.point[i].x;
+              vec3fKeyValue_out[i].y=keyValue_container.point[i].y;
+              vec3fKeyValue_out[i].z=0;
+              }
+           }
+
+        function keyValue_in(value)
+           {
+           vec3fKeyValue_out = new MFVec3f();
+           for (i = 0; i < value.length; i++) 
+              {
+              vec3fKeyValue_out[i].x=value[i].x;
+              vec3fKeyValue_out[i].y=value[i].y;
+              vec3fKeyValue_out[i].z=0;
+              }
+           }
+
+        function value_in(value) 
+           {
+           value_changed = new SFVec2f(value.x, value.y);
+           }
+        "
+    }
+
+   ROUTE KEY_VALUE_CONTAINER.point TO SCRIPT.keyValue_in
+   ROUTE SCRIPT.vec3fKeyValue_out TO INTERPOLATOR_3D.keyValue
+   ROUTE INTERPOLATOR_3D.value_changed TO SCRIPT.value_in
+}
+
+
+

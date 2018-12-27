@@ -1,0 +1,375 @@
+<!--
+/*
+ * Copyright (C) 2018 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h1>How to build a space glider with extrusion (not difficult)</h1>
+<br>
+<h2>First a few informations to read</h2>
+<br>
+On some systems (Linux KDE/Gnome and SGI IRIX 4dwm), there is a 
+programm icon fuer "dune4kids", it lools soemthing like this:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+On systems like Micro$oft Windows or MacOSX there is only one (other)
+programm icon:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normally, the program of this icon starts with the english full version,
+usually with very much icons and too much menues.
+<br>
+<a href="dune4kids_start_en.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+In this case, you have to switch to dune4kids.<br> 
+You have to <a href="dune4kids_start_en.html" target="_blank"> 
+click here</a> to switch to the right version.<br>
+<img src="frog01_en.png">
+<br><br>
+<h2>What to do, if the program crashes ?</h2>
+With a bit of luck, you can load the last situation, if there is a
+new ".dune_crash" file in the list of recent files.
+<br>
+<img src="frog00_en.png">
+<br>
+<h1>Navigation</h1>
+Navigation means the movment in the 3D modell.<br>
+This is important, cause it can happen very easily, that you get inside or
+behind your peace of work and see therefore nothing.<br><br>
+When you see nothing there are two way to continue, ofthen you use this
+ways together:
+<ul>
+<li> <b>Move backwards</b><br>
+     You can go forwards and backwards, if you press together the 
+     left mouse button and the "Shift" key on the keyboard and move the
+     mouse up and down.
+     If you use "Examine" (when the icon <img src="examine.png"> is pressed)
+     this also works with the middle button of a 3-button mouse.
+     If there is a mouse with a scroll wheel, you have to press the mouse
+     wheel.
+</li>
+<li> <b>Turn the 3D world</b><br>
+     If you press both the left mouse button and the "Control" key on the 
+     keyboard and then move the mouse, the whole 3D world turns around.
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Additionally there you can press together the left mouse button, the "Shift" 
+key and the "Control" key and move the mouse (or use the icon 
+<img src="move_along_screen.png">). This results in the movement in direction
+of the screen plane: up, down, left and right.
+<br>
+<br>
+After you find the object and moved near to it, you should press again the
+"Examine" icon <img src="examine.png"> in order to continue to work normally.
+<br>
+<h1>Icons for changes</h1>
+In Order to show, how things are changed, a box is created.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, to changed whole objects:
+<ul>
+<li>Move: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Rotate: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Scale: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>uniform scale: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>move center of rotation: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+With small white boxes you can change the objects itself.
+With the single arrow icons <img src="xyz.png"> you can select the direction.
+<br>
+For example if only the green arrow is pushed,
+<img src="y_only.jpg"> you can move the little box<br> 
+<br>
+<img src="yonly_1.jpg"> 
+<br>
+only into the direction of the green arrow.<br>
+<br>
+<img src="yonly_2.jpg">. 
+<br>
+In the same way as arrows grabed by the stem to move inside a plane,
+you can also push two arrows <img src="xz_only.jpg"> in one time
+to move a little box in one plane. 
+<br>
+<h1>How to build a glider model (not difficult)</h1>
+<br>
+You don't have to obey the following description exactly, but should 
+(at least at the first reading) stick to the clue.<br>
+It is important that <em> Change -&gt; X mirred modelling</em> is alway 
+seletected.<br>
+Start with a box <em> New -&gt; Box </em>
+<br>
+<img src="plane1.png"/>
+<br>
+Navigate to show more faces 
+<br>
+<img src="plane2.png"/>
+<br>
+Use <em> Change -&gt; Change to - &gt; IndexedFaceSet </em>
+<br>
+<img src="plane3.png"/>
+<br>
+Use <em> Selection -&gt; Faces </em> and select the face in z (blue) direction
+<br>
+<img src="plane4.png"/>
+<br>
+Use <em> (IndexedFace)Set -> Inset </em> and press OK;
+<br>
+<img src="plane5a.png"/>
+<br>
+Select the new face in the middle of the face.
+<br>
+<img src="plane6.png"/>
+<br>
+And drag it forward with the left mouse button pressed.
+<br>
+<img src="plane7.png"/>
+<br>
+Select the backward face on the side
+<br>
+<img src="plane8.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Inset face</em> and press OK.
+<br>
+<img src="plane9.png"/>
+<br>
+Select the lower face
+<br>
+<img src="plane10.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Extrude</em>.
+<br>
+<img src="plane11.png"/>
+<br>
+Drag the extrude face into x (red) direction.
+<br>
+<img src="plane12.png"/>
+<br>
+Navigate to see the plane from behind and select the backward face.
+<br>
+<img src="plane13.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Inset face</em> and Insert 0.3, the press OK.
+<br>
+<img src="plane14.png"/>
+<br>Select the middle face.
+<br>
+<img src="plane15.png"/>
+<br>
+Drag the middle face backwards.
+<br>
+<img src="plane16.png"/>
+<br>
+Select the backward side face.
+<br>
+<img src="plane17.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Inset face</em>.
+<br>
+<img src="plane18.png"/>
+<br>
+Insert 0.2, the press OK.
+<br>
+<img src="plane19.png"/>
+<br>
+Use <em> Movement -&gt; z only (blue) </em> to drag the face into the 
+z direction.
+<br>
+<img src="plane20.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Extrude</em>.
+<br>
+<img src="plane21.png"/>
+<br>
+Reset <em> Movement -&gt; z only (blue) </em> and 
+use <em> Movement -&gt; x only (red) </em> to drag the face into the
+x direction. 
+<br>
+<img src="plane22.png"/>
+<br>
+Select the upper backward face and use 
+<em>(IndexedFace)Set -> Inset face</em> insert 0.2 and press OK.
+<br>
+<img src="plane23.png"/>
+<br>
+Reset <em> Movement -&gt; x only (red) </em> and 
+use <em> Movement -&gt; z only (blue) </em> and drag the face into the
+z direction. 
+<br>
+<img src="plane24.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Extrude</em>.
+<br>
+<img src="plane25.png"/>
+<br>
+Navigate to see the new face better and  
+Reset <em> Movement -&gt; z only (blue) </em> and 
+use <em> Movement -&gt; y only (green) </em>
+<br>
+<img src="plane26.png"/>
+<br>
+Drag the face into the y direction. 
+<br>
+<img src="plane27.png"/>
+<br>
+Reset <em> Movement -&gt; y only (green) </em>
+and use <em> Seletion -&gt; Lines </em>. Select a line
+<br>
+<img src="plane28.png"/>
+<br>
+And pull it into the right direction. You may use 
+<em> Movement -&gt; x/y/z only </em>
+<br>
+<img src="plane29.png"/>
+<br>
+Other line...
+<br>
+<img src="plane30.png"/>
+<br>
+Other line...
+<br>
+<img src="plane31.png"/>
+<br>
+<br>
+<img src="plane32.png"/>
+<br>
+Navigate to see the object from behind and select the matching face.
+<br>
+<img src="plane33.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Extrude</em> and drag the face into the object.
+<br>
+<img src="plane34.png"/>
+<br>
+Navigate to see the object from front and select the matching face.
+<br>
+<img src="plane35.png"/>
+<br>
+Use <em>(IndexedFace)Set -> Extrude</em> and drag the face into the object.
+<br>
+<img src="plane36.png"/>
+<br>
+<br>
+<img src="plane37.png"/>
+<br>
+Navigation and click to the object<br>
+<img src="plane38.png"/>
+<br>
+Use <em>(IndexedFace)Set -&gt; Subdivide</em>.
+<br>
+<img src="plane39.png"/>
+<br>
+Use <em>(IndexedFace)Set -&gt; Subdivide</em>.
+<br>
+<img src="plane41.png"/>
+<br>
+Select the IndexedFaceSet
+<br>
+<img src="plane42.png"/>
+<br>
+Use <em> Change -&gt; Show (sometimes numbers)</em>
+and increase creaseAngle. The edges of the shape are hidden.
+<br>
+<img src="plane43.png"/>
+<br>
+Select the Transform
+<br>
+<img src="plane44.png"/>
+<br>
+Use <em>New -&gt; Sphere</em>.
+<br>
+<img src="plane45.png"/>
+<br>
+Drag the green arrow top to move the sphere.
+<br>
+<img src="plane46.png"/>
+<br>
+Select the Material of the sphere.
+<br>
+<img src="plane47.png"/>
+<br>
+Use <em>-Change -&gt Color (need Material or ...) -&gt; Normal </em>
+and select something blue
+<br>
+<img src="plane48.png"/>
+<br>
+Use <em>-Change -&gt Transparency</em>.
+<br>
+<img src="plane49.png"/>
+<br>
+Press OK.
+<br>
+<img src="plane50.png"/>
+<br>
+Select the Material of the IndexedFaceSet.
+<br>
+<img src="plane51.png"/>
+<br>
+Use <em>-Change -&gt Color (need Material or ...) -&gt; Gloss </em>
+and select something white
+<br>
+<img src="plane52.png"/>
+<br>
+Select the Transform of the IndexedFaceSet.
+<br>
+<img src="plane53.png"/>
+<br>
+Use <em>Animation -&gt Create Curve Animation (need Transform)</em>.
+<br>
+<img src="plane54.png"/>
+<br>
+Press OK.<br>
+A path of the object has been created.
+Select CurveAnimation1. 
+<br>
+<img src="plane55.png"/>
+<br>
+Drag the points of the path to matching places and press the triangle play
+button.
+<br>
+<img src="plane56.png"/>
+<br>
+

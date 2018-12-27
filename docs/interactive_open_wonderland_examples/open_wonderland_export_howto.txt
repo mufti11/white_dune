@@ -1,0 +1,131 @@
+How to use Wonderland modules from VRML/X3D files
+=================================================
+
+A recent version of java/javac (java SDK, not OpenSDK) should be installed
+
+you need to download the sources of Wonderland (e.g. to src)
+ant must be installed
+
+To create a VRML97/X3DV file, you can use either white_dune ("-4kids") itself 
+or a additional general purpose 3D modeller with VRML97/X3D export like 
+wings3d, blender, 3D Studio Max, maya etc.
+Such a file can then imported into a VRML97/X3D scene opened by white_dune
+with File -> Import (or via a Inline Node) and then animated etc.
+In Wings3D create/modify 3D objects and use File -> Export -> VRML 2.0, 
+eg. sample123.wrl
+
+If you want to use X3DB (binary) files, you need a translator 
+to the X3DV format, like the "aopt" program shipped with the gratis 
+"instant reality player" program.
+
+You can use the white_dune program to graphically open and modify 
+the VRML97/X3D file. 
+
+To export the VRML/X3D data use (in the main GUI):
+
+File -> Export As ... -> Export As Open Wonderland 0.5 module Java Source
+
+In the new opened window enter
+
+- the Wonderland module export path (something/wonderland/modules)
+- a name prefix as solution for possible name problems (default: X3d)
+- press the button of "Generate many classes" for larger VRML/X3D files
+
+If your have jdk and ant installed, you can press the button
+ 
+  run "ant deploy" after export (could take time)
+
+this compiles the created module source and uploads the module to the running 
+Open Wonderland server on the same machine.
+
+You can modify the ant command and the options for running ant 
+(usually if javac need more memory for compilation)
+
+The default ant command starts a new command window and iconify the 
+white_dune windows. If the ant command fails, the command window stays 
+open and the white_dune windows are kept until you close the ant command
+window.
+
+Commandline/batch usage
+=======================
+
+Sometimes it is usefull not to work interactivly, e.g. when you have
+a lot of VRML97/X3D files and want to process them in a batchfile/loop.
+Unfortunalty, white_dune still needs the possibility to open a window,
+cause OpenGL commands are internally used (a virtual windowing system
+on a machine with no display hardware and no physical input devices
+like Xvfb is sufficent).
+
+To try out the creation of a wonderland module, open a commandline window
+
+Use something like the commandline
+
+ dune -wonderland src/0.5-preview2/wonderland/modules sample123.wrl
+
+The source for a wonderland module will be created as
+
+   src/0.5-preview2/wonderland/modules/exportX3dv/sample123
+
+Open a commandline window and change in the directory
+
+   src/0.5-preview2/wonderland/modules/exportX3dv/sample123
+
+then run ant
+
+   ant
+
+to create the jar file
+
+   src/0.5-preview2/wonderland/modules/exportX3dv/sample123/dist/sample123.jar
+
+When compiling with  the  command  ant, the java compiler may get out of memory
+resources.
+To fix the problem, you can set the memory limits  by  extending the 
+javac tag in the file  wonderland/build-tools/build-scripts/build-setup.xml e.g.
+
+<javac ...
+       ...
+       fork="true"
+       memoryinitialsize="256m"
+       memorymaximumsize="1024m"
+>
+
+or set the environment variable ANT_OPTS to "-Xms256m -Xmx1024m"
+
+Start the Wonderland server with
+
+   java -jar path_to/Wonderland.jar
+
+After initialisation, it will show the adress of the started webserver, 
+something like http://computername:8080/
+If needed, change your firewall settings to allow http://computername:8080/ 
+and java web start
+
+Open the http://computername:8080/ URL with Firefox, Internet Explorer etc.
+
+Click to the big button "Server Admin"
+
+Click to "Manage Modules", scroll to the bottom of the page and use 
+browse/install to install the module file
+
+   src/0.5-preview2/wonderland/modules/exportX3dv/sample123/dist/sample123.jar
+
+Click to "Manage Server", click to "Restart all" and wait till the servers has been restarted
+
+Then click to "Home" and "Launch"
+
+Click to "login" in the resulting Wonderland client window and use insert -> components to install the sample123
+module.
+
+Each run of the "white_dune.exe -wonderland ..." commandline will only modify the file
+
+   src/0.5-preview2/wonderland/modules/exportX3dv/sample12/src/classes/org/jdesktop/wonderland/modules/sample123/client/jme/cellrenderer/Sample123.java 
+
+which contain only the data/numbers from the VRML/X3DV. Program parts to use 
+this data with jME/Wonderland like
+
+   src/0.5-preview2/wonderland/modules/exportX3dv/sample12/src/classes/org/jdesktop/wonderland/modules/sample123/client/jme/cellrenderer/Sample123CellRenderer.java 
+
+are not modified. The other programs parts come mainly from the sample 
+tuturials and can be changed without the fear to be modified by a new export 
+of the 3D data. 

@@ -1,0 +1,83 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+Transform
+  {
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Sphere
+	{
+	}
+      }
+    DEF TouchSensor3 TouchSensor
+      {
+      }
+    ]
+  }
+
+DEF Script1 Script 
+  {
+  inputOnly SFBool bool1_in
+  outputOnly MFString mstring1_out
+  url 
+    [
+    "ecmascript:
+
+ // eventOut MFString mstring1_out //
+ function bool1_in(value)
+    {
+    // value  SFBool
+    if (value)
+       {
+       mstring1_out = new MFString('pressed');
+       }
+    else
+       {
+       mstring1_out = new MFString('released');
+       }
+    }
+
+"
+    "java:
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+    script.mstring1_out = new String[1];
+    script.mstring1_out[0] = \"\";
+    if (script.bool1_in)
+        script.mstring1_out[0] = \"pressed\";
+    else
+        script.mstring1_out[0] = \"released\";
+"
+    ]
+  }
+
+ROUTE TouchSensor3.isActive TO Script1.bool1_in
+
+Transform
+  {
+  translation -2.96995329 -2.26498842 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text1 Text
+	{
+	string "click sphere"
+	}
+      }
+  }
+
+ROUTE Script1.mstring1_out TO Text1.set_string
+

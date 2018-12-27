@@ -1,0 +1,142 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+DEF Transform1 Transform
+  {
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Cylinder
+	{
+	}
+      }
+    Transform
+      {
+      translation -3.06951141 -5.31380288e-2 0
+      children 
+	[
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      diffuseColor 0.47450980 1 0.20392157
+	      }
+	    }
+	  geometry Sphere
+	    {
+	    radius 0.37992694
+	    }
+	  }
+	Transform
+	  {
+	  translation -1.33760321 -1.60540568 0
+	  children 
+	    Shape
+	      {
+	      appearance Appearance
+		{
+		material Material
+		  {
+		  }
+		}
+	      geometry Text
+		{
+		string "start"
+		}
+	      }
+	  }
+	DEF TouchSensor1 TouchSensor
+	  {
+	  }
+	]
+      }
+    ]
+  }
+
+DEF TimeSensor1 TimeSensor
+  {
+  cycleInterval 3
+  }
+
+ROUTE TouchSensor1.touchTime TO TimeSensor1.set_startTime
+
+DEF OrientationInterpolator1 OrientationInterpolator
+  {
+  key 0
+  keyValue 0 0 1 0
+  }
+
+ROUTE TimeSensor1.fraction_changed TO OrientationInterpolator1.set_fraction
+ROUTE OrientationInterpolator1.value_changed TO Transform1.set_rotation
+
+DEF PositionInterpolator1 PositionInterpolator
+  {
+  key 
+    [
+    0
+    1
+    ]
+  keyValue 
+    [
+    0 0 0
+    0 1 0
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+
+Transform
+  {
+  translation 3.06951141 0 0
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  diffuseColor 1 0.21568627 0.20000000
+	  }
+	}
+      geometry Sphere
+	{
+	radius 0.37992694
+	}
+      }
+    Transform
+      {
+      translation -0.93999999 -1.57571649 0
+      children 
+	Shape
+	  {
+	  appearance Appearance
+	    {
+	    material Material
+	      {
+	      }
+	    }
+	  geometry Text
+	    {
+	    string "stop"
+	    }
+	  }
+      }
+    DEF TouchSensor2 TouchSensor
+      {
+      }
+    ]
+  }
+
+ROUTE TouchSensor2.touchTime TO TimeSensor1.set_stopTime
+

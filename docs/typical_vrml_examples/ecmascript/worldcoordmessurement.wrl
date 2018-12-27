@@ -1,0 +1,278 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    4.554112e-2 
+    0.116926 
+    0.123526 
+    0.130798 
+    0.187095 
+    0.197602 
+    0.207625 
+    0.214192 
+    0.238932 
+    0.253591 
+    0.260106 
+    0.268465 
+    0.282205 
+    0.378796 
+    0.385285 
+    0.476710 
+    0.610990 
+    0.625932 
+    0.651712 
+    0.718322 
+    0.766100 
+    0.773547 
+    0.805569 
+    0.816833 
+    0.824318 
+    0.832961 
+    0.839518 
+    0.873217 
+    0.883912 
+    0.892683 
+    0.900706 
+    0.908476 
+    0.915391 
+    0.923202 
+    0.959104 
+    0.966633 
+    0.973604 
+    0.981146 
+    0.989119 
+    0.995864 
+    ]
+  keyValue 
+    [
+    0 -0.482095 0 
+    -0.117010 -4.447523 0 
+    -0.358596 -4.447523 0 
+    -0.725851 -4.447523 0 
+    -2.586272 -4.252780 0 
+    -2.586272 -3.678954 0 
+    -2.586272 -2.923973 0 
+    -2.586272 -2.087756 0 
+    -2.586272 2.546310e-4 0 
+    -2.586272 0.678475 0 
+    -2.586272 1.224323 0 
+    -2.586272 1.591579 0 
+    -2.554280 1.591579 -8.894454e-3 
+    -0.307875 1.591579 -8.894454e-3 
+    -0.307875 1.295147 -8.894454e-3 
+    1.522605 0.375611 -8.894454e-3 
+    -0.509768 0.101497 6.554365e-2 
+    -1.244511 0.101497 6.554365e-2 
+    -2.176938 0.101497 6.554365e-2 
+    -2.176938 0.101497 3.603753 
+    -2.176938 0.398721 3.716573 
+    -2.176938 0.398721 3.537411 
+    -2.176938 0.398721 2.478072 
+    -2.176938 0.398721 2.415223 
+    -2.176938 0.398721 2.114865 
+    -2.176938 0.398721 1.723924 
+    -2.176938 0.398721 1.114045 
+    -2.176938 0.398721 -1.708297 
+    -2.176938 0.398721 -2.507901 
+    -2.176938 0.398721 -3.194184 
+    -2.176938 0.398721 -3.720078 
+    -2.176938 0.398721 -3.868130 
+    -2.176938 0.457710 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    -2.176938 0.551484 -3.868130 
+    ]
+  }
+
+DEF Transform2 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Sphere 
+	{
+	}
+      }
+    DEF ProximitySensor1 ProximitySensor 
+      {
+      size 1000 1000 1000
+      }
+    ]
+  translation -0.307875 1.294887 -8.894454e-3
+  }
+
+ROUTE PositionInterpolator1.value_changed TO Transform2.set_translation
+
+DEF TimeSensor1 TimeSensor 
+  {
+  cycleInterval 8.220000
+  loop TRUE
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+
+DEF Script1 Script 
+  {
+  eventIn SFVec3f vec3f1_in
+  eventIn SFVec3f vec3f2_in
+  eventOut SFVec3f vec3f1_out
+  field SFVec3f vstore1 0 0 0
+  field SFVec3f vstore2 0 0 0
+  url 
+    [
+    "javascript:
+
+ // field SFVec3f vstore1 //
+ // field SFVec3f vstore2 //
+ // eventOut SFVec3f vec3f1_out //
+
+ function account_world_coord()
+    {
+    vec3f1_out[0] = vstore2[0] - vstore1[0];
+    vec3f1_out[1] = vstore2[1] - vstore1[1];
+    vec3f1_out[2] = vstore2[2] - vstore1[2];
+    }
+
+ function vec3f1_in(value)
+    {
+    // value  SFVec3f
+    vstore1[0] = value[0];
+    vstore1[1] = value[1];
+    vstore1[2] = value[2];
+    account_world_coord();
+    }
+
+ function vec3f2_in(value)
+    {
+    // value  SFVec3f
+    vstore2[0] = value[0];
+    vstore2[1] = value[1];
+    vstore2[2] = value[2];
+    account_world_coord();
+    }
+
+"
+    ]
+  }
+
+ROUTE ProximitySensor1.position_changed TO Script1.vec3f1_in
+
+DEF ProximitySensor2 ProximitySensor 
+  {
+  size 1000 1000 1000
+  }
+
+ROUTE ProximitySensor2.position_changed TO Script1.vec3f2_in
+
+DEF UNIMPORTANTHUD Transform 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  DEF Text1 Text 
+	    {
+	    string 
+	      [
+	      "test"
+	      ]
+	    }
+	  }
+	]
+      scale 0.200000 0.200000 0.200000
+      translation -0.800000 -0.720000 -1.779999
+      }
+    ]
+  }
+
+ROUTE ProximitySensor2.orientation_changed TO UNIMPORTANTHUD.set_rotation
+ROUTE ProximitySensor2.position_changed TO UNIMPORTANTHUD.set_translation
+
+DEF UNIMPORTANTVEC3FTOHUDCONVERTER Script 
+  {
+  eventIn SFVec3f vec3f1_in
+  eventOut MFString mstring1_out
+  field SFString text ""
+  url 
+    [
+    "javascript:
+
+ // field SFString text //
+ // eventOut MFString mstring1_out //
+
+ function vec3f1_in(value)
+    {
+    // value  SFVec3f
+    text = '';
+    text += Math.round(value[0]*100)/100;
+    text += '      ' + Math.round(value[1]*100)/100;
+    text += '      ' + Math.round(value[2]*100)/100;
+    mstring1_out = new MFString(text);
+    }
+
+"
+    ]
+  }
+
+ROUTE Script1.vec3f1_out TO UNIMPORTANTVEC3FTOHUDCONVERTER.vec3f1_in
+ROUTE UNIMPORTANTVEC3FTOHUDCONVERTER.mstring1_out TO Text1.set_string
+
+DEF Transform1 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Text 
+	{
+	string 
+	  [
+	  "        Text  follow object"
+	  "        but no ROUTE from "
+	  "        interpolar to text"
+	  ]
+	fontStyle 	FontStyle 
+	  {
+	  size 0.500000
+	  }
+	}
+      }
+    ]
+  }
+
+ROUTE Script1.vec3f1_out TO Transform1.set_translation
+

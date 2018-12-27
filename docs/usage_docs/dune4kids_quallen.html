@@ -1,0 +1,331 @@
+<!--
+/*
+ * Copyright (C) 2011 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h2>Bau einer Qualle (leicht)</h2>
+<br>
+<br>
+<h2>Erst einmal ein paar Informationen zum lesen</h2>
+<br>
+Auf manchen Systemen (Linux KDE/Gnome und SGI IRIX 4dwm) gibt es ein eigenes 
+Programmicon fuer "dune4kids", es sieht dann irgendwie so aus:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+Auf Systemen wie Micro$oft Windows oder MacOSX ist aber nur ein 
+(anderes) Programmicon vorhanden:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normalerweise startet das Programm dieses Icons beim ersten Mal 
+in der englischen Vollversion, in der Regel mit sehr vielen Icons 
+und zu vielen Menues.<br>
+<a href="dune4kids_start_de.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+Es muss dann zuerst einmal auf Deutsch und dann auf dune4kids umgestellt 
+werden.<br> Man muss <a href="dune4kids_start_de.html" target="_blank"> 
+hier draufklicken</a> um auf die richtige Version umschalten zu 
+k&ouml;nnen.<br>
+<img src="frog01.png">
+<br><br>
+<h2>Was tun, wenn das Programm abst&uuml;rtzt ?</h2>
+Mit etwas Gl&uuml;ck kann man den letzten Stand neu laden, wenn man bei
+den aktuellen Dateien eine neue ".dune_crash" Datei findet.
+<br>
+<img src="frog00.png">
+<br>
+<h1>Navigation</h1>
+Navigation bedeutet das Herumbewegen im 3D-Modell.<br>
+Das ist wichtig, denn es kann sehr leicht passieren, dass man vor oder in 
+sein Werkstueck ger&auml;t und deswegen ueberhaupt nichts mehr sieht.<br><br>
+Wenn man nichts mehr sieht, gibt es zwei Vorgehensweisen, die man meistens
+gemeinsam anwendet:
+<ul>
+<li> <b>Man geht nach hinten</b><br>
+     Vorw&auml;rts und Rueckw&auml;rts geht man, indem man gemeinsam die linke 
+     Maustaste und die "Shift"-Taste (deutsche Tastatur: "Leerer-Pfeil-hoch-Taste") 
+     gedr&uuml;ckt h&auml;lt.
+     In der Einstellung "Examine" (wenn das Icon <img src="examine.png"> gedrueckt 
+     ist) funktioniert das auch mit der mittleren Taste einer 3-Tasten-Maus.
+     Bei einer Maus mit Scrollrad muss man das mittlere Scrollrad
+     dr&uuml;cken.
+</li>
+<li> <b>Man dreht die 3D-Welt</b><br>
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Zus&auml;tzlich gibt es noch die M&ouml;glichkeit, die linke Maustaste,
+die "Shift"-Taste und die "Control"-Taste gleichzeitig gedr&uuml;ckt
+zu halten (oder das Icon <img src="move_along_screen.png"> benutzen).
+Damit kann man sich in Richtung der Bildschirmfl&auml;che, also nach 
+oben, unten, links oder rechts bewegen.
+<br>
+<br>
+Nachdem man sein Objekt wieder gefunden hat, sollte man wieder das 
+"Examine"-Icon <img src="examine.png"> dr&uuml;cken, damit man wieder
+wie gewohnt arbeiten kann.
+<br>
+<h1>Icons f&uuml;r Ver&auml;nderungen</h1>
+Um zu zeigen, wie man Dinge ver&auml;ndern kann, wird einfach mal ein
+Quader erzeugt.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, um ganze Objekte zu ver&auml;ndern:
+<ul>
+<li>Verschieben: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Drehen: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Vergr&ouml;ssern/verkleinern: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>Gleichartig vergr&ouml;ssern/verkleinern: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>Drehpunkt verschieben: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+Mit weissen K&auml;stchen kann man Objekte selber ver&auml;ndern.
+Mit den einzelnen Pfeilicons <img src="xyz.png"> kann man die Richtung
+steuern. <br>
+Wird zum Beispiel nur der gr&uuml;ne Pfeil hereingedr&uuml;ckt, 
+<img src="y_only.jpg"> kann bei<br> 
+<img src="yonly_1.jpg"> 
+<br><br> 
+ein K&auml;stchen nur in Richtung des gr&uuml;ne Pfeils geschoben werden.<br>
+<img src="yonly_2.jpg">. 
+<br><br>
+Genau wie man Pfeile auch an den Sch&auml;ften statt an den Spitzen
+packen kann, um in einer Ebene verschieben zu k&ouml;nnen, kann man
+auch zwei Pfeile gleichzeitig hereingedr&uuml;cken <img src="xz_only.jpg">, 
+um ein K&auml;stchen in einer Ebene verschieben zu k&ouml;nnen.
+<br>
+<h1>Jetzt geht es los: Bau einer Qualle (leicht)</h1>
+<br>
+Die folgende Beschreibung sollte man eher als Vorschlag betrachten und 
+nicht als Kochrezept, das man sklavisch befolgen muss.<br>
+<br>
+Eine Qualle wird aus zwei Teilen hergestellt: einem Schirm und einer Schleppe
+aus Nesself&auml;den.
+<br>
+F&uuml;r den Schirm beginnt man mit einer Halbkugel 
+<em>Neu -&gt Halbkugel</em>:
+<br>
+<img src="qualle1.png">
+<br>
+Eine Halbkugel w&auml;re aber meistens zu langweilig. 
+<br>
+<img src="qualle2.png">
+<br>
+Um eine bessere Form 
+zu erreichen, muss muss man die Zahlen der Formel &auml;ndern, die 
+die Form des Schirms berechnet. Dazu benutzt man den Men&uuml;eintrag<br> 
+<em>Veraendern -&gt Zeige (manchmal) Zahlen</em>:<br>
+<image src="qualle3.png">
+<br>
+Dabei kann man bei manchen angew&auml;hlten Objekten im linken Fenster (hier 
+"SuperShape") die Zahlen ver&auml;ndern.
+<br>
+<image src="qualle4.png">
+<br>
+Wenn man die Felder mit den Zahlen anklickt, kann man Zahlen eintippen
+(Achtung: "Kommazahlen" werden hier mit einem Punkt geschrieben).
+<br>
+<image src="qualle5.png">
+<br>
+Man kann auch die Zahlen verkleinern oder vergr&ouml;&szlig;ern indem man
+eine Zahl anklickt ohne die Maustaste loszulassen (dabei erscheint ein 
+Doppelpfeil) und die Maus nach links oder rechts bewegt.
+Die Zahlen, die f&uuml;r eine Quallenform benutzt werden k&ouml;nnen,
+sind eigentlich ziemlich egal. Allerdings mit einer Ausnahme: die Zahl
+f&uuml;r "um" sollte immer eine ganze Zahl sein (wie zum Beispiel 4 oder 5 
+oder 6) und nie eine Kommazahl (wie zum Beispiel 4.2 oder 8.9), denn sonst
+sieht die Qualle etwas verzogen aus.
+<br>
+<image src="qualle7.png">
+<br>
+Jetzt sollte man das Zwischenergebnis in eine Datei abspeichern. 
+Beendet man das
+Programm (oder schaltet man den Strom ab) ist alles verloren, wenn man
+nicht in eine Datei abgespeichert hat. Zum Abspeichern benutzt man
+<em>Datei -&gt; Speichern</em>. Dabei &ouml;ffnet sich ein Fenster, an
+dessen unteren Rand man etwas eintippen kann. Am besten ist es, wenn
+man das Wort Qualle, dann einen Unterstrich (dieses Zeichen: _), dann
+seinen Vornamen, dann einen Unterstrich (_), dann seinen Nachnamen,
+dann einen Unterstrich (_) und dann sein Alter eintippt. 
+<br>
+<image src="qualle_save.png">
+<br>
+Also wenn man 
+"Max Mustermann" heisst und 8 Jahre alt ist: Qualle_Max_Mustermann_8<br>
+Damit weiss man beim Zusammenbauen des Films, dass die Datei ein 3D-Modell
+einer Qualle enth&auml;lt und dass man "Max Mustermann, 8 Jahre" zu der
+Qualle im Abspann schreiben muss.
+<br>
+<br>
+Auch sp&auml;ter (und vor allem am Schluss !) sollte man immer mal
+wieder <em>Datei -&gt; Speichern</em> benutzen, damit nichts verloren
+geht.
+<br>
+<br>
+Wenn der Schirm der Qualle fertig ist, muss die Schleppe gebaut werden.
+Damit die Schleppe mitbewegt wird, wenn der Schirm bewegt wird, muss jetzt
+im linken Fenster "Transform" angew&auml;lt werden.
+<br>
+<image src="qualle7a.png">
+<br>
+Danach benutzt man wieder <em>Neu -&gt Halbkugel</em>:
+<br>
+<img src="qualle1.png">
+<br>
+Jetzt sieht es auf den ersten Blick so aus, als h&auml;tte man 
+r&uuml:ckw&auml;rts gearbeitet (wie wenn man <em> Bearbeiten &gt;
+rueckgaenig machen</em> benutzt h&auml;tte), aber die neue 
+Halbkugel (die Schleppe) verdeckt (je nach Blickwinkel)
+nur den Schirm
+<br>
+<img src="qualle10.png">
+<br>
+Danach benutzt man <em>Bewegungsart -&gt; nur y (gruen)</em> (das entspricht
+dem Hereindruecken des gr&uuml;nen Pfeils <img src="y_only.jpg"> in der obersten Bildleiste), damit man
+die Schleppe nicht versehentlich seitlich verschieben kann.
+<br> 
+<img src="qualle11.png">
+<br>
+Jetzt klickt man das zweite Transform (das Transform der Schleppe) im linken
+Fenster an, so dass man die Schleppe mit dem gr&uuml;nen Pfeil in nur eine
+Richtung verschieben kann (Pfeil anklicken, die Maustaste festhalten und
+die Maus verschieben).
+<br>
+<img src="qualle18.png">
+<br>
+Wird die Schleppe angeklickt, kann man sie mit den weissen K&auml;stchen 
+auf die richtige Gr&ouml;&szlig;e bringen (Pfeil anklicken, die 
+Maustaste festhalten und die Maus verschieben). Dazu kann man auch die 
+Zahlen bei "size" benutzen. Danach benutzt man wieder Zahlen, um die 
+Form der Schleppe zu ver&auml;ndern.
+<br>
+<img src="qualle19.png">
+<br>
+Quallen sind durchscheinend, deshalb muss im linken Fenster "Material"
+der angeklickt werden. Wenn man kein "Material" sieht, wenn man das
+entsprechende Objekt angeklickt hat: "Material" versteckt sich innerhalb
+von "Appearance". Um "Appearance" zu &ouml;ffnen, muss man auf das "+"
+Zeichen neben dem Icon von Appearance" klicken.
+<br>
+<img src="material_close.png">
+<img src="material_open.png">
+<img src="material_selected.png">
+<br>
+Wenn ein Material angew&auml;hlt ist, kann man 
+<em>Veraendern -&gt Durchsichtigkeit (braucht Material)</em>:
+benutzen
+<br>
+<img src="qualle20.png">
+<br>
+Es erscheint ein Fenster, bei dem man eine Zahl zwischen Null
+und Eins eintippen kann. 0.5 (also Einhalb) ist ok.
+<br>
+<img src="qualle21.png">
+<br>
+Danach wiederholt man das Ganze f&uuml;r den anderen 
+Quallenk&ouml;perteil.
+<br>
+<img src="qualle22.png">
+<br>
+<h1>Qualle bewegen</h1>
+<br>
+Eine Qualle bewegt sich, indem sie ihren Schirm langsam
+aufbl&auml;ht und das dabei eingesaugte Wasser 
+ruckartig durch zusammenziehen des Schirms nach unten
+dr&uuml;ckt.<br>
+F&uuml;r diese Bewegung muss man den "SuperShape" des
+Schirmes im linken Fenster anklicken.<br>
+Danach benutzt man <em>Animation -&gt 
+Neue Animation (Objekt z.B. Transform </em> 
+(hier ist es stattdessen SuperShape)<em> anwaehlen)</em>
+<br>
+<img src="qualle23.png">
+<br>
+Jetzt &ouml;ffnet sich ein Dialogfenster, bei dem man zuerst die
+Animationszeit &auml;ndern muss. Eine Qualle braucht nicht 5 Sekunden,
+um mit ihrem Schirm zu pumpen, sie braucht eher 1 oder 2 Sekunden.
+<br>
+<img src="qualle24.png">
+<img src="qualle25.png">
+<br>
+Danach kann man Ok dr&uuml;cken, denn "set_size" (f&uuml;r die 
+Gr&ouml;&szlig;e des Schirms) ist schon angew&auml;lt.<br>
+Danach dr&uuml;ckt man in der untersten Leiste den roten Kreis und das blaue
+Dreieck hinein. Das bedeutet, dass man gleichzeitig die &Auml;nderung aufnimmt
+und abspielt.
+<br>
+<img src="recording.jpg">
+<br>
+Jetzt zieht man am oberen K&auml;chen des Schirms, gleichzeitig wird die
+(hoffentlich pumpende) Bewegung aufgezeichnet.
+<br>
+<img src="qualle26.png">
+<br>
+<br>
+<br>
+<img src="qualle28.png">
+<br>
+Danach soll sich die ganze Qualle fortbewegen. <br>
+Dazu muss man den ersten Transform im linken Fenster anw&auml;hlen.<br>
+<br>
+<img src="qualle29.png">
+<br>
+Danach benutzt man <em>Animation -&gt 
+Neue Animation (Objekt z.B. Transform anwaehlen)</em> 
+und dr&uuml;ckt Ok.
+<br>
+<img src="qualle30.png">
+<br>
+Jetzt vergewissert man sich, dass immer noch der ersten Transform im linken 
+Fenster anw&auml;hlt ist, vergewissert sich, dass die unterste Leiste immer
+noch auf Aufnahme und gleichzeitig Abspielen steht.
+<br>
+<img src="recording.jpg">
+<br>
+Danach bewegt man den Pfeil synchron zur Bewegung des Schirms
+<br>
+<img src="qualle31.png">
+<br>
+Geschafft !

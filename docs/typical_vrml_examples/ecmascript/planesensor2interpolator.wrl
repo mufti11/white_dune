@@ -1,0 +1,178 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF Transform1 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 0.101960 0.101960
+	  }
+	}
+      geometry       Box 
+	{
+	}
+      }
+    DEF PlaneSensor1 PlaneSensor 
+      {
+      maxPosition 2 0
+      }
+    ]
+  scale 0.500000 0.500000 0.500000
+  }
+
+ROUTE PlaneSensor1.translation_changed TO Transform1.set_translation
+
+DEF Script1 Script 
+  {
+  eventIn SFVec3f vec3f1_in
+  eventOut SFFloat float1_out
+  url 
+    [
+    "javascript:
+
+ // eventOut SFFloat float1_out //
+
+ function vec3f1_in(value)
+    {
+    // value  SFVec3f
+    float1_out=value[0]/2.0;
+    }
+
+"
+    ]
+  }
+
+ROUTE PlaneSensor1.translation_changed TO Script1.vec3f1_in
+
+DEF ScalarInterpolator1 ScalarInterpolator 
+  {
+  key 
+    [
+    3.373818e-2 
+    0.304993 
+    0.391362 
+    0.461537 
+    0.533062 
+    0.677461 
+    0.785425 
+    0.866396 
+    ]
+  keyValue 
+    [
+    0.465837 
+    0.242236 
+    0.118012 
+    0.192545 
+    0.316769 
+    0.726707 
+    0.577638 
+    0.428570 
+    ]
+  }
+
+ROUTE Script1.float1_out TO ScalarInterpolator1.set_fraction
+
+DEF OrientationInterpolator1 OrientationInterpolator 
+  {
+  key 
+    [
+    8.906882e-2 
+    0.255059 
+    0.496625 
+    0.692306 
+    0.923075 
+    ]
+  keyValue 
+    [
+    0 0.652172 0 0.391303 
+    0 1 0 0.701862 
+    0 0.757763 0.813664 -1.123394 
+    0 0.875775 0.807452 0.683229 
+    0 0.708073 0 0.236024 
+    ]
+  }
+
+ROUTE Script1.float1_out TO OrientationInterpolator1.set_fraction
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    1.889337e-2 
+    0.186233 
+    0.377867 
+    0.956815 
+    ]
+  keyValue 
+    [
+    2.408390 1.279818 0.633539 
+    1.572906 1.279818 0.633539 
+    11.087430 1.045346 0.633539 
+    0.422250 0.832297 2.439666 
+    ]
+  }
+
+ROUTE Script1.float1_out TO PositionInterpolator1.set_fraction
+
+DEF ColorInterpolator1 ColorInterpolator 
+  {
+  key 
+    [
+    3.238866e-2 
+    0.184884 
+    0.348177 
+    0.554655 
+    0.739540 
+    ]
+  keyValue 
+    [
+    0.857141 0.863354 0.708073 
+    0 0 0.708073 
+    0 0 0.453415 
+    0.888198 0.397514 0.248447 
+    0 0.993788 0.813664 
+    ]
+  }
+
+ROUTE Script1.float1_out TO ColorInterpolator1.set_fraction
+
+DEF Transform2 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	DEF Material1 Material 
+	  {
+	  diffuseColor 0.857141 0.863354 0.708073
+	  transparency 0.465837
+	  }
+	}
+      geometry       Box 
+	{
+	}
+      }
+    ]
+  rotation -0.566990 0.711636 -0.414844 1.682443
+  scale 2.408390 1.279818 0.633539
+  scaleOrientation 0 1 0 0.391303
+  translation -3.168490 1.644444 0
+  }
+
+ROUTE ColorInterpolator1.value_changed TO Material1.set_diffuseColor
+ROUTE ScalarInterpolator1.value_changed TO Material1.set_transparency
+ROUTE PositionInterpolator1.value_changed TO Transform2.set_scale
+ROUTE OrientationInterpolator1.value_changed TO Transform2.set_scaleOrientation
+

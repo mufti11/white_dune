@@ -1,0 +1,26 @@
+#VRML V2.0 utf8
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+EXTERNPROTO InlineLoadControl 
+[
+  exposedField SFBool    load
+  exposedField MFString  url
+  field        SFVec3f   bboxCenter
+  field        SFVec3f   bboxSize
+  eventOut     MFNode    children
+]
+[
+  "urn:web3d:vrml97:node:InlineLoadControl",
+  "InlineLoadControlPROTO.wrl"
+  "http://wdune.ourproject.org/docs/vrml97Amendment1/InlineLoadControlPROTO.wrl"
+]
+
+InlineLoadControl 
+  {
+  url 
+    [
+    "../../logo/dune.wrl"
+    ]
+  }

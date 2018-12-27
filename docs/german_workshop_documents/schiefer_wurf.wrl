@@ -1,0 +1,50 @@
+#VRML V2.0 utf8
+
+DEF Transform1 Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material Material
+          {
+          }
+        }
+      geometry Box
+        {
+        }
+      }
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFFloat float1_in
+  eventOut SFVec3f vec3f1_out
+  url "javascript:
+
+// insert program code only into functions
+
+ // eventOut SFVec3f vec3f1_out //
+
+function float1_in(t)
+    {
+    // value  SFFloat
+    v0 = 6;      // Abwurfgeschwindigkeit
+    w = 1.07;   // Winkel im Bogenmass
+    vec3f1_out = new SFVec3f(v0 * t * Math.sin(w), - 0.5 * 9.81 * t * t + v0 * t* Math.cos(w), 0);
+    }
+
+"
+  }
+
+ROUTE Script1.vec3f1_out TO Transform1.set_translation
+
+DEF TimeSensor1 TimeSensor
+  {
+  cycleInterval 2
+  loop TRUE
+  }
+
+ROUTE TimeSensor1.fraction_changed TO Script1.float1_in
+

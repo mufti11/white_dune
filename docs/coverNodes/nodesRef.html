@@ -1,0 +1,539 @@
+<!--
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+<html>
+ None standard extensions for the standard VRML97 nodes in Cover/Covise
+ (the line with ... reminds to the standard fields of this node):<br>
+ <ul>
+  <li><a name="Appearance"></a><b>Appearance</b><br>
+<pre>
+   Appearance {
+      ...
+      exposedField SFNode texture2          NULL
+      exposedField SFNode textureTransform2 NULL
+      exposedField SFNode texture3          NULL
+      exposedField SFNode textureTransform3 NULL
+      exposedField SFNode texture4          NULL
+      exposedField SFNode textureTransform4 NULL
+   }
+</pre>
+   The texture2/texture3/texture4 fields are similar to the texture
+   field of the standard VRML97 Appearance node. They can be used 
+   for multitexturing with texture nodes like ImageTexture, PixelTexture, 
+   MovieTexture or the none standard Cover/Covise CubeTexture node.<br> 
+   <br>
+   The textureTransform2/textureTransform3/textureTransform4 fields are
+   similar to the textureTransform field of the standard VRML97 Appearance
+   node. The data of textureTransform2 is applied to texture2, the 
+   data of textureTransform3 is applied to texture3, the 
+   data of textureTransform4 is applied to texture4.
+  </li>
+  <li><a name="ImageTexture"></a><b>ImageTexture</b><br>
+<pre>
+   ImageTexture {
+      ...
+      field SFBool  environment false
+      field SFInt32 blendMode   0     # (0,5)
+      field SFInt32 filterMode  0     # (0,5)
+      field SFInt32 anisotropy  1     # (0,2)
+   }
+</pre>
+   The <a name="blendMode"></a>blendMode field is important for 
+   multitexturing. Each number stands
+   for the function the texture is mixed with other textures of a multitextured
+   node.<br>
+   The meaning of the numbers are:<br>
+   <ul>
+    <li>
+     1: Modulate
+    </li>
+    <li>
+     2: Blend
+    </li>
+    <li>
+     3: Decal
+    </li>
+    <li>
+     4: Replace
+    </li>
+    <li>
+     5: Add
+    </li>
+   </ul>
+   The number 0 means to use the default, which is set in the covise/cover
+   configuration files.<br>
+   <br>
+   The filterMode field is used for texture filtering.
+   The meaning of the numbers are:<br>
+   <ul>
+    <li>
+     1: LINEAR
+    </li>
+    <li>
+     2: LINEAR_MIPMAP_LINEAR
+    </li>
+    <li>
+     3:LINEAR_MIPMAP_NEAREST
+    </li>
+    <li>
+     4:LINEAR_MIPMAP_LINEAR
+    </li>
+    <li>
+     5:NEAREST
+    </li>
+   </ul>    
+   The number 0 means to use the default, which is set in the covise/cover
+   configuration files.<br>
+   <br>
+   The anisotropy field is used for anisotropic texture filtering.
+   The meaning of the numbers are:<br>
+   <ul>
+    <li>
+     1: anisotropisches Filtering 
+    </li>
+    <li>
+     2: GL_EXT_texture_filter_anisotropic
+    </li>
+   </ul>
+   The number 0 means to use the default, which is set in the covise/cover
+   configuration files.<br>
+  </li>
+  <li><a name="IndexedFaceSet"></a><b>IndexedFaceSet</b><br>
+<pre>
+   IndexedFaceSet {
+      ...
+      exposedField SFNode texCoord2 NULL
+      exposedField SFNode texCoord3 NULL
+      exposedField SFNode texCoord4 NULL
+   }
+</pre>
+   The texCoord2/texCoord3/texCoord4 fields are similar to the texCoord
+   field of the standard VRML97 IndexedFaceSet node. They can be used 
+   for multitexturing with TextureCoordinate nodes.<br> 
+  </li>
+  <li><a name="MovieTexture"></a><b>MovieTexture</b><br>
+<pre>
+   MovieTexture {
+      ...
+      field SFInt32 blendMode   0     # (0,5)
+   }
+</pre>
+   The blendMode field of the MovieTexture node is similar to the
+   <a href="#blendMode">blendMode field of ImageTexture</a>
+  </li>
+  <li><a name="NavigationInfo"></a><b>NavigationInfo</b><br>
+<pre>
+   NavigationInfo {
+      ...
+      eventIn      SFBool  set_bindLast 
+      exposedField SFFloat scale         -1 
+   }
+</pre>
+   The set_bindLast eventIn is used for returning to the last status
+   of the node as the node was active.<br>
+   The scale field is used to redefine the units of the world.<br>
+   In Cover/Covise, the units of the world are per default different from the 
+   1 unit/1 Meter recommendation in the ISO 14772. Instead, Cover/Covise use
+   a 1 unit/1 millimeter default. Cause size is especially important in
+   immersive virtual reality, Cover/Covise has the nonstandard field scale
+   for easy integration of usual sized worlds.
+  </li>
+  <li><a name="PixelTexture"></a><b>PixelTexture</b><br>
+<pre>
+   PixelTexture {
+      ...
+      field SFInt32 blendMode   0     # (0,5)
+   }
+</pre>
+   The blendMode field of the PixelTexture node is similar to the
+   <a href="#blendMode">blendMode field of ImageTexture</a>
+  </li>
+  <li><a name="Shape"></a><b>Shape</b><br>
+<pre>
+   Shape {
+      ...
+      field SFNode effect NULL
+   }
+</pre>
+   The effect field is intended to be used by shader based geometry 
+   modificators. Currently the only valid nodetype allowed for the
+   effect field is the now deprecated Wave node.
+  </li>
+  <li><a name="Transform"></a><b>Transform</b><br>
+<pre>
+   Transform {
+      ...
+      ... scale ... # [-infinite, infinite]
+   }
+</pre>
+   The only difference between the standard fields of the Transform node
+   and the Covise/Cover extension is the range of allowed values of the
+   scale field. In standard VRML97 the range is [0, infinite] which means
+   that only positive scale values are allowed. The Covise/Cover extension
+   also allows negative values. If a negative value occures in the x, y or
+   z axis, the children content of the Tranform node is mirrored in the 
+   matching direction.
+  </li>
+  <li><a name="Viewpoint"></a><b>Viewpoint</b><br>
+<pre>
+   Viewpoint {
+      ...
+      eventIn      SFBool   set_bindLast 
+      exposedField SFString type         "" # "" "HORIZONTAL"
+   }
+</pre>
+   The set_bindLast eventIn is used for returning to the last status
+   of the node as the node was active.<br>
+   If the type field is set to the value "HORIZONTAL", rolling movements
+   of the viewpoints are avoided. This is usefull, because rolling movements 
+   of the viewpoint can be cause motion sickness in immersive virtual reality
+   systems. 
+  </li>
+  <li><a name="WorldInfo"></a><b>WorldInfo</b><br>
+<pre>
+   WorldInfo {
+      ...
+      field SFBool correctBackFaceCulling TRUE 
+      field SFBool correctSpatializedAudio TRUE
+   }
+</pre>
+  </li>
+  <li><a name="ARSensor"></a><b>ARSensor</b><br>
+<pre>
+   ARSensor {
+       exposedField SFBool trackObjects FALSE
+       exposedField SFBool freeze FALSE
+       exposedField SFBool enabled TRUE
+       exposedField SFBool currentCamera TRUE
+       exposedField SFBool headingOnly FALSE
+       exposedField SFVec3f maxPosition -1.0 -1.0 -1.0
+       exposedField SFVec3f minPosition -1.0 -1.0 -1.0
+       exposedField SFFloat orientationThreshold 15.0
+       exposedField SFFloat positionThreshold 0.3
+       exposedField SFVec3f invisiblePosition 100000 100000 100000
+       exposedField SFVec3f cameraPosition 0 0 24
+       exposedField SFVec3f cameraOrientation 90 90 0
+       exposedField SFString markerName ""
+       eventOut SFBool isVisible
+       eventOut SFVec3f translation_changed
+       eventOut SFVec3f rotation_changed
+       eventOut SFVec3f scale_changed
+   }
+</pre>
+  </li>
+  <li><a name="COVER"></a><b>COVER</b><br>
+<pre>
+   COVER {
+       exposedField SFVec3f position1 0 0 0
+       exposedField SFVec3f position2 0 0 0
+       exposedField SFVec3f position3 0 0 0
+       exposedField SFVec3f position4 0 0 0
+       exposedField SFVec3f position5 0 0 0
+       exposedField SFVec3f position6 0 0 0
+       exposedField SFVec3f position7 0 0 0
+       exposedField SFVec3f position8 0 0 0
+       exposedField SFRotation orientation1 0 0 1 0
+       exposedField SFRotation orientation2 0 0 1 0
+       exposedField SFRotation orientation3 0 0 1 0
+       exposedField SFRotation orientation4 0 0 1 0
+       exposedField SFRotation orientation5 0 0 1 0
+       exposedField SFRotation orientation6 0 0 1 0
+       exposedField SFRotation orientation7 0 0 1 0
+       exposedField SFRotation orientation8 0 0 1 0
+       eventOut SFString localKeyPressed
+       eventOut SFString localKeyReleased
+       eventOut SFString keyPressed
+       eventOut SFString keyReleased
+       eventOut SFVec3f avatar1Position
+       eventOut SFRotation avatar1Orientation
+       eventOut SFVec3f localPosition
+       eventOut SFRotation localOrientation
+       exposedField SFInt32 soundEnvironment 26
+   }
+</pre>
+   The fields localPosition and localOrientation act like a ProximitySensor,
+   but unlike a ProximitySensor it deliver the data of the tracking system,
+   not the data of the virtual camera: turning the head in a CAVE do not 
+   change the Proximitity data but change the localPosition/localOrientation
+   data<br> 
+   <br>   
+   The fields position1 - position8 and orientation1 - orientation8 are 
+   related to some covise plugins they are "not important"<br>
+   <br>
+   The meaning of the other fields are not known yet
+  </li>
+  <li><a name="CubeTexture"></a><b>CubeTexture</b><br>
+<pre>
+   CubeTexture {
+       exposedField MFString urlXP ""
+       exposedField MFString urlXN ""
+       exposedField MFString urlYP ""
+       exposedField MFString urlYN ""
+       exposedField MFString urlZP ""
+       exposedField MFString urlZN ""
+       exposedField SFBool repeatS TRUE
+       exposedField SFBool repeatT TRUE
+       exposedField SFInt32 blendMode 0
+   }
+</pre>
+
+   The COVER CubeTexture node implements environment mapping 
+   ("fake realtime mirror"). 
+   Mirror images are simples mapped as Texture to a object. 
+   If the object rotates, the Texture on the object rotate accordingly.<br>
+   <br>
+   The urlXP, urlXN etc. urls similar to the texture fields in the 
+   VRML97 Background node
+  </li>
+  <li><a name="Sky"></a><b>Sky</b><br>
+<pre>
+   Sky {
+        eventIn SFTime set_time
+        exposedField SFBool enabled TRUE
+        exposedField SFBool timeLapse FALSE
+        exposedField SFBool currentTime TRUE
+        exposedField SFInt32 year 2006
+        exposedField SFInt32 month 4
+        exposedField SFInt32 day 7
+        exposedField SFInt32 hour 13
+        exposedField SFInt32 minute 12
+        exposedField SFFloat radius 800
+        exposedField SFFloat latitude 48.6
+        exposedField SFFloat longitude 9.0008
+        exposedField SFFloat altitude 400.0
+   }
+</pre>
+  </li>
+  <li><a name="SpaceSensor"></a><b>SpaceSensor</b><br>
+<pre>
+   SpaceSensor {
+       exposedField SFBool autoOffset TRUE
+       exposedField SFBool enabled    TRUE
+       exposedField SFBool rotationEnabled FALSE
+       exposedField SFVec3f maxPosition -1.0 -1.0 -1.0
+       exposedField SFVec3f minPosition -1.0 -1.0 -1.0
+       exposedField SFVec3f offset 0 0 0
+       eventOut SFBool isActive
+       eventOut SFVec3f translation_changed
+       eventOut SFVec3f trackPoint_changed
+       eventOut SFVec3f rotation_changed
+   }
+</pre>
+   This implements a "3D-Mouse" drag Sensor similar to the space sensor
+  </li>
+  <li><a name="SteeringWheel"></a><b>SteeringWheel</b><br>
+<pre>
+   SteeringWheel {
+        eventIn SFTime set_time
+        eventOut MFInt32 buttons_changed
+        eventOut MFFloat axes_changed
+        exposedField SFBool enabled TRUE
+        exposedField SFInt32 joystickNumber -1
+   }
+</pre>
+  </li>
+  <li><a name="TUIButton"></a><b>TUIButton</b><br>
+<pre>
+   TUIButton {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       eventOut SFTime touchTime
+   }
+</pre>
+  </li>
+  <li><a name="TUIComboBox"></a><b>TUIComboBox</b><br>
+<pre>
+   TUIComboBox {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField MFString items []
+       exposedField SFBool withNone TRUE
+       exposedField SFInt32 defaultChoice 0
+       eventOut SFInt32 choice
+   }
+</pre>
+  </li>
+  <li><a name="TUIElement"></a><b>TUIElement</b><br>
+<pre>
+   TUIElement {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+   }
+</pre>
+  </li>
+  <li><a name="TUIFloatSlider"></a><b>TUIFloatSlider</b><br>
+<pre>
+   TUIFloatSlider {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField SFFloat min 0.0
+       exposedField SFFloat max 100.0
+       exposedField SFFloat value 50.0
+   }
+</pre>
+  </li>
+  <li><a name="TUIFrame"></a><b>TUIFrame</b><br>
+<pre>
+   TUIFrame {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+   }
+</pre>
+  </li>
+  <li><a name="TUILabel"></a><b>TUILabel</b><br>
+<pre>
+   TUILabel {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+   }
+</pre>
+  </li>
+  <li><a name="TUIListBox"></a><b>TUIListBox</b><br>
+<pre>
+   TUIListBox {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField MFString items []
+       exposedField SFBool withNone TRUE
+       exposedField SFInt32 defaultChoice 0
+       eventOut SFInt32 choice
+   }
+</pre>
+  </li>
+  <li><a name="TUIMap"></a><b>TUIMap</b><br>
+<pre>
+   TUIMap {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField MFFloat ox []
+       exposedField MFFloat oy []
+       exposedField MFFloat xSize []
+       exposedField MFFloat ySize []
+       exposedField MFFloat height []
+       exposedField MFString maps []
+       eventOut SFInt32 currentMap
+       eventOut SFVec3f currentPos
+       eventOut SFRotation currentRot
+   }
+</pre>
+   This node is currently deprecated   
+  </li>
+  <li><a name="TUIProgressBar"></a><b>TUIProgressBar</b><br>
+<pre>
+   TUIProgressBar {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField SFInt32 max 100
+       exposedField SFInt32 value 0
+   }
+</pre>
+  </li>
+  <li><a name="TUISlider"></a><b>TUISlider</b><br>
+<pre>
+   TUISlider {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField SFInt32 min 0
+       exposedField SFInt32 max 100
+       exposedField SFInt32 value 50
+   }
+</pre>
+  </li>
+  <li><a name="TUISplitter"></a><b>TUISplitter</b><br>
+<pre>
+   TUISplitter {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+   }
+</pre>
+  </li>
+  <li><a name="TUITabFolder"></a><b>TUITabFolder</b><br>
+<pre>
+   TUITabFolder {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+   }
+</pre>
+  </li>
+  <li><a name="TUITab"></a><b>TUITab</b><br>
+<pre>
+   TUITab {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       eventIn SFTime activate
+       eventOut SFTime touchTime
+       eventOut SFTime deactivateTime
+   }
+</pre>
+  </li>
+  <li><a name="TUIToggleButton"></a><b>TUIToggleButton</b><br>
+<pre>
+   TUIToggleButton {
+       exposedField SFString elementName ""
+       exposedField SFString parent ""
+       exposedField SFVec2f pos 0.0 0.0
+       exposedField SFBool state FALSE
+       eventOut SFInt32 choice
+   }    
+</pre>
+  </li>
+  <li><a name="Vehicle"></a><b>Vehicle</b><br>
+<pre>
+    Vehicle {
+        eventIn SFBool reset
+        eventIn SFFloat aMax
+        eventIn SFFloat vMax
+        eventIn SFInt32 gear
+        eventOut SFRotation breakPedalRotation
+        eventOut SFRotation clutchPedaRotationl
+        eventOut SFRotation gasPedalRotation
+        eventOut SFRotation steeringWheelRotation
+        eventOut SFRotation wheelRotation
+        eventOut SFFloat speed
+        eventOut SFFloat acceleration
+        eventOut SFInt32 gear
+        exposedField SFRotation carRotation 1 0 0 0
+        exposedField SFVec3f carTranslation 0 0 0
+        exposedField SFString inputDevice "AUTO"
+   }
+</pre>
+  </li>
+  <li><a name="Wave"></a><b>Wave</b><br>
+<pre>
+   Wave{
+       exposedField SFFloat fraction 0 
+       exposedField SFFloat freq1 0.18
+       exposedField SFFloat height1 0.1
+       exposedField SFFloat damping1 1.0
+       exposedField SFVec3f dir1 1 1 0
+       exposedField SFFloat freq2 3.0
+       exposedField SFFloat height2 0.1
+       exposedField SFFloat damping2 1.0
+       exposedField SFVec3f dir2 1 0 0
+       exposedField SFFloat speed1 1.0
+       exposedField SFFloat speed2 1.0
+       exposedField SFRotation coeffSin 1 -0.166667 0.00833333 -0.000198413
+       exposedField SFRotation coeffCos 1 -0.5 0.0416667 -0.00138889
+       exposedField SFString fileName "cg_water.cg"
+   }
+</pre>
+   This node is currently deprecated   
+  </li>
+ </ul>
+</html>
+      

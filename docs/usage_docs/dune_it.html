@@ -1,0 +1,3823 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<!--
+  /* * dune_it.html
+  *
+  * Copyright (C) 2006 J. "MUFTI" Scheurich, Roberto Angeletti
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program (see the file "COPYING" for details); if
+  * not, write to the Free Software Foundation, Inc.,
+  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  */ last update: white_dune-0.29beta446
+  -->
+  
+  
+  <meta http-equiv="Content-Type" content="">
+
+  
+  <title>Documentazione "di White_dune"</title>
+</head>
+
+
+<body>
+
+<h1>Indice</h1>
+
+<ul>
+
+  <li>
+    <h2><a href="#White_dune">"White_dune", che cosa e' ?</a></h2>
+
+  </li>
+
+  <li>
+    <h2><a href="#crash">"White_dune" si e' schiantato, lavoro
+    perso?</a></h2>
+
+  </li>
+
+  <li>
+    <h3><a href="#languages">Far partire "White_dune" con i menu
+    stranieri</a></h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#vrml">Che cosa sono "scenegraph, fieldvalues, routes"
+    ecc. ?</a></h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#waskann">Che cosa "White_dune" puo' fare e cosa non
+    puo'</a></h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#fenster">Le 5 finestre di "White_dune"</a></h3>
+  </li>
+  <li>
+    <h3><a href="#Menue">Menu overview</a></h3>
+  </li>
+
+  <li>
+    <h3><a href="#navigation">Navigazione</a></h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#scenegraph">Modificare lo scenegraph</a></h3>
+
+    
+    <ul>
+
+      <li>
+        <h4><a href="#use">Usare USE</a> (nuovo nella versione
+        0.29beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#scenegraphoperations">Operazioni su Scenegraph </a>
+        (nuovo nella versione 0.27beta)</h4>
+
+      </li>
+
+    
+    </ul>
+
+  </li>
+
+  <li>
+    <h3><a href="#route">Input/elimina ROUTE</a></h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#fields">Modifica FieldValues</a></h3>
+
+    
+    <ul>
+
+      <li>
+        <h4><a href="#keyboard">Input da tastiera</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#mouse">Input con il mouse</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#MF">Cambiare "MF"-FieldValues</a> (nuovo nella
+        versione 0.27beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#3DWindow">Cambiare FieldValues nella finestra 3D
+        Preview</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#6D">6D Input</a> (nuovo nella Versione 0.19beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#6Dlocal">6D Local Mode Input</a> (nuovo nella
+        Versione 0.19beta)</h4>
+
+      </li>
+
+      <li>
+        
+        <h4><a href="#nxtdials">Mindstorms NXT dials Input</a> 
+         (nuovo nella  Versione 0.29beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#joystick">Linux Joystick Input</a> (nuovo nella
+        Versione 0.20beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#joystick_windows">M$Windows Joystick Input</a> (nuovo
+        nella Versione 0.22beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#channelview">Cambiare FieldValues nella Finestra
+        ChannelView</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#colorcircle">Cerchio del Colore</a> (nuovo nella
+        Versione 0.19beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#scriptedit">Script Editor</a> (nuovo nella Versione
+        0.22beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#urledit">URL Editor</a> (nuovo nella Versione
+        0.22beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#fieldpipe">Cursore di Campo</a> (nuovo nella Versione
+        0.29beta)</h4>
+
+      </li>
+
+    
+    </ul>
+
+  </li>
+
+  <li>
+    <h3><a href="#simplescript">Script Semplificato</a> (nuovo nella
+    Versione 0.22beta)</h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#nurbs">Modellazione NURBS</a> (parzialmente nuovo nella
+    Versione 0.25beta)</h3>
+
+    
+    <ul>
+
+      <li>
+        <h4><a href="#nurbsbasics">Basi di NURBS</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#nurbssymetric">Modellazione simmetria X</a> (nuovo
+        nella Versione 0.25beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#nurbsconversion">Conversione NURBS</a> (nuovo nella
+        Versione 0.25beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#elevatedegree">Degree elevate</a> (nuovo nella
+        Versione 0.27beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#nurbsindexedfaceset">IndexedFaceSet Nurbs</a> (nuovo
+        nella Versione 0.25beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#nurbsindexedfaceset">Costruzione IndexedFaceSet</a>
+        (nuovo nella Versione 0.25beta)</h4>
+
+      </li>
+
+    
+    </ul>
+
+  </li>
+
+  <li>
+    <h3><a href="#super">Modellazione Superformula</a> (nuovo nella
+    Versione 0.27beta)</h3>
+
+    
+    <ul>
+
+      <li>
+        <h4><a href="#superformula">Basi di Superformula</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#superextrusion">SuperEstrusione</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#supershape">SuperShape</a></h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#superellipsoid">SuperEllissoide</a></h4>
+
+      </li>
+
+    
+    </ul>
+
+  </li>
+
+  <li></li>
+
+  <li>
+    <h3>altri comandi relativi alla Modellazione-3D</h3>
+
+    
+    <ul>
+
+      <li>
+        <h4><a href="#coordinate">Cambiare nodi basati su coordinate</a>
+        (nuovo nella Versione 0.29beta)</h4>
+
+      </li>
+
+      <li>
+        <h4><a href="#array">Array tool</a> (nuovo nella Versione
+        0.27beta)</h4>
+
+      </li>
+
+    
+    </ul>
+
+  </li>
+
+  <li>
+    <h3><a href="#vrmlcut"><em>VrmlCut scripted Proto</em></a> (nuovo nella
+    Versione 0.29beta)</h3>
+
+  </li>
+
+  <li>
+    <h3><a href="#upload"><em>File -&gt; upload</em></a> (nuovo nella
+    Versione 0.27beta)</h3>
+
+  </li>
+
+</ul>
+
+
+<h2><a name="White_dune">"White_dune", che cos'e' ?</a></h2>
+
+
+<p></p>
+
+
+<p style="text-align: justify;">White_dune &egrave; un editor grafico VRML97, un
+semplice modellatore (NURBS) 3D e un tool animazione in via di sviluppo. Puo'
+leggere i file VRML97, visualizzarli e permette all'utente di cambiare lo
+scenegraph, i campi e gli itinerari ROUTE. Esso puo' essere usato per
+migliorare o creare mondi-3D VRML97, animazioni ed interazioni. <br>
+
+Le funzioni principali di white_dune non sono abbastanza potenti (ancora), da
+poter essere usato da solo. Ha piu' senso usarlo insieme ad un modellatore 3D
+che possiede un export statico VRML97 (come per esempio Wings3D o
+ArtOfIllusion).<br>
+
+A differenza della maggior parte dei modellatori 3D,
+l'illuminazione/colorazione e la struttura interna di white_dune sono basati
+sullo standard VRML97.</p>
+
+
+<p></p>
+
+
+<h3><a name="crash">"White_dune" si e' schiantato, lavoro perso ?</a></h3>
+
+
+<p>White_dune e' in fase di sviluppo e non e' stabile come dovrebbe.</p>
+
+
+<p><b>Se White_dune si arresta, il vostro lavoro andra'
+perso</b><b>&nbsp;?</b> <br>
+
+<br>
+
+<font color="#ff0000">No non automaticamente !</font> <br>
+
+<br>
+
+</p>
+
+
+<div style="text-align: justify;">
+"White_dune"&nbsp;provera'&nbsp; a salvare il file VRML97 prima dell'arresto
+anomalo. Questo non sempre riesce, per esempio quando l'errore che ha causato
+l'arresto ha danneggiato la struttura di dati interna. Se il file viene
+salvato, il white_dune scrivera'&nbsp; sotto&nbsp;Unix/Linux qualcosa
+come:&nbsp;</div>
+
+
+<p></p>
+
+&nbsp; &nbsp;Internal Crash !<br>
+
+
+<pre> Try to save Files<br> attempt to write file to /home/someone/.dune_crash_NUMBER_NUMBER.wrl<br> write sucessful<br></pre>
+
+sulla finestra standard di errore ed sulla console di sistema (per esempio
+sulla finestra dell'applicazione della xconsole).<br>
+
+Sotto M$Windows ottenete (probabilmente dopo avere cliccato "ignora") un
+Messagebox simile a questo:<br>
+
+<br>
+
+<img src="crash.jpg"><br>
+
+<br>
+
+Quando ri-lancerete&nbsp;white_dune, dovreste vedere il nome del file&nbsp;
+.dune_crash sulla lista degli ultimi file salvati.<br>
+
+<br>
+
+<img src="crashrestore.jpg"><br>
+
+<br>
+
+Selezionatelo e salvatelo con un altro nome.<br>
+
+Questo metodo puo' fallire, se l'errore che ha prodotto l'arresto ha
+danneggiato la struttura di dati interna del programma.<br>
+
+In questo caso e'&uml; opportuno cercare nell'indice dei file VRML provvisori
+(".dune_"), quello&nbsp; prodotto durante l'esecuzione di
+<em>File-&gt;Preview</em> o di <em>File-&gt;Textedit.</em><br>
+
+Queste file vengono cancellati al&nbsp; normale termine del programma, ma non
+nel caso di un arresto anomalo.<br>
+
+
+
+<div style="text-align: justify;">
+Per esempio se il programma si arresta immediatamente&nbsp;dopo aver cambiato
+o creato&nbsp;la parte di ECMAscript di uno scriptnode con un un texteditor,
+dopo che il file con il programma con l'ECMAscript e' stato scritto, il file
+e' ancora conservato nel filesystem. Potete trovare questo file (attraverso
+la data di creazione e di nome) e riutilizzarlo usando Copia e Incolla. <br>
+
+</div>
+
+<br>
+
+
+
+<h3><a name="languages">Far partire "White_dune" con i menu stranieri</a></h3>
+
+<p>White_dune puo' essere inizializzato con i menu in lingua straniera.<br>
+
+</p>
+
+
+<div style="text-align: justify;">
+Per esempio, per far partire white_dune con il menu in lingua italiana, deve
+essere usata l'opzione&nbsp;"- italian" sulla riga di comando.<br>
+
+Dato che e' scomodo far partire il programma da una finestra di comando, e'
+piu' conveniente scrivere uno shellscript (Linux/UNIX/MacOSX) o batchfile
+(Micro$oft Windows).<br>
+
+</div>
+
+
+<p>Se non potete trovare un file corrispondente (per esempio italiandune per
+la lingua italiana), potete generare uno con i commandi:</p>
+
+<br>
+
+
+<ul>
+
+  <li>Sotto Linux/UNIX:<br>
+
+
+    
+    <pre> echo dune -italian &gt; italiandune.sh<br> chmod +x italiandune.sh<br> </pre>
+
+  </li>
+
+  <li>Sotto Micro$oft Windows:<br>
+
+
+    
+    <pre> echo drive:\pathto\white_dune_version.exe -italian &gt; italiandune.bat<br> </pre>
+
+  </li>
+
+</ul>
+
+Sotto MacOSX dovete modificare nel file
+white_dune.app/Contents/MacOS/dunestarter le linee con le opzioni per la
+partenza del programma:<br>
+
+
+<pre> DUNEOPTIONS=" "<br> export DUNEOPTIONS<br></pre>
+
+ed aggiungere, ad esempio, l'opzione -german per il linguaggio italiano:<br>
+
+
+<pre> DUNEOPTIONS="-italian "<br> export DUNEOPTIONS<br></pre>
+
+<br>
+
+Per altre versioni esotiche di UNIX troverete delle opzioni simili nei
+seguenti file <br>
+
+<br>
+
+
+<ul>
+
+  <li>SGI IRIX/4Dwm: desktop/irix*/duneoptions.m4<br>
+
+    Leggi il file README_IRIX.desktop per maggiori informazioni</li>
+
+  <li>IBM AIX/cde: /usr/local/bin/white_dune.dt</li>
+
+  <li>Sun Solaris/cde: /opt/White_Dune/bin/white_dune.dt</li>
+
+  <li>Redhat Linux/kde: /usr/share/applications/dune.desktop</li>
+
+</ul>
+
+
+<div style="text-align: justify;">
+Se siete interessati alla traduzione dei menu di white_dune e dei messaggi di
+errore&nbsp;in un nuova lingua straniera (nessuna capacita' di programmazione
+e' richiesta), si prega di leggere<a href="../developer_docs/dune_developer.html#localisation"> step by step
+instructions about localisation</a> nella "developer documentation".</div>
+
+
+<p></p>
+
+
+<h3><a name="waskann">Cosa "white_dune" puo' fare e cosa non puo'</a></h3>
+
+
+<p></p>
+
+<ul>
+
+  <li><strong>White_dune non e' un browser VRML completo (ancora) e puo' non
+    visualizzare tutto</strong><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Ha caratteristiche per generare&nbsp;interazioni e programmazione di
+    script, ma ancora avete bisogno <span style="font-style: italic;">di
+    File</span><em> - &gt; preview</em> (oppure&nbsp;dovete salvare il file
+    ed aprirlo in un Browser&nbsp;VRML) per verificare i risultati. </div>
+
+  </li>
+
+  <li><strong>Cio' che (ancora) manca in white_dune e' il supporto per i nodi
+    VRML autodefiniti (PROTO bzw. EXTERNPROTO)</strong> <br>
+
+
+
+    
+    <div style="text-align: justify;">
+    White_dune riconosce i PROTO e scrive i PROTO invariati quando salva i
+    file. Potete creare nuovi nodi X3D/VRML del corrispondente PROTO-tipo e
+    modificare i campi (i valori di default dei PROTO nei&nbsp;file
+    (EXTERNPROTO) non sono (ancora) correttamente reconosciuti). I PROTO non
+    sono mostrati correttamente nella finestra di&nbsp;3D Preview in tutti i
+    casi (ancora). Non c'e' alcun modo&nbsp; (attraverso l'uso di <em>File
+    -&gt; textedit </em>) di modificare la stessa definizione di
+    PROTO&nbsp;(ancora). </div>
+
+  </li>
+
+  <li><strong>White_dune non e' un modellatore per uso generale</strong>
+    (ancora)<br>
+    
+    <div style="text-align: justify;">
+    Ha funzioni di&nbsp;input semplificato per le&nbsp;primitive VRML97 come
+    la Scatola, la Sfera, il Cono, il Cilindro e figure come ElevationGrid ed
+    Estrusione, ma non per altri oggetti come&nbsp;IndexedFaceSet (una figura
+    composta da molte&nbsp;facce), IndexedLineSet e PointSet.<br>
+
+    L'oggetto piu' comune nella modellazione 3D e' la "mesh" (maglia). La
+    maggior parte dei programmi 3D di modellazione attualmente esportano i
+    dati di "mesh" in VRML97 come IndexedFaceSets.<br>
+
+    </div>
+
+  </li>
+
+  <li style="text-align: justify;">Un altro oggetto&nbsp;comune nella
+    modellazione 3D e'&nbsp; la&nbsp;"NURBS" (Non Uniform Rational B-Spline),
+    che puo' essere usata in White_dune. I nodi come NurbsSurface, NurbsGroup
+    o NurbsCurve non fanno parte del&nbsp;tradizionale standard VRML97 del
+    1997, ma fanno parte dell' Amendament 1 allo standard VRML97&nbsp;dal
+    2002.<br>
+
+    Attualmente, questo tipo dii nodi sono supportati dai browsers VRML97
+    come Bitmanagement/Blaxxun cc3d/Contact, ma non sono implementati in
+    browsers&nbsp;non piu' sviluppati&nbsp;come CosmoPlayer 2.1.<br>
+
+    Esiste una implementazione&nbsp;(lenta e non completa) per CosmoPlayer
+    2.1 via un VRML PROTO. Potete trovare&nbsp;maggiori informazioni su
+    questo argomento 
+    <a href=../vrml200x_nurbssurface/index.html>
+    inquesto link</a> .&nbsp; </li>
+
+  <li style="text-align: justify;">White_dune infine consente la conversione
+    di tutti gli oggetti di superficie in&nbsp; IndexedFaceSet. Un
+    IndexedFaceSet puo' essere convertito in IndexedLineSet, un
+    IndexedLineSet puo' essere convertito in PointSet.<br>
+
+    Ma tenete presente che&nbsp;queste conversioni avvengono in una
+    sola&nbsp;direzione. Una conversione all'indietro non e' possibile
+    all'interno di White_dune. </li>
+
+</ul>
+
+
+<p></p>
+
+
+<p style="text-align: justify;">Potete trovare alcuni esempi tipici del VRML
+(da caricare in White_dune) 
+<a href=../typical_vrml_examples/index.html>qui</a>,
+ma tenete presente il fatto che gli esempi non mostrano la modellazione o le
+possibilita' di animazione, ma pricipalmente&nbsp;esempi VRML97 su
+interazione e scripting. Queste sono caratteristiche, che possono non essere
+implementate in White_dune (ancora).<br>
+
+Gli esempi sono la base di inizio per costruire i mondi interattivi 3D con
+White_dune, che sono usati successivamente con un "vero" browser&nbsp;VRML.
+</p>
+
+
+<h3><a name="vrml">Che cosa sono "scenegraph, fieldvalues, routes" etc.
+?</a></h3>
+
+White_dune e' uno strumento (tool) di base per creare/modificare file VRML97.
+Si suppone che l'utente conosca la struttura del&nbsp;VRML97. <br>
+
+
+
+<p>E' possibile trovare una documentazione tecnica dettagliata sul VRML97
+nelle specifiche ufficiali ISO nel: <a href="http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1">
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1
+</a>. Per l'uso di White_dune, specialmente &nbsp;il riferimento per i nodi,
+e' importante:<br>
+
+<a href="http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html">http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html&nbsp;</a>.<br>
+
+Un ottimo, semplice tutorial per principianti sul VRML97 puo' essere reperito
+(beside in a range of books) at <a href="http://web3d.vapourtech.com/tutorials/vrml97/">
+http://web3d.vapourtech.com/tutorials/vrml97/</a>.<br>
+
+X3D is the sucessor of VRML97. Despite some minor technical differences
+(which are handled automatically by white_dune) are alle commands of
+the VRML97 standard still available in X3D.<br>
+This is not the case for the "forgotten" VRML97 Amendment 1 Standard from
+2002. Sone VRML97 Amendment 1 commands like e.g the CoordinateDeformer 
+node do not exist anymore, but all still existing VRML97 Amendment 1 
+commands are handled automatically by white_dune, when a VRML97 file is
+stored as X3D(V) file.
+</p>
+<h3><a name="fenster">Le 5 finestre di "White_dune"</a></h3>
+
+
+<p><img src="windows.png"><br>
+
+</p>
+
+
+<p style="text-align: justify;">Oltre ai toolbar con le icone ed i messaggi
+"White_dune" e' composto essenzialmente da 5 finestre. Tramite il menu
+"vista", e' possibile accendere/spegnere tutte le finestre con la sola
+finestra&nbsp;di "3D Preview"&nbsp;. Accendete/spegnete le finestre, quando
+volete controllare lo stato del vostro lavoro.</p>
+
+<ul>
+
+  <li><b>Albero di Scena (Scene Tree)</b><br>
+
+    Questa finestra contiene il grafo della scena (scenegraph). Esso mostra
+    la struttura del file&nbsp;VRML, le informazioni, come i nodi VRML nodes
+    sono strutturati.<br>
+
+  </li>
+
+  <li><b>Vista dei Parametri (Field View)</b><br>
+
+    Questa finestra contiene i valori dei campi, i numeri (o stringhe di
+    caratteri) in un file VRML. Solo i campi del nodo correntemente
+    selezionato sono mostrati.</li>
+
+  <li><b>Vista dei Collegamenti (Route View)</b><br>
+
+    Questa finestra contiene i Collegamenti (ROUTE), ovvero le strade
+    attraverso cui i vari nodi VRML possono inviare informazioni tra di
+    loro.<br>
+
+    In accordo con il settaggio presente in <em>options -&gt; RouteView
+    Settings</em> puo' essere mostrato solo la corrente ROUTE&nbsp;(come
+    ROUTE sono memorizzati&nbsp;in un VRML file) oppure le Route di tutti i
+    nodi esistenti. Mostrare tutti i nodi rende fiu' facile creare una nuova
+    ROUTE in un file VRML piccolo, ma puo' essere molto intricato con un file
+    VRML molto grande. </li>
+
+  <li><b>Vista del Canale (Channel View)</b><br>
+
+    Questa finestra e' valida solo per i nodi di interpolazione. I nodi di
+    interpolazione sono molto importanti per le animazioni in VRML97.</li>
+
+  <li><b>Finestra di visualizzazione 3D (3D Preview)</b><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Questa finestra non puo' essere spenta e visualizza l'output grafico di
+    un file VRML. A differenza delle altre finestre, l'implementazione dello
+    standard&nbsp;VRML97 in questa finestra e' (ancora) incompleta.<br>
+
+    Alcuni nodi VRML97 come&nbsp;"MovieTexture" o gli&nbsp;"EXTERNPROTO"
+    autodefiniti, non sono visualizzati. Le icone dei nodi non visualizzati
+    sono vuoti (EXTERNPROTO) oppure circondati da un bordo nero.<br>
+
+    I nodi presi dal non largamente usato VRML97 Amendment 1 Standard
+    (ISO/IEC 14772:2002) hanno i maggiori problemi, dovuti al fatto che i
+    nodi&nbsp;NurbsSurface, NurbsCurve e NurbsGroup dall' Amendment 1 sono
+    correntemente responsabili per le piu' potenti funzioni di modellazione
+    3D di White_dune.<br>
+
+    Non tutti i campi sono visualizzati correttamente, ad es. il nodo "Text"
+    sotto&nbsp;Linux/UNIX/MacOSX puo' essere visto come&nbsp;"meglio che
+    niente" (specialmente se il programma e' stato compilato senza il
+    supporto della libreria GLUT ). I campi del nodo&nbsp;"FontStyle"&nbsp;
+    (che appartiene al nodo "Text" sono anche non corretti (ancora).<br>
+
+    Il campo "convex" e' (ancora) ignorato, anche. Quando "convex" e' su
+    "false", i poligoni non convessi sono visualizzati correttamente.<br>
+
+    </div>
+
+    <img src="convex_freewrl.png"> <img src="convex_dune.png"><br>
+
+    Immagine corretta e sbagliata si un&nbsp;IndexedFaceSet con
+    poligoni&nbsp;non convessi con "convex false" in FreeWRL (links) e
+    White_dune (destra)<br>
+
+    Il problema con il&nbsp;"convex false" esiste anche nel nodo Extrusion.
+    Ci sono piu' errori di render quando si usano&nbsp;i nodi Extrusion.<br>
+
+    La visualizzazione di oggetti multipli trasparenti puo' risultare
+    erronea.<br>
+
+    Ci sono anche errori nella visualizzazione di qualche PROTO.<br>
+
+    <b>Naturalmente, se c'e' un'errore di visualizzazione di un oggetto nella
+    finestra 3d cio' non significa che ci sia un errore nel file VRML</b>.<br>
+
+    In caso di dubbi, usate <em>File-&gt;Preview</em> per lanciare un VRML
+    browser.</li>
+
+</ul>
+
+
+<h3><a name="menue">Menu overview</a></h3>
+ 
+<p>Il menu principale di white_dune &egrave; separato nei seguenti sotto-menu:
+ </p>
+<ul>
+  <li>
+   File<br>
+Questo sotto-menu permette di gestire i file, per caricare, inserire e
+salvare file VRML/X3D. Esso pu&ograve; anche essere usato per esportare
+in diverse varianti dei file VRML/X3D e &nbsp;in qualche altro formato
+3D.<br>
+Il submenu&nbsp;File contiene anche una modalit&agrave; per editare il
+file corrente come testo senza ulteriori pannelli di dialogo di
+apertura e salvataggio. </li>
+  <li>
+   Modifica<br>
+Questo sotto-menu &egrave; usato per copiare, incollare, cancellare o cercare oggetti.<br>
+Esso contiene anche una voce di menu per il comando VRML/X3D "DEF".
+questo comando &egrave; usato per assegnare un nome ad un oggetto
+VRML/X3D. Esso pu&ograve; essere usato in una "ROUTE" per scambiare
+messaggi tra oggetti VRML/X3D. Pu&ograve; essere anche usato dal
+comando "USE"&nbsp;(anche disponibile sotto il
+sotto-menu&nbsp;"Modifica"), che crea un &nbsp;puntatore
+indistinguibile all'oggetto, come nel caso di un hard link UNIX. </li>
+  <li>
+   Vista<br>
+questo sotto-menu &egrave; inteso per i settaggi sulla finestra usata e gli strumenti (o "toolbars").<br>
+In questa possibilit&agrave;, per commutare tra finestra singola e toolbars, esiste anche una voce di menu <em> Vista -&gt; Schermo Intero</em>,
+che fa sparire tutti gli strumenti delle palette intorno alla palette
+standard (ad.es. con icone per aprire e salvare) e mostra solo la
+finestra&nbsp;3D. Questo &egrave; molto utile per modellare un oggetto
+3D o per navigare nel mondo 3D. </li>
+  <li>
+   Crea<br>
+
+   This submenu is intented for the creation of new VRML/X3D nodes.<br>
+
+   The menu is orginised somewhat similar to the components of the X3D
+   standard, but only VRML97 nodes are organised this way. 
+   VRML97 Amendment 1 nodes, X3D nodes, X3D draft nodes and extension
+   nodes for browsers like cover or kambi are seperated in own submenus.
+  </li>
+  <li>
+   Azioni<br>
+
+   This submenu contains functions to change the VRML/X3D file.<br>
+
+   A mayor part of this functions were designed cause they are not
+   available in a lot of 3D modellers (or not supported by their
+   VRML/X3D Export).
+  </li>
+  <li>
+   Converti<br>
+
+   This submenu is intended to support the conversion between 3D objects.<br>
+
+   There are two classes of conversions:
+   
+    <ul>
+      <li>
+     Shape conversion:<br>
+
+     The conversion of shapes means the loss of information in almost
+     all cases. In a typical case, you start with a shape with only
+     few parameters like a sphere with only one parameter (radius)
+     or a scripted PROTO like SuperShape (with less than 20 parameters for
+     a complex object). The next step may be the conversion to a 
+     Nurbs(Patch)Surface. A typical Nurbs(Patch)Surface has much more 
+     parameters then a primitive or scripted PROTO (if you don't count
+     huge array of values as only one parameter). But unlike a 
+     primitive etc., you can change small details of a Nurbs(Patch)Surface
+     easily.<br>
+
+     The next step could be the conversion to a IndexFaceSet (mesh).
+     This also increases the possibilities to change details. 
+     While a Nurbs(Patch)Surface can be changed via a few controlpoints,
+     a IndexFaceSet has usually much more vertices as details, that can be 
+     changed. But the conversion also looses control, cause the change
+     of a controlpoint in a Nurbs(Patch)Surface can control a lot of
+     vertices of a shape.<br>
+
+     The next possible steps only loose information: the conversion to
+     a IndexedLineSet only loose information about faces and the next
+     possible step, the conversion to a PointSet only loose information 
+     about the connections between the vertices.
+    </li>
+      <li>
+     Interpolator creation:<br>
+
+     This menupoints creates Position- and OrientationInterpolators from
+     a NurbsCurve. Unlike the conversion of shapes, the new created 
+     interpolator do not replace the NurbsCurve. The new created interpolator
+     is not connected to other nodes. To use it for a animation, it
+     need to be connected to a TimeSensor and a target node with the
+     following Routes menu.
+    </li>
+    </ul>
+
+  </li>
+  <li>
+   Routes<br>
+
+   This submenu is used for VRML/X3D ROUTE commands.<br>
+
+   The chapter about <a href="#route">Input/erase of ROUTEs</a>
+   discribe this submenu.
+  </li>
+  <li>
+   Modo<br>
+
+   This submenu is used to set navigation and input modes.
+  </li>
+  <li>
+   Opzioni<br>
+
+   This submenu is used to change settings.
+  </li>
+  <li>
+   Help<br>
+
+   This submenu shows helppages with a HTML webbrowser.
+  </li>
+  <li>
+   ! (opzionale "teacher menu")<br>
+Questo sottomenu &egrave; disponibile soltanto se il porgramma &egrave;
+stato compilato con questa opzione. Esso &egrave; usato per marcare
+costrutti giusti e sbagliati. </li>
+</ul>
+
+<p></p>
+<p></p>
+
+
+<h3><a name="navigation">Navigazione</a></h3>
+
+
+<p>Nella finestra&nbsp;3D, avete tre modalita' di navigazione. </p>
+
+<ul>
+
+  <li>Shift-Mouse 1: Zoom View</li>
+
+  <li>ctrl-Mouse 1: Rotate View</li>
+
+  <li>Shift-ctrl-Mouse 1: Move View</li>
+
+</ul>
+
+Inoltre, dalla versione 0.16 avete una navigazione stile Silicon Graphics.
+Tenete conto che un windowmanager non configurato puo' limitare tutti gli
+input del mouse che usino il tasto Alt...
+<ul>
+
+  <li>Alt-Mouse1: Rotate View</li>
+
+  <li>Alt-Mouse2: Move View</li>
+
+  <li>Alt-Mouse1-Mouse2: Zoom View</li>
+
+</ul>
+
+Quando e' attivo un "6D inputdevice" ed e' selezionata l'icona
+della&nbsp;Scena <img src="sceneicon.jpg"> nell'albero della Scena, la
+navigazione dipende dalle icone di trasformazione <img src="schieb.png"> <img src="rot.png"> <img src="6d.png"> <img src="rocket.png"> <img src="hover.png"> nel file VRML.
+
+<p></p>
+
+
+<h3><a name="scenegraph">Modificare lo SceneGraph</a></h3>
+
+
+<div style="text-align: justify;">
+Il modo piu' semplice per modificare il Grafo della Scena (SceneGraph) e'
+aggiungere un nuovo nodo cliccando sull'icona del corrispondente nodo
+VRML.<br>
+
+Per identificare l'icona corrispondente ad un nono VRML, muovete il mouse su
+di esso ed aspettate. Un testo descrittivo di&nbsp;verra' mostrato sulla
+barra di stato in basso della finestra di White_dune.<br>
+
+</div>
+
+
+<p>White_dune provera' ad includere il nuovo nodo nel punto di selezione
+dello scenegraph,<br>
+
+<img src="node_add_valid.jpg"><br>
+
+oppure nella root dello scenegraph (icona "Scene").<br>
+
+White_dune mettera' in grigio tutte le icone dei nodi che sono impossibili da
+aggiungere.<br>
+
+<img src="node_add_invalid.jpg"><br>
+
+<br>
+
+La seguente tabella mostra le richieste per questi nodi nello standard VRML97
+:<br>
+
+</p>
+
+<ul>
+
+  <li>Appearance vuole Shape</li>
+
+  <li>Material vuole Appearance</li>
+
+  <li>ImageTexture vuole Appearance</li>
+
+  <li>MovieTexture vuole Appearance (oppure Sound)</li>
+
+  <li>PixelTexture vuole Appearance</li>
+
+  <li>TextureTransform vuole Appearance</li>
+
+  <li>Coordinate vuole IndexedFaceSet oppure IndexedLineSet oppure
+  PointSet</li>
+
+  <li>Color vuole IndexedFaceSet o IndexedLineSet o PointSet</li>
+
+  <li>Normal vuole IndexedFaceSet</li>
+
+  <li>TextureCoordinate&nbsp;vuole IndexedFaceSet </li>
+
+  <li>FontStyle&nbsp;vuole Text </li>
+
+  <li>AudioClip&nbsp;vuole Sound </li>
+
+</ul>
+
+
+<div style="text-align: justify;">
+Per esempio un nodo Appearence deve essere selezionato, per includere una
+ImageTexture, oppure una Shape deve essere selezionata per includere un'
+Appearence.<br>
+
+Tutti i campi dei nodi corrispondenti nel&nbsp;VRML97 sono di tipo SFNode,
+altrimenti puo' essere inserito un solo nodo. Un icona e' anche grigia, se
+c'e' gia' un corrispondente nodo.<br>
+
+Per esempio, non potete includere due nodi ImageTexture in
+un&nbsp;Appearence. Cosi' l' ImageTexture e' anche in grigio, se un
+nodo&nbsp;Appearence e' selezionato, ma c'e' gia' un nodo ImageTexture
+contenuto. <br>
+
+Secondo lo Standard VRML97 i nodi&nbsp; Box, Sphere, Cone, Cylinder,
+IndexedFaceSet, IndexedLineSet, PointSet, ElevationGrid, Extrusion e Text
+hanno bisogno di un nodo "Shape". In tutti i casi, la struttura necessaria
+per l'uso di questo nodo Shape.geometry e' chiara. Infatti il&nbsp;click
+sulle icone e l'uso del&nbsp; menu <em> Create -&gt; Shape -&gt;
+vocedelmenu</em>&nbsp; costruisce una&nbsp;Shape-struttura (che include un
+sovrastante nodo Transform).<br>
+
+(Nuovo nella Versione 0.29beta) In caso di creazione di un nodo, se
+l'elemento&nbsp;selezionato non e' una Shape di cui il nuovo nodo possa far
+parte, il sovrastante nodo Transform viene riempito in modo che il nuovo nodo
+venga mostrato direttamente di fronte all'attuale punto di vista.<br>
+
+<br>
+
+</div>
+
+
+<p></p>
+
+
+<p style="text-align: justify;">I comandi &nbsp;<em>Edit -&gt; copy</em>,
+<em>Edit -&gt; paste</em> and <em>Edit -&gt; delete</em> &nbsp;funzionano in
+maniera simile agli stessi comandi negli altri programmi. Se l'ultimo click
+del mouse e' stato fatto nell'albero della scena ("Scene Tree"), questi
+comandi possono essere usati per modificare lo scenegraph come ci si aspetta.
+</p>
+
+
+<p style="text-align: justify;">Un comando inusuale e'&nbsp; <em>Edit -gt;
+copy branch to root</em>. Esso copia tutti i nodi lungo il percorso alla
+radice ("root") dello&nbsp;scenegraph corrente nel buffer. Questo puo' essere
+veramente utile, se avete bisogno di duplicare e spezzare un ramo dello
+scenegraph. </p>
+
+
+<p>Un altro modo per modificare lo&nbsp;scenegraph e' di trascinare parti di
+esso con il mouse.<br>
+
+White_dune vi mostrera'&nbsp;l'icona di un segnale di stop, se il nodo di
+destinazione non e' possibile.<br>
+
+<img src="scenegraphchange_invalid.jpg"><br>
+
+Se il nodo di destinazione e' possibile, White_dune mostrera' il normale
+puntatore del mouse.<br>
+
+<img src="scenegraphchange_valid.jpg"><br>
+
+La destinazione non e' possibile, se ci sono campi SF/MFNode multipli nel
+nodo finale.<br>
+
+<img src="scenegraph_multiple_target.png"><br>
+
+I nodi con campi multipli di tipo SF/MFNode (per es. il nodo "collision")
+mostrano sempre i nomi dei campi nello "scenetree" (a meno di &nbsp;un
+settaggio contrario nel pannello <em>Options -&gt; Preferences</em>); in
+questo caso potete usare i nomi dei campi come destinazione&nbsp;.<br>
+
+<img src="scenegraph_multiple_fields.png"></p>
+
+
+<p>In maniera simile al copy/move del programma explorer di M$Windows2000, e
+simili filemanager, e' possibile modificare il behaviour, se e' usata la
+tastiera quando il mouse e' ancora in trascinamento:<br>
+
+</p>
+
+<ul>
+
+  <li>Move: <br>
+
+    la tastiera non e' premuta oppure il tasto Shift e' premuto (l'icona non
+    cambia) <br>
+
+    <img src="scenegraphchange_move.jpg"><br>
+
+  </li>
+
+  <li>Copy: <br>
+
+    <img src="scenegraphchange_copy_ptr.jpg"><br>
+
+    Crtl key premuto (icona aggiunge l'immagine "+") <br>
+
+    <img src="scenegraphchange_copy.jpg"><br>
+
+  </li>
+
+  <li>DEF/USE: <br>
+
+    <img src="scenegraphchange_link_ptr.jpg"><br>
+
+    Crtl key e Shift key premute insieme (icona aggiunge immagine "freccia")
+    <br>
+
+    <img src="scenegraphchange_link.jpg"><br>
+
+  </li>
+
+</ul>
+
+
+<p></p>
+
+
+<p></p>
+
+
+<h4><b><a name="use">Usando USE</a></b></h4>
+
+<small>(nuovo nella Versione 0.29beta)</small><br>
+
+Al di la' del metodo&nbsp;drag and drop descritto sopra, c'e' un altro modo
+di usare il costrutto USE. Il costrutto USE e qualcosa di simile ad un
+puntatore, il riuso di un nodo gia' esistente. Il nodo USE deve essere
+definito da un nodo DEF, seguito dal nome, che puo' essere applicato con
+<em>Edit -&gt; DEF</em>. &nbsp;L'uso di <em>Edit -&gt; USE</em> (se
+possibile) aggiunge un nuovo USE dell'ultimo nodo DEF, nel punto del nodo
+selezionato.<br>
+
+Se modificate il nodo DEF, il nodo USE e' anche modificato.<br>
+
+Se modificate il nodo USE, il nodo&nbsp;DEF e' anche modificato.<br>
+
+In White_dune (eccetto quando usate un text editor su un VRML97 file), potete
+legalmente cancellare il nodo DEF. Il primo nodo USE scritto formalmente
+diventera' il nuovo DEF, dato che il costrutto DEF/USE e' di puntatori
+indistinguibili.<br>
+
+L'uso di USE e' utile per rendere i file VRML piu' piccoli (scaricabili piu'
+velocemente), facilita le possibilita' di manutenzione e puo' essere usato
+per un rendering piu' veloce da un browser VRML intelligente.<br>
+
+Ulteriori comandi, che possono create costrutti USE sono gli&nbsp; <a href="#array"> array tool</a> e altri tra le seguenti operazioni "create"
+scenegraph.
+
+<p></p>
+
+
+<p></p>
+
+
+<h4><b><a name="scenegraphoperations">Operazioni Scenegraph</a></b></h4>
+
+<small>(nuovo nella Versione 0.27beta)</small><br>
+
+Non c'e' alcun modo di muovere nodi multipli nello scenegraph (ancora). Un
+modo per scavalcare questo e' l'uso di operazioni che possono essere
+applicate a tutti i nodi dello scenegraph che seguono il nodo selezionato
+(compreso il nodo stesso). <br>
+
+<img src="scenegraphbranch_start.png"><br>
+
+Ci sono comandi disponibili sotto <em>Actions -&gt; Rest of scenegraph
+branch</em>:
+<ul>
+
+  <li><em>Muovi verso ("Move to")</em><br>
+
+    Questo comando sposta i nodi in un nodo di raggruppamento (come Group,
+    Transfrom etc.)<br>
+
+    <img src="scenegraphbranch_transform.png"> <br>
+
+    E' anche possibile inserire i nodi in un nuovo file VRML97 ed usare
+    questo file attraverso il comando Inline, ma solo se non c'e' alcun ROUTE
+    che ha uno o piu' nodi come destinazione oppure se e' usato un nodo
+  USE.</li>
+
+  <li><em>Muovi di un livello sopra</em><br>
+
+    Questo comando sposta i nodi dello stesso ramo dello scenegraph verso il
+    genitore del nodo selezionato.<br>
+
+    <img src="scenegraphbranch_up.png"></li>
+
+  <li><em>Azioni -&gt; Muovi il resto dello scenegraph di un livello sopra
+    ("Actions -&gt; Move rest of scenegraph branch 1 level up ")</em><br>
+
+    Questo comando sposta i nodi dello stesso ramo dello&nbsp;scenegraph
+    verso il genitore del nodo selezionato.<br>
+
+    <img src="scenegraphbranch_up.png"></li>
+
+  <li><em>Crea</em><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Questo comando crea un nuovo nodo (ImageTexture, Material, Appearance,
+    Normal ecc.) in ogni posto possibile nel ramo dello scenegraph. Tutti i
+    nodi vengono creati&nbsp;all'interno di un nodo Shape. Si deve stinguere
+    tra nodi che rientrano sotto il campo "appearance" della Shape
+    (ImageTexture, Material und Appearance) e nodi che rientrano nel campo
+    "geometry" della Shape (Normal, TextureCoordinate). Per i nodi del campo
+    "appearance", viene creato un nuovo nodo nella prima possibilita'
+    esistente nello scenegraph e per tutte le possibilita' seguenti il nodo
+    e' riutilizzato attraverso USE. Questo rende possibile modificare il
+    colore, il materiale e la texture di un intero scenegraph con il minimo
+    sforzo. Nodi che rientrano nel campo "geometry" della shape verranno
+    generati secondo i dati necessari della Shape (per.es. un
+    IndexedFaceSet). </div>
+
+  </li>
+
+  <li><em>Set</em><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Questo comando modifica alcuni campi (creaseAngle, transparency, ecc.)
+    nel ramo dello scenegraph, che influenzano la vista di una shape shape e
+    possono essere facilmente cambiati.</div>
+
+  </li>
+
+  <li style="text-align: justify;"><em>Rimuovi</em><br>
+
+    Questo comando rimuove alcuni nodi (ImageTexture, Material, Appearance,
+    Normal ecc.) nel ramo dello scenegraph. Molti dei nodi sono
+    corrispondenti ai nodi nel comando&nbsp;<em>Crea</em>, dato che esso puo'
+    inserire solo nodi, se il campo corrispondente non e' bloccato da un nodo
+    gia' esistente. Cosi' il comando&nbsp;<em>Rimuovi</em> puo' essere il
+    primo passo per cambiare i valori nel ramo dello&nbsp;scenegraph. </li>
+
+  <li>
+    
+    <div style="text-align: justify;">
+    <em>Show polygons/primitives in status bar</em> Questo e' un comando
+    informativo e non cambia nulla nello&nbsp;Scenegraph. Puo' essere usato
+    per trovare pa parte dello scenegraph che contiene il piu' grande numero
+    di poligoni/primitive. Cio' e' molto importante per trovare problemi di
+    efficienza nei dati 3D per il tempo reale. Primitive sono nodi
+    come&nbsp;Box, Cone, Cylinder and Sphere. Per le&nbsp;Primitive, il
+    numero dei poligoni usati nel Browser VRML&nbsp;dipende dal Browser VRML
+    stesso. Per esempio, un VRML Browser puo' usare 16 poligoni per disegnare
+    la superficie superiore di un cilindro di bassa qualita' oppure puo'
+    usare 32 poligoni per una qualita' miigliore.<br>
+
+    Una sfera generalmente usa numerosi&nbsp;poligoni in piu' di una Box.<br>
+
+    </div>
+
+    Per trovare la parte di scenegraph che contiene il maggior numero di
+    poligoni/primitive, potete usare un algoritmo di ricerca binaria:<br>
+
+
+    
+    <ul>
+
+      <nl>Cliccate sull'icona della scena sulla radice dello&nbsp;scenegraph
+      ed usa "<em>Actions -&gt; Rest of scenegraph branch -&gt; Show
+      polygons/primitives in status bar"</em>. Il risultato e' il numero dei
+      poligonsi/primitive nell'intero&nbsp;VRML file. </nl><nl>Selezionate un
+      nodo posto approssimativamente nella meta' del corrente livello del
+      ramo dello&nbsp;scenegraph ed usate <em>"Actions -&gt; Rest of
+      scenegraph branch -&gt; Show polygons/primitives in status
+      bar"</em>.<br>
+
+      Se il numero e' piu' grande della meta' del risultato dell'ultimo
+      comando, la maggioranza dei poligoni/primitive e' nella parte superiore
+      del livello corrente del ramo dello scenegraph. Continuate con il
+      comando alla meta' approssimativa della parte superiore del livello
+      corrente del ramo dello&nbsp;scenegraph. <br>
+
+      Se il numero e' inferiore della meta' del risultato dell'ultimo
+      comando, la maggioranza dei poligoni/primitive e' nella parte inferiore
+      del corrente livello del ramo dello&nbsp;scenegraph. Continuate con il
+      comando alla meta' approssimativa della parte inferiore del corrente
+      ramo dello scenegraph.<br>
+
+      Continuate con questo schema, usando la meta' della parte rimanente
+      dell'ultimo comando, finche' non troevrete o il nodo, o il gruppo di
+      nodi che contiene la maggioranza dei poligoni/primitive nel vostro
+      file. Il nodo&nbsp;</nl><nl>(o il gruppo di nodi) (per es. se e' un
+      nodo Group o Transform) puo' esso stesso contenere molti altri nodi. Se
+      cliccate sul sel segno +&nbsp; nell'albero della scena di qualche nodo,
+      potete aprire un nuovo livello nel ramo dello scenegraph. Se avete
+      bisogno di continuare la ricerca della parte con il maggior numero
+      di&nbsp;poligoni/primitive, usate <em>Actions -&gt; Rest of scenegraph
+      branch -&gt; Show polygons/primitives in status bar</em> e continuate
+      con il secondo step. </nl>
+    </ul>
+
+  </li>
+
+</ul>
+
+Sfortunatamente, alcune di queste operazioni sono (ancora) molto lente.
+
+<p></p>
+
+
+<h3><a name="route">Inserimento/cancellazione di ROUTE</a></h3>
+
+
+<p>In White_dune, ci sono due differenti settaggi, che guidano il modo in cui
+inserire una ROUTE.</p>
+
+<ul>
+
+  <li>In <em> Options -&gt; RouteView Settings...</em> il checkbox per "Show
+    all nodes in Routeview" e'&nbsp;settato:<br>
+
+    Tutti i nodi nella scena sono mostrati nel routeview.<br>
+
+    Questo e' utile per lavorare con file&nbsp;VRML piccoli, ma con file VRML
+    con un sacco di nodi, puo' essere terribile cercare la giusta icona. </li>
+
+  <li>In <em> Options -&gt; RouteView Settings...</em> il checkbox per "Show
+    all nodes in Routeview" non e' settato:<br>
+
+    Solo i nodi con ROUTE gia' esistenti sono mostrati nella routeview.<br>
+
+    Per poter vedere un nodo senza ROUTE nella Routeview, dovete selezionare
+    il nodo nell'albero della scena ed usare il comando <em>Route -&gt; show
+    node on top</em>.</li>
+
+</ul>
+
+
+<p></p>
+
+
+<div style="text-align: justify;">
+I ROUTE sono creati in White_dune cercando l'icona a destra nella finestra
+RouteView (se cliccate sulle icone, viene selezionata l'icona corrispondente
+nell'albero della scena (usare <em>"Route -gt; Move node to top"</em> puo'
+essere utile) e cliccate sui box dell'evento corrispondente. Viene mostrato
+il nome dell'evento, e potete disegnare una linea fino al prossimo
+evento/icona. <br>
+
+<img src="routemake1.jpg"><img src="routemake2.jpg"> <br>
+
+</div>
+
+
+<p>Come richiesto dallo standard VRML, solo gli eventi dello stesso tipo
+(stesso colore dei box) possono essere connessi.<br>
+
+Per cancellare una ROUTE, semplicemente tagliate la linea.<br>
+
+<img src="routecut1.jpg"><img src="routecut2.jpg"><br>
+
+</p>
+
+
+<div style="text-align: justify;">
+Come suggerimento per i principianti, alcuni box degli eventi sono marcati
+con un&nbsp;puntino rosso, che sta ad indicare gli eventi importanti o piu'
+spesso usati.<br>
+
+Naturalmente l'importanza/uso degli eventi puo' differire dal task del tuo
+mondo VRML world. Tutti i nodi sensori&nbsp; (i sorgenti originari del
+processamento degli eventi) hanno i box degli eventi con i punti rossi. </div>
+
+
+<div style="text-align: justify;">
+In complessi mondi VRML con un gran numero di oggetti (per esempio i file
+VRML esportati da programmi di modellazione 3D come&nbsp;Wings3D, Blender,
+AOI, Catia, 3D Studio Max, Maya ecc.) puo' essere difficoltoso cercare i
+nodi&nbsp;VRML nella finestra&nbsp;RouteView. <br>
+
+</div>
+
+
+<p><img src="routeview_full.png"><br>
+
+Ci sono operazioni che permettono di saltare al nodo selezionato (con <em>
+Routes -&gt; Unzoom/jump to selection </em>) <br>
+
+<img src="routeview_jump.png"><br>
+
+oppure zoomare all'esterno della Routeview (con <em> Routes -&gt; Zoom
+out</em>) <br>
+
+<img src="routeview_zoom.png"><br>
+
+ma in questi casi, e' raccomandato l'uso del nodo&nbsp;VRML Inline. Questo
+puo' essere usato per inserire oggetti statici (per esempio parti del
+paesaggio o parti di forme rigide) nei propri VRML file. Come risultato il
+completo mondo VRML puo' consistere di un piccolo numero di nodi VRML. <br>
+
+<img src="routeview_inline.png"><br>
+
+</p>
+
+
+<p><b>Comandi con l'automatica generazione di ROUTE</b><br>
+
+Ci sono due comandi che generano automaticamente nuovi ROUTE.</p>
+
+<ul>
+
+  <li><em>Action -&gt; animate </em><br>
+
+    Con questi comandi saranno generati i ROUTE per<br>
+
+    TimeSensor -&gt; *Interpolator -&gt; nodo selezionato<br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Dopo l'uso di questo comando, si aprira' un pannello che chiedera' per
+    quale TimeSensor deve essere costruito oppure quale&nbsp;TimeSensor
+    esistente deve essere usato. Il pannello chiede anche quale evento di
+    destinazione (canpo), nel nodo selezionato, deve essere usato. In base al
+    tipo di evento di destinazione verra' generato un
+    nuovo&nbsp;Interpolatore. </div>
+
+    
+    <ul>
+
+      <li>SFFloat: ScalarInterpolator</li>
+
+      <li>SFVec3f: PositionInterpolator</li>
+
+      <li>SFRotation: OrientationInterpolator</li>
+
+      <li>SFColor: ColorInterpolator</li>
+
+      <li style="text-align: justify;">MFVec3f: CoordinateInterpolator
+        (eccetto quando la destinazione e' un nodo Normal, nel qual caso
+        sara' generato un NormalInterpolator)</li>
+
+    
+    </ul>
+
+
+    
+    <div style="text-align: justify;">
+    Quando il valore di un evento di destinazione puo' essere letto, una
+    nuova coppia key/keyValue con key=0.0 e keyValue=value_target_field
+    verra' settata.</div>
+
+  </li>
+
+  <li><em>Action -&gt; add Interaction</em><small> (nuovo nella Versione
+    0.29beta)</small><br>
+
+    In questo caso, verra' generato il ROUTE<br>
+
+    Sensor -&gt; selected node<br>
+
+    Poiche' ci sono piu' di una possibile destinazione di evento nel nodo
+    selezionato e differenti dagli Interpolatori, la assegnazione tra tipi di
+    evento di destinazione e sensore e' ambigua tra molte possibilita', molte
+    delle quali hanno senso. Cosi' ci sono due&nbsp;Liste: un Listbox che
+    potete usare per selezionare tra gli eventi raccomandati e tutti gli
+    eventi, ed un listbox, in cui potete selezionare i sensori gia'
+    esistenti.<br>
+
+    In una finestra ci saranno i checkbox con tutti i sensori
+    eventi/destinazione eventi combinazioni per una nuova interazione,
+    secondo la&nbsp; selezione dei&nbsp;listbox. </li>
+
+</ul>
+
+
+<p></p>
+
+
+<h3><a name="fields">Cambiare il valore dei campi ("fieldvalues")</a></h3>
+
+
+<p>Esiste piu' di un modo di modificare i valori dei campi:<br>
+
+</p>
+
+<ul>
+
+  <li><b><a name="keyboard">Input da tastiera</a></b><br>
+
+    Cliccando con il mouse sul valore corrispondente e rilasciando il
+    bottone. Si aprira' una finestra di input per inserire i valori con la
+    tastiera.</li>
+
+  <li><b><a name="mouse">Input con il Mouse</a></b><br>
+
+    Premendo il tasto sinistro sul valore corrispondente e non rilasciando il
+    bottone, ma muovendo il puntatore del mouse a destra o sinistra. In
+    questo modo verra' incrementato o diminuito il valore. <br>
+
+    <img src="fieldchange.jpg"><br>
+
+  </li>
+
+  <li><b><a name="MF">Cambiare&nbsp;"MF"-FieldValues</a></b><small>(nuovo
+    nella versione 0.27beta)</small><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Nella finestra dei parametri o campi ("fieldview"), un segno "+" alla
+    sinistra di un campo "MF" , come MFFloat, MFInt32, MFVec3f, MFRotation,
+    MFString ecc. I campi "MF" sono tabelle di dati, di cui potete osservare
+    il contenuto: primo, secondo, terzo, ecc.<br>
+
+    Per mostrare/modificare il contenuto di un campo "MF", dovete cliccare
+    sul carattere&nbsp; "+" alla sua sinistra.<br>
+
+    Come in un file&nbsp;VRML, un campo "MF" con un solo dato e mostrato in
+    maniera simile ad un&nbsp;normale campo "SF" ("single&nbsp;field").<br>
+
+    Per aggiungere dati ad un campo "MF", dovete cliccare sulla seconda
+    colonna dei caratteri&nbsp;"+". Un nuovo dato sara' inserito sulla riga
+    seguente della tabella.<br>
+
+    Per inserire al primo punto, cliccare sul lato destro della finestra
+    "fieldview" prima del primo campo"MF" aperto.<br>
+
+    Per cancellare da un campo "MF", cliccate sul lato sinistro della
+    "fieldview " alla riga con i dati che volete eliminare ed usate il menu
+    <em>Edit -&gt; delete</em>.</div>
+
+  </li>
+
+  <li><b><a name="3DWindow">Modificare i FieldValue nella finestra 3D
+    Preview</a></b><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Le modifiche nella finestra 3D Preview sono anche una modifica dei
+    campi&nbsp;fieldvalues. Principalmente, sono modificati i nodi
+    transform.<br>
+
+    </div>
+
+    Durante il lavoro interattivo con il mouse nella finestra 3D Preview, le
+    icone <img src="transform.jpg"> selezionano tra
+    
+    <ul>
+
+      <li>traslazione <img src="schieb.png"></li>
+
+      <li>rotatione <img src="rot.png"></li>
+
+      <li>scala <img src="scale.jpg"></li>
+
+      <li>sposta il centro <img src="center.jpg"> <small>(nuovo nella
+        versione 0.19beta)</small></li>
+
+    
+    </ul>
+
+    <br>
+
+    <strong>Tenete conto che non e' possibile usare queste funzioni, quando
+    non esiste il nodo&nbsp;transform&nbsp; <img src="transform2.jpg"> nel
+    ramo dello scenegraph</strong>.<br>
+
+    All'interno del nodo Transform, anche altri campi possono essere
+    modificati nella finestra 3D Preview. This is about moving small white
+    boxes, like in Box, Cone, Cylinder, Sphere, ElevationGrid, Extrusion,
+    PointLight or the VRML97 Amendment 1 NurbSurface/NurbsCurve Nodes.</li>
+
+  <li><b><a name="6D">6D Input</a></b> <small>(nuovo nella versione
+    0.19beta)</small><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Fino dalla&nbsp;versione 0.19beta White_dune supporta 6D inputdevices (6D
+    sta per &nbsp;6 gradi di liberta'degrees of freedom) sotto Unix/Linux.<br>
+
+    </div>
+
+
+    
+    <div style="text-align: justify;">
+    E' premuto, potete spostare un nodo Transform&nbsp;(e gli oggetti
+    contenuti) in tutti e 6 i gradi di liberta'. L'icona <img src="schieb.png"> limita il movimento alle&nbsp;traslazioni, l' icona
+    <img src="rot.png"> limita alle rotazioni. <br>
+
+    </div>
+
+
+    
+    <div style="text-align: justify;">
+    Il classico 6D inputdevice e' la spaceball, una sorta di joystick che
+    permette solo piccole escursioni, ma in tutte le direzioni, incluse
+    rotazioni.<br>
+
+    </div>
+
+    <img src="spaceball.jpg"><br>
+
+    Se, per esempio, premete la parte alta della spaceball, l'oggetto si
+    spostera' verso il basso. Quando girate la spaceball, l'oggetto seguira'
+    questo movimento.<br>
+
+    La configurazione delle 6D inputdevices (ancora) funziona esclusivamente
+    attraverso parametri da riga di comando. A secondo del tipo di 6D
+    inputdevice una scala di valori di input e' necessaria, per esempio: <br>
+
+
+    
+    <pre> white_dune -xinput spaceball -allxyz=20,200 -allrot=40,400<br></pre>
+
+    <br>
+
+    E' anche possibile cambiare la scala delle&nbsp;inputdevices quando il
+    programma sta girando. Usete <em> Mode -&gt; Inputdevice -&gt; Increase
+    input device </em> (icona <img src="faster.png">) oppure <em> Mode -&gt;
+    Inputdevice -&gt; Decrease input device </em> (icona <img src="slower.png">). <br>
+
+    Se limitate il movimento alle&nbsp;translazioni (<img src="schieb.png">),
+    solo la "allxyz" scala e' cambiata. Se vi limitate alle rotazioni <img src="rot.png">, solo la scala "allrot" e' cambiata. <br>
+
+    Attraverso il protocollo Xinput, sono supportati anche Linux joystick e
+    libsball. Per dettagli sui parametri da riga di comando, vedete&nbsp;<a href="white_dune.1.html#lbAF">la pagina del manuale</a>. <br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Un altra 6D inputdevice e' composta dalle "dial" (per es. disponibile
+    sotto SGI IRIX). Per default, gli assi di input sono sistemati in modo
+    abbastanza scomodo.<br>
+
+    </div>
+
+    <img src="dials_default.jpg"><br>
+
+    Attraverso i parametri della linea di comando<br>
+
+
+    
+    <pre> white_dune -xinput dialbox-1 -x=0 -y=2 -z=4 -xrot=1 -yrot=3 -zrot=5 -all=100,100,wheel<br></pre>
+
+    <br>
+
+    potete cambiare gli assi.<br>
+
+    <img src="dials_normal.jpg"><br>
+
+  </li>
+
+  <li><b><a name="6Dlocal">6D Local Mode Input:</a></b><small> Conoscete i
+    piani&nbsp; RC ? (nuovo nella versione 0.19beta)</small><br>
+
+    Quando e' premuta l'icoma 6Dlocal&nbsp; <img src="6dloc.png">&nbsp;,
+    potete agire attraverso gli assi locali di un nodo transform.<br>
+
+    Per esempio, potete muovere una spaceball nella direzione z ("verso lo
+    schermo") e il nodo transform (e gli oggetti contenuti) si muove verso la
+    direzione del suo asse z locale, seguendo la freccia blu Z. Per esempio,
+    ancora, se muovete una spaceball nella &nbsp;direzione y ("sopra") il
+    nodo transform (ed i suoi oggetti contenuti) si muoveranno nella
+    direzione del suo asse y locale, seguendo la freccia verde y.<br>
+
+    <img src="6dlocal_right3.jpg"><br>
+
+    Questo e' utile quando oggetto e nodo transform sono sistemati in maniera
+    simile. Normalmente l'oggetto non e' nella direzione della freccia del
+    suo nodo transform.<br>
+
+    <img src="6dlocal_wrong.jpg"><br>
+
+    Tuttavia il nodo transform puo' essere ruotato in nodo da corrispondere
+    alla rotazione dell'oggetto.<br>
+
+    <img src="6dlocal_right1.jpg"><br>
+
+    <img src="6dlocal_right2.jpg"><br>
+
+    Quando usate questo tipo di manipolazione, vedrete un effetto, che non
+    sorprende gli utenti dei piani RC: &nbsp;Se l'oggetto sta spostandosi
+    verso di voi, un rollio verso sinistra della spaceball fa ruotare verso
+    destra l'oggetto.<br>
+
+    Una modalita' simile e' il razzo ("the rocket ")<img src="rocket.png">.
+    In modalita' rocket, le traslazioni sono solo permesse nella direzione z.
+    Questo e' utile se volete manipolare un oggetto su un percorso
+    permettendo tutti i tipi di rotazione.<br>
+
+    Una modalita' simile e' l'overcraft ("hover") <img src="hover.png">&nbsp;. In modalita' hover, sono permesse solo le
+    rotazioni intorno al'asse y locale. Questo e' utile se volete muovere un
+    oggetto lungo un piano.<br>
+
+    Altre modalita' che funzionano sugli assi locali sono la scala <img src="scale.jpg"> e il centro <img src="center.jpg">&nbsp;. </li>
+
+ <li>
+  <b><a name="nxtdials">Mindstorms NXT dials Input:</a></b><br>
+
+    Un device autocostruito molto simile ai dials SGI puo' essere facilmente 
+    realizzato con il Mindstorms NXT set.<br>
+
+    <a href="nxtdials_en.wrl"><img src="nxtdials.png"></a><br>
+
+    Semplicemente, attaccate una rotella a ciascuno dei 3 motori 
+    Mindstorm NXT, collegate i motori con il NXT brick, connettete il 
+    NXT brick con il vostro Computer via USB e potrete usare il risultato 
+    come un device di input USB. <br>
+
+    L'accesso e' effettuato con la&nbsp;libusb, che puo' avere bisogno di 
+    una configurazione aggiuntiva, per es. uno pseudo-filesystem conosciuto 
+    come 'usbdevfs` oppure 'usbfs` montato sotto /proc/bus/usb di Linux. <br>
+
+    Per accedere alle funzioni libusb senza i diritti di root, avrete bisogno
+    di configurazioni aggiuntive, per es. di una modifica della
+    configurazione udev di Linux (<a href="../../tools/nxt_udev.sh">
+    tools/nxt_udev.sh</a>).<br>
+
+    La linea di comando da usare per il primo brick connesso alla porta 
+    USB:
+<pre>
+        dune -nxtdials 0 -all=,,wheel
+</pre>
+
+  </li>
+  <li><b><a name="joystick">Linux joystick Input:</a></b><br>
+
+    Sfortunatamente, le 6D inputdevices non sono molto diffuse. Per questo,
+    White_dune sotto Linux&nbsp;supporta anche i joystick.<br>
+
+    Ci sono molte device (incluse le&nbsp;spaceball), che possono essere
+    usate sotto&nbsp;Linux come joystick. Bisogna distinguere tra 6D (per es.
+    Labtec Spaceball), 4D (es. gamepads con 2 thumbsticks), 3D (z.B. joystick
+    con un twisting stick (es. Micro$oft Sidewinder Pro)) e "normali" 2D
+    joysticks. 
+    
+    <ul>
+
+      <li>6D joysticks (come. Labtec Spaceball) sono usati come gli altri 6D
+        inputdevice.<br>
+
+      </li>
+
+      <li>4D joysticks (come gamepads con 2 thumbsticks) non permettono 6D e
+        6D Local mode. Oltre a translazione <img src="schieb.png">, rotatione
+        <img src="rot.png">, scala <img src="scale.jpg"> e modifica del
+        centro <img src="center.jpg"> essi supportano la modalita' "hover"
+        <img src="hover.png"> e "rocket "<img src="rocket.png">.<br>
+
+        A seconda del modo, rotazione e translazione saranno assegnate
+        all'asse appropriato.</li>
+
+      <li>Quando state usando un 3D joystick (come joystick con un twisting
+        stick) le cose sono piu' complicate. Nella configurazione di default,
+        un input attraverso l'asse 3.&nbsp;(un twist dello stick) causa un
+        movimento assegnato all'asse z.<br>
+
+        <img src="joystick_3D_move.jpg"> <img src="joystick_3D_rot.jpg"></li>
+
+      <li>
+        
+        <div style="text-align: justify;">
+        Quando state usando un 2D joystick, non ci sono abbastanza assi per
+        inserire dati 3D. Tuttavia potete commutare tra l'interpretazione
+        dell'asse&nbsp; 2. come direzione z (modalita' vicino/lontano
+        "near/far" <img src="near_far.png">&nbsp;) e direzione y (sopra/sotto
+        "up/down" <img src="up_down.png">&nbsp;) attraverso le icone.<br>
+
+        </div>
+
+
+        
+        <div style="text-align: justify;">
+        Per quanto riguarda le rotazioni, il modo "near/far" <img src="near_far.png"> e' interpretato come rotazione intorno all'asse
+        y, mentre il modo "up/down" <img src="up_down.png"> e' interpretato
+        come rotazione intorno all'asse z.<br>
+
+        </div>
+
+      </li>
+
+      <li>Il modo "rocket" <img src="rocket.png"> ha bisogno di 4
+        assi&nbsp;in un senso. Per rendere questo disponibile con un 3D
+        joystick, l'informazione di rotazione del "near/far" <img src="near_far.png"> e dell' "up/down" <img src="up_down.png"> e'
+        usato qui.<br>
+
+        Il "rocket" <img src="rocket.png"> mode non e' disponibile con i 2D
+        joystick.</li>
+
+    
+    </ul>
+
+    <br>
+
+    A volte, un joystick axis sembra non essere molto utile (come il
+    controller extra del Micro$oft Sidewinder Pro). <br>
+
+    <img src="joystick_sidewinder.jpg"><br>
+
+    Cosi', il numero degli assi puo' essere limitato. Per usare, ad esempio,
+    il Micro$oft Sidewinder Pro come 3 axis joystick, potete usare l'opzione
+    -axis nella linea di comando. <br>
+
+
+    
+    <pre> white_dune -joystick /dev/input/js0 -axes=3<br></pre>
+
+    <br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Le Gamepads sono spesso sovraffollate con assi non molto utili. Ad
+    esempio, il Logitech Wingman Cordless Gamepad riporta 9 assi quando e'
+    provato con il programma jstest. Per usare i 6 assi buoni (2 thumbsticks
+    ed i cross-hairs), dovete cambiare l'assegnazione degli assi dalla riga
+    di comando. <br>
+
+    </div>
+
+    
+    <pre> white_dune -joystick /dev/input/js0 -y=4 -z=-1 -xrot=6 -yrot=3 -zrot=5<br></pre>
+
+    <br>
+
+    Dovete interpretare l'opzione "-z=-1" in questo modo: l'asse z sara'
+    assegnato al numero 1 (cioe' l'asse 2.&nbsp;, contando a partire da 0),
+    ma la direzione dell'input e' invertita. </li>
+
+  <li><b><a name="joystick_windows">M$Windows joystick Input:</a></b><br>
+
+    Il supporto di un M$Windows joystick e' molto simile ad un Linux
+    joystick.<br>
+
+    Le speciali qualita' dei joystick driver rilasciati con&nbsp;M$Windows
+    non dovrebbero farvi meravigliare, se, ad esempio il 2. thumbstick di un
+    gamepad non rilascia valori oppure un asse del joystick sara' riportato,
+    ma rilasera' solo errori.<br>
+
+    Ma a parte questo, la superiorita' degli autori delle API di un M$Windows
+    joystick API si coglie dal fatto, che un errore va interpretato come un
+    completo ritorno (un problema simile all'esplosione del primo missile
+    Ariane 5&nbsp;....).<br>
+
+    Cosi' dovete iniziare un testo sotto M$Windows con solo 2 assi. Per il
+    primo M$Windows joystick (number 0) la riga di comando e' qualcosa di
+    simile a quella seguente: <br>
+
+
+    
+    <pre> white_dune.exe -joystick 0 -axes=2 -none=2 -allxyz=20,,,0.000001 -allrot=0.2,,,0.0000001<br></pre>
+
+  </li>
+
+  <li><b><a name="channelview">Cambiare&nbsp;FieldValues nella finestra
+    ChannelView</a></b><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    La Finestra ChannelView e' usate per mostrare o cambiare nodi di
+    interpolazione. In un nodo di interpolazione, i valori di input tra 0 ed
+    1 sono assegnati ad un&nbsp;range di valori di uscita.<br>
+
+    </div>
+
+    Interpolatori sono usati nel VRML per semplici animazioni nella forma<br>
+
+
+    
+    <pre> ROUTE TimeSensorDEFNAME.fraction_changed TO ???InterpolatorDEFNAME.set_fraction<br> ROUTE ???InterpolatorDEFNAME.value_changed TO ???DEFNAME.set_???<br></pre>
+
+    <br>
+
+
+
+    
+    <div style="text-align: justify;">
+    L'output "fraction_changed" di un nodo TimeSensor (valori rilasciati
+    compresi tra 0 and 1) sono instradati verso l'evento di input
+    "set_fraction"di un nodo di interpolazione. Il nodo di interpolazione
+    seleziona un valore corrispondente intermedio tra i valori di output Il
+    risultato puo' essere instradato verso un altro nodo VRML, this leads to
+    a animation without jerk. <br>
+
+    </div>
+
+    Nel seguente esempio:<br>
+
+    <img src="interpolator.jpg"><br>
+
+
+
+    
+    <div style="text-align: justify;">
+    l'output di un PositionInterpolator con i valori di&nbsp;input 0, 0.3, 1
+    e quelli di&nbsp;output &nbsp;x=1 y=0 z=3, x=1 y=2 z=3, x=3 y=3 z=0 viene
+    instradato all'Input &nbsp;set_translation di un nodo transform. Per
+    esempio, il nodo transform (e l'oggetto contenuto) si muovera'
+    nell'intervallo timecycle tra 0 e 0.3 per y=0 fino a y=2 (in alto).<br>
+
+    </div>
+
+    
+    <ul>
+
+      <li>Facilmente utilizzabili sono tutti gli interpolatori SF:
+        
+        <ul>
+
+          <li>ColorInterpolator:<br>
+
+            Interpola tra Colori.<br>
+
+            Intrada destinazioni per i colori che troverete in
+            Shape-&gt;Appearance-&gt;Material</li>
+
+          <li>PositionInterpolator:<br>
+
+            Interpola tra Posizioni.<br>
+
+            Intrada destinazioni che possono essere
+            Transform.set_translation, per esempio.</li>
+
+          <li>OrientationInterpolator:<br>
+
+            Interpola tra rotazioni.<br>
+
+            Intrada destinazioni che possono essere Transform.set_rotation,
+            per esempio.</li>
+
+          <li>ScalarInterpolator:<br>
+
+            Interpola tra singoli (floating point) numeri.<br>
+
+            Singoli numeri possono essere gli EventIn di molteplici Nodi
+            VRML.<br>
+
+            Ci sono molte possibilita' di uso.</li>
+
+        
+        </ul>
+
+      </li>
+
+      <li>Gli interpolatori MF non sono facili da visualizzare nella
+        ChannelView, perche' un gran numero di dati possono semplicemente
+        riempire la finestra. Therefore only changes of the MF-Values over
+        the time is displayed. Se non ci sono modifiche, Il primo valore e'
+        sempre visualizzato<br>
+
+        <img src="morphing_start.png"><br>
+
+        per permettere di aggiungere altre&nbsp;key con il mouse <br>
+
+        <img src="morphing_last.png"><br>
+
+        (per esempio per ripetere il primo timestep come ultimo timestep)<br>
+
+        . <img src="morphing_result.png"><br>
+
+
+
+        
+        <div style="text-align: justify;">
+        C'e' un limite superiore nel numero di valori visualizzati. Guardate
+        "Limit keys in Channelview" nel pannello "<em>Options -&gt;
+        Preferences</em>". Settate questo limite in base alla velocita' del
+        vostro sistema.</div>
+
+        
+        <ul>
+
+          <li>CoordinateInterpolator:<br>
+
+            Interpola tipicamente tra i punti in un IndexFaceSet.<br>
+
+            Animazioni, che usano il CoordinateInterpolator sono generalmente
+            chiamate "morphing".</li>
+
+          <li>NormalInterpolator:<br>
+
+            Interpola tra le Normali di un IndexFaceSet.<br>
+
+          </li>
+
+        
+        </ul>
+
+      </li>
+
+    
+    </ul>
+
+    <br>
+
+    <br>
+
+    Alcune animazioni di&nbsp;interpolazione&nbsp;possono essere create
+    inWhite_dune attraverso modifiche nella finestra 3D Preview. Animazioni
+    basate su PositionInterpolator/Transform.set_translation e
+    OrientationInterpolator/Transform.set_rotation possono anche essere
+    create con la registrazione di un 6D inputdevice.<br>
+
+    <br>
+
+    Se volete lavorare con i&nbsp;tool <img src="recording.jpg"> come quelli
+    di un VideoRegistratore VCR (record e playback animations) devono essere
+    vere le seguenti condizioni:
+    
+    <ul>
+
+      <li>La ROUTE deve avere la forma<br>
+
+
+        
+        <pre> ROUTE TimeSensor.fraction_changed TO ???Interpolator.set_fraction<br> ROUTE ???Interpolator.value_changed TO ???.set_???<br></pre>
+
+      </li>
+
+      <li>Nel Timesensor il campo "loop" deve essere "TRUE". (l'Animazione
+        deve ripartire ad anello).</li>
+
+      <br>
+
+      <img src="timesensor.jpg"><br>
+
+
+      
+      <ul>
+
+        <li>Il campo "starttime" del Timesensor deve essere piu' grande o
+          ugualeal campo "stoptime" del Timesensor.</li>
+
+      
+      </ul>
+
+    
+    </ul>
+
+    <br>
+
+
+
+    
+    <div style="text-align: justify;">
+    Fino dalla&nbsp;versione 0.27beta&nbsp;e' presente in White_dune un menu
+    <em> Actions -&gt; Animate</em>, che crea questa struttura per il nodo
+    selezionato (solo quando il nodo ha&nbsp;EventIn/ExposedField-Felder del
+    tipo corrispondente all'interpolatore). Con <em> Actions
+    -&gt;Animate</em> viene proposto il pannello<br>
+
+    </div>
+
+    <img src="animationdialog.jpg"><br>
+
+    che permette di scegliere, se un nuovo TimeSensor, con quale tempo di
+    animazione va creato oppure, nel caso di&nbsp; TimeSensor gia' esistenti,
+    quele va usato e quali campi andrebbero animati. <br>
+
+    Quando viene premuto solo il bottone di registrazione <img src="recording_one.jpg">, durante la creazione di una animazione, dovete
+    prima cambiare il cursore del tempo e dopo inserire il valore (via
+    tastiera, mouse oppure 6D inputdevice).<br>
+
+    <img src="animation_onetime.png"> <br>
+
+    <br>
+
+    <img src="animation_onetime2.png"> <br>
+
+    <br>
+
+    Quando il bottone rosso di record e' premuto insieme al bottone del
+    triangolo play <img src="recording.jpg">, il cambiamento dei valori (via
+    <a href="#mouse">mouseinput</a> o 6D inputdevice) e' registrato in
+    continuazione. <br>
+
+    <img src="animation_recording.jpg"> <br>
+
+    La registrazione del mouseinput richiede una mano calma. E' abbastanza
+    facile cancellare senza volere alcuni dei valori gia' registrati. <br>
+
+    <img src="delete_keys1.jpg"> <br>
+
+    Dovete selazionare un&nbsp;time range premendo il tasto sinistro del
+    mouse e trascinandolo&nbsp;a sinistra/destra nella finestra channelview e
+    dopo usare il menu <em> Edit -&gt; delete oppure</em> l'icona di
+    cancellazione. <br>
+
+    <img src="delete_keys2.jpg"> <br>
+
+    I valori corrispondenti verranno cancellati. <br>
+
+    <img src="delete_keys3.jpg"> <br>
+
+  </li>
+
+  <li><b><a name="colorcircle">Cerchio dei Colori</a></b> <small>(nuovo nella
+    Versione 0.19beta)</small><br>
+
+    C'e' uno speciale pannello di input per i colori, che prende il posto
+    della finestra&nbsp;fieldView. Per visualizzare il pannello, deve essere
+    selezionato un campo colore nella finestra fieldView e deve essere
+    premuta l'icona del Colorcircle.<br>
+
+    <img src="colorcircle1.png"><br>
+
+    Con un click del mouse, potete selezionare un colore color nel cerchio e
+    nella barra vicino ad esso, in cui potete scegliere una variante piu'
+    scura.<br>
+
+    <img src="colorcircle2.png"><br>
+
+    Attualmente, quando non state usando un monitor true/directcolor su
+    Unix/Linux, il display del color circle risultera' lento....<br>
+
+    Quando viene premuto il bottone "OK"&nbsp;, ritornera' la visualizzazione
+    della normale finestra fieldView. </li>
+
+  <li><b><a name="scriptedit">Script Editor</a></b> <small>(nuovo nella
+    Versione 0.22beta)</small><br>
+
+    Ci sono due modi per far partire lo&nbsp;scripteditor:<br>
+
+    <img src="scriptedit_icon1.jpg"><br>
+
+
+    
+    <ul>
+
+      <li>Per creare un nuovo scriptnode:<br>
+
+        Attraverso l'icona&nbsp;"Script"&nbsp;(menu <em>Create -&gt;
+        Programming -&gt; Script</em>),</li>
+
+      <li>Per modificare un nodo si Script gia' esistente.<br>
+
+        Se e' selezionato un nodo di script, attraverso l'icona "Object Edit"
+        (menu <em>Actions -&gt; Object edit</em>),</li>
+
+    
+    </ul>
+
+    Il pannello dello scripteditor<br>
+
+    <img src="scripteditor.jpg"><br>
+
+    permette di aggiungere nuovi campi/eventi al nodo di script (add), di
+    cambiarli (change) oppure di cancellarli (delete).<br>
+
+    Per terminare il lavoro sul nodo di script, premete il bottone Accetta
+    ("OK").</li>
+
+  <li><b><a name="urledit">URL Editor</a></b> <small>(nuovo nella Versione
+    0.22beta)</small><br>
+
+    Il campo "url" (puo' contenere il codice&nbsp;ECMAscript (javascript) di
+    un nodo di script) puo' essere modificato con un texteditor.<br>
+
+    Attraverso il menu <em>options -&gt; Texteditor Settings</em> e'
+    possibile selezionare il texteditor.<br>
+
+    Quando il campo "url" e' vuoto, verranno creati degli schemi per gli
+    ECMAscript.<br>
+
+    Per entrare in edit dello script, selezionate il nodo di script ed usate
+    l'icona "URL Edit"&nbsp; (menu <em>Actions -&gt; Url edit</em>).<br>
+
+    <img src="urledit.jpg"><br>
+
+  </li>
+
+  <li>
+    
+    <div style="text-align: justify;">
+    <b><a name="fieldpipe">Field pipe</a></b><small>(nuovo nella versione
+    0.29beta)</small> Uno dei piu' potenti modi per modificare i valori dei
+    campi e' la cosiddetta "field pipe". Questa permette di cambiare i valori
+    dei campi attraverso qualche programma esterno.<br>
+
+    Usualmente non esiste ancora un programma esterno corrispondente, e cosi'
+    la "field pipe" e' importante soprattutto per utenti con capacita' di
+    programmazione.<br>
+
+    Se si seleziona un campo SFField oppure MFField nella finestra fieldview
+    ed usate <em>"Actions -&gt; field pipe</em>", una linea con il valore del
+    campo viene scritto in un file, nel caso of a SFField. Nel caso di un
+    MFField verranno scritte nel file tante linee quanti sono i valori SF nel
+    campo MFField.<br>
+
+    </div>
+
+    Per esempio, selezionando il seguente campo TextureTransform.scale<br>
+
+    <img src="sffieldpipeselect.jpg"><br>
+
+    (un campo SFVec2f), i valori<br>
+
+
+    
+    <pre> 1 1<br> </pre>
+
+    saranno scritti nel file.<br>
+
+    Per esempio, se viene selezionato il seguente campo Color.color&nbsp;<br>
+
+    <img src="mffieldpipeselect.jpg"><br>
+
+    (un campo MFColor) i valori<br>
+
+
+    
+    <pre> 0 0.5 0<br> 0.5 0 0<br> 0 0 0.5<br> 0.5 0.5 0<br> 0.5 0 0.5<br> 0 0.5 0.5<br> </pre>
+
+    verranno scritti nel file.<br>
+
+    Il file terminera' con un carattere newline.<br>
+
+    Quando si usa <em>Actions -&gt; field pipe</em>, viene aperto un
+    pannello, che chiede all'utente una riga di comando. La riga di comando
+    &nbsp;puo' essere usaata per far partire un programma compilato (per
+    esempio, scritto in un linguaggio di programmazione come Ada, C, C++ o
+    Fortran) oppure un&nbsp;interprete con un programma in un
+    linguaggio&nbsp;interpretato (come, ad esempio, in un linguaggio di
+    programmazione come awk, perl o python).<br>
+
+    La riga di comando data e' lanciata in questo modo:<br>
+
+
+    
+    <pre> commandline &lt; file &gt; outputfile<br> </pre>
+
+    che esegue ogni linea del file come&nbsp;standard input
+    della&nbsp;commandline e scrive lo standard output risultante all'interno
+    di outputfile.<br>
+
+    Se il file di output scritto ha la stessa/corrispondente struttura del
+    campo/fileInput (per esempio, per il campo SFVec2f&nbsp;<br>
+
+
+    
+    <pre> 2 1 <br> </pre>
+
+    o per il campo MFColor di esempio<br>
+
+
+    
+    <pre> 1 0.5 0<br> 0.5 1 0<br> 0 0 0.5<br> 0.5 0.5 0<br> 0.5 0 0.5<br> 0 0.5 0.5<br> </pre>
+
+    ove e' importante che i valori Color siano campi in virgola mobile nel
+    range tra 0 ed 1. Il contenuto del file di output e' usato come nuovo
+    fieldvalue ed i file intermedi di input/output vengono rimossi.<br>
+
+    Il piu' semplice esempio di una "field pipe" e' l'uso di un semplice
+    comando&nbsp;"echo" di sistema.<br>
+
+    La riga di comando<br>
+
+
+    
+    <pre> echo some th ing<br> </pre>
+
+    scrive semplicemente gli argomenti<br>
+
+
+    
+    <pre> some th ing<br> </pre>
+
+    In un esempio molto semplice, questo puo' essere usato per cambiare i
+    valori "1 1" in "2 1", usando<br>
+
+
+    
+    <pre> echo 2 1<br> </pre>
+
+    come riga di comando nel pannello del "field pipe".<br>
+
+    Per il seguente piu' complicato (ma piu' realistico) esempio, e' stato
+    usato il linguaggio di programmazione awk, un linguaggio interpretato
+    molto&nbsp;simile al linguaggio C. Awk e' molto utile per questo scopo,
+    perche' spezza la linea di input automaticamente in valori ed accetta
+    programmi completi dati sulla riga di comando.<br>
+
+    Se voi usaste la seguente riga di comando<br>
+
+
+    
+    <pre> awk '{print $1 + 0.1 , $2 + 0.2 , $3 + 0.35}'<br> </pre>
+
+    come "field pipe" per il seguente campo MFColor<br>
+
+
+    
+    <pre> 0 0.5 0<br> 0.5 0 0<br> 0 0 0.5<br> 0.5 0.5 0<br> 0.5 0 0.5<br> 0 0.5 0.5<br> </pre>
+
+    il risultato sarebbe<br>
+
+
+    
+    <pre> 0.1 0.7 0.35<br> 0.6 0.2 0.35<br> 0.1 0.2 0.85<br> 0.6 0.7 0.35<br> 0.6 0.2 0.85<br> 0.1 0.7 0.85<br> </pre>
+
+    Per esempio se questo campo MFColor fosse usato come colore per i bordi
+    di un Box IndexedFaceSet, il comando renderebbe tutti i colori dei bordi
+    un poco piu' luminosi, un po' piu' verdi ed un po' piu' blu.<br>
+
+    Lo stesso esempio, scritto in linguaggio C richiederebbe il seguente
+    listato:<br>
+
+
+    
+    <pre>#include <stdio.h><br>int main(int argc, char** argv)<br>{<br>while(!feof(stdin)) {<br>float c1, c2, c3;<br>scanf("%f %f %f", &amp;c1, &amp;c2, &amp;c3);<br>printf("%g %g %g\n", c1 + 0.1, c2 + 0.2, c3 + 0.35); }<br>return 0;<br>}<br></stdio.h></pre>
+
+    Il testo andrebbe salvato in un file chiamato "main.c", e sarebbe
+    necessario compilare il&nbsp;file, ad esempio con il comando<br>
+
+
+    
+    <pre> cc -o /tmp/a.exe main.c<br> </pre>
+
+    ed otterreste un programma da eseguire con<br>
+
+
+    
+    <pre> /tmp/a.exe<br> </pre>
+
+    nel pannello della "field pipe" di White_dune.</li>
+
+</ul>
+
+
+<p></p>
+
+
+<h3><a name="simplescript">Scriptbuilding</a> semplificato <small>(nuovo
+nella Versione 0.22beta)</small></h3>
+
+
+<div style="text-align: justify;">
+Prima di usare il pannello dello scripteditor, e' necessario pianificare
+quali sono i datatypes e le informazioni eventIn/eventOut dei nodi &nbsp;che
+volete connettere. Per fare questo, avete bisogno di leggere la descrizione
+dei nodi dello <a href="http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html">
+standard VRML</a> (potete, per esempio, usare il menu <em>Help -&gt; nome del
+Nodo attualmente selezionato</em> oppure un libro avanzato).<br>
+
+Per una veloce sperimentazione, potete trovare piu' conveniente usare il
+metodo di scriptbuilding semplificato.<br>
+
+Create un nuovo&nbsp;scriptnode "vuoto" con l'icona "Script" (oppure il menu
+<em>Crea -&gt; Programmazione -&gt; Script</em>).<br>
+
+Seguendo la&nbsp;&nbsp;<a href="http://dune.sourceforge.net/philosophy.html" target="new"> filosofia &nbsp;"get out of the way!"</a> del progetto
+originario di&nbsp;dune, premete semplicemente "OK" sul pannello dello
+scripteditor&nbsp;(vedete sopra).<br>
+
+Ora potete usare la finestra RouteView per l'ulteriore lavoro necessario. <br>
+
+</div>
+
+
+<p><br>
+
+<img src="simple_scriptbuild1.jpg"><br>
+
+<br>
+
+I nodi di Script hanno uno speciale&nbsp;eventOut "connect anything"
+("connetti qualunque cosa"). Cliccando e trascinando questo con il mouse,
+verra' mostrata una ROUTE bianca. <br>
+
+<br>
+
+<img src="simple_scriptbuild2.jpg"><br>
+
+<br>
+
+Tenete premuto il bottone del mouse, mentre collegate e vedrete che potete
+connettere questa ROUTE agli eventIns degli altri nodi (come "normal"
+routing), <br>
+
+<br>
+
+<img src="simple_scriptbuild3.jpg"><br>
+
+<br>
+
+ma (diversamente dal "normal" routing) il colore della ROUTE (per indicare il
+tipo) puo' cambiare a seconda dell' eventIn. <br>
+
+<br>
+
+<img src="simple_scriptbuild4.jpg"><br>
+
+<br>
+
+Quando rilascerete il bottone del mouse, la ROUTE sara' stabilita. <br>
+
+<br>
+
+<img src="simple_scriptbuild5.jpg"><br>
+
+<br>
+
+In maniera simile, potete usare lo speciale eventIn "connect anything" dello
+scriptnode <br>
+
+<br>
+
+<img src="simple_scriptbuild6.jpg"><br>
+
+<br>
+
+e connetterlo ad un eventOut di un altro nodo. <br>
+
+<br>
+
+<img src="simple_scriptbuild7.jpg"><br>
+
+<br>
+
+</p>
+
+
+<div style="text-align: justify;">
+Ora dovete editare il campo "url" &nbsp;del nodo di script. Attraverso l'uso
+di&nbsp; <a href="#urledit">urledit</a> potete selezionare il nodo script
+nella finestra dello SceneTree, il campo "url" nella FieldView. <br>
+
+</div>
+
+
+<p><br>
+
+<img src="simple_scriptbuild8.jpg"><br>
+
+<br>
+
+e premete l'icona "Object Edit"&nbsp;(oppure usate il menu <em>Azioni -&gt;
+Object modifica</em>). <br>
+
+<br>
+
+<img src="simple_scriptbuild9.jpg"><br>
+
+<br>
+
+Ora "white_dune" provera' a lanciare un editor esterno - i "duri a morire" di
+UNIX&nbsp;useranno "xterm -e vi", che e' il default sotto Linux/UNIX ("xedit"
+per MacOSX, "edit" per M$Windows) se $WINEDITOR non e' stato settato al primo
+lancio. Potete modificare l'editor usando il menu <em>Opzioni -&gt; Settaggi
+Texteditor ...</em>. <br>
+
+Nella finestra dell' editor, vedrete uno schema del necessario codice
+sorgente javascript. <br>
+
+Usate <em>Opzioni -&gt; Settaggi ECMAscript</em> per impostare i commenti
+estesi nello schema. <br>
+
+<br>
+
+<img src="simple_scriptbuild10.jpg"><br>
+
+<br>
+
+Use the editor to complete the javascript code and save/quit the editor - in
+case of the vi editor use the keystrokes :wq</p>
+
+
+<h3><a name="nurbs">Modellazione delle NURBS</a> <small> (parzialmente nuova
+nella Versione 0.25beta)</small></h3>
+
+<ul>
+
+  <li>
+    <h4><a name="nurbsbasics">Concetti base delle NURBS</a></h4>
+
+    
+    <p style="text-align: justify;">Molto usato nella&nbsp;computer grafica,
+    il termine NURBS sta ad indicare una&nbsp;complicata formula matematica,
+    che puo' essere usata per archiviare superfici casuali e curve in una
+    maniera estremamente compatta.<br>
+
+    Specialmente per uno standard di rete come il VRML il supporto delle
+    NURBS e' un grande vantaggio, perche' evita il trasferimento dei dati di
+    tutti i vertici di una superficie&nbsp;mesh. Invece, solo un
+    relativamente piccolo gruppo di numeri deve essere trasferito. I numeri
+    possono essere usati per ottenere i dati dei vertici.<br>
+
+    </p>
+
+
+    
+    <div style="text-align: justify;">
+    Questo e' un vantaggio, perche' la potenza di calcolo del computer e'
+    cresciuta molto di piu' della velocita' della rete (per esempio: il
+    computer che invio' nel 1969 il primo carattere ("L" da "LOGIN")
+    attraverso l' InternetProtocol fu un minicomputer Honeywell DDP-516 con
+    12KB di memoria, un clock di 1.1 Mhz (ma necessari molti cicli di clock
+    per una linea di comando assembler) ed il peso di mezza tonnellata.
+    Questo computer usava una rete con 50000 baud. Queste sono
+    approssimativamente la stessa della potenza di una semplice calcolatrice
+    e la connessione di un moderno modem telefonico.</div>
+
+    
+    <p style="text-align: justify;">Secondo quanto e' riportato in "The NURBS
+    book" (di Pigel/Tiller) NURBS si legge "Noone Understands nonuniform
+    Rational Basis Splines" (Nessuno Comprende le NonUniformi Razionali
+    Basis Splines).<br>
+
+    Voi non avete bisogno di comprendere completamente la matematica per
+    lavorare con un modellatore di NURBS. Pero' puo' essere utile per usare
+    un programma comeWhite_dune (che ha accesso a tutti i numeri di superfici
+    e curve NURBS) il capirne le basi.</p>
+
+    Quando producete una curva NURBS (con <em> Create-&gt;VRML97 Amendment 1
+    Node-&gt;NurbsCurve </em>/OK) e muovete un poco i piccoli quadrati
+    bianchi ed aprite tutti i numeri nella finestra dei parametri
+    (fieldView)<br>
+
+
+    
+    <p><br>
+
+    <img src="nurbscurve.jpg"><br>
+
+    <br>
+
+    voi potete vedere che una curva NURBS usa essenzialmente&nbsp;4 tipi di
+    dati. </p>
+
+    
+    <ul>
+
+      <li>Punti di Controllo (controlPoints):<br>
+
+        Qesta e' la parte principale delle posizioni dei punti marcati con i
+        quadrati bianchi (l'altra parte delle posizioni e' il peso).<br>
+
+        Quando muovete una maniglia o "handler" (cioe' un quadrato bianco),
+        una parte della curva si muove insieme. <br>
+
+        <br>
+
+        <img src="controlpoint.jpg"><br>
+
+        <br>
+
+        i punti di controllo ("controlPoints") sono gli elementi piu'
+        importanti&nbsp; in White_dune, per manipolare le NURBS. </li>
+
+      <li>Peso ("weight"):<br>
+
+
+
+        
+        <div style="text-align: justify;">
+        Questi valori sono responsabili dell'influenza di ogni punto di
+        controllo sull'intera curva. La parola "peso" ("weight") ricorda i
+        tempi precedenti all'avvento dell'era del computer, in cui le curve
+        erano fatte attraverso sottili strisce di legno e pesi di piombo.
+        Quando il punto di controllo rimane al suo posto e viene aumentato il
+        peso, <br>
+
+        </div>
+
+        <br>
+
+        <img src="weight.jpg"><br>
+
+        <br>
+
+        la curva viene spinta piu' vicino al&nbsp;controlpoint.<br>
+
+        Nonostante il fatto che il&nbsp;controlpoint rimanga nello stesso
+        posto, il suo valore e' stato cambiato. La ragione e' collegata al
+        fatto che ci sono due formule matematiche equivalenti per memorizzare
+        le NURBS (forma&nbsp;omogenea e disomogenea). </li>
+
+      <li>nodo ("knot"): <br>
+
+
+
+        
+        <div style="text-align: justify;">
+        i valori di nodo sono responsabili (insieme ad altre cose) se
+        un&nbsp;controlpoint colpisce una&nbsp;linea e se c'e' un lato. Per
+        forzare questo, i valori devono essere ripetuti enne &nbsp;"(ordine -
+        1)" volte. <br>
+
+        </div>
+
+        <br>
+
+        <img src="knot.jpg"><br>
+
+        <br>
+
+      </li>
+
+      <li>ordine: (anche (grado+1))<br>
+
+        Questo numero e' responsabile di come senta l'influenza di un
+        controlPoint. <br>
+
+        <br>
+
+        <img src="order.jpg"><br>
+
+        <br>
+
+      </li>
+
+    
+    </ul>
+
+    Il rimanente valore di "tessellation" non ha riferimento&nbsp;matematico,
+    bensi' un fondamento pratico. Esso e' il responsabile del numero di
+    punti/lati con cui e' visualizzata la curva. <br>
+
+    <br>
+
+    <img src="tess3.jpg"><br>
+
+    <br>
+
+    Il cambiamento di questo valore permette una piu' facile adattamento alla
+    potenza grafica di un computer. <br>
+
+    <br>
+
+    <img src="tess11.jpg"><br>
+
+    <br>
+
+    Per default (value "0"), White_dune (che gira anche su&nbsp;computer poco
+    potenti) usa valori molto piccoli di "tessellation".<br>
+
+    L'esempio mostra una Superficie Nurbs, che e' stata convertita da una
+    sfera. Alcuni controlpoints sono stati tirati fuori. <br>
+
+    <br>
+
+    <img src="tess0.jpg"><br>
+
+    <br>
+
+    Solo con un valore alto di "tessellation" potete vedere la forma "reale"
+    dell'oggetto. <br>
+
+    <br>
+
+    <img src="tess181.jpg"><br>
+
+    <br>
+
+
+    
+    <p></p>
+
+  </li>
+
+  <li>
+    <h4><a name="nurbssymetric">Modellazione simmetrica X</a> <small>(nuovo
+    nella Versione 0.25beta)</small></h4>
+
+    
+    <p>White_dune vi permette di creare una Superficie Nurbs (e.g. with <em>
+    Crea -&gt; VRML97 Amendment 1 -&gt; NurbsSurface -&gt; piano/OK</em>).
+    Potete modificare questa superficie con il mouse, semplicemente
+    trascinando le maniglie bianche.<br>
+
+    <br>
+
+    <br>
+
+    <img src="nurbsurface1.jpg"><br>
+
+    <br>
+
+    Questo modifica i punti di controllo della Superficie Nurbs. <br>
+
+    <br>
+
+    <img src="nurbsurface2.jpg"><br>
+
+    <br>
+
+    In questo tipo di operazione White_dune e' molto utile per creare
+    paesaggi con dune<br>
+
+    <br>
+
+    <img src="dunes.jpg"><br>
+
+    <br>
+
+    ma non e' veramente utile per molti altri scopi</p>
+
+    
+    <p>Molti oggetti richiedono una modellazione simmetrica, essendo una
+    meta' dell'oggetto simile all'altra parte dell'oggetto stesso. In
+    White_dune, questo puo' essere fatto con <em>Azioni -&gt; X symetric
+    modelling</em>. Quando esso e' attivo, ogni movimento dei punti di
+    controllo di una parte<br>
+
+    <br>
+
+    <img src="symetric1.jpg"><br>
+
+    <br>
+
+    sara' applicato anche per l'altra parte, <br>
+
+    <br>
+
+    <img src="symetric2.jpg"><br>
+
+    <br>
+
+    ed e' quindi piu' facile costruire una Superficie Nurbs simmetrica anche
+    complessa.<br>
+
+    <br>
+
+    <img src="mantasurface.jpg"><br>
+
+    <br>
+
+    La direzione&nbsp;X per la modellazione simmetrica e' stat scelta per i
+    <a href="#6Dlocal">local input modes</a>.</p>
+
+    
+    <p>E' possibile limitare il movimento dei punti di controllo ad una linea
+    o un piano.<br>
+
+    Con solo uno dei settaggi <em>Modo -&gt; solo x</em>, <span style="font-style: italic;">Modo</span><em> -&gt; solo y</em> or <span style="font-style: italic;">Modo</span><em> -&gt; solo z</em> (oppure le
+    loro icone con una freccia nella direzione x (rossa), y (verde) or z
+    (blu)&nbsp;) il movimento dei punti e' limitato a quella direzione. La
+    direzione non e' da intendersi quella dello spazio assoluto, ma la
+    direzione della geometria corrispondente. Solo il valore della x, della y
+    o della&nbsp;z del punto di controllo che si sposta viene cambiato.<br>
+
+    Se per esempio solo il Modo-_solo y<em></em> (la&nbsp;seconda icona delle
+    frecce) e' usata<br>
+
+    <br>
+
+    <img src="yonly.jpg"><br>
+
+    <br>
+
+    il movimento dei punti di controllo e' limitato alla direzione y. Si
+    tratta della direzione della freccia verde dell'ultimo nodo Transform che
+    corrisponde alla geometria puntata. <br>
+
+    <br>
+
+    <img src="yonly1.jpg">&nbsp;&nbsp;<img src="yonly2.jpg"><br>
+
+    <br>
+
+    Quando due dei settaggi <em>Modo -&gt; solo x</em>, <em>Modo -&gt; solo
+    y</em> oppure <em>Modo -&gt; solo z</em> (o due delle corrispondenti
+    icone) sono attivi, i punti possono essere spostati nel corrispondente
+    piano. <br>
+
+    Se per esempio vengono selezionati &nbsp;<em>Modo -&gt; solo x</em>
+    &nbsp;e&nbsp; <em>Modo -&gt; solo z</em> (ovvero la prima e la terza
+    icona a freccia)<br>
+
+    <br>
+
+    <img src="xzonly.jpg"><br>
+
+    <br>
+
+    il movimento dei controlpoints sara' limitato al piano xz.<br>
+
+    Quando nessuna delle icone e' selezionata, &nbsp;oppure tutte,<br>
+
+    <br>
+
+    <img src="no_only.jpg">&nbsp;&nbsp;<img src="xyzonly.jpg"><br>
+
+    <br>
+
+    </p>
+
+
+    
+    <div style="text-align: justify;">
+    non c'e alcun limite, ed il movimento del punto con il mouse puo'
+    modificare tutti e tre i valori&nbsp;x, y, z. </div>
+
+    
+    <p></p>
+
+
+    
+    <div style="text-align: justify;">
+    La decisione se muovere la parte simmetrica di una Superficie Nurbs
+    e'&nbsp;fatta se i valori dei punti di controllo/pesi sono&nbsp;
+    abbastanza simili. Essi sono abbastanza simili se la distanza del valore
+    assoluto e' piu' piccolo di un valore "Epsilon". Il valore di "Epsilon"
+    puo' essere impostato nella finestra di dialogo <em>Opzioni -&gt;
+    Preferenze</em>.<br>
+
+    Quando viene scelta la modellazione simmetrica, molti punti posti vicini
+    vengono presi insieme e si muovono insieme. Questo puo' essere usato per
+    chiudere una NurbsSurface aperta, ma risultano molti&nbsp;controlpoint
+    sullo stesso posto di una NurbsSurface risulta in un lato. <br>
+
+    </div>
+
+    
+    <p><br>
+
+    <img src="closedpeak.jpg"><br>
+
+    <br>
+
+    </p>
+
+
+    
+    <div style="text-align: justify;">
+    In una nuova nurbssurface appena creata esiste (secondo lo standard VRML)
+    per default solo un lato (cio' e'&nbsp;importante, quando la superficie
+    non e' chiusa): il campo "solid" e' TRUE. <br>
+
+    </div>
+
+    
+    <p><br>
+
+    <img src="mantasurface1side.jpg"><br>
+
+    <br>
+
+    In molti casi questo non e' molto utile. Cambiate il campo "solid" nella
+    finestra FieldView su FALSE, per far visualizzare il lato interno della
+    superficie. <br>
+
+    <br>
+
+    <img src="mantasurface2side.jpg"><br>
+
+    <br>
+
+    Altre volte invece una superficie a due lati non e'&nbsp; utile per
+    formare un volume. In questo caso e' raccomandabile crere un gruppo
+    ("Group")<br>
+
+    <br>
+
+    <img src="nurbsgroup1.jpg"><br>
+
+    <br>
+
+    Spostate la Shape contenente la NurbsSurface in un Group. <br>
+
+    <br>
+
+    <img src="nurbsgroup2.jpg"><br>
+
+    <br>
+
+    Poi, copiate la Shape con la NurbsSurface di nuovo all'interno del Group.
+    Per fare questo, trascinate l'icona della Shape nell'icona del Group e
+    poi tenete premuto il tasto control ("Ctrl") mentre il bottone del mouse
+    e' ancora&nbsp;premuto. <br>
+
+    <br>
+
+    <img src="nurbsgroup3.jpg"><br>
+
+    <br>
+
+    Poiche' il campo "solid" e' ancora FALSE in questo esempio, un problema
+    comune del 3D in realtime puo' essere dimostrato quando il colore di
+    una&nbsp;shape viene modificato: <br>
+
+    <br>
+
+    <img src="zfight1.jpg"><br>
+
+    <br>
+
+    Pareti troppo sottili ("Too thin walls", detto anche "z-fighting"). <br>
+
+    </p>
+
+
+    
+    <div style="text-align: justify;">
+    Quando spostate un controlpoint di una NurbsSurface un poco piu' in alto,
+    per dare alla forma un po' piu' di volume, il software della vostra
+    scheda di render non e' piu' in grado di decidere, quale delle due
+    superfici simili e' piu' vicina all'osservatore. <br>
+
+    </div>
+
+    
+    <p><br>
+
+    <img src="zfight2.jpg"><br>
+
+    <br>
+
+    </p>
+
+
+    
+    <div style="text-align: justify;">
+    Questo effetto da risultati imprevedibili, e puo' cambiare con l'angolo
+    di vista, con il software usato (per es. VRML browser o driver della
+    scheda grafica) e spesso con il tipo di scheda grafica. <br>
+
+    Per eliminare questo problema, dovete settare entrambi i campi "solid" su
+    TRUE ed usare il campo "ccw" field ("Counter Clock Wise") per differire
+    tra il lato superiore ed il lato inferiore di una superficie. <br>
+
+    </div>
+
+    
+    <p><br>
+
+    <img src="zfightok.jpg"><br>
+
+    <br>
+
+    Ora potete spostare i&nbsp;controlpoints non di bordo della NurbsSurface
+    in basso per dare alla forma piu' volume. Dovreste spostare le Shapes con
+    le NurbsSurface dal&nbsp;Group in un NurbsGroup. <br>
+
+    <br>
+
+    <a href="../../logo/manta.wrl"><img src="nurbsgroup4.jpg"></a><br>
+
+    <br>
+
+    Il nodo NurbsGroup e' lo standard VRML responsabile di disegnare i bordi
+    delle NurbsSurface connessi, quando i&nbsp;controlpoint dei bordi delle
+    NurbsSurface sono identiche.<br>
+
+    In White_dune, un NurbsGroup permette anche una modellazione X
+    simmetrica. I cambiamenti di un&nbsp;controlpoint sono distribuiti a
+    tutte le NurbsSurfaces che sono direttamente (or attraverso un nodo
+    shape) contenute in un NurbsGroup.<br>
+
+    Questo permette di spostare i&nbsp;controlpoint di un bordo e lasciare
+    l'intero oggetto chiuso. <br>
+
+    <br>
+
+    <a href="../../logo/manta2.wrl"><img src="nurbsgroup5.jpg"></a><br>
+
+    <br>
+
+    Alla fine, non dovete dimenticare di spostare il NurbsGroup di nuovo in
+    un nodo Transform, altrimenti non potrete effettuare
+    spostamento/rotazione/scala e animazione. <br>
+
+    <br>
+
+    <img src="nurbsgroup6.jpg"><br>
+
+    <br>
+
+    </p>
+
+  </li>
+
+  <li>
+    <h4><a name="nurbsconversion">Conversioni&nbsp;NURBS&nbsp;</a><small>(nuovo
+    nella Versione 0.25beta)</small></h4>
+
+    
+    <p>Quando costruite delle NurbsSurface chiuse, potete semplicemente
+    cominciare da una forma gia' chiusa. White_dune non vi permette (ancora)
+    di convertire un nodo IndexedFaceSet in una NurbsSurface, ma permette di
+    convertire le primitive VRML (scatola, cono, cilindro e&nbsp;sfera) in
+    una NurbsSurface. Vi permette anche di convertire una NurbsCurve in una
+    NurbsSurface (per rivoluzione).<br>
+
+    Dalla versione 0.27beta permette anche di convertire una NurbsCurve in un
+    Superextrusion PROTO (vedete piu' in basso) e permette di convertire un
+    SuperEllipsoid PROTO oppure SuperShape PROTO (in basso) in una
+    NurbsSurface per&nbsp;approssimazione. </p>
+
+    
+    <ul>
+
+      <li>box<br>
+
+        To convert a box to a NurbsSurface, first select a box in the
+        Scenegraph <br>
+
+        <br>
+
+        <img src="box.jpg"><br>
+
+        <br>
+
+        and use the menuitem <em>Convert -&gt; Convert to NurbsSurface</em>.
+        <br>
+
+        <br>
+
+        <img src="box2nurbsdialog.jpg"><br>
+
+        <br>
+
+        If you switch off the "6 Plains" checkbox, you get a single
+        NurbsSurface. <br>
+
+        <br>
+
+        <img src="oneboxnurbs.jpg"><br>
+
+        <br>
+
+        If the "6 Plains" checkbox is pressed, you get 6 plains in a
+        NurbsGroup forming a box. <br>
+
+        <br>
+
+        <img src="sixboxnurbs.jpg"><br>
+
+        <br>
+
+      </li>
+
+      <li>cone, cylinder and sphere<br>
+
+        Convertion of this primitives is similar to the convertion of a box,
+        but the objects are build internally with a revolving line (better
+        NurbsCurve). For example, in the result of a cylinder conversion <br>
+
+        <br>
+
+        <img src="cylinder.jpg"><br>
+
+        <br>
+
+        you see that there are controlpoints that reach the surface. This has
+        been done by the repeat of values in the knotvectors. As a
+        consequence, a edge will be created at the matching places when the
+        controlpoints are moved. <br>
+
+        <br>
+
+        <img src="cylinderedge.jpg"><br>
+
+        <br>
+
+      </li>
+
+      <li>Creating a NurbsSurface via a revolving NurbsCurve<br>
+
+        Currently this method offers the most modelling features.<br>
+
+        First a NurbsCurve node has to be selected in the scenegraph <br>
+
+        <br>
+
+        <img src="nurbscurve_scenegraph.jpg"><br>
+
+        <br>
+
+        When creating a NurbsCurve (e.g. via <em> Create -&gt; VRML97
+        Amendment 1 -&gt; NurbsCurve </em>) you should take into account, if
+        you want to continue with X symetric modelling or not.<br>
+
+        The NurbsCurve creation dialog <br>
+
+        <br>
+
+        <img src="nurbscurvedialog.jpg"><br>
+
+        <br>
+
+        offers you three options: Curve along x, along y, along z axis. Only
+        if you revolve a curve along the y or z axis, x-symetric modelling is
+        possible. So you may prefer to create a NurbsCurve only along the y
+        or z axis. <br>
+
+        <br>
+
+        <br>
+
+        <img src="nurbscurverotationy.jpg"><br>
+
+        <br>
+
+        Drag now the curve points to form the side view of the revolved
+        shape. <br>
+
+        <br>
+
+        <img src="nurbscurverotation2.jpg"><br>
+
+        <br>
+
+        Now use <em> Convert -&gt; Convert to NurbsSurface</em> to continue.
+        <br>
+
+        <br>
+
+        <img src="nurbsrotationdialog.jpg"><br>
+
+        <br>
+
+        To make X symetric modelling possible, you should keep the checkbox
+        "Flatten Curve before rotation" pressed. It moves all points into one
+        plain, but keeps the distance from the origin. <br>
+
+        <br>
+
+        <img src="nurbsrotationsurface.jpg"><br>
+
+        <br>
+
+        As with a converted Sphere, Cylinder and Cone a edge may be created,
+        when the controlpoints are moved. <br>
+
+        <br>
+
+        <img src="nurbsrotationsurface2.jpg"><br>
+
+        <br>
+
+      </li>
+
+    
+    </ul>
+
+    
+    <p></p>
+
+  </li>
+
+  <li>
+    <h4><a name="elevatedegree">Elevazione di grado ("Degree elevate")</a>
+    <small>(nuovo nella Versione 0.27beta)</small></h4>
+
+    
+    <p>Durante la modellazione con nodi&nbsp; NURBS potresti voler inserire
+    nuovi punti di controllo in una direzione. <br>
+
+    <br>
+
+    <img src="elevate_before.jpg"><br>
+
+    <br>
+
+    Con il menu<em> Actions -gt&amp; NURBS operations -&gt; Elevate (U/V)
+    Degree up </em>questo e' possibile, senza cambiare la forma dell'oggetto.
+    <br>
+
+    <br>
+
+    <img src="elevate_after.jpg"><br>
+
+    <br>
+
+    Con i nuovi punti di controllo potete creare una nuova protuberanza. <br>
+
+    <br>
+
+    <img src="elevate_target.jpg"><br>
+
+    <br>
+
+    </p>
+
+  </li>
+
+  <li>
+    <h4><a name="nurbsindexedfaceset">Crea un&nbsp;IndexedFaceSet</a>
+    <small>(new in Version 0.25beta)</small></h4>
+
+
+    
+    <div style="text-align: justify;">
+    Le superfici NURBS sono spesso viste come facce arrotondate. Ma
+    attraverso i molteplici punti di controllo e valori knotvector, il
+    settaggio dei valori di u/vTesselation possono essere facilmente usati
+    per costruire un oggetto a facce (IndexedFaceSet).<br>
+
+    </div>
+
+    
+    <p><br>
+
+    <br>
+
+    <img src="spherefaceset1.jpg"><br>
+
+    <br>
+
+    Per esempio, potete convertire una sfera con <em>Convert -&gt; Convert to
+    NurbsSurface</em> <br>
+
+    <br>
+
+    <img src="spherefaceset2.jpg"><br>
+
+    <br>
+
+    e settare u/vTesselation a valori bassi, per ottenere solo poche facce.
+    <br>
+
+    <br>
+
+    <img src="spherefaceset3.jpg"><br>
+
+    <br>
+
+    Con <em>Convert -&gt; Convert nurbs to IndexedFaceSet</em> potete
+    convertire il risultato in un nodo IndexedFaceSet. <br>
+
+    <br>
+
+    <img src="spherefaceset4.jpg"><br>
+
+    <br>
+
+    Per eliminare il settaggio delle normali, che rende morbida la
+    visualizzazione dei colori sulle facce, dovete cancellare il nodo Normal
+    dall' IndexedFaceSet. <br>
+
+    <br>
+
+    <img src="spherefaceset5.jpg"><br>
+
+    <br>
+
+    </p>
+
+    
+    <p>La seguente tabella mostra come forme di base possono essere
+    convertite da primitive, usando i settaggi u/vTesselation in
+    NurbsSurface</p>
+
+
+    
+    <table>
+
+      <tbody>
+
+        <tr>
+
+          <td>Oggetto</td>
+
+          <td>Convertito</td>
+
+          <td>uTesselation</td>
+
+          <td>vTesselation</td>
+
+        </tr>
+
+        <tr>
+
+          <td>Tetraedro</td>
+
+          <td>Cono</td>
+
+          <td>3</td>
+
+          <td>4</td>
+
+        </tr>
+
+        <tr>
+
+          <td>Piramide 4-lati</td>
+
+          <td>Cono</td>
+
+          <td>4</td>
+
+          <td>4</td>
+
+        </tr>
+
+        <tr>
+
+          <td>Esaedro</td>
+
+          <td>Sfera/Cilindro</td>
+
+          <td>3</td>
+
+          <td>2</td>
+
+        </tr>
+
+        <tr>
+
+          <td>Octaedro</td>
+
+          <td>Sfera/Cilindro</td>
+
+          <td>4</td>
+
+          <td>2</td>
+
+        </tr>
+
+        <tr>
+
+          <td>prisma n-lati</td>
+
+          <td>Cilindro</td>
+
+          <td>n</td>
+
+          <td>&gt;1</td>
+
+        </tr>
+
+        <tr>
+
+          <td></td>
+
+          <td></td>
+
+          <td></td>
+
+          <td></td>
+
+        </tr>
+
+      
+      </tbody>
+    
+    </table>
+
+    
+    <p></p>
+
+
+    
+    <div style="text-align: justify;">
+    L'implementazione dell' IndexedFaceSet in White_dune ha le maniglie (che
+    sono i cubi bianchi posti sui vertici per modificare con il mouse
+    l'oggetto). Quando create un Piano NurbsSurface Plain (<em>Convert -&gt;
+    VRML97 Amendment 1 -&gt; NurbsSurface -&gt; Plain (Nurbs)</em>) con grado
+    1 <br>
+
+    </div>
+
+    
+    <p><br>
+
+    <img src="degree1faceset1.jpg"><br>
+
+    <br>
+
+    ed impostate la uTesselation a uDimension-1 , e la vTesselation a
+    vDimension-1, gli spigoli visibili e la posizione delle maniglie (della
+    nurbsSurface) sono identiche, esattamente come in un IndexedFaceSet. <br>
+
+    <br>
+
+    <img src="degree1faceset2.jpg"><br>
+
+    <br>
+
+    Con <em>Converti -&gt; Converti nurb in IndexedFaceSet</em> potete
+    convertire il risultato in un nodo IndexedFaceSet. <br>
+
+    <br>
+
+    <img src="degree1faceset3.jpg"><br>
+
+    <br>
+
+    To get rid of the normalssetting, which smooth the colors of the faces,
+    you need to delete the normals node from the IndexedFaceSet. <br>
+
+    <br>
+
+    <img src="degree1faceset4.jpg"><br>
+
+    <br>
+
+    Unfortunatly, the convertion from a IndexedFaceSet back to a NurbsSurface
+    is not implement yet...</p>
+
+  </li>
+
+</ul>
+
+
+<h3><a name="super">Modellazione Superformula</a> <small>(nuovo nella
+Versione 0.27beta)</small></h3>
+
+<ul>
+
+  
+  <ul>
+
+    <li>
+      <h4><a name="superformula">Basi di Superformula</a></h4>
+
+      White_dune supporta&nbsp;la modellazione 3D basata sulla cosiddetta
+      "superformula" <br>
+
+
+      
+      <pre> pow(pow(fabs(cos(m * angle / 4.0) / a), n2) + <br> pow(fabs(cos(m * angle / 4.0) / b), n3), -1.0 / n1)<br></pre>
+
+      <br>
+
+      Questa formula e' stata trovata da un biologo qualche anno fa e puo'
+      essere usata per forme n-simmetriche&nbsp;simili a quelle della natura
+      come fiori, leafs, corpi di insetto, conchiglie or stelle marine. <br>
+
+      <br>
+
+      <img src="supershapes.jpg"><br>
+
+      <br>
+
+      See this <a href="supershapes.wrl" target="_blank">range of shapes</a>,
+      which are all done with the SuperShape PROTO. <br>
+
+      <br>
+
+      Superformula based shapes are not part of VRML97 by itself and are
+      implemented by a PROTO (self defined VRML97 node) with scripting
+      ("scripted PROTO").<br>
+
+      Superformula based shapes can be converted either to a Extrusion node
+      or to a IndexedFaceSet node. IndexedFaceSet based scripted shapes can
+      also be approximated to a NurbsSurface node as a starting point for
+      further NURBS-modelling.
+      
+      <ul>
+
+        <li>
+          <h4><a name="superextrusion">SuperExtrusion</a></h4>
+
+          The SuperExtrusion PROTO uses the superformula to account a 2D
+          polygon in the X-Z-plane and form a shape by repeating this polygon
+          in the Y direction along a curve. The curve is similar to a
+          NurbsCurve and can be changed by moving the controlpoints. This
+          shape can be converted to a Extrusion and some of its parameter
+          work similar to a Extrusion. Unlike the Extrusion node, the scale
+          parameters are not applied to each spine point, they are smeared
+          over the whole spine. <br>
+
+          <br>
+
+          <img src="superextrusion.png"></li>
+
+        <li>
+          <h4><a name="supershape">SuperShape</a></h4>
+
+          The SuperShape PROTO uses the superformula to account a 2D polygon
+          in the X-Z-plane and form a shape using the superformula also in
+          the Y-Z-plane similar to spherical coordinates. <br>
+
+          <br>
+
+          <img src="supershape.png"><br>
+
+          <br>
+
+          This shape can be converted to a IndexedFaceSet.</li>
+
+        <li>
+          <h4><a name="superellipsoid">SuperEllipsoid</a></h4>
+
+          White_dune also has a PROTO for the superellipsoid, a special case
+          of a supershape. It can be used to form a sphere, <br>
+
+          <br>
+
+          <img src="superellipsoid_sphere.jpg"><br>
+
+          <br>
+
+          a box, a cylinder, <br>
+
+          <br>
+
+          <img src="superellipsoid_cylinder.jpg"><br>
+
+          <br>
+
+          a octaeder and rounded forms of this shapes <br>
+
+          <br>
+
+          <img src="superellipsoid_box_smooth.jpg"><br>
+
+          <br>
+
+          <br>
+
+          <br>
+
+          <img src="superellipsoid_cylinder_smooth.jpg"><br>
+
+          <br>
+
+          with only 2 parameters. Like the SuperShape PROTO the SuperEllpsoid
+          PROTO has a field "border", e.g. to form a half sphere. <br>
+
+          <br>
+
+          <img src="superellipsoid_sphere_half.jpg"><br>
+
+          <br>
+
+          This shape can be converted to a IndexedFaceSet.</li>
+
+      
+      </ul>
+
+      
+      <p></p>
+
+
+      
+      <h3><a name="coordinate">Modificare nodi basati su
+      coordinate</a><small> (nuovo nella Versione 0.29beta)</small></h3>
+
+      
+      <p>Dalla versione 0.29beta e' anche possibile modificare
+      interattivamente nella finestra 3D preview i nodi basati su coordinate
+      (come IndexedFaceSet ("Mesh"), IndexedLineSet oppure PointSet) in
+      maniera simile alla modifica dei controlpoint di una forma NURBS.<br>
+
+      Per nodi con un elevato numero di vertici, questo puo' essere utile per
+      modificare dei piccoli dettagli.</p>
+
+
+      
+      <h3><a name="flip">Flip/swap and set centeractions</a></h3>
+
+      
+      <p>There are a few handy modelling actions in the <em>Action</em>
+      menu:</p>
+
+      
+      <ul>
+
+        <li><em>Flip (x/y/z)</em><br>
+
+          The Flip command can be used for whole scenegraph branches. It
+          changes all values of the Transform and Shape (sub-)nodes from x to
+          -x, y to -y or z to -z. This is usefull to mirror a branch of
+          objects after doubling the branch. When used on difficult objects
+          like Cone or IndexedFaceSets, flip tries keep things constistent. A
+          Cone can not be flipped in the y-direction, therefore the cone of a
+          y-flip command is converted to a NurbsSurface first. For a Surface
+          node like the IndexedFaceSet, flip takes care about the normal and
+          ccw fields. A Coordinate node in the IndexedFaceSet also support
+          the <em>Flip</em> command, but you have to take care about the
+          normal and ccw field by yourself.</li>
+
+        <li><em>Swap (xy/yz/xz)</em><br>
+
+          The Swap command can also be used for whole scenegraph branches.
+          E.g. the xy command exchanges the x and y values in all matching
+          nodes.</li>
+
+        <li><em>Flatten (x/y/z)</em><br>
+
+          This command only works for NURBS and Coordinate nodes. It sets all
+          points in the x, y or z direction to the average of all nodes in
+          this direction.</li>
+
+        <li><em>Flatten to zero (x/y/z)</em><br>
+
+          This command only works for NURBS and Coordinate nodes. It sets all
+          points in the x, y or z direction to zero.</li>
+
+        <li><em>Set Center to (mid min/max x/y/z)</em><br>
+
+          This command requires the combination<br>
+
+          Transform -&gt; Shape -&gt; geometrynode<br>
+
+          where the geometrynode (e.g. Box, Sphere, IndexedFaceSet etc.) is
+          selected. The command set the center (rotation point) of the
+          Transform node to the mid or the borders of the bounding box of the
+          geometry. This is usefull when working with modelling tools, which
+          export VRML objects with the rotation point wide away from the
+          object.</li>
+
+      
+      </ul>
+
+      
+      <p></p>
+
+
+      
+      <h3><a name="array">Array tool</a><small>(new in Version
+      0.27beta)</small></h3>
+
+      
+      <p>White_dune allows to multiply objects. In difference to similar
+      functions in some 3D-Modellers (like the "Art of Illusion" program) it
+      do not create N copies of the same object. It creates N VRML Transform
+      nodes (for translation, rotation etc. in respect to the Array dialog
+      below.) with a VRML USE construct. A USE construct is a compact way to
+      repeat things in VRML. It is a sort of "pointer without difference"
+      similar to a hardlink to a UNIX file (if you know only M$Windows: a
+      more smart way of a shortcut to a file). A USEd node also changes, when
+      it orginal changes.<br>
+
+      <br>
+
+      To use the Array tool, select the object you want to multiply <br>
+
+      <br>
+
+      <img src="array_start.png"><br>
+
+      <br>
+
+      and use <em>Actions -&gt; Array</em>. A dialog will occure <br>
+
+      <br>
+
+      <img src="array_dialog.png"><br>
+
+      <br>
+
+      where you can input the number of objects and the parameters for the
+      transform node. <br>
+
+      <br>
+
+      <img src="array_result.png"><br>
+
+      <br>
+
+      When you change the orginal, all USEd nodes change too. <br>
+
+      <br>
+
+      <img src="array_changed.png"><br>
+
+      <br>
+
+      </p>
+
+
+      
+      <h4><a name="vrmlcut"><em>VrmlCut script Proto</em></a></h4>
+
+      <small>(nuovo nella Versione 0.29beta)</small>
+      
+      <p>In VRML/X3D it is amaizingly different to build sequences of
+      animations, usually called "movie". According to the realtime 3D nature
+      of VRML/X3D animations can be started interactivly and independendly
+      from each, so it there is difficult to define a overall timeline, just
+      like the cutting of a movie.<br>
+
+      One approach to ease this problem in white_dune is the usage of the
+      scripted PROTO node VrmlCut. It has a Field "scenes", where single
+      animation VRML/X3D data can be put into other scripted PROTO nodes
+      named VrmlScene. The content of such a VrmlScene node can be seen
+      similar to a single scene in a movie. The VrmlCut node switches from
+      one VrmlScene to the next VrmlScene and try to jump to the first camera
+      viewpoint and try to start all the animations in the current VrmlScene
+      node.<br>
+
+      Just like the SuperShape, SuperEllipsoid, etc. node the VrmlCut node is
+      not a buildin VRML node. It is a PROTO, a sequence of VRML nodes, that
+      is composed by a Switch node and a Script node and TimeSensor node.<br>
+
+      Like a Script node it has a changable set of fields/events. Cause
+      multiple VrmlCut nodes would have multiple different sets of
+      fields/events, you can have only one Proto definition of VrmlCut and
+      therefore you can have only one VrmlCut node per VRML-file.<br>
+
+      The VrmlCut switches between a sequence of VrmlScene nodes (basically a
+      Group-like node with some scripting for routing) driven by the internal
+      TimeSensor and the Script.<br>
+
+      All information between the VrmlCut, VrmlScene, TimeSensors (for
+      animations) and Viewpoints (cameras) are passed via ROUTE commands.
+      This makes the concept flexible (for example the ROUTE sources can be
+      reused to drive other nodes like Sound or Fog) but building much ROUTEs
+      is much work.<br>
+
+      To reduce the work, the following method can be used:</p>
+
+      
+      <ul>
+
+        
+        <ul>
+
+          <li>Build single scenes, each in one VRML file</li>
+
+          <li>Open a VRML file with common background (or empty)</li>
+
+          <li>Use <em>Create -&gt; Scripted PROTOs -&gt; VrmlCut</em> to
+            create a VrmlCut node</li>
+
+          <li>Directly use <em>Create -&gt; Scripted PROTOs -&gt;
+            VrmlScene</em> to create a VrmlScene node</li>
+
+          <li>Directly use <em>File -&gt; Import</em> to include a VRML file
+            into the scene. All timesensors and the first viewpoint gets
+            ROUTEs from the VrmlScene node. The loop field in the
+            timersensors are switched off. The longest cycleTime of the
+            timesensors are copied into the matching offset of the
+            scenelengths field of the VrmlCut</li>
+
+          <li>Directly use <em>Create -&gt; Scripted PROTOs -&gt;
+            VrmlScene</em> to create the next VrmlScene node.</li>
+
+          <li>Directly use <em>File -&gt; Import</em> to include the next
+            VRML file.</li>
+
+          <li>Continue with this steps</li>
+
+        
+        </ul>
+
+      
+      </ul>
+
+      At the end, you can use the "play" icon or <em>File-&gt;preview</em>to
+      start the sequence of animations.<br>
+
+      With the sceneNumber, numberPreviousScenes and numberNextScenes fields
+      of VrmlCut can be used play a reduced range of scenes. This is usefull
+      to optimize the lengths of the scenes in the sceneLengths field of
+      VrmlCut.
+      
+      <p></p>
+
+
+      
+      <h4><a name="upload"><em>File -&gt; upload</em></a></h4>
+
+      <small>(new in Version 0.27beta) </small>
+      
+      <p>White_dune has a command (menuitem <em>File -&gt; Upload</em>) to
+      upload a VRML file to a internet server.<br>
+
+      When you upload files to the internet, you are usually ask about a
+      access password. White_dune has the ability to store the password in a
+      memory protected from swapspace by mlock/vlock calls.<br>
+
+      The swapspace is a region on the disk where the content of the computer
+      memory can be swapped out to make space for other running programs. A
+      intruder can inspect the swapspace to search for passwords.<br>
+
+      Passing a password from one application (white_dune) to a other
+      application (the upload command) in a secure way is not a easy task in
+      respect to things like swapspace.<br>
+
+      In the upload settings dialog (see <em>Options -&gt; Upload
+      settings...</em>) <br>
+
+      <br>
+
+      <img src="upload.png"><br>
+
+      <br>
+
+      the upload command can have two parameters. Each parameter of the
+      upload commandline is set with the characters "%s".</p>
+
+      
+      <ul>
+
+        <li>In case of one "%s", this parameter is replaced by the path of
+          the VRML file, which is created from the the current white_dune
+          data.<br>
+
+          If no password is used, the upload program can either ask for a
+          password each upload or use a advanced authentication mechanism
+          like ssh passphrase.</li>
+
+        <li>If there is one "%s" and there is a password, this password is
+          sended via standardin to the upload program. Usually the content of
+          standartin/standardout is not protected from spacespace, so there
+          is possibly a security risk when using this option.</li>
+
+        <li>Using two "%s" send the password via a commandline option. On
+          most Operationsystems, this is a high security risk, cause
+          commandline options can be read by any other user on the same
+          system.</li>
+
+      
+      </ul>
+
+      The last line in the upload settings dialog gives you the ability to
+      reload a HTML-webpage after the upload. To use it, you have to type in
+      the HTML tags that will be copied into a HTML file.<br>
+
+      For example, the following dialog will copy the data by white_dune to a
+      VRML file with a static name and will display this VRML file together
+      with the string "hello" in the webbrowser on the next <em>File -&gt;
+      upload</em> command. <br>
+
+      <br>
+
+      <img src="upload_copy.png"><br>
+
+      <br>
+
+      The HTML tags line can contain "%s" characters, which would be replaced
+      by the password. This would result in a HTML file with the password in
+      it. This is a very high security risk, do not use this feature without
+      knowing exactly what you are doing !</li>
+
+  
+  </ul>
+
+</ul>
+
+</body>
+</html>

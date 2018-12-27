@@ -1,0 +1,235 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+Transform 
+  {
+  children 
+    [
+    DEF GROUP Group 
+      {
+      }
+    ]
+  translation 0 0 -10
+  }
+
+WorldInfo 
+  {
+  info 
+    [
+    "Copyright (C) 2003 J. \"MUFTI\" Scheurich, 2007 Braden McDaniel"
+    " This program is free software; you can redistribute it and/or modify"
+    " it under the terms of the GNU General Public License"
+    ]
+  title "Particles"
+  }
+
+DEF TimeSensor1 TimeSensor 
+  {
+  loop TRUE
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFFloat t
+  eventIn SFVec3f force_in
+  directOutput TRUE
+  field SFNode particle_node   Transform 
+    {
+    children 
+      [
+      Shape 
+	{
+	appearance 	Appearance 
+	  {
+	  material 	  Material 
+	    {
+	    ambientIntensity 0.639998
+	    diffuseColor 1 0.533333 0.356862
+	    shininess 0.159997
+	    specularColor 0.643136 0.898038 0.956861
+	    transparency 0.599999
+	    }
+	  }
+	geometry 	Sphere 
+	  {
+	  }
+	}
+      ]
+    rotation 1 0 0 -1.570000
+    scale 0.500000 1 1
+    }
+  field SFInt32 number_particles 12
+  field SFVec3f force 0 0 0.100000
+  field SFVec2f energyRange 1.720000 1.779999
+  field SFVec2f angleRangeDEG 0 90
+  field SFFloat startHeight 0
+  field SFVec2f allowedHeightRange -5 5
+  field SFVec2f sizeRange 0.500000 0.800000
+  field SFFloat density 1
+  field SFFloat gravitation 9.810000
+  field SFFloat jetRadius 0.2
+  field SFNode group USE GROUP
+  field MFNode internNode 
+    [
+    ]
+  field MFVec3f internPosition 
+    [
+    ]
+  field MFVec3f internVector 
+    [
+    ]
+  field SFFloat internT 0
+  field MFFloat internMass 
+    [
+    ]
+  field SFString vrmlstring ""
+  field SFFloat size 1
+  url 
+    [
+    "javascript:
+
+ // field SFNode particle_node //
+
+ // field SFInt32 number_particles //
+
+ // field SFVec3f force //
+
+ // field SFVec2f energyRange //
+
+ // field SFVec2f angleRangeDEG //
+
+ // field SFFloat startHeight //
+
+ // field SFVec2f allowedHeightRange //
+
+ // field SFVec2f sizeRange //
+
+ // field SFFloat density //
+
+ // field SFFloat gravitation //
+
+ // field SFNode group //
+
+ // field MFNode internNode //
+
+ // field MFVec3f internPosition //
+
+ // field MFVec3f internVector //
+
+ // field SFFloat internT //
+
+ // field MFFloat internMass //
+
+ function newParticle(i)
+    {
+    size = sizeRange[0] + Math.random() * (sizeRange[1]-sizeRange[0]);
+
+    internMass[i] = size * size * size * density;
+
+    internPosition[i].x = 0;
+    internPosition[i].y = startHeight; 
+    internPosition[i].z = 0;
+    }
+
+ function startNewParticle(i)
+    {
+    newParticle(i);
+    energy = energyRange[0] + Math.random() * (energyRange[1] - energyRange[0]);
+    v = 0.5 * energy / internMass[i];
+    alpha = Math.random() * 2.0 * Math.PI;
+    angle = angleRangeDEG[0];
+    angle +=  Math.random() * (angleRangeDEG[1]-angleRangeDEG[0]);
+    angle *= 2.0* Math.PI / 360.0; 
+    internVector[i].x = v * Math.cos(angle) * Math.cos(alpha);
+    internVector[i].y = v * Math.sin(angle);
+    internVector[i].z = v * Math.cos(angle) * Math.sin(alpha);
+    }
+
+ function  initialize()
+    {
+    var particles;
+    var i;
+    if (allowedHeightRange[0] > startHeight) 
+       {
+       print('error: allowedHeightRange[0] must be bigger than startHeight');
+       number_particles = 0;
+       }
+    if (allowedHeightRange[1] < startHeight) 
+       {
+       print('error: allowedHeightRange[1] must be smaller than startHeight');
+       number_particles = 0;
+       }
+    internPosition.length = number_particles;
+    internVector.length = number_particles;
+    for (i = 0; i < number_particles; i++)
+       {
+       startNewParticle(i);
+       vrmlstring += 'Transform { scale ' + size + ' ' + size + ' ' + size + ' }';
+       } 
+    particles = Browser.createVrmlFromString(vrmlstring);
+    for (i = 0; i < number_particles; i++)
+       {
+       particles[i].children = new MFNode(particle_node);
+       }
+    group.children = particles;
+    }
+
+ function  t(value)
+    {
+    // value  SFTime
+    if (value > internT) 
+       delta = value - internT;
+    else
+       delta = value - internT + 1.0;
+
+    var children = group.children;
+    for (i = 0; i < number_particles; i++) 
+        {
+        if (children[i].translation[1] < allowedHeightRange[0])
+            {
+            startNewParticle(i);
+            }
+        else if (children[i].translation[1] > allowedHeightRange[1])
+            { 
+            startNewParticle(i);
+            }
+        else 
+           {
+           internVector[i].y -= delta * gravitation;
+
+           internVector[i].x += delta * force.x;
+           internVector[i].y += delta * force.y;
+           internVector[i].z += delta * force.z;
+
+
+           internPosition[i].x += internVector[i].x * delta;
+           internPosition[i].y += internVector[i].y * delta;
+           internPosition[i].z += internVector[i].z * delta;
+           }
+        children[i].translation = internPosition[i];
+        }
+    internT = value;
+    }
+
+
+
+ function  force_in(value)
+    {
+    // value  SFVec3f
+    force = value;
+    }
+
+    "
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO Script1.t
+
+
+
+
+ 	  	 

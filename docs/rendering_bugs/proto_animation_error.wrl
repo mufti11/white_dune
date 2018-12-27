@@ -1,0 +1,117 @@
+#VRML V2.0 utf8
+
+PROTO NEW_PROTO1
+  [
+  eventOut SFFloat fraction
+  ]
+{
+Transform
+  {
+  children 
+    Transform
+      {
+      children 
+        DEF TimeSensor1 TimeSensor
+          {
+          loop TRUE
+          fraction_changed IS fraction
+          }
+      }
+  }
+
+}
+
+Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material DEF Material1_10 Material
+          {
+          diffuseColor 0.136646 8.074500e-2 4.347800e-2
+          }
+        }
+      geometry Sphere
+        {
+        }
+      }
+  }
+
+DEF NEW_PROTO1 NEW_PROTO1
+  {
+  }
+
+DEF ColorInterpolator1 ColorInterpolator
+  {
+  key 
+    [
+    0
+    0.192195
+    0.435122
+    0.682927
+    0.933659
+    ]
+  keyValue 
+    [
+    0.800000 0.800000 0.800000
+    0.800000 0 0.140164
+    0.800000 0.800000 0.043478
+    0.720497 0.080745 0.043478
+    0.136646 0.080745 0.043478
+    ]
+  }
+
+ROUTE NEW_PROTO1.fraction TO ColorInterpolator1.set_fraction
+ROUTE ColorInterpolator1.value_changed TO Material1_10.set_diffuseColor
+
+DEF NEW_PROTO1_0 NEW_PROTO1
+  {
+  }
+
+DEF ColorInterpolator1_0 ColorInterpolator
+  {
+  key 
+    [
+    0
+    0.137561
+    0.244878
+    0.446829
+    0.702439
+    0.933659
+    ]
+  keyValue 
+    [
+    0.800000 0.800000 0.800000
+    0.161491 0.016243 0.153561
+    0.260870 0 0.140164
+    0.472050 0.347826 0.043478
+    0.242236 0.080745 0.043478
+    0.136646 0.080745 0.043478
+    ]
+  }
+
+ROUTE NEW_PROTO1_0.fraction TO ColorInterpolator1_0.set_fraction
+
+Transform
+  {
+  translation -4.377204 0 0
+  children 
+    Shape
+      {
+      appearance Appearance
+        {
+        material DEF Material1 Material
+          {
+          diffuseColor 0.136646 8.074500e-2 4.347800e-2
+          }
+        }
+      geometry Cylinder
+        {
+        }
+      }
+  }
+
+ROUTE ColorInterpolator1_0.value_changed TO Material1.set_diffuseColor
+

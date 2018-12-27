@@ -1,0 +1,40 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO NurbsSurface[
+#
+# Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
+# Copyright (C) 1999 Stephen F. White
+#
+# PROTO interface and javascript port
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+#
+# urn collection 
+# Copyright (C) 2003 Braden McDaniel, Paul Aslin
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+ field SFInt32 uDimension
+ field SFInt32 vDimension
+ field MFFloat uKnot
+ field MFFloat vKnot
+ field SFInt32 uOrder
+ field SFInt32 vOrder
+ field SFBool solid
+ field SFBool ccw
+ exposedField MFVec3f controlPoint
+ exposedField MFFloat weight
+ exposedField SFInt32 uTessellation
+ exposedField SFInt32 vTessellation
+ exposedField SFNode texCoord
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsSurface",
+ "urn:inet:blaxxun.com:node:NurbsSurface",
+ "urn:ParaGraph:NurbsSurface",
+ "NurbsSurfacePROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml200x_nurbssurface/NurbsSurfacePROTO.wrl",
+]
+

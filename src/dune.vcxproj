@@ -1,0 +1,1744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E16EC06D-12A1-4ADA-B4FA-0FA00CD5A5E5}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.27130.2010</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/dune.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/MLd /QIfist /Gz
+ %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\freetype2-master\include;..\..\glu\include;..\..\curl-7.60.0\include;..\..\boost_1_67_0;..\..\mpfr-4.0.1\src;..\..\gmp-6.1.2;..\..\CGAL-4.12\include;..\..\expat-2.2.5\lib;swt\include;..\..\zlib-1.2.11;..\..\jpeg-9b;..\..\libpng-1.6.34;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include\mfc;C:\Programme\Microsoft SDK\Samples\netds\adsi\samples\General\DsBrowse\bitmaps;..\..\vcglib</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\Debug/dune.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level1</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CallingConvention>StdCall</CallingConvention>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x1009</Culture>
+      <AdditionalIncludeDirectories>C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include\mfc;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include;C:\Programme\Microsoft SDK\Samples\netds\adsi\samples\General\DsBrowse\bitmaps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <Link>
+      <AdditionalOptions>/force:multiple  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>opengl32.lib;Winmm.lib;..\..\expat-2.2.5\expat\x64\Debug\expat.lib;..\..\jpeg-9b\jpeg\x64\Debug\jpeg.lib;..\..\libpng-1.6.34\png\x64\Debug\png.lib;..\..\zlib-1.2.11\zlib\x64\Debug\zlib.lib;..\..\curl-7.60.0\build\Win64\VC15\LIB Debug\libcurld.lib;..\..\CGAL-4.12\build\Release\lib\libCGAL-vc140-mt-gd-4.12.lib;ole32.lib;Advapi32.lib;user32.lib;Gdi32.lib;comDlg32.lib;odbc32.lib;odbccp32.lib;comctl32.lib</AdditionalDependencies>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <OutputFile>.\Debug/dune.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/dune.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+      <ForceFileOutput>Enabled</ForceFileOutput>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/dune.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TypeLibraryName>.\Debug/dune.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions> /Gz /bigobj
+ %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\freetype2-master\include;..\..\glu\include;..\..\curl-7.60.0\include;..\..\boost_1_67_0;..\..\mpfr-4.0.1\src;..\..\gmp-6.1.2;..\..\CGAL-4.12\include;..\..\expat-2.2.5\lib;swt\include;..\..\zlib-1.2.11;..\..\jpeg-9b;..\..\libpng-1.6.34;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include\mfc;C:\Programme\Microsoft SDK\Samples\netds\adsi\samples\General\DsBrowse\bitmaps;..\..\vcglib</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\Debug/dune.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>false</BrowseInformation>
+      <WarningLevel>Level1</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>StdCall</CallingConvention>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x1009</Culture>
+      <AdditionalIncludeDirectories>C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include\mfc;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include;C:\Programme\Microsoft SDK\Samples\netds\adsi\samples\General\DsBrowse\bitmaps;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <Link>
+      <AdditionalOptions>/force:multiple  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>opengl32.lib;..\..\freetype2-master\objs\freetype.lib;..\..\glu\glu\x64\Debug\glu.lib;Winmm.lib;..\..\expat-2.2.5\expat\x64\Debug\expat.lib;..\..\jpeg-9b\jpeg\x64\Debug\jpeg.lib;..\..\libpng-1.6.34\png\x64\Debug\png.lib;..\..\zlib-1.2.11\zlib\x64\Debug\zlib.lib;..\..\curl-7.60.0\build\Win64\VC15\LIB Debug\libcurld.lib;..\..\CGAL-4.12\lib\libCGAL-vc140-mt-gd-4.12.lib;..\..\mpfr-4.0.1\mpfr\x64\Debug\mpfr.lib;..\..\gmp-6.1.2\gmp\x64\Debug\gmp.lib;ole32.lib;Advapi32.lib;user32.lib;Gdi32.lib;Ws2_32.lib;wldap32.lib;comDlg32.lib;odbc32.lib;odbccp32.lib;comctl32.lib</AdditionalDependencies>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <OutputFile>.\x64\Debug\dune.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/dune.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/dune.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/dune.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>swt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\Release/dune.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x1009</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;opengl32.lib;;swt.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/dune.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>swt\win32\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\Release/dune.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/dune.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TypeLibraryName>.\Release/dune.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>swt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\Release/dune.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x1009</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;opengl32.lib;swt.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/dune.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>swt\win32\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\Release/dune.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/dune.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AboutDialog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="advancing_front.cpp" />
+    <ClCompile Include="cdt.cpp" />
+    <ClCompile Include="Contour.cpp" />
+    <ClCompile Include="NurbsCurve2DDialog.cpp" />
+    <ClCompile Include="NodeBinaryGeometry.cpp" />
+    <ClCompile Include="NodeBlock.cpp" />
+    <ClCompile Include="NodeColorChaser.cpp" />
+    <ClCompile Include="NodeColorMaskMode.cpp" />
+    <ClCompile Include="NodeCommonSurfaceShader.cpp" />
+    <ClCompile Include="NodeCoordinateChaser.cpp" />
+    <ClCompile Include="NodeDepthMode.cpp" />
+    <ClCompile Include="NodeDish.cpp" />
+    <ClCompile Include="NodeDynamicLOD.cpp" />
+    <ClCompile Include="NodeEnvironment.cpp" />
+    <ClCompile Include="NodeExternalGeometry.cpp" />
+    <ClCompile Include="NodeField.cpp" />
+    <ClCompile Include="NodeImageGeometry.cpp" />
+    <ClCompile Include="NodeImageTextureAtlas.cpp" />
+    <ClCompile Include="NodeMesh.cpp" />
+    <ClCompile Include="NodeMPRVolumeStyle.cpp" />
+    <ClCompile Include="NodeMultiPart.cpp" />
+    <ClCompile Include="NodeNozzle.cpp" />
+    <ClCompile Include="NodeParam.cpp" />
+    <ClCompile Include="NodeParticleSet.cpp" />
+    <ClCompile Include="NodePlane.cpp" />
+    <ClCompile Include="NodePopGeometry.cpp" />
+    <ClCompile Include="NodePopGeometryLevel.cpp" />
+    <ClCompile Include="NodePyramid.cpp" />
+    <ClCompile Include="NodeRadarVolumeStyle.cpp" />
+    <ClCompile Include="NodeRectangularTorus.cpp" />
+    <ClCompile Include="NodeRefinementTexture.cpp" />
+    <ClCompile Include="NodeRemoteSelectionGroup.cpp" />
+    <ClCompile Include="NodeScalarDamper.cpp" />
+    <ClCompile Include="NodeSlopedCylinder.cpp" />
+    <ClCompile Include="NodeSnout.cpp" />
+    <ClCompile Include="NodeSolidOfRevolution.cpp" />
+    <ClCompile Include="NodeSphereSegment.cpp" />
+    <ClCompile Include="NodeStippleVolumeStyle.cpp" />
+    <ClCompile Include="NodeSurfaceShaderTexture.cpp" />
+    <ClCompile Include="NodeTexCoordChaser2D.cpp" />
+    <ClCompile Include="NodeTorus.cpp" />
+    <ClCompile Include="NodeUniform.cpp" />
+    <ClCompile Include="NodeViewfrustum.cpp" />
+    <ClCompile Include="PointFtgl.cpp" />
+    <ClCompile Include="quadric_simp.cpp" />
+    <ClCompile Include="shapes.cpp" />
+    <ClCompile Include="StaticGroupNode.cpp" />
+    <ClCompile Include="sweep.cpp" />
+    <ClCompile Include="sweep_context.cpp" />
+    <ClCompile Include="Vectoriser.cpp" />
+    <ClCompile Include="ViewpointDialog.cpp" />
+    <ClCompile Include="AnchoredJointNode.cpp" />
+    <ClCompile Include="AnimationDialog.cpp" />
+    <ClCompile Include="HAnimJointDialog.cpp" />
+    <ClCompile Include="ArrayDialog.cpp" />
+    <ClCompile Include="BasicTransformNode.cpp" />
+    <ClCompile Include="Box2NurbsDialog.cpp" />
+    <ClCompile Include="buf.c" />
+    <ClCompile Include="CattExportDialog.cpp" />
+    <ClCompile Include="ChainBasedNode.cpp" />
+    <ClCompile Include="ChannelView.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="CheckBoxWindow.cpp" />
+    <ClCompile Include="ColorCircle.cpp" />
+    <ClCompile Include="Commandline.cpp" />
+    <ClCompile Include="CommandList.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="Cone2NurbsDialog.cpp" />
+    <ClCompile Include="CoverDefDialog.cpp" />
+    <ClCompile Include="CurveAnimationDialog.cpp" />
+    <ClCompile Include="Cylinder2NurbsDialog.cpp" />
+    <ClCompile Include="DefDialog.cpp" />
+    <ClCompile Include="Dialog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="DuneApp.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="DynamicFieldsNode.cpp" />
+    <ClCompile Include="EcmaScriptApp.cpp" />
+    <ClCompile Include="EcmaScriptSettingsDialog.cpp" />
+    <ClCompile Include="Element.cpp" />
+    <ClCompile Include="ElevationGridDialog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="EmitterNode.cpp" />
+    <ClCompile Include="EulerAngles.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="EventIn.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="EventOut.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="ExportNamesApp.cpp" />
+    <ClCompile Include="ExposedField.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="FaceData.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="FieldCommand.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="FieldPipeDialog.cpp" />
+    <ClCompile Include="FieldValue.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="FieldView.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="FieldViewItem.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="FilesMissingInWindowsProjects.cpp" />
+    <ClCompile Include="GeometryNode.cpp" />
+    <ClCompile Include="GeoNode.cpp" />
+    <ClCompile Include="gif.c" />
+    <ClCompile Include="GpsMathLib.cpp" />
+    <ClCompile Include="GroupNode.cpp" />
+    <ClCompile Include="HelpSettingsDialog.cpp" />
+    <ClCompile Include="illegal2vrml.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="IndexedTriangleSetNode.cpp" />
+    <ClCompile Include="InputDevice.cpp" />
+    <ClCompile Include="InputDeviceApp.cpp" />
+    <ClCompile Include="InputDeviceNameSelectionDialog.cpp" />
+    <ClCompile Include="InputDeviceSelectionDialog.cpp" />
+    <ClCompile Include="InputDeviceSettingsDialog.cpp" />
+    <ClCompile Include="InteractionDialog.cpp" />
+    <ClCompile Include="InteractionDialog2.cpp" />
+    <ClCompile Include="InteractionDialog3.cpp" />
+    <ClCompile Include="Interpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="jpegLoad.c" />
+    <ClCompile Include="lexer.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="mathx.c" />
+    <ClCompile Include="Matrix.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MyMesh.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MeshBasedNode.cpp" />
+    <ClCompile Include="MeshMorphingNode.cpp" />
+    <ClCompile Include="MeshSubdivide.cpp" />
+    <ClCompile Include="Metadata.cpp" />
+    <ClCompile Include="MFBool.cpp" />
+    <ClCompile Include="MFBoolItem.cpp" />
+    <ClCompile Include="MFColor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFColorItem.cpp" />
+    <ClCompile Include="MFColorRGBA.cpp" />
+    <ClCompile Include="MFColorRGBAItem.cpp" />
+    <ClCompile Include="MFDouble.cpp" />
+    <ClCompile Include="MFDoubleItem.cpp" />
+    <ClCompile Include="MFFloat.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFFloatItem.cpp" />
+    <ClCompile Include="MFieldCommand.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFInt32.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFInt32Item.cpp" />
+    <ClCompile Include="MFMatrix3f.cpp" />
+    <ClCompile Include="MFMatrix3fItem.cpp" />
+    <ClCompile Include="MFMatrix4f.cpp" />
+    <ClCompile Include="MFMatrix4fItem.cpp" />
+    <ClCompile Include="MFNode.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFNodeItem.cpp" />
+    <ClCompile Include="MFRotation.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFRotationItem.cpp" />
+    <ClCompile Include="MFString.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFStringItem.cpp" />
+    <ClCompile Include="MFTime.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFTimeItem.cpp" />
+    <ClCompile Include="MFVec2d.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFVec2dItem.cpp" />
+    <ClCompile Include="MFVec2f.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFVec2fItem.cpp" />
+    <ClCompile Include="MFVec3d.cpp" />
+    <ClCompile Include="MFVec3dItem.cpp" />
+    <ClCompile Include="MFVec3f.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="MFVec3fItem.cpp" />
+    <ClCompile Include="MFVec4f.cpp" />
+    <ClCompile Include="MFVec4fItem.cpp" />
+    <ClCompile Include="ModellingApp.cpp" />
+    <ClCompile Include="ModellingSettingsDialog.cpp" />
+    <ClCompile Include="MoveCommand.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="mysnprintf.c" />
+    <ClCompile Include="MyString.cpp" />
+    <ClCompile Include="nebula\ExportNebula.cpp" />
+    <ClCompile Include="Node.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeAnchor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeAppearance.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeArc2D.cpp" />
+    <ClCompile Include="NodeArcClose2D.cpp" />
+    <ClCompile Include="NodeARSensor.cpp" />
+    <ClCompile Include="NodeAudioClip.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeBackground.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeBallJoint.cpp" />
+    <ClCompile Include="NodeBillboard.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeBlendedVolumeStyle.cpp" />
+    <ClCompile Include="NodeBlendMode.cpp" />
+    <ClCompile Include="NodeBooleanFilter.cpp" />
+    <ClCompile Include="NodeBooleanSequencer.cpp" />
+    <ClCompile Include="NodeBooleanToggle.cpp" />
+    <ClCompile Include="NodeBooleanTrigger.cpp" />
+    <ClCompile Include="NodeBoundaryEnhancementVolumeStyle.cpp" />
+    <ClCompile Include="NodeBoundedPhysicsModel.cpp" />
+    <ClCompile Include="NodeBox.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeCADAssembly.cpp" />
+    <ClCompile Include="NodeCADFace.cpp" />
+    <ClCompile Include="NodeCADLayer.cpp" />
+    <ClCompile Include="NodeCADPart.cpp" />
+    <ClCompile Include="NodeCartoonVolumeStyle.cpp" />
+    <ClCompile Include="NodeCattExportRec.cpp" />
+    <ClCompile Include="NodeCattExportSrc.cpp" />
+    <ClCompile Include="NodeCircle2D.cpp" />
+    <ClCompile Include="NodeClipPlane.cpp" />
+    <ClCompile Include="NodeCollidableOffset.cpp" />
+    <ClCompile Include="NodeCollidableShape.cpp" />
+    <ClCompile Include="NodeCollision.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeCollisionCollection.cpp" />
+    <ClCompile Include="NodeCollisionSensor.cpp" />
+    <ClCompile Include="NodeCollisionSpace.cpp" />
+    <ClCompile Include="NodeColor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeColorDamper.cpp" />
+    <ClCompile Include="NodeColorInterpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeColorRGBA.cpp" />
+    <ClCompile Include="NodeColorSetInterpolator.cpp" />
+    <ClCompile Include="NodeComment.cpp" />
+    <ClCompile Include="NodeComposedCubeMapTexture.cpp" />
+    <ClCompile Include="NodeComposedShader.cpp" />
+    <ClCompile Include="NodeComposedTexture3D.cpp" />
+    <ClCompile Include="NodeComposedVolumeStyle.cpp" />
+    <ClCompile Include="NodeCone.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeConeEmitter.cpp" />
+    <ClCompile Include="NodeContact.cpp" />
+    <ClCompile Include="NodeContour2D.cpp" />
+    <ClCompile Include="NodeContourPolyline2D.cpp" />
+    <ClCompile Include="NodeCoordinate.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeCoordinateDamper.cpp" />
+    <ClCompile Include="NodeCoordinateDeformer.cpp" />
+    <ClCompile Include="NodeCoordinateDouble.cpp" />
+    <ClCompile Include="NodeCoordinateInterpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeCoordinateInterpolator2D.cpp" />
+    <ClCompile Include="NodeCOVER.cpp" />
+    <ClCompile Include="NodeCubeTexture.cpp" />
+    <ClCompile Include="NodeCubicBezier2DOrientationInterpolator.cpp" />
+    <ClCompile Include="NodeCubicBezierPositionInterpolator.cpp" />
+    <ClCompile Include="NodeCurveAnimation.cpp" />
+    <ClCompile Include="NodeCylinder.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeCylinderSensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeDirectionalLight.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeDISEntityManager.cpp" />
+    <ClCompile Include="NodeDISEntityTypeMapping.cpp" />
+    <ClCompile Include="NodeDisk2D.cpp" />
+    <ClCompile Include="NodeDoubleAxisHingeJoint.cpp" />
+    <ClCompile Include="NodeEaseInEaseOut.cpp" />
+    <ClCompile Include="NodeEdgeEnhancementVolumeStyle.cpp" />
+    <ClCompile Include="NodeEffect.cpp" />
+    <ClCompile Include="NodeEffectPart.cpp" />
+    <ClCompile Include="NodeElevationGrid.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeEspduTransform.cpp" />
+    <ClCompile Include="NodeExplosionEmitter.cpp" />
+    <ClCompile Include="NodeExport.cpp" />
+    <ClCompile Include="NodeExtrusion.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeFillProperties.cpp" />
+    <ClCompile Include="NodeFloatVertexAttribute.cpp" />
+    <ClCompile Include="NodeFog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeFogCoordinate.cpp" />
+    <ClCompile Include="NodeFontStyle.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeForcePhysicsModel.cpp" />
+    <ClCompile Include="NodeGeneratedCubeMapTexture.cpp" />
+    <ClCompile Include="NodeGeneratedShadowMap.cpp" />
+    <ClCompile Include="NodeGeoCoordinate.cpp" />
+    <ClCompile Include="NodeGeoElevationGrid.cpp" />
+    <ClCompile Include="NodeGeoLocation.cpp" />
+    <ClCompile Include="NodeGeoLOD.cpp" />
+    <ClCompile Include="NodeGeoMetadata.cpp" />
+    <ClCompile Include="NodeGeoOrigin.cpp" />
+    <ClCompile Include="NodeGeoPositionInterpolator.cpp" />
+    <ClCompile Include="NodeGeoProximitySensor.cpp" />
+    <ClCompile Include="NodeGeoTouchSensor.cpp" />
+    <ClCompile Include="NodeGeoTransform.cpp" />
+    <ClCompile Include="NodeGeoViewpoint.cpp" />
+    <ClCompile Include="NodeGravityPhysicsModel.cpp" />
+    <ClCompile Include="NodeGroup.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeHAnimDisplacer.cpp" />
+    <ClCompile Include="NodeHAnimHumanoid.cpp" />
+    <ClCompile Include="NodeHAnimJoint.cpp" />
+    <ClCompile Include="NodeHAnimSegment.cpp" />
+    <ClCompile Include="NodeHAnimSite.cpp" />
+    <ClCompile Include="NodeImageCubeMapTexture.cpp" />
+    <ClCompile Include="NodeImageTexture.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeImageTexture3D.cpp" />
+    <ClCompile Include="NodeImport.cpp" />
+    <ClCompile Include="NodeIndexedFaceSet.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeIndexedLineSet.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeIndexedQuadSet.cpp" />
+    <ClCompile Include="NodeIndexedTriangleFanSet.cpp" />
+    <ClCompile Include="NodeIndexedTriangleSet.cpp" />
+    <ClCompile Include="NodeIndexedTriangleStripSet.cpp" />
+    <ClCompile Include="NodeInline.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeInlineLoadControl.cpp" />
+    <ClCompile Include="NodeIntegerSequencer.cpp" />
+    <ClCompile Include="NodeIntegerTrigger.cpp" />
+    <ClCompile Include="NodeIsoSurfaceVolumeData.cpp" />
+    <ClCompile Include="NodeJoystickSensor.cpp" />
+    <ClCompile Include="NodeKambiAppearance.cpp" />
+    <ClCompile Include="NodeKambiHeadLight.cpp" />
+    <ClCompile Include="NodeKambiInline.cpp" />
+    <ClCompile Include="NodeKambiNavigationInfo.cpp" />
+    <ClCompile Include="NodeKambiOctreeProperties.cpp" />
+    <ClCompile Include="NodeKambiTriangulation.cpp" />
+    <ClCompile Include="NodeKeySensor.cpp" />
+    <ClCompile Include="NodeLabView.cpp" />
+    <ClCompile Include="NodeLayer.cpp" />
+    <ClCompile Include="NodeLayerSet.cpp" />
+    <ClCompile Include="NodeLayout.cpp" />
+    <ClCompile Include="NodeLayoutGroup.cpp" />
+    <ClCompile Include="NodeLayoutLayer.cpp" />
+    <ClCompile Include="NodeLdrawDatExport.cpp" />
+    <ClCompile Include="NodeLinePickSensor.cpp" />
+    <ClCompile Include="NodeLineProperties.cpp" />
+    <ClCompile Include="NodeLineSet.cpp" />
+    <ClCompile Include="NodeList.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeLoadSensor.cpp" />
+    <ClCompile Include="NodeLocalFog.cpp" />
+    <ClCompile Include="NodeLOD.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeMaterial.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeMatrix3VertexAttribute.cpp" />
+    <ClCompile Include="NodeMatrix4VertexAttribute.cpp" />
+    <ClCompile Include="NodeMatrixTransform.cpp" />
+    <ClCompile Include="NodeMetadataBoolean.cpp" />
+    <ClCompile Include="NodeMetadataDouble.cpp" />
+    <ClCompile Include="NodeMetadataFloat.cpp" />
+    <ClCompile Include="NodeMetadataInteger.cpp" />
+    <ClCompile Include="NodeMetadataSet.cpp" />
+    <ClCompile Include="NodeMetadataString.cpp" />
+    <ClCompile Include="NodeMotorJoint.cpp" />
+    <ClCompile Include="NodeMovieTexture.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeMultiGeneratedTextureCoordinate.cpp" />
+    <ClCompile Include="NodeMultiTexture.cpp" />
+    <ClCompile Include="NodeMultiTextureCoordinate.cpp" />
+    <ClCompile Include="NodeMultiTextureTransform.cpp" />
+    <ClCompile Include="NodeNavigationInfo.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeNormal.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeNormalInterpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeNurbsCurve.cpp" />
+    <ClCompile Include="NodeNurbsCurve2D.cpp" />
+    <ClCompile Include="NodeNurbsGroup.cpp" />
+    <ClCompile Include="NodeNurbsOrientationInterpolator.cpp" />
+    <ClCompile Include="NodeNurbsPositionInterpolator.cpp" />
+    <ClCompile Include="NodeNurbsSet.cpp" />
+    <ClCompile Include="NodeNurbsSurface.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeNurbsSurfaceInterpolator.cpp" />
+    <ClCompile Include="NodeNurbsSweptSurface.cpp" />
+    <ClCompile Include="NodeNurbsSwungSurface.cpp" />
+    <ClCompile Include="NodeNurbsTextureCoordinate.cpp" />
+    <ClCompile Include="NodeNurbsTextureSurface.cpp" />
+    <ClCompile Include="NodeNurbsTrimmedSurface.cpp" />
+    <ClCompile Include="NodeOpacityMapVolumeStyle.cpp" />
+    <ClCompile Include="NodeOrientationChaser.cpp" />
+    <ClCompile Include="NodeOrientationDamper.cpp" />
+    <ClCompile Include="NodeOrientationInterpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeOrthoViewpoint.cpp" />
+    <ClCompile Include="NodePackagedShader.cpp" />
+    <ClCompile Include="NodeParticleSystem.cpp" />
+    <ClCompile Include="NodePickableGroup.cpp" />
+    <ClCompile Include="NodePixelTexture.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodePixelTexture3D.cpp" />
+    <ClCompile Include="NodePlaneSensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodePointEmitter.cpp" />
+    <ClCompile Include="NodePointLight.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodePointPickSensor.cpp" />
+    <ClCompile Include="NodePointSet.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodePolyline2D.cpp" />
+    <ClCompile Include="NodePolylineEmitter.cpp" />
+    <ClCompile Include="NodePolypoint2D.cpp" />
+    <ClCompile Include="NodePositionChaser.cpp" />
+    <ClCompile Include="NodePositionChaser2D.cpp" />
+    <ClCompile Include="NodePositionDamper.cpp" />
+    <ClCompile Include="NodePositionDamper2D.cpp" />
+    <ClCompile Include="NodePositionInterpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodePositionInterpolator2D.cpp" />
+    <ClCompile Include="NodePrimitivePickSensor.cpp" />
+    <ClCompile Include="NodeProgramShader.cpp" />
+    <ClCompile Include="NodeProjectedTextureCoordinate.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeProjectionVolumeStyle.cpp" />
+    <ClCompile Include="NodeProximitySensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeQuadSet.cpp" />
+    <ClCompile Include="NodeReceiverPdu.cpp" />
+    <ClCompile Include="NodeRectangle2D.cpp" />
+    <ClCompile Include="NodeRenderedTexture.cpp" />
+    <ClCompile Include="NodeRigidBody.cpp" />
+    <ClCompile Include="NodeRigidBodyCollection.cpp" />
+    <ClCompile Include="NodeScalarChaser.cpp" />
+    <ClCompile Include="NodeScalarInterpolator.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeScreenEffect.cpp" />
+    <ClCompile Include="NodeScreenFontStyle.cpp" />
+    <ClCompile Include="NodeScreenGroup.cpp" />
+    <ClCompile Include="NodeScript.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeSegmentedVolumeData.cpp" />
+    <ClCompile Include="NodeShadedVolumeStyle.cpp" />
+    <ClCompile Include="NodeShaderPart.cpp" />
+    <ClCompile Include="NodeShaderProgram.cpp" />
+    <ClCompile Include="NodeShaderTexture.cpp" />
+    <ClCompile Include="NodeShape.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeSignalPdu.cpp" />
+    <ClCompile Include="NodeSilhouetteEnhancementVolumeStyle.cpp" />
+    <ClCompile Include="NodeSingleAxisHingeJoint.cpp" />
+    <ClCompile Include="NodeSky.cpp" />
+    <ClCompile Include="NodeSliderJoint.cpp" />
+    <ClCompile Include="NodeSound.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeSpaceSensor.cpp" />
+    <ClCompile Include="NodeSphere.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeSphereSensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeSplinePositionInterpolator.cpp" />
+    <ClCompile Include="NodeSplinePositionInterpolator2D.cpp" />
+    <ClCompile Include="NodeSplineScalarInterpolator.cpp" />
+    <ClCompile Include="NodeSpotLight.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeSquadOrientationInterpolator.cpp" />
+    <ClCompile Include="NodeStaticGroup.cpp" />
+    <ClCompile Include="NodeSteeringWheel.cpp" />
+    <ClCompile Include="NodeStringSensor.cpp" />
+    <ClCompile Include="NodeSuperEllipsoid.cpp" />
+    <ClCompile Include="NodeSuperExtrusion.cpp" />
+    <ClCompile Include="NodeSuperRevolver.cpp" />
+    <ClCompile Include="NodeSuperShape.cpp" />
+    <ClCompile Include="NodeSurfaceEmitter.cpp" />
+    <ClCompile Include="NodeSwitch.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeTeapot.cpp" />
+    <ClCompile Include="NodeTexCoordDamper2D.cpp" />
+    <ClCompile Include="NodeText.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeText3D.cpp" />
+    <ClCompile Include="NodeTextureBackground.cpp" />
+    <ClCompile Include="NodeTextureCoordinate.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeTextureCoordinate3D.cpp" />
+    <ClCompile Include="NodeTextureCoordinate4D.cpp" />
+    <ClCompile Include="NodeTextureCoordinateGenerator.cpp" />
+    <ClCompile Include="NodeTextureProperties.cpp" />
+    <ClCompile Include="NodeTextureTransform.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeTextureTransform3D.cpp" />
+    <ClCompile Include="NodeTextureTransformMatrix3D.cpp" />
+    <ClCompile Include="NodeTimeSensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeTimeTrigger.cpp" />
+    <ClCompile Include="NodeToneMappedVolumeStyle.cpp" />
+    <ClCompile Include="NodeTouchSensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeTransform.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeTransformSensor.cpp" />
+    <ClCompile Include="NodeTransmitterPdu.cpp" />
+    <ClCompile Include="NodeTriangleFanSet.cpp" />
+    <ClCompile Include="NodeTriangleSet.cpp" />
+    <ClCompile Include="NodeTriangleSet2D.cpp" />
+    <ClCompile Include="NodeTriangleStripSet.cpp" />
+    <ClCompile Include="NodeTrimmedSurface.cpp" />
+    <ClCompile Include="NodeTUIButton.cpp" />
+    <ClCompile Include="NodeTUIComboBox.cpp" />
+    <ClCompile Include="NodeTUIFloatSlider.cpp" />
+    <ClCompile Include="NodeTUIFrame.cpp" />
+    <ClCompile Include="NodeTUILabel.cpp" />
+    <ClCompile Include="NodeTUIListBox.cpp" />
+    <ClCompile Include="NodeTUIMap.cpp" />
+    <ClCompile Include="NodeTUIProgressBar.cpp" />
+    <ClCompile Include="NodeTUISlider.cpp" />
+    <ClCompile Include="NodeTUISplitter.cpp" />
+    <ClCompile Include="NodeTUITab.cpp" />
+    <ClCompile Include="NodeTUITabFolder.cpp" />
+    <ClCompile Include="NodeTUIToggleButton.cpp" />
+    <ClCompile Include="NodeTwoSidedMaterial.cpp" />
+    <ClCompile Include="NodeUniversalJoint.cpp" />
+    <ClCompile Include="NodeVectorInterpolator.cpp" />
+    <ClCompile Include="NodeVehicle.cpp" />
+    <ClCompile Include="NodeViewpoint.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeViewpointGroup.cpp" />
+    <ClCompile Include="NodeViewport.cpp" />
+    <ClCompile Include="NodeVirtualAcoustics.cpp" />
+    <ClCompile Include="NodeVirtualSoundSource.cpp" />
+    <ClCompile Include="NodeVisibilitySensor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NodeVolumeData.cpp" />
+    <ClCompile Include="NodeVolumeEmitter.cpp" />
+    <ClCompile Include="NodeVolumePickSensor.cpp" />
+    <ClCompile Include="NodeVrmlCut.cpp" />
+    <ClCompile Include="NodeVrmlScene.cpp" />
+    <ClCompile Include="NodeWave.cpp" />
+    <ClCompile Include="NodeWindPhysicsModel.cpp" />
+    <ClCompile Include="NodeWonderlandImportJava.cpp" />
+    <ClCompile Include="NodeWorldInfo.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NurbsArc.cpp" />
+    <ClCompile Include="NurbsCurve2NurbsSurfDialog.cpp" />
+    <ClCompile Include="NurbsCurveDegreeElevate.cpp" />
+    <ClCompile Include="NurbsCurveDialog.cpp" />
+    <ClCompile Include="NurbsMakeRevolvedSurface.cpp" />
+    <ClCompile Include="NurbsPlaneDialog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="NurbsSurfaceDegreeElevate.cpp" />
+    <ClCompile Include="OneBoolDialog.cpp" />
+    <ClCompile Include="OneFloatDialog.cpp" />
+    <ClCompile Include="OneIntDialog.cpp" />
+    <ClCompile Include="OneTextDialog.cpp" />
+    <ClCompile Include="OutputApp.cpp" />
+    <ClCompile Include="OutputSettingsDialog.cpp" />
+    <ClCompile Include="PanedWindow.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="Path.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="pngLoad.c" />
+    <ClCompile Include="PreferencesApp.cpp" />
+    <ClCompile Include="PreviewSettingsDialog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="Proto.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="ProtoDialog.cpp" />
+    <ClCompile Include="ProtoNameDialog.cpp" />
+    <ClCompile Include="Quaternion.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="RenderApp.cpp" />
+    <ClCompile Include="RenderSettingsDialog.cpp" />
+    <ClCompile Include="RenderState.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="resource.c" />
+    <ClCompile Include="RouteCommand.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="RouteViewApp.cpp" />
+    <ClCompile Include="RouteViewSettingsDialog.cpp" />
+    <ClCompile Include="Scene.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="Scene3DView.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SceneGraphView.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SceneProtoMap.cpp" />
+    <ClCompile Include="SceneTreeView.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SceneView.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="ScriptDialog.cpp" />
+    <ClCompile Include="ScriptEdit.cpp" />
+    <ClCompile Include="ScriptEventDialog.cpp" />
+    <ClCompile Include="SFBool.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFBoolItem.cpp" />
+    <ClCompile Include="SFColor.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFColorItem.cpp" />
+    <ClCompile Include="SFColorRGBA.cpp" />
+    <ClCompile Include="SFColorRGBAItem.cpp" />
+    <ClCompile Include="SFDouble.cpp" />
+    <ClCompile Include="SFDoubleItem.cpp" />
+    <ClCompile Include="SFFloat.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFFloatItem.cpp" />
+    <ClCompile Include="SFImage.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFImageItem.cpp" />
+    <ClCompile Include="SFInt32.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFInt32Item.cpp" />
+    <ClCompile Include="SFMatrix3f.cpp" />
+    <ClCompile Include="SFMatrix3fItem.cpp" />
+    <ClCompile Include="SFMatrix4f.cpp" />
+    <ClCompile Include="SFMatrix4fItem.cpp" />
+    <ClCompile Include="SFNode.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFNodeItem.cpp" />
+    <ClCompile Include="SFRotation.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFRotationItem.cpp" />
+    <ClCompile Include="SFString.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFStringItem.cpp" />
+    <ClCompile Include="SFTime.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFTimeItem.cpp" />
+    <ClCompile Include="SFVec2d.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFVec2dItem.cpp" />
+    <ClCompile Include="SFVec2f.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFVec2fItem.cpp" />
+    <ClCompile Include="SFVec3d.cpp" />
+    <ClCompile Include="SFVec3dItem.cpp" />
+    <ClCompile Include="SFVec3f.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="SFVec3fItem.cpp" />
+    <ClCompile Include="SFVec4f.cpp" />
+    <ClCompile Include="SFVec4fItem.cpp" />
+    <ClCompile Include="Sphere2NurbsDialog.cpp" />
+    <ClCompile Include="SplitFacesDialog.cpp" />
+    <ClCompile Include="StartWithApp.cpp" />
+    <ClCompile Include="StatusBar.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="StereoViewApp.cpp" />
+    <ClCompile Include="StereoViewSettingsDialog.cpp" />
+    <ClCompile Include="subd.c" />
+    <ClCompile Include="subd_mesh.c" />
+    <ClCompile Include="swt\generic\groupbox.c" />
+    <ClCompile Include="swt\generic\util.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="swt\win32\browser.c" />
+    <ClCompile Include="swt\win32\dragdrop.cpp" />
+    <ClCompile Include="swt\win32\swt.c" />
+    <ClCompile Include="TexteditSettingsDialog.cpp" />
+    <ClCompile Include="ToIndexedFaceSetDialog.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="ToolbarWindow.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="TransformMode.cpp" />
+    <ClCompile Include="TransformNode.cpp" />
+    <ClCompile Include="TUIElement.cpp" />
+    <ClCompile Include="TwoRadioButtonsDialog.cpp" />
+    <ClCompile Include="Types.cpp" />
+    <ClCompile Include="UnRouteCommand.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="UploadSettingsDialog.cpp" />
+    <ClCompile Include="URL.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="URLDialog.cpp" />
+    <ClCompile Include="Util.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <ClCompile Include="WonderlandModuleExport.cpp" />
+    <ClCompile Include="WonderlandModuleExportDialog.cpp" />
+    <ClCompile Include="WriteWonderlandCellRenderCode.cpp" />
+    <ClCompile Include="X3DNBodyCollidableNode.cpp" />
+    <ClCompile Include="X3DNBodyCollisionSpaceNode.cpp" />
+    <ClCompile Include="X3DRigidJointNode.cpp" />
+    <ClCompile Include="xerrorhandler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="lexer.l">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%25WINDIR%25\system32\cmd.exe &lt; ..\batch\useflex.bat
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%25WINDIR%25\system32\cmd.exe &lt; ..\batch\useflex.bat
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">lexer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">lexer.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="parser.y">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%25WINDIR%25\system32\cmd &lt; ..\batch\usebison.bat
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%25WINDIR%25\system32\cmd &lt; ..\batch\usebison.bat
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">parser.cpp;y.tab.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">parser.cpp;y.tab.h;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="res\cursor1.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AboutDialog.h" />
+    <ClInclude Include="AnimationDialog.h" />
+    <ClInclude Include="Array.h" />
+    <ClInclude Include="Array2D.h" />
+    <ClInclude Include="Box2NurbsDialog.h" />
+    <ClInclude Include="ChannelView.h" />
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="CommandList.h" />
+    <ClInclude Include="Cone2NurbsDialog.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="Cylinder2NurbsDialog.h" />
+    <ClInclude Include="Dialog.h" />
+    <ClInclude Include="DuneApp.h" />
+    <ClInclude Include="Element.h" />
+    <ClInclude Include="ElevationGridDialog.h" />
+    <ClInclude Include="EulerAngles.h" />
+    <ClInclude Include="EventIn.h" />
+    <ClInclude Include="EventOut.h" />
+    <ClInclude Include="ExposedField.h" />
+    <ClInclude Include="Face.h" />
+    <ClInclude Include="Field.h" />
+    <ClInclude Include="FieldCommand.h" />
+    <ClInclude Include="FieldValue.h" />
+    <ClInclude Include="FieldView.h" />
+    <ClInclude Include="FieldViewItem.h" />
+    <ClInclude Include="FilesMissingInWindowsProjects.h" />
+    <ClInclude Include="FontInfo.h" />
+    <ClInclude Include="gif.h" />
+    <ClInclude Include="HelpSettingsDialog.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="Interpolator.h" />
+    <ClInclude Include="jpegLoad.h" />
+    <ClInclude Include="kljcpyrght.h" />
+    <ClInclude Include="List.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MyMesh.h" />
+    <ClInclude Include="MFColor.h" />
+    <ClInclude Include="MFFloat.h" />
+    <ClInclude Include="MFieldCommand.h" />
+    <ClInclude Include="MFInt32.h" />
+    <ClInclude Include="MFNode.h" />
+    <ClInclude Include="MFRotation.h" />
+    <ClInclude Include="MFString.h" />
+    <ClInclude Include="MFTime.h" />
+    <ClInclude Include="MFVec2f.h" />
+    <ClInclude Include="MFVec3f.h" />
+    <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="mysnprintf.h" />
+    <ClInclude Include="MyString.h" />
+    <ClInclude Include="nebula\ExportNebula.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="NodeAnchor.h" />
+    <ClInclude Include="NodeAppearance.h" />
+    <ClInclude Include="NodeArc2D.h" />
+    <ClInclude Include="NodeArcClose2D.h" />
+    <ClInclude Include="NodeArray.h" />
+    <ClInclude Include="NodeARSensor.h" />
+    <ClInclude Include="NodeAudioClip.h" />
+    <ClInclude Include="NodeBackground.h" />
+    <ClInclude Include="NodeBallJoint.h" />
+    <ClInclude Include="NodeBillboard.h" />
+    <ClInclude Include="NodeBinaryGeometry.h" />
+    <ClInclude Include="NodeBlendedVolumeStyle.h" />
+    <ClInclude Include="NodeBlendMode.h" />
+    <ClInclude Include="NodeBlock.h" />
+    <ClInclude Include="NodeBooleanFilter.h" />
+    <ClInclude Include="NodeBooleanSequencer.h" />
+    <ClInclude Include="NodeBooleanToggle.h" />
+    <ClInclude Include="NodeBooleanTrigger.h" />
+    <ClInclude Include="NodeBoundaryEnhancementVolumeStyle.h" />
+    <ClInclude Include="NodeBoundedPhysicsModel.h" />
+    <ClInclude Include="NodeBox.h" />
+    <ClInclude Include="NodeCADAssembly.h" />
+    <ClInclude Include="NodeCADFace.h" />
+    <ClInclude Include="NodeCADLayer.h" />
+    <ClInclude Include="NodeCADPart.h" />
+    <ClInclude Include="NodeCartoonVolumeStyle.h" />
+    <ClInclude Include="NodeCattExportRec.h" />
+    <ClInclude Include="NodeCattExportSrc.h" />
+    <ClInclude Include="NodeCircle2D.h" />
+    <ClInclude Include="NodeClipPlane.h" />
+    <ClInclude Include="NodeCollidableOffset.h" />
+    <ClInclude Include="NodeCollidableShape.h" />
+    <ClInclude Include="NodeCollision.h" />
+    <ClInclude Include="NodeCollisionCollection.h" />
+    <ClInclude Include="NodeCollisionSensor.h" />
+    <ClInclude Include="NodeCollisionSpace.h" />
+    <ClInclude Include="NodeColor.h" />
+    <ClInclude Include="NodeColorChaser.h" />
+    <ClInclude Include="NodeColorDamper.h" />
+    <ClInclude Include="NodeColorInterpolator.h" />
+    <ClInclude Include="NodeColorMaskMode.h" />
+    <ClInclude Include="NodeColorRGBA.h" />
+    <ClInclude Include="NodeColorSetInterpolator.h" />
+    <ClInclude Include="NodeComment.h" />
+    <ClInclude Include="NodeCommonSurfaceShader.h" />
+    <ClInclude Include="NodeComposedCubeMapTexture.h" />
+    <ClInclude Include="NodeComposedShader.h" />
+    <ClInclude Include="NodeComposedTexture3D.h" />
+    <ClInclude Include="NodeComposedVolumeStyle.h" />
+    <ClInclude Include="NodeCone.h" />
+    <ClInclude Include="NodeConeEmitter.h" />
+    <ClInclude Include="NodeContact.h" />
+    <ClInclude Include="NodeContour2D.h" />
+    <ClInclude Include="NodeContourPolyline2D.h" />
+    <ClInclude Include="NodeCoordinate.h" />
+    <ClInclude Include="NodeCoordinateChaser.h" />
+    <ClInclude Include="NodeCoordinateDamper.h" />
+    <ClInclude Include="NodeCoordinateDeformer.h" />
+    <ClInclude Include="NodeCoordinateDouble.h" />
+    <ClInclude Include="NodeCoordinateInterpolator.h" />
+    <ClInclude Include="NodeCoordinateInterpolator2D.h" />
+    <ClInclude Include="NodeCOVER.h" />
+    <ClInclude Include="NodeCubeTexture.h" />
+    <ClInclude Include="NodeCubicBezier2DOrientationInterpolator.h" />
+    <ClInclude Include="NodeCubicBezierPositionInterpolator.h" />
+    <ClInclude Include="NodeCurveAnimation.h" />
+    <ClInclude Include="NodeCylinder.h" />
+    <ClInclude Include="NodeCylinderSensor.h" />
+    <ClInclude Include="NodeDepthMode.h" />
+    <ClInclude Include="NodeDirectionalLight.h" />
+    <ClInclude Include="NodeDISEntityManager.h" />
+    <ClInclude Include="NodeDISEntityTypeMapping.h" />
+    <ClInclude Include="NodeDish.h" />
+    <ClInclude Include="NodeDisk2D.h" />
+    <ClInclude Include="NodeDoubleAxisHingeJoint.h" />
+    <ClInclude Include="NodeDynamicLOD.h" />
+    <ClInclude Include="NodeEaseInEaseOut.h" />
+    <ClInclude Include="NodeEdgeEnhancementVolumeStyle.h" />
+    <ClInclude Include="NodeEffect.h" />
+    <ClInclude Include="NodeEffectPart.h" />
+    <ClInclude Include="NodeElevationGrid.h" />
+    <ClInclude Include="NodeEnvironment.h" />
+    <ClInclude Include="NodeEspduTransform.h" />
+    <ClInclude Include="NodeExplosionEmitter.h" />
+    <ClInclude Include="NodeExport.h" />
+    <ClInclude Include="NodeExternalGeometry.h" />
+    <ClInclude Include="NodeExtrusion.h" />
+    <ClInclude Include="NodeField.h" />
+    <ClInclude Include="NodeFillProperties.h" />
+    <ClInclude Include="NodeFlags.h" />
+    <ClInclude Include="NodeFloatVertexAttribute.h" />
+    <ClInclude Include="NodeFog.h" />
+    <ClInclude Include="NodeFogCoordinate.h" />
+    <ClInclude Include="NodeFontStyle.h" />
+    <ClInclude Include="NodeForcePhysicsModel.h" />
+    <ClInclude Include="NodeGeneratedCubeMapTexture.h" />
+    <ClInclude Include="NodeGeneratedShadowMap.h" />
+    <ClInclude Include="NodeGeoCoordinate.h" />
+    <ClInclude Include="NodeGeoElevationGrid.h" />
+    <ClInclude Include="NodeGeoLocation.h" />
+    <ClInclude Include="NodeGeoLOD.h" />
+    <ClInclude Include="NodeGeoMetadata.h" />
+    <ClInclude Include="NodeGeoOrigin.h" />
+    <ClInclude Include="NodeGeoPositionInterpolator.h" />
+    <ClInclude Include="NodeGeoProximitySensor.h" />
+    <ClInclude Include="NodeGeoTouchSensor.h" />
+    <ClInclude Include="NodeGeoTransform.h" />
+    <ClInclude Include="NodeGeoViewpoint.h" />
+    <ClInclude Include="NodeGravityPhysicsModel.h" />
+    <ClInclude Include="NodeGroup.h" />
+    <ClInclude Include="NodeHAnimDisplacer.h" />
+    <ClInclude Include="NodeHAnimHumanoid.h" />
+    <ClInclude Include="NodeHAnimJoint.h" />
+    <ClInclude Include="NodeHAnimSegment.h" />
+    <ClInclude Include="NodeHAnimSite.h" />
+    <ClInclude Include="NodeImageCubeMapTexture.h" />
+    <ClInclude Include="NodeImageGeometry.h" />
+    <ClInclude Include="NodeImageTexture.h" />
+    <ClInclude Include="NodeImageTexture3D.h" />
+    <ClInclude Include="NodeImageTextureAtlas.h" />
+    <ClInclude Include="NodeImport.h" />
+    <ClInclude Include="NodeIndexedFaceSet.h" />
+    <ClInclude Include="NodeIndexedLineSet.h" />
+    <ClInclude Include="NodeIndexedQuadSet.h" />
+    <ClInclude Include="NodeIndexedTriangleFanSet.h" />
+    <ClInclude Include="NodeIndexedTriangleSet.h" />
+    <ClInclude Include="NodeIndexedTriangleStripSet.h" />
+    <ClInclude Include="NodeInline.h" />
+    <ClInclude Include="NodeInlineLoadControl.h" />
+    <ClInclude Include="NodeIntegerSequencer.h" />
+    <ClInclude Include="NodeIntegerTrigger.h" />
+    <ClInclude Include="NodeIsoSurfaceVolumeData.h" />
+    <ClInclude Include="NodeJoystickSensor.h" />
+    <ClInclude Include="NodeKambiAppearance.h" />
+    <ClInclude Include="NodeKambiHeadLight.h" />
+    <ClInclude Include="NodeKambiInline.h" />
+    <ClInclude Include="NodeKambiNavigationInfo.h" />
+    <ClInclude Include="NodeKambiOctreeProperties.h" />
+    <ClInclude Include="NodeKambiTriangulation.h" />
+    <ClInclude Include="NodeKeySensor.h" />
+    <ClInclude Include="NodeLabView.h" />
+    <ClInclude Include="NodeLayer.h" />
+    <ClInclude Include="NodeLayerSet.h" />
+    <ClInclude Include="NodeLayout.h" />
+    <ClInclude Include="NodeLayoutGroup.h" />
+    <ClInclude Include="NodeLayoutLayer.h" />
+    <ClInclude Include="NodeLdrawDatExport.h" />
+    <ClInclude Include="NodeLinePickSensor.h" />
+    <ClInclude Include="NodeLineProperties.h" />
+    <ClInclude Include="NodeLineSet.h" />
+    <ClInclude Include="NodeList.h" />
+    <ClInclude Include="NodeLoadSensor.h" />
+    <ClInclude Include="NodeLocalFog.h" />
+    <ClInclude Include="NodeLOD.h" />
+    <ClInclude Include="NodeMaterial.h" />
+    <ClInclude Include="NodeMatrix3VertexAttribute.h" />
+    <ClInclude Include="NodeMatrix4VertexAttribute.h" />
+    <ClInclude Include="NodeMatrixTransform.h" />
+    <ClInclude Include="NodeMesh.h" />
+    <ClInclude Include="NodeMetadataBoolean.h" />
+    <ClInclude Include="NodeMetadataDouble.h" />
+    <ClInclude Include="NodeMetadataFloat.h" />
+    <ClInclude Include="NodeMetadataInteger.h" />
+    <ClInclude Include="NodeMetadataSet.h" />
+    <ClInclude Include="NodeMetadataString.h" />
+    <ClInclude Include="NodeMotorJoint.h" />
+    <ClInclude Include="NodeMovieTexture.h" />
+    <ClInclude Include="NodeMPRVolumeStyle.h" />
+    <ClInclude Include="NodeMultiGeneratedTextureCoordinate.h" />
+    <ClInclude Include="NodeMultiPart.h" />
+    <ClInclude Include="NodeMultiTexture.h" />
+    <ClInclude Include="NodeMultiTextureCoordinate.h" />
+    <ClInclude Include="NodeMultiTextureTransform.h" />
+    <ClInclude Include="NodeNavigationInfo.h" />
+    <ClInclude Include="NodeNormal.h" />
+    <ClInclude Include="NodeNormalInterpolator.h" />
+    <ClInclude Include="NodeNozzle.h" />
+    <ClInclude Include="NodeNurbsCurve.h" />
+    <ClInclude Include="NodeNurbsCurve2D.h" />
+    <ClInclude Include="NodeNurbsGroup.h" />
+    <ClInclude Include="NodeNurbsOrientationInterpolator.h" />
+    <ClInclude Include="NodeNurbsPositionInterpolator.h" />
+    <ClInclude Include="NodeNurbsSet.h" />
+    <ClInclude Include="NodeNurbsSurface.h" />
+    <ClInclude Include="NodeNurbsSurfaceInterpolator.h" />
+    <ClInclude Include="NodeNurbsSweptSurface.h" />
+    <ClInclude Include="NodeNurbsSwungSurface.h" />
+    <ClInclude Include="NodeNurbsTextureCoordinate.h" />
+    <ClInclude Include="NodeNurbsTextureSurface.h" />
+    <ClInclude Include="NodeNurbsTrimmedSurface.h" />
+    <ClInclude Include="NodeOpacityMapVolumeStyle.h" />
+    <ClInclude Include="NodeOrientationChaser.h" />
+    <ClInclude Include="NodeOrientationDamper.h" />
+    <ClInclude Include="NodeOrientationInterpolator.h" />
+    <ClInclude Include="NodeOrthoViewpoint.h" />
+    <ClInclude Include="NodePackagedShader.h" />
+    <ClInclude Include="NodeParam.h" />
+    <ClInclude Include="NodeParticleSet.h" />
+    <ClInclude Include="NodeParticleSystem.h" />
+    <ClInclude Include="NodePickableGroup.h" />
+    <ClInclude Include="NodePixelTexture.h" />
+    <ClInclude Include="NodePixelTexture3D.h" />
+    <ClInclude Include="NodePlane.h" />
+    <ClInclude Include="NodePlaneSensor.h" />
+    <ClInclude Include="NodePointEmitter.h" />
+    <ClInclude Include="NodePointLight.h" />
+    <ClInclude Include="NodePointPickSensor.h" />
+    <ClInclude Include="NodePointSet.h" />
+    <ClInclude Include="NodePolyline2D.h" />
+    <ClInclude Include="NodePolylineEmitter.h" />
+    <ClInclude Include="NodePolypoint2D.h" />
+    <ClInclude Include="NodePopGeometry.h" />
+    <ClInclude Include="NodePopGeometryLevel.h" />
+    <ClInclude Include="NodePositionChaser.h" />
+    <ClInclude Include="NodePositionChaser2D.h" />
+    <ClInclude Include="NodePositionDamper.h" />
+    <ClInclude Include="NodePositionDamper2D.h" />
+    <ClInclude Include="NodePositionInterpolator.h" />
+    <ClInclude Include="NodePositionInterpolator2D.h" />
+    <ClInclude Include="NodePrimitivePickSensor.h" />
+    <ClInclude Include="NodeProgramShader.h" />
+    <ClInclude Include="NodeProjectedTextureCoordinate.h" />
+    <ClInclude Include="NodeProjectionVolumeStyle.h" />
+    <ClInclude Include="NodeProximitySensor.h" />
+    <ClInclude Include="NodePyramid.h" />
+    <ClInclude Include="NodeQuadSet.h" />
+    <ClInclude Include="NodeRadarVolumeStyle.h" />
+    <ClInclude Include="NodeReceiverPdu.h" />
+    <ClInclude Include="NodeRectangle2D.h" />
+    <ClInclude Include="NodeRectangularTorus.h" />
+    <ClInclude Include="NodeRefinementTexture.h" />
+    <ClInclude Include="NodeRemoteSelectionGroup.h" />
+    <ClInclude Include="NodeRenderedTexture.h" />
+    <ClInclude Include="NodeRigidBody.h" />
+    <ClInclude Include="NodeRigidBodyCollection.h" />
+    <ClInclude Include="NodeScalarChaser.h" />
+    <ClInclude Include="NodeScalarDamper.h" />
+    <ClInclude Include="NodeScalarInterpolator.h" />
+    <ClInclude Include="NodeScreenEffect.h" />
+    <ClInclude Include="NodeScreenFontStyle.h" />
+    <ClInclude Include="NodeScreenGroup.h" />
+    <ClInclude Include="NodeScript.h" />
+    <ClInclude Include="NodeSegmentedVolumeData.h" />
+    <ClInclude Include="NodeShadedVolumeStyle.h" />
+    <ClInclude Include="NodeShaderPart.h" />
+    <ClInclude Include="NodeShaderProgram.h" />
+    <ClInclude Include="NodeShaderTexture.h" />
+    <ClInclude Include="NodeShape.h" />
+    <ClInclude Include="NodeSignalPdu.h" />
+    <ClInclude Include="NodeSilhouetteEnhancementVolumeStyle.h" />
+    <ClInclude Include="NodeSingleAxisHingeJoint.h" />
+    <ClInclude Include="NodeSky.h" />
+    <ClInclude Include="NodeSliderJoint.h" />
+    <ClInclude Include="NodeSlopedCylinder.h" />
+    <ClInclude Include="NodeSnout.h" />
+    <ClInclude Include="NodeSolidOfRevolution.h" />
+    <ClInclude Include="NodeSound.h" />
+    <ClInclude Include="NodeSpaceSensor.h" />
+    <ClInclude Include="NodeSphere.h" />
+    <ClInclude Include="NodeSphereSegment.h" />
+    <ClInclude Include="NodeSphereSensor.h" />
+    <ClInclude Include="NodeSplinePositionInterpolator.h" />
+    <ClInclude Include="NodeSplinePositionInterpolator2D.h" />
+    <ClInclude Include="NodeSplineScalarInterpolator.h" />
+    <ClInclude Include="NodeSpotLight.h" />
+    <ClInclude Include="NodeSquadOrientationInterpolator.h" />
+    <ClInclude Include="NodeStaticGroup.h" />
+    <ClInclude Include="NodeSteeringWheel.h" />
+    <ClInclude Include="NodeStippleVolumeStyle.h" />
+    <ClInclude Include="NodeStringSensor.h" />
+    <ClInclude Include="NodeSuperEllipsoid.h" />
+    <ClInclude Include="NodeSuperExtrusion.h" />
+    <ClInclude Include="NodeSuperRevolver.h" />
+    <ClInclude Include="NodeSuperShape.h" />
+    <ClInclude Include="NodeSurfaceEmitter.h" />
+    <ClInclude Include="NodeSurfaceShaderTexture.h" />
+    <ClInclude Include="NodeSwitch.h" />
+    <ClInclude Include="NodeTeapot.h" />
+    <ClInclude Include="NodeTexCoordChaser2D.h" />
+    <ClInclude Include="NodeTexCoordDamper2D.h" />
+    <ClInclude Include="NodeText.h" />
+    <ClInclude Include="NodeText3D.h" />
+    <ClInclude Include="NodeTextureBackground.h" />
+    <ClInclude Include="NodeTextureCoordinate.h" />
+    <ClInclude Include="NodeTextureCoordinate3D.h" />
+    <ClInclude Include="NodeTextureCoordinate4D.h" />
+    <ClInclude Include="NodeTextureCoordinateGenerator.h" />
+    <ClInclude Include="NodeTextureProperties.h" />
+    <ClInclude Include="NodeTextureTransform.h" />
+    <ClInclude Include="NodeTextureTransform3D.h" />
+    <ClInclude Include="NodeTextureTransformMatrix3D.h" />
+    <ClInclude Include="NodeTimeSensor.h" />
+    <ClInclude Include="NodeTimeTrigger.h" />
+    <ClInclude Include="NodeToneMappedVolumeStyle.h" />
+    <ClInclude Include="NodeTorus.h" />
+    <ClInclude Include="NodeTouchSensor.h" />
+    <ClInclude Include="NodeTransform.h" />
+    <ClInclude Include="NodeTransformSensor.h" />
+    <ClInclude Include="NodeTransmitterPdu.h" />
+    <ClInclude Include="NodeTriangleFanSet.h" />
+    <ClInclude Include="NodeTriangleSet.h" />
+    <ClInclude Include="NodeTriangleSet2D.h" />
+    <ClInclude Include="NodeTriangleStripSet.h" />
+    <ClInclude Include="NodeTrimmedSurface.h" />
+    <ClInclude Include="NodeTUIButton.h" />
+    <ClInclude Include="NodeTUIComboBox.h" />
+    <ClInclude Include="NodeTUIFloatSlider.h" />
+    <ClInclude Include="NodeTUIFrame.h" />
+    <ClInclude Include="NodeTUILabel.h" />
+    <ClInclude Include="NodeTUIListBox.h" />
+    <ClInclude Include="NodeTUIMap.h" />
+    <ClInclude Include="NodeTUIProgressBar.h" />
+    <ClInclude Include="NodeTUISlider.h" />
+    <ClInclude Include="NodeTUISplitter.h" />
+    <ClInclude Include="NodeTUITab.h" />
+    <ClInclude Include="NodeTUITabFolder.h" />
+    <ClInclude Include="NodeTUIToggleButton.h" />
+    <ClInclude Include="NodeTwoSidedMaterial.h" />
+    <ClInclude Include="NodeUniform.h" />
+    <ClInclude Include="NodeUniversalJoint.h" />
+    <ClInclude Include="NodeVectorInterpolator.h" />
+    <ClInclude Include="NodeVehicle.h" />
+    <ClInclude Include="NodeViewfrustum.h" />
+    <ClInclude Include="NodeViewpoint.h" />
+    <ClInclude Include="NodeViewpointGroup.h" />
+    <ClInclude Include="NodeViewport.h" />
+    <ClInclude Include="NodeVirtualAcoustics.h" />
+    <ClInclude Include="NodeVirtualSoundSource.h" />
+    <ClInclude Include="NodeVisibilitySensor.h" />
+    <ClInclude Include="NodeVolumeData.h" />
+    <ClInclude Include="NodeVolumeEmitter.h" />
+    <ClInclude Include="NodeVolumePickSensor.h" />
+    <ClInclude Include="NodeVrmlCut.h" />
+    <ClInclude Include="NodeVrmlScene.h" />
+    <ClInclude Include="NodeWave.h" />
+    <ClInclude Include="NodeWindPhysicsModel.h" />
+    <ClInclude Include="NodeWonderlandImportJava.h" />
+    <ClInclude Include="NodeWorldInfo.h" />
+    <ClInclude Include="NurbsArc.h" />
+    <ClInclude Include="NurbsCurve2NurbsSurfDialog.h" />
+    <ClInclude Include="NurbsCurveDegreeElevate.h" />
+    <ClInclude Include="NurbsCurveDialog.h" />
+    <ClInclude Include="NurbsMakeRevolvedSurface.h" />
+    <ClInclude Include="NurbsPlaneDialog.h" />
+    <ClInclude Include="PanedWindow.h" />
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="Path.h" />
+    <ClInclude Include="pngLoad.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="Previewer.h" />
+    <ClInclude Include="PreviewSettingsDialog.h" />
+    <ClInclude Include="Proto.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="QuatTypes.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="RenderState.h" />
+    <ClInclude Include="RouteCommand.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Scene3DView.h" />
+    <ClInclude Include="SceneGraphView.h" />
+    <ClInclude Include="SceneTreeView.h" />
+    <ClInclude Include="SceneView.h" />
+    <ClInclude Include="ScriptDialog.h" />
+    <ClInclude Include="ScriptEdit.h" />
+    <ClInclude Include="SFBool.h" />
+    <ClInclude Include="SFBoolItem.h" />
+    <ClInclude Include="SFColor.h" />
+    <ClInclude Include="SFDouble.h" />
+    <ClInclude Include="SFFloat.h" />
+    <ClInclude Include="SFImage.h" />
+    <ClInclude Include="SFInt32.h" />
+    <ClInclude Include="SFMFTypes.h" />
+    <ClInclude Include="SFNode.h" />
+    <ClInclude Include="SFRotation.h" />
+    <ClInclude Include="SFString.h" />
+    <ClInclude Include="SFTime.h" />
+    <ClInclude Include="SFVec2f.h" />
+    <ClInclude Include="SFVec3f.h" />
+    <ClInclude Include="Sphere2NurbsDialog.h" />
+    <ClInclude Include="Stack.h" />
+    <ClInclude Include="StatusBar.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="String.h" />
+    <ClInclude Include="TexteditSettingsDialog.h" />
+    <ClInclude Include="ToolbarWindow.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="UnRouteCommand.h" />
+    <ClInclude Include="URL.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="Vec2f.h" />
+    <ClInclude Include="Vec3f.h" />
+    <ClInclude Include="xerrorhandler.h" />
+    <ClInclude Include="y.tab.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\channel_.bmp" />
+    <Image Include="res\dune.ico" />
+    <Image Include="res\DuneDoc.ico" />
+    <Image Include="Res\dune_icon.bmp" />
+    <Image Include="Res\dune_icon_mask.bmp" />
+    <Image Include="Res\dune_icon_small.bmp" />
+    <Image Include="Res\dune_icon_small_mask.bmp" />
+    <Image Include="res\emptySocketRound.bmp" />
+    <Image Include="res\emptySocketSquare.bmp" />
+    <Image Include="res\fullSocketRound.bmp" />
+    <Image Include="res\fullSocketSquare.bmp" />
+    <Image Include="res\halftone.bmp" />
+    <Image Include="res\node_icons.bmp" />
+    <Image Include="res\standard_toolbar.bmp" />
+    <Image Include="res\Toolbar.bmp" />
+    <Image Include="res\transform_mode.bmp" />
+    <Image Include="res\vcr.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dune.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

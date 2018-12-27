@@ -1,0 +1,448 @@
+#VRML V2.0 utf8
+
+PROTO SuperEllipsoid
+#
+# works at least with SGI Cosmo Player 2.1.5, cc3dglut 4.3
+#
+# A VRML Proto to account the data of a SuperEllipsoid shape with scripting
+# (slow)
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+#
+# exampe use
+#
+# EXTERNPROTO SuperEllipsoid
+#   [
+#   exposedField SFFloat n1 
+#   exposedField SFFloat n2 
+#   exposedField SFFloat border
+#   field SFBool bottom
+#   exposedField SFFloat bottomBorder
+#   field SFBool ccw
+#   field SFFloat creaseAngle
+#   field SFBool solid
+#   exposedField SFVec3f size
+#   field SFBool solid
+#   exposedField SFNode texCoord
+#   field SFBool top
+#   exposedField SFInt32 uTessellation 
+#   exposedField SFInt32 vTessellation 
+#   ]
+# [
+# "SuperEllipsoidPROTO.wrl"
+# ]
+# Shape 
+#   {
+#   appearance Appearance 
+#      {
+#      material Material 
+#	  {
+#	  }
+#      }
+#   geometry SuperEllipsoid 
+#     {
+#     }
+#   }
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+# Cambridge, MA 02139, USA.
+#
+   [
+   exposedField SFFloat n1 1
+   exposedField SFFloat n2 1
+   exposedField SFFloat border 1.57079632679489661923
+   field SFBool bottom FALSE
+   exposedField SFFloat bottomBorder -1.57079632679489661923
+   field SFBool ccw FALSE
+   field SFFloat creaseAngle 0.78539816339744830962
+   exposedField SFVec3f size 1 1 1
+   field SFBool solid FALSE
+# the FreeWrl browser do not accept the exposedField in connection with the IS
+# in the later IndexedFaceSet, so field is used instead
+#   exposedField SFNode texCoord NULL
+   field SFNode texCoord NULL
+   field SFBool top FALSE
+   exposedField SFInt32 uTessellation 0
+   exposedField SFInt32 vTessellation 0
+   ]
+{
+    DEF IndexedFaceSet1 IndexedFaceSet 
+      {
+      coord DEF Coordinate1 Coordinate 
+        {
+        }
+      creaseAngle IS creaseAngle
+      solid IS solid
+      ccw IS ccw
+      texCoord IS texCoord
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF N1_CONTAINER TextureTransform 
+              {
+              rotation IS n1
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF N2_CONTAINER  TextureTransform 
+              {
+              rotation IS n2
+              }
+            }
+          }
+        ]
+      }
+
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF BORDER_CONTAINER TextureTransform 
+              {
+              rotation IS border
+              }
+            }
+          }
+        ]
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        Shape 
+          {
+          appearance       Appearance 
+            {
+            textureTransform DEF BOTTOM_BORDER_CONTAINER TextureTransform 
+              {
+              rotation IS bottomBorder
+              }
+            }
+          }
+        ]
+      }
+    
+    DEF UTESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS uTessellation
+      }
+    
+    DEF VTESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS vTessellation
+      }
+    
+    Switch 
+      {
+      choice 
+        [
+        DEF SIZE_CONTAINER Transform 
+          {
+          translation IS size
+          }
+        ]
+      }
+
+    DEF Script1 Script 
+      {
+      eventOut MFInt32 coordindex_out
+      eventOut MFVec3f vertices_out
+      eventIn SFFloat n1_in 
+      field SFFloat n1 1
+      eventIn SFFloat n2_in 
+      field SFFloat n2 1
+      eventIn SFInt32 uTessellation_in 
+      field SFInt32 uTessellation 0
+      eventIn SFInt32 vTessellation_in 
+      field SFInt32 vTessellation 0
+      field SFFloat border 1.57079632679489661923
+      eventIn SFFloat border_in
+      field SFBool bottom IS bottom
+      field SFFloat bottomBorder -1.57079632679489661923
+      eventIn SFFloat bottomBorder_in
+      field SFVec3f size 1 1 1
+      eventIn SFVec3f size_in
+      field SFBool top IS top
+
+      field MFFloat s1xy []
+      field MFFloat s1z []
+      field MFFloat s2x []
+      field MFFloat s2y []
+      field MFInt32 ci []
+      field MFVec3f vert []
+      field SFNode n1Container USE N1_CONTAINER
+      field SFNode n2Container USE N2_CONTAINER
+      field SFNode uTessContainer USE UTESSELLATION_CONTAINER
+      field SFNode vTessContainer USE VTESSELLATION_CONTAINER
+      field SFNode bottomBorderContainer USE BOTTOM_BORDER_CONTAINER
+      field SFNode borderContainer USE BORDER_CONTAINER
+      field SFNode sizeContainer USE SIZE_CONTAINER
+      field SFFloat EPSILON 1e-6
+      field SFInt32 defaultTessellation 32
+      url 
+        [
+        "javascript:
+    
+     // field SFInt32 uTessellation //
+     // field SFInt32 vTessellation //
+    
+     // field SFFloat n1 //
+     // field SFFloat n2 //
+    
+     // eventOut MFInt32 coordindex_out //
+     // eventOut MFVec3f vertices_out //
+    
+
+     function cossign(f)
+        {
+        // range -PI to PI
+        if ((f < Math.PI/2.0 + EPSILON) && (f > Math.PI/2.0 - EPSILON))
+            return 0;
+        if (f > Math.PI/2.0)
+            return -1;
+        if ((f < -Math.PI/2.0 + EPSILON) && (f > -Math.PI/2.0 - EPSILON))
+            return 0;
+        if (f > -Math.PI/2.0)
+            return 1;
+        // -PI < x < -PI/2
+        return -1;
+        }
+
+     function sinsign(f)
+        {
+        // range -PI to PI
+        if ((f < Math.PI + EPSILON) && (f > Math.PI - EPSILON))
+            return 0;
+        if (f > Math.PI)
+            return -1;
+        if ((f < 0 + EPSILON) && (f > 0 - EPSILON))
+            return 0;
+        if (f > 0)
+            return 1;
+        if ((f < -Math.PI + EPSILON) && (f > -Math.PI - EPSILON))
+            return 0;
+        if (f < -Math.PI)
+            return 1;
+        // -PI < x < 0
+        return -1;
+        }
+    
+     function superellipse1xy(angle1)
+        {
+        c1 = Math.cos(angle1);
+        return cossign(angle1)*Math.pow(Math.abs(c1),n2);
+        }
+    
+     function superellipse1z(angle1)
+        {
+        s1 = Math.sin(angle1);
+        return sinsign(angle1)*Math.pow(Math.abs(s1),n2);
+        }
+    
+     function superellipse2x(angle2)
+        {
+        c2 = Math.cos(angle2);
+        n = n1;
+        if (Math.abs(n) < 1e-15)
+            n = 1e-15;
+        return cossign(angle2)*Math.pow(Math.abs(c2),n);
+        }
+    
+     function superellipse2y(angle2)
+        {
+        s2 = Math.sin(angle2);
+        n = n1;
+        if (Math.abs(n) < 1e-15)
+            n = 1e-15;
+        return sinsign(angle2)*Math.pow(Math.abs(s2),n);
+        }
+    
+     function account()
+        {
+        uTess=(uTessellation==0)?defaultTessellation+1:uTessellation+1;
+        vTess=(vTessellation==0)?defaultTessellation+1:vTessellation+1;
+        needTop=top;
+        if (border==(Math.PI/2.0))
+            needTop=false;
+        needBottom=bottom;
+        if (bottomBorder==(-Math.PI/2.0))
+            needBottom=false;
+        low=bottomBorder;
+        high=border;
+        if (high<low) 
+           {
+           temp=high;
+           high=low;
+           low=temp;
+           }
+        inc1=(high-low)/(uTess-1);
+        inc2=Math.PI/(vTess-1)*2.0;
+        ci=new MFInt32();
+        vert=new MFVec3f();
+        index=0;
+        cindex=0;
+        for (a1=0;a1<uTess;a1++)
+           {
+           angle1=low+a1*inc1;
+           s1xy[a1]=superellipse1xy(angle1);
+           s1z[a1]=superellipse1z(angle1);
+           }
+        for (a2=0;a2<vTess;a2++)
+           {
+           angle2=-Math.PI+a2*inc2;
+           s2x[a2]=superellipse2x(angle2);
+           s2y[a2]=superellipse2y(angle2);
+           }
+        for (a2=0;a2<vTess;a2++)
+           for (a1=0;a1<uTess;a1++)
+              {
+              vert[index]=new SFVec3f(size[0]*s1xy[a1]*s2y[a2],
+                                      size[1]*s1z[a1],
+                                      size[2]*s1xy[a1]*s2x[a2]);
+              index++;
+              c2=a2+1;
+              if (a2==(vTess-1))
+                 c2=0;
+              c1=a1+1;
+              if (a1<(uTess-1))
+                 {
+                 ci[cindex++]=c1*vTess+a2;
+                 ci[cindex++]=c1*vTess+c2;
+                 ci[cindex++]=a1*vTess+c2;
+                 ci[cindex++]=a1*vTess+a2;
+                 ci[cindex++]=-1;
+                 }
+              }
+        if (needTop) 
+           {
+           vert[index]=new SFVec3f(0,size[1]*s1z[uTess-1],0);
+           for (a2=0;a2<vTess-1;a2++) 
+              {
+              ci[cindex++]=index;           
+              ci[cindex++]=index-1-a2;
+              ci[cindex++]=index-2-a2;
+              ci[cindex++]=-1;
+              }
+           index++;
+           }
+        if (needBottom) 
+           {
+           vert[index]=new SFVec3f(0,size[1]*s1z[0],0);
+           for (a2=0;a2<vTess-1;a2++) 
+              {
+              ci[cindex++] = index;           
+              ci[cindex++] = a2;
+              ci[cindex++] = a2 + 1;
+              ci[cindex++] = -1;
+              }
+           index++;
+           }
+        vertices_out=vert;
+        coordindex_out=ci;
+        }
+    
+     function initialize()
+        {
+        n1=n1Container.rotation;
+        n2=n2Container.rotation;
+        uTessellation=uTessContainer.whichChoice;
+        vTessellation=vTessContainer.whichChoice;
+        bottomBorder=bottomBorderContainer.rotation;
+        border=borderContainer.rotation;
+        size=sizeContainer.translation;
+        account();
+        }
+    
+     function n1_in(value)
+        {
+        n1 = value;
+        account();
+        }
+    
+     function n2_in(value)
+        {
+        n2 = value;
+        account();
+        }
+    
+     function border_in(value)
+        {
+        border = value;
+        account();
+        }
+
+     function bottomBorder_in(value)
+        {
+        bottomBorder = value;
+        account();
+        }
+
+     function size_in(value)
+        {
+        size = value;
+        account();
+        }
+
+     function uTessellation_in(value)
+        {
+        uTessellation = value;
+        account();
+        }
+    
+     function vTessellation_in(value)
+        {
+        vTessellation = value;
+        account();
+        }
+    "
+        ]
+      }
+
+ROUTE N1_CONTAINER.rotation TO Script1.n1_in
+ROUTE N2_CONTAINER.rotation TO Script1.n2_in
+    
+ROUTE BORDER_CONTAINER.rotation TO Script1.border_in
+ROUTE BOTTOM_BORDER_CONTAINER.rotation TO Script1.bottomBorder_in
+
+ROUTE SIZE_CONTAINER.translation TO Script1.size_in
+
+ROUTE UTESSELLATION_CONTAINER.whichChoice TO Script1.uTessellation_in
+ROUTE VTESSELLATION_CONTAINER.whichChoice TO Script1.vTessellation_in
+    
+ROUTE Script1.vertices_out TO Coordinate1.set_point
+ROUTE Script1.coordindex_out TO IndexedFaceSet1.set_coordIndex
+}

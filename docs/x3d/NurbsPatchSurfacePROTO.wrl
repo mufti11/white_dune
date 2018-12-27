@@ -1,0 +1,455 @@
+#VRML V2.0 utf8
+
+PROTO NurbsPatchSurface  
+#
+# use with SGI cosmoplayer Cosmo Player 2.1.5 (browserdependend ?)
+#
+# Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
+# Copyright (C) 1999 Stephen F. White
+#
+# PROTO interface and javascript port
+# Copyright (C) 2003 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+   [
+   exposedField MFVec3f controlPoint    []     # (&infin;,&infin;)
+   exposedField SFNode  texCoord        NULL
+
+   exposedField SFInt32 uTessellation   0      # (-&infin;,&infin;)
+   exposedField SFInt32 vTessellation   0      # (-&infin;,&infin;)
+   exposedField MFFloat weight          []     # (0,&infin;)
+
+   field        SFBool  solid           TRUE
+   field        SFBool  ccw             TRUE
+   field        SFInt32 uDimension      0      # [0,&infin;)
+   field        MFFloat uKnot           []     # (-&infin;,&infin;)
+   field        SFInt32 uOrder          3      # [2,&infin;) 
+   field        SFBool  uClosed         FALSE
+   field        SFInt32 vDimension      0      # [0,&infin;)
+   field        MFFloat vKnot           []     # (-&infin;,&infin;)
+   field        SFInt32 vOrder          3      # [2,&infin;)
+   field        SFBool  vClosed         FALSE
+   ]
+{
+DEF NURBS_INDEXED_FACE_SET IndexedFaceSet
+  {
+  solid IS solid
+  ccw IS ccw
+  creaseAngle 1.57
+  coord Coordinate { point [] }
+  coordIndex []
+  normal Normal { vector [] }
+  texCoord TextureCoordinate { point [] }
+  } 
+
+# nodes switched off, not rendered cause not part of the scenegraph anyway ....
+Switch 
+  {
+  choice 
+    [
+    Shape 
+      {
+      geometry PointSet 
+	{
+        coord DEF NURBS_CONTROLPOINT_CONTAINER 
+              Coordinate { point IS controlPoint } 
+	}
+      }
+    DEF NURBS_UTESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS uTessellation
+      }
+    DEF NURBS_VTESSELLATION_CONTAINER Switch 
+      {
+      whichChoice IS vTessellation
+      }
+    DEF NURBS_WEIGHT_CONTAINER ScalarInterpolator
+      {
+      # same number of key and keyvalue....
+      key IS weight
+      keyValue IS weight
+      }
+    Shape 
+      {
+      geometry DEF NURBS_TEXCOORD_CONTAINER PointSet 
+	{
+        coord IS texCoord
+	}
+      }
+    ]
+  }
+
+DEF NURBS_SCRIPT Script 
+  {
+  directOutput TRUE  
+  field SFNode mesh USE NURBS_INDEXED_FACE_SET
+
+  field SFNode controlPoint_container USE NURBS_CONTROLPOINT_CONTAINER
+  eventIn MFVec3f controlPoint_in
+  eventOut MFVec3f controlPoint_out 
+  field MFVec3f controlPoint [] 
+
+  field SFNode texCoord_container USE NURBS_TEXCOORD_CONTAINER
+  eventIn SFNode texCoord_in 
+  eventOut SFNode texCoord_out 
+  field SFNode texCoord NULL
+
+  field SFNode uTessellation_container USE NURBS_UTESSELLATION_CONTAINER
+  eventIn SFInt32 uTessellation_in 
+  eventOut SFInt32 uTessellation_out 
+  field SFInt32 uTessellation 0
+
+  field SFNode vTessellation_container USE NURBS_VTESSELLATION_CONTAINER
+  eventIn SFInt32 vTessellation_in 
+  eventOut SFInt32 vTessellation_out 
+  field SFInt32 vTessellation 0
+
+  field SFNode weight_container USE NURBS_WEIGHT_CONTAINER
+  eventIn MFFloat weight_in
+  eventOut MFFloat weight_out
+  field MFFloat weight []
+
+  field SFInt32 uDimension IS uDimension
+  field SFInt32 vDimension IS vDimension
+  field MFFloat uKnot IS uKnot
+  field MFFloat vKnot IS vKnot
+  field SFInt32 uOrder IS uOrder
+  field SFInt32 vOrder IS vOrder
+  field SFBool ccw IS ccw
+
+  field MFFloat weights []
+  field MFVec3f tess []
+  field MFVec3f normals []
+  field MFFloat w []
+  field MFVec2f tc []
+  field MFInt32 ci []
+
+  field MFFloat uBasis []
+  field MFFloat vBasis []
+  field MFFloat uDeriv []
+  field MFFloat vDeriv []
+
+  field SFVec3f S 0 0 0
+  field SFVec3f du 0 0 0
+  field SFVec3f dv 0 0 0
+
+  field SFVec3f un 0 0 0
+  field SFVec3f vn 0 0 0
+
+  field MFFloat left []
+  field MFFloat right []
+  url 
+    [
+    "javascript:
+
+    function findSpan(dimension, order, u, knots)
+       {
+       var low;
+       var mid;
+       var high;
+       var n;
+
+       n = dimension + order - 1;
+
+       if (u >= knots[n]) {
+	  return n - order;
+       }
+       low = order - 1;	high = n - order + 1;
+
+       mid = (low + high) / 2;
+
+       while (u < knots[mid] || u >= knots[mid+1]) {
+	   if (u < knots[mid]) {
+	      high = mid;
+	   } else {
+	      low = mid;
+	   }
+	   mid = (low+high)/2;
+       }
+       return Math.floor(mid);
+    }
+
+    function basisFuns(span, u, order, knots, basis, deriv)
+       {
+       var j;
+       var saved;
+       var dsaved;
+       var r;
+       var temp;
+
+       basis[0] = 1.0;
+       for (j = 1; j < order; j++) {
+	   left[j] = u - knots[span+1-j];
+	   right[j] = knots[span+j]-u;
+	   saved = 0.0;
+           dsaved = 0.0;
+	   for (r = 0; r < j; r++) {
+	       temp = basis[r] / (right[r+1] + left[j-r]);
+	       basis[r] = saved + right[r+1] * temp;
+	       deriv[r] = dsaved - j * temp;
+	       saved = left[j-r] * temp;
+	       dsaved = j * temp;
+	   }
+	   basis[j] = saved;
+	   deriv[j] = dsaved;
+       }
+    }
+
+
+    function surfacePoint(weight,u,v,normal,ind)
+       {
+       var i;
+       var j;
+
+       var uSpan;
+       var vSpan;
+
+       var uBase;
+       var vBase;
+
+       var index;
+
+       var w;
+       var duw;
+       var duv;
+
+       var gain;
+       var dugain;
+       var dvgain;
+
+       uSpan = findSpan(uDimension, uOrder, u, uKnot);
+       vSpan = findSpan(vDimension, vOrder, v, vKnot);
+
+       basisFuns(uSpan, u, uOrder, uKnot, uBasis, uDeriv);
+       basisFuns(vSpan, v, vOrder, vKnot, vBasis, vDeriv);
+
+       uBase = uSpan-uOrder+1;
+       vBase = vSpan-vOrder+1;
+
+       index = vBase*uDimension + uBase;
+
+       S=new SFVec3f(0.0, 0.0, 0.0);
+       du=new SFVec3f(0.0, 0.0, 0.0);
+       dv=new SFVec3f(0.0, 0.0, 0.0);
+       w = 0.0;
+       duw = 0.0;
+       dvw = 0.0;
+       for (j = 0; j < vOrder; j++) {
+	   for (i = 0; i < uOrder; i++) {
+	       gain = uBasis[i] * vBasis[j];
+	       dugain = uDeriv[i] * vBasis[j];
+	       dvgain = uBasis[i] * vDeriv[j];
+	       S.x += controlPoint[index].x * gain;
+	       S.y += controlPoint[index].y * gain;
+	       S.z += controlPoint[index].z * gain;
+	       w += weight[index] * gain;
+	       du.x += controlPoint[index].x * dugain;
+	       du.y += controlPoint[index].y * dugain;
+	       du.z += controlPoint[index].z * dugain;
+	       dv.x += controlPoint[index].x * dvgain;
+	       dv.y += controlPoint[index].y * dvgain;
+	       dv.z += controlPoint[index].z * dvgain;
+	       duw += weight[index] * dugain;
+	       dvw += weight[index] * dvgain;
+	       index++;
+	   }
+	   index += uDimension - uOrder;
+       }
+       S.x = S.x / w;
+       S.y = S.y / w;
+       S.z = S.z / w;
+       un.x = (du.x - S.x * duw) / w;
+       un.y = (du.y - S.y * duw) / w;
+       un.z = (du.z - S.z * duw) / w;
+       vn.x = (dv.x - S.x * dvw) / w;
+       vn.y = (dv.y - S.y * dvw) / w;
+       vn.z = (dv.z - S.z * dvw) / w;
+       normal[ind] = un.cross(vn);
+       normal[ind].normalize();
+       return S;
+       }
+
+    function makeMesh()
+       {
+       var size;
+       var i;
+       var j;
+       var index;
+       var u;
+       var v;
+       var uinv;
+       var vinv;
+       var uInc;
+       var vInc;
+       var uTess;        
+       var vTess;        
+
+       index=0;
+
+       weights = new MFFloat();
+   
+       if (uDimension == 0 || vDimension == 0) return;
+   
+       if (uKnot.length != uOrder + uDimension) {
+           print('no NurbsSurface: uKnot.length!=uOrder+uDimension');
+           return;
+       }
+       if (vKnot.length != vOrder + vDimension) {
+           print('no NurbsSurface: vKnot.length!=vOrder+vDimension');
+           return;
+       }
+   
+       if (controlPoint.length != uDimension * vDimension) {
+           print('no NurbsSurface: controlPoint.length!=uDimension*vDimension');
+           return;
+       }
+
+       if (weight.length == 0) {
+   	   weights = new MFFloat();
+   	   for (i = 0; i < uDimension * vDimension; i++) {
+   	        weights[i] = 1.0;
+   	   }
+       } else if (weight.length != uDimension * vDimension) {
+           print('no NurbsSurface: weight.length!=uDimension*vDimension');
+   	   return;
+       }
+   
+       uTess=uTessellation;
+       vTess=vTessellation;
+
+// from the orignal white_dune sources
+//       if (uTess <= 0) uTess = 32;
+//       if (vTess <= 0) vTess = 32;
+
+// changed to increase performance
+       if (uTess <= 0) uTess = 16;
+       if (vTess <= 0) vTess = 16;
+
+       tess = new MFVec3f();
+       normals = new MFVec3f();
+
+       size = (uTess + 1) * (vTess + 1);
+   
+       uInc = (uKnot[uKnot.length-1] - uKnot[0]) / uTess;
+       vInc = (vKnot[vKnot.length-1] - vKnot[0]) / vTess;
+   
+       index = 0;
+       w = (weight.length == 0) ? weights : weight;
+       for (j = 0, v = vKnot[0]; j <= vTess; j++, v += vInc) {
+   	    for (i = 0, u = uKnot[0]; i <= uTess; i++, u += uInc) {
+   	         tess[index] = surfacePoint(w,u,v,normals,index);
+   	         if (!ccw) {
+                    normals[index].x = -normals[index].x;
+                    normals[index].y = -normals[index].y;
+                    normals[index].z = -normals[index].z;
+                 }
+   	         index++;
+   	    }
+       }
+   
+       index = 0;
+       tc = new MFVec2f();
+       uinv = 1.0 / uTess;
+       vinv = 1.0 / vTess;
+       for (j = 0; j <= vTess; j++) {
+   	    for (i = 0; i <= uTess; i++) {
+   	        tc[index++] = new SFVec2f(i * uinv, j * vinv);
+   	    }
+       }
+       ci = new MFInt32();
+       index = 0;
+       for (j = 0; j < vTess; j++) {
+           for (i = 0; i < uTess; i++) {
+   	       ci[index++] = j * (uTess+1) + i;
+   	       ci[index++] = j * (uTess+1) + (i+1);
+   	       ci[index++] = (j+1) * (uTess+1) + (i+1);
+   	       ci[index++] = (j+1) * (uTess+1) + i;
+               ci[index++] = -1;
+           }
+       }
+   
+       mesh.coord.set_point=tess;
+       mesh.set_coordIndex=ci;
+       mesh.normal.vector=normals;
+       if (texCoord == null) {
+           mesh.texCoord.set_point=tc;
+           
+       } else
+           mesh.texCoord=texCoord;
+    }
+
+    function initialize()
+       {
+       controlPoint=controlPoint_container.point;
+       weight=weight_container.key;
+       uTessellation=uTessellation_container.whichChoice;
+       vTessellation=vTessellation_container.whichChoice;
+       texCoord=texCoord_container.coord;
+       makeMesh();
+       }
+
+    function controlPoint_in(value, time)
+       {
+       controlPoint=value;
+       controlPoint_out=value;
+       makeMesh();
+       }    
+
+    function weight_in(value, time)
+       {
+       weight=value;
+       weight_out=value;
+       makeMesh();
+       }
+    
+    function uTessellation_in(value, time)
+       {
+       uTessellation=value;
+       uTessellation_out=value;
+       makeMesh();
+       }
+    
+    function vTessellation_in(value, time)
+       {
+       vTessellation=value;
+       vTessellation_out=value;
+       makeMesh();
+       }
+    
+    function texCoord_in(value, time)
+       {
+       texCoord=value;
+       texCoord_out=value;
+       makeMesh();
+       }
+    "
+   ]
+   }
+
+   ROUTE NURBS_CONTROLPOINT_CONTAINER.point TO NURBS_SCRIPT.controlPoint_in
+   ROUTE NURBS_WEIGHT_CONTAINER.keyValue TO NURBS_SCRIPT.weight_in
+   ROUTE NURBS_UTESSELLATION_CONTAINER.whichChoice TO NURBS_SCRIPT.uTessellation_in
+   ROUTE NURBS_VTESSELLATION_CONTAINER.whichChoice TO NURBS_SCRIPT.vTessellation_in
+   ROUTE NURBS_TEXCOORD_CONTAINER.coord TO NURBS_SCRIPT.texCoord_in
+
+   ROUTE NURBS_SCRIPT.controlPoint_out TO NURBS_CONTROLPOINT_CONTAINER.point
+   ROUTE NURBS_SCRIPT.weight_out TO NURBS_WEIGHT_CONTAINER.keyValue
+   ROUTE NURBS_SCRIPT.uTessellation_out TO NURBS_UTESSELLATION_CONTAINER.whichChoice
+   ROUTE NURBS_SCRIPT.vTessellation_out TO NURBS_VTESSELLATION_CONTAINER.whichChoice
+   ROUTE NURBS_SCRIPT.texCoord_out TO NURBS_TEXCOORD_CONTAINER.coord
+}
+    

@@ -1,0 +1,37 @@
+#VRML V2.0 utf8
+
+PROTO NurbsTextureSurface
+#
+# provisional version, nothing is rendered
+#
+# Copyright (C) 2004 J. "MUFTI" Scheurich
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+[
+field         SFInt32   uDimension    0     # [0,) 
+field         SFInt32   vDimension    0     # [0,)
+field         MFFloat   uKnot         []    # (-,)
+field         MFFloat   vKnot         []    # (-,)
+field         SFInt32   uOrder        3     # [2,)
+field         SFInt32   vOrder        3     # [2,)
+exposedField  MFVec2f   controlPoint  []    # (-,)
+exposedField  MFFloat   weight        []    # (0,)
+]
+{
+    TextureCoordinate {}
+}
+

@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * Copyright (C) 2007 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<head>
+ <title>Using ISO/IEC14772-1:1997/Amd. 1:2002(E) NurbsSurface with cosmoplayer</title> 
+</head> 
+<body>
+<ul>
+ <li>
+  <h3><a href="#nurbs">What are Nurbs ?</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#browser">My browser do not understand "NurbsSurface"</a></h3> 
+ </li>
+</ul>
+<h2><a name="nurbs">What are Nurbs ?</a></h2>
+<p> 
+  NURBS means "Non-Uniform Rational B-Splines". 
+  In short, NURBS can be used to build rounded faces by transfering 
+  only very few data. A mathematical formula is used to construct the faces.
+</p>
+<h2><a name="browser">My browser do not understand "NurbsSurface"</a></h2>
+<p> 
+NurbsSurface (and other Nurbs objects) are part of the  
+<a href=http://www.web3d.org/x3d/specifications/vrml/vrml97am1/fdam/index.html>
+ISO/IEC14772-1:1997/Amd. 1:2002(E) VRML standard</a>. Some VRML97 browsers like 
+cc3d or cortona already have the NurbsSurface Node available, while most 
+other browsers
+do not support it yet.<br><br>
+White_dune support the VRML Amendment 1 NurbsSurface, but this would be useless 
+for other browsers.<br><br>
+For the Cosmo Player browser (at least the version 2.1.5 on IRIX and 
+and the version 2.1.1 on M$Windows), it is possible to use 
+a <a href=NurbsSurfacePROTO.wrl>NurbsSurface PROTO</a> written in 
+javascript to make use of the NurbsSurface node (texCoord not supported yet).
+<br><br>
+To view NurbsSurface nodes with the Cosmo Player browser 
+you need to include this <a href=NurbsSurface.wrl>EXTERNPROTO declaration 
+</a>in your VRML file (e.g. by using File -> import in white_dune).<br>
+Other Browsers with NurbsSurface support will fall back to their 
+own (very much faster) implementation.
+<br><br>
+<a href=NurbsSurface_example.wrl>Click here</a> (and be patient till 
+the accounting is ready) if you have the Cosmo Player browser 
+(at least the version 2.1.5 on IRIX or version 2.1.1 on M$Windows work)
+to see a example of the usage of the NurbsSurface EXTERNPROTO.
+</p>
+</body>
+

@@ -1,0 +1,52 @@
+#VRML V2.0 utf8
+
+DEF Transform1 Transform {
+  translation 0 -1.129925e-2 0
+  children 
+    Shape {
+      appearance Appearance {
+      }
+      geometry Sphere {
+      }
+    }
+}
+
+DEF Script1 Script {
+  eventIn SFRotation rotation1_in
+  eventOut SFVec3f vec3f1_out
+  url [
+    "javascript:
+
+// insert program code only into functions
+
+ // eventOut SFVec3f vec3f1_out //
+
+ function rotation1_in(value)
+    {
+    // value  SFRotation
+    vec3f1_out[0] = value[3];
+    }
+
+"
+    "x3domscript:
+
+// insert program code only into functions
+
+ function rotation1_in(event)
+    {
+    var value = event.value;
+    var n = new x3dom.fields.SFVec3f(value.w, 0, 0);
+    document.getElementById('Transform1').setAttribute('translation', n);
+    }
+
+"
+  ]
+}
+
+ROUTE Script1.vec3f1_out TO Transform1.set_translation
+
+DEF CylinderSensor1 CylinderSensor {
+}
+
+ROUTE CylinderSensor1.rotation_changed TO Script1.rotation1_in
+

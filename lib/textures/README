@@ -1,0 +1,77 @@
+The textures in this directory lib/textures are 256x256 in size and are tileable
+
+
+The following files are made from similar named textures in gimp 2.2.8 
+by J. "MUFTI" Scheurich
+
+The gimp-data package has the following copyright:
+
+Copyrights for GIMP-related packages:
+
+gimp
+---------
+Copyright (C) 1995 Spencer Kimball and Peter Mattis
+
+The GIMP may be redistributed under the terms of the GNU GPL,
+Version 2 or later, found on Debian systems in the file 
+/usr/share/common-licenses/GPL
+
+3d_green.jpg
+3d_green_transparent.png
+amethyst.jpg
+big_blue_bright.jpg
+blue_web.jpg
+bricks.jpg
+burlap.jpg
+burlwood.jpg
+cork_board.jpg
+crack.jpg
+craters.jpg
+crinkled_paper.jpg
+dried_mud.jpg
+electric_blue.jpg
+fibers.jpg
+granite1.jpg
+java.jpg
+leather.jpg
+leopard.jpg
+lightning.jpg
+lightning_transparent.png
+maple_leaves.jpg
+maple_leaves_transparent2.png
+maple_leaves_transparent.png
+nops.jpg
+one_small_step.jpg
+paper.jpg
+parque1.jpg
+parque2.jpg
+parque3.jpg
+pastel_stuff.jpg
+pine.jpg
+pine_questionmark.jpg
+pink_marble.jpg
+pool_bottom.jpg
+rain.jpg
+recessed.jpg
+red_cubes.jpg
+rocks.jpg
+sky.jpg
+slate.jpg
+small_squares.jpg
+stone.jpg
+terra.jpg
+tree_bark.jpg
+walnut.jpg
+warning.jpg
+wood1.jpg
+wood2.jpg
+wood_of_some_sort.jpg
+
+
+The following file is made with povray by J. "MUFTI" Scheurich
+
+This file is free software; the Free Software Foundation
+gives unlimited permission to copy, distribute and modify it.
+
+flow2.jpg
+

@@ -1,0 +1,392 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF NavigationInfo1 NavigationInfo 
+  {
+  avatarSize 
+    [
+    0.250000 
+    1.600000 
+    0.750000 
+    ]
+  type 
+    [
+    "EXAMINE"
+    "ANY"
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    Collision 
+      {
+      children 
+	[
+	Group 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  diffuseColor 1 0 0
+		  emissiveColor 1 0 0
+		  shininess 7.812500e-2
+		  specularColor 0.500000 0.500000 0.500000
+		  }
+		}
+	      geometry 	      IndexedLineSet 
+		{
+		coord 		Coordinate 
+		  {
+		  point 
+		    [
+		    -1 -1 -1 
+		    -1 1 -1 
+		    1 1 -1 
+		    1 -1 -1 
+		    -1 -1 1 
+		    -1 1 1 
+		    1 1 1 
+		    1 -1 1 
+		    ]
+		  }
+		coordIndex 
+		  [
+		  0 1 2 3 0 -1 
+		  6 7 3 2 6 -1 
+		  7 6 5 4 7 -1 
+		  4 5 1 0 4 -1 
+		  1 5 6 2 1 -1 
+		  4 0 3 7 4 -1 
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      collide FALSE
+      }
+    DEF innerProximitySensor1 ProximitySensor 
+      {
+      size 2 2 2
+      }
+    DEF outerProximitySensor1 ProximitySensor 
+      {
+      size 3 3 3
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Sphere 
+	    {
+	    radius 0.1
+	    }
+	  }
+	]
+      }
+    ]
+  }
+
+Viewpoint 
+  {
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFVec3f positionFromOuterProxy
+  eventIn SFVec3f positionFromInnerProxy
+  eventIn SFBool isActiveFromInnerProxy
+  eventOut SFFloat toNavigationInfo_Speed
+  field SFBool isInInnerProxy FALSE
+  field SFVec3f positionOuterProxy 0 0 0
+  field SFFloat oldDistance 0
+  field SFFloat distance 0
+  url 
+    [
+    "javascript:
+
+ function initialize()
+    {
+    
+    }
+
+ // field SFFloat oldDistance //
+ // field SFFloat distance //
+ // field SFBool isInInnerProxy //
+ // field SFVec3f positionOuterProxy //
+ // eventOut SFFloat toNavigationInfo_Speed //
+
+ function positionFromOuterProxy(value)
+    {
+    if (!isInInnerProxy)
+       positionOuterProxy = new SFVec3f(value[0], value[1], value[2]);
+    }
+
+ function positionFromInnerProxy(value)
+    {
+    if (isInInnerProxy)
+       {
+       distance = positionOuterProxy.subtract(value).length();
+       if (distance > oldDistance)
+          toNavigationInfo_Speed = 0.0001;
+       else
+          toNavigationInfo_Speed = 5;
+       oldDistance = distance;
+       }
+    else
+       {
+       oldDistance = 0;
+       toNavigationInfo_Speed = 5;
+       positionOuterProxy = new SFVec3f(value[0], value[1], value[2]);
+       }
+    }
+
+ function isActiveFromInnerProxy(value)
+    {
+    isInInnerProxy = value;
+    }
+
+"
+    ]
+  }
+
+ROUTE outerProximitySensor1.position_changed TO Script1.positionFromOuterProxy
+ROUTE innerProximitySensor1.position_changed TO Script1.positionFromInnerProxy
+ROUTE innerProximitySensor1.isActive TO Script1.isActiveFromInnerProxy
+ROUTE Script1.toNavigationInfo_Speed TO NavigationInfo1.set_speed
+
+DEF REST Group 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Billboard 
+	  {
+	  axisOfRotation 0 0 0
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "up of the box"
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      translation -3.583168 3.107064 0
+      }
+    Transform 
+      {
+      children 
+	[
+	Billboard 
+	  {
+	  axisOfRotation 0 0 0
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "below the box"
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      translation -3.526972 -3.777904 0
+      }
+    Transform 
+      {
+      children 
+	[
+	Billboard 
+	  {
+	  axisOfRotation 0 0 0
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "front of the box"
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      translation -3.272972 -0.357539 12.750471
+      }
+    Transform 
+      {
+      children 
+	[
+	Billboard 
+	  {
+	  axisOfRotation 0 0 0
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "back of the box"
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      translation -3.526771 -0.978773 -8.109171
+      }
+    Transform 
+      {
+      children 
+	[
+	Billboard 
+	  {
+	  axisOfRotation 0 0 0
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "right of the box"
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      translation 6.878602 0.320845 0
+      }
+    Transform 
+      {
+      children 
+	[
+	Billboard 
+	  {
+	  axisOfRotation 0 0 0
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Text 
+		{
+		string 
+		  [
+		  "left of the box"
+		  ]
+		}
+	      }
+	    ]
+	  }
+	]
+      translation -11.180147 0.320845 0
+      }
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 0 0
+	  emissiveColor 1 0 0
+	  shininess 7.812500e-2
+	  specularColor 1.568627e-2 1.568627e-2 1.568627e-2
+	  }
+	}
+      geometry       Text 
+	{
+	string 
+	  [
+	  "Try to reach the sphere"
+	  ]
+	}
+      }
+    ]
+  scale 0.400000 0.400000 0.400000
+  translation -2.425354 -1.736930 0
+  }
+

@@ -1,0 +1,37 @@
+#VRML V2.0 utf8
+
+Group {
+  children [
+    Transform {
+      children 
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Sphere {
+            radius 2.498779
+          }
+        }
+    }
+    Transform {
+      children 
+        Shape {
+          appearance Appearance {
+            material Material {
+              emissiveColor 1 1 0
+            }
+          }
+          geometry PointSet {
+            coord Coordinate {
+              point [
+                5 0 0
+                -5 0 0
+              ]
+            }
+          }
+        }
+    }
+  ]
+}
+

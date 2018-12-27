@@ -1,0 +1,100 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+Group 
+  {
+  children 
+    [
+    DEF SCHRIFT_TAUSCHER Script 
+      {
+      eventIn SFVec3f vec3f_in
+      eventOut MFString schrift_out
+      url 
+	[
+	"javascript:
+
+         function vec3f_in(value, time)
+            {
+            if (value[0]==1)
+               schrift_out=new MFString('move left');
+            else if (value[0]==0)
+               schrift_out=new MFString('move right');
+            else
+               schrift_out=new MFString('move left or right');
+            }
+        "
+	]
+      }
+    ]
+  }
+
+Transform 
+  {
+  children 
+    [
+    DEF Transform1 Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Box 
+	    {
+	    size 0.200000 0.200000 0.200000
+	    }
+	  }
+	DEF PlaneSensor1 PlaneSensor 
+	  {
+	  maxPosition 1 0
+	  }
+	Transform 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  diffuseColor 0.496894 0.496894 0.514693
+		  }
+		}
+	      geometry 	      DEF Text1 Text 
+		{
+		string 
+		  [
+		  "move right"
+		  ]
+		}
+	      }
+	    ]
+	  scale 0.200000 0.200000 0.200000
+	  translation -0.300000 -0.100000 0.200000
+	  }
+	]
+      }
+    ]
+  translation -0.818349 0 2
+  }
+
+ROUTE PlaneSensor1.translation_changed TO SCHRIFT_TAUSCHER.vec3f_in
+ROUTE SCHRIFT_TAUSCHER.schrift_out TO Text1.set_string
+ROUTE PlaneSensor1.translation_changed TO Transform1.set_translation
+
+Viewpoint 
+  {
+  position 0 0 4.260000
+  }
+

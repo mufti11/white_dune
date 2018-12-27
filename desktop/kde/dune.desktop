@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=Graphics;3DGraphics
+Encoding=UTF-8
+Name=White Dune
+Comment=graphical VRML97 editor
+GenericName=White Dune
+Icon=dune.png
+MimeType=model/vrml
+#FilePattern=*.wrl
+#Patterns=*.wrl;*.wrz;
+Exec=dune -fn 9x15bold -x3dv %F

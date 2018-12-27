@@ -1,0 +1,38 @@
+/* XPM */
+static char * tux4_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 16 1 0 0",
+/* colors */
+" 	s none	m none	c none",
+".	s iconColor6	m white	c yellow",
+"X	s iconGray6	m black	c #636363636363",
+"o	s selectColor	m white	c #94949797A6A6",
+"O	s iconGray7	m black	c #424242424242",
+"+	s iconGray8	m black	c #212121212121",
+"@	s iconColor5	m black	c blue",
+"#	s iconColor3	m black	c red",
+"$	s iconColor4	m white	c green",
+"%	s iconGray5	m black	c #737373737373",
+"&	s iconGray3	m white	c #adadadadadad",
+"*	s iconGray4	m white	c #949494949494",
+"=	s iconColor1	m black	c black",
+"-	c #999999999999",
+";	s iconGray2	m white	c #bdbdbdbdbdbd",
+":	c #CCCCCCCCCCCC",
+/* pixels */
+"                ",
+"                ",
+"      .         ",
+"     .X.        ",
+"    .X.X        ",
+"oOX.X.XX.       ",
+"oO.X.X.XX   O   ",
+"o.X.X.X.X. +@+# ",
+"oO.X.X.OXX $.$#%",
+"o.O.O.X.XX +&+#*",
+"oO.+.O.X.+=-;-==",
+"o.O.O.O.X*=;:;=*",
+"oX.O.O.O.*=;:;=*",
+"o%%%%%%***=;:;=&",
+"o%*********+++*-",
+"ooooooooooo.o.oo"};

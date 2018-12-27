@@ -1,0 +1,36 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO CoordinateInterpolator2D [
+ eventIn SFFloat set_fraction
+ exposedField MFFloat key
+ exposedField MFVec2f keyValue
+ eventOut MFVec2f value_changed
+ ]
+"CoordinateInterpolator2DPROTO.wrl"
+
+DEF CoordinateInterpolator2D1 CoordinateInterpolator2D
+  {
+  key 
+    [
+    0 
+    0.294294 
+    0.533033 
+    0.745495 
+    0.960960 
+    ]
+  keyValue 
+    [
+    0 0 
+    0 0.944099 
+    0.881987 0.944099 
+    0.105590 0.944099 
+    0.919254 -0.588820 
+    ]
+  }
+
+DEF TimeSensor1 TimeSensor
+  {
+  loop TRUE
+  }
+
+ROUTE TimeSensor1.fraction_changed TO CoordinateInterpolator2D1.set_fraction

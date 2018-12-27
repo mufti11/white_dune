@@ -1,0 +1,271 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       DEF IndexedFaceSet1 IndexedFaceSet 
+	{
+	coord 	DEF Coordinate1 Coordinate 
+	  {
+	  }
+	ccw TRUE
+	creaseAngle 0.709999
+	}
+      }
+    ]
+  rotation -0.491309 -0.860261 -0.136252 0.623705
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFFloat n1_in
+  eventIn SFFloat n2_in
+  eventIn SFInt32 uTessellation_in
+  eventIn SFInt32 vTessellation_in
+  eventOut MFInt32 coordindex_out
+  eventOut MFVec3f vertices_out
+  field SFFloat n1 1
+  field SFFloat n2 1
+  field SFInt32 uTessellation 16
+  field SFInt32 vTessellation 16
+  field MFFloat s1xy []
+  field MFFloat s1z []
+  field MFFloat s2x []
+  field MFFloat s2y []
+  field SFFloat EPSILON 1e-6
+  url 
+    [
+    "javascript:
+
+ // field SFInt32 uTessellation //
+ // field SFInt32 vTessellation //
+
+ // field SFFloat n1 //
+ // field SFFloat n2 //
+
+ // eventOut MFInt32 coordindex_out //
+ // eventOut MFVec3f vertices_out //
+
+ function cossign(f)
+    {
+    // range -PI to PI
+    if ((f < Math.PI/2.0 + EPSILON) && (f > Math.PI/2.0 - EPSILON))
+        return 0;
+    if (f > Math.PI/2.0)
+        return -1;
+    if ((f < -Math.PI/2.0 + EPSILON) && (f > -Math.PI/2.0 - EPSILON))
+        return 0;
+    if (f > -Math.PI/2.0)
+        return 1;
+    // -PI < x < -PI/2
+    return -1;
+    }
+
+ function sinsign(f)
+    {
+    // range -PI to PI
+    if ((f < Math.PI + EPSILON) && (f > Math.PI - EPSILON))
+        return 0;
+    if (f > Math.PI)
+        return -1;
+    if ((f < 0 + EPSILON) && (f > 0 - EPSILON))
+        return 0;
+    if (f > 0)
+        return 1;
+    if ((f < -Math.PI + EPSILON) && (f > -Math.PI - EPSILON))
+        return 0;
+    if (f < -Math.PI)
+        return 1;
+    // -PI < x < 0
+    return -1;
+    }
+   
+ function superellipse1xy(angle1)
+    {
+    var c1 = Math.cos(angle1);
+    return cossign(angle1)*Math.pow(Math.abs(c1),n2);
+    }
+   
+ function superellipse1z(angle1)
+    {
+    var s1 = Math.sin(angle1);
+    return sinsign(angle1)*Math.pow(Math.abs(s1),n2);
+    }
+   
+ function superellipse2x(angle2)
+    {
+    var c2 = Math.cos(angle2);
+    var n = n1;
+    if (Math.abs(n) < 1e-5)
+        n = 1e-5;
+    return cossign(angle2)*Math.pow(Math.abs(c2),n);
+    }
+   
+ function superellipse2y(angle2)
+    {
+    var s2 = Math.sin(angle2);
+    var n = n1;
+    if (Math.abs(n) < 1e-5)
+        n = 1e-5;
+    return sinsign(angle2)*Math.pow(Math.abs(s2),n);
+    }
+   
+ function account()
+    {
+    var uTess=(uTessellation==0)?33:uTessellation+1;
+    var vTess=(vTessellation==0)?33:vTessellation+1;
+    var inc1=Math.PI/(vTess-1);
+    var inc2=Math.PI/(vTess-1)*2.0;
+    ci=new MFInt32();
+    vert=new MFVec3f();
+    var index=0;
+    var cindex=0;
+    var angle1=-Math.PI/2.0;
+    var angle2=-Math.PI;
+    var i;
+    var a1=0;
+    var a2=0;
+    for (a1=0;a1<uTess;a1++)
+       {
+       s1xy[a1]=superellipse1xy(angle1);
+       s1z[a1]=superellipse1z(angle1);
+       angle1+=inc1;
+       }
+    for (a2=0;a2<vTess;a2++)
+       {
+       s2x[a2]=superellipse2x(angle2);
+       s2y[a2]=superellipse2y(angle2);
+       angle2+=inc2;
+       }
+    for (a1=0;a1<uTess;a1++)
+       for (a2=0;a2<vTess;a2++)
+          {
+          vert[index].z = s1xy[a1]*s2x[a2];
+          vert[index].x = s1xy[a1]*s2y[a2];
+          vert[index].y = s1z[a1];
+          index++;
+          }
+    for (a1=0;a1<uTess;a1++)
+       for (a2=0;a2<vTess;a2++)
+          {
+          var c1=a1+1;
+          if (a1==uTess-1)
+             continue;
+          var c2=a2+1;
+          if (a2==vTess-1)
+             continue;
+          ci[cindex++]=a1*vTess+a2;
+          ci[cindex++]=a1*vTess+c2;
+          ci[cindex++]=c1*vTess+c2;
+          ci[cindex++]=c1*vTess+a2;
+          ci[cindex++]=-1;
+          }
+    vertices_out=vert;
+    coordindex_out=ci;
+    }
+   
+ function initialize()
+   {
+   account();
+   }
+
+ function n1_in(value)
+   {
+   n1 = value;
+   account();
+   }
+
+ function n2_in(value)
+   {
+   n2 = value;
+   account();
+   }
+
+ function uTessellation_in(value)
+   {
+   uTessellation = value;
+   account();
+   }
+
+ function vTessellation_in(value)
+   {
+   vTessellation = value;
+   account();
+   }
+
+"
+    ]
+  }
+
+ROUTE Script1.vertices_out TO Coordinate1.set_point
+ROUTE Script1.coordindex_out TO IndexedFaceSet1.set_coordIndex
+
+
+
+DEF TimeSensor1 TimeSensor 
+  {
+  cycleInterval 20
+  loop TRUE
+  }
+
+DEF ScalarInterpolator1 ScalarInterpolator 
+  {
+  key 
+    [
+    0 
+    0.500000 
+    1 
+    ]
+  keyValue 
+    [
+    1 
+    1 
+    0.03
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO ScalarInterpolator1.set_fraction
+ROUTE ScalarInterpolator1.value_changed TO Script1.n2_in
+
+Viewpoint 
+  {
+  }
+
+DEF TimeSensor2 TimeSensor 
+  {
+  cycleInterval 10
+  loop TRUE
+  }
+
+DEF ScalarInterpolator2 ScalarInterpolator 
+  {
+  key 
+    [
+    0 
+    0.500000 
+    0.5
+    ]
+  keyValue 
+    [
+    0.03 
+    1 
+    0.03
+    ]
+  }
+
+ROUTE TimeSensor2.fraction_changed TO ScalarInterpolator2.set_fraction
+ROUTE ScalarInterpolator2.value_changed TO Script1.n1_in

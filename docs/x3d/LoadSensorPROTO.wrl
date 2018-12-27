@@ -1,0 +1,77 @@
+#VRML V2.0 utf8
+
+PROTO LoadSensor [
+#
+# Copyright (C) 2004 J. "MUFTI" Scheurich
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program (see the file "COPYING" for details); if 
+# not, write to the Free Software Foundation, Inc., 
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+ exposedField SFBool enabled TRUE
+ exposedField SFNode metadata NULL
+ exposedField SFTime timeOut 0
+ exposedField MFNode watchList []
+ eventOut SFBool isActive
+ eventOut SFBool isLoaded
+ eventOut SFTime loadTime
+ eventOut SFFloat progress
+ ]
+{
+  Group 
+    {
+    children 
+      [
+      DEF Script1 Script 
+        {
+        eventOut SFBool initial 
+        url 
+          [
+          "javascript:
+
+          function initialize()
+             {
+             initial = false;
+             }
+          "
+          ]
+        }
+      DEF Script2 Script 
+        {
+        eventIn SFBool initial 
+        eventOut SFBool isActive IS isActive
+        eventOut SFBool isLoaded IS isLoaded 
+        eventOut SFTime loadTime IS loadTime
+        eventOut SFFloat progress IS progress
+        url 
+          [
+          "javascript:
+
+          function initial(value, timestamp)
+             {
+             isActive = false;
+             isLoaded = true;
+             loadTime = timestamp;
+             progess = 1.0;    
+             }
+          "
+          ]
+        }
+      ]
+    ROUTE Script1.initial TO Script2.initial
+    }
+}
+
+
+

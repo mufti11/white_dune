@@ -1,0 +1,114 @@
+#VRML V2.0 utf8
+
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+
+DEF Viewpoint1 Viewpoint 
+  {
+  description "1."
+  }
+
+DEF Viewpoint2 Viewpoint 
+  {
+  position 0 0 20
+  description "2."
+  }
+
+Group 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  diffuseColor 1 0 0
+	  emissiveColor 1 0 0
+	  shininess 7.812500e-2
+	  specularColor 0.500000 0.500000 0.500000
+	  }
+	}
+      geometry       IndexedLineSet 
+	{
+	coord 	Coordinate 
+	  {
+	  point 
+	    [
+	    -2 -2 -2 
+	    -2 2 -2 
+	    2 2 -2 
+	    2 -2 -2 
+	    -2 -2 2 
+	    -2 2 2 
+	    2 2 2 
+	    2 -2 2 
+	    ]
+	  }
+	coordIndex 
+	  [
+	  0 1 2 3 0 -1 
+	  6 7 3 2 6 -1 
+	  7 6 5 4 7 -1 
+	  4 5 1 0 4 -1 
+	  1 5 6 2 1 -1 
+	  4 0 3 7 4 -1 
+	  ]
+	}
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 1 0 0
+	      }
+	    }
+	  geometry 	  Text 
+	    {
+	    string 
+	      [
+	      "Proximity"
+	      ]
+	    }
+	  }
+	]
+      translation -2 -3.549376 0
+      }
+    DEF ProximitySensor1 ProximitySensor 
+      {
+      size 4 4 4
+      }
+    ]
+  }
+
+DEF Script1 Script 
+  {
+  eventIn SFBool bool1_in
+  eventOut SFBool bool1_out
+  url 
+    [
+    "javascript:
+
+ // eventOut SFBool bool1_out //
+
+
+ function bool1_in(value)
+    {
+    bool1_out = !value;
+    }
+"
+    ]
+  }
+
+ROUTE ProximitySensor1.isActive TO Script1.bool1_in
+ROUTE Script1.bool1_out TO Viewpoint1.set_bind
+

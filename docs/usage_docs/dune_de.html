@@ -1,0 +1,3884 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * dune_de.html 
+ *
+ * Copyright (C) 2006-2018 J. "MUFTI" Scheurich
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,  
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ 
+ last update: white_dune-0.99pl1111
+-->
+<head>
+ <title>"white_dune" Dokumentation</title> 
+</head> 
+<body>
+<ul>
+ <li>
+  <h3><a href="#white_dune">"White_dune" was ist das ?</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#crash">"White_dune" abgest&uuml;rzt, bisherige Arbeit verloren ?</a></h3>
+ </li>
+ <li>
+  <h3><a href="#languages">"White_dune" mit deutschen Men&uuml;s starten</a></h3>
+ </li>
+ <li>
+  <h3><a href="#vrml">Was bedeuten Szenengraph, Fieldwerte, Routes usw. ?</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#wonderland">X3D-compiler und Open Wonderland Unterst&uuml;tzung</a>(neu in Version 0.31beta)</h3> 
+ </li>
+ <li>
+  <h3><a href="#waskann">Was "white_dune" nicht kann und was es kann</a></h3>
+ </li>
+ <li>
+  <h3><a href="#fenster">Die 5 Fenster von "white_dune"</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#menue">&Uuml;berblick &uuml;bers Men&uuml;</a></h3> 
+ </li>
+ <li>
+  <h3><a href="#navigation">Navigation</a></h3>
+ </li>
+ <li>
+  <h3><a href="#scenegraph">Ver&auml;ndern des Szenengraph</a></h3>
+  <ul>
+   <li>
+    <h4><a href="#use">Die Benutzung von USE</a>(neu in Version 0.29beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#scenegraphoperations">Szenengraph Operationen</a>(neu in Version 0.27beta)</h4>
+   </li>
+  </ul>
+ </li>
+ <li>
+  <h3><a href="#route">Eingabe/L&ouml;schen von ROUTE's</a></h3>
+ </li>
+ <li>
+  <h3><a href="#fields">Fieldwerte ver&auml;ndern</a></h3>
+  <ul>
+   <li>
+    <h4><a href="#keyboard">Tastatureingabe</a></h4>
+   </li>
+   <li>
+    <h4><a href="#MF">"MF"-Fieldwerte &auml;ndern</a>(neu in version 0.27beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#mouse">Mauseingabe</a></h4>
+   </li>
+   <li>
+    <h4><a href="#3DWindow">Fieldwerte ver&auml;ndern im 3D Preview Fenster</a></h4>
+   </li>
+   <li>
+    <h4><a href="#6D">6D Input</a> (neu in Version 0.19beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#6Dlocal">6D Local Mode Input</a> (neu in Version 0.19beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#nxtdials">Mindstorms NXT dials Input</a> (neu in Version 0.29beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#joystick">Linux Joystick Input</a> (neu in Version 0.20beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#joystick_windows">M$Windows Joystick Input</a> (neu in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#joystick_macosx">MacOSX Joystick Input</a> (neu in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#channelview">Fieldwerte ver&auml;ndern im ChannelView Window</a></h4>
+   </li>
+   <li>
+    <h4><a href="#colorcircle">Farbkreis</a> (neu in Version 0.19beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#scriptedit">Script Editor</a> (neu in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#urledit">URL Editor</a> (neu in Version 0.22beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#fieldpipe">Field pipe</a> (neu in version 0.29beta)</h4>
+   </li>
+  </ul>
+ </li>
+ <li>
+  <h3><a href="#simplescript">Vereinfachtes Skriptbau-Verfahren</a> 
+                                               (neu in Version 0.22beta)</h3>
+ </li>
+ <li>
+  <h3><a href="#x3domscript">X3DOM scripting</a> (neu in Version 0.99pl1084)</h3>
+ </li>
+ <li>
+  <h3><a href="#nurbs">NURBS Modellierung</a> 
+                                         (zum Teil neu in Version 0.25beta)</h3>
+   <ul>
+   <li>
+    <h4><a href="#nurbsbasics">NURBS Grundlagen</a></h4>
+   </li>
+   <li>
+    <h4><a href="#nurbssymetric">X symetrisches Modellieren</a>
+                                         (neu in Version 0.25beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#nurbsconversion">NURBS Konversion</a>
+                                         (neu in Version 0.25beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#elevatedegree">Grad Erh&ouml;hung</a>
+                                         (neu in Version 0.27beta)</h4>
+   </li>
+   <li>
+    <h4><a href="#nurbsrebuild">NURBS Neubau</a>
+                                         (neu in Version 0.99pl1090)</h4>
+   </li>
+   <li>
+    <h4><a href="#nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a>
+                                         (neu in Version 0.25beta)</h4>
+   </li>
+   <li>
+     <h4><a href="#nurbsanimation">Animation mit Hilfe von NURBS</a>
+                                          (neu in Version 0.99)</h4>
+   </li>
+   <li>
+     <h4><a href="#nurbstrimmed">NURBS Trimming</a>
+                                          (neu in Version 0.99pl1050)</h4>
+   </li>
+  </ul>
+   <h3><a href="#super">Superformula Modellierung</a> 
+                                          (neu in Version 0.27beta)</h3>
+   <ul>
+    <li>
+     <h4><a href="#superformula">Superformula Grundlagen</a></h4>
+    </li>
+    <li>
+     <h4><a href="#superextrusion">SuperExtrusion</a></h4>
+    </li>
+    <li>
+     <h4><a href="#supershape">SuperShape</a></h4>
+    </li>
+    <li>
+     <h4><a href="#superellipsoid">SuperEllipsoid</a></h4>
+    </li>
+    <li>
+     <h4><a href="#superrevolver">SuperRevolver</a></h4>
+    </li>
+   </ul>
+  </li>
+  <li>
+   <h3><a href="#subdivide">Subdivide Modellierung</a> 
+                                          (neu in Version 0.99pl624)</h3>
+  </li>
+  <li>
+   <h3><a href="#extrusion">IndexedFaceSet Extrusion</a> 
+                                          (neu in Version 0.99pl654)</h3>
+  </li>
+  <li>
+   <h3>Weitere Kommandos zur 3D-Modellierung</a></h3>
+   <ul>
+    <li>
+     <h4><a href="#coordinate">&Auml;ndern von Coordinate basierten Knoten</a> (neu in Version 0.29beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#convexhull">Konvexe H&uuml;lle</a> (neu in Version 0.99pl812)</h4>
+    </li>
+    <li>
+     <h4><a href="#meshreducer">Fl&auml;chen Reduzierer</a> (neu in Version 0.99pl850)</h4>
+    </li>
+    <li>
+     <h4><a href="#symetric">Symetrische Modellierung</a> (neu in Version 0.99pl987)</h4>
+    </li>
+    <li>
+     <h4><a href="#skinbones">Skin and bones Modellierung</a></h4>
+    </li>
+    <li>
+     <h4><a href="#boolean">Boolsche Modellierung</a></h4>
+    </li>
+    <li>
+     <h4><a href="#array">Array Werkzeug</a> (neu in Version 0.27beta)</h4>
+    </li>
+   </ul>
+   <h3>Reparatur-Kommandos im "Aktion" Men&uuml;</a></h3>
+   <ul>
+    <li>
+     <h4><a href="#remove_invalid">Ung&uuml;ltige children nodes l&ouml;schen</a> (neu in Version 0.27beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#triangulate">Trianguliere IndexedFaceSet</a> (neu in Version 0.29beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#set_path">Set path of all URLs to</a> (neu in Version 0.27beta)</h4>
+    </li>
+   </ul>
+   <h3>Weitere Kommandos im "Aktion" Men&uuml;</a></h3>
+   <ul>
+    <li>
+     <h4><a href="#object_url_edit">Objekt/URL editieren</a> (neu in Version 0.29beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#set_default">Setze default Werte (behalte Szenengraph)</a> (neu in Version 0.27beta)</h4>
+    </li>
+    <li>
+     <h4><a href="#xray">R&ouml;ntgenblick</a> (neu in Version 0.27beta)</h4>
+    </li>
+   </ul>
+  </li>
+  <li>
+   <h3><a href="#proto">PROTO Erstellung/Ver&auml;nderung</a> (neu in Version 0.99pl444)</h3>
+  </li>
+  <li>
+   <h3><a href="#vrmlcut">VrmlCut scripted Proto</a> (neu in Version 0.29beta)</h3>
+  </li>
+  <li>
+   <h3><a href="#upload"><em>Datei -&gt; upload</em></a> (neu in Version 0.27beta)</h3>
+  </li>
+ </li>
+ </ul>
+
+<h2><a name="white_dune">"White_dune" was ist das ?</a></h2> 
+<p>
+White_dune ist ein graphischer VRML97/X3DV Editor, ein simpler 
+(NURBS) 3D Modeller und ein Animationwerkzeug in Entwicklung.<br>
+Es kann ein VRML97/X3DV file lesen, stellt dessen Szenengraph dar und 
+erlaubt es dem Benutzer, den Szenengraph, die Fieldwerte und Routes zu 
+ver&auml;ndern.<br>
+White_dune kann benutzt werden, um 3D-Modelle,
+Animationen und Interaktionen in VRML97/X3DV zu verbessern oder zu 
+erstellen.<br> 
+Als einziges 3D Modelling Werkzeug ist es verglichen mit der Konkurrenz noch
+etwas schwach. 
+Es ist sinnvoll, noch zus&auml;tzlich einen statischen 3D Modeller mit 
+VRML97/X3D Export
+(wie z.B. wings3D oder Art Of Illusion) einzusetzen.<br>
+Der Vorteil von white_dune gegen&uuml;ber den meisten anderen 3D Modellern 
+ist, dass das Beleuchtungsmodell und der innere Aufbau von white_dune auf den
+VRML97/X3DV Standards basiert. Dadurch lassen sich die M&ouml;glichkeiten von
+VRML97/X3DV bei einer Nachbearbeitung oder Erstellung mit white_dune besser 
+nutzen.<br>
+Verglichen mit den allgemein einsetzbaren 3D Modellern (die meinstens
+nur Mesh (IndexedFaceSet) und Interpolatorknoten exportieren k&ouml;nnen)
+unterst&uuml;tzt white_dune alle VRML97 Knoten und alle
+Knoten des X3D Standards "X3D 3.3" (ISO/IEC 19775-1:2013), auch wenn nicht
+alle Knoten dargestellt werden.
+<br>
+white_dune ist ein open source Programm, das bedeutet dass jeder das Programm
+kopieren und ver&auml;ndern darf. Die offizielle Version ist unter
+<a href="https://wdune.ourproject.org">https://wdune.ourproject.org</a>
+verf&uuml;gbar.
+</p>
+<h3><a name="crash">"White_dune" abgest&uuml;rzt, bisherige Arbeit verloren ?</a></h3>
+<p>
+White_dune wird dauernd weiterentwickelt und l&auml;uft daher nicht immer so
+stabil, wie es sollte.<br><br>
+<b>Wenn white_dune abgest&uuml;rzt ist, ist die bisherige Arbeit verloren ?</b>
+<br><br>
+<font color="#FF0000"> Nein, nicht zwingend.</font>
+<br><br>
+"white_dune" versucht noch, die
+ VRML97/X3D Datei kurz vor dem Absturz zu speichern. Das funktioniert nicht
+ immer, vor allem wenn der Fehler, der den Absturz verursacht hat, die 
+ interne Datenstruktur zerst&ouml;rt hat (das passiert allerdings eher selten).
+ Wenn die Datei erfolgreich geschrieben worden ist, schreibt white_dune 
+ unter Unix/Linux  
+<pre>
+   Internal Crash !
+   Try to save Files
+   attempt to write file to /home/someone/.dune_crash_NUMBER_NUMBER.wrl
+   write sucessfull
+</pre>
+auf die Standartfehlerausgabe des white_dune starteten Fensters und auf
+die Systemkonsole (z.B. das Fenster der "xconsole" Anwendung).<br> 
+Die wichige Zeile ist dabei die Zeile "write successfull"
+("erfolgreich geschrieben").<br>
+Unter M$Windows erscheint (ggf. nach Dr&uuml;cken von "ignorieren/ignore",
+falls man nach einer Debugger gefragt wird) eine entsprechende 
+Messagebox<br>
+<img src=crash.jpg><br>
+Wenn sie dann white_dune neu starten und das file Men&uuml; &ouml;ffnen, 
+sollten Sie den Dateinamen des .dune_crash Files sehen.<br>
+<img src=crashrestore.jpg><br>
+Klicken Sie darauf und speichern Sie in eine andere Datei.<br>
+</p>
+<p>
+Wenn der Fehler, der zum Absturz gef&uuml;hrt hat, die interne Datenstruktur
+im Programm besch&auml;digt hat, kann diese Methode versagen.<br>
+In diesem Fall lohnt es sich nach tempor&auml;ren Daten (".dune_*") im 
+Verzeichnis der VRML-Datei zu suchen, die bei der Ausf&uuml;hrung von
+<em>Datei-&gt;Vorschau</em> oder <em>Datei-&gt;Textedit</em> entstanden sind.<br>
+Diese Dateien werden bei einem normalen Programmende gel&ouml;scht, nicht
+aber bei einem Programmabsturz.<br>
+Wenn white_dune sehr oft abst&uuml;rtzt, aber alle Daten erfolgreich
+gerettet werden konnten, kann es Sinn machen, diese &uuml;berfl&uuml;ssigen
+Datein zu suchen und l&ouml;schen, um verschwendeten Plattenplatz 
+zur&uuml;ckzugewinnen.<br>
+Neben Dateien zur Vorschau und zum Editieren mit einem Texteditor
+speichert white_dune auch den Inhalt eines editierten Script-Knotens
+zur Verwendung in einem Texteditor in tempor&auml;ren Dateien.
+</p>
+<h3><a name="languages">"White_dune" mit deutschen Men&uuml;s starten</a></h3>
+<p>
+Um white_dune mit deutschen Men&uuml;s zu starten, muss die Kommandozeilenoption
+"-german" benutzt werden. <br>
+Zur Zeit sind 4 Kommandozeilen-Optionen f&uuml;r Sprachen verf&uuml;gbar:<br>
+<ul>
+  <li>
+    <b>-english</b><br>
+    F&uuml;r englische Sprache
+  </li>
+  <li>
+    <b>-german</b><br>
+    F&uuml;r deutsche Sprache
+  </li>
+  <li>
+    <b>-italian</b><br>
+    F&uuml;r italienische Sprache
+  </li>
+  <li>
+    <b>-french</b><br>
+    F&uuml;r franz&ouml;schische Sprache
+  </li>
+</ul>
+Ausserdem gibt es noch die <b>-portuguese</b> Option f&uuml;r Portugisisch,
+die gilt aber nur f&uuml;r die 4kids Men&uuml;s.
+<br>  
+Da es unpraktisch ist, das dauernd in eine
+Kommandozeile einzutippen, gibt es einen zweiten Weg, um die Sprache
+auszuw&auml;hlen. Unter Linux/UNIX wird das &uuml;ber die Umgebungsvariable
+LANG erledigt. Wenn die ersten beiden Zeichen dieser Umgebungsvariable
+"de" ist, werden deutsche Men&umml;s benutzt, sind sie "it", werden 
+italienische Men&umml;s benutzt ("fr" f&uuml; franz&ouml;schische Men&umml;s).<br>
+Wenn man mit einer deutschen Umgebung arbeiten will, bei der $LANG
+entsprechend gesetzt ist, man aber trotzdem mit englischen Men&uuml;s
+arbeiten will, muss man die -english Kommandozeilenoption benutzt 
+werden.<br>
+Das kann das &uuml;ber ein Shellskript 
+(Linux/UNIX/MacOSX) oder Batchfile (M$Windows) gemacht werden.<br>
+Wenn Sie kein entsprechendes File (z.B. "germandune") finden, k&ouml;nnen
+Sie sie sich eines mit den Kommandozeilen:
+<ul>
+ <li>
+  F&uuml;r Linux/UNIX:<br>
+
+  <pre>
+     echo dune -german > germandune.sh
+     chmod +x germandune.sh
+  </pre>
+ </li>
+ <li>
+  F&uuml;r Micro$oft Windows:<br>
+  <pre>
+     echo Laufwerk:\pfadzu\white_dune_version.exe -german > germandune.bat
+  </pre>
+ </li>
+</ul>
+anlegen. F&uuml;r MacOSX k&ouml;nnen Sie in der Datei 
+white_dune.app/Contents/MacOS/dunestarter die Zeilen mit den Optionen
+f&uuml;r den Programmstart<br>
+<pre>
+   DUNEOPTIONS=" "
+   export DUNEOPTIONS
+</pre>
+um die -german Option erg&auml;nzen:<br>
+<pre>
+   DUNEOPTIONS="-german "
+   export DUNEOPTIONS
+</pre>
+F&uuml;r andere exotische UNIX desktops finden sich entsprechende Optionen
+in den folgenden Dateien:
+<ul>
+ <li>
+  SGI IRIX/4Dwm: desktop/irix*/duneoptions.m4<br>
+  Lesen sie die Datei README_IRIX.desktop um mehr Informationen zu bekommen
+ </li>
+ <li>
+  IBM AIX/cde: /usr/local/bin/white_dune.dt
+ </li>
+ <li>
+  Sun Solaris/cde: /opt/White_Dune/bin/white_dune.dt
+ </li>
+ <li>
+  Redhat Linux/kde: /usr/share/applications/dune.desktop
+ </li>
+</ul>
+Auf &auml;hnlicher Weise ist es m&ouml;glich, andere Kommandozeilenoptionen
+von white_dune zu benutzen.
+Die <a href="dune.1.html" target="_blank">man page 
+von white_dune (in englischer Sprache)</a> zeigt andere Optionen.<br>
+Die wichtigsten Optionen sind:
+<ul>
+  <li>
+  Optionen f&uuml;r 3D Eingabeger&auml;te<br>
+  Die unterst&uuml;tzten Eingabeger&auml;te unterscheiden sich unter
+  verschiedenen Betriebssystemen. Es gibt Unterst&uuml;tztung f&uuml;r
+  Joystick, Spaceball, Dials und magnetische Tracker.
+  </li>
+  <li>
+  Optionen f&uuml;r stereoskopische Ansicht<br>
+  Diese Optionen (wie "-stereo") sind werden f&uuml;r stereoskopische Ansicht
+  mit Shutterbrille (oder Beamern) benutzt.
+  </li>
+  <li>
+  Optionen f&uuml;r white_dune Varianten:<br>
+  Zur Zeit gibt es 4 verschiedene Varianten von white_dune.
+  Diese Varianten bedeuten entweder ein komplett verschiedenes GUI
+  oder kleinere Unterschiede in den benutzbaren Men&uuml;rs.
+  <ul>
+    <li> 
+     Die -x3dv Option<br>
+     Diese Option startet white_dune so, dass von Anfang an ein
+     X3DV File erzeugt wird. Im Normalfall wird ein VRML97 File erzeugt,
+     das man &uuml; dem Menupunkt <em>Datei -&gt; Speichern Als...</em> auch 
+     als X3DV File abspeichern kann.
+    </li>
+    <li> 
+     <a name="4kids">
+      Die -4kids Option
+     </a><br>
+     Diese Option startet mit einem komplett unterschiedlichen stark 
+     vereinfachten Men&uuml;, das f&uuml;r blutige Anf&auml;nger geeignet ist. 
+     Damit wurden schon erfolgreich Kurse mit Kindern und Jugendlichen
+     durchgef&uuml;hrt.
+    </li>
+    <li> 
+     Die -4catt Option<br>
+     Diese Option startet mit einem komplett unterschiedlichen Men&uuml;, 
+     das f&uuml;r Anwender des 3D-Soundsimulationsprogramms 
+     Catt Acoustics 8 geeignet ist.
+    </li>
+    <li> 
+     Die -cover Option<br>
+     Diese Option unterst&uuml;tzt einige zus&auml;tzlichen VRML-Befehle 
+     und Erweiterungen,
+     die f&uuml;r den immersiven VRML-Browser "cover/covise" gedacht sind.
+    </li>
+    <li> 
+     Die -kambi Option<br>
+     Diese Option unterst&uuml;tzt einige zus&auml;tzlichen 
+     X3D-Befehle und Erweiterungen,
+     die f&uuml;r die X3D basierte Gameengine "kambi" gedacht sind.
+    </li>
+  </ul>   
+  </li>
+  <li>
+   Die -tessellation Option<br>
+   Das Argument der -tessellation Option ist ein ganzzahliger Wert.
+   Er beeinflusst, mit wievielen Eckpunkte die Fl&auml;chen bei Knoten 
+   wie Sphere (Kugel), Cylinder (Zylinder), Cone (Kegel) sowie NURBS-
+   und Superformel-Knoten (mit u/vTessellation gleich Null) dargestellt 
+   werden.<br>
+   Damit ist die -tessellation Option entscheidend f&uuml;r die 
+   Benutzung von Rechner mit fehlender 3D Hardwarebeschleunigung (und/oder
+   schwachem Prozessor).<br>
+   Mit Hilfe der -tessellation Option ist es m&ouml;glich, dass auch mit
+   leistungsschwachen Rechnern 3D-Objekte erzeugt und bearbeitet werden
+   k&ouml;nnen, die allerdings auf diesen Rechnern nur grob dargestellt 
+   werden. Werden die erzeugten Objekte sp&auml;ter ohne -tessellation 
+   Option auf einem leistungsstarken Rechner dargestellt, werden sie
+   vollst&auml;ndig dargestellt. Fehlt die -tessellation Option, wird
+   ein Defaultwert von 32 benutzt, der minimal m&ouml;gliche Wert
+   betr&auml;gt 8.<br>
+   Die -tessellation Option hilft nichts, wenn Knoten wie IndexedFaceSet,
+   *Triangle*Set, Extrusion oder ElevationGrid angezeugt werden m&uuml;ssen,
+   deren Eckpunkte von Anfang an festgelegt sind. Deshalb sollte auf
+   schwachen Rechnern vermieden werden, Knoten mit nicht festgelegten
+   Eckpunkten (z.B. Kugel, Zylinder usw.) in diese Knoten zu konvertieren.
+  </li>
+</ul>
+Die Men&uuml;s und Dialoge von white_dune k&ouml;nnen in andere Fremdsprachen
+&uuml;bersetzt werden, ohne dass besondere Programmierf&auml;higkeiten
+ben&ouml;tigt werden.<br>
+Wenn Sie sich daf&uuml;r interessieren, die Men&uuml;s und Fehlermeldungen von
+white_dune in ein neue Fremdsprache zu &uuml;bersetzen (dazu sind keine
+Programmierf&auml;higkeiten notwendig), dann lesen Sie bitte das
+<a href="../developer_docs/dune_developer.html#localisation"> 
+Schritt f&uuml;r Schritt Kochrezept in englischer Sprache</a> in der 
+Entwicklerdokumentation.
+</p>
+<h3><a name="vrml">Was bedeuten Szenengraph, Fieldwerte und Routes usw. ?</a>
+</h3> 
+<p>
+White_dune (ohne -4kids oder -4catt option) ist ein Lowlevel Werkzeug zum 
+Bearbeiten von VRML97 und X3DV
+Files. Dabei wird vorausgesetzt, dass dem Benutzer die grundlegende
+Struktur von VRML/X3D bekannt ist. <br> 
+Nat&uuml;rlich kann white_dune dazu benutzt werden, um sich in VRML/X3D
+einzuarbeiten. Ein guter Startpunkt ist nat&uuml;rlich das <a href="#4kids">
+"-4kids"</a> Kommandozeilenargument, aber damit lassen sich nur 
+3D-Objekte erzeugen und animieren, die interessanteren VRML/X3D Features
+wie Interaktion und Scripting bleiben aussen vor.
+</p>
+<p>
+Man findet einige typischen VRML/X3D Beispiele (die man in white_dune)
+laden kann <a href=../typical_vrml_examples/index.html>hier</a>, 
+aber man muss sich dar&uuml;ber im Klaren sein, dass diese Beispiele
+keine Modelling- oder Animations-Features zeigen, sie zeigen 
+haupts&auml;chlich VRML97 Beispiele mit Interaktion und Scripting. 
+Das sind Features die in white_dune (noch) nicht korrekt angezeigt werden 
+k&ouml;nnen.<br>
+Die Beispiele dienen als Ausgangsbasis, um mit white_dune interaktive
+3D-Welten zu erstellen, die dann sp&auml;ter mit einen "richtigen" 
+VRML/X3D Browser angezeigt werden k&ouml;nnen.<br>
+Das "Route"-Fenster und der Script-Code sind f&uuml;r einen Anf&auml;ger
+am interessantesten.
+</p>
+<p>
+Ausf&uuml;hrliche technische Informationen zu VRML97 findet
+man in der
+offiziellen ISO Spezifikation unter
+<a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1>
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1</a>.
+F&uuml;r die Benutzung von White_dune ist vor allem die Node Referenz
+<a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html>
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
+</a>
+wichtig.<br>
+X3D ist der Nachfolger von VRML97. Trotz einigen minimalen technischen
+Unterschieden (die von white_dune automatisch abgehandelt werden) sind 
+alle Befehle des VRML97 Standards von 1997 in X3D weiter vorhanden.<br>
+F&uuml;r den "vergessenen" VRML97 Amendment 1 Standard von 2002 gilt dies 
+nicht z.B. der CoordinateDeformer Knoten existiert nicht mehr in X3D.
+Die meisten weiter existierenden VRML97 Amendment 1 Befehle werden aber 
+automatisch von white_dune abgehandelt, wenn eine VRML97-Datei als 
+X3D(V)-Datei abgespeichert wird.
+</p>
+<h2><a name="wonderland">X3D compiler und Open Wonderland Unterst&uuml;tzung
+    </a>
+</h2> 
+<p>
+White_dune kann die Daten des VRML97/X3DV Szenengraphen in den 
+Programmiersprachen C, C++ oder java exportieren ("X3D-compiler").<br>
+Details dazu findet man in der <a href="dune_1.html#sect12">Manpage von 
+white_dune</a>.<br>
+F&uuml;r die Programmiersprache C gibt es eine in der Entwicklung befindliche
+Bibleothek, mit deren Hilfe man 3D-Objekte und Animationen mit Hilfe
+von OpenGL rendern kann. Beispiele dazu finden sich im 
+Verzeichnis <a href="../export_example_c">docs/export_example_c</a> des
+Sourcearchives. Die entsprechenden Beispiele f&uuml;r die Programmiersprache C++ 
+finden sich im Verzeichnis 
+<a href="../export_example_c++">docs/export_example_c++</a>.
+<br>
+F&uuml;r die Programmiersprache java existiert eine M&ouml;glichkeit, 3D-Objekte 
+und Animationen mit der Java Monkey Engine (JME, Version 2) zu rendern.<br>
+Die entsprechenden Beispiele finden sich im Verzeichnis 
+<a href="../export_example_java">docs/export_example_java</a>.<br>
+Darauf basiert auch der in white_dune eingebaute Export zu Quellcode f&uuml;r
+ein Module in <a href="openwonderland.org">Open Wonderland</a>(einer
+Internet-3D-Multiuserumgebung).<br>
+Dabei ist neben der Anzeige von 3D-Objekten und Animation auch Interaktion 
+(mit Hilfe der VRML97/X3D Sensorknoten) m&ouml;glich. Allerdings werden
+(bisher) nicht alle X3D Knoten und nicht das gesamte Laufzeitverhalten 
+unterst&uuml;tzt.<br>
+Im Gegensatz zu VRML/X3D und traditionellem OpenGL unterst&uuml;tzt
+Open Wonderland keine graphischen 3D-Objekte, die aus Polygonen mit mehr
+als 3 oder 4 Eckpunkten bestehen (obwohl Open Wonderland intern OpenGL
+verwendet). Deshalb trianguliert white_dune diese Objekte beim 
+Wonderland-Export.<br>
+Das funktioniert aber nicht so einfach bei der Morphing-Animation von 
+3D-Objekte mit Polygonen mit mehr als 4 Eckpunkten, diese 3D-Objekte 
+unterst&uuml;tzen beim Open Wonderland Export keine Morphing-Animation.<br>
+Ob ein bestimmter X3D Knoten in Open Wonderland unterst&uuml;tzt wird, sieht man
+am rechten unteren Rand seines Icons: dort befindet sich ein kleiner blauer
+Punkt (wie beim Icon f&uuml;r Box)<br>
+<img src="box_wonderland.jpg"/>
+<br>
+wenn der Knoten in Open Wonderland unterst&uuml;tzt wird.<br>
+Die Frage, welche Interaktionen m&ouml;glich sind, entscheidet sich im
+RouteView-Fenster. Bei SensorKnoten und Interpolatoren (nur bei diesen) sind
+die unterst&uuml;tzten Events farbig markiert.<br>
+Eine blaue oder lila Markierung der Events eines Knotens im RouteView 
+bedeutet, dass der Event vom Wonderland Exporter unterst&uuml;tzt wird, 
+w&auml;hrend eine rote oder keine Markierung bedeutet, dass der
+Event vom Wonderland Exporter (noch) nicht unterst&uuml;tzt wird.
+Eine rote Markierung bedeutet, dass es sich um einen oft benutzen Event
+handelt, eine lila Markierung soll eine Mischung zwischen roter und blauer
+Markierung andeuten: diese Events sind sowohl oft benutzt als auch vom
+Wonderland Exporter unterst&uuml;tzt.<br>
+<img src="wonderland_sensor_routeview.jpg"/>
+Im Beispiel wird ein TouchSensor im RouteView-Fenster gezeigt, zusammen
+mit einigen seiner EventNamen. 
+<ul>
+  <li>
+      Die Events "set_enabled" und "isActive" sind blau markiert, wird also 
+      vom Wonderland Exporter unterst&uuml;tzt.
+  </li>
+  <li>
+      Das Event "hitPoint_changed" ist rot markiert, wird also vom 
+      Wonderland Exporter (noch) nicht unterst&uuml;tzt.
+  </li>
+  <li>
+      Das Event "touchTime" ist lila markiert, wird also vom 
+      Wonderland Exporter unterst&uuml;tzt.
+  </li>
+</ul>
+Es kann zum Beispiel ein Route-Informationsverbindungsweg vom 
+TouchSensor.isActive Event (blau markiert) zu einem ScriptKnoten 
+gef&uuml;hrt werden, um von dort Information mit einem kleinen, 
+selbstgeschriebenen java-Programm in einem anderen Event eines anderen 
+von Wonderland unterst&uuml;tzten Knoten zu leiten.<br> 
+Es kann zum Beispiel auch ein Route-Informationsverbindungsweg von
+TouchSensor.touchTime (lila markiert) in einen TimeSensor.set_startTime Event
+(&uuml;brigens auch lila markiert) gef&uuml;hrt werden, um damit eine
+einfache Animation zu starten (denn einfache Animationen in X3D bestehen auch
+den ROUTE Befehlen "TimeSensor (ggf. mit Feld loop FALSE) -&gt; 
+Interpolator &gt; animierter Knoten").<br>
+Der Event TouchSensor.hitPoint_changed (rot markiert) wird zwar in
+X3D oft benutzt, wird aber nicht vom Wonderland-Export unterst&uuml;tzt.
+</p>
+<h3><a name="waskann">Was "white_dune" nicht kann und was es kann</a></h3>
+<p>
+<ul>
+  <li>
+  <strong>White_dune ist (noch) kein vollst&auml;ndiger VRML97 Browser 
+  (und schon gar kein vollst&auml;ndiger X3D Browser) und
+  kann nicht alles darstellen</strong><br>
+  Man kann mit white_dune Interaktion und Scriptprogrammierung erstellen,
+  aber zum Testen braucht man immer noch <em>Datei -&gt; Vorschau</em>
+  (oder muss das File abspeichern und dann mit einen VRML Browser aufrufen).
+  </li>
+  <li>
+  <strong>White_dune ist (noch) kein allgemein einsetzbares Modelling Tool.
+  </strong><br>
+  Komfortable Eingabem&ouml;glichkeiten gibt es f&uuml;r einfache Shapeknoten 
+  (K&ouml;rper) wie Box (W&uuml;rfel), Sphere (Kugel), Cone (Kegel),
+  und Zylinder sowie Shapeknoten wie ElevationGrid (H&ouml;henfeld) und 
+  Extrusion, aber nicht f&uuml;r Shapeknoten wie IndexedFaceSet 
+  (aus Einzelfl&auml;chen zusammengesetzter K&ouml;rper, "Mesh"),
+  IndexedLineSet (Linienb&uuml;ndel) und PointSet (Punktwolke), die in
+  der Regel aus sehr vielen Einzelwerten bestehen, f&uuml;r die (noch)
+  das Konzept fehlt.<br>
+  Der beim 3D-Modelling am h&auml;ufigsten eingesetzte K&ouml;rper ist
+  die "mesh". Viele 3D-Modelling-Programme exportieren zur Zeit bei 
+  VRML97 ausschliesslich "mesh"-Daten als IndexedFaceSet.<br>
+  </li>
+  <li> 
+  Ein beim 3D-Modelling ebenfalls h&auml;ufig eingesetztes Objekt ist 
+  das "NURBS" Objekt, das von white_dune unterst&uuml;tzt wird.<br>
+  Shapeknoten wie NurbsSurface, NurbsCurve oder NurbsGroup gibt es im 
+  traditionellen VRML97 Standard von 1997 nicht, sie sind Teil 
+  des VRML97 Amendment 1 ("VRML97 Anhang 1") Standard von 2002.
+  Eine zu VRML97 Amendment 1 inkompatible NURBS Implementation ist im 
+  X3D Standard verf&uuml;gbar.
+  White_dune kann automatisch von VRML97 Amendment 1 NURBS nach X3D NURBS 
+  (und umgekehrt) konvertieren. Das h&auml;ngt beim Speichern einer Datei
+  von der verwendeten Datei-Extension ab (.wrl f&uuml;r VRML97 Amendment 1,
+  .x3d bzw. .x3dv f&uuml;r X3D)<br>
+  Eine Einf&uuml;hrung in NURBS findet sich in einem
+  <a href="#nurbsbasics">anderen Abschnitt</a>.
+  VRML97 Amendmend 1 NURBS wird zur Zeit von den VRML97 Browser 
+  bitmanagement/blaxxun cc3d/contact unterst&uuml;tzt, aber nicht in
+  schlecht gewarteten VRML browsern wie cosmoplayer 2.1.<br>
+  </li>
+  <li>
+  White_dune erlaubt letztendlich die Konvertierung aller fl&auml;chigen 
+  K&ouml;rper in ein IndexedFaceSet (zumindest der Fl&auml;chen, die von
+  white_dune gerendert werden k&ouml;nnen, mit der Ausnahme von Text). 
+  Ein IndexedFaceSet kann in ein
+  IndexedLineSet, dieses in ein IndexedLineSet und dieses 
+  letztendlich in ein PointSet konvertiert werden.<br>
+  Dabei muss beachtet werden, dass diese Konvertierungen
+  Einbahn-Strassen darstellen, eine R&uuml;ckkonversion ist nicht innerhalb
+  des white_dune Programms durchf&uuml;hrbar 
+  (ausser <a href="#convexhull"><em>Actions -&gt; Konvexe H&uuml;lle</em></a>, 
+  das erzeugt ein IndexedFaceSet aus den Punten von verschiedenen Objekten).
+  Deshalb existiert ein Menupunkt <em>File -&gt; Exportiere als ... -&gt; 
+  PureVRML97</em>.<br>
+  Animierte Fl&auml;chen (einfache Timer und Interpolator Animation)
+  wie zum Beispiel NURBS oder Superformula Knoten werden
+  beim Export nach "PureVRML97" (aber nicht bei der Konvertierung in 
+  ein IndexedFaceSet) in eine Timer und Interpolator Animaton von 
+  IndexedFaceSet Knoten umgewandelt. Dabei ist zu beachten, dass 
+  die Berechnung von Werten zwischen zwei Zeitpunkten bei NURBS/Superformula 
+  Knoten anderst verl&auml;ft wie bei dem f&uuml;r IndexedFaceSet 
+  zust&auml;ndigen CoordinateInterpolator Knoten. Aus diesem Grund 
+  ben&ouml;tigt eine erfolgreiche Konvertierung einer solchen Animation
+  gen&uuml;gend Keyframes, mehr Keyframes wie eine NURBS/Superformula
+  basierte Animation.
+  </li>
+</ul>
+</p>
+<h3><a name="fenster">Die 5 Fenster von "white_dune"</a></h3> 
+<p>
+<img src=windows.png><br>
+Neben diversen Toolbars f&uuml;r Icons und Nachrichten besteht "white_dune" 
+(ohne die -kids oder -4catt Startoptionen) im wesentlichen aus 5 Fenstern. 
+Ausser dem "3D Preview" Fenster lassen sich die Fenster &uuml;ber den 
+Men&uuml;punkt "View" angepasst an den jeweiligen Arbeitsschritt
+ein- und ausschalten. 
+<ul>
+ <li>
+  <b>Scene Tree</b><br>
+  Dieses Fenster enth&auml;lt den Szenengraphen, und zeigt damit
+  die Struktur einer VRML/X3D Datei, die Information, wie 
+  einzelne VRML Nodes (Knoten) angeordnet sind.
+ </li>
+ <li>
+  <b>Field View</b><br>
+  Dieses Fenster enth&auml;lt die Fieldwerte, die Zahlen
+  (bzw. Zeichenketten usw.) in einer VRML/X3D Datei. Angezeigt
+  werden jeweils die Fields des zuletzt ausgew&auml;hlten
+  Knoten. 
+ </li>
+ <li>
+  <b>Route View</b><br>
+  Dieses Fenster enth&auml;lt die ROUTE's, die 
+  Informationswege mit denen sich verschiedene 
+  VRML/X3D Knoten beim Programmlauf verschiedene Nachrichten
+  schicken k&ouml;nnen.<br>
+  Ausgehend von den Einstellungen bei <em>Optionen -&gt; RouteView 
+  Einstellungen</em> werden im RouteView entweder die zur Zeit bestehenden
+  ROUTEs angezeigt (so wie in einer VRML/X3D-Datei nur die bestehenden ROUTEs
+  abgelegt sind) oder die Routes und alle existierenden Knoten, so dass
+  es bei kleinem VRML/X3D-Dateien einfacher ist, neue ROUTEs hinzuzuf&uuml;gen,
+  w&auml;hrend sich bei grossen VRML/X3D-Dateien ein verwirrendes Bild ergibt.
+ </li>
+ <li>
+  <b>Channel View</b><br>
+  Dieses Fenster besch&auml;ftigt sich ausschliesslich
+  mit Interpolatorknoten. Interpolatorknoten sind in VRML97 und X3D
+  vor allem wichtig f&uuml;r Animationen.
+ <li>
+  <b>3D Preview</b><br>
+  Dieses Fenster l&auml;sst sich nicht abschalten und 
+  zeigt eine Vorschau auf die graphische Darstellung
+  des VRML Files. Im Gegensatz zu den anderen Fenstern
+  ist im entsprechenden Programmteil die Umsetzung
+  des VRML97 Standards (noch) l&uuml;ckenhaft.<br>
+  Einige Knotentypen wie "MovieTexture" und werden &uuml;berhaupt nicht 
+  dargestellt. 
+  Die Icons von Knoten, die &uuml;berhaupt nicht dargestellt werden haben 
+  einen schwarzen Rahmen.
+  Bei den Knoten aus dem wenig verbreiteten erweiterten 
+  VRML97 Amendment 1 Standard (ISO/IEC 14772:2002) gibt es die meisten
+  L&uuml;cken, obwohl die Knoten NurbsSurface, NurbsCurve und NurbsGroup 
+  von Amendment 1 zur Zeit f&uuml;r die m&auml;chtigsten 3D Modelling 
+  Features von white_dune verantwortlich sind.<br> 
+  Die Knoten von X3D werden auch nicht komplett unterst&uuml;tzt.<br>
+  Es sind auch nicht alle Fieldwerte richtig dargestellt, zum Beispiel
+  bei Knotentypen wie "Text" unter Unix (besonders wenn ohne 
+  Unterst&uuml;tzung der GLUT Bibleothek &uuml;bersetzt wird) ist
+  die Umsetzung als "erst mal besser als gar nichts"
+  zu verstehen. Auch die Fieldwerte des zum "Text" Knoten geh&ouml;renden
+  "FontStyle" Knotens werden (noch) nicht richtig dargestellt.<br>
+  Auch das Field "convex" wird (noch) ignoriert. Wird "convex" auf "false"
+  gesetzt, werden Einbuchtungen in Fl&auml;chen bei der Darstellung 
+  beachtet.<br>
+  <img src=convex_freewrl.png>
+  <img src=convex_dune.png><br>
+  Korrekte und fehlerhafte Darstellung eines IndexedFaceSet mit eingebuchteten
+  Fl&auml;chen bei "convex false" in FreeWRL (links)
+  und White_dune (rechts)<br>
+  Das Problem mit "convex false" existiert auch bei Extrusion-basierten
+  Knoten. Bei Extrusion-basierten Knoten existieren noch weitere 
+  Darstellungsfehler.<br>
+  
+  Die Darstellung von mehreren durchsichtigen K&ouml;rpern hintereinander
+  ist ebenfalls fehlerhaft.<br>
+  <a href="../rendering_bugs/rendering_errors.html">Hier</a> findet sich
+  eine detailierte Darstellung von Michalis Kamburelis (dem Author der
+  kambi VRML gameengine)
+  weiterer Fehler im 3D Preview Fenster.<br>
+  <b>Nat&uuml;rlich bedeutet eine solche falsche Darstellung im 3D Preview
+  eines 
+  eingelesenen VRML Objekts nicht, dass sich ein Fehler in der eingelesenen 
+  VRML Datei befindet</b>. <br>
+  Mit <em>Datei -&gt; Vorschau</em> sollte man im Zweifelsfall 
+  einen VRML Browser starten.
+ </li>
+</ul>
+</p>
+<h3><a name="menue">&Uuml;berblick &uuml;bers Men&uuml;</a></h3> 
+<p>
+ The main menu of white_dune is seperated into the following submenus:
+ <ul>
+  <li>
+   Datei<br>
+   Diese Untermen&uuml; behandelt Dateioperationen, wie &ouml;ffnen,
+   einf&uuml;gen und speichern von VRML/X3D Dateien. Es kann auch benutzt
+   werden, um verschiedene Varianten von VRML/X3D sowie einige andere
+   3D Dateiformate abzuspeichern.<br>
+   Das Datei Untermen&uuml; enth&auml;lt auch einen Men&uuml;punkt, um
+   die aktuelle Datei in Textform ohne weitere &ouml;ffnen/speicher 
+   Dialoge in einem Texteditor zu bearbeiten.
+  </li>
+  <li>
+   Bearbeiten<br>
+   Dieses Untermen&uuml; wird benutzt, um Objekte zu kopieren, einzuf&uuml;gen,
+   l&ouml;schen oder zu suchen.<br>
+   Es enth&auml;lt auch einen Men&uuml;punkt f&uuml;r den VRML/X3D "DEF" 
+   Befehl. Dieser Befehl wird benutzt, um einem VRML/X3D Objekt einen
+   Namen zuzuweisen. Dieser Namen kann in einem "ROUTE" Befehl benutzt
+   werden, um Nachrichten zwischen VRML/X3D Objekten auszutauschen.
+   Er kann auch f&uuml;r einen "USE" Befehl benutzt werden (auch Teil
+   des "Bearbeiten" Untermen&uuml;s) um einen ununterscheidbaren Zeiger
+   auf das Objekt zu erzeugen, so &auml;hlich wie bei einem UNIX hard link.
+  </li>
+  <li>
+   Auswahl<br>
+   Dieses Untermen&uuml; wird benutzt, um die Auswahl zu steuern.<br>
+   Dabei k&ouml;nnen die Eckpunkte von beliebigen Mesh-Objekten, 
+   Fl&auml;chen und Linien von IndexedFaceSet und die Gewichte von HanimJoint 
+   ausgew&auml;hlt werden.<br>
+   "Bereich" bezieht sich auf Eckpunkte von IndexedFaceSet und 
+   Nurbs(Patch)Surface. Dabei muss ein erster Eckpunkt angew&auml;hlt
+   werden, bevor <em>Auswahl -&gt; Bereich</em> benutzt wird.
+   Danach muss ein zweiter Eckpunkt angew&auml;hlt werden. Es werden alle
+   Eckpunkte ausgew&auml;hlt deren Abstand zum ersten Eckpunkt kleiner
+   ist als der Abstand zwischen dem ersten und zweiten Eckpunkt.<br>
+   Der Men&uuml;punkt "vorherige Auswahl" stellt die vorher g&uuml;ltige
+   Auswahl zur Verf&uuml;gung, falls das m&ouml;glich ist.<br>
+   Der Men&uuml;punkt "Auswahl loeschen" dient dazu, die bisherige
+   Auswahl wieder zu reduzieren.<br>
+   Die Men&uuml;punkte "Zeige nur ausgewaehlte Eckpunkte", 
+   "Verstecke Eckpunkte" und "Zeige wieder Eckpunkte", k&ouml;nnen benutzt 
+   werden, um Eckpunkte zeitweise zu verstecken und wieder zu zeigen. Das ist 
+   sinnvoll, wenn die Ansicht vieler Eckpunkte den Benutzer verwirrt.   
+  </li>
+  <li>
+   Fenster<br>
+   Dieses Untermen&uuml; dient zur Festlegung der dargestellten Fenster
+   und Iconbalken.<br>
+   Neben der M&oul;glichkeit, einzelne Fenster und Iconbalken einzeln 
+   ein- und auszuschalten, gibt es auf den Men&uuml;punkt <em> Fenster
+   -&gt; Vollbild</em>, das alle Iconbalken ausser der Standardleiste
+   (z.B. mit den Icons f&uuml;r &Ouml;ffnen und Speicher) ausschaltet
+   und das 3D Preview-Fenster als einzige Fenster zeigt. Der Men&uuml;punkt
+   <em> Fenster -&gt; Vollbild</em> ist sehr sinnvoll, um ein 3D Objekt
+   zu modellieren oder in der 3D Welt zu navigieren.
+  </li>
+  <li>
+   Erzeugen<br>
+   Dieses Untermen&uuml; dient zur Erzeugung von neuen VRML/X3D Knoten.<br>
+   Das Men&uuml; ist so &auml;hnlich organisiert wie die components im
+   X3D Standard, aber nur die VRML97 Knoten sind so organisiert.
+   VRML97 Amendment 1 Knoten, X3D Knoten, X3D draft Knoten und extension
+   Knoten f&uuml;r Browser wie cover, kambi oder x3dom sind in eigenen 
+   Submen&uuml;s organsiert.
+  </li>
+  <li>
+   Animation<br>
+   Dieses Untermen&uuml; dient zur Erzeugung und Steuerung von Animationen.
+  </li>
+  <li>
+   Aktion<br>
+   Dieses Untermen&uuml; enh&auml:lt Funktionen, um die VRML/X3D Datei
+   zu ver&auml;ndern.<br>
+   Ein grosser Teil dieser Funktionen wurde deshalb entworfen, weil sie
+   von vielen 3D Modellern nicht zu Verf&uuml;gung gestellt werden (bzw.
+   beim VRML/X3D Export nicht mitexportiert werden).
+  </li>
+  <li>
+   Umwandeln<br>
+   Dieses Untermen&uuml; dient zur Umwandlung von 3D Objekten.<br>
+   Es gibt zwei verschiedene Arten der Umwandlung:
+   <ul>
+    <li>
+     Umwandlung von Geometrie:<br>
+     Die Umwandlung von Geometrie bedeutet eine Verlust an Information
+     in fast allen F&auml;llen. Im typischen Fall startet man mit
+     Geometrie mit nur wenigen Parametern wie eine Kugel mit nur
+     einem Parameter (radius) oder einem scripted PROTO wie SuperShape
+     (mit weniger als 20 Parametern f&uuml;r ein komplexes Objekt).
+     Der n&auml;chste Schritt k&ouml;nnte die Umwandlung in ein
+     Nurbs(Patch)Surface sein. 
+     Ein typischer Nurbs(Patch)Surface Knoten hat sehr viel mehr Parameter
+     als eine primitiver K&ouml;per oder ein scripted PROTO (wenn 
+     man grosse Arrays von Werten nicht als ein einziger Parameter 
+     z&auml;lt). Aber anders als bei einem primitiven K&ouml;per usw. 
+     kann man bei einem Nurbs(Patch)Surface Knoten kleine Details einfach
+     &auml;ndern.<br>
+     Der n&auml;chste Schritt k&ouml;nnte die Umwandlung in einen 
+     IndexFaceSet Knoten ("Mesh") sein. Auch dies erh&ouml;ht die
+     M&ouml;glichkeiten, um Details zu &auml;ndern.
+     W&auml;hrend ein Nurbs(Patch)Surface &uuml;ber nur wenige Kontrollpunkte
+     ge&auml;ndert kann, hat ein IndexFaceSet Knoten normalerweise sehr 
+     viel mehr Eckpunkte als Details, die ge&auml;ndert werden k&ouml;nnen.
+     Aber die Umwandlung verliert auch Kontrolle, denn die &Auml;nderung
+     eines Kontrollpunkts eines Nurbs(Patch)Surface Knotens kann eine
+     Menge Eckpunkte eines K&ouml;rper kontrollieren.<br>
+     Die n&auml;chsten m&ouml;glichen Schritte verlieren nur Information:
+     die Umwandlung in einen IndexedLineSet Knoten (Linien) verliert nur 
+     Information &uuml;ber Fl&auml;chen und der n&auml;chsten m&ouml;gliche
+     Schritt, die Umwandlung in ein PointSet (Punkte) verliert nur 
+     Informationen &uuml;ber die Verbindungen der Eckpunkte.
+    </li>
+    <li>
+     Interpolator Erzeugung:<br>
+     Diese Men&uuml;punkte erzeugen Position- und OrientationInterpolatoren
+     ausgehend von einer NurbsCurve. Anders als bei der Umwandlung von
+     Geometrie ersetzt der neu erzeugte Interpolator nicht die NurbsCurve.
+     Der neu erzeugte Interpolator in nicht verbunden mit anderen 
+     Knoten. Um ihn f&uuml;r eine Animation zu nutzen, muss er mit
+     einem TimeSensor und dem Zielknoten mit dem folgenden Routes Men&uuml;
+     verbunden werden.
+    </li>
+   </ul>
+  </li>
+  <li>
+   Routes<br>
+   Dieses Untermen&uuml; dient Bearbeiten von VRML/X3D ROUTE Befehlen.<br>
+   Das Kapitel &uuml;ber <a href="#route">Eingabe/L&ouml;schen von ROUTE's</a>
+   beschreibt dieses Men&uuml; n&auml;her.
+  </li>
+  <li>
+   Modus<br>
+   Dieses Untermen&uuml; dient zur Einstellung von Navigation und Eingabe.
+  </li>
+  <li>
+   Optionen<br>
+   Dieses Untermen&uuml; dient zum Ver&auml;ndern von diversen Einstellungen.
+  </li>
+  <li>
+   Hilfe<br>
+   Dieses Untermen&uuml; zeigt Hilfeseiten mit Hilfe eines HTML-Webbrowsers.
+  </li>
+  <li>
+   ! (zus&auml;tzlich m&ouml;gliches "Lehrer Men&uuml;")<br>
+   Dieses Untermen&uuml; ist nur bei entsprechender Programm&uuml;bersetzung
+   vorhanden. Es dient zur Markierung von richtigen und falschen Konstrukten.
+  </li>
+ </ul>
+</p>
+<h3><a name="navigation">Navigation</a></h3>
+<p>
+  Um im 3D Preview Fenster navigieren zu k&ouml;nnen steht zur Verf&uuml;gung:
+  <ul>
+   <li>
+   Shift-Mouse 1: Zoom View
+   </li>
+   <li>
+   Ctrl-Mouse 1: Rotate View
+   </li>
+   <li>
+   Shift-Ctrl-Mouse 1: Move View
+   </li>
+  </ul>
+  zus&auml;tzlich steht ab der Version 0.16 eine SGI artige Navigation
+  zur Verf&uuml;gung. Bitte beachten Sie, dass es nicht selten ist, dass
+  ein entsprechend konfigurierter
+  Windowmanager diese Eingaben f&uuml;r seine eigenen Zwecke interpretieren
+  k&ouml;nnte...
+  <ul>
+   <li>
+   Alt-Mouse1: Rotate View
+   </li>
+   <li>
+   Alt-Mouse2: Move View
+   </li>
+   <li>
+   Alt-Mouse1-Mouse2: Zoom View
+   </li>
+  </ul>
+  Ist ein 6D Eingabeger&auml;t aktiv, kann bei angew&auml;hltem 
+  Scene-Icon <img src=sceneicon.jpg> im Scene Tree Fenster
+  je nach der Auswahl der Transformicons <img src=schieb.png> <img src=rot.png>
+  <img=6d.png> <img src=rocket.png> <img src=hover.png>
+  durch das VRML File navigiert werden. <br>
+  Das Scene-Icon wird ausgew&auml;hlt, wenn ins Leere des 3D Preview Fensters
+  geklickt wird.<br>
+  Zus&auml;tzlich existiert je ein Icon das Navigation mit der
+  Maus <img src="mouse_navigation.png"> oder dem Eingabeger&auml;t 
+  <img src="inputdevice_navigation.png"> erzwingt.
+</p>
+<h3><a name="scenegraph">Ver&auml;ndern des Szenengraph</a></h3>
+<p>
+Einen neuen
+VRML node mit eine Mausklick auf das entsprechenden Icon 
+hinzuf&uuml;gen ist der einfachste Weg, den Szenengraph zu &auml;ndern.<br>
+Um ein VRML Knoten Icon zu identifizieren, bewegen Sie den Mousezeiger 
+&uuml;ber das Icon und warten Sie kurz. Ein beschreibender Text wird auf der
+Statusbar am unteren Ende des Fensters erscheinen.<br> 
+White_dune versucht, entweder den neuen node am blau untermalten 
+Selektionspunkt des Szenengraph<br> 
+<img src=node_add_valid.jpg><br>
+oder am root node des Scenengraph ("Scene" Icon) einzuf&uuml;gen.<br>
+White_dune graut alle node Icons aus, die nicht eingef&uuml;gt werden 
+k&ouml;nnen.<br>
+<img src=node_add_invalid.jpg><br><br>
+Die folgende Tabelle zeigt die Anforderung f&uuml;r die entsprechenden 
+Knoten im VRML97 Standard:<br>
+<ul>
+<li>Appearance braucht Shape
+<li>Material braucht Appearance
+<li>ImageTexture braucht Appearance
+<li>MovieTexture braucht Appearance
+<li>PixelTexture braucht Appearance
+<li>TextureTransform braucht Appearance
+<li>Coordinate braucht IndexedFaceSet oder IndexedLineSet oder PointSet
+<li>Color braucht IndexedFaceSet oder IndexedLineSet oder PointSet oder 
+    ElevationGrid
+<li>Normal braucht IndexedFaceSet
+<li>TextureCoordinate braucht IndexedFaceSet
+<li>FontStyle braucht Text
+<li>AudioClip braucht Sound
+</ul>
+So muss zum Beispiel ein Appearence Knoten selektiert sein, damit ein 
+ImageTexture Knoten eingef&uuml;gt werden kann, oder ein Shape Knoten
+selektiert sein, damit ein Appearence Knoten eingef&uuml;gt werden kann.<br>
+Alle die entsprechenden Felder im VRML97 Standard sind vom Datentyp
+SFNode, deshalb kann nur ein Knoten eingef&uuml;gt werden.
+Deshalb wird ein Icon auch dann ausgegr&auml;ut, wenn schon ein 
+entsprechender Knoten vorhanden ist.<br>
+Zum Beispiel k&ouml;nnen keine zwei ImageTexture Knoten zu einem
+Appearence Knoten hinzugef&uumlt werden. 
+Deswegen ist das ImageTexture Icon ebenfalls ausgegraut, 
+wenn ein Appearence Knote selektiert wird, aber ein ImageTexture Knoten
+schon vorhanden ist.<br>
+Nach dem VRML97 Standard brauchen auch die K&ouml;rper Knoten Box, Sphere, 
+Cone, Cylinder, IndexedFaceSet, IndexedLineSet, PointSet, ElevationGrid, 
+Extrusion und Text als Vorraussetzung einen Shapeknoten. Da bei der 
+Benutzung dieser Shape.geometry Knoten die 
+ben&ouml;tigte Struktur klar ist, wird beim Klicken auf die Icons und
+bei der Benutzung der <em>Erzeugen -&gt; Koerper -&gt; </em> Men&uuml;punkte  
+eine vollst&auml;ndige Shape-Struktur (einschliesslich default 
+Appearance/Material Knoten und einem umschliessenden Transform Knoten) 
+aufgebaut.<br>
+(Neu in Version 0.29beta) Ist bei der Erzeugung so eines Shape-Knotens
+kein Knoten angew&auml;hlt in den der Shape-Knoten passt, so wird der
+umschliessende Transform Knoten so aufgebaut, dass der neue Knoten direkt
+vor dem aktuellen Kamerapunkt erscheint).
+<br>
+F&uuml;r die im VRML97 Amendment 1 Standard hinzugekommenen, aber inzwischen
+veralteten Knoten gilt zus&auml;tzlich:
+<ul>
+ <li>
+  Coordinate braucht CoordinateDeformer 
+ </li>
+ <li>
+  NurbsSurface braucht Shape oder NurbsGroup
+ </li>
+ <li>
+  Contour2D braucht TrimmedSurface
+ </li>
+ <li>
+  NurbsTexutureCoordinate braucht NurbsSurface
+ </li>
+ <li>
+  TextureCoordinate braucht entweder entsprechenden VRML97 Knoten oder 
+  NurbsSurface
+ </li>
+</ul>
+Die Erweiterungen und zus&auml;tzlichen Knoten des immersiven Cover VRML97
+Browsers brauchen ebenfalls zus&auml;tzliche Regeln: 
+<ul>
+ <li>
+  Wave braucht Shape
+ </li>
+ <li>
+  VirtualSoundSource braucht VirtualAcoustics
+ </li>
+</ul>
+Die Erweiterungen und zus&auml;tzlichen Knoten der kambi VRML game engine 
+braucht auch eine zus&auml;tzliche Regel:
+<ul>
+ <li>
+ ImageTexture, PixelTexture und MovieTexture nodes brauchen entweder 
+ die entsprechenden VRML97 Knoten oder KambiAppearance
+ </li>
+</ul>
+White_dune hat selbst eine Scripted PROTO Erweiterung, die auch
+eine zus&auml;tzliche Regel braucht:
+<ul>
+ <li>
+  VrmlScene braucht VrmlCut
+ </li>
+</ul>
+Weil es sehr viel mehr X3D Knoten als VRML97 Knoten gibt, ist die Liste
+der ben&ouml;tigten Knoten bei X3D sehr viel l&auml;nger als bei VRML97:
+<ul>
+ <li>
+  MultiTexture braucht Appearance
+ </li>
+ <li>
+  ImageTexture braucht Appearance oder MultiTexture
+ </li>
+ <li> 
+  MovieTexture braucht Appearance oder MultiTexture
+ </li>
+ <li>
+  PixelTexture braucht Appearance oder MultiTexture
+ </li>  
+ <li>
+  MultiTextureTransform braucht Appearance 
+ </li>
+ <li>
+  TextureTransform braucht Appearance oder MultiTextureTransform
+ </li>
+ <li>
+  MultiTextureCoordinate braucht IndexedFaceSet oder NurbsPatchSurface
+ </li>
+ <li>
+  FillProperties braucht Appearance
+ </li>
+ <li>
+  LineProperties braucht Appearance
+ </li>
+ <li>
+  NurbsTextureCoordinate braucht NurbsPatchSurface
+ </li>
+ <li>
+  TextureCoordinate braucht entweder die entsprechenen VRML97 Knoten oder 
+  oder IndexedTriangleFanSet oder IndexedTriangleSet 
+  oder IndexedTriangleStripSet oder TriangleFanSet oder TriangleSet 
+  oder TriangleStripSet oder MultiTextureCoordinate
+ </li>
+ <li>
+  Coordinate oder CoordinateDouble braucht entweder die entsprechenen 
+  VRML97 Knoten f&uuml;r
+  Coordinate oder LineSet oder IndexedTriangleFanSet oder 
+  IndexedTriangleSet oder 
+  IndexedTriangleStripSet oder TriangleFanSet oder TriangleSet oder 
+  TriangleStripSet oder NurbsPatchSurface oder NurbsCurve oder 
+  NurbsPositionInterpolator oder NurbsOrientationInterpolator oder
+  NurbsSurfaceInterpolator oder NurbsTrimmedSurface
+  oder HAnimHumanoid oder HAnimSegment
+  oder NurbsOrientationInterpolator
+ </li>
+ <li>
+  Normal braucht entweder die entsprechenen VRML97 Knoten oder HAnimHumanoid 
+  oder IndexedTriangleSet oder IndexedTriangleFanSet 
+  oder IndexedTriangleStripSet
+  oder TriangleFanSet oder TriangleSet oder TriangleStripSet
+ </li>
+ <li>
+  Color braucht entweder die entsprechenen VRML97 Knoten
+  oder GeoElevationGrid oder LineSet
+  oder IndexedTriangleFanSet oder IndexedTriangleSet oder 
+  IndexedTriangleStripSet oder TriangleFanSet oder TriangleSet oder 
+  TriangleStripSet
+ </li>
+ <li>
+  ColorRGBA braucht entweder die entsprechenen VRML97 Knoten f&uuml;r Color
+  oder GeoElevationGrid
+  oder IndexedTriangleFanSet oder IndexedTriangleSet oder 
+  IndexedTriangleStripSet oder TriangleFanSet oder TriangleSet oder 
+  TriangleStripSet
+ </li>
+ <li>
+  NurbsCurve2D braucht Contour2D oder NurbsSweptSurface
+ </li>
+ <li>
+  ContourPolyline2D braucht Contour2D
+ </li>
+ <li>
+  Contour2D braucht NurbsTrimmedSurface
+ </li>
+ <li>
+  HAnimSegment braucht HAnimHumanoid oder HAnimJoint
+ </li>
+ <li>
+  HAnimJoint braucht HAnimHumanoid oder HAnimJoint
+ </li>
+ <li>
+  HAnimSite braucht HAnimHumanoid oder HAnimJoint
+ </li>
+ <li>
+  HAnimDisplacer braucht HAnimJoint oder HAnimSegment
+ </li>
+</ul>
+Zus&auml;tzlich dazu gibt es noch die Regeln f&uuml;r die X3D Knoten
+der Rigid Body Physics Kompontente, die getrennt aufgelistet werden,
+da diese Regeln allein f&uuml;r eine sinnvolle Benutzung dieser Knoten nicht
+ausreichen: 
+<ul>
+ <li>
+  RigidBody braucht BallJoint oder DoubleAxisHingeJoint oder SingleAxisHingeJoint
+  oder UniversalJoint oder SliderJoint oder MotorJoint oder RigidBodyCollection or
+  Contact
+ </li>
+ <li>
+  CollideableOffset braucht RigidBody oder CollidableOffset oder CollisionCollection
+  oder CollisionSpace oder Contact
+ </li>
+ <li>
+  CollideableShape braucht RigidBody oder CollidableOffset oder CollisionCollection
+  oder CollisionSpace oder Contact
+ </li>
+ <li>
+  CollisionSpace braucht CollisionCollection oder CollisionSpace
+ </li>
+ <li>
+  CollisionCollection braucht CollisionSensor
+ </li>
+</ul>
+Diese Regeln reichen deshalb nicht aus, weil eine sinnvolle Anwendung
+den Aufbau einer Struktur erfordern, bei der CollideableShape und
+CollideableOffset Knoten im Wurzelknoten des Szenengraphen stehen
+und in verschiedenen Knoten ge-USE-d werden, die dann ihrerseits
+in weiterer Stellen ge-USE-d werden. Um die Erstellung dieser 
+Struktur zu vereinfachen, gibt es <a href="physics">
+eine entsprechende Operation f&umml;r Szenengraphzweige</a>.
+</p>
+<p>
+Die Kommandos <em>Bearbeiten -&gt; kopieren</em>, 
+<em>Bearbeiten -&gt; einf&uuml;gen</em> und
+<em>Bearbeiten -&gt; l&ouml;schen</em> arbeiten so wie die gleichen
+Kommandos in vielen Programmen. <br>
+Nat&uuml;rlich sind nur &Auml;nderungen des Szenengraphen m&ouml;glich,
+die den oben vorgestellten "Knoten A braucht Knoten B"-Regeln entsprechen.
+Je nach selektiertem Knoten im Szenengraphen (dem Ziel einer 
+<em>Bearbeiten -&gt; einf&uuml;gen</em> Aktion) wird also der Men&uuml;punkt
+<em>Bearbeiten -&gt; einf&uuml;gen</em> ausgegraut oder nicht.<br>
+Es kann vorkommen, dass es bei einem unver&auml;nderten Szenengraphen
+nicht sofort m&ouml;glich ist, einen
+kopierten Knoten einzuf&uuml;gen, weil ein Knoten fehlt, der zum Kopieren 
+dieses Knotens gebraucht wird. Dieser fehlende Knoten muss dann zuerst 
+neu erzeugt werden, bevor die Kopieraktion erfolgreich beendet werden
+kann.
+</p>
+<p>
+Ein ungew&ouml;hnliches Kommando ist das 
+<em>Bearbeiten -&gt; Kopiere Zweig bis zur Wurzel</em> Kommando.
+Es kopiert alle Knoten entlang des Pfads bis zur Wurzel des aktuellen
+Szenengraph Zweigs in den Einf&uuml;gen-Puffer.<br>
+Das kann sehr n&uuml;tzlich sein, um einen Szenengraphzweig zu duplizieren
+und aufzuspalten.
+</p>
+<p>
+Ein anderer Weg, den Szenengraph zu ver&auml;ndern, ist Teile davon mit
+der Maus herumzuschieben.<br>
+White_dune zeigt das Icon eines Stopschildes,
+wenn der Zielknoten dies wegen der "fehlenden Knotenregel" nicht erlaubt.<br>
+<img src=scenegraphchange_invalid.jpg><br>    
+Wenn der Zielknoten es erlaubt, benutzt white_dune den normalen Mauszeiger.<br>
+<img src=scenegraphchange_valid.jpg><br>
+Ein Ziel ist nicht eindeutig, wenn der Ziel node mehrere SF/MFNode fields hat.
+<br>
+<img src=scenegraph_multiple_target.png><br>
+Knoten mit mehreren Fields vom Typ SF/MFNode (zum Beispiel der collision 
+Knoten) werden im Scenetree immer mit den entsprechenden Feldnamen 
+dargestellt (auch wenn die Einstellungen im 
+<em>Optionen -&gt; Allgemeine Einstellungen...</em> Dialog anders sind), damit 
+die Field Namen als Ziel benutzt werden k&ouml;nnen.<br>
+<img src=scenegraph_multiple_fields.png>
+</p>
+<p>
+Genauso wie beim lokalen kopieren/verschieben im Explorerprogramm von 
+M$Windows2000 und &auml;hnlichen Filemanagern kann man das Verhalten
+beeinflussen, wenn man die Tastatur benutzt, nachdem man angefangen hat,
+den VRML Knoten herumzuschieben:<br>
+<ul>
+ <li>
+  Verschieben: <br>
+  keine Taste dr&uuml;cken oder Shift Taste dr&uuml;cken
+  (das Icon bleibt unver&auml;ndert)
+  <br><img src=scenegraphchange_move.jpg><br>  
+ </li>
+ <li>
+  Kopieren: 
+  <br><img src=scenegraphchange_copy_ptr.jpg><br>  
+  Crtl Taste dr&uuml;cken
+  (das Icon zeigt zus&auml;tzlich ein "+" Zeichen)
+  <br><img src=scenegraphchange_copy.jpg><br>  
+ </li>
+ <li>
+  DEF/USE: 
+  <br><img src=scenegraphchange_link_ptr.jpg><br>  
+  Crtl Taste und Shift Taste gleichzeitig dr&uuml;cken
+  (das Icon zeigt zus&auml;tzlich ein "Pfeil" Zeichen)
+  <br><img src=scenegraphchange_link.jpg><br>  
+  Die USE Konstruktion ist so etwas wie ein ununterscheidbarer Zeiger, die
+  nochmal-Benutzung eines bereits existierenden Knotens.<br>
+  Bei DEF/USE sind Orginal und Kopie nicht mehr zu unterscheiden:
+  <ul>
+   <li>
+    Ver&auml;ndert man das Orginal dann ver&auml;ndert sich auch die Kopie. 
+   </li>
+   <li>
+    Ver&auml;ndert man die Kopie dann ver&auml;ndert sich auch das Orginal.
+   </li>
+   <li>
+    L&ouml;scht man die Kopie, hat das keine Auswirkungen auf das Orginal.
+   </li>
+   <li>
+    L&ouml;scht man das Orginal, hat das keine Auswirkungen auf die Kopie.
+   </li>
+  </ul>
+  Eine vergleichbare Konstruktion sind die Hardlinks des UNIX Filesystems.
+ </li>
+</ul>
+</p>
+<b><h4><a name="use">Die Benutzung von USE</a></h4></b><small>(neu in Version 0.29beta)</small><br>
+ Neben der oben gezeigten drag and drop Methode gibt es einen weiteren
+ Weg um das USE Konstrukt zu benutzen.
+ Der Knoten, der ge-USE-t werden soll braucht einen DEF Namen, der mit
+ <em>Bearbeiten -&gt; DEF</em> zugewiesen wird.
+ <em>Bearbeiten -&gt; USE</em> (falls m&ouml;glich) erzeugt ein neues USE 
+ des letzten ge-DEF-ten Knotens an der Stelle des angew&auml;hlten Knotens.<br>
+ In white_dune (anders wie wenn man einen Texteditor f&uuml;r eine VRML97
+ Datei benutzt), kann man den ge-DEF-ten Knoten problemlos l&ouml;schen.
+ Der zuerst geschreibene ge-USE-te Knoten wird dann zum neuen ge-DEF-ten
+ Knoten.
+ <br>
+ Die Benutzung von USE ist sinnvoll, um VRML Dateien klein zu halten
+ (was bedeutet, dass die Dateien schneller im Internet &uuml:bertragen
+ werden k&ouml;nnen), erh&ouml;ht die Wartbarkeit und kann unter Umst&auml;nden
+ von einem
+ geschickt programmierten VRML Browser dazu genutzt werden, dass
+ Objekte schneller gezeichnet werden (zum Beispiel durch die Verwendung
+ von glLists bei OpenGL rendering).<br>
+ Zus&auml;tzlich Kommandos die USE benutzen sind das <a href="#array">
+ array Werkzeug</a> und manche der folgenden "create" Szenegraph Operationen.
+</p>
+<p>
+ <b><h4><a name="scenegraphoperations">Szenengraph Operationen</a></b></h4><small>(neu in Version 0.27beta)</small><br>
+ Es gibt (noch) keinen Weg, um mehrere Knoten im Szenengraph zu verschieben.
+ Als Workaround gibt es Operationen um den aktuellen Szenegraphzweig
+ umzusortieren 
+ (<em>Aktion -&gt; bewege Geschwisterknoten -&gt; 
+  nach oben/nach unten/zur ersten/letzten Position</em>)
+ und Operationen, die auf alle Knoten im Szenengraph Zweig
+ wirken,
+ der dem angew&auml;lten Knoten folgt (einschliesslich des 
+ angew&auml;lten Knotens). <br>
+ <img src=scenegraphbranch_start.png><br>  
+ Die verf&uuml;gbaren Kommandos sind Sie unter dem Menupunkt
+ <em>Aktion -&gt; Rest des Szenegraph-Zweigs</em> erreichbar:
+ <ul>
+  <li>
+   <em>Verschieben in </em><br>
+   Dieses Kommando verschiebt die Knoten in einen "grouping node" 
+   (gruppierender Knoten) (wie Group, Transfrom usw.)<br>
+   <img src=scenegraphbranch_transform.png><br>
+   Es ist ebenfalls m&ouml;glich, Knoten in eine neue VRML97 Datei 
+   auszulagern und diese Datei &uuml;ber den Inline Befehl in der aktuellen
+   VRML97 anzusprechen, allerdings nur, wenn keine ROUTE die auszulagernden
+   Knoten anspricht oder eine USE Konstruktion benutzt wird.
+  </li>
+  <li>
+   <em>1 Ebene nach oben </em><br>
+   Dieses Kommando verschiebt die Knoten in den gleichen Szenegraph 
+   Zweig wie der "parent node" (Eltern Knoten) des angew&auml;lten Knotens.<br>
+   <img src=scenegraphbranch_up1.png><br>
+   <br>
+   <img src=scenegraphbranch_up2.png><br>
+   Dieser Befehl wird oft nach den Befehlen im letzten Absatz beschriebenen
+   Befehlen zum Verschieben in einen neuen Knoten benutzt.
+  </li>
+  <li>
+   <em>Verschieben in den ausgew&auml;hlten &Transform</em><br>
+   Dieses Kommando funktioniert nur bei einem angew&auml;ahlten Transform-Knoten.
+   Es verschiebt die Knoten, die auf den ausgew&auml;hlten Knoten
+   folgen, in den ausgew&auml;hlten Transform-Knoten. Im Unterschied zum
+   im ersten Blick sehr &auml;hnlichen Befehl zum Verschieben in einen
+   neuen Transform-Knoten ist bei diesem Befehl die Position, Lage und
+   Vergr&ouml;sserung/Verkleinerung der Knoten entscheidend.<br>
+   In den ausgew&auml;hlten Knoten werden (abh&auml;gig von den Feldern des
+   angew&auml;lten Transforms) bis zu 7 neue Transform-Knoten
+   eingef&uuml;gt, um die Position, Lage und Vergr&ouml;sserung aller 
+   verschobenen Knoten so auszugleichen, dass ihre globale Position, 
+   Lage und Vergr&ouml;sserung nicht ver&auml;ndert wird.<br>
+   <img src=scenegraphchange_move_transform1.png><br>
+   <br>
+   <img src=scenegraphchange_move_transform2.png><br>
+   Dieses Kommando wird oft dazu benutzt, um mehrteilige symetrische 
+   Objekte zu erstellen: <br>
+   Im ersten Schritt wird der oberste der neu eingef&uuml;gten Transform
+   Knoten angew&auml;hlt und den Men&uuml;punkt <em>Bearbeiten -&gt; 
+   Kopieren</em> benutzt.<br>
+   <img src=scenegraphchange_move_transform3.png><br>
+   Danach wird der urspr&uuml;nglich angew&auml;hlte Transform Knoten wieder
+   angew&auml;hlt,<br>
+   <img src=scenegraphchange_move_transform4.png><br>
+   um mit dem Men&uuml;punkt <em>Bearbeiten -&gt; Einf&uuml;gen</em> die 
+   Knoten zu duplizieren.<br>
+   <img src=scenegraphchange_move_transform5.png><br>
+   Mit einem Befehl wie <em> Aktion -&gt; Umklappen -&gt; x </em> werden die
+   duplizierten Knoten gespielt.<br>
+   <img src=scenegraphchange_move_transform6.png><br>
+   Dieses Verfahren zum Erzeugen von symetrischen Objekten funktioniert
+   nur wenn das scaleOrientation Feld des urspr&uuml;nglich 
+   angew&auml;hlten Transform-Knoten ein  enth&auml;lt,
+   das verhindert, dass das 
+  </li>
+  <li>
+   <em>Erzeugen</em><br>
+   Das Erzeugen Kommando erzeugt an jeder Stelle innerhalb des
+   Scenengraphen an der das m&ouml;glich ist, den neuen Knoten
+   (ImageTexture, Material, Appearance, Normal usw.). 
+   Die zu erzeugenden Knoten geh&ouml;ren alle zum Shape Knoten. 
+   Dabei muss unterschieden werden zwischen Knoten, die zum appearance Feld
+   von Shape geh&ouml;ren (ImageTexture, Material und Appearance) und Knoten, 
+   die zum geometry Feld von Shape geh&ouml;ren (Normal, TextureCoordinate).
+   Bei Knoten, die zum appearance Feld geh&ouml;ren, wird ein neuer Knoten
+   bei der ersten M&ouml;glichkeit im Szenegraph angelegt und bei allen
+   weiteren M&ouml;glichkeiten wird &uuml;ber USE dieser Knoten wiederverwendet.
+   <br>
+   <img src=scenegraphbranch_create1.png><br>
+   <br>
+   <img src=scenegraphbranch_create2.png><br>
+   Das macht es m&ouml;glich, die Farbe, die Materialeigenschaften und
+   die Textur eines ganzen Szenegraphzweigs mit wenig Aufwand zu 
+   ver&auml;ndern. Bei Knoten, die zum geometry Feld von Shape geh&ouml;ren,
+   werden die Knoten jeweils aus den Daten des Shapes (zum Beispiel ein
+   IndexedFaceSet) erzeugt.<br>
+   Um jeden beliebigen Knotentypen an bestimmten Stellen des Szenengraph
+   erzeugen zu k&ouml;nnen muss man den
+   <a href="#scenegraph_branch_fieldpipe"><em>Spezielle Funktionen -&gt; 
+   Benutze Fieldpipe</em> 
+   </a> Befehl benutzen
+  </li>
+  <li>
+   <em>Setzen</em><br>
+   Das Setzen Kommando ver&auml;ndert Felder (creaseAngle, 
+   transparency, usw.) im Szenengraph Zweig, die den Look eines Shape
+   Knoten beeinflussen..
+  </li>
+  <li>
+   <em>Umwandeln</em><br>
+   Dieses Kommando convertiert Knoten in andere Knoten. Das ist sehr
+   &auml;hnlich zum <em>Umwandeln</em> Punkt im Hauptmen&uuml;, 
+   aber leider ist zur Zeit nur die Umwandlung in
+   IndexedFaceSet und TriangleSet implementiert.
+  </li>
+  <li>
+   <em>L&ouml;schen</em><br>
+   Das L&ouml;schen Kommando l&ouml;scht einige Knotentypen
+   (ImageTexture, Material, Appearance, Normal etc.) oder beliebige Knoten
+   (abh&auml;gig von ihrem Namen bzw. DEF-Namen) im Szenengraph Zweig.
+   Die meisten dieser Knotentypen korrespondieren mit den Knoten beim
+   <em>Erzeugen</em> Kommando, denn das <em>Erzeugen</em> Kommando
+   kann nur dann Knoten einf&uuml;gen, wenn das passende Field nicht durch
+   einen bereits existierenden Knoten blockiert ist.<br>
+   Manchmal ist es sinnvoll, die Knoten im ersten Schritt zu l&ouml;schen und
+   dann im n&auml;chsten Schritt neu zu erstellen.<br>
+   Wenn man zum Beispiel eine Menge texturierter Objekte im Szenengraph
+   Zweig hat und allen Objekten die gleiche Textur geben will.
+   Im ersten Schritt l&ouml;scht man &uuml;berall die Textureknoten und
+   im n&auml;chsten Schritt erzeugt man &uuml;berall einen Texturknoten.
+   Weil der neue Texturknoten immer ein USE "Klon" des ersten Texturknoten
+   ist, resultiert eine &Auml;nderung des Texturknotens in einer &Auml;nderung
+   jeder der erzeugten Texturknoten.<br>
+   Das L&ouml;schen von einigen der Knoten (e.g. Normal oder TextureCoordinate)
+   hat Auswirkungen auf den Elternknoten, denn einige der Felder des
+   Elternknoten (z.B. normalIndex oder texCoordIndex des IndexedFaceSet
+   Knoten) sollte auch gel&ouml;scht werden. In diesem Fall l&ouml;scht
+   white_dune dieses Feld.<br>
+   <img src=scenegraphchange_delete1.png><br>
+   <br>
+   <img src=scenegraphchange_delete2.png><br>
+   <br>
+   <img src=scenegraphchange_delete3.png>
+  </li>
+  <li>
+   <em>Spezielle Funktionen:</em><br>
+   Dieser Punkt sammelt alles, das nicht in die anderen Kategorien passt.
+   <ul>
+    <li>
+    <a name="scenegraph_branch_fieldpipe"><em>Benutze Fieldpipe</em></a>
+    <br>
+     Das <a href="#fieldpipe">Konzept der Fieldpipe</a> wird in einem 
+     der folgenden Kapitel vorgestellt. Hier wird es auf jeden Knoten
+     im Szenengraphzweig angewendet, der dessen Namen oder DEF-Namen zu dem
+     im Dialog abgefragten Nodefilter passt.
+    </li>
+    <li>
+     <a name="show_polygons">
+      <em>Zeige Polygon/Primitivzahl in der Anzeigeleiste</em>
+     </a>
+     Dieses Kommando ist ein Informationskommando und &auml;ndert nichts
+     im Szenegraph. Es kann dazu benutzt werden um den Teil des Szenegraphen
+     zu finden, der den gr&ouml;ssten Teil der Polygone/Primitive enth&auml;lt.
+     Das ist sehr wichtig um Performance Probleme in Realtime 3D Daten
+     zu finden.<br>
+     Primitive sind Knoten wie Box (Quader), Cone (Kegel), Cylinder (Zylinder)
+     und Sphere (Kugel).
+     Bei Primitiven h&auml;gt Zahl der benutzten Polygone vom benutzten
+     VRML Browser ab. Zum Beispiel kann ein VRML Browser 16 Polygone
+     benutzen, um die obere Fl&auml;che eines Zylinders
+     bei schlechter Qualit&auml;t mit deutlichen Ecken darzustellen oder 
+     32 Polygone bei besserer Qualit&auml;t.<br>
+     Um den Teil im Szenengraph zu finden, der die gr&ouml;sste 
+     Anzahl von Polygonen/Primitive hat, kann ein Bin&auml;rer Suchalgorithmus
+     verwendet werden:<br>
+     <ul>
+      <nl> 
+       Klicke das Scene Icon an der Wurzel des Szenengraph an und benutze
+       <em>Aktion -&gt; Rest des Szenengraph Zweigs -&gt; 
+       Zeige Polygon-/Primitiv-Zahl in der Anzeigeleiste</em>.
+       Angezeigt wird die Zahl der Polygone/Primitiven in der ganzen VRML 
+       Datei.
+      </nl>
+      <nl>
+       W&auml;hlen Sie einen Knoten an, der ungef&auml;hr in der Mitte des
+       aktuellen Bereichs des Szenengraph Zweigs ist und benutzen Sie
+       <em>Aktion -&gt; Rest des Szenengraph Zweigs -&gt; 
+       Zeige Polygon-/Primitiv-Zahl in der Anzeigeleiste</em>.<br>
+       Wenn die Nummer gr&ouml:sser ist als die H&auml;lfte des Results
+       des letzten Kommandos, dann ist die Mehrheit der Polygone/Primitiven
+       im oberen Teil des aktuellen Bereichs des Szenengraph Zweigs.<br>      
+       Wenn die Nummer kleiner ist als die H&auml;lfte des Results
+       des letzten Kommandos, dann ist die Mehrheit der Polygone/Primitiven
+       im unteren Teil des aktuellen Bereichs des Szenengraph Zweigs.<br>      
+       Fahren sie mit dem Schema bei der Mitte des verbleibenden Bereichs
+       des letzten Befehls weiter zu machen, fort bis man entweder den
+       Knoten oder den Bereich von Knoten gefunden hat, die die meisten
+       Polygone/Primitive in der Datei enth&auml;lt.
+      </nl>
+      <nl>
+       Der Knoten (oder Bereich von Knoten) (z.B. wenn es ein Group oder
+       Transform Knoten ist) kann seinerseitz andere Knoten enthalten.
+       Wenn sie auf das Pluszeichen im Szenenbaum klicken k&ouml;nnen
+       &ouml:ffnet sich ein neuer Bereich des Szenenbaum. 
+       Wenn weiter nach dem Teil mit den meisten Polygonen/Primitiven 
+       gesucht werden soll, benutzen Sie
+       <em>Aktion -&gt; Rest des Szenengraph Zweigs -&gt; 
+       Zeige Polygon-/Primitiv-Zahl in der Anzeigeleiste</em>.
+       und machen Sie mit dem 2. Schritt weiter.
+      </nl>
+     </ul>
+    </li>
+    <li>
+    <em>Benutze Fieldpipe</em><br>
+     Das <a href="#fieldpipe">Konzept der Fieldpipe</a> wird in einem 
+     der folgenden Kapitel vorgestellt. Hier wird es auf jeden Knoten
+     im Szenengraphzweig angewendet, der dessen Namen oder DEF-Namen zu dem
+     im Dialog abgefragten Nodefilter passt.
+    </li>
+    <li>
+     <a name="build_physics">
+      <em>Erstelle RigidBodyCollection/CollisionSensor</em>
+     </a><br>
+     Dieses Kommando ist nur f&uuml;r die X3D Rigid Body Physics component
+     sinnvoll. In diesem Fall muss eine komplizierte Struktur von Knoten
+     erzeugt werden, die viele DEF/USE Konstrukte enthalten muss.
+     Dieses Kommando sammelt alle CollideableShape und
+     CollidableOffset Knoten im aktuellen Szenegraph-zweig und erzeugt
+     die f&uuml;r die Simulation starrer K&ouml;rper n&ouml;tige Struktur.
+     Neben Simulationsparamtern muss man ggf. nur noch die Gelenkknoten 
+     (...Joint) einf&uuml;gen und per USE die RigidBody Knoten an diese 
+     Gelenke anschliessen.
+    </li>
+    <li>
+     <em>Zeige Polygon-Zahl f&uuml;r Catt8 in der Anzeigeleiste</em><br>
+     Dieses Kommando ist &auml;hnlich wie <a href="#show_polygons">
+     das entsprechende Kommando zur Anzeige der Polygon/Primitivenzahl</a>.
+     Der entscheidende Unterschied ist, dass dieser Befehl f&uuml;r 
+     den Export ins Catt8 Dateiformat gedacht ist. Das Format f&uuml;r Catt 8
+     kennt keine Primitiven. Ausserdem kennt Catt8 keine doppelseitigen
+     Fl&auml;chen, so dass in diesem Fall die Vorderseite und R&uuml;ckseite
+     getrennt exportiert (und hier entsprechen gez&auml;lt) werden.
+    </li>
+   </ul>
+  </li>
+ </ul>
+ Leider sind einige dieser Operationen (noch) sehr langsam.
+</p>
+<h3><a name="route">Eingabe/L&ouml;schen von ROUTE's</a></h3>
+<p>
+In white_dune gibt es zwei verschiedene Einstellungen, die entscheiden,
+wie eine ROUTE eingegeben werden kann.
+<ul>
+ <li>
+  In <em> Optionen -&gt; RouteView Einstellungen...</em> ist das
+  K&auml;stchen f&uuml;r "Zeige alle Knoten im Routeview" angeklickt:<br>
+  Alle Knoten in der Szene werden im Routeview angezeigt.<br>
+  Das ist sinnvoll f&uuml;r die Arbeit mit kleinen VRML Dateien, aber
+  nicht f&uuml;r VRML Dateien mit vielen Knoten, dann kann es schwierig
+  werden, das richtige Icon zu finden.
+ </li>
+ <li>
+  In <em> Optionen -&gt; RouteView Einstellungen...</em> ist das
+  K&auml;stchen f&uuml;r "Zeige alle Knoten im Routeview" nicht angeklickt:<br>
+  Nur Knoten mit existierenden ROUTEs werden im Routeview gezeigt.<br>
+  Um einen Knoten ohne ROUTEs im Routeview erscheinen zu lassen, muss man
+  den entsprechenden Knoten im Scene Tree anw&auml;hlen und dann das
+  <em>Route -&gt; Zeige Knoten ganz oben</em> Kommando verwenden.
+ </li>
+</ul>
+</p>
+<p>
+ROUTEs werden in white_dune angelegt, indem man das entsprechende Icon
+im RouteView Fenster findet (klicken auf die Icons selektiert die
+entsprechenden Icons im Scene Tree Fenster) oder mit
+<em>Route -&gt; Zeige Knoten ganz oben</em> im RouteView Fenster erscheinen
+l&auml;&szlig;t und auf die K&aumlstchen
+f&uuml;r die Events klickt. Dabei wird der Name des Events angezeigt
+und es l&auml;sst sich eine Linie zum n&auml;chsten Icon/Event ziehen.
+<br>
+<img src=routemake1.jpg><img src=routemake2.jpg> <br>
+Es k&ouml;nnen (wie im VRML Standard verlangt) nur Events mit gleichen
+Datentypen (gleiche Farbe der K&auml;stchen) verbunden werden.<br>
+Zum L&ouml;schen der ROUTEs kann die Linie einfach durchgestrichen 
+werden.<br>
+<img src=routecut1.jpg><img src=routecut2.jpg><br>
+Als Vorschlag f&uuml;r Anf&auml;nger sind einige Event-K&auml;stchen mit
+einem kleinen roten Punkt markiert. Der rote Punkt zeigt wichtige/oft
+benutzte Events.<br>
+Nat&uuml;rlich h&auml;ngt die Wichtigkeit/Benutzungsh&auml;ufigkeit 
+eines Events vom
+Thema der VRML Welt ab. Alle Sensor Knoten (die eigentlich Quelle bei der
+Verarbeitung der meisten Events) haben mit roten Punkten markierte 
+Event-K&auml;stchen.
+</p>
+<p>
+Bei komplexen VRML Welten mit vielen Objekten (zum Beispiel dem VRML Export
+aus einem 3D-Modelling-Programms wie Wings3D, Blender, AOI, Catia, 
+3D Studio Max, Maya usw.) kann es sehr schwierig werden, die gew&uuml;schten
+VRML Knoten im RouteView Fenster wiederzufinden. 
+<br><img src=routeview_full.png><br>
+Es gibt Befehle, um zum angew&auml;lten Knoten zu springen (mit
+<em>Routes -&gt; Kein Zoom/Sprung zur Auswahl</em>)
+<br><img src=routeview_jump.png><br>
+oder die Ansicht des Routeview zu vergr&ouml;ssern 
+(mit <em>Routes -&gt; Herauszoomen</em>)
+<br><img src=routeview_zoom.png><br>
+aber in diesem Fall 
+empfiehlt sich der Einsatz des Inline VRML-Knotens.
+Damit ist es m&ouml;glich
+ist statische Objekte (die zum Beispiel Teil der Umgebung oder Teil von
+starren Objekten sind) in eigene VRML Dateien auszulagern, so dass die
+gesamte VRML-Welt nur noch aus sehr wenigen VRML Knoten besteht.
+<br><img src=routeview_inline.png><br>
+</p> 
+<p>
+<b>Befehle, die automatisch ROUTEs erzeugen</b><br>
+Es gibt zwei Befehle, die automatisch neue ROUTEs erzeugen.
+<ul>
+ <li>
+  <em> Aktion -&gt; Animation erstellen </em><br>
+  Hierbei werden die ROUTEs <br>
+  TimeSensor -&gt; *Interpolator -&gt; angew&auml;lter Knoten<br>
+  erzeugt. Es &ouml;ffnet sich ein Dialog, der fragt, ob ein 
+  neuer TimeSensor oder ob ein bereits existierender 
+  TimeSensor benutzt werden soll. Der Dialog fragt auch danach, welches
+  Zielevent (Field) im angew&auml;hlten Knoten benutzt werden soll. Nach dem
+  Typ des Zielevents richtet es sich, welcher Interpolator erzeugt wird:
+  <ul>
+   <li>
+    SFFloat: ScalarInterpolator
+   </li>
+   <li>
+    SFVec3f: PositionInterpolator
+   </li>
+   <li>
+    SFRotation: OrientationInterpolator
+   </li>
+   <li>
+    SFColor: ColorInterpolator
+   </li>
+   <li>
+    MFVec3f: CoordinateInterpolator (ausser der Zielknoten ist ein Normal 
+             Knoten ist und es wird deswegen ein NormalInterpolator erzeugt)
+   </li>
+   <li>
+    Im X3D Standard gibt es noch zus&auml;tzliche Interpolatorknoten:
+    <ul>
+     <li>
+      SFVec2f: PositionInterpolator2D
+     </li>
+     <li>
+      MFVec2f: CoordinateInterpolator2D
+     </li>
+    </ul>
+   </li>
+  </ul>
+  Wenn der Inhalt des Zielevents ermittelt werden kann, wird ein erster
+  Eintrag in den Interpolator mit key=0.0 und keyValue=wert_zielfeld erzeugt.
+ </li>
+ <li>
+  <em> Aktion -&gt; Interaktion erstellen </em><small>(neu in Version 0.29beta)<br></small>
+  Hierbei werden die ROUTE <br>
+  Sensor -&gt; angew&auml;lter Knoten<br>
+  erzeugt.<br>
+  Da es in der Regel mehrere Zielevents im angew&auml;hlten Knoten gibt 
+  und anders als bei den 
+  Interpolatoren die Zuordnung Zielevent zu Sensor oft nicht eindeutig ist,
+  ergeben sich sehr viele M&ouml;glichkeiten, von denen viele nur selten
+  einen Sinn ergeben. Deswegen gibt es zwei Listboxen: eine Listbox
+  mit dem zwischen
+  empfohlenen Zielevents und allen Zielevents ausgew&auml;hlt werden kann,
+  und eine Listbox, mit der bereits existierende Sensoren ausgew&auml;hlt
+  werden k&ouml;nnen.<br>
+  In einem Fenster werden entsprechend der Auswahl in den Listboxen 
+  anklickbare K&auml;stchen f&uuml;r alle Sensorevent/Zielevent
+  Kombinationen dargestellt, aus denen die neue Interaktion ausgew&auml;lt
+  werden kann.
+ </li>
+</ul>
+</p>
+<h3><a name="fields">Fieldwerte ver&auml;ndern</a></h3>
+<p>
+Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
+<ul>
+ <li>
+  <b><a name="keyboard">Tastatureingabe</a></b><br>
+  &Uuml;ber das klicken mit der Maus auf den entsprechenden Wert
+  und dem Loslassen der Maustaste. Dann &ouml;ffnet sich ein 
+  Texteingabefenster und man kann Werte &uuml;ber die Tastatur eingeben.
+ </li>
+ <li>
+   <b><a name="mouse">Mauseingabe</a></b><br>
+  &Uuml;ber das klicken mit der Maus auf den entsprechenden Wert,
+  dem Festhalten der Maustaste und der Bewegung des Mauszeigers nach
+  links oder rechts. Dies erh&ouml;ht oder erniedrigt den Wert.<br>
+   <img src=fieldchange.jpg><br>
+ </li>
+ <li>
+  <b><a name="MF">"MF"-Fieldwerte &auml;ndern</a></b><small>(neu in version 0.27beta)</small><br>
+  Im Fieldview Window, markiert ein "+"-Zeichen auf der linken Seite
+  ein "MF"-field 
+  wie MFFloat, MFInt32, MFVec3f, MFRotation, MFString usw.
+  "MF"-Fields sind Datenfelder, man kann den Inhalt abz&auml;hlen: ein, zwei,
+  drei usw.<br>
+  Um ein "MF"-Field anzuschauen/zu ver&auml;ndern, muss man auf das
+  "+"-Zeichen auf der linken Seite klicken.<br>
+  Wie in einer VRML Datei wird ein "MF"-field mit nur einem Dateneintrag
+  &auml;hnlich behandelt wie ein normales "SF"-Field mit nur einem Datum.<br>
+  Um Daten zu einem "MF"-field hinzuzuf&uuml;gen, muss man auf die zweite
+  Spalte von "+"-Zeichen klicken. Dann wird ein neuer Dateneintrag 
+  in die n&auml;chste Stelle im Datenfeld eingef&uuml;gt.<br>
+  Um Daten an erster Stelle einzuf&uuml;gen, muss man im ge&ouml;ffneten
+  "MF"-field auf die rechte Seite des FieldView Fensters &uuml;ber dem 
+  ersten Eintrag klicken.<br>
+  Um von einem "MF"-Field zu l&ouml;schen, muss auf die linke Seite
+  des FieldView Fensters in der Reihe mit dem zu l&ouml;schenden 
+  Dateneintrag klicken und danach den Men&uuml;punkt 
+  <em>Bearbeiten -&gt; Loeschen</em> benutzen.
+ </li>
+ <li>
+  <b><a name="3DWindow">Fieldwerte ver&auml;ndern im 3D Preview Fenster</a></b><br>
+   Ver&auml;nderungen im 3D Preview Fenster bedeuten auch eine 
+   Ver&auml;nderung der
+   Fieldwerte. Oft wird dabei ein Transformknoten 
+   ver&auml;ndert.<br>
+   Mit den Werkzeugen <img src=transform.jpg> legen Sie beim interaktiven
+   Arbeiten fest, ob das Arbeit mit der Maus auf einem Transformknoten
+   eine 
+   <ul>
+   <li> Verschiebung <img src=schieb.png> </li>
+   <li> Drehung <img src=rot.png> </li>
+   <li> Skalierung <img src=scale.jpg> </li>
+   <li> Gleichm&auml;&szlig;e Skalierung <img src=uniform_scale.png>
+        <small>(neu in Version 0.29beta)</small> </li>
+   <li> Mittelpunktsverschiebung <img src=center.jpg>
+        <small>(neu in Version 0.19beta)</small> </li>
+   </ul>
+   aktiviert wird. <br>
+   <strong>Beachten Sie, dass Sie diese Werkzeuge nicht benutzen
+   k&ouml;nnen, wenn kein Transformknoten <img src=transform2.jpg> 
+   im entsprechenden Zweig 
+   des Szenengraphs vorhanden ist</strong>.<br>
+   Ausser dem Transformknoten k&ouml;nnen auch andere Fieldwerte im 3D 
+   Preview Fenster
+   ver&auml;ndert werden. Bei den meisten Knoten, die zum "geometry"
+   Feld eines Shape-Knoten (graphisches 3D-Objekt) geh&ouml;ren,
+   lassen sich kleine weisse K&auml;stchen 
+   verschieben, die z.B. mit Eck- oder Kurvenpunkte gekoppelt sind.
+   Beispiele sind Box, Cone, Cylinder, Sphere, ElevationGrid, 
+   Extrusion, PointLight, (Indexed)*Set, die X3DV/VRML97 
+   Amendment 1 NurbSurface/NurbsCurve Knoten oder mittels Skripting 
+   erstellte Knoten ("scripted PROTOs") die mit Hilfe von NURBS Kurven
+   erzeugt werden (z.B. SuperExtrusion, SuperRevolver).
+ </li>
+ <li>
+  <b><a name="6D">6D Input</a></b> <small>(neu in Version 0.19beta)</small><br>
+  Seit Version 0.19beta unterst&uuml;tzt White_dune 6D Eingabeger&auml;te
+  (6D bezieht sich auf die 6 Freiheitsgrade) unter Unix/Linux.<br> 
+  Ist ein 6D Eingabeger&auml;t konfiguriert und das Icon <img src=6d.png> 
+  gedr&uuml;ckt, kann ein Transform-Knoten
+  (und die darin enthaltenen Objekte) in allen 6 Freiheitsgraden bewegt 
+  werden. Das Icon <img src=schieb.png> beschr&auml;nkt sich auf
+  Verschiebung, das Icon <img src=rot.png> auf Drehung.
+  <br>
+  Das klassische 
+  6D Eingabeger&auml;t
+  ist der Spaceball, eine Art Joystick mit (mit Kugel statt Hebel), der nur 
+  kleine Auslenkungen erlaubt,
+  diese aber in alle Raumrichtungen, einschliesslich Drehungen.<br>
+  <img src=spaceball.jpg><br>
+  Dr&uuml;ckt man zum Beispiel auf den Spaceball, bewegt sich das Objekt
+  nach unten. Verdreht man den Spaceball, folgt das Objekt dieser
+  Bewegung.<br>
+  &Auml;hnliche Ger&auml;te sind Magellan Spacemouse oder Spacenavigator,
+  nur dass statt einer Kugel eine ergonomisch geformte Scheibe benutzt wird.
+  <br>
+  Die Konfiguration der 6D Eingabeger&auml;te funktioniert (noch) 
+  ausschliesslich &uuml;ber Kommandozeilenparameter. Dabei
+  muss neben der Art des Eingabeger&auml;ts auch die Skalierung
+  (Multiplikation) der Eingabewerte angegeben werden, zum Beispiel:
+<br>
+<pre>
+   white_dune -xinput spaceball -allxyz=20,200 -allrot=40,400
+</pre>
+<br>
+  Es ist auch m&ouml;glich, den Einfluss der Eingabeger&auml;te zu
+  vergr&ouml;ssern/verkleinern w&auml;hrend das Programm l&auml;uft.
+  Benutzen Sie 
+  <em>Modus -&gt; Eingabegeraet -&gt; Vergroessere Eingabegeraet-Daten</em>
+  (icon <img src=faster.png>) oder 
+  <em>Modus -&gt; Eingabegeraet -&gt; Verkleinere Eingabegeraet-Daten</em>
+  (icon <img src=slower.png>).
+  <br>
+  Wenn die Bewegung auf Verschiegungen (<img src=schieb.png>)
+  begrenzt wird, wird nur der "allxyz" Bereich ver&auml;ndert.
+  Wenn die Bewegung auf Drehungen (<img src=rot.png>)
+  begrenzt wird, wird nur der "allrot" Bereich ver&auml;ndert.
+<br>
+  Ausser der Unterst&uuml;tzung &uuml;ber das Xinput Protokoll werden
+  Spaceballger&auml;te
+  auch &uuml;ber Linux Joystick und libsball unterst&uuml;tzt. Details zu
+  den Kommandozeilenparametern sind in der 
+  <a href=dune_1.html>man page</a> zu finden. <br>
+  Ein anderes 6D Eingabeger&auml;t sind sogenannte Dials (verf&uuml;gbar
+  z.B. unter SGI IRIX).
+  In der Defaulteinstellung sind die Eingabeachsen etwas ung&uuml;nstig
+  angeordnet<br>
+  <img src=dials_default.jpg><br>
+  &Uuml;ber Kommandozeilenparameter 
+<br>
+<pre>
+   white_dune -xinput dialbox-1 -x=0 -y=2 -z=4 -xrot=1 -yrot=3 -zrot=5 -all=100,100,wheel
+</pre>
+<br>
+  lassen sich die Achsen vertauschen.<br>
+  <img src=dials_normal.jpg><br>
+ </li>
+ <li>
+  <b><a name="nxtdials">Mindstorms NXT dials Input:</a></b><br>
+  Ein selbstgebasteltes Ger&auml;t, das sehr &auml;hnlich wie die SGI
+  Dials sind, kann sehr einfach mit einem Mindstorms NXT Set hergestellt
+  werden.<br>
+  <a href="nxtdials_de.wrl"><img src=nxtdials.png></a><br>
+  Es muss nur ein Rad/Zahnrad an je einen der 3 NXT Motoren angebaut werden,
+  die Motoren m&uuml;ssen mit dem NXT Brick verbunden werden und der Brick
+  muss mit USB an den Rechner angeschlossen werden.
+  <br>
+  Der Zugriff erfolgt &uuml;ber libusb, das unter Umst&auml;nden
+  eine weitere Konfiguration erfordert.<br>
+  Zum Beispiel um libusb Funktionen unter Linux ohne Rootrechte benutzen 
+  zu k&ouml;nnen, ist ein Script wie <a href="../../tools/nxt_udev.sh">
+  tools/nxt_udev.sh</a> hilfreich.<br>
+  Die passende Kommandzeile um den ersten ("0") am USB-Port eingesteckten 
+  Brick ist:<br>
+<pre>
+     dune -nxtdials 0 -all=,,wheel
+</pre>
+  </li>
+ <li>
+  <b><a name="6Dlocal">6D Local Mode Input:</a></b><small> 
+  Kennen Sie Funkfernsteuerungen? (neu in Version 0.19beta)</small><br>
+  Ist das 6D Local Icon <img src=6dloc.png> gedr&uuml;ckt, so kann man damit
+  die lokalen Achsen eines Transformknoten steuern. <br>
+  Bewegt man zum
+  Beispiel einen Spaceball in z-Richtung ("in den Schirm hinein", so bewegt 
+  sich der Transformknoten (und die enthaltenen Objekte) in Richtung seiner 
+  lokalen Z-Achse, folgt also der Richtung des blauen Z-Pfeils.<br>
+  Bewegt man zum
+  Beispiel einen Spaceball in y-Richtung ("nach oben", so bewegt 
+  sich der Transformknoten (und die enthaltenen Objekte) in Richtung seiner 
+  lokalen Z-Achse, folgt also der Richtung des gr&uuml;nen Y-Pfeils.<br>
+  <img src=6dlocal_right3.jpg><br>
+  Das kann sehr sinnvoll sein, wenn man Objekt und Transformknoten 
+  entsprechend anordnet. Im Normalfall liegt allerdings ein Objekt 
+  nicht in der Richtung der Pfeile seines Transformknotens,<br>
+  <img src=6dlocal_wrong.jpg><br>
+  deshalb sollte dieser Transformknoten in einen anderen Transformknoten
+  gepackt werden und dann der Transformknoten des Objekts entsprechend
+  gedreht werden, so dass die Pfeile des neue Transformknotens in 
+  Richtung des Objekts liegt.<br>
+  <img src=6dlocal_right1.jpg><br>
+  <img src=6dlocal_right2.jpg><br>
+  Bei der Benutzung zeigt sich ein Effekt, der f&uuml;r Benutzer von
+  funkgesteuerten Modellflugzeugen keine &Uuml;berraschung darstellt:
+  kommt das Objekt "auf einen zu", f&uuml;hrt eine Rollbewegung des
+  Spaceballs nach links zu einer Rollbewegung des Objekts nach rechts.
+  <br>
+  Ein &auml;hnlicher Bewegungsmodus ist der rocket <img src=rocket.png> 
+  (Racketen) Modus. Im rocket modus, sind Verschiebungen nur in der
+  lokalen Z-Richtung erlaubt.
+  Das is n&uuml;tzlich, um ein Object entlang eines Pfades zu steuern
+  und dabei alle Drehungen zu erlauben.<br>
+  Ein anderer &auml;hnlicher Bewegungsmodus ist der hover <img src=hover.png> 
+  (schwebe) Modus. Im hover modus, sind Drehungen nur um die lokale 
+  y-Achse erlaubt.
+  Das is n&uuml;tzlich, um ein Object auf einer Ebene zu steuern.<br>
+  Andere Bewegungsmodi, die im lokalen Modus arbeiten (&Auml;nderungen nur 
+  in Richtung der lokalen Achsen), sind der scale <img src=scale.jpg> 
+  (Skalierung) und changing center <img src=center.jpg> (Zentrum 
+  ver&auml;ndern) Modus.
+ </li>
+ <li>
+  <b><a name="joystick">Linux joystick Input:</a></b><br>
+  Leider sind "echte" 6D Eingabeger&auml;te nicht besonders verbreitet.<2
+  Deshalb bietet white_dune unter Linux Support f&uuml;r joysticks an.
+  Eine ganze Anzahl unterschiedlicher Ger&auml;te (darunter auch der Spaceball)
+  kann unter Linux als Joystick angesprochen werden. <br>
+  Joysticks sind die nat&uuml;rlichen Eingabeger&auml;te f&uuml;r den
+  <a href="#6Dlocal">6D local</a> Eingabemodus oder den "hover" Eingabemodus.
+  <br>
+  Dabei muss man 6D (z.B. Gamepads mit 2 Daumensticks und digitalem Achsenkreuz,
+  oder auch Labtec Spaceball, Magellan Spacemouse), 4D (z.B. Gamepads mit 2 
+  Daumensticks), 3D (z.B. Joystick mit Drehgriff 
+  (z.B. Micro$oft Sidewinder Pro))
+  und "normale" 2D joysticks unterscheiden.
+  <ul>
+  <li>
+  6D Joysticks (z.B. Gamepads mit 2 Daumensticks und digitalem Achsenkreuz,
+  Labtec Spaceball, Magellan Spacemouse) sind wie alle anderen 6D 
+  Eingabeger&auml;te zu behandeln.<br>
+  Bei Gamepads mit 2 Daumensticks und digitalem Achsenkreuz kann es 
+  n&uuml;tzlich sein, die Achsen zu vertauschen, wenn das digitale
+  Achsenkreuz (das nur eine Bewegung mit konstanter Geschwindigkeit 
+  erlaubt) auf "wichtige" Bewegungsrichtungen (wie zum Beispiel vorw&auml;rts 
+  und r&uuml;ckw&auml;rts) gelegt ist. 
+  </li>
+  <li>
+  4D Joysticks (z.B. Gamepads mit 2 Daumensticks) erlauben keinen 6D und 
+  6D Local Modus. Ausser Verschiebung <img src=schieb.png>, 
+  Drehung <img src=rot.png>, Skalierung <img src=scale.jpg> und
+  Mittelpunktsverschiebung <img src=center.jpg> unterst&uuml;tzen sie noch
+  hover <img src=hover.png>
+  (schwebe) Modus und rocket <img src=rocket.png> (Racketen) Modus.<br>
+  Dabei werden je nach Modus Rotation und Verschiebung auf die 
+  entsprechenden Achsen gelegt.
+  </li>
+  <li>
+  Bei 3D Joysticks (z.B. Joystick mit Drehgriff)
+  ist die Lage etwas komplizierter. In der default Einstellung erzeugt
+  eine Eingabe &uuml;ber die dritte Achse (also eine Drehung am Griff) 
+  meist eine Bewegung in Richtung der z-Achse.<br>
+  <img src=joystick_3D_move.jpg> <img src=joystick_3D_rot.jpg>
+  </li>
+  <li>
+  Beim 2D Joystick stehen nicht gen&uuml;gend Achsen f&uuml;r 
+  eine 3D Eingabe zur Verf&uuml;gung. Deshalb muss zwischen 
+  einer Interpretation der 2. Achse als z-Richtung (near/far 
+  <img src=near_far.png> (nah-fern) Modus) und als y-Richtung 
+  (up/down <img src=up_down.png> (oben-unten) Modus) &uuml;ber die 
+  Icons umgeschaltet werden. <br>
+  Bei Drehungen bedeutet der near/far <img src=near_far.png> (nah-fern) 
+  Modus eine Drehung um die y-Achse, der up/down <img src=up_down.png> 
+  (oben-unten) Modus eine Drehung um die z-Achse.<br>
+  </li>
+  <li>
+  Der "rocket" <img src=rocket.png> (Racketen) Modus ben&ouml;tigt eigentlich
+  4 Achsen. Damit er mit einem 3D joystick benutzt werden kann, wird
+  hier ebenfalls die Drehungsinformation des near/far  
+  <img src=near_far.png> (nah-fern) Modus und up/down <img src=up_down.png>
+  (oben-unten) Modus benutzt.<br>
+  Beim 2D Joystick steht der "rocket" <img src=rocket.png> (Racketen) Modus 
+  nicht zur Verf&uuml;gung.
+  </li>
+  </ul><br>
+  Es kommt vor, dass bei eine Joystick-Achse wenig brauchbar erscheint 
+  (wie z.B. beim Micro$oft Sidewinder Pro der Schubregler). <br>
+  <img src=joystick_sidewinder.jpg><br>
+  Deshalb kann die Anzahl der Achsen beschr&auml;nkt werden. Um z.B. 
+  den Micro$oft Sidewinder Pro als 3-achsigen Joystick zu behandeln,
+  kann man die -axes -Option in der Kommandozeile benutzen.
+<br>
+<pre>
+   white_dune -joystick /dev/input/js0 -axes=3
+</pre>
+<br>
+  Gamepads sind h&auml;ufig mit wenig sinnvollen Achsen &uuml;berfrachtet.
+  Das Logitech Wingman Cordless Gamepad meldet zum Beispiel beim Test mit dem
+  jstest Programm 9 Achsen. Um die 6 sinnvollen Achsen
+  (2 Daumensticks und das Eingabekreuz) sinnvoll einzusetzen, muss die
+  Achsenzuordnung in der Kommandozeile ver&auml;ndert werden.
+<br>
+<pre>
+   white_dune -joystick /dev/input/js0 -y=4 -z=-1 -xrot=6 -yrot=3 -zrot=5
+</pre>
+<br>
+  Dabei bedeutet die Angabe "-z=-1" dass die z-Achse auf die Achse Nummer
+  1 (also die 2. Achse, da die Z&auml;hlung bei 0 beginnt) gelegt wird,
+  die Eingaberichtung aber umgedreht wird. 
+ </li>
+ <li>
+  <b><a name="joystick_windows">M$Windows joystick Input:</a></b><br>
+  Die Unterst&uuml;tzung f&uuml;r einen M$Windows joystick ist sehr
+  &auml;hnlich zum Linux joystick.<br>
+  Bei den speziellen Eigenschaften der
+  mit M$Windows gelieferten joystick Treiber sollte man sich nicht
+  dar&uuml;ber wundern, wenn z.B. der 2. Daumenstick eines Gamepads
+  &uuml;berhaupt keine Werte liefern kann, oder Joystickachsen gemeldet 
+  werden, aber nur Fehler zur&uuml;ckliefern.<br> 
+  Ausserdem hat die Weisheit der Authoren der M$Windows joystick 
+  Programmierschnittstelle dazu gef&uuml;hrt, dass ein Fehler 
+  als Vollausschlag interpretiert werden muss (ein &auml;hnliches Problem
+  f&uuml;hrte &uuml;brigens zur Explosion der ersten Ariane 5 Rakete...).<br>
+  Deshalb sollte man unter M$Windows beim Testen mit 2 Achsen beginnen.
+  F&uuml;r den ersten M$Windows joystick (Nummer 0) kann die Kommandozeile
+  dann zum Beispiel so lauten:
+<br>
+<pre>
+   white_dune.exe -joystick 0 -axes=2 -none=2 -allxyz=20,,,0.000001 -allrot=0.2,,,0.0000001
+</pre>
+ </li>
+ <li>
+  <b><a name="joystick_macosx">MacOSX joystick Input:</a></b><br>
+  Hier lautet eine typische Kommandozeile f&uuml;r die Joystick-Benutzung:
+<pre>
+  dune -startX11aqua -SDLjoystick 0 -all=,,,0.000004 -y=-1 -xrot=2 -z=-3 -none=2 -allrot=0.2
+</pre>
+  Nur ist es bei MacOSX nicht &uuml;blich (aber m&ouml;glich), die 
+  Kommandozeile zu benutzen.<br>
+  Stattdessen ist white_dune in einer MacOSX Anwendung namens white_dune.app
+  verpacket. Aus der Kommandozeilensicht ist white_dune.app ein ganz
+  normales Verzeichnis, das mit dem "cd"-Befehl betreten werden kann.
+  Es ist auch m&ouml;glich, das white_dune.app package mit dem  "finder"
+  Programm zu &ouml;ffnen.
+  Im Verzeichnis white_dune.app/Contents/MacOS/ befindet sich eine
+  Datei "dunestarter", die mit einem normalen Texteditor ver&auml;ndert werden
+  kann.<br>
+  In dieser Datei finden sich die Optionen f&uuml;r den Programmstart
+<pre>
+   DUNEOPTIONS=" "
+   export DUNEOPTIONS
+</pre>
+  die sich um die Optionen f&uuml;r die Joystickbenutzung, zum Beispiel<br>
+<pre>
+   DUNEOPTIONS="-SDLjoystick 0 -all=,,,0.000004 -y=-1 -xrot=2 -z=-3 -none=2 -allrot=0.2"
+   export DUNEOPTIONS
+</pre>
+  erg&auml;nzen lassen.
+ </li>
+ <li>
+   <b><a name="channelview">Fieldwerte ver&auml;ndern im ChannelView Window</a></b><br>
+   Das ChannelView Window wird zur Anzeige oder Ver&auml;nderung von 
+   Interpolator-Knoten
+   benutzt. Bei einem Interpolator-Knoten sind Eingabewerten zwischen 0 und 1
+   eine Reihe von Ausgabewerten zugeordnet.<br>
+   Interpolatoren werden in VRML bei einfachen Animationen in der Form
+<br>
+<pre>
+   ROUTE TimeSensorDEFNAME.fraction_changed TO ??InterpolatorDEFNAME.set_fraction
+   ROUTE ??InterpolatorDEFNAME.value_changed TO ??DEFNAME.set_??
+</pre>
+<br>
+   verwendet. Der Ausgang "fraction_changed" eines TimeSensor-Knoten 
+   (der Werte zwischen 0 und 1 liefert) wird dabei in den "set_fraction" 
+   Eingang eines Interpolator-Knoten geleitet. Der Interpolator-Knoten
+   w&auml;hlt einen passenden Zwischenwert der Ausgabewerten, der
+   in andere VRML-Knoten geleitet werden kann, so dass
+   eine Animation ruckfrei abl&auml;ft. 
+  <br>
+   Im folgenden Beispiel:<br>
+   <img src=interpolator.jpg><br>
+   wird die Ausgabe eines PositionInterpolators mit den Eingabewerten
+   0, 0.3, 1 und den Ausgabewerten x=1 y=0 z=3, x=1 y=2 z=3, x=3 y=3 z=0
+   auf den set_translation Eingang eines Transform-Knotens (also eine
+   Verschiebung) geleitet. Das bedeutet zum Beispiel, dass sich der 
+   Transform-Knoten 
+   (und der darin enthaltene K&ouml;rper) bei Zeitzykluswerten zwischen 
+   0 und 0.3 von y=0 nach y=2 (also nach oben) bewegt.<br>
+  <ul>
+   <li>
+   Einfach benutzbar sind alle SF-Interpolatoren:
+   <ul>
+    <li>
+     ColorInterpolator:<br>
+     Interpoliert zwischen Farben.<br>
+     Farben finden sich z.B. bei Shape-&gt;Appearance-&gt;Material    
+    </li>
+    <li>
+     PositionInterpolator:<br>
+     Interpoliert zwischen Positionen.<br>
+     Ziel kann z.B. Transform.set_translation sein.
+    </li>
+    <li>
+     OrientationInterpolator:<br>
+     Interpoliert zwischen Drehungen.<br>
+     Ziel kann z.B. Transform.set_rotation sein.
+    </li>
+    <li>
+     ScalarInterpolator:<br>
+     Interpoliert zwischen einzelnen Zahlen.<br> 
+     Einzelne Zahlen kommen oft in Knoten als EventIn vor.<br>
+     Daher gibt es viele Verwendungsm&ouml;glichkeiten.
+    </li>
+   </ul>
+   <li>
+   Die folgenden MF-Interpolatoren sind nicht so einfach im ChannelView
+   darstellbar, es w&uuml;rde eine grosse Menge an Daten geben, die das 
+   Fenster einfach &uuml;berfluten w&uuml;rden.
+   Deswegen werden nur Ver&auml;nderungen &uuml;ber die Zeit
+   dargestellt. Wenn es keine Ver&auml;nderungen gibt, wird der erste
+   Wert immer dargestellt<br>
+   <img src=morphing_start.png><br>
+   um es zu erlauben, dass zus&auml;tzliche Werte mit der Maus eingetragen
+   werden k&ouml;nnen <br>
+   <img src=morphing_last.png><br>
+   (zum Beispiel um den ersten Zeitschritt als letzten Zeitschritt zu
+   wiederholen)<br>.
+   <img src=morphing_result.png><br>
+   Es gibt eine obere Grenze der Zahl der dargestellten Werte.
+   Unter "Limit keys in Channelview"
+   im <em>Optionen -&gt; Allgemeine Einstellungen</em> dialog l&auml;sst sie 
+   sich &auml;ndern. 
+   Setzen Sie diese Grenze entsprechend der Geschwindigkeit Ihres Systems.
+   <ul>
+     <li>
+      CoordinateInterpolator:<br>
+      Interpoliert typischerweise zwischen den Positionen von Punkten eines 
+      IndexFaceSet.<br>
+      Das heisst das pro Punkt eines zusammengesetzten 
+      K&ouml;rpers und Zeitschritt ein 3D Vektor Wert eingetragen werden muss.
+      Animationen mit der Hilfe des CoordinateInterpolator nennt man
+      normalerweise "Morphing".
+     </li>
+     <li>
+     NormalInterpolator:<br>
+     Interpoliert zwischen den Oberfl&auml;chennormalen eines
+     aus Einzelfl&auml;chen zusammengesetzten K&ouml;rpers. <br>
+     Das heisst das pro Punkt (oder Polygon) eines zusammengesetzten 
+     K&ouml;rpers und Zeitschritt ein 3D Vektor Wert eingetragen werden muss.
+     </li>
+   </ul>
+   </li>
+  </ul> 
+  Bestimmte einfache Interpolator-Animationen k&ouml;nnnen in 
+  White_dune auch &uuml;ber Ver&auml;nderungen im 3D Preview Fenster erstellt werden.
+  PositionInterpolator/Transform.set_translation
+  und OrientationInterpolator/Transform.set_rotation basierte 
+  Animationen k&ouml;nnen auch &uuml;ber die Aufnahme von 6D 
+  Eingabeger&auml;ten eingegeben werden.<br><br>
+  Damit mit den Werkzeugen <img src=recording.jpg>
+  wie mit einem Kassettenrecorder Animationen aufgenommen und abgespielt
+  werden k&ouml;nnen sind folgende Vorraussetzungen n&ouml;tig:
+  <ul>
+  <li>
+  Es m&uuml;ssen ROUTEs in der Form
+  <br>
+<pre>
+   ROUTE TimeSensor.fraction_changed TO ??Interpolator.set_fraction
+   ROUTE ??Interpolator.value_changed TO ??.set_??
+</pre>
+  vorhanden sein.
+  </li>
+  <li>
+  Im Timesensor-Knoten muss der Fieldwert "loop" auf "TRUE" gesetzt sein
+  (die Animation wiederholt sich immer wieder). 
+  </li>
+  <br><img src=timesensor.jpg><br>
+  <li>
+  Der Fieldwert "starttime" des Timesensor-Knoten muss gr&ouml;sser oder 
+  gleich dem Fieldwert "stoptime" des Timesensor-Knoten sein.
+  </li>
+  </ul><br>  
+  Seit Version 0.27beta existiert in white_dune der Men&uuml;punkt
+  <em>Aktion -&gt; Animation erstellen</em>, der genau diese Struktur 
+  f&uuml;r den angew&auml;lten Knoten erzeugt. Dieser Men&uuml;punkt
+  kann nur verwendet werden, wenn dieser Knoten 
+  EventIn/ExposedField-Felder hat, f&uuml;r 
+  die ein Interpolator existiert. Im entsprechenden Dialog wird nachgefragt,
+  <br><img src=animationdialog.jpg><br>
+  ob ein neuer TimeSensor mit einer bestimmten Animationsdauer erzeugt werden
+  soll bzw. ob ein bestehender TimeSensor wiederverwendet werden soll und
+  welche Felder animiert werden sollen.
+  <br>
+  Wird beim Erstellen einer Animation nur das Aufnahmeicon gedr&uuml;ckt 
+  <img src="recording_one.jpg">, 
+  muss der Zeitcursor jeweils ver&auml;ndert
+  werden und danach der entsprechende Wert (&uuml;ber Tastatur, Maus oder
+  u. U. 6D Eingabeger&auml;t) ver&auml;ndert werden.<br>
+  <img src="animation_onetime.png">
+  <br><br>
+  <img src="animation_onetime2.png">
+  <br><br>
+  Wird das Aufnahmeicon zusammen mit dem Abspielicon gedr&uuml;ckt 
+  <img src="recording.jpg">, wird dauernd die Ver&auml;nderung der Werte
+  (durch <a href="#mouse">Mauseingabe</a> oder u. U. 6D Eingabeger&auml;t) 
+   aufgenommen. 
+  <br>
+  <img src="animation_recording.jpg">
+  <br>
+  Die Mauseingabe bei der Aufname erfordert eine ruhige Hand. 
+  Es ist nicht ungew&ouml;hnlich, dass man nach der Aufnahme einige 
+  aufgenommene Werte l&ouml;schen will.
+  <br>
+  <img src="delete_keys1.jpg">
+  <br>
+  Dazu kann man einen Zeitbereich im Channelview Fenster durch Klicken und 
+  gleichzeitigem Verschieben der Maus anw&auml;hen und den Men&uuml;epunkt
+  <em>Bearbeiten -&gt; Loeschen</em> bzw. das L&ouml;schen Icon benutzen.
+  <br>
+  <img src="delete_keys2.jpg">
+  <br>
+  Dadurch werden die entsprechenden Werte gel&ouml;scht.
+  <br>
+  <img src="delete_keys3.jpg">
+  <br>
+  Beim L&ouml;schen muss man auf den zuletzt gemachten Mausklick achten.
+  Wird zum Beispiel nach dem Selektieren im channelview ein Objekt im
+  3D Fenster angeklickt, so wird dieses Objekt im Scenenbaum
+  angew&auml;hlt. Der folgende <em>Bearbeiten -&gt; Loeschen</em>
+  Befehl l&ouml;scht dann dieses Objekt und nicht den Bereich im channelview.
+  Wird zum Beispiel nach dem Selektieren im channelview ein Element eines  
+  MF-Feldes im fieldview angeklickt, l&ouml;scht der folgende 
+  <em>Bearbeiten -&gt; Loeschen</em> Befehl das Element des MF-Feldes.
+ </li>
+ <li>
+  <b><a name="colorcircle">Farbkreis</a></b> <small>(neu in Version 0.19beta)</small><br>
+  F&uuml;r Farbwerte gibt es einen spezielles Eingabefenster, das an die
+  Stelle des FieldView Fensters tritt, wenn darin ein Farbwert 
+  ausgew&auml;hlt ist und das Colorcircle Icon gedr&uuml;ckt wird.<br>
+  <img src=colorcircle1.png><br>
+  Im Farbkreis kann man dann mit einem Mausklick eine bestimmte Farbe 
+  und im Farbbalken daneben anschliessend eine dunklere Variante 
+  ausw&auml;hlen.<br> 
+  <img src=colorcircle2.png><br>
+  Der Aufbau des Farbkreises ist zur Zeit noch ziemlich langsam, wenn unter
+  Unix/Linux kein True/Directcolor Display zur Verf&uuml;gung steht
+  (inzwischen kommt das nur noch bei sehr alten Graphikkarten vor).<br>
+  &Uuml;ber den "OK" Button kehrt man zum normalen FieldView Fenster
+  zur&uuml;ck.
+ </li>
+ <li>
+  <b><a name="scriptedit">Script Editor</a></b> <small>(neu in Version 0.22beta)</small><br>
+  Es gibt zwei M&ouml;glichkeiten, den Scripteditor zu starten:<br>
+  <img src=scriptedit_icon1.jpg><br>
+  <ul>
+    <li>
+      Um einen neuen Scriptknoten zu erzeugen:<br>
+      &Uuml;ber das "Script" icon (Men&uuml;punkt 
+      <em>Erzeugen -&gt; Programmierung -&gt; Script</em>), 
+    </li>
+    <li>
+      Um einen selektierten Scriptknoten zu ver&auml;ndern:<br>
+      &Uuml;ber das "Object Edit" icon 
+      (Men&uuml;punkt <em>Aktion -&gt; Objekt editieren</em>), 
+    </li>
+  </ul>
+  Der ge&ouml;ffnete Scripteditor Dialog<br>
+  <img src=scripteditor.jpg><br>
+  erlaubt es, neue Felder/Events zum Scriptknoten hinzuzuf&uuml;gen (add),
+  sie zu ver&auml;ndern (change), zu kopieren (copy) oder zu 
+  l&ouml;schen (delete).<br>
+  Zus&auml;tzlich kann man spezielle Funktionen wie
+  Initialize, Shutdown und Eventsprocessed hinzuf&uuml;gen.<br>
+  Dr&uuml;cken Sie "OK" um die Arbeit am Scriptknoten zu beenden.
+ </li>
+ <li>
+  <b><a name="urledit">URL Editor</a></b> <small>(neu in Version 0.22beta)</small><br>
+  Das "url"-Feld (das den ECMAscript (javascript) Code eines Scriptknotens
+  enthalten kann) kann in einem Texteditor ver&auml;ndert werden (edit).
+  &Uuml;ber den Men&uuml;punkt 
+  <em>Optionen -&gt; Text/Objekteditor Einstellungen</em>
+  kann der Texteditor ausgew&auml;hlt werden.<br>
+  Ist das "url"-Feld leer, wird ein Schema eines ECMAscripts erzeugt.<br>
+  Um den Texteditor zu starten, muss ein Script Knoten angew&auml;hlt werden
+  und das "URL editieren" icon (oder Men&uuml;punkt 
+  <em>Aktion -&gt; URL editieren</em> benutzt werden).<br>
+  <img src=urledit.jpg><br>
+  Der URL Editor kann &uuml;brigens auch zum Ver&auml;ndern des Dateiinhalts
+  einer URL f&uuml;r lokale Filmdateien (".mpeg") beim Movietexture Knoten,
+  f&uuml;r lokale Sounddateien (".wav") beim Audioclip Knoten und
+  f&uuml;r lokale Bilddateien (".jpg"/".png") beim Imagetexture Knoten
+  verwendet werden.<br>
+  Ein passendes Programm wurde oft schon bei der Kompilierung ausgew&auml;hlt
+  (zum Beispiel gimp f&uuml;r Bilddateien oder audacity f&uuml;r Sounddateien). 
+  Wenn kein passendes Programm konfiguriert wurde, wird zuerst nach einem
+  passenden Programm gefragt. The Programme k&ouml;nnen mit
+  <em>Optionen -&gt; Text/Objekt Editor Einstellungen...</em> ver&auml;ndert
+  werden.
+ </li>
+ <li>
+  <b><a name="fieldpipe">Field pipe</a></b><small>(neu in version 0.29beta)</small><br>
+  Einer der m&auml;chtigsten M&ouml;glichkeiten um Feldwerte zu &auml;ndern
+  ist die Field pipe. Damit ist es m&ouml;glich, Feldwerte mit einem 
+  beliebigen externen Programm zu ver&auml;ndern.<br>
+  Im Normalfall hat man dieses externe Programm noch nicht, die Field pipe ist
+  also vor allem wichtig f&uuml;r einen Benutzer mit 
+  Programmierf&auml;higkeiten.<br>
+  Neben der hier beschriebenen Field pipe f&uuml:r einfache Felder ist es
+  auch m&ouml;glich, die <a href="#scenegraph_branch_fieldpipe">Field pipe 
+  f&uuml; ganze Szenengraphzweige</a> ausf&uuml;hren zu lassen.<br> 
+  Wenn ein SF-Field oder MF-Field im Fieldview Fenster angew&auml;hlt ist
+  und <em>Aktion -&gt; field pipe</em> benutzt wird, dann wird im Fall eines
+  SF-Field eine Zeile mit dem Fieldwert in eine Datei geschrieben. 
+  Im Fall eines MF-Field werden genausoviele Zeilen wie die Zahl der 
+  SF-Werte im MF-Field geschrieben.<br>
+  Wird zum Beispiel das folgende TextureTransform.scale Field<br>
+  <img src=sffieldpipeselect.jpg><br>  
+  (ein SFVec2f Field) angew&auml;hlt, werden die Werte<br>
+  <pre>
+      1 1
+  </pre> 
+  in die Datei geschrieben.<br>
+  Wird zum Beispiel das folgende Color.color Field <br>
+  <img src=mffieldpipeselect.jpg><br>  
+  (ein MFColor Field) angew&auml;hlt, werden die Werte<br>
+  <pre>
+      0 0.5 0
+      0.5 0 0
+      0 0 0.5
+      0.5 0.5 0
+      0.5 0 0.5
+      0 0.5 0.5
+  </pre> 
+  in die Datei geschrieben.<br>
+  Die Datei endet mit dem Zeichen f&uuml;r eine neue Zeile.<br>
+  Wenn <em>Aktion -&gt; field pipe</em> benutzt wird, &ouml;ffnet sich ein
+  Dialog, der nach eine Kommandozeile fragt. Diese Kommandozeile kann
+  benutzt werden um ein kompiliertes Programm (zum Beispiel geschrieben
+  Programmier Sprachen wie Ada, C, C++ oder Fortran) oder einen Interpreter 
+  mit einem Programm in einer interpretierten Sprache (zum Beispiel geschrieben
+  in einer Programmiersprache wie awk, perl oder python) zu starten.<br>
+  Die Kommandzeile wird intern gestart mit<br>
+  <pre>
+  Kommandozeile &lt; file &gt; outputfile
+  </pre>
+  was dazu f&uuml;hrt, dass jede Zeile der Datei file als Standardeingabe
+  mit der Kommandozeile verarbeitet wird und das Ergebnis von der 
+  Standartausgabe in der Datei outputfile geschrieben wird.<br>
+  Wenn die geschriebene Datei outputfile die gleiche oder passende 
+  Struktur wie die das verarbeitete field/die Eingabedatei hat (zum Beispiel
+  f&uuml;r das SFVec3f Beispiel)<br>
+  <pre>
+      2 1
+  </pre> 
+  oder f&uuml;r das MFColor Beispiel<br>
+  <pre>
+      1 0.5 0
+      0.5 1 0
+      0 0 0.5
+      0.5 0.5 0
+      0.5 0 0.5
+      0 0.5 0.5
+  </pre>
+  Dabei ist es wichtig, dass Farbwert Fliesskommazahlen im Bereich 0 bis
+  1 sind. Der Inhalt der Ausgabedatei wird als neuer Field-Wert benutzt 
+  und die zwischenzeitlich angelegten Eingabe/Ausgabe-Dateien werden 
+  gel&ouml;scht.<br>
+  Das allereinfachste Beispiel einer field pipe ist die Benutzung des
+  "echo" Systemkommandos.<br>
+  Die Kommandozeile<br>
+  <pre>
+       echo ir gend was
+  </pre> 
+  gibt einfach die Argumente<br>
+  <pre>
+       ir gend was
+  </pre> 
+  zur&uuml;ck. In einem einfachen Beispiel kann das genutzt werden, um
+  die Werte "1 1" in "2 1" durch Benutzung von<br>
+  <pre>
+       echo 2 1
+  </pre> 
+  als die Kommandozeile im Field pipe dialog zu ver&auml;ndern.<br>
+  F&uuml;r das folgende kompliziertere (aber auch sinnvollere) Beispiel
+  wird die awk Programmiersprache benutzt. Awk ist eine interpretierte
+  Sprache, die ziemlich &auml;hnlich wie die Programmiersprache C aussieht.
+  Awk ist sehr praktisch f&uuml;r diesen Zweck, denn es zerhackt eine
+  Eingabezeile automatisch in einzelne Werte und man kann komplette
+  Programme in der Eingabezeile angeben.<br>
+  Wird die folgende Kommandozeile<br> 
+  <pre>
+       awk '{print $1 + 0.1 , $2 + 0.2 , $3 + 0.35}'
+  </pre> 
+  als Field pipe f&uuml;r das folgende MFColor Feld<br>
+  <pre>
+      0 0.5 0
+      0.5 0 0
+      0 0 0.5
+      0.5 0.5 0
+      0.5 0 0.5
+      0 0.5 0.5
+  </pre> 
+  benutzt, dann ist das Resultat<br>
+  <pre>
+      0.1 0.7 0.35
+      0.6 0.2 0.35
+      0.1 0.2 0.85
+      0.6 0.7 0.35
+      0.6 0.2 0.85
+      0.1 0.7 0.85
+  </pre>
+  Wird dieses MFColor Feld f&uuml;r die Farben der Ecken eines 
+  IndexedFaceSet W&uuml;rfels benutzt, dann werden alles Farben ein bisschen
+  heller, ein bisschen gr&uuml;ner und blauer.<br>
+  <img src=mffieldpiperesult.jpg><br>  
+  Das gleiche Beispiel in der Sprache C erfordert, dass man ein Programm
+  wie das folgende schreibt:<br>
+<pre>
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
+   while(!feof(stdin)) {
+      float c1, c2, c3;
+      scanf("%f %f %f", &c1, &c2, &c3);
+      printf("%g %g %g\n", c1 + 0.1, c2 + 0.2, c3 + 0.35); 
+   }
+   return 0;
+}
+</pre>
+  Dieses Programm muss kompiliert werden, wenn zum Beispiel diese Datei 
+  main.c genannt wird, dann braucht man ein Kommando wie<br>
+  <pre>
+      cc -o /tmp/a.exe main.c
+  </pre> 
+  auf der Kommandozeile) und man m&uuml;sste sowas wie
+<br>
+  <pre>
+   /tmp/a.exe
+  </pre> 
+  im Field pipe Dialog benutzen.
+  <br>
+  Eine der einfachsten Anwendungen des UNIX echo Kommandos in einer
+  field pipe ist das l&ouml;schen von Knoten &uuml;ber
+  <pre>
+      echo
+  </pre> 
+  f&uuml;r den entsprechenden Vaterknoten/das entsprechende Feld.
+ </li>
+</ul>
+</p> 
+<h3><a name="simplescript">Vereinfachtes Skriptbau-Verfahren</a> <small>
+                                        (neu in Version 0.22beta)</small></h3>
+<p>
+Bevor man den Scripteditor Dialog benutzen kann, muss man planen,
+welche Datentypen und eventIn/eventOut Informationen die Knoten 
+haben, die man anschliessen will. Dazu muss man 
+<a href=http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html>
+die Knotenbeschreibung des 
+VRML standards</a> (zum Beispiel &uuml;ber den Men&uuml;punkt
+<em>Hilfe -&gt; <i>Name des gerade selektierten Knoten</i></em> lesen
+(oder ein entsprechendes Buch benutzen).<br>
+Zum schnellen Ausprobieren kann es dagegen angenehmer sein, das
+vereinfachte Skriptbau-Verfahren zu benutzen.<br>
+Erzeugen Sie einen "leeren" Scriptknoten mit dem "Script" icon
+(oder benutzen Sie den Men&uuml;punkt <em>Erzeugen -&gt; Programmierung -&gt; Script</em>).
+<br>
+Gem&auml;ss der 
+<a href="http://dune.sourceforge.net/philosophy.html" target="new">
+"Weg da!" Philosophie</a> des urspr&uuml;nglichen dune Projekts
+dr&uuml;cken Sie einfach nur "OK" im Scripteditor Dialog (siehe oben).<br>
+Jetzt wird das RouteView Fenster f&uuml;r die weitere Arbeit benutzt.
+<br><br><img src=simple_scriptbuild1.jpg><br><br>
+Scriptknoten haben ein spezielles "connect anything" ("verbinde alles")
+eventOut.
+Wenn man draufklickt, die Maustaste festh&auml;lt und die Maus verschiebt
+("drag") wird eine weisse Route gezeichent
+<br><br><img src=simple_scriptbuild2.jpg><br><br>
+Wenn man die Maustaste gedr&uuml;ckt h&auml;lt, kann man sehen, dass man diese
+Route (wie beim "normalen" Routing) an eventIns anderer Knoten anschliessen
+kann,
+<br><br><img src=simple_scriptbuild3.jpg><br><br>
+dass aber (im Gegensatz zum "normal" Routing) die Farbe dieser Route
+(also eigentlich der Datentyp) mit dem abgefragten eventIn wechselt.
+<br><br><img src=simple_scriptbuild4.jpg><br><br>
+Wenn man die Maustaste losl&auml;sst, wird die Route vollendet.
+<br><br><img src=simple_scriptbuild5.jpg><br><br>
+Entsprechend l&auml;sst sich der spezielle "connect anything" eventIn
+des Scriptknotens benutzen
+<br><br><img src=simple_scriptbuild6.jpg><br><br>
+und mit dem eventOut eines anderen Knoten verbunden.
+<br><br><img src=simple_scriptbuild7.jpg><br><br>
+Jetzt m&uuml;ssen Sie noch das "url" Feld des Scriptknoten ver&auml;ndern.
+Neben der Benutzung von <a href="#urledit">urledit</a> k&ouml;nnen sie
+auch den Scriptknoten im SceneTree Fenster und das
+"url" Feld im FieldView Fenster selektieren und dann
+<br><br><img src=simple_scriptbuild8.jpg><br><br>
+das "Object Edit" Icon dr&uuml;cken (oder benutzen den Men&uuml;punkt
+<em>Aktion -&gt; Objekt editieren</em>). 
+<br><br><img src=simple_scriptbuild9.jpg><br><br>
+Nun wird "white_dune" versuchen einen externen Editor zu starten - 
+eingefleischte UNIX Benutzer benutzen "xterm -e vi", das ist der
+Default unter Linux/UNIX ("xedit" f&uuml;r MacOSX, "edit" f&uuml;r M$Windows)
+wenn $WINEDITOR nicht beim ersten Programmlauf gesetzt war. 
+Man kann die Editoreinstellung mit dem 
+<em>Options -&gt; Texteditor Settings ...</em> Men&uuml;punkt &auml;ndern. <br>
+Im Edit Fenster sehen Sie ein Schema des ben&ouml;tigten javascript Codes.<br>
+<img src=simple_scriptbuild10.jpg><br><br>
+Benutzen Sie den Editor, um den Javascript code zu vervollst&auml;ndigen,
+dann speichern und verlassen Sie den Editor
+- im Fall des vi Editors benutzen Sie die Tastenkombination :wq 
+<br> Benutzen Sie <em>Options -&gt; ECMAscript settings</em> um einzustellen,
+welche erweiterten Kommentare Sie im Schema haben wollen.<br>
+Per default werden sehr viele Kommentare in das Skript geschrieben.
+Das ist zwar sehr n&uuml;tzlich f&uuml;r Anf&auml;nger, weil dann sofort
+alle mit den benutzten Datentypen m&ouml;glichen Befehle schon im
+Script bereitstehen. Allerdings ist es auch ziemlich un&uuml;bersichtlich.<br>
+Benutzer mit etwas Programmiererfahrung tendieren dazu, die Einstellungen
+in <em>Options -&gt; ECMAscript settings</em> so zu setzen, dass nur der
+fest verdrahte Kommentar &uuml;ber den jeweils benutzen Datentyp &uuml;brig 
+bleibt.
+</p> 
+<h3><a name="x3domscript">X3DOM scripting</a> <small>
+                                     (neu in Version 0.99pl1084)</small></h3>
+<p>
+<a href='https://www.x3dom.org/'>X3DOM</a>, ein X3D browser im 
+Webbrowser, unterst&uuml;tzt keine X3D Script-Knoten, sondern nur
+javascript Knoten. Trotzdem kann im X3DOM mode (initiert durch die 
+"Starte das naechste Mal mit X3DOM Unterstuetzung" Option oder die
+Kommandozeilenoption "-x3dom") das  
+<a href="#simplescript">vereinfachte Skriptbau-Verfahren</a> 
+angewendet werden.<br>
+Dabei geht man wie beim vereinfachte Skriptbau-Verfahren vor, nur
+dass ein neuer "x3domscript:"-Eintrag in der Script-URL entsteht.<br>
+<img src="x3domscript.png"><br>
+Da X3DOM nur Skripting analog "directOutput" unterst&uuml;tzt, muss
+dabei statt der eventOut-Variablen ein Zugriff &uuml;ber den "DEF" name
+(bzw. "id") des Ziel-Knotens und des Ziel-Feldnamens angegeben werden.<br>
+<img src="x3domscript2.png"><br>
+Beim Preview/Export nach X3DOM werden dann alle n&ouml;tigen Eintr&auml;ge
+f&uuml;r X3DOM in der X3D-Datei angepasst.
+</p>
+<h3><a name="nurbs">NURBS Modellierung</a> <small>
+                          (zum Teil neu in Version 0.25beta)</small></h3>
+<ul>
+<li> <h4><a name="nurbsbasics">NURBS Grundlagen</a></h4>
+<p>
+In der Computergraphik bedeuten NURBS eine komplizierte Rechenvorschrift, 
+mit deren Hilfe sich beliebige Fl&auml;chen und Linien/Kurven im Raum sehr 
+kompakt darstellen lassen. <br>
+Gerade f&uuml;r eine Netzwerkstandard wie VRML ist die Unterst&uuml;tzung 
+von NURBS deshalb ein grosser Vorteil, da dabei nicht die Daten aller Eckpunkte 
+eines Fl&auml;chennetzes &uuml;ber ein Netzwerk
+&uuml;bertragen werden m&uuml;ssen, sondern nur eine relative kleiner
+Anzahl von Zahlenwerten, mit denen die Eckpunkte berechnet werden 
+k&ouml;nnen. 
+Das lohnt sich, da in der Vergangenheit die Rechenleistung sehr viel 
+st&auml;rker 
+gestiegen ist als die Netzwerkgeschwindigkeit (zum Vergleich: der Rechner 
+der 1969 das erste Zeichen ("L" von "LOGIN") &uuml;ber das Internetprotokoll 
+&uuml;bertragen hat, war ein Honeywell DDP-516 minicomputer mit 12KB Speicher,
+einer Taktfrequenz von 1.1 Mhz (wobei viele Takte f&uuml;r einen Computerbefehl
+ben&ouml;tigt wurden) und dem Gewicht einer halben Tonne. Dieser
+Rechner benutzte eine Netzwerkleitung mit 50000 baud. Das entspricht 
+ungef&auml;hr der Rechenleistung eines einfachen Taschenrechners und der 
+Netzwerkverbindung eines modernen Telefonmodems).<br>
+Deswegen wurden NURBS Knoten nicht nur zum X3D Standard hinzugef&uuml;gt,
+sondern im Jahr 2002 auch zum VRML97 Standard (VRML97 amendment 1).
+</p>
+<p>
+Piegl und Tiller schreiben in "The NURBS book", NURBS  w&auml;re ein Akronym 
+f&uuml;r "Nobody Understands nonuniform Rational Basis Splines" 
+(niemand versteht verschiedenartig gebrochene Grund-Brettchen).<br>
+Um mit einem NURBS Modeller zu arbeiten, braucht man die entsprechende
+Mathematik nat&uuml;rlich nicht komplett zu verstehen. Allerdings kann
+es f&uuml;r die Benutzung eines Programms wie white_dune (das Zugriff
+auf alle Zahlenwerte der NURBS Fl&auml;chen/Kurven bietet) ein Einblick 
+in die NURBS Grundlagen sinnvoll sein.
+</p>
+<p>
+Erstellt man in white_dune eine NURBS-Kurve (mit 
+<em>Erzeugen-&gt;VRML97 Amendment 1-&gt;NurbsCurve </em>/OK), verschiebt eines
+der weissen K&auml;stchen und klappt alle Zahlenwerte im FieldView auf
+<br><br><img src=nurbscurve.jpg><br><br>
+so erkennt man, dass eine NURBS-Kurve im wesentlichen aus 4 Datenarten
+besteht.
+<ul>
+<li>
+Kontrollpunkte (controlPoint):<br>
+Das sind die mit weissen K&auml;stchen markierten Punkte.
+Verschiebt man ein K&auml;stchen, verschiebt sich ein Teil der Kurve
+entsprechend.
+<br><br><img src=controlpoint.jpg><br><br>
+Kontrollpunkte sind die wichtigsten Elemente in white_dune, um NURBS
+zu beeinflussen.
+</li>
+<li>
+Gewichte (weight):<br>
+Diese Werten bestimmen den Einfluss eines einzelnen Kontrollpunkts
+auf die Kurve. Das Wort Gewicht erinnert an die Zeit vor dem Computerzeitalter,
+als Graphiker Kurven mit Holzbrettchen (sogennanten Straklatten) und 
+Bleigewichten gestaltet haben.
+Bleibt der Kontrollpunkt auf der gleichen Stelle und
+erh&ouml;ht man das entsprechende Gewicht
+<br><br><img src=weight.jpg><br><br>
+so wird die Kurve zum Kontrollpunkt hingezogen.<br>
+Obwohl hier der Kontrollpunkt auf der gleichen Stelle liegt, hat sich 
+sein Wert ver&auml;ndert. Das liegt daran, dass es zwei mathematisch
+gleichwertige NURBS-Formeln gibt. White_dune benutzt die bei VRML 
+&uuml;bliche Formel.
+</li>
+<li>
+Knotenvektoren (knot): <br>
+Knotenvektoren bestimmen unter anderem (<small>***</small>)
+ob ein Kontrollpunkt von der
+Kurve getroffen wird und ob eine Kante auftritt. Dazu m&uuml;ssen die
+Werte an der entsprechenden Stelle "Grad" "(Ordnung -1)" mal wiederholt werden.
+<br><br><img src=knot.jpg><br><br>
+</li>
+<li>
+Ordnung (order): (auch Grad+1 (degree+1))<br>
+Ueber diese Zahl wird festgelegt, wie weit der Einfluss eines 
+Kontrollpunkts reicht.
+<br><br><img src=order.jpg><br><br>
+</li>
+</ul>
+Der verbliebene Wert "tessellation" hat keinen mathematischen, sondern
+einen praktischen Hintergrund. Er legt fest, mit wievielen Punkten/Ecken
+die Kurve dargestellt wird. 
+<br><br><img src=tess3.jpg><br><br>
+Das Ver&auml;ndern dieses Werts erlaubt eine einfache Anpassung an
+die Graphikleistung eines Rechners.
+<br><br><img src=tess11.jpg><br><br>
+Per default (Wert "0") benutzt white_dune (das auch auf schwachen Rechnern 
+laufen soll) bei Objekten mit sehr vielen Kontrollpunkten zu kleine Werte
+f&uuml;r "tessellation".<br>
+Ein Beispiel zeigt eine Nurbsfl&auml;che, die aus einer Kugel konvertiert
+wurde und bei der einige Kontrollpunkte herausgezogen wurden.
+<br><br><img src=tess0.jpg><br><br>
+Nur mit einem hohen Wert f&uuml;r "tessellation" zeigt sich die 
+"wahre" Form des Objekts.
+<br><br><img src=tess181.jpg><br><br>
+</p> 
+</li>
+<li> <h4><a name="nurbssymetric">X symetrisches Modellieren</a>
+<small>(neu in Version 0.25beta)</small></h4>
+<p>
+Mit White_dune kann man Nurbs(Patch)Surface Knoten erstellen 
+(z.B. mit <em>Erzeugen -&gt; VRML97 Amendment 1 -&gt; NurbsSurface -&gt; plain/OK</em>). 
+Man kann die entstandene Fl&auml;che ver&auml;ndern, indem man die weissen
+K&auml;stchen mit der Maus verschiebt.<br>
+<br><br><img src=nurbsurface1.jpg><br><br>
+Das ver&auml;ndert die Kontrolpunkte des Nurbs(Patch)Surface Knotens.
+<br><br><img src=nurbsurface2.jpg><br><br>
+Mit dieser Methode kann man white_dune am sinnvollsten bei der Herstellung von
+Landschaften mit D&uuml;nen 
+<br><br><img src=dunes.jpg><br><br>
+einsetzen, die Methode ist aber nicht sehr sinnvoll f&uuml;r die meisten
+anderen Aufgaben.
+</p>
+<p>
+Viele Objekte erfordern symetrische Modellierung, die eine Seite
+des Objekts soll so aussehen, wie die andere Seite.
+In white_dune, kann das mit dem Men&uuml;punkt 
+<em>Aktion -&gt; X symetric modelling</em> erreicht werden.
+Wenn dieser Men&uuml;punkt aktiviert ist, wird jede Bewegung von den
+Kontrollpunkten der einen Seite
+<br><br><img src=symetric1.jpg><br><br>
+auf die andere Seite &uuml;bertragen,
+<br><br><img src=symetric2.jpg><br><br>
+und es ist ziemlich einfach, eine ziemlich komplizierte symetrische
+Nurbs(Patch)Surface Fl&auml;che zu erzeugen.
+<br><br><img src=mantasurface.jpg><br><br>
+Die X Richtung f&uuml;r die symetrische Modellierung
+wurde wegen des
+<a href="#6Dlocal">Local Input Mode</a> gew&auml;hlt.
+</p>
+<p>
+Es ist m&ouml;glich, das Verschieben der Kontrollpunkte auf
+eine Linie oder Fl&auml;che zu beschr&auml;nkten.<br>
+Wird nur eine der Settings <em>Modus -&gt; Nur x</em>, <em>Modus -&gt; Nur y</em>
+oder <em>Modus -&gt; Nur z</em> (bzw. ihre Icons mit jeweils einem Pfeil
+in x (rot), y (gr&uuml;n) oder z (blau)) benutzt, so lassen sich die Punkte
+nur in dieser Richtung verschieben. Dabei wird allerdings nicht die 
+Ausrichtung im gesamten Raum benutzt, sondern die Ausrichtung der 
+entsprechenden Geometrie. Es &auml;ndert sich also einweder nur der
+x, der y oder der z Wert des verschobenen Kontrollpunkts.<br>
+Ist zum Beispiel nur <em>Modus -&gt; Nur y</em> bzw. das zweite der
+Pfeilicons benutzt
+<br><br><img src=yonly.jpg><br><br>
+ist die Bewegung der Kontrollpunkte auf die y-Richtung beschr&auml;nkt.
+Das ist auch die Richtung, auf die der gr&uuml;ne Pfeil des letzten 
+f&uuml;r den entsprechenden K&ouml;rper zust&auml;ndigen Transform-Knotens 
+zeigt.
+<br><br><img src=yonly1.jpg>&nbsp;&nbsp;<img src=yonly2.jpg><br><br>
+Werden zwei der Settings <em>Modus -&gt; Nur x</em>, <em>Modus -&gt; Nur y</em>
+oder <em>Modus -&gt; Nur z</em> (bzw. ihre Icons mit jeweils einem Pfeil
+f&uuml;r die x (rot), y (gr&uuml;n) oder z (blau) Richtung) benutzt, so lassen 
+sich die Punkte innerhalb der entsprechenden Ebene verschieben.<br>
+Ist zum Beispiel nur <em>Modus -&gt; Nur x</em> und  <em>Modus -&gt; Nur z</em> 
+bzw. das Erste und das Dritte der Pfeilicons benutzt
+<br><br><img src=xzonly.jpg><br><br>
+ist die Bewegung der Kontrollpunkte auf die xz-Ebene beschr&auml;nkt.<br>
+Sind alle oder kein Icon benutzt, 
+<br><br><img src=no_only.jpg>&nbsp;&nbsp;<img src=xyzonly.jpg><br><br>
+dann besteht keine Beschr&auml;nkung, bei einem Verschieben mit der Maus
+k&ouml;nnen sowohl die x, y und z Werte ge&auml;ndert werden.
+</p>
+<p>
+Die Entscheidung ob der symetrische Teil eines Nurbs(Patch)Surface Knoten
+mitbewegt wird, h&auml;ngt von der Entscheidung ab, ob die Zahlenwerte der 
+Kontrollpunkte/Gewichte fast gleich ist.
+Sie sind fast gleich, wenn der Abstand der absoluten Werte kleiner ist
+als der Wert "Epsilon". Die Gr&ouml;&szlig;e von "Epsilon" kann &uuml;ber
+den <em>Optionen -&gt; Allgemeine Einstellungen</em> Dialog eingestellt 
+werden.<br>
+Wenn symetrische Modellierung angew&auml;hlt ist, schnappen fast gleiche 
+Punkte zusammen und werden zusammen bewegt.
+Das kann benutzt werden, um offene Nurbs(Patch)Surface Fl&auml;chen zu 
+schliessen,
+aber mehrere Kontrollpunkte auf einem Platz erzeugen eine Ecke/Kante.
+<br><br><img src=closedpeak.jpg><br><br>
+Es ist auch m&ouml;glich, mehrere Kontrollpunkte auf einmal zu bewegen.<br>
+Dazu wird ein weisses K&auml;stchen mit der mittleren Maustaste angeklickt,
+das weisse K&auml;stchen f&auml;rbt sich daraufhin gr&uuml;n.<br>
+Werden weitere K&auml;stchen mit der mittleren Maustaste angeklickt, 
+f&auml;rben die sich ebenfalls gr&uuml;n.<br>
+<br><br><img src=middle_mouse_de.jpg><img src=middle_mouse2.jpg><br><br>
+Wird eines der gr&uuml;nen K&auml;stchen mit Hilfe der linken Maustaste 
+wegbewegt, folgen die anderen gr&uuml;nen K&auml;chen.<br>
+Ist <em>Aktion -&gt; X symetric modelling</em> aktiviert, werden auch die
+gegen&uuml;berliegenden Kontrollpunkte entsprechend mitbewegt.
+<br><br><img src=multihandle.jpg><br><br>
+Wenn <em>Aktion -&gt; X symetric modelling</em> aktiviert ist, ist es nicht
+m&ouml;glich, zwei symetrische, auf genau gegen&uuuml;berliegenden Seiten 
+liegende K&auml;stchen auszuw&auml;hlen.<br>
+<br><br><img src=xsymetric_mouse_de.jpg><br><br>
+Der zweite mittlere Mausklick bleibt dann wirkungslos.
+<br><br><img src=xsymetric_mouse2.jpg><br><br>
+Es ist auch m&ouml;glich mehrere weisse K&auml;stchen auf einmal zu 
+selektieren, dazu muss man mit der rechten Maustaste einen unsichtbaren
+Kasten aufziehen. Dazu muss man z.B. den Mauszeiger in die linke obere Ecke des
+unsichtbaren Kastens positionieren,<br>  
+<br><br><img src=multiselect1.png><br><br>
+die rechte Maustaste dr&uuml;cken und gedr&uuml;ckt halten, den Mauszeiger in 
+die untere rechte Ecke positionieren und dann die rechte Maustaste loslassen. 
+Nachdem die Maustaste losgelassen wurde, werden alle im unsichtbaren Kasten 
+enthaltenen weissen K&auml;stchen gr&uuml;n, das heisst selektiert.<br>
+<br><br><img src=multiselect2.png><br><br>
+Wenn <em>Aktion -&gt; X symetric modelling</em> dabei aktiviert ist, werden dabei 
+ebenfalls einer jeweils gegen&uuml;ber liegenden K&auml;stchen deselektiert.<br>
+Eine neu entstandene Nurbs(Patch)Surface 
+Fl&auml;che existiert (in Einklang mit den
+VRML Standards) per default nur einseitig (was wichtig ist, 
+wenn die Oberfl&auml;che nicht geschlossen ist): das Feld "solid" hat den
+Wert TRUE (wahr).
+<br><br><img src=mantasurface1side.jpg><br><br>
+In den meisten F&auml;llen ist das nicht sehr sinnvoll:
+Um die Oberfl&auml;che doppelseitig zu machen, wird das Feld "solid" 
+im FieldView Fenster auf FALSE (falsch) gesetzt.
+<br><br><img src=mantasurface2side.jpg><br><br>
+Oft ist auch eine zweiseitige Fl&auml;che nicht besonders n&uuml;tzlich, um 
+einen volumin&ouml;sen K&ouml;rper zu bilden.
+In diesem Fall ist es sinnvoll, einen NurbsGroup-(NURBS Gruppen-)Knoten zu 
+erzeugen,
+<br><br><img src=nurbsgroup1.jpg><br><br>
+den K&ouml;rper mit dem Nurbs(Patch)Surface 
+Knoten in den NurbsGroup-Knoten zu verschieben
+<br><br><img src=nurbsgroup2.jpg><br><br>
+und eine Kopie des K&ouml;rpers mit dem Nurbs(Patch)Surface Knoten
+zus&auml;tzlich im NurbsGroup-Knoten zu erzeugen.
+Um eine Kopie anzulegen, zieht man das Shape Icon mit der Maus ins
+NurbsGroup icon und h&auml;lt dann die Kontroltaste ("Ctrl") gedr&uuml;ckt,
+w&auml;hrend die Maustaste noch gegedr&uuml;ckt ist.
+<br><br><img src=nurbsgroup3.jpg><br><br>
+Weil in diesem Beispiel das Feld "solid" immer noch FALSE ist, kann man
+ein weit verbreitetes Problem des realtime 3D demonstrieren, wenn die
+Farbe eines K&ouml;rpers ver&auml;ndert wird.
+<br><br><img src=zfight1.jpg><br><br>
+<b>Zu d&uuml;nne W&auml;nde</b> (auch "z-fighting" genannt). <br>
+Wenn sie einen Kontrollpunkt von einem Nurbs(Patch)Surface Knoten etwas
+nach oben verschieben, um dem K&ouml;rper mehr Volumen zu geben,
+kann die bilderzeugende Hardware und Software nicht mehr so leicht 
+entscheiden, welche der beiden nah aneinanderliegende Fl&auml;chen
+mit welcher Farbe n&auml;her zum Betrachter angeordnet ist.
+<br><br><img src=zfight2.jpg><br><br>
+Der Effekt ist im allgemeinen nicht vorhersehbar, er kann sich mit dem
+Betrachtungswinkel, der benutzten Software (zum Beispiel VRML Browser
+oder Graphiktreiber) und sogar mit der benutzten Graphikkarte &auml;ndern.
+<br>
+Um das Problem zu vermeiden, m&uuml;ssen beide "solid" Felder zu TRUE
+zur&uuml;ckgeschalten werden und das "ccw" ("Counter Clock Wise", "gegen
+den Uhrzeitersinn") Feld muss sich zwischen der oberen und unteren 
+einseitigen Fl&auml;che unterscheiden.
+<br><br><img src=zfightok.jpg><br><br>
+Jetzt k&ouml;nnen die nichtbegrenzenden Kontrollpunkte der Nurbs(Patch)Surface 
+Knoten verschoben werden, um dem K&ouml;rper mehr Volumen zu geben.
+<br><br><a href="../../logo/manta.wrl"><img src=nurbsgroup4.jpg></a><br><br>
+Der NurbsGroup Knoten ist im VRML Standard verantwortlich daf&uuml;r, dass
+die Begrenzungen der enthaltenen Nurbs(Patch)Surface Knoten ohne L&uuml;cken 
+gezeichnet werden,
+wenn die Kontrollpunkte der Begrenzungen der Nurbs(Patch)Surface Knoten 
+identisch sind.<br>
+In white_dune, erlaubt der NurbsGroup Knoten auch X symetrische Modellierung.
+&Auml;nderungen eines Kontrollpunkts werden an alle Nurbs(Patch)Surface Knoten
+weitergegeben,
+die direkt (oder &uuml;ber einem Shape Knoten) einem NurbsGroup Knoten
+enthalten sind.<br>
+Das macht es m&ouml;glich, die Kontrollpunkte der Begrenzung eines
+Nurbs(Patch)Surfaceknoten zu verschieben und dabei das ganze Objekt 
+geschlossen zu 
+halten, weil dann die Kontrollpunkte der angrenzenden Nurbs(Patch)Surface Knoten
+mitverschoben werden.
+<br><br><a href="../../logo/manta2.wrl"><img src=nurbsgroup5.jpg></a><br><br>
+Am Ende sollte man darauf achten, dass der NurbGroup Knoten in einen
+Transform Knoten enthalten ist, sonst kann das Objekt nicht 
+verschoben/rotiert/skaliert usw. werden.
+<br><br><img src=nurbsgroup6.jpg><br><br>
+</p> 
+</li>
+<li> <h4><a name="nurbsconversion">NURBS Konversion</a>
+<small>(neu in Version 0.25beta)</small></h4>
+<p>
+Wenn geschlossene Nurbs(Patch)Surface 
+Knoten das Ziel sind, kann es n&uuml;tzlich
+sein, schon mit einem geschlossenen K&ouml;rper zu beginnen.
+White_dune erlaubt es nicht, eine beliebige Mesh (einen IndexedFaceSet
+Knoten) in einen Nurbs(Patch)Surface 
+Knoten zu konvertieren, aber es erlaubt es
+die primitiven VRML Knoten
+(box, cone, cylinder und sphere) in einen Nurbs(Patch)Surface Knoten zu 
+konvertieren. White_dune erlaubt auch, einen NurbsCurve Knoten in
+einen Nurbs(Patch)Surface Knoten (als Rotationsk&ouml;rper) zu konvertieren.<br>
+Seit Version 0.27beta erlaubt es white_dune auch einen NurbsCurve Knoten 
+in ein Superextrusion PROTO (siehe unten) zu konvertieren 
+und erlaubt es, ein SuperEllipsoid PROTO oder SuperShape PROTO (siehe unten) 
+in einen Nurbs(Patch)Surface Knoten zu konvertieren (durch Ann&auml;herung).
+<ul>
+<li>
+Box<br>
+Um einen Box (W&uuml;rfel) Knoten in einen Nurbs(Patch)Surface Knoten zu 
+konvertieren,
+muss ein Box Knoten im Szenengraph angew&auml;hlt werden
+<br><br><img src=box.jpg><br><br>
+und der Men&uuml;punkt <em>Umwandeln -&gt; in Nurbs(Patch)Surface umwandeln
+</em> benutzt werden.
+<br><br><img src=box2nurbsdialog.jpg><br><br>
+Wenn die "6 Plains" (6 Fl&auml;chen) Schaltfl&auml;che nicht gedr&uuml;ckt 
+ist, 
+wird ein einziger Nurbs(Patch)Surface Knoten erzeugt.
+<br><br><img src=oneboxnurbs.jpg><br><br>
+Wenn die "6 Plains" Schaltfl&auml;che gedr&uuml;ckt ist, werden 6 
+Fl&auml;chen in einem NurbsGroup Knoten erzeugt.
+<br><br><img src=sixboxnurbs.jpg><br><br>
+</li>
+<li>
+Cone, Cylinder und Sphere<br>
+Die Konversion dieser primitiven K&ouml;rper ist &auml;hnlich zu der 
+Konversion eines Box Knotens, aber die Objekte werden intern mit einer
+drehenden Linie (besser NurbsCurve) erzeugt.
+Zum Beispiel beim Ergebnis einer Cylinder Konversion eines 
+<br><br><img src=cylinder.jpg><br><br>
+sieht man, dass es Kontrollpunkte gibt, die die Oberfl&auml;che 
+ber&uuml;hren. Dies wird erreicht, indem Werte im Knotenvektor 
+wiederholt werden. Als Konsequenz entsteht eine Kante, wenn der
+Kontrollpunkt verschoben wird.
+<br><br><img src=cylinderedge.jpg><br><br>
+</li>
+<li>
+Nurbs(Patch)Surface aus NurbsCurve (&uuml;ber Drehung)<br>
+Zuerst muss ein NurbsCurve Knoten im 
+Scenengraph angew&auml;hlt werden
+<br><br><img src=nurbscurve_scenegraph.jpg><br><br>
+Wenn ein NurbsCurve Knoten erzeugt wird (e.g. via <em>Erzeugen -&gt; 
+VRML97 Amendment 1 -&gt; NurbsCurve </em>) muss in Betracht gezogen werden,
+ob X symetrische Modellierung benutzt wird.<br>
+Der NurbsCurve Erzeugungsdialog 
+<br><br><img src=nurbscurvedialog.jpg><br><br>
+bietet drei M&ouml;glichkeiten: Kurve entlang x, entlang y, entlang z Achse.
+Nur wenn die Kurve um die y oder z Achse gedreht wird, ist 
+X symetrische Modellierung m&ouml;glich. Deswegen ist es m&ouml;glicherweise
+vorzuziehen, einen NurbsCurve Knoten entlang der y oder z Achse zu 
+erzeugen.<br>
+<a name="rotating_nurbscurve"></a>
+<br><br><img src=nurbscurverotationy.jpg><br><br>
+Die Kurvenpunkte bilden die Seitenansicht des Drehk&ouml;rpers.
+<br><br><img src=nurbscurverotation2.jpg><br><br>
+Mit <em>Umwandeln -&gt; In Nurbs(Patch)Surface umwandeln</em> geht es weiter.
+<br><br><img src=nurbsrotationdialog.jpg><br><br>
+Um X symetrische Modellierung m&ouml;glich zu machen, sollte die
+Schaltfl&auml;che  
+"Kurve vor der Drehung pl&auml;tten"
+gedr&uuml;ckt bleiben. Dabei werden alle Punkte in eine Ebene verschoben,
+wobei der Abstand vom Nullpunkt erhalten bleibt.
+<br><br><img src=nurbsrotationsurface.jpg><br><br>
+Genau wie bei konvertierten Sphere, Cylinder und Cone Knoten, kann eine
+Ecke entstehen, wenn die Kontrollpunkte verschoben werden.
+<br><br><img src=nurbsrotationsurface2.jpg><br><br>
+Ziemlich &auml;hnlich zur Drehung einer NurbsCurve ist das
+<a href="#superrevolver">scripted SuperRevolver PROTO</a>.
+Das SuperRevolver PROTO erzeugt einen NURBS surface basierten K&ouml;rper 
+bei jeder &Auml;nderung einer ("gepl&auml;tteten") 2D curve, aber als 
+scripted PROTO ist es nur indirekt Teil des Standards.
+</li>
+</ul>
+</p>
+<li> <h4><a name="elevatedegree">Grad Erh&ouml;hung</a>
+<small>(neu in Version 0.27beta)</small></h4>
+<p>
+Bei Modellieren mit NURBS Knoten kommt oft der Wunsch auf, neue 
+Kontrollpunkte in einer Richtung einzuf&uuml;gen.
+<br><br><img src=elevate_before.jpg><br><br>
+Mit dem Men&uuml;punkt <em>Aktion -&gt; NURBS aendern -&gt; 
+Graderh&ouml;hung (U/V)</em> ist 
+das m&ouml;glich, ohne die &auml;ssere Form zu ver&auml;ndern.
+<br><br><img src=elevate_after.jpg><br><br>
+Mit den neuen Kontrollpunkten lassen sich neue Ausbuchtungen verwirklichen.
+<br><br><img src=elevate_target.jpg><br><br>
+</p>
+</li>
+<h4><a name="nurbsrebuild">NURBS Neubau</a>
+                                <small>(neu in Version 0.99pl1090)</small></h4>
+<li>
+Leider reicht die Graderh&ouml:hung nicht aus, um komplexe NURBS
+K&ouml;rper zu modellieren. Es kann vorkommen, dass man viele neue
+Kontrollpunkte braucht. In dem Fall bietet sich der Neubau des NURBS
+Objekts an.<br>
+In einem einfachen Beispiel wird eine Kugel (<em>Erzeugen -&gt; Form
+-&gt; Sphere</em>) in ein NURBS-Objekt verwandelt (<em> Umwandeln -&gt;
+In Nurbs(Patch)Surface umwandeln</em> OK). 
+<br><br><img src=sonne1.png><br><br>
+Dabei entstehen 45 neue Kontrollpunkte, die sich teilweise gegenseitig 
+verdecken.<br>
+Das ist zu wenig, um eine altmodische Sonne zu modellieren und 
+einzelne Sonnenstrahlen herauszuziehen.<br>
+Mit dem Anw&auml;hlen von Nurbs(Patch)Surface 
+und <em>Aktion -&gt; NURBS aendern -&gt; neue Kontrollpunkte</em>
+lassen sich viele Kontrollpunkte erzeugen
+<br><br><img src=sonne2.png><br><br>
+und
+<br><br><img src=sonne3.png><br><br>
+herausziehen.
+<br><br><img src=sonne4.png><br><br>
+</li>
+<li> <h4><a name="nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a>
+<small>(neu in Version 0.25beta)</small></h4>
+<p>
+NURBS Fl&auml;chen werden oft als abgerundete Fl&auml;chen angesehen.
+Aber neben mehrfachen Kontrollpunkten und Knotvektor Werten,
+kann das Setzen der u/vTesselation Wert einfach dazu benutzt werden,
+um Objekte aus Einzelfl&auml;chen (IndexedFaceSet Knoten) zu erzeugen.<br>
+
+<br><br><img src=spherefaceset1.jpg><br><br>
+Wenn zum Beispiel ein Sphere Knoten mit
+<em>Umwandeln -&gt; In Nurbs(Patch)Surface umwandeln</em> konvertiert wird
+<br><br><img src=spherefaceset2.jpg><br><br>
+und kleine u/vTesselation Werte gesetzt werden, 
+entstehen nur sehr wenige Fl&auml;chen.
+<br><br><img src=spherefaceset3.jpg><br><br>
+Mit <em>Umwandeln -&gt; In IndexedFaceSet umwandeln</em> kann das Resultat
+in einen IndexedFaceSet Knoten verwandelt werden.
+<br><br><img src=spherefaceset4.jpg><br><br>
+Um die Normalenvektoren loszuwerden, die die Farben der Fl&auml;chen
+verschwimmen lassen, muss der Normal Knoten vom IndexedFaceSet Knoten
+entfernt werden.
+
+<br><br><img src=spherefaceset5.jpg><br><br>
+</p>
+<p>
+Die folgende Tabelle zeigt, welche grunds&auml;tzlichen K&ouml;rper 
+mit dem Setzen von u/vTesselation in Nurbs(Patch)Surface Knoten 
+aus konvertierten Primitiven erzeugt werden k&ouml;nnen.
+<table>
+<tr><td>K&ouml;per</td><td>Konvertiert von</td><td>uTesselation</td><td>vTesselation</td></tr>
+<tr><td>Tetraeder</td><td>Cone</td><td>3</td><td>4</td></tr>
+<tr><td>4-eckige Pyramide</td><td>Cone</td><td>4</td><td>4</td></tr>
+<tr><td>Hexaeder</td><td>Sphere/Cylinder</td><td>3</td><td>2</td></tr>
+<tr><td>Octaeder</td><td>Sphere/Cylinder</td><td>4</td><td>2</td></tr>
+<tr><td>n-eckiges Prisma</td><td>Cylinder</td><td>n</td><td>&gt;1</td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+</table>
+</p>
+<p>
+Wenn eine Nurbs(Patch)Surface Fl&auml;che
+(<em>Erzeugen -&gt; VRML97 Amendment 1 -&gt; NurbsSurface -&gt; 
+Fl&auml;che (Nurbs)</em>)
+mit Grad 1 erzeugt wird
+<br><br><img src=degree1faceset1.jpg><br><br>
+und uTesselation auf den Wert uDimension-1 und vTesselation auf
+den Wert vDimension-1 gesetzt wird,
+sind die sichtbaren Ecken und die Position der Handles (des 
+Nurbs(Patch)Surface Knotens) identisch, genauso, wie es bei einem 
+IndexedFaceSet Knoten w&auml;re.
+<br><br><img src=degree1faceset2.jpg><br><br>
+Mit dem Men&uuml;punkt <em>Umwandeln -&gt; In IndexedFaceSet umwandeln</em> 
+kann das Result in einen IndexedFaceSet Knoten verwandelt werden.
+<br><br><img src=degree1faceset3.jpg><br><br>
+Um die Normalenvektoren loszuwerden, die die Farben der Fl&auml;chen
+verschwimmen lassen, muss der Normal Knoten vom IndexedFaceSet Knoten
+entfernt werden.
+<br><br><img src=degree1faceset4.jpg><br><br>
+Ungl&uuml;cklicherweise ist die Konversion von einem IndexedFaceSet Knoten
+zur&uuml;ck in einen Nurbs(Patch)Surface Knoten schwierig oder zumindest 
+noch nicht implementiert...
+</p>
+</li>
+<h4><a name="nurbsanimation">Animation mit Hilfe von NURBS</a></h4>
+<li>
+<p>
+Es ist m&ouml;glich, aus einer NurbsCurve Animationsdaten zu gewinnen.
+Dazu wird eine NURBS-Kurve und ein animierbares Objekt ben&ouml;tigt.<br>
+<br><br><img src=nurbsanimation1.png><br><br>
+Selektiert man nun die NURBS-Kurve, <br>
+<br><br><img src=nurbsanimation2.png><br><br>
+kann man mit <em>Umwandeln -> in 
+PositionInterpolator kopieren</em> und mit <em>Umwandeln -> in 
+OrientationInterpolator kopieren XZ/XY/YZ Ebene</em> ein 
+PositionInterpolator/OrientationInterpolator-Paar erzeugen. Dabei muss man
+die Ebene w&auml;hlen, die senkrecht auf der Drehachse steht.<br>
+<br><br><img src=nurbsanimation3.png><br><br>
+Damit eine richtige VRML-Animation entsteht, muss noch ein TimeSensor-Knoten 
+eingef&uuml;gt werden (<em>Erzeugen -> Sensor -> TimeSensor</em>).<br> 
+Danach muss mit <em>Routes -> zeige Knoten ganz oben</em> 
+der TimeSensor-Knoten, die Interpolatoren und der Transform-Knoten so<br>
+<br><br><img src=nurbsanimation4.png><br><br>
+mit Routes verbunden werden, dass eine Animation entsteht.<br>
+Wird nun TimeSensor.loop auf TRUE gestellt, folgt die Animation der NurbsCurve.
+</p>
+<p>
+Der Men&uuml;punkt <em>Animation -> erzeuge Kurvenanimation</em> fasst alle
+diese Punkte zusammen. Dabei wird ein spezielles EXTERNPROTO erzeugt, das die
+Informationen einer NurbsCurve (in der VRML97:2002 Variante) enth&aumlt. Dieses
+EXTERNPROTO wird durch javascript-Knoten in einem Standard-VRML-Browser so
+interpretiert, dass die Animation dargestellt wird. F&uuml;r 
+nicht-Standard-VRML-Browser wie z.B. X3DOM, die keinen Script-Knoten kennen, 
+kann der CurveAnimation-Knoten in einen PositionInterpolator und 
+einen OrientationInterpolator umgewandelt werden. Das passiert beim 
+Exportieren von C/C++ sourcecode automatisch<br>
+Der CurveAnimation-Knoten enth&auml;lt noch die Drehachse und das Feld "hover",
+das angibt, ob sich ein animierter Knoten nur in der Drehachse dreht oder sich
+noch zus&auml;tzlich so dreht, dass er der NurbsCurve folgt (bei einer nicht
+flachen NurbsCurve in Richtung der Steigung der NurbsCurve).
+</p>
+</li>
+</ul>
+</p>
+<h3><a name="nurbstrimmed">NURBS Trimming</a> 
+                                  <small>(neu in Version 0.99pl1050)</small></h3>
+<p>
+In Version 0.99pl1050 wird der NurbsTrimmedSurface Knoten wirklich einsetzbar.
+<br>
+Die Defaults und das Verhalten von NurbsCurve2D sind darauf ausgelegt.<br>
+Wenn Sie NURBS Trimming ausprobieren wollen, steht <a href="door.x3dv">
+dieses Beispiel</a> zur Verf&uuml;gung.<br>
+Die Abk&uuml;rzung "ccw" beim NurbsCurve2D Dialog bedeutet &uuml;brigens, dass 
+die erzeugte geschlossene Kurve entgegen dem Urzeigersinn (Counter Clock
+Wise) orientiert ist.
+Ist sie im Urzeigersinn orientiert, wird der Inhalt der Kurve ausgeschnitten,
+sonst der Rest abgeschnitten.
+Uebrigens muss diese Kurve immer geschlossen bleiben, sonst kann es zu
+einem Absturz in der Graphikbibleothel "libGLU" kommen 8-(<br>
+Wird die Kurve ueber Griffe in white_dune ver&auml;ndert, bleibt sie
+geschlossen.
+</p>
+<h3><a name="super">Superformula Modellierung</a> 
+                                  <small>(neu in Version 0.27beta)</small></h3>
+<h4><a name="superformula">Superformula Grundlagen</a></h4>
+<p>
+ White_dune unterst&uuml;tzt 3D-modelling, die auf der sogenannten
+ "superformula" ("Superformel") basiert.
+  <br>
+<pre>
+        pow(pow(fabs(cos(m * angle / 4.0) / a), n2) + 
+            pow(fabs(sin(m * angle / 4.0) / b), n3), -1.0 / n1)
+</pre>
+ <br>
+ Diese Formel wurde vor einigen Jahren von einem Biologen gefunden und
+ kann benutzt werden, um n-symetrische Formen zu erzeugen, die Dingen aus der
+ Natur wie Blumen, Bl&auml;ttern, Insektenk&ouml;rpern, Muscheln 
+ oder Seesternen &auml;hnlich sehen.
+ <br><br><img src=supershapes.jpg><br><br>
+ Diese <a href="supershapes.wrl" target="_blank">Formen</a>
+ wurden alle mit dem SuperShape PROTO erzeugt.
+ <br><br>
+ Superformula basierte Formen sind nicht von sich aus Teil von VRML97,
+ sondern sind &uuml;ber ein PROTO (selbst definierter VRML Knoten)
+ mit Scriptcode ("scripted PROTO") implementiert.<br>
+ Superformula basierte K&ouml;rper k&ouml;nnen entweder in einen
+ Extrusion Knoten oder in einen IndexedFaceSet Knoten umgewandelt werden. 
+ IndexedFaceSet basierte superformula K&ouml;rper k&ouml;nnen auch
+ einem Nurbs(Patch)Surface Knoten angen&auml;hert werden, um so einen Startpunkt
+ f&uuml;r weiteres NURBS-modelling zu haben.
+ <ul>
+  <li>
+   <h4><a name="superextrusion">SuperExtrusion</a></h4>
+   
+   Das SuperExtrusion PROTO benutzt die Superformel um ein 2D Polygon
+   in der X-Z-Fl&auml;che zu berechnen und formt daraus einen K&ouml;rper
+   indem dieses Polygon in der Y-Richtung entlang einer Kurve wiederholt
+   wird.
+   Diese Kurve funktioniert entsprechend einer NurbsCurve und kann
+   ver&auml;ndert werden, indem man die Kontrollpunkte bewegt.<br> 
+   Dieser K&ouml;rper kann in eine Extrusion umgewandelt werden und 
+   einige seiner Parameter funktionieren wie bei einer Extrusion.
+   Anders als bei einer Extrusion werden die scale Parameter nicht
+   pro spine Punkt angewandt sondern &uuml;ber den ganzen spine 
+   verschmiert.
+   <br><br><img src=superextrusion.png><br><br>
+  </li>
+  <li>
+   <h4><a name="supershape">SuperShape</a></h4>
+ 
+   Das SuperShape PROTO benutzt die Superformel um ein 2D Polygon
+   in der X-Z-Fl&auml;che zu berechnen und formt einen K&ouml;rper,
+   indem die Superformel auch in der Y-Z-Fl&auml;che &auml;hnlich
+   wie bei Kugelkoordinaten berechnet wird.<br> 
+   <br><br><img src=supershape.png><br><br>
+   Dieser K&ouml;rper kann in ein IndexedFaceSet umgewandelt werden
+  </li>
+  <li>
+   <h4><a name="superellipsoid">SuperEllipsoid</a></h4>
+   
+   White_dune hat auch ein PROTO f&uuml;r ein Superellipsoid, 
+   ein spezieller Fall des SuperShape. Es kann benutzt werden, um eine
+   Kugel, 
+   <br><br><img src=superellipsoid_sphere.jpg><br><br>
+   eine Box, ein Zylinder, 
+   <br><br><img src=superellipsoid_cylinder.jpg><br><br>
+   ein Oktaeder und abgerundete Formen dieser K&uuml;rper    
+   <br><br><img src=superellipsoid_box_smooth.jpg><br><br>
+   <br><br><img src=superellipsoid_cylinder_smooth.jpg><br><br>
+   mit nur 2 Parametern zu erzeugen.<br> 
+   Wie das SuperShape PROTO hat das SuperEllpsoid PROTO ein Feld "border",
+   um z.B. auch Halbkugeln modellieren zu k&ouml;nnen.
+   <br><br><img src=superellipsoid_sphere_half.jpg><br><br>
+   Dieser K&ouml;rper kann in ein IndexedFaceSet umgewandelt werden
+  </li>
+  <li>
+   <h4><a name="superrevolver">SuperRevolver</a></h4>
+    Das SuperRevolver PROTO funktioniert &auml;hnlich zur 
+    <a href="#rotating_nurbscurve">Drehung einer NurbsCurve</a>,
+    benutzt aber statt einer Drehung die Superformel und statt einer 
+    dreidimensionalen Kurve eine zweidimensionale Kurve.
+    <br>
+    Die Defaultwerte f&uuml;r die Parameter der Superformel (a=1, b=1, m=0,
+    n1=1, n2=1, n3=1) beschreiben als 2D Fl&auml;che einen Kreis. Diese
+    Form erkennt man, wenn man einen SuperRevolver K&ouml;rper von oben
+    betrachtet. 
+    <br>
+    Anders als die Drehung einer NurbsCurve wird bei der Benutzung von
+    SuperRevolver nicht zwischen verschiedenen Objekten umgewandelt. 
+    Stattdessen kann die 2D Nurbskurve jederzeit interaktiv ver&auml;ndert 
+    werden und dadurch der SuperRevolver K&ouml;rper ver&auml;ndert werden.
+    <br><br><img src="superrevolver.png"><br><br>
+    Es gibt auch ein Feld "pieceOfCake", das es erlaubt, "Kuchenst&uuml;cke"
+    aus dem K&ouml;rper zu schneiden.
+    <br><br><img src="superrevolver_pieceofcake.png"><br><br>
+  </li>
+ </ul>
+</p>
+<h3><a name="subdivide">Subdivide Modellierung</a> <small>(neu in Version 0.99pl624)</small></h3>
+<p>
+Subdivide Modellierung ist verf&uuml;gbar via 
+<em>(IndexedFace)Set -&gt; subdivide</em>
+Kommando oder dr&uumlcken von "s" wenn ein mesh basierter Knoten (z.B. 
+IndexedFaceSet, Box oder NurbsSurface) ausgew&auml;ht ist. 
+Subdivide benutzt den Catmull-Clark Algorithm um Objekte weicher zu machen. <br>
+Starten Sie mit einer ausgew&auml;hten Box mit passender Gr&ouml;&szlig;e:
+<br><br><img src="box.png"><br><br>
+Benutzen Sie <em>(IndexedFace)Set -&gt; subdivide</em> oder dr&uuml;cken Sie 
+"s"
+<br><br><img src="box2.png"><br><br>
+Benutzen Sie <em>Auswahl -&gt; Fl&auml;chen</em> und ziehen Sie die 
+angeklickete Fl&auml;che heraus noch mit der linken Maustaste festgehalten.
+<br><br><img src="box3.png"><br><br>
+Um das Objekt noch weicher zu machen, benutzen Sie <em>Aktion -&gt; subdivide
+</em> oder dr&uuml;cken Sie "s"
+<br><br><img src="box4.png"><br><br>
+Um die Fl&auml;chen zu verstecken, k&ouml;nnen Sie creaseAngle von 
+IndexedFaceSet setzen.
+<br><br><img src="box5.png"><br><br>
+Seien Sie sich bewusst, dass es kein "eckiger" Kommando in white_dune gibt
+ausser den "tessellation" Feldern in Nurbs(Patch)Surface or superformula 
+basierten Knoten.
+<br><br><img src="box6.png"><br><br>
+Deswegen ist es n&uuml;tzlich, oft <em>edit -&gt; undo</em> zu benutzen
+um ein subdivided objekt zu testen and zu modifizieren.
+<br>
+Leider funktioniert Subdivide nicht mit allen Fl&auml;chen, sondern nur mit
+geschlossenen Objekten. Deswegen ist Subdivide bei Auswahl eines SuperExtrusion
+Knotens ausgegraut.
+<br>
+Analog zu Fl&auml;chen, Linien k&ouml;nnen ausgew&auml;hlt werden mit
+<em>Auswahl -&gt; Linien
+</em>.
+<br><br><img src="extrusion9.png"><br><br>
+Ausgew&auml;hlte Linien lines k&ouml;nnen mit der Maus verschoben werden.
+<br><br><img src="extrusion10.png"><br><br>
+</p>
+<h3><a name="extrusion">IndexedFaceSet Extrusion</a> <small>(neu in Version 0.99pl654)</small></h3>
+<p>
+Wenn der angew&auml;lte X3D-Befehl ein IndexedFaceSet ist (oder zum 
+IndexedFacedSet konvertiert wurde),steht ein spezielle Form der Extrusion
+zur Verf&uuml;gung. Dabei kann eine oder mehrere Fl&auml;chen eines
+IndexedFaceSet herausgezogen oder hineingedr&uuml;ckt werden.
+<br>
+Dazu muss <em>Auswahl -&gt; Fl&auml;chen</em> und Coordinate von IndexedFaceSet
+ausgew&auml;hlt sein.
+<br><br><img src="extrusion.png"><br><br>
+Mit der mittleren Maustaste lassen sich ein oder mehrere Fl&auml;chen
+anw&auml;hlen.
+<br><br><img src="extrusion2.png"><br><br>
+Nach <em>(IndexedFace)Set -&gt; Extrude Face </em> lassen sich 
+mit der linken Maustaste Fl&auml;chen herausziehen.
+Ist das X Symetrie icon <img src="symetric_pressed.png">
+angew&auml;hlt, werden auch aus der anderen Seite Fl&auml;chen herausgezogen.
+<br><br><img src="extrusion3.png"><br><br>
+Genauso lassen sich Fl&auml;chen in den K&ouml;rper hineindr&uuml;cken.
+<br><br><img src="extrusion4.png"><br><br>
+Das macht Sinn im Zusammenhang mit 
+<a href="#subdivide">Subdivide Modellierung</a>.
+<em>Actions -&gt; (IndexedFace)Set -&gt; Extrude Face </em>
+<br><br><img src="extrusion5.png"><br><br>
+<em>(IndexedFace)Set -&gt; Subdivide</em>
+<br><br><img src="extrusion6.png"><br><br>
+<em>(IndexedFace)Set -&gt; Subdivide</em>
+<br><br><img src="extrusion7.png"><br><br>
+Das Ganze mit angepasstem IndexedFaceSet.creaseAngle 
+<br><br><img src="extrusion8.png"><br><br>
+</p>
+<h3><a name="coordinate">&Auml;ndern von Coordinate basierten Knoten</a><small> (neu in Version 0.29beta)</small></h3>
+<p>
+Seit Version 0.29beta k&ouml;nnen auch Coordinate basierte Knoten 
+(wie IndexedFaceSet ("Mesh"), IndexedLineSet oder PointSet)
+genauso im 3D Preview Fenster interaktiv ver&auml;ndert werden wie die 
+Kontrollpunkte eines NURBS K&ouml;rpers.<br>
+Bei Knoten mit sehr vielen Punkten, ist das (noch) nur sinnvoll um kleinere
+Details zu ver&auml;ndern.
+</p>
+<h3><a name="flip">Umklappen/austauschen und Setze Drehpunkt Aktionen</a></h3>
+<p>
+Es gibt einige n&uuml;tzliche modelling Aktionen im <em>Aktion</em> Men&uuml;:
+<ul>
+ <li>
+  <em>Umklappen (x/y/z)</em><br>
+  Das Umklappen Kommando kann f&uuml;r ganze Szenengraph Zweige benutzt werden.
+  Es &auml;ndert alle Transform und Shape (Unter-)Knoten von x zu -x,
+  y zu -y oder z zu -z. Das ist n&uuml;tzlich um eine Zweig von Objekten
+  nach einer Verdopplung zu spiegeln.
+  Bei schwierigen Objekten wie Cone oder IndexedFaceSet wird versucht,
+  das Ergebnis konsistent zu halten. Ein Cone (Kegel) kann nicht in
+  der y-Richtung umgeklappt werden, deswegen wird er in diesem Fall
+  vorher in einen Nurbs(Patch)Surface Knoten umgewandelt.
+  F&uuml;r einen Oberfl&auml;chenknoten wie IndexedFaceSet, das Umklappen
+  Kommando beachtet die normal und ccw Fields. Ein Coordinate Knoten
+  in einem IndexedFaceSet unterst&uuml;tzt auch das <em>Umklappen</em>
+  Kommando, aber dann muss man selber auf das normal und ccw Field aufpassen.
+ </li>
+ <li>
+  <em>Austauschen (xy/yz/xz)</em><br>
+  Das Austauschen Kommando kann auch f&uuml;r ganze Scenengraph Zweige benutzt
+  werden.
+  Zum Beispiel vertauscht das xy Kommando die x und y Wert von allen passenden
+  Knoten.
+ </li>
+ <li>
+  <em>Verschiebe zu (x/y/z)</em><br>
+  Dieses Kommando funktioniert nur f&uuml;r NURBS und Coordinate
+  Knoten. Es setzt alle selektierten Punkte in der x, y oder z Richtung auf den 
+  angegebenen Wert.
+ </li>
+ <li>
+  <em>Setze Drehpunkt zu (Mitte min/max x/y/z)</em><br>
+  Dieses Kommando erfordert die Kombination<br>
+  Transform -&gt; Shape -&gt; Geometrieknoten<br>
+  wobei der Geometrieknoten (e.g. Box, Sphere, IndexedFaceSet etc.)
+  angew&auml;hlt sein muss.
+  Das Kommando setzt den Mittelpunkt (Drehpunkt) des Transform Knotens auf
+  den Mittelpunkt oder die Grenzen des umschliessenden Quaders. Das ist
+  n&uuml;tzlich, wenn man mit Modellierungwerkzeugen arbeitet, die VRML
+  Objekte mit einem Drehpunkt exportieren, der weit weg vom Objekt liegt.
+ </li>
+</ul>
+</p>
+<h4><a name="convexhull">Konvexe H&uuml;lle</a><small>(neu in Version 0.99pl812)</small></h4>
+<p>
+<em>Aktion -&gt; Konvexe Huelle</em> erzeugt ein bauchiges IndexedFaceSet
+aus Objekten in einem Szenegraph Zweig (es kann auch f&uuml;r einen ganzen
+Scenengraph benutzt werden, aber das ist oft nicht sinnvoll).
+Nur die Transform Knoten Daten, die Mesh-Punkte, Linien-Punkte und PointSet
+Knoten Punkte werden benutzt um ein neues IndexedFaceSet zu erzeugen.
+<br>
+Im folgenden Beispiel wird eine Kugel und ein PointSet mit 2 Punkten gezeigt:
+<br><a href="convex_hull_before.wrl"><img src="convex_hull_before.png"></a><br>
+Die Benutzung von <em>Actions -&gt; Convex hull</em> resultiert in<br>
+<img src="convex_hull_after.png"><br>
+Es werden 2 symetrische NurbsSurface und 2 symetrische NurbsCurve werden
+hinzugef&uuml;gt<br>
+<img src="convex_hull_before2.png"><br>
+Die Benutzung von <em>Actions -&gt; Convex hull</em> resultiert in<br>
+<img src="convex_hull_after2.png"><br>
+Vergessen Sie nicht, IndexedFaceSet.creaseAngle anzupassen:<br>
+<img src="convex_hull_after3.png"><br>
+</p>
+<h4><a name="meshreducer">Fl&auml;chen Reduzierer</a> (neu in Version 0.99pl850)</h4>
+<p>
+Arbeitet man mit <a href="#subdivide">Subdivide Modellierung</a> (oder
+einem 3D-Scanner), kann die Zahl der entstehenden Fl&auml;chen explodieren.
+Als kleine Abhilfe steht ein Fl&auml;chen Reduzierer zur Verf&uuml;gung.
+Als Beispiel das Resultat einer konvexen H&uuml;lle Operation:
+<br>
+<img src="meshreducer_before.png"><br>
+W&auml;hlt man IndexedFaceSet an, wird <em>(IndexedFace)Set -&gt:
+Flaechen Reduzierer</em> verf&uuml;gbar.
+<br>
+<img src="meshreducer_dialog.png"><br>
+Klickt man es an, wird in einem Dialog nach dem Prozentsatz der verbliebenen
+Fl&auml;chen gefragt. Wird z.B. 5 Prozent angegeben, verbleiben 1/20 der
+Fl&auml;chen.
+<br>
+<img src="meshreducer_after.png"><br>
+Es ist zu beachten, dass der Fl&auml;chen Reduzierer genau wie das konvexe 
+H&uuml;lle Werkzeug keine symetrischen Ergebnisse liefern.
+Als einziger Ausweg hilft die symetrische Modellierung.
+</p>
+<h4><a name="symetric">Symetrische Modellierung</a></h4>
+<p>
+Mit <em>(IndexedFace)Set -&gt; mache symetrisch</em> kann man die eine
+(plus) oder andere (plus abgew&auml;hlt) Seite eines IndexedFaceSet spiegeln.
+</p>
+<h4><a name="skinbones">Skin and bones Modellierung</a><small>(neu in Version 0.99pl972)</small></h4>
+<p>
+"Skin and bones" bedeutet dass Sie eine Oberfl&auml;che als Haut (skin)
+und Gelenke/Knochen (bones) haben, um die Oberfl&auml;che zu manipulieren.
+Skin and bones Techniken in X3D sind verbunden mit dem HAnimHumanoid
+Befehl, weil die haupts&auml;chliche Anwendung die menschliche Animation ist.
+<br>
+Aber menschliche Animation erfordert eine Menge Gelenke, deswegen wird
+eine Blume mit zwei Gelenken gezeigt.<br>
+Zuerst starten wir mit einem IndexedFaceSet einer Blume 
+(erzeugt mit einem SuperRevolver, konvertiert zu einem modifizierten 
+Nurbs(Patch)Surface konvertiert zu IndexedFaceSet).
+<br>
+<img src="flower1.png"><br>
+Als n&auml;chstes HAnimHumanoid Knoten mit 
+<em>Erzeugen -&gt; X3D misc components
+-&gt; H-Anim -&gt; HAnimHumanoid</em> und ziehen Sie den Shape Befehl in 
+HAnimHumanoid.skin.
+<br>
+<img src="flower2.png"><br>
+Bitte st&ouml;ren Sie sich nicht daran, dass die Blume aus dem  
+preview 3D-Fenster verschwindet.<br>
+w&auml;hlen sie den Coordinate Befehl an und benutzen Sie
+<em>Auswahl -&gt; Eckpunkte</em> (oder besser: 
+<em>Auswahl -&gt; HAnimJoint ohne weight</em>).
+<br>
+<img src="flower3.png"><br>
+Wenn <em>Aktion -&gt;X symetrisches Modelling</em> angeklickt ist, 
+klicken Sie auf das
+<img src="frog08.png"> Icon.<br>
+Benutzen Sie die rechte Maus-Taste um eine Box um die H&auml;lfte der
+Blume aufzuziehen. 
+<br>
+<img src="flower4.png"><br>
+Benutze <em>Erzeugen -&gt; X3D misc components -&gt; H-Anim -&gt; HAnimJoint</em>.
+<br>
+Ein Dialog &ouml;ffnet sich:
+<br>
+<img src="flower5.png"><br>
+Klicken Sie OK.
+<br>
+<img src="flower6.png"><br>
+Ein DEF Dialog &ouml;ffnet sich. Klicken Sie OK.
+<br>
+<img src="flower7.png"><br>
+W&auml;hlen Sie das HAnimHumanoid.skeleton Feld an. Benutzen Sie 
+<em>Bearbeiten -&gt; USE.</em>
+<br>
+<img src="flower8.png"><br>
+W&auml;hlen Sie "Scene".
+<br>
+<img src="flower8a.png"><br>
+W&auml;hlen Sie den Coordinate Befehl an und benutzen Sie die rechte Maustaste
+um eine Box um den Rest der Blume aufzuziehen.
+<br>
+<img src="flower9.png"><br>
+<br>Ein Dialog &ouml;ffnet sich:<br>
+<img src="flower5.png"><br>
+Click to OK.
+<br>
+Ein DEF Dialog &ouml;ffnet sich. Klicken Sie OK.
+<br>
+<img src="flower10.png"><br>
+W&auml;hlen Sie das HAnim_Humanoid.skeleton.HAnimJoint1.children Feld an.
+Benutzen Sie <em>Bearbeiten -&gt; USE.</em>
+<br>
+<img src="flower11.png"><br>
+Die Blume und ihr Gelenk ist fertig. Benutzen Sie <em>Modus -&gt; 
+Drehpunkt verschieben</em> um den Drehpunkt des Gelenks zu verschieben.
+<br>
+<img src="flower12.png"><br>
+Benutzen Sie <em>Modus -&gt; Drehen</em>, dann benutzen Sie den Drehgriff 
+um den oberen Teil der Blume zu drehen.
+<br>
+<img src="flower13.png"><br>
+<br>
+Um HAnimJoint.skinCoordWeight kleiner 1 zu setzen, w&auml;hlen Sie den
+HAnimJoint aus (w&auml;hlen Sie "Scene" um diese Auswahl zu vergessen), dann
+w&auml;hlen Sie den Coordinate Knoten.
+<br>
+<img src="flower14.png"><br>
+Benutzen Sie die rechte Maustaste um eine Box um die Eckpunkte aufzuziehen,
+deren HAnimJoint.skinCoordWeight sie setzen wollen.
+<br>
+<img src="flower15.png"><br>
+Setzen sie den weight Wert im Dialog, das "node" und "parent" Dialog Element
+wurde gesetzt durch die vorherige HAnimJoint-Auswahl. Klicken Sie OK.
+<br>
+<img src="flower16.png"><br>
+Die Blume ist fertig, aber HAnimHumanoid.skinCoord muss gesetzt werden.
+<br>
+<img src="flower17.png"><br>
+Sie m%uuml;ssen HAnimHumanoid.skin.Shape.IndexedFaceSet.Coordinate anw&auml;hlen
+und <em>Bearbeiten -&gt; DEF</em> benutzen.
+<br>
+<img src="flower18.png"><br>
+Klicken Sie OK.<br>
+W&auml;hlen Sie HAnimHumanoid.skinCoord an und benutzen Sie
+<em>Bearbeiten -&gt; USE</em>.  
+<br>
+<img src="flower19.png"><br>
+</p>
+<h4><a name="boolean">Boolsche Modellierung</a><small>(neu in Version 0.99pl999)</small></h4>
+<p>
+White_dune erlaubt die boolsche Modellierung von IndexedFaceSets.<br>
+Dabei werden eine Gruppe (Knoten Group) von 2 Meshes (graphische
+Objekte au&szlig;er Text (und andere Fl&auml;chen)) voneinander
+abgezogen, eine Schnittmenge gebildet oder zusammengebaut. Dabei entsteht
+ein neues IndexedFaceSet. Erlaubt sind nur geschlossene Objekte,
+die sich nicht selbst &uuml;berschneiden d&uuml;rfen.<br>
+<br>
+Begonnen wird mit einer Box<br>
+<img src="bool1.png"><br>
+Als n&auml;chstes mu&szlig; "Scene" angew&auml;hlt werden.<br>
+<img src="bool2.png"><br>
+Dann wird eine Kugel hinzugef&uuml;gt. Sie ist zwar nicht sichtbar,
+aber die Griffe sind noch sichtbar.<br>
+<img src="bool3.png"><br>
+Die Kugel wird leicht vergr&ouml;&szlig;ert indem man an den Griffen zieht.<br>
+<img src="bool4.png"><br>
+Als n&auml;chstes wird das erste Transform angew&auml;hlt.<br>
+<img src="bool5.png"><br>
+Danach wird <em>Aktion -&gt; Rest des Szenengraph Zweigs -&gt;
+Verschieben in -&gt; Group</em> benutzt. Nat&uuml;rlich gibt
+es auch einfachere Wege um eine Gruppe mit zwei Meshes herzustellen.<br>
+Als n&auml;chstes wird die Group angew&auml;hlt.<br>
+<img src="bool6.png"><br>
+Danach wird <em>(IndexedFace)Set -&gt; Boolsche Operationen -&gt; Schneiden
+</em> angewendet.<br>
+<img src="bool7.png"><br>
+Es entsteht ein IndexedFaceSet mit der Schnittmenge der beiden Objekte.<br>
+Danach wird "Scene" angew&auml;hlt.<br>
+<img src="bool8.png"><br>
+Als n&auml;chstes wird noch eine Kugel eingef&uuml;gt...<br>
+<img src="bool9.png"><br>
+... und vergr&ouml;&szlig;ert<br>
+<img src="bool10.png"><br>
+Als n&auml;chstes wird das erste Transform angew&auml;hlt.<br>
+<img src="bool11.png"><br>
+Danach wird <em>Aktion -&gt; Rest des Szenengraph Zweigs -&gt;
+Verschieben in -&gt; Group</em> benutzt.<br>
+Als n&auml;chstes wird die Group angew&auml;hlt.<br>
+<img src="bool12.png"><br>
+Danach wird <em>(IndexedFace)Set -&gt; Boolsche Operationen -&gt; Abziehen
+</em> angewendet. Dabei einsteht ein IndexedFaceSet.<br>
+<img src="bool13.png"><br>
+</p>
+<h4><a name="array">Array Werkzeug</a><small>(neu in Version 0.27beta)</small></h4>
+<p>
+White_dune erlaubt es Objekte zu vervielf&auml;ltigen. 
+Im Unterschied zu &auml;hnlichen Funktionen in einigen 3D-Modellers 
+(wie dem "Art of Illusion" Programm) werden dabei nicht N Kopien des
+gleichen Objekts erzeugt. Es werden N VRML Transform Knoten (f&uuml;r
+Verschiebung (translation), Drehung (rotation), Vergr&ouml;ssern/Verkleinern
+(scale) und Mittelpunkt (scale) abh&auml;ngig vom Arraydialog) mit
+einem VRML USE Konstrukt erzeugt. Ein USE Konstrukt ist ein kompakter
+Weg um Dinge in VRML zu wiederholen. Es ist eine Art "Zeiger ohne
+Unterschied", &auml;hnlich wie ein Hardlink zu einer UNIX Datei (wenn
+Sie nur M$Windows kennen: eine cleverer Abart eines Shortcut zu einer
+Datei). Ein ge-USE-ter Knoten &auml;ndert sich ebenfalls, wenn sich das 
+Orginal ver&auml;ndert.
+<br>
+Um das Array Werkzeug zu benutzen, muss das Objekt ausgew&auml;hlt werden,
+das vervielf&auml;lltigt werden soll.
+<br><br><img src=array_start.png><br><br>
+Danach wird der Men&uuml;punkt <em>Aktion -&gt; Vervielfaeltigen</em> benutzt. 
+Im folgenden Array Dialog
+<br><br><img src=array_dialog.png><br><br>
+kann die Zahl der Objekte (Numbers Objects) und die Parameter f&uuml;r die
+Transform Knoten eingetragen werden.
+<br><br><img src=array_result.png><br><br>
+Wenn das Orginal ge&auml;ndert wird, &auml;ndern sich alle ge-USE-ten
+Knoten ebenfalls.
+<br><br><img src=array_changed.png><br><br>
+</p>
+<h3>Reparatur-Kommandos im "Aktion" Men&uuml;</a></h3>
+<p>
+Die folgenden Kommandos sind n&uuml;tzlich, wenn man mit VRML/X3D Dateien 
+arbeitet, die aus anderen Werkzeugen stammen. Sie dienen zur Korrektur
+von einigen kleineren Fehlern oder Problemen.
+<ul>
+ <li>
+  <h4><a name="remove_invalid">Ung&uuml;ltige children nodes loeschen</a> (new in Version 0.27beta)</h4>
+  <br>
+  In einigen F&auml;llen exportieren bereits benutzte Werkzeuge Dateien mit 
+  ung&uuml;ltigen Kindknoten ("invalid children nodes").<br>
+  Bei der Benutzung des L&ouml;schbefehls f&uuml;r diese Knoten sind zwei
+  F&auml;lle zu unterscheiden:
+  <ul>
+   <li>
+    Der Programmierer dieser Werkzeuge hat die Bedeutung von DEF/USE
+    mit einem Macroverhalten wie bei der Benutzung von "#define" 
+    bei der Programmiersprache C verwechselt. Da in diesem Fall noch
+    ein weiterer USE Befehl f&uuml;r den entsprechenden Knoten existiert,
+    l&auml;sst sich der vorherige ung&uuml;ltige Kindknoten mit 
+    dem zugeh&ouml;rigen "DEF" gefahrlos in white_dune l&ouml;schen, 
+    ohne dass dabei Information verloren geht.
+   </li>
+   <li>
+    Der Programmierer dieser Werkzeuge hat einen anderen Fehler 
+    begangen. In diesem Fall bedeutet das L&ouml;schen des 
+    ung&uuml;ltigen Kindknotens einen echten Datenverlust.
+   </li>
+  </ul>
+ </li>
+ <li>
+  <h4><a name="triangulate">Trianguliere IndexedFaceSet</a> (new in Version 0.29beta)</h4>
+  <br>
+  Ein IndexedFaceSet besteht aus Polygonen. Im Allgemeinen bedeutet das,
+  das es Fl&auml;chen mit 3, 4, 5, 6, 7 usw. Ecken gibt. Leider ist die
+  Aufgabe, Polygone bei Echtzeit 3D darzustellen nicht so einfach.<br>
+  Haupts&auml;chlich kann es drei Probleme geben, wenn eine Fl&auml;che
+  mehr als 3 Ecken hat:
+  <ul>
+   <li>
+    Das Polygon &uuml;berschneidet sich selbst.<br>
+    Dazu gibt es eine Regel im VRML97 Standard:<br>
+    "Each face of the IndexedFaceSet shall have: ... vertices that define a
+    non-self-intersecting polygon." (Jede Fl&auml;che des IndexedFaceSet
+    sollte haben: ... Eckpunkte, die ein nicht-selbst-&uuml;berschneidenes
+    Polygon definieren)<br>
+    Polygone, die sich selbst &uuml;berschneiden, werden normalerweise als
+    besch&auml;digt angesehen. Oft wurden sie von einem echten 
+    Programmfehler mit versehentlich vertauschten Ecken eines Polygons
+    erzeugt. <br>
+    Auf jeden Fall werden diese Polygone nicht so angezeigt,
+    wie sie definiert sind.<br> 
+    <img src="self_intersecting.png">
+    <img src="triangulated_intersection.png"><br>
+    Links ein sich &uuml;berschneidenes Polygon, rechts das triangulierte 
+    Polygon
+   </li>
+   <li>
+    Das Polygon ist nicht flach.<br>
+    Dazu gibt es eine Regel im VRML97 Standard:<br>
+    "Each face of the IndexedFaceSet shall have: ... vertices that define a 
+    planar polygon." (Jede Fl&auml;che des IndexedFaceSet
+    sollte haben: ... Eckpunkte, die ein planares (flaches) Polygon 
+    definieren)<br>
+    Leider ist es nicht ungew&ouml;hnlich, dass diese Regel ignoriert wird,
+    obwohl es mindestens zwei M&ouml;glichkeiten gibt, nicht flache Polygone 
+    darzustellen.<br>
+    Zum Beispiel kann ein Polygon mit den Ecken 1, 2, 3, 4 gerendert werden
+    entweder als ein Dreieck mit den Ecken 1, 2, 3 und ein Dreieck mit den
+    Ecken 3, 4, 1 gezeichnet werden oder als ein Dreieck mit den Ecken
+    4, 1, 2 und einem Dreieck mit den Ecken 2, 3, 4. Falls das Polygon nicht
+    flach ist, sehen diese Dreiecke verschieden aus.<br>
+    <img src="nonflat1.png">
+    <img src="nonflat2.png">
+   </li>
+   <li>
+    Das Polygon ist nicht konvex.<br>
+    Anders als bei den beiden anderen F&auml;llen ist es m&ouml;glich, 
+    ein IndexedFaceSet mit nicht-konvexen Polygonen zu haben, wenn sein
+    "convex" Feld den Wert "FALSE" (falsch) hat.<br>
+    Im allgemeinen ist es einfacher/schneller, ein konvexes Polygon
+    darzustellen. Wenn beim Darstellen eines nicht-konvexen Polygons
+    der Algoritmus zur Darstellung eines konvexen Polygons benutzt wird,
+    kann das Ergebnis sehr h&auml;sslich aussehen.<br>
+    <img src="nonconvex1.png">
+    <img src="nonconvex2.png"><br>
+    Links ein nicht-konvexes Polygon, dargestellt mit "convex TRUE", 
+    rechts das triangulierte Polygon.
+   </li>
+  </ul>
+  Alle diese Probleme k&ouml;nnen vermieden werden, wenn die Polygone
+  mit mehr als 3 Ecken in Dreiecke umgewandelt werden. Das nennt man
+  "Triangulation".<br>
+  Im allgemeinen erfordert die Triangulation die Erzeugung von neuen
+  Eckpunkten, deswegen ist es keine gute Idee, Triangulation bei
+  einem IndexedFaceSet zu benutzen, das f&uuml;r eine Morphing Animation 
+  benutzt wird.
+ </li>
+ <li>
+  <h4><a name="set_path">Set path of all URLs to</a> (new in Version 0.27beta)</h4>
+  <br>
+  Einige Werkzeuge, die VRML/X3D Dateien schreiben, erzeugen bei der Benutzung
+  von Dateien (zum Beispiel bei der Benutzung von Bildern/Bitmaps beim
+  ImageTexture Knoten) Pfade im "url" Feld, die nur auf dem erzeugenden 
+  Rechner g&uuml;ltig sind (zum Beispiel "C:\temp\beispiel.png"). 
+  VRML/X3D Dateien werden aber sehr h&auml;ufig auf einen Webserver gelegt. 
+  Selbst wenn die Dateien mit auf den Webserver &uuml;bertragen werden, ist 
+  damit noch nicht sichergestellt, dass die Pfade in der VRML/X3D Datei 
+  stimmen.<br>
+  Der Befehl "Set path of all URLs to" erlaubt es, alle Pfade umzustellen.
+  Sehr sinnvoll ist dabei der Defaultpfad ".", der bedeutet, dass die 
+  Bild-, Sound-, Film- usw. Dateien im gleichen Verzeichnis wie die
+  VRML/X3D Datei untergebracht werden kann.
+ </li>
+</ul>
+</p>
+<h3>Weitere Kommandos im "Aktion" Men&uuml;</a></h3>
+<p>
+<ul>
+ <li>
+  <h4><a name="object_url_edit">Objekt/URL editieren</a> (new in Version 0.29beta)</h4>
+  <br>
+  Die Benutzung der "Edit Object"/"Edit URL" Aktion wurde schon im
+  Kapitel &uuml;ber <a href="#simplescript">script editing</a> beschrieben.
+  Neben der Benutzung eines Texteditors um das "url" Felds eines Scripts
+  selbst zu ver&auml;ndern ("Edit URL"), wird auch die Benutzung eines 
+  Spezialwerkzeugs beschrieben ("Edit object").<br>
+  Die gleichen Prinzipien k&ouml;nnen auch auf andere Knoten mit "url" Feldern
+  angewendet werden: dem ImageTexture, dem AudioClip und dem MovieTexture 
+  Knoten.<br>
+  Die Benutzung von <em>Aktion -&gt; Objekt editieren</em> startet bei
+  angew&auml;hltem Knoten des Typs
+  <ul>
+   <li>
+    <b>ImageTexture</b> 
+    ein Programm zum Ver&auml;ndern von Bilddateien/Bitmapdateien (.jpg/.png)
+    (zum Beispiel gimp oder xpaint)
+   </li>
+   <li>
+    <b>AudioClip</b> 
+    ein Programm zum Ver&auml;ndern von Sounddateien (.wav)
+    (zum Beispiel audacity oder wavesurfer)
+   </li>
+   <li>
+    <b>MovieTexture</b> 
+    ein Programm zum Ver&auml;ndern von Filmdateien (.mpeg)
+    (zum Beispiel avidemux)
+   </li>
+  </ul>
+  Die Linux/UNIX Version von white_dune sucht im Konfigurationsschritt
+  der Kompilierung aktiv nach bereits bekannten Programmen, die f&uuml;r
+  <em>Aktion -&gt; Objekt editieren</em> benutzt werden k&ouml;nnen.<br>
+  Ist kein entsprechendes Programm verf&uuml;gbar, so fragt ein Dialog
+  beim ersten Aufruf dieser Menupunkte nach einem entsprechenden Programm.
+  &Uuuml;ber den Dialog bei <em>Optionen -&gt; Text/Objekt Editor 
+  Einstellungen</em> lassen sich die Programme auch jederzeit gegen
+  andere austauschen.<br>
+  Ein wichtiger Hinweis f&uuml;r MacOSX Benutzer: das Programm, das benutzt
+  wird, um Text oder Obekte zu bearbeiten darf nicht sofort nach dem
+  Start zur Kommandozeile zur&uuml;ckkehren. Das ist der Normalfall
+  bei den &uuml;blichen MacOSX Programmen. Man kann entweder versuchen,
+  das Bin&auml;rprogramm eine something.app MacOSX Programms im
+  Verzeichnis direkt aufzurufen oder man kann auf MacOSX portierte
+  UNIX/X11 Programm wie gimp benutzen.
+ </li>
+ <li>
+  <h4><a name="set_default">Setze default Werte (behalte Szenengraph)</a> (new in Version 0.27beta)</h4>
+  <br>
+  Manchmal ist es sinnvoll, alle vera&uuml;nderten Werte eines Knotens
+  wieder auf die Anfangswerte zur&uuml;kzusetzen. Allerdings sind beim
+  baumf&ouml;rmigen VRML/X3D Szenengraph oft Knoten ineinander verschachtelt, 
+  so dass eine neues Setzen der Anfangswerte auch ein L&ouml;schen
+  ganzer Teilb&auml;me bedeuten w&uuml;rde.<br>
+  Deswegen werden beim Setzen von default Werten Knotenfelder vom Typ
+  SFNode bzw. MFNode unver&auml;ndert gelassen.
+ </li>
+ <li>
+  <h4><a name="xray">R&ouml;ntgenblick</a> (new in Version 0.27beta)</h4>
+  <br>
+  Die experimentelle R&ouml;ntgenblick Funktion l&auml;sst einen
+  durch alle undurchsichtigen Oberfl&auml;che einer Szene schauen.
+  Das ist meistens sehr verwirrend, ist aber manchmal sehr n&uuml;tzlich.
+ </li>
+</ul>
+</p>
+<h4><a name="proto"><em>PROTO Erstellung/Ver&auml;nderung</em></a></h4> <small> (new in Version 0.99pl444)</small>
+<p>
+Um ein PROTO zu erstellen, muss zuerst ein Szenengraphzweig erstellt werden,
+deren Knoten den Grossteil des PROTOs ausmachen.<br>
+In diesem Beispiel sind ein Shape/Box, ein Shape/Sphere und ein Viewpoint
+Knoten in diesem Szenengraphzweig.
+<br><br><img src=proto_creation1.png><br><br>
+Um ein PROTO mit diesen Knoten zu erstellen, muss <em>Actions-&gt;Rest of 
+scenegraph branch-&gt;Move to-&gt;new PROTO</em> angeklickt werden.<br>
+<br><br><img src=proto_creation2.png><br><br>
+Es folgt ein Dialog, der nach dem Namen des PROTOs fragt, hier w&auml;hlt
+man "DOME" (Kuppelgeb&auml;ude)
+<br><br><img src=proto_creation3.png><br><br>
+Als n&auml;chstes folgt ein Dialog, der die Argumente des PROTOs bestimmt.
+An diesen Dialog kommt man sp&auml;ter wieder mit Selektieren des PROTOs und
+<em>Edit -&gt; Object edit</em> heran.
+Als field Argument w&auml;hlt man SFColor color und dr&uuml;ckt "Add".<br>
+<br><br><img src=proto_creation4.png><br><br>
+Danach dr&uuml;ckt man "ok" um den Dialog abzuschliessen.<br>
+<br><br><img src=proto_creation5.png><br><br>
+Als n&auml;chstes &ouml;ffnet sich das RouteView/IS-Fenster, dabei ist das
+PROTO "DOME" selektiert.
+<br><br><img src=proto_creation6.png><br><br>
+Es is jetzt m&ouml;glich, die Knoten des PROTOs in den Szenengraph zu
+verschieben oder neue Knoten hinzuzuf&uuml;gen.
+In diesem Fall wird der Viewpoint Knoten aus dem PROTO in die normale
+Szene verschoben.<br>
+Als n&auml;chstes benutzt man <em> Create -&gt; PROTO usage -&gt; DOME</em>
+um den DOME im Szenengraph darzustellen.
+<br><br><img src=proto_creation7.png><br><br>
+Als n&auml;chstes selektiert man den einen Material-Knoten im PROTO und
+benutzt <em> Routes/IS -&gt Show node on top </em>.
+<br><br><img src=proto_creation8.png><br><br>
+Dananch verschiebt man Material-Knoten und PROTO im Route/IS view um
+color und diffuseColor zu verbinden.
+<br><br><img src=proto_creation9.png><br><br>
+Als n&auml;chstes selektiert man den anderen Material-Knoten im PROTO und
+benutzt <em> Routes/IS -&gt Show node on top </em>.
+<br><br><img src=proto_creation10.png><br><br>
+Dananch verschiebt man den anderen Material-Knoten und PROTO im Route/IS view 
+um color und diffuseColor zu verbinden.
+<br><br><img src=proto_creation11.png><br><br>
+Danach l&auml;sst sich "color" im DOME-Knoten ver&auml;ndern und
+ein weiteres Transform und DOME Paar einf&uuml;gen.
+<br><br><img src=proto_creation12.png><br><br>
+</p>
+<h4><a name="vrmlcut"><em>VrmlCut scripted Proto</em></a></h4> <small> (new in Version 0.29beta)</small>
+<p>
+In VRML/X3D ist es erstaunlich schwierig eine Folge von Animationen zu
+erzeugen, die man &uuml;blicherweise "Film" nennt.
+Passend zur Echtzeit 3D Natur von VRML/X3D k&ouml;nnen Animationen interaktiv
+und unabh&auml;ndig voneinander gestartet werden, deswegen ist es schwierig,
+eine allumfallende timeline (wie beim cutten eines Films) zu erzeugen.<br>
+Ein Ansatz, um das Problem in white_dune zu erleichtern ist die Benutzung
+des scripted PROTO Knoten VrmlCut. Dieser Knoten hat ein Field "scenes", 
+in dem einzelne VRML/X3D Animationsdaten in einem anderen scripted PROTO 
+Knoten namens VrmlScene abgelegt werden kann. Der Inhalt so eines VrmlScene
+Knoten kann man als Inhalt einer einzelnen Scene in einem Film ansehen.
+Der VrmlCut Knoten schaltet von einer VrmlScene zu der n&auml;chsten, versucht
+zur ersten Kamera(Viewpoint) zu springen und alle Animationen in der 
+aktuellen VrmlScne zu starten.<br>
+Genau wie die SuperShape, SuperEllipsoid, usw. Knoten ist der VrmlCut Knoten
+ein eigentlicher VRML Knoten. Es ist ein PROTO, ein Verbund von VRML Knoten,
+er besteht aus einem Switch Knoten, einem Script Knoten und einem TimeSensor.
+<br>
+Genau wie ein Script Konten hat er einen Ver&auml;nderlichen Satz von 
+fields/events. Weil mehrere VrmlCut Knoten mehrere verschiedene S&auml;tze von
+fields/events h&auml;tten, can man nur eine Proto Definition von VrmlCut und
+deshalb nur ein VrmlCut Knoten pro VRML-file haben.<br>
+Der VrmlCut Knoten schaltet die Abfolge von VrmlScene Knoten (ein Group
+artiger Knoten mit einem Script Knoten f&uuml;r routing) angetrieben von
+TimeSenor und Script.<br>
+Alle Informationen zwischen VrmlCut, VrmlScene, TimeSensoren (f&uuml;r Animationen)
+und Viewpoints (Kameras) werden &uuml;ber ROUTE Verbindungen &uuml;bertragen.
+Das macht das Konzept flexibel (zum Beispiel k&ouml;nnen die ROUTE sourcen
+benutzt werden um andere Knoten wie Sound oder Fog zu versorgen), aber 
+die Erzeugung von vielen Routes bedeutet viel Arbeit.<br>
+Um die Arbeit zu reduzieren, kann die folgende Methode benutzt werden:
+<ul>
+ <li>
+  Erzeugen sie einzelne Scenen, jede in einer eigenen VRML Datei.
+ </li>
+ <li>
+  Oeffnen sie eine VMRL Datei mit einen gemeinsamen Hintergrund (oder eine
+  leere Datei).
+ </li>
+ <li>
+  Benutzen Sie <em>Erzeugen -&gt; Scripted PROTOs -&gt; VrmlCut</em> 
+  um eine VrmlCut Knoten zu erzeugen.
+ </li>
+ <li>
+  Benutzen sie direkt danach <em>Erzeugen -&gt; Scripted PROTOs -&gt; VrmlScene</em> 
+  um einen VrmlScene Knoten zu erzeugen.
+ </li>
+ <li>
+  Benutzen sie direkt danach <em>Datei -&gt; Einfuegen</em> um eine VRML Datei
+  in die Scene zu bringen. Alle TimeSensoren und der erste Viewpoint 
+  werden mit ROUTEs von dem VrmlScene Knoten verbunden.
+  Das loop Field in den TimeSensoren wird abgeschaltet. Die gr&ouml;sste
+  cycleTime der TimeSensoren wird in den passenden Index des 
+  scenelengths Field des VrmlCut Knotens abgelegt.
+ </li>
+ <li>
+  Benutzen sie direkt danach <em>Erzeugen -&gt; Scripted PROTOs -&gt; VrmlScene</em> 
+  um den n&auml;chsten VrmlScene Knoten zu erzeugen.
+ </li>
+ <li>
+  Benutzen sie direkt danach <em>Datei -&gt; Einfuegen</em> um die n&auml;chste
+  VRML Datei einzuf&uuml;gen.
+ </li>
+ <li>
+  usw.
+ </li>
+</ul>
+Am Schluss kann man mit dem "play" icon oder &uuml;ber "<em>Datei -&gt; Vorschau</em>
+the Kette von Animationen starten.<br>
+Mit den sceneNumber, numberPreviousScenes und numberNextScenes Fields 
+des VrmlCut Knotens kann ein reduzierter Bereich der Animationen angeschaut
+werden. Das ist sinnvoll, um die L&auml;ngen der Scenen im  sceneLengths field 
+des VrmlCut Knoten zu optimieren.
+</p>
+<h4><a name="upload"><em>Datei -&gt; Upload</em></a> </h4> <small>(new in Version 0.27beta)</small>
+<p>
+White_dune hat einen Befehl (Men&uuml;punkt <em>Datei -&gt; Upload</em>) 
+um eine VRML Datei auf einen Internet Server heraufzuladen.<br>
+Beim heraufladen einer Datei ins Internet wird man &uuml;blicherweise
+nach einem Passwort gefragt. White_dune kann das Passwort so speichern,
+dass es von den Auslagerungsdaten (swapspace) durch mlock/vlock Aufrufe
+gesch&uuml;tzt ist.<br>
+Auslagerungsdaten ist der Inhalt von Computerspeicher der auf Platte 
+ausgelagert wird um Platz f&uuml;r andere laufende Programme zu machen.
+Ein Eindringling kann die Auslagerungsdaten nach Passworten durchsuchen.<br>
+Die &Uuml;bertragung eines Passworts von einer Anwendung (white_dune)
+zu einer anderen Anwendung (dem Herauflade-Kommando) auf einem
+sicheren Weg ist keine leichte Aufgabe, wenn man an Probleme wie
+die Auslagerungsdaten denkt.<br>
+Im upload settings dialog (<em>Options -&gt; Upload settings...</em>)
+<br><br><img src=upload.png><br><br>
+kann das upload Kommando zwei Parameter haben. Jeder parameter der
+upload Kommandozeil wird mit Hilfe der Buchstaben "%s" gesetzt.
+<ul>
+<li>
+Im Fall von nur einem "%s" wird dieser Parameter ersetzt mit dem
+Pfad der VRML Datei, die aus den aktuellen Daten in white_dune
+erzeugt wurde.<br>
+Wenn kein Passwort benutzt wird, kann des  Herauflade-Kommando entweder
+jedes Mal nach dem Passwort fragen oder es wird ein fortgeschrittener
+Authentifizierungsalgorithmus wie z.B. ssh passphrase benutzt.
+</li>
+<li>
+Im Fall von nur einem "%s" und wenn es ein Passwort gibt, wird diese
+Passwort &uuml;ber standardin an das  Herauflade-Kommando geschickt.
+Normalerweise ist der Inhalt von standartin/standardout nicht vom
+den Auslagerungsdaten gesch&uuml;tzt, so dass es ein m&ouml;gliches
+Sicherheitsrisiko gibt.
+</li>
+<li>
+Im Fall von zwei "%s" wird das Password as Kommandozeilen Option benutzt.
+Auf den meisten Operationsystemen, bedeutet das ein hohes Sicherheitsrisiko,
+denn die Kommandozeilen kann von jedem anderen Benutzer auf dem gleichen
+System gelesen werden.
+</li>
+</ul>
+Die letzte Zeile im upload settings Dialog enth&auml;lt die M&ouml;glichkeit,
+eine html-webpage nach dem Heraufladen aufzurufen. Um das zu nutzen,
+m&uuml;ssen die entsprechenden HTML tags eingetippt werden, die dann
+in ein HTML file eingetragen werden.<br>
+Zum Beispiel ist im folgenden Dialog eingetragen, dass die Daten aus
+white_dune in eine VRML Datei mit einem vorbestimmten Namen kopiert
+wird und dann diese VRML Datei zusammen mit der Zeichenkette "hello"
+im Webbrowser beim n&auml;chsten <em>Datei -&gt; Upload</em> Kommando 
+dargestellt wird.
+<br><br><img src=upload_copy.png><br><br>
+Die Zeile mit den HTML tags kann "%s" einhalten, was dann durch
+das Passwort ersetzt wird. Dadurch wird ein HTML file mit einem
+Passwort erzeugt. Das ist ein sehr hohes Sicherheitsrisiko, benutzen
+diese M&ouml;glichkeit nicht, wenn Sie nicht genau wissen, was Sie tun !
+</p>
+<small>*** 
+Der Knotenvektoren ist der Vektor, &uuml;ber dem die NURBS-Kurve definiert ist. 
+Ohne darauf n&auml;her einzugehen, soll nur kurz und beispielhaft sein 
+Einflu&szlig; 
+gezeigt werden. Betrachtet man den im Bild gezeigten Knotenvektor, so 
+f&auml;llt auf, dass sich  die ersten sowie die letzten Werte des Knotenvektors 
+wiederholen. Das hat zu Folge, dass die Kurve wirklich bis zum ersten (letzten) 
+Kontrollpunkt geht, und die erste (letzte) Seite des Kontrollpolygons (Polygon, 
+dass durch die Kontrollpunkte gebildet wird) als Tangente besitzt, wodurch man 
+bequem und "kontrolliert" modellieren kann (Man kennt die Endpunkte des 
+Splines). 
+Vervielfacht man Werte des Knotenvektors in seinem Inneren, so erzeugt man 
+einen 
+Stetigkeitabfall in der Kurve. Tritt ein Knoten so oft auf, wievielten Grades 
+die 
+Kurve ist, so kann man, wie im Bild zu sehen, eine Ecke in der Kurve erzeugen.
+</small>
+</body>
+
+

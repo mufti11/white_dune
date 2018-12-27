@@ -1,0 +1,36 @@
+#!/bin/sh
+
+cd `dirname $0`
+
+# it is not a good idea (anymore) to set DISPLAY=:0
+
+DUNEOPTIONS=" "
+export DUNEOPTIONS
+
+DUNEPATH=`dirname $0`
+export DUNEPATH
+
+DUNEDOCS=`echo file://$DUNEPATH/../Resources/WhiteDuneHelp/docs | awk '{gsub("\/[^\/]*\/\.\.\/","/");print $0};'`
+export DUNEDOCS
+
+ARCH=`uname -m`
+
+$DUNEPATH/white_dune
+rc=$?
+if test $rc = 133 ; then
+   # try i386 binary
+   $DUNEPATH/white_dune.i386
+   rc=$?
+fi
+if test $rc = 133 ; then
+   # try ppc binary
+   $DUNEPATH/white_dune.ppc
+   rc=$?
+fi
+if test $rc = 133 ; then
+# use the sign # at the beginnig of the next line to disable the errormessage 
+    osascript -l AppleScript -e "tell Application \"Finder\" to display dialog \"white_dune xcode program failed, try to start dune directly. Edit $0 to disable this error message\" " &
+fi
+if test $rc != 0 ; then
+    $DUNEPATH/dune -startX11aqua $DUNEOPTIONS
+fi

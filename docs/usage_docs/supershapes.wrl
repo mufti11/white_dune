@@ -1,0 +1,470 @@
+#VRML V2.0 utf8
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+EXTERNPROTO SuperShape[
+ exposedField SFFloat ua
+ exposedField SFFloat ub
+ exposedField SFFloat um
+ exposedField SFFloat un1
+ exposedField SFFloat un2
+ exposedField SFFloat un3
+ exposedField SFFloat va
+ exposedField SFFloat vb
+ exposedField SFFloat vm
+ exposedField SFFloat vn1
+ exposedField SFFloat vn2
+ exposedField SFFloat vn3
+ exposedField SFFloat border
+ field SFFloat creaseAngle
+ field SFNode texCoord
+ exposedField SFInt32 uTessellation
+ exposedField SFInt32 vTessellation
+ ]
+[
+ "SuperShapePROTO.wrl"
+ "http://wdune.ourproject.org/docs/scriptedNodes/SuperShapePROTO.wrl"
+]
+
+
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 4
+	vm 4
+	}
+      }
+    ]
+  rotation 0.638469 -0.766925 6.466662e-2 1.071105
+  translation -1.660910 1.456099 1.486755
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um -4
+	va -1.059998
+	vb 0.819998
+	vm 4
+	vn1 12.179990
+	vn2 13.060003
+	vn3 12.260004
+	uTessellation 64
+	vTessellation 64
+	}
+      }
+    ]
+  rotation 0.153940 -0.827700 -0.539643 0.676666
+  translation -2.756206 2.545608 -0.753956
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	va -1.059998
+	vb 0.819998
+	vm 4
+	vn1 12.179990
+	vn2 13.060003
+	vn3 12.260004
+	uTessellation 64
+	vTessellation 64
+	}
+      }
+    ]
+  translation 5.197798 3.961463 3.622123
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 6
+	va -1.059998
+	vb 0.819998
+	vm 4
+	vn1 12.179990
+	vn2 13.060003
+	vn3 12.260004
+	uTessellation 64
+	vTessellation 64
+	}
+      }
+    ]
+  rotation -0.366975 -0.838930 -0.401900 1.870687
+  translation -1.768638 -1.635419 -3.436249
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	}
+      }
+    ]
+  translation -0.669120 0.412903 3.369565
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	vm 1.259999
+	vn1 0.360000
+	vn2 1.199998
+	vn3 0.499998
+	}
+      }
+    ]
+  rotation -1 0 0 0.104717
+  translation 3.360702e-2 -1.096279 2.187324
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 6
+	un1 -0.800000
+	un3 0.660000
+	va 0.860000
+	vb 15.359996
+	vm 1.659999
+	vn1 0.660000
+	vn2 -6.460000
+	vn3 0.460000
+	}
+      }
+    ]
+  rotation -0.904688 -0.413416 -0.103076 0.537837
+  scale 0.200000 0.200000 0.200000
+  translation 1.516515 -3.498878 -2.697740
+  }
+
+Viewpoint 
+  {
+  orientation 0.418719 0.273565 -0.865930 3.035341
+  position -10.025582 -7.945323 7.400650
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 5.259996
+	un1 -0.519999
+	un2 1.059998
+	un3 1.019999
+	va 0.639998
+	vb 0.899999
+	vm 2.019999
+	vn1 1.919999
+	vn2 0.639998
+	vn3 0.419999
+	}
+      }
+    ]
+  translation -0.704971 0.131766 -0.545892
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 6
+	un1 -1
+	va -1.059998
+	vb 0.819998
+	vm 4
+	vn1 12.179990
+	vn2 13.060003
+	vn3 12.260004
+	uTessellation 64
+	vTessellation 64
+	}
+      }
+    ]
+  rotation -0.366975 -0.838930 -0.401900 1.870687
+  scale 0.600000 0.600000 0.600000
+  translation -0.788685 -3.630522 -4.345160
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 6
+	vm 5.939999
+	vn1 -0.379999
+	}
+      }
+    ]
+  scale 0.500000 0.500000 0.500000
+  translation 2.686049e-2 -1.627346 -1.472411
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um -7.259996
+	un1 1.299998
+	un2 1.200000
+	un3 0.519999
+	vm -13.179999
+	vn1 0.579999
+	vn2 1.340000
+	vn3 1.539999
+	}
+      }
+    ]
+  translation 2.002076 -1.602705 0.907956
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	ub 0.280000
+	um 1
+	va 3.019999
+	vb -1.999993e-2
+	vm -9.119997
+	vn1 5.539999
+	vn2 3.419996
+	vn3 2.119997
+	}
+      }
+    ]
+  rotation -9.393890e-2 -0.198486 -0.975591 3.103373
+  translation 3.754707 -3.209352 -0.778258
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	ua 0.740000
+	ub 1e4
+	um -1.080000
+	un1 -2.039999
+	un2 -7.300000
+	un3 0.219999
+	va -3.920001
+	vb -7.019999
+	vm 30.860000
+	vn1 10.260000
+	vn2 -0.479997
+	vn3 0.280000
+	}
+      }
+    ]
+  rotation 0.679419 0.702244 -0.212703 3.568259
+  translation 1.842854 -4.298488 2.216063
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	um 10
+	un1 -2.720000
+	vm 14
+	vn1 -5.679999
+	vn2 0.759999
+	}
+      }
+    ]
+  translation -3.305451 -7.704707e-2 -1.756529
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	vm 17.040000
+	vn1 -4.920000
+	vn2 -1
+	}
+      }
+    ]
+  translation 7.723546 2.542649 1.761798
+  }
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       SuperShape 
+	{
+	vm 17.040000
+	vn1 -4.920000
+	}
+      }
+    ]
+  translation 6.065119 -1.082863 1.454902
+  }
+

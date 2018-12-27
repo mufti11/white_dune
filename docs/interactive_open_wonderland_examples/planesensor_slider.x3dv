@@ -1,0 +1,92 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+DEF Transform1 Transform
+  {
+  children 
+    [
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  diffuseColor 1 1.56862754e-2 1.56862754e-2
+	  }
+	}
+      geometry Box
+	{
+	size 0.30000001 0.30000001 0.30000001
+	}
+      }
+    DEF PlaneSensor1 PlaneSensor
+      {
+      }
+    ]
+  }
+
+DEF Script1 Script 
+  {
+  inputOnly SFVec3f vec3f1_in
+  outputOnly SFVec3f vec3f1_out
+  outputOnly MFString mstring1_out
+  url 
+    [
+    "javascript:
+
+// insert program code only into functions
+
+ // eventOut SFVec3f vec3f1_out //
+
+ // eventOut MFString mstring1_out //
+
+ function vec3f1_in(value)
+    {
+    // value  SFVec3f
+    x = value[0];
+    if (x > 1)
+        x = 1;
+    if (x < -1)
+        x = -1;
+    vec3f1_out = new SFVec3f(x, 0, 0);
+    mstring1_out = new MFString(x);
+    }
+"
+    "java:
+    X3dScript_Script1 script = (X3dScript_Script1)node;
+    float x = script.vec3f1_in[0];
+    if (x > 1)
+        x = 1;
+    if (x < -1)
+        x = -1;
+     script.vec3f1_out[0] = x;
+     script.mstring1_out = new String[1];
+     script.mstring1_out[0] = \"\" + x;
+"
+    ]
+  }
+
+ROUTE PlaneSensor1.trackPoint_changed TO Script1.vec3f1_in
+ROUTE Script1.vec3f1_out TO Transform1.set_translation
+
+Transform
+  {
+  translation -1.05623161 -1.76739084 0
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry DEF Text1 Text
+	{
+	string "test"
+	}
+      }
+  }
+
+ROUTE Script1.mstring1_out TO Text1.set_string
+

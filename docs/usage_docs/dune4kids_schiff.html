@@ -1,0 +1,398 @@
+<!--
+/*
+ * Copyright (C) 2011 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h2>Bau eines Schiffs (nicht schwer)</h2>
+<br>
+<br>
+<h2>Erst einmal ein paar Informationen zum lesen</h2>
+<br>
+Auf manchen Systemen (Linux KDE/Gnome und SGI IRIX 4dwm) gibt es ein eigenes 
+Programmicon fuer "dune4kids", es sieht dann irgendwie so aus:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+Auf Systemen wie Micro$oft Windows oder MacOSX ist aber nur ein 
+(anderes) Programmicon vorhanden:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normalerweise startet das Programm dieses Icons beim ersten Mal 
+in der englischen Vollversion, in der Regel mit sehr vielen Icons 
+und zu vielen Menues.<br>
+<a href="dune4kids_start_de.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+Es muss dann zuerst einmal auf Deutsch und dann auf dune4kids umgestellt 
+werden.<br> Man muss <a href="dune4kids_start_de.html" target="_blank"> 
+hier draufklicken</a> um auf die richtige Version umschalten zu 
+k&ouml;nnen.<br>
+<img src="frog01.png">
+<br><br>
+<h2>Was tun, wenn das Programm abst&uuml;rtzt ?</h2>
+Mit etwas Gl&uuml;ck kann man den letzten Stand neu laden, wenn man bei
+den aktuellen Dateien eine neue ".dune_crash" Datei findet.
+<br>
+<img src="frog00.png">
+<br>
+<h1>Navigation</h1>
+Navigation bedeutet das Herumbewegen im 3D-Modell.<br>
+Das ist wichtig, denn es kann sehr leicht passieren, dass man vor oder in 
+sein Werkstueck ger&auml;t und deswegen ueberhaupt nichts mehr sieht.<br><br>
+Wenn man nichts mehr sieht, gibt es zwei Vorgehensweisen, die man meistens
+gemeinsam anwendet:
+<ul>
+<li> <b>Man geht nach hinten</b><br>
+     Vorw&auml;rts und Rueckw&auml;rts geht man, indem man gemeinsam die linke 
+     Maustaste und die "Shift"-Taste (deutsche Tastatur: "Leerer-Pfeil-hoch-Taste") 
+     gedr&uuml;ckt h&auml;lt.
+     In der Einstellung "Examine" (wenn das Icon <img src="examine.png"> gedrueckt 
+     ist) funktioniert das auch mit der mittleren Taste einer 3-Tasten-Maus.
+     Bei einer Maus mit Scrollrad muss man das mittlere Scrollrad
+     dr&uuml;cken.
+</li>
+<li> <b>Man dreht die 3D-Welt</b><br>
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Zus&auml;tzlich gibt es noch die M&ouml;glichkeit, die linke Maustaste,
+die "Shift"-Taste und die "Control"-Taste gleichzeitig gedr&uuml;ckt
+zu halten (oder das Icon <img src="move_along_screen.png"> benutzen).
+Damit kann man sich in Richtung der Bildschirmfl&auml;che, also nach 
+oben, unten, links oder rechts bewegen.
+<br>
+<br>
+Nachdem man sein Objekt wieder gefunden hat, sollte man wieder das 
+"Examine"-Icon <img src="examine.png"> dr&uuml;cken, damit man wieder
+wie gewohnt arbeiten kann.
+<br>
+<h1>Icons f&uuml;r Ver&auml;nderungen</h1>
+Um zu zeigen, wie man Dinge ver&auml;ndern kann, wird einfach mal ein
+Quader erzeugt.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, um ganze Objekte zu ver&auml;ndern:
+<ul>
+<li>Verschieben: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Drehen: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Vergr&ouml;ssern/verkleinern: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>Gleichartig vergr&ouml;ssern/verkleinern: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>Drehpunkt verschieben: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+Mit weissen K&auml;stchen kann man Objekte selber ver&auml;ndern.
+Mit den einzelnen Pfeilicons <img src="xyz.png"> kann man die Richtung
+steuern. <br>
+Wird zum Beispiel nur der gr&uuml;ne Pfeil hereingedr&uuml;ckt, 
+<img src="y_only.jpg"> kann bei<br> 
+<img src="yonly_1.jpg"> 
+<br><br> 
+ein K&auml;stchen nur in Richtung des gr&uuml;ne Pfeils geschoben werden.<br>
+<img src="yonly_2.jpg">. 
+<br><br>
+Genau wie man Pfeile auch an den Sch&auml;ften statt an den Spitzen
+packen kann, um in einer Ebene verschieben zu k&ouml;nnen, kann man
+auch zwei Pfeile gleichzeitig hereingedr&uuml;cken <img src="xz_only.jpg">, 
+um ein K&auml;stchen in einer Ebene verschieben zu k&ouml;nnen.
+<br>
+<h1>Jetzt geht es los: Bau einer Schiffs (nicht schwer)</h1>
+<br>
+Die folgende Beschreibung muss man nicht sklavisch befolgen, aber (zumindest
+beim ersten Versuch) halbwegs in der Spur bleiben.<br>
+<br>
+Ein Schiff wird aus mehreren Teilen hergestellt: einem Rumpf, einem Mast
+mit Maststange und einem Segel.
+<br>
+<h2>Rumpf</h2>
+<br>
+Begonnen wird mit dem Rumpf.<br> 
+F&uuml;r den Rumpf beginnt man mit einer Halbkugel 
+<em><b>Neu -&gt Halbkugel</b></em>:
+<br>
+<img src="qualle1.png">
+<br>
+Eine Halbkugel w&auml;re aber meistens zu langweilig. 
+<br>
+<img src="qualle2.png">
+<br>
+Um eine bessere Form 
+zu erreichen, muss muss man die Zahlen der Formel &auml;ndern, die 
+die Form des Schiffs berechnet. Dazu benutzt man den Men&uuml;eintrag<br> 
+<em>Veraendern -&gt Zeige (manchmal) Zahlen</em>:<br>
+<image src="qualle3.png">
+<br>
+Dabei kann man bei manchen angew&auml;hlten Objekten im linken Fenster (hier 
+"SuperShape") die Zahlen ver&auml;ndern.
+<br>
+<image src="qualle4.png">
+<br>
+Wenn man die Felder mit den Zahlen anklickt, kann man Zahlen eintippen
+(Achtung: "Kommazahlen" werden hier mit einem Punkt geschrieben).
+<br>
+<image src="qualle5.png">
+<br>
+Man kann auch die Zahlen verkleinern oder vergr&ouml;&szlig;ern indem man
+eine Zahl anklickt ohne die Maustaste loszulassen (dabei erscheint ein 
+Doppelpfeil) und die Maus nach links oder rechts bewegt.
+Die Zahlen, die f&uuml;r eine Schiffsform benutzt werden k&ouml;nnen,
+sind eigentlich ziemlich egal. Allerdings mit einer Ausnahme: die Zahl
+f&uuml;r "um" sollte ungef&auml;hr 1 sein.
+<br>
+Wenn man sich mit den Zahlen total verhaspelt hat, kann man mit
+<em>Veraendern -&gt; Setze Startwerte</em> wieder zu einer vollen
+Kugel zur&uumll;ckkehren.
+<br>
+<image src="schiff1.png">
+<br>
+Sinnvoll ist, die Schalter f&uuml;r "top" (bzw. "bottom") anzuklicken.
+Dann hat das Schiff auch ein richtiges Deck und ist nicht hohl wie
+eine Nussschale.<br>
+<br>
+<image src="schiff2.png">
+<br>
+Zieht man an einem weissen K&auml;stchen, kann
+man den K&ouml;rper viel gezielt ver&auml;ndern.
+<br>
+Beim white_dune Programm sind bestimmte Richtungen bevorzugt. Man kann
+zum Beispiel K&ouml;rper mit dem Joystick steuern, wenn der K&ouml;rper
+richtig liegt. Es gibt auch einen dazu passenden 
+<em>Bewegungsart -&gt; Aufstehen</em> Befehl.<br>
+Deswegen sollte man den Rumpf nur in Richtung des blauen Pfeils in
+die L&auml;ge ziehen.
+<br>
+Jetzt sollte man das Zwischenergebnis in eine Datei abspeichern. 
+Beendet man das
+Programm (oder schaltet man den Strom ab) ist alles verloren, wenn man
+nicht in eine Datei abgespeichert hat. Zum Abspeichern benutzt man
+<br><em><b>Datei -&gt; Speichern</b></em>.<br> Dabei &ouml;ffnet sich ein Fenster, an
+dessen unteren Rand man etwas eintippen kann. Am besten ist es, wenn
+man das Wort Schiff, dann einen Unterstrich (dieses Zeichen: _), dann
+seinen Vornamen, dann einen Unterstrich (_), dann seinen Nachnamen,
+dann einen Unterstrich (_) und dann sein Alter eintippt. 
+<br>
+<image src="schiff_save.png">
+<br>
+Also wenn man 
+"Max Mustermann" heisst und 9 Jahre alt ist: Schiff_Max_Mustermann_9<br>
+Damit weiss man beim Zusammenbauen des Films, dass die Datei ein 3D-Modell
+eines Schiffs enth&auml;lt und dass man "Max Mustermann, 9 Jahre" zum
+Schiff im Abspann schreiben muss.
+<br>
+<br>
+Auch sp&auml;ter (und vor allem am Schluss !) sollte man immer mal
+wieder <em>Datei -&gt; Speichern</em> benutzen, damit nichts verloren
+geht.
+<br>
+<br>
+Jetzt sollte das "Examine"-Icon <img src="examine.png"> hineingedr&uuml;ckt 
+sein. Ausserdem sollte das Icon <img src="symetric_pressed.png"> f&uuml;r
+"X gespiegeltes Ver&auml;ndern" hineingedr&uuml;ckt sein (&auml;ndert man 
+ggf. mit <em>Ver&auml;ndern -&gt; "X gespiegeltes Ver&auml;ndern"</em>).
+<br>
+<h2>Mast</h2>
+<br>
+Beim Bau des Mastes muss man daf&uuml;r Sorge tragen, dass der Mast
+mitbewegt wird, wenn man den Rumpf bewegt. Dazu muss das oberste Transform
+im linken Fenster ange&auml;hlt werden. 
+<br>
+<image src="schiff3.png">
+<br>
+F&uuml;r die Maststange wird ein Zylinder mit 
+<em>Neu -&gt Zylinder</em> eingef&uuml;gt.
+<br>
+<image src="schiff5.png">
+<br>
+Leider ist der Zylinder viel zu dick. In der jetzigen Form ist er eher als
+Turm eines U-Boots benutzbar. Hier w&auml;re deshalb der Punkt, an dem
+man vom Segelboot zum U-Boot umschwenken k&ouml;nnte. Allerdings muss man
+sich dann seine weiteren Objekte selber zusammensuchen. Zum Beispiel kann
+man Ruder/Flossen aus flachgeklopften Kugeln (bzw. Superegg) basteln (siehe
+oben Vergr&ouml;ssern/Verkleinern). 
+Den Zylinder kann man mit den weissen K&auml;chsten d&uuml;nner machen. 
+Genauso kann die L&auml;nge des Zylinders (also die L&auml;nge des Masts) 
+ver&auml;ndert werden. Da die L&auml;nge des Masts oben und unten w&auml;chst,
+muss man oft auch die H&ouml;henlage des Masts mit Hilfe des gr&uuml;nen
+Pfeils ver&auml;ndern.
+<br>
+<image src="schiff6.png">
+<br>
+Als n&auml;chstes ist die Querstange des Masts an der Reihe. Dazu w&auml;hlt
+man den Transform-Befehl des Masts (hier also den zweitobersten 
+Transform-Befehl im linken Fenster an.<br>
+<br>
+<image src="schiff6a.png">
+<br>
+Danach benutzt man <em><b>Berarbeiten -&gt; Kopieren</b></em> und sofort
+danach (ohne irgendwas anderes anzuklicken) <em><b>Berarbeiten -&gt; gespiegelt
+einfuegen -&gt; x (rot)</b></em>.<br>
+Jetzt existieren zwei Masten, aber weil sie an der selben Stelle stehen,
+sieht man nur einen.<br> 
+<br>
+<image src="schiff7.png">
+<br>
+Jetzt w&auml;hlt man den Transform des neu entstandenen Masts an.
+<br>
+<image src="schiff7a.png">
+<br>
+Mit dem Befehl <em><b>Ver&auml;ndern -&gt; setze Startwerte</b></em>
+verschiebt man die Mastquerstange nach unten.
+<br>
+<image src="schiff8.png">
+<br>
+Man dem Befehl <em><b>Ver&auml;ndern -&gt; Vertauschen -&gt;
+x (rot) und y (gruen)</b></em> wird die Mastquerstange umgeklappt.
+<br>
+<image src="schiff9.png">
+<br>
+Danach muss man die Querstange mit Hilfe der Pfeile noch etwas weiter 
+nach oben schieben.
+<br>
+<image src="schiff10.png">
+<br>
+<h2>Segel</h2>
+<br>
+F&uuml;r das Segel wird wieder der oberste Transform im linken Fenster
+angew&auml;hlt.
+<br>
+<image src="schiff11.png">
+<br>
+Mit <em><b>Neu -&gt Flaeche</b></em> wird das Segel eingef&uuml;gt.
+<br>
+<image src="schiff11a.png">
+<br>
+Allerdings ist das Segel falsch entstanden. Das wird mit
+<em><b>Veraendern -&gt; Vertauschen -&gt; y (gruen) und z (blau)</b></em>
+repariert. Danach kann man das Segel an die richtige Stelle schieben.
+<br>
+<image src="schiff12.png">
+<br>
+Mit dem Umschalten auf Vergr&ouml;ssern/Verkleinern
+<br>
+<image src="schiff12b.png">
+<br>
+kann man die Gr&ouml;sse des Segels anpassen.
+<br>
+<image src="schiff12a.png">
+<br>
+Danach klickt man das Segel an und klickt mit dem Mausrad (Mausrad dr&uuml;cken
+und loslassen) zwei Punkte in der Mitte des Segels an, so dass sie 
+gr&uuml;n gef&auml;rben.
+<br>
+<image src="schiff13.png">
+<br>
+Indem man den blauen Pfeil am oberen Rand anklickt, stellt man sicher,
+dass die Punkte nur nach vorne oder hinten bewegt werden.
+<br>
+<image src="schiff14.png">
+<br>
+Dann schiebt man mit die Punkte nach vorn.
+<br>
+<image src="schiff15.png">
+<br>
+Damit ist das Schiff komplett.
+<br>
+<image src="schiff16.png">
+<br>
+<h2>Vorw&auml;rts</h2>
+Jetzt kann man das Schiff endlich nach vorne schwimmen lassen. 
+<br>
+Die folgenden Bilder zeigen aber einen Fisch und kein Schiff, obwohl im Text
+von einem Schiff die Rede ist.
+<br>
+Letztendlich ist aber v&ouml;llig egal, was bewegt wird.<br>
+<br>
+Es k&ouml;nnte auch ein Haus oder ein Baum sein, man w&uuml;rde immer gleich
+vorgehen. Die Bilder mit einem Fisch waren einfach schon fertig. 8-)
+<br>
+<br>
+Zuerst muss man den Drehpunkt an die richtige
+Stelle setzen, sonst "schiebt" das Schiff um die Kurve.<br>
+Dazu w&auml;lt man das oberste Transform im linken Fenster an und 
+klickt auf das Icon <img src="center.jpg"> f&uuml;r Drehpunkt verschieben.
+<br>
+<img src="fish42.png"/>
+<br>
+Und schiebt den Mittelpunkt mit der Maus auf der Spitze des hellblauen 
+Pfeils an die richtige Stelle.
+<br>
+<img src="fish43.png"/>
+<br>
+Am besten benutzt man f&uuml;r schwimmenlassen einen Joystick (bzw. Gamepad), 
+der mit <em>Optionen -&gt InputDevice Einstellungen</em> in der white_dune
+Vollversion eingerichtet wurde. Dann gibt es einige Icons mehr in der obersten
+Leiste. Die beste Einstellung f&uuml;r die Bewegung mit dem Joystick ist
+das Icon, das "schweben" bedeutet und ein bisschen wie ein Luftkissenboot
+von vorne aussieht.
+<br>
+<img src="fish44.png"/>
+<br>
+Jetzt klickt man den obersten Transform im linken Fenster an und benutzt
+<br>
+<em><b>Animation -&gt; Neue Animation (Objekt z.B. Transform anwaehlen)</b></em>
+<br>
+<img src="fish45.png"/>
+<br>
+Beim folgenden Dialog-Fenster sind schon "translation" (Verschieben) und
+"rotation" (drehen) ausgew&auml;lt, so dass man nur noch "OK" dr&uuml;cken
+muss.<br>
+Jetzt muss man nur noch die Icons in der untersten Leiste f&uuml;r "Aufnahme"
+(roter Kreis) und "Abspielen" (blaues Dreieck) hineindr&uuml;cken und kann
+die Bewegung des Schiffs, der mit dem Joystick gesteuert wird,
+aufzeichnen lassen.<br>
+Man sollte immer nur ein Animationsfenster mit Animationsdaten f&uuml;llen
+und nicht Animationsdaten &uuml;berschreiben, denn bei langsamen Maschinen
+kommt es dann leicht zum Ruckeln.
+<br>
+<img src="fish46.png"/>
+<br>
+Wenn man sich vertan hat (passiert oft) kann man im Animationsfenster einen
+Bereich ausw&auml;hlen (mit dem Dr&uuml;cken und Festhalten der linken 
+Maustaste und dem Verschieben der Maus in Richtung der Breite des Fensters)
+um mit <b>sofortigem</b> <em>Bearbeiten -&gt; L&ouml;schen</em> einen Bereich
+der Animation zu l&ouml;schen. Benutzt man nicht sofort 
+<em>Bearbeiten -&gt; L&ouml;schen</em>, sondern klickt was anderes an,
+wird was anderes gel&ouml;scht (zum Gl&uuml;ck gibts  
+<em> Bearbeiten -&gt; Rueckgaengig machen</em>).
+<br>
+Geschafft !

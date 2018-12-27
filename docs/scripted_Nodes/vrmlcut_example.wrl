@@ -1,0 +1,353 @@
+#VRML V2.0 utf8
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+PROTO VrmlCut [
+ eventOut SFTime startTime0
+ eventOut SFTime startTime1
+ eventOut SFTime startTime2
+ eventOut SFTime startTime3
+
+  field MFFloat sceneLengths 
+    [
+    ]
+  field SFInt32 sceneNumber -1
+  field SFInt32 numberPreviousScenes 0
+  field SFInt32 numberNextScenes 0
+  eventIn SFTime time_in
+  exposedField MFNode scenes 
+    [
+    ]
+  ]
+{
+DEF VrmlCutSwitch Switch 
+  {
+  choice IS scenes
+  }
+
+DEF VrmlCutScript Script 
+  {
+  eventOut SFTime startTime0 IS startTime0
+  eventOut SFTime startTime1 IS startTime1
+  eventOut SFTime startTime2 IS startTime2
+  eventOut SFTime startTime3 IS startTime3
+
+  eventIn SFTime time_in IS time_in
+  eventOut SFInt32 whichScene_out
+  field MFFloat sceneLengths IS sceneLengths
+  field SFInt32 sceneNumber IS sceneNumber
+  field SFInt32 numberPreviousScenes IS numberPreviousScenes
+  field SFInt32 numberNextScenes IS numberNextScenes
+  field SFTime firstTime 0
+  field SFInt32 currentScene 0
+  field SFInt32 firstScene 0
+  field SFInt32 lastScene 0
+  url     "javascript:
+
+      function initialize()
+         {
+         firstScene=sceneNumber-numberPreviousScenes;
+         if (firstScene<0)
+             firstScene=0;
+         currentScene=firstScene;
+         lastScene=sceneNumber+numberNextScenes;
+         if (lastScene>=sceneLengths.length)
+            lastScene=sceneLengths.length-1;
+         if (sceneNumber<0)
+            {
+            firstScene=0;
+            lastScene=sceneLengths.length-1;
+            }            
+         }
+      function startScene(value)
+         {
+         whichScene_out=currentScene;
+         if (currentScene==0)
+            startTime0=value;
+         if (currentScene==1)
+            startTime1=value;
+         if (currentScene==2)
+            startTime2=value;
+         if (currentScene==3)
+            startTime3=value;
+         }
+
+      function time_in(value, time)
+         {
+         if ((firstTime==0) || (currentScene>lastScene))
+            {
+            firstTime=value;
+            currentScene=firstScene;
+            startScene(value);
+            }
+         if (value>=firstTime+sceneLengths[currentScene])
+            {
+            firstTime=value;
+            currentScene++;
+            startScene(value);
+            }
+         }
+      "
+  }
+
+
+DEF VrmlCutTimeSensor TimeSensor 
+  {
+  loop TRUE
+  }
+
+ROUTE VrmlCutTimeSensor.time TO VrmlCutScript.time_in
+
+ROUTE VrmlCutScript.whichScene_out TO VrmlCutSwitch.set_whichChoice
+
+}
+
+
+
+
+PROTO VrmlScene
+  [
+  eventIn SFTime timeIn
+  eventOut SFTime timeOut
+  eventOut SFBool bindOut
+  exposedField MFNode children 
+    [
+    ]
+  ]
+{
+Group 
+  {
+  children IS children
+  }
+
+Script 
+  {
+  eventIn SFTime timeIn IS timeIn
+  eventOut SFTime timeOut IS timeOut
+  eventOut SFBool bindOut IS bindOut
+  url     "javascript:
+ // eventOut SFTime timeOut //
+ // eventOut SFBool bindOut //
+ function timeIn(value)
+    {
+    // value  SFTime
+    timeOut=value;
+    bindOut=true;
+    }
+    "
+  }
+
+}
+
+
+DEF VRMLCUT VrmlCut 
+  {
+  sceneLengths 
+    [
+    1.500000
+    2
+    2
+    3
+    ]
+  scenes 
+    [
+    DEF VRMLSCENE1 VrmlScene 
+      {
+      children 
+	[
+	DEF Transform1 Transform 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Cylinder 
+		{
+		}
+	      }
+	    DEF PositionInterpolator1 PositionInterpolator 
+	      {
+	      key 
+		[
+		0 
+		0.896085 
+		]
+	      keyValue 
+		[
+		0 0 0 
+		4.529273 0.732918 0.372669 
+		]
+	      }
+	    DEF TimeSensor2 TimeSensor 
+	      {
+	      cycleInterval 3
+	      }
+	    ]
+	  translation 0.108424 1.754501e-2 8.921164e-3
+	  }
+	DEF Viewpoint2 Viewpoint 
+	  {
+	  orientation -0.911886 0.396134 0.107427 0.561896
+	  position 1.959992 4.923892 8.480195
+	  }
+	DEF Transform3 Transform 
+	  {
+	  children 	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Cone 
+		{
+		}
+	      }
+	  translation 0 4.027152e-2 2.039121e-3
+	  }
+	DEF TimeSensor4 TimeSensor 
+	  {
+	  cycleInterval 4.149999
+	  }
+	DEF PositionInterpolator3 PositionInterpolator 
+	  {
+	  key 
+	    [
+	    0 
+	    0.944669 
+	    ]
+	  keyValue 
+	    [
+	    0 0 0 
+	    0 2.453336 0.124223 
+	    ]
+	  }
+	]
+      }
+    DEF VRMLSCENE2 VrmlScene 
+      {
+      children 
+	[
+	DEF Transform2 Transform 
+	  {
+	  children 
+	    [
+	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Sphere 
+		{
+		}
+	      }
+	    DEF PositionInterpolator2 PositionInterpolator 
+	      {
+	      key 
+		[
+		0 
+		1.001348 
+		]
+	      keyValue 
+		[
+		0 0 0 
+		-6.163431 -0.166097 -6.347405e-2 
+		]
+	      }
+	    DEF TimeSensor3 TimeSensor 
+	      {
+	      cycleInterval 3
+	      }
+	    ]
+	  translation -3.959567 -0.106705 -4.077757e-2
+	  }
+	DEF Viewpoint1 Viewpoint 
+	  {
+	  orientation 0.682763 0.436750 -0.585732 0.894854
+	  position 4.345242 -14.296236 17.155145
+	  }
+	]
+      }
+    DEF VrmlScene1 VrmlScene 
+      {
+      children 
+	[
+	DEF Viewpoint3 Viewpoint 
+	  {
+	  }
+	DEF Transform5 Transform 
+	  {
+	  children 	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Cone 
+		{
+		}
+	      }
+	  }
+	]
+      }
+    DEF VrmlScene2 VrmlScene 
+      {
+      children 
+	[
+	DEF Viewpoint4 Viewpoint 
+	  {
+	  position 0 0 9.899998
+	  }
+	DEF Transform4 Transform 
+	  {
+	  children 	    Shape 
+	      {
+	      appearance 	      Appearance 
+		{
+		material 		Material 
+		  {
+		  }
+		}
+	      geometry 	      Box 
+		{
+		}
+	      }
+	  }
+	]
+      }
+    ]
+  numberPreviousScenes 1
+  numberNextScenes 1
+  }
+
+ROUTE TimeSensor2.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+ROUTE TimeSensor4.fraction_changed TO PositionInterpolator3.set_fraction
+ROUTE PositionInterpolator3.value_changed TO Transform3.set_translation
+ROUTE VRMLSCENE1.timeOut TO TimeSensor2.set_startTime
+ROUTE VRMLSCENE1.timeOut TO TimeSensor4.set_startTime
+ROUTE VRMLSCENE1.bindOut TO Viewpoint2.set_bind
+ROUTE TimeSensor3.fraction_changed TO PositionInterpolator2.set_fraction
+ROUTE PositionInterpolator2.value_changed TO Transform2.set_translation
+ROUTE VRMLSCENE2.timeOut TO TimeSensor3.set_startTime
+ROUTE VRMLSCENE2.bindOut TO Viewpoint1.set_bind
+ROUTE VrmlScene1.bindOut TO Viewpoint3.set_bind
+ROUTE VrmlScene2.bindOut TO Viewpoint4.set_bind
+ROUTE VRMLCUT.startTime0 TO VRMLSCENE1.timeIn
+ROUTE VRMLCUT.startTime1 TO VRMLSCENE2.timeIn
+ROUTE VRMLCUT.startTime2 TO VrmlScene1.timeIn
+ROUTE VRMLCUT.startTime3 TO VrmlScene2.timeIn
+

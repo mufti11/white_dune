@@ -1,0 +1,140 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+DEF TimeSensor1 TimeSensor 
+  {
+  cycleInterval 3
+  loop TRUE
+  }
+
+DEF Viewpoint1 Viewpoint 
+  {
+  orientation 0 0 0 0
+  position -0.255424 -3.328841 25.586574
+  }
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    2.721088e-3 
+    0.502040 
+    0.989115 
+    ]
+  keyValue 
+    [
+    0 0 10 
+    -0.272922 -3.556889 26.654359 
+    0 0 9.756641 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Viewpoint1.set_position
+
+DEF OrientationInterpolator1 OrientationInterpolator 
+  {
+  key 
+    [
+    6.802720e-3 
+    0.180952 
+    0.990476 
+    1.008163 
+    ]
+  keyValue 
+    [
+    0 0 0 0 
+    0 1.043416 0 0.500000 
+    0 0.963020 0 -0.557192 
+    0 0 0 -0.574547 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO OrientationInterpolator1.set_fraction
+ROUTE OrientationInterpolator1.value_changed TO Viewpoint1.set_orientation
+
+Group 
+  {
+  children 
+    [
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Box 
+	    {
+	    }
+	  }
+	]
+      translation 3 1.753935 0
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Cylinder 
+	    {
+	    }
+	  }
+	]
+      translation -3.306951 -1.457715 0
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Cone 
+	    {
+	    }
+	  }
+	]
+      translation 2.872603 -1.657109 3.370387
+      }
+    Transform 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    }
+	  geometry 	  Sphere 
+	    {
+	    }
+	  }
+	]
+      translation -2.295416 2.844802 -3.317089
+      }
+    ]
+  }
+

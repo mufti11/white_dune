@@ -1,0 +1,85 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+DEF Transform1 Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Cylinder 
+	{
+	}
+      }
+    DEF TouchSensor1 TouchSensor 
+      {
+      }
+    ]
+  translation 1.289904 0.295843 2.502840e-2
+  }
+
+DEF TimeSensor1 TimeSensor 
+  {
+  }
+
+ROUTE TouchSensor1.touchTime TO TimeSensor1.set_startTime
+
+DEF PositionInterpolator1 PositionInterpolator 
+  {
+  key 
+    [
+    2.444987e-3 
+    0.177261 
+    0.370415 
+    0.837408 
+    0.947432 
+    0.965770 
+    0.986552 
+    ]
+  keyValue 
+    [
+    0 0 4.098217e-2 
+    2.459907 1.533037 2.885766 
+    1.967039 -1.147370 -0.351653 
+    1.189745 0.509316 8.074533e-2 
+    0.885980 0.734098 0.506274 
+    8.074533e-2 6.211180e-2 0.759412 
+    8.074533e-2 6.211180e-2 0.759412 
+    ]
+  }
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+
+Transform 
+  {
+  children 
+    [
+    Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  }
+	}
+      geometry       Text 
+	{
+	string 
+	  [
+	  "touchsensor animation trigger"
+	  ]
+	}
+      }
+    ]
+  translation -5.452226 2.124099 0
+  }
+

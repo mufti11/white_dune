@@ -1,0 +1,52 @@
+#!/sbin/ksh
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+# convert Cosmoworld outputfile to standard VRML on a SGI 
+# result is printed to stdout
+# uses /usr/sbin/worldsToVrml and /usr/sbin/imgcopy
+
+TMP1=/tmp/cosmo2vrml_1_$$.wrl
+IMAGEFORMAT=png
+if test $# -ne 1 ; then
+   if test $# -eq 0 ; then
+      TMPIN=/tmp/cosmo2vrml97filter_in.wrl
+      cat > $TMPIN
+      /usr/sbin/worldsToVrml $TMPIN $TMP1
+      rm $TMPIN      
+   else
+         echo convert cosmoworld output to standard vrml and convert imageformat to png 1>&2
+         echo Usage $0 'inputfile > outputfile' 1>&2
+         exit 1
+   fi
+else
+   /usr/sbin/worldsToVrml $1 $TMP1
+fi
+
+awk -v dirname=`dirname $1` -v imageformat=$IMAGEFORMAT \
+    -v ownscript=$0 -v process=$$ \
+' 
+/\"file:.*\"/ { 
+   flag=1; 
+   match($0,"file:.*[^\"]"); 
+   x=substr($0,RSTART+length("file:"),RLENGTH-length("file:")); 
+   if (substr(x,length(x)-3,4)==".wrl") 
+      { 
+      file=".tmp_" process "_" ++filenum ".wrl"; 
+      system(ownscript " <" x " >" file); 
+      } 
+   else 
+      { 
+      file=".tmp_" process "_" ++filenum "." imageformat; 
+      system("/usr/sbin/imgcopy " x " " file); 
+      } 
+   y=$0; 
+   gsub("file:" x,"./" file,y); 
+   print y; 
+   } 
+/^/ {if (flag==0) print $0} 
+/\"file:.*\"/ {flag=0} 
+' $TMP1
+rm $TMP1
+

@@ -1,0 +1,664 @@
+<!--
+/*
+ * Copyright (C) 2011 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h2>Bau eines Fisches (nicht leicht)</h2>
+<br>
+<br>
+<h2>Erst einmal ein paar Informationen zum lesen</h2>
+<br>
+Auf manchen Systemen (Linux KDE/Gnome und SGI IRIX 4dwm) gibt es ein eigenes 
+Programmicon fuer "dune4kids", es sieht dann irgendwie so aus:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+Auf Systemen wie Micro$oft Windows oder MacOSX ist aber nur ein 
+(anderes) Programmicon vorhanden:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normalerweise startet das Programm dieses Icons beim ersten Mal 
+in der englischen Vollversion, in der Regel mit sehr vielen Icons 
+und zu vielen Menues.<br>
+<a href="dune4kids_start_de.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+Es muss dann zuerst einmal auf Deutsch und dann auf dune4kids umgestellt 
+werden.<br> Man muss <a href="dune4kids_start_de.html" target="_blank"> 
+hier draufklicken</a> um auf die richtige Version umschalten zu 
+k&ouml;nnen.<br>
+<img src="frog01.png">
+<br><br>
+<h2>Was tun, wenn das Programm abst&uuml;rtzt ?</h2>
+Mit etwas Gl&uuml;ck kann man den letzten Stand neu laden, wenn man bei
+den aktuellen Dateien eine neue ".dune_crash" Datei findet.
+<br>
+<img src="frog00.png">
+<br>
+<h1>Navigation</h1>
+Navigation bedeutet das Herumbewegen im 3D-Modell.<br>
+Das ist wichtig, denn es kann sehr leicht passieren, dass man vor oder in 
+sein Werkstueck ger&auml;t und deswegen ueberhaupt nichts mehr sieht.<br><br>
+Wenn man nichts mehr sieht, gibt es zwei Vorgehensweisen, die man meistens
+gemeinsam anwendet:
+<ul>
+<li> <b>Man geht nach hinten</b><br>
+     Vorw&auml;rts und Rueckw&auml;rts geht man, indem man gemeinsam die linke 
+     Maustaste und die "Shift"-Taste (deutsche Tastatur: 
+     "Leerer-Pfeil-hoch-Taste") 
+     gedr&uuml;ckt  h&auml;lt und dabei die Maus nach oben oder unten 
+     verschiebt.
+     In der Einstellung "Examine" (wenn das Icon <img src="examine.png"> 
+     gedr&uuml;ckt 
+     ist) funktioniert das auch mit der mittleren Taste einer 3-Tasten-Maus.
+     Bei einer Maus mit Scrollrad muss man das mittlere Scrollrad
+     dr&uuml;cken.
+</li>
+<li> <b>Man dreht die 3D-Welt</b><br>
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Zus&auml;tzlich gibt es noch die M&ouml;glichkeit, die linke Maustaste,
+die "Shift"-Taste und die "Control"-Taste gleichzeitig gedr&uuml;ckt
+zu halten (oder das Icon <img src="move_along_screen.png"> benutzen).
+Damit kann man sich in Richtung der Bildschirmfl&auml;che, also nach 
+oben, unten, links oder rechts bewegen.
+<br>
+<br>
+Nachdem man sein Objekt wieder gefunden hat, sollte man wieder das 
+"Examine"-Icon <img src="examine.png"> dr&uuml;cken, damit man wieder
+wie gewohnt arbeiten kann.
+<br>
+<h1>Icons f&uuml;r Ver&auml;nderungen</h1>
+Um zu zeigen, wie man Dinge ver&auml;ndern kann, wird einfach mal ein
+Quader erzeugt.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, um ganze Objekte zu ver&auml;ndern:
+<ul>
+<li>Verschieben: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Drehen: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Vergr&ouml;ssern/verkleinern: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>Gleichartig vergr&ouml;ssern/verkleinern: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>Drehpunkt verschieben: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+Mit weissen K&auml;stchen kann man Objekte selber ver&auml;ndern.
+Mit den einzelnen Pfeilicons <img src="xyz.png"> kann man die Richtung
+steuern. <br>
+Wird zum Beispiel nur der gr&uuml;ne Pfeil hereingedr&uuml;ckt, 
+<img src="y_only.jpg"> kann bei<br> 
+<img src="yonly_1.jpg"> 
+<br><br> 
+ein K&auml;stchen nur in Richtung des gr&uuml;ne Pfeils geschoben werden.<br>
+<img src="yonly_2.jpg">. 
+<br><br>
+Genau wie man Pfeile auch an den Sch&auml;ften statt an den Spitzen
+packen kann, um in einer Ebene verschieben zu k&ouml;nnen, kann man
+auch zwei Pfeile gleichzeitig hereingedr&uuml;cken <img src="xz_only.jpg">, 
+um ein K&auml;stchen in einer Ebene verschieben zu k&ouml;nnen.
+<br>
+<h1>Jetzt geht es los: Bau einer Fisches (nicht leicht)</h1>
+<br>
+Die folgende Beschreibung muss man nicht sklavisch befolgen, aber (zumindest
+beim ersten Versuch) halbwegs in der Spur bleiben.<br>
+<br>
+Ein Fisch wird aus mehreren Teilen hergestellt: einem Rumpf mit Maul,
+mehreren Flossen und zwei Augen.
+<br>
+<h2>Rumpf</h2>
+<br>
+Begonnen wird mit dem Rumpf. Der Rumpf besteht aus einem mathematischen
+Kegel (kein Kegel wie beim Kegeln, sondern einem K&ouml;rper, der so 
+&auml;hlich aussieht, wie eine &auml;gyptische Pyramide, nur unten
+mit einem Kreis statt einem Viereck. Ein H&uuml;tchen beim Fang-den-Hut
+ist so ein mathematischer Kegel).<br>
+Dazu benutzt man <br><em><b>Neu &gt; Kegel</b></em>
+<br>
+<img src="fish1.png"/>
+<br>
+Wenn "Cone" (englisch f&uuml;r "Kegel") angew&auml;hlt ist, kann mit dem
+Verschieben der weissen K&auml;stchen (K&auml;stchen anklicken, dabei die
+Maustaste gedr&uuml;ckt halten und die Maus verschieben) die H&ouml;he und
+die Breite des Kegels ver&auml;ndern.<br>
+<br>
+<img src="fish1a.png"/>
+<br>
+Sp&auml;ter wird der untere Kreis des Kegels zusammengefaltet und bildet
+das Maul. Viele Fische haben ein eher kleines Maul, deswegen sollte die 
+Breite des Kegels eher klein sein. Ob es sp&auml;ter ein d&uuml;nner oder
+ein dicker Fisch wird, wird damit noch 
+nicht festgelegt. Das wird erst sp&auml;ter entschieden.<br>
+Damit man den unteren Kreis des Kegels zusammenfalten kann, muss man
+den Kegel verformen k&ouml;nnen. Deswegen ist der n&auml;chste Befehl
+(nachdem im linken Fenster <b>"Cone" angew&auml;hlt </b>wurde).
+<br><em><b>Veraendern -&gt; mache verformbar (NURBS)</b></em>
+<br>
+<img src="fish1b.png"/>
+<br>
+Im n&auml;chsten Fenster kann man einfach "OK" anklicken. 
+<br>
+<img src="fish2.png"/>
+<br>
+Obwohl sich am K&ouml;rper nichts ver&auml;ndert hat, haben sich die 
+K&auml;stchen ver&auml;ndert. Zieht man an einem K&auml;stchen, kann
+man den K&ouml;rper viel gezielter ver&auml;ndern (wenn man jetzt an
+einem K&auml;stchen gezogen hat (<b>nur dann</b>), sollte man <em> 
+Bearbeiten -&gt; Rueckgaengig machen</em> benutzen, das K&auml;stchen wandert
+dann wieder zur&uuml;ck).
+<br>
+Beim white_dune Programm sind bestimmte Richtungen bevorzugt. Man kann
+zum Beispiel K&ouml;rper mit dem Joystick steuern, wenn der K&ouml;rper
+richtig liegt. Es gibt auch einen dazu passenden 
+<em>Bewegungsart -&gt; Aufstehen</em> Befehl.<br>
+Dummerweise passt der Fischrumpf noch nicht so richtig dazu, deswegen muss 
+<b>"NurbsSurface" im linken Fenster ausgew&auml;lt werden</b>, damit man
+<br><em><b>Ver&auml;ndern -&gt; Vertauschen -&gt; y (gruen) und z(blau)</b></em>
+<br>
+benutzen kann.
+<br>
+<img src="fish3.png"/>
+<br>
+Jetzt sollte man das Zwischenergebnis in eine Datei abspeichern. 
+Beendet man das
+Programm (oder schaltet man den Strom ab) ist alles verloren, wenn man
+nicht in eine Datei abgespeichert hat. Zum Abspeichern benutzt man
+<br><em>Datei -&gt; Speichern</em>.<br> Dabei &ouml;ffnet sich ein Fenster, an
+dessen unteren Rand man etwas eintippen kann. Am besten ist es, wenn
+man das Wort Fisch, dann einen Unterstrich (dieses Zeichen: _), dann
+seinen Vornamen, dann einen Unterstrich (_), dann seinen Nachnamen,
+dann einen Unterstrich (_) und dann sein Alter eintippt. 
+<br>
+<image src="fish_save.png">
+<br>
+Also wenn man 
+"Max Mustermann" heisst und 11 Jahre alt ist: Fisch_Max_Mustermann_11<br>
+Damit weiss man beim Zusammenbauen des Films, dass die Datei ein 3D-Modell
+eines Fischs enth&auml;lt und dass man "Max Mustermann, 11 Jahre" zum
+Fisch im Abspann schreiben muss.
+<br>
+<br>
+Auch sp&auml;ter (und vor allem am Schluss !) sollte man immer mal
+wieder <em>Datei -&gt; Speichern</em> benutzen, damit nichts verloren
+geht.
+<br>
+<br>
+Jetzt sollte das "Examine"-Icon <img src="examine.png"> hineingedr&uuml;ckt 
+sein. Ausserdem sollte das Icon <img src="symetric_pressed.png"> f&uuml;r
+"X gespiegeltes Ver&auml;ndern" hineingedr&uuml;ckt sein (&auml;ndert man 
+ggf. mit <em>Ver&auml;ndern -&gt; "X gespiegeltes Ver&auml;ndern"</em>).
+<br>
+<br>
+Man dreht sich jetzt sein Objekt so hin, dass man mit dem Klicken der
+mittleren Maustaste (meistens: draufklicken auf das mittlere Mausrad)
+zwei K&auml;stchen gr&uuml;n markieren kann. Die richtigen 
+K&auml;stchen sind das obere (Richtung gr&uuml;ner Pfeil) K&auml;stchen
+am "Fischmaul" Kreis und das K&auml;stchen daneben.
+<br>
+<img src="fish4.png"/>
+<br>
+Jetzt braucht man eine ruhige Hand, um mit der rechten Maustaste eines
+der gr&uuml;nen K&auml;stchen zu treffen, die Maustaste gedr&uuml;ckt 
+zu halten und die Maus zu verschieben. Dabei bewegen sich beide 
+gr&uuml;nen K&auml;stchen und das dazu in Richtung x (roter Pfeil) 
+gespiegelte K&auml;stchen. Es entsteht der Oberkiefer des Fischs.
+<br>
+<img src="fish5.png"/>
+<br>
+Genauso entsteht der Unterkiefer. Man klickt erst mal ins Leere, um
+die bisherige Markierung zu beenden. Dann markiert man das untere 
+K&auml;stchen (Richtung gr&uuml;ner Pfeil) K&auml;stchen
+am "Fischmaul" Kreis und das K&auml;stchen daneben.
+<br>
+<img src="fish6.png"/>
+<br>
+Mit dem Ziehen am &auml;sseren K&auml;stchen wird der Unterkiefer 
+herausgezogen.
+<br>
+<img src="fish7.png"/>
+<br>
+Jetzt kann man die Dicke des Fischs festlegen. Dazu geht man genau 
+wie bei Unter- und Oberkiefer vor, es werden dabei nur K&auml;stchen
+in der Mitte des Fischs markiert 
+<br>
+<img src="fish8.png"/>
+<br>
+und in die H&ouml;he gezogen.
+<br>
+<img src="fish9.png"/>
+<br>
+Genauso geht man f&uuml;r die Unterseite des Fischs vor.
+<br>
+<img src="fish10.png"/>
+<img src="fish11.png"/>
+<br>
+<br>
+Man kann auch noch an anderen K&auml;stchen (am besten an mehreren gleichzeitig)
+ziehen und schauen, ob der
+Fisch dadurch sch&ouml;ner wird (gegebenenfalls die &Auml;nderungen 
+(mit <em>Bearbeiten -&gt;) Rueckgaengig machen</em>) oder zum Beispiel mit dem 
+Vergr&ouml;ssern/Verkleinern-Icon <img src="scale.jpg"> einen 
+flachgeklopften Fisch (wie eine Scholle oder ein Rochen) basteln
+(danach wieder auf das Verschieben-Icon <img src="schieb.png">
+zur&uuml;ckstellen).
+<br>
+<h2>Flossen</h2>
+<br>
+Als n&auml;chstes baut man die Schwanzflosse. Damit man sp&auml;ter den
+ganzen Fisch bewegen kann (und nicht nur Rumpf und Flossen getrennt)
+muss vor dem n&auml;chsten Befehl im linken Fenster der "Transform"-Befehl
+des Rumpfs (der oberste Transform im linken Fenster) angew&auml;hlt werden.
+<br>
+<img src="fish12.png"/>
+<br>
+Dann benutzt man <br><em><b>Neu -> Flaeche -> y (gr&uuml;n) und z (blau))</b>
+</em>. Danach wird man nach der Gr&ouml;sse der Fl&auml;che gefragt, dabei 
+kann man einfach <em>OK</em> klicken.
+<br>
+<img src="fish13.png"/>
+<br>
+Danach muss man die Flosse mit der blauen Pfeilspitze an den richtigen
+Ort schieben.
+<br>
+<img src="fish15.png"/>
+<br>
+Die Form der Flosse wird durch Verschieben der weissen K&auml;stchen
+festgelegt.
+<br>
+<img src="fish16.png"/>
+<br>
+F&uuml;r R&uuml;chken- und Bauchflosse wird ein kleiner Trick benutzt:
+sie entstehen aus einer Kopie der Schwanzflosse. Dazu muss der 
+"Transform"-Befehl der Schwanzflosse ausgew&auml;lt werden
+<br>
+<img src="fish17.png"/>
+<br>
+und dann <br><em><b>Bearbeiten -&gt; Kopieren</b></em><br> sofort gefolgt von
+<br><em><b>Bearbeiten -&gt; Gespiegelt einfuegen -&gt; x (rot)</b></em><br>
+benutzt werden.
+<br>
+<img src="fish18.png"/>
+<br>
+Auch wenn es auf den ersten Blick so aussieht, als h&auml;tte sich nichts
+ver&auml;ndert, ist die Schwanzflosse jetzt zweimal vorhanden. Da die
+zweite Kopie an der gleichen Stelle sitzt wie die erste, sieht man das
+aber nur an dem linken Fenster. Jetzt muss man die zweite Kopie in die
+Mitte des Fisches schieben (mit dem blauen Pfeilende)
+<br>
+<img src="fish19.png"/>
+<br>
+und kann dann mit dem Verschieben der K&auml;stchen die Form entsprechend
+ver&auml;ndern.
+<br>
+<img src="fish21.png"/>
+<br>
+<h2>Augen</h2>
+<br>
+Als n&auml;chstes werden die Augen gebaut.<br>
+Zuerst wird das linke Fenster aufger&auml;mt. Man klickt die + Icons 
+der Transforms der bisher gebauten Flossen an
+<br>
+<img src="fish22.png"/>
+<br>
+Dann muss wieder der "Transform"-Knoten des Rumpfs (der oberste Transform
+im linken Fenster) angew&auml;hlt werden.
+<br>
+<img src="fish23.png"/>
+<br>
+Mit <br><em><b>Neu &gt; Kugel</b></em><br> wird der &auml;ussere Teil 
+des Auges erstellt.
+<br>
+<img src="fish24.png"/>
+<br>
+Allerdings ist dieser Teil noch viel zu gross. Mit den weissen K&auml;stchen
+macht man es kleiner und mit den Pfeilen verschiebt man es an die richtige
+Stelle.
+<br>
+<img src="fish25.png"/>
+<br>
+Jetzt ist der Augapfel an der Reihe. Dazu muss man vorher den Transform des
+&auml;usseren Teil des Auges anw&auml;hlen.
+<br>
+<img src="fish26.png"/>
+<br>
+Es wird wieder <br><em><b>Neu &gt; Kugel</b></em><br> benutzt
+<br>
+<img src="fish27.png"/>
+<br>
+Und wieder ist der Augapfel zu gross. Auch er wird mit den weissen 
+K&auml;stchen kleiner gemacht und mit den Pfeilen verschoben.
+(wenn der Augapfel im Auge verschwindet, ist das nicht weiter tragisch:
+man muss nur im linken Fenster das richtige "Sphere" (englisch f&uuml;r 
+Kugel)-Icon anklicken und sieht dann wieder K&auml;stchen und Pfeile, obwohl
+der Augapfel selber gar nicht sichtbar ist).
+<br>
+<img src="fish28.png"/>
+<br>
+Als n&auml;chstes kommt Farbe ins Spiel. Daf&uuml;r muss man im linken Fenster
+das "Material"-Icon anw&uuml;hlen (falls man keinen sieht: er kann
+sich innerhalb eines "Appearance"-Icons verstecken, man muss dann das 
+"+"-Icon von Appearance anklicken).<br>
+Jetzt wird <br><em><b>Veraendern -&gt; Farbe (braucht Material) -&gt; Normal
+</b></em><br> benutzt. Es &ouml;ffnet sich ein Farbfenster, bei dem man 
+eine Farbe und hell/dunkel ausw&auml;hlen kann.
+<br>
+<img src="fish29.png"/>
+<br>
+Nachdem man "OK" angeklickt hat, benutzt man 
+<br><em><b>Veraendern -&gt; Farbe (braucht Material) -&gt; Glaenzen</b></em>.
+<br>
+Damit das gut wirkt, muss man eine helle Farbe ausw&auml;hlen.
+<br>
+<img src="fish31.png"/>
+<br>
+Wenn man mag, kann man &uuml;ber 
+<em>Veraendern -&gt; mache verformbar (NURBS)</em>
+die Form der Augen und des Augapfels ver&auml;ndern.<br>
+Nachdem das Auge fertig ist, muss man es gespiegelt kopieren.<br>
+Dazu muss man den Transform des &auml;usseren Teil des Auges anw&auml;hlen.
+<br>
+<img src="fish32.png"/>
+<br>
+Dann muss man 
+<br><em><b>Bearbeiten -&gt; Kopieren</b></em><br> und sofort danach
+<br><em><b>Bearbeiten -&gt; Gespiegelt einfuegen -&gt; x (rot)</b></em><br>
+genutzen. Aus einem Auge sind zwei geworden.
+<br>
+<img src="fish33.png"/>
+<br>
+<h2>Ein tieferes Maul</h2>
+<br>
+Ein kleines Problem wurde vergessen und muss noch repariert werden:<br>
+Unser Fisch hat noch das Maul einer Sockenpuppe (mit einer geraden Kante
+anstelle eines tiefen Schlunds).<br>
+Damit das Maul etwas nat&uuml;trlicher aussieht muss man den Punkt in 
+der Mitte des Mauls nach hinten schieben. 
+<br>
+<img src="fish33a.png"/>
+<br>
+Das kann man erst machen, nachdem man die Augen gebastelt hat, denn sonst
+sieht man die Kugeln, aus denen die Augen gemacht sind, wenn der Fisch das 
+Maul aufreisst.
+<br>
+<img src="fish33b.png"/>
+<br>
+<h2>Weg mit dem Grauschleier</h2>
+<br>
+Im Prinzip ist der Fisch geputzt.<br> 
+Als n&auml;chstes kann man die Farben von Rumpf und Flossen ver&auml;ndern.
+Dazu geht man vor wie gerade beim Auge, man muss im linken Fenster
+das "Material" Icon des K&ouml;rpers anklicken und dann 
+<em><b>Veraendern -&gt; Farbe (braucht Material) -&gt; Normal / Gluehen / Glaenzen</b></em>
+benutzen. Bei "Gl&uuml;hen" wird eine Art Leuchtfarbe benutzt, das macht nur
+mit dunklen Farben Sinn, sonst ist der Fisch so weiss/hell, dass die
+Rundungen nicht mehr zu sehen sind.
+<br>
+<img src="fish34.png"/>
+<br>
+<h2>Animation</h2>
+<br>
+Jetzt kommt die Sache in Bewegung.<br>
+Als erstes kommt die Schl&auml;ngel-Bewegung eines Fisches dran (w&uuml;rde 
+man den Fisch zuerst als Ganzes bewegen, w&uuml;rde der Fisch einem
+unter der Maus davonschwimmen, wenn man das sp&auml;ter versuchen w&uuml;rde).
+<br>
+Die Schl&auml;ngel-Bewegung geht vom Rumpf aus, deswegen muss der Rumpf
+ausgew&auml;hlt werden. Es reicht, dazu den Rumpf anzuklicken.<br>
+Sinnvollerweise wird die Welt so gedreht, dass man den Rumpf von oben sieht.
+<br>
+<img src="fish35.png"/>
+<br>
+Jetzt benutzt man 
+<br><em><b>Animation -&gt; Neue Animation (Objekt z.B. Transform anwaehlen)</b></em><br>
+<br>Dadurch &ouml;ffnet sich ein Dialog-Fenster:
+<br>
+<img src="fish36.png"/>
+<br>
+In diesem Fenster wird gefragt, wie lange die Animation dauern soll, bevor
+sie sich wiederholt. Der Anfangswert ist 5 Sekunden, was f&uuml;r die
+Schl&auml;ngel-Bewegung viel zu viel ist. Sinnvoll ist zum Beispiel eine
+Sekunde oder eine halbe Sekunden (eine halbe Sekunde schreibt man in
+diesem Programm 0.5 und nicht etwa 0,5).<br>
+Ausserdem wird gefragt, was animiert werden soll (die Punkte, aus denen
+der Rumpf besteht), aber das ist hier schon vorausgew&auml;hlt, so dass 
+man nur noch "OK" klicken muss.
+<br>
+<img src="fish37.png"/>
+<br>
+Jetzt ist das Animationsfenster dazugekommen. Es zeigt, was zu welchem
+Zeitpunkt passiert.<br>
+Im Animationsfenster muss jetzt die Linie in der Mitte und am Ende
+angeklickt werden, so dass insgesamt 3 Punkte zu sehen sind.<br>
+Das bedeutet, dass nach der H&auml;lfte der Zeit und am Ende
+die Punkte des Rumpfs an der gleichen Stelle sind, wie am Anfang.<br>
+Ausserdem muss in der Leiste unter dem Animationsfenster das 
+"Aufnahme"-Icon hineingedr&uuml;ckt werden, so dass &Auml;nderungen des 
+animierten Objekts als Teil der Animation aufgezeichnet werden.<br>
+<br>
+<img src="fish38.png"/>
+<br>
+Bisher wurden alle seitlichen &Auml;nderungen an beiden Seiten gleich
+ausgef&uuml;hrt. Das geht bei einer Schl&auml;ngel-Bewegung nat&uuml;rlich
+schief. Deswegen muss <em>Veraendern -> x gespiegeltes Veraendern</em>
+angeklickt werden, bis das K&auml;stchen vor <em>x gespiegeltes</em>
+nicht mehr zu sehen ist.<br>
+Statt so:
+<br>
+<img src="not_xsymetric.png"/>
+<br>
+muss das Ganze so ausehen:
+<br>
+<img src="xsymetric.png"/>
+<br>
+Ein Rochen, eine Scholle oder ein Delphin/Wal macht nat&uuml;rlich
+keine seitliche Schl&auml;ngel-Bewegung sondern eine Schl&auml;ngel-Bewegung
+nach oben und unten. Deshalb sollte bei Rochen, Wal und so weiter 
+das Icon hineingedr&uuml;ckt bleiben.
+<br>
+<img src="fish39.png"/>
+<br>
+Als n&auml;chstes muss das Animationsfenster zwischen der linken Seite
+und der Mitte anklicken. Ein schwarzer Strich blinkt dann im ersten
+Viertel (von links) des Animationsfensters. An der Position des 
+schwarzen Strichs werden die &Auml;nderungen aufgezeichnet.<br>
+Jetzt muss man alle Punkte eines Rings im hinteren Teil des Fischs 
+einfangen.<br>
+Das geht mit der rechten Maustaste. Man muss sie links neben/unter dem
+ersten Punkt dr&uuml;cken, gedr&uuml;ckt halten und dabei die Maus so 
+bewegen, dass man rechts neben/&uuml;ber dem letzen Punkt ist. Dann kann man
+die Maustaste loslassen und alle Punkte im gedachten Viereck (zwischen 
+dr&uuml;cken und loslassen) sind ausgew&auml;hlt und werden gr&uuml;n.<br>
+Dann muss man gut zielen, um einen der Punkte zu treffen und damit alle
+Punkte auf eine Seite ziehen.<br>
+Das Animationsfenster ver&auml;ndert sich daraufhin.
+<br>
+<img src="fish40.png"/>
+<br>
+Danach ist die Gegenbewegung zu einem sp&auml;teren Zeitpunkt dran.<br>
+Zuerst muss wieder der schwarze, blinkende Strich umgesetzt werden.
+Man klickt dazu ins Animationsfenster zwischen der Mitte und der
+rechten Seite. Der Fisch wird wieder gerade (das liegt am vorher 
+eingef&uuml;gten Punkt in der Mitte). Danach (w&auml;hlt und) verschiebt 
+man die schon vorher benutzten Punkte auf die andere Seite. 
+<br>
+<img src="fish41.png"/>
+<br>
+Die erste Schl&auml;ngel-Animation ist fertig. Man kann die Animation 
+abspielen, indem man in der Leiste mit dem Aufnahme-Icon auf das blaue
+Viereck klickt (um die Aufnahme zu beenden) und dann aufs blaue Dreieck
+klickt (und die Animation abzuspielen). Nachdem man sich die Animation
+angesehen hat, klickt man wieder auf das blaue Viereck um die Animation
+zu stoppen.
+<br>
+Leider passen starren Flossen so gar nicht zur Schl&auml;ngel-Bewegung.
+Man muss die Flossen ebenfalls animieren. Dazu geht man fast genauso vor
+wie bei der ersten Bewegung: Man klickt die Flosse an und benutzt <br>
+<em><b>Animation -&gt; Neue Animation (Objekt z.B. Transform anwaehlen)</b></em>
+<br>
+<img src="fish41a.png"/>
+<br>
+Jetzt &ouml;ffnet sich das Dialog-Fenster, das nach der Anzahl der Sekunden fragt.
+Hier gibt es jetzt den einzigen Unterschied zum bisherigen Vorgehen.
+Statt 1 Sekunde w&auml;hlt man in der oberen Auswahl "TimeSensor1" statt 
+"new TimeSensor". Damit werden die alte Bewegung und die neue Bewegung
+einander angeglichen und laufen gleichzeitig ab.<br>
+<br>
+<img src="fish41b.png"/>
+<br>
+Danach geht alles weiter wie bisher. Man klickt die 3 Punkte im 
+Animationsfenster an
+<br>
+<img src="fish38.png"/>
+<br>
+und so weiter, und so weiter...
+<h2>Vorw&auml;rts</h2>
+Nachdem man fertiggeschl&auml;ngelt hat, kann man den Fisch endlich nach vorne
+schwimmen lassen. Zuerst muss man aber den Drehpunkt an die richtige
+Stelle setzen, sonst "schiebt" der Fisch um die Kurve.<br>
+Dazu w&auml;lt man das oberste Transform im linken Fenster an und 
+klickt auf das Icon <img src="center.jpg"> f&uuml;r Drehpunkt verschieben.
+<br>
+<img src="fish42.png"/>
+<br>
+Und schiebt den Mittelpunkt mit der Maus auf der Spitze des hellblauen 
+Pfeils an die richtige Stelle.
+<br>
+<img src="fish43.png"/>
+<br>
+Es gibt zwei Methoden, mit denen der Fisch in Kurven vorw&auml;rts bewegt wird:
+<ul>
+<li>mit der Maus wird eine Kurve animiert</li>
+<li>mit einem Joystick wird eine Kurve ferngesteuert</li>
+</ul>
+Da viele Leute keinen Joystick (oder ein Gamepad mit Hebeln) haben, zuerst die
+erste Methode mit der Maus. Diese Methode ist einfacher zu lernen, denn das
+Fernsteuern mit dem Joystock erfordert Erfahrung (kommt ein Objekt auf einen
+zu, muss man nach links steuern, damit das Objekt nach rechts abbiegt).<br>
+Zuerst muss der oberste Transform angew&auml;hlt werden.
+<br>
+<img src="fish44a.png"/>
+<br>
+Danach benutzt man <em>Animation -> Erzeuge Kurven-Animation (braucht 
+Transform) </em>
+<br>
+<img src="fish45a.png"/>
+<br>
+Es erscheint ein Fenster, mit dem man die L&auml;nge der Animation in Sekunden,
+die Anzahl der verschiebbaren Punkte der Kurve und die Richtung der Kurve
+angeben kann. Es reicht, wenn man <em>OK</em> dr&uuml;ckt.
+<br>
+<img src="fish46a.png"/>
+<br>
+Dr&uuml;ckt man das Dreieck unter den Fenstern, das "Animation abspielen"
+bedeutet, merkt man, dass sich der Fisch r&uuml;ckw&auml;rts bewegt.
+Man muss den Fisch also in einer Richtung spiegeln. 
+<br>
+<img src="fish47a.png"/>
+<br>
+Dazu muss man wieder das Transform des Fisches anw&auml;hlen.
+<br>
+<img src="fish48a.png"/>
+<br>
+Und mit <em>Veraendern -> Umklappen -> z (blau)</em> stimmt die Richtung 
+wieder.
+<br>
+<img src="fish49a.png"/>
+<br>
+Jetzt kann man die Punkte der Kurve verschieben. Damit eine ebene Kurve
+entsteht, sollte man sollte man <em>Bewgungsart -> nur x (rot)</em> und
+<em>Bewgungsart -> nur z (blau)</em> benutzen. Dabei zeigen die K&auml;stchen
+in der obersten Reihe an, dass der rote und der blaue Pfeil gedr&uumlckt 
+sind.
+<br>
+<img src="fish50a.png"/>
+<br>
+Hier zeigen 3 Momentaufnahmen von oben, dass der Fisch der Kurve folgt. 
+<br>
+<img src="fish51a.png"/>
+<br>
+Damit eine robuste VRML97-Animation entsteht, sollte noch der CurveAnimation-
+Knoten angew&auml;hlt werden und <em>Veraendern -> Umwandeln in -> In 
+Standard Interpolatoren umwandeln</em> benutzt werden, damit die Datei in
+jedem VRML97-Browser angezeigt wird. Es gibt zwar eine L&ouml;sung, die
+in fast allen VRML97-Browsern funktioniert allerdings noch nicht in freewrl.
+<br>
+Bei der zweiten Methode benutzt man f&uuml;r Schwimmenlassen einen Joystick 
+(bzw. Gamepad mit 2 Daumen-Joysticks), 
+der mit <em>Optionen -&gt InputDevice Einstellungen</em> in der white_dune
+Vollversion eingerichtet wurde. Dann gibt es einige Icons mehr in der obersten
+Leiste. Die beste Einstellung f&uuml;r die Bewegung mit dem Joystick ist
+das Icon, das "schweben" bedeutet und ein bisschen wie ein Luftkissenboot
+von vorne aussieht.
+<br>
+<img src="fish44.png"/>
+<br>
+Jetzt klickt man den obersten Transform im linken Fenster an und benutzt
+<br>
+<em><b>Animation -&gt; Neue Animation (Objekt z.B. Transform anwaehlen)</b></em>
+<br>
+<img src="fish45.png"/>
+<br>
+Beim folgenden Dialog-Fenster sind schon "translation" (Verschieben) und
+"rotation" (drehen) ausgew&auml;lt, so dass man nur noch "OK" dr&uuml;cken
+muss.<br>
+Jetzt muss man nur noch die Icons in der untersten Leiste f&uuml;r "Aufnahme"
+(roter Kreis) und "Abspielen" (blaues Dreieck) hineindr&uuml;cken und kann
+die Bewegung des Fisches, der mit dem Joystick gesteuert wird,
+aufzeichnen lassen.<br>
+Man sollte immer nur ein Animationsfenster mit Animationsdaten f&uuml;llen
+und nicht Animationsdaten &uuml;berschreiben, denn bei langsamen Maschinen
+kommt es dann leicht zum Ruckeln.
+<br>
+<img src="fish46.png"/>
+<br>
+Wenn man sich vertan hat (passiert oft) kann man im Animationsfenster einen
+Bereich ausw&auml;hlen (mit dem Dr&uuml;cken und Festhalten der linken 
+Maustaste und dem Verschieben der Maus in Richtung der Breite des Fensters)
+um mit <b>sofortigem</b> <em>Bearbeiten -&gt; L&ouml;schen</em> einen Bereich
+der Animation zu l&ouml;schen. Benutzt man nicht sofort 
+<em>Bearbeiten -&gt; L&ouml;schen</em>, sondern klickt was anderes an,
+wird was anderes gel&ouml;scht (zum Gl&uuml;ck gibts  
+<em> Bearbeiten -&gt; Rueckgaengig machen</em>).
+<br>
+Geschafft !

@@ -1,0 +1,151 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+Transform 
+  {
+  children 
+    [
+    Billboard 
+      {
+      axisOfRotation 1 0 0
+      children 
+	[
+	DEF IMAGE Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      }
+	    texture 	    ImageTexture 
+	      {
+	      url 
+		[
+		"image.gif"
+		]
+	      }
+	    }
+	  geometry 	  IndexedFaceSet 
+	    {
+	    color 	    Color 
+	      {
+	      color 
+		[
+		0.800000 7.695870e-2 0.101607 
+		]
+	      }
+	    coord 	    Coordinate 
+	      {
+	      point 
+		[
+		-2 2 0 
+		-2 -2 0 
+		2 2 0 
+		2 -2 0 
+		]
+	      }
+	    texCoord 	    TextureCoordinate 
+	      {
+	      point 
+		[
+		0 1 
+		0 0 
+		1 1 
+		1 0 
+		]
+	      }
+	    colorIndex 
+	      [
+	      0 
+	      ]
+	    colorPerVertex FALSE
+	    coordIndex 
+	      [
+	      0 1 3 2 -1 
+	      ]
+	    creaseAngle 0.500000
+	    texCoordIndex 
+	      [
+	      0 1 3 2 -1 
+	      ]
+	    }
+	  }
+	]
+      }
+    DEF BOX Shape 
+      {
+      appearance       Appearance 
+	{
+	material 	Material 
+	  {
+	  transparency 0.800000
+	  }
+	}
+      geometry       Box 
+	{
+	}
+      }
+    ]
+  translation 2 2 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Billboard 
+      {
+      axisOfRotation 0 0 1
+      children 
+	[
+	USE IMAGE
+	]
+      }
+    USE BOX
+    ]
+  translation 2 -2 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Billboard 
+      {
+      children 
+	[
+	USE IMAGE
+	]
+      }
+    USE BOX
+    ]
+  translation -2 -2 0
+  }
+
+Transform 
+  {
+  children 
+    [
+    Billboard 
+      {
+      axisOfRotation 0 0 0
+      children 
+	[
+	USE IMAGE
+	]
+      }
+    USE BOX
+    ]
+  translation -2 2 0
+  }
+
+NavigationInfo 
+  {
+  type 
+    [
+    "EXAMINE"
+    ]
+  }
+
