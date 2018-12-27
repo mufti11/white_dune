@@ -1,0 +1,27 @@
+srcdir = @srcdir@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+     
+.PHONY: install installdirs
+install: installdirs ../bin/dune
+	$(INSTALL_PROGRAM) ../bin/dune $(bindir)/dune
+
+installdirs:
+	${srcdir}/../packager/debian/mkinstalldirs $(bindir)
+
+dist:	$(DISTFILES)
+	pwd | sed 's|.*/||' > .dname
+	rm -rf `cat .dname`
+	mkdir `cat .dname`
+	ln $(DISTFILES) `cat .dname`
+	cd res ; $(MAKE) dist
+	cd swt ; $(MAKE) dist
+	tar cf - `cat .dname` | gzip > `cat .dname`.tar.gz
+	rm -rf `cat .dname` .dname
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

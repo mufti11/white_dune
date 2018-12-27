@@ -1,0 +1,5 @@
+White_dune is a low level tool, it can read X3DV/VRML97 files, display and let
+the user change the scenegraph/fields. Unlike most highlevel tools, it uses
+a lightning model based on the X3D/VRML97 standard.
+
+WWW: http://wdune.ourproject.org/

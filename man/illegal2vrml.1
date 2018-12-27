@@ -1,0 +1,157 @@
+.\" See section COPYING for conditions for redistribution
+.\"
+.TH illegal2vrml 1 2017-09-20 "white_dune 0.99rc766"
+.SH NAME
+\fBillegal2vrml\fP \- convert VRML97 files with illegal extensions
+.SH SYNOPSIS
+.br
+\fBillegal2vrml\fP
+[\fB
+-prefix prefix
+\fP] 
+\fB
+protofile.wrl
+\fP
+\fB
+file.wrl
+\fP
+.P
+.SH DESCRIPTION
+.B illegal2vrml
+convert Virtual Reality Modeling Language (VRML97) files with illegal 
+extensions to valid VRML97, according to ISO/IEC 14772 Annex F.
+Annex F decribe, how extensions to the VRML language should be
+implemented: using a EXTERNPROTO with a "urn" (fake URL) that sign the
+VRML browser the extension and not to use the following URL.
+.P
+.B illegal2vrml
+read the file 
+.B protofile.wrl
+which should contain such EXTERNPROTOs. 
+The names of the EXTERNPROTOs should start with the same prefix.
+The prefix is needed to deal with additional illegal field names
+in valid VRML97 nodes.
+.br
+In the next step
+.B illegal2vrml
+read the file 
+.B file.wrl
+and replace all node names which are identical to the EXTERNPROTOs
+without the prefix with the names of the EXTERNPROTOs (with the prefix).
+.br
+In the last step, the result is written to standard output.
+.P
+.SH OPTIONS
+.TP
+.B \-prefix prefix \fP 
+
+set the name of the prefix of the EXTERNPROTOs. If this option is not
+used, the prefix is calculated from the proto names in 
+.B protofile.wrl
+.P
+.SH EXAMPLE
+.P
+Imagine a VRML97 file with a illegal extension to the WorldInfo node
+.LP
+.TP
+$ cat $HOME/worldinfo.wrl
+.br
+#VRML V2.0 utf8
+
+WorldInfo 
+.br
+{ 
+.br
+  copyright "(C) illegal extension Inc."
+.br
+  info      "a existing VRML97 node with a illegal extension"
+.br
+}
+.LP
+.TP
+A matching file with a EXTERNPROTO would be
+.LP
+.TP
+$ cat $HOME/protofile.wrl
+.br
+#VRML V2.0 utf8
+
+EXTERNPROTO PrefixWorldInfo
+.br
+[
+.br
+field SFString copyright
+.br
+field MFString info
+.br
+field SFString title
+.br
+]
+.br
+["urn:inet:browser.com:library:PrefixWorldInfo" "PrefixWorldInfo.wrl"]
+.LP
+.TP
+To convert to a valid VRML97 file, use
+.LP
+.TP
+$ illegal2vrml -prefix Prefix  $HOME/protofile.wrl $HOME/worldinfo.wrl
+.br
+#VRML V2.0 utf8
+
+EXTERNPROTO PrefixWorldInfo
+.br
+[
+.br
+field SFString copyright
+.br
+field MFString info
+.br
+field SFString title
+.br
+]
+.br
+["urn:inet:browser.com:library:PrefixWorldInfo" "PrefixWorldInfo.wrl"]
+
+PrefixWorldInfo 
+.br
+  {
+.br
+  copyright "(C) illegal extension Inc."
+.br
+  info 
+.br
+    [
+.br
+    "a existing VRML97 node with a illegal extension"
+.br
+    ]
+.br
+  }
+.P
+.SH COPYRIGHT
+    illegal2vrml convert VRML97 files with illegal extensions 
+.br
+    Copyright (C) 2000-2003  J. "MUFTI" Scheurich, Stephen F. White
+
+    This program is free software; you can redistribute it 
+    and/or modify it under the terms of the 
+    GNU General Public License 
+    as published by the Free Software Foundation; either 
+    version 2 of the License, or (at your option) any later 
+    version.
+.P
+.SH BUGS
+Inside PROTOs, the conversion program do not parse for node names (yet).
+Therefore only a string based replacement is made inside PROTOs.
+.SH DIAGNOSTICS
+Exit status is 0 for sucessfull operation,
+1 if inputfiles can not be sucessfully read or other error 
+.SH "SEE ALSO"
+.TP
+VRML97 International Standard
+.br
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1
+.TP
+VRML97 International Standard Annex F
+.br
+http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/extensions.html

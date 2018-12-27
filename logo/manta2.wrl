@@ -1,0 +1,236 @@
+#VRML V2.0 utf8
+
+# This Makefile is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+EXTERNPROTO NurbsSurface[
+ field SFInt32 uDimension
+ field SFInt32 vDimension
+ field MFFloat uKnot
+ field MFFloat vKnot
+ field SFInt32 uOrder
+ field SFInt32 vOrder
+ exposedField MFVec3f controlPoint
+ exposedField MFFloat weight
+ exposedField SFInt32 uTessellation
+ exposedField SFInt32 vTessellation
+ exposedField SFNode texCoord
+ field SFBool ccw
+ field SFBool solid
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsSurface",
+ "urn:inet:blaxxun.com:node:NurbsSurface",
+ "urn:ParaGraph:NurbsSurface",
+ "NurbsSurfacePROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml200x_nurbssurface/NurbsSurfacePROTO.wrl",
+]
+
+Transform 
+  {
+  children 
+    [
+    Group 
+      {
+      children 
+	[
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 0.254999 0.224997 0.185000
+	      }
+	    }
+	  geometry 	  NurbsSurface 
+	    {
+	    uDimension 5
+	    vDimension 5
+	    uKnot 
+	      [
+	      0 
+	      0 
+	      0 
+	      0 
+	      1 
+	      2 
+	      2 
+	      2 
+	      2 
+	      ]
+	    vKnot 
+	      [
+	      0 
+	      0 
+	      0 
+	      0 
+	      1 
+	      2 
+	      2 
+	      2 
+	      2 
+	      ]
+	    uOrder 4
+	    vOrder 4
+	    controlPoint 
+	      [
+	      -1.868180 0.567138 5.032226 
+	      -1 0 4 
+	      0 -1.468683 5.400700 
+	      1 0 4 
+	      1.868180 0.567138 5.032226 
+	      -2.809036 -0.515887 3.061712 
+	      0 0.918982 3.413918 
+	      0 1.159311 4.413484 
+	      0 0.918982 3.413918 
+	      2.809036 -0.515887 3.061712 
+	      -8.205862 -2.981199 1.890087 
+	      0 -7.918204e-2 1.662677 
+	      0 0.636883 -1.820402 
+	      0 -7.918204e-2 1.662677 
+	      8.205862 -2.981199 1.890087 
+	      -11.306056 -2.301934 -1.993651 
+	      0 -7.918204e-2 1.662677 
+	      0 0.636883 -1.820402 
+	      0 -7.918204e-2 1.662677 
+	      11.306056 -2.301934 -1.993651 
+	      -6.685655 0.517641 -12.568014 
+	      -0.175292 -3.689126 -2.753700 
+	      0 -6.324096 -41.434074 
+	      0.175292 -3.689126 -2.753700 
+	      6.685655 0.517641 -12.568014 
+	      ]
+	    weight 
+	      [
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      ]
+	    }
+	  }
+	Shape 
+	  {
+	  appearance 	  Appearance 
+	    {
+	    material 	    Material 
+	      {
+	      diffuseColor 0.975000 1 1
+	      }
+	    }
+	  geometry 	  NurbsSurface 
+	    {
+	    uDimension 5
+	    vDimension 5
+	    uKnot 
+	      [
+	      0 
+	      0 
+	      0 
+	      0 
+	      1 
+	      2 
+	      2 
+	      2 
+	      2 
+	      ]
+	    vKnot 
+	      [
+	      0 
+	      0 
+	      0 
+	      0 
+	      1 
+	      2 
+	      2 
+	      2 
+	      2 
+	      ]
+	    uOrder 4
+	    vOrder 4
+	    controlPoint 
+	      [
+	      -1.868180 0.567138 5.032226 
+	      -1.052335 -4.663471e-2 4.597364 
+	      0 -1.468683 5.400700 
+	      1.052335 -4.663471e-2 4.597364 
+	      1.868180 0.567138 5.032226 
+	      -2.809036 -0.515887 3.061712 
+	      0 -1.690906 -4.711503 
+	      0 1.159311 4.413484 
+	      0 -1.690906 -4.711503 
+	      2.809036 -0.515887 3.061712 
+	      -8.205862 -2.981199 1.890087 
+	      0 -2.387145 4.571420 
+	      0 -1.974514 3.947788 
+	      0 -2.387145 4.571420 
+	      8.205862 -2.981199 1.890087 
+	      -11.306056 -2.301934 -1.993651 
+	      0 -2.387145 4.571420 
+	      0 -1.974514 3.947788 
+	      0 -2.387145 4.571420 
+	      11.306056 -2.301934 -1.993651 
+	      -6.685655 0.517641 -12.568014 
+	      0 -3.684664 -2.424165 
+	      0 -6.324096 -41.434074 
+	      0 -3.684664 -2.424165 
+	      6.685655 0.517641 -12.568014 
+	      ]
+	    weight 
+	      [
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      1 
+	      ]
+	    ccw FALSE
+	    }
+	  }
+	]
+      }
+    ]
+  }
+

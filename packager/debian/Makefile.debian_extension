@@ -1,0 +1,11 @@
+.PHONY: install installdirs
+
+install: installdirs dune
+	cd src && make CFLAGS="$(CFLAGS)" INSTALL_PROGRAM="$(INSTALL_PROGRAM)" prefix="$(prefix)" install
+
+installdirs:
+	cd src && make installdirs
+
+dist:
+	cd src && make CFLAGS="$(CFLAGS)" INSTALL_PROGRAM="$(INSTALL_PROGRAM)" prefix="$(prefix)" dist 
+

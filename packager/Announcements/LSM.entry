@@ -1,0 +1,13 @@
+Begin4
+Title:          white_dune
+Version:        0.99pl1096
+Entered-date:   2018-10-27
+Description:    white_dune is a graphical X3D/VRML97 Editor, simple NURBS/Supershape 3D modeller, animation tool and X3D compiler in development.
+Keywords:       dune realtime 3D Virtual Reality modelling language X3D VRML97 graphical editor NURBS animation scenegraph OpenGL shutterglasses
+Author:         swhite@Discreet.COM (Stephen F. White)
+Maintained-by:  mufti11@web.de (J. "MUFTI" Scheurich)
+Primary-site:   http://wdune.ourproject.org
+Platforms:      Linux and other Unices, MacOSX, Windows 
+Copying-policy: GPL
+End
+

@@ -1,0 +1,28 @@
+Source: wdune
+Section: graphics
+Priority: optional
+Maintainer: J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>
+Build-Depends: debhelper (>= 5), make, bison, flex, gawk, m4, x11proto-core-dev, libexpat1-dev, libxmu-dev, libxi-dev, libxi-dev, libgl-dev|libgl1-mesa-dev, libglu-dev|libglu1-mesa-dev, libmotif-dev|lesstif-dev|lesstif2-dev, libpng-dev|libpng12-dev, libjpeg62-turbo-dev, g++, gcc, libusb-dev, libcurl4-openssl-dev, aqsis, libfreetype6-dev, ttf-bitstream-vera, imagemagick
+Standards-Version: 3.5.6.1
+
+Package: wdune
+Architecture: any
+Depends: ${shlibs:Depends}, gimp, pinta, audacity, rcs, lxterminal, vim-tiny, imagemagick, aqsis, ttf-bitstream-vera
+Suggests: vrwave, openvrml-lookat, freewrl, moonlight, admesh, wings3d
+Description: Graphical X3D/VRML97 editor, simple NURBS/Superformula 3D modeller and  animation tool
+ white_dune is:
+ - a graphical editor to load/create/store X3D/VRML97 files
+ - a simple NURBS/Superformula/Subdivision based 3D modeller
+ - a 3D animation tool
+ - a commandline X3D/VRML97 compiler in development
+ - a program with (currently) 3 different GUIs
+ - a program for beginners/children to create their first 3D animation ("-4kids")
+ - a tool (and examples) that supports you in learning X3D or VRML97
+ - a tool to load static/animated X3D/VRML97 files (directly or via "Inline"
+   commands) created by programs like maya, 3D Studio MAX, Cinema4D, blender, 
+   wings3d, art of illusion etc. and add interaction/scripting 
+ - a tool to manipulate 3D data with 3D input devices (e.g. joystick/spaceball)
+ - a tool to view 3D data with quadbuffer stereoview (e.g. shutterglases)
+ - a open framework to create or process 3D data and store it as a ISO standard 
+ 
+ 

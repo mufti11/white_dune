@@ -1,0 +1,118 @@
+%%comments:
+Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts. A copy of the license is included in the file COPYING.txt
+
+%%name: white_dune
+
+%%short-description: graphical X3DV/VRML97 editor/animationtool
+
+%%full-description: white_dune is a graphical editor, a simple NURBS 
+                    3D modeller, a animation tool and a compiler
+                    for the Extensible 3D (X3D(v): ISO/IEC 19776-2.2:2008) 
+                    and Virtual Reality Modelling Language 
+                    (VRML97: ISO/IEC 14772) in development.
+                    X3D and VRML97 are the ISO standards for displaying 
+                    3D data over the web via browserplugins.
+                    X3D and VRML97 have support for animation, realtime 
+                    interaction and multimedia (image, movie, sound).
+
+                    white_dune can read X3DV/VRML97 files, display and let the user 
+                    change the scenegraph/fields. 
+
+                    white_dune has support for stereoscopic view via 
+                    "quadbuffer" capable stereo visuals. 
+
+                    white_dune can export the data of the X3D scenegraph
+                    to sourcecode in the languages C, C++ und java
+
+%%category: Applications/Web authoring Applications/Graphics applications Applications/3D modeller
+
+%%license: GPL
+
+%%license verified by: 
+
+%%license verified on: 
+
+%%maintainer: J. Scheurich <mufti@csv.ica.uni-stuttgart.de>
+
+%%updated: Mon Dec  6 13:49:08 CET 2010
+
+%%keywords: X3D X3DV Virtual Reality Modelling Language VRML VRML97 editor animation NURBS stereoscopic
+
+%%interface: X Window/M$Windows + OpenGL/Mesa
+
+%%programs: dune
+
+%%GNU: 
+
+%%web-page: http://wdune.ourproject.org
+
+%%support: 
+
+%%doc: english/german/russian user introduction HTML included, http://wdune.ourproject.org/docs
+
+%%developers: Steven F. White, J. Scheurich and others
+
+%%contributors: Ian Lance Taylor, Patrick Powell, Brandon Long
+                Thomas Roessler, Michael Elkins, Chris Morley/OpenVRML, 
+                Kirk L. Johnson, Thiemo Seufer, Christian Hanisch, 
+                Kevin Meinert/VRJuggler, J. Dean Brederson/I3Stick, 
+                Herbert Stocker, E. M. Jaeger/VRMLSUCK, Steve Baker/TUX_AQFH,
+                Aaron Cram, Maksim Diachkov, John Stewart/FreeWRL, 
+                Sam Lantinga/SDL, Max Horn/SDL, Thomas Rothermel,
+                Philippe Lavoie/libnurbs++, Markus Schneider, Martin Briegel,
+                Jens Wilhelm, Wu Qingwei, BobMaX, Satoshi Konno/cybergarage,
+                Haining Zhi, Free Software Foundation, Inc/gcc, orbisnap,
+                Dr. Guido Kramann, Alan Bleasby, Pawel W. Olszta, OpenGLUT,
+                Spencer Kimball, Peter Mattis, Luigi Auriemma, Gilles Debunne,
+                Leonardo Zide, Janosch Graef, Michalis Kamburelis, 
+                Giacomo Poderi, Brian Paul, Doug Sanden, Francois Gouget, 
+                Stefan Wolf
+%%sponsors: 
+
+%%repository:
+
+%%related: FreeWRL, OpenVRML, mjbWorld, Wings3D, Art of Illusion, LeoCAD, Open Wonderland
+
+%%source-language: C/C++
+
+%%supported-languages: X3D, VRML97, javascript, C, C++, java
+
+%%use-requirements:
+
+%%build-prerequisites: X11 + Motif/Lesstif or M$Windows API, OpenGL/Mesa
+
+%%weak-prerequisites: libexpat, libjpeg, libpng, zlib, libsball
+                      hardware and software supporting "quadbuffer" stereoview
+
+%%source-prerequisites:
+
+%%version: 0.30pl4 stable 03 Dec 2010 for Linux/Unix, M$Windows, MacOSX
+
+%%announce-list: source@web3d.org
+
+%%announce-news: comp.lang.vrml comp.os.linux.announce
+
+%%help-list: 
+
+%%help-news:
+
+%%help-irc-channel:
+
+%%dev-list: 
+
+%%dev-news:
+
+%%dev-irc-channel:
+
+%%bug-list: 
+
+%%bug-database: 
+
+%%entry written by: J. Scheurich <mufti@csv.ica.uni-stuttgart.de>
+

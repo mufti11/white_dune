@@ -1,0 +1,62 @@
+<XML_DIZ_INFO>
+    <Company_Info>
+       <Company_WebSite_URL>https://wdune.ourproject.org</Company_WebSite_URL>
+       <Contact_Info>
+           <Contact_First_Name>J. "MUFTI"</Contact_First_Name>
+           <Contact_Last_Name>J. Scheurich</Contact_Last_Name>
+           <Contact_Email>mufti11@web.de</Contact_Email>
+        </Contact_Info>
+    </Company_Info>
+    <Program_Info>
+       <Program_Name>white_dune</Program_Name>
+       <Program_Version>0.99pl1212</Program_Version>
+       <Program_Release_Month>12</Program_Release_Month>
+       <Program_Release_Day>7</Program_Release_Day>
+       <Program_Release_Year>2018</Program_Release_Year>
+       <Program_Cost_Dollars>0</Program_Cost_Dollars>
+       <Program_OS_Support>
+           Linux,Linux Open Source,Win10 x64,MacOSX
+       </Program_OS_Support>
+       <Program_Language>English,German,Italien,French</Program_Language>
+    </Program_Info>
+    <Program_Descriptions>
+        <English>
+            <Keywords>X3D VRML97 3d modeller animation shutterglases</Keywords>
+            <Char_Desc_45>white_dune X3D/VRML97 editor</Char_Desc_45>
+            <Char_Desc_80>white_dune 3D modeller and animation tool</Char_Desc_80>
+            <Char_Desc_250>
+                With white_dune you can create/change 3D objects and animate 
+                them (in a easy way if you choose the -4kids GUI).
+                The result can be shown in any webgl enabled web browser or 
+                 can be converted to the RIB format for movie creation.
+            </Char_Desc_250>
+        </English>
+    </Program_Descriptions>
+    <Web_Info>
+        <Application_URLs>
+            <Application_Info_URL>https://wdune.ourproject.org/</Application_Info_URL>
+            <Application_Screenshot_URL>
+                https://wdune.ourproject.org/screenshot.jpg
+             </Application_Screenshot_URL>
+        </Application_URLs>
+        <Download_URLs>
+            <Primary_Download_URL>
+                ftp://ftp.ourproject.org/pub/wdune/wdune-0.99pl1212.tar.bz2
+            </Primary_Download_URL>
+            <Secondary_Download_URL>
+                ftp://ftp.ourproject.org/pub/wdune/whitedune_0.99pl1212-1_amd64.deb
+            </Secondary_Download_URL>
+            <Additional_Download_URL_1>
+                ftp://ftp.ourproject.org/pub/wdune/white_dune-0.99pl1212.exe
+            </Additional_Download_URL_1>
+            <Additional_Download_URL_2>
+                ftp://ftp.ourproject.org/pub/wdune/white_dune-MacOSX-10.11-0.99pl1212.tar.gz  
+            </Additional_Download_URL_2>
+        </Download_URLs>
+    </Web_Info>
+    <Permissions>
+        <Distribution_Permissions>
+            As in GNU Public License 3
+        </Distribution_Permissions>
+    </Permissions>
+</XML_DIZ_INFO>

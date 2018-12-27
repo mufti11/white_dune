@@ -1,0 +1,9 @@
+Document: whitedune
+Title: Debian whitedune Manual
+Author: J. "MUFTI" Scheurich, Roberto "BobMaX" Angeletti, Maksim Diachkov
+Abstract: This manual describes what whitedune is and how it can be used to manage online manuals on Debian systems.
+Section: 1
+Format: HTML
+Index: /usr/share/doc/whitedune/docs/index.html
+Files: /usr/share/doc/whitedune/docs/*.html
+
