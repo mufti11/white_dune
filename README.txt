@@ -4894,5 +4894,13 @@ Updated some icons
 
 Updated test script
 
+Added workaround for OrthoViewpoint
+
+Fixed error in Text c/c++/java export
+
+Fixed errors in Color c/c++/java export
+
+Fixed error in selection
+
 contact: MUFTI <mufti@users.ourproject.org>
 

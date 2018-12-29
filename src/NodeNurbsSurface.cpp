@@ -197,7 +197,8 @@ NodeNurbsSurface::getControlPoints(void)
 void
 NodeNurbsSurface::setControlPoints(MFVec3f *points)
 {
-    if (controlPointX3D()->getValue()->getType() == X3D_COORDINATE_DOUBLE) {
+    Node *control = controlPointX3D()->getValue();
+    if (control && control->getType() == X3D_COORDINATE_DOUBLE) {
         NodeCoordinateDouble *coord = (NodeCoordinateDouble *)
                                       controlPointX3D()->getValue();
         if (coord == NULL) {
@@ -207,7 +208,7 @@ NodeNurbsSurface::setControlPoints(MFVec3f *points)
         MFVec3d *pointsDouble = points->getMFVec3d();
         Node::setField(controlPoint_Field(), points);
         ((Node *)coord)->Node::setField(coord->point_Field(), pointsDouble);
-    } else if (controlPointX3D()->getValue()->getType() == VRML_COORDINATE) {
+    } else if (control && control->getType() == VRML_COORDINATE) {
         NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
         if (coord == NULL) {
             createControlPoints(points);
@@ -744,8 +745,8 @@ NodeNurbsSurface::setHandle(MFVec3f *value, int handle, float newWeight,
     if (changed) {
         m_meshDirty = true;
 
-        if (controlPointX3D() && controlPointX3D()->getValue()->getType() == 
-                                 X3D_COORDINATE_DOUBLE) {
+        if (controlPointX3D() && controlPointX3D()->getValue() &&
+            controlPointX3D()->getValue()->getType() == X3D_COORDINATE_DOUBLE) {
             NodeCoordinateDouble *pointNode = (NodeCoordinateDouble *)
                                               controlPointX3D()->getValue();
             if (pointNode == NULL) {
@@ -756,7 +757,7 @@ NodeNurbsSurface::setHandle(MFVec3f *value, int handle, float newWeight,
             m_scene->setField(pointNode, pointNode->point_Field(), 
                               doubleValue->copy());
             m_scene->setField(this, controlPoint_Field(), newValue);
-        } else if (controlPointX3D()) {           
+        } else if (controlPointX3D() && controlPointX3D()->getValue()) {
             NodeCoordinate *pointNode = (NodeCoordinate *)
                                          controlPointX3D()->getValue();
             if (pointNode == NULL) {

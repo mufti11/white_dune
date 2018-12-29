@@ -650,7 +650,7 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
     
             x3d.gl.glBegin(GL2.GL_POLYGON);
             if((colors != null) && !colorpervertex)
-                x3d.gl.glColor3f(colors[facecounter], colors[facecounter + 1], colors[facecounter + 2]);
+                x3d.gl.glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
     
             for(int i = 0; i != faces_len; i++)
             {
@@ -660,7 +660,6 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
                     x3d.gl.glEnd();
                     if (i != faces_len - 1)
                         x3d.gl.glBegin(GL2.GL_POLYGON);
-                    continue;
                 }
                 if(normalindex != null)
                     normalbuffer = normalindex[i];
@@ -693,6 +692,7 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
             x3d.gl.glEnd();
         }
     }
+    x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
 }
 
 class MyMaterialRenderCallback extends X3dMaterialRenderCallback

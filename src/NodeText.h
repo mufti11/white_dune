@@ -50,6 +50,7 @@ public:
 
 #ifdef HAVE_LIBFREETYPE
     virtual bool    isMesh(void) { return true; }
+    virtual bool    isExportTargetMesh(void) { return true; }
 #endif
 
     FieldIndex fontStyle;

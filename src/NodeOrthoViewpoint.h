@@ -33,6 +33,7 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "DuneApp.h"
 #include "KambiViewpointCommonFields.h"
 
 class ProtoOrthoViewpoint : public Proto {
@@ -71,6 +72,9 @@ public:
     virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeOrthoViewpoint(*this); }
 
+    void                apply(bool useStereo = TheApp->useStereo());
+    void                transformForViewpoint(bool useStereo);
+
     fieldMacros(SFVec3f,    centerOfRotation, ProtoOrthoViewpoint)
     fieldMacros(SFString,   description, ProtoOrthoViewpoint)
     fieldMacros(MFFloat,    fieldOfView, ProtoOrthoViewpoint)
@@ -85,6 +89,8 @@ public:
     fieldMacros(SFBool,     isActive, ProtoOrthoViewpoint)
     fieldMacros(SFFloat,    zFar, ProtoOrthoViewpoint)
     fieldMacros(SFFloat,    zNear, ProtoOrthoViewpoint)
+protected:
+    float                   m_matrix[16];
 };
 
 #endif

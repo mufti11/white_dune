@@ -8,5 +8,5 @@ clean:
 	rm -f CExport.c render core
 
 CExport.c: Untitled.wrl ../../../bin/dune
-	../../../bin/dune -c -o CExport.c Untitled.wrl
+	../../../bin/dune -c Untitled.wrl > CExport.c 
 

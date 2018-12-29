@@ -148,7 +148,7 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
 
         glBegin(GL_POLYGON);
         if(colors && !colorpervertex)
-            glColor3f(colors[facecounter], colors[facecounter + 1], colors[facecounter + 2]);
+            glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
 
         for(i = 0; i != faces_len; i ++)
         {
@@ -157,7 +157,6 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
                 glEnd();
                 if (i != faces_len - 1)
                     glBegin(GL_POLYGON);
-                continue;
             }
             if(normalindex != NULL)
                 normalbuffer = normalindex[i];
@@ -189,6 +188,7 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
         }
         glEnd();
     }
+    glDisable(GL_COLOR_MATERIAL); 
 }
 
 void CRWDTextRender(X3dNode *data, void* extraData)

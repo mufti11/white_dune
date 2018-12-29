@@ -23,7 +23,7 @@ early versions of Windows 95, which requires the installation of OpenGL first).
 white_dune under M$Windows usually stores some configuration information in 
 the user section of the registry. It is possible to remove this information 
 with the commandline argument "-uninstall", eg. by typing
-    dune.exe -uninstall
+    path_to\dune.exe -uninstall
 on the commandline.
 You may need to run this after installation to get rid of deprecated 
 configuration information.
@@ -62,6 +62,7 @@ Systems supported by "packager" directory
  the matching X11 SDK package. 
  More modern MacOSX systems usually install "X11 for MacOSX" and the X11 SDK 
  package is available on installation media.
+ For current MacOSX systems you have to install XQuartz from the internet.
  For MacOSX use:
      (cd packager/macosx && sh mksit.sh)
 
@@ -77,14 +78,11 @@ Systems supported by "packager" directory
  For Redhat Linux (and possibly other rpm based systems) use (as root):
      (cd packager/rpm && sh mkrpm.sh)
 
- For Fedora Linux like Scientific Linux 7.x (and possibly other rpm based systems) use (as root):
-     (cd packager/rpm && sh mkrpm_sl7.sh)
+ For OpenSuse (and possibly other rpm based systems) use (as root):
+     (cd packager/rpm && sh mkrpm_opensuse.sh)
 
  For Debian Linux (stable) use:
-     (cd packager/debian && sh mkdeb.sh)
-
- For Debian Linux (testing) you can try:
-     (cd packager/debian && sh mkdeb_testing.sh)
+     (cd packager/debian && sh mkdeb_stretch.sh)
 
  For Slackware Linux use:
      (cd packager/slackware && sh mkpkg.sh)
@@ -137,19 +135,19 @@ software is based in part on the work of the Independent JPEG Group.
 
 Additionally, the CGAL and VCGlib libraries are used for the convex hull,
 CSG and polygon reducer functionality. The headers only version of this 
-libraries are sufficent.
+VCGlib is sufficent.
 
 Another library is the cURL library, it can be used to download VRML/X3D
 files from the internet (and matching texture files, sound files, Inlines 
 and EXTERPROTOs).
 
 It is not recommended to link the "freeglut" libraries, cause the program 
-will can exit with a emergency save to the file named "$HOME/.dune_crash*.wrl" \
+can exit with a emergency save to the file named "$HOME/.dune_crash*.wrl"
 when try to display a VRML97 Text node.
 As a workaround, white_dune included a few routines from the OpenGLUT
 library as sources, so you do not need to link any GLUT libraries any more.
 
-A matching library is the freetype2 library, it is used for Text/Text3D
+A needed library is the freetype2 library, it is used for Text/Text3D
 rendering.
 
 If you have a spaceball device connected to the serial port, it is 
@@ -184,6 +182,9 @@ Dune has been successfully compiled with
 - gcc/g++ 2.95.3
 - gcc/g++ 2.95.2
 - gcc/g++ 2.8.1
+- gcc/g++ 7.3.0
+- gcc/g++ 8.2.1
+- clang 6.0.1
 - MIPSpro 7.30 (SGI IRIX)
 - Sun WorkShop 6 update 2 C/C++ 5.3 (SUN SOLARIS) (make depend fails (harmless))
 - HP ANSI C++ B3910B A.03.55/HP92453-01 B.11.11.10 HP C Compiler (HP-UX)
@@ -321,13 +322,13 @@ There are some unusual options for running configure
 --without-cgal             do not use CGAL library e.g. to use convex hull
 --without-png_handle_unknown  use if link fails cause of png_handle_unknown
 --with-sdljoystick         use SDL joystick code
---with-helpurl=\"helpurl\"   URL of the \"docs\" directory
+--with-helpurl=\"helpurl\" URL of the \"docs\" directory
 --with-vrmlnodesurl=\"vrmlnodesurl\" URL of ISO standard vrml97 node list e.g. downloaded version of  http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
---with-protobaseurl=\"url\"  URL of base directory of PROTOs for needed EXTERNPROTO statements
+--with-protobaseurl=\"url\" URL of base directory of PROTOs for needed EXTERNPROTO statements
 --with-coverwave           allow creation of deprecated cover node Wave
 --with-covertuimap         allow creation of incomplete cover node TUIMap
 --with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla
---with-vrmlbrowser=vrmlbrowser  VRML browser eg. netscape freewrl lookat...
+--with-vrmlbrowser=vrmlbrowser  VRML browser eg. view3dscene freewrl lookat...
 --with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp kolourpaint xpaint imgworks...
 --with-soundeditor=soundeditor  object editor for sound (.wav) files eg. audacity rezound wavesurfer gnusound sweep soundeditor...
 --with-movieeditor=movieeditor  object editor for movie (.mpeg) files eg. cinelerra avidemux2 avidemux moviemaker...
@@ -372,7 +373,7 @@ Former configuration options, not supported anymore:
 --with-nurbscurveprotourl="url"   moved to --with-protobaseurl/vrml97Amendment1
 --with-nurbsgroupprotourl="url"   moved to --with-protobaseurl/vrml97Amendment1
 --with-menugerman                 moved into commandline parameters
---with-blacknwhiteicons           moved into commandline parameters
+--with-blacknwhiteicons           deprecated
 --with-vrml97am1url=\"url\"       moved to --with-protobaseurl/vrml97Amendment1
 --with-x3ddrafturl=\"url\"        moved to --with-protobaseurl/x3d
 --with-scriptednodes=\"url\"      moved to --with-protobaseurl/scriptedNodes

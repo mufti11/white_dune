@@ -1,9 +1,51 @@
-whitedune (0.99pl1242-1) experimental; urgency=low
+wdune (0.99pl1248-1) experimental; urgency=low
 
-  * Version 0.99pl1242 debian package
+  * Version 0.99pl1248 debian package
     For details see the README file of the source package
 
- -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Wed, 26 Dec 2018 10:34:40 +0100
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Sat, 29 Dec 2018 12:47:55 +0100
+
+whitedune (0.99pl1248-1) experimental; urgency=low
+
+  * Version 0.99pl1248 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Sat, 29 Dec 2018 11:50:05 +0100
+
+wdune (0.99pl1248-1) experimental; urgency=low
+
+  * Version 0.99pl1248 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Fri, 28 Dec 2018 19:29:50 +0100
+
+whitedune (0.99pl1248-1) experimental; urgency=low
+
+  * Version 0.99pl1248 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Fri, 28 Dec 2018 19:19:15 +0100
+
+whitedune (0.99pl1248-1) experimental; urgency=low
+
+  * Version 0.99pl1248 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Fri, 28 Dec 2018 12:34:17 +0100
+
+wdune (0.99pl1248-1) experimental; urgency=low
+
+  * Version 0.99pl1248 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Fri, 28 Dec 2018 10:24:50 +0100
+
+whitedune (0.99rc1243-1) experimental; urgency=low
+
+  * Version 0.99rc1243 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Wed, 26 Dec 2018 11:20:20 +0100
 
 whitedune (0.99pl1242-1) experimental; urgency=low
 

@@ -215,7 +215,7 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
 
         glBegin(GL_POLYGON);
         if(colors && !colorpervertex)
-            glColor3f(colors[facecounter], colors[facecounter + 1], colors[facecounter + 2]);
+            glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
 
         for(int i = 0; i != faces_len; i++)
         {
@@ -224,7 +224,6 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
                 glEnd();
                 if (i != faces_len - 1)
                     glBegin(GL_POLYGON);
-                continue;
             }
 
             if(normalindex != NULL)
@@ -248,7 +247,8 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
             else
             {
                 if(normalpervertex && normal != NULL)glNormal3f(normal[normalbuffer*3], normal[normalbuffer*3+1], normal[normalbuffer*3+2]);
-                if(colors && colorpervertex)glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                if(colors && color_len > 0 && colorpervertex)
+                    glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
                 if(Xtexturecoordinate)
                     if((Xtexturecoordinate->point) && (texturecoordinateindex))
                         glTexCoord2f(Xtexturecoordinate->point[texturebuffer*2], Xtexturecoordinate->point[texturebuffer*2+1]);
@@ -257,6 +257,7 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
         }
         glEnd();
     }
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 
@@ -1698,8 +1699,8 @@ void CPPRWD::init()
     /*Enable light*/
     glEnable(GL_LIGHTING);
 
-    GLint zero[4] = {0, 0, 0, 0};
-    glLightModeliv(GL_LIGHT_MODEL_AMBIENT, zero);
+    GLint one[4] = {1, 1, 1, 0};
+    glLightModeliv(GL_LIGHT_MODEL_AMBIENT, one);
 
     /* Use depth buffering for hidden surface elimination. */
     glEnable(GL_DEPTH_TEST);

@@ -409,7 +409,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
         } else
             break;
         // search for field
-        STREEITEM tmpItem = NULL;
+        STREEITEM tmpItem = item;
         bool isNode = false;
         for (; item != NULL; item = swTreeGetNextItem(m_tree, item)) {
             TreeNode *t = (TreeNode *) swTreeGetItemData(m_tree, item);
@@ -420,7 +420,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
                break;
             }
         }
-        if (item == NULL)
+        if ((item == NULL) && (tmpItem != NULL))
             item = tmpItem;
         isNode = false;
         if (node && (TheApp->GetShowAllFields() || node->showFields())) {

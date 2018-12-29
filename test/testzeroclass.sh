@@ -9,7 +9,8 @@
 grep class `dirname $0`/../src/*.h | grep '{' | grep -v template | 
     grep -v StringBuf | grep -v Iterator | grep -v Pair | grep -v Stack |
     grep -v gmp | grep -v Vectoriser | grep -v SweepContext |
-    grep -v AdvancingFront | grep -v shapes | grep -v Contour |
+    grep -v AdvancingFront | grep -v shapes | grep -v Contour | 
+    grep -v PointFtgl |
 awk '
 BEGIN { 
    print "#include \"DuneApp.h\"\n#include \"stdio.h\"\n" 

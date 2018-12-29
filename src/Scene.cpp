@@ -101,6 +101,7 @@ extern "C" {
 #include "NodeVrmlCut.h"
 #include "NodeNavigationInfo.h"
 #include "NodeViewpoint.h"
+#include "NodeOrthoViewpoint.h"
 #include "NodeBackground.h"
 #include "NodeCurveAnimation.h"
 #include "NodeFog.h"
@@ -3527,13 +3528,24 @@ Scene::drawScene(bool pick, int x, int y, float width, float height)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (pick) gluPickMatrix(x, y, width, height, v);
+    if (pick) 
+        gluPickMatrix(x, y, width, height, v);
     float fieldOfView = RAD2DEG(getCamera()->fieldOfView()->getValue() *
                                 getUnitAngle());
     if (TheApp->hasFixFieldOfView())
         fieldOfView = TheApp->getFixFieldOfView();
     gluPerspective(fieldOfView, aspect, TheApp->GetNearClippingPlaneDist(),
                                         TheApp->GetFarClippingPlaneDist());
+
+    if (getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT) {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        float dim = 4; // ???
+        glOrtho(-dim * aspect, dim * aspect, -dim, dim, 
+                TheApp->GetNearClippingPlaneDist(),
+                TheApp->GetFarClippingPlaneDist());
+    }
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -3623,20 +3635,20 @@ Scene::drawScene(bool pick, int x, int y, float width, float height)
     if (m_headlight)
         enableHeadlight();
 
-    glPushMatrix();
-    applyCamera();
-    glLoadName(PICKED_RIGID_BODY_HANDLE);
-    drawHandles(true);
-    glPopMatrix();
+    if (getSelection()->getNode()->getType() != X3D_ORTHO_VIEWPOINT) {
+        glPushMatrix();
+        applyCamera();
+        glLoadName(PICKED_RIGID_BODY_HANDLE);
+        drawHandles(true);
+        glPopMatrix();
 
-    glPushMatrix();
-    applyCamera();
-    glLoadName(PICKED_HANDLE);
-    drawHandles(false);
-    glPopMatrix();
-
+        glPushMatrix();
+        applyCamera();
+        glLoadName(PICKED_HANDLE);
+        drawHandles(false);
+        glPopMatrix();
+    }
     glDisable(GL_LIGHT0);
-
     glPopName();
     TheApp->printRenderErrors();
 
@@ -3840,9 +3852,8 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
 {
     GLuint *glPath = NULL;
     int glPathLen = 0;
-//    unsigned depth = UINT_MAX;
-    unsigned depth = 0;
-    unsigned handleDepth = depth;
+    unsigned depth = UINT_MAX;
+    unsigned handleDepth = 0;
     bool pickedHandle = false;
     bool pickedNode = false;
     int handle = -1;
@@ -3852,11 +3863,13 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
         unsigned minDepth = *pickBuffer++;
         unsigned maxDepth = *pickBuffer++;
         if (*pickBuffer == PICKED_NODE) {
-            pickedNode = true;
-            pickedHandle = false;
-            glPath = pickBuffer + 1;
-            glPathLen = numNames - 1;
-            depth = minDepth;
+            if (depth >= maxDepth) {
+                pickedNode = true;
+                pickedHandle = false;
+                glPath = pickBuffer + 1;
+                glPathLen = numNames - 1;
+                depth = maxDepth;
+            }
         } else if (*pickBuffer == PICKED_RIGID_BODY_HANDLE) {
             if (m_rigidBodyHandleNode == NULL)
                 return NULL;
@@ -4620,7 +4633,10 @@ Scene::isModified() const
 void
 Scene::applyCamera()
 {
-    m_currentViewpoint->apply();
+    if (getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT)
+        ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
+    else
+        m_currentViewpoint->apply();
 }
 
 void

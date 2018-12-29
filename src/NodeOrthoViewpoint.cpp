@@ -32,7 +32,7 @@
 #include "SFRotation.h"
 #include "SFVec3f.h"
 #include "SFBool.h"
-#include "DuneApp.h"
+#include "Scene.h"
 
 ProtoOrthoViewpoint::ProtoOrthoViewpoint(Scene *scene)
   : Proto(scene, "OrthoViewpoint")
@@ -82,3 +82,54 @@ NodeOrthoViewpoint::NodeOrthoViewpoint(Scene *scene, Proto *def)
   : Node(scene, def)
 {
 }
+
+void 
+NodeOrthoViewpoint::apply(bool useStereo)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    if (m_scene->isCurrentViewpoint(this)) {
+        double unitAngle = m_scene->getUnitAngle();
+        const float *rot = orientation()->getValue();
+        const float *pos = position()->getValue();
+
+        glRotatef(RAD2DEG(-rot[3] * unitAngle), rot[0], rot[1], rot[2]);
+        glTranslatef(-pos[0], -pos[1], -pos[2]);
+    }
+    glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
+    glPopMatrix();
+    transformForViewpoint(useStereo);
+}
+
+void 
+NodeOrthoViewpoint::transformForViewpoint(bool useStereo)
+{
+    double unitAngle = m_scene->getUnitAngle();
+
+    const float *rot = orientation()->getValue();
+    const float *pos = position()->getValue();
+
+    float eyeposition=0; 
+    float eyeangle=0; 
+    if (useStereo)
+       {
+       // inexact "toe in" stereo method 
+       if (TheApp->getEyeMode()==EM_RIGHT)
+          {
+          eyeposition= - TheApp->getEyeHalfDist();
+          eyeangle= - TheApp->getEyeAngle();
+          }
+       else if (TheApp->getEyeMode()==EM_LEFT)
+          {
+          eyeposition= + TheApp->getEyeHalfDist();
+          eyeangle= + TheApp->getEyeAngle();
+          }
+       }
+    glTranslatef(eyeposition, 0, 0);
+    glRotatef(eyeangle, 0,1,0);
+    glRotatef(-RAD2DEG(rot[3] * unitAngle), rot[0], rot[1], rot[2]);
+    glTranslatef(-pos[0], -pos[1], -pos[2]);
+}
+
+
