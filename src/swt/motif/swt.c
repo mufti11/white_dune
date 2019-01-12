@@ -580,6 +580,14 @@ swInitialize(int *argc, char **argv,int stereotype)
                         attribs2[8] = GLX_ACCUM_BLUE_SIZE;
                         attribs2[9] = redsize;
                     }
+                    if (((attrib == 1) || (attrib == 2)) && 
+                        ((stereotype == RED_CYAN_ANAGLYPH_STEREO) || 
+                         (stereotype == CYAN_RED_ANAGLYPH_STEREO))) {
+                        attribs2[6] = GLX_ACCUM_RED_SIZE;
+                        attribs2[7] = GLX_ACCUM_GREEN_SIZE;
+                        attribs2[8] = GLX_ACCUM_BLUE_SIZE;
+                        attribs2[9] = redsize;
+                    }
                     TheVisual = glXChooseVisual(TheDisplay, 
                                                 DefaultScreen(TheDisplay),
                                                 attribs_pointer);
@@ -598,7 +606,9 @@ swInitialize(int *argc, char **argv,int stereotype)
                             ((stereotype == RED_GREEN_ANAGLYPH_STEREO) || 
                             (stereotype == GREEN_RED_ANAGLYPH_STEREO) || 
                             (stereotype == RED_BLUE_ANAGLYPH_STEREO) || 
-                            (stereotype == BLUE_RED_ANAGLYPH_STEREO))) 
+                            (stereotype == BLUE_RED_ANAGLYPH_STEREO) ||
+                            (stereotype == RED_CYAN_ANAGLYPH_STEREO) || 
+                            (stereotype == CYAN_RED_ANAGLYPH_STEREO))) 
                             stereoret = stereotype;
                         break;
                     }

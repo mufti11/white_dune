@@ -77,12 +77,14 @@ static void vertexTess(GLfloat *v)
         return;
     }
 #ifndef _WIN32
+# ifdef HAVE_FPCLASSIFY 
     if (!(fpclassify(v[0] == FP_ZERO) || isnormal(v[0]) ||
           fpclassify(v[1] == FP_ZERO) || isnormal(v[1]) ||
           fpclassify(v[2] == FP_ZERO) || isnormal(v[2]))) {
         outOfBoundingBox++;
         return;
     }
+# endif
 #endif
        
     vertices.append(v[0]);

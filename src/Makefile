@@ -36,10 +36,10 @@ EGREP_PROBLEMS = no
 
 CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
 COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
-CFLAGS_BIG = -g $(COMMON_FLAGS)   -std=c++11 
-CFLAGS = -g $(COMMON_FLAGS) 
-CXXFLAGS = $(CFLAGS)  -std=c++11 
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
+CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11  -fopenmp
+CFLAGS = -g $(COMMON_FLAGS)  -fopenmp
+CXXFLAGS = $(CFLAGS)  -std=c++11  -fopenmp
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 

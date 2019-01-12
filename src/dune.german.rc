@@ -300,12 +300,15 @@ BEGIN
             MENUITEM "z",                                ID_MAKE_SYMETRIC_Z
         END
         MENUITEM "Schnappe Punkte zusammen",             ID_SNAP_TOGETHER
+#ifdef HAVE_LIBCGAL
         POPUP "Boolsche Operationen"
         BEGIN
             MENUITEM "Abziehen (braucht Group mit 2 Meshes)", ID_CSG_SUBTRACT
             MENUITEM "Schneiden (braucht Group mit 2 Meshes)", ID_CSG_INTERSECTION
             MENUITEM "Zusammenbauen (braucht Group mit 2 Meshes)", ID_CSG_UNION
         END
+#endif
+        MENUITEM "Vereinige in IndexedFaceSet (braucht Group)",  ID_SIMPLE_JOIN
     END
     POPUP "Bewegungs&art"
     BEGIN
@@ -1354,7 +1357,11 @@ BEGIN
         END
 //        MENUITEM "Interpolator time shift",           ID_TIME_SHIFT
         MENUITEM "Field pipe",                          ID_PIPE
-        MENUITEM "Setze HanimJoint weight",             ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Setze HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Loesche HanimJoint weight",       ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Setze Viewoint",                      ID_VIEWPOINT
         MENUITEM "Roentgenblick",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Setze Pfad aller URLs",               ID_SET_URL
@@ -1379,12 +1386,15 @@ BEGIN
             MENUITEM "z",                                ID_MAKE_SYMETRIC_Z
         END
         MENUITEM "Schnappe Punkte zusammen",             ID_SNAP_TOGETHER
+#ifdef HAVE_LIBCGAL
         POPUP "Boolsche Operationen"
         BEGIN
             MENUITEM "Abziehen (braucht Group mit 2 Meshes)", ID_CSG_SUBTRACT    
             MENUITEM "Schneiden (braucht Group mit 2 Meshes)", ID_CSG_INTERSECTION 
             MENUITEM "Zusammenbauen (braucht Group mit 2 Meshes)", ID_CSG_UNION    
         END
+#endif
+        MENUITEM "Vereinige in IndexedFaceSet (braucht Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Umwandeln"
     BEGIN
@@ -1901,7 +1911,7 @@ BEGIN
     PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,87,370,50,14
     AUTOCHECKBOX    "Behalte URLs beim speichern in ein anderes Verzeichnis",
                     IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "Benutze Kernighan/Richite Formatierung",IDC_K_AND_R,
+    AUTOCHECKBOX    "Benutze Kernighan/Ritchie Formatierung",IDC_K_AND_R,
                     19,24,152,12
     LTEXT           "Zahl der eingefuegten Leerzeichen",IDC_STATIC,
                     19,39,114,12

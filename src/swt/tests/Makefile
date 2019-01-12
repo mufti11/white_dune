@@ -7,12 +7,12 @@ AWK = gawk
 CXXCPP = g++ -E
 CXX = g++
 
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g ../../mysnprintf.o ../lib/libswt.a -lusb -lsball -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system  
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g ../../mysnprintf.o ../lib/libswt.a -lusb -lsball -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system  
 
 INCDIRS = -I../include
 
 # WARNINGS = -Wall -Wwrite-strings
-CFLAGS = -g $(WARNINGS) $(INCDIRS)   
+CFLAGS = -g $(WARNINGS) $(INCDIRS)   -fopenmp 
 CXXFLAGS = $(CFLAGS)
 
 TARGETS = swTest text buttons doodle drawing tree restest draw1

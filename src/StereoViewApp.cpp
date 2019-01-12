@@ -63,6 +63,8 @@ static bool isAnaglyph(int stereoType)
       case GREEN_RED_ANAGLYPH_STEREO:
       case RED_BLUE_ANAGLYPH_STEREO:
       case BLUE_RED_ANAGLYPH_STEREO:
+      case RED_CYAN_ANAGLYPH_STEREO:
+      case CYAN_RED_ANAGLYPH_STEREO:
          return true;
       }
    return false;

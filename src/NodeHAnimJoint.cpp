@@ -185,6 +185,7 @@ NodeHAnimJoint::applyJoint(int skinNum, MyMesh *mesh, MFVec3f *origVertices,
             int index = mfskinCoordIndex->getValue(i);
             if (index >= origVertices->getSFSize())
                 continue;
+            mesh->setValidVertex(index);
             Vec3f point = origVertices->getVec(index);
             Vec3f newpoint = vertices->getVec(index);
             int sCwI = MIN(i, mfskinCoordWeight->getSize() - 1);

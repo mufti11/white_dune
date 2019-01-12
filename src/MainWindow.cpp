@@ -1818,6 +1818,7 @@ MainWindow::OnCommand(void *vid)
         TheApp->OnFileNewWindow();
         break;
       case ID_DUNE_FILE_PREVIEW:
+        m_scene->setUpdateViewsSelection(false);
         TheApp->OnFilePreview(m_scene);
         return;
       case ID_DUNE_FILE_SAVE:
@@ -2390,8 +2391,11 @@ MainWindow::OnCommand(void *vid)
       case ID_SET_WEIGHTS_TO_1:
         setWeightsTo1();
         break;
-      case ID_HANIM_JOINT_WEIGHT:
+      case ID_HANIM_JOINT_WEIGHT_SET:
         setHAnimJointWeight();
+        break;
+      case ID_HANIM_JOINT_WEIGHT_REMOVE:
+        removeHAnimJointWeight();
         break;
       case ID_PIPE:
         pipeField();
@@ -2478,6 +2482,9 @@ MainWindow::OnCommand(void *vid)
         csg(INTERSECTION);
         break;
 #endif
+      case ID_SIMPLE_JOIN:
+        simpleJoin();
+        break;
 
       case ID_TO_NURBS:
       case ID_TO_NURBS_4KIDS:
@@ -5627,6 +5634,28 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
         }
 }
 
+static Node *searchIdxNode;
+static Node *searchMaterialNode;
+static Matrix searchMeshData;
+
+static bool searchNodes(Node *node, void *data)
+{
+    if (node && node->isMeshBasedNode()) {
+        searchIdxNode = node;
+    } 
+    if (node->getType() == VRML_MATERIAL) {
+        searchMaterialNode = node;
+    }
+    if (node->getType() == VRML_TRANSFORM) {
+        NodeTransform *transform = (NodeTransform *)node;
+        Matrix transformMatrix;
+        transform->transform();
+        transform->getMatrix(transformMatrix);
+        searchMeshData = transformMatrix;
+    } 
+    return true;     
+}
+
 void
 MainWindow::UpdateToolbarSelection(void)
 {
@@ -5897,7 +5926,10 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_CENTER_TO_MINZ, SW_MENU_DISABLED, 
                    canCenter ? 0 : SW_MENU_DISABLED);
 
-    swMenuSetFlags(m_menu, ID_HANIM_JOINT_WEIGHT, SW_MENU_DISABLED,
+    swMenuSetFlags(m_menu, ID_HANIM_JOINT_WEIGHT_SET, SW_MENU_DISABLED,
+                   (node->getType() == VRML_COORDINATE) ? 
+                   0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_HANIM_JOINT_WEIGHT_REMOVE, SW_MENU_DISABLED,
                    (node->getType() == VRML_COORDINATE) ? 
                    0 : SW_MENU_DISABLED);
 
@@ -5925,7 +5957,7 @@ MainWindow::UpdateToolbarSelection(void)
                    (m_scene->getSelectedHandlesSize() > 0) ?
                    0 : SW_MENU_DISABLED);
     bool isGroup2children = false;
-    if (node->getType() == VRML_GROUP) {
+    if ((node->getType() == VRML_GROUP) && (node != m_scene->getRoot())) {
         NodeGroup *group = (NodeGroup *)node;
         if (group->children()->getSize() == 2)
             isGroup2children = true;
@@ -5936,6 +5968,20 @@ MainWindow::UpdateToolbarSelection(void)
                    isGroup2children ? 0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_CSG_UNION, SW_MENU_DISABLED,
                    isGroup2children ? 0 : SW_MENU_DISABLED);
+    bool isGroupWithMeshes = false;
+    if ((node->getType() == VRML_GROUP) && (node != m_scene->getRoot())) {
+        isGroupWithMeshes = true;
+        NodeGroup *group = (NodeGroup *)node;
+        for (int i = 0; i < group->children()->getSize(); i++) {
+            searchIdxNode = NULL;
+            group->children()->getValue(i)->doWithBranch(searchNodes, NULL, false);
+            Node *node = searchIdxNode;  
+            if (node && !(node->isMeshBasedNode()))
+                isGroupWithMeshes = false;
+        }
+    }
+    swMenuSetFlags(m_menu, ID_SIMPLE_JOIN, SW_MENU_DISABLED,
+                   isGroupWithMeshes ? 0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_SPLIT_FACES, SW_MENU_DISABLED,
                    (node->getType() == VRML_COORDINATE) ?
                    0 : SW_MENU_DISABLED);
@@ -6117,8 +6163,6 @@ MainWindow::UpdateToolbarSelection(void)
 
     oldIsRoot = isRoot;
 }
-
-
 
 void
 MainWindow::RefreshRecentFileMenu(void)
@@ -8914,29 +8958,11 @@ MainWindow::snapTogether()
     if (node->getType() == VRML_INDEXED_FACE_SET) {
         NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)node;
         face->snapTogether();
-        optimizeSet();
+//        optimizeSet();
     }
 }
 
 #ifdef HAVE_LIBCGAL
-static Node * searchIdxNode;
-static Matrix searchMeshData;
-
-static bool searchNodes(Node *node, void *data)
-{
-    if (node && node->isMeshBasedNode()) {
-        searchIdxNode = node;
-    } 
-    if (node->getType() == VRML_TRANSFORM) {
-        NodeTransform *transform = (NodeTransform *)node;
-        Matrix transformMatrix;
-        transform->transform();
-        transform->getMatrix(transformMatrix);
-        searchMeshData = transformMatrix;
-    } 
-    return true;     
-}
-
 void
 MainWindow::csg(int operation)
 {
@@ -8993,6 +9019,56 @@ MainWindow::csg(int operation)
     }
 }
 #endif
+
+void
+MainWindow::simpleJoin()
+{
+    Node *node = m_scene->getSelection()->getNode();
+    Node *parent = node->getParent();
+    if (parent && node->getType() == VRML_GROUP) {
+        Array<FacesetAndMatrix> facesets;
+        int parentField = node->getParentField();
+        NodeGroup *group = (NodeGroup *)node;
+        for (int i = 0; i < group->children()->getSize(); i++) {        
+            searchIdxNode = NULL;
+            searchMaterialNode = NULL;
+            searchMeshData = Matrix::identity();
+            group->children()->getValue(i)->doWithBranch(searchNodes, NULL, 
+                                                         false);
+            Matrix matrix = searchMeshData;
+            Node *node = searchIdxNode;  
+
+            if (node && node->isMeshBasedNode()) {
+                NodeIndexedFaceSet *face = NULL;
+                if (node->getType() == VRML_INDEXED_FACE_SET)
+                    face = (NodeIndexedFaceSet *) node;
+                else
+                    face = (NodeIndexedFaceSet *) node->toIndexedFaceSet();
+                FacesetAndMatrix faceAndMatrix;
+                faceAndMatrix.node = face;
+                faceAndMatrix.material = (NodeMaterial *)searchMaterialNode;
+                faceAndMatrix.matrix = matrix;
+
+                facesets.append(faceAndMatrix);
+           }
+        }
+        NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                   NodeIndexedFaceSet::simpleJoin(facesets);
+		
+        if (face == NULL)
+            return;          
+        face->solid(new SFBool(false));
+
+        m_scene->setSelection(parent);
+        Node *newNode = createGeometryNode(face);
+
+        MoveCommand *command = new MoveCommand(node, parent, parentField,
+                                                     NULL, -1);
+        command->execute();
+        m_scene->setSelection(newNode);
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+    }
+}
 
 void
 MainWindow::splitIntoPieces(void) 
@@ -11039,6 +11115,68 @@ MainWindow::setHAnimJointWeight()
             parent->skinCoordIndex(indices);
             parent->skinCoordWeight(weights);
         }    
+    }
+}
+
+static Array<Node *> joints;
+
+static bool searchJoints(Node *node, void *data)
+{
+    if (node->getType() == X3D_HANIM_JOINT) {
+        joints.append(node);
+    } 
+    return true;     
+}
+
+void
+MainWindow::removeHAnimJointWeight()
+{
+    Node *current = m_scene->getSelection()->getNode();
+    if (current->getType() == VRML_COORDINATE) {
+        int numHandles = m_scene->getSelectedHandlesSize();
+        if (numHandles == 0)
+            return;
+        Array<int> handles;
+        for (int i = 0; i < numHandles; i++) {
+            int handle = m_scene->getSelectedHandle(i);
+            if ((handle < 0) || (handle >= NO_HANDLE))
+                continue;
+            handles.append(handle);
+        }
+        NodeHAnimHumanoid *human = current->getHumanoid();
+        if (human == NULL)
+            return;
+        for (int n = 0; n < human->skeleton()->getSize(); n++) {
+            Node *skel = human->skeleton()->getValue(n);
+            if (skel == NULL)
+                return;
+            joints.resize(0);
+            skel->doWithBranch(searchJoints, NULL);
+            for (int j = 0; j < joints.size(); j++) {
+                NodeHAnimJoint *joint = (NodeHAnimJoint *)joints[j]; 
+                bool changed = false;
+                if (joint != NULL) {
+                    MFFloat *weights = (MFFloat *)
+                                       joint->skinCoordWeight()->copy();
+                    MFInt32 *indices = (MFInt32 *)
+                                       joint->skinCoordIndex()->copy();
+                    for (int i = 0; i < handles.size(); i++) {
+                        int handle = handles[i];
+                        int f = indices->find(handle);
+                        if (f > -1) {
+                            indices->removeSFValue(f);
+                            weights->removeSFValue(f);
+                            changed = true;
+                        } 
+                   }
+                   if (changed) {
+                       joint->skinCoordIndex(indices);
+                       joint->skinCoordWeight(weights);
+                       human->update();
+                   }
+                }
+            }
+        }
     }
 }
 

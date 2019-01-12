@@ -165,6 +165,7 @@ public:
     int                 getMeshFlags(void);
     void                setMeshFlags(int MeshFlags);
     void                setVerticesZero(void);
+    void                setValidVertex(int i);  
     virtual int         countPolygons(void);
     virtual int         countPolygons1Sided(void);
     virtual int         countPolygons2Sided(void);
@@ -223,6 +224,7 @@ private:
     int                 m_currentFace;
     bool                m_texcoords_generated;
     Array<Vec3f>        m_smoothNormalsArray;
+    Array<bool>         m_validVertices;
 
 #ifdef HAVE_GLUNEWTESS
     Array<VertexInfo>   m_verticesInfo;

@@ -18,14 +18,8 @@ Why not gimp as default image editor ?
 ======================================
 
 gimp is a good image editor, but it is not a good tool for commandline.
-When you use e.g. "gimp test.png" on the commandline, you get e.g. with 
-the gimp of fedora 19 or debian wheezy the following errormessage:
-
-GIMP Message
-
-You can use this dialog to save to the GIMP XCF
-format. Use File->Export to export to other file formats.
-
+When you use e.g. "gimp test.png" on the commandline, modify the image
+and use File->Save, it doesn't write back the file.
 In fact you can use File->Export instead of File->Save, but this is 
 confusiong 8-( so the default uses a other image editor like pinta.
 If you need to use gimp, simply replace the image editor setting

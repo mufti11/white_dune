@@ -1236,8 +1236,15 @@ swCreateGLContext(SDC dc)
     if ((stereoType == RED_BLUE_ANAGLYPH_STEREO) || 
         (stereoType == BLUE_RED_ANAGLYPH_STEREO)) {
         pfd.cAccumBits = 8;
-        pfd.cAccumGreenBits = 4;
+        pfd.cAccumBlueBits = 4;
         pfd.cAccumRedBits = 4;
+    }
+    if ((stereoType == RED_CYAN_ANAGLYPH_STEREO) || 
+        (stereoType == CYAN_RED_ANAGLYPH_STEREO)) {
+        pfd.cAccumBits = 8;
+        pfd.cAccumBlueBits = 3;
+        pfd.cAccumGreenBits = 2;
+        pfd.cAccumRedBits = 3;
     }
 
     if ((want8Bit) || (GetDeviceCaps(dc->hDC, BITSPIXEL) == 8)) {
@@ -1364,6 +1371,25 @@ swMakeCurrent(SDC dc, SGLC context)
         glGetIntegerv(GL_ACCUM_BLUE_BITS, &bluebits);
 
         if ((redbits == 0) || (bluebits == 0)) {
+            MessageBox(NULL, 
+                       "visual do not have enough Accumulation bits for anaglyph stereo", 
+                       "Warning", SW_MB_ERROR);
+            exit(1);
+        }
+    }
+
+    if ((stereoType == RED_CYAN_ANAGLYPH_STEREO) ||
+        (stereoType == CYAN_RED_ANAGLYPH_STEREO)) {
+        int redbits = 0;
+        int greenbits = 0;
+        int bluebits = 0;
+        char buf[1024];
+
+        glGetIntegerv(GL_ACCUM_RED_BITS, &redbits);
+        glGetIntegerv(GL_ACCUM_GREEN_BITS, &greenbits);
+        glGetIntegerv(GL_ACCUM_BLUE_BITS, &bluebits);
+
+        if ((redbits == 0) || (bluebits == 0) || (greenbits == 0)) {
             MessageBox(NULL, 
                        "visual do not have enough Accumulation bits for anaglyph stereo", 
                        "Warning", SW_MB_ERROR);

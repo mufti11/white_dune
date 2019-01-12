@@ -379,9 +379,8 @@ public:
                            { return m_selectedHandles[i]; }
     bool                isInSelectedHandles(int handle) 
                            { 
-                           for (int i = 0; i < m_selectedHandles.size(); i++)
-                               if (handle == m_selectedHandles[i])
-                                   return true;
+                           if (m_selectedHandles.find(handle) != -1)
+                               return true;
                            return false;
                            }
     bool                isNewSelectedHandle(void) 

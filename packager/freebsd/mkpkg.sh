@@ -13,6 +13,7 @@ fi
 VERSION=`sh ../../batch/getversion.sh`
 export VERSION
 
+export CC=clang
 export CXX=clang
 export CPPFLAGS=-I/usr/local/include/freetype2
 export LIBS=-lstdc++

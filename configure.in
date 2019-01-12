@@ -78,6 +78,9 @@ AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use c
 AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version of the CGAL library,
             CGALHEADERS=yes)
 
+AC_ARG_WITH(omp,--without-omp             do not use OpenMP (usefull on raspberry PI),
+            OMP=no)
+
 AC_ARG_WITH(png_handle_unknown,--without-png_handle_unknown  use if link fails cause of png_handle_unknown,
             AC_DEFINE(HAVE_NO_PNG_HANDLE_UNKNOWN))
 
@@ -982,6 +985,16 @@ if test "X_$X11_ERROR" = "X_1" ; then
 EOF
  exit 1
 ]
+fi
+
+HAVE_OMP_FLAGS=""
+if test "X_$OMP" != "X_no" ; then
+ AC_CHECK_HEADER(omp.h,HAVE_OMP_FLAGS=-fopenmp;AC_DEFINE(HAVE_OMP))
+ if test "X_$HAVE_OMP_FLAGS" != ""; then
+     CFLAGS="$CFLAGS $HAVE_OMP_FLAGS"
+     CXXFLAGS="$CXXFLAGS $HAVE_OMP_FLAGS"
+     AC_HAVE_LIBRARY(gomp)
+ fi
 fi
 
 dnl Checks for libraries.

@@ -1639,6 +1639,82 @@ NodeIndexedFaceSet::insetFace(float factor)
 
     m_meshDirty = true;
 }
+
+Node *
+NodeIndexedFaceSet::simpleJoin(Array<FacesetAndMatrix> data)
+{
+    NodeIndexedFaceSet *ret = NULL;
+    MFVec3f *vertices = new MFVec3f();
+    MFInt32 *ci = new MFInt32();
+    MFColorRGBA *colorRGBA = new MFColorRGBA();
+    MFColor *color = new MFColor();
+    Scene *scene = NULL;
+    if (data.size() > 0) {
+        scene = data[0].node->getScene();
+        bool x3d = scene->isX3d();
+        ret = (NodeIndexedFaceSet *)scene->createNode("IndexedFaceSet");
+        ret->coord(new SFNode(scene->createNode("Coordinate")));
+        if (x3d)
+            ret->color(new SFNode(scene->createNode("ColorRGBA")));
+        else
+            ret->color(new SFNode(scene->createNode("Color")));
+        int numCi = 0;
+        for (int i = 0; i < data.size(); i++) {
+            NodeIndexedFaceSet *node = data[i].node;
+            MyMesh *mesh = node->getMesh();
+            MFVec3f *vert = mesh->getVertices();
+            MFFloat *colors = mesh->getColors();
+            int offset = 3;
+            if (mesh->hasColorRGBA())
+                offset = 4;
+            MFInt32 *coordIndex = mesh->getCoordIndex();            
+            for (int j = 0; j < vert->getSFSize(); j++) {
+                vertices->appendVec(data[i].matrix * vert->getVec(j));
+                if (data[i].material != NULL) {
+                    float *c = (float *)
+                        data[i].material->diffuseColor()->getValue();
+                    if (colors && colors->getSize() > 0) {
+                        c[0] = colors->getValue(j * offset);
+                        c[1] = colors->getValue(j * offset + 1);
+                        c[2] = colors->getValue(j * offset + 2);
+                    }    
+                    float t = data[i].material->transparency()->getValue();
+                    if (colors && (colors->getSize() > 0) && 
+                        mesh->hasColorRGBA())
+                        t = 1 - colors->getValue(j * offset + 3);
+                    if (x3d)
+                        colorRGBA->appendSFValue(c[0], c[1], c[2], 1 - t);
+                    else
+                        color->appendSFValue(c[0], c[1], c[2]);
+                }    
+            }
+            for (int j = 0; j < coordIndex->getSFSize(); j++)
+                if (coordIndex->getValue(j) < 0)
+                    ci->appendSFValue(coordIndex->getValue(j));
+                else
+                    ci->appendSFValue(coordIndex->getValue(j) + numCi);
+            if (coordIndex->getValue(coordIndex->getSFSize() - 1) > -1) {
+                ci->appendSFValue(-1);
+                numCi++;
+            }
+            numCi += vert->getSFSize();
+        }
+        NodeCoordinate *ncoord = ((NodeCoordinate *)ret->coord()->getValue());
+        ncoord->point(new MFVec3f(*vertices));
+        if (x3d) {
+            NodeColorRGBA *ncolor = ((NodeColorRGBA *)ret->color()->getValue());
+            ncolor->color(new MFColorRGBA(*colorRGBA));
+        } else {
+            NodeColor *ncolor = ((NodeColor *)ret->color()->getValue());
+            ncolor->color(new MFColor(*color));
+        }
+        ret->coordIndex(new MFInt32(*ci));
+
+        return ret;
+    }
+
+    return NULL;
+}
     
 int 
 NodeIndexedFaceSet::getProfile(void) const

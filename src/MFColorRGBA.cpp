@@ -76,6 +76,15 @@ MFColorRGBA::setSFValue(int index, const float *values)
         m_value[index * getStride() + i] = values[i];
 }
 
+void
+MFColorRGBA::setSFValue(int index, float r, float g, float b, float a)
+{
+    m_value[index * 4    ] = r;
+    m_value[index * 4 + 1] = g;
+    m_value[index * 4 + 2] = b;
+    m_value[index * 4 + 3] = a;
+}
+
 void 
 MFColorRGBA::clamp(const FieldValue *min, const FieldValue *max)
 {
@@ -188,5 +197,11 @@ MFColorRGBA::insertSFValue(int index, const float *values)
         m_value.insert(values[i], index * getStride() + i);
 }
 
-
-
+void
+MFColorRGBA::insertSFValue(int index, float r, float g, float b, float a)
+{
+        m_value.insert(r, index * getStride());
+        m_value.insert(g, index * getStride() + 1);
+        m_value.insert(b, index * getStride() + 2);
+        m_value.insert(a, index * getStride() + 3);
+}

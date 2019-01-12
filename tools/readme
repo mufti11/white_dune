@@ -21,3 +21,6 @@ povray_mkskybox.sh
                       x-povray      
                       convert       (ImageMagick 5.4.7 is known working)
 
+modify_orientation_interpolator.awk
+                      awk           (GNU Awk 4.1.4 is known working)
+

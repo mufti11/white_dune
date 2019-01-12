@@ -140,6 +140,7 @@ MyMesh::MyMesh(MeshBasedNode *node,
         m_drawCounter = -1;
     m_currentFace = -1;
     m_texcoords_generated = false;
+    m_validVertices.resize(0);
 }
 
 MyMesh::~MyMesh()
@@ -391,6 +392,8 @@ MyMesh::draw(int pass)
         for (int j = offset; j < offset + numVertices; j++) {
             if ((coordIndex[j] < 0) || (j >= m_coordIndex->getSize()) ||
                 (coordIndex[j] > m_vertices->getSFSize()))
+                continue;
+            if ((m_validVertices.size() > 0) && !m_validVertices[coordIndex[j]])
                 continue;
             if (texCoords && texCoordIndex &&
                 (j < m_texCoordIndex->getSFSize()) &&
@@ -1490,8 +1493,16 @@ MyMesh::setMeshFlags(int meshFlags) {
 void
 MyMesh::setVerticesZero(void)
 {
-     for (int i = 0; i < m_vertices->getSFSize(); i++)
+     for (int i = 0; i < m_vertices->getSFSize(); i++) {
          m_vertices->setSFValue(i, 0, 0, 0);
+         m_validVertices[i] = false;
+     }
+}
+
+void
+MyMesh::setValidVertex(int i)
+{
+     m_validVertices[i] = true;
 }
 
 int 

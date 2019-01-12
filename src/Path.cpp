@@ -49,10 +49,10 @@ Path::Path(const int *path, int len, Scene *scene, bool protoInTree,
     m_node = node;
 
 #ifdef DEBUG
-//    swDebugf("Path List: ");
-//    for (int i = 0; i < len; i++)
-//        swDebugf("%d ", path[i]);
-//    swDebugf("\n");
+    swDebugf("Path List: ");
+    for (int i = 0; i < len; i++)
+        swDebugf("%d ", path[i]);
+    swDebugf("\n");
 #endif
 
     if (len > 0) {

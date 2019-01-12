@@ -50,6 +50,9 @@
 /* Define if you have the z Library  */
 #undef HAVE_LIBZ
 
+/* Define if you have OpenMP */
+#undef HAVE_OMP
+
 /* define if you use the spaceball library */
 #undef HAVE_LIBSBALL
 

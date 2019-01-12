@@ -30,6 +30,9 @@
 
 #include "stdafx.h"
 #include <stdio.h>
+#ifdef HAVE_OMP
+# include <omp.h>
+#endif
 
 // Template for a C type array. Index: 0 ... size()-1 
 
@@ -143,13 +146,25 @@ public:
                     m_size = size;
                 }
     int         find(T t) const {
-                    for (int i = 0; i < m_size; i++)
-                        if (m_data[i]==t) return i;
-                    return -1;
+                    int ret = -1;
+                    if (m_capacity < m_size)
+                        return -1;
+                    #pragma omp parallel
+                    {
+                        #pragma omp for
+                        for (int i = 0; i < m_size; i++)
+                            if (m_data[i] == t) {
+                               ret = i;
+                               #pragma omp cancel for
+                               i = m_size; // break
+                           }
+                        #pragma omp barrier
+                    }
+                    return ret;
                 }
     int         findBackward(T t) const {
                     for (int i = m_size - 1; i >= 0; i--)
-                        if (m_data[i]==t) return i;
+                        if (m_data[i] == t) return i;
                     return -1;
                 }
     bool        contains(T t) const {

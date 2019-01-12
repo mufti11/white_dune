@@ -247,6 +247,7 @@ protected:
     void                insertCubeTexture();
     void                insertHAnimJoint();
     void                setHAnimJointWeight();
+    void                removeHAnimJointWeight();
     void                insertHAnimSegment();
     void                insertHAnimSite();
     void                createVirtualAcoustics();
@@ -390,6 +391,7 @@ protected:
 #endif
     void                snapTogether();
     void                csg(int operation);
+    void                simpleJoin();
     void                toNurbs();
     void                toNurbsTrimmedSurface();
     void                toNurbsCurve();

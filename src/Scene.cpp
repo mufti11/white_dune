@@ -1103,7 +1103,7 @@ Scene::writeComponents(int f)
                     RET_ONERROR( mywritestr(f, ":") )
                 else if (isX3dXml())
                     RET_ONERROR( mywritestr(f, "' level='") )
-                RET_ONERROR( mywritef(f, "%d ", j->item()->getData()) ) 
+                RET_ONERROR( mywritef(f, "%d", j->item()->getData()) ) 
                 if (isX3dXml())
                     RET_ONERROR( mywritestr(f, "'/>") )
                 RET_ONERROR( mywritestr(f, "\n") )
@@ -4520,6 +4520,9 @@ Scene::setSelection(Path *path)
         }
         if (node->getType() == X3D_HANIM_JOINT) {
             m_lastSelectedHAnimJoint = node;
+        }
+        if (node->getType() == X3D_HANIM_HUMANOID) {
+            m_lastSelectedHAnimJoint = NULL;
         }
         if (node == getRoot()) {
             m_lastSelectedHAnimJoint = NULL;

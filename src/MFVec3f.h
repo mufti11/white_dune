@@ -80,6 +80,8 @@ public:
                            { insertSFValue(getSFSize(), x, y, z); }
     virtual void        appendSFValue(const float *values) 
                            { insertSFValue(getSFSize(), values); }
+    virtual void        appendVec(Vec3f v) 
+                           { insertSFValue(getSFSize(), v.x, v.y, v.z); }
                         
     Vec3f               getMinBoundingBox(void);
     Vec3f               getMaxBoundingBox(void);

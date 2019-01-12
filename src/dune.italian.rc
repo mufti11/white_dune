@@ -308,6 +308,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 Meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Movimento"
     BEGIN
@@ -1359,7 +1360,11 @@ BEGIN
         END
 //        MENUITEM "Interpolatore time shift",          ID_TIME_SHIFT
         MENUITEM "field pipe",                          ID_PIPE
-        MENUITEM "Set HanimJoint weight",               ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Set Viewoint",                        ID_VIEWPOINT
         MENUITEM "Rendering raggi X",                   ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Imposta il percorso delle URL",       ID_SET_URL
@@ -1392,6 +1397,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 Meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)", ID_SIMPLE_JOIN
     END
     POPUP "&Converti"
     BEGIN
@@ -1920,7 +1926,7 @@ BEGIN
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
     AUTOCHECKBOX    "skip part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Material name genateration on non VRML/X3D export",
+    GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
     LTEXT           "Download directory",
                     IDC_STATIC,19,190,65,10

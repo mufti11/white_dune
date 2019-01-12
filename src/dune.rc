@@ -146,7 +146,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "C&opy\tCtrl+C",                       ID_DUNE_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",                      ID_DUNE_EDIT_PASTE
-        POPUP "Paste symetric"
+        POPUP "Paste symmetric"
         BEGIN
             MENUITEM "&x (red)",                        ID_DUNE_EDIT_PASTE_SYMMETRIC_X
             MENUITEM "&y (green)",                      ID_DUNE_EDIT_PASTE_SYMMETRIC_Y
@@ -364,7 +364,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-        POPUP "Make symetric"
+        POPUP "Make symmetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -379,6 +379,7 @@ BEGIN
             MENUITEM "Union (needs Group wih 2 meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Movement"
     BEGIN
@@ -474,7 +475,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "C&opy\tCtrl+C",                       ID_DUNE_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",                      ID_DUNE_EDIT_PASTE
-        POPUP "Paste symetric"
+        POPUP "Paste symmetric"
         BEGIN
             MENUITEM "&x",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_X
             MENUITEM "&y",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_Y
@@ -670,7 +671,7 @@ BEGIN
         MENUITEM "&Copy\tCtrl+C",                       ID_DUNE_EDIT_COPY
         MENUITEM "Copy branch to root",                 ID_DUNE_EDIT_COPY_BRANCH_TO_ROOT
         MENUITEM "&Paste\tCtrl+V",                      ID_DUNE_EDIT_PASTE
-        POPUP "Paste symetric"
+        POPUP "Paste symmetric"
         BEGIN
             MENUITEM "&x",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_X
             MENUITEM "&y",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_Y
@@ -1300,7 +1301,7 @@ BEGIN
     END
     POPUP "&Actions"
     BEGIN
-        MENUITEM "x symmetric Modelling",                ID_X_SYMETRIC
+        MENUITEM "x symmetricial Modelling",             ID_X_SYMETRIC
         POPUP "Create Shapes at zero"
         BEGIN
             MENUITEM "x",                                ID_CREATE_AT_ZERO_X
@@ -1429,7 +1430,11 @@ BEGIN
         END
 //        MENUITEM "Interpolator time shift",            ID_TIME_SHIFT
         MENUITEM "Field pipe",                           ID_PIPE
-        MENUITEM "Set HanimJoint weight",                ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Set Viewoint",                         ID_VIEWPOINT
         MENUITEM "Xray rendering",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Set path of all URLs to",              ID_SET_URL
@@ -1447,7 +1452,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-        POPUP "Make symetric"
+        POPUP "Make symmetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -1462,6 +1467,7 @@ BEGIN
             MENUITEM "Union (needs Group wih 2 meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Convert"
     BEGIN
@@ -1817,7 +1823,7 @@ BEGIN
     EDITTEXT        IDC_HANDLE_SCALE,128,122,45,14,ES_AUTOHSCROLL
     LTEXT           "Humanoid Handle Scale:",IDC_STATIC,20,146,105,8
     EDITTEXT        IDC_HUMANOID_JOINT_SCALE,128,145,45,14,ES_AUTOHSCROLL
-    LTEXT           "Epsilon for symemtric modelling:",IDC_STATIC,20,169,100,
+    LTEXT           "Epsilon for symmetricial modelling:",IDC_STATIC,20,169,100,
                     8
     EDITTEXT        IDC_HANDLE_EPSILON,128,168,45,14,ES_AUTOHSCROLL
     AUTOCHECKBOX    "Use NURBS weights == 1", IDC_WEIGHTS_1, 20,184,100,12
@@ -2048,7 +2054,7 @@ BEGIN
     PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
                     IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "use Kernighan/Richite formating",IDC_K_AND_R,
+    AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
                     19,24,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
@@ -2060,7 +2066,7 @@ BEGIN
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
     AUTOCHECKBOX    "skip last part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Material name genateration on non VRML/X3D export",
+    GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
     LTEXT           "Download directory",
                     IDC_STATIC,19,190,65,10
@@ -2613,7 +2619,7 @@ BEGIN
 #ifdef HAVE_AFLOCK
     PUSHBUTTON      "Aflock Setting",IDC_OPTIONS_AFLOCK,8,277,60,13
 #endif
-    GROUPBOX        "Input Device Settings",IDC_STATIC,0,41,307,157
+    GROUPBOX        "Input Device Settings",IDC_STATIC,0,41,307,207
 END
 
 IDD_AFLOCK DIALOG DISCARDABLE  0, 0, 156, 230
@@ -4729,6 +4735,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "Mode"
     BEGIN
@@ -5777,7 +5784,11 @@ BEGIN
         END
 //        MENUITEM "Interpolator time shift",      ID_TIME_SHIFT
         MENUITEM "Field pipe",                     ID_PIPE
-        MENUITEM "Set HanimJoint weight",          ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Set Viewoint",                   ID_VIEWPOINT
         MENUITEM "Vue radiographique",             ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Placer chemin de tout les URLs", ID_SET_URL
@@ -5810,6 +5821,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Convertir"
     BEGIN
@@ -6325,7 +6337,7 @@ BEGIN
     PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
                     IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "use Kernighan/Richite formating",IDC_K_AND_R,
+    AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
                     19,24,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
@@ -6337,7 +6349,7 @@ BEGIN
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
     AUTOCHECKBOX    "skip last part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Material name genateration on non VRML/X3D export",
+    GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
     LTEXT           "Download directory",
                     IDC_STATIC,19,190,65,10
@@ -8949,12 +8961,15 @@ BEGIN
             MENUITEM "z",                                ID_MAKE_SYMETRIC_Z
         END
         MENUITEM "Schnappe Punkte zusammen",             ID_SNAP_TOGETHER
+#ifdef HAVE_LIBCGAL
         POPUP "Boolsche Operationen"
         BEGIN
             MENUITEM "Abziehen (braucht Group mit 2 Meshes)", ID_CSG_SUBTRACT
             MENUITEM "Schneiden (braucht Group mit 2 Meshes)", ID_CSG_INTERSECTION
             MENUITEM "Zusammenbauen (braucht Group mit 2 Meshes)", ID_CSG_UNION
         END
+#endif
+        MENUITEM "Vereinige in IndexedFaceSet (braucht Group)",  ID_SIMPLE_JOIN
     END
     POPUP "Bewegungs&art"
     BEGIN
@@ -10003,7 +10018,11 @@ BEGIN
         END
 //        MENUITEM "Interpolator time shift",           ID_TIME_SHIFT
         MENUITEM "Field pipe",                          ID_PIPE
-        MENUITEM "Setze HanimJoint weight",             ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Setze HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Loesche HanimJoint weight",       ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Setze Viewoint",                      ID_VIEWPOINT
         MENUITEM "Roentgenblick",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Setze Pfad aller URLs",               ID_SET_URL
@@ -10028,12 +10047,15 @@ BEGIN
             MENUITEM "z",                                ID_MAKE_SYMETRIC_Z
         END
         MENUITEM "Schnappe Punkte zusammen",             ID_SNAP_TOGETHER
+#ifdef HAVE_LIBCGAL
         POPUP "Boolsche Operationen"
         BEGIN
             MENUITEM "Abziehen (braucht Group mit 2 Meshes)", ID_CSG_SUBTRACT    
             MENUITEM "Schneiden (braucht Group mit 2 Meshes)", ID_CSG_INTERSECTION 
             MENUITEM "Zusammenbauen (braucht Group mit 2 Meshes)", ID_CSG_UNION    
         END
+#endif
+        MENUITEM "Vereinige in IndexedFaceSet (braucht Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Umwandeln"
     BEGIN
@@ -10550,7 +10572,7 @@ BEGIN
     PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,87,370,50,14
     AUTOCHECKBOX    "Behalte URLs beim speichern in ein anderes Verzeichnis",
                     IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "Benutze Kernighan/Richite Formatierung",IDC_K_AND_R,
+    AUTOCHECKBOX    "Benutze Kernighan/Ritchie Formatierung",IDC_K_AND_R,
                     19,24,152,12
     LTEXT           "Zahl der eingefuegten Leerzeichen",IDC_STATIC,
                     19,39,114,12
@@ -13175,6 +13197,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 Meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Movimento"
     BEGIN
@@ -14226,7 +14249,11 @@ BEGIN
         END
 //        MENUITEM "Interpolatore time shift",          ID_TIME_SHIFT
         MENUITEM "field pipe",                          ID_PIPE
-        MENUITEM "Set HanimJoint weight",               ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Set Viewoint",                        ID_VIEWPOINT
         MENUITEM "Rendering raggi X",                   ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Imposta il percorso delle URL",       ID_SET_URL
@@ -14259,6 +14286,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 Meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)", ID_SIMPLE_JOIN
     END
     POPUP "&Converti"
     BEGIN
@@ -14787,7 +14815,7 @@ BEGIN
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
     AUTOCHECKBOX    "skip part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Material name genateration on non VRML/X3D export",
+    GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
     LTEXT           "Download directory",
                     IDC_STATIC,19,190,65,10
@@ -17394,7 +17422,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-        POPUP "Make symetric"
+        POPUP "Make symmetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -17409,6 +17437,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 Meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Movimento"
     BEGIN
@@ -18320,17 +18349,17 @@ BEGIN
     POPUP "&Animation"
     BEGIN
         MENUITEM "Create Curve Animation (need Transform)", ID_CURVE_ANIMATION
-        MENUITEM "Animate (select animateable object)", ID_ANIMATION
+        MENUITEM "Animate (select animateable object)",  ID_ANIMATION
         MENUITEM "Go to Interpolator (need animated object)", ID_SEARCH_INTERPOLATOR
         MENUITEM "Go to TimeSensor (need animated object)", ID_SEARCH_TIME_SENSOR
-        MENUITEM "Animation time (need TimeSensor)",    ID_CHANGE_ANIMATION_TIME
-        MENUITEM "Disable animation (need TimeSensor)", ID_CHANGE_DISABLE_ANIMATION
-        MENUITEM "Enable animation (need TimeSensor)",  ID_CHANGE_ENABLE_ANIMATION
-        MENUITEM "Delete all animation data",           ID_DELETE_ANIMATION_DATA
+        MENUITEM "Animation time (need TimeSensor)",     ID_CHANGE_ANIMATION_TIME
+        MENUITEM "Disable animation (need TimeSensor)",  ID_CHANGE_DISABLE_ANIMATION
+        MENUITEM "Enable animation (need TimeSensor)",   ID_CHANGE_ENABLE_ANIMATION
+        MENUITEM "Delete all animation data",            ID_DELETE_ANIMATION_DATA
     END
     POPUP "&Actions"
     BEGIN
-        MENUITEM "x symmetric Modelling",                ID_X_SYMETRIC
+        MENUITEM "x symmetricial Modelling",             ID_X_SYMETRIC
         POPUP "Create Shapes at zero"
         BEGIN
             MENUITEM "x",                                ID_CREATE_AT_ZERO_X
@@ -18459,7 +18488,11 @@ BEGIN
         END
 //        MENUITEM "Interpolator time shift",            ID_TIME_SHIFT
         MENUITEM "Field pipe",                           ID_PIPE
-        MENUITEM "Set HanimJoint weight",                ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Set Viewoint",                         ID_VIEWPOINT
         MENUITEM "Xray rendering",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Set path of all URLs to",              ID_SET_URL
@@ -18477,7 +18510,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-        POPUP "Make symetric"
+        POPUP "Make symmetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -18492,6 +18525,7 @@ BEGIN
             MENUITEM "Union (needs Group with 2 Meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Convert"
     BEGIN
@@ -18779,7 +18813,7 @@ BEGIN
     EDITTEXT        IDC_HANDLE_SCALE,128,122,45,14,ES_AUTOHSCROLL
     LTEXT           "Humanoid Handle Scale:",IDC_STATIC,20,146,105,8
     EDITTEXT        IDC_HUMANOID_JOINT_SCALE,128,145,45,14,ES_AUTOHSCROLL
-    LTEXT           "Epsilon for symemtric modelling:",IDC_STATIC,20,169,100,
+    LTEXT           "Epsilon for symmetricial modelling:",IDC_STATIC,20,169,100,
                     8
     EDITTEXT        IDC_HANDLE_EPSILON,128,169,45,14,ES_AUTOHSCROLL
     AUTOCHECKBOX    "Use NURBS weights == 1", IDC_WEIGHTS_1, 20,184,100,12
@@ -19010,7 +19044,7 @@ BEGIN
     PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
                     IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "use Kernighan/Richite formating",IDC_K_AND_R,
+    AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
                     19,24,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
@@ -19022,7 +19056,7 @@ BEGIN
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
     AUTOCHECKBOX    "skip last part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Material name genateration on non VRML/X3D export",
+    GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
     LTEXT           "Download directory",
                     IDC_STATIC,19,190,65,10
@@ -20387,9 +20421,9 @@ BEGIN
     ID_PT_DUNE_EDIT_FIND        "Find the specified text\nFind"
     ID_PT_DUNE_EDIT_FIND_AGAIN  "Reuse last find command\nFind again"
     ID_PT_DUNE_EDIT_PASTE       "Insert Clipboard contents\nPaste"
-    ID_PT_DUNE_EDIT_PASTE_SYMMETRIC_X "Insert Clipboard contents and flip x (red direction) symetric (use at once after copy)\nPaste symetric x (red)"
-    ID_PT_DUNE_EDIT_PASTE_SYMMETRIC_Y "Insert Clipboard contents and flip y (green direction) symetric (use at once after copy)\nPaste symetric y (green)"
-    ID_PT_DUNE_EDIT_PASTE_SYMMETRIC_Z "Insert Clipboard contents and flip z (blue direction) symetric (use at once after copy)\nPaste symetric z (blue)"
+    ID_PT_DUNE_EDIT_PASTE_SYMMETRIC_X "Insert Clipboard contents and flip x (red direction) symmetricial (use at once after copy)\nPaste symetric x (red)"
+    ID_PT_DUNE_EDIT_PASTE_SYMMETRIC_Y "Insert Clipboard contents and flip y (green direction) symmetricial (use at once after copy)\nPaste symetric y (green)"
+    ID_PT_DUNE_EDIT_PASTE_SYMMETRIC_Z "Insert Clipboard contents and flip z (blue direction) symmetricial (use at once after copy)\nPaste symetric z (blue)"
     ID_PT_DUNE_EDIT_REPEAT      "Repeat the last action\nRepeat"
     ID_PT_DUNE_EDIT_REPLACE     "Replace specific text with different text\nReplace"
     ID_PT_DUNE_EDIT_SELECT_ALL  "Select the entire document\nSelect All"
@@ -20868,7 +20902,7 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
-    ID_PT_X_SYMETRIC           "x symmetric Modelling (changing the vertices with x will also change the vertices with -x)\nx symmetric Modelling"
+    ID_PT_X_SYMETRIC           "x symmetricial Modelling (changing the vertices with x will also change the vertices with -x)\nx symmetric Modelling"
     ID_PT_INTERACTION          "Create Interaction\nCreate Interaction"
     ID_PT_CREATE_AT_ZERO_X     "Create new node at x=0\nCreate at x=0"
     ID_PT_CREATE_AT_ZERO_Y     "Create new node at y=0\nCreate at y=0"

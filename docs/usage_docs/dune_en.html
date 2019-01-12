@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */  
   
- last update: white_dune-0.99pl1111
+ last update: white_dune-0.99pl1262
 -->   
 <head>
  <title>"White_dune" documentation</title> 
@@ -3035,9 +3035,21 @@ manipulate the surface. Skin and bones technics in X3D are connected
 to the HAnimHumanoid node, cause the main application is human animation.<br>
 But human animation require a lot of joints, so a flower with two
 joints is shown.<br>
+If you want to try a human (made with "makehuman") instead, use can use
+<a href="human.x3d">human.x3d in the docs/usage_docs directory</a> instead.
+<br>
+A walk animation (extended with the "Nancy" animation of Cindy Ballreich)
+is available as
+<a href="human.x3dv">human.x3dv in the docs/usage_docs Directory</a>.
+This animation was modified at the hips, to compensate the wide legged
+pose of the "makehuman" output.
+<br>
+Back to the flower:
+<br>
 First we start with a IndexedFaceSet of a flower (created with a SuperRevolver,
 converted to a modified Nurbs(Patch)Surface converted to IndexedFaceSet).
 <br>
+Of course, the procedure is also working with another IndexedFaceSet.<br>
 <img src="flower1.png"><br>
 Next we create a HAnimHumanoid node with <em>Create -&gt; X3D misc components
 -&gt; H-Anim -&gt; HAnimHumanoid</em> and move the Shape node to

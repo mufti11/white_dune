@@ -75,6 +75,15 @@ MFColor::setSFValue(int index, const float *values)
         m_value[index * getStride() + i] = values[i];
 }
 
+
+void
+MFColor::setSFValue(int index, float r, float g, float b)
+{
+    m_value[index * 3    ] = r;
+    m_value[index * 3 + 1] = g;
+    m_value[index * 3 + 2] = b;
+}
+
 void 
 MFColor::clamp(const FieldValue *min, const FieldValue *max)
 {
@@ -178,5 +187,13 @@ MFColor::insertSFValue(int index, const float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);
+}
+
+void
+MFColor::insertSFValue(int index, float r, float g, float b)
+{
+        m_value.insert(r, index * getStride());
+        m_value.insert(g, index * getStride() + 1);
+        m_value.insert(b, index * getStride() + 2);
 }
 

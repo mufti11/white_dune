@@ -1,7 +1,7 @@
 /*
  * NodeFlags.h
  *
- * Copyright (C) 2016 Stephen F. White, J. Scheurich
+ * Copyright (C) 2019 Stephen F. White, J. Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,8 @@ enum flags {
     NODE_FLAG_FLIPPED,
     NODE_FLAG_SWAPPED,
     NODE_FLAG_X3D_ONLY,
-    NODE_FLAG_VRML_ONLY
+    NODE_FLAG_VRML_ONLY,
+    NODE_FLAG_HIDDEN
 };
 
 #endif

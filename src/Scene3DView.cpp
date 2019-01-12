@@ -175,6 +175,8 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
                glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
            else if (TheApp->getStereoType() == RED_BLUE_ANAGLYPH_STEREO)
                glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
+           else if (TheApp->getStereoType() == RED_CYAN_ANAGLYPH_STEREO)
+               glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
            else 
                glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
        }
@@ -200,6 +202,8 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
                glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
            else if (TheApp->getStereoType() == BLUE_RED_ANAGLYPH_STEREO)
                glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
+           else if (TheApp->getStereoType() == CYAN_RED_ANAGLYPH_STEREO)
+               glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
            else
                glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);        
        } 
@@ -831,11 +835,8 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
             Path *path = m_scene->pick(x, height - y);
             int newHandle = -1;
             if (path) {
-                if (path->getPathLen() == 0)
-                    m_scene->removeSelectedHandles();                
-                else  {
+                if (path->getPathLen() != 0)
                     newHandle = m_scene->getLastSelectedHandle();
-                }
                 Node *node = m_scene->getSelection()->getNode();
                 if (m_scene->getSelectedHandlesSize() > 1)
                     node->startSetMultiHandles();

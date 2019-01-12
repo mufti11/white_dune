@@ -398,16 +398,18 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             item = NULL;
             break;
         }
-        int pos = path[i++]; 
-        Node *oldNode = node;
-        if (value->getType() == SFNODE) {
-            node = ((SFNode *) value)->getValue();
-            item = swTreeGetFirstChild(m_tree, item);
-        } else if ((value->getType() == MFNODE) && (pos > -1)) {
-            node = ((MFNode *) value)->getValue(pos);
-            item = swTreeGetFirstChild(m_tree, item);
-        } else
-            break;
+        if (i < len) {
+            int pos = path[i++]; 
+            Node *oldNode = node;
+            if (value->getType() == SFNODE) {
+                node = ((SFNode *) value)->getValue();
+                item = swTreeGetFirstChild(m_tree, item);
+            } else if ((value->getType() == MFNODE) && (pos > -1)) {
+                node = ((MFNode *) value)->getValue(pos);
+                item = swTreeGetFirstChild(m_tree, item);
+            } else
+               break;
+        }
         // search for field
         STREEITEM tmpItem = item;
         bool isNode = false;
@@ -420,44 +422,10 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
                break;
             }
         }
+        if ((tmpItem != NULL) && (tmpItem == item))
+            item = tmpItem;
         if ((item == NULL) && (tmpItem != NULL))
             item = tmpItem;
-        isNode = false;
-        if (node && (TheApp->GetShowAllFields() || node->showFields())) {
-            Proto *proto = node->getProto();
-            for (int j = field; j < field + 1; j++) {
-                if ((j == proto->metadata_Field()) && 
-                    (!m_scene->isX3d())) {
-                    continue;
-                }
-                STREEITEM tmp = swTreeGetFirstChild(m_tree, item);
-                if (!isNull(tmp)) {
-                    item = tmp;
-                    if (value->getType() == MFNODE) {
-                        MFNode* mfNode = (MFNode *)value;
-                        for (int n = 0; n < mfNode->getSize(); n++) { 
-                            if (n == 0) {
-                                TreeNode *t = (TreeNode *) 
-                                              swTreeGetItemData(m_tree, item);
-                                if (t && t->node && t->node->isEqual(node))
-                                   break;
-                                continue;
-                            }
-                            tmpItem = swTreeGetNextItem(m_tree, item);
-                            if (tmpItem) {
-                                item = tmpItem;
-                                TreeNode *t = (TreeNode *) 
-                                              swTreeGetItemData(m_tree, item);
-                                if (t && t->node && t->node->isEqual(node))
-                                    isNode = true;
-                                if (isNode && t && t->field == field)
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     if (item != NULL && item != swTreeGetCurrentItem(m_tree)) {
@@ -487,9 +455,6 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
 
     STREEITEM fieldItem;
     Proto *def = node->getProto();
-    bool showAllFields = TheApp->GetShowAllFields() || node->showFields();
-    if (node == m_scene->getRoot())
-        showAllFields = false;
     bool x3d = m_scene->isX3d();
 
     for (int i = 0; i < def->getNumFields(); i++) {
@@ -499,30 +464,11 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
         if (field->getType() == MFNODE) {
             MFNode *value = (MFNode *) node->getField(i);
             const char *name = (const char *) field->getName(x3d);
-            if (showAllFields) {
-                fieldItem = swTreeInsertItem(m_tree, SW_INSERT_LAST_CHILD,
-                                             item, name);
-                swTreeSetItemData(m_tree, fieldItem, new TreeNode(i, NULL));
-                swTreeSetItemImage(m_tree, fieldItem, m_bitmapItems - 2, m_bitmapItems - 2);
-                InsertNodeListRec(value->getValues(), i, fieldItem);
-            } else {
-                InsertNodeListRec(value->getValues(), i, item);
-            }
+            InsertNodeListRec(value->getValues(), i, item);
         } else if (field->getType() == SFNODE) {
             SFNode *value = (SFNode *) node->getField(i);
             const char *name = (const char *) field->getName(x3d);
-            if (showAllFields) {
-                fieldItem = swTreeInsertItem(m_tree, SW_INSERT_LAST_CHILD,
-                                             item, name);
-                swTreeSetItemData(m_tree, fieldItem, new TreeNode(i, NULL));
-                swTreeSetItemImage(m_tree, fieldItem, m_bitmapItems - 2, 
-                                   m_bitmapItems - 2);
-                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD,
-                              fieldItem);
-            } else {
-                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD,
-                              item);
-            }
+            InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
         }
     }
 }
@@ -706,7 +652,7 @@ Path *SceneTreeView::MakePath(STREEITEM item)
     Node *root = m_scene->getRoot();
 
     t1 = (TreeNode *) swTreeGetItemData(m_tree, item);
-    len = ((t1 && t1->node) || (t1 == NULL))? 0 : 1;
+    len = ((t1 && t1->node) || (t1 == NULL)) ? 0 : 1;
 
     for (p = item; p != NULL; p = swTreeGetParentItem(m_tree, p)) {
         t = (TreeNode *) swTreeGetItemData(m_tree, p);
@@ -786,26 +732,6 @@ SceneTreeView::GetIndex(STREEITEM item)
         return 0;
     }
 }
-
-#if 0
-void SceneTreeView::OnRButtonDown(UINT nFlags, CPoint point) 
-{
-    STREEITEM item = swTreeHitTest(point.x, point.y);
-
-    if (item) {
-        swTreeSetCurrentItem(m_tree, item);
-        CRect r;
-        GetWindowRect(&r);
-
-        FancyMenu menu, insertMenu;
-        Path *path = MakePath(item);
-        GetDocument()->ContextMenu(path, &menu, &insertMenu);
-        menu.TrackPopupMenu(TPM_CENTERALIGN | TPM_RIGHTBUTTON, 
-                            point.x + r.left, point.y + r.top, this);
-        delete path;
-    }
-}
-#endif
 
 void SceneTreeView::UpdateOverlay()
 {

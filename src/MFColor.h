@@ -51,11 +51,16 @@ public:
 
     virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
+    virtual void        setSFValue(int index, float r, float g, float b);
     virtual void        setSFValue(int index, const float* values);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 
     virtual void        insertSFValue(int index, FieldValue *value);
+    virtual void        insertSFValue(int index, float r, float g, float b);
     virtual void        insertSFValue(int index, const float *values);
+
+    virtual void        appendSFValue(float r, float g, float b)
+                           { insertSFValue(getSFSize(), r, g, b); }
 
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 

@@ -234,16 +234,37 @@ NodeCoordinate::drawHandles(void)
         NodeHAnimHumanoid *human = this->getHumanoid();
         if (human != NULL) {
             state.startDrawHandles();
-            for (int ci = 0; ci < point()->getSFSize(); ci++) {
-                NodeHAnimJoint *joint = (NodeHAnimJoint *)
-                    m_scene->getLastSelectedHAnimJoint();
-                if (joint) {
+            NodeHAnimJoint *joint = (NodeHAnimJoint *)
+                                    m_scene->getLastSelectedHAnimJoint();
+            if (joint) {
+                for (int ci = 0; ci < point()->getSFSize(); ci++)
                     if (joint->skinCoordIndex()->find(ci) > -1) { 
+                        bool hidden = false;
+                        for (int i = 0; i < m_scene->getNumHiddenVertices(); 
+                             i++)
+                            if (m_scene->getHiddenVertex(i) == ci) {
+                                hidden = true;
+                                break;
+                            }
+                        if (hidden)
+                           continue;
                         state.setHandleColor(m_scene, ci);
                         glLoadName(ci);
                         state.drawHandle(Vec3f(point()->getValue(ci)));
                     }
-                } else if (human->jointHasNoWeight(ci)) {
+            } else {
+                human->buildJointHasWeightArray();
+                Array<int> *arrayPtr = human->getJointHasNoWeightArray();
+                for (int i = 0; i < (*arrayPtr).size(); i++) {
+                    int ci = (*arrayPtr)[i];
+                    bool hidden = false;
+                    for (int i = 0; i < m_scene->getNumHiddenVertices(); i++)
+                        if (m_scene->getHiddenVertex(i) == ci) {
+                            hidden = true;
+                            break;
+                        }
+                    if (hidden)
+                        continue;
                     state.setHandleColor(m_scene, ci);
                     glLoadName(ci);
                     state.drawHandle(Vec3f(point()->getValue(ci)));
@@ -291,6 +312,15 @@ NodeCoordinate::getHandle(int handle, int *constraint, int *field)
         if (handle >= 0 && handle < ci->getSFSize()) {
             Vec3f first = point()->getValue(ci->getValue(handle));
             return first;
+        }
+    }
+    if (mode == SELECTION_HANIM_JOINT_WEIGHT) {
+        if (handle >= 0 && handle < point()->getSFSize()) {
+            Vec3f ret((Vec3f)point()->getValue(handle));
+            TheApp->PrintMessageWindowsVertex(IDS_VERTEX_SELECTED, "point", 
+                                              handle, 
+                                              (Vec3f)point()->getValue(handle));
+            return ret;
         }
     }
     return Vec3f(0.0f, 0.0f, 0.0f);

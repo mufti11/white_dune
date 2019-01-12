@@ -185,6 +185,7 @@ Dune has been successfully compiled with
 - gcc/g++ 7.3.0
 - gcc/g++ 8.2.1
 - clang 6.0.1
+- Apple LLVM version 7.3.0
 - MIPSpro 7.30 (SGI IRIX)
 - Sun WorkShop 6 update 2 C/C++ 5.3 (SUN SOLARIS) (make depend fails (harmless))
 - HP ANSI C++ B3910B A.03.55/HP92453-01 B.11.11.10 HP C Compiler (HP-UX)
@@ -319,6 +320,7 @@ There are some unusual options for running configure
 
 --with-oldmotif            used for compatibility with old motif/lesstif versions
 --without-devil 	   do not use DevIL library to load textureimages
+--without-omp              do not use OpenMP (usefull on raspberry PI)
 --without-cgal             do not use CGAL library e.g. to use convex hull
 --without-png_handle_unknown  use if link fails cause of png_handle_unknown
 --with-sdljoystick         use SDL joystick code
@@ -410,6 +412,13 @@ do not work on big endian machines (e.g. Apple PowerMac, Sun SPARC, SGI MIPS)
 Do not use the CGAL library. CGAL is used for important modelling functions
 like "convex hull". It is usefull to compile without CGAL cause a lot of
 CGAL implemantations crashes the valgrind memory debugger.
+
+=============
+--without-omp
+=============
+
+Do not use OpenMP. OpenMP speeds up the Array.find() routine, but on
+system like raspberry PI it tends to overheat the processors.
 
 ============================
 --without-png_handle_unknown 

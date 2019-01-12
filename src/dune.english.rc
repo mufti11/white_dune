@@ -96,7 +96,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "C&opy\tCtrl+C",                       ID_DUNE_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",                      ID_DUNE_EDIT_PASTE
-        POPUP "Paste symetric"
+        POPUP "Paste symmetric"
         BEGIN
             MENUITEM "&x (red)",                        ID_DUNE_EDIT_PASTE_SYMMETRIC_X
             MENUITEM "&y (green)",                      ID_DUNE_EDIT_PASTE_SYMMETRIC_Y
@@ -314,7 +314,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-        POPUP "Make symetric"
+        POPUP "Make symmetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -329,6 +329,7 @@ BEGIN
             MENUITEM "Union (needs Group wih 2 meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Movement"
     BEGIN
@@ -424,7 +425,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "C&opy\tCtrl+C",                       ID_DUNE_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",                      ID_DUNE_EDIT_PASTE
-        POPUP "Paste symetric"
+        POPUP "Paste symmetric"
         BEGIN
             MENUITEM "&x",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_X
             MENUITEM "&y",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_Y
@@ -620,7 +621,7 @@ BEGIN
         MENUITEM "&Copy\tCtrl+C",                       ID_DUNE_EDIT_COPY
         MENUITEM "Copy branch to root",                 ID_DUNE_EDIT_COPY_BRANCH_TO_ROOT
         MENUITEM "&Paste\tCtrl+V",                      ID_DUNE_EDIT_PASTE
-        POPUP "Paste symetric"
+        POPUP "Paste symmetric"
         BEGIN
             MENUITEM "&x",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_X
             MENUITEM "&y",                              ID_DUNE_EDIT_PASTE_SYMMETRIC_Y
@@ -1250,7 +1251,7 @@ BEGIN
     END
     POPUP "&Actions"
     BEGIN
-        MENUITEM "x symmetric Modelling",                ID_X_SYMETRIC
+        MENUITEM "x symmetricial Modelling",             ID_X_SYMETRIC
         POPUP "Create Shapes at zero"
         BEGIN
             MENUITEM "x",                                ID_CREATE_AT_ZERO_X
@@ -1379,7 +1380,11 @@ BEGIN
         END
 //        MENUITEM "Interpolator time shift",            ID_TIME_SHIFT
         MENUITEM "Field pipe",                           ID_PIPE
-        MENUITEM "Set HanimJoint weight",                ID_HANIM_JOINT_WEIGHT
+        POPUP "HanimJoint weight"
+        BEGIN
+            MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
+            MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
+        END
         MENUITEM "Set Viewoint",                         ID_VIEWPOINT
         MENUITEM "Xray rendering",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Set path of all URLs to",              ID_SET_URL
@@ -1397,7 +1402,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-        POPUP "Make symetric"
+        POPUP "Make symmetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -1412,6 +1417,7 @@ BEGIN
             MENUITEM "Union (needs Group wih 2 meshes)", ID_CSG_UNION
         END
 #endif
+        MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
     END
     POPUP "&Convert"
     BEGIN
@@ -1767,7 +1773,7 @@ BEGIN
     EDITTEXT        IDC_HANDLE_SCALE,128,122,45,14,ES_AUTOHSCROLL
     LTEXT           "Humanoid Handle Scale:",IDC_STATIC,20,146,105,8
     EDITTEXT        IDC_HUMANOID_JOINT_SCALE,128,145,45,14,ES_AUTOHSCROLL
-    LTEXT           "Epsilon for symemtric modelling:",IDC_STATIC,20,169,100,
+    LTEXT           "Epsilon for symmetricial modelling:",IDC_STATIC,20,169,100,
                     8
     EDITTEXT        IDC_HANDLE_EPSILON,128,168,45,14,ES_AUTOHSCROLL
     AUTOCHECKBOX    "Use NURBS weights == 1", IDC_WEIGHTS_1, 20,184,100,12
@@ -1998,7 +2004,7 @@ BEGIN
     PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
                     IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "use Kernighan/Richite formating",IDC_K_AND_R,
+    AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
                     19,24,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
@@ -2010,7 +2016,7 @@ BEGIN
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
     AUTOCHECKBOX    "skip last part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Material name genateration on non VRML/X3D export",
+    GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
     LTEXT           "Download directory",
                     IDC_STATIC,19,190,65,10
@@ -2563,7 +2569,7 @@ BEGIN
 #ifdef HAVE_AFLOCK
     PUSHBUTTON      "Aflock Setting",IDC_OPTIONS_AFLOCK,8,277,60,13
 #endif
-    GROUPBOX        "Input Device Settings",IDC_STATIC,0,41,307,157
+    GROUPBOX        "Input Device Settings",IDC_STATIC,0,41,307,207
 END
 
 IDD_AFLOCK DIALOG DISCARDABLE  0, 0, 156, 230

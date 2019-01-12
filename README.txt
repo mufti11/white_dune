@@ -4902,5 +4902,25 @@ Fixed errors in Color c/c++/java export
 
 Fixed error in selection
 
+Fixed error in rendering a incomplete HAnimHummanoid
+
+Added red/cyan anaglyph rendering
+
+Fixed error in SceneTreeView::UpdateNode
+
+Added multiple right mouse buttom selection
+
+Added human.x3d (made with makehuman) to documentation
+
+Optimized HAnimHumanoid no weight handle display
+
+Fixed HAnimHumanoid rendering if skin.Shape.IndexedFaceSet.coord is selected
+
+Fixed X3D/XML component statement
+
+Added improvements in the HAnimJoint.skinCoord* handling
+
+Fixed SceneTreeView selection of HAnimHumanoid joint
+
 contact: MUFTI <mufti@users.ourproject.org>
 

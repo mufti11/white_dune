@@ -39,9 +39,10 @@
 #include "FieldCommand.h"
 #include "Matrix.h"
 #include "Util.h"
+#include "Field.h"
+#include "Path.h"
 #include "NodeViewpoint.h"
 #include "NodeNavigationInfo.h"
-#include "Field.h"
 #include "ExposedField.h"
 #include "NodeShape.h"
 #include "NodeIndexedFaceSet.h"
@@ -95,6 +96,7 @@ NodeHAnimHumanoid::NodeHAnimHumanoid(Scene *scene, Proto *def)
     m_numMeshes = 0;
     m_matrixDirty = true;
     m_material = NULL;
+    m_hasNoWeightArrayDirty = true;
 }
 
 NodeHAnimHumanoid::~NodeHAnimHumanoid()
@@ -404,6 +406,7 @@ NodeHAnimHumanoid::setField(int index, FieldValue *value, int cf)
         TransformNode::setField(index, value, cf);
     else
         Node::setField(index, value, cf);
+    m_hasNoWeightArrayDirty = true;
 }
 
 static bool searchDirty(Node *node, void *data)
@@ -419,6 +422,9 @@ static bool searchDirty(Node *node, void *data)
 void
 NodeHAnimHumanoid::preDraw()
 {
+    if (skin()->getSize() == 0)
+        return;
+
     bool matrixDirty = false;
     NodeList *childList = getBasicChildren()->getValues();
 
@@ -455,6 +461,17 @@ NodeHAnimHumanoid::preDraw()
 void
 NodeHAnimHumanoid::draw(int pass)
 {
+    int type = m_scene->getSelection()->getNode()->getType();
+    if ((type == VRML_COORDINATE) || (type == VRML_COLOR) || 
+                                     (type == X3D_COLOR_RGBA)) {
+        glEnable(GL_ALPHA_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glAlphaFunc(GL_NOTEQUAL, 0);
+    }
+    if (skin()->getSize() == 0)
+        return;
+
     NodeList *childList = getBasicChildren()->getValues();
     int n = childList->size();
 
@@ -559,6 +576,7 @@ NodeHAnimHumanoid::update()
 {
     for (int i = 0; i < m_meshNodes.size(); i++)
         m_meshNodes[i]->setMeshDirty();
+     m_hasNoWeightArrayDirty = true;
 }
 
 void
@@ -649,6 +667,8 @@ public:
 static bool searchNoWeight(Node *node, void *data)
 {
     NoWeightData *noWeight = (NoWeightData *)data;
+    if (noWeight->noWeight == false)
+        return false;
     if (node->getType() == X3D_HANIM_JOINT) {
         NodeHAnimJoint *joint = (NodeHAnimJoint *)node;
         if (joint->skinCoordIndex()->find(noWeight->vertex) > -1) {
@@ -657,6 +677,25 @@ static bool searchNoWeight(Node *node, void *data)
         }
     }
     return true;     
+}
+
+void
+NodeHAnimHumanoid::buildJointHasWeightArray(void)
+{
+    if (!m_hasNoWeightArrayDirty)
+        return; 
+    m_hasNoWeightArray.resize(0);
+    for (int i = 0; i < m_numMeshes; i++) {
+        MFInt32 *ci = m_meshes[i]->getCoordIndex();
+        for (int j = 0; j < ci->getSize(); j++) {
+            int index = ci->getValue(j);
+            if (index < 0)
+                continue;
+            if (jointHasNoWeight(index))
+                m_hasNoWeightArray.append(index);
+        }  
+    }
+    m_hasNoWeightArrayDirty = false;
 }
 
 bool              

@@ -736,6 +736,7 @@ with_iconscale2
 with_devil
 with_cgal
 with_cgalheaders
+with_omp
 with_png_handle_unknown
 with_sdljoystick
 with_helpurl
@@ -1439,6 +1440,7 @@ Optional Packages:
 --without-devil           do not use DevIL library to load textureimages
 --without-cgal            do not use CGAL library e.g. to use convex hull
 --with-cgalheaders        use the headers only version of the CGAL library
+--without-omp             do not use OpenMP (usefull on raspberry PI)
 --without-png_handle_unknown  use if link fails cause of png_handle_unknown
 --with-sdljoystick 	  use SDL joystick code
 --with-helpurl=\"helpurl\"  URL of the \"docs\" directory
@@ -3773,6 +3775,13 @@ fi
 # Check whether --with-cgalheaders was given.
 if test "${with_cgalheaders+set}" = set; then :
   withval=$with_cgalheaders; CGALHEADERS=yes
+fi
+
+
+
+# Check whether --with-omp was given.
+if test "${with_omp+set}" = set; then :
+  withval=$with_omp; OMP=no
 fi
 
 
@@ -7171,6 +7180,61 @@ if test "X_$X11_ERROR" = "X_1" ; then
 EOF
  exit 1
 
+fi
+
+HAVE_OMP_FLAGS=""
+if test "X_$OMP" != "X_no" ; then
+ ac_fn_c_check_header_mongrel "$LINENO" "omp.h" "ac_cv_header_omp_h" "$ac_includes_default"
+if test "x$ac_cv_header_omp_h" = xyes; then :
+  HAVE_OMP_FLAGS=-fopenmp;$as_echo "#define HAVE_OMP 1" >>confdefs.h
+
+fi
+
+
+ if test "X_$HAVE_OMP_FLAGS" != ""; then
+     CFLAGS="$CFLAGS $HAVE_OMP_FLAGS"
+     CXXFLAGS="$CXXFLAGS $HAVE_OMP_FLAGS"
+     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lgomp" >&5
+$as_echo_n "checking for main in -lgomp... " >&6; }
+if ${ac_cv_lib_gomp_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lgomp  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_gomp_main=yes
+else
+  ac_cv_lib_gomp_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gomp_main" >&5
+$as_echo "$ac_cv_lib_gomp_main" >&6; }
+if test "x$ac_cv_lib_gomp_main" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBGOMP 1
+_ACEOF
+
+  LIBS="-lgomp $LIBS"
+
+fi
+ac_cv_lib_gomp=ac_cv_lib_gomp_main
+
+ fi
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -ldl" >&5

@@ -84,9 +84,13 @@ static int testCommandlineStereo(int argc, char** argv)
                 return RED_BLUE_ANAGLYPH_STEREO;
             else if (strcmp(argv[i],"blue_red") == 0)
                 return BLUE_RED_ANAGLYPH_STEREO;
+            else if (strcmp(argv[i],"red_cyan") == 0)
+                return RED_CYAN_ANAGLYPH_STEREO;
+            else if (strcmp(argv[i],"cyan_red") == 0)
+                return CYAN_RED_ANAGLYPH_STEREO;
             else {
                 errorprintf(stderr,
-                      "wrong glasses type. Currently supported: red_green green_red red_blue blue_red");
+                      "wrong glasses type. Currently supported: red_green green_red red_blue blue_red red_cyan cyan_red");
                 return NO_STEREO;
             }
                 
@@ -209,6 +213,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
       case GREEN_RED_ANAGLYPH_STEREO:
       case RED_BLUE_ANAGLYPH_STEREO:
       case BLUE_RED_ANAGLYPH_STEREO:
+      case RED_CYAN_ANAGLYPH_STEREO:
+      case CYAN_RED_ANAGLYPH_STEREO:
       case QUAD_BUFFER_STEREO:
       case FORCE_QUAD_BUFFER_STEREO:
         wantStereo = true; 
@@ -309,6 +315,8 @@ int main(int argc, char *argv[])
       case GREEN_RED_ANAGLYPH_STEREO:
       case RED_BLUE_ANAGLYPH_STEREO:
       case BLUE_RED_ANAGLYPH_STEREO:
+      case RED_CYAN_ANAGLYPH_STEREO:
+      case CYAN_RED_ANAGLYPH_STEREO:
       case QUAD_BUFFER_STEREO:
       case FORCE_QUAD_BUFFER_STEREO:
         wantStereo = true; 

@@ -49,6 +49,8 @@
 #include "SFMFTypes.h"
 #include "ComposedGeometryMacros.h"
 
+class Matrix;
+
 enum {
     UNION,
     INTERSECTION,
@@ -90,6 +92,13 @@ public:
     ComposedGeometryProtoMacro()
     x3domGeometryCommonFieldIndex()
     FieldIndex normalUpdateMode;
+};
+
+class FacesetAndMatrix {
+public:
+    NodeIndexedFaceSet *node;
+    NodeMaterial *material;
+    Matrix matrix;
 };
 
 class NodeIndexedFaceSet : public MeshBasedNode, Colored {
@@ -176,6 +185,8 @@ public:
     bool            buildQuad(void);
     bool            canSplitFace(int face);
     bool            canSplitFaces(void);
+
+    static Node    *simpleJoin(Array<FacesetAndMatrix> data);
 
     bool            checkMidpoint(Vec3f midPoint, int jLoop, int nLoop,
                                   int point1, int point2,

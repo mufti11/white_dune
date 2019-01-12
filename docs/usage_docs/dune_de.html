@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- last update: white_dune-0.99pl1111
+ last update: white_dune-0.99pl1262
 -->
 <head>
  <title>"white_dune" Dokumentation</title> 
@@ -3333,10 +3333,23 @@ Befehl, weil die haupts&auml;chliche Anwendung die menschliche Animation ist.
 <br>
 Aber menschliche Animation erfordert eine Menge Gelenke, deswegen wird
 eine Blume mit zwei Gelenken gezeigt.<br>
+Wenn Sie menschliche Animation ausprobieren wollen, k&ouml;nnen Sie
+ein 3D-Modell (hergestellt mit "makehuman") im 
+<a href="human.x3d">human.x3d im docs/usage_docs Directory</a> benutzen.
+<br>
+Eine Geh-Animation (erweitert mit der "Nancy"-Animation von Cindy Ballreich)
+ist verf&uuml;gbar als
+<a href="human.x3dv">human.x3dv im docs/usage_docs Directory</a>.
+Diese Animation wurde an der H&uuml;fte ver&auml;ndert, um die breitbeinige
+Position der Ausgabe von "makehuman" auszugleichen.
+<br>
+Zur&uuml;ck zur verbogenen Blume:
+<br>
 Zuerst starten wir mit einem IndexedFaceSet einer Blume 
 (erzeugt mit einem SuperRevolver, konvertiert zu einem modifizierten 
-Nurbs(Patch)Surface konvertiert zu IndexedFaceSet).
-<br>
+Nurbs(Patch)Surface konvertiert zu IndexedFaceSet).<br>
+Nat&uuml;rlich funktioniert das Verfahren auch mit einem anderen
+IndexedFaceSet.<br>
 <img src="flower1.png"><br>
 Als n&auml;chstes HAnimHumanoid Knoten mit 
 <em>Erzeugen -&gt; X3D misc components
@@ -3416,7 +3429,7 @@ wurde gesetzt durch die vorherige HAnimJoint-Auswahl. Klicken Sie OK.
 Die Blume ist fertig, aber HAnimHumanoid.skinCoord muss gesetzt werden.
 <br>
 <img src="flower17.png"><br>
-Sie m%uuml;ssen HAnimHumanoid.skin.Shape.IndexedFaceSet.Coordinate anw&auml;hlen
+Sie m&uuml;ssen HAnimHumanoid.skin.Shape.IndexedFaceSet.Coordinate anw&auml;hlen
 und <em>Bearbeiten -&gt; DEF</em> benutzen.
 <br>
 <img src="flower18.png"><br>

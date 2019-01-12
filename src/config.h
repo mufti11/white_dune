@@ -51,6 +51,9 @@
 /* Define if you have the z Library  */
 #define HAVE_LIBZ 1
 
+/* Define if you have OpenMP */
+#define HAVE_OMP 1
+
 /* define if you use the spaceball library */
 #define HAVE_LIBSBALL 1
 
@@ -316,7 +319,7 @@
 #define HAVE_TERM "/usr/bin/lxterminal --no-remote "
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
 
 /* object editor for sound (.wav/.midi) files */
 #define HAVE_SOUND_EDITOR "/usr/bin/audacity"
@@ -531,7 +534,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99pl1248"
+#define HAVE_DUNE_VERSION "white_dune 0.99rc1276"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

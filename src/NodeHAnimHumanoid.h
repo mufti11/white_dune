@@ -111,6 +111,10 @@ public:
     virtual void      createMeshes(bool cleanDoubleVertices = true,
                                    bool triangulateMesh = true);
 
+    void              buildJointHasWeightArray(void);
+    Array<int>       *getJointHasNoWeightArray(void) 
+                          { return &m_hasNoWeightArray; }
+
     bool              jointHasNoWeight(int vertex);
     Node             *getJointParent(Node *node);
 
@@ -132,11 +136,13 @@ public:
     fieldMacros(SFString, version,     ProtoHAnimHumanoid)
     fieldMacros(MFNode,   viewpoints,  ProtoHAnimHumanoid)
 
-    int m_numMeshes;
-    MyMeshPtr *m_meshes;
+    int           m_numMeshes;
+    MyMeshPtr    *m_meshes;
     Array<MeshBasedNode *> m_meshNodes;
-    MFVec3f **m_origVertices;
+    MFVec3f     **m_origVertices;
     NodeMaterial *m_material;
+    Array<int>    m_hasNoWeightArray;
+    bool          m_hasNoWeightArrayDirty;
 };
 
 #endif
