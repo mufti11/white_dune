@@ -716,6 +716,14 @@ swTreeSetItemName(STREE tree, STREEITEM item, const char* name)
     invalidateItem(tree,item);
 }
 
+extern char *
+swTreeGetItemName(STREE tree, STREEITEM item)
+{
+    if (item == NULL)
+        return NULL;
+    return item->name;
+}
+
 static int
 drawTreeRec(STree *tree, SDC dc, STreeItem *item, int x, int y)
 {

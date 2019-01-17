@@ -135,7 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc README.txt COPYING.txt docs
+%doc README.txt COPYING docs
 
 /usr/bin/dune
 /usr/bin/dune4kids

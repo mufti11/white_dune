@@ -532,6 +532,7 @@ extern STREEITEM swTreeHitTest(STREE tree, int x, int y);
 extern void swTreeSetOverlayImage(STREE tree, int index);
 extern void swTreeSetFlags(STREE tree, STREEITEM item, int mask, int flags);
 extern void swTreeSetItemName(STREE tree, STREEITEM item, const char* name);
+extern char *swTreeGetItemName(STREE tree, STREEITEM item);
 
 
 /* header control */

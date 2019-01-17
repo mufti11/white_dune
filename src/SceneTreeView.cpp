@@ -378,6 +378,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             item = swTreeGetNextItem(m_tree, item);             
     }
 
+    bool endloops = false;
     for (int i = start; i < len;) {
         int field = path[i++];
         if (node && node->isPROTO()) {
@@ -398,28 +399,74 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             item = NULL;
             break;
         }
+        bool isNode = false;
+        STREEITEM tmpItem = item;
+        Node *oldNode = node;
         if (i < len) {
             int pos = path[i++]; 
-            Node *oldNode = node;
             if (value->getType() == SFNODE) {
                 node = ((SFNode *) value)->getValue();
                 item = swTreeGetFirstChild(m_tree, item);
             } else if ((value->getType() == MFNODE) && (pos > -1)) {
                 node = ((MFNode *) value)->getValue(pos);
                 item = swTreeGetFirstChild(m_tree, item);
+                if (item && strcmp(swTreeGetItemName(m_tree, item), 
+                                   "metadata") == 0)
+                    item = swTreeGetNextItem(m_tree, item);
             } else
                break;
         }
+        bool showAllFields = TheApp->GetShowAllFields() || 
+                             oldNode->showFields();
+        if (showAllFields) {
+            Proto *proto = oldNode->getProto();
+            {
+                STREEITEM tmp = swTreeGetFirstChild(m_tree, item);
+                if (!isNull(tmp)) {
+                    item = tmp;
+                    if (value->getType() == MFNODE) {
+                        MFNode* mfNode = (MFNode *)value;
+                        for (int n = 0; n < mfNode->getSize(); n++) { 
+                            if (n == 0) {
+                                TreeNode *t = (TreeNode *) 
+                                              swTreeGetItemData(m_tree, item);
+                                if (t && t->node && t->node->isEqual(node))
+                                   break;
+                                continue;
+                            }    
+                            for (; item != NULL; 
+                                item = swTreeGetNextItem(m_tree, item)) {
+                                tmpItem = item;
+                                if (tmpItem) {
+                                    item = tmpItem;
+                                    TreeNode *t = (TreeNode *) 
+                                        swTreeGetItemData(m_tree, item);
+                                    if (t && t->node && t->node->isEqual(node))
+                                        isNode = true;
+                                    if (t->node == updatePath->getNode()) {
+                                        endloops=true;
+                                        break;
+                                    }
+                                    if (isNode && t && t->field == field) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (endloops)
+            break;
         // search for field
-        STREEITEM tmpItem = item;
-        bool isNode = false;
         for (; item != NULL; item = swTreeGetNextItem(m_tree, item)) {
             TreeNode *t = (TreeNode *) swTreeGetItemData(m_tree, item);
             if (t && t->node && t->node->isEqual(node))
-               isNode = true;
+                isNode = true;
             if (isNode && t && t->field == field) {
-               tmpItem = item;
-               break;
+                tmpItem = item;
+                break;
             }
         }
         if ((tmpItem != NULL) && (tmpItem == item))
@@ -456,6 +503,9 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
     STREEITEM fieldItem;
     Proto *def = node->getProto();
     bool x3d = m_scene->isX3d();
+    bool showAllFields = TheApp->GetShowAllFields() || node->showFields();
+    if (node == m_scene->getRoot())
+        showAllFields = false;
 
     for (int i = 0; i < def->getNumFields(); i++) {
         Field *field = def->getField(i);
@@ -464,10 +514,27 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
         if (field->getType() == MFNODE) {
             MFNode *value = (MFNode *) node->getField(i);
             const char *name = (const char *) field->getName(x3d);
-            InsertNodeListRec(value->getValues(), i, item);
+            if (showAllFields) {
+                fieldItem = swTreeInsertItem(m_tree, SW_INSERT_LAST_CHILD,
+                                             item, name);
+                swTreeSetItemData(m_tree, fieldItem, new TreeNode(i, NULL));
+                swTreeSetItemImage(m_tree, fieldItem, m_bitmapItems - 2, 
+                                   m_bitmapItems - 2);
+                InsertNodeListRec(value->getValues(), i, fieldItem);
+            } else
+                InsertNodeListRec(value->getValues(), i, item);
         } else if (field->getType() == SFNODE) {
             SFNode *value = (SFNode *) node->getField(i);
             const char *name = (const char *) field->getName(x3d);
+            if (showAllFields) {
+                fieldItem = swTreeInsertItem(m_tree, SW_INSERT_LAST_CHILD,
+                                             item, name);
+                swTreeSetItemData(m_tree, fieldItem, new TreeNode(i, NULL));
+                swTreeSetItemImage(m_tree, fieldItem, m_bitmapItems - 2, 
+                                   m_bitmapItems - 2);
+                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD,
+                              fieldItem);
+            } else
             InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
         }
     }
@@ -798,4 +865,5 @@ void SceneTreeView::OnItemExpanded(NMHDR* pNMHDR, LRESULT* pResult)
     *pResult = 0;
 }
 #endif
+
 

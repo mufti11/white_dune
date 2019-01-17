@@ -4922,5 +4922,7 @@ Added improvements in the HAnimJoint.skinCoord* handling
 
 Fixed SceneTreeView selection of HAnimHumanoid joint
 
+Fixed SceneTreeView display of HAnimHumanoid
+
 contact: MUFTI <mufti@users.ourproject.org>
 

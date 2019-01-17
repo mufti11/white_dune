@@ -3369,6 +3369,28 @@ swTreeSetItemName(STREE tree, STREEITEM item, const char* name)
     TreeView_SetItem(tree->hWnd, &info);
 }
 
+extern char *
+swTreeGetItemName(STREE tree, STREEITEM item)
+{
+    static const size_t maxLen = 128;
+    WCHAR buffer[/*maxLen*/ 128 + 1];
+
+    if (item == NULL)
+        return NULL;
+
+    TV_ITEM info;
+    info.hItem = (HTREEITEM)item;
+    info.mask = TVIF_TEXT;
+    info.cchTextMax = maxLen;
+    info.pszText = &buffer[0];
+
+    TreeView_GetItem(tree->hWnd, &info);
+
+    return info.pszText;
+}
+
+
+
 extern void
 swTreeSetImageList(STREE tree, SBITMAP bitmap, SBITMAP mask, int width, int height, int count)
 {

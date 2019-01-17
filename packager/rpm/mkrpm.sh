@@ -61,7 +61,7 @@ fi
 
 RPM_BUILD_ROOT='$RPM_BUILD_ROOT'
 
-cat > /tmp/$VERSION5.spec << EOT 
+cat > /tmp/wdune.spec << EOT 
 Summary: A graphical X3D/VRML97 editor, simple 3D modeler and animation tool
 Name: wdune
 %global extraver pl$VERSION4
@@ -105,42 +105,32 @@ Requires: bitstream-vera-sans-fonts
 The white_dune program is a graphical X3D/VRML97 editor, 
 simple extrusion/NURBS/Superformula 3D modeler and animation tool.
 With white_dune you can create/change 3D objects and animate them (in a easy 
-way if you choose the -4kids GUI).The result can be shown in any webgl enabled 
+way if you choose the -4kids GUI). The result can be shown in any WebGL enabled 
 web browser or can be converted to the RIB format for movie creation. 
 X3D and VRML97 are the ISO standard for displaying 3D data over the web. 
-With Cobweb or X3DOM it can displayed in any webgl enabled web browser. 
-This includes animation, real-time interaction and multimedia (image, movie, 
-sound). VRML97 can be written by popular programs like maya, catia, 
-3D Studio MAX, cinema4D, blender, wings3d and others, but (unlike white_dune) 
-most of this programs support only a small part of the VRML97 features.
-Dune can read X3DV/VRML97 files, display and let the user change the 
-scene-graph and all fields of all nodes. 
-Some documentation how to use dune is included.
-The most powerful 3D modeling features of white_dune support the 
-VRML97 Amendment1 style NURBS nodes and Superformula based PROTOs. 
-This is mainly convenient for building some rounded shapes.
-For artistic mesh modeling work, the usage of a static 3D modeler with 
-VRML97 export features may be useful. The result can be either used unchanged
-in a bigger VRML97 file via the Inline command without breaking the 
-tool-chain or improved in white_dune.
-Examples for free (speech) static 3D modelers with VRML97 export available 
-under Linux are blender, wings3d, art of illusion or sharp construct.
+With Cobweb or X3DOM it can displayed in any WebGL enabled web browser. 
+
 Under Linux, white_dune support some 3D input-devices like joysticks, game-pads
 or all devices supported via the Xinput protocol.
 White_dune support quad-buffer stereo visuals. Under Linux, this can be used
-with Elsa Revelator or Crystal eyes shutter-glasses and special drivers for 
-expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
-This version of white_dune support both English and German menus and messages.
-Information how to translate white_dune to foreign languages can be found under
-docs/developer_docs/dune_developer.html#localisation
-Partitial translations of menus exist for French, Italian and Portuguese.
+with Elsa Revelator, Crystal Eyes or Nvidia 3D Vision shutter-glasses and 
+special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
 %prep
 %setup -q
 
 
 
 %build
-%configure $OPTIMIZE --without-devil --with-vrmlbrowser=firefox --with-helpurl="/usr/share/doc/wdune/docs/"  --with-protobaseurl="/usr/share/doc/wdune/docs" --with-checkincommand="ci"  --with-imageeditor="kolourpaint" --with-imageeditor4kids="kolourpaint" --with-soundeditor=audacity
+%configure \
+    --with-optimization \
+    --without-devil \
+    --with-vrmlbrowser=firefox \
+    --with-helpurl="/usr/share/doc/wdune/docs/" \
+    --with-protobaseurl="/usr/share/doc/wdune/docs" \
+    --with-checkincommand="ci" \
+    --with-imageeditor="kolourpaint" \
+    --with-imageeditor4kids="kolourpaint" \
+    --with-soundeditor=audacity
 %make_build 
 
 %install
@@ -171,33 +161,32 @@ $RPM_BUILD_ROOT//%{_datadir}/applications/dune.desktop
 #/usr/lib/rpm/find-debuginfo.sh
 
 %files
-%defattr(-,root,root)
 %doc README.txt docs
-%license COPYING.txt
+%license COPYING
 
-/%{_bindir}/dune
-/%{_bindir}/dune4kids
-/%{_bindir}/illegal2vrml
-/%{_datadir}/applications/dune.desktop
-/%{_datadir}/pixmaps/dune.png
-/%{_datadir}/applications/dune4kids.desktop
-/%{_datadir}/pixmaps/dune4kids.png
-/%{_datadir}/man/man1/dune.1*
-/%{_datadir}/man/man1/dune4kids.1*
-/%{_datadir}/man/man1/illegal2vrml.1*
+%{_bindir}/dune
+%{_bindir}/dune4kids
+%{_bindir}/illegal2vrml
+%{_datadir}/applications/dune.desktop
+%{_datadir}/pixmaps/dune.png
+%{_datadir}/applications/dune4kids.desktop
+%{_datadir}/pixmaps/dune4kids.png
+%{_mandir}/man1/dune.1*
+%{_mandir}/man1/dune4kids.1*
+%{_mandir}/man1/illegal2vrml.1*
 #/usr/lib/debug/usr/bin/dune.debug
 
 %changelog
-* Wed Sep 20 2017 J. Scheurich <mufti11@web.de> 0.99pl765
+* Wed Sep 20 2017 J. Scheurich <mufti11@web.de> 0.99pl1276
 -- Initial packaging
 Release: 1%{?dist}
 
 EOT
 
-if rpm -ba /tmp/$VERSION5.spec ; then
+if rpm -ba /tmp/wdune.spec ; then
    echo > /dev/null
 else
-   rpmbuild -ba /tmp/$VERSION5.spec
+   rpmbuild -ba /tmp/wdune.spec
 fi
-rm -f /tmp/$VERSION.spec
+#rm -f /tmp/wdune.spec
 
