@@ -711,7 +711,6 @@ Scene::readInline(NodeInline *node)
                     double oldUnitLength = getUnitLength();
                     pushUnitLength();
                     TheApp->setImportFile(filename);
-//                    parse(file, node, -1, SCAN_FOR_INLINE);
                     parse(file, node, -1, SCAN_FOR_BOTH);
                     node->setUnitLength(oldUnitLength / getUnitLength());
                     popUnitLength();

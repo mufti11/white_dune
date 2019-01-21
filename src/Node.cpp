@@ -2973,12 +2973,15 @@ NodeData::receiveEvent(int eventIn, double timestamp, FieldValue *value)
     EventIn *evIn = m_proto->getEventIn(eventIn);
     if ((m_isEventIns.size() > 0) && (m_isEventIns[eventIn] != NULL))
         evIn = m_isEventIns[eventIn];
-    if (evIn && (evIn->getFlags() & FF_IS))
-        for (int i = 0; i < evIn->getNumIs(); i++) {
-            Node *isNode = evIn->getIsNode(i);
-            isNode->receiveEvent(evIn->getIsField(i), timestamp, value);
+    if (evIn && (evIn->getFlags() & FF_IS)) {
+        if (getType() != VRML_SCRIPT) {
+            for (int i = 0; i < evIn->getNumIs(); i++) {
+                Node *isNode = evIn->getIsNode(i);
+                isNode->receiveEvent(evIn->getIsField(i), timestamp, value);
+
+            }
         }
-    else {
+    } else {
         if (field != -1) {
             // set the appropriate field
             setField(field, value);
@@ -3273,6 +3276,8 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                         bool searchInRest, bool skipBranch, 
                         bool skipProto, bool callSelf, bool skipInline)
 {
+    if (this == NULL)
+        return false;
     bool searchOn = true;
     bool handleInline = !skipInline;
     if (searchOn && (!skipProto) && hasProtoNodes()) {

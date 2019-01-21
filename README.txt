@@ -4924,5 +4924,9 @@ Fixed SceneTreeView selection of HAnimHumanoid joint
 
 Fixed SceneTreeView display of HAnimHumanoid
 
+Fixed error in DEF/USE handling of XML parser
+
+Fixed crash in recursive Node::receiveEvent
+
 contact: MUFTI <mufti@users.ourproject.org>
 

@@ -1,9 +1,9 @@
 This file is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it.
 
-This directory contains various UNIX shell script commandline tools.
-They depend (beside on common unix shell commands like sh, cp or rm) on the 
-following programs:
+This directory contains various UNIX shell script command-line tools.
+They depend (beside on common unix shell commands like sh, cp or rm,
+and on the following programs:
 
 collectViewpoints.sh  (collect viewpoints to Transform animations)
                       awk           (GNU Awk 3.1.1 is known working)

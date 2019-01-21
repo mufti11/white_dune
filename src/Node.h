@@ -785,8 +785,10 @@ public:
     virtual int       getNumVertex(void) { return 0; }
     virtual Vec3f     getVertex(int i) { return Vec3f(0.0f, 0.0f, 0.0f); }
 
-    virtual void      sendEvent(int eventOut, double timestamp, FieldValue *value);
-    virtual void      receiveEvent(int eventIn, double timestamp, FieldValue *value);
+    virtual void      sendEvent(int eventOut, double timestamp, 
+                                FieldValue *value);
+    virtual void      receiveEvent(int eventIn, double timestamp, 
+                                   FieldValue *value);
 
     int               writeCSendEvent(int f, int indent, int languageFlag, 
                                       EventIn *target, EventOut *source, 

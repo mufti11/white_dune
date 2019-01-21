@@ -116,19 +116,23 @@ NodeInline::draw(int pass)
     glPushName(url_Field());  // field offset
 
     for (int i = 0; i < m_loadedNodes->size(); i++)
-        m_loadedNodes->get(i)->bind();
+        if (m_loadedNodes->get(i))
+            m_loadedNodes->get(i)->bind();
 
     glPushName(0);
     if (m_unitLength > 0)
         glScaled(1 / m_unitLength, 1 / m_unitLength, 1 / m_unitLength);
     for (int i = 0; i < m_loadedNodes->size(); i++) {
-        glLoadName(i);
-        m_loadedNodes->get(i)->draw(pass);
+        if (m_loadedNodes->get(i)) {
+            glLoadName(i);
+            m_loadedNodes->get(i)->draw(pass);
+        }
     }
     glPopName();
 
     for (int i = 0; i < m_loadedNodes->size(); i++)
-        m_loadedNodes->get(i)->unbind();
+        if (m_loadedNodes->get(i))
+            m_loadedNodes->get(i)->unbind();
 
     glPopName();
 }
@@ -142,7 +146,8 @@ NodeInline::preDraw()
     if (m_unitLength > 0)
         glScaled(1 / m_unitLength, 1 / m_unitLength, 1 / m_unitLength);
     for (int i = 0; i < m_loadedNodes->size(); i++)
-        m_loadedNodes->get(i)->preDraw();
+        if (m_loadedNodes->get(i))
+            m_loadedNodes->get(i)->preDraw();
 }
 
 void

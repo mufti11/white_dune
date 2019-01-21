@@ -4052,7 +4052,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
         /* check for a USE */
         for (int i = 0; attrib[i] != NULL; i += 2) { 
             if (strcmp("USE",attrib[i]) == 0) { //"USE" 
-                node = scene->use(attrib[i + 1]);
+                node = scene->use(checkName(attrib[i + 1]));
                 MyString name = "";
                 name += attrib[i + 1];
                 checkName(name);

@@ -228,7 +228,9 @@ Interpolator::getInterpolatedFieldValue(float k)
     m_fraction = k;
     float *values = new float[getNumChannels()];
     interpolate(k, values);
-    return createKey(values);
+    FieldValue *val = createKey(values);
+    val->ref();
+    return val;
 }
 
 void
@@ -345,7 +347,8 @@ Interpolator::insertKey(int pos, float key, const float *values, int numValues)
 
     MFFloat *newKey = new MFFloat(newK, numKeys + 1);
     FieldValue *newKeyValue = createKeys(newV, numKeys + 1);
-    
+    newKeyValue->ref();    
+
     if (values) {
         CommandList *list = new CommandList();
 
