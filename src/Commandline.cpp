@@ -535,7 +535,8 @@ void parseCommandlineUsage(
                     exit(1);
                 }
                 rc = scene->write(fileDescriptor, url, 
-                                  convert | (tempSave ? TEMP_SAVE : 0)); 
+                                  convert | SKIP_SAVED_TEST | 
+                                  (tempSave ? TEMP_SAVE : 0)); 
                 if (fileDescriptor != 1) {
                     if (rc != 0)
                         myperror(url);

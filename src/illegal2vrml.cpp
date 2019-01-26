@@ -102,7 +102,7 @@ int illegal2vrml(int argc, char *argv[])
        myperror(argv[secondFileIndex]);
        return(1);
     }
-    scene->write(1, "./export.wrl", TEMP_SAVE);
+    scene->write(1, "./export.wrl", TEMP_SAVE | SKIP_SAVED_TEST);
     delete TheApp;
     return 0;
 }

@@ -40,6 +40,7 @@
 #include "NodeNurbsCurve.h"
 #include "NodeNurbsGroup.h"
 #include "NodeCoordinate.h"
+#include "NodeViewport.h"
 
 static int 
 inputDeviceTimerCallback(void *data)
@@ -148,15 +149,24 @@ void Scene3DView::OnUpdate(SceneView *sender, int type, Hint *hint)
                                        inputDeviceTimerCallback, this);
 }
 
-void Scene3DView::OnDraw(int /* x */, int /* y */,
-                         int /* width */, int /* height */) 
+void 
+Scene3DView::drawViewPort(Node *root, int count)
 {
     int width, height;
     if (!m_dc) m_dc = swCreateDC(m_wnd);
     if (!m_glc) m_glc = swCreateGLContext(m_dc);
     swMakeCurrent(m_dc, m_glc);
     swGetSize(m_wnd, &width, &height);
-    glViewport(0, 0, width, height);
+    if (root == NULL)
+        glViewport(0, 0, width, height);
+    else if (root->getType() == X3D_VIEWPORT) {
+        NodeViewport *viewport = (NodeViewport *)root;
+        const float *data = viewport->clipBoundary()->getValues();
+        glViewport(width * data[0], height * data[2], 
+                   width * (data[1] - data[0]), height * (data[3] - data[2]));
+    }
+    if (root == NULL)
+        root = m_scene->getRoot();
     TheApp->setEyeMode(EM_NONE);
     if (TheApp->isAnaglyphStereo()) {
         glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
@@ -165,69 +175,78 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     }
     if ((TheApp->canQuadBufferStereo()) || (TheApp->useStereo())) {
-       if (TheApp->useStereo())
-           TheApp->setEyeMode(EM_LEFT);
-       if (TheApp->canQuadBufferStereo())
-            glDrawBuffer(GL_BACK_LEFT);
-       if (TheApp->isAnaglyphStereo()) {
-           glClear(GL_ACCUM_BUFFER_BIT);
-           if (TheApp->getStereoType() == RED_GREEN_ANAGLYPH_STEREO)
-               glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-           else if (TheApp->getStereoType() == RED_BLUE_ANAGLYPH_STEREO)
-               glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
-           else if (TheApp->getStereoType() == RED_CYAN_ANAGLYPH_STEREO)
-               glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
-           else 
-               glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
-       }
-       m_scene->drawScene(false,0,0);
-       if (TheApp->useStereo())
-           if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
-               m_scene->draw3dCursor(m_mouseX, m_mouseY);
-       if (m_button3down)
-           if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
-               m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
-                                          m_rubberBandX, m_rubberBandY);
-       if (TheApp->isAnaglyphStereo())
-           glAccum(GL_ACCUM, 1.0f);
+        if (TheApp->useStereo())
+            TheApp->setEyeMode(EM_LEFT);
+        if (TheApp->canQuadBufferStereo())
+             glDrawBuffer(GL_BACK_LEFT);
+        if (TheApp->isAnaglyphStereo()) {
+            glClear(GL_ACCUM_BUFFER_BIT);
+            if (TheApp->getStereoType() == RED_GREEN_ANAGLYPH_STEREO)
+                glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+            else if (TheApp->getStereoType() == RED_BLUE_ANAGLYPH_STEREO)
+                glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
+            else if (TheApp->getStereoType() == RED_CYAN_ANAGLYPH_STEREO)
+                glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+            else 
+                glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
+        }
+        m_scene->drawScene(false,0,0,width,height,root,count);
+        if (TheApp->useStereo())
+            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
+                m_scene->draw3dCursor(m_mouseX, m_mouseY);
+        if (m_button3down)
+            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
+                m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
+                                           m_rubberBandX, m_rubberBandY);
+        if (TheApp->isAnaglyphStereo())
+            glAccum(GL_ACCUM, 1.0f);
 
-       if (TheApp->useStereo())
-           TheApp->setEyeMode(EM_RIGHT);
+        if (TheApp->useStereo())
+            TheApp->setEyeMode(EM_RIGHT);
 
-       if (TheApp->canQuadBufferStereo())
-           glDrawBuffer(GL_BACK_RIGHT);
-       if (TheApp->isAnaglyphStereo()) {
-           glClear(GL_ACCUM_BUFFER_BIT);
-           if (TheApp->getStereoType() == GREEN_RED_ANAGLYPH_STEREO)
-               glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-           else if (TheApp->getStereoType() == BLUE_RED_ANAGLYPH_STEREO)
-               glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
-           else if (TheApp->getStereoType() == CYAN_RED_ANAGLYPH_STEREO)
-               glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
-           else
+        if (TheApp->canQuadBufferStereo())
+            glDrawBuffer(GL_BACK_RIGHT);
+        if (TheApp->isAnaglyphStereo()) {
+            glClear(GL_ACCUM_BUFFER_BIT);
+            if (TheApp->getStereoType() == GREEN_RED_ANAGLYPH_STEREO)
+                glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+            else if (TheApp->getStereoType() == BLUE_RED_ANAGLYPH_STEREO)
+                glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
+            else if (TheApp->getStereoType() == CYAN_RED_ANAGLYPH_STEREO)
+                glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+            else
                glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);        
-       } 
-       m_scene->drawScene(false,0,0);
-       if (TheApp->useStereo())
-           if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN)) {
-               m_scene->draw3dCursor(m_mouseX, m_mouseY);
-               if (m_button3down)
-                   m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
+        } 
+        m_scene->drawScene(false,0,0,width,height,root,count);
+        if (TheApp->useStereo())
+            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN)) {
+                m_scene->draw3dCursor(m_mouseX, m_mouseY);
+                if (m_button3down)
+                    m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
                                               m_rubberBandX, m_rubberBandY);
-           }
-       if (TheApp->isAnaglyphStereo())
-           glAccum(GL_ACCUM, 1.0f);
-       }
+            }
+        if (TheApp->isAnaglyphStereo())
+            glAccum(GL_ACCUM, 1.0f);
+        }
     else
        {
-       m_scene->drawScene(false,0,0);
+       m_scene->drawScene(false,0,0,width,height,root,count);
        if (m_button3down)
            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
                m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
                                           m_rubberBandX, m_rubberBandY);
        }
-    if (TheApp->isAnaglyphStereo())
-        glAccum(GL_RETURN,1.0);
+}
+
+void Scene3DView::OnDraw(int /* x */, int /* y */,
+                         int /* width */, int /* height */) 
+{
+    Array<NodeViewport *> *viewports = m_scene->getViewPorts();
+    if (viewports->size() > 0)
+        for (int i = 0; i < (*viewports).size(); i++)
+            drawViewPort(viewports->get(i), i);
+    else    
+        drawViewPort(NULL, 0);
     swSwapBuffers(m_dc, m_glc);
 }
 

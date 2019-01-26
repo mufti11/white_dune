@@ -66,6 +66,7 @@ public:
     void                Navigate3D(InputDevice * inputDevice);
     void                Handle3D(const Path* path,InputDevice* inputDevice, 
                                  int handle);
+    void                drawViewPort(Node* viewport, int count);
 
 protected:
     Quaternion         &getQuat(const Path* path);
@@ -77,7 +78,6 @@ protected:
     Vec3f               constrainSphere(const Vec3f &euler, float dx, float dy,
                                         const Matrix &mat);
 
-    // Generated message map functions
 protected:
     SDC         m_dc;
     SGLC        m_glc;

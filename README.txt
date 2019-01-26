@@ -4928,5 +4928,7 @@ Fixed error in DEF/USE handling of XML parser
 
 Fixed crash in recursive Node::receiveEvent
 
+Added ViewPort node rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 

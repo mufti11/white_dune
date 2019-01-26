@@ -32,6 +32,7 @@
 #include "SFVec3f.h"
 #include "SFVec3f.h"
 #include "DuneApp.h"
+#include "Scene.h"
 
 ProtoViewport::ProtoViewport(Scene *scene)
   : ProtoGroup(scene, "Viewport")
@@ -53,3 +54,12 @@ NodeViewport::NodeViewport(Scene *scene, Proto *def)
   : NodeGroup(scene, def)
 {
 }
+
+void        
+NodeViewport::setField(int index, FieldValue *value, int containerField)
+{
+    m_scene->setViewPorts();
+    NodeGroup::setField(index, value, containerField);
+}
+
+

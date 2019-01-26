@@ -81,6 +81,7 @@ class Path;
 class FontInfo;
 class NodeViewpoint;
 class NodeNavigationInfo;
+class NodeViewport;
 class NodeFog;
 class NodeBackground;
 class SFVec3f;
@@ -314,7 +315,8 @@ public:
                                                  int field) const;
 
     void                drawScene(bool pick = false, int x = 0, int y = 0,
-                                  float width = 0, float height = 0);
+                                  float width = 0, float height = 0,
+                                  Node *root = NULL, int count = 0);
 
     int                 getNumDraw(void) { return m_numDraw; }
 
@@ -768,6 +770,20 @@ public:
                             else 
                                 m_ribTexureFiles.add(file, txFile); 
                             }
+     bool               getSavedVrml(void) { return m_saved_vrml; }
+     bool               getSavedX3dv(void) { return m_saved_x3dv; }
+     bool               getSavedX3dXml(void) { return m_saved_x3dxml; }
+     void               setNotSaved(void) {
+                            m_saved_vrml = false;
+                            m_saved_x3dv = false;
+                            m_saved_x3dxml = false;
+                        }
+     Array<NodeViewport *> *getViewPorts();
+     void               setViewPorts(void);
+     void               addViewPort(NodeViewport *node) {
+                           m_viewports.append(node);
+                        }
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -852,6 +868,8 @@ protected:
 
     NodeFog            *m_currentFog;
     NodeBackground     *m_currentBackground;
+
+    Array<NodeViewport *> m_viewports;
 
     bool                m_canUpdateViewsSelection;
     List<SceneView *>   m_views;
@@ -969,6 +987,10 @@ protected:
     bool                m_downloaded;
 
     Map<MyString, MyString> m_ribTexureFiles;
+    
+    bool                m_saved_vrml;
+    bool                m_saved_x3dv;
+    bool                m_saved_x3dxml;
 };
 
 bool writeCNodeData(Node *node, void *data);

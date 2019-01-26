@@ -154,6 +154,7 @@ public:
                         }
     int                 width() { return m_width; }
     const Chain        &chain(int num) const { return m_chains[num]; }
+    int                 size(void) { return m_size; }
 
 private:
     void                resize(int width);

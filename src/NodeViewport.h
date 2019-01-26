@@ -58,6 +58,13 @@ public:
     virtual int         getComponentLevel(void) const { return 1; }
     virtual Node   *copy() const { return new NodeViewport(*this); }
 
+    virtual void    preDraw() { children()->preDraw(); }
+    virtual void    draw(int pass) { children()->draw(pass, children_Field()); }
+
+    virtual void    setField(int index, FieldValue *value, 
+                             int containerField = -1);
+
+
     fieldMacros(MFFloat, clipBoundary, ProtoViewport);
 };
 

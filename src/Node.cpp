@@ -544,6 +544,8 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
             if (isNode)
                 isNode->setField(expField->getIsField(i), value);
         }
+    if (m_scene)
+        m_scene->setNotSaved();
 }
 
 void

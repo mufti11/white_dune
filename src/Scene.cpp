@@ -115,6 +115,7 @@ extern "C" {
 #include "NodeNurbsCurve.h"
 #include "NodeCattExportRec.h"
 #include "NodeLdrawDatExport.h"
+#include "NodeViewport.h"
 
 #define ARRAY_SIZE(v)  ((int) (sizeof(v) / sizeof(v[0])))
 
@@ -213,6 +214,7 @@ Scene::Scene()
     m_viewOfLastSelection=NULL;
     m_selection_is_in_scene=false;
     m_URL="";
+    m_newURL="";
     m_errorLineNumber = -1;
 
     m_obj3dCursor = gluNewQuadric();
@@ -352,7 +354,11 @@ Scene::Scene()
     m_downloaded = false;
     m_path = "";
     m_firstSelectionRangeHandle = -1;
+    m_saved_vrml = true;
+    m_saved_x3dv = true;
+    m_saved_x3dxml = true;
     setSelection(getRoot());
+    setViewPorts();
     updateTime();
 }
 
@@ -502,6 +508,23 @@ Scene::setNodes(NodeList *nodes)
     ((NodeGroup *)m_root)->children(new MFNode(nodes));
 }
 
+static bool searchViewPort(Node *node, void *data)
+{
+    Scene *scene = (Scene *)data;
+    if (node->getType() == X3D_VIEWPORT) {
+        NodeViewport *viewport = (NodeViewport *)node;
+        scene->addViewPort(viewport);
+    }
+    return true;
+}     
+
+void
+Scene::setViewPorts(void)
+{
+    m_viewports.resize(0);
+    m_root->doWithBranch(searchViewPort, this);
+}
+
 void
 Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
 {
@@ -531,6 +554,9 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
         scanForInlines(nodes);
     scanForMultimedia(nodes);
     nodes->clearFlag(NODE_FLAG_TOUCHED);
+    for (int i = 0; i < nodes->size(); i++)
+        if (nodes->get(i))
+            nodes->get(i)->doWithBranch(searchViewPort, this, false);
 }
 
 static bool loadInline(Node *node, void *data)
@@ -1175,6 +1201,15 @@ static bool markUsedProto(Node *node, void *data)
 
 int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 {
+    if (!(writeFlags & SKIP_SAVED_TEST)) {
+        if (writeFlags & X3DV)
+            if (m_saved_x3dv == true)
+                return 0;
+        if (writeFlags & X3D_XML)
+            if (m_saved_x3dxml == true)
+                return 0;
+    }    
+
     TheApp->setWriteUrl(url);
     ProtoMap::Chain::Iterator *j;
     for (int i = 0; i < m_protos.width(); i++)
@@ -1521,6 +1556,12 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         (writeFlags & (TEMP_EXPORT | TEMP_SAVE))) {
         resetWriteFlags(oldWriteFlags);
     }
+
+    if (writeFlags & X3DV) 
+        m_saved_x3dv = true;
+    else if (writeFlags & X3D_XML)
+        m_saved_x3dxml = true;
+
     return 0;
 }
 
@@ -3509,8 +3550,11 @@ Scene::redo()
 }
 
 void
-Scene::drawScene(bool pick, int x, int y, float width, float height)
+Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
+                 int count)
 {
+    if (root == NULL)
+        root = getRoot();
     GLint v[4];
     float aspect;
 
@@ -3548,8 +3592,10 @@ Scene::drawScene(bool pick, int x, int y, float width, float height)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    if (count == 0) {
+        glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    }
 
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
@@ -3587,7 +3633,7 @@ Scene::drawScene(bool pick, int x, int y, float width, float height)
 
     m_headlightIsSet = false;
     m_defaultViewpoint->preDraw();
-    m_root->preDraw();
+    root->preDraw();
 
     if (m_currentFog)
         m_currentFog->apply();
@@ -3610,10 +3656,10 @@ Scene::drawScene(bool pick, int x, int y, float width, float height)
     else
         glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
-    m_root->draw(RENDER_PASS_NON_TRANSPARENT);
+    root->draw(RENDER_PASS_NON_TRANSPARENT);
     glEnable(GL_BLEND);
     glDepthFunc(GL_LEQUAL);
-    m_root->draw(RENDER_PASS_TRANSPARENT);
+    root->draw(RENDER_PASS_TRANSPARENT);
 
     for (int i = 0; i < m_numLights; i++) {
         glDisable((GLenum) (GL_LIGHT0 + i));
@@ -4946,6 +4992,11 @@ Scene::deleteSelectedAppend(CommandList* list)
         if (m_selection->getNode() == m_currentViewpoint) {
             m_defaultViewpoint = (NodeViewpoint *)m_currentViewpoint->copy();
             m_currentViewpoint = m_defaultViewpoint;
+        }
+        if (m_selection->getNode() &&
+            m_selection->getNode()->getType() == X3D_VIEWPORT) {
+            m_viewports.remove(m_viewports.find((NodeViewport *)
+                                                m_selection->getNode()));
         }
         Node *node = m_selection->getNode();
         Node *parent = m_selection->getParent();
@@ -6367,6 +6418,13 @@ Scene::warning(const char* string)
     swDebugf("%s\n", string);
 }
 
+Array<NodeViewport *> *
+Scene::getViewPorts() 
+{ 
+    return &m_viewports; 
+}
+
+
 void
 Scene::warning(int id)
 {
@@ -6391,4 +6449,3 @@ FieldUpdate::FieldUpdate(Node *n, int f, int i)
     field = f;
     index = i;
 }
-

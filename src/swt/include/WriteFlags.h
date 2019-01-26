@@ -53,6 +53,7 @@ enum {
     MANY_JAVA_CLASSES  = 1<<27,
     OUTSIDE_JAVA_CLASS = 1<<28,
     RIB                = 1<<29,
+    SKIP_SAVED_TEST    = 1<<30,
 };
 
 #define WRITE_JAVA_MEMBER_VARIABLES WRITE_JAVA_VARS

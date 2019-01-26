@@ -11955,6 +11955,12 @@ bool
 MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
                      char *x3dPath)
 {
+    if (writeFlags & !SKIP_SAVED_TEST) {
+        if ((writeFlags & X3DV) && m_scene->getSavedX3dv())
+            return true;
+        if ((writeFlags & X3D_XML) && m_scene->getSavedX3dXml())
+            return true;
+    }
     bool writeError = true;
     char path[1024];
     mystrncpy_secure(path,filepath,1024); 
@@ -12038,14 +12044,15 @@ bool MainWindow::OnFileSave()
     if (path[0] && (path[0] != '-')) {
         char lastChar = path[strlen(path) > 0 ? strlen(path) - 1 : 0];
         if (lastChar == 'z')
-            return OnFileSaveAs(m_scene->isX3d() ? X3DV : 0);
+            return OnFileSaveAs(m_scene->isX3d() ? X3DV | SKIP_SAVED_TEST: 0);
         else    
-            return SaveFile(path, m_scene->getURL(), writeFlags);
+            return SaveFile(path, m_scene->getURL(), 
+                            writeFlags | SKIP_SAVED_TEST);
     }
     else if (m_scene->isX3dXml())
-        return OnFileSaveAs(X3D_XML);
+        return OnFileSaveAs(X3D_XML | SKIP_SAVED_TEST);
     else
-        return OnFileSaveAs(m_scene->isX3dv() ? X3DV : 0);
+        return OnFileSaveAs(m_scene->isX3dv() ? X3DV | SKIP_SAVED_TEST: 0);
 }
 
 bool MainWindow::OnFileExportVRML97()
@@ -12060,7 +12067,7 @@ bool MainWindow::OnFileExportX3DV()
 
 bool MainWindow::OnFileExportX3DXML()
 {
-    return OnFileSaveAs(X3D_XML | TEMP_EXPORT);
+    return OnFileSaveAs(X3D_XML | TEMP_EXPORT | SKIP_SAVED_TEST);
 }
 
 bool MainWindow::OnFileExportX3D4Wonderland()
@@ -12080,7 +12087,7 @@ bool MainWindow::OnFileExportKanim()
 
 bool MainWindow::OnFileExportX3dom()
 {
-    return OnFileSaveAs(X3DOM | X3D_XML | TEMP_EXPORT);
+    return OnFileSaveAs(X3DOM | X3D_XML | TEMP_EXPORT | SKIP_SAVED_TEST);
 }
 
 bool MainWindow::OnFileExportXite()
@@ -12303,6 +12310,13 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
     } else if (swSaveFileDialog(m_wnd, "Save As", fileSelectorText, path, 1024,
                                 ".wrl"))
         save = true; 
+
+    if (writeFlags & SKIP_SAVED_TEST) {
+        if ((writeFlags & X3DV) && m_scene->getSavedX3dv())
+            save = false;
+        if ((writeFlags & X3D_XML) && m_scene->getSavedX3dXml())
+            save = false;
+    }
     delete [] fileSelectorText;
     if (save) {
         URL url;
@@ -12556,7 +12570,8 @@ bool MainWindow::SaveModified()
     bool ok = true;
     char str[256], message[256], title[256];
 
-    if (m_scene->isModified()) {
+    if (m_scene->isModified() && 
+        ((!m_scene->getSavedX3dv()) && (!m_scene->getSavedX3dv()))) {
         const char *path = m_scene->getPath();
         swSetFocus(m_wnd);
         swLoadString(IDS_DUNE, title, 256);

@@ -466,7 +466,8 @@ DuneApp::SaveTempFile(Scene *scene, const char *name, int writeFlags,
         swGetTempFile(path+i, name, getExtension(X3DV), 1024-i);
         int f = open(path, O_WRONLY | O_CREAT,00666);
         if (f == -1) {
-            if (scene->write(f, path, (writeFlags | (TEMP_SAVE & (~XITE)))
+            if (scene->write(f, path, (writeFlags | SKIP_SAVED_TEST | 
+                             (TEMP_SAVE & (~XITE)))
                 != 0))
                writeError = true;
             else if (swTruncateClose(f))
@@ -496,7 +497,8 @@ DuneApp::SaveTempFile(Scene *scene, const char *name, int writeFlags,
     fileURL.FromPath(path);
     bool oldKeepUrls = TheApp->GetKeepURLs();
     TheApp->SetKeepURLs(true);
-    if (scene->write(f, fileURL, writeFlags | TEMP_SAVE, wrlpath))
+    if (scene->write(f, fileURL, writeFlags | TEMP_SAVE | SKIP_SAVED_TEST, 
+                     wrlpath))
         writeError = true;
     else if (swTruncateClose(f))
         writeError = true;
@@ -689,7 +691,7 @@ DuneApp::saveTempFiles(MainWindow *currentWindow, int useExtensionTxt)
             initSelectionLinenumber();
         bool oldKeepUrls = TheApp->GetKeepURLs();
         TheApp->SetKeepURLs(true);
-        int writeFlags = TEMP_SAVE;
+        int writeFlags = TEMP_SAVE | SKIP_SAVED_TEST;
         if (scene->isX3d())
             writeFlags |= X3DV;
 //        const char *file = strdup(url.GetPath());
