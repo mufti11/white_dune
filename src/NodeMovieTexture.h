@@ -49,6 +49,7 @@ public:
                                 MOVIE_TEXTURE_NODE; 
                        }
 
+    FieldIndex description;
     FieldIndex loop;
     FieldIndex pitch;
     FieldIndex pauseTime;
@@ -83,6 +84,7 @@ public:
 
     virtual void    load();  
 
+    fieldMacros(SFString, description,       ProtoMovieTexture)
     fieldMacros(SFBool,   loop,              ProtoMovieTexture)
     fieldMacros(SFFloat,  pitch,             ProtoMovieTexture)
     fieldMacros(SFTime,   pauseTime,         ProtoMovieTexture)

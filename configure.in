@@ -1708,6 +1708,12 @@ dnl build version number
 DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
 AC_DEFINE_UNQUOTED(HAVE_DUNE_VERSION,"${DUNE_VERSION}")
 
+AC_ARG_WITH(about,--with-about=\"about text\" about text,
+            DUNE_VERSION2="$withval";export DUNE_VERSION2)
+if test "X_$DUNE_VERSION2" != "X_" ; then
+   AC_DEFINE_UNQUOTED(HAVE_DUNE_VERSION,"${DUNE_VERSION2}")
+fi
+
 dnl automatic generate functions/lists for VRML types (e.g. SFBool <=> SFBOOL)
 
 (cd $SELFDIR && sh batch/mkSFMFTypes.sh)

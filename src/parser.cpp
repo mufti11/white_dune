@@ -4263,7 +4263,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                 level++;          
                 status.push(STATUS_PROTO);
                 if (!scene->addProtoName(MyString(name)))
-                    scene->warning(IDS_PROTO_ALREADY_DEFINED);
+                    scene->warning(IDS_PROTO_ALREADY_DEFINED, name);
                 startProto();
             } else if (!strcmp(element, "ExternProtoDeclare")) {
                 const char *name = NULL;

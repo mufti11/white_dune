@@ -66,7 +66,7 @@ Summary: A graphical X3D/VRML97 editor, simple 3D modeler and animation tool
 Name: wdune
 %global extraver pl$VERSION4
 Version: $VERSION6
-Release: 1.%{extraver}%{?dist}
+Release: 1%{?dist}
 #Copyright: GPL
 License: GPLv3+
 URL: http://wdune.ourproject.org/
@@ -100,6 +100,7 @@ Requires: lxterminal
 Requires: ImageMagick
 Requires: aqsis-core
 Requires: bitstream-vera-sans-fonts
+Requires: xorg-x11-fonts-misc
 
 %description
 The white_dune program is a graphical X3D/VRML97 editor, 
@@ -122,6 +123,7 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
 
 %build
 %configure \
+    --with-about="$VERSION1" \
     --with-optimization \
     --without-devil \
     --with-vrmlbrowser=firefox \

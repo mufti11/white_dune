@@ -789,6 +789,7 @@ with_osmesa
 with_debug
 with_x
 enable_input_events
+with_about
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1493,6 +1494,7 @@ Optional Packages:
 --with-osmesa 	          use mesa off screen rendering (avoid with real OpenGL)
 --with-debug 	          set -DDEBUG=1 to enable debugging code
   --with-x                use the X Window System
+--with-about=\"about text\" about text
 
 Some influential environment variables:
   CC          C compiler command
@@ -9974,6 +9976,19 @@ cat >>confdefs.h <<_ACEOF
 #define HAVE_DUNE_VERSION "${DUNE_VERSION}"
 _ACEOF
 
+
+
+# Check whether --with-about was given.
+if test "${with_about+set}" = set; then :
+  withval=$with_about; DUNE_VERSION2="$withval";export DUNE_VERSION2
+fi
+
+if test "X_$DUNE_VERSION2" != "X_" ; then
+   cat >>confdefs.h <<_ACEOF
+#define HAVE_DUNE_VERSION "${DUNE_VERSION2}"
+_ACEOF
+
+fi
 
 
 (cd $SELFDIR && sh batch/mkSFMFTypes.sh)

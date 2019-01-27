@@ -4930,5 +4930,9 @@ Fixed crash in recursive Node::receiveEvent
 
 Added ViewPort node rendering
 
+Fixed missing MovieTexture.description
+
+Fixed strange loop in Scene::readExternProto resulting in recursive crash
+
 contact: MUFTI <mufti@users.ourproject.org>
 

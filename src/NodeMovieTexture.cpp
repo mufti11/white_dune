@@ -37,6 +37,9 @@
 ProtoMovieTexture::ProtoMovieTexture(Scene *scene)
   : Proto(scene, "MovieTexture")
 {
+    description.set( 
+        addExposedField(SFSTRING, "description", new SFString("")));
+    setFieldFlags(description, FF_X3D_ONLY);
     loop.set(
           addExposedField(SFBOOL, "loop", new SFBool(false)));
     speed.set(

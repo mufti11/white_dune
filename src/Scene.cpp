@@ -626,54 +626,46 @@ static bool recreateNodePROTO(Node *node, void *data)
 void 
 Scene::scanForExternProtos(NodeList *nodes)
 {
-    bool protoLoaded;
-    do {
-        protoLoaded = false;
-        ProtoMap::Chain::Iterator *j;
-        for (int i = 0; i < m_protos.width(); i++) {
-            for (j = m_protos.chain(i).first(); j != NULL; j = j->next()) {
-                Proto *proto = j->item()->getData();
-                if (proto == NULL)
-                    continue;
-                if (belongsToNodeWithExternProto(proto->getName(isX3d())))
-                    continue;
-                if (proto->isCoverProto() || 
-                    proto->isKambiProto() || 
-                    proto->isX3domProto())
-                    continue;
-                if (proto->isX3dInternalProto())
-                    continue;
-                if (proto == NULL)
-                    continue;
-                if (proto->isLoaded())
-                    continue;
-                if (proto->isLoading())
-                    continue;
+    ProtoMap::Chain::Iterator *j;
+    for (int i = 0; i < m_protos.width(); i++) {
+        for (j = m_protos.chain(i).first(); j != NULL; j = j->next()) {
+            Proto *proto = j->item()->getData();
+            if (proto == NULL)
+                continue;
+            if (belongsToNodeWithExternProto(proto->getName(isX3d())))
+                continue;
+            if (proto->isCoverProto() || 
+                proto->isKambiProto() || 
+                proto->isX3domProto())
+                continue;
+            if (proto->isX3dInternalProto())
+                continue;
+            if (proto == NULL)
+                continue;
+            if (proto->isLoaded())
+                continue;
+            if (proto->isLoading())
+                continue;
 #ifdef NURBS_CURVE_ANIMATION_COMPATIBILTY
-                if (strcmp(proto->getName(true), "NurbsCurveAnimation") == 0) {
-                    readExternProto(proto);
-                    continue;
-                }                        
+            if (strcmp(proto->getName(true), "NurbsCurveAnimation") == 0) {
+                readExternProto(proto);
+                continue;
+            }                        
 #endif
-                if ((proto->getUrls() != NULL) && (!proto->isInternUrl())) {
-                    if (readExternProto(proto)) {
-                        protoLoaded = true;
-                    } else {
-                        MFString *urls = (MFString *)proto->getUrls();
-                        MyString files = "";
-                        for (int i = 0; i < urls->getSize(); i++) {
-                             files += urls->getValue(i);
-                             files += " ";
-                        }     
-                        TheApp->MessageBox(IDS_EXTERNPROTO_FILE_FAILED, 
-                                           proto->getName(isX3d()), files);
-                    }
+            if ((proto->getUrls() != NULL) && (!proto->isInternUrl())) {
+                if (!readExternProto(proto)) {
+                    MFString *urls = (MFString *)proto->getUrls();
+                    MyString files = "";
+                    for (int i = 0; i < urls->getSize(); i++) {
+                         files += urls->getValue(i);
+                         files += " ";
+                    }     
+                    TheApp->MessageBox(IDS_EXTERNPROTO_FILE_FAILED, 
+                                       proto->getName(isX3d()), files);
                 }
-//                if (protoLoaded)
-//                    break;
             }
         }
-    } while (protoLoaded);
+    }
     nodes->doWithBranch(recreateNodePROTO, NULL, false, true, false, true, 
                                                  false);
 }
@@ -797,6 +789,7 @@ Scene::readExternProto(Proto *proto)
                     TheApp->setImportFile(filename);
                     parse(file, node, node->children_Field(), 
                           SCAN_FOR_EXTERN_PROTO);
+                    proto->setLoaded(true);
                     proto->setUnitLength(oldUnitLength / getUnitLength());
                     proto->setUnitAngle(getUnitAngle());
                     popUnitAngle();
