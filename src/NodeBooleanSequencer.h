@@ -25,16 +25,16 @@
 #ifndef _NODE_H
 #include "Node.h"
 #endif
+#ifndef _INTERPOLATOR_H
+#include "Interpolator.h"
+#endif
 #ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
-#include "Proto.h"
 #endif
 
 #include "SFMFTypes.h"
 
-class ProtoBooleanSequencer : public Proto {
+class ProtoBooleanSequencer : public ProtoInterpolator {
 public:
                     ProtoBooleanSequencer(Scene *scene);
     virtual Node   *create(Scene *scene);
@@ -47,10 +47,9 @@ public:
     FieldIndex keyValue;
 };
 
-class NodeBooleanSequencer : public Node {
+class NodeBooleanSequencer : public Interpolator {
 public:
                     NodeBooleanSequencer(Scene *scene, Proto *proto);
-                    NodeBooleanSequencer(const NodeBooleanSequencer &node);
     virtual        ~NodeBooleanSequencer();
 
     virtual const char* getComponentName(void) const;
@@ -60,9 +59,20 @@ public:
 
     virtual bool    hasX3domOnoutputchange(void) { return true; } 
 
-    fieldMacros(MFFloat, key,      ProtoBooleanSequencer)
-    fieldMacros(MFBool,  keyValue, ProtoBooleanSequencer)
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
 
+    virtual int         getNumChannels() const { return 1; }
+
+    virtual float       getKeyValue(int channel, int index) const;
+
+    virtual FieldValue *getInterpolatedFieldValue(float k);
+
+    virtual void        setKeyValue(int channel, int index, float value);
+ 
+    virtual void        insertKey(int pos, float key, const float *values);
+ 
+    fieldMacros(MFBool, keyValue, ProtoBooleanSequencer)
 };
 
 #endif // _NODE_BOOLEAN_SEQUENCER_H

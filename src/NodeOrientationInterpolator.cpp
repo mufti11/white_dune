@@ -54,16 +54,16 @@ NodeOrientationInterpolator::getNumChannels() const
 }
 
 FieldValue *
-NodeOrientationInterpolator::createKey(float *value) const
+NodeOrientationInterpolator::createKey(void *value) const
 {
-    FieldValue *r = new SFRotation(value);
+    FieldValue *r = new SFRotation((float *)value);
     return r;
 }
 
 FieldValue *
-NodeOrientationInterpolator::createKeys(float *value, int numKeys) const
+NodeOrientationInterpolator::createKeys(void *value, int numKeys) const
 {
-    return new MFRotation(value, numKeys * 4);
+    return new MFRotation((float *)value, numKeys * 4);
 }
 
 void

@@ -4337,30 +4337,23 @@ MainWindow::setViewpoint(void)
     if (navi && dlg.GetValidDist()) {
         MFFloat *avatarSize = navi->avatarSize();
         avatarSize->setValue(3, dist);
-        NodeViewpoint *camera = m_scene->getCamera();
-        SFVec3f *pos = camera->position();
-        Vec3f vec(pos->getValue());
+        Node *camera = m_scene->getCamera();
+        Vec3f vec = camera->getPosition();
         vec.normalize(); 
         vec = vec * dist;
-        pos = new SFVec3f(vec.x, vec.y, vec.z);
-        camera->position(pos);
-        FieldUpdate hint(camera, camera->position_Field());
-        m_scene->UpdateViews(NULL, UPDATE_FIELD, &hint);
+        camera->setPosition(vec);
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
     if (viewData) {
         Vec3f vec(viewData[0], viewData[1], viewData[2]);
         vec.normalize();
         vec = vec * dist;
-        SFVec3f *pos = new SFVec3f(vec.x, vec.y, vec.z);
         SFRotation *rot = new SFRotation(viewData[3], viewData[4], viewData[5],
                                          viewData[6]);
-        NodeViewpoint *camera = m_scene->getCamera();
-        camera->position(pos);
-        camera->orientation(rot);
-        FieldUpdate hint(camera, camera->position_Field());
-        m_scene->UpdateViews(NULL, UPDATE_FIELD, &hint);
-        FieldUpdate hint2(camera, camera->orientation_Field());
-        m_scene->UpdateViews(NULL, UPDATE_FIELD, &hint2);
+        Node *camera = m_scene->getCamera();
+        camera->setPosition(vec);
+        camera->setOrientation(rot->getQuat());
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
     m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D, NULL);
 }
@@ -4382,7 +4375,7 @@ MainWindow::setTarget(void)
         trans->getMatrix(mat);
         matrix = matrix * mat;
     }
-    NodeViewpoint *viewpoint = m_scene->getCamera();
+    Node *viewpoint = m_scene->getCamera();
     float dist = 0;
     Vec3f vec;
     float mat[4][4];
@@ -4390,28 +4383,15 @@ MainWindow::setTarget(void)
     vec.x = mat[3][0];
     vec.y = mat[3][1];
     vec.z = mat[3][2];
+    Vec3f viewVec = viewpoint->getPosition();
     if (viewpoint)
-        dist = sqrt((viewpoint->position()->getValue(0) - vec.x) *
-                    (viewpoint->position()->getValue(0) - vec.x) +
-                    (viewpoint->position()->getValue(1) - vec.y) *
-                    (viewpoint->position()->getValue(1) - vec.y)+
-                    (viewpoint->position()->getValue(2) - vec.z) *
-                    (viewpoint->position()->getValue(2) - vec.z));
+        dist = sqrt((viewVec.x - vec.x) * (viewVec.x - vec.x) +
+                    (viewVec.y - vec.y) * (viewVec.y - vec.y) +
+                    (viewVec.z - vec.z) * (viewVec.z - vec.z));
     NodeNavigationInfo *navi = m_scene->getNavigationInfoNode();
     if (navi) {
         MFFloat *avatarSize = navi->avatarSize();
         avatarSize->setValue(3, dist);
-/*
-        NodeViewpoint *camera = m_scene->getCamera();
-        SFVec3f *pos = camera->position();
-        Vec3f vec(pos->getValue());
-        vec.normalize(); 
-        vec = vec * dist;
-        pos = new SFVec3f(vec.x, vec.y, vec.z);
-        camera->position(pos);
-        FieldUpdate hint(camera, camera->position_Field());
-        m_scene->UpdateViews(NULL, UPDATE_FIELD, &hint);
-*/
     }
     m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D, NULL);
 }
@@ -6404,7 +6384,7 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
     }            
     NodeTransform *nTransform = (NodeTransform *)
                                 m_scene->createNode("Transform");
-    NodeViewpoint *camera = m_scene->getCamera();
+    Node *camera = m_scene->getCamera();
     nTransform->children(new MFNode(new NodeList(nShape)));
     Node *transformNode = createNode(nTransform);
     if (transformNode == NULL)
@@ -6415,22 +6395,19 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
             parentIsRoot = true;
     if (parentIsRoot) 
         if (camera) {
-            SFRotation *sfRotation = camera->orientation();
+            SFRotation *sfRotation = new SFRotation(camera->getOrientation());
             Quaternion quad = sfRotation->getQuat();
-            SFVec3f *sfPosition = camera->position();
-            Vec3f *vec = new Vec3f(sfPosition->getValue()[0],
-                                   sfPosition->getValue()[1], 
-                                   sfPosition->getValue()[2]);
+            Vec3f vec = camera->getPosition();
             Vec3f ten(0, 0, -10);
-            *vec += ten * quad;
+            vec += ten * quad;
             nTransform->rotation(new SFRotation(*sfRotation));
             if (TheApp->getCreateAtZero(0))
-                (*vec).x = 0;
+                vec.x = 0;
             if (TheApp->getCreateAtZero(1))
-                (*vec).y = 0;
+                vec.y = 0;
             if (TheApp->getCreateAtZero(2))
-                (*vec).z = 0;
-            nTransform->translation(new SFVec3f(*vec));
+                vec.z = 0;
+            nTransform->translation(new SFVec3f(vec));
         }
     if (TheApp->is4Kids()) {
         // make Material node visible
@@ -7018,13 +6995,16 @@ void
 MainWindow::createViewpoint()
 {
     NodeViewpoint *node = (NodeViewpoint *)m_scene->createNode("Viewpoint");
-    NodeViewpoint *camera = m_scene->getCamera();
+    Node *camera = m_scene->getCamera();
 
-    node->fieldOfView((SFFloat *)camera->fieldOfView()->copy());
-    node->jump((SFBool *)camera->jump()->copy());
-    node->orientation((SFRotation *)camera->orientation()->copy());
-    node->position((SFVec3f *)camera->position()->copy());
-    node->description((SFString *)camera->description()->copy());
+    node->fieldOfView((SFFloat *)(camera->fov()->copy()));
+//    node->jump((SFBool *)camera->jump()->copy());
+    SFRotation *r = new SFRotation(camera->getOrientation());
+    node->orientation(r);
+    char buf[4096];
+    Vec3f pos = camera->getPosition();
+    node->position(new SFVec3f(pos.x, pos.y, pos.z));
+//    node->description((SFString *)camera->description()->copy());
     m_scene->execute(new MoveCommand(node, NULL, -1, m_scene->getRoot(), 
                                     m_scene->getRootField()));
     m_scene->setSelection(node);
@@ -7036,16 +7016,17 @@ MainWindow::createGeoViewpoint()
 {
     const char *nodeName = "GeoViewpoint";
     NodeGeoViewpoint *node = (NodeGeoViewpoint *)m_scene->createNode(nodeName);
-    NodeViewpoint *camera = m_scene->getCamera();
+    Node *camera = m_scene->getCamera();
 
-    node->fieldOfView((SFFloat *)camera->fieldOfView()->copy());
-    node->jump((SFBool *)camera->jump()->copy());
-    node->orientation((SFRotation *)camera->orientation()->copy());
+//    node->fieldOfView((SFFloat *)camera->fieldOfView()->copy());
+//    node->jump((SFBool *)camera->jump()->copy());
+    SFRotation r(camera->getOrientation());
+    node->orientation(r);
     char buf[4096];
-    const float *pos = camera->position()->getValue();
-    mysnprintf(buf, 4095, "%g %g %g", pos[0], pos[1], pos[2]);
+    Vec3f pos = camera->getPosition();
+    mysnprintf(buf, 4095, "%g %g %g", pos.x, pos.y, pos.z);
     node->position(new SFString(buf));
-    node->description((SFString *)camera->description()->copy());
+//    node->description((SFString *)camera->description()->copy());
     m_scene->execute(new MoveCommand(node, NULL, -1, m_scene->getRoot(), 
                                     m_scene->getRootField()));
     m_scene->setSelection(node);

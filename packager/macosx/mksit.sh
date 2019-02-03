@@ -29,6 +29,8 @@ if test "$OS" = "10.2" ; then
    OS="Jaguar"-`uname -p`
 fi
 
+export CXXFLAGS=-Wno-tautological-undefined-compare
+
 VERSION=`sh ../../batch/getversion.sh`
 MAYOR=`awk -v version=$VERSION -v col=pl 'BEGIN {split(version,a,col);print a[1]}'`
 rm -rf /tmp/white_dune-$VERSION

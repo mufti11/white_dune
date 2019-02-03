@@ -48,8 +48,8 @@ public:
                            { return new NodePositionInterpolator(*this); }
 
     virtual int         getNumChannels() const { return 3; }
-    virtual FieldValue *createKey(float *value) const;
-    virtual FieldValue *createKeys(float *values, int numKeys) const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
 
     ADD_FLIP
     ADD_SWAP

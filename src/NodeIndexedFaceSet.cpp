@@ -77,7 +77,7 @@ ProtoIndexedFaceSet::ProtoIndexedFaceSet(Scene *scene)
         setFieldFlags(texCoord4, FF_COVER_ONLY);
     }
     ccw.set(
-          addExposedField(SFBOOL, "ccw", new SFBool(true)));
+          addField(SFBOOL, "ccw", new SFBool(true)));
     setFieldFlags(ccw, FF_4KIDS);
     colorIndex.set(
           addField(MFINT32, "colorIndex", new MFInt32(), new SFInt32(-1)));

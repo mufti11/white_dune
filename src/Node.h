@@ -55,6 +55,7 @@
 #include "NodeArray.h"
 #include "Stack.h"
 #include "Matrix.h"
+#include "Quaternion.h"
 
 class FieldValue;
 class Node;
@@ -70,6 +71,7 @@ class MyMesh;
 class MFVec3f;
 class MFVec2f;
 class NodeHAnimHumanoid;
+class SFFloat; 
 
 class RouteSocket {
 public:
@@ -999,6 +1001,15 @@ public:
                            { m_counter4SceneTreeView = 0; }
     long               getId(void);
 
+    // for Node*Viewpoint
+    virtual Vec3f       getPosition() const { return Vec3f(); }
+    virtual Quaternion  getOrientation() const { return Quaternion(); } 
+    virtual void        setPosition(const Vec3f &pos) {}
+    virtual void        setOrientation(const Quaternion &quat)  {}
+    virtual SFFloat    *fov() { return NULL; };
+    virtual void        getMatrix(float* matrix) {}
+    void                apply(bool useStereo = false) {}
+
 protected:
     const char        *searchIsName(int i, int type);
 
@@ -1033,6 +1044,7 @@ protected:
     void               addIsElement(Node *node, int field, int elementType,
                                     Proto *origProto, int origField, 
                                     int flags = 0);
+
 protected:
     Scene             *m_scene;
     ParentArray        m_parents;

@@ -1960,8 +1960,7 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
 
     float fov = 30;
     if (m_currentViewpoint)
-        fov = m_currentViewpoint->fieldOfView()->getValue() * 
-              360.0 / (2 * M_PI);
+        fov = m_currentViewpoint->fov()->getValue() * 360.0 / (2 * M_PI);
 
     RET_ONERROR( mywritestr(f, "ShadingRate 1\n") ) 
     RET_ONERROR( mywritef(f, "Projection \"perspective\" \"fov\" [%f]\n", 
@@ -3566,7 +3565,7 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
     glLoadIdentity();
     if (pick) 
         gluPickMatrix(x, y, width, height, v);
-    float fieldOfView = RAD2DEG(getCamera()->fieldOfView()->getValue() *
+    float fieldOfView = RAD2DEG(getCamera()->fov()->getValue() *
                                 getUnitAngle());
     if (TheApp->hasFixFieldOfView())
         fieldOfView = TheApp->getFixFieldOfView();
@@ -4677,11 +4676,11 @@ Scene::applyCamera()
     if (getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT)
         ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
     else
-        m_currentViewpoint->apply();
+        ((NodeViewpoint *)m_currentViewpoint)->apply();
 }
 
 void
-Scene::setCamera(NodeViewpoint *camera)
+Scene::setCamera(Node *camera)
 {
     m_currentViewpoint = camera;
 }
@@ -4750,7 +4749,7 @@ Scene::updateTime()
     UpdateViews(NULL, UPDATE_TIME);
 }
 
-NodeViewpoint *
+Node *
 Scene::getCamera() const
 {
     return m_currentViewpoint;
@@ -5894,6 +5893,8 @@ static bool searchBindableNodes(Node *node, void *data)
     Scene *scene = (Scene *)data;
     if (node->getType() == VRML_VIEWPOINT)
         scene->addViewpoint(node);
+    else if (node->getType() == X3D_ORTHO_VIEWPOINT)
+        scene->addViewpoint(node);
     else if (node->getType() == VRML_NAVIGATION_INFO)
         scene->addNavigationInfo(node);
     else if (node->getType() == VRML_BACKGROUND)
@@ -5901,6 +5902,14 @@ static bool searchBindableNodes(Node *node, void *data)
     else if (node->getType() == VRML_FOG)
         scene->addFog(node);
     return true;     
+}
+
+void
+Scene::findBindableNodes(void)
+{
+    if (m_root != NULL)
+        m_root->doWithBranch(searchBindableNodes, this);
+    setFirstNavigationInfo();
 }
 
 static bool convertToTriangleSet(Node *node, void *data)
@@ -5963,14 +5972,6 @@ static bool convertToIndexedFaceSet(Node *node, void *data)
 void Scene::branchConvertToIndexedFaceSet(Node *node)
 {
     node->doWithBranch(::convertToIndexedFaceSet, this);
-}
-
-void
-Scene::findBindableNodes(void)
-{
-    if (m_root != NULL)
-        m_root->doWithBranch(searchBindableNodes, this);
-    setFirstNavigationInfo();
 }
 
 static bool createNormals(Node *node, void *data)

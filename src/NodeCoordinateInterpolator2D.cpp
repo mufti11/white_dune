@@ -66,15 +66,15 @@ NodeCoordinateInterpolator2D::getNumChannels() const
 }
 
 FieldValue *
-NodeCoordinateInterpolator2D::createKey(float *value) const
+NodeCoordinateInterpolator2D::createKey(void *value) const
 {
-    return new MFVec2f(value, getNumChannels());
+    return new MFVec2f((float *)value, getNumChannels());
 }
 
 FieldValue *
-NodeCoordinateInterpolator2D::createKeys(float *value, int numKeys) const
+NodeCoordinateInterpolator2D::createKeys(void *value, int numKeys) const
 {
-    return new MFVec2f(value, numKeys * getNumChannels());
+    return new MFVec2f((float *)value, numKeys * getNumChannels());
 }
 
 void 

@@ -102,10 +102,12 @@ public:
     virtual bool        hasKambiFields(void) { return true; }
 
     Vec3f               getPosition() const;
-    const Quaternion   &getOrientation() const;
+    Quaternion          getOrientation() const;
 
     void                setPosition(const Vec3f &pos);
     void                setOrientation(const Quaternion &quat);
+
+    SFFloat            *fov() { return fieldOfView(); };
 
     virtual bool        supportCurveAnimation(void) { return true; }
 

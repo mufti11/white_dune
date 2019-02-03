@@ -52,16 +52,16 @@ NodePositionInterpolator::NodePositionInterpolator(Scene *scene, Proto *def)
 }
 
 FieldValue *
-NodePositionInterpolator::createKey(float *value) const
+NodePositionInterpolator::createKey(void *value) const
 {
-    FieldValue *r = new SFVec3f(value);
+    FieldValue *r = new SFVec3f((float *)value);
     return r;
 }
 
 FieldValue *
-NodePositionInterpolator::createKeys(float *value, int numKeys) const
+NodePositionInterpolator::createKeys(void *value, int numKeys) const
 {
-    return new MFVec3f(value, numKeys * 3);
+    return new MFVec3f((float *)value, numKeys * 3);
 }
 
 void

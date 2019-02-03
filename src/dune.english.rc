@@ -923,8 +923,8 @@ BEGIN
                 MENUITEM "BooleanTrigger",              ID_NEW_BOOLEAN_TRIGGER
                 MENUITEM "IntegerTrigger",              ID_NEW_INTEGER_TRIGGER
                 MENUITEM "TimeTrigger",                 ID_NEW_TIME_TRIGGER
-                MENUITEM "BooleanSequencer (not rendered)",  ID_NEW_BOOLEAN_SEQUENCER
-                MENUITEM "IntegerSequencer (not rendered)",  ID_NEW_INTEGER_SEQUENCER
+                MENUITEM "BooleanSequencer",            ID_NEW_BOOLEAN_SEQUENCER
+                MENUITEM "IntegerSequencer",            ID_NEW_INTEGER_SEQUENCER
             END
             POPUP "CADGeometry"
             BEGIN
@@ -3514,8 +3514,8 @@ BEGIN
     ID_NEW_BOOLEAN_TRIGGER "Insert a new X3D BooleanTrigger Node.\nX3D BooleanTrigger"
     ID_NEW_INTEGER_TRIGGER "Insert a new X3D IntegerTrigger Node.\nX3D IntegerTrigger"
     ID_NEW_TIME_TRIGGER    "Insert a new X3D TimeTrigger Node.\nX3D TimeTrigger"
-    ID_NEW_BOOLEAN_SEQUENCER "Insert a new X3D BooleanSequencer Node (not rendered).\nX3D BooleanSequencer (not rendered)"
-    ID_NEW_INTEGER_SEQUENCER "Insert a new X3D IntegerSequencer Node (not rendered).\nX3D IntegerSequencer (not rendered)"
+    ID_NEW_BOOLEAN_SEQUENCER "Insert a new X3D BooleanSequencer Node.\nX3D BooleanSequencer"
+    ID_NEW_INTEGER_SEQUENCER "Insert a new X3D IntegerSequencer Node.\nX3D IntegerSequencer"
     ID_NEW_ESPDU_TRANSFORM "Insert a new X3D EspduTransform Node.\nX3D EspduTransform"
     ID_NEW_RECEIVER_PDU    "Insert a new X3D ReceiverPdu Node.\nX3D ReceiverPdu"
     ID_NEW_SIGNAL_PDU      "Insert a new X3D SignalPdu Node.\nX3D SignalPdu"

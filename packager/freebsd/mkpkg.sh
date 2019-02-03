@@ -14,7 +14,9 @@ VERSION=`sh ../../batch/getversion.sh`
 export VERSION
 
 export CC=clang
+export CFLAGS="-Wno-unused-command-line-argument -L/usr/local/lib"
 export CXX=clang
+export CXXFLAGS=-Wno-tautological-undefined-compare
 export CPPFLAGS=-I/usr/local/include/freetype2
 export LIBS=-lstdc++
 

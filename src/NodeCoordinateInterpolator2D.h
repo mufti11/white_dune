@@ -53,8 +53,8 @@ public:
                            { return new NodeCoordinateInterpolator2D(*this); }
 
     virtual int         getNumChannels() const;
-    virtual FieldValue *createKey(float *value) const;
-    virtual FieldValue *createKeys(float *values, int numKeys) const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
     virtual void        recordValue(int key, FieldValue *value);
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }

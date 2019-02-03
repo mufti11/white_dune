@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include "stdafx.h"
 
+#ifdef HAVE_FPCLASSIFY 
+# include <math.h>
+#endif
+
 #include "NodeNurbsTrimmedSurface.h"
 #include "Proto.h"
 #include "FieldValue.h"
@@ -78,9 +82,9 @@ static void vertexTess(GLfloat *v)
     }
 #ifndef _WIN32
 # ifdef HAVE_FPCLASSIFY 
-    if (!(fpclassify(v[0] == FP_ZERO) || isnormal(v[0]) ||
-          fpclassify(v[1] == FP_ZERO) || isnormal(v[1]) ||
-          fpclassify(v[2] == FP_ZERO) || isnormal(v[2]))) {
+    if ((fpclassify(v[0]) != FP_ZERO) || isnormal(v[0]) ||
+        (fpclassify(v[1]) != FP_ZERO) || isnormal(v[1]) ||
+        (fpclassify(v[2]) != FP_ZERO) || isnormal(v[2])) {
         outOfBoundingBox++;
         return;
     }

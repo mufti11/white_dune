@@ -293,6 +293,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 #else
 int main(int argc, char *argv[])
 {
+    if (argc < 0)
+        argc = 0;
     TheApp = new DuneApp();
     parseCommandlineUsage(argc, argv);
     bool *files=new bool[argc+1];

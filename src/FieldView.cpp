@@ -401,7 +401,7 @@ void FieldView::DrawItem(int index, SDC dc)
        def = m_selectedNode->getProto();
     if (def == NULL)
         return;
-    Field *field;
+    Field *field = NULL;
     if (index >= m_items.size())
         return;
     FieldViewItem *item = m_items[index];
@@ -438,7 +438,7 @@ void FieldView::DrawItem(int index, SDC dc)
         swSetFGColor(dc, bg);
         swFillRect(dc, r.left, r.top, r.Width(), r.Height());
         swSetBGColor(dc, bg);
-        if (parent->GetValue()) {
+        if (parent->GetValue() && field) {
             if (parent->GetValue()->equals(field->getDefault(x3d))) {
                 fg = swGetWindowColor(m_window, SW_COLOR_HIGHLIGHT);
             } else {

@@ -52,14 +52,14 @@ NodePositionInterpolator2D::NodePositionInterpolator2D(Scene *scene, Proto *def)
 }
 
 FieldValue *
-NodePositionInterpolator2D::createKey(float *value) const
+NodePositionInterpolator2D::createKey(void *value) const
 {
-    FieldValue *r = new SFVec2f(value);
+    FieldValue *r = new SFVec2f((float *)value);
     return r;
 }
 
 FieldValue *
-NodePositionInterpolator2D::createKeys(float *value, int numKeys) const
+NodePositionInterpolator2D::createKeys(void *value, int numKeys) const
 {
-    return new MFVec2f(value, numKeys * 2);
+    return new MFVec2f((float *)value, numKeys * 2);
 }

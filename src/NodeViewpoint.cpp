@@ -209,7 +209,8 @@ void NodeViewpoint::setPosition(const Vec3f &pos)
     m_scene->setField(this, position_Field(), new SFVec3f(pos));
 }
 
-const Quaternion &NodeViewpoint::getOrientation() const
+Quaternion 
+NodeViewpoint::getOrientation() const
 {
     return ((NodeViewpoint *)this)->orientation()->getQuat();
 }
@@ -240,7 +241,6 @@ NodeViewpoint::getAnimationCommentID(void)
 { 
     return IDS_ANIMATION_HELP_VIEWPOINT + swGetLang(); 
 }
-
 
 void
 NodeViewpoint::getMatrix(float* matrix)

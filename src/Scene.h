@@ -473,8 +473,8 @@ public:
 
     void                startWalking();
 
-    NodeViewpoint      *getCamera() const;
-    void                setCamera(NodeViewpoint *camera);
+    Node               *getCamera() const;
+    void                setCamera(Node *camera);
     void                applyCamera(void);
 
     NodeNavigationInfo *getNavigationInfoNode() const;
@@ -859,8 +859,8 @@ protected:
     bool                m_extraModifiedFlag;
 
     bool                m_setViewpoint;
-    NodeViewpoint      *m_defaultViewpoint;
-    NodeViewpoint      *m_currentViewpoint;
+    Node               *m_defaultViewpoint;
+    Node               *m_currentViewpoint;
 
     bool                m_setNavigationInfo;
     NodeNavigationInfo *m_defaultNavigationInfo;

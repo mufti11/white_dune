@@ -51,3 +51,32 @@ NodeLayerSet::NodeLayerSet(Scene *scene, Proto *def)
   : Node(scene, def)
 {
 }
+
+void    
+NodeLayerSet::draw(int pass)
+{
+    NodeList *childList = layers()->getValues();
+    int n = childList->size();
+
+    glPushMatrix();
+
+    glDepthMask(GL_FALSE);
+
+    glPushName(layers_Field());  // field
+    glPushName(0);                 // index
+    for (int j = 0; j < order()->getSize(); j++) {
+        int i = order()->getValue(j);
+        if ((i < 0) || (i >= n))
+            continue;
+        glLoadName(i);
+        if (childList->get(i) != this)
+            childList->get(i)->draw(pass);
+    }
+    glPopName();
+    glPopName();
+
+    glDepthMask(GL_TRUE);
+
+    glPopMatrix();    
+}
+

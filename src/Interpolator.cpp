@@ -141,8 +141,14 @@ Interpolator::findKey(float value) const
 
     for (i = 0; i < numKeys; i++) {
         float k = key->getValue(i);
-        if (k > value) break;
+        if (k > value) {
+           if (i > 0)
+              i--;
+           break;
+        }
     }
+    if (i == numKeys)
+        return numKeys - 1;
     return i;
 }
 
@@ -230,6 +236,7 @@ Interpolator::getInterpolatedFieldValue(float k)
     interpolate(k, values);
     FieldValue *val = createKey(values);
     val->ref();
+    delete [] values;
     return val;
 }
 
@@ -453,7 +460,8 @@ Interpolator::recordKey(FieldValue *value, bool isrunning)
 // but works with compilers without or defect rtti implementations...
 //
 
-Interpolator       *dynamic_cast_Interpolator(Node* node)
+Interpolator *
+dynamic_cast_Interpolator(Node* node)
 {
     if (node == NULL)
        return NULL;

@@ -3509,7 +3509,7 @@ swLoadPreferences(const char *company, const char *appName)
         rcFileEnvironmentName[i] = toupper(rcFileEnvironmentName[i]);
     strcat(rcFileEnvironmentName, "RC");
     if (getenv(rcFileEnvironmentName) == NULL) {    
-        len = strlen(home) + strlen(appName) + 5;
+        len = (home == NULL) ? 0 : strlen(home) + strlen(appName) + 5;
         table->filename = (char *) malloc(len);
         mysnprintf(table->filename, len, "%s/.%src", home, appName);
     } else

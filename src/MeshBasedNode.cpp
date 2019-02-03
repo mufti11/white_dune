@@ -1364,7 +1364,7 @@ MeshBasedNode::writeRib(int f, int indent)
     glLoadIdentity();
     Matrix matrix;
     Matrix viewpointMatrix;
-    NodeViewpoint *viewpoint = m_scene->getCamera();
+    Node *viewpoint = m_scene->getCamera();
     viewpoint->apply();
     viewpoint->getMatrix(viewpointMatrix);
     matrix = viewpointMatrix * transformMatrix;

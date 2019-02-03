@@ -4934,5 +4934,13 @@ Fixed missing MovieTexture.description
 
 Fixed strange loop in Scene::readExternProto resulting in recursive crash
 
+Added LayerSet node rendering
+
+Fixed wrong ExposedField IndexedFaceSet.ccw
+
+Fixed error in Interpolator
+
+Added Boolean/IntegerSequencer rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 

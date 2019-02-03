@@ -132,4 +132,35 @@ NodeOrthoViewpoint::transformForViewpoint(bool useStereo)
     glTranslatef(-pos[0], -pos[1], -pos[2]);
 }
 
+Vec3f
+NodeOrthoViewpoint::getPosition() const
+{
+    return Vec3f(((NodeOrthoViewpoint *)this)->position()->getValue());
+}
+
+void NodeOrthoViewpoint::setPosition(const Vec3f &pos)
+{
+    m_scene->setField(this, position_Field(), new SFVec3f(pos));
+}
+
+Quaternion 
+NodeOrthoViewpoint::getOrientation() const
+{
+    return ((NodeOrthoViewpoint *)this)->orientation()->getQuat();
+}
+
+void NodeOrthoViewpoint::setOrientation(const Quaternion &quat)
+{
+    SFRotation *rot = new SFRotation(quat);
+    rot->reverseFixAngle(m_scene->getUnitAngle());
+    m_scene->setField(this, orientation_Field(), rot);
+}
+
+void
+NodeOrthoViewpoint::getMatrix(float* matrix)
+{
+    for (int i = 0; i < 16; i++)
+       matrix[i] = m_matrix[i];
+}
+
 

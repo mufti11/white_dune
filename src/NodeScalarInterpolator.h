@@ -49,8 +49,8 @@ public:
     virtual Node       *copy() const 
                            { return new NodeScalarInterpolator(*this); }
 
-    virtual FieldValue *createKey(float *value) const;
-    virtual FieldValue *createKeys(float *value, int numKeys) const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
 
     virtual int         getNumChannels() const { return 1; }
 

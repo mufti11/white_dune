@@ -181,8 +181,8 @@ NodeBackground::apply()
     glDisable(GL_FOG);
     glDisable(GL_CULL_FACE);
     glLoadIdentity();
-    const float *r = m_scene->getCamera()->orientation()->getValue();
-    glRotatef(RAD2DEG(-r[3] * unitAngle), r[0], r[1], r[2]);
+    Quaternion r = m_scene->getCamera()->getOrientation();
+    glRotatef(RAD2DEG(-r.w * unitAngle), r.x, r.y, r.z);
     glMultMatrixf(m_matrix);
     drawBackgroundSphere();
     drawBackgroundTextures();

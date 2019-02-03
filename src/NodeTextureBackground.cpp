@@ -130,7 +130,8 @@ NodeTextureBackground::apply()
     glDisable(GL_FOG);
     glDisable(GL_CULL_FACE);
     glLoadIdentity();
-    const float *r = m_scene->getCamera()->orientation()->getValue();
+    SFRotation rot(m_scene->getCamera()->getOrientation());
+    const float *r = rot.getValue();
     glRotatef(-RAD2DEG(r[3] * unitAngle), r[0], r[1], r[2]);
     drawTextureBackgroundSphere();
     drawTextureBackgroundTextures();

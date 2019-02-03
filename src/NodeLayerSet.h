@@ -57,6 +57,9 @@ public:
     virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeLayerSet(*this); }
 
+    virtual void    preDraw() { layers()->preDraw(); }
+    virtual void    draw(int pass);
+
     fieldMacros(SFInt32, activeLayer, ProtoLayerSet);
     fieldMacros(MFNode,  layers,      ProtoLayerSet);
     fieldMacros(MFInt32, order,       ProtoLayerSet);

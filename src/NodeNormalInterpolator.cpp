@@ -65,15 +65,15 @@ NodeNormalInterpolator::getNumChannels() const
 }
 
 FieldValue *
-NodeNormalInterpolator::createKey(float *value) const
+NodeNormalInterpolator::createKey(void *value) const
 {
-    return new MFVec3f(value, getNumChannels());
+    return new MFVec3f((float *)value, getNumChannels());
 }
 
 FieldValue *
-NodeNormalInterpolator::createKeys(float *value, int numKeys) const
+NodeNormalInterpolator::createKeys(void *value, int numKeys) const
 {
-    return new MFVec3f(value, numKeys * getNumChannels());
+    return new MFVec3f((float *)value, numKeys * getNumChannels());
 }
 
 void 

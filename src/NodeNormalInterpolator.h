@@ -50,8 +50,8 @@ public:
                            { return new NodeNormalInterpolator(*this); }
 
     virtual int         getNumChannels() const;
-    virtual FieldValue *createKey(float *value) const;
-    virtual FieldValue *createKeys(float *value, int numKeys) const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
     virtual void        recordValue(int key, FieldValue *value);
 
     ADD_FLIP

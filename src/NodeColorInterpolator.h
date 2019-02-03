@@ -48,8 +48,8 @@ public:
     virtual Node       *copy() const { return new NodeColorInterpolator(*this);}
 
     virtual int         getNumChannels() const { return 3; }
-    virtual FieldValue *createKey(float *values) const;
-    virtual FieldValue *createKeys(float *values, int numKeys) const;
+    virtual FieldValue *createKey(void *values) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
     virtual void        setKeyValue(int channel, int index, float value);
 
     fieldMacros(MFColor, keyValue, ProtoColorInterpolator)

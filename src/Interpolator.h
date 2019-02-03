@@ -60,25 +60,25 @@ public:
     
     int                 getNumKeys() const;
     float               getKey(int index) const;
-    float               getKeyValue(int channel, int index) const;
+    virtual float       getKeyValue(int channel, int index) const;
     void                setKey(int index, float value);
     virtual void        setKeyValue(int channel, int index, float value);
     void                backupKey(int index);
     void                backup(CommandList *list);
     void                receiveEvent(int eventIn, double timestamp, 
                                      FieldValue *value);
-    void                insertKey(int pos, float key, const float *values);
+    virtual void        insertKey(int pos, float key, const float *values);
     void                insertKey(int pos, float key, 
                                   const float *values, int numValues);
     void                deleteKeys(int start, int end);
     virtual void        interpolate(float k, float *values);
-    FieldValue         *getInterpolatedFieldValue(float k);
+    virtual FieldValue *getInterpolatedFieldValue(float k);
     void                sendInterpolatedEvent(double timestamp, float k);
     void                sendInterpolatedValue(double timestamp, float k);
 
     virtual int         getNumChannels() const = 0;
-    virtual FieldValue *createKey(float *value) const = 0;
-    virtual FieldValue *createKeys(float *value, int numKeys) const = 0;
+    virtual FieldValue *createKey(void *value) const = 0;
+    virtual FieldValue *createKeys(void *value, int numKeys) const = 0;
 
     int                 findKey(float value) const;
     int                 findKeyInclusive(float value) const;

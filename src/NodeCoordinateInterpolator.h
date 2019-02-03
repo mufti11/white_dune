@@ -50,8 +50,8 @@ public:
     virtual int         getX3dVersion(void) const { return 0; }
 
     virtual int         getNumChannels() const;
-    virtual FieldValue *createKey(float *value) const;
-    virtual FieldValue *createKeys(float *values, int numKeys) const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
     virtual void        recordValue(int key, FieldValue *value);
 
     ADD_FLIP

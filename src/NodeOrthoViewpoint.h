@@ -69,11 +69,21 @@ public:
 
     virtual const char* getComponentName(void) const { return "Navigation"; }
     virtual int         getComponentLevel(void) const { return 2; }
-    virtual int     getX3dVersion(void) const { return 2; } 
-    virtual Node   *copy() const { return new NodeOrthoViewpoint(*this); }
+    virtual int         getX3dVersion(void) const { return 2; } 
+    virtual Node       *copy() const { return new NodeOrthoViewpoint(*this); }
 
     void                apply(bool useStereo = TheApp->useStereo());
     void                transformForViewpoint(bool useStereo);
+
+    Vec3f               getPosition() const;
+    Quaternion          getOrientation() const;
+
+    void                setPosition(const Vec3f &pos);
+    void                setOrientation(const Quaternion &quat);
+
+    SFFloat            *fov() { static SFFloat f(M_PI / 4); return &f; }
+
+    void                getMatrix(float* matrix);
 
     fieldMacros(SFVec3f,    centerOfRotation, ProtoOrthoViewpoint)
     fieldMacros(SFString,   description, ProtoOrthoViewpoint)

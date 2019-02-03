@@ -1066,7 +1066,7 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
 {
     glPushMatrix();
     glLoadIdentity();
-    NodeViewpoint *camera=m_scene->getCamera();
+    Node *camera=m_scene->getCamera();
     Quaternion viewrot=camera->getOrientation();
     Quaternion newrot;
     bool rotation_changed=false;
@@ -1104,11 +1104,6 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
     }
     m_scene->applyCamera();
     swInvalidateWindow(m_wnd);
-    // Backup of inputdevice data is maybe memory murder 8-(
-    if (translation_changed)
-       m_scene->backupField(camera, camera->position_Field());
-    if (rotation_changed)
-       m_scene->backupField(camera, camera->orientation_Field());
     glPopMatrix();
 }
 
