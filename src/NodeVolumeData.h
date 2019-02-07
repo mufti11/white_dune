@@ -67,6 +67,9 @@ public:
     virtual int     getX3dVersion(void) const { return 3; }    
     virtual Node   *copy() const { return new NodeVolumeData(*this); }
 
+    virtual void preDraw();
+    virtual void draw(int pass);
+
     fieldMacros(SFVec3f, dimensions, ProtoVolumeData);
     fieldMacros(SFNode, renderStyle, ProtoVolumeData);
     fieldMacros(SFNode, voxels, ProtoVolumeData);

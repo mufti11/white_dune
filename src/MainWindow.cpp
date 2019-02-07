@@ -8970,15 +8970,76 @@ MainWindow::csg(int operation)
             if (node1 && node1->isMeshBasedNode() &&
                 node2 && node2->isMeshBasedNode()) {
 
+
+                m_scene->backupFieldsStart();
                 NodeIndexedFaceSet *face1 = (NodeIndexedFaceSet *)
                                             node1->toIndexedFaceSet();
-                face1->triangulateMesh();
-                face1->optimize();
+                MyMesh *mesh = face1->triangulateMesh();
+                MFInt32 *mfcoordIndex = mesh->getCoordIndex();
+                if (mfcoordIndex) {
+                    mfcoordIndex = (MFInt32 *) mfcoordIndex->copy();
+                    m_scene->backupFieldsAppend(face1, 
+                                                face1->coordIndex_Field());
+                    m_scene->setField(face1, face1->coordIndex_Field(),
+                                      new MFInt32(*mfcoordIndex));
+                }
+                NodeCoordinate *coord = (NodeCoordinate *)
+                                        face1->coord()->getValue();
+                MFVec3f *mfcoord = mesh->getVertices();
+                if (coord && mfcoord) {
+                    mfcoord = (MFVec3f *) mfcoord;
+                    m_scene->backupFieldsAppend(coord, coord->point_Field());
+                    m_scene->setField(coord, coord->point_Field(), 
+                                      new MFVec3f(*mfcoord));
+                }
+                MFVec3f *mfVertices = NULL;
+                MFInt32 *mfCoordIndex = NULL;
+                face1->optimizeMesh(&mfVertices, &mfCoordIndex);
+                NodeCoordinate *coord1 = (NodeCoordinate *) 
+                                        m_scene->createNode("Coordinate");
+                if (coord1 && mfVertices && mfCoordIndex) {
+                    m_scene->backupFieldsAppend(coord1, coord1->point_Field());
+                    coord1->point(new MFVec3f(*mfVertices));
+                    face1->coord(new SFNode(coord1));
+                    m_scene->backupFieldsAppend(face1, 
+                                                face1->coordIndex_Field());
+                    face1->coordIndex(new MFInt32(*mfCoordIndex));
+                }
 
                 NodeIndexedFaceSet *face2 = (NodeIndexedFaceSet *)
                                             node2->toIndexedFaceSet();
-                face2->triangulateMesh();
-                face2->optimize();
+                mesh = face2->triangulateMesh();
+                mfcoordIndex = mesh->getCoordIndex();
+                if (mfcoordIndex) {
+                    mfcoordIndex = (MFInt32 *) mfcoordIndex->copy();
+                    m_scene->backupFieldsAppend(face2, 
+                                                face2->coordIndex_Field());
+                    m_scene->setField(face2, face2->coordIndex_Field(),
+                                      new MFInt32(*mfcoordIndex));
+                }
+                coord = (NodeCoordinate *)face2->coord()->getValue();
+                mfcoord = mesh->getVertices();
+                if (coord && mfcoord) {
+                    mfcoord = (MFVec3f *) mfcoord;
+                    m_scene->backupFieldsAppend(coord, coord->point_Field());
+                    m_scene->setField(coord, coord->point_Field(), 
+                                      new MFVec3f(*mfcoord));
+                }
+                mfVertices = NULL;
+                mfCoordIndex = NULL;
+                face2->optimizeMesh(&mfVertices, &mfCoordIndex);
+                NodeCoordinate *coord2 = (NodeCoordinate *) 
+                                         m_scene->createNode("Coordinate");
+                if (coord2 && mfVertices && mfCoordIndex) {
+                    m_scene->backupFieldsAppend(coord2, coord2->point_Field());
+                    coord2->point(new MFVec3f(*mfVertices));
+                    face2->coord(new SFNode(coord2));
+                    m_scene->backupFieldsAppend(face2, 
+                                                face2->coordIndex_Field());
+                    face2->coordIndex(new MFInt32(*mfCoordIndex));
+                }
+
+                m_scene->backupFieldsDone();
 
                 NodeIndexedFaceSet *face = face1->csg(face2, operation, 
                                                       matrix1, matrix2);

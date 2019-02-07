@@ -31,6 +31,8 @@
 #include "SFVec3f.h"
 #include "SFVec3f.h"
 #include "DuneApp.h"
+#include "Scene.h"
+#include "NodeImageTexture3D.h"
 
 ProtoVolumeData::ProtoVolumeData(Scene *scene)
   : Proto(scene, "VolumeData")
@@ -57,11 +59,6 @@ ProtoVolumeData::ProtoVolumeData(Scene *scene)
                         VRML_APPEARANCE));
     setFieldFlags(appearance, FF_X3D_ONLY);
 
-    geometry.set(
-        addExposedField(SFNODE, "geometry", new SFNode(),
-                        GEOMETRY_NODE));
-    setFieldFlags(geometry, FF_X3D_ONLY);
-
     isPickable.set(
         addField(SFBOOL, "isPickable", new SFBool(true)));
     setFieldFlags(isPickable, FF_X3D_ONLY);
@@ -81,3 +78,25 @@ NodeVolumeData::NodeVolumeData(Scene *scene, Proto *def)
   : Node(scene, def)
 {
 }
+
+void
+NodeVolumeData::preDraw()
+{
+    Node *node = voxels()->getValue();
+    if (node && (node->getType() == X3D_IMAGE_TEXTURE_3D)) {
+        ((NodeImageTexture3D *)node)->preDraw();
+    }
+}
+
+void
+NodeVolumeData::draw(int pass)
+{
+    if (pass == RENDER_PASS_NON_TRANSPARENT)
+        return; 
+    Node *node = voxels()->getValue();
+    if (node && (node->getType() == X3D_IMAGE_TEXTURE_3D)) {
+        ((NodeImageTexture3D *)node)->draw(pass);
+    }
+}
+
+

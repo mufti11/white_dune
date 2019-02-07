@@ -420,6 +420,9 @@
 /* define if you have a tty file for UNIX/Linux fontrendering */
 #undef HAVE_DEFAULT_TTF_FILE
 
+/* define if you have imlib2 */
+#undef HAVE_LIBIMLIB2
+
 /* 
    Define if you want to document the method to uninstall white_dune
 */

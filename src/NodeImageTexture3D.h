@@ -35,6 +35,7 @@
 #include "KambiTextureCommonFields.h"
 
 #include "SFMFTypes.h"
+#include "Texture3D.h"
 
 class ProtoImageTexture3D : public Proto {
 public:
@@ -68,6 +69,9 @@ public:
     virtual int     getX3dVersion(void) const { return 1; }
     virtual Node   *copy() const { return new NodeImageTexture3D(*this); }
 
+    virtual void    preDraw();
+    virtual void    draw(int pass);
+
     fieldMacros(MFString, url,               ProtoImageTexture3D);
     fieldMacros(SFBool,   repeatS,           ProtoImageTexture3D);
     fieldMacros(SFBool,   repeatT,           ProtoImageTexture3D);
@@ -78,6 +82,11 @@ public:
     fieldMacros(SFBool,   hideChildren,      ProtoImageTexture3D);
     fieldMacros(SFInt32,  origChannelCount,  ProtoImageTexture3D);
     fieldMacros(SFBool,   scale,             ProtoImageTexture3D);
+
+public:
+    int m_textureTableIndex;
+    bool m_nodeNeedsCompiling;
+    ppTextures m_textures_prv;
 };
 
 #endif

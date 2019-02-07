@@ -1442,7 +1442,7 @@ NodeData::writeRoutes(int f, int indent) const
             if (j->item().getNode()->getFlag(NODE_FLAG_TOUCHED)) {
                 Node *src = j->item().getNode();
                 int field = j->item().getField();
-                if ((m_scene->getWriteFlags() && X3DOM) && 
+                if ((m_scene->getWriteFlags() & X3DOM) && 
                     (j->item().getNode()->getType() == VRML_SCRIPT)) {
                     NodeScript *script = (NodeScript *)j->item().getNode();
                     bool flag = false;

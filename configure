@@ -4717,7 +4717,7 @@ _ACEOF
 fi
 
 if test "X_$WWWBROWSER" = "X_" ; then
-   for ac_prog in firefox x-www-browser epiphany iceweasel phoenix galeon firebird opera mozilla seamonkey lynx links netscape
+   for ac_prog in xdg-open firefox x-www-browser epiphany iceweasel phoenix galeon firebird opera mozilla seamonkey lynx links netscape
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -8976,6 +8976,67 @@ EOF
       ZLIB_WARNING="no usable zlib (==libz) library: no reading of compressed VRML files, possibly no rendering of png textures"
    fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for imlib_copy_drawable_to_image in -lImlib2" >&5
+$as_echo_n "checking for imlib_copy_drawable_to_image in -lImlib2... " >&6; }
+if ${ac_cv_lib_Imlib2_imlib_copy_drawable_to_image+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lImlib2  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char imlib_copy_drawable_to_image ();
+int
+main ()
+{
+return imlib_copy_drawable_to_image ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_Imlib2_imlib_copy_drawable_to_image=yes
+else
+  ac_cv_lib_Imlib2_imlib_copy_drawable_to_image=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Imlib2_imlib_copy_drawable_to_image" >&5
+$as_echo "$ac_cv_lib_Imlib2_imlib_copy_drawable_to_image" >&6; }
+if test "x$ac_cv_lib_Imlib2_imlib_copy_drawable_to_image" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBIMLIB2 1
+_ACEOF
+
+  LIBS="-lImlib2 $LIBS"
+
+else
+  IMLIB2_ERROR=1
+fi
+
+if test "X_$IMLIB2_ERROR" = "X_1" ; then
+   cat 1>&2 << EOF
+
+*** couldn't find working imlib2 ***
+
+Couldn't find imlib2 develop package.
+imlib2 is a library for image loading
+This is not a fatal error; the package will be simply built without
+support to render ImageTexture3D nodes
+
+EOF
+   IMLIB2_WARNING="no usable imlib2 library: no rendering of ImageTexture3D nodes"
+fi
+
    if test "X_$HAVE_OLPC" = "X_1" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XML_ExpatVersion in -lexpat" >&5
 $as_echo_n "checking for XML_ExpatVersion in -lexpat... " >&6; }
@@ -11728,4 +11789,9 @@ if test "X_$VCG_ERROR" = "X_1" ; then
     echo "if libvcg is not available, the polygon reducer function is not available" 1>&2
 fi
 
+if test "X_$IMLIB2_WARNING" != "X_" ; then
+    echo " " 1>&2
+    echo "Warning:" 1>&2
+    echo " " $IMLIB2_WARNING 1>&2
+fi
 

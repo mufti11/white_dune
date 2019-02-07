@@ -38,6 +38,7 @@ VERSION4=`awk -v x="$VERSION2" 'BEGIN {split(x, a, "pl");print a[2]}'`
 VERSION5=wdune-$VERSION3
 VERSION6=$VERSION3
 VERSION=$VERSION1
+
 (
    cd ../../.. && 
    rm -rf /tmp/$VERSION5 && \
@@ -90,10 +91,13 @@ BuildRequires: libcurl-devel
 BuildRequires: ImageMagick
 BuildRequires: aqsis-core
 BuildRequires: freetype-devel 
+BuildRequires: imlib2-devel
 BuildRequires: bitstream-vera-sans-fonts
 BuildRequires: desktop-file-utils
+BuildRequires: xdg-utils
+BuildRequires: coreutils
+BuildRequires: grep
 Requires: rcs
-Requires: firefox
 Requires: kolourpaint
 Requires: audacity
 Requires: lxterminal
@@ -119,16 +123,13 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
 %prep
 %setup -q
 
-
-
 %build
 %configure \
     --with-about="$VERSION1" \
     --with-optimization \
     --without-devil \
-    --with-vrmlbrowser=firefox \
-    --with-helpurl="/usr/share/doc/wdune/docs/" \
-    --with-protobaseurl="/usr/share/doc/wdune/docs" \
+    --with-helpurl="/usr/share/doc/wdune-docs/docs/" \
+    --with-protobaseurl="/usr/share/doc/wdune-docs/docs" \
     --with-checkincommand="ci" \
     --with-imageeditor="kolourpaint" \
     --with-imageeditor4kids="kolourpaint" \
@@ -141,7 +142,6 @@ mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man1
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/misc/white_dune
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/pixmaps/
-#mkdir -p $RPM_BUILD_ROOT/usr/lib/debug/usr/bin/
 
 install -m 755 -p bin/dune $RPM_BUILD_ROOT/%{_bindir}/dune
 install -m 755 -p bin/dune4kids $RPM_BUILD_ROOT/%{_bindir}/dune4kids
@@ -158,12 +158,9 @@ desktop-file-install                                    \
 --add-category="Graphics"                               \
 --delete-original                                       \
 --dir=$RPM_BUILD_ROOT/%{_datadir}/applications          \
-$RPM_BUILD_ROOT//%{_datadir}/applications/dune.desktop
-
-#/usr/lib/rpm/find-debuginfo.sh
+$RPM_BUILD_ROOT/%{_datadir}/applications/dune.desktop
 
 %files
-%doc README.txt docs
 %license COPYING
 
 %{_bindir}/dune
@@ -176,19 +173,25 @@ $RPM_BUILD_ROOT//%{_datadir}/applications/dune.desktop
 %{_mandir}/man1/dune.1*
 %{_mandir}/man1/dune4kids.1*
 %{_mandir}/man1/illegal2vrml.1*
-#/usr/lib/debug/usr/bin/dune.debug
 
 %changelog
-* Wed Sep 20 2017 J. Scheurich <mufti11@web.de> 0.99pl1276
--- Initial packaging
-Release: 1%{?dist}
+
+%package docs
+Summary: Documentation for white_dune
+%description docs
+Documentation for white_dune
+%files docs
+%doc README.txt docs
 
 EOT
+
+rpmdev-bumpspec --comment="Initial RPM release" --userstring="J. Scheurich <mufti11@web.de>" /tmp/wdune.spec
 
 if rpm -ba /tmp/wdune.spec ; then
    echo > /dev/null
 else
    rpmbuild -ba /tmp/wdune.spec
 fi
-#rm -f /tmp/wdune.spec
+
+
 

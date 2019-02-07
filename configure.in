@@ -399,7 +399,7 @@ fi
 
 dnl check for webbrowsers
 if test "X_$WWWBROWSER" = "X_" ; then
-   AC_PATH_PROGS(WWWBROWSER,[firefox x-www-browser epiphany iceweasel phoenix galeon firebird opera mozilla seamonkey lynx links netscape])
+   AC_PATH_PROGS(WWWBROWSER,[xdg-open firefox x-www-browser epiphany iceweasel phoenix galeon firebird opera mozilla seamonkey lynx links netscape])
 fi
 
 if test "X_$WWWBROWSER" = "X_" ; then
@@ -1399,6 +1399,21 @@ EOF
       ZLIB_WARNING="no usable zlib (==libz) library: no reading of compressed VRML files, possibly no rendering of png textures"
    fi
 
+AC_CHECK_LIB(Imlib2, imlib_copy_drawable_to_image, , IMLIB2_ERROR=1)
+if test "X_$IMLIB2_ERROR" = "X_1" ; then
+   cat 1>&2 << EOF
+
+*** couldn't find working imlib2 ***
+
+Couldn't find imlib2 develop package.
+imlib2 is a library for image loading
+This is not a fatal error; the package will be simply built without
+support to render ImageTexture3D nodes
+
+EOF
+   IMLIB2_WARNING="no usable imlib2 library: no rendering of ImageTexture3D nodes"
+fi
+
    if test "X_$HAVE_OLPC" = "X_1" ; then
       AC_CHECK_LIB(expat, XML_ExpatVersion)
       AC_CHECK_LIB(freetype, FT_Library_Version)
@@ -1921,4 +1936,9 @@ if test "X_$VCG_ERROR" = "X_1" ; then
     echo "if libvcg is not available, the polygon reducer function is not available" 1>&2
 fi
 
+if test "X_$IMLIB2_WARNING" != "X_" ; then
+    echo " " 1>&2
+    echo "Warning:" 1>&2
+    echo " " $IMLIB2_WARNING 1>&2
+fi
 

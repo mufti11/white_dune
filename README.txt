@@ -4942,5 +4942,7 @@ Fixed error in Interpolator
 
 Added Boolean/IntegerSequencer rendering
 
+Fixed CSG operations
+
 contact: MUFTI <mufti@users.ourproject.org>
 

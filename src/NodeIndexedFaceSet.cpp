@@ -1857,6 +1857,10 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
         CGAL::Polygon_mesh_processing::triangulate_faces(surface2);
     
         CGAL::Polygon_mesh_processing::parameters::all_default();
+
+        CGAL::Polygon_mesh_processing::stitch_borders(surface1); 	
+        CGAL::Polygon_mesh_processing::stitch_borders(surface2); 	
+
     /*
         if (CGAL::Polygon_mesh_processing::does_self_intersect(surface1)) {
             char str[256], title[256], message[256];
