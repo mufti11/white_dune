@@ -58,8 +58,8 @@ protected:
 
 private:
     MainWindow         *m_mainWindow;
-    Array<STOOLBAR>     m_toolbars;
-    Array<SBITMAP>      m_bitmaps;
+    MyArray<STOOLBAR>   m_toolbars;
+    MyArray<SBITMAP>    m_bitmaps;
 };
 
 #endif // _TOOLBAR_WINDOW_H

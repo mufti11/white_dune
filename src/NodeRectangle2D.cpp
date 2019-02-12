@@ -85,7 +85,7 @@ NodeRectangle2D::createMesh(bool cleanDoubleVertices, bool triangulate)
     fpoint[3 * 3 + 2] = 0;
 
     
-    Array<int> icoordIndex;
+    MyArray<int> icoordIndex;
     icoordIndex.append(0);
     icoordIndex.append(1);
     icoordIndex.append(2);
@@ -105,7 +105,7 @@ NodeRectangle2D::createMesh(bool cleanDoubleVertices, bool triangulate)
     float transparency = 0;
     if (hasParent())
         transparency = getParent()->getTransparency();
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
 
     m_mesh = new MyMesh(this, coords, coordIndex, NULL, NULL, NULL, NULL,
                         texCoords, NULL, 0, meshFlags, transparency);

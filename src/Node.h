@@ -137,7 +137,7 @@ public:
     parentFlag  m_parentFlag;             
 };
 
-typedef Array<Parent> ParentArray;
+typedef MyArray<Parent> ParentArray;
 
 enum Constraint {
     CONSTRAIN_NONE = 0,
@@ -1069,10 +1069,10 @@ protected:
     NodePROTO         *m_nodePROTO;
     bool               m_canDraw;
     bool               m_isConvertedInCurveAnimaton;
-    Array<EventIn *>      m_isEventIns;
-    Array<EventOut *>     m_isEventOuts;
-    Array<Field *>        m_isFields;
-    Array<ExposedField *> m_isExposedFields;
+    MyArray<EventIn *>      m_isEventIns;
+    MyArray<EventOut *>     m_isEventOuts;
+    MyArray<Field *>        m_isFields;
+    MyArray<ExposedField *> m_isExposedFields;
     int                m_counter4SceneTreeView;
 };
    

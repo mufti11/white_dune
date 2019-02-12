@@ -90,7 +90,7 @@ protected:
     bool                equals(const MFDouble *value) const;
 
 protected:
-    Array<double>       m_value;
+    MyArray<double>     m_value;
 };
 
 #endif // _MFDOUBLE_H

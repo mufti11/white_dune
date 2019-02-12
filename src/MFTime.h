@@ -76,7 +76,7 @@ public:
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:
-    Array<double>       m_value;
+    MyArray<double>     m_value;
 };
 
 #endif // _MFTIME_H

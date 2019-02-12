@@ -77,6 +77,7 @@ ProtoVolumeData::create(Scene *scene)
 NodeVolumeData::NodeVolumeData(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_boxtris = NULL;
 }
 
 void

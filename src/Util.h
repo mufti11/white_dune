@@ -92,10 +92,10 @@ public:
     static void     myGlMaterialfv(GLenum face, GLenum pname, 
                                    const float *params);
     static bool     invertMatrix(float out[16], const float in[16]);
-    static void     getTexCoords(Array<MFVec2f *>&texCoords, Node *texCoord);
+    static void     getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord);
 
 #ifdef HAVE_LIBCGAL
-    static NodeIndexedFaceSet *convexHull(Scene *scene, Array<Vec3f> vec);
+    static NodeIndexedFaceSet *convexHull(Scene *scene, MyArray<Vec3f> vec);
 #endif
 };
 

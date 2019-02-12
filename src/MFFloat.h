@@ -98,7 +98,7 @@ protected:
     bool                equals(const MFFloat *value) const;
 
 protected:
-    Array<float>        m_value;
+    MyArray<float>      m_value;
 };
 
 #endif // _MFFLOAT_H

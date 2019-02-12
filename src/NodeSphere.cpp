@@ -303,7 +303,7 @@ NodeSphere::createMesh(bool cleanDoubleVertices, bool triangulate)
     fnormal[offset + 1] = -1;
     fnormal[offset + 2] = 0;
 
-    Array<int> icoordIndex;
+    MyArray<int> icoordIndex;
     for (i = 0; i < tess; i++) {    
         icoordIndex.append(1 + i);
         if (i == (tess - 1))
@@ -378,7 +378,7 @@ NodeSphere::createMesh(bool cleanDoubleVertices, bool triangulate)
     if (hasParent())
         transparency = getParent()->getTransparency();
 
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
     m_mesh = new MyMesh(this, coords, coordIndex, normals, normalIndex, colors, 
                         colorIndex, texCoords, texCoordIndex,
                         M_PI / 2.0f - 0.0001f, meshFlags, transparency);

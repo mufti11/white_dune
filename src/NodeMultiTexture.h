@@ -97,7 +97,7 @@ public:
 protected:
     int m_maxTextureUnits;
     GLuint *m_textureObjects;
-    Array<int> m_modeInt;
+    MyArray<int> m_modeInt;
 };
 
 #endif // _NODE_MULTI_TEXTURE_H

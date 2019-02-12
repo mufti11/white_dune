@@ -70,4 +70,9 @@ ProtoBlendedVolumeStyle::create(Scene *scene)
 NodeBlendedVolumeStyle::NodeBlendedVolumeStyle(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_fbohandles = NULL;
+    m_weightFunction1 = 0;
+    m_weightFunction2 = 0;
+    m_weightConstant1 = 1;
+    m_weightConstant2 = 1;
 }

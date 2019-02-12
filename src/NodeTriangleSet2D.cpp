@@ -98,7 +98,7 @@ NodeTriangleSet2D::createMesh(bool cleanDoubleVertices, bool triangulate)
         transparency = getParent()->getTransparency();
     if (solid()->getValue())
         meshFlags |= MESH_SOLID;
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
     m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
                         NULL, texCoords, NULL, 0, meshFlags, transparency);
 }

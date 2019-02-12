@@ -27,6 +27,6 @@
 #endif
 class MyString;
 
-typedef Array<MyString> StringArray;
+typedef MyArray<MyString> StringArray;
 
 #endif // _STRINGARRAY_H

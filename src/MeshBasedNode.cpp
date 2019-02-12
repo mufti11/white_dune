@@ -1283,7 +1283,7 @@ MeshBasedNode::writeRib(int f, int indent)
     if (texCoordIndex == NULL)
         texCoordIndex = coordIndex;
 
-    Array<int> indexArray;
+    MyArray<int> indexArray;
     // search longest *Index
     int numIndex = COORD_INDEX;
     int numCoordIndices = 0;

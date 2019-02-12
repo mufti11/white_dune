@@ -678,7 +678,7 @@ void NodeExtrusion::createMesh(bool cleanDoubleVertices, bool triangulate)
         meshFlags |= MESH_CONVEX;
     meshFlags |= MESH_COLOR_PER_VERTEX;
     meshFlags |= MESH_NORMAL_PER_VERTEX;
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
     m_mesh = new MyMesh(this, vertices, coordIndex, NULL, NULL,
                         NULL, NULL, texCoords, NULL, creaseAngle()->getValue(), 
                         meshFlags);

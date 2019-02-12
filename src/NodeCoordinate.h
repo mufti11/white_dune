@@ -115,11 +115,11 @@ public:
     void draw(Node *node);
     NodeNurbsGroup *findNurbsGroup();
 protected:
-    Array<Vec3f> m_selectedVertices;
-    Array<Vec3f> m_selectedVertices2;
-    Array<Vec3f> m_selectedVerticesWithoutX;
-    Array<bool> m_validSymVerticesHandles;
-    Array<int> m_selectedVerticesHandles;
+    MyArray<Vec3f> m_selectedVertices;
+    MyArray<Vec3f> m_selectedVertices2;
+    MyArray<Vec3f> m_selectedVerticesWithoutX;
+    MyArray<bool> m_validSymVerticesHandles;
+    MyArray<int> m_selectedVerticesHandles;
 };
 
 #endif // _NODE_COORDINATE_H

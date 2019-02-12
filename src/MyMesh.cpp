@@ -64,7 +64,7 @@ MyMesh::MyMesh(MeshBasedNode *node,
                MFVec3f *vertices, MFInt32 *coordIndex,
                MFVec3f *normals, MFInt32 *normalIndex,
                MFFloat *colors, MFInt32 *colorIndex,
-               Array<MFVec2f *>texCoords, MFInt32 *texCoordIndex,
+               MyArray<MFVec2f *>texCoords, MFInt32 *texCoordIndex,
                float creaseAngle, int meshFlags, float transparency)
 {
     m_node = node;
@@ -212,7 +212,7 @@ MyMesh::~MyMesh()
 MyMesh *
 MyMesh::copy(void)
 {
-    Array<MFVec2f*> texCoords;
+    MyArray<MFVec2f*> texCoords;
     for (int i = 0; i < m_texCoords.size(); i++)
         if (m_texCoords[i] != NULL) {
             if (m_texCoords[i]->getSize() > 0)
@@ -617,7 +617,7 @@ MyMesh::smoothNormals()
 
     EdgeList::Iterator *j;
     int nVerts = m_vertices->getSFSize();
-    Array<Vec3f> normals;
+    MyArray<Vec3f> normals;
     // the created normals are normalPerVertex, so any vertex need a normal
     m_normalPerVertex = true;
     float cosAngle = (float) cos(m_creaseAngle);
@@ -626,7 +626,7 @@ MyMesh::smoothNormals()
     const int *coordIndex = m_coordIndex->getValues();
     int nCoords = m_coordIndex->getSize();
     int start = 0;
-    Array<int> normalIndex;
+    MyArray<int> normalIndex;
 
     for (int i = 0; i < nCoords; i++) {
         int v = coordIndex[i];
@@ -715,7 +715,7 @@ MyMesh::smoothNormals()
         }
     }
     // join all smoothed normals of a vertex
-    Array <IntArray *> smoothNormalIndices;
+    MyArray<IntArray *> smoothNormalIndices;
     for (int i = 0; (i < normalIndex.size()) || (i < nVerts); i++)
         smoothNormalIndices.append(new IntArray());
     for (int n = 0; n < nCoords; n++) {
@@ -1104,7 +1104,7 @@ MyMesh::optimizeCoordIndex(void)
     // test if there are faces with identical vertices in a row
     // if such unnecessary repeated vertices are found, 
     // the matching coordIndices are deleted
-    Array<int> coordIndexDeleteArray;
+    MyArray<int> coordIndexDeleteArray;
     for (int i = 0; i < m_numFaces; i++) {
         int offset = m_faces[i]->getOffset();
         if (offset >= coordIndex->getSize())
@@ -1223,12 +1223,12 @@ MyMesh::optimizeVertices(MFVec3f **newCoord, MFInt32 **newCoordIndex,
                        float epsilon)
 {
     const float *vertex = m_vertices->getValues();
-    Array<bool> vertexAlreadyHandled;
+    MyArray<bool> vertexAlreadyHandled;
     for (int i = 0; i < m_vertices->getSize(); i++)
         vertexAlreadyHandled.append(false);
 
     const int *coordIndex = m_coordIndex->getValues();
-    Array<int> tmpCoordIndex;
+    MyArray<int> tmpCoordIndex;
     for (int i = 0; i < m_coordIndex->getSize(); i++)
         tmpCoordIndex.append(-1);
 
@@ -1840,7 +1840,7 @@ MyMesh::buildNewTriangulatedMesh(MeshBasedNode *that)
     }
     if (texCoord == NULL)
         texCoord = ::generateTextureCoordinates(vertices, coordIndex);
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     texCoords.append(texCoord);
     MFInt32 *texCoordIndex = NULL;
 

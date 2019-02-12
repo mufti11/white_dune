@@ -86,7 +86,7 @@ CurveAnimationDialog::LoadData()
     SWND comboTimeSensors = swGetDialogItem(m_dlg, IDC_TIMESENSORS);
     swComboBoxDeleteAll(comboTimeSensors);
 
-    Array<MyString> timeSensors;
+    MyArray<MyString> timeSensors;
     timeSensors[0] = "new TimeSensor"; 
 
     const NodeList *nodes = m_scene->getNodes();

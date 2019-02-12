@@ -156,9 +156,9 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
     float fn1 = n1()->getValue();
     float fn2 = n2()->getValue();
     float fn3 = n3()->getValue();
-    Array<float> r1(superTess);
-    Array<float> c1(superTess);
-    Array<float> s1(superTess);
+    MyArray<float> r1(superTess);
+    MyArray<float> c1(superTess);
+    MyArray<float> s1(superTess);
     for (int a1 = 0; a1 < superTess; a1++) {
         float angle1 = low + a1 * inc1;
         r1[a1] = superFormula(angle1, fa, fb, fm, fn1, fn2, fn3);
@@ -188,7 +188,7 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
     m_nurbsCurve->order(new SFInt32(order()->getValue()));
     const Vec3f *chain = m_nurbsCurve->getChain();
     int chainLength = m_nurbsCurve->getChainLength();
-    Array<float> fchain(chainLength * 2);
+    MyArray<float> fchain(chainLength * 2);
     for (int i = 0; i < chainLength; i++) {
          fchain[i * 2    ] = chain[i].x;
          fchain[i * 2 + 1] = chain[i].y;
@@ -276,7 +276,7 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
 
     MFInt32 *coordIndex = new MFInt32(ci, cindex);
     MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex);
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     texCoords.append(texCoord);
 
     bool bsolid = solid()->getValue();
@@ -530,7 +530,7 @@ NodeSuperRevolver::degreeElevate(int newDegree)
     Vec3f *tPoints = new Vec3f[dimension];
     float *tWeights = new float[dimension];
     int knotSize = knot()->getSize();
-    Array<float> tKnots(knotSize);
+    MyArray<float> tKnots(knotSize);
     int deg = order()->getValue() - 1;
     int upDegree = newDegree - deg;
 

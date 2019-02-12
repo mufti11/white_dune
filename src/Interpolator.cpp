@@ -142,8 +142,6 @@ Interpolator::findKey(float value) const
     for (i = 0; i < numKeys; i++) {
         float k = key->getValue(i);
         if (k > value) {
-           if (i > 0)
-              i--;
            break;
         }
     }
@@ -438,7 +436,7 @@ Interpolator::recordKey(FieldValue *value, bool isrunning)
         int maxOldKey = findKey(m_fraction - 0.01f);
         if (maxOldKey > oldKey)
             oldKey = maxOldKey;
-        if (key > oldKey) {
+        if ((oldKey != -1) && (key > oldKey)) {
             deleteKeys(oldKey, key);
             key = oldKey;
         }                   

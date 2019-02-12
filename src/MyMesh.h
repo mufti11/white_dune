@@ -88,7 +88,7 @@ public:
                                MFVec3f *vertices, MFInt32 *coordIndex,
                                MFVec3f *normals, MFInt32 *normalIndex,
                                MFFloat *colors, MFInt32 *colorIndex,
-                               Array<MFVec2f *>texCoords, 
+                               MyArray<MFVec2f *>texCoords, 
                                MFInt32 *texCoordIndex,
                                float creaseAngle, int meshFlags, 
                                float transparency = 0);
@@ -194,7 +194,7 @@ private:
     MFVec3f            *m_vertices;
     MFVec3f            *m_normals;
     MFFloat            *m_colors;
-    Array<MFVec2f*>     m_texCoords;
+    MyArray<MFVec2f*>   m_texCoords;
 
     MFInt32            *m_coordIndex;
     MFInt32            *m_colorIndex;
@@ -203,7 +203,7 @@ private:
 
     int                 m_numFaces;
     FaceData          **m_faces;
-    Array<MyLine>       m_lines;
+    MyArray<MyLine>     m_lines;
 
     float               m_creaseAngle;
     bool                m_ccw;
@@ -223,23 +223,23 @@ private:
     unsigned int        m_listIndex;
     int                 m_currentFace;
     bool                m_texcoords_generated;
-    Array<Vec3f>        m_smoothNormalsArray;
-    Array<bool>         m_validVertices;
+    MyArray<Vec3f>      m_smoothNormalsArray;
+    MyArray<bool>       m_validVertices;
 
 #ifdef HAVE_GLUNEWTESS
-    Array<VertexInfo>   m_verticesInfo;
+    MyArray<VertexInfo> m_verticesInfo;
 
-    Array<float>        m_triangulatedVertices;
-    Array<int>          m_triangulatedIndices;
+    MyArray<float>      m_triangulatedVertices;
+    MyArray<int>        m_triangulatedIndices;
 
-    Array<float>        m_triangulatedNormals;
+    MyArray<float>      m_triangulatedNormals;
     bool                m_triangulatedHasNormals;
 
-    Array<float>        m_triangulatedColors;
+    MyArray<float>      m_triangulatedColors;
     bool                m_triangulatedHasColors;
     bool                m_triangulatedHasColorsRGBA;
 
-    Array<float>        m_triangulatedTexCoords;
+    MyArray<float>      m_triangulatedTexCoords;
     bool                m_triangulatedHasTexCoords;
 
     List<VertexInfo *>  m_newMemory4VerticesInfo;

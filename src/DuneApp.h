@@ -359,7 +359,7 @@ protected:
 
 protected:
     List<MainWindow *>  m_windows;
-    Array<MyString>     m_recentFiles;
+    MyArray<MyString>   m_recentFiles;
 
     SBROWSER            m_browser;
     SHBROWSER           m_helpBrowser;
@@ -369,7 +369,7 @@ protected:
     SWND                m_mainWnd;
     Node               *m_clipboardNode;
 
-    Array<MyString*>    m_filesToDelete;
+    MyArray<MyString*>  m_filesToDelete;
 
     MyString            m_importURL;
     MyString            m_oldImportURL;
@@ -379,7 +379,7 @@ protected:
     bool                m_selectionLinenumberFlag;
 
     List<FileBackup *>  m_tempFiles;
-    Array<PathInt *>  m_tempPath; 
+    MyArray<PathInt *>  m_tempPath; 
 
     bool                m_trackAnimation;
     bool                m_coverMode;

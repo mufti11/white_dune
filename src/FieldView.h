@@ -154,8 +154,8 @@ protected:
         Point           m_trackPoint;
         FieldValue     *m_trackValue;
 
-        Array<FieldViewItem *> m_items;
-        Array<FieldViewItem *> m_fields;
+        MyArray<FieldViewItem *> m_items;
+        MyArray<FieldViewItem *> m_fields;
 
         bool            m_fieldViewActive;
         bool            m_isRoot;

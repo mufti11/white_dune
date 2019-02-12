@@ -173,12 +173,12 @@ public:
     void            insetFace(float factor);
     int             symetricPointIndex(int ci, int iface);
     int             symetricFace(int iface, bool sameFace = false);
-    bool            checkBorderMidPoint(int icoordIndex, Array<int> symFaces);
-    bool            checkBorderFace(Array<int> innerBorder, 
-                                    Array<int> outerBorder, 
+    bool            checkBorderMidPoint(int icoordIndex, MyArray<int> symFaces);
+    bool            checkBorderFace(MyArray<int> innerBorder, 
+                                    MyArray<int> outerBorder, 
                                     MFInt32 *coordIndex, 
                                     int borderIndex1, int borderIndex2,
-                                    Array<int> symFaces, bool sym);
+                                    MyArray<int> symFaces, bool sym);
     void            optimize(void);
     void            optimizeCoordIndex(void);
 
@@ -186,7 +186,7 @@ public:
     bool            canSplitFace(int face);
     bool            canSplitFaces(void);
 
-    static Node    *simpleJoin(Array<FacesetAndMatrix> data);
+    static Node    *simpleJoin(MyArray<FacesetAndMatrix> data);
 
     bool            checkMidpoint(Vec3f midPoint, int jLoop, int nLoop,
                                   int point1, int point2,
@@ -207,7 +207,7 @@ public:
     float          *intersectVector0Plane(Vec3f endPoint, Vec3f startPoint,
                                           int direction);
     void            makeSymetric(int direction, bool plus);
-    void            deleteFaces(MFInt32 *coordIndex, Array<int> *faces);
+    void            deleteFaces(MFInt32 *coordIndex, MyArray<int> *faces);
     void            snapTogether(void);
 
     fieldMacros(SFNode,   color,            ProtoIndexedFaceSet)

@@ -114,6 +114,9 @@ protected:
 
     int  m_ac3dMaterialIndex;
     bool m_isFirstLdrawColor;
+
+public:
+    float *m_verifiedColor;
 };
 
 #endif // _NODE_MATERIAL_H

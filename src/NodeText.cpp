@@ -145,7 +145,7 @@ struct Tri
     Vec3f a, b, c;
 };
 
-Array<Tri> tris;
+MyArray<Tri> tris;
 
 vector<p2t::Point*> triangulateContour(Vectoriser *vectoriser, int c, float offset) {
     vector<p2t::Point*> polyline;
@@ -479,7 +479,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
     float transparency = 0;
     if (hasParent())
         transparency = getParent()->getTransparency();
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     m_mesh = new MyMesh(this, coords, coordIndex, NULL, NULL, NULL, NULL,
                         texCoords, NULL, 0, 0, transparency);
 

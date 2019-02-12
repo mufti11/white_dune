@@ -149,7 +149,7 @@ public:
                                     }
 
 protected:
-    Array<FieldViewItem *>      m_children;
+    MyArray<FieldViewItem *>    m_children;
 };
 
 #endif // _FIELD_VIEW_ITEM_H

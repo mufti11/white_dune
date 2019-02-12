@@ -60,8 +60,8 @@ ProtoNurbsTrimmedSurface::create(Scene *scene)
 }
 
 static int tesselationType = 0;
-static Array<float> vertices;
-static Array<int> coordIndices;
+static MyArray<float> vertices;
+static MyArray<int> coordIndices;
 static float boundingBoxMax[3] = { 0, 0, 0 };
 static float boundingBoxMin[3] = { 0, 0, 0 };
 static int startIndex;
@@ -284,7 +284,7 @@ NodeNurbsTrimmedSurface::createMesh(bool cleanDoubleVertices,
     MFVec3f *coords = new MFVec3f(vertices.getData(), vertices.size());
     MFInt32 *coordIndex = new MFInt32((int *)coordIndices.getData(), 
                                       coordIndices.size());
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
 
     int meshFlags = 0;
     float transparency = 0;
@@ -401,7 +401,7 @@ NodeNurbsTrimmedSurface::drawOrCreateMesh(void)
                                GL_MAP2_NORMAL); 
 #endif
 
-    Array<float*> point;
+    MyArray<float*> point;
 
     MFNode *nodes = trimmingContour();
     if (nodes)

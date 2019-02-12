@@ -95,6 +95,6 @@ protected:
 protected:
     NodeNurbsCurve *m_nurbsCurve;
     bool            m_nurbsCurveDirty;
-    Array<float>    m_chain;
+    MyArray<float>  m_chain;
 };
 #endif // _NODE_NURBS_POSITION_INTERPOLATOR_H

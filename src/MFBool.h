@@ -71,7 +71,7 @@ public:
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 protected:
-    Array<bool>          m_value;
+    MyArray<bool>       m_value;
 };
 
 #endif

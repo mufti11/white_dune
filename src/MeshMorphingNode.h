@@ -30,9 +30,9 @@ class NodeGroup;
 
 class InterpolatorInfo {
 public:
-    Array<Interpolator *> interpolator;
-    Array<int> field;
-    Array<const Node *> node;
+    MyArray<Interpolator *> interpolator;
+    MyArray<int> field;
+    MyArray<const Node *> node;
 };
 
 class MeshMorphingNode : public MeshBasedNode {

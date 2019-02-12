@@ -3097,7 +3097,7 @@ Node::getPath() const
          protoRoot = protoRoot->getParentOrProtoParent())
         len += 2;
 
-    Array<int> protoList;
+    MyArray<int> protoList;
     m_scene->getProtoList(&protoList, protoRoot);
     if (protoList.size() > 0)
         len += 4;

@@ -70,7 +70,7 @@ NurbsArc::NurbsArc(int narcs, float degree, Vec3f sPoint, Vec3f point, Vec3f vec
   float rDegree = degree / 180 * M_PI;
   float delta = (float) (rDegree/narcs);
   float w1 = cos(delta / 2);
-  Array<float> cosines, sines;
+  MyArray<float> cosines, sines;
 
   for(int i=1; i<=narcs; i++){
     angle = angle + delta;
@@ -148,7 +148,7 @@ NurbsArc::NurbsArc(int narcs, float degree, Vec3f sPoint, Vec3f point, Vec3f vec
 
     k = knots.size();
     
-    Array<float> tKnots(k);
+    MyArray<float> tKnots(k);
 
     for(int i=0; i<k; i++){
       tKnots[i] = getKnots(i);

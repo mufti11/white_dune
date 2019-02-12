@@ -80,7 +80,7 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     MFVec3f *normals = NULL;
     MFFloat *colors = NULL;
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
 
     if (normal()->getValue())

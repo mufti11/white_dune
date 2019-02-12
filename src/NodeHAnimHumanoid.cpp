@@ -516,7 +516,7 @@ NodeHAnimHumanoid::draw(int pass)
 static int numMeshes = 0;
 
 static NodeMaterial *firstMaterial = NULL;
-static Array<MeshBasedNode *> meshNodes; 
+static MyArray<MeshBasedNode *> meshNodes; 
 
 static bool searchMeshes(Node *node, void *data)
 {

@@ -241,7 +241,7 @@ Scene3DView::drawViewPort(Node *root, int count)
 void Scene3DView::OnDraw(int /* x */, int /* y */,
                          int /* width */, int /* height */) 
 {
-    Array<NodeViewport *> *viewports = m_scene->getViewPorts();
+    MyArray<NodeViewport *> *viewports = m_scene->getViewPorts();
     if (viewports->size() > 0)
         for (int i = 0; i < (*viewports).size(); i++)
             drawViewPort(viewports->get(i), i);

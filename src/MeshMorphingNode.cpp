@@ -104,8 +104,8 @@ MeshMorphingNode::addToConvertedNodes(int flags)
 void 
 MeshMorphingNode::findInterpolators(InterpolatorInfo& info)
 {
-    Array<const Node *> nodeList;
-    Array<int> fieldList;
+    MyArray<const Node *> nodeList;
+    MyArray<int> fieldList;
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         int type = m_proto->getField(i)->getType();
         int animatedField = getAnimatedNodeField(i);
@@ -175,9 +175,9 @@ MeshMorphingNode::addCoordinateInterpolator(Node *node,
     }
         
     // sort list of keys
-    Array<float> keys;
-    Array<float> coordKeyValues;
-    Array<float> normalKeyValues;
+    MyArray<float> keys;
+    MyArray<float> coordKeyValues;
+    MyArray<float> normalKeyValues;
     bool foundMinKey = false;
     float currentKey = -1;
     do {

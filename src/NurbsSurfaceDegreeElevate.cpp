@@ -30,7 +30,7 @@
 #endif
 
 NurbsSurfaceDegreeElevate::NurbsSurfaceDegreeElevate(Vec3f Points[], 
-      float Weights[], Array<float> uKnots, Array<float> vKnots,
+      float Weights[], MyArray<float> uKnots, MyArray<float> vKnots,
       int uDimension, int vDimension, int uDegree, int vDegree,
       int uUpDegree, int vUpDegree)
 {

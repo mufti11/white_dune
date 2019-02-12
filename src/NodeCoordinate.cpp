@@ -254,7 +254,7 @@ NodeCoordinate::drawHandles(void)
                     }
             } else {
                 human->buildJointHasWeightArray();
-                Array<int> *arrayPtr = human->getJointHasNoWeightArray();
+                MyArray<int> *arrayPtr = human->getJointHasNoWeightArray();
                 for (int i = 0; i < (*arrayPtr).size(); i++) {
                     int ci = (*arrayPtr)[i];
                     bool hidden = false;

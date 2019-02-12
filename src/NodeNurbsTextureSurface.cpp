@@ -362,8 +362,8 @@ NodeNurbsTextureSurface::degreeElevate(int newUDegree, int newVDegree)
     int tvOrder = vOrder()->getValue();
     int uKnotSize = uKnot()->getSize();
     int vKnotSize = vKnot()->getSize();
-    Array<float> tuKnots(uKnotSize);
-    Array<float> tvKnots(vKnotSize);
+    MyArray<float> tuKnots(uKnotSize);
+    MyArray<float> tvKnots(vKnotSize);
     int tuDegree = tuOrder - 1;
     int tvDegree = tvOrder - 1;
     int tuUpDegree = newUDegree - tuDegree;

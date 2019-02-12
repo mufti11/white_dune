@@ -113,6 +113,6 @@ private:
     bool                m_cursorOn;
     bool                m_autoScrolling;
     int                 m_autoScrollPX, m_autoScrollPY;
-    Array<bool>         m_multipleValuesInChannel;
+    MyArray<bool>       m_multipleValuesInChannel;
 };
 #endif

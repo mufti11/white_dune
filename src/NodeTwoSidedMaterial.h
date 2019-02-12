@@ -115,6 +115,10 @@ protected:
 
     int  m_ac3dMaterialIndex;
     bool m_isFirstLdrawColor;
+
+public:
+    float *m_verifiedFrontColor;
+    float *m_verifiedBackColor;
 };
 
 #endif

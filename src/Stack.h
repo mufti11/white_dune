@@ -27,9 +27,9 @@
 #endif
 
 template<class T> 
-class Stack {
+class MyStack {
 public:
-                        Stack()
+                        MyStack()
                            { m_top = 0; }
 
     void                push(T t)
@@ -60,7 +60,7 @@ public:
     int                 getTop() const { return m_top; }
     
 private:
-    Array<T>            m_data;
+    MyArray<T>          m_data;
     int                 m_top;
 };
 

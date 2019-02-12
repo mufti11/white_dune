@@ -122,7 +122,7 @@ void
 NodeLOD::accountNodeToDrawIndex()
 {
     NodeList *childList = level()->getValues();
-    Array<int> indexList;
+    MyArray<int> indexList;
     NodeList tmpChildList;
 
     for (int i = 0; i < childList->size(); i++)

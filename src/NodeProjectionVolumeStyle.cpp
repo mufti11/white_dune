@@ -50,4 +50,5 @@ ProtoProjectionVolumeStyle::create(Scene *scene)
 NodeProjectionVolumeStyle::NodeProjectionVolumeStyle(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_type = 0;
 }

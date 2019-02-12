@@ -149,7 +149,7 @@ protected:
 
 protected:
     NodeNurbsCurve    *m_nurbsCurve;
-    Array<float>       m_chain;
+    MyArray<float>     m_chain;
     SuperRevolverData  m_tempStoreData;
 };
 #endif // _NODE_SUPER_REVOLVER_H

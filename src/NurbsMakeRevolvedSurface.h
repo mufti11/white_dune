@@ -38,9 +38,9 @@ public:
     bool         isValid() {return valid;}
 
 protected:
-    Array<float> points;
-    Array<float> weights;
-    Array<float> knots;
-    Vec3f        IntersectLines(Vec3f &P1, Vec3f &T1, Vec3f &P2, Vec3f &T2);
-    bool         valid;     
+    MyArray<float> points;
+    MyArray<float> weights;
+    MyArray<float> knots;
+    Vec3f          IntersectLines(Vec3f &P1, Vec3f &T1, Vec3f &P2, Vec3f &T2);
+    bool           valid;     
 };

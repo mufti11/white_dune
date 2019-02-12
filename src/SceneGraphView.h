@@ -200,7 +200,7 @@ protected:
         int             m_XNodesOnlyEventIns;
         int             m_YNodesOnlyEventIns;
 
-        Array<NodeOrProto> m_nodesOrProtos;
+        MyArray<NodeOrProto> m_nodesOrProtos;
 
         Proto          *m_currentProto;
 

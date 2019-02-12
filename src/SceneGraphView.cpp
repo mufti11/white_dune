@@ -193,7 +193,7 @@ SceneGraphView::~SceneGraphView()
 
 bool collectNode(Node *node, void *data)
 {
-    Array<NodeOrProto> *nodes = (Array<NodeOrProto> *)data;
+    MyArray<NodeOrProto> *nodes = (MyArray<NodeOrProto> *)data;
     NodeOrProto np(node);
     nodes->append(np); 
     return true;
@@ -957,7 +957,7 @@ void SceneGraphView::DrawNode(SDC dc, Node *node, int xPos, int yPos)
 
         y = yMax + BORDER_WIDTH + SOCKET_SPACING;
 
-        Array<int> fieldArray;
+        MyArray<int> fieldArray;
         for (int i = 0; i < fields; i++) {
             Field *field = node->getProto()->getField(i);
             if (!(field->getFlags() & FF_HIDDEN))
@@ -1214,7 +1214,7 @@ void SceneGraphView::DrawProto(SDC dc, Proto *proto, int xPos, int yPos)
 
     y = yMax + BORDER_WIDTH + SOCKET_SPACING;
 
-    Array<int> fieldArray;
+    MyArray<int> fieldArray;
     for (int i = 0; i < fields; i++) {
         Field *field = proto->getField(i);
         if (!(field->getFlags() & FF_HIDDEN))

@@ -175,9 +175,9 @@ NodeSuperExtrusion::createExtrusion()
     float fn1 = n1()->getValue();
     float fn2 = n2()->getValue();
     float fn3 = n3()->getValue();
-    Array<float> r1(superTess);
-    Array<float> c1(superTess);
-    Array<float> s1(superTess);
+    MyArray<float> r1(superTess);
+    MyArray<float> c1(superTess);
+    MyArray<float> s1(superTess);
     for (a1 = 0; a1 < superTess; a1++) {
         float angle1 = low + a1 * inc1;
         r1[a1] = superFormula(angle1, fa, fb, fm, fn1, fn2, fn3);

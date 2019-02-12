@@ -60,4 +60,5 @@ ProtoShadedVolumeStyle::create(Scene *scene)
 NodeShadedVolumeStyle::NodeShadedVolumeStyle(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_phaseFunction = 0;
 }

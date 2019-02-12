@@ -2011,7 +2011,7 @@ Scene::writeCattGeo(void)
     m_cattRecIsWritten = false;
     m_cattSrcIsWritten = false;
 
-    Array<NodeCattExportRec *> cattExportRecNodes;
+    MyArray<NodeCattExportRec *> cattExportRecNodes;
     getRoot()->doWithBranch(collectCattExportRecNodes, &cattExportRecNodes);
 
     for (int i = 0; i < cattExportRecNodes.size(); i++)
@@ -2894,7 +2894,7 @@ Scene::writeCRoutes(int filedes, int languageFlag)
 
 static bool searchExtensionProto(int extension, Node *node, void *data)
 {
-    Array<Proto *> *protoArrayPtr = (Array<Proto *> *) data;
+    MyArray<Proto *> *protoArrayPtr = (MyArray<Proto *> *) data;
     if (!node->hasDefault(extension) /* && !node->hasRoute(extension)*/) {
         for (int i = 0; i < (*protoArrayPtr).size(); i++)
             if ((*protoArrayPtr)[i] == node->getProto())
@@ -2921,7 +2921,7 @@ Scene::writeExtensionProtos(int f, int flag)
     int x3d = false;
     if (flag == FF_X3D_ONLY)
         x3d = true;
-    Array<Proto *> protoArray;
+    MyArray<Proto *> protoArray;
     NodeList *nodes = ((NodeGroup *)getRoot())->children()->getValues();
     for (int i = 0; i < nodes->size(); i++) {
         if (flag == FF_COVER_ONLY)
@@ -4570,7 +4570,7 @@ Scene::setSelection(Path *path)
 }
 
 void
-Scene::getProtoList(Array<int> *protoList, const Node *node)
+Scene::getProtoList(MyArray<int> *protoList, const Node *node)
 {
     if (node != getRoot())
         for (int i = 0; (i < getNumProtos()) && (protoList->size() == 0); i++) {
@@ -4596,7 +4596,7 @@ Scene::newPath(Node *node)
         len += 2;
     }
 
-    Array<int> protoList;
+    MyArray<int> protoList;
     getProtoList(&protoList, n);
     if (protoList.size() > 0)
         len += 4;
@@ -6256,7 +6256,7 @@ Scene::setSelectionMode(int mode)
             }
         if (faceSet == NULL)
             return;
-        Array<int> oldSelection;
+        MyArray<int> oldSelection;
         for (int i = 0; i < getSelectedHandlesSize(); i++)
              oldSelection.append(getSelectedHandle(i));
         removeSelectedHandles();
@@ -6412,7 +6412,7 @@ Scene::warning(const char* string)
     swDebugf("%s\n", string);
 }
 
-Array<NodeViewport *> *
+MyArray<NodeViewport *> *
 Scene::getViewPorts() 
 { 
     return &m_viewports; 

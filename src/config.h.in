@@ -421,7 +421,11 @@
 #undef HAVE_DEFAULT_TTF_FILE
 
 /* define if you have imlib2 */
-#undef HAVE_LIBIMLIB2
+/* the code using imlib2 (NodeImageTexture3D) is not ready yet, won't compile */
+/* #undef HAVE_LIBIMLIB2 */
+
+/* define if you have gles version 2 */
+#undef HAVE_LIBGLESV2
 
 /* 
    Define if you want to document the method to uninstall white_dune

@@ -125,7 +125,7 @@ protected:
     bool                  m_extrusionNew;
     NodeNurbsCurve       *m_profileCurve;
     NodeNurbsCurve       *m_spineCurve;
-    Array<float>          m_chain;
+    MyArray<float>        m_chain;
     NurbsSwungSurfaceData m_tempStoreData;
 };
 

@@ -112,9 +112,9 @@ protected:
     int             m_vDimension;
     int             m_nuAreaPoints;
     int             m_nvAreaPoints;
-    Array<float>    m_uKnots;
-    Array<float>    m_vKnots;
-    Array<Vec3f>    m_rectangle;
+    MyArray<float>  m_uKnots;
+    MyArray<float>  m_vKnots;
+    MyArray<Vec3f>  m_rectangle;
 };
 
 

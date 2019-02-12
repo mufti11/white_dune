@@ -69,8 +69,8 @@ protected:
     char                m_command[1024+1024+2];
     void               *m_data;
     EditorReadyCallback m_editorReadyCallback;
-    Array<int>          m_urlStartData;
-    Array<int>          m_urlEndData;
+    MyArray<int>        m_urlStartData;
+    MyArray<int>        m_urlEndData;
     char               *m_urlData;
     int                 m_urlDataLength;
     bool                m_popUp;

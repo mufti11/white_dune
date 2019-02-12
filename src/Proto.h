@@ -380,10 +380,10 @@ protected:
 protected:
     Scene                *m_scene;
     MyString              m_name;
-    Array<EventIn *>      m_eventIns;
-    Array<EventOut *>     m_eventOuts;
-    Array<Field *>        m_fields;
-    Array<ExposedField *> m_exposedFields;
+    MyArray<EventIn *>      m_eventIns;
+    MyArray<EventOut *>     m_eventOuts;
+    MyArray<Field *>        m_fields;
+    MyArray<ExposedField *> m_exposedFields;
 
     MyString              m_appinfo;
     MyString              m_documentation;
@@ -400,7 +400,7 @@ protected:
     bool                  m_numbers4KidsInit;
 
     // for PROTO's:
-    Array<Node *>         m_protoNodes;
+    MyArray<Node *>       m_protoNodes;
     int                   m_nodeIndex;
     FieldValue           *m_urls;
     bool                  m_isInternUrl;
@@ -526,12 +526,12 @@ public:
 
 protected:
     NodeList            m_nodes;
-    Array<Node *>       m_indexedNodes;
+    MyArray<Node *>     m_indexedNodes;
     int                 m_jointRotationField;
     bool                m_isHumanoid;
 };
 
-typedef Array<Proto *>  ProtoArray;
+typedef MyArray<Proto *>  ProtoArray;
 int getMaskedNodeClass(int nodeClass);
 bool matchNodeClass(int nodeType, int childType, bool repeat = true);
 

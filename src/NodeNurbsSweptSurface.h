@@ -137,7 +137,7 @@ protected:
     bool                  m_extrusionDirty;
     bool                  m_extrusionNew;
     NodeNurbsCurve       *m_crossSectionCurve;
-    Array<float>          m_chain;
+    MyArray<float>        m_chain;
     NurbsSweptSurfaceData m_tempStoreData;
 };
 

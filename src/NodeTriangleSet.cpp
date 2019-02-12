@@ -168,7 +168,7 @@ NodeTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         m_coordIndex->ref();
     }
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
     
     float transparency = 0;

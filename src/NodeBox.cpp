@@ -595,7 +595,7 @@ NodeBox::createMesh(bool cleanDoubleVertices, bool triangulate)
     MFVec2f *texCoord = new MFVec2f();
     for (int i = 0; i < sizeof(ftexCoord)/sizeof(float); i += 2)
         texCoord->appendSFValue(ftexCoord[i], ftexCoord[i + 1]);
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     texCoords.append(texCoord);
 
     MFInt32 *texCoordIndex = new MFInt32();

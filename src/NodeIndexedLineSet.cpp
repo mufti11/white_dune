@@ -309,7 +309,7 @@ NodeIndexedLineSet::writeAc3d(int f, int indent)
                               vertices->getValue(i)[1],
                               vertices->getValue(i)[2]) )
     int numberPolyLines = 0;
-    Array<char *> stringsToWrite;
+    MyArray<char *> stringsToWrite;
     int lineFlags = 0x2; // line
     int startPolyLine = 0;
     bool inPolyLine = false;

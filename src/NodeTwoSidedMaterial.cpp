@@ -78,6 +78,8 @@ NodeTwoSidedMaterial::NodeTwoSidedMaterial(Scene *scene, Proto *def)
 {
     m_ac3dMaterialIndex = -1;
     m_isFirstLdrawColor = false;
+    m_verifiedFrontColor = NULL;
+    m_verifiedBackColor = NULL;
 }
 
 

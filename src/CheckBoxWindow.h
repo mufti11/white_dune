@@ -54,10 +54,10 @@ public:
     void                invalidateWindow(void);
 
 protected:
-    Array<MyString>     m_strings;
-    Array<SWND>         m_buttons;
-    Array<bool>         m_buttonsPressed;
-    Array<bool>         m_initButtonsPressed;
+    MyArray<MyString>   m_strings;
+    MyArray<SWND>       m_buttons;
+    MyArray<bool>       m_buttonsPressed;
+    MyArray<bool>       m_initButtonsPressed;
     int                 m_fontHeight;
     SWND                m_parent_window;
 };

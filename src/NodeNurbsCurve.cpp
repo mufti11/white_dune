@@ -882,7 +882,7 @@ NodeNurbsCurve::degreeElevate(int newDegree)
     Vec3f *tPoints = new Vec3f[dimension];
     float *tWeights = new float[dimension];
     int knotSize = knot()->getSize();
-    Array<float> tKnots(knotSize);
+    MyArray<float> tKnots(knotSize);
     int deg = order()->getValue() - 1;
     int upDegree = newDegree - deg;
 

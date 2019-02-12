@@ -220,7 +220,7 @@ NodeElevationGrid::createMesh(bool cleanDoubleVertices, bool triangulate)
         colorIndex->ref();
     }
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
 
     if (ccw()->getValue())

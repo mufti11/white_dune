@@ -282,8 +282,8 @@ NodeNurbsCurve2D::setHandle(int handle, const Vec3f &v)
                 newValue->setValue(handle * 2    , v.x * w);
                 newValue->setValue(handle * 2 + 1, v.y * w);
             }
-            Array <VecMapper> sameChanges;
-            Array <VecMapper> symChanges;
+            MyArray <VecMapper> sameChanges;
+            MyArray <VecMapper> symChanges;
             for (int i = 0; i < numPoints; i++) {
                 VecMapper vecMap;
                 if (m_scene->getXSymetricMode() && (i != handle)) {

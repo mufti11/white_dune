@@ -112,7 +112,7 @@ public:
                                    bool triangulateMesh = true);
 
     void              buildJointHasWeightArray(void);
-    Array<int>       *getJointHasNoWeightArray(void) 
+    MyArray<int>     *getJointHasNoWeightArray(void) 
                           { return &m_hasNoWeightArray; }
 
     bool              jointHasNoWeight(int vertex);
@@ -138,10 +138,10 @@ public:
 
     int           m_numMeshes;
     MyMeshPtr    *m_meshes;
-    Array<MeshBasedNode *> m_meshNodes;
+    MyArray<MeshBasedNode *> m_meshNodes;
     MFVec3f     **m_origVertices;
     NodeMaterial *m_material;
-    Array<int>    m_hasNoWeightArray;
+    MyArray<int>  m_hasNoWeightArray;
     bool          m_hasNoWeightArrayDirty;
 };
 

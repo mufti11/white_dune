@@ -60,7 +60,7 @@ protected:
     int lastCommand;    
 
     StringArray device_options;
-    Array<InputDevice *> existing_devices;
+    MyArray<InputDevice *> existing_devices;
 public:
     SWND parent;
     // define variables for the selectable data as SWND widget/control

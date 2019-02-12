@@ -87,7 +87,7 @@ protected:
     Quaternion      accountQuat(Vec3f vec1, Vec3f vec2);
 
 protected:
-    Array<Vec3f>    m_chain;
+    MyArray<Vec3f>  m_chain;
     bool            m_chainDirty;
 };
 

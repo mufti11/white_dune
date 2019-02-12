@@ -35,7 +35,11 @@
 #include "KambiTextureCommonFields.h"
 
 #include "SFMFTypes.h"
-#include "Texture3D.h"
+#ifdef HAVE_LIBIMLIB2
+# ifdef HAVE_LIBGLESV2
+#  include "Texture3D.h"
+# endif
+#endif
 
 class ProtoImageTexture3D : public Proto {
 public:
@@ -69,8 +73,13 @@ public:
     virtual int     getX3dVersion(void) const { return 1; }
     virtual Node   *copy() const { return new NodeImageTexture3D(*this); }
 
+#ifdef HAVE_LIBIMLIB2
+# ifdef HAVE_LIBGLESV2
+    void load();
     virtual void    preDraw();
     virtual void    draw(int pass);
+# endif
+#endif
 
     fieldMacros(MFString, url,               ProtoImageTexture3D);
     fieldMacros(SFBool,   repeatS,           ProtoImageTexture3D);
@@ -86,7 +95,13 @@ public:
 public:
     int m_textureTableIndex;
     bool m_nodeNeedsCompiling;
+    bool m_loaded;
+#ifdef HAVE_LIBIMLIB2
+# ifdef HAVE_LIBGLESV2
     ppTextures m_textures_prv;
+    textureTableIndexStruct_s *m_tableIndex;
+# endif
+#endif
 };
 
 #endif

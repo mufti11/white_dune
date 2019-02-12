@@ -35,7 +35,7 @@ public:
     int m_elementIndex;
 };
 
-typedef Array<InterfaceData *> InterfaceArray;
+typedef MyArray<InterfaceData *> InterfaceArray;
 
 
 #endif

@@ -162,7 +162,7 @@ protected:
     MyString            m_name;
     MyString            m_x3dName;
     int                 m_flags;
-    Array<IsElement *>  m_isArray;
+    MyArray<IsElement *> m_isArray;
 
     MyString            m_appinfo;
     MyString            m_documentation;

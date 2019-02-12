@@ -255,7 +255,7 @@ void InputDeviceSettingsDialog::SaveData()
     //click button save_Settings 
 
     // write all paramater to command[]
-    Array<MyString> command;
+    MyArray<MyString> command;
     command_sum=0;
 
     //check the max_number_axis
@@ -343,7 +343,7 @@ void InputDeviceSettingsDialog::enable_all(bool flag)
 void InputDeviceSettingsDialog::SetDefault()
 {
     char buff[128];
-    Array<MyString> command;
+    MyArray<MyString> command;
     int command_sum=0;
 
     command[command_sum]="";

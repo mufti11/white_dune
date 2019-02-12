@@ -4362,7 +4362,7 @@ void
 MainWindow::setTarget(void)
 {
     Node *node = m_scene->getSelection()->getNode();
-    Stack<Node *> nodeStack;
+    MyStack<Node *> nodeStack;
     while (node) {
        if (node->getType() == VRML_TRANSFORM)
            nodeStack.push(node);
@@ -4415,7 +4415,7 @@ void MainWindow::searchInterpolator(void)
     Node *node = m_scene->getSelection()->getNode();
     if (!node->hasInputs())
         return;
-    Array<Node *> targets;
+    MyArray<Node *> targets;
     for (int i = 0; i < node->getProto()->getNumEventIns(); i++) {
         for (SocketList::Iterator *j = node->getInput(i).first(); 
              j != NULL; j = j->next()) {
@@ -4445,7 +4445,7 @@ void MainWindow::searchInterpolator(void)
     }     
 }
 
-static void searchInInterpolator(Array<Node *>& targets, Node *interpolator) {
+static void searchInInterpolator(MyArray<Node *>& targets, Node *interpolator) {
     for (int k = 0; k < interpolator->getProto()->getNumEventIns(); k++) {
         for (SocketList::Iterator *l = interpolator->getInput(k).first(); 
              l != NULL; l = l->next()) {
@@ -4465,7 +4465,7 @@ static void searchInInterpolator(Array<Node *>& targets, Node *interpolator) {
 void MainWindow::searchTimeSensor(void)
 {
     Node *node = m_scene->getSelection()->getNode();
-    Array<Node *> targets;
+    MyArray<Node *> targets;
     if (node->isInterpolator())
         searchInInterpolator(targets, node);
     else {
@@ -6480,9 +6480,9 @@ MainWindow::createAnimation(void)
     AnimationDialog dlg(m_wnd, node);
     if (dlg.DoModal() == IDCANCEL)
         return;
-    Array<int> eventInFields = dlg.getEventInFields();
-    Array<int> eventInTypes = dlg.getEventInTypes();
-    Array<bool> eventInIsAnimated = dlg.getEventInIsAnimated();
+    MyArray<int> eventInFields = dlg.getEventInFields();
+    MyArray<int> eventInTypes = dlg.getEventInTypes();
+    MyArray<bool> eventInIsAnimated = dlg.getEventInIsAnimated();
 
     Node *insertNode = getInsertNode(node);
 
@@ -7841,7 +7841,7 @@ MainWindow::createTorus(void)
 }
 
 static Matrix meshDataMatrix;
-static Array<Vec3f> points;
+static MyArray<Vec3f> points;
 static int numNodes;
 
 static bool searchMeshDataOrTransform(Node *node, void *data)
@@ -8183,7 +8183,7 @@ MainWindow::moveBranchToInline()
     FieldValue  *value = target->getField(targetField);
 
     // build list of nodes in branch
-    Array<Node *> nodesInBranch;
+    MyArray<Node *> nodesInBranch;
     if (value->getType() == MFNODE) {
         MFNode *nodes = (MFNode *)value;
         bool inBranch = false;
@@ -9068,7 +9068,7 @@ MainWindow::simpleJoin()
     Node *node = m_scene->getSelection()->getNode();
     Node *parent = node->getParent();
     if (parent && node->getType() == VRML_GROUP) {
-        Array<FacesetAndMatrix> facesets;
+        MyArray<FacesetAndMatrix> facesets;
         int parentField = node->getParentField();
         NodeGroup *group = (NodeGroup *)node;
         for (int i = 0; i < group->children()->getSize(); i++) {        
@@ -9412,8 +9412,8 @@ void MainWindow::moveTo(int direction)
     float value = dlg.GetValue();
     if (m_scene->getSelectedHandlesSize() > 1)
         node->startSetMultiHandles();
-    Array<int> selectedVerticesHandles;
-    Array<Vec3f> selectedVertices;
+    MyArray<int> selectedVerticesHandles;
+    MyArray<Vec3f> selectedVertices;
     Node* parent = node;
     if (node->getType() == VRML_COORDINATE)
         parent = node->getParent();
@@ -9524,8 +9524,8 @@ void MainWindow::scaleBy(int direction)
     float value = dlg.GetValue();
     if (m_scene->getSelectedHandlesSize() > 1)
         node->startSetMultiHandles();
-    Array<int> selectedVerticesHandles;
-    Array<Vec3f> selectedVertices;
+    MyArray<int> selectedVerticesHandles;
+    MyArray<Vec3f> selectedVertices;
     Node* parent = node;
     if (node->getType() == VRML_COORDINATE)
         parent = node->getParent();
@@ -11030,7 +11030,7 @@ MainWindow::insertHAnimJoint()
             int numHandles = m_scene->getSelectedHandlesSize();
             if (numHandles == 0)
                 return;
-            Array<int> handles;
+            MyArray<int> handles;
             for (int i = 0; i < numHandles; i++) {
                 handles.append(m_scene->getSelectedHandle(i));
             }
@@ -11093,7 +11093,7 @@ MainWindow::setHAnimJointWeight()
         int numHandles = m_scene->getSelectedHandlesSize();
         if (numHandles == 0)
             return;
-        Array<int> handles;
+        MyArray<int> handles;
         for (int i = 0; i < numHandles; i++) {
             int handle = m_scene->getSelectedHandle(i);
             if ((handle < 0) || (handle >= NO_HANDLE))
@@ -11160,7 +11160,7 @@ MainWindow::setHAnimJointWeight()
     }
 }
 
-static Array<Node *> joints;
+static MyArray<Node *> joints;
 
 static bool searchJoints(Node *node, void *data)
 {
@@ -11178,7 +11178,7 @@ MainWindow::removeHAnimJointWeight()
         int numHandles = m_scene->getSelectedHandlesSize();
         if (numHandles == 0)
             return;
-        Array<int> handles;
+        MyArray<int> handles;
         for (int i = 0; i < numHandles; i++) {
             int handle = m_scene->getSelectedHandle(i);
             if ((handle < 0) || (handle >= NO_HANDLE))
@@ -12463,8 +12463,8 @@ void MainWindow::OnEditCopyBranchToRoot()
     Node *node = m_scene->getSelection()->getNode();
     if (node && (node != m_scene->getRoot())) {
         NodeArray nodeArray;
-        Array<int> fieldArray;
-        Array<bool> mfNodeFlagArray;
+        MyArray<int> fieldArray;
+        MyArray<bool> mfNodeFlagArray;
         Node *compareNode = node;
         int numNodes = 0;
         while (compareNode != m_scene->getRoot()) {
@@ -12954,7 +12954,7 @@ MainWindow::clearStatusText()
 
 bool
 MainWindow::fieldPipe(Node *node, int field, const char *pipeCommand,
-                      Array<int> *handles)
+                      MyArray<int> *handles)
 {
     bool success = true;
     static char path_out[1024];        
@@ -13115,7 +13115,7 @@ MainWindow::pipeField(void)
         if ((node == NULL) || (node == m_scene->getRoot()))
             return;
     }
-    Array<int> handles;
+    MyArray<int> handles;
     if (field == -1) {
         for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
             int handle = m_scene->getSelectedHandle(i);

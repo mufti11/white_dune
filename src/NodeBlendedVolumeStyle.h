@@ -77,6 +77,12 @@ public:
     fieldMacros(SFNode, weightTransferFunction1, ProtoBlendedVolumeStyle);
     fieldMacros(SFNode, weightTransferFunction2, ProtoBlendedVolumeStyle);
     fieldMacros(SFNode, surfaceNormals, ProtoBlendedVolumeStyle);
+public:
+    int *m_fbohandles;
+    int m_weightFunction1;
+    int m_weightFunction2;
+    float m_weightConstant1;
+    float m_weightConstant2;
 };
 
 #endif

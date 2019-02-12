@@ -103,7 +103,7 @@ NodeArcClose2D::createMesh(bool cleanDoubleVertices, bool triangulate)
         fpoint[i * 3 + 2] = 0;
     }
 
-    Array<int> icoordIndex;
+    MyArray<int> icoordIndex;
     for (i = 0; i < loopSize; i++)
         icoordIndex.append(i);
     icoordIndex.append(0);
@@ -116,7 +116,7 @@ NodeArcClose2D::createMesh(bool cleanDoubleVertices, bool triangulate)
                                         icoordIndex.size());
     MFInt32 *coordIndex = (MFInt32 *)mfcoordIndex->copy();
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
 
     int meshFlags = MESH_NORMAL_PER_VERTEX;
     if (solid()->getValue())

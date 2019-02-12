@@ -62,7 +62,7 @@ protected:
     CheckBoxWindow        m_window;
     Node                 *m_interactionNode;
     InteractionRouteData *m_routeData;
-    Array<int>            m_eventIns;        
+    MyArray<int>          m_eventIns;        
 };
 
 #endif

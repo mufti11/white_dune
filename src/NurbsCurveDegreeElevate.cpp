@@ -40,7 +40,7 @@
 #define NUMZERO 1e-6
 
 NurbsCurveDegreeElevate::NurbsCurveDegreeElevate(Vec3f controlPoints[], 
-      float weights[], Array<float> knots, int dimension, 
+      float weights[], MyArray<float> knots, int dimension, 
       int pDegree, int upDegree)
 {
   newPoints.resize(0);
@@ -50,8 +50,8 @@ NurbsCurveDegreeElevate::NurbsCurveDegreeElevate(Vec3f controlPoints[],
 
   if(upDegree<1) {return;}
 
-  Array<Vec4f> hControlPoints; 
-  Array<Vec4f> newHPoints;
+  MyArray<Vec4f> hControlPoints; 
+  MyArray<Vec4f> newHPoints;
 
   int p = pDegree;
   int t = upDegree;

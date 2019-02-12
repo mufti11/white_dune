@@ -171,7 +171,7 @@ protected:
     NodeExtrusion     *m_extrusion;
     NodeNurbsCurve    *m_nurbsCurve;
     bool               m_extrusionDirty;
-    Array<float>       m_chain;
+    MyArray<float>     m_chain;
     SuperExtrusionData m_tempStoreData;
 };
 #endif // _NODE_SUPER_EXTRUSION_H

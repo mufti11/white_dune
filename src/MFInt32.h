@@ -79,7 +79,7 @@ public:
 
     int                 find(int i) { return m_value.find(i); }
 protected:
-    Array<int>          m_value;
+    MyArray<int>        m_value;
 };
 
 #endif // _MFINT32_H

@@ -216,9 +216,9 @@ NodeSuperShape::createMesh(SuperShapeData &data)
     float fun1 = data.un1;
     float fun2 = data.un2;
     float fun3 = data.un3;
-    Array<float> r1(uTess);
-    Array<float> c1(uTess);
-    Array<float> s1(uTess);
+    MyArray<float> r1(uTess);
+    MyArray<float> c1(uTess);
+    MyArray<float> s1(uTess);
     for (a1 = 0; a1 < uTess; a1++) {
         float angle1 = -M_PI + a1 * inc1;
         r1[a1] = superFormula(angle1, fua, fub, fum, fun1, fun2, fun3);
@@ -231,9 +231,9 @@ NodeSuperShape::createMesh(SuperShapeData &data)
     float fvn1 = data.vn1;
     float fvn2 = data.vn2;
     float fvn3 = data.vn3;
-    Array<float> r2(vTess);
-    Array<float> c2(vTess);
-    Array<float> s2(vTess);
+    MyArray<float> r2(vTess);
+    MyArray<float> c2(vTess);
+    MyArray<float> s2(vTess);
     for (a2 = 0; a2 < vTess; a2++) {
         float angle2 = low + a2 * inc2;
         r2[a2] = superFormula(angle2, fva, fvb, fvm, fvn1, fvn2, fvn3);
@@ -326,7 +326,7 @@ NodeSuperShape::createMesh(SuperShapeData &data)
                              data.cleanDoubleVertices);    
 
     MFInt32 *coordIndex = new MFInt32(ci, cindex);
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, data.texCoord);    
     if (texCoords.size() == 0) {
         MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex);

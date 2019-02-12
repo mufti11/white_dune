@@ -74,7 +74,7 @@ NodeDisk2D::createMesh(bool cleanDoubleVertices, bool triangulate)
 
     float *fpoint = NULL;
     int numPoints = 0;
-    Array<int> icoordIndex;
+    MyArray<int> icoordIndex;
 
     int tess = TheApp->getTessellation() + 1;
     
@@ -140,7 +140,7 @@ NodeDisk2D::createMesh(bool cleanDoubleVertices, bool triangulate)
     if (hasParent())
         transparency = getParent()->getTransparency();
 
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
     m_mesh = new MyMesh(this,
                         coords, coordIndex, NULL, NULL, NULL, NULL, texCoords, 
                         NULL, 0, meshFlags, transparency);

@@ -376,7 +376,7 @@ Util::createConeMesh(bool cleanDoubleVertices, bool bside, bool bbottom)
     fnormal[offset + 1] = 1;
     fnormal[offset + 2] = 0;
 
-    Array<int> icoordIndex;
+    MyArray<int> icoordIndex;
     if (bbottom)
         for (int i = 0; i < tess; i++) {    
             if (i == (tess - 1))
@@ -409,7 +409,7 @@ Util::createConeMesh(bool cleanDoubleVertices, bool bside, bool bbottom)
     
     MFColor *colors = NULL;
     MFInt32 *colorIndex = NULL;
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
     MFInt32 *texCoordIndex = NULL;
 
     int meshFlags = MESH_NORMAL_PER_VERTEX;
@@ -761,7 +761,7 @@ Util::invertMatrix(float out[16], const float in[16])
 }
 
 void
-Util::getTexCoords(Array<MFVec2f *>&texCoords, Node *texCoord)
+Util::getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord)
 {
     MFVec2f *mftexCoord = NULL;
     if (texCoord) {
@@ -811,7 +811,7 @@ typedef boost::graph_traits<Surface_mesh>::face_descriptor face_descriptor;
 typedef boost::graph_traits<Surface_mesh>::halfedge_descriptor halfedge_descriptor;
 
 NodeIndexedFaceSet *
-Util::convexHull(Scene *scene, Array<Vec3f> vec)
+Util::convexHull(Scene *scene, MyArray<Vec3f> vec)
 {
     int diffentVecCount = 0;
     for (int i = 0; i < vec.size(); i++) {

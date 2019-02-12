@@ -33,9 +33,9 @@ public:
 
     NodeTimeSensor     *getTimeSensor()        { return m_timeSensor; }
     float               getTimeSensorSeconds() { return m_newTimeSensorSeconds; }
-    Array<int>         &getEventInFields()     { return m_eventInFields; }    
-    Array<int>         &getEventInTypes()      { return m_eventInTypes; }    
-    Array<bool>        &getEventInIsAnimated() { return m_eventInIsAnimated; }
+    MyArray<int>       &getEventInFields()     { return m_eventInFields; }    
+    MyArray<int>       &getEventInTypes()      { return m_eventInTypes; }    
+    MyArray<bool>      &getEventInIsAnimated() { return m_eventInIsAnimated; }
     void                buildInterfaceData(void);
 
 protected:
@@ -51,10 +51,10 @@ protected:
     NodeTimeSensor     *m_timeSensor;
     float               m_newTimeSensorSeconds;
     bool                m_okFlag;
-    Array<MyString>     m_eventInNames;
-    Array<int>          m_eventInFields;
-    Array<int>          m_eventInTypes;
-    Array<bool>         m_eventInIsAnimated;
+    MyArray<MyString>   m_eventInNames;
+    MyArray<int>        m_eventInFields;
+    MyArray<int>        m_eventInTypes;
+    MyArray<bool>       m_eventInIsAnimated;
 };
 
 #endif

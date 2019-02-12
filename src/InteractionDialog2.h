@@ -44,9 +44,9 @@ protected:
 protected:
     CheckBoxWindow        m_window;
     InteractionRouteData *m_routeData;
-    Array<MyString>       m_sensors;
-    Array<MyString>       m_protos;
-    Array<Node *>         m_nodes;
+    MyArray<MyString>     m_sensors;
+    MyArray<MyString>     m_protos;
+    MyArray<Node *>       m_nodes;
     Scene                *m_scene;
 };
 

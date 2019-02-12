@@ -28,6 +28,6 @@
 
 class Node;
 
-typedef Array<Node *> NodeArray;
+typedef MyArray<Node *> NodeArray;
 
 #endif // _NODEARRAY_H

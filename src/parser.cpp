@@ -140,8 +140,8 @@ Node *targetNode;
 int targetField;
 int scanFor = SCAN_FOR_BOTH;
 
-static Stack<Node *> nodeStack;
-static Stack<Proto *> protoStack;
+static MyStack<Node *> nodeStack;
+static MyStack<Proto *> protoStack;
 static int defName = -1;
 static int currentType;
 static NodeList commentNodeList;
@@ -190,7 +190,7 @@ public:
        }
 };
 
-Array<nameTranslation*> NameTranslation;
+MyArray<nameTranslation*> NameTranslation;
 
 static bool x3d = false;
 
@@ -3635,7 +3635,7 @@ public:
     IntArray *containerFields;
 };
 
-static Stack<DataNode> nodes;
+static MyStack<DataNode> nodes;
 
 #define STATUS_NONE 0
 #define STATUS_NODE 1
@@ -3652,13 +3652,13 @@ static Stack<DataNode> nodes;
 #define STATUS_IMPORTEXPORT 12
 #define STATUS_SHADERPART 13
 
-static Stack<int> status;
-static Stack<int> currentFieldIndex;
+static MyStack<int> status;
+static MyStack<int> currentFieldIndex;
 static bool done;
 static NodeList *rootNodes;
 char *currentURL = NULL;
 char *parentURL = NULL;
-static Array<XML_Parser> x3dParser;
+static MyArray<XML_Parser> x3dParser;
 static int contextIndex = -1; //contextIndex 0=scene, protobody 1, protobody 2..
 static int doingcdata = 0;
 static int gotcdata = 0;
@@ -3733,7 +3733,7 @@ static void XMLCALL handleComment(void *userData, const XML_Char *data)
     }
 }
 
-static void mfstrsplit(Array<const char *> *toksArray, char *string)
+static void mfstrsplit(MyArray<const char *> *toksArray, char *string)
 {
     /* special version of strsplit just for mf strings */
     int count = 0;
@@ -3902,7 +3902,7 @@ parseFieldValue(int curtype, const char* value)
         StringArray *strings = new StringArray();
         // doesn't split on blank (but does on ") 
         // in case a filename has a blank in it.
-        Array<const char *> tokens;
+        MyArray<const char *> tokens;
         mfstrsplit(&tokens, (char *)value);
         tcount = tokens.size();
         for (int i = 0; i < tcount; i++) {
@@ -4504,7 +4504,7 @@ static void XMLCALL end(void *data, const char *el)
 {
     NodeList *childList;  
     depth--;
-    Array<int> *containerFields = nodes.peek().containerFields;
+    MyArray<int> *containerFields = nodes.peek().containerFields;
     childList = nodes.pop().nodeList;
     Node *current_node = nodeStack.pop();
     Proto *current_proto = protoStack.peek(); 

@@ -80,6 +80,9 @@ public:
     fieldMacros(SFNode, geometry, ProtoVolumeData);
     fieldMacros(SFBool, isPickable, ProtoVolumeData);
     fieldMacros(SFBool, render, ProtoVolumeData);
+
+public:
+    float *m_boxtris; 
 };
 
 #endif

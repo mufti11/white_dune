@@ -32,7 +32,7 @@
 class NurbsCurveDegreeElevate {
 public:
                   NurbsCurveDegreeElevate(Vec3f controlPoints[], 
-                                          float weights[], Array<float> knots, 
+                                          float weights[], MyArray<float> knots,
                                           int dimension, 
                                           int pDegree, int upDegree);
      int          getKnotSize() {return newKnots.size();}
@@ -43,10 +43,10 @@ public:
      float        getKnots(int index) {return newKnots[index];}
 
 protected:
-     Array<Vec3f> newPoints;
-     Array<float> newWeights;
-     Array<float> newKnots;
-     Array<int>   binomi;
+     MyArray<Vec3f> newPoints;
+     MyArray<float> newWeights;
+     MyArray<float> newKnots;
+     MyArray<int>   binomi;
 
      void         makeBinomi(int n, int k);
      int          getBinomi(int n, int k){return(binomi[(n*max)+n+k]);}

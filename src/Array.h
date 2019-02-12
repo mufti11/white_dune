@@ -36,9 +36,9 @@
 
 // Template for a C type array. Index: 0 ... size()-1 
 
-template<class T> class Array {
+template<class T> class MyArray {
 public:
-                Array(int capacity = DEFAULT_CAPACITY )
+                MyArray(int capacity = DEFAULT_CAPACITY )
                 { 
                    if (capacity == 0)
                        capacity = DEFAULT_CAPACITY;
@@ -46,7 +46,7 @@ public:
                    m_data = new T[capacity]; 
                    m_size = 0;
                 }
-                Array(const Array<T> &a)
+                MyArray(const MyArray<T> &a)
                 {
                   m_capacity = m_size = a.m_size;
                   if (m_size == 0) 
@@ -55,11 +55,11 @@ public:
                   for (int i = 0; i < MIN(m_capacity, m_size); i++) 
                       m_data[i] = a.m_data[i];
                 }
-                Array(const T *a, int len)
+                MyArray(const T *a, int len)
                 {
                   setData(a, len);
                 }
-               ~Array()
+               ~MyArray()
                 {
                   if (m_data)
                       delete[] m_data; 
@@ -67,7 +67,7 @@ public:
                   m_size = 0;
                 }
 
-//    Array<T>   *copy() { return new Array<T>(*this); }
+//    MyArray<T>   *copy() { return new Array<T>(*this); }
     const T    &get(int index) const
                 { return m_data[index]; }
     void        set(int index, T t)

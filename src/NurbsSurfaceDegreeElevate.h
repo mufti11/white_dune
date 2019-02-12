@@ -32,8 +32,8 @@
 class NurbsSurfaceDegreeElevate {
 public:
                  NurbsSurfaceDegreeElevate(Vec3f Points[], float Weights[], 
-                                           Array<float> uKnots, 
-                                           Array<float> vKnots, 
+                                           MyArray<float> uKnots, 
+                                           MyArray<float> vKnots, 
                                            int uDimension, int vDimension, 
                                            int uDegree, int vDegree,
                                            int uUpDegree, int vUpDegree);
@@ -49,16 +49,16 @@ public:
     int          getVDimension() {return newVDimension;}
 
 protected:
-    Array<Vec3f> newPoints;
-    Array<float> newWeights;
-    Array<float> newUKnots;
-    Array<float> newVKnots;
-    int          newUDimension;
-    int          newVDimension;
+    MyArray<Vec3f> newPoints;
+    MyArray<float> newWeights;
+    MyArray<float> newUKnots;
+    MyArray<float> newVKnots;
+    int            newUDimension;
+    int            newVDimension;
     
-    Array<Vec3f> tempPoints;
-    Array<float> tempWeights;
-    //Array<float> tempUKnots;
+    MyArray<Vec3f> tempPoints;
+    MyArray<float> tempWeights;
+    //MyArray<float> tempUKnots;
 };  
 #endif
 

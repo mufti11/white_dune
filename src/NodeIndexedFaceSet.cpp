@@ -330,7 +330,7 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         }
     }    
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
 
     if (bcolorPerVertex)
@@ -584,7 +584,7 @@ NodeIndexedFaceSet::splitSelectedFaces(void)
 }
 
 bool
-NodeIndexedFaceSet::checkBorderMidPoint(int icoordIndex, Array<int> symFaces)
+NodeIndexedFaceSet::checkBorderMidPoint(int icoordIndex, MyArray<int> symFaces)
 {
     int verticesCount = 0;
     NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
@@ -610,10 +610,10 @@ NodeIndexedFaceSet::checkBorderMidPoint(int icoordIndex, Array<int> symFaces)
 }
 
 bool
-NodeIndexedFaceSet::checkBorderFace(Array<int> innerBorder, 
-                                    Array<int> outerBorder, MFInt32 *coordIndex,
+NodeIndexedFaceSet::checkBorderFace(MyArray<int> innerBorder, 
+                                    MyArray<int> outerBorder, MFInt32 *coordIndex,
                                     int borderIndex1, int borderIndex2,
-                                    Array<int> symFaces, bool sym)
+                                    MyArray<int> symFaces, bool sym)
 {
     NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
     if (ncoord == NULL)
@@ -692,9 +692,10 @@ NodeIndexedFaceSet::symetricFace(int iface, bool sameFace)
 }
 
 void
-NodeIndexedFaceSet::deleteFaces(MFInt32 *coordIndex, Array<int> *facesToDelete)
+NodeIndexedFaceSet::deleteFaces(MFInt32 *coordIndex, 
+                                MyArray<int> *facesToDelete)
 {
-    Array<int> sortedFaces;
+    MyArray<int> sortedFaces;
     int facesToDeleteSize = (*facesToDelete).size();
     for (int i = 0; i < facesToDeleteSize; i++) {
         int k = 0;
@@ -732,13 +733,13 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
     MFInt32 *newCoordIndex = new MFInt32((MFInt32 *)coordIndex()->copy());
     int numNewCoordIndex = newVertices->getSFSize();
     int borderCount = 0;
-    Array<int> innerBorder;
-    Array<int> outerBorder;
-    Array<bool> symBorder;
-    Array<bool> validBorder;
+    MyArray<int> innerBorder;
+    MyArray<int> outerBorder;
+    MyArray<bool> symBorder;
+    MyArray<bool> validBorder;
     int numFaces = 0;
-    Array<int> newFaces;
-    Array<int> symFaces;
+    MyArray<int> newFaces;
+    MyArray<int> symFaces;
     for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
         int iface = symetricFace(m_scene->getSelectedHandle(i));
         if (iface > -1)
@@ -839,7 +840,7 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
     if (newCoordIndex->getValue(newCoordIndex->getSFSize() - 1) > -1)
         newCoordIndex->appendSFValue(-1);
 
-    Array<int> facesToDelete;
+    MyArray<int> facesToDelete;
     for (int i = 0; i < getMesh()->getNumFaces(); i++)
         if (m_scene->isInSelectedHandles(i)) {
             int facesToDeleteSize = facesToDelete.size();
@@ -1019,7 +1020,7 @@ NodeIndexedFaceSet::buildQuad(void)
                          }
                      ci->appendSFValue(ci->getValue(second));
                      ci->appendSFValue(-1);
-                     Array<int> facesToDelete;
+                     MyArray<int> facesToDelete;
                      if (iface1 < iface2) {
                          facesToDelete.append(iface2);
                          facesToDelete.append(iface1);
@@ -1206,7 +1207,7 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
         return;
     MFVec3f *newVertices = new MFVec3f((MFVec3f *)ncoord->point()->copy());
     MFInt32 *newCoordIndex = new MFInt32((MFInt32 *)coordIndex()->copy());
-    Array<int> symFaces;
+    MyArray<int> symFaces;
     if (m_scene->getXSymetricMode())
         for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
             int iface = symetricFace(m_scene->getSelectedHandle(i));
@@ -1214,7 +1215,7 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
                 if (!m_scene->isInSelectedHandles(iface))
                     symFaces.append(iface);
     }
-    Array<CoordIndexMapper> coordIndexToAdded;
+    MyArray<CoordIndexMapper> coordIndexToAdded;
     int numAddedVertices = 0;
     int numNewVertices = newVertices->getSFSize();
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
@@ -1332,9 +1333,9 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
             }
         }
     }
-    Array<int> sortedM;
-    Array<int> sortedL;
-    Array<int> sortedO;
+    MyArray<int> sortedM;
+    MyArray<int> sortedL;
+    MyArray<int> sortedO;
     for (int n = 0; n < coordIndexToAdded.size(); n++) {
         int m = coordIndexToAdded[n].edgeCoordIndex;
         int l = coordIndexToAdded[n].coordIndex;
@@ -1355,7 +1356,7 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
             sortedO.append(o);
         }
     }
-    Array<int> sortedFaces;
+    MyArray<int> sortedFaces;
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
         if (m_scene->isInSelectedHandles(i) || symFaces.contains(i)) {
             int k = 0;
@@ -1442,9 +1443,9 @@ NodeIndexedFaceSet::makeSymetric(int direction, bool plus)
     if (ncoord == NULL)
         return;
     MFVec3f *vertices = new MFVec3f((MFVec3f *)ncoord->point());
-    Array<float> halfVertices;
-    Array<float> startVertices;
-    Array<int> halfCoordIndex;
+    MyArray<float> halfVertices;
+    MyArray<float> startVertices;
+    MyArray<int> halfCoordIndex;
     int newCi = 0;
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
         FaceData *face = getMesh()->getFace(i);
@@ -1574,7 +1575,7 @@ NodeIndexedFaceSet::insetFace(float factor)
         return;
     MFVec3f *vertices = new MFVec3f((MFVec3f *)ncoord->point()->copy());
     MFInt32 *ci = (MFInt32 *)coordIndex()->copy();
-    Array<int> facesToDelete;
+    MyArray<int> facesToDelete;
     for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
          facesToDelete.append(m_scene->getSelectedHandle(i));
     }
@@ -1641,7 +1642,7 @@ NodeIndexedFaceSet::insetFace(float factor)
 }
 
 Node *
-NodeIndexedFaceSet::simpleJoin(Array<FacesetAndMatrix> data)
+NodeIndexedFaceSet::simpleJoin(MyArray<FacesetAndMatrix> data)
 {
     NodeIndexedFaceSet *ret = NULL;
     MFVec3f *vertices = new MFVec3f();
@@ -1803,7 +1804,7 @@ namespace params = CGAL::Polygon_mesh_processing::parameters;
 static void
 build_mesh(Surface *meshOut, MyMesh *mesh, Matrix matrix)
 {
-    Array<vertex_index> u;    
+    MyArray<vertex_index> u;    
     for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
         Vec3f v = mesh->getVertices()->getVec(i);
         v = matrix * v;
@@ -1858,8 +1859,8 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
     
         CGAL::Polygon_mesh_processing::parameters::all_default();
 
-        CGAL::Polygon_mesh_processing::stitch_borders(surface1); 	
-        CGAL::Polygon_mesh_processing::stitch_borders(surface2); 	
+//        CGAL::Polygon_mesh_processing::stitch_borders(surface1); 	
+//        CGAL::Polygon_mesh_processing::stitch_borders(surface2); 	
 
     /*
         if (CGAL::Polygon_mesh_processing::does_self_intersect(surface1)) {

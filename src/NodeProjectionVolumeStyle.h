@@ -62,6 +62,9 @@ public:
     fieldMacros(SFBool, enabled, ProtoProjectionVolumeStyle);
     fieldMacros(SFFloat, intensityThreshold, ProtoProjectionVolumeStyle);
     fieldMacros(SFString, type, ProtoProjectionVolumeStyle);
+
+public:
+    int m_type;
 };
 
 #endif

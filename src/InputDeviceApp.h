@@ -101,9 +101,9 @@ public:
 private:
     bool                m_dontCareFocus;
     int                 m_maxNumberAxes;
-    Array<InputDevice*> m_inputDevices;
+    MyArray<InputDevice*> m_inputDevices;
 #ifdef HAVE_AFLOCK
-    Array<AflockDevice*>m_aflockDevices;
+    MyArray<AflockDevice*>m_aflockDevices;
 #endif
 };
 

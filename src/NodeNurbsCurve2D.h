@@ -111,7 +111,7 @@ private:
                 (getParent()->getType() == X3D_NURBS_SWEPT_SURFACE); }
 private:
     int             m_dimension;
-    Array<Vec2f>    m_chain;
+    MyArray<Vec2f>  m_chain;
     bool            m_chainDirty;
     bool            m_isInternal;
     int             m_handleRendering;

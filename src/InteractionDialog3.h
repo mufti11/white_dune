@@ -51,7 +51,7 @@ protected:
     bool                  m_eventInIsInteractive;
     bool                  m_initIsInteractive;
     int                   m_level;
-    Array<int>            m_eventOuts;        
+    MyArray<int>          m_eventOuts;        
 };
 
 #endif

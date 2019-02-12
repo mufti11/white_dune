@@ -93,7 +93,7 @@ class Element;
 
 class DownloadPathData;
 
-typedef Stack<Command *> CommandStack;
+typedef MyStack<Command *> CommandStack;
 
 typedef Map<MyString, Node *> NodeMap;
 typedef Map<MyString, int> StringMap;
@@ -541,7 +541,7 @@ public:
                             }
     const char         *getPath() const { return m_path; }
 
-    void                getProtoList(Array<int> *protoList, const Node *node);
+    void                getProtoList(MyArray<int> *protoList, const Node *node);
     void                setPathAllURL(const char *path);
 
     bool                isModified() const;
@@ -778,7 +778,7 @@ public:
                             m_saved_x3dv = false;
                             m_saved_x3dxml = false;
                         }
-     Array<NodeViewport *> *getViewPorts();
+     MyArray<NodeViewport *> *getViewPorts();
      void               setViewPorts(void);
      void               addViewPort(NodeViewport *node) {
                            m_viewports.append(node);
@@ -796,12 +796,12 @@ protected:
     Node               *m_root;
     int                 m_rootField;
     StringMap           m_symbols;
-    Array<MyString>     m_symbolList;
-    Array<MyString>     m_protoNames;
+    StringArray         m_symbolList;
+    StringArray         m_protoNames;
     int                 m_numProtoNames;
     int                 m_statusNumProtoNames;
-    Array<MyString>     m_protoDefinitions;
-    Array<bool>         m_isNestedProto;
+    StringArray         m_protoDefinitions;
+    MyArray<bool>       m_isNestedProto;
     int                 m_numProtoDefinitions;
     int                 m_statusNumProtoDefinitions;
     ProtoMap            m_protos;
@@ -818,7 +818,7 @@ protected:
     NodeList            m_navigationinfos;
     NodeList            m_backgrounds;
     NodeList            m_fogs;
-    Stack<Node *>       m_fogStack;
+    MyStack<Node *>     m_fogStack;
 
     NodeList            m_timeSensors;
 
@@ -828,13 +828,13 @@ protected:
     NodeList            m_nodes;
 
     Path               *m_selection;
-    Array<int>          m_selectedHandles;
+    IntArray            m_selectedHandles;
     int                 m_lastSelectedHandle;
     int                 m_oldLastSelectedHandle;
     bool                m_isNewSelectedHandle;
 
     Node               *m_oldSelection;
-    Array<int>          m_oldSelectedHandles;
+    IntArray            m_oldSelectedHandles;
 
     bool                m_singleSelectedHandle;
 
@@ -869,13 +869,13 @@ protected:
     NodeFog            *m_currentFog;
     NodeBackground     *m_currentBackground;
 
-    Array<NodeViewport *> m_viewports;
+    MyArray<NodeViewport *> m_viewports;
 
     bool                m_canUpdateViewsSelection;
     List<SceneView *>   m_views;
 
     MyString            m_errors;
-    Array<FontInfo *>   m_fonts;
+    MyArray<FontInfo *>   m_fonts;
 
     MyString            m_path;
 
@@ -902,15 +902,15 @@ protected:
     bool                m_use3dCursor;
     int                 m_errorLineNumber;
 
-    Array<const char *> m_nodesWithExternProto;
-    Array<const char *> m_nodesForceExternProtoWrite;
+    MyArray<const char *> m_nodesWithExternProto;
+    MyArray<const char *> m_nodesForceExternProtoWrite;
     bool                m_externProtoWarning;
     int                 m_numberBuildinProtos;
 
     bool                m_isParsing;
 
     // temporary nodes to write (e.g. Interpolators for PureVRML Export)
-    Array<Node *>       m_delayedWriteNodes;
+    MyArray<Node *>     m_delayedWriteNodes;
 
     bool                m_hasJoints;
     bool                m_showJoints;
@@ -929,7 +929,7 @@ protected:
     double              m_oldWalkTime;
 
     Node               *m_defNode;
-    Array<Proto *>      m_writtenExtensionProtos;
+    MyArray<Proto *>    m_writtenExtensionProtos;
     bool                m_importIntoVrmlScene;
 
     int                 m_numDataFunctions;
@@ -957,18 +957,18 @@ protected:
 
     Node               *m_rigidBodyHandleNode;
 
-    Array<const char*>  m_metaKeys;
-    Array<const char*>  m_metaValues;
+    MyArray<const char*>  m_metaKeys;
+    MyArray<const char*>  m_metaValues;
 
-    Array<const char*>  m_unitCategory;
-    Array<const char*>  m_unitName;
-    Array<double>       m_unitConversionFactor;
+    MyArray<const char*>  m_unitCategory;
+    MyArray<const char*>  m_unitName;
+    MyArray<double>       m_unitConversionFactor;
 
     double              m_unitLength;
     double              m_unitAngle;
 
-    Stack<double>       m_unitLengthStack;
-    Stack<double>       m_unitAngleStack;
+    MyStack<double>     m_unitLengthStack;
+    MyStack<double>     m_unitAngleStack;
 
     NodeArray           m_sensorNodes;
 

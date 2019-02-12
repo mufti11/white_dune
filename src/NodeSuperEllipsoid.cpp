@@ -211,15 +211,15 @@ NodeSuperEllipsoid::createMesh(SuperEllipsoidData *data, bool cleanVertices)
     float inc2 = M_PI / (uTess - 1) * 2.0;
     int a1;
     int a2;
-    Array<float> s1xy(vTess);
-    Array<float> s1z(vTess);
+    MyArray<float> s1xy(vTess);
+    MyArray<float> s1z(vTess);
     for (a1 = 0; a1 < vTess; a1++) {
         float angle1 = low + a1 * inc1;
         s1xy[a1] = superellipse1xy(angle1, data->n2);
         s1z[a1] = superellipse1z(angle1, data->n2);
     }
-    Array<float> s2x(uTess);
-    Array<float> s2y(uTess);
+    MyArray<float> s2x(uTess);
+    MyArray<float> s2y(uTess);
     for (a2 = 0; a2 < uTess; a2++) {
         float angle2 = -M_PI + a2 * inc2;
         s2x[a2] = superellipse2x(angle2, data->n1);
@@ -303,7 +303,7 @@ NodeSuperEllipsoid::createMesh(SuperEllipsoidData *data, bool cleanVertices)
     cindex = optimizeNormals(ci, vert, NULL, cindex, false, cleanVertices);  
     MFInt32 *coordIndex = new MFInt32(ci, cindex);
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
     if (texCoords.size() == 0) {
         MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex);

@@ -140,7 +140,7 @@ protected:
     NodePositionInterpolator    *m_positionInterpolator; 
     NodeOrientationInterpolator *m_orientationInterpolator; 
     bool               m_curveDirty;
-    Array<float>       m_chain;
+    MyArray<float>     m_chain;
 };
 #endif 
  

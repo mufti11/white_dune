@@ -123,7 +123,7 @@ NodeIndexedTriangleFanSet::createMesh(bool cleanDouble, bool triangulate)
         }
     }
 
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
     
 //    if (!texCoord()->getValue())

@@ -542,7 +542,7 @@ NodeNurbsSurface::createMesh(const Vec3f *controlPoints, bool cleanVertices,
     meshFlags |= MESH_CONVEX;
     meshFlags |= MESH_COLOR_PER_VERTEX;
     meshFlags |= MESH_NORMAL_PER_VERTEX;
-    Array<MFVec2f *>texCoords;
+    MyArray<MFVec2f *>texCoords;
     texCoords.append(mfTexCoord);
     m_mesh = new MyMesh(this, vertices, coordIndex, normal, NULL,
                         NULL, NULL, texCoords, NULL, 1.57, meshFlags);
@@ -1105,8 +1105,8 @@ NodeNurbsSurface::degreeElevate(int newUDegree, int newVDegree)
     int tvOrder = vOrder()->getValue();
     int uKnotSize = uKnot()->getSize();
     int vKnotSize = vKnot()->getSize();
-    Array<float> tuKnots(uKnotSize);
-    Array<float> tvKnots(vKnotSize);
+    MyArray<float> tuKnots(uKnotSize);
+    MyArray<float> tvKnots(vKnotSize);
     int tuDegree = tuOrder - 1;
     int tvDegree = tvOrder - 1;
     int tuUpDegree = newUDegree - tuDegree;

@@ -60,7 +60,7 @@ private:
     Node               *m_parent;
     float               m_upperlimit;
     float               m_lowerlimit;
-    Array<MyString>     m_joints;
+    MyArray<MyString>   m_joints;
 };
 
 #endif

@@ -447,7 +447,7 @@ protected:
     void                linearVknot(void);
     bool                isEditorInUse(bool errormessage = false);
     bool                fieldPipe(Node *node, int field, const char *command,
-                                  Array<int> *handles = NULL);
+                                  MyArray<int> *handles = NULL);
     void                pipeField(void);
     int                 considerIdRanges(int id);
     void                HandleScale(void);
@@ -515,7 +515,7 @@ protected:
     bool                m_yOnly;
     bool                m_zOnly;
     SWND                m_fieldCanvas;
-    Array<ProtoMenuItem>m_protoMenu;
+    MyArray<ProtoMenuItem> m_protoMenu;
     ScriptEdit         *m_scriptEdit;
     bool                m_scriptEditorInUse;
     ObjectEdit         *m_shaderEdit;

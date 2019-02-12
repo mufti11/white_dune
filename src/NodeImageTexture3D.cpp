@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include "stdafx.h"
+#include "GL/gl.h"
 
 #include "NodeImageTexture3D.h"
 #include "Proto.h"
@@ -31,8 +32,24 @@
 #include "SFBool.h"
 #include "SFNode.h"
 #include "DuneApp.h"
+#include "NodeMaterial.h"
+#include "NodeTwoSidedMaterial.h"
+#include "NodeVolumeData.h"
 #include "NodeTextureProperties.h"
 #include "NodeTextureTransform.h"
+#include "NodeOpacityMapVolumeStyle.h"
+#include "NodeComposedVolumeStyle.h"
+#include "NodeBlendedVolumeStyle.h"
+#include "NodeBoundaryEnhancementVolumeStyle.h"
+#include "NodeCartoonVolumeStyle.h"
+#include "NodeEdgeEnhancementVolumeStyle.h"
+#include "NodeProjectionVolumeStyle.h"
+#include "NodeShadedVolumeStyle.h"
+#include "NodeSilhouetteEnhancementVolumeStyle.h"
+#include "NodeToneMappedVolumeStyle.h"
+
+#include "NodeEffect.h"
+#include "NodeEffectPart.h"
 
 ProtoImageTexture3D::ProtoImageTexture3D(Scene *scene)
   : Proto(scene, "ImageTexture3D")
@@ -80,7 +97,13 @@ NodeImageTexture3D::NodeImageTexture3D(Scene *scene, Proto *def)
 {
     m_textureTableIndex = 0;
     m_nodeNeedsCompiling = true;
+    m_loaded = false;
+#ifdef HAVE_LIBIMLIB2
+# ifdef HAVE_LIBGLESV2
     m_textures_prv = NULL;
+    m_tableIndex = NULL;
+# endif
+#endif
 }
 
 // The following uses code from FreeWRL
@@ -103,14 +126,25 @@ NodeImageTexture3D::NodeImageTexture3D(Scene *scene, Proto *def)
     along with FreeWRL/FreeX3D.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-#if 0
-code not ready...
-//#ifdef HAVE_LIBIMLIB2
+#ifdef HAVE_LIBIMLIB2
+# ifdef HAVE_LIBGLESV2
 
+// code not ready
+
+#include "GL/glext.h"
+
+#include "GLES2/gl2.h"
 #include <Imlib2.h>
 #include "Texture3D.h"
 
+static int isMobile = TRUE;
+
 ppTextures textures_prv = NULL;
+ppOpenGL_Utils openGL_Utils_prv = NULL;
+ppRenderFuncs RenderFuncs_prv = NULL;
+
+Node *renderFuncs_texturenode = NULL;
+int renderFuncs_textureStackTop = 0;
 
 struct multiTexParams {
     int multitex_mode[2];
@@ -123,6 +157,4120 @@ typedef struct pRenderTextures{
 }* ppRenderTextures;
 
 static int _noisy = 0;
+
+const static GLchar *pointSizeDeclare="uniform float pointSize;\n";
+const static GLchar *pointSizeAss="gl_PointSize = pointSize; \n";
+
+static const GLchar *ADSLLightModel = "\n\
+/* use ADSLightModel here the ADS colour is returned from the function.  */\n\
+vec4 ADSLightModel(in vec3 myNormal, in vec4 myPosition, in bool useMatDiffuse) {\n\
+  int i;\n\
+  vec4 diffuse = vec4(0., 0., 0., 0.);\n\
+  vec4 ambient = vec4(0., 0., 0., 0.);\n\
+  vec4 specular = vec4(0., 0., 0., 1.);\n\
+  vec3 normal = normalize (myNormal);\n\
+\n\
+  vec3 viewv = -normalize(myPosition.xyz); \n \
+  bool backFacing = (dot(normal,viewv) < 0.0); \n \
+  vec4 emissive;\n\
+  vec4 matdiffuse = vec4(1.0,1.0,1.0,1.0);\n\
+  float myAlph = 0.0;\n\
+\n\
+  fw_MaterialParameters myMat = fw_FrontMaterial;\n\
+\n\
+/* back Facing materials - flip the normal and grab back materials */ \n \
+if (backFacing) { \n \
+    normal = -normal; \n \
+    myMat = fw_BackMaterial; \n \
+} \n \
+\n\
+  emissive = myMat.emission;\n\
+  myAlph = myMat.diffuse.a;\n\
+  if(useMatDiffuse)\n\
+    matdiffuse = myMat.diffuse;\n\
+\n\
+  /* apply the lights to this material */\n\
+  for (i=0; i<MAX_LIGHTS; i++) {\n\
+    if(i<lightcount) { /*weird but ANGLE needs constant loop*/ \n\
+      vec4 myLightDiffuse = fw_LightSource[i].diffuse;\n\
+      vec4 myLightAmbient = fw_LightSource[i].ambient;\n\
+      vec4 myLightSpecular = fw_LightSource[i].specular;\n\
+      vec4 myLightPosition = fw_LightSource[i].position; \n\
+      int myLightType = lightType[i]; //fw_LightSource[i].lightType;\n\
+      vec3 myLightDir = fw_LightSource[i].spotDirection.xyz; \n\
+      vec3 eyeVector = normalize(myPosition.xyz);\n\
+      vec3  VP;     /* vector of light direction and distance */\n\
+      VP = myLightPosition.xyz - myPosition.xyz;\n\
+      vec3 L = myLightDir; /*directional light*/ \n\
+      if(myLightType < 2) /*point and spot*/ \n\
+       L = normalize(VP); \n\
+      float nDotL = max(dot(normal, L), 0.0);\n\
+      vec3 halfVector = normalize(L - eyeVector);\n\
+      /* normal dot light half vector */\n\
+      float nDotHV = max(dot(normal,halfVector),0.0);\n\
+      \n\
+      if (myLightType==1) {\n\
+        /* SpotLight */\n\
+        float spotDot; \n\
+        float spotAttenuation = 0.0; \n\
+        float powerFactor = 0.0; /* for light dropoff */ \n\
+        float attenuation; /* computed attenuation factor */\n\
+        float d;            /* distance to vertex */            \n\
+        d = length(VP);\n\
+        if (nDotL > 0.0) {\n\
+          powerFactor = pow(nDotL,myMat.shininess); \n\
+          /* tone down the power factor if myMat.shininess borders 0 */\n\
+          if (myMat.shininess < 1.0) {\n\
+            powerFactor *= myMat.shininess; \n\
+          } \n\
+        } \n\
+        attenuation = 1.0/(fw_LightSource[i].Attenuations.x + (fw_LightSource[i].Attenuations.y * d) + (fw_LightSource[i].Attenuations.z *d *d));\n\
+        spotDot = dot (-L,myLightDir);\n\
+        /* check against spotCosCutoff */\n\
+        if (spotDot > fw_LightSource[i].spotCutoff) {\n\
+          spotAttenuation = pow(spotDot,fw_LightSource[i].spotCutoff);\n\
+        }\n\
+        attenuation *= spotAttenuation;\n\
+        /* diffuse light computation */\n\
+        diffuse += nDotL* matdiffuse*myLightDiffuse * attenuation;\n\
+        /* ambient light computation */\n\
+        ambient += myMat.ambient*myLightAmbient;\n\
+        /* specular light computation */\n\
+        specular += myLightSpecular * powerFactor * attenuation;\n\
+        \n\
+      } else if (myLightType == 2) { \n\
+        /* DirectionalLight */ \n\
+        float powerFactor = 0.0; /* for light dropoff */\n\
+        if (nDotL > 0.0) {\n\
+          powerFactor = pow(nDotHV, myMat.shininess);\n\
+          /* tone down the power factor if myMat.shininess borders 0 */\n\
+          if (myMat.shininess < 1.0) {\n\
+           powerFactor *= myMat.shininess;\n\
+          }\n\
+        }\n\
+        /* Specular light computation */\n\
+        specular += myMat.specular *myLightSpecular*powerFactor;\n\
+        /* diffuse light computation */\n\
+        diffuse += nDotL*matdiffuse*myLightDiffuse;\n\
+        /* ambient light computation */\n\
+        ambient += myMat.ambient*myLightAmbient; \n\
+      } else {\n\
+        /* PointLight */\n\
+        float powerFactor=0.0; /* for light dropoff */\n\
+        float attenuation = 0.0; /* computed attenuation factor */\n\
+        float d = length(VP);  /* distance to vertex */ \n\
+        /* are we within range? */\n\
+        if (d <= fw_LightSource[i].lightRadius) {\n\
+          if (nDotL > 0.0) {\n\
+            powerFactor = pow(nDotL, myMat.shininess);\n\
+            //attenuation = (myMat.shininess-128.0);\n\
+          }\n\
+          /* this is actually the SFVec3f attenuation field */\n\
+          attenuation = 1.0/(fw_LightSource[i].Attenuations.x + (fw_LightSource[i].Attenuations.y * d) + (fw_LightSource[i].Attenuations.z *d *d));\n\
+          /* diffuse light computation */\n\
+          diffuse += nDotL* matdiffuse*myLightDiffuse * attenuation;\n\
+          /* ambient light computation */\n\
+          ambient += myMat.ambient*myLightAmbient;\n\
+          /* specular light computation */\n\
+          attenuation *= (myMat.shininess/128.0);\n\
+          specular += myLightSpecular * powerFactor * attenuation;\n\
+        }\n\
+      }\n\
+    }\n\
+  }\n\
+  return clamp(vec4(vec3(ambient+diffuse+specular+emissive),myAlph), 0.0, 1.0);\n\
+}\n\
+";
+
+static const GLchar *vertex_plug_clip_apply =    "\
+#ifdef CLIP \n\
+#define FW_MAXCLIPPLANES 4 \n\
+uniform int fw_nclipplanes; \n\
+uniform vec4 fw_clipplanes[FW_MAXCLIPPLANES]; \n\
+varying float fw_ClipDistance[FW_MAXCLIPPLANES]; \n\
+ \n\
+void PLUG_vertex_object_space (in vec4 vertex_object, in vec3 normal_object){ \n\
+  for ( int i=0; i<fw_nclipplanes; i++ ) \n\
+    fw_ClipDistance[i] = dot( fw_clipplanes[i], vertex_object); \n\
+} \n\
+#endif //CLIP \n\
+";
+
+static const GLchar *frag_plug_clip_apply =    "\
+#ifdef CLIP \n\
+#define FW_MAXCLIPPLANES 4 \n\
+uniform int fw_nclipplanes; \n\
+varying float fw_ClipDistance[FW_MAXCLIPPLANES]; \n\
+void PLUG_fog_apply (inout vec4 finalFrag, in vec3 normal_eye_fragment ){ \n\
+    for(int i=0;i<fw_nclipplanes;i++) { \n\
+      //if(normal_eye_fragment.z > fw_ClipDistance[i]) discard;  \n\
+      if(fw_ClipDistance[i] < 0.0) discard; \n\
+    } \n\
+} \n\
+#endif //CLIP \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/lighting.html#t-foginterpolant
+// PLUG: fog_apply (fragment_color, normal_eye_fragment)
+static const GLchar *plug_fog_apply =    "\
+void PLUG_fog_apply (inout vec4 finalFrag, in vec3 normal_eye_fragment ){ \n\
+  float ff = 1.0; \n\
+  float depth = abs(castle_vertex_eye.z/castle_vertex_eye.w); \n\
+  if(fw_fogparams.fogType > 0){ \n\
+    ff = 0.0;  \n\
+    if(fw_fogparams.fogType == 1){ //FOGTYPE_LINEAR \n\
+      if(depth < fw_fogparams.visibilityRange) \n\
+        ff = (fw_fogparams.visibilityRange-depth)/fw_fogparams.visibilityRange; \n\
+    } else { //FOGTYPE_EXPONENTIAL \n\
+        if(depth < fw_fogparams.visibilityRange){ \n\
+          ff = exp(-depth/(fw_fogparams.visibilityRange -depth) ); \n\
+          ff = clamp(ff, 0.0, 1.0);  \n\
+        } \n\
+    } \n\
+    finalFrag = mix(finalFrag,fw_fogparams.fogColor,1.0 - ff);  \n\
+  } \n\
+} \n\
+";
+
+//MULTITEXTURE
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/texturing.html#MultiTexture
+  /* PLUG: texture_apply (fragment_color, normal_eye_fragment) */
+static const GLchar *plug_fragment_texture_apply =    "\
+void PLUG_texture_apply (inout vec4 finalFrag, in vec3 normal_eye_fragment ){ \n\
+\n\
+  #ifdef MTEX \n\
+  vec4 source; \n\
+  int isource,iasource, mode; \n\
+  //finalFrag = texture2D(fw_Texture_unit0, fw_TexCoord[0].st) * finalFrag; \n\
+  if(textureCount>0){ \n\
+    if(fw_Texture_mode0[0] != MTMODE_OFF) { \n\
+      isource = fw_Texture_source0[0]; //castle-style dual sources \n\
+      iasource = fw_Texture_source0[1]; \n\
+      if(isource == MT_DEFAULT) source = finalFrag; \n\
+      else if(isource == MTSRC_DIFFUSE) source = matdiff_color; \n\
+      else if(isource == MTSRC_SPECULAR) source = vec4(castle_ColorES.rgb,1.0); \n\
+      else if(isource == MTSRC_FACTOR) source = mt_Color; \n\
+      if(iasource != 0){ \n\
+        if(iasource == MT_DEFAULT) source.a = finalFrag.a; \n\
+        else if(iasource == MTSRC_DIFFUSE) source.a = matdiff_color.a; \n\
+        else if(iasource == MTSRC_SPECULAR) source.a = 1.0; \n\
+        else if(iasource == MTSRC_FACTOR) source.a = mt_Color.a; \n\
+      } \n\
+      finalColCalc(source,fw_Texture_mode0[0],fw_Texture_mode0[1],fw_Texture_function0, fw_Texture_unit0,fw_TexCoord[0].st); \n\
+      finalFrag = source; \n\
+    } \n\
+  } \n\
+  if(textureCount>1){ \n\
+    if(fw_Texture_mode1[0] != MTMODE_OFF) { \n\
+      isource = fw_Texture_source1[0]; //castle-style dual sources \n\
+      iasource = fw_Texture_source1[1]; \n\
+      if(isource == MT_DEFAULT) source = finalFrag; \n\
+      else if(isource == MTSRC_DIFFUSE) source = matdiff_color; \n\
+      else if(isource == MTSRC_SPECULAR) source = vec4(castle_ColorES.rgb,1.0); \n\
+      else if(isource == MTSRC_FACTOR) source = mt_Color; \n\
+      if(iasource != 0){ \n\
+        if(iasource == MT_DEFAULT) source.a = finalFrag.a; \n\
+        else if(iasource == MTSRC_DIFFUSE) source.a = matdiff_color.a; \n\
+        else if(iasource == MTSRC_SPECULAR) source.a = 1.0; \n\
+        else if(iasource == MTSRC_FACTOR) source.a = mt_Color.a; \n\
+      } \n\
+      finalColCalc(source,fw_Texture_mode1[0],fw_Texture_mode1[1],fw_Texture_function1, fw_Texture_unit1,fw_TexCoord[1].st); \n\
+      finalFrag = source; \n\
+    } \n\
+  } \n\
+  if(textureCount>2){ \n\
+    if(fw_Texture_mode2[0] != MTMODE_OFF) { \n\
+      isource = fw_Texture_source2[0]; //castle-style dual sources \n\
+      iasource = fw_Texture_source2[1]; \n\
+      if(isource == MT_DEFAULT) source = finalFrag; \n\
+      else if(isource == MTSRC_DIFFUSE) source = matdiff_color; \n\
+      else if(isource == MTSRC_SPECULAR) source = vec4(castle_ColorES.rgb,1.0); \n\
+      else if(isource == MTSRC_FACTOR) source = mt_Color; \n\
+      if(iasource != 0){ \n\
+        if(iasource == MT_DEFAULT) source.a = finalFrag.a; \n\
+        else if(iasource == MTSRC_DIFFUSE) source.a = matdiff_color.a; \n\
+        else if(iasource == MTSRC_SPECULAR) source.a = 1.0; \n\
+        else if(iasource == MTSRC_FACTOR) source.a = mt_Color.a; \n\
+      } \n\
+      finalColCalc(source,fw_Texture_mode2[0],fw_Texture_mode2[1],fw_Texture_function2,fw_Texture_unit2,fw_TexCoord[2].st); \n\
+      finalFrag = source; \n\
+    } \n\
+  } \n\
+  if(textureCount>3){ \n\
+    if(fw_Texture_mode3[0] != MTMODE_OFF) { \n\
+      isource = fw_Texture_source3[0]; //castle-style dual sources \n\
+      iasource = fw_Texture_source3[1]; \n\
+      if(isource == MT_DEFAULT) source = finalFrag; \n\
+      else if(isource == MTSRC_DIFFUSE) source = matdiff_color; \n\
+      else if(isource == MTSRC_SPECULAR) source = vec4(castle_ColorES.rgb,1.0); \n\
+      else if(isource == MTSRC_FACTOR) source = mt_Color; \n\
+      if(iasource != 0){ \n\
+        if(iasource == MT_DEFAULT) source.a = finalFrag.a; \n\
+        else if(iasource == MTSRC_DIFFUSE) source.a = matdiff_color.a; \n\
+        else if(iasource == MTSRC_SPECULAR) source.a = 1.0; \n\
+        else if(iasource == MTSRC_FACTOR) source.a = mt_Color.a; \n\
+      } \n\
+      finalColCalc(source,fw_Texture_mode3[0],fw_Texture_mode3[1],fw_Texture_function3,fw_Texture_unit3,fw_TexCoord[3].st); \n\
+      finalFrag = source; \n\
+    } \n\
+  } \n\
+  #else //MTEX \n\
+  /* ONE TEXTURE */ \n\
+  #ifdef CUB \n\
+  finalFrag = textureCube(fw_Texture_unit0, fw_TexCoord[0]) * finalFrag; \n\
+  #else //CUB \n\
+  finalFrag = texture2D(fw_Texture_unit0, fw_TexCoord[0].st) * finalFrag; \n\
+  #endif //CUB \n\
+  #endif //MTEX \n\
+  \n\
+}\n";
+
+static const GLchar *plug_fragment_texture3D_apply_volume =    "\n\
+vec4 texture3Demu0( sampler2D sampler, in vec3 texcoord3, in int magfilter){ \n\
+  vec4 sample = vec4(0.0); \n\
+  #ifdef TEX3D \n\
+  //TILED method (vs Y strip method) \n\
+  vec3 texcoord = texcoord3; \n\
+  //texcoord.z = 1.0 - texcoord.z; //flip z from RHS to LHS\n\
+  float depth = max(1.0,float(tex3dTiles[2])); \n\
+  if(repeatSTR[0] == 0) texcoord.x = clamp(texcoord.x,0.0001,.9999); \n\
+  else texcoord.x = mod(texcoord.x,1.0); \n\
+  if(repeatSTR[1] == 0) texcoord.y = clamp(texcoord.y,0.0001,.9999); \n\
+  else texcoord.y = mod(texcoord.y,1.0); \n\
+  if(repeatSTR[2] == 0) texcoord.z = clamp(texcoord.z,0.0001,.9999); \n\
+  else texcoord.z = mod(texcoord.z,1.0); \n\
+  vec4 texel; \n\
+  int izf = int(floor(texcoord.z*depth)); //floor z \n\
+  int izc = int(ceil(texcoord.z*depth));  //ceiling z \n\
+  izc = izc == tex3dTiles[2] ? izc - 1 : izc; //clamp int z \n\
+  vec4 ftexel, ctexel; \n\
+  \n\
+  int nx = tex3dTiles[0]; //0-11 \n\
+  int ny = tex3dTiles[1]; \n\
+  float fnx = 1.0/float(nx); //.1\n\
+  float fny = 1.0/float(ny); \n\
+  int ix = izc / ny; //60/11=5\n\
+  int ixny = ix * ny; //5*11=55\n\
+  int iy = izc - ixny; //60-55=5 modulus remainder \n\
+  float cix = float(ix); //5 \n\
+  float ciy = float(iy); \n\
+  float xxc = (cix + texcoord.s)*fnx; //(5 + .5)*.1 = .55\n\
+  float yyc = (ciy + texcoord.t)*fny; \n\
+  ix = izf / ny; \n\
+  ixny = ix * ny; \n\
+  iy = izf - ixny; //modulus remainder \n\
+  float fix = float(ix); \n\
+  float fiy = float(iy); \n\
+  float xxf = (fix + texcoord.s)*fnx; \n\
+  float yyf = (fiy + texcoord.t)*fny; \n\
+  \n\
+  vec2 ftexcoord, ctexcoord; //texcoord is 3D, ftexcoord and ctexcoord are 2D coords\n\
+  ftexcoord.s = xxf; \n\
+  ftexcoord.t = yyf; \n\
+  ctexcoord.s = xxc; \n\
+  ctexcoord.t = yyc; \n\
+  ftexel = texture2D(sampler,ftexcoord.st); \n\
+  ctexel = texture2D(sampler,ctexcoord.st); \n\
+  float fraction = mod(texcoord.z*depth,1.0); \n\
+  if(magfilter == 1) \n\
+    texel = mix(ctexel,ftexel,1.0-fraction); //lerp GL_LINEAR \n\
+  else \n\
+    texel = ftexel; //fraction > .5 ? ctexel : ftexel; //GL_NEAREST \n\
+  sample = texel; \n\
+  #endif //TEX3D \n\
+  return sample; \n\
+} \n\
+vec4 texture3Demu( sampler2D sampler, in vec3 texcoord3){ \n\
+    //use uniform magfilter \n\
+    return texture3Demu0( sampler, texcoord3, magFilter); \n\
+} \n\
+void PLUG_texture3D( inout vec4 sample, in vec3 texcoord3 ){ \n\
+    sample = texture3Demu(fw_Texture_unit0,texcoord3); \n\
+} \n\
+void PLUG_texture_apply (inout vec4 finalFrag, in vec3 normal_eye_fragment ){ \n\
+\n\
+    vec4 sample; \n\
+    sample = texture3Demu(fw_Texture_unit0,fw_TexCoord[0]); \n\
+    finalFrag *= sample; \n\
+  \n\
+}\n";
+
+
+static const GLchar *plug_fragment_texture3Dlayer_apply =    "\
+void PLUG_texture_apply (inout vec4 finalFrag, in vec3 normal_eye_fragment ){ \n\
+\n\
+  #ifdef TEX3DLAY \n\
+  vec3 texcoord = fw_TexCoord[0]; \n\
+  texcoord.z = 1.0 - texcoord.z; //flip z from RHS to LHS\n\
+  float depth = max(1.0,float(textureCount-1)); \n\
+  float delta = 1.0/depth; \n\
+  if(repeatSTR[0] == 0) texcoord.x = clamp(texcoord.x,0.0001,.9999); \n\
+  else texcoord.x = mod(texcoord.x,1.0); \n\
+  if(repeatSTR[1] == 0) texcoord.y = clamp(texcoord.y,0.0001,.9999); \n\
+  else texcoord.y = mod(texcoord.y,1.0); \n\
+  if(repeatSTR[2] == 0) texcoord.z = clamp(texcoord.z,0.0001,.9999); \n\
+  else texcoord.z = mod(texcoord.z,1.0); \n\
+  int flay = int(floor(texcoord.z*depth)); \n\
+  int clay = int(ceil(texcoord.z*depth)); \n\
+  vec4 ftexel, ctexel; \n\
+  //flay = 0; \n\
+  //clay = 1; \n\
+  if(flay == 0) ftexel = texture2D(fw_Texture_unit0,texcoord.st);  \n\
+  if(clay == 0) ctexel = texture2D(fw_Texture_unit0,texcoord.st);  \n\
+  if(flay == 1) ftexel = texture2D(fw_Texture_unit1,texcoord.st);  \n\
+  if(clay == 1) ctexel = texture2D(fw_Texture_unit1,texcoord.st);  \n\
+  if(flay == 2) ftexel = texture2D(fw_Texture_unit2,texcoord.st);  \n\
+  if(clay == 2) ctexel = texture2D(fw_Texture_unit2,texcoord.st);  \n\
+  if(flay == 3) ftexel = texture2D(fw_Texture_unit3,texcoord.st);  \n\
+  if(clay == 3) ctexel = texture2D(fw_Texture_unit3,texcoord.st); \n\
+  float fraction = mod(texcoord.z*depth,1.0); \n\
+  vec4 texel; \n\
+  if(magFilter == 1) \n\
+    texel = mix(ctexel,ftexel,(1.0-fraction)); //lerp GL_LINEAR \n\
+  else \n\
+    texel = fraction > .5 ? ctexel : ftexel; //GL_NEAREST \n\
+  finalFrag *= texel; \n\
+  #endif //TEX3DLAY \n\
+  \n\
+}\n";
+
+static const GLchar *plug_vertex_lighting_ADSLightModel = "\n\
+/* use ADSLightModel here the ADS colour is returned from the function.  */ \n\
+void PLUG_add_light_contribution2 (inout vec4 vertexcolor, inout vec3 specularcolor, in vec4 myPosition, in vec3 myNormal, in float shininess ) { \n\
+  //working in eye space: eye is at 0,0,0 looking generally in direction 0,0,-1 \n\
+  //myPosition, myNormal - of surface vertex, in eyespace \n\
+  //vertexcolor - diffuse+ambient -will be replaced or modulated by texture color \n\
+  //specularcolor - specular+emissive or non-diffuse (emissive added outside this function) \n\
+  //algo: uses Blinn-Phong specular reflection: half-vector pow(N*H,shininess) \n\
+  int i; \n\
+  vec4 diffuse = vec4(0., 0., 0., 0.); \n\
+  vec4 ambient = vec4(0., 0., 0., 0.); \n\
+  vec4 specular = vec4(0., 0., 0., 1.); \n\
+  vec3 N = normalize (myNormal); \n\
+  \n\
+  vec3 E = -normalize(myPosition.xyz); \n \
+  vec4 matdiffuse = vec4(1.0,1.0,1.0,1.0); \n\
+  float myAlph = 0.0;\n\
+  \n\
+  fw_MaterialParameters myMat = fw_FrontMaterial; \n\
+  \n\
+  /* back Facing materials - flip the normal and grab back materials */ \n\
+  bool backFacing = (dot(N,E) < 0.0); \n\
+  if (backFacing) { \n\
+    N = -N; \n\
+    #ifdef TWO \n\
+    myMat = fw_BackMaterial; \n\
+    #endif //TWO \n\
+  } \n\
+  \n\
+  myAlph = myMat.diffuse.a; \n\
+  //if(useMatDiffuse) \n\
+  matdiffuse = myMat.diffuse; \n\
+  \n\
+  /* apply the lights to this material */ \n\
+  /* weird but ANGLE needs constant loop */ \n\
+  for (i=0; i<MAX_LIGHTS; i++) {\n\
+    if(i < lightcount) { \n\
+      vec4 myLightDiffuse = fw_LightSource[i].diffuse; \n\
+      vec4 myLightAmbient = fw_LightSource[i].ambient; \n\
+      vec4 myLightSpecular = fw_LightSource[i].specular; \n\
+      vec4 myLightPosition = fw_LightSource[i].position; \n\
+      int myLightType = lightType[i]; \n\
+      vec3 myLightDir = fw_LightSource[i].spotDirection.xyz; \n\
+      vec3  VP;     /* vector of light direction and distance */ \n\
+      VP = myLightPosition.xyz - myPosition.xyz; \n\
+      vec3 L = myLightDir; /*directional light*/ \n\
+      if(myLightType < 2) /*point and spot*/ \n\
+        L = normalize(VP); \n\
+      float NdotL = max(dot(N, L), 0.0); //Lambertian diffuse term \n\
+      /*specular reflection models, phong or blinn-phong*/ \n\
+      //#define PHONG 1 \n\
+      #ifdef PHONG \n\
+      //Phong \n\
+      vec3 R = normalize(-reflect(L,N)); \n\
+      float RdotE = max(dot(R,E),0.0); \n\
+      float specbase = RdotE; \n\
+      float specpow = .3 * myMat.shininess; //assume shini tuned to blinn, adjust for phong \n\
+      #else //PHONG \n\
+      //Blinn-Phong \n\
+      vec3 H = normalize(L + E); //halfvector\n\
+      float NdotH = max(dot(N,H),0.0); \n\
+      float specbase = NdotH; \n\
+      float specpow = myMat.shininess; \n\
+      #endif //PHONG \n\
+      float powerFactor = 0.0; /* for light dropoff */ \n\
+      if (specbase > 0.0) { \n\
+        powerFactor = pow(specbase,specpow); \n\
+        /* tone down the power factor if myMat.shininess borders 0 */ \n\
+        if (myMat.shininess < 1.0) { \n\
+          powerFactor *= myMat.shininess; \n\
+        } \n\
+      } \n\
+      \n\
+      if (myLightType==1) { \n\
+        /* SpotLight */ \n\
+        float spotDot, multiplier; \n\
+        float spotAttenuation = 0.0; \n\
+        float attenuation; /* computed attenuation factor */ \n\
+        float D; /* distance to vertex */ \n\
+        D = length(VP); \n\
+        attenuation = 1.0/(fw_LightSource[i].Attenuations.x + (fw_LightSource[i].Attenuations.y * D) + (fw_LightSource[i].Attenuations.z *D*D)); \n\
+        multiplier = 0.0; \n\
+        spotDot = dot (-L,myLightDir); \n\
+        /* check against spotCosCutoff */ \n\
+        if (spotDot > fw_LightSource[i].spotCutoff) { \n\
+          //?? what was this: spotAttenuation = pow(spotDot,fw_LightSource[i].spotExponent); \n\
+          if(spotDot > fw_LightSource[i].spotBeamWidth) { \n\
+            multiplier = 1.0; \n\
+          } else { \n\
+            multiplier = (spotDot - fw_LightSource[i].spotCutoff)/(fw_LightSource[i].spotBeamWidth - fw_LightSource[i].spotCutoff); \n\
+          } \n\
+        } \n\
+        //attenuation *= spotAttenuation; \n\
+        attenuation *= multiplier; \n\
+        /* diffuse light computation */ \n\
+        diffuse += NdotL* matdiffuse*myLightDiffuse * attenuation; \n\
+        /* ambient light computation */ \n\
+        ambient += myMat.ambient*myLightAmbient; \n\
+        /* specular light computation */ \n\
+        specular += myLightSpecular * powerFactor * attenuation; \n\
+        \n\
+      } else if (myLightType == 2) { \n\
+        /* DirectionalLight */ \n\
+        /* Specular light computation */ \n\
+        specular += myMat.specular *myLightSpecular*powerFactor; \n\
+        /* diffuse light computation */ \n\
+        diffuse += NdotL*matdiffuse*myLightDiffuse; \n\
+        /* ambient light computation */ \n\
+        ambient += myMat.ambient*myLightAmbient; \n\
+      } else { \n\
+        /* PointLight */ \n\
+        float attenuation = 0.0; /* computed attenuation factor */ \n\
+        float D = length(VP);  /* distance to vertex */ \n\
+        /* are we within range? */ \n\
+        if (D <= fw_LightSource[i].lightRadius) { \n\
+          /* this is actually the SFVec3f attenuation field */ \n\
+          attenuation = 1.0/(fw_LightSource[i].Attenuations.x + (fw_LightSource[i].Attenuations.y * D) + (fw_LightSource[i].Attenuations.z *D*D)); \n\
+          /* diffuse light computation */ \n\
+          diffuse += NdotL* matdiffuse*myLightDiffuse * attenuation; \n\
+          /* ambient light computation */ \n\
+          ambient += myMat.ambient*myLightAmbient; \n\
+          /* specular light computation */ \n\
+          attenuation *= (myMat.shininess/128.0); \n\
+          specular += myLightSpecular * powerFactor * attenuation; \n\
+        } \n\
+      } \n\
+    } \n\
+  } \n\
+  vertexcolor = clamp(vec4(vec3(ambient + diffuse ) + vertexcolor.rgb ,myAlph), 0.0, 1.0); \n\
+  specularcolor = clamp(specular.rgb + specularcolor, 0.0, 1.0); \n\
+} \n\
+";
+
+#define STR_MAX_LIGHTS "\n#define MAX_LIGHTS 8\n "
+static const GLchar *maxLights = STR_MAX_LIGHTS;
+
+static const GLchar *fragHighPrecision = "precision highp float;\n ";
+
+static const GLchar *fragMediumPrecision = "precision mediump float;\n ";
+
+static const GLchar *discardInFragEnd = "if (finalFrag.a==0.0) {discard; } else {gl_FragColor = finalFrag;}}";
+
+static const GLchar *fragEnd = "gl_FragColor = finalFrag;}";
+
+static const GLchar *fragNoAppAss = "finalFrag = vec4(1.0, 1.0, 1.0, 1.0);\n";
+
+const static GLchar *fragADSLAss = "finalFrag = ADSLightModel(vertexNorm,vertexPos,true) * finalFrag;";
+
+static const GLchar *fragFrontColAss=    " finalFrag = v_front_colour * finalFrag;";
+
+static const GLchar *fragTex0Dec = "uniform sampler2D fw_Texture_unit0; \n";
+
+const static GLchar *fragSingTexAss = "finalFrag = texture2D(fw_Texture_unit0, fw_TexCoord[0].st) * finalFrag;\n";
+
+static const GLchar *fragTex0CubeDec = "uniform samplerCube fw_Texture_unit0; \n";
+
+const static GLchar *fragSingTexCubeAss = "finalFrag = textureCube(fw_Texture_unit0, fw_TexCoord[0]) * finalFrag;\n";
+
+const static GLchar *fragMulTexCalc = "\
+if(textureCount>=1) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode0,fw_Texture_unit0,fw_TexCoord[0].st);} \n\
+if(textureCount>=2) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode1,fw_Texture_unit1,fw_TexCoord[0].st);} \n\
+if(textureCount>=3) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode2,fw_Texture_unit2,fw_TexCoord[0].st);} \n\
+/* REMOVE these as shader compile takes long \
+if(textureCount>=4) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode3,fw_Texture_unit3,fw_TexCoord[0].st);} \n\
+if(textureCount>=5) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode4,fw_Texture_unit4,fw_TexCoord[0].st);} \n\
+if(textureCount>=6) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode5,fw_Texture_unit5,fw_TexCoord[0].st);} \n\
+if(textureCount>=7) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode6,fw_Texture_unit6,fw_TexCoord[0].st);} \n\
+if(textureCount>=8) {finalFrag=finalColCalc(finalFrag,fw_Texture_mode7,fw_Texture_unit7,fw_TexCoord[0].st);} \n\
+*/ \n";
+
+static const GLchar *fragFillPropFunc = "\
+vec4 fillPropCalc(in vec4 prevColour, vec2 MCposition, int algorithm) {\
+vec4 colour; \
+vec2 position, useBrick; \
+\
+position = MCposition / HatchScale; \
+\
+if (algorithm == 0) {/* bricking  */ \
+    if (fract(position.y * 0.5) > 0.5) \
+        position.x += 0.5; \
+        }\
+\
+/* algorithm 1, 2 = no futzing required here  */ \
+if (algorithm == 3) {/* positive diagonals */ \
+    vec2 curpos = position; \
+    position.x -= curpos.y; \
+} \
+\
+if (algorithm == 4) {/* negative diagonals */ \
+    vec2 curpos = position; \
+    position.x += curpos.y; \
+} \
+\
+if (algorithm == 6) {/* diagonal crosshatch */ \
+    vec2 curpos = position; \
+    if (fract(position.y) > 0.5)  { \
+        if (fract(position.x) < 0.5) position.x += curpos.y; \
+        else position.x -= curpos.y; \
+    } else { \
+        if (fract(position.x) > 0.5) position.x += curpos.y; \
+        else position.x -= curpos.y; \
+    } \
+} \
+\
+position = fract(position); \
+\
+useBrick = step(position, HatchPct); \
+\
+    if (filled) {colour = prevColour;} else { colour=vec4(0.,0.,0.,0); }\
+if (hatched) { \
+    colour = mix(HatchColour, colour, useBrick.x * useBrick.y); \
+} \
+return colour; } ";
+
+static const GLchar *fragFillPropCalc = "\
+finalFrag= fillPropCalc(finalFrag, hatchPosition, algorithm);\n";
+
+static const GLchar *fragMulTexFunc ="\
+vec4 finalColCalc(in vec4 prevColour, in int mode, in sampler2D tex, in vec2 texcoord) { \
+vec4 texel = texture2D(tex,texcoord); \
+vec4 rv = vec4(1.,0.,1.,1.);  \
+\
+if (mode==MTMODE_OFF) { rv = vec4(prevColour);} \
+else if (mode==MTMODE_REPLACE) {rv = vec4(texture2D(tex, texcoord));}\
+else if (mode==MTMODE_MODULATE) { \
+\
+vec3 ct,cf; \
+float at,af; \
+\
+cf = prevColour.rgb; \
+af = prevColour.a; \
+\
+ct = texel.rgb; \
+at = texel.a; \
+\
+\
+rv = vec4(ct*cf, at*af); \
+\
+} \
+else if (mode==MTMODE_MODULATE2X) { \
+vec3 ct,cf; \
+float at,af; \
+\
+cf = prevColour.rgb; \
+af = prevColour.a; \
+\
+ct = texel.rgb; \
+at = texel.a; \
+rv = vec4(vec4(ct*cf, at*af)*vec4(2.,2.,2.,2.)); \
+}\
+else if (mode==MTMODE_MODULATE4X) { \
+vec3 ct,cf; \
+float at,af; \
+\
+cf = prevColour.rgb; \
+af = prevColour.a; \
+\
+ct = texel.rgb; \
+at = texel.a; \
+rv = vec4(vec4(ct*cf, at*af)*vec4(4.,4.,4.,4.)); \
+}\
+else if (mode== MTMODE_ADDSIGNED) {\
+rv = vec4 (prevColour + texel - vec4 (0.5, 0.5, 0.5, -.5)); \
+} \
+else if (mode== MTMODE_ADDSIGNED2X) {\
+rv = vec4 ((prevColour + texel - vec4 (0.5, 0.5, 0.5, -.5))*vec4(2.,2.,2.,2.)); \
+} \
+else if (mode== MTMODE_ADD) {\
+rv= vec4 (prevColour + texel); \
+} \
+else if (mode== MTMODE_SUBTRACT) {\
+rv = vec4 (prevColour - texel); \
+} \
+else if (mode==MTMODE_ADDSMOOTH) { \
+rv = vec4 (prevColour + (prevColour - vec4 (1.,1.,1.,1.)) * texel); \
+} \
+return rv; \
+\
+} \n";
+
+static const GLchar *fragMultiTexUniforms = " \
+/* defined for single textures... uniform sampler2D fw_Texture_unit0; */\
+uniform sampler2D fw_Texture_unit1; \
+uniform sampler2D fw_Texture_unit2; \
+/* REMOVE these as shader compile takes long \
+uniform sampler2D fw_Texture_unit3; \
+uniform sampler2D fw_Texture_unit4; \
+uniform sampler2D fw_Texture_unit5; \
+uniform sampler2D fw_Texture_unit6; \
+uniform sampler2D fw_Texture_unit7; \
+*/  \
+uniform int fw_Texture_mode0; \
+uniform int fw_Texture_mode1; \
+uniform int fw_Texture_mode2; \
+/* REMOVE these as shader compile takes long \
+uniform int fw_Texture_mode3; \
+uniform int fw_Texture_mode4; \
+uniform int fw_Texture_mode5; \
+uniform int fw_Texture_mode6; \
+uniform int fw_Texture_mode7; \
+*/ \n\
+\
+uniform int textureCount;\n";
+
+const static GLchar *fragMultiTexDef = MULTITEXTUREDefs;
+
+const static GLchar *vertADSLCalc = "v_front_colour = ADSLightModel(vertexNorm,vertexPos,true);";
+
+const static GLchar *vertADSLCalc0 = "v_front_colour = ADSLightModel(vertexNorm,vertexPos,false);";
+
+static const GLchar *vertHatchPosCalc = "hatchPosition = fw_Vertex.xy;\n";
+
+static const GLchar *fillPropDefines = "\
+uniform vec4 HatchColour; \n\
+uniform bool hatched; uniform bool filled;\n\
+uniform vec2 HatchScale; uniform vec2 HatchPct; uniform int algorithm; ";
+
+//=============STRUCT METHOD FOR LIGHTS==================
+// use for opengl, and angleproject desktop/d3d9
+static const GLchar *lightDefines = "\
+struct fw_MaterialParameters {\n\
+  vec4 emission;\n\
+  vec4 ambient;\n\
+  vec4 diffuse;\n\
+  vec4 specular;\n\
+  float shininess;\n\
+};\n\
+uniform int lightcount;\n\
+//uniform float lightRadius[MAX_LIGHTS];\n\
+uniform int lightType[MAX_LIGHTS];//ANGLE like this\n\
+struct fw_LightSourceParameters { \n\
+  vec4 ambient;  \n\
+  vec4 diffuse;   \n\
+  vec4 specular; \n\
+  vec4 position;   \n\
+  vec4 halfVector;  \n\
+  vec4 spotDirection; \n\
+  float spotBeamWidth; \n\
+  float spotCutoff; \n\
+  vec3 Attenuations; \n\
+  //float constantAttenuation; \n\
+  //float linearAttenuation;  \n\
+  //float quadraticAttenuation; \n\
+  float lightRadius; \n\
+  //int lightType; ANGLE doesnt like int in struct array \n\
+}; \n\
+\n\
+uniform fw_LightSourceParameters fw_LightSource[MAX_LIGHTS] /* gl_MaxLights */ ;\n\
+";
+
+/*
+Good hints for code here: http://www.opengl.org/wiki/Mathematics_of_glTexGen
+*/
+static const GLchar *sphEnvMapCalc = " \n     \
+/* sphereEnvironMapping Calculation */ \
+/* vec3 u=normalize(vec3(fw_ModelViewMatrix * fw_Vertex));  (myEyeVertex)  \
+vec3 n=normalize(vec3(fw_NormalMatrix*fw_Normal)); \
+vec3 r = reflect(u,n);  (myEyeNormal) */ \n\
+vec3 u=normalize(vec3(vertexPos)); /* u is normalized position, used below more than once */ \n \
+vec3 r= reflect(u,vertexNorm); \n\
+if (fw_textureCoordGenType==TCGT_SPHERE) { /* TCGT_SPHERE  GL_SPHERE_MAP OpenGL Equiv */ \n\
+    float m=2.0 * sqrt(r.x*r.x + r.y*r.y + (r.z*1.0)*(r.z*1.0)); \n\
+    fw_TexCoord[0] = vec3(r.x/m+0.5,r.y/m+0.5,0.0); \n \
+}else if (fw_textureCoordGenType==TCGT_CAMERASPACENORMAL) /* GL_REFLECTION_MAP used for sampling cubemaps */ {\n \
+    float dotResult = 2.0 * dot(u,r); \n\
+    fw_TexCoord[0] = vec3(u-r)*dotResult;\n\
+} else { /* default usage - like default CubeMaps */ \n\
+    vec3 u=normalize(vec3(fw_ProjectionMatrix * fw_Vertex)); /* myEyeVertex */ \
+    fw_TexCoord[0] = reflect(u,vertexNorm);\n \
+}\n\
+";
+
+#define TEXTURECOORDINATEGENERATORDefs " \
+#define TCGT_CAMERASPACENORMAL    0\n \
+#define TCGT_CAMERASPACEPOSITION    1\n \
+#define TCGT_CAMERASPACEREFLECTION    2\n \
+#define TCGT_COORD    3\n \
+#define TCGT_COORD_EYE    4\n \
+#define TCGT_NOISE    5\n \
+#define TCGT_NOISE_EYE    6\n \
+#define TCGT_SPHERE    7\n \
+#define TCGT_SPHERE_LOCAL    8\n \
+#define TCGT_SPHERE_REFLECT    9\n \
+#define TCGT_SPHERE_REFLECT_LOCAL    10\n \
+";
+
+int fw_strcpy_s(char *dest, int destsize, const char *source){
+    int ier = -1;
+    if(dest)
+    if(source && strlen(source) < (unsigned)destsize){
+        strcpy(dest,source);
+        ier = 0;
+    }
+    return ier;
+}
+
+int fw_strcat_s(char *dest, int destsize, const char *source){
+    int ier = -1;
+    if(dest){
+        int destlen = strlen(dest);
+        if(source)
+            if(strlen(source)+destlen < (unsigned)destsize){
+                strcat(dest,source);
+                ier = 0;
+            }
+    }
+    return ier;
+}
+
+static double identity[] = { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+
+void loadIdentityMatrix (double *mat) {
+        memcpy((void *)mat, (void *)identity, sizeof(double)*16);
+}
+
+void fw_glGetDoublev (int ty, GLDOUBLE *mat) {
+	GLDOUBLE *dp;
+//	ppOpenGL_Utils p = (ppOpenGL_Utils)gglobal()->OpenGL_Utils.prv;
+	ppOpenGL_Utils p = (ppOpenGL_Utils)openGL_Utils_prv;
+
+/*
+	switch (ty) {
+		case GL_PROJECTION_MATRIX: printf ("getDoublev(GL_PROJECTION_MATRIX)\n"); break;
+		case GL_MODELVIEW_MATRIX: printf ("getDoublev(GL_MODELVIEW_MATRIX)\n"); break;
+		case GL_TEXTURE_MATRIX: printf ("getDoublev(GL_TEXTURE_MATRIX)\n"); break;
+	}
+*/
+
+	switch (ty) {
+		case GL_PROJECTION_MATRIX: dp = p->FW_ProjectionView[p->projectionviewTOS]; break;
+		case GL_MODELVIEW_MATRIX: dp = p->FW_ModelView[p->modelviewTOS]; break;
+		case GL_TEXTURE_MATRIX: dp = p->FW_TextureView[p->textureviewTOS]; break;
+		default: {
+			loadIdentityMatrix(mat);
+		printf ("invalid mode sent in it is %d, expected one of %d %d %d\n",ty,GL_PROJECTION_MATRIX,GL_MODELVIEW_MATRIX,GL_TEXTURE_MATRIX);
+			return;}
+	}
+	memcpy((void *)mat, (void *) dp, sizeof (GLDOUBLE) * MATRIX_SIZE);
+}
+
+static void shaderErrorLog(GLuint myShader, char *which) {
+    #if defined  (GL_VERSION_2_0) || defined (GL_ES_VERSION_2_0)
+        #define MAX_INFO_LOG_SIZE 512
+        GLchar infoLog[MAX_INFO_LOG_SIZE];
+        char outline[MAX_INFO_LOG_SIZE*2];
+        glGetShaderInfoLog(myShader, MAX_INFO_LOG_SIZE, NULL, infoLog);
+        sprintf(outline,"problem with %s shader: %s",which, infoLog);
+//        ConsoleMessage (outline);
+    #else
+        ConsoleMessage ("Problem compiling shader");
+    #endif
+}
+ 
+char *insertBefore(char *current, char *insert, char* wholeBuffer, int wholeBuffersize){
+    //inserts insert at current location
+    char *newcurrent, *here;
+    int insertlen, wholelen, need, movesize;
+
+    wholelen = strlen(current) +1; //plus 1 to get the \0 at the end in memmove
+    insertlen = strlen(insert);
+    need = wholelen + insertlen + 1;
+    movesize = wholelen;
+    newcurrent = current;
+    if(need < wholeBuffersize){
+        here = current;
+        newcurrent = current + insertlen;
+        memmove(newcurrent,current,movesize);
+        memcpy(here,insert,insertlen);
+    }else{
+        ConsoleMessage("Not enough buffer for compositing shader buffsz=%d need=%d\n",wholeBuffersize,need);
+    }
+    //if(1){
+    //    char *tmp = strdup(wholeBuffer);
+    //    printf("strdup: %s",tmp);
+    //    free(tmp);
+    //}
+    return newcurrent;
+}
+
+void removeAt(char *here, int len){
+    //removes len bytes from string, moving tail bytes up by len bytes
+    int wholelen, movesize;
+    char *source;
+    wholelen = strlen(here) + 1; //take the \0
+    source = here + len;
+    movesize = wholelen - len;
+    memmove(here,source,movesize);
+}
+
+void replaceAll(char *buffer,int bsize, char *oldstr, char *newstr){
+    char *found;
+    while((found = strstr(buffer,oldstr))){
+        removeAt(found,strlen(oldstr));
+        insertBefore(found,newstr,buffer,bsize);
+    }
+
+}
+
+void extractPlugCall(char *start, char *PlugName,char *PlugParameters){
+    //from the addon shader, get the name PLUG_<name>(declaredParameters)
+    char *pns, *pne, *pps, *ppe;
+    int len;
+    pns = strstr(start,"PLUG: ");
+    pns += strlen("PLUG: ");
+    pne = strchr(pns,' ');
+    len = pne - pns;
+    strncpy(PlugName,pns,len);
+    PlugName[len] = '\0';
+    pps = strchr(pne,'(');
+    ppe = strchr(pps,')') + 1;
+    len = ppe - pps;
+    strncpy(PlugParameters,pps,len);
+    PlugParameters[len] = '\0';
+    //printf("PlugName %s PlugParameters %s\n",PlugName,PlugParameters);
+}
+
+int LookForPlugDeclarations( char * CodeForPlugDeclarations, int bsize, char *PlugName, char *ProcedureName, char *ForwardDeclaration) {
+    //in the main code, look for matching PLUG: <PlugName>(plugparams) and place a call to ProcedureName(plugparams)
+    //Result := false
+    //for each S: string in CodeForPlugDeclaration do
+    //begin
+    int Result;
+    //i = 0;
+    //while(CodeForPlugDeclarations[i]){
+        char *S;
+        char MainPlugName[100], MainPlugParams[1000];
+        //char PlugDeclarationBuffer[10000];
+        int AnyOccurrencesHere = FALSE; //:= false
+    Result = FALSE;
+        //strcpy_s(PlugDeclarationBuffer,10000,*CodeForPlugDeclarations);
+        S = CodeForPlugDeclarations;
+        do {
+            //while we can find an occurrence
+            //  of /* PLUG: PlugName (...) */ inside S do
+            //begin
+            S = strstr(S,"/* PLUG: ");
+            //if(S)
+            //    printf("found PLUG:\n");
+            //else
+            //    printf("PLUG: not found\n");
+            if(S){  ////where = strstr(haystack,needle)
+                char ProcedureCallBuffer[500], *ProcedureCall;
+                extractPlugCall(S,MainPlugName,MainPlugParams);
+                if(!strcmp(MainPlugName,PlugName)){
+                    //found the place in the main shader to make the call to addon function
+                    //insert into S a call to ProcedureName,
+                    //with parameters specified inside the /* PLUG: PlugName (...) */,
+                    //right before the place where we found /* PLUG: PlugName (...) */
+                    ProcedureCall = ProcedureCallBuffer;
+                    sprintf(ProcedureCall,"%s%s;\n",ProcedureName,MainPlugParams);
+                    S = insertBefore(S,ProcedureCall,CodeForPlugDeclarations,bsize);
+                    AnyOccurrencesHere = TRUE; //:= true
+                    Result = TRUE; //:= true
+                }else{
+                    //printf("found a PLUG: %s but doesn't match PLUG_%s\n",MainPlugName,PlugName);
+                }
+                S += strlen("/* PLUG:") + strlen(MainPlugName) + strlen(MainPlugParams);
+            }
+        }
+        while(S); //AnyOccurrencesHere);
+        //end
+
+        //if AnyOccurrencesHere then
+        if(AnyOccurrencesHere){
+            //insert the PlugForwardDeclaration into S,
+            //at the place of /* PLUG-DECLARATIONS */ inside
+            //(or at the beginning, if no /* PLUG-DECLARATIONS */)
+            S = CodeForPlugDeclarations;
+            S = strstr(S,"/* PLUG-DECLARATIONS */");
+            if(!S) S = CodeForPlugDeclarations;
+            S = insertBefore(S,ForwardDeclaration,CodeForPlugDeclarations,bsize);
+            //S = *CodeForPlugDeclarations;
+            //*CodeForPlugDeclarations = strdup(PlugDeclarationBuffer);
+            //FREE_IF_NZ(S);
+        }else{
+            printf("didn't find PLUG_%s\n",PlugName);
+        }
+    //    i++;
+    //} //end
+    return Result;
+} //end
+
+void extractPlugName(char *start, char *PlugName,char *PlugDeclaredParameters){
+    //from the addon shader, get the name PLUG_<name>(declaredParameters)
+    char *pns, *pne, *pps, *ppe;
+    int len;
+    pns = strstr(start,"PLUG_");
+    pns += strlen("PLUG_");
+    //pne = strchr(pns,' ');
+    pne = strpbrk(pns," (");
+    len = pne - pns;
+    strncpy(PlugName,pns,len);
+    PlugName[len] = '\0';
+    pps = strchr(pne,'(');
+    ppe = strchr(pps,')') + 1;
+    len = ppe - pps;
+    strncpy(PlugDeclaredParameters,pps,len);
+    PlugDeclaredParameters[len] = '\0';
+    //printf("PlugName %s PlugDeclaredParameters %s\n",PlugName,PlugDeclaredParameters);
+}
+
+void Plug( int EffectPartType, const char *PlugValue, char **CompleteCode, int *unique_int)
+{
+    //Algo: 
+    // outer loop: search for PLUG_<name> in (addon) effect
+    //   inner loop: search for matching PLUG: <name> in main shader
+    //     if found, paste addon into main:
+    //        a) forward declaration at top, 
+    //        b) method call at PLUG: point 
+    //        c) method definition at bottom
+    //var
+    //  PlugName, ProcedureName, PlugForwardDeclaration: string;
+    char PlugName[100], PlugDeclaredParameters[1000], PlugForwardDeclaration[1000], ProcedureName[100], PLUG_PlugName[100];
+    char Code[SBUFSIZE], Plug[PBUFSIZE];
+    int HasGeometryMain = FALSE, AnyOccurrences;
+    char *found;
+    int err;
+
+    UNUSED(err);
+
+    //var
+    // Code: string list;
+    //begin
+    
+    if(!CompleteCode[EffectPartType]) return;
+    err = fw_strcpy_s(Code,SBUFSIZE, CompleteCode[EffectPartType]);
+    err = fw_strcpy_s(Plug,PBUFSIZE, PlugValue);
+
+    //HasGeometryMain := HasGeometryMain or
+    //  ( EffectPartType = geometry and
+    //    PlugValue contains 'main()' );
+    HasGeometryMain = HasGeometryMain || 
+        ((EffectPartType == SHADERPART_GEOMETRY) && strstr("main(",Plug));
+
+    //while we can find PLUG_xxx inside PlugValue do
+    //begin
+    found = Plug;
+    do {
+        found = strstr(found,"void PLUG_"); //where = strstr(haystack,needle)
+        //if(!found)
+        //    printf("I'd like to complain: void PLUG_ isn't found in the addon\n");
+        if(found){
+            //PlugName := the plug name we found, the "xxx" inside PLUG_xxx
+            //PlugDeclaredParameters := parameters declared at PLUG_xxx function
+            extractPlugName(found,PlugName,PlugDeclaredParameters);
+            found += strlen("void PLUG_") + strlen(PlugName) + strlen(PlugDeclaredParameters);
+            //{ Rename found PLUG_xxx to something unique. }
+            //ProcedureName := generate new unique procedure name,
+            //for example take 'plugged_' + some unique integer
+            sprintf(ProcedureName,"%s_%d",PlugName,(*unique_int));
+            (*unique_int)++;
+
+            //replace inside PlugValue all occurrences of 'PLUG_' + PlugName
+            //with ProcedureName
+            sprintf(PLUG_PlugName,"%s%s","PLUG_",PlugName);
+            replaceAll(Plug,PBUFSIZE,PLUG_PlugName,ProcedureName);
+
+            //PlugForwardDeclaration := 'void ' + ProcedureName +
+            //PlugDeclaredParameters + ';' + newline
+            sprintf(PlugForwardDeclaration,"void %s%s;\n",ProcedureName,PlugDeclaredParameters);
+
+            //AnyOccurrences := LookForPlugDeclaration(Code)
+            AnyOccurrences = LookForPlugDeclarations(Code,SBUFSIZE, PlugName,ProcedureName,PlugForwardDeclaration);
+
+            /* If the plug declaration is not found in Code, then try to find it
+                in the final shader. This happens if Code is special for given
+                light/texture effect, but PLUG_xxx is not special to the
+                light/texture effect (it is applicable to the whole shape as well).
+                For example, using PLUG_vertex_object_space inside
+                the X3DTextureNode.effects. 
+            */
+            //if not AnyOccurrences and
+            //    Code <> Source[EffectPartType] then
+            //    AnyOccurrences := LookForPlugDeclaration(Source[EffectPartType])
+            //if(!AnyOccurrences && Code != Source[EffectPartType]){
+            //    AnyOccurrences = LookForPlugDeclarations(Source[EffectPartType]);
+            //}
+            //if not AnyOccurrences then
+            //    Warning('Plug name ' + PlugName + ' not declared')
+            //}
+            if(!AnyOccurrences){
+                ConsoleMessage("Plug name %s not declared\n",PlugName);
+            }
+        }
+    }while(found);
+    //end
+
+    /*{ regardless if any (and how many) plug points were found,
+    always insert PlugValue into Code. This way EffectPart with a library
+    of utility functions (no PLUG_xxx inside) also works. }*/
+    //Code.Add(PlugValue)
+    //printf("strlen Code = %d strlen PlugValue=%d\n",strlen(Code),strlen(PlugValue));
+    err = fw_strcat_s(Code,SBUFSIZE,Plug);
+    FREE_IF_NZ(CompleteCode[EffectPartType]);
+    CompleteCode[EffectPartType] = strdup(Code);
+} //end
+
+void EnableEffect(struct Node *node, char **CompletedCode, int *unique_int){
+    int i, ipart;
+    const char *str;
+
+    ipart=SHADERPART_VERTEX;
+    NodeEffect *effect = (NodeEffect *)node;
+    for(i=0;i<effect->parts()->getSize();i++){
+        NodeEffectPart *part = (NodeEffectPart*)effect->parts()->getValue(i);
+        if(part->getType() == KAMBI_EFFECT_PART){
+            if(!strcmp(part->type()->getValue(),"FRAGMENT"))
+                ipart = SHADERPART_FRAGMENT;
+            else if(!strcmp(part->type()->getValue(),"VERTEX"))
+                ipart = SHADERPART_VERTEX;
+            str = part->url()->getValue(0).getData();
+            if(!strncmp(str,"data:text/plain,",strlen("data:text/plain,")))
+                str += strlen("data:text/plain,");
+            Plug(ipart,str, CompletedCode, unique_int);
+        }
+    }
+}
+
+const static GLchar *fragTCGTDefs = TEXTURECOORDINATEGENERATORDefs;
+
+/* VERTEX inputs */
+
+static const GLchar *vertPosDec = "\
+    attribute      vec4 fw_Vertex; \n \
+    uniform         mat4 fw_ModelViewMatrix; \n \
+    uniform         mat4 fw_ProjectionMatrix; \n ";
+
+static const GLchar *vertNormDec = " \
+    uniform        mat3 fw_NormalMatrix;\n \
+    attribute      vec3 fw_Normal; \n";
+
+static const GLchar *vertSimColDec = "\
+    attribute  vec4 fw_Color;\n ";
+
+static const GLchar *vertTexMatrixDec = "\
+    uniform mat4 fw_TextureMatrix0;\n";
+
+static const GLchar *vertTexCoordGenDec ="\
+    uniform int fw_textureCoordGenType;\n";
+
+static const GLchar *vertTexCoordDec = "\
+    attribute vec2 fw_MultiTexCoord0;\n";
+
+static const GLchar *vertOneMatDec = "\
+    uniform fw_MaterialParameters\n\
+    fw_FrontMaterial; \n";
+static const GLchar *vertBackMatDec = "\
+    uniform fw_MaterialParameters fw_BackMaterial; \n";
+static const GLchar *fragSimColAss = "finalFrag = v_front_colour * finalFrag;\n ";
+
+
+/* VERTEX outputs */
+
+static const GLchar *vecNormPos = " \
+    vec3 vertexNorm; \
+    vec4 vertexPos; \n";
+
+static const GLchar *varyingNormPos = " \
+    varying vec3 vertexNorm; \
+    varying vec4 vertexPos; \n";
+
+static const GLchar *varyingTexCoord = "\
+    varying vec3 fw_TexCoord[4];\n";
+
+static const GLchar *varyingFrontColour = "\
+    varying vec4    v_front_colour; \n";
+
+static const GLchar *varyingHatchPosition = "\
+    varying vec2 hatchPosition; \n";
+
+/* VERTEX Calculations */
+
+static const GLchar *vertMainStart = "void main(void) { \n";
+
+static const GLchar *vertEnd = "}";
+
+static const GLchar *vertPos = "gl_Position = fw_ProjectionMatrix * fw_ModelViewMatrix * fw_Vertex;\n ";
+
+static const GLchar *vertNormPosCalc = "\
+    vertexNorm = normalize(fw_NormalMatrix * fw_Normal);\n \
+    vertexPos = fw_ModelViewMatrix * fw_Vertex;\n ";
+
+static const GLchar *vertSimColUse = "v_front_colour = fw_Color; \n";
+
+static const GLchar *vertEmissionOnlyColourAss = "v_front_colour = fw_FrontMaterial.emission;\n";
+static const GLchar *vertSingTexCalc = "fw_TexCoord[0] = vec3(vec4(fw_TextureMatrix0 *vec4(fw_MultiTexCoord0,0,0))).stp;\n";
+
+static const GLchar *vertSingTexCubeCalc = "\
+    vec3 u=normalize(vec3(fw_ProjectionMatrix * fw_Vertex)); /* myEyeVertex */ \
+    /* vec3 n=normalize(vec3(fw_NormalMatrix*fw_Normal)); \
+    fw_TexCoord[0] = reflect(u,n); myEyeNormal */ \n \
+    /* v_texC = reflect(normalize(vec3(vertexPos)),vertexNorm);\n */ \
+    fw_TexCoord[0] = reflect(u,vertexNorm);\n";
+
+//dug9 Jan 5, 2014 static const GLchar *fragMainStart = "void main() { vec4 finalFrag = vec4(0.,0.,0.,0.);\n";
+static const GLchar *fragMainStart = "void main() { vec4 finalFrag = vec4(1.,1.,1.,1.);\n";
+static const GLchar *anaglyphGrayFragEnd =    "float gray = dot(finalFrag.rgb, vec3(0.299, 0.587, 0.114)); \n \
+        gl_FragColor = vec4(gray, gray, gray, finalFrag.a);}";
+
+// START MIT, VOLUME RENDERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+/* Generic GLSL vertex shader, used on OpenGL ES. */
+static const GLchar *volumeVertexGLES2 = " \n\
+uniform mat4 fw_ModelViewMatrix; \n\
+uniform mat4 fw_ProjectionMatrix; \n\
+attribute vec4 fw_Vertex; \n\
+ \n\
+/* PLUG-DECLARATIONS */ \n\
+ \n\
+varying vec4 castle_vertex_eye; \n\
+varying vec4 castle_Color; \n\
+ \n\
+void main(void) \n\
+{ \n\
+  vec4 vertex_object = fw_Vertex; \n\
+  vec3 normal_object = vec3(0.0); \n\
+  /* PLUG: vertex_object_space (vertex_object, normal_object) */ \n\
+  castle_vertex_eye = fw_ModelViewMatrix * vertex_object; \n\
+   \n\
+   castle_Color = vec4(1.0,.5,.5,1.0); \n\
+  \n\
+  gl_Position = fw_ProjectionMatrix * castle_vertex_eye; \n\
+   \n\
+} \n\
+";
+
+/* Generic GLSL fragment shader, used on OpenGL ES. */
+static const GLchar *volumeFragmentGLES2 = " \n\
+/* DEFINES */ \n\
+#ifdef MOBILE \n\
+//precision highp float; \n\
+precision mediump float; \n\
+#endif //MOBILE \n\
+ \n\
+ vec4 HeatMapColor(float value, float minValue, float maxValue) \n\
+{ \n\
+    //used for debugging. If min=0,max=1 then magenta is 0, blue,green,yellow, red is 1 \n\
+    vec4 ret; \n\
+    int HEATMAP_COLORS_COUNT; \n\
+    vec4 colors[6]; \n\
+    HEATMAP_COLORS_COUNT = 6; \n\
+    colors[0] = vec4(0.32, 0.00, 0.32, 1.0); \n\
+    colors[1] = vec4( 0.00, 0.00, 1.00, 1.00); \n\
+    colors[2] = vec4(0.00, 1.00, 0.00, 1.00); \n\
+    colors[3] = vec4(1.00, 1.00, 0.00, 1.00); \n\
+    colors[4] = vec4(1.00, 0.60, 0.00, 1.00); \n\
+    colors[5] = vec4(1.00, 0.00, 0.00, 1.00); \n\
+    float ratio=(float(HEATMAP_COLORS_COUNT)-1.0)*clamp((value-minValue)/(maxValue-minValue),0.0,1.0); \n\
+    int indexMin=int(floor(ratio)); \n\
+    int indexMax= indexMin+1 < HEATMAP_COLORS_COUNT-1 ? indexMin+1 : HEATMAP_COLORS_COUNT-1; \n\
+    ret = mix(colors[indexMin], colors[indexMax], ratio-float(indexMin)); \n\
+    if(value < minValue) ret = vec4(0.0,0.0,0.0,1.0); \n\
+    if(value > maxValue) ret = vec4(1.0,1.0,1.0,1.0); \n\
+    return ret; \n\
+} \n\
+vec4 debug_color; \n\
+float hash( float n ) \n\
+{ \n\
+    return fract(sin(n)*43758.5453); \n\
+} \n\
+float noise( vec3 xyz ) \n\
+{ \n\
+    // The noise function returns a value in the range -1.0f -> 1.0f \n\
+    vec3 p = floor(xyz); \n\
+    vec3 f = fract(xyz); \n\
+    \n\
+    f = f*f*(3.0-2.0*f); \n\
+    float n = p.x + p.y*57.0 + 113.0*p.z; \n\
+    \n\
+    return mix(mix(mix( hash(n+0.0), hash(n+1.0),f.x), \n\
+                   mix( hash(n+57.0), hash(n+58.0),f.x),f.y), \n\
+               mix(mix( hash(n+113.0), hash(n+114.0),f.x), \n\
+                   mix( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z); \n\
+} \n\
+vec3 noise3( in vec3 xyz, in float range ){ \n\
+    vec3 rxyz = vec3(xyz); \n\
+    rxyz.x += noise(xyz)*range; \n\
+    rxyz.y += noise(xyz)*range; \n\
+    rxyz.z += noise(xyz)*range; \n\
+    return rxyz; \n\
+} \n\
+ \n\
+varying vec4 castle_vertex_eye; \n\
+varying vec4 castle_Color; \n\
+uniform mat4 fw_ModelViewProjInverse; \n\
+//uniform float fw_FocalLength; \n\
+uniform vec4 fw_viewport; \n\
+uniform vec3 fw_dimensions; \n\
+//uniform vec3 fw_RayOrigin; \n\
+uniform sampler2D fw_Texture_unit0; \n\
+uniform sampler2D fw_Texture_unit1; \n\
+uniform sampler2D fw_Texture_unit2; \n\
+uniform sampler2D fw_Texture_unit3; \n\
+#ifdef TEX3D \n\
+uniform int tex3dTiles[3]; \n\
+uniform int repeatSTR[3]; \n\
+uniform int magFilter; \n\
+#endif //TEX3D \n\
+#ifdef SEGMENT \n\
+uniform int fw_nIDs; \n\
+uniform int fw_enableIDs[10]; \n\
+uniform int fw_surfaceStyles[2]; \n\
+uniform int fw_nStyles; \n\
+vec4 texture3Demu( sampler2D sampler, in vec3 texcoord3); \n\
+vec4 texture3Demu0( sampler2D sampler, in vec3 texcoord3, int magfilter); \n\
+bool inEnabledSegment(in vec3 texcoords, inout int jstyle){ \n\
+    bool inside = true; \n\
+    jstyle = 1; //DEFAULT \n\
+    vec4 segel = texture3Demu0(fw_Texture_unit1,texcoords,0); \n\
+    //convert from GL_FLOAT 0-1 to int 0-255 \n\
+    //Q. is there a way to do int images in GLES2? \n\
+    int ID = int(floor(segel.a * 255.0 + .1)); \n\
+    //debug_color = HeatMapColor(float(ID),0.0,5.0); \n\
+    //debug_color.a = .2; \n\
+    if(ID < fw_nIDs){ \n\
+        //specs: The indices of this array corresponds to the segment identifier. \n\
+        inside = fw_enableIDs[ID] == 0 ? false : true; \n\
+    } \n\
+    if(inside){ \n\
+        int kstyle = fw_nStyles-1; \n\
+        kstyle = ID < fw_nStyles ? ID : kstyle; \n\
+        jstyle = fw_surfaceStyles[kstyle]; \n\
+        jstyle = jstyle == 1 ? 0 : jstyle; \n\
+    } \n\
+    return inside; \n\
+} \n\
+#endif //SEGMENT \n\
+#ifdef ISO \n\
+uniform float fw_stepSize; \n\
+uniform float fw_tolerance; \n\
+uniform float fw_surfaceVals[]; \n\
+uniform int fw_nVals; \n\
+uniform int fw_surfaceStyles[]; \n\
+uniform int fw_nStyles; \n\
+#endif //ISO \n\
+ \n\
+struct Ray { \n\
+  vec3 Origin; \n\
+  vec3 Dir; \n\
+}; \n\
+struct AABB { \n\
+  vec3 Min; \n\
+  vec3 Max; \n\
+}; \n\
+bool IntersectBox(Ray r, AABB aabb, out float t0, out float t1) \n\
+{ \n\
+    vec3 invR = 1.0 / r.Dir; \n\
+    vec3 tbot = invR * (aabb.Min-r.Origin); \n\
+    vec3 ttop = invR * (aabb.Max-r.Origin); \n\
+    vec3 tmin = min(ttop, tbot); \n\
+    vec3 tmax = max(ttop, tbot); \n\
+    vec2 t = max(tmin.xx, tmin.yz); \n\
+    t0 = max(t.x, t.y); \n\
+    t = min(tmax.xx, tmax.yz); \n\
+    t1 = min(t.x, t.y); \n\
+    return t0 <= t1; \n\
+} \n\
+/* PLUG-DECLARATIONS */ \n\
+ \n\
+vec3 fw_TexCoord[1]; \n\
+#ifdef CLIP \n\
+#define FW_MAXCLIPPLANES 4 \n\
+uniform int fw_nclipplanes; \n\
+uniform vec4 fw_clipplanes[FW_MAXCLIPPLANES]; \n\
+bool clip (in vec3 vertex_object){ \n\
+  bool iclip = false; \n\
+  for ( int i=0; i<fw_nclipplanes; i++ ) { \n\
+    if( dot( fw_clipplanes[i], vec4(vertex_object,1.0)) < 0.0) \n\
+        iclip = true; \n\
+  } \n\
+  return iclip; \n\
+} \n\
+#endif //CLIP \n\
+vec3 vertex_eye; \n\
+vec3 normal_eye; \n\
+vec4 raysum; \n\
+void main(void) \n\
+{ \n\
+    debug_color = vec4(0.0); \n\
+    float maxDist = length(fw_dimensions); //1.414214; //sqrt(2.0); \n\
+    int numSamples = 128; \n\
+    float fnumSamples = float(numSamples); \n\
+    float stepSize = maxDist/fnumSamples; \n\
+    float densityFactor = 5.0/fnumSamples; //.88; // 1.0=normal H3D, .5 see deeper  \n\
+     \n\
+    vec4 fragment_color; \n\
+    //vec4 raysum; \n\
+    vec3 rayDirection; \n\
+    //convert window to frustum \n\
+    rayDirection.xy = 2.0 * (gl_FragCoord.xy - fw_viewport.xy) / fw_viewport.zw - vec2(1.0); \n\
+    rayDirection.z = 0.0; \n\
+    vec3 rayOrigin; // = fw_RayOrigin; \n\
+    //the equivalent of gluUnproject \n\
+    //by unprojecting 2 points on ray here, this should also work with ortho viewpoint \n\
+    vec4 ray4 = vec4(rayDirection,1.0); \n\
+    vec4 org4 = ray4; \n\
+    //if I back up the ray origin by -1.0 the front plane clipping works properly \n\
+    ray4.z = 0.0; //1.0; \n\
+    org4.z = -1.0; //0.0; \n\
+    ray4 = fw_ModelViewProjInverse * ray4; \n\
+    org4 = fw_ModelViewProjInverse * org4; \n\
+    ray4 /= ray4.w; \n\
+    org4 /= org4.w; \n\
+    rayDirection = normalize(ray4.xyz - org4.xyz); \n\
+    rayOrigin = org4.xyz; \n\
+    \n\
+    Ray eye = Ray( rayOrigin, rayDirection); \n\
+    vec3 half_dimensions = fw_dimensions * .5; \n\
+    vec3 minus_half_dimensions = half_dimensions * -1.0; \n\
+    AABB aabb = AABB(minus_half_dimensions,half_dimensions); \n\
+    \n\
+    float tnear, tfar; \n\
+    IntersectBox(eye, aabb, tnear, tfar); \n\
+    if (tnear < 0.0) tnear = 0.0; \n\
+    vec3 rayStart = eye.Origin + eye.Dir * tnear; \n\
+    vec3 rayStop = eye.Origin + eye.Dir * tfar; \n\
+    // Perform the ray marching: \n\
+    vec3 pos = rayStart; \n\
+    vec3 step = normalize(rayStop-rayStart) * stepSize; \n\
+    float totaltravel = distance(rayStop, rayStart); \n\
+    float travel = totaltravel; \n\
+    float T = 1.0; \n\
+    vec3 Lo = vec3(0.0); \n\
+    normal_eye = rayDirection; \n\
+    vec3 pos2 = pos; \n\
+    // Transform from object space to texture coordinate space: \n\
+    pos2 = (pos2+half_dimensions)/fw_dimensions; \n\
+    pos2 = clamp(pos2,0.001,.999); \n\
+    raysum = vec4(0.0); \n\
+    float depth = 0.0; \n\
+    float lastdensity; \n\
+    float lastdensity_iso; \n\
+    \n\
+    for (int i=0; i < numSamples; ++i) { \n\
+        //raysum = HeatMapColor(travel,0.0,2.0); \n\
+        //break; \n\
+       // ...lighting and absorption stuff here... \n\
+        pos2 = pos; \n\
+        vertex_eye = pos2; \n\
+        // Transform from object space to texture coordinate space: \n\
+        pos2 = (pos2+half_dimensions)/fw_dimensions; \n\
+        //pos2.z = 1.0 - pos2.z; //RHS to LHS \n\
+        pos2 = clamp(pos2,0.001,.999); \n\
+        vec3 texcoord3 = pos2; \n\
+        bool iclip = false; \n\
+        #ifdef CLIP \n\
+        iclip = clip(vertex_eye); //clip(totaltravel - travel); \n\
+        #endif //CLIP \n\
+        if(!iclip) { \n\
+            fragment_color = vec4(1.0,0.0,1.0,1.0); //do I need a default? seems not \n\
+            /* PLUG: texture3D ( fragment_color, texcoord3) */ \n\
+            #ifdef SEGMENT \n\
+            int jstyle = 1; \n\
+            if(inEnabledSegment(texcoord3,jstyle)){ \n\
+            #endif //SEGMENT \n\
+            //assuming we had a scalar input image and put L into .a, \n\
+            // and computed gradient and put in .rgb : \n\
+            float density = fragment_color.a; //recover the scalar value \n\
+            vec3 gradient = fragment_color.rgb - vec3(.5,.5,.5); //we added 127 to (-127 to 127) in CPU gradient computation\n\
+            //vec4 voxel = vec4(density,density,density,density); //this is where the black visual voxels come from\n\
+            vec4 voxel = vec4(density,density,density,density); //this is where the black visual voxels come from\n\
+            \n\
+            #ifdef ISO \n\
+            if(i==0){ \n\
+                lastdensity = density; \n\
+                lastdensity_iso = 0.0; \n\
+            } \n\
+            int MODE = fw_nVals == 1 ? 1 : 3; \n\
+            MODE = fw_stepSize != 0.0 && MODE == 1 ? 2 : 1; \n\
+            #ifdef ISO_MODE3 \n\
+            if(MODE == 3){ \n\
+                for(int i=0;i<fw_nVals;i++){ \n\
+                    float iso = fw_surfaceVals[i]; \n\
+                    if( sign( density - iso) != sign( lastdensity - iso) && length(gradient) > fw_tolerance ){ \n\
+                        voxel.a = 1.0; \n\
+                        int jstyle = min(i,fw_nStyles-1); \n\
+                        jstyle = fw_surfaceStyles[jstyle]; \n\
+                        if(jstyle == 1){ \n\
+                            /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ \n\
+                        } else if(jstyle == 2) { \n\
+                            /* PLUG: voxel_apply_OPACITY (voxel, gradient) */ \n\
+                        } else if(jstyle == 3) { \n\
+                            /* PLUG: voxel_apply_BLENDED (voxel, gradient) */ \n\
+                        } else if(jstyle == 4) { \n\
+                            /* PLUG: voxel_apply_BOUNDARY (voxel, gradient) */ \n\
+                        } else if(jstyle == 5) { \n\
+                            /* PLUG: voxel_apply_CARTOON (voxel, gradient) */ \n\
+                        } else if(jstyle == 6) { \n\
+                            /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ \n\
+                        } else if(jstyle == 7) { \n\
+                            /* PLUG: voxel_apply_EDGE (voxel, gradient) */ \n\
+                        } else if(jstyle == 8) { \n\
+                            /* PLUG: voxel_apply_PROJECTION (voxel, gradient) */ \n\
+                        } else if(jstyle == 9) { \n\
+                            /* PLUG: voxel_apply_SHADED (voxel, gradient) */ \n\
+                        } else if(jstyle == 10) { \n\
+                            /* PLUG: voxel_apply_SILHOUETTE (voxel, gradient) */ \n\
+                        } else if(jstyle == 11) { \n\
+                            /* PLUG: voxel_apply_TONE (voxel, gradient) */ \n\
+                        } \n\
+                    } else { \n\
+                        voxel = vec4(0.0); //similar to discard \n\
+                    } \n\
+                } \n\
+                lastdensity = density; \n\
+            } \n\
+            #else //ISO_MODE3 \n\
+            if(MODE == 1){ \n\
+                float iso = fw_surfaceVals[0]; \n\
+                if( sign( density - iso) != sign( lastdensity - iso) && length(gradient) > fw_tolerance ){ \n\
+                    //debug_color = HeatMapColor(iso,0.0,.3); \n\
+                    voxel.a = 1.0; \n\
+                    /* PLUG: voxel_apply (voxel, gradient) */ \n\
+                } else { \n\
+                    voxel = vec4(0.0); //similar to discard \n\
+                } \n\
+                lastdensity = density; \n\
+            } else if(MODE == 2){ \n\
+                float iso = fw_surfaceVals[0]; \n\
+                float density_iso = density / fw_stepSize; \n\
+                if( sign( density_iso - iso) != sign( lastdensity_iso - iso) && length(gradient) > fw_tolerance ){ \n\
+                    voxel.a = 1.0; \n\
+                    /* PLUG: voxel_apply (voxel, gradient) */ \n\
+                } else { \n\
+                    voxel = vec4(0.0); //similar to discard \n\
+                } \n\
+                lastdensity = density; \n\
+                lastdensity_iso = density_iso; \n\
+            }  \n\
+            #endif //ISO_MODE3 \n\
+            #else //ISO \n\
+            #ifdef SEGMENT \n\
+            //debug_color = HeatMapColor(float(jstyle),1.0,12.0); \n\
+            //debug_color.a = .2; \n\
+            if(jstyle == 1){ \n\
+                /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ \n\
+            } else if(jstyle == 2) { \n\
+                /* PLUG: voxel_apply_OPACITY (voxel, gradient) */ \n\
+            } else if(jstyle == 3) { \n\
+                /* PLUG: voxel_apply_BLENDED (voxel, gradient) */ \n\
+            } else if(jstyle == 4) { \n\
+                /* PLUG: voxel_apply_BOUNDARY (voxel, gradient) */ \n\
+            } else if(jstyle == 5) { \n\
+                /* PLUG: voxel_apply_CARTOON (voxel, gradient) */ \n\
+            } else if(jstyle == 6) { \n\
+                /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ \n\
+            } else if(jstyle == 7) { \n\
+                /* PLUG: voxel_apply_EDGE (voxel, gradient) */ \n\
+            } else if(jstyle == 8) { \n\
+                /* PLUG: voxel_apply_PROJECTION (voxel, gradient) */ \n\
+            } else if(jstyle == 9) { \n\
+                /* PLUG: voxel_apply_SHADED (voxel, gradient) */ \n\
+            } else if(jstyle == 10) { \n\
+                /* PLUG: voxel_apply_SILHOUETTE (voxel, gradient) */ \n\
+            } else if(jstyle == 11) { \n\
+                /* PLUG: voxel_apply_TONE (voxel, gradient) */ \n\
+            } \n\
+            #else //SEGMENT \n\
+            //non-iso rendering styles \n\
+            //void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) \n\
+            /* PLUG: voxel_apply (voxel, gradient) */ \n\
+            #endif //SEGMENT \n\
+            #endif //ISO \n\
+            density = voxel.a; \n\
+            //debug_color = HeatMapColor(densityFactor,0.134,.135); \n\
+            T = (1.0 - raysum.a); \n\
+            raysum.a += density * T; \n\
+            raysum.rgb += voxel.rgb  * T * density; \n\
+            if(raysum.a > .99) { \n\
+                break; \n\
+            } \n\
+            #ifdef SEGMENT \n\
+            } //if inEnabledSegment \n\
+            #endif //SEGMENT \n\
+        } //iclip \n\
+        travel -= stepSize; \n\
+        depth += stepSize; \n\
+        if(travel <= 0.0) break; \n\
+        pos += step; \n\
+        \n\
+    }  \n\
+    //void PLUG_ray_apply (inout vec4 raysum) \n\
+    /* PLUG: ray_apply (raysum) */ \n\
+    if(true) gl_FragColor = raysum; \n\
+    else gl_FragColor = debug_color; \n\
+} \n\
+";
+
+const char *getVolumeVertex(void){
+    return volumeVertexGLES2; //genericVertexDesktop
+}
+const char *getVolumeFragment(){
+    return volumeFragmentGLES2; //genericFragmentDesktop;
+}
+
+/* Generic GLSL vertex shader.
+   Used by ../castlerendererinternalshader.pas to construct the final shader.
+
+   This is converted to template.vs.inc, and is then compiled
+   in program's binary.
+   When you change this file, rerun `make' and then recompile Pascal sources.
+*/
+
+static const GLchar *genericVertexGLES2 = "\
+/* DEFINES */ \n\
+/* Generic GLSL vertex shader, used on OpenGL ES. */ \n\
+ \n\
+uniform mat4 fw_ModelViewMatrix; \n\
+uniform mat4 fw_ProjectionMatrix; \n\
+uniform mat3 fw_NormalMatrix; \n\
+#ifdef CUB \n\
+uniform mat4 fw_ModelViewInverseMatrix; \n\
+#endif //CUB \n\
+attribute vec4 fw_Vertex; \n\
+attribute vec3 fw_Normal; \n\
+ \n\
+#ifdef TEX \n\
+uniform mat4 fw_TextureMatrix0; \n\
+attribute vec4 fw_MultiTexCoord0; \n\
+//varying vec3 v_texC; \n\
+varying vec3 fw_TexCoord[4]; \n\
+#ifdef TEX3D \n\
+uniform int tex3dUseVertex; \n\
+#endif //TEX3D \n\
+#ifdef MTEX \n\
+uniform mat4 fw_TextureMatrix1; \n\
+uniform mat4 fw_TextureMatrix2; \n\
+uniform mat4 fw_TextureMatrix3; \n\
+attribute vec4 fw_MultiTexCoord1; \n\
+attribute vec4 fw_MultiTexCoord2; \n\
+attribute vec4 fw_MultiTexCoord3; \n\
+#endif //MTEX \n\
+#ifdef TGEN \n\
+ #define TCGT_CAMERASPACENORMAL    0  \n\
+ #define TCGT_CAMERASPACEPOSITION    1 \n\
+ #define TCGT_CAMERASPACEREFLECTION    2 \n\
+ #define TCGT_COORD    3 \n\
+ #define TCGT_COORD_EYE    4 \n\
+ #define TCGT_NOISE    5 \n\
+ #define TCGT_NOISE_EYE    6 \n\
+ #define TCGT_SPHERE    7 \n\
+ #define TCGT_SPHERE_LOCAL    8 \n\
+ #define TCGT_SPHERE_REFLECT    9 \n\
+ #define TCGT_SPHERE_REFLECT_LOCAL    10 \n\
+ uniform int fw_textureCoordGenType; \n\
+#endif //TGEN \n\
+#endif //TEX \n\
+#ifdef FILL \n\
+varying vec2 hatchPosition; \n\
+#endif //FILL \n\
+\n\
+/* PLUG-DECLARATIONS */ \n\
+ \n\
+varying vec4 castle_vertex_eye; \n\
+varying vec3 castle_normal_eye; \n\
+varying vec4 castle_Color; //DA diffuse ambient term \n\
+ \n\
+//uniform float castle_MaterialDiffuseAlpha; \n\
+//uniform float castle_MaterialShininess; \n\
+/* Color summed with all the lights. \n\
+   Like gl_Front/BackLightModelProduct.sceneColor: \n\
+   material emissive color + material ambient color * global (light model) ambient. \n\
+*/ \n\
+\n\
+#ifdef LITE \n\
+#define MAX_LIGHTS 8 \n\
+uniform int lightcount; \n\
+//uniform float lightRadius[MAX_LIGHTS]; \n\
+uniform int lightType[MAX_LIGHTS];//ANGLE like this \n\
+struct fw_LightSourceParameters { \n\
+  vec4 ambient;  \n\
+  vec4 diffuse;   \n\
+  vec4 specular; \n\
+  vec4 position;   \n\
+  vec4 halfVector;  \n\
+  vec4 spotDirection; \n\
+  float spotBeamWidth; \n\
+  float spotCutoff; \n\
+  vec3 Attenuations; \n\
+  float lightRadius; \n\
+}; \n\
+\n\
+uniform fw_LightSourceParameters fw_LightSource[MAX_LIGHTS] /* gl_MaxLights */ ;\n\
+#endif //LITE \n\
+\n\
+//uniform vec3 castle_SceneColor; \n\
+//uniform vec4 castle_UnlitColor; \n\
+#ifdef UNLIT \n\
+uniform vec4 fw_UnlitColor; \n\
+#endif //UNLIT \n\
+#ifdef LIT \n\
+struct fw_MaterialParameters { \n\
+  vec4 emission; \n\
+  vec4 ambient; \n\
+  vec4 diffuse; \n\
+  vec4 specular; \n\
+  float shininess; \n\
+}; \n\
+uniform fw_MaterialParameters fw_FrontMaterial; \n\
+varying vec3 castle_ColorES; //emissive shininess term \n\
+vec3 castle_Emissive; \n\
+#ifdef TWO \n\
+uniform fw_MaterialParameters fw_BackMaterial; \n\
+#endif //TWO \n\
+#endif //LIT \n\
+#ifdef FOG \n\
+struct fogParams \n\
+{  \n\
+  vec4 fogColor; \n\
+  float visibilityRange; \n\
+  float fogScale; //applied on cpu side to visrange \n\
+  int fogType; // 0 None, 1= FOGTYPE_LINEAR, 2 = FOGTYPE_EXPONENTIAL \n\
+  // ifdefed int haveFogCoords; \n\
+}; \n\
+uniform fogParams fw_fogparams; \n\
+#ifdef FOGCOORD \n\
+attribute float fw_FogCoords; \n\
+#endif \n\
+#endif //FOG \n\
+float castle_MaterialDiffuseAlpha; \n\
+float castle_MaterialShininess; \n\
+vec3 castle_SceneColor; \n\
+vec4 castle_UnlitColor; \n\
+vec4 castle_Specular; \n\
+ \n\
+#ifdef CPV \n\
+attribute vec4 fw_Color; //castle_ColorPerVertex; \n\
+varying vec4 cpv_Color; \n\
+#endif //CPV \n\
+#ifdef PARTICLE \n\
+uniform vec3 particlePosition; \n\
+uniform int fw_ParticleGeomType; \n\
+#endif //PARTICLE \n\
+ \n\
+ vec3 dehomogenize(in mat4 matrix, in vec4 vector){ \n\
+    vec4 tempv = vector; \n\
+    if(tempv.w == 0.0) tempv.w = 1.0; \n\
+    vec4 temp = matrix * tempv; \n\
+    float winv = 1.0/temp.w; \n\
+    return temp.xyz * winv; \n\
+ } \n\
+void main(void) \n\
+{ \n\
+  #ifdef LIT \n\
+  castle_MaterialDiffuseAlpha = fw_FrontMaterial.diffuse.a; \n\
+  #ifdef TEX \n\
+  #ifdef TAREP \n\
+  //to modulate or not to modulate, this is the question \n\
+  //in here, we turn off modulation and use image alpha \n\
+  castle_MaterialDiffuseAlpha = 1.0; \n\
+  #endif //TAREP \n\
+  #endif //TEX \n\
+  castle_MaterialShininess =    fw_FrontMaterial.shininess; \n\
+  castle_SceneColor = fw_FrontMaterial.ambient.rgb; \n\
+  castle_Specular =    fw_FrontMaterial.specular; \n\
+  castle_Emissive = fw_FrontMaterial.emission.rgb; \n\
+  #ifdef LINE \n\
+   castle_SceneColor = vec3(0.0,0.0,0.0); //line gets color from castle_Emissive \n\
+  #endif //LINE\n\
+  #else //LIT \n\
+  //default unlits in case we dont set them \n\
+  castle_UnlitColor = vec4(1.0,1.0,1.0,1.0); \n\
+  castle_MaterialDiffuseAlpha = 1.0; \n\
+  #endif //LIT \n\
+  \n\
+  #ifdef FILL \n\
+  hatchPosition = fw_Vertex.xy; \n\
+  #endif //FILL \n\
+  \n\
+  vec4 vertex_object = fw_Vertex; \n\
+  #ifdef PARTICLE \n\
+  if(fw_ParticleGeomType != 4){ \n\
+    vertex_object.xyz += particlePosition; \n\
+  } \n\
+  #endif //PARTICLE \n\
+  vec3 normal_object = fw_Normal; \n\
+  /* PLUG: vertex_object_space_change (vertex_object, normal_object) */ \n\
+  /* PLUG: vertex_object_space (vertex_object, normal_object) */ \n\
+   \n\
+  #ifdef CASTLE_BUGGY_GLSL_READ_VARYING \n\
+  /* use local variables, instead of reading + writing to varying variables, \n\
+     when VARYING_NOT_READABLE */ \n\
+  vec4 temp_castle_vertex_eye; \n\
+  vec3 temp_castle_normal_eye; \n\
+  vec4 temp_castle_Color; \n\
+  #define castle_vertex_eye temp_castle_vertex_eye \n\
+  #define castle_normal_eye temp_castle_normal_eye \n\
+  #define castle_Color      temp_castle_Color \n\
+  #endif //CASTLE_BUGGY_GLSL_READ_VARYING \n\
+  \n\
+  castle_vertex_eye = fw_ModelViewMatrix * vertex_object; \n\
+  #ifdef PARTICLE \n\
+  //sprite: align to viewer \n\
+  if(fw_ParticleGeomType == 4){ \n\
+    vec4 ppos = vec4(particlePosition,1.0); \n\
+    vec4 particle_eye = fw_ModelViewMatrix * ppos; \n\
+    ppos.x += 1.0; \n\
+    vec4 particle_eye1 = fw_ModelViewMatrix * ppos; \n\
+    float pscal = length(particle_eye1.xyz - particle_eye.xyz); \n\
+    castle_vertex_eye = particle_eye + pscal*vertex_object; \n\
+  } \n\
+  #endif //PARTICLE \n\
+  castle_normal_eye = normalize(fw_NormalMatrix * normal_object); \n\
+  \n\
+  /* PLUG: vertex_eye_space (castle_vertex_eye, castle_normal_eye) */ \n\
+   \n\
+  #ifdef LIT \n\
+  castle_ColorES = castle_Emissive; \n\
+  castle_Color = vec4(castle_SceneColor, 1.0); \n\
+  /* PLUG: add_light_contribution2 (castle_Color, castle_ColorES, castle_vertex_eye, castle_normal_eye, castle_MaterialShininess) */ \n\
+  /* PLUG: add_light_contribution (castle_Color, castle_vertex_eye, castle_normal_eye, castle_MaterialShininess) */ \n\
+  castle_Color.a = castle_MaterialDiffuseAlpha; \n\
+  /* Clamp sum of lights colors to be <= 1. See template.fs for comments. */ \n\
+  castle_Color.rgb = min(castle_Color.rgb, 1.0); \n\
+  #else //LIT \n\
+  castle_Color.rgb = castle_UnlitColor.rgb; \n\
+  #endif //LIT \n\
+  \n\
+  #ifdef CPV //color per vertex \n\
+  cpv_Color = fw_Color; \n\
+  #endif //CPV \n\
+  \n\
+  #ifdef TEX \n\
+  vec4 texcoord = fw_MultiTexCoord0; \n\
+  #ifdef TEX3D \n\
+  //to re-use vertex coords as texturecoords3D, we need them in 0-1 range: CPU calc of fw_TextureMatrix0 \n\
+  if(tex3dUseVertex == 1) \n\
+    texcoord = vec4(fw_Vertex.xyz,1.0); \n\
+  #endif //TEX3D \n\
+  #ifdef TGEN  \n\
+  { \n\
+    vec3 vertexNorm; \n\
+    vec4 vertexPos; \n\
+    vec3 texcoord3 = texcoord.xyz; \n\
+    vertexNorm = normalize(fw_NormalMatrix * fw_Normal); \n\
+    vertexPos = fw_ModelViewMatrix * fw_Vertex; \n\
+    /* sphereEnvironMapping Calculation */  \n\
+    vec3 u=normalize(vec3(vertexPos)); /* u is normalized position, used below more than once */ \n\
+    vec3 r= reflect(u,vertexNorm); \n\
+    if (fw_textureCoordGenType==TCGT_SPHERE) { /* TCGT_SPHERE  GL_SPHERE_MAP OpenGL Equiv */ \n\
+      float m=2.0 * sqrt(r.x*r.x + r.y*r.y + (r.z*1.0)*(r.z*1.0)); \n\
+      texcoord3 = vec3(r.x/m+0.5,r.y/m+0.5,0.0); \n\
+    }else if (fw_textureCoordGenType==TCGT_CAMERASPACENORMAL) { \n\
+      /* GL_REFLECTION_MAP used for sampling cubemaps */ \n\
+      float dotResult = 2.0 * dot(u,r); \n\
+      texcoord3 = vec3(u-r)*dotResult; \n\
+    }else if (fw_textureCoordGenType==TCGT_COORD) { \n\
+      /* 3D textures can use coords in 0-1 range */ \n\
+      texcoord3 = fw_Vertex.xyz; //xyz; \n\
+    } else { /* default usage - like default CubeMaps */ \n\
+      vec3 u=normalize(vec3(fw_ProjectionMatrix * fw_Vertex)); /* myEyeVertex */  \n\
+      texcoord3 =    reflect(u,vertexNorm); \n\
+    } \n\
+    texcoord.xyz = texcoord3; \n\
+  } \n\
+  #endif //TGEN \n\
+  fw_TexCoord[0] = dehomogenize(fw_TextureMatrix0, texcoord); \n\
+  #ifdef MTEX \n\
+  fw_TexCoord[1] = dehomogenize(fw_TextureMatrix1,fw_MultiTexCoord1); \n\
+  fw_TexCoord[2] = dehomogenize(fw_TextureMatrix2,fw_MultiTexCoord2); \n\
+  fw_TexCoord[3] = dehomogenize(fw_TextureMatrix3,fw_MultiTexCoord3); \n\
+  #endif //MTEX \n\
+  #endif //TEX \n\
+  \n\
+  gl_Position = fw_ProjectionMatrix * castle_vertex_eye; \n\
+  \n\
+  #ifdef CUB \n\
+  //cubemap \n\
+  vec4 camera = fw_ModelViewInverseMatrix * vec4(0.0,0.0,0.0,1.0); \n\
+  //vec3 u = normalize( vec4(castle_vertex_eye - camera).xyz ); \n\
+  vec3 u = normalize( vec4(vertex_object + camera).xyz ); \n\
+  vec3 v = normalize(fw_Normal); \n\
+  fw_TexCoord[0] = normalize(reflect(u,v)); //computed in object space \n\
+  fw_TexCoord[0].st = -fw_TexCoord[0].st; //helps with renderman cubemap convention \n\
+  #endif //CUB \n\
+  #ifdef CASTLE_BUGGY_GLSL_READ_VARYING \n\
+  #undef castle_vertex_eye \n\
+  #undef castle_normal_eye \n\
+  #undef castle_Color \n\
+  castle_vertex_eye = temp_castle_vertex_eye; \n\
+  castle_normal_eye = temp_castle_normal_eye; \n\
+  castle_Color      = temp_castle_Color; \n\
+  #endif //CASTLE_BUGGY_GLSL_READ_VARYING \n\
+  \n\
+  #ifdef FOG \n\
+  #ifdef FOGCOORD \n\
+  castle_vertex_eye.z = fw_FogCoords; \n\
+  #endif //FOGCOORD \n\
+  #endif //FOG \n\
+  #ifdef UNLIT \n\
+  castle_Color = fw_UnlitColor; \n\
+  #endif //UNLIT \n\
+} \n";
+
+
+/* Generic GLSL fragment shader.
+   Used by ../castlerendererinternalshader.pas to construct the final shader.
+
+   This is converted to template.fs.inc, and is then compiled
+   in program's binary.
+   When you change this file, rerun `make' and then recompile Pascal sources.
+*/
+/* 
+    started with: http://svn.code.sf.net/p/castle-engine/code/trunk/castle_game_engine/src/x3d/opengl/glsl/template_mobile.fs
+  defines:
+  GL_ES_VERSION_2_0 - non-desktop
+  HAS_GEOMETRY_SHADER - version 3+ gles
+*/
+
+const char *getGenericVertex(void){
+        return genericVertexGLES2; //genericVertexDesktop
+}
+
+static const GLchar *genericFragmentGLES2 = "\
+/* DEFINES */ \n\
+#ifdef MOBILE \n\
+//precision highp float; \n\
+precision mediump float; \n\
+#endif //MOBILE \n\
+/* Generic GLSL fragment shader, used on OpenGL ES. */ \n\
+ \n\
+varying vec4 castle_Color; \n\
+ \n\
+#ifdef LITE \n\
+#define MAX_LIGHTS 8 \n\
+uniform int lightcount; \n\
+//uniform float lightRadius[MAX_LIGHTS]; \n\
+uniform int lightType[MAX_LIGHTS];//ANGLE like this \n\
+struct fw_LightSourceParameters { \n\
+  vec4 ambient;  \n\
+  vec4 diffuse;   \n\
+  vec4 specular; \n\
+  vec4 position;   \n\
+  vec4 halfVector;  \n\
+  vec4 spotDirection; \n\
+  float spotBeamWidth; \n\
+  float spotCutoff; \n\
+  vec3 Attenuations; \n\
+  float lightRadius; \n\
+}; \n\
+\n\
+uniform fw_LightSourceParameters fw_LightSource[MAX_LIGHTS] /* gl_MaxLights */ ;\n\
+#endif //LITE \n\
+\n\
+#ifdef CPV \n\
+varying vec4 cpv_Color; \n\
+#endif //CPV \n\
+\n\
+#ifdef TEX \n\
+#ifdef CUB \n\
+uniform samplerCube fw_Texture_unit0; \n\
+#else //CUB \n\
+uniform sampler2D fw_Texture_unit0; \n\
+#endif //CUB \n\
+varying vec3 fw_TexCoord[4]; \n\
+#ifdef TEX3D \n\
+uniform int tex3dTiles[3]; \n\
+uniform int repeatSTR[3]; \n\
+uniform int magFilter; \n\
+#endif //TEX3D \n\
+#ifdef TEX3DLAY \n\
+uniform sampler2D fw_Texture_unit1; \n\
+uniform sampler2D fw_Texture_unit2; \n\
+uniform sampler2D fw_Texture_unit3; \n\
+uniform int textureCount; \n\
+#endif //TEX3DLAY \n\
+#ifdef MTEX \n\
+uniform sampler2D fw_Texture_unit1; \n\
+uniform sampler2D fw_Texture_unit2; \n\
+uniform sampler2D fw_Texture_unit3; \n\
+uniform ivec2 fw_Texture_mode0;  \n\
+uniform ivec2 fw_Texture_mode1;  \n\
+uniform ivec2 fw_Texture_mode2;  \n\
+uniform ivec2 fw_Texture_mode3;  \n\
+uniform ivec2 fw_Texture_source0;  \n\
+uniform ivec2 fw_Texture_source1;  \n\
+uniform ivec2 fw_Texture_source2;  \n\
+uniform ivec2 fw_Texture_source3;  \n\
+uniform int fw_Texture_function0;  \n\
+uniform int fw_Texture_function1;  \n\
+uniform int fw_Texture_function2;  \n\
+uniform int fw_Texture_function3;  \n\
+uniform int textureCount; \n\
+uniform vec4 mt_Color; \n\
+#define MTMODE_ADD    1\n \
+#define MTMODE_ADDSIGNED    2\n \
+#define MTMODE_ADDSIGNED2X    3\n \
+#define MTMODE_ADDSMOOTH    4\n \
+#define MTMODE_BLENDCURRENTALPHA    5\n \
+#define MTMODE_BLENDDIFFUSEALPHA    6\n \
+#define MTMODE_BLENDFACTORALPHA    7\n \
+#define MTMODE_BLENDTEXTUREALPHA    8\n \
+#define MTMODE_DOTPRODUCT3    9\n \
+#define MTMODE_MODULATE    10\n \
+#define MTMODE_MODULATE2X    11\n \
+#define MTMODE_MODULATE4X    12\n \
+#define MTMODE_MODULATEALPHA_ADDCOLOR    13\n \
+#define MTMODE_MODULATEINVALPHA_ADDCOLOR    14\n \
+#define MTMODE_MODULATEINVCOLOR_ADDALPHA    15\n \
+#define MTMODE_OFF    16\n \
+#define MTMODE_REPLACE    17\n \
+#define MTMODE_SELECTARG1    18\n \
+#define MTMODE_SELECTARG2    19\n \
+#define MTMODE_SUBTRACT    20\n \
+#define MTSRC_DIFFUSE    1 \n\
+#define MTSRC_FACTOR    2 \n\
+#define MTSRC_SPECULAR    3 \n\
+#define MTFN_ALPHAREPLICATE    0 \n\
+#define MTFN_COMPLEMENT    1 \n\
+#define MT_DEFAULT -1 \n\
+\n\
+void finalColCalc(inout vec4 prevColour, in int mode, in int modea, in int func, in sampler2D tex, in vec2 texcoord) { \n\
+  vec4 texel = texture2D(tex,texcoord); \n\
+  vec4 rv = vec4(1.,0.,1.,1.);   \n\
+  if (mode==MTMODE_OFF) {  \n\
+    rv = vec4(prevColour); \n\
+  } else if (mode==MTMODE_REPLACE) { \n\
+    rv = vec4(texture2D(tex, texcoord)); \n\
+  }else if (mode==MTMODE_MODULATE) {  \n\
+    vec3 ct,cf;  \n\
+    float at,af;  \n\
+    cf = prevColour.rgb;  \n\
+    af = prevColour.a;  \n\
+    ct = texel.rgb;  \n\
+    at = texel.a;  \n\
+    rv = vec4(ct*cf, at*af);  \n\
+  } else if (mode==MTMODE_MODULATE2X) {  \n\
+    vec3 ct,cf;  \n\
+    float at,af;  \n\
+    cf = prevColour.rgb;  \n\
+    af = prevColour.a;  \n\
+    ct = texel.rgb;  \n\
+    at = texel.a;  \n\
+    rv = vec4(vec4(ct*cf, at*af)*vec4(2.,2.,2.,2.));  \n\
+  }else if (mode==MTMODE_MODULATE4X) {  \n\
+    vec3 ct,cf;  \n\
+    float at,af;  \n\
+    cf = prevColour.rgb; \n\
+    af = prevColour.a;  \n\
+    ct = texel.rgb;  \n\
+    at = texel.a;  \n\
+    rv = vec4(vec4(ct*cf, at*af)*vec4(4.,4.,4.,4.));  \n\
+  }else if (mode== MTMODE_ADDSIGNED) { \n\
+    rv = vec4 (prevColour + texel - vec4 (0.5, 0.5, 0.5, -.5));  \n\
+  } else if (mode== MTMODE_ADDSIGNED2X) { \n\
+    rv = vec4 ((prevColour + texel - vec4 (0.5, 0.5, 0.5, -.5))*vec4(2.,2.,2.,2.));  \n\
+  } else if (mode== MTMODE_ADD) { \n\
+    rv= vec4 (prevColour + texel);  \n\
+  } else if (mode== MTMODE_SUBTRACT) { \n\
+    rv = vec4 (texel - prevColour); //jas had prev - tex \n\
+  } else if (mode==MTMODE_ADDSMOOTH) {  \n\
+    rv = vec4 (prevColour + (prevColour - vec4 (1.,1.,1.,1.)) * texel);  \n\
+  } else if (mode==MTMODE_BLENDDIFFUSEALPHA) {  \n\
+    rv = vec4 (mix(prevColour,texel,castle_Color.a)); \n\
+  } else if (mode==MTMODE_BLENDTEXTUREALPHA) {  \n\
+    rv = vec4 (mix(prevColour,texel,texel.a)); \n\
+  } else if (mode==MTMODE_BLENDFACTORALPHA) {  \n\
+    rv = vec4 (mix(prevColour,texel,mt_Color.a)); \n\
+  } else if (mode==MTMODE_BLENDCURRENTALPHA) {  \n\
+    rv = vec4 (mix(prevColour,texel,prevColour.a)); \n\
+  } else if (mode==MTMODE_SELECTARG1) {  \n\
+    rv = texel;  \n\
+  } else if (mode==MTMODE_SELECTARG2) {  \n\
+    rv = prevColour;  \n\
+  } \n\
+  if(modea != 0){ \n\
+    if (modea==MTMODE_OFF) {  \n\
+      rv.a = prevColour.a; \n\
+    } else if (modea==MTMODE_REPLACE) { \n\
+      rv.a = 1.0; \n\
+    }else if (modea==MTMODE_MODULATE) {  \n\
+      float at,af;  \n\
+      af = prevColour.a;  \n\
+      at = texel.a;  \n\
+      rv.a = at*af;  \n\
+    } else if (modea==MTMODE_MODULATE2X) {  \n\
+      float at,af;  \n\
+      af = prevColour.a;  \n\
+      at = texel.a;  \n\
+      rv.a = at*af*2.0;  \n\
+    }else if (modea==MTMODE_MODULATE4X) {  \n\
+      float at,af;  \n\
+      af = prevColour.a;  \n\
+      at = texel.a;  \n\
+      rv.a = at*af*4.0;  \n\
+    }else if (modea== MTMODE_ADDSIGNED) { \n\
+      rv.a = (prevColour.a + texel.a + .5);  \n\
+    } else if (modea== MTMODE_ADDSIGNED2X) { \n\
+      rv.a = ((prevColour.a + texel.a + .5))*2.0;  \n\
+    } else if (modea== MTMODE_ADD) { \n\
+      rv.a = prevColour.a + texel.a;  \n\
+    } else if (modea== MTMODE_SUBTRACT) { \n\
+      rv.a = texel.a - prevColour.a;  //jas had prev - texel \n\
+    } else if (modea==MTMODE_ADDSMOOTH) {  \n\
+      rv.a = (prevColour.a + (prevColour.a - 1.)) * texel.a;  \n\
+    } else if (modea==MTMODE_BLENDDIFFUSEALPHA) {  \n\
+      rv.a = mix(prevColour.a,texel.a,castle_Color.a); \n\
+    } else if (modea==MTMODE_BLENDTEXTUREALPHA) {  \n\
+      rv.a = mix(prevColour.a,texel.a,texel.a); \n\
+    } else if (modea==MTMODE_BLENDFACTORALPHA) {  \n\
+      rv.a = mix(prevColour.a,texel.a,mt_Color.a); \n\
+    } else if (modea==MTMODE_BLENDCURRENTALPHA) {  \n\
+      rv.a = mix(prevColour.a,texel.a,prevColour.a); \n\
+    } else if (modea==MTMODE_SELECTARG1) {  \n\
+      rv.a = texel.a;  \n\
+    } else if (modea==MTMODE_SELECTARG2) {  \n\
+      rv.a = prevColour.a;  \n\
+    } \n\
+  } \n\
+  if(func == MTFN_COMPLEMENT){ \n\
+    //rv = vec4(1.0,1.0,1.0,1.0) - rv; \n\
+    rv = vec4( vec3(1.0,1.0,1.0) - rv.rgb, rv.a); \n\
+  }else if(func == MTFN_ALPHAREPLICATE){ \n\
+    rv = vec4(rv.a,rv.a,rv.a,rv.a); \n\
+  } \n\
+  prevColour = rv;  \n\
+} \n\
+#endif //MTEX \n\
+#endif //TEX \n\
+#ifdef FILL \n\
+uniform vec4 HatchColour; \n\
+uniform bool hatched; uniform bool filled;\n\
+uniform vec2 HatchScale; \n\
+uniform vec2 HatchPct; \n\
+uniform int algorithm; \n\
+varying vec2 hatchPosition; \n\
+void fillPropCalc(inout vec4 prevColour, vec2 MCposition, int algorithm) { \n\
+  vec4 colour; \n\
+  vec2 position, useBrick; \n\
+  \n\
+  position = MCposition / HatchScale; \n\
+  \n\
+  if (algorithm == 0) {/* bricking  */ \n\
+    if (fract(position.y * 0.5) > 0.5) \n\
+      position.x += 0.5; \n\
+  } \n\
+  \n\
+  /* algorithm 1, 2 = no futzing required here  */ \n\
+  if (algorithm == 3) { /* positive diagonals */ \n\
+    vec2 curpos = position; \n\
+    position.x -= curpos.y; \n\
+  } \n\
+  \n\
+  if (algorithm == 4) {  /* negative diagonals */ \n\
+    vec2 curpos = position; \n\
+    position.x += curpos.y; \n\
+  } \n\
+  \n\
+  if (algorithm == 6) {  /* diagonal crosshatch */ \n\
+    vec2 curpos = position; \n\
+    if (fract(position.y) > 0.5)  { \n\
+      if (fract(position.x) < 0.5) position.x += curpos.y; \n\
+      else position.x -= curpos.y; \n\
+    } else { \n\
+      if (fract(position.x) > 0.5) position.x += curpos.y; \n\
+      else position.x -= curpos.y; \n\
+    } \n\
+  } \n\
+  \n\
+  position = fract(position); \n\
+  \n\
+  useBrick = step(position, HatchPct); \n\
+  \n\
+  if (filled) {colour = prevColour;} else { colour=vec4(0.,0.,0.,0); }\n\
+  if (hatched) { \n\
+      colour = mix(HatchColour, colour, useBrick.x * useBrick.y); \n\
+  } \n\
+  prevColour = colour; \n\
+} \n\
+#endif //FILL \n\
+#ifdef FOG \n\
+struct fogParams \n\
+{  \n\
+  vec4 fogColor; \n\
+  float visibilityRange; \n\
+  float fogScale; \n\
+  int fogType; // 0 None, 1= FOGTYPE_LINEAR, 2 = FOGTYPE_EXPONENTIAL \n\
+  // ifdefed int haveFogCoords; \n\
+}; \n\
+uniform fogParams fw_fogparams; \n\
+#endif //FOG \n\
+ \n\
+/* PLUG-DECLARATIONS */ \n\
+ \n\
+#ifdef HAS_GEOMETRY_SHADER \n\
+#define castle_vertex_eye castle_vertex_eye_geoshader \n\
+#define castle_normal_eye castle_normal_eye_geoshader \n\
+#endif \n\
+ \n\
+varying vec4 castle_vertex_eye; \n\
+varying vec3 castle_normal_eye; \n\
+#ifdef LIT \n\
+#ifdef LITE \n\
+//per-fragment lighting ie phong \n\
+struct fw_MaterialParameters { \n\
+  vec4 emission; \n\
+  vec4 ambient; \n\
+  vec4 diffuse; \n\
+  vec4 specular; \n\
+  float shininess; \n\
+}; \n\
+uniform fw_MaterialParameters fw_FrontMaterial; \n\
+#ifdef TWO \n\
+uniform fw_MaterialParameters fw_BackMaterial; \n\
+#endif //TWO \n\
+vec3 castle_ColorES; \n\
+#else //LITE \n\
+//per-vertex lighting - interpolated Emissive-specular \n\
+varying vec3 castle_ColorES; //emissive shininess term \n\
+#endif //LITE \n\
+#endif //LIT\n\
+ \n\
+/* Wrapper for calling PLUG texture_coord_shift */ \n\
+vec2 texture_coord_shifted(in vec2 tex_coord) \n\
+{ \n\
+  /* PLUG: texture_coord_shift (tex_coord) */ \n\
+  return tex_coord; \n\
+} \n\
+ \n\
+vec4 matdiff_color; \n\
+void main(void) \n\
+{ \n\
+  vec4 fragment_color = vec4(1.0,1.0,1.0,1.0); \n\
+  matdiff_color = castle_Color; \n\
+  float castle_MaterialDiffuseAlpha = castle_Color.a; \n\
+  \n\
+  #ifdef LITE \n\
+  //per-fragment lighting aka PHONG \n\
+  //start over with the color, since we have material and lighting in here \n\
+  castle_MaterialDiffuseAlpha = fw_FrontMaterial.diffuse.a; \n\
+  matdiff_color = vec4(0,0,0,1.0); \n\
+  castle_ColorES = fw_FrontMaterial.emission.rgb; \n\
+  /* PLUG: add_light_contribution2 (matdiff_color, castle_ColorES, castle_vertex_eye, castle_normal_eye, fw_FrontMaterial.shininess) */ \n\
+  #endif //LITE \n\
+  \n\
+  #ifdef LIT \n\
+  #ifdef MATFIR \n\
+  fragment_color.rgb = matdiff_color.rgb; \n\
+  #endif //MATFIR \n\
+  #endif //LIT \n\
+  #ifdef UNLIT \n\
+  fragment_color = castle_Color; \n\
+  #endif //UNLIT \n\
+  \n\
+  #ifdef CPV \n\
+  #ifdef CPVREP \n\
+  fragment_color = cpv_Color; //CPV replaces mat.diffuse prior \n\
+  fragment_color.a *= castle_MaterialDiffuseAlpha; \n\
+  #else \n\
+  fragment_color *= cpv_Color; //CPV modulates prior \n\
+  #endif //CPVREP \n\
+  #endif //CPV \n\
+  \n\
+  #ifdef TEX \n\
+  #ifdef TEXREP \n\
+  fragment_color = vec4(1.0,1.0,1.0,1.0); //texture replaces prior \n\
+  #endif //TEXREP \n\
+  #endif //TEX \n\
+  \n\
+  /* Fragment shader on mobile doesn't get a normal vector now, for speed. */ \n\
+  //#define normal_eye_fragment castle_normal_eye //vec3(0.0) \n\
+  #define normal_eye_fragment vec3(0.0) \n\
+  \n\
+  #ifdef FILL \n\
+  fillPropCalc(matdiff_color, hatchPosition, algorithm); \n\
+  #endif //FILL \n\
+  \n\
+  #ifdef LIT \n\
+  #ifndef MATFIR \n\
+  //modulate texture with mat.diffuse \n\
+  fragment_color.rgb *= matdiff_color.rgb; \n\
+  fragment_color.a *= castle_MaterialDiffuseAlpha; \n\
+  #endif //MATFIR \n\
+  fragment_color.rgb = clamp(fragment_color.rgb + castle_ColorES, 0.0, 1.0); \n\
+  #endif //LIT \n\
+  \n\
+  /* PLUG: texture_apply (fragment_color, normal_eye_fragment) */ \n\
+  /* PLUG: steep_parallax_shadow_apply (fragment_color) */ \n\
+  /* PLUG: fog_apply (fragment_color, normal_eye_fragment) */ \n\
+  \n\
+  #undef normal_eye_fragment \n\
+  \n\
+  gl_FragColor = fragment_color; \n\
+  \n\
+  /* PLUG: fragment_end (gl_FragColor) */ \n\
+} \n";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#OpacityMapVolumeStyle
+// opacity with intensity == intensity lookup/transferFunction
+
+static const GLchar *plug_voxel_DEFAULT =    "\
+void voxel_apply_DEFAULT (inout vec4 voxel, inout vec3 gradient) { \n\
+    float alpha = voxel.a; \n\
+    //voxel.a = voxel.r; \n\
+    //voxel.rgb = vec3(alpha); \n\
+} \n\
+void PLUG_voxel_apply_DEFAULT (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_DEFAULT(voxel,gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_DEFAULT(voxel,gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#OpacityMapVolumeStyle
+static const GLchar *plug_voxel_OPACITY =    "\
+uniform int fw_opacTexture; \n\
+//uniform sampler2D fw_Texture_unit3; \n\
+void voxel_apply_OPACITY (inout vec4 voxel, inout vec3 gradient) { \n\
+    if(fw_opacTexture == 1){ \n\
+        vec4 lookup_color; \n\
+        float lum = voxel.r; \n\
+        vec2 texcoord = vec2(lum,0.0); \n\
+        //this is too simple for the lookups in the specs \n\
+        //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#t-transferFunctionTextureCoordinateMapping \n\
+        lookup_color = texture2D(fw_Texture_unit3,texcoord); \n\
+        voxel.rgb = lookup_color.rgb; \n\
+        voxel.a = lum; \n\
+    }else{ \n\
+        //like default \n\
+        float alpha = voxel.a; \n\
+        voxel.a = voxel.r; \n\
+        voxel.rgb = vec3(alpha); \n\
+    } \n\
+} \n\
+void PLUG_voxel_apply_OPACITY (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_OPACITY(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_OPACITY(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#BlendedVolumeStyle
+static const GLchar *plug_voxel_BLENDED =    "\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#BoundaryEnhancementVolumeStyle
+static const GLchar *plug_voxel_BOUNDARY =    "\n\
+uniform float fw_boundaryOpacity; \n\
+uniform float fw_retainedOpacity; \n\
+uniform float fw_opacityFactor; \n\
+void voxel_apply_BOUNDARY (inout vec4 voxel, inout vec3 gradient) { \n\
+    float magnitude = length(gradient); \n\
+    float factor = (fw_retainedOpacity + fw_boundaryOpacity*pow(magnitude,fw_opacityFactor) ); \n\
+    voxel.a = voxel.a * factor; \n\
+    //debug_color = HeatMapColor(factor,0.0,1.0); \n\
+} \n\
+void PLUG_voxel_apply_BOUNDARY (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_BOUNDARY(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_BOUNDARY(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#CartoonVolumeStyle
+static const GLchar *plug_voxel_CARTOON =    "\n\
+uniform int fw_colorSteps; \n\
+uniform vec4 fw_orthoColor; \n\
+uniform vec4 fw_paraColor; \n\
+void voxel_apply_CARTOON (inout vec4 voxel, inout vec3 gradient) { \n\
+    float len = length(gradient); \n\
+    if(len > 0.01) { \n\
+        vec3 ng = normalize(gradient); \n\
+        float ndotv = dot(normal_eye,ng); \n\
+        if(ndotv > 0.01 && voxel.a > 0.0) { \n\
+            ndotv = floor(ndotv/float(fw_colorSteps))*float(fw_colorSteps); \n\
+            vec4 color = mix(fw_orthoColor,fw_paraColor,ndotv); \n\
+            //voxel.rgb = color.rgb*voxel.a; \n\
+            voxel.rgb = color.rgb; \n\
+        } else { \n\
+            voxel = vec4(0.0); //similar to discard \n\
+        } \n\
+    } else { \n\
+        voxel = vec4(0.0); //similar to discard \n\
+    } \n\
+} \n\
+void PLUG_voxel_apply_CARTOON (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_CARTOON(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_CARTOON(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ComposedVolumeStyle
+static const GLchar *plug_voxel_COMPOSED =    "\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#EdgeEnhancementVolumeStyle
+static const GLchar *plug_voxel_EDGE =    "\
+uniform float fw_cosGradientThreshold; \n\
+uniform vec4 fw_edgeColor; \n\
+void voxel_apply_EDGE (inout vec4 voxel, inout vec3 gradient) { \n\
+    float len = length(gradient); \n\
+    if(len > 0.01) { \n\
+        vec3 ng = normalize(gradient); \n\
+        float ndotv = abs(dot(normal_eye,ng));  \n\
+        if( ndotv < fw_cosGradientThreshold ) { \n\
+            voxel = mix(voxel,fw_edgeColor,1.0 -ndotv); \n\
+        } \n\
+    } \n\
+} \n\
+void PLUG_voxel_apply_EDGE (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_EDGE(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_EDGE(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ProjectionVolumeStyle
+static const GLchar *plug_voxel_PROJECTION =    "\n\
+uniform float fw_intensityThreshold; \n\
+uniform int fw_projType; \n\
+float MAXPROJ = 0.0; \n\
+float MINPROJ = 1.0; \n\
+float AVEPROJ = 0.0; \n\
+float LMIP = 0.0; \n\
+vec4 RGBAPROJ; \n\
+int PROJCOUNT = 0; \n\
+void voxel_apply_PROJECTION (inout vec4 voxel, inout vec3 gradient) { \n\
+    PROJCOUNT++; \n\
+    float cval = length(voxel.rgb); \n\
+    if(fw_projType == 1){ \n\
+        //MIN \n\
+        if(cval < MINPROJ){ \n\
+            MINPROJ = cval; \n\
+            RGBAPROJ = voxel; \n\
+        } \n\
+    }else if(fw_projType == 2){ \n\
+        //MAX \n\
+        if(fw_intensityThreshold > 0.0){ \n\
+            //LMIP \n\
+            if(LMIP == 0.0) { \n\
+                LMIP = cval; \n\
+                RGBAPROJ = voxel; \n\
+            } \n\
+        } else { \n\
+            //MIP \n\
+            if(cval > MAXPROJ){ \n\
+                MAXPROJ = cval; \n\
+                RGBAPROJ = voxel; \n\
+            } \n\
+        } \n\
+    }else if(fw_projType==3){ \n\
+        //AVERAGE \n\
+        AVEPROJ += cval; \n\
+        RGBAPROJ += voxel; \n\
+    } \n\
+} \n\
+void PLUG_voxel_apply_PROJECTION (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_PROJECTION(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_PROJECTION(voxel, gradient); \n\
+} \n\
+void PLUG_ray_apply (inout vec4 raysum) { \n\
+    float value = 0.0; \n\
+    vec4 color = vec4(1.0); \n\
+    if(fw_projType == 1){ \n\
+        //MIN \n\
+        value = MINPROJ; \n\
+        color = RGBAPROJ; \n\
+    }else if(fw_projType == 2){ \n\
+        //MAX \n\
+        if(fw_intensityThreshold > 0.0){ \n\
+            //LMIP \n\
+            value = LMIP; \n\
+            color = RGBAPROJ; \n\
+        } else { \n\
+            //MIP \n\
+            value = MAXPROJ; \n\
+            color = RGBAPROJ; \n\
+        } \n\
+    }else if(fw_projType==3){ \n\
+        //AVERAGE \n\
+        value = AVEPROJ / float(PROJCOUNT); \n\
+        color = RGBAPROJ / float(PROJCOUNT); \n\
+    } \n\
+    //raysum.rgb = color.rgb * color.a; \n\
+    //raysum.a = color.a; \n\
+    \n\
+    raysum.rgb = vec3(value,value,value); \n\
+//    raysum.a = 1.0 - value; \n\
+    //raysum.a = value;\n\
+    //raysum.a = color.a; \n\
+    //raysum = color; \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ShadedVolumeStyle
+static const GLchar *plug_voxel_SHADED =    "\
+#ifdef LITE \n\
+#define MAX_LIGHTS 8 \n\
+uniform int lightcount; \n\
+//uniform float lightRadius[MAX_LIGHTS]; \n\
+uniform int lightType[MAX_LIGHTS];//ANGLE like this \n\
+struct fw_LightSourceParameters { \n\
+  vec4 ambient;  \n\
+  vec4 diffuse;   \n\
+  vec4 specular; \n\
+  vec4 position;   \n\
+  vec4 halfVector;  \n\
+  vec4 spotDirection; \n\
+  float spotBeamWidth; \n\
+  float spotCutoff; \n\
+  vec3 Attenuations; \n\
+  float lightRadius; \n\
+}; \n\
+\n\
+uniform fw_LightSourceParameters fw_LightSource[MAX_LIGHTS] /* gl_MaxLights */ ;\n\
+#endif //LITE \n\
+ \n\
+#ifdef FOG \n\
+struct fogParams \n\
+{  \n\
+  vec4 fogColor; \n\
+  float visibilityRange; \n\
+  float fogScale; \n\
+  int fogType; // 0 None, 1= FOGTYPE_LINEAR, 2 = FOGTYPE_EXPONENTIAL \n\
+  // ifdefed int haveFogCoords; \n\
+}; \n\
+uniform fogParams fw_fogparams; \n\
+#endif //FOG \n\
+#ifdef LIT \n\
+#ifdef LITE \n\
+//per-fragment lighting ie phong \n\
+struct fw_MaterialParameters { \n\
+  vec4 emission; \n\
+  vec4 ambient; \n\
+  vec4 diffuse; \n\
+  vec4 specular; \n\
+  float shininess; \n\
+}; \n\
+uniform fw_MaterialParameters fw_FrontMaterial; \n\
+#ifdef TWO \n\
+uniform fw_MaterialParameters fw_BackMaterial; \n\
+#endif //TWO \n\
+vec3 castle_ColorES; \n\
+#else //LITE \n\
+//per-vertex lighting - interpolated Emissive-specular \n\
+varying vec3 castle_ColorES; //emissive shininess term \n\
+#endif //LITE \n\
+#endif //LIT\n\
+uniform int fw_phase; \n\
+uniform int fw_lighting; \n\
+uniform int fw_shadows; \n\
+void voxel_apply_SHADED (inout vec4 voxel, inout vec3 gradient) { \n\
+    float len = length(gradient); \n\
+    vec3 ng = vec3(0.0); \n\
+    if(len > 0.0) \n\
+      ng = normalize(gradient); \n\
+    vec4 color = vec4(1.0); \n\
+    #ifdef LIT \n\
+    vec3 castle_ColorES = fw_FrontMaterial.specular.rgb; \n\
+    color.rgb = fw_FrontMaterial.diffuse.rgb; \n\
+    #else //LIT \n\
+    color.rgb = vec3(0,0,0.0,0.0); \n\
+    vec3 castle_ColorES = vec3(0.0,0.0,0.0); \n\
+    #endif //LIT    \n\
+    // void add_light_contribution2(inout vec4 vertexcolor, inout vec3 specularcolor, in vec4 myPosition, in vec3 myNormal, in float shininess ); \n\
+    vec4 vertex_eye4 = vec4(vertex_eye,1.0); \n\
+    /* PLUG: add_light_contribution2 (color, castle_ColorES, vertex_eye4, ng, fw_FrontMaterial.shininess) */ \n\
+    // voxel.rgb = color.rgb; \n\
+    color.rgb = mix(color.rgb,castle_ColorES,dot(ng,normal_eye)); \n\
+    voxel.rgb = color.rgb; \n\
+    //voxel.rgb = voxel.rgb * color.rgb; \n\
+} \n\
+void PLUG_voxel_apply_SHADED (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_SHADED(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_SHADED(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#SilhouetteEnhancementVolumeStyle
+static const GLchar *plug_voxel_SILHOUETTE =    "\n\
+uniform float fw_BoundaryOpacity; \n\
+uniform float fw_RetainedOpacity; \n\
+uniform float fw_Sharpness; \n\
+void voxel_apply_SILHOUETTE (inout vec4 voxel, inout vec3 gradient) { \n\
+    float len = length(gradient); \n\
+    if(len > 0.01) { \n\
+        vec3 ng = normalize(gradient); \n\
+        float ndotv = abs(dot(ng,normal_eye)); \n\
+        float factor = (fw_RetainedOpacity + fw_BoundaryOpacity*pow(1.0 - ndotv,fw_Sharpness)); \n\
+        //float factor = (fw_RetainedOpacity + pow(fw_BoundaryOpacity*(1.0 - ndotv),fw_Sharpness)); \n\
+        //debug_color = HeatMapColor(factor,0.0,1.0); \n\
+        voxel.a = voxel.a * factor; \n\
+    } \n\
+} \n\
+void PLUG_voxel_apply_SILHOUETTE (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_SILHOUETTE(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_SILHOUETTE(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ToneMappedVolumeStyle
+static const GLchar *plug_voxel_TONE =    "\
+uniform vec4 fw_coolColor; \n\
+uniform vec4 fw_warmColor; \n\
+void voxel_apply_TONE (inout vec4 voxel, inout vec3 gradient) { \n\
+    float len = length(gradient); \n\
+    if(len > 0.0) { \n\
+        vec3 color; \n\
+        vec3 ng = normalize(gradient); \n\
+        //vec3 L = normalize(vec3(-.707,-.707,.707)); \n\
+        float cc = (1.0 + dot(normal_eye,ng))*.5; \n\
+        //float cc = (1.0 + dot(L,ng))*.5; \n\
+        //debug_color = HeatMapColor(cc,0.0,1.0); \n\
+        color = mix(fw_coolColor.rgb,fw_warmColor.rgb,cc); \n\
+        voxel = vec4(color,voxel.a); \n\
+    } else { \n\
+        voxel.a = 0.0; \n\
+        //debug_color = vec4(0.0); \n\
+    } \n\
+} \n\
+void PLUG_voxel_apply_TONE (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_TONE(voxel, gradient); \n\
+} \n\
+void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) { \n\
+    voxel_apply_TONE(voxel, gradient); \n\
+} \n\
+";
+
+// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#BlendedVolumeStyle
+// blended (BlendedVolumeStyle) works (was interpreted and implemented by dug9, Oct 2016)
+//  by rendering 2 volumedatas to 2 fbo textures, then running
+// this shader to blend the 2 fbo textures and spit out fragments just
+// where the box is. Use with the regular volume Vertex shader so
+// only frags over the box show, and so we get box depth for depth blending
+// with the main scene
+static const GLchar *volumeBlendedFragmentGLES2 = " \n\
+/* DEFINES */ \n\
+#ifdef MOBILE \n\
+//precision highp float; \n\
+precision mediump float; \n\
+#endif //MOBILE \n\
+ vec4 HeatMapColor(float value, float minValue, float maxValue) \n\
+{ \n\
+    //used for debugging. If min=0,max=1 then magenta is 0, blue,green,yellow, red is 1 \n\
+    vec4 ret; \n\
+    int HEATMAP_COLORS_COUNT; \n\
+    vec4 colors[6]; \n\
+    HEATMAP_COLORS_COUNT = 6; \n\
+    colors[0] = vec4(0.32, 0.00, 0.32, 1.0); \n\
+    colors[1] = vec4( 0.00, 0.00, 1.00, 1.00); \n\
+    colors[2] = vec4(0.00, 1.00, 0.00, 1.00); \n\
+    colors[3] = vec4(1.00, 1.00, 0.00, 1.00); \n\
+    colors[4] = vec4(1.00, 0.60, 0.00, 1.00); \n\
+    colors[5] = vec4(1.00, 0.00, 0.00, 1.00); \n\
+    float ratio=(float(HEATMAP_COLORS_COUNT)-1.0)*clamp((value-minValue)/(maxValue-minValue),0.0,1.0); \n\
+    int indexMin=int(floor(ratio)); \n\
+    int indexMax= indexMin+1 < HEATMAP_COLORS_COUNT-1 ? indexMin+1 : HEATMAP_COLORS_COUNT-1; \n\
+    ret = mix(colors[indexMin], colors[indexMax], ratio-float(indexMin)); \n\
+    if(value < minValue) ret = vec4(0.0,0.0,0.0,1.0); \n\
+    if(value > maxValue) ret = vec4(1.0,1.0,1.0,1.0); \n\
+    return ret; \n\
+} \n\
+vec4 debug_color; \n\
+ \n\
+uniform vec4 fw_viewport; \n\
+uniform sampler2D fw_Texture_unit0; \n\
+uniform sampler2D fw_Texture_unit1; \n\
+uniform sampler2D fw_Texture_unit2; \n\
+uniform sampler2D fw_Texture_unit3; \n\
+uniform float fw_iwtc1; \n\
+uniform float fw_iwtc2; \n\
+uniform int fw_iwtf1; \n\
+uniform int fw_iwtf2; \n\
+uniform int fw_haveTransfers; \n\
+vec3 weightcolor( in vec3 color, in int func, in float wt, in float ov,  in float oblend, in sampler2D table){ \n\
+    vec3 ret; \n\
+    if(func == 1){ \n\
+        ret = color * wt; \n\
+    }else if(func == 2){ \n\
+        ret = color * ov; \n\
+    }else if(func == 3){ \n\
+        ret = color * oblend; \n\
+    }else if(func == 4){ \n\
+        ret = color * (1.0 - oblend); \n\
+    }else if(func == 5){ \n\
+        vec2 texcoord = color.rg;\n\
+        ret = color * texture2D(table,texcoord).r; \n\
+    } \n\
+    return ret; \n\
+} \n\
+float weightalpha( in float alpha, in int func, in float wt, in float ov, in float oblend, in sampler2D table){ \n\
+    float ret; \n\
+    if(func == 1){ \n\
+        ret = alpha * wt; \n\
+    }else if(func == 2){ \n\
+        ret = alpha * ov; \n\
+    }else if(func == 3){ \n\
+        ret = alpha * oblend; \n\
+    }else if(func == 4){ \n\
+        ret = alpha * (1.0 - oblend); \n\
+    }else if(func == 5){ \n\
+        vec2 texcoord = vec2(alpha,0);\n\
+        ret = alpha * texture2D(table,texcoord).r; \n\
+    } \n\
+    return ret; \n\
+} \n\
+void main(void) \n\
+{ \n\
+    vec2 fc = (gl_FragCoord.xy - fw_viewport.xy) / fw_viewport.zw; \n\
+    vec4 frag0 = texture2D(fw_Texture_unit0,fc); \n\
+    vec4 frag1 = texture2D(fw_Texture_unit1,fc); \n\
+    vec3 cv = frag0.rgb; \n\
+    float ov = frag0.a; \n\
+    vec3 cblend = frag1.rgb; \n\
+    float oblend = frag1.a; \n\
+    vec3 cvw, cbw; \n\
+    float ovw, obw; \n\
+    cvw = weightcolor(cv,fw_iwtf1,fw_iwtc1,ov,oblend,fw_Texture_unit2); \n\
+    ovw = weightalpha(ov,fw_iwtf1,fw_iwtc1,ov,oblend,fw_Texture_unit2); \n\
+    cbw = weightcolor(cblend,fw_iwtf2,fw_iwtc2,ov,oblend,fw_Texture_unit3); \n\
+    obw = weightalpha(oblend,fw_iwtf2,fw_iwtc2,ov,oblend,fw_Texture_unit3); \n\
+    vec3 cg = clamp( cvw + cbw, 0.0, 1.0); \n\
+    float og = clamp(ovw + obw, 0.0, 1.0); \n\
+    \n\
+    gl_FragColor = vec4(cg,og); \n\
+} \n\
+";
+
+static int getSpecificShaderSourceOriginal (const GLchar *vertexSource[vertexEndMarker], 
+    const GLchar *fragmentSource[fragmentEndMarker], shaderflagsstruct whichOne) { //unsigned int whichOne) {
+
+    bool doThis;
+    bool didADSLmaterial;
+#ifdef USING_SHADER_LIGHT_ARRAY_METHOD
+    //for angleproject winRT d3d11 - can't do struct[] array for lights
+    const GLchar *lightDefines0 = lightDefinesArrayMethod;
+    const GLchar *ADSLLightModel0 = ADSLLightModelArrayMethod;
+#else
+    const GLchar *lightDefines0 = lightDefines;
+    const GLchar *ADSLLightModel0 = ADSLLightModel;
+#endif
+    
+    /* GL_ES - do we have medium precision, or just low precision?? */
+    /* Phong shading - use the highest we have */
+    /* GL_ES_VERSION_2_0 has these definitions */
+
+#if defined (GL_ES_VERSION_2_0)
+    bool haveHighPrecisionFragmentShaders = false;
+
+#ifdef VARY_VERTEX_PRECISION
+    bool haveHighPrecisionVertexShaders = false;
+#endif
+
+    GLint range[2]; GLint precision;
+
+    // see where we are doing the lighting. Use highest precision there, if we can.
+    if (DESIRE(whichOne.base,SHADINGSTYLE_PHONG)) {
+        glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_HIGH_FLOAT, range, &precision);
+        if (precision!=0) {
+            haveHighPrecisionFragmentShaders=true;
+        } else {
+            haveHighPrecisionFragmentShaders=false;
+            glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_MEDIUM_FLOAT, range, &precision);
+            if (precision == 0) {
+                ConsoleMessage("low precision Fragment shaders only available - view may not work so well");
+            }
+        }
+#ifdef VARY_VERTEX_PRECISION
+    // if we do lighting on the Vertex shader side, do we have to worry about precision?
+    } else {
+        glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_HIGH_FLOAT, range, &precision);
+        if (precision!=0) {
+            haveHighPrecisionVertexShaders=true;
+        } else {
+            haveHighPrecisionVertexShaders=false;
+            glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_MEDIUM_FLOAT, range, &precision);
+            if (precision == 0) {
+                ConsoleMessage("low precision Vertex shaders only available - view may not work so well");
+            }
+        }
+#endif //VARY_VERTEX_PRECISION
+
+    }
+#else
+    // ConsoleMessage ("seem to not have GL_MEDIUM_FLOAT or GL_HIGH_FLOAT");
+#endif // GL_ES_VERSION_2_0 for GL_HIGH_FLOAT or GL_MEDIUM_FLOAT
+
+    #if defined (VERBOSE) && defined (GL_ES_VERSION_2_0)
+    { /* debugging - only */
+    GLboolean b;
+
+    glGetBooleanv(GL_SHADER_COMPILER,&b);
+    if (b) ConsoleMessage("have shader compiler"); else ConsoleMessage("NO SHADER COMPILER");
+
+
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_LOW_FLOAT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_LOW_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_MEDIUM_FLOAT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_MEDIUM_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_HIGH_FLOAT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_HIGH_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_LOW_INT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_LOW_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_MEDIUM_INT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_MEDIUM_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_HIGH_INT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_HIGH_INT range [%d,%d],precision %d",range[0],range[1],precision);
+
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_LOW_FLOAT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_LOW_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_MEDIUM_FLOAT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_MEDIUM_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_HIGH_FLOAT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_HIGH_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_LOW_INT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_LOW_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_MEDIUM_INT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_MEDIUM_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_HIGH_INT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_HIGH_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    }
+    #endif //VERBOSE for GL_ES_VERSION_2_0
+
+    #ifdef VERBOSE
+    if DESIRE(whichOne.base,NO_APPEARANCE_SHADER) ConsoleMessage ("want NO_APPEARANCE_SHADER");
+    if DESIRE(whichOne.base,MATERIAL_APPEARANCE_SHADER) ConsoleMessage ("want MATERIAL_APPEARANCE_SHADER");
+    if DESIRE(whichOne.base,TWO_MATERIAL_APPEARANCE_SHADER) ConsoleMessage ("want TWO_MATERIAL_APPEARANCE_SHADER");
+    if DESIRE(whichOne.base,ONE_TEX_APPEARANCE_SHADER)ConsoleMessage("want ONE_TEX_APPEARANCE_SHADER");
+    if DESIRE(whichOne.base,MULTI_TEX_APPEARANCE_SHADER)ConsoleMessage("want MULTI_TEX_APPEARANCE_SHADER");
+    if DESIRE(whichOne.base,COLOUR_MATERIAL_SHADER)ConsoleMessage("want COLOUR_MATERIAL_SHADER");
+    if DESIRE(whichOne.base,FILL_PROPERTIES_SHADER)ConsoleMessage("want FILL_PROPERTIES_SHADER");
+    if DESIRE(whichOne.base,HAVE_LINEPOINTS_COLOR)ConsoleMessage ("want LINE_POINTS_COLOR");
+    if DESIRE(whichOne.base,HAVE_LINEPOINTS_APPEARANCE)ConsoleMessage ("want LINE_POINTS_APPEARANCE");
+    if DESIRE(whichOne.base,HAVE_TEXTURECOORDINATEGENERATOR) ConsoleMessage ("want HAVE_TEXTURECOORDINATEGENERATOR");
+    if DESIRE(whichOne.base,HAVE_CUBEMAP_TEXTURE) ConsoleMessage ("want HAVE_CUBEMAP_TEXTURE");
+    #endif //VERBOSE
+#undef VERBOSE
+
+
+    /* Cross shader Fragment bits - GL_ES_VERSION_2_0 has this */
+#if defined(GL_ES_VERSION_2_0)
+    fragmentSource[fragmentGLSLVersion] = "#version 100\n";
+    vertexSource[vertexGLSLVersion] = "#version 100\n";
+    if (haveHighPrecisionFragmentShaders)  {
+        fragmentSource[fragmentPrecisionDeclare] = fragHighPrecision;
+        //ConsoleMessage("have high precision fragment shaders");
+    } else {
+        fragmentSource[fragmentPrecisionDeclare] = fragMediumPrecision;
+        //ConsoleMessage("have medium precision fragment shaders");
+    }
+
+#ifdef VARY_VERTEX_PRECISION
+    // if we do lighting on the Vertex shader side, do we have to worry about precision?
+    if (haveHighPrecisionVertexShaders)  {
+        vertexSource[vertexPrecisionDeclare] = fragHighPrecision;
+        ConsoleMessage("have high precision vertex shaders");
+    } else {
+        vertexSource[vertexPrecisionDeclare] = fragMediumPrecision;
+        ConsoleMessage("have medium precision vertex shaders");
+    }
+#endif //VARY_VERTEX_PRECISION
+
+#else
+    //changed from 120 to 110 Apr2014: main shaders still seem to work the same, openGL 2.0 now compiles them, and 2.1 (by specs) compiles 110
+    fragmentSource[fragmentGLSLVersion] = "#version 110\n";//"#version 120\n";
+    vertexSource[vertexGLSLVersion] = "#version 110\n"; //"#version 120\n";
+#endif
+
+    fragmentSource[fragMaxLightsDeclare] = maxLights;
+    vertexSource[vertMaxLightsDeclare] = maxLights;
+    vertexSource[vertexPositionDeclare] = vertPosDec;
+
+
+
+    /* User defined shaders - only give the defines, let the user do the rest */
+
+    if (!whichOne.usershaders) { // & USER_DEFINED_SHADER_MASK) == 0) {
+        /* initialize */
+
+        /* Generic things first */
+
+        /* Cross shader Vertex bits */
+
+        vertexSource[vertexMainStart] = vertMainStart;
+        vertexSource[vertexPositionCalculation] = vertPos;
+        vertexSource[vertexMainEnd] = vertEnd;
+
+
+        fragmentSource[fragmentMainStart] = fragMainStart;
+/*
+        if(Viewer()->anaglyph || Viewer()->anaglyphB)
+            fragmentSource[fragmentMainEnd] = anaglyphGrayFragEnd;
+        else 
+*/ 
+                {
+            if (DESIRE(whichOne.base,SHADINGSTYLE_PHONG)) fragmentSource[fragmentMainEnd] = discardInFragEnd;
+            else fragmentSource[fragmentMainEnd] = fragEnd;
+            //fragmentSource[fragmentMainEnd] = discardInFragEnd;
+        }
+
+        //ConsoleMessage ("whichOne %x mask %x",whichOne,~whichOne);
+
+
+        /* specific strings for specific shader capabilities */
+
+        if DESIRE(whichOne.base,COLOUR_MATERIAL_SHADER) {
+            vertexSource[vertexSimpleColourDeclare] = vertSimColDec;
+            vertexSource[vertFrontColourDeclare] = varyingFrontColour;
+            vertexSource[vertexSimpleColourCalculation] = vertSimColUse;
+            vertexSource[vertexPointSizeDeclare] = pointSizeDeclare;
+            vertexSource[vertexPointSizeAssign] = pointSizeAss;
+            fragmentSource[fragmentSimpleColourDeclare] = varyingFrontColour;
+            fragmentSource[fragmentSimpleColourAssign] = fragSimColAss;
+        }
+
+        if DESIRE(whichOne.base,NO_APPEARANCE_SHADER) {
+            fragmentSource[fragmentSimpleColourAssign] = fragNoAppAss;
+            vertexSource[vertexPointSizeDeclare] = pointSizeDeclare;
+            vertexSource[vertexPointSizeAssign] = pointSizeAss;
+
+        }
+
+
+        /* One or TWO material no texture shaders - one material, choose between
+            Phong shading (slower) or Gouraud shading (faster). */
+
+        if (DESIRE(whichOne.base,SHADINGSTYLE_PHONG)) {
+            doThis = (DESIRE(whichOne.base,MATERIAL_APPEARANCE_SHADER)) ||
+                (DESIRE(whichOne.base,TWO_MATERIAL_APPEARANCE_SHADER));
+        } else {
+            doThis = DESIRE(whichOne.base,TWO_MATERIAL_APPEARANCE_SHADER);
+        }
+
+        if (doThis) {
+            vertexSource[vertexNormPosOutput] = varyingNormPos;
+            vertexSource[vertexNormalDeclare] = vertNormDec;
+            vertexSource[vertexNormPosCalculation] = vertNormPosCalc;
+
+            fragmentSource[fragmentLightDefines] = lightDefines0;
+            fragmentSource[fragmentOneColourDeclare] = vertOneMatDec;
+            fragmentSource[fragmentBackColourDeclare] = vertBackMatDec;
+            fragmentSource[fragmentNormPosDeclare] = varyingNormPos;
+            fragmentSource[fragmentADSLLightModel] = ADSLLightModel0;
+            fragmentSource[fragmentADSLAssign] = fragADSLAss;
+
+        }
+
+
+        /* TWO_MATERIAL_APPEARANCE_SHADER - this does not crop up
+                that often, so just use the PHONG shader. */
+        didADSLmaterial = false;
+        if((DESIRE(whichOne.base,MATERIAL_APPEARANCE_SHADER)) && (!DESIRE(whichOne.base,SHADINGSTYLE_PHONG))) {
+            vertexSource[vertexNormalDeclare] = vertNormDec;
+            vertexSource[vertexLightDefines] = lightDefines0;
+            vertexSource[vertexOneMaterialDeclare] = vertOneMatDec;
+            vertexSource[vertFrontColourDeclare] = varyingFrontColour;
+            vertexSource[vertexNormPosCalculation] = vertNormPosCalc;
+            vertexSource[vertexNormPosOutput] = vecNormPos;
+            vertexSource[vertexLightingEquation] = ADSLLightModel0;
+            vertexSource[vertexBackMaterialDeclare] = vertBackMatDec;
+            vertexSource[vertexADSLCalculation] = vertADSLCalc;
+            didADSLmaterial = true;
+            fragmentSource[fragmentOneColourDeclare] = varyingFrontColour;
+            fragmentSource[fragmentOneColourAssign] = fragFrontColAss;
+        }
+
+
+        if DESIRE(whichOne.base,HAVE_LINEPOINTS_APPEARANCE) {
+            vertexSource[vertexLightDefines] = lightDefines0;
+            vertexSource[vertFrontColourDeclare] = varyingFrontColour;
+            vertexSource[vertexOneMaterialDeclare] = vertOneMatDec;
+
+            #if defined (GL_ES_VERSION_2_0)
+        vertexSource[vertexPointSizeDeclare] = pointSizeDeclare;
+        vertexSource[vertexPointSizeAssign] = pointSizeAss;
+        #endif
+
+            vertexSource[vertexOneMaterialCalculation] = vertEmissionOnlyColourAss;
+            fragmentSource[fragmentSimpleColourDeclare] = varyingFrontColour;
+            fragmentSource[fragmentSimpleColourAssign] = fragSimColAss;
+        }
+
+
+        /* texturing - MULTI_TEX builds on ONE_TEX */
+        if (DESIRE(whichOne.base,ONE_TEX_APPEARANCE_SHADER) ||
+            DESIRE(whichOne.base,HAVE_TEXTURECOORDINATEGENERATOR) ||
+            DESIRE(whichOne.base,HAVE_CUBEMAP_TEXTURE) ||
+            DESIRE(whichOne.base,MULTI_TEX_APPEARANCE_SHADER)) {
+            vertexSource[vertexTexCoordInputDeclare] = vertTexCoordDec;
+            vertexSource[vertexTexCoordOutputDeclare] = varyingTexCoord;
+            vertexSource[vertexTextureMatrixDeclare] = vertTexMatrixDec;
+            vertexSource[vertexSingleTextureCalculation] = vertSingTexCalc;
+            if(didADSLmaterial)
+                vertexSource[vertexADSLCalculation] = vertADSLCalc0; //over-ride material diffuseColor with texture
+
+            fragmentSource[fragmentTexCoordDeclare] = varyingTexCoord;
+            fragmentSource[fragmentTex0Declare] = fragTex0Dec;
+            fragmentSource[fragmentTextureAssign] = fragSingTexAss;
+        }
+
+        /* Cubemaps - do not multi-texture these yet */
+        if (DESIRE(whichOne.base,HAVE_CUBEMAP_TEXTURE)) {
+            vertexSource[vertexSingleTextureCalculation] = vertSingTexCubeCalc;
+
+            fragmentSource[fragmentTex0Declare] = fragTex0CubeDec;
+            fragmentSource[fragmentTextureAssign] = fragSingTexCubeAss;
+        }
+
+        /* MULTI_TEX builds on ONE_TEX */
+        if DESIRE(whichOne.base,MULTI_TEX_APPEARANCE_SHADER) {
+            /* we have to do the material params, in case we need to
+                modulate/play with this. */
+
+            vertexSource[vertexOneMaterialDeclare] = vertOneMatDec;
+            vertexSource[vertexLightDefines] = lightDefines0;
+            vertexSource[vertexNormPosCalculation] = vertNormPosCalc;
+            vertexSource[vertexNormPosOutput] = vecNormPos;
+            vertexSource[vertexLightingEquation] = ADSLLightModel0;
+            vertexSource[vertexBackMaterialDeclare] = vertBackMatDec;
+
+            fragmentSource[fragmentMultiTexDefines]= fragMultiTexUniforms;
+            fragmentSource[fragmentMultiTexDeclare] = fragMultiTexDef;
+            fragmentSource[fragmentTex0Declare] = fragTex0Dec;
+            fragmentSource[fragmentMultiTexModel] = fragMulTexFunc;
+            fragmentSource[fragmentTextureAssign] = fragMulTexCalc;
+        }
+
+        /* TextureCoordinateGenerator - do calcs in Vertex, fragment like one texture */
+        if DESIRE(whichOne.base,HAVE_TEXTURECOORDINATEGENERATOR) {
+            /* the vertex single texture calculation is different from normal single texture */
+            /* pass in the type of generator, and do the calculations */
+            vertexSource[vertexTextureMatrixDeclare] = vertTexCoordGenDec;
+            vertexSource[vertexSingleTextureCalculation] = sphEnvMapCalc;
+
+            vertexSource[vertexTCGTDefines] = fragTCGTDefs;
+
+        }
+
+            if DESIRE(whichOne.base,FILL_PROPERTIES_SHADER) {
+                /* just add on top of the other shaders the fill properties "stuff" */
+
+                vertexSource[vertexHatchPositionDeclare] = varyingHatchPosition;
+                vertexSource[vertexHatchPositionCalculation] = vertHatchPosCalc;
+
+                fragmentSource[fragmentFillPropDefines] = fillPropDefines;
+                fragmentSource[fragmentHatchPositionDeclare] = varyingHatchPosition;
+                fragmentSource[fragmentFillPropModel] = fragFillPropFunc;
+                fragmentSource[fragmentFillPropAssign] = fragFillPropCalc;
+            }
+
+    } else {  // user defined shaders
+
+        if (whichOne.usershaders) { // >= USER_DEFINED_SHADER_START) {
+            int me = 0;
+            ppOpenGL_Utils p;
+            //ttglobal tg = gglobal();
+            p = (ppOpenGL_Utils)openGL_Utils_prv;
+
+            //me = (whichOne / USER_DEFINED_SHADER_START) -1;
+            me = whichOne.usershaders;
+            //ConsoleMessage ("HAVE USER DEFINED SHADER %x",whichOne);
+
+            // add the following:
+            // this has both Vertex manipulations, and lighting, etc.
+    //        #define HEADLIGHT_LIGHT (MAX_LIGHTS-1)\n
+            vertexSource[vertexMainStart] = "  \n \
+            #define HEADLIGHT_LIGHT 0\n \
+            #define ftransform() (fw_ProjectionMatrix*fw_ModelViewMatrix*fw_Vertex)\n \
+            #define gl_ModelViewProjectionMatrix (fw_ProjectionMatrix*fw_ModelViewMatrix)\n \
+            #define gl_NormalMatrix fw_NormalMatrix\n \
+            #define gl_ProjectionMatrix fw_ProjectionMatrix \n\
+            #define gl_ModelViewMatrix fw_ModelViewMatrix \n\
+            #define fw_TextureMatrix fw_TextureMatrix0 \n\
+            #define gl_TextureMatrix fw_TextureMatrix0 \n\
+            #define gl_Vertex fw_Vertex \n \
+            #define gl_Normal fw_Normal\n \
+            #define gl_Texture_unit0 fw_Texture_unit0\n \
+            #define gl_MultiTexCoord0 fw_MultiTexCoord0\n \
+            #define gl_Texture_unit1 fw_Texture_unit1\n \
+            #define gl_MultiTexCoord1 fw_MultiTexCoord1\n \
+            #define gl_Texture_unit2 fw_Texture_unit2\n \
+            #define gl_MultiTexCoord2 fw_MultiTexCoord2\n \
+            #define gl_LightSource fw_LightSource\n ";
+
+        // copy over the same defines, but for the fragment shader.
+        // Some GLSL compilers will complain about the "fttransform()"
+        // definition if defined in a Fragment shader, so we judiciously
+        // copy over things that are fragment-only.
+
+        //    #define HEADLIGHT_LIGHT (MAX_LIGHTS-1)\n
+            fragmentSource[fragmentMainStart] = " \
+            #define HEADLIGHT_LIGHT 0\n \
+            #define gl_NormalMatrix fw_NormalMatrix\n \
+            #define gl_Normal fw_Normal\n \
+            #define gl_LightSource fw_LightSource\n ";
+
+
+
+
+            vertexSource[vertexLightDefines] = lightDefines0;
+            vertexSource[vertexSimpleColourDeclare] = vertSimColDec;
+            vertexSource[vertFrontColourDeclare] = varyingFrontColour;
+
+
+
+            vertexSource[vertexNormalDeclare] = vertNormDec;
+            fragmentSource[fragmentLightDefines] = lightDefines0;
+            //ConsoleMessage ("sources here for %d are %p and %p", me, p->userDefinedVertexShader[me], p->userDefinedFragmentShader[me]);
+
+            if ((p->userDefinedVertexShader[me] == NULL) || (p->userDefinedFragmentShader[me]==NULL)) {
+                ConsoleMessage ("no Shader Source found for user defined shaders...");
+                return false;
+
+            }
+            fragmentSource[fragmentUserDefinedInput] = p->userDefinedFragmentShader[me];
+            vertexSource[vertexUserDefinedInput] = p->userDefinedVertexShader[me];
+
+        }
+    }
+
+//#define VERBOSE 1
+    #ifdef VERBOSE
+    /* print out the vertex source here */
+        {
+            vertexShaderResources_t x1;
+            fragmentShaderResources_t x2;
+            int i;
+
+            ConsoleMessage ("Vertex source:\n");
+            for (x1=vertexGLSLVersion; x1<vertexEndMarker; x1++) {
+                if (strlen(vertexSource[x1])>0)
+                    ConsoleMessage("%s",vertexSource[x1]);
+            }
+            ConsoleMessage("Fragment Source:\n");
+            i=0;
+            for (x2=fragmentGLSLVersion; x2<fragmentEndMarker; x2++) {
+                if (strlen(fragmentSource[x2])>0)
+                    ConsoleMessage("%s",fragmentSource[x2]);
+            }
+        }
+    #endif //VERBOSE
+//#undef VERBOSE
+    return TRUE;
+}
+#undef VERBOSE
+
+const char *getGenericFragment(){
+        return genericFragmentGLES2; //genericFragmentDesktop;
+}
+
+void AddVersion( int EffectPartType, int versionNumber, char **CompleteCode){
+    //puts #version <number> at top of shader, first line
+    char Code[SBUFSIZE], line[1000];
+    char *found;
+    int err;
+
+    UNUSED(err);
+
+    if (!CompleteCode[EffectPartType]) return;
+    err = fw_strcpy_s(Code, SBUFSIZE, CompleteCode[EffectPartType]);
+
+    found = Code;
+    if (found) {
+        sprintf(line, "#version %d \n", versionNumber);
+        insertBefore(found, line, Code, SBUFSIZE);
+        FREE_IF_NZ(CompleteCode[EffectPartType]);
+        CompleteCode[EffectPartType] = strdup(Code);
+    }
+}
+
+void AddDefine0( int EffectPartType, const char *defineName, int defineValue, char **CompleteCode)
+{
+    //same as AddDEfine but you can say a number other than 1
+    char Code[SBUFSIZE], line[1000];
+    char *found;
+    int err;
+
+    UNUSED(err);
+
+    if(!CompleteCode[EffectPartType]) return;
+    err = fw_strcpy_s(Code,SBUFSIZE, CompleteCode[EffectPartType]);
+
+    found = strstr(Code,"/* DEFINE"); 
+    if(found){
+        sprintf(line,"#define %s %d \n",defineName,defineValue);
+        insertBefore(found,line,Code,SBUFSIZE);
+        FREE_IF_NZ(CompleteCode[EffectPartType]);
+        CompleteCode[EffectPartType] = strdup(Code);
+    }
+} 
+
+void AddDefine( int EffectPartType, const char *defineName, char **CompleteCode){
+    //adds #define <defineName> 1 to shader part, just above "/* DEFINES */" line in ShaderPart
+    // char *CompleteCode[3] has char *vs *gs *fs parts, and will be realloced inside
+    AddDefine0(EffectPartType,defineName,1,CompleteCode);
+}
+
+Stack *getEffectStack();
+void EnableEffects( char **CompletedCode, int *unique_int){
+    int i;
+    Stack *effect_stack;
+    effect_stack = getEffectStack();
+    for(i=0;i<vectorSize(effect_stack);i++){
+        Node *node = vector_get(Node*,effect_stack,i);
+        if(node->getType() == KAMBI_EFFECT){
+            EnableEffect(node,CompletedCode,unique_int);
+        }
+    }
+}
+
+static const GLchar *plug_fragment_end_anaglyph =    "\
+void PLUG_fragment_end (inout vec4 finalFrag){ \n\
+    float gray = dot(finalFrag.rgb, vec3(0.299, 0.587, 0.114)); \n\
+    finalFrag = vec4(gray,gray,gray, finalFrag.a); \n\
+}\n";
+
+int getSpecificShaderSourceCastlePlugs (const GLchar **vertexSource, const GLchar **fragmentSource, shaderflagsstruct whichOne) 
+{
+    //for building the Builtin (similar to fixed-function pipeline, except from shader parts)
+    //in OpenGL_Utils.c L.2553 set usingCastlePlugs = 1 to get in here.
+    //whichone - a bitmask of shader requirements, one bit for each requirement, so shader permutation can be built
+
+    int retval, unique_int;
+    char *CompleteCode[3];
+    char *vs, *fs;
+    retval = FALSE;
+    if(whichOne.usershaders ) //& USER_DEFINED_SHADER_MASK) 
+        return retval; //not supported yet as of Aug 9, 2016
+    retval = TRUE;
+
+    //generic
+    vs = strdup(getGenericVertex());
+    fs = strdup(getGenericFragment());
+        
+    CompleteCode[SHADERPART_VERTEX] = vs;
+    CompleteCode[SHADERPART_GEOMETRY] = NULL;
+    CompleteCode[SHADERPART_FRAGMENT] = fs;
+
+    // what we really have here: UberShader with CastlePlugs
+    // UberShader: one giant shader peppered with #ifdefs, and you add #defines at the top for permutations
+    // CastlePlugs: allows users to add effects on to uberShader with PLUGs
+    // - and internally, we can do a few permutations with PLUGs too
+
+    if(isMobile){
+        AddVersion(SHADERPART_VERTEX, 100, CompleteCode); //lower precision floats
+        AddVersion(SHADERPART_FRAGMENT, 100, CompleteCode); //lower precision floats
+        AddDefine(SHADERPART_FRAGMENT,"MOBILE",CompleteCode); //lower precision floats
+    }else{
+        //desktop, emulating GLES2
+        AddVersion(SHADERPART_VERTEX, 110, CompleteCode); //lower precision floats
+        AddVersion(SHADERPART_FRAGMENT, 110, CompleteCode); //lower precision floats
+    }
+
+    unique_int = 0; //helps generate method name PLUG_xxx_<unique_int> to avoid clash when multiple PLUGs supplied for same PLUG point
+    //Add in:
+    //Lit
+    //Fog
+    //analglyph
+    if(DESIRE(whichOne.base,WANT_ANAGLYPH))
+        Plug(SHADERPART_FRAGMENT,plug_fragment_end_anaglyph,CompleteCode,&unique_int);  //works, converts frag to gray
+    //color per vertex
+    if DESIRE(whichOne.base,COLOUR_MATERIAL_SHADER) {
+        AddDefine(SHADERPART_VERTEX,"CPV",CompleteCode);
+        AddDefine(SHADERPART_FRAGMENT,"CPV",CompleteCode);
+        if(DESIRE(whichOne.base,CPV_REPLACE_PRIOR)){
+            AddDefine(SHADERPART_VERTEX,"CPVREP",CompleteCode);
+            AddDefine(SHADERPART_FRAGMENT,"CPVREP",CompleteCode);
+        }
+    }
+    //material appearance
+    //2 material appearance
+    //phong vs gourard
+    if(DESIRE(whichOne.base,MATERIAL_APPEARANCE_SHADER) || DESIRE(whichOne.base,TWO_MATERIAL_APPEARANCE_SHADER)){
+        //if(isLit)
+        if(DESIRE(whichOne.base,MAT_FIRST)){
+            //strict table 17-3 with no other modulation means Texture > CPV > mat.diffuse > (111)
+            AddDefine(SHADERPART_VERTEX,"MATFIR",CompleteCode);
+            AddDefine(SHADERPART_FRAGMENT,"MATFIR",CompleteCode);
+        }
+        if(DESIRE(whichOne.base,SHADINGSTYLE_PHONG) && !DESIRE(whichOne.base,HAVE_LINEPOINTS_COLOR)){
+            //when we say phong in freewrl, we really mean per-fragment lighting
+            AddDefine(SHADERPART_FRAGMENT,"LIT",CompleteCode);
+            AddDefine(SHADERPART_FRAGMENT,"LITE",CompleteCode);  //add some lights
+            Plug(SHADERPART_FRAGMENT,plug_vertex_lighting_ADSLightModel,CompleteCode,&unique_int); //use lights
+
+            if(DESIRE(whichOne.base,TWO_MATERIAL_APPEARANCE_SHADER))
+                AddDefine(SHADERPART_FRAGMENT,"TWO",CompleteCode);
+            //but even if we mean per-fragment, for another dot product per fragment we can upgrade
+            //from blinn-phong to phong and get the real phong reflection model 
+            //(although dug9 can't tell the difference):
+            AddDefine(SHADERPART_FRAGMENT,"PHONG",CompleteCode);
+        }else{
+            AddDefine(SHADERPART_VERTEX,"LIT",CompleteCode);
+            AddDefine(SHADERPART_FRAGMENT,"LIT",CompleteCode);
+            //lines and points 
+            if( DESIRE(whichOne.base,HAVE_LINEPOINTS_COLOR) ) {
+                AddDefine(SHADERPART_VERTEX,"LINE",CompleteCode);
+            }else{
+                AddDefine(SHADERPART_VERTEX,"LITE",CompleteCode);  //add some lights
+                Plug(SHADERPART_VERTEX,plug_vertex_lighting_ADSLightModel,CompleteCode,&unique_int); //use lights
+                if(DESIRE(whichOne.base,TWO_MATERIAL_APPEARANCE_SHADER))
+                    AddDefine(SHADERPART_VERTEX,"TWO",CompleteCode);
+            }
+        }
+    }
+    //textureCoordinategen
+    //cubemap texure
+    //one tex appearance
+    //multi tex appearance
+    //cubemap tex
+    /*    http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/lighting.html#Lightingon
+        "The Material's transparency field modulates the alpha in the texture. Hence, 
+        a transparency of 0 will result in an alpha equal to that of the texture. 
+        A transparency of 1 will result in an alpha of 0 regardless of the value in the texture."
+        That doesn't seem to me to be what browsers Octaga, InstantReality, or Cortona are doing, 
+        and its not what table 17-3 and the Lighting equation say is happening. 
+        In the table, alpha is never 'modulated' ie there's never an alpha= AT * (1-TM) term.
+        - freewrl version 3 and vivaty do modulate.
+        I've put a define to set if you don't want modulation ie table 17-3.
+        If you do want to modulate ie the above quote "to modulate", comment out the define
+        I put a mantis issue to web3d.org for clarification Aug 16, 2016
+    */
+
+    if(DESIRE(whichOne.base,HAVE_UNLIT_COLOR)){
+        AddDefine(SHADERPART_VERTEX,"UNLIT",CompleteCode);
+        AddDefine(SHADERPART_FRAGMENT,"UNLIT",CompleteCode);
+    }
+    if (DESIRE(whichOne.base,ONE_TEX_APPEARANCE_SHADER) ||
+        DESIRE(whichOne.base,HAVE_TEXTURECOORDINATEGENERATOR) ||
+        DESIRE(whichOne.base,HAVE_CUBEMAP_TEXTURE) ||
+        DESIRE(whichOne.base,MULTI_TEX_APPEARANCE_SHADER)) {
+        AddDefine(SHADERPART_VERTEX,"TEX",CompleteCode);
+        AddDefine(SHADERPART_FRAGMENT,"TEX",CompleteCode);
+        if(DESIRE(whichOne.base,HAVE_TEXTURECOORDINATEGENERATOR) )
+            AddDefine(SHADERPART_VERTEX,"TGEN",CompleteCode);
+        if(DESIRE(whichOne.base,TEX3D_SHADER)){
+            //in theory, if the texcoordgen "COORD" and TextureTransform3D are set in scenefile 
+            // and working properly in freewrl, then don't need TEX3D for that node in VERTEX shader
+            // which is using tex3dbbox (shape->_extent reworked) to get vertex coords in 0-1 range
+            // x Sept 4, 2016 either TextureTransform3D or CoordinateGenerator "COORD" isn't working right for Texture3D
+            // so we're using the bbox method
+            //vertex str texture coords computed same for both volume and layered tex3d
+            AddDefine(SHADERPART_VERTEX,"TEX3D",CompleteCode); 
+            AddDefine(SHADERPART_FRAGMENT,"TEX3D",CompleteCode); 
+            //fragment part different:
+            if(DESIRE(whichOne.base,TEX3D_LAYER_SHADER)){
+                //up to 6 textures, with lerp between floor,ceil textures
+                AddDefine(SHADERPART_FRAGMENT,"TEX3DLAY",CompleteCode);
+                Plug(SHADERPART_FRAGMENT,plug_fragment_texture3Dlayer_apply,CompleteCode,&unique_int);
+            }else{
+                //TEX3D_VOLUME_SHADER
+                //AddDefine(SHADERPART_FRAGMENT,"TEX3D",CompleteCode);
+                Plug(SHADERPART_FRAGMENT,plug_fragment_texture3D_apply_volume,CompleteCode,&unique_int);
+            }
+        }else{
+            if(DESIRE(whichOne.base,HAVE_CUBEMAP_TEXTURE)){
+                AddDefine(SHADERPART_VERTEX,"CUB",CompleteCode);
+                AddDefine(SHADERPART_FRAGMENT,"CUB",CompleteCode);
+            } else if(DESIRE(whichOne.base,MULTI_TEX_APPEARANCE_SHADER)){
+                AddDefine(SHADERPART_VERTEX,"MTEX",CompleteCode);
+                AddDefine(SHADERPART_FRAGMENT,"MTEX",CompleteCode);
+            }
+            if(DESIRE(whichOne.base,TEXTURE_REPLACE_PRIOR) )
+                AddDefine(SHADERPART_FRAGMENT,"TEXREP",CompleteCode);
+            if(DESIRE(whichOne.base,TEXALPHA_REPLACE_PRIOR))
+                AddDefine(SHADERPART_VERTEX,"TAREP",CompleteCode);
+
+            Plug(SHADERPART_FRAGMENT,plug_fragment_texture_apply,CompleteCode,&unique_int);
+
+            //if(texture has alpha ie channels == 2 or 4) then vertex diffuse = 111 and fragment diffuse*=texture
+            //H: we currently assume image alpha, and maybe fill the alpha channel with (1-material.transparency)?
+            //AddDefine(SHADERPART_VERTEX,"TAT",CompleteCode);
+            //AddDefine(SHADERPART_FRAGMENT,"TAT",CompleteCode);
+        }
+    }
+
+    //fill properties / hatching
+    if(DESIRE(whichOne.base,FILL_PROPERTIES_SHADER)) {
+        AddDefine(SHADERPART_VERTEX,"FILL",CompleteCode);        
+        AddDefine(SHADERPART_FRAGMENT,"FILL",CompleteCode);        
+    }
+    //FOG
+    if(DESIRE(whichOne.base,FOG_APPEARANCE_SHADER)){
+        AddDefine(SHADERPART_VERTEX,"FOG",CompleteCode);        
+        AddDefine(SHADERPART_FRAGMENT,"FOG",CompleteCode);    
+        if(DESIRE(whichOne.base,HAVE_FOG_COORDS))
+            AddDefine(SHADERPART_VERTEX,"FOGCOORD",CompleteCode);
+        Plug(SHADERPART_FRAGMENT,plug_fog_apply,CompleteCode,&unique_int);    
+    }
+    //CLIPPLANE
+    //FOG
+    if(DESIRE(whichOne.base,CLIPPLANE_SHADER)){
+        AddDefine(SHADERPART_VERTEX,"CLIP",CompleteCode);    
+        Plug(SHADERPART_VERTEX,vertex_plug_clip_apply,CompleteCode,&unique_int);    
+        AddDefine(SHADERPART_FRAGMENT,"CLIP",CompleteCode);    
+        Plug(SHADERPART_FRAGMENT,frag_plug_clip_apply,CompleteCode,&unique_int);    
+    }
+    if(DESIRE(whichOne.base,PARTICLE_SHADER)){
+        AddDefine(SHADERPART_VERTEX,"PARTICLE",CompleteCode);
+    }
+    //EFFECTS - castle game engine effect nodes X3D_Effect with plugs applied here
+    EnableEffects(CompleteCode,&unique_int);
+
+    // stripUnusedDefines(CompleteCode);
+    // http://freecode.com/projects/unifdef/  example: unifdef -UTEX -UGMTEX shader.vs > out.vs will strip the TEX and MTEX sections out
+    // or hack something like https://github.com/evanplaice/pypreprocessor 
+    // dug9 hacked py3 for shader pre-processing: http://dug9.users.sourceforge.net/web3d/tests/largetexture/preprocessor_dug9_3T.py
+
+    *fragmentSource = CompleteCode[SHADERPART_FRAGMENT]; //original_fragment; //fs;
+    *vertexSource = CompleteCode[SHADERPART_VERTEX]; //original_vertex; //vs;
+    if(0){
+        //write out ubershader text to files (for preprocessing and analysis)
+        static int n = 0;
+        char filenamestr[100];
+        n++;
+        sprintf(filenamestr,"shader_vertex_%d.txt",n);
+        FILE* fp = fopen(filenamestr,"w+");
+        fwrite(*vertexSource,strlen(*vertexSource)+1,1,fp);
+        fclose(fp);
+        sprintf(filenamestr,"shader_frag_%d.txt",n);
+        fp = fopen(filenamestr,"w+");
+        fwrite(*fragmentSource,strlen(*fragmentSource)+1,1,fp);
+        fclose(fp);
+    }
+    return retval;
+}
+
+int getSpecificShaderSourceVolume (const GLchar **vertexSource, const GLchar **fragmentSource, shaderflagsstruct whichOne) 
+{
+    //for building the Builtin (similar to fixed-function pipeline, except from shader parts)
+    //in OpenGL_Utils.c L.2553 set usingCastlePlugs = 1 to get in here.
+    //whichone - a bitmask of shader requirements, one bit for each requirement, so shader permutation can be built
+
+    int retval, unique_int;
+    unsigned int volflags;
+    unsigned char volflag[7];
+    int kflags,i,k;
+    char *CompleteCode[3];
+    char *vs, *fs;
+    retval = FALSE;
+    if(whichOne.usershaders ) //& USER_DEFINED_SHADER_MASK) 
+        return retval; //not supported yet as of Aug 9, 2016
+    retval = TRUE;
+
+    //generic
+    vs = strdup(getVolumeVertex());
+    fs = strdup(getVolumeFragment());
+        
+    CompleteCode[SHADERPART_VERTEX] = vs;
+    CompleteCode[SHADERPART_GEOMETRY] = NULL;
+    if(whichOne.volume == SHADERFLAGS_VOLUME_STYLE_BLENDED << 4){
+        CompleteCode[SHADERPART_FRAGMENT] = STRDUP(volumeBlendedFragmentGLES2);
+
+    }else{
+        CompleteCode[SHADERPART_FRAGMENT] = fs;
+    }
+
+    // what we really have here: UberShader with CastlePlugs
+    // UberShader: one giant shader peppered with #ifdefs, and you add #defines at the top for permutations
+    // CastlePlugs: allows users to add effects on to uberShader with PLUGs
+    // - and internally, we can do a few permutations with PLUGs too
+
+    if(isMobile){
+        AddVersion(SHADERPART_VERTEX, 100, CompleteCode); //lower precision floats
+        AddVersion(SHADERPART_FRAGMENT, 100, CompleteCode); //lower precision floats
+        AddDefine(SHADERPART_FRAGMENT,"MOBILE",CompleteCode); //lower precision floats
+    }else{
+        //desktop, emulating GLES2
+        AddVersion(SHADERPART_VERTEX, 110, CompleteCode); //lower precision floats
+        AddVersion(SHADERPART_FRAGMENT, 110, CompleteCode); //lower precision floats
+    }
+
+    if(whichOne.volume == SHADERFLAGS_VOLUME_STYLE_BLENDED << 4){
+        *fragmentSource = CompleteCode[SHADERPART_FRAGMENT]; //original_fragment; //fs;
+        *vertexSource = CompleteCode[SHADERPART_VERTEX]; //original_vertex; //vs;
+        return retval;
+    }
+
+    unique_int = 0; //helps generate method name PLUG_xxx_<unique_int> to avoid clash when multiple PLUGs supplied for same PLUG 
+
+    //if(DESIRE(whichOne.volume,TEX3D_SHADER)){
+    AddDefine(SHADERPART_FRAGMENT,"TEX3D",CompleteCode); 
+    Plug(SHADERPART_FRAGMENT,plug_fragment_texture3D_apply_volume,CompleteCode,&unique_int); //uses TILED
+    //}
+
+    if(DESIRE(whichOne.volume,SHADERFLAGS_VOLUME_DATA_BASIC)){
+        AddDefine(SHADERPART_FRAGMENT,"BASIC",CompleteCode); 
+    }
+    if(DESIRE(whichOne.volume,SHADERFLAGS_VOLUME_DATA_ISO)){
+        AddDefine(SHADERPART_FRAGMENT,"ISO",CompleteCode); 
+        if(DESIRE(whichOne.volume,SHADERFLAGS_VOLUME_DATA_ISO_MODE3)){
+            AddDefine(SHADERPART_FRAGMENT,"ISO_MODE3",CompleteCode); 
+        }
+    }
+    if(DESIRE(whichOne.volume,SHADERFLAGS_VOLUME_DATA_SEGMENT)){
+        AddDefine(SHADERPART_FRAGMENT,"SEGMENT",CompleteCode); 
+    }
+    if(DESIRE(whichOne.base,CLIPPLANE_SHADER)){
+        AddDefine(SHADERPART_FRAGMENT,"CLIP",CompleteCode);    
+        // we use a special function in frag for clip for volume
+    }
+
+    //unsigned int 32 bits - 4 for basic, leaves 28/4 = max 7 styles
+    //work from left to right (the order declared), skip any 0/null/empties
+    volflags = whichOne.volume;
+    // this was just here, but is defined above. volflag[7];
+    kflags = 0;
+    for(i=0;i<7;i++){
+        int iflag = (volflags >> (7-i)*4) & 0xF;
+        if(iflag){
+            volflag[kflags] = iflag;
+            kflags++;
+        }
+    }
+    //now volflag[] is in the order declared with no 0s/nulls 
+    for(k=0;k<kflags;k++){
+        switch(volflag[k]){
+        case SHADERFLAGS_VOLUME_STYLE_DEFAULT:
+            AddDefine(SHADERPART_FRAGMENT,"DEFAULT",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_DEFAULT,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_OPACITY:
+            AddDefine(SHADERPART_FRAGMENT,"OPACITY",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_OPACITY,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_BLENDED:
+            AddDefine(SHADERPART_FRAGMENT,"BLENDED",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_BLENDED,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_BOUNDARY:
+            AddDefine(SHADERPART_FRAGMENT,"BOUNDARY",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_BOUNDARY,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_CARTOON:
+            AddDefine(SHADERPART_FRAGMENT,"CARTOON",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_CARTOON,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_COMPOSED:
+            AddDefine(SHADERPART_FRAGMENT,"COMPOSED",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_COMPOSED,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_EDGE:
+            AddDefine(SHADERPART_FRAGMENT,"EDGE",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_EDGE,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_PROJECTION:
+            AddDefine(SHADERPART_FRAGMENT,"PROJECTION",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_PROJECTION,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_SHADED:
+            AddDefine(SHADERPART_FRAGMENT,"SHADED",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_SHADED,CompleteCode,&unique_int);
+            //if you want a plug within a plug, then if you include the higher level
+            // plug first, then the lower level plug should find its tartget in the CompleteCode
+            AddDefine(SHADERPART_FRAGMENT,"LIT",CompleteCode); 
+            AddDefine(SHADERPART_FRAGMENT,"LITE",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_vertex_lighting_ADSLightModel,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_SILHOUETTE:
+            AddDefine(SHADERPART_FRAGMENT,"SILHOUETTE",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_SILHOUETTE,CompleteCode,&unique_int);
+            break;
+        case SHADERFLAGS_VOLUME_STYLE_TONE:
+            AddDefine(SHADERPART_FRAGMENT,"TONE",CompleteCode); 
+            Plug(SHADERPART_FRAGMENT,plug_voxel_TONE,CompleteCode,&unique_int);
+            break;
+        default:
+            //if 0, just skip
+            break;
+        }
+    }
+
+
+    //shader doesn't compile?
+    //in visual studio, this is a good place to get the composed shader source, then paste into
+    // an editor that has line numbers, to get to the ERROR line
+    *fragmentSource = CompleteCode[SHADERPART_FRAGMENT]; //original_fragment; //fs;
+    *vertexSource = CompleteCode[SHADERPART_VERTEX]; //original_vertex; //vs;
+    return retval;
+
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< END MIT, VOLUME RENDERING
+
+static int getSpecificShaderSource (const GLchar *vertexSource[vertexEndMarker], const GLchar *fragmentSource[fragmentEndMarker], 
+    shaderflagsstruct whichOne) {
+    int iret, userDefined, usingCastlePlugs = 1;
+    userDefined = whichOne.usershaders ? TRUE : FALSE;
+
+    if(usingCastlePlugs && !userDefined) { // && !DESIRE(whichOne,SHADINGSTYLE_PHONG)) {
+        //new Aug 2016 castle plugs
+        if(whichOne.volume)
+            iret = getSpecificShaderSourceVolume(vertexSource, fragmentSource, whichOne);
+        else
+            iret = getSpecificShaderSourceCastlePlugs(vertexSource, fragmentSource, whichOne);
+    }else{
+        iret = getSpecificShaderSourceOriginal(vertexSource, fragmentSource, whichOne);
+    }
+    return iret;
+}
+
+static void getShaderCommonInterfaces (s_shader_capabilities_t *me) {
+    GLuint myProg = me->myShaderProgram;
+    int i;
+
+
+    #ifdef SHADERVERBOSE
+    {
+    GLsizei count;
+    GLuint shaders[10];
+    GLint  xxx[10];
+    int i;
+    GLchar sl[3000];
+
+
+    printf ("getShaderCommonInterfaces, I am program %d\n",myProg);
+
+    if (glIsProgram(myProg)) 
+        printf ("getShaderCommonInterfaces, %d is a program\n",myProg); 
+    else 
+        printf ("hmmm - it is not a program!\n");
+    glGetAttachedShaders(myProg,10,&count,shaders);
+    printf ("got %d attached shaders, they are: \n",count);
+    for (i=0; i<count; i++) {
+        GLsizei len;
+
+        printf ("%d\n",shaders[i]);
+        glGetShaderSource(shaders[i],3000,&len,sl);
+        printf ("len %d\n",len);
+        printf ("sl: %s\n",sl);
+    }
+    glGetProgramiv(myProg,GL_INFO_LOG_LENGTH, xxx); printf ("GL_INFO_LOG_LENGTH_STATUS %d\n",xxx[0]);
+    glGetProgramiv(myProg,GL_LINK_STATUS, xxx); printf ("GL_LINK_STATUS %d\n",xxx[0]);
+    glGetProgramiv(myProg,GL_VALIDATE_STATUS, xxx); printf ("GL_VALIDATE_STATUS %d\n",xxx[0]);
+    glGetProgramiv(myProg,GL_ACTIVE_ATTRIBUTES, xxx); printf ("GL_ACTIVE_ATTRIBUTES %d\n",xxx[0]);
+    glGetProgramiv(myProg,GL_ACTIVE_UNIFORMS, xxx); printf ("GL_ACTIVE_UNIFORMS %d\n",xxx[0]);
+
+    glGetProgramiv(myProg,GL_INFO_LOG_LENGTH, xxx);
+    if (xxx[0] != 0) {
+        #define MAX_INFO_LOG_SIZE 512
+        GLchar infoLog[MAX_INFO_LOG_SIZE];
+        glGetProgramInfoLog(myProg, MAX_INFO_LOG_SIZE, NULL, infoLog);
+        printf ("log: %s\n",infoLog);
+    }
+    }
+    #endif /* DEBUG */
+
+
+    me->myMaterialEmission = GET_UNIFORM(myProg,"fw_FrontMaterial.emission");
+    me->myMaterialDiffuse = GET_UNIFORM(myProg,"fw_FrontMaterial.diffuse");
+    me->myMaterialShininess = GET_UNIFORM(myProg,"fw_FrontMaterial.shininess");
+    me->myMaterialAmbient = GET_UNIFORM(myProg,"fw_FrontMaterial.ambient");
+    me->myMaterialSpecular = GET_UNIFORM(myProg,"fw_FrontMaterial.specular");
+
+    me->myMaterialBackEmission = GET_UNIFORM(myProg,"fw_BackMaterial.emission");
+    me->myMaterialBackDiffuse = GET_UNIFORM(myProg,"fw_BackMaterial.diffuse");
+    me->myMaterialBackShininess = GET_UNIFORM(myProg,"fw_BackMaterial.shininess");
+    me->myMaterialBackAmbient = GET_UNIFORM(myProg,"fw_BackMaterial.ambient");
+    me->myMaterialBackSpecular = GET_UNIFORM(myProg,"fw_BackMaterial.specular");
+
+    //me->lightState = GET_UNIFORM(myProg,"lightState");
+    //me->lightType = GET_UNIFORM(myProg,"lightType");
+    //me->lightRadius = GET_UNIFORM(myProg,"lightRadius");
+    //me->lightcount = GET_UNIFORM(myProg,"lightcount");
+
+    /* get lights in a more normal OpenGL GLSL format */
+
+    /*
+        struct gl_LightSourceParameters
+        {
+        vec4 ambient;              // Aclarri
+        vec4 diffuse;              // Dcli
+        vec4 specular;             // Scli
+        vec4 position;             // Ppli
+        vec4 halfVector;           // Derived: Hi
+        vec4 spotDirection;        // Sdli
+        float spotExponent;        // Srli
+        float spotCutoff;          // Crli
+        float spotCosCutoff;       // Derived: cos(Crli)
+        vec3 Attenuations (const,lin,quad)
+        //float constantAttenuation; // K0
+        //float linearAttenuation;   // K1
+        //float quadraticAttenuation;// K2
+        float lightRadius;
+        int lightType;
+        };
+
+
+        uniform gl_LightSourceParameters gl_LightSource[gl_MaxLights];
+    */
+    {
+        //using lighsource arrays - see shader
+        char uniformName[100];
+        me->haveLightInShader = false;
+#ifdef USING_SHADER_LIGHT_ARRAY_METHOD
+        //char* sndx;
+        for (i = 0; i<MAX_LIGHTS; i++) {
+            char* sndx;
+            /* go through and modify the array for each variable */
+            strcpy(uniformName, "lightambient[0]");
+            sndx = strstr(uniformName, "["); 
+            sndx[1] = '0' + i;
+            me->lightAmbient[i] = GET_UNIFORM(myProg, uniformName);
+
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightAmbient[i]);
+
+            strcpy(uniformName, "lightdiffuse[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightDiffuse[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightDiffuse[i]);
+
+
+            strcpy(uniformName, "lightspecular[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightSpecular[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpecular[i]);
+
+
+            strcpy(uniformName, "lightposition[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightPosition[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightPosition[i]);
+
+
+            // flag used to determine if we have to send light position info to this shader
+            if (me->lightPosition[i] != -1) me->haveLightInShader = true;
+
+            strcpy(uniformName, "lightspotDirection[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightSpotDir[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpotDir[i]);
+
+
+            strcpy(uniformName, "lightspotExponent[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightSpotBeamWidth[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpotBeamWidth[i]);
+
+
+            strcpy(uniformName, "lightspotCutoff[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightSpotCutoffAngle[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpotCutoffAngle[i]);
+
+
+            strcpy(uniformName, "lightAttenuations[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightAtten[i] = GET_UNIFORM(myProg, uniformName);
+
+            strcpy(uniformName, "lightRadius[0]");
+            sndx = strstr(uniformName, "[");
+            sndx[1] = '0' + i;
+            me->lightRadius[i] = GET_UNIFORM(myProg, uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightQuadAtten[i]);
+
+        }
+
+#else //USING_SHADER_LIGHT_ARRAY_METHOD
+/*
+        strcpy(uniformName,"fw_LightSource[0].");
+        for (i=0; i<MAX_LIGHTS; i++) {
+            /* go through and modify the array for each variable */
+            uniformName[15] = '0' + i;
+
+            strcpy(&uniformName[18],"ambient");
+/*
+            //ConsoleMessage ("have uniform name request :%s:",uniformName);
+            me->lightAmbient[i] = GET_UNIFORM(myProg,uniformName);
+
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightAmbient[i]);
+
+            strcpy(&uniformName[18],"diffuse");
+            me->lightDiffuse[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightDiffuse[i]);
+
+
+            strcpy(&uniformName[18],"specular");
+            me->lightSpecular[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpecular[i]);
+
+
+            strcpy(&uniformName[18],"position");
+            me->lightPosition[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightPosition[i]);
+
+
+            // flag used to determine if we have to send light position info to this shader
+            if (me->lightPosition[i] != -1) me->haveLightInShader = true;
+
+            strcpy(&uniformName[18],"spotDirection");
+            me->lightSpotDir[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpotDir[i]);
+
+
+            //strcpy(&uniformName[18],"spotExponent");
+            strcpy(&uniformName[18],"spotBeamWidth");
+            me->lightSpotBeamWidth[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpotBeamWidth[i]);
+
+
+            strcpy(&uniformName[18],"spotCutoff");
+            me->lightSpotCutoffAngle[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightSpotCutoffAngle[i]);
+
+
+            strcpy(&uniformName[18],"Attenuations");
+            me->lightAtten[i] = GET_UNIFORM(myProg,uniformName);
+
+        //strcpy(&uniformName[18],"constantAttenuation");
+            //me->lightConstAtten[i] = GET_UNIFORM(myProg,uniformName);
+            ////ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightConstAtten[i]);
+            //
+
+            //strcpy(&uniformName[18],"linearAttenuation");
+            //me->lightLinAtten[i] = GET_UNIFORM(myProg,uniformName);
+            ////ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightLinAtten[i]);
+            //
+
+            //strcpy(&uniformName[18],"quadraticAttenuation");
+            //me->lightQuadAtten[i] = GET_UNIFORM(myProg,uniformName);
+            ////ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightQuadAtten[i]);
+
+            strcpy(&uniformName[18],"lightRadius");
+            me->lightRadius[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightQuadAtten[i]);
+
+            //strcpy(&uniformName[18],"lightType");
+            //me->lightType[i] = GET_UNIFORM(myProg,uniformName);
+            //ConsoleMessage ("light Uniform test for %d is %s, %d",i,uniformName,me->lightQuadAtten[i]);
+        }
+*/
+#endif // USING_SHADER_LIGHT_ARRAY_METHOD
+//        strcpy(uniformName,"lightType[0]");
+//        for (i = 0; i < MAX_LIGHTS; i++) {
+//            /* go through and modify the array for each variable */
+//            uniformName[10] = '0' + i;
+//            me->lightType[i] = GET_UNIFORM(myProg, uniformName);
+//        }
+    }
+
+    //if (me->haveLightInShader) ConsoleMessage ("this shader HAS lightfields");
+
+    me->ModelViewMatrix = GET_UNIFORM(myProg,"fw_ModelViewMatrix");
+    me->ProjectionMatrix = GET_UNIFORM(myProg,"fw_ProjectionMatrix");
+    me->NormalMatrix = GET_UNIFORM(myProg,"fw_NormalMatrix");
+    me->ModelViewInverseMatrix = GET_UNIFORM(myProg,"fw_ModelViewInverseMatrix");
+    //for (i=0; i<MAX_MULTITEXTURE; i++) {
+    me->TextureMatrix[0] = GET_UNIFORM(myProg,"fw_TextureMatrix0");
+    me->TextureMatrix[1] = GET_UNIFORM(myProg,"fw_TextureMatrix1");
+    me->TextureMatrix[2] = GET_UNIFORM(myProg,"fw_TextureMatrix2");
+    me->TextureMatrix[3] = GET_UNIFORM(myProg,"fw_TextureMatrix3");
+
+    me->Vertices = GET_ATTRIB(myProg,"fw_Vertex");
+
+    me->Normals = GET_ATTRIB(myProg,"fw_Normal");
+    me->Colours = GET_ATTRIB(myProg,"fw_Color");
+    me->FogCoords = GET_ATTRIB(myProg,"fw_FogCoords");
+
+
+    //for (i=0; i<MAX_MULTITEXTURE; i++) {
+    me->TexCoords[0] = GET_ATTRIB(myProg,"fw_MultiTexCoord0");
+    me->TexCoords[1] = GET_ATTRIB(myProg,"fw_MultiTexCoord1");
+    me->TexCoords[2] = GET_ATTRIB(myProg,"fw_MultiTexCoord2");
+    me->TexCoords[3] = GET_ATTRIB(myProg,"fw_MultiTexCoord3");
+
+
+    for (i=0; i<MAX_MULTITEXTURE; i++) {
+        char line[200];
+        sprintf (line,"fw_Texture_unit%d",i);
+        me->TextureUnit[i]= GET_UNIFORM(myProg,line);
+        sprintf (line,"fw_Texture_mode%d",i);
+        me->TextureMode[i] = GET_UNIFORM(myProg,line);
+        sprintf (line,"fw_Texture_source%d",i);
+        me->TextureSource[i] = GET_UNIFORM(myProg,line);
+        sprintf (line,"fw_Texture_function%d",i);
+        me->TextureFunction[i] = GET_UNIFORM(myProg,line);
+        //printf ("   i %d tu %d mode %d\n",i,me->TextureUnit[i],me->TextureMode[i]);
+
+    }
+
+    me->textureCount = GET_UNIFORM(myProg,"textureCount");
+    me->multitextureColor = GET_UNIFORM(myProg,"mt_Color");
+    //printf ("GETUNIFORM for textureCount is %d\n",me->textureCount);
+
+    //texture3D
+    me->tex3dTiles = GET_UNIFORM(myProg,"tex3dTiles");
+    me->tex3dUseVertex = GET_UNIFORM(myProg,"tex3dUseVertex");
+    me->magFilter = GET_UNIFORM(myProg,"magFilter");
+    me->repeatSTR = GET_UNIFORM(myProg,"repeatSTR");
+
+
+    /* for FillProperties */
+    me->myPointSize = GET_UNIFORM(myProg, "pointSize");
+    me->hatchColour = GET_UNIFORM(myProg,"HatchColour");
+    me->hatchPercent = GET_UNIFORM(myProg,"HatchPct");
+    me->hatchScale = GET_UNIFORM(myProg,"HatchScale");
+    me->filledBool = GET_UNIFORM(myProg,"filled");
+    me->hatchedBool = GET_UNIFORM(myProg,"hatched");
+    me->algorithm = GET_UNIFORM(myProg,"algorithm");
+
+    me->fogColor = GET_UNIFORM(myProg,"fw_fogparams.fogColor");
+    me->fogvisibilityRange = GET_UNIFORM(myProg,"fw_fogparams.visibilityRange");
+    me->fogScale = GET_UNIFORM(myProg,"fw_fogparams.fogScale");
+    me->fogType = GET_UNIFORM(myProg,"fw_fogparams.fogType");
+
+    /* clipplane */
+    me->clipplanes = GET_UNIFORM(myProg,"fw_clipplanes");
+    me->nclipplanes = GET_UNIFORM(myProg,"fw_nclipplanes");
+
+    /* TextureCoordinateGenerator */
+    me->texCoordGenType = GET_UNIFORM(myProg,"fw_textureCoordGenType");
+
+
+    #ifdef VERBOSE
+    printf ("shader uniforms: vertex %d normal %d modelview %d projection %d\n",
+        me->Vertices, me->Normals, me->ModelViewMatrix, me->ProjectionMatrix);
+    printf ("hatchColour %d, hatchPercent %d",me->hatchColour, me->hatchPercent);
+    #endif
+
+
+}
+
+static void makeAndCompileShader(struct shaderTableEntry *me) {
+
+    GLint success;
+    GLuint myVertexShader = 0;
+    GLuint myFragmentShader= 0;
+
+    GLuint myProg = 0;
+    s_shader_capabilities_t *myShader = me->myCapabilities;
+    const GLchar *vertexSource[vertexEndMarker];
+    const GLchar  *fragmentSource[fragmentEndMarker];
+//    vertexShaderResources_t x1;
+//    fragmentShaderResources_t x2;
+    int x1;
+    int x2;
+
+
+#ifdef VERBOSE
+    ConsoleMessage ("makeAndCompileShader called");
+#endif //VERBOSE
+#undef VERBOSE
+
+    /* initialize shader sources to blank strings, later we'll fill it in */
+    for (x1=vertexGLSLVersion; x1<vertexEndMarker; x1++)
+        vertexSource[x1] = "";
+    for (x2=fragmentGLSLVersion; x2<fragmentEndMarker; x2++)
+        fragmentSource[x2] = "";
+
+
+    /* pointerize this */
+    myProg = glCreateProgram(); /* CREATE_PROGRAM */
+    (*myShader).myShaderProgram = myProg;
+
+    /* assume the worst... */
+    (*myShader).compiledOK = FALSE;
+
+    /* we put the sources in 2 formats, allows for differing GL/GLES prefixes */
+    if (!getSpecificShaderSource(vertexSource, fragmentSource, me->whichOne)) {
+        return;
+    }
+
+
+    myVertexShader = CREATE_SHADER (VERTEX_SHADER);
+    SHADER_SOURCE(myVertexShader, vertexEndMarker, ((const GLchar **)vertexSource), NULL);
+    COMPILE_SHADER(myVertexShader);
+    GET_SHADER_INFO(myVertexShader, COMPILE_STATUS, &success);
+    if (!success) {
+        shaderErrorLog(myVertexShader,(char *)"VERTEX");
+    } else {
+
+        ATTACH_SHADER(myProg, myVertexShader);
+    }
+
+    /* get Fragment shader */
+    myFragmentShader = CREATE_SHADER (FRAGMENT_SHADER);
+    SHADER_SOURCE(myFragmentShader, fragmentEndMarker, (const GLchar **) fragmentSource, NULL);
+    COMPILE_SHADER(myFragmentShader);
+    GET_SHADER_INFO(myFragmentShader, COMPILE_STATUS, &success);
+    if (!success) {
+        shaderErrorLog(myFragmentShader,(char *)"FRAGMENT");
+    } else {
+        ATTACH_SHADER(myProg, myFragmentShader);
+    }
+
+    LINK_SHADER(myProg);
+
+    glGetProgramiv(myProg,GL_LINK_STATUS, &success);
+    (*myShader).compiledOK = (success == GL_TRUE);
+
+    getShaderCommonInterfaces(myShader);
+}
+
+/* find a shader that matches the capabilities requested. If no match, recreate it */
+s_shader_capabilities_t *getMyShaders(shaderflagsstruct rq_cap0) { //unsigned int rq_cap0) {
+
+    /* GL_ES_VERSION_2_0 has GL_SHADER_COMPILER */
+    #ifdef GL_SHADER_COMPILER
+    GLboolean b;
+    static bool haveDoneThis = false;
+    #endif
+    //unsigned int rq_cap;
+    shaderflagsstruct rq_cap;
+    int i;
+
+    ppOpenGL_Utils p = openGL_Utils_prv;
+    struct Vector *myShaderTable = p->myShaderTable;
+    struct shaderTableEntry *new1 = NULL;
+
+    rq_cap = rq_cap0;
+    //rq_cap = NO_APPEARANCE_SHADER; //for thunking to simplest when debugging
+
+    for (i=0; i<vectorSize(myShaderTable); i++) {
+        struct shaderTableEntry *me = vector_get(struct shaderTableEntry *,myShaderTable, i);
+        if(rq_cap0.volume){
+            if(me->whichOne.volume == rq_cap0.volume && me->whichOne.effects == rq_cap0.effects){
+                return me->myCapabilities;
+            }
+        }else{
+            if (me->whichOne.base == rq_cap0.base && me->whichOne.effects == rq_cap0.effects && me->whichOne.usershaders == rq_cap0.usershaders) {
+                //printf("getMyShaders chosen shader caps base %d effects %d user %d\n",me->whichOne.base,me->whichOne.effects,me->whichOne.usershaders);
+                return me->myCapabilities;
+            }
+        }
+    }
+
+
+    // if here, we did not find the shader already compiled for us.
+
+    //ConsoleMessage ("getMyShader, looking for %x",rq_cap);
+
+    //ConsoleMessage ("getMyShader, not found, have to create");
+    //for (i=0; i<vectorSize(myShaderTable); i++) {
+        //struct shaderTableEntry *me = vector_get(struct shaderTableEntry *,myShaderTable, i);
+        //ConsoleMessage ("getMyShader, i %d, rq_cap %x, me->whichOne %x myCap %p\n",i,rq_cap,me->whichOne,me->myCapabilities);
+        //}
+
+
+
+
+
+    /* GL_ES_VERSION_2_0 has GL_SHADER_COMPILER */
+#ifdef GL_SHADER_COMPILER
+        glGetBooleanv(GL_SHADER_COMPILER,&b);
+        if (!haveDoneThis) {
+            haveDoneThis = true;
+            if (!b) {
+            //I found desktop openGL version 2.1.2  comes in here, but does still render OK
+            //ConsoleMessage("NO SHADER COMPILER - have to sometime figure out binary shader distros");
+            ConsoleMessage("no shader compiler\n");
+            return NULL;
+            }
+        }
+#endif
+
+    // ConsoleMessage ("getMyShader, here now");
+
+#ifdef VERBOSE
+#if defined (GL_SHADER_COMPILER) && defined (GL_HIGH_FLOAT)
+    /* GL_ES_VERSION_2_0 variables for shaders */
+    { /* debugging */
+    GLint range[2]; GLint precision;
+    GLboolean b;
+
+    ConsoleMessage("starting getMyShader");
+
+    glGetBooleanv(GL_SHADER_COMPILER,&b);
+    if (b) ConsoleMessage("have shader compiler"); else ConsoleMessage("NO SHADER COMPILER");
+
+
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_LOW_FLOAT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_LOW_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_MEDIUM_FLOAT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_MEDIUM_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_HIGH_FLOAT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_HIGH_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_LOW_INT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_LOW_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_MEDIUM_INT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_MEDIUM_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER,GL_HIGH_INT, range, &precision);
+    ConsoleMessage ("GL_VERTEX_SHADER, GL_HIGH_INT range [%d,%d],precision %d",range[0],range[1],precision);
+
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_LOW_FLOAT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_LOW_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_MEDIUM_FLOAT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_MEDIUM_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_HIGH_FLOAT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_HIGH_FLOAT range [%d,%d],precision %d",range[0],range[1],precision);
+
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_LOW_INT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_LOW_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_MEDIUM_INT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_MEDIUM_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER,GL_HIGH_INT, range, &precision);
+    ConsoleMessage ("GL_FRAGMENT_SHADER, GL_HIGH_INT range [%d,%d],precision %d",range[0],range[1],precision);
+    }
+#endif // #ifdef GL_ES_VERSION_2_0 specific debugging
+#endif //VERBOSE
+
+    new1 = MALLOC(struct shaderTableEntry *, sizeof (struct shaderTableEntry));
+
+    new1 ->whichOne = rq_cap;
+    new1->myCapabilities = MALLOC(s_shader_capabilities_t*, sizeof (s_shader_capabilities_t));
+
+    //ConsoleMessage ("going to compile new shader for %x",rq_cap);
+    makeAndCompileShader(new1);
+
+    vector_pushBack(struct shaderTableEntry*, myShaderTable, new1);
+
+    //ConsoleMessage ("going to return new %p",new);
+    //ConsoleMessage ("... myCapabilities is %p",new->myCapabilities);
+    return new1->myCapabilities;
+}
+
+s_shader_capabilities_t *getMyShader(unsigned int rq_cap0) {
+    shaderflagsstruct rq_cap0s;
+    memset(&rq_cap0s,0,sizeof(shaderflagsstruct));
+    rq_cap0s.base = rq_cap0;
+    return getMyShaders(rq_cap0s);
+}
+
 /* ************************************************************************** */
 /* ******************************** Vector ********************************** */
 /* ************************************************************************** */
@@ -267,7 +4415,7 @@ void registerTexture0(int iaction, Node *tmp) {
 
             // keep track of which texture this one is.
             textureNumber = vectorSize(p->activeTextureTable);
-
+printf("textureNumber %d\n", textureNumber);
             //{char line[200]; sprintf (line,"registerTexture textureNumber %d",textureNumber); ConsoleMessage(line);}
 
             DEBUG_TEX("CREATING TEXTURE NODE: type %d\n", it->_nodeType);
@@ -390,7 +4538,7 @@ s_list_t* ml_insert(s_list_t *list, s_list_t *point, s_list_t *item)
 
 void ml_enqueue(s_list_t **list, s_list_t *item)
 {
-	*list = ml_insert(*list,*list,item);
+    *list = ml_insert(*list,*list,item);
 }
 
 void threadsafe_enqueue_item_signal(s_list_t *item, s_list_t** queue)
@@ -3195,6 +7343,10 @@ void new_bind_image(Node *node, struct multiTexParams *param) {
     mfurl = texture->url();
 
     myTableIndex = getTableIndex(thisTexture);
+    if (texture->m_tableIndex == NULL)
+        texture->m_tableIndex = myTableIndex;
+    else
+        myTableIndex = texture->m_tableIndex;
     if (myTableIndex->status != TEX_LOADED) {
         DEBUG_TEX("new_bind_image, I am %p, textureStackTop %d, thisTexture is %d myTableIndex %p status %s\n",
         node,tg->RenderFuncs.textureStackTop,thisTexture,myTableIndex, texst(myTableIndex->status));
@@ -3294,7 +7446,7 @@ void loadTextureNode (NodeImageTexture3D *node, void *vparam)
     /* this will cause bind_image to create a new "slot" for this texture */
     /* cast to GLuint because __texture defined in VRMLNodes.pm as SFInt */
 
-    releaseTexture(node);
+    //releaseTexture(node);
     }
 
     new_bind_image(node, (struct multiTexParams *)vparam);
@@ -3316,6 +7468,7 @@ void *RenderTextures_constructor(){
 }
 void RenderTextures_init(struct tRenderTextures *t){
     textures_prv = (ppTextures)RenderTextures_constructor();
+    t->prv = textures_prv;
     {
         ppRenderTextures p = (ppRenderTextures)textures_prv;
         /* variables for keeping track of status */
@@ -3389,42 +7542,6 @@ static int setActiveTexture (int c, GLfloat thisTransparency,  GLint *texUnit, G
     return TRUE;
 }
 
-
-
-typedef struct pOpenGL_Utils{
-    // list of all X3D nodes in this system.
-    // scene graph is tree-structured. this is a linear list.
-    struct Vector *linearNodeTable;
-    // how many holes might we have in this table, due to killing nodes, etc?
-    int potentialHoleCount;
-
-    float cc_red, cc_green, cc_blue, cc_alpha;
-    pthread_mutex_t  memtablelock;// = PTHREAD_MUTEX_INITIALIZER;
-/*
-    MATRIX4 FW_ModelView[MAX_LARGE_MATRIX_STACK];
-    MATRIX4 FW_ProjectionView[MAX_SMALL_MATRIX_STACK];
-    MATRIX4 FW_TextureView[MAX_SMALL_MATRIX_STACK];
-*/
-    int modelviewTOS;// = 0;
-    int projectionviewTOS;// = 0;
-    int textureviewTOS;// = 0;
-    //int pickrayviewTOS;// = 0;
-
-    int whichMode;// = GL_MODELVIEW;
-    GLDOUBLE *currentMatrix;// = FW_ModelView[0];
-#ifdef GLEW_MX
-    GLEWContext glewC;
-#endif
-
-    struct Vector *myShaderTable; /* list of all active shaders requested by input */
-    int userDefinedShaderCount;    /* if the user actually has a Shader node */
-    char *userDefinedFragmentShader[MAX_USER_DEFINED_SHADERS];
-    char *userDefinedVertexShader[MAX_USER_DEFINED_SHADERS];
-
-    int shadingStyle; //0=flat, 1=gouraud, 2=phong 3=wireframe
-    int maxStackUsed;
-}* ppOpenGL_Utils;
-
 /* lets disable texture transforms here */
 void textureTransform_end(void) {
     int j;
@@ -3448,34 +7565,1616 @@ void textureTransform_end(void) {
     glMatrixMode(GL_MODELVIEW);
 }
 
+ppComponent_Shape component_Shape_prv = NULL;
+
+//getters
+struct matpropstruct *getAppearanceProperties(){
+    ppComponent_Shape p = component_Shape_prv;
+
+    return &p->appearanceProperties;
+}
+
+
+/*
+
+
+X3D Volume Rendering Component
+
+*/
+
+/*
+Volumee Rendering aka voxels
+http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html
+- VolumeData is like shape node with its own equivalents to appearance, geometry
+- Style nodes - like appearance, except sometimes composable
+
+
+Before starting to implement this there are a few other nodes and components that might be needed:
+- clipPlane - besides transparent voxels, you may want to slice a volumetric image with a clipplane to look inside IMPLEMENTED SEPT 2016
+- we have TextureProperties to get the RST
+- Texturing3D component > for 3D image file format reading: 
+    http://paulbourke.net/dataformats/volumetric/
+    - Simplest 3d texture file, if you are writing your own
+    http://www.web3d.org/x3d/content/examples/Basic/VolumeRendering/
+    - these examples use nrrd format, not much harder IMPLEMENTED Oct 2, 2016
+Links:
+    http://http.developer.nvidia.com/GPUGems/gpugems_ch39.html
+    - GpuGems online, ideas about volume rendering
+    http://teem.sourceforge.net/ 
+    - same place as nrrd file format lib
+    - unu.exe commandline program is handy:
+        print nrrd file header:
+            unu head brain.nrrd
+        resize an image ie from 512x512x512 to 128x128x128:
+            unu resample -s 128 128 128 -i brain.nrrd -o brain128.nrrd
+                
+    http://castle-engine.sourceforge.net/compositing_shaders.php
+    - in the "Compositing Shaders in X3D" .pdf, page 9 mentions volume nodes
+    - the VolumeRendering Component has 10 style nodes, and Kambu is suggesting his Plug/hook method
+    http://cs.iupui.edu/~tuceryan/research/Microscopy/vis98.pdf
+    - paper: "Image-Based Transfer Function Design for Data Exploration in Volume Visualization"
+        pain: hard to stay organized with general functions in volume data
+        solution: goal-directed composable steps ie sharpen surface, colorize via 'transfer functions'
+        1. Apply transfer functions
+            A. Gray = F(Gray) or F(F(F(F(Gray)))) ie can chain grayscale functions for each voxel processed
+                a) F() image functions - anything from 2D image processing generalized to 3D
+                b) F() spatial functions - edge sharpening ie sobel or smoothing also from image processing
+            B. Gray to RGBA - lookup table
+        2. do your raycasting on RGBA
+    http://demos.vicomtech.org/
+    - uses webgl and x3dom
+    https://www.slicer.org/
+    - Uses teem
+    http://teem.sourceforge.net/mite/opts.html
+    - teem > Mite - has some transfer tables
+    http://graphicsrunner.blogspot.ca/2009/01/volume-rendering-101.html
+    - shows 'volume raycasting' method, shader (directx) and results
+    http://prideout.net/blog/?tag=volume-rendering
+    - shows volume raycasting shader example
+    https://www.opengl.org/discussion_boards/showthread.php/174814-Save-vertices-to-texture-problem
+    - xyz texture preparation, related to volume raycasting shader technique
+    http://http.developer.nvidia.com/GPUGems3/gpugems3_ch30.html
+    - see 30.3.1 Volume Rendering for raymarching nuances
+
+
+COMPONENT VOLUMERENDERING ISSUES Oct 29, 2016
+http://dug9.users.sourceforge.net/web3d/tests/volume/
+- these sample scenes use max size 128 .nrrd textures
+
+By Node:
+
+VoiumeData
+    - works
+SegmentedVolumeData
+    - no confirmation its working
+    - SegmentedVentricles.x3d - cycles every 3 seconds or so
+IsoSurfaceVolumeData
+    - no confirm
+    - IsoSurfaceSkull.x3d
+
+BlendedVolumeStyle
+    - blackscreens
+    - BlendedBodyInternals.x3d - blackscreens
+    - BlendedComposedVolumes.x3d - blackscreens
+BoundaryEnhancementVolumeStyle
+    - no confirm
+    - BoundaryEnhancementInternals.x3d - blackscreens
+    - BlendedComposedVolumes.x3d - blackscreens
+CartoonVolumeStyle
+    - works
+    - CartoonBackpack.x3d 
+    - BlendedComposedVolumes.x3d
+ComposedVolumeStyle
+    - no confirm
+    - ComposedBackpack.x3d
+    - BlendedComposedVolumes.x3d
+EdgeEnhancementVolumeStyle
+    - works
+    - EdgeBrain.x3d
+    - ComposedBackpack.x3d
+    - BlendedComposedVolumes.x3d
+OpacityMapVolumeStyle
+    - no TransferFunction verification
+    - basics (implicit) works, plus explicit:
+    - BlendedComposedVolumes.x3d
+    - SegmentedVentricles.x3d
+ProjectionVolumeStyle
+    - works
+    - ProjectionMaxVentricles.x3d 
+ShadedVolumeStyle
+    - no confirm
+    - ShadedBrain.x3d - no evidence of shading
+SillouetteEnhancementVolumeStyle
+    - works but hard to see a difference
+    - SilhouetteSkull.x3d
+    - ComposedBackpack.x3d
+    - BlendedComposedVolumes.x3d
+ToneMappedVolumeStyle
+    - works
+    - BlendedComposedVolumes.x3d
+    - ToneInternal.x3d - blackscreens
+
+
+By Technique:
+
+gradients:
+    IsoSurfaceVolumeData
+
+surfaceNormals:
+    CartoonVolumeStyle
+    EdgeEnhacementVolumeStyle
+    ShadedVolumeStyle
+    SilhouetteEnhancementVolumeStyle
+    ToneMappedVolumeStyle
+
+segmentIdentifiers:
+    SegmentedVolumeData
+
+Texture2D as transfer function:
+    BlendedVolumeStyle > weightTransferFunction1, weightTransferFunction2
+    OpacityMapVolumeStyle > transferFunction
+
+MF list:
+MFNode -renderStyle > ComposedVolumeStyle, IsoSurfaceVolumeData, SegmentedVolumeStyle
+MFFloat -surfaceValues > IsoSurfaceVolumeData
+
+
+*/
+
+typedef struct pComponent_VolumeRendering{
+    GLuint front_texture;
+    GLuint back_texture;
+    GLint ifbobuffer;
+    GLint idepthbuffer;
+    int width, height;
+    GLfloat *quad;
+}* ppComponent_VolumeRendering;
+void *Component_VolumeRendering_constructor(){
+    void *v = MALLOCV(sizeof(struct pComponent_VolumeRendering));
+    memset(v,0,sizeof(struct pComponent_VolumeRendering));
+    return v;
+}
+void Component_VolumeRendering_init(struct tComponent_VolumeRendering *t){
+    //public
+    //private
+    t->prv = Component_VolumeRendering_constructor();
+    {
+        ppComponent_VolumeRendering p = (ppComponent_VolumeRendering)t->prv;
+        p->back_texture = 0;
+        p->front_texture = 0;
+        p->ifbobuffer = 0;
+        p->idepthbuffer = 0;
+        p->width = 0;
+        p->height = 0;
+        p->quad = NULL;
+    }
+}
+void Component_VolumeRendering_clear(struct tComponent_VolumeRendering *t){
+    //public
+    //private
+    {
+        ppComponent_VolumeRendering p = (ppComponent_VolumeRendering)t->prv;
+        //p->front_texture;
+        //p->back_texture;
+        FREE_IF_NZ(p->quad);
+    }
+}
+//ppComponent_VolumeRendering p = (ppComponent_VolumeRendering)gglobal()->Component_VolumeRendering.prv;
+
+
+
+
+//6 faces x 2 triangles per face x 3 vertices per triangle x 3 scalars (xyz) per vertex = 6 x 2 x 3 x 3 = 108
+GLfloat box [108] = {1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, };
+
+//      6  7 //back far z
+//      4  5
+// 2  3   //front near z
+// 0  1 
+float boxvert [24] = {
+-.5f,-.5f, .5f, .5f,-.5f, .5f, -.5f,.5f, .5f, .5f,.5f, .5f, //near z LL LR UL UR
+-.5f,-.5f,-.5f, .5f,-.5f,-.5f, -.5f,.5f,-.5f, .5f,.5f,-.5f, //far z
+};
+//ccw tris
+short boxtriindccw [48] = {
+0, 1, 3, -1,  //near z
+3, 2, 0, -1,
+1, 5, 7, -1, //right
+7, 3, 1, -1,
+5, 4, 6, -1, //back z
+6, 7, 5, -1, 
+4, 0, 2, -1, //left
+2, 6, 4, -1,
+2, 3, 7, -1, //top y
+7, 6, 2, -1,
+4, 5, 1, -1, //bottom y
+1, 0, 4, -1,
+};
+short boxtriindcw [48] = {
+0, 3, 1, -1,  //near z
+3, 0, 2, -1,
+1, 7, 5, -1, //right
+7, 1, 3, -1,
+5, 6, 4, -1, //back z
+6, 5, 7, -1, 
+4, 2, 0, -1, //left
+2, 4, 6, -1,
+2, 7, 3, -1, //top y
+7, 2, 6, -1,
+4, 1, 5, -1, //bottom y
+1, 4, 0, -1,
+};
+
+void compile_VolumeData(NodeVolumeData *node){
+    int i,j,itri, ind, jvert;
+    float *boxtris;
+
+    ConsoleMessage("compile_volumedata\n");
+    if(node->m_boxtris == NULL){
+        node->m_boxtris = (float *)MALLOC(void *,108 * sizeof(float));
+    }
+    boxtris = (float*)node->m_boxtris;
+    if(0)
+    for(i=0;i<36;i++){
+        for(j=0;j<3;j++)
+            boxtris[i*3 + j] = .5f * node->dimensions()->getValue()[j] * box[i*3 + j];  //raw triangles are -1 to 1, dimensions are absolute
+
+    }
+    if(1)
+    for(itri=0;itri<12;itri++){
+        for(jvert=0;jvert<3;jvert++) {
+            float *vert;
+            ind = boxtriindccw[itri*4 + jvert];
+            vert = &boxvert[ind*3];
+            for(j=0;j<3;j++){
+                boxtris[(itri*3 +jvert)*3 + j] = node->dimensions()->getValue()[j]*vert[j];
+            }
+        }
+    }
+    //for(i=0;i<36;i++)
+    //    printf("%f %f %f\n",boxtris[i*3 +0],boxtris[i*3 +1],boxtris[i*3 +2]);
+    MARK_NODE_COMPILED
+}
+void pushnset_framebuffer(int ibuffer);
+void popnset_framebuffer();
+
+
+#ifdef OLDCODE
+#ifdef GL_DEPTH_COMPONENT32
+#define FW_GL_DEPTH_COMPONENT GL_DEPTH_COMPONENT32
+#else
+#define FW_GL_DEPTH_COMPONENT GL_DEPTH_COMPONENT16
+#endif
+#endif //OLDCODE
+
+
+void __gluMultMatricesd(const GLDOUBLE a[16], const GLDOUBLE b[16],    GLDOUBLE r[16]);
+int __gluInvertMatrixd(const GLDOUBLE m[16], GLDOUBLE invOut[16]);
+ivec4 get_current_viewport();
+textureTableIndexStruct_s *getTableTableFromTextureNode(Node *textureNode);
+
+unsigned int prep_volumestyle(Node *vstyle, unsigned int volflags){
+    NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
+    if(style0->enabled()->getValue()){
+        switch(vstyle->getType()){
+            case X3D_OPACITY_MAP_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_OPACITY;
+                break;
+            case X3D_BLENDED_VOLUME_STYLE:
+                //volflags = volflags << 4;
+                //volflags |= SHADERFLAGS_VOLUME_STYLE_BLENDED;
+                //do nothing, so parent renders as default, or gets a style via composed
+                break;
+            case X3D_BOUNDARY_ENHANCEMENT_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_BOUNDARY;
+                break;
+            case X3D_CARTOON_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_CARTOON;
+                break;
+            case X3D_COMPOSED_VOLUME_STYLE:
+                {
+                    int i;
+                    NodeComposedVolumeStyle *style = (NodeComposedVolumeStyle*)vstyle;
+                    //volflags = volflags << 4;
+                    //volflags |= SHADERFLAGS_VOLUME_STYLE_COMPOSED;
+                    // I 'unroll' composed here, into a bit-shifted list with 4 bits per entry
+                    for(i=0;i<style->renderStyle()->getSize();i++){
+                        volflags = prep_volumestyle(style->renderStyle()->getValue(i), volflags);
+                    }
+                }
+                break;
+            case X3D_EDGE_ENHANCEMENT_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_EDGE;
+                break;
+            case X3D_PROJECTION_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_PROJECTION;
+                break;
+            case X3D_SHADED_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_SHADED;
+                break;
+            case X3D_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_SILHOUETTE;
+                break;
+            case X3D_TONE_MAPPED_VOLUME_STYLE:
+                volflags = volflags << 4;
+                volflags |= SHADERFLAGS_VOLUME_STYLE_TONE;
+                break;
+            default:
+                break;
+        }
+    }
+    return volflags;
+}
+
+void profile_start(const char *name){}
+void profile_end(const char *name){}
+
+void render_volume_data(Node *renderStyle, Node *voxels, NodeVolumeData *node);
+NodeMaterial *get_material_oneSided();
+NodeTwoSidedMaterial *get_material_twoSided();
+void pushnset_viewport(float *vpFraction);
+void popnset_viewport();
+int haveFrameBufferObject();
+void render_volumestyle(Node *vstyle, GLint myProg){
+    NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
+    if(style0->enabled()->getValue()){
+        switch(vstyle->getType()){
+            case X3D_OPACITY_MAP_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#OpacityMapVolumeStyle
+                    // Q. how do the transfer function on GPU? its defined like its on the CPU ie 
+                    //   with integers. On GPU the .a will be 0.0 to 1.0. I guess that can be used as 1D texture coordinate.
+                    int havetexture;
+                    GLint iopactex;
+                    NodeOpacityMapVolumeStyle *style = (NodeOpacityMapVolumeStyle*)vstyle;
+                    havetexture = 0;
+                    if(style->transferFunction()->getValue()){
+                        //load texture
+                        struct NodeImageTexture3D *tmpN;
+                        textureTableIndexStruct_s *tti;
+//                        ttglobal tg = gglobal();
+
+                        POSSIBLE_PROTO_EXPANSION(NodeImageTexture3D *, style->transferFunction()->getValue(),tmpN);
+                        renderFuncs_texturenode = tmpN;
+
+                        //problem: I don't want it sending image dimensions to my volume shader,
+                        // which could confuse the voxel sampler
+                        //render_node(tmpN); //render_node(node->texture); 
+                        loadTextureNode(tmpN,NULL);
+                        tti = getTableTableFromTextureNode(tmpN);
+                        if(tti && tti->status >= TEX_LOADED){
+                            glActiveTexture(GL_TEXTURE0+3); 
+                            glBindTexture(GL_TEXTURE_2D,tti->OpenGLTexture); 
+                            havetexture = 1;
+                        }
+                    }
+                    iopactex = GET_UNIFORM(myProg,"fw_opacTexture");
+                    glUniform1i(iopactex,havetexture);
+
+                }
+                break;
+            case X3D_BLENDED_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#BlendedVolumeStyle
+                    NodeBlendedVolumeStyle *style = (NodeBlendedVolumeStyle*)vstyle;
+                    //FBO blending
+                    //a)  render the parent volumeData to fbo:
+                    //    - in prep Blended push fbo
+                    //    - render main to fbo
+                    //    - in fin Blended: read pixels or save renderbuffer texture 0
+                    //b)  in fin Blended: render blended (voxels,stye) as VolumeData to fbo
+                    //    - read pixels or same renderbuffer texture 1
+                    //c)   pop fbo
+                    //d)  set 2 pixelsets as textures
+                    //     and render via a special little shader that blends 2 textures and sends to GL_BACK. 
+                    #define BLENDED 1
+                    #ifdef BLENDED
+                    int *fbohandles = style->m_fbohandles;
+                    GLint iviewport[4];
+                    float vp[4] = {0.0f,1.0f,0.0f,1.0f}; //arbitrary
+
+                    glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
+                    if(haveFrameBufferObject()){
+                        if(fbohandles[0] == 0){
+                            GLuint depthrenderbuffer;
+                            // https://www.opengl.org/wiki/Framebuffer_Object
+                            glGenFramebuffers(1, (GLuint *) &fbohandles[0]);
+                            pushnset_framebuffer(fbohandles[0]); //binds framebuffer. we push here, in case higher up we are already rendering the whole scene to an fbo
+
+                            // The depth buffer - optional
+                            glGenRenderbuffers(1, &depthrenderbuffer);
+                            glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+                            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, iviewport[2],iviewport[3]);
+                            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+
+
+                            glGenTextures(1,(GLuint *) &fbohandles[1]);
+                            glBindTexture(GL_TEXTURE_2D, fbohandles[1]);
+                            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iviewport[2], iviewport[3], 0, GL_RGBA , GL_UNSIGNED_BYTE, 0);
+                            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+                            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbohandles[1], 0);
+
+                            
+                            glGenTextures(1,(GLuint *)&fbohandles[2]);
+                            glBindTexture(GL_TEXTURE_2D, fbohandles[2]);
+                            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iviewport[2], iviewport[3], 0, GL_RGBA , GL_UNSIGNED_BYTE, 0);
+                            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+                            //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+1, GL_TEXTURE_2D, fbohandles[2], 0);
+                            //--dont assign the second texture till after the parent VolumeData has drawn itself
+                            //glDrawBuffers(1,&fbohandles[1]);
+                            if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                                printf("ouch framebuffer not complete\n");
+                            //popnset_framebuffer(); //pop after drawing
+                        }else{
+                            pushnset_framebuffer(fbohandles[0]);
+                            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbohandles[1], 0);
+                        }
+                    }
+                    pushnset_viewport(vp); //something to push so we can pop-and-set below, so any mainloop GL_BACK viewport is restored
+                    glViewport(0,0,iviewport[2],iviewport[3]); //viewport we want 
+                    glClearColor(0.0f,0.0f,0.0f,0.0f); //red, for diagnostics during debugging
+                    FW_GL_CLEAR(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                    #endif //BLENDED
+                }
+                break;
+            case X3D_BOUNDARY_ENHANCEMENT_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#BoundaryEnhancementVolumeStyle
+                    NodeBoundaryEnhancementVolumeStyle *style = (NodeBoundaryEnhancementVolumeStyle*)vstyle;
+                    //SFFloat     [in,out] boundaryOpacity  0.9     [0,1]
+                    //SFFloat     [in,out] opacityFactor    2       [0,?)
+                    //SFFloat     [in,out] retainedOpacity  0.2     [0,1]
+                    GLint ibebound, iberetain, ibefactor;
+                    ibebound = GET_UNIFORM(myProg,"fw_boundaryOpacity");
+                    glUniform1f(ibebound,style->boundaryOpacity()->getValue());
+                    iberetain = GET_UNIFORM(myProg,"fw_retainedOpacity");
+                    glUniform1f(iberetain,style->retainedOpacity()->getValue());
+                    ibefactor = GET_UNIFORM(myProg,"fw_opacityFactor");
+                    glUniform1f(ibefactor,style->opacityFactor()->getValue());
+                }
+                break;
+            case X3D_CARTOON_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#CartoonVolumeStyle
+                    NodeCartoonVolumeStyle *style = (NodeCartoonVolumeStyle*)vstyle;
+                    //SFInt32     [in,out] colorSteps       4       [1,64]
+                    //SFColorRGBA [in,out] orthogonalColor  1 1 1 1 [0,1]
+                    //SFColorRGBA [in,out] parallelColor    0 0 0 1 [0,1]
+                    //SFNode      [in,out] surfaceNormals   NULL    [X3DTexture3DNode]
+                    GLint itoonsteps, itoonortho, itoonparallel;
+                    itoonsteps = GET_UNIFORM(myProg,"fw_colorSteps");
+                    glUniform1i(itoonsteps,style->colorSteps()->getValue());
+                    itoonortho = GET_UNIFORM(myProg,"fw_orthoColor");
+                    glUniform4fv(itoonortho,1,style->orthogonalColor()->getValue());
+                    itoonparallel = GET_UNIFORM(myProg,"fw_paraColor");
+                    glUniform4fv(itoonparallel,1,style->parallelColor()->getValue());
+
+                }
+                break;
+            case X3D_COMPOSED_VOLUME_STYLE:
+                {
+                    int i;
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ComposedVolumeStyle
+                    NodeComposedVolumeStyle *style = (NodeComposedVolumeStyle*)vstyle;
+                    for(i=0;i<style->renderStyle()->getSize();i++){
+                        render_volumestyle(style->renderStyle()->getValue(i), myProg);
+                    }
+                }
+                break;
+            case X3D_EDGE_ENHANCEMENT_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#EdgeEnhancementVolumeStyle
+                    //SFColorRGBA [in,out] edgeColor         0 0 0 1 [0,1]
+                    //SFBool      [in,out] enabled           TRUE
+                    //SFFloat     [in,out] gradientThreshold 0.4     [0,PI]
+                    //SFNode      [in,out] metadata          NULL    [X3DMetadataObject]
+                    //SFNode      [in,out] surfaceNormals    NULL    [X3DTexture3DNode]
+                    NodeEdgeEnhancementVolumeStyle *style = (NodeEdgeEnhancementVolumeStyle*)vstyle;
+                    GLint iedgeColor, igradientThreshold;
+                    const float *rgba;
+                    rgba = style->edgeColor()->getValue();
+                    iedgeColor = GET_UNIFORM(myProg,"fw_edgeColor");
+                    glUniform4fv(iedgeColor,1,rgba);
+                    igradientThreshold = GET_UNIFORM(myProg,"fw_cosGradientThreshold");
+                    glUniform1f(igradientThreshold,cosf(style->gradientThreshold()->getValue()));
+                    //printf("edge uniforms color %d gradthresh %d\n",iedgeColor,igradientThreshold);
+                }
+                break;
+            case X3D_PROJECTION_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ProjectionVolumeStyle
+                    NodeProjectionVolumeStyle *style = (NodeProjectionVolumeStyle*)vstyle;
+                    //SFFloat  [in,out] intensityThreshold 0     [0,1]
+                    //SFString [in,put] type               "MAX" ["MAX", "MIN", "AVERAGE"]
+                    GLint iintensity, itype;
+                    int ktype = 1; // initialize this to something that makes sense
+                    const char *ctype;
+                    iintensity = GET_UNIFORM(myProg,"fw_intensityThreshold");
+                    glUniform1f(iintensity,style->intensityThreshold()->getValue());
+                    itype = GET_UNIFORM(myProg,"fw_projType");
+                    if(style->m_type == 0){
+                        ctype = style->type()->getValue();
+                        if(!strcmp(ctype,"MIN")) 
+                            ktype = 1;
+                        else if(!strcmp(ctype,"MAX")) 
+                            ktype = 2;
+                        else if(!strcmp(ctype,"AVERAGE")) 
+                            ktype = 3;
+                        style->m_type = ktype;
+                    }
+                    glUniform1i(itype,style->m_type);
+                }
+                break;
+            case X3D_SHADED_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ShadedVolumeStyle
+                    GLint iphase, ilite, ishadow;
+                    NodeShadedVolumeStyle *style = (NodeShadedVolumeStyle*)vstyle;
+                    //SFBool   [in,out] lighting       FALSE
+                    //SFNode   [in,out] material       NULL                [X3DMaterialNode]
+                    //SFBool   [in,out] shadows        FALSE
+                    //SFNode   [in,out] surfaceNormals NULL                [X3DTexture3DNode]
+                    //SFString []       phaseFunction  "Henyey-Greenstein" ["Henyey-Greenstein","NONE",...]
+                    //MATERIAL
+                    if(style->material()->getValue()){
+                        struct fw_MaterialParameters defaultMaterials = {
+                                    {0.0f, 0.0f, 0.0f, 1.0f}, /* Emission */
+                                    {0.0f, 0.0f, 0.0f, 1.0f}, /* Ambient */
+                                    {0.8f, 0.8f, 0.8f, 1.0f}, /* Diffuse */
+                                    {0.0f, 0.0f, 0.0f, 1.0f}, /* Specular */
+                                    10.0f};                   /* Shininess */
+
+                        NodeMaterial *matone;
+                        NodeTwoSidedMaterial *mattwo;
+                        struct fw_MaterialParameters *fw_FrontMaterial;
+                        struct fw_MaterialParameters *fw_BackMaterial;
+                        GLint myMaterialAmbient;
+                        GLint myMaterialDiffuse;
+                        GLint myMaterialSpecular;
+                        GLint myMaterialShininess;
+                        GLint myMaterialEmission;
+
+                        GLint myMaterialBackAmbient;
+                        GLint myMaterialBackDiffuse;
+                        GLint myMaterialBackSpecular;
+                        GLint myMaterialBackShininess;
+                        GLint myMaterialBackEmission;
+                        struct matpropstruct *myap = getAppearanceProperties();
+
+                        memcpy (&myap->fw_FrontMaterial, &defaultMaterials, sizeof (struct fw_MaterialParameters));
+                        memcpy (&myap->fw_BackMaterial, &defaultMaterials, sizeof (struct fw_MaterialParameters));
+
+                        RENDER_MATERIAL_SUBNODES(style->material()->getValue());
+                        //struct matpropstruct matprop;
+                        //s_shader_capabilities_t mysp;
+                        //sendFogToShader(mysp); 
+                        matone = get_material_oneSided();
+                        mattwo = get_material_twoSided();
+                        //sendMaterialsToShader(mysp);
+                        if (matone != NULL) {
+                            memcpy (&myap->fw_FrontMaterial, matone->m_verifiedColor, sizeof (struct fw_MaterialParameters));
+                            memcpy (&myap->fw_BackMaterial, matone->m_verifiedColor, sizeof (struct fw_MaterialParameters));
+                            /* copy the emissive colour over for lines and points */
+                            memcpy(&myap->emissionColour,matone->m_verifiedColor, 3*sizeof(float));
+
+                        } else if (mattwo != NULL) {
+                            memcpy (&myap->fw_FrontMaterial, mattwo->m_verifiedFrontColor, sizeof (struct fw_MaterialParameters));
+                            memcpy (&myap->fw_BackMaterial, mattwo->m_verifiedBackColor, sizeof (struct fw_MaterialParameters));
+                            /* copy the emissive colour over for lines and points */
+                            memcpy(&myap->emissionColour,mattwo->m_verifiedFrontColor, 3*sizeof(float));
+                        } else {
+                            /* no materials selected.... */
+                        }
+
+
+
+                        if (!myap) return;
+                        fw_FrontMaterial = &myap->fw_FrontMaterial;
+                        fw_BackMaterial = &myap->fw_BackMaterial;
+
+
+//                        PRINT_GL_ERROR_IF_ANY("BEGIN sendMaterialsToShader");
+
+                        /* eventually do this with code blocks in glsl */
+
+
+                        myMaterialEmission = GET_UNIFORM(myProg,"fw_FrontMaterial.emission");
+                        myMaterialDiffuse = GET_UNIFORM(myProg,"fw_FrontMaterial.diffuse");
+                        myMaterialShininess = GET_UNIFORM(myProg,"fw_FrontMaterial.shininess");
+                        myMaterialAmbient = GET_UNIFORM(myProg,"fw_FrontMaterial.ambient");
+                        myMaterialSpecular = GET_UNIFORM(myProg,"fw_FrontMaterial.specular");
+
+                        myMaterialBackEmission = GET_UNIFORM(myProg,"fw_BackMaterial.emission");
+                        myMaterialBackDiffuse = GET_UNIFORM(myProg,"fw_BackMaterial.diffuse");
+                        myMaterialBackShininess = GET_UNIFORM(myProg,"fw_BackMaterial.shininess");
+                        myMaterialBackAmbient = GET_UNIFORM(myProg,"fw_BackMaterial.ambient");
+                        myMaterialBackSpecular = GET_UNIFORM(myProg,"fw_BackMaterial.specular");
+
+
+                        profile_start("sendvec");
+                        GLUNIFORM4FV(myMaterialAmbient,1,fw_FrontMaterial->ambient);
+                        GLUNIFORM4FV(myMaterialDiffuse,1,fw_FrontMaterial->diffuse);
+                        GLUNIFORM4FV(myMaterialSpecular,1,fw_FrontMaterial->specular);
+                        GLUNIFORM4FV(myMaterialEmission,1,fw_FrontMaterial->emission);
+                        GLUNIFORM1F(myMaterialShininess,fw_FrontMaterial->shininess);
+
+                        GLUNIFORM4FV(myMaterialBackAmbient,1,fw_BackMaterial->ambient);
+                        GLUNIFORM4FV(myMaterialBackDiffuse,1,fw_BackMaterial->diffuse);
+                        GLUNIFORM4FV(myMaterialBackSpecular,1,fw_BackMaterial->specular);
+                        GLUNIFORM4FV(myMaterialBackEmission,1,fw_BackMaterial->emission);
+                        GLUNIFORM1F(myMaterialBackShininess,fw_BackMaterial->shininess);
+                        profile_end("sendvec");
+
+
+                    }
+                    if(style->lighting()->getValue()){
+                        //LIGHT
+                        //FOG
+                        //-these are from the scenegraph above the voldata node, and -like clipplane- can/should be
+                        //set generically
+                    }
+
+                    //phasefunc
+                    if(style->phaseFunction()->getValue() == 0){
+                        if(!strcmp(style->phaseFunction()->getValue(),"NONE"))
+                            style->m_phaseFunction = 1;
+                        else if(!strcmp(style->phaseFunction()->getValue(),"Henyey-Greenstein"))
+                            style->m_phaseFunction = 2;
+                    }
+                    iphase = GET_UNIFORM(myProg,"fw_phase");
+                    glUniform1i(iphase,style->m_phaseFunction);
+                    ilite = GET_UNIFORM(myProg,"fw_lighting");
+                    glUniform1i(ilite,style->lighting()->getValue());
+                    ishadow = GET_UNIFORM(myProg,"fw_shadows");
+                    glUniform1i(ishadow,style->shadows()->getValue());
+                }
+                break;
+            case X3D_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#SilhouetteEnhancementVolumeStyle
+                    NodeSilhouetteEnhancementVolumeStyle *style = (NodeSilhouetteEnhancementVolumeStyle*)vstyle;
+                    //SFFloat [in,out] silhouetteBoundaryOpacity 0    [0,1]
+                    //SFFloat [in,out] silhouetteRetainedOpacity 1    [0,1]
+                    //SFFloat [in,out] silhouetteSharpness       0.5  [0,8)
+                    GLint isilbound, isilretain, isilsharp;
+                    isilbound = GET_UNIFORM(myProg,"fw_BoundaryOpacity");
+                    glUniform1f(isilbound,style->silhouetteBoundaryOpacity()->getValue());
+                    isilretain = GET_UNIFORM(myProg,"fw_RetainedOpacity");
+                    glUniform1f(isilretain,style->silhouetteRetainedOpacity()->getValue());
+                    isilsharp = GET_UNIFORM(myProg,"fw_Sharpness");
+                    glUniform1f(isilsharp,style->silhouetteSharpness()->getValue());
+                }
+                break;
+            case X3D_TONE_MAPPED_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ToneMappedVolumeStyle
+                    //SFColorRGBA [in,out] coolColor      0 0 1 0 [0,1]
+                    //SFColorRGBA [in,out] warmColor      1 1 0 0 [0,1]
+                    //SFNode      [in,out] surfaceNormals NULL    [X3DTexture3DNode]
+                    NodeToneMappedVolumeStyle *style = (NodeToneMappedVolumeStyle*)vstyle;
+                    //send warm, cool to shader
+                    GLint icool, iwarm;
+                    icool = GET_UNIFORM(myProg,"fw_coolColor");
+                    glUniform4fv(icool,1,style->coolColor()->getValue());
+                    iwarm = GET_UNIFORM(myProg,"fw_warmColor");
+                    glUniform4fv(iwarm,1,style->warmColor()->getValue());
+                }
+                break;
+            default:
+                break;
+        }
+    }
+}
+static struct {
+const char *ctype;
+int itype;
+} blendfuncs [] = {
+{"CONSTANT",1},
+{"ALPHA1",2},
+{"ALPHA2",3},
+{"TABLE",4},
+{"ONE_MINUS_ALPHA1",5},
+{"ONE_MINUS_ALPHA2",6},
+{NULL,0},
+};
+
+int lookup_blendfunc(const char *funcname){
+    int iret, i;
+    i = 0;
+    iret = 0;
+    do{
+        if(!strcmp(blendfuncs[i].ctype,funcname)){
+            iret = blendfuncs[i].itype;
+            break;
+        }
+        i++;
+    }while(blendfuncs[i].ctype);
+    return iret;
+}
+
+void sendBindBufferToGPU (GLenum target, GLuint buffer, const char *file, int line) {
+
+	
+/*
+	if (target == GL_ARRAY_BUFFER_BINDING) printf ("glBindBuffer, GL_ARRAY_BUFFER_BINDING %d at %s:%d\n",buffer,file,line);
+	else if (target == GL_ARRAY_BUFFER) printf ("glBindBuffer, GL_ARRAY_BUFFER %d at %s:%d\n",buffer,file,line);
+	else if (target == GL_ELEMENT_ARRAY_BUFFER) printf ("glBindBuffer, GL_ELEMENT_ARRAY_BUFFER %d at %s:%d\n",buffer,file,line);
+	else printf ("glBindBuffer, %d %d at %s:%d\n",target,buffer,file,line);
+	
+*/
+
+	glBindBuffer(target,buffer);
+}
+
+
+void sendExplicitMatriciesToShader (GLint ModelViewMatrix, GLint ProjectionMatrix, GLint NormalMatrix, GLint *TextureMatrix, GLint ModelViewInverseMatrix);
+void render_GENERIC_volume_data(s_shader_capabilities_t *caps, Node **renderStyle, int nstyle, Node *voxels, struct X3D_VolumeData *node );
+s_shader_capabilities_t * getVolumeProgram(Node **renderStyle, int nstyle, int VOLUME_DATA_FLAG);
+void saveImage_web3dit(struct textureTableIndexStruct *tti, char *fname);
+
+/* finished rendering thisshape. */
+void finishedWithGlobalShader(void) {
+    //printf ("finishedWithGlobalShader\n");
+
+
+    /* get rid of the shader */
+    getAppearanceProperties()->currentShaderProperties = NULL;
+FW_GL_BINDBUFFER(GL_ARRAY_BUFFER, 0);
+
+FW_GL_BINDBUFFER(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+}
+
+/* choose and turn on a shader for this geometry */
+
+void enableGlobalShader(s_shader_capabilities_t *myShader) {
+	ppRenderFuncs p = (ppRenderFuncs)RenderFuncs_prv;
+
+    //ConsoleMessage ("enableGlobalShader, have myShader %d",myShader->myShaderProgram);
+    if (myShader == NULL) {
+        finishedWithGlobalShader(); 
+        return;
+    };
+    
+    
+    getAppearanceProperties()->currentShaderProperties = myShader;
+    if (myShader->myShaderProgram != p->currentShader) {
+		USE_SHADER(myShader->myShaderProgram);
+		p->currentShader = myShader->myShaderProgram;
+	}
+}
+
+void fin_volumestyle(Node *vstyle, NodeVolumeData *dataParent){
+    NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
+    if(style0->enabled()->getValue()){
+        switch(vstyle->getType()){
+            case X3D_OPACITY_MAP_VOLUME_STYLE:
+                {
+                    //do I need to do this?
+                    renderFuncs_textureStackTop = 0;
+                    renderFuncs_texturenode = NULL;
+                }
+            break;
+            case X3D_BLENDED_VOLUME_STYLE:
+                {
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#BlendedVolumeStyle
+                    NodeBlendedVolumeStyle *style = (NodeBlendedVolumeStyle*)vstyle;
+                    //FBO blending
+                    //a)  render the parent volumeData to fbo:
+                    //    - in prep Blended push fbo
+                    //    - render main to fbo
+                    //    - in fin Blended: read pixels or save renderbuffer texture 0
+                    //b)  in fin Blended: render blended (voxels,stye) as VolumeData to fbo
+                    //    - read pixels or same renderbuffer texture 1
+                    //c)   pop fbo
+                    //d)  set 2 pixelsets as textures
+                    //     and render via a special little shader that blends 2 textures and sends to GL_BACK. 
+                #ifdef BLENDED
+                    GLuint pixelType = GL_RGBA;
+                    int *fbohandles = style->m_fbohandles;
+                    if(fbohandles[0] > 0){
+                        //readpixels from parent volumedata render
+                        static int iframe = 0;
+                        s_shader_capabilities_t *caps;
+                        int nsubstyle;
+                        //GLuint myProg;
+                        int method_draw_cube, method_draw_quad;
+
+                        iframe++;
+                        //FW_GL_READPIXELS (0,0,isize,isize,pixelType,GL_UNSIGNED_BYTE, ttip->texdata);
+                        if(0) if(iframe==500){
+                            //write out whats in the framebuffer, and use as texture in test scene, to see fbo rendered OK
+                            GLint iviewport[4];
+                            char namebuf[100];
+                            textureTableIndexStruct_s ttipp, *ttip;
+                            ttip = &ttipp;
+                            glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
+
+                            ttip->texdata = (unsigned char *)MALLOC (GLvoid *, 4*iviewport[2]*iviewport[3]);
+
+                            /* grab the data */
+                            //FW_GL_PIXELSTOREI (GL_UNPACK_ALIGNMENT, 1);
+                            //FW_GL_PIXELSTOREI (GL_PACK_ALIGNMENT, 1);
+                            
+                            // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glReadPixels.xml
+                            FW_GL_READPIXELS (iviewport[0],iviewport[1],iviewport[2],iviewport[3],pixelType,GL_UNSIGNED_BYTE, ttip->texdata);
+                            ttip->x = iviewport[2];
+                            ttip->y = iviewport[3];
+                            ttip->z = 1;
+                            ttip->hasAlpha = 1;
+                            ttip->channels = 4;
+                            //write out tti as web3dit image files for diagnostic viewing, can use for BackGround node
+                            //void saveImage_web3dit(struct textureTableIndexStruct *tti, char *fname)
+                            sprintf(namebuf,"%s%d.web3dit","blended_fbo_",0);
+                            saveImage_web3dit(ttip, namebuf);
+                            FREE_IF_NZ(ttip->texdata);
+                        }
+
+                        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbohandles[2], 0);
+                        //glDrawBuffers(1,&fbohandles[2]);
+
+                        glClearColor(0.0f,0.0f,0.0f,0.0f); //red, for diagnostics during debugging
+                        FW_GL_CLEAR(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                        //render blended as volumedata to fbo
+                        //render_volume_data(style->renderStyle,style->voxels,dataParent);
+                        nsubstyle = style->renderStyle()->getValue() ? 1 : 0;
+                        Node *tmpNode = style->renderStyle()->getValue();
+                        caps = getVolumeProgram(&tmpNode,nsubstyle, SHADERFLAGS_VOLUME_DATA_BASIC);
+                        //render generic volume 
+                        render_GENERIC_volume_data(caps,&tmpNode,nsubstyle,style->voxels()->getValue(),(struct X3D_VolumeData*)dataParent );
+                        //render_GENERIC_volume_data(caps,style->renderStyle,1,style->voxels,(struct X3D_VolumeData*)dataParent );
+
+                        //glDrawBuffers(0,NULL);
+
+                        //read blended from fbo
+                        //FW_GL_READPIXELS (0,0,isize,isize,pixelType,GL_UNSIGNED_BYTE, ttip->texdata);
+                        if(0) if(iframe==500){
+                            //write out whats in the framebuffer, and use as texture in test scene, to see fbo rendered OK
+                            GLint iviewport[4];
+                            char namebuf[100];
+                            textureTableIndexStruct_s ttipp, *ttip;
+                            ttip = &ttipp;
+                            glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
+
+                            ttip->texdata = (unsigned char*)MALLOC (GLvoid *, 4*iviewport[2]*iviewport[3]);
+
+                            /* grab the data */
+                            //FW_GL_PIXELSTOREI (GL_UNPACK_ALIGNMENT, 1);
+                            //FW_GL_PIXELSTOREI (GL_PACK_ALIGNMENT, 1);
+                            // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glReadPixels.xml
+                            FW_GL_READPIXELS (iviewport[0],iviewport[1],iviewport[2],iviewport[3],pixelType,GL_UNSIGNED_BYTE, ttip->texdata);
+                            ttip->x = iviewport[2];
+                            ttip->y = iviewport[3];
+                            ttip->z = 1;
+                            ttip->hasAlpha = 1;
+                            ttip->channels = 4;
+                            //write out tti as web3dit image files for diagnostic viewing, can use for BackGround node
+                            //void saveImage_web3dit(struct textureTableIndexStruct *tti, char *fname)
+                            sprintf(namebuf,"%s%d.web3dit","blended_fbo_",1);
+                            saveImage_web3dit(ttip, namebuf);
+                            FREE_IF_NZ(ttip->texdata);
+                            printf("wrote blended_fbo_.web3dit \n");
+                        }
+                        popnset_framebuffer();
+                        popnset_viewport();
+                        //we're now back to rendering to the screen
+                        //we should have 2 textures
+
+                        //render 2 textures as blended multitexture, or in special shader for blending, 
+                        //2 textures are fbohandles[0] (parent voldata), fbohandles[1] (blend voldata)
+                        //over window-filling quad
+                        //Options: 
+                        //1) draw our cube again, to get the depth (and skip unneeded pixels)
+                        //   but use gl_fragCoords as texture interpolator
+                        //2) draw quad in ortho mode (but where depth buffer?)
+                        method_draw_cube = method_draw_quad = 0;
+                        method_draw_cube = 1;
+                        if(method_draw_cube){
+                            GLint myProg;
+                            GLint iwtc1, iwtc2, iwtf1, iwtf2;
+                            GLint TextureUnit;
+                            int havetextures;
+                            GLint iopactex, vp;
+                            GLint iviewport[4];
+                            float viewport[4];
+                            shaderflagsstruct shader_requirements; //shaderflags, 
+                            s_shader_capabilities_t *caps;
+                            GLint Vertices, mvm, proj;
+                            double modelviewMatrix[16], projMatrix[16]; //, mvp[16]; // mvpinverse[16]; //mvmInverse[16], 
+
+
+                            memset(&shader_requirements,0,sizeof(shaderflagsstruct));
+                            shader_requirements.volume = SHADERFLAGS_VOLUME_STYLE_BLENDED << 4; //send the following through the volume ubershader
+                            // by default we'll mash it in: shader_requirements.volume |= TEX3D_SHADER;
+                            caps = getMyShaders(shader_requirements);
+                            enableGlobalShader(caps);
+                            myProg = caps->myShaderProgram;
+
+                            //send the usual matrices - same vertex shader as volumedata
+                            //but simpler frag shader that uses gl_fragCoords, and does blend
+
+                            //set shader flags
+                            //build or get shader program
+                            //set attributes 
+                            //SFFloat  [in,out] weightConstant1         0.5        [0,1]
+                            //SFFloat  [in,out] weightConstant2         0.5        [0,1]
+                            //BRUTZMAN: ALPHA0,1 here should be ALPHA1,2 to match table 14.1
+                            //SFString [in,out] weightFunction1         "CONSTANT" ["CONSTANT", "ALPHA0", "ALPHA1", "TABLE",
+                            //                                                    "ONE_MINUS_ALPHA0", "ONE_MINUS_ALPHA1" ] 
+                            //SFString [in,out] weightFunction2         "CONSTANT" ["CONSTANT", "ALPHA0", "ALPHA1", "TABLE",
+                            //                                                    "ONE_MINUS_ALPHA0", "ONE_MINUS_ALPHA1" ] 
+                            //SFNode   [in,out] weightTransferFunction1 NULL       [X3DTexture2DNode]
+                            //SFNode   [in,out] weightTransferFunction2 NULL       [X3DTexture2DNode]
+
+                            iwtc1 = GET_UNIFORM(myProg,"fw_iwtc1");
+                            iwtc2 = GET_UNIFORM(myProg,"fw_iwtc2");
+                            iwtf1 = GET_UNIFORM(myProg,"fw_iwtf1");
+                            iwtf2 = GET_UNIFORM(myProg,"fw_iwtf2");
+                            glUniform1f(iwtc1,style->m_weightConstant1);
+                            glUniform1f(iwtc2,style->m_weightConstant2);
+/*
+                            if(style->m_weightFunction1 == 0)
+                                style->m_weightFunction1 = lookup_blendfunc(style->weightFunction1->strptr);
+                            if(style->m_weightFunction2 == 0)
+                                style->_weightFunction2 = lookup_blendfunc(style->weightFunction2->strptr);
+                            glUniform1i(iwtf1,style->m_weightFunction1);
+*/                            glUniform1i(iwtf2,style->m_weightFunction2);
+/*
+                            //set the 2 textures from the fbo rendering
+                            glActiveTexture ( GL_TEXTURE0 );
+                            glBindTexture(GL_TEXTURE_2D,style->m_fbohandles1);
+                            FW_GL_TEXPARAMETERI( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);  //don't interpolate integer segment IDs
+
+                            glActiveTexture ( GL_TEXTURE0+1 );
+                            glBindTexture(GL_TEXTURE_2D,style->_fbohandles.p[2]);
+                            FW_GL_TEXPARAMETERI( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);  //don't interpolate integer segment IDs
+*/
+                            TextureUnit= GET_UNIFORM(myProg,"fw_Texture_unit0");
+                            glUniform1i(TextureUnit,0);
+                            TextureUnit= GET_UNIFORM(myProg,"fw_Texture_unit1");
+                            glUniform1i(TextureUnit,1);
+
+/*
+                            //set the 2 transfer function textures
+                            havetextures = 0;
+                            if(style->weightTransferFunction1){
+                                //load texture
+                                Node *tmpN;
+                                textureTableIndexStruct_s *tti;
+                                ttglobal tg = gglobal();
+
+                                POSSIBLE_PROTO_EXPANSION(struct X3D_Node *, style->weightTransferFunction1,tmpN);
+                                tg->RenderFuncs.texturenode = (void*)tmpN;
+
+                                //problem: I don't want it sending image dimensions to my volume shader,
+                                // which could confuse the voxel sampler
+                                //render_node(tmpN); //render_node(node->texture); 
+                                loadTextureNode(tmpN,NULL);
+                                tti = getTableTableFromTextureNode(tmpN);
+                                if(tti && tti->status >= TEX_LOADED){
+                                    glActiveTexture(GL_TEXTURE0+2); 
+                                    glBindTexture(GL_TEXTURE_2D,tti->OpenGLTexture); 
+                                    havetextures |= 1;
+                                }
+                            }
+                            if(style->weightTransferFunction2){
+                                //load texture
+                                struct X3D_Node *tmpN;
+                                textureTableIndexStruct_s *tti;
+                                ttglobal tg = gglobal();
+
+                                POSSIBLE_PROTO_EXPANSION(struct X3D_Node *, style->weightTransferFunction2,tmpN);
+                                tg->RenderFuncs.texturenode = (void*)tmpN;
+
+                                //problem: I don't want it sending image dimensions to my volume shader,
+                                // which could confuse the voxel sampler
+                                //render_node(tmpN); //render_node(node->texture); 
+                                loadTextureNode(tmpN,NULL);
+                                tti = getTableTableFromTextureNode(tmpN);
+                                if(tti && tti->status >= TEX_LOADED){
+                                    glActiveTexture(GL_TEXTURE0+3); 
+                                    glBindTexture(GL_TEXTURE_2D,tti->OpenGLTexture); 
+                                    havetextures |= 2;
+                                }
+                            }
+*/
+                            iopactex = GET_UNIFORM(myProg,"fw_haveTransfers");
+                            glUniform1i(iopactex,havetextures);
+
+
+                            glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
+
+                            vp = GET_UNIFORM(myProg,"fw_viewport");
+                            viewport[0] = (float)iviewport[0]; //xmin
+                            viewport[1] = (float)iviewport[1]; //ymin
+                            viewport[2] = (float)iviewport[2]; //width
+                            viewport[3] = (float)iviewport[3]; //height
+                            GLUNIFORM4F(vp,viewport[0],viewport[1],viewport[2],viewport[3]);
+
+                            //draw the box
+
+                            Vertices = GET_ATTRIB(myProg,"fw_Vertex");
+                            mvm = GET_UNIFORM(myProg,"fw_ModelViewMatrix"); //fw_ModelViewMatrix
+                            proj = GET_UNIFORM(myProg,"fw_ProjectionMatrix"); //fw_ProjectionMatrix
+                            sendExplicitMatriciesToShader(mvm,proj,-1,NULL,-1);
+                            FW_GL_GETDOUBLEV(GL_MODELVIEW_MATRIX, modelviewMatrix);
+                            FW_GL_GETDOUBLEV(GL_PROJECTION_MATRIX, projMatrix);
+
+                            glEnableVertexAttribArray(Vertices);
+
+                            glVertexAttribPointer(Vertices, 3, GL_FLOAT, GL_FALSE, 0, dataParent->m_boxtris);
+
+
+                            glEnable(GL_CULL_FACE);
+                            glFrontFace(GL_CW); 
+                            glDrawArrays(GL_TRIANGLES,0,36);
+                            glDisable(GL_CULL_FACE);
+
+                        }else if(method_draw_quad){
+                            ////we need a shader that doesn't bother with matrices - just draws quad like ortho
+                            //GLint Vertices = GET_ATTRIB(myProg,"fw_Vertex");
+                            //glEnableVertexAttribArray(Vertices);
+                            //glVertexAttribPointer(Vertices, 3, GL_FLOAT, GL_FALSE, 0, box);
+                            //glDrawArrays(GL_TRIANGLES,0,6); //6 vertices for quad
+                        }
+
+                    }
+                #endif //BLENDED
+                }
+            case X3D_COMPOSED_VOLUME_STYLE:
+                {
+                    int i;
+                    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#ComposedVolumeStyle
+                    NodeComposedVolumeStyle *style = (NodeComposedVolumeStyle*)vstyle;
+                    for(i=0;i<style->renderStyle()->getSize();i++){
+                        fin_volumestyle(style->renderStyle()->getValue(i),dataParent);
+                    }
+                }
+                break;
+
+        default:
+            break;
+        }
+    }
+}
+int volstyle_needs_normal(struct X3D_Node *vstyle){
+    //IDEA: compute image gradient and store in RGB, if a style requests it
+    // then surfaceNormal = normalize(gradient)
+    //SFNode [in,out] surfaceNormals NULL [X3DTexture3DNode
+    // Cartoon
+    // Edge
+    // Shaded
+    // SilhouetteEnhancement
+    // ToneMappedVolumeStyle
+    //
+    //SFNode [in,out] gradients NULL [X3DTexture3DNode]
+    // IsoSurfaceVolumeData
+    //
+    //SFNode [in,out] segmentIdentifiers NULL [X3DTexture3DNode]
+    // SegmentedVolumeData
+    int need_normal;
+    struct X3D_OpacityMapVolumeStyle *style0 = (struct X3D_OpacityMapVolumeStyle*)vstyle;
+    need_normal = FALSE;
+    if(style0->enabled){
+        switch(vstyle->_nodeType){
+            case NODE_ComposedVolumeStyle:
+                {
+                    int i;
+                    struct X3D_ComposedVolumeStyle *style = (struct X3D_ComposedVolumeStyle*)vstyle;
+                    for(i=0;i<style->renderStyle.n;i++){
+                        need_normal = need_normal || volstyle_needs_normal(style->renderStyle.p[i]);
+                    }
+                }
+                break;
+            case NODE_CartoonVolumeStyle:
+            case NODE_EdgeEnhancementVolumeStyle:
+            case NODE_ShadedVolumeStyle:
+            case NODE_SilhouetteEnhancementVolumeStyle:
+            case NODE_ToneMappedVolumeStyle:
+                {
+                    //in perl structs, for these nodes its all the 3rd field after enabled, metadata, surfacenormals
+                    struct X3D_ToneMappedVolumeStyle *style = (struct X3D_ToneMappedVolumeStyle*)vstyle;
+                    need_normal = need_normal || (style->surfaceNormals == NULL);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    return need_normal;
+}
+
+void compile_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
+    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#IsoSurfaceVolumeData
+    // VolumeData + 4 fields:
+    //SFFloat [in,out] contourStepSize  0        (-INF,INF)
+    //SFNode  [in,out] gradients        NULL     [X3DTexture3DNode]
+    //SFFloat [in,out] surfaceTolerance 0        [0,INF)
+    //MFFloat [in,out] surfaceValues    []       (-INF,INF)
+    printf("compile_isosurfacevolumedata not implemented\n");
+    compile_VolumeData((struct X3D_VolumeData *)node);
+}
+
+
+
+void compile_SegmentedVolumeData(struct X3D_SegmentedVolumeData *node){
+    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#SegmentedVolumeData
+    // VolumeData + 2 fields:
+    //MFBool  [in,out] segmentEnabled     []
+    //SFNode  [in,out] segmentIdentifiers NULL     [X3DTexture3DNode]
+    printf("compile_segmentedvolumedata \n");
+    compile_VolumeData((struct X3D_VolumeData *)node);
+}
+s_shader_capabilities_t * getVolumeProgram(struct X3D_Node **renderStyle, int nstyle, int VOLUME_DATA_FLAG){
+    static int once = 0;
+    unsigned int volflags;
+    int i;
+    s_shader_capabilities_t *caps;
+
+    if(!once)
+        ConsoleMessage("getVolumeProgram\n");
+    volflags = 0;
+    if(nstyle){
+        for(i=0;i<nstyle;i++){
+            struct X3D_OpacityMapVolumeStyle *style0 = (struct X3D_OpacityMapVolumeStyle*)renderStyle[i];
+            if(style0->enabled){
+                volflags = prep_volumestyle(renderStyle[i], volflags); //get shader flags
+            }
+        }
+    }else{
+        volflags = SHADERFLAGS_VOLUME_STYLE_DEFAULT;
+    }
+
+    if(!once){
+        printf("volflags= ");
+        for(i=0;i<8;i++)
+            printf("%d ",((volflags >> (8-i-1)*4) & 0xF)); //show 4 int
+        printf("\n");
+    }
+
+    //render 
+    //Step 1: set the 3D texture
+    //if(node->voxels)
+    //    render_node(node->voxels);
+    //Step 2: get rays to cast: start point and direction vector for each ray to cast
+
+    //method: use cpu math to compute a few uniforms so frag shader can do box intersections
+    //http://prideout.net/blog/?p=64
+    //- one step raycasting using gl_fragCoord
+    //- we modified this general method to use gluUnproject math instead of focallength
+
+    //Step 3: accumulate along rays and render opacity fragment in one step
+    //GPU VERSION
+    {
+        shaderflagsstruct shader_requirements; //shaderflags, 
+        // OLDCODE GLint myProg;
+
+        memset(&shader_requirements,0,sizeof(shaderflagsstruct));
+        //shaderflags = getShaderFlags();
+        shader_requirements.volume = VOLUME_DATA_FLAG; //SHADERFLAGS_VOLUME_DATA_BASIC; //send the following through the volume ubershader
+        shader_requirements.volume |= (volflags << 4); //SHADERFLAGS_VOLUME_STYLE_OPACITY;
+        //CLIPPLANES ?
+        shader_requirements.base |= getShaderFlags().base & CLIPPLANE_SHADER; 
+        // by default we'll mash it in: shader_requirements.volume |= TEX3D_SHADER;
+        caps = getMyShaders(shader_requirements);
+        enableGlobalShader(caps);
+        // OLDCODE myProg =  caps->myShaderProgram;
+    }
+    //Step 1: set the 3D texture
+    once = 1;
+    //return myProg;
+    return caps; 
+}
+
+void render_SEGMENTED_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *segmentIDs, int itexture, struct X3D_SegmentedVolumeData *node) {
+    int myProg;
+    GLint inids, ienable;
+
+    int *enabledIDs = node->segmentEnabled.p;
+    int nIDs = node->segmentEnabled.n;
+    myProg = caps->myShaderProgram;
+    if(segmentIDs){
+        struct X3D_Node *tmpN;
+        textureTableIndexStruct_s *tti;
+        ttglobal tg = gglobal();
+
+        POSSIBLE_PROTO_EXPANSION(struct X3D_Node *, segmentIDs,tmpN);
+        tg->RenderFuncs.texturenode = (void*)tmpN;
+
+        render_node(tmpN); //render_node(node->voxels); 
+
+        tti = getTableTableFromTextureNode(tmpN);
+        if(tti && tti->status >= TEX_LOADED){
+            GLint TextureUnit;
+            if(0){
+                //in theory these will be set by the main voxel texture but don't match
+                //here we want NEAREST not LINEAR
+                GLint tex3dUseVertex, ttiles, repeatSTR, magFilter;
+                ttiles = GET_UNIFORM(myProg,"tex3dTiles");
+                GLUNIFORM1IV(ttiles,3,tti->tiles);
+
+                //me->tex3dUseVertex = GET_UNIFORM(myProg,"tex3dUseVertex");
+                tex3dUseVertex = GET_UNIFORM(myProg,"tex3dUseVertex");
+                glUniform1i(tex3dUseVertex,0); 
+                repeatSTR = GET_UNIFORM(myProg,"repeatSTR");
+                glUniform1iv(repeatSTR,3,tti->repeatSTR);
+                magFilter = GET_UNIFORM(myProg,"magFilter");
+                glUniform1i(magFilter,0); //tti->magFilter); //NEAREST
+            }
+            TextureUnit= GET_UNIFORM(myProg,"fw_Texture_unit1");
+            glUniform1i(TextureUnit,itexture);
+            glActiveTexture(GL_TEXTURE0+itexture); 
+            glBindTexture(GL_TEXTURE_2D,tti->OpenGLTexture); 
+            FW_GL_TEXPARAMETERI( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);  //don't interpolate integer segment IDs
+        }
+    }
+    inids = GET_UNIFORM(myProg,"fw_nIDs");
+    glUniform1i(inids,nIDs); 
+    ienable = GET_UNIFORM(myProg,"fw_enableIDs");
+    glUniform1iv(ienable,nIDs,enabledIDs); 
+
+    //similar to ISO, there are multiple rendering styles
+    if(node->renderStyle.n){
+        int i, *styleflags,instyles;
+        GLint istyles;
+
+        styleflags = MALLOC(int*,sizeof(int)*node->renderStyle.n);
+        for(i=0;i<node->renderStyle.n;i++){
+            styleflags[i] = prep_volumestyle(node->renderStyle.p[i],0);
+        }
+        //printf("%d %d\n",styleflags[0],styleflags[1]);
+        istyles = GET_UNIFORM(myProg,"fw_surfaceStyles");
+        glUniform1iv(istyles,node->renderStyle.n,styleflags);
+        instyles = GET_UNIFORM(myProg,"fw_nStyles");
+        glUniform1i(instyles,node->renderStyle.n);
+    }
+
+
+
+}
+
+
+
+float *getTransformedClipPlanes();
+int getClipPlaneCount();
+void sendFogToShader(s_shader_capabilities_t *me);
+void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node **renderStyle, int nstyle, struct X3D_Node *voxels, struct X3D_VolumeData *node ) {
+    static int once = 0;
+    int myProg;
+    //unsigned int volflags;
+    GLint Vertices, mvm, proj, mvpi;
+    double modelviewMatrix[16],projMatrix[16], mvp[16], mvpinverse[16]; // mvmInverse[16], 
+    float spmat[16];
+    int nsend;
+    GLint iclipplanes, inclipplanes;
+    float *clipplanes;
+    GLint iviewport[4];
+    float viewport[4];
+    GLint vp, dim;
+    float *dimensions;
+
+    ttglobal tg = gglobal();
+
+    myProg = caps->myShaderProgram;
+
+    if(voxels){
+        struct X3D_Node *tmpN;
+        textureTableIndexStruct_s *tti;
+        POSSIBLE_PROTO_EXPANSION(struct X3D_Node *, voxels,tmpN);
+        tg->RenderFuncs.texturenode = (void*)tmpN;
+
+        //gradient > Oct 2016 we compute in textures.c if channels==1 and z>1 and put in rgb
+        // - saves mallocing another RGBA 
+        // - for scalar images RGB is unused or just 111 anyway
+        // - takes 1 second on desktop CPU for 17 Mpixel image
+        //if(node->renderStyle){
+        //    if(volstyle_needs_normal(node->renderStyle)){
+        //        switch(tmpN->_nodeType){
+        //            case NODE_PixelTexture3D:
+        //                ((struct X3D_PixelTexture3D*)tmpN)->_needs_gradient = TRUE; break;
+        //            case NODE_ImageTexture3D:
+        //                ((struct X3D_ImageTexture3D*)tmpN)->_needs_gradient = TRUE; break;
+        //        }
+        //    }
+        //}
+        //render_node(voxels) should keep pulling the texture through all stages of loading and opengl
+        render_node(tmpN); //render_node(node->voxels); 
+
+        tti = getTableTableFromTextureNode(tmpN);
+        if(tti && tti->status >= TEX_LOADED){
+            GLint ttiles, tex3dUseVertex,repeatSTR,magFilter;
+            ttiles = GET_UNIFORM(myProg,"tex3dTiles");
+            GLUNIFORM1IV(ttiles,3,tti->tiles);
+
+            //me->tex3dUseVertex = GET_UNIFORM(myProg,"tex3dUseVertex");
+            tex3dUseVertex = GET_UNIFORM(myProg,"tex3dUseVertex");
+            glUniform1i(tex3dUseVertex,0); 
+            repeatSTR = GET_UNIFORM(myProg,"repeatSTR");
+            glUniform1iv(repeatSTR,3,tti->repeatSTR);
+            magFilter = GET_UNIFORM(myProg,"magFilter");
+            glUniform1i(magFilter,1); //need LINEAR //tti->magFilter);
+
+            glActiveTexture(GL_TEXTURE0); 
+            glBindTexture(GL_TEXTURE_2D,tti->OpenGLTexture); 
+            FW_GL_TEXPARAMETERI( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        }
+    }
+    if(nstyle){
+        int i;
+        for(i=0;i<nstyle;i++){
+            struct X3D_OpacityMapVolumeStyle *style0 = (struct X3D_OpacityMapVolumeStyle*)renderStyle[i];
+            if(style0->enabled){
+                render_volumestyle(renderStyle[i],myProg); //send uniforms
+                // if style uses a texture, it should be the next texture ie GL_TEXTURE0+1,2..
+            }
+        }
+    }
+    //3.1 set uniforms: dimensions, focal length, fov (field of view), window size, modelview matrix
+    //    set attributes vertices of triangles of bounding box
+    // set box with vol.dimensions with triangles
+    Vertices = GET_ATTRIB(myProg,"fw_Vertex");
+    mvm = GET_UNIFORM(myProg,"fw_ModelViewMatrix"); //fw_ModelViewMatrix
+    proj = GET_UNIFORM(myProg,"fw_ProjectionMatrix"); //fw_ProjectionMatrix
+    if(!once)
+        ConsoleMessage("vertices %d mvm %d proj %d\n",Vertices,mvm,proj);
+    sendExplicitMatriciesToShader(mvm,proj,-1,NULL,-1);
+    FW_GL_GETDOUBLEV(GL_MODELVIEW_MATRIX, modelviewMatrix);
+    FW_GL_GETDOUBLEV(GL_PROJECTION_MATRIX, projMatrix);
+    if(1){
+        //see gluUnproject in Opengl_Utils.c
+        __gluMultMatricesd(modelviewMatrix, projMatrix, mvp);
+        if (!__gluInvertMatrixd(mvp, mvpinverse)) return;
+    }else{
+        matmultiplyFULL(mvp,modelviewMatrix,projMatrix);
+        //matmultiplyFULL(mvp,projMatrix,modelviewMatrix);
+        //if (!__gluInvertMatrixd(mvp, mvpinverse)) return;
+        matinverseFULL(mvpinverse,mvp); //seems different than glu's. H0: just wrong H1: transopose H2: full inverse vs factorized
+    }
+    matdouble2float4(spmat,mvpinverse);
+
+    mvpi = GET_UNIFORM(myProg,"fw_ModelViewProjInverse");
+    GLUNIFORMMATRIX4FV(mvpi,1,GL_FALSE,spmat);
+
+
+//SEND CLIPPLANES?
+    //sendClipplanesToShader(mysp);
+    clipplanes = getTransformedClipPlanes();
+    
+    nsend = getClipPlaneCount();
+    iclipplanes = GET_UNIFORM(myProg,"fw_clipplanes");
+    inclipplanes = GET_UNIFORM(myProg,"fw_nclipplanes");
+
+    GLUNIFORM4FV(iclipplanes,nsend,clipplanes);
+    GLUNIFORM1I(inclipplanes,nsend);
+
+//SEND LIGHTS IF WE HAVE A SHADER STYLE 
+    //int haveShaderStyle = FALSE;
+    //if(nstyle){
+    //    for(int i=0;i<nstyle;i++){
+    //        haveShaderStyle = haveShaderStyle || (renderStyle[i]->_nodeType == NODE_ShadedVolumeStyle); 
+    //    }
+    //}
+    //if(haveShaderStyle){
+        //send lights
+        if (caps->haveLightInShader) {
+            sendLightInfo(caps);
+            sendFogToShader(caps);
+        }
+    //}
+
+
+
+    //get the current viewport
+    glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
+    vp = GET_UNIFORM(myProg,"fw_viewport");
+    viewport[0] = (float)iviewport[0]; //xmin
+    viewport[1] = (float)iviewport[1]; //ymin
+    viewport[2] = (float)iviewport[2]; //width
+    viewport[3] = (float)iviewport[3]; //height
+    GLUNIFORM4F(vp,viewport[0],viewport[1],viewport[2],viewport[3]);
+    dim = GET_UNIFORM(myProg,"fw_dimensions");
+    dimensions = node->dimensions.c;
+    GLUNIFORM3F(dim,dimensions[0],dimensions[1],dimensions[2]);
+
+    if(!once) ConsoleMessage("dim %d vp %d \n",dim,vp );
+
+    //3.2 draw with shader
+    glEnableVertexAttribArray(Vertices);
+    glVertexAttribPointer(Vertices, 3, GL_FLOAT, GL_FALSE, 0, node->_boxtris);
+    // https://www.opengl.org/wiki/Face_Culling
+    glEnable(GL_CULL_FACE);
+    //we want to draw only either back/far or front/near triangles, not both
+    //so that we comput a ray only once.
+    //and because we want to use clipplane (or frustum near side) to slice into
+    //volumes, we want to make sure we are still getting ray fragments when slicing
+    //so instead of drawing the front faces (which would slice away fragments/rays)
+    //we want to draw only the far/back triangles so even when slicing, we'll get
+    //fragment shader calls, and can compute rays.
+    //assuming our triangles are defined CCW (normal)
+    //setting front-face to GL_CW should ensure only the far/back triangles are rendered
+    glFrontFace(GL_CW); 
+    glDrawArrays(GL_TRIANGLES,0,36);
+    glDisable(GL_CULL_FACE);
+    if(voxels){
+        tg->RenderFuncs.textureStackTop = 0;
+        tg->RenderFuncs.texturenode = NULL;
+    }
+    if(nstyle){
+        int i;
+        for(i=0;i<nstyle;i++)
+            fin_volumestyle(renderStyle[i],node);
+    }
+    once = 1;
+
+} 
+
+void child_SegmentedVolumeData(struct X3D_SegmentedVolumeData *node){
+    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#SegmentedVolumeData
+    // VolumeData + 2 fields:
+    //MFBool  [in,out] segmentEnabled     []
+    //SFNode  [in,out] segmentIdentifiers NULL     [X3DTexture3DNode]
+    s_shader_capabilities_t *caps;
+    static int once = 0;
+    COMPILE_IF_REQUIRED
+
+    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+        int itexture = 1; //voxels=0,segmentIDs=1
+
+        if(!once)
+            printf("child segmentedvolumedata \n");
+        //int nstyles = 0;
+        //if(node->renderStyle) nstyles = 1;
+
+        caps = getVolumeProgram(node->renderStyle.p,node->renderStyle.n, SHADERFLAGS_VOLUME_DATA_SEGMENT);
+        //get and set segment-specific uniforms
+        itexture = 1; //voxels=0,segmentIDs=1
+        render_SEGMENTED_volume_data(caps,node->segmentIdentifiers,itexture,node);
+        //render generic volume 
+        render_GENERIC_volume_data(caps,node->renderStyle.p,node->renderStyle.n,node->voxels,(struct X3D_VolumeData*)node );
+        once = 1;
+    } //if VF_Blend
+
+}
+void render_ISO_volume_data(s_shader_capabilities_t *caps,struct X3D_IsoSurfaceVolumeData *node){
+    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#IsoSurfaceVolumeData
+    // VolumeData + 4 fields, minus 1 field
+    //SFFloat [in,out] contourStepSize  0        (-INF,INF)
+    //SFNode  [in,out] gradients        NULL     [X3DTexture3DNode]
+    //SFFloat [in,out] surfaceTolerance 0        [0,INF)
+    //MFFloat [in,out] surfaceValues    []       (-INF,INF)
+    //MFNode  [in,out] renderStyle      []       [X3DVolumeRenderStyleNode]
+    //minus SFNode renderStyle
+    int myProg;
+    GLint istep, itol,ivals,invals;
+    myProg= caps->myShaderProgram;
+    istep = GET_UNIFORM(myProg,"fw_stepSize");
+    glUniform1f(istep,node->contourStepSize); 
+    itol = GET_UNIFORM(myProg,"fw_tolerance");
+    glUniform1f(itol,node->surfaceTolerance); 
+
+    ivals = GET_UNIFORM(myProg,"fw_surfaceVals");
+    glUniform1fv(ivals,node->surfaceValues.n,node->surfaceValues.p); 
+    invals = GET_UNIFORM(myProg,"fw_nVals");
+    glUniform1i(invals,node->surfaceValues.n);
+    if(node->renderStyle.n){
+        int i;
+        // OLDCODE GLint istyles;
+        GLint instyles;
+        int *styleflags = MALLOC(int*,sizeof(int)*node->renderStyle.n);
+        for(i=0;i<node->renderStyle.n;i++){
+            styleflags[i] = prep_volumestyle(node->renderStyle.p[i],0);
+        }
+        // OLDCODE istyles = GET_UNIFORM(myProg,"fw_surfaceStyles");
+        glUniform1iv(ivals,node->renderStyle.n,styleflags);
+        instyles = GET_UNIFORM(myProg,"fw_nStyles");
+        glUniform1i(instyles,node->renderStyle.n);
+    }
+
+    //renderstyle handling?
+    //Options:
+    // a) include all renderstyles in the shader
+    // b) go through the list and |= (multiple times should show up as once?)
+    // then make a special shader to (equivalent to switch-case) on each voxel/gradient after iso value has been computed
+}
+
+void child_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
+    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#IsoSurfaceVolumeData
+    // VolumeData + 4 fields:
+    //SFFloat [in,out] contourStepSize  0        (-INF,INF)
+    //SFNode  [in,out] gradients        NULL     [X3DTexture3DNode]
+    //SFFloat [in,out] surfaceTolerance 0        [0,INF)
+    //MFFloat [in,out] surfaceValues    []       (-INF,INF)
+    static int once = 0;
+    COMPILE_IF_REQUIRED
+    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+        unsigned int voldataflags;
+        s_shader_capabilities_t *caps;
+        int MODE;
+
+        if(!once)
+            printf("child segmentedvolumedata \n");
+        voldataflags = SHADERFLAGS_VOLUME_DATA_ISO;
+
+        MODE = node->surfaceValues.n == 1 ? 1 : 3;
+        MODE = node->contourStepSize != 0.0f && MODE == 1 ? 2 : 1;
+        if(MODE == 3)
+            voldataflags |= SHADERFLAGS_VOLUME_DATA_ISO_MODE3;
+        caps = getVolumeProgram(node->renderStyle.p,node->renderStyle.n, voldataflags);
+        //get and set ISO-specific uniforms
+        render_ISO_volume_data(caps,node);
+        //render generic volume 
+        render_GENERIC_volume_data(caps,node->renderStyle.p,node->renderStyle.n,node->voxels,(struct X3D_VolumeData*)node );
+        once = 1;
+    } //if VF_Blend
+}
+
+void child_VolumeData(struct X3D_VolumeData *node){
+    // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#VolumeData
+    // VolumeData 
+    s_shader_capabilities_t *caps;
+    static int once = 0;
+    COMPILE_IF_REQUIRED
+
+    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+        int nstyles = 0;
+        if(!once)
+            printf("child volumedata \n");
+        if(node->renderStyle) nstyles = 1;
+        caps = getVolumeProgram(&node->renderStyle,nstyles, SHADERFLAGS_VOLUME_DATA_BASIC);
+        //render generic volume 
+        render_GENERIC_volume_data(caps,&node->renderStyle,nstyles,node->voxels,(struct X3D_VolumeData*)node );
+        once = 1;
+    } //if VF_Blend
+
+}
+
+void
+NodeImageTexture3D::load()
+{
+    if (!m_loaded) {
+        RenderTextures_init((tRenderTextures*)&textures_prv);
+        registerTexture(this);
+        int textureNumber = m_textureTableIndex;
+        texture_load_from_file(getTableIndex(textureNumber), 
+                               (char *)url()->getValue(0).getData());
+        loadTextureNode(this, NULL);    
+        m_textures_prv = textures_prv;
+        m_loaded = true;
+    }
+}
+
 void
 NodeImageTexture3D::preDraw()
 {
-    RenderTextures_init((tRenderTextures*)&textures_prv);
-    registerTexture(this);
-    int textureNumber = m_textureTableIndex;
-    texture_load_from_file(getTableIndex(textureNumber), 
-                           (char *)url()->getValue(0).getData());
-    m_textures_prv = textures_prv;
+    load();
 }
 
 void
 NodeImageTexture3D::draw(int pass)
 {
     textures_prv = m_textures_prv;
-    loadTextureNode(this, NULL);    
+    Node *node = getParent();
+    if (node->getType() == X3D_VOLUME_DATA) {
+        NodeVolumeData *data = (NodeVolumeData *)node;
+        render_volume_data(data->renderStyle()->getValue(), 
+                           data->voxels()->getValue(), data);
+   }
 }
-
-#else
-
-void
-NodeImageTexture3D::preDraw()
-{
-}
-
-void
-NodeImageTexture3D::draw(int pass)
-{
-}
-
+# endif
 #endif
+
+

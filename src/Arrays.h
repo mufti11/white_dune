@@ -22,10 +22,10 @@
 #ifndef ARRAYS_H
 #define ARRAYS_H 1
 
-typedef Array<bool>   BoolArray;
-typedef Array<int>    IntArray;
-typedef Array<float>  FloatArray;
-typedef Array<double> DoubleArray;
+typedef MyArray<bool>   BoolArray;
+typedef MyArray<int>    IntArray;
+typedef MyArray<float>  FloatArray;
+typedef MyArray<double> DoubleArray;
 
 #include "StringArray.h"
 #endif

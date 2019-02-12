@@ -424,7 +424,7 @@ NodeCone::createMesh(bool cleanDoubleVertices, bool triangulate)
         offsetTexCoord += 2;
     }
 
-    Array<int> icoordIndex;
+    MyArray<int> icoordIndex;
     if (bbottom)
         for (int i = 0; i < tess; i++) {    
             icoordIndex.append(1 + i);
@@ -455,7 +455,7 @@ NodeCone::createMesh(bool cleanDoubleVertices, bool triangulate)
     MFVec3f *normals = new MFVec3f(fnormal, sizePoints);
 
     MFVec2f *texCoord = new MFVec2f(ftexCoord, sizeTexCoords);
-    Array<MFVec2f *> texCoords;
+    MyArray<MFVec2f *> texCoords;
     texCoords.append(texCoord);
 
     MFInt32 *normalIndex = NULL;

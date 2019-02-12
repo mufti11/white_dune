@@ -69,6 +69,9 @@ public:
     fieldMacros(SFBool, shadows, ProtoShadedVolumeStyle);
     fieldMacros(SFNode, surfaceNormals, ProtoShadedVolumeStyle);
     fieldMacros(SFString, phaseFunction, ProtoShadedVolumeStyle);
+
+public:
+   int m_phaseFunction;
 };
 
 #endif

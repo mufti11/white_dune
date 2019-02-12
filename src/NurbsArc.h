@@ -36,9 +36,9 @@ public:
              bool   isValid() { return m_valid; }
 
 protected:
-                    Array<Vec3f> points;
-                    Array<float> weights;
-                    Array<float> knots;
+                    MyArray<Vec3f> points;
+                    MyArray<float> weights;
+                    MyArray<float> knots;
              void   makeKnotvector(int narcs);
              int    Intersect3DLines(Vec3f &P1, Vec3f &T1, Vec3f &P2, Vec3f &T2);
              Vec3f  PointToLine(Vec3f lPoint, Vec3f lVector, Vec3f Point);
