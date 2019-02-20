@@ -76,6 +76,9 @@ public:
     fieldMacros(SFString, crossOrigin,       ProtoPixelTexture3D);
     fieldMacros(SFInt32,  origChannelCount,  ProtoPixelTexture3D);
     fieldMacros(SFBool,   scale,             ProtoPixelTexture3D);
+
+public:
+    int m_textureTableIndex;
 };
 
 #endif

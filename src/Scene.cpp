@@ -597,7 +597,8 @@ static bool loadMultimedia(Node *node, void *data)
         (node->getType() == X3DOM_BINARY_GEOMETRY) ||
         (node->getType() == X3DOM_EXTERNAL_GEOMETRY) ||
         (node->getType() == X3DOM_POP_GEOMETRY_LEVEL) ||
-        (node->getType() == X3DOM_MULTI_PART))
+        (node->getType() == X3DOM_MULTI_PART) ||
+        (node->getType() == X3D_IMAGE_TEXTURE_3D))
         node->load();
     return true;
 }

@@ -4541,6 +4541,8 @@ void MainWindow::deleteAnimationData(void)
                 Interpolator *interpolator = (Interpolator *)inputNode;
                 int min = interpolator->findKeyInclusive(0);
                 int max = interpolator->findKey(1);
+                if (max == interpolator->key()->getSize())
+                    max--;
                 interpolator->deleteKeys(min, max);
             }
         }

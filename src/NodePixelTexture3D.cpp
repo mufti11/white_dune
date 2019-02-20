@@ -75,4 +75,5 @@ ProtoPixelTexture3D::create(Scene *scene)
 NodePixelTexture3D::NodePixelTexture3D(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_textureTableIndex = 0;
 }

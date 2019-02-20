@@ -35,11 +35,23 @@
 #include "KambiTextureCommonFields.h"
 
 #include "SFMFTypes.h"
+
 #ifdef HAVE_LIBIMLIB2
 # ifdef HAVE_LIBGLESV2
-#  include "Texture3D.h"
+    class textureTableIndexStruct;
+    typedef textureTableIndexStruct textureTableIndexStruct_s;
+    class Vector;
+    typedef struct pTextures{
+        struct Vector *activeTextureTable;
+        textureTableIndexStruct_s* loadThisTexture;
+
+        /* current index into loadparams that texture thread is working on */
+        int currentlyWorkingOn;// = -1;
+        int textureInProcess;// = -1;
+    }* ppTextures;
 # endif
 #endif
+
 
 class ProtoImageTexture3D : public Proto {
 public:

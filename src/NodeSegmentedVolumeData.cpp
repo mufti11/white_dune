@@ -89,4 +89,5 @@ ProtoSegmentedVolumeData::create(Scene *scene)
 NodeSegmentedVolumeData::NodeSegmentedVolumeData(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_renderFlags = 0;
 }

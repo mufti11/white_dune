@@ -32,6 +32,7 @@
 #include "SFBool.h"
 #include "SFNode.h"
 #include "DuneApp.h"
+#include "Scene.h"
 #include "NodeMaterial.h"
 #include "NodeTwoSidedMaterial.h"
 #include "NodeVolumeData.h"
@@ -47,9 +48,13 @@
 #include "NodeShadedVolumeStyle.h"
 #include "NodeSilhouetteEnhancementVolumeStyle.h"
 #include "NodeToneMappedVolumeStyle.h"
+#include "NodeIsoSurfaceVolumeData.h"
+#include "NodeSegmentedVolumeData.h"
 
 #include "NodeEffect.h"
 #include "NodeEffectPart.h"
+
+#include "NodePixelTexture3D.h"
 
 ProtoImageTexture3D::ProtoImageTexture3D(Scene *scene)
   : Proto(scene, "ImageTexture3D")
@@ -141,7 +146,7 @@ static int isMobile = TRUE;
 
 ppTextures textures_prv = NULL;
 ppOpenGL_Utils openGL_Utils_prv = NULL;
-ppRenderFuncs RenderFuncs_prv = NULL;
+ppRenderFuncs renderFuncs_prv = NULL;
 
 Node *renderFuncs_texturenode = NULL;
 int renderFuncs_textureStackTop = 0;
@@ -160,6 +165,39 @@ static int _noisy = 0;
 
 const static GLchar *pointSizeDeclare="uniform float pointSize;\n";
 const static GLchar *pointSizeAss="gl_PointSize = pointSize; \n";
+
+/* A stack is essentially a vector */
+typedef struct Vector Stack;
+
+/* Constructor and destructor */
+#define newStack(type) \
+ newVector(type, 4)
+#define deleteStack(type, me) \
+ deleteVector(type, me)
+
+/* Push and pop */
+#define stack_push(type, me, el) \
+ vector_pushBack(type, me, el)
+#define stack_pop(type, me) \
+ vector_popBack(type, me)
+
+/* Top of stack */
+#define stack_top(type, me) \
+ vector_get(type, me, vectorSize(me)-1)
+
+/* Is the stack empty? */
+#define stack_empty(me) \
+ vector_empty(me)
+
+Stack *getEffectStack(){
+/*
+	ttglobal tg = gglobal();
+	ppComponent_ProgrammableShaders p = (ppComponent_ProgrammableShaders)tg->Component_ProgrammableShaders.prv;
+	return p->effect_stack;
+*/
+        return NULL;
+}
+
 
 static const GLchar *ADSLLightModel = "\n\
 /* use ADSLightModel here the ADS colour is returned from the function.  */\n\
@@ -950,28 +988,28 @@ void loadIdentityMatrix (double *mat) {
 }
 
 void fw_glGetDoublev (int ty, GLDOUBLE *mat) {
-	GLDOUBLE *dp;
-//	ppOpenGL_Utils p = (ppOpenGL_Utils)gglobal()->OpenGL_Utils.prv;
-	ppOpenGL_Utils p = (ppOpenGL_Utils)openGL_Utils_prv;
+    GLDOUBLE *dp;
+//    ppOpenGL_Utils p = (ppOpenGL_Utils)gglobal()->OpenGL_Utils.prv;
+    ppOpenGL_Utils p = (ppOpenGL_Utils)openGL_Utils_prv;
 
 /*
-	switch (ty) {
-		case GL_PROJECTION_MATRIX: printf ("getDoublev(GL_PROJECTION_MATRIX)\n"); break;
-		case GL_MODELVIEW_MATRIX: printf ("getDoublev(GL_MODELVIEW_MATRIX)\n"); break;
-		case GL_TEXTURE_MATRIX: printf ("getDoublev(GL_TEXTURE_MATRIX)\n"); break;
-	}
+    switch (ty) {
+        case GL_PROJECTION_MATRIX: printf ("getDoublev(GL_PROJECTION_MATRIX)\n"); break;
+        case GL_MODELVIEW_MATRIX: printf ("getDoublev(GL_MODELVIEW_MATRIX)\n"); break;
+        case GL_TEXTURE_MATRIX: printf ("getDoublev(GL_TEXTURE_MATRIX)\n"); break;
+    }
 */
 
-	switch (ty) {
-		case GL_PROJECTION_MATRIX: dp = p->FW_ProjectionView[p->projectionviewTOS]; break;
-		case GL_MODELVIEW_MATRIX: dp = p->FW_ModelView[p->modelviewTOS]; break;
-		case GL_TEXTURE_MATRIX: dp = p->FW_TextureView[p->textureviewTOS]; break;
-		default: {
-			loadIdentityMatrix(mat);
-		printf ("invalid mode sent in it is %d, expected one of %d %d %d\n",ty,GL_PROJECTION_MATRIX,GL_MODELVIEW_MATRIX,GL_TEXTURE_MATRIX);
-			return;}
-	}
-	memcpy((void *)mat, (void *) dp, sizeof (GLDOUBLE) * MATRIX_SIZE);
+    switch (ty) {
+        case GL_PROJECTION_MATRIX: dp = p->FW_ProjectionView[p->projectionviewTOS]; break;
+        case GL_MODELVIEW_MATRIX: dp = p->FW_ModelView[p->modelviewTOS]; break;
+        case GL_TEXTURE_MATRIX: dp = p->FW_TextureView[p->textureviewTOS]; break;
+        default: {
+            loadIdentityMatrix(mat);
+        printf ("invalid mode sent in it is %d, expected one of %d %d %d\n",ty,GL_PROJECTION_MATRIX,GL_MODELVIEW_MATRIX,GL_TEXTURE_MATRIX);
+            return;}
+    }
+    memcpy((void *)mat, (void *) dp, sizeof (GLDOUBLE) * MATRIX_SIZE);
 }
 
 static void shaderErrorLog(GLuint myShader, char *which) {
@@ -1183,17 +1221,17 @@ void Plug( int EffectPartType, const char *PlugValue, char **CompleteCode, int *
             //{ Rename found PLUG_xxx to something unique. }
             //ProcedureName := generate new unique procedure name,
             //for example take 'plugged_' + some unique integer
-            sprintf(ProcedureName,"%s_%d",PlugName,(*unique_int));
+            snprintf(ProcedureName,999,"%s_%d",PlugName,(*unique_int));
             (*unique_int)++;
 
             //replace inside PlugValue all occurrences of 'PLUG_' + PlugName
             //with ProcedureName
-            sprintf(PLUG_PlugName,"%s%s","PLUG_",PlugName);
+            snprintf(PLUG_PlugName,99,"%s%s","PLUG_",PlugName);
             replaceAll(Plug,PBUFSIZE,PLUG_PlugName,ProcedureName);
 
             //PlugForwardDeclaration := 'void ' + ProcedureName +
             //PlugDeclaredParameters + ';' + newline
-            sprintf(PlugForwardDeclaration,"void %s%s;\n",ProcedureName,PlugDeclaredParameters);
+            snprintf(PlugForwardDeclaration,999,"void %s%s;\n",ProcedureName,PlugDeclaredParameters);
 
             //AnyOccurrences := LookForPlugDeclaration(Code)
             AnyOccurrences = LookForPlugDeclarations(Code,SBUFSIZE, PlugName,ProcedureName,PlugForwardDeclaration);
@@ -4066,8 +4104,6 @@ static void getShaderCommonInterfaces (s_shader_capabilities_t *me) {
         me->Vertices, me->Normals, me->ModelViewMatrix, me->ProjectionMatrix);
     printf ("hatchColour %d, hatchPercent %d",me->hatchColour, me->hatchPercent);
     #endif
-
-
 }
 
 static void makeAndCompileShader(struct shaderTableEntry *me) {
@@ -4546,16 +4582,16 @@ void threadsafe_enqueue_item_signal(s_list_t *item, s_list_t** queue)
 //    pthread_mutex_lock(queue_lock);
 //    if (*queue == NULL)
 //        pthread_cond_signal(queue_nonzero);
-    ml_enqueue(queue,item);
+//      ml_enqueue(queue,item);
 //    pthread_mutex_unlock(queue_lock);
 }
 
 void texitem_enqueue(s_list_t *item){
     ppLoadTextures p;
 //    ttglobal tg = gglobal();
-    p = (ppLoadTextures)textures_prv;
+//    p = (ppLoadTextures)textures_prv;
 
-    threadsafe_enqueue_item_signal(item, &p->texture_request_list);
+//    threadsafe_enqueue_item_signal(item, &p->texture_request_list);
 }
 
 static int sniffImageChannels_bruteForce(unsigned char *imageblob, int width, int height){
@@ -4976,10 +5012,10 @@ void move_texture_to_opengl(textureTableIndexStruct_s* me) {
     float anisotropicDegree=1.0f;
     int borderWidth;
 
-        GLint Trc,Src,Rrc;
-        GLint minFilter, magFilter;
-        GLint compression;
-        int generateMipMaps;
+    GLint Trc,Src,Rrc;
+    GLint minFilter, magFilter;
+    GLint compression;
+    int generateMipMaps;
 
     unsigned char *mytexdata;
 
@@ -5108,7 +5144,6 @@ void move_texture_to_opengl(textureTableIndexStruct_s* me) {
             if (borderWidth < 0) borderWidth=0; if (borderWidth>1) borderWidth = 1;
 
             // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/texturing.html#t-TextureMagnificationModes
-
 /*
             switch (findFieldInTEXTUREMAGNIFICATIONKEYWORDS(tpNode->magnificationFilter()->getValue())) {
                 case TMAG_AVG_PIXEL:
@@ -5162,7 +5197,6 @@ void move_texture_to_opengl(textureTableIndexStruct_s* me) {
                         tpNode->textureCompression->strptr);
             }
 */
-
             magFilter = GL_NEAREST;
             minFilter = GL_NEAREST_MIPMAP_NEAREST;
             compression = GL_FASTEST;
@@ -5500,7 +5534,7 @@ void move_texture_to_opengl(textureTableIndexStruct_s* me) {
                             x = mx;
                             y = my;
                             z = mz;
-                            FREE_IF_NZ(me->texdata);
+//                            FREE_IF_NZ(me->texdata);
                         }
 
                         //COMPUTE GRADIENT - we'll do unconditionally if channels == 1 for 3D image
@@ -7156,7 +7190,7 @@ encoding: raw
  *                           load it now.
  */
 int textureIsDDS(textureTableIndexStruct_s* this_tex, char *filename); 
-bool texture_load_from_file(textureTableIndexStruct_s* this_tex, char *filename)
+bool texture_load_from_file(textureTableIndexStruct_s* this_tex, const char *filename)
 {
 /* WINDOWS */
 #if defined (_MSC_VER) 
@@ -7267,7 +7301,7 @@ bool texture_load_from_file(textureTableIndexStruct_s* this_tex, char *filename)
             imlib_image_flip_vertical(); /* FIXME: do we really need this ? */
 
             /* store actual filename, status, ... */
-            this_tex->filename = filename;
+            this_tex->filename = (char *)filename;
             this_tex->hasAlpha = (imlib_image_has_alpha() == 1);
             this_tex->channels = this_tex->hasAlpha ? 4 : 3;
             this_tex->frames = 1;
@@ -7446,7 +7480,7 @@ void loadTextureNode (NodeImageTexture3D *node, void *vparam)
     /* this will cause bind_image to create a new "slot" for this texture */
     /* cast to GLuint because __texture defined in VRMLNodes.pm as SFInt */
 
-    //releaseTexture(node);
+    releaseTexture(node);
     }
 
     new_bind_image(node, (struct multiTexParams *)vparam);
@@ -7772,23 +7806,23 @@ GLfloat box [108] = {1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.
 // 2  3   //front near z
 // 0  1 
 float boxvert [24] = {
--.5f,-.5f, .5f, .5f,-.5f, .5f, -.5f,.5f, .5f, .5f,.5f, .5f, //near z LL LR UL UR
--.5f,-.5f,-.5f, .5f,-.5f,-.5f, -.5f,.5f,-.5f, .5f,.5f,-.5f, //far z
+    -.5f,-.5f, .5f, .5f,-.5f, .5f, -.5f,.5f, .5f, .5f,.5f, .5f, //near z LL LR UL UR
+    -.5f,-.5f,-.5f, .5f,-.5f,-.5f, -.5f,.5f,-.5f, .5f,.5f,-.5f, //far z
 };
 //ccw tris
 short boxtriindccw [48] = {
-0, 1, 3, -1,  //near z
-3, 2, 0, -1,
-1, 5, 7, -1, //right
-7, 3, 1, -1,
-5, 4, 6, -1, //back z
-6, 7, 5, -1, 
-4, 0, 2, -1, //left
-2, 6, 4, -1,
-2, 3, 7, -1, //top y
-7, 6, 2, -1,
-4, 5, 1, -1, //bottom y
-1, 0, 4, -1,
+    0, 1, 3, -1,  //near z
+    3, 2, 0, -1,
+    1, 5, 7, -1, //right
+    7, 3, 1, -1,
+    5, 4, 6, -1, //back z
+    6, 7, 5, -1, 
+    4, 0, 2, -1, //left
+    2, 6, 4, -1,
+    2, 3, 7, -1, //top y
+    7, 6, 2, -1,
+    4, 5, 1, -1, //bottom y
+    1, 0, 4, -1,
 };
 short boxtriindcw [48] = {
 0, 3, 1, -1,  //near z
@@ -7835,9 +7869,6 @@ void compile_VolumeData(NodeVolumeData *node){
     //    printf("%f %f %f\n",boxtris[i*3 +0],boxtris[i*3 +1],boxtris[i*3 +2]);
     MARK_NODE_COMPILED
 }
-void pushnset_framebuffer(int ibuffer);
-void popnset_framebuffer();
-
 
 #ifdef OLDCODE
 #ifdef GL_DEPTH_COMPONENT32
@@ -7848,10 +7879,104 @@ void popnset_framebuffer();
 #endif //OLDCODE
 
 
-void __gluMultMatricesd(const GLDOUBLE a[16], const GLDOUBLE b[16],    GLDOUBLE r[16]);
-int __gluInvertMatrixd(const GLDOUBLE m[16], GLDOUBLE invOut[16]);
+void gluMultMatricesd(const GLDOUBLE a[16], const GLDOUBLE b[16],    GLDOUBLE r[16]);
+int gluInvertMatrixd(const GLDOUBLE m[16], GLDOUBLE invOut[16]);
 ivec4 get_current_viewport();
-textureTableIndexStruct_s *getTableTableFromTextureNode(Node *textureNode);
+
+int getTextureTableIndexFromFromTextureNode(Node *node){
+    int thisTexture = -1;
+    int thisTextureType = node->getType();
+
+    if (thisTextureType==X3D_PIXEL_TEXTURE_3D){
+        NodePixelTexture3D* pt = (NodePixelTexture3D*) node;
+        thisTexture = pt->m_textureTableIndex;
+    } else if (thisTextureType==X3D_IMAGE_TEXTURE_3D){
+        NodeImageTexture3D* pt = (NodeImageTexture3D*) node;
+        thisTexture = pt->m_textureTableIndex;
+    } else {
+        ConsoleMessage ("Invalid type for texture\n");
+    }
+    return thisTexture;
+}
+
+void gluMultMatricesd(const GLDOUBLE a[16], const GLDOUBLE b[16],
+					GLDOUBLE r[16])
+{
+	int i, j;
+
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			r[i*4+j] =
+				a[i*4+0]*b[0*4+j] +
+				a[i*4+1]*b[1*4+j] +
+				a[i*4+2]*b[2*4+j] +
+				a[i*4+3]*b[3*4+j];
+		}
+	}
+}
+
+/*
+** Invert 4x4 matrix.
+** Contributed by David Moore (See Mesa bug #6748)
+*/
+int gluInvertMatrixd(const GLDOUBLE m[16], GLDOUBLE invOut[16])
+{
+	GLDOUBLE inv[16], det;
+	int i;
+
+	inv[0] =   m[5]*m[10]*m[15] - m[5]*m[11]*m[14] - m[9]*m[6]*m[15]
+				+ m[9]*m[7]*m[14] + m[13]*m[6]*m[11] - m[13]*m[7]*m[10];
+	inv[4] =  -m[4]*m[10]*m[15] + m[4]*m[11]*m[14] + m[8]*m[6]*m[15]
+				- m[8]*m[7]*m[14] - m[12]*m[6]*m[11] + m[12]*m[7]*m[10];
+	inv[8] =   m[4]*m[9]*m[15] - m[4]*m[11]*m[13] - m[8]*m[5]*m[15]
+				+ m[8]*m[7]*m[13] + m[12]*m[5]*m[11] - m[12]*m[7]*m[9];
+	inv[12] = -m[4]*m[9]*m[14] + m[4]*m[10]*m[13] + m[8]*m[5]*m[14]
+				- m[8]*m[6]*m[13] - m[12]*m[5]*m[10] + m[12]*m[6]*m[9];
+	inv[1] =  -m[1]*m[10]*m[15] + m[1]*m[11]*m[14] + m[9]*m[2]*m[15]
+				- m[9]*m[3]*m[14] - m[13]*m[2]*m[11] + m[13]*m[3]*m[10];
+	inv[5] =   m[0]*m[10]*m[15] - m[0]*m[11]*m[14] - m[8]*m[2]*m[15]
+				+ m[8]*m[3]*m[14] + m[12]*m[2]*m[11] - m[12]*m[3]*m[10];
+	inv[9] =  -m[0]*m[9]*m[15] + m[0]*m[11]*m[13] + m[8]*m[1]*m[15]
+				- m[8]*m[3]*m[13] - m[12]*m[1]*m[11] + m[12]*m[3]*m[9];
+	inv[13] =  m[0]*m[9]*m[14] - m[0]*m[10]*m[13] - m[8]*m[1]*m[14]
+				+ m[8]*m[2]*m[13] + m[12]*m[1]*m[10] - m[12]*m[2]*m[9];
+	inv[2] =   m[1]*m[6]*m[15] - m[1]*m[7]*m[14] - m[5]*m[2]*m[15]
+				+ m[5]*m[3]*m[14] + m[13]*m[2]*m[7] - m[13]*m[3]*m[6];
+	inv[6] =  -m[0]*m[6]*m[15] + m[0]*m[7]*m[14] + m[4]*m[2]*m[15]
+				- m[4]*m[3]*m[14] - m[12]*m[2]*m[7] + m[12]*m[3]*m[6];
+	inv[10] =  m[0]*m[5]*m[15] - m[0]*m[7]*m[13] - m[4]*m[1]*m[15]
+				+ m[4]*m[3]*m[13] + m[12]*m[1]*m[7] - m[12]*m[3]*m[5];
+	inv[14] = -m[0]*m[5]*m[14] + m[0]*m[6]*m[13] + m[4]*m[1]*m[14]
+				- m[4]*m[2]*m[13] - m[12]*m[1]*m[6] + m[12]*m[2]*m[5];
+	inv[3] =  -m[1]*m[6]*m[11] + m[1]*m[7]*m[10] + m[5]*m[2]*m[11]
+				- m[5]*m[3]*m[10] - m[9]*m[2]*m[7] + m[9]*m[3]*m[6];
+	inv[7] =   m[0]*m[6]*m[11] - m[0]*m[7]*m[10] - m[4]*m[2]*m[11]
+				+ m[4]*m[3]*m[10] + m[8]*m[2]*m[7] - m[8]*m[3]*m[6];
+	inv[11] = -m[0]*m[5]*m[11] + m[0]*m[7]*m[9] + m[4]*m[1]*m[11]
+				- m[4]*m[3]*m[9] - m[8]*m[1]*m[7] + m[8]*m[3]*m[5];
+	inv[15] =  m[0]*m[5]*m[10] - m[0]*m[6]*m[9] - m[4]*m[1]*m[10]
+				+ m[4]*m[2]*m[9] + m[8]*m[1]*m[6] - m[8]*m[2]*m[5];
+
+	det = m[0]*inv[0] + m[1]*inv[4] + m[2]*inv[8] + m[3]*inv[12];
+	if (det == 0)
+		return GL_FALSE;
+
+	det = 1.0 / det;
+
+	for (i = 0; i < 16; i++)
+		invOut[i] = inv[i] * det;
+
+	return GL_TRUE;
+}
+
+textureTableIndexStruct_s *getTableTableFromTextureNode(Node *textureNode){
+    textureTableIndexStruct_s *ret = NULL;
+    int index = getTextureTableIndexFromFromTextureNode(textureNode);
+    if(index > -1)
+        ret = getTableIndex(index);
+    return ret;
+}
+
 
 unsigned int prep_volumestyle(Node *vstyle, unsigned int volflags){
     NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
@@ -7918,10 +8043,6 @@ void profile_end(const char *name){}
 
 void render_volume_data(Node *renderStyle, Node *voxels, NodeVolumeData *node);
 NodeMaterial *get_material_oneSided();
-NodeTwoSidedMaterial *get_material_twoSided();
-void pushnset_viewport(float *vpFraction);
-void popnset_viewport();
-int haveFrameBufferObject();
 void render_volumestyle(Node *vstyle, GLint myProg){
     NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
     if(style0->enabled()->getValue()){
@@ -7981,12 +8102,12 @@ void render_volumestyle(Node *vstyle, GLint myProg){
                     float vp[4] = {0.0f,1.0f,0.0f,1.0f}; //arbitrary
 
                     glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
-                    if(haveFrameBufferObject()){
+                    if(1){
                         if(fbohandles[0] == 0){
                             GLuint depthrenderbuffer;
                             // https://www.opengl.org/wiki/Framebuffer_Object
                             glGenFramebuffers(1, (GLuint *) &fbohandles[0]);
-                            pushnset_framebuffer(fbohandles[0]); //binds framebuffer. we push here, in case higher up we are already rendering the whole scene to an fbo
+//                            pushnset_framebuffer(fbohandles[0]); //binds framebuffer. we push here, in case higher up we are already rendering the whole scene to an fbo
 
                             // The depth buffer - optional
                             glGenRenderbuffers(1, &depthrenderbuffer);
@@ -8016,12 +8137,9 @@ void render_volumestyle(Node *vstyle, GLint myProg){
                             if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
                                 printf("ouch framebuffer not complete\n");
                             //popnset_framebuffer(); //pop after drawing
-                        }else{
-                            pushnset_framebuffer(fbohandles[0]);
-                            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbohandles[1], 0);
                         }
                     }
-                    pushnset_viewport(vp); //something to push so we can pop-and-set below, so any mainloop GL_BACK viewport is restored
+//                    pushnset_viewport(vp); //something to push so we can pop-and-set below, so any mainloop GL_BACK viewport is restored
                     glViewport(0,0,iviewport[2],iviewport[3]); //viewport we want 
                     glClearColor(0.0f,0.0f,0.0f,0.0f); //red, for diagnostics during debugging
                     FW_GL_CLEAR(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -8160,6 +8278,7 @@ void render_volumestyle(Node *vstyle, GLint myProg){
                         //struct matpropstruct matprop;
                         //s_shader_capabilities_t mysp;
                         //sendFogToShader(mysp); 
+#if 0
                         matone = get_material_oneSided();
                         mattwo = get_material_twoSided();
                         //sendMaterialsToShader(mysp);
@@ -8177,7 +8296,7 @@ void render_volumestyle(Node *vstyle, GLint myProg){
                         } else {
                             /* no materials selected.... */
                         }
-
+#endif
 
 
                         if (!myap) return;
@@ -8306,21 +8425,20 @@ int lookup_blendfunc(const char *funcname){
 
 void sendBindBufferToGPU (GLenum target, GLuint buffer, const char *file, int line) {
 
-	
+    
 /*
-	if (target == GL_ARRAY_BUFFER_BINDING) printf ("glBindBuffer, GL_ARRAY_BUFFER_BINDING %d at %s:%d\n",buffer,file,line);
-	else if (target == GL_ARRAY_BUFFER) printf ("glBindBuffer, GL_ARRAY_BUFFER %d at %s:%d\n",buffer,file,line);
-	else if (target == GL_ELEMENT_ARRAY_BUFFER) printf ("glBindBuffer, GL_ELEMENT_ARRAY_BUFFER %d at %s:%d\n",buffer,file,line);
-	else printf ("glBindBuffer, %d %d at %s:%d\n",target,buffer,file,line);
-	
+    if (target == GL_ARRAY_BUFFER_BINDING) printf ("glBindBuffer, GL_ARRAY_BUFFER_BINDING %d at %s:%d\n",buffer,file,line);
+    else if (target == GL_ARRAY_BUFFER) printf ("glBindBuffer, GL_ARRAY_BUFFER %d at %s:%d\n",buffer,file,line);
+    else if (target == GL_ELEMENT_ARRAY_BUFFER) printf ("glBindBuffer, GL_ELEMENT_ARRAY_BUFFER %d at %s:%d\n",buffer,file,line);
+    else printf ("glBindBuffer, %d %d at %s:%d\n",target,buffer,file,line);
+    
 */
 
-	glBindBuffer(target,buffer);
+    glBindBuffer(target,buffer);
 }
 
 
-void sendExplicitMatriciesToShader (GLint ModelViewMatrix, GLint ProjectionMatrix, GLint NormalMatrix, GLint *TextureMatrix, GLint ModelViewInverseMatrix);
-void render_GENERIC_volume_data(s_shader_capabilities_t *caps, Node **renderStyle, int nstyle, Node *voxels, struct X3D_VolumeData *node );
+void render_GENERIC_volume_data(s_shader_capabilities_t *caps, Node **renderStyle, int nstyle, Node *voxels, NodeVolumeData *node );
 s_shader_capabilities_t * getVolumeProgram(Node **renderStyle, int nstyle, int VOLUME_DATA_FLAG);
 void saveImage_web3dit(struct textureTableIndexStruct *tti, char *fname);
 
@@ -8340,7 +8458,7 @@ FW_GL_BINDBUFFER(GL_ELEMENT_ARRAY_BUFFER, 0);
 /* choose and turn on a shader for this geometry */
 
 void enableGlobalShader(s_shader_capabilities_t *myShader) {
-	ppRenderFuncs p = (ppRenderFuncs)RenderFuncs_prv;
+    ppRenderFuncs p = (ppRenderFuncs)renderFuncs_prv;
 
     //ConsoleMessage ("enableGlobalShader, have myShader %d",myShader->myShaderProgram);
     if (myShader == NULL) {
@@ -8351,14 +8469,14 @@ void enableGlobalShader(s_shader_capabilities_t *myShader) {
     
     getAppearanceProperties()->currentShaderProperties = myShader;
     if (myShader->myShaderProgram != p->currentShader) {
-		USE_SHADER(myShader->myShaderProgram);
-		p->currentShader = myShader->myShaderProgram;
-	}
+        USE_SHADER(myShader->myShaderProgram);
+        p->currentShader = myShader->myShaderProgram;
+    }
 }
 
 void fin_volumestyle(Node *vstyle, NodeVolumeData *dataParent){
     NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
-    if(style0->enabled()->getValue()){
+    if(style0 && style0->enabled()->getValue()){
         switch(vstyle->getType()){
             case X3D_OPACITY_MAP_VOLUME_STYLE:
                 {
@@ -8434,8 +8552,8 @@ void fin_volumestyle(Node *vstyle, NodeVolumeData *dataParent){
                         Node *tmpNode = style->renderStyle()->getValue();
                         caps = getVolumeProgram(&tmpNode,nsubstyle, SHADERFLAGS_VOLUME_DATA_BASIC);
                         //render generic volume 
-                        render_GENERIC_volume_data(caps,&tmpNode,nsubstyle,style->voxels()->getValue(),(struct X3D_VolumeData*)dataParent );
-                        //render_GENERIC_volume_data(caps,style->renderStyle,1,style->voxels,(struct X3D_VolumeData*)dataParent );
+                        render_GENERIC_volume_data(caps,&tmpNode,nsubstyle,style->voxels()->getValue(),(NodeVolumeData*)dataParent );
+                        //render_GENERIC_volume_data(caps,style->renderStyle,1,style->voxels,(NodeVolumeData*)dataParent );
 
                         //glDrawBuffers(0,NULL);
 
@@ -8468,8 +8586,8 @@ void fin_volumestyle(Node *vstyle, NodeVolumeData *dataParent){
                             FREE_IF_NZ(ttip->texdata);
                             printf("wrote blended_fbo_.web3dit \n");
                         }
-                        popnset_framebuffer();
-                        popnset_viewport();
+//                        popnset_framebuffer();
+//                        popnset_viewport();
                         //we're now back to rendering to the screen
                         //we should have 2 textures
 
@@ -8609,7 +8727,7 @@ void fin_volumestyle(Node *vstyle, NodeVolumeData *dataParent){
                             Vertices = GET_ATTRIB(myProg,"fw_Vertex");
                             mvm = GET_UNIFORM(myProg,"fw_ModelViewMatrix"); //fw_ModelViewMatrix
                             proj = GET_UNIFORM(myProg,"fw_ProjectionMatrix"); //fw_ProjectionMatrix
-                            sendExplicitMatriciesToShader(mvm,proj,-1,NULL,-1);
+//                            sendExplicitMatriciesToShader(mvm,proj,-1,NULL,-1);
                             FW_GL_GETDOUBLEV(GL_MODELVIEW_MATRIX, modelviewMatrix);
                             FW_GL_GETDOUBLEV(GL_PROJECTION_MATRIX, projMatrix);
 
@@ -8650,7 +8768,7 @@ void fin_volumestyle(Node *vstyle, NodeVolumeData *dataParent){
         }
     }
 }
-int volstyle_needs_normal(struct X3D_Node *vstyle){
+int volstyle_needs_normal(Node *vstyle){
     //IDEA: compute image gradient and store in RGB, if a style requests it
     // then surfaceNormal = normalize(gradient)
     //SFNode [in,out] surfaceNormals NULL [X3DTexture3DNode
@@ -8666,28 +8784,28 @@ int volstyle_needs_normal(struct X3D_Node *vstyle){
     //SFNode [in,out] segmentIdentifiers NULL [X3DTexture3DNode]
     // SegmentedVolumeData
     int need_normal;
-    struct X3D_OpacityMapVolumeStyle *style0 = (struct X3D_OpacityMapVolumeStyle*)vstyle;
+    NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)vstyle;
     need_normal = FALSE;
-    if(style0->enabled){
-        switch(vstyle->_nodeType){
-            case NODE_ComposedVolumeStyle:
+    if(style0->enabled()->getValue()){
+        switch(vstyle->getType()){
+            case X3D_COMPOSED_VOLUME_STYLE:
                 {
                     int i;
-                    struct X3D_ComposedVolumeStyle *style = (struct X3D_ComposedVolumeStyle*)vstyle;
-                    for(i=0;i<style->renderStyle.n;i++){
-                        need_normal = need_normal || volstyle_needs_normal(style->renderStyle.p[i]);
+                    NodeComposedVolumeStyle *style = (NodeComposedVolumeStyle*)vstyle;
+                    for(i=0;i<style->renderStyle()->getSize();i++){
+                        need_normal = need_normal || volstyle_needs_normal(style->renderStyle()->getValue(i));
                     }
                 }
                 break;
-            case NODE_CartoonVolumeStyle:
-            case NODE_EdgeEnhancementVolumeStyle:
-            case NODE_ShadedVolumeStyle:
-            case NODE_SilhouetteEnhancementVolumeStyle:
-            case NODE_ToneMappedVolumeStyle:
+            case X3D_CARTOON_VOLUME_STYLE:
+            case X3D_EDGE_ENHANCEMENT_VOLUME_STYLE:
+            case X3D_SHADED_VOLUME_STYLE:
+            case X3D_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE:
+            case X3D_TONE_MAPPED_VOLUME_STYLE:
                 {
                     //in perl structs, for these nodes its all the 3rd field after enabled, metadata, surfacenormals
-                    struct X3D_ToneMappedVolumeStyle *style = (struct X3D_ToneMappedVolumeStyle*)vstyle;
-                    need_normal = need_normal || (style->surfaceNormals == NULL);
+                    NodeToneMappedVolumeStyle *style = (NodeToneMappedVolumeStyle*)vstyle;
+                    need_normal = need_normal || (style->surfaceNormals()->getValue() == NULL);
                 }
                 break;
             default:
@@ -8697,7 +8815,7 @@ int volstyle_needs_normal(struct X3D_Node *vstyle){
     return need_normal;
 }
 
-void compile_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
+void compile_IsoSurfaceVolumeData(NodeIsoSurfaceVolumeData *node){
     // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#IsoSurfaceVolumeData
     // VolumeData + 4 fields:
     //SFFloat [in,out] contourStepSize  0        (-INF,INF)
@@ -8705,20 +8823,31 @@ void compile_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
     //SFFloat [in,out] surfaceTolerance 0        [0,INF)
     //MFFloat [in,out] surfaceValues    []       (-INF,INF)
     printf("compile_isosurfacevolumedata not implemented\n");
-    compile_VolumeData((struct X3D_VolumeData *)node);
+    compile_VolumeData((NodeVolumeData *)node);
 }
 
+//unsigned int getShaderFlags(){
+shaderflagsstruct getShaderFlags(){
+    //return top-of-stack global shaderflags
+    //unsigned int retval;
+    shaderflagsstruct retval;
+//    ttglobal tg = gglobal();
+    ppRenderFuncs p = (ppRenderFuncs)renderFuncs_prv;
+    //retval = stack_top(unsigned int,p->shaderflags_stack);
+    retval = stack_top(shaderflagsstruct,p->shaderflags_stack);
+    return retval;
+}
 
-
-void compile_SegmentedVolumeData(struct X3D_SegmentedVolumeData *node){
+void compile_SegmentedVolumeData(NodeSegmentedVolumeData *node){
     // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#SegmentedVolumeData
     // VolumeData + 2 fields:
     //MFBool  [in,out] segmentEnabled     []
     //SFNode  [in,out] segmentIdentifiers NULL     [X3DTexture3DNode]
     printf("compile_segmentedvolumedata \n");
-    compile_VolumeData((struct X3D_VolumeData *)node);
+    compile_VolumeData((NodeVolumeData *)node);
 }
-s_shader_capabilities_t * getVolumeProgram(struct X3D_Node **renderStyle, int nstyle, int VOLUME_DATA_FLAG){
+
+s_shader_capabilities_t * getVolumeProgram(Node **renderStyle, int nstyle, int VOLUME_DATA_FLAG){
     static int once = 0;
     unsigned int volflags;
     int i;
@@ -8729,8 +8858,8 @@ s_shader_capabilities_t * getVolumeProgram(struct X3D_Node **renderStyle, int ns
     volflags = 0;
     if(nstyle){
         for(i=0;i<nstyle;i++){
-            struct X3D_OpacityMapVolumeStyle *style0 = (struct X3D_OpacityMapVolumeStyle*)renderStyle[i];
-            if(style0->enabled){
+            NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)renderStyle[i];
+            if(style0->enabled()->getValue()){
                 volflags = prep_volumestyle(renderStyle[i], volflags); //get shader flags
             }
         }
@@ -8779,20 +8908,283 @@ s_shader_capabilities_t * getVolumeProgram(struct X3D_Node **renderStyle, int ns
     return caps; 
 }
 
-void render_SEGMENTED_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *segmentIDs, int itexture, struct X3D_SegmentedVolumeData *node) {
+
+
+void render_node(struct Node *node) {
+    struct X3D_Virt *virt;
+
+    //int srg = 0;
+    //int sch = 0;
+    int justGeom = 0;
+    int pushed_ray;
+    int pushed_sensor;
+    //struct currayhit *srh = NULL;
+    ppRenderFuncs p;
+//    ttglobal tg = gglobal();
+    p = (ppRenderFuncs)renderFuncs_prv;
+
+    X3D_NODE_CHECK(node);
+//#define RENDERVERBOSE 1
+#ifdef RENDERVERBOSE
+    p->renderLevel ++;
+#endif
+
+    if(!node) {
+#ifdef RENDERVERBOSE
+        DEBUG_RENDER("%d no node, quick return\n", renderLevel);
+        p->renderLevel--;
+#endif
+        return;
+    }
+//    virt = virtTable[node->getType()];
+
+#ifdef RENDERVERBOSE 
+    //printf("%d =========================================NODE RENDERED===================================================\n",renderLevel);
+    {
+        int i;
+        for(i=0;i<p->renderLevel;i++) printf(" ");
+    }
+    printf("%d node %u (%s) , v %u renderFlags %x ",p->renderLevel, node,stringNodeType(node->_nodeType),virt,node->_renderFlags);
+
+/*
+    if ((node->_renderFlags & VF_Viewpoint) == VF_Viewpoint) printf (" VF_Viewpoint");
+    if ((node->_renderFlags & VF_Geom )== VF_Geom) printf (" VF_Geom");
+    if ((node->_renderFlags & VF_localLight )== VF_localLight) printf (" VF_localLight");
+    if ((node->_renderFlags & VF_Sensitive) == VF_Sensitive) printf (" VF_Sensitive");
+    if ((node->_renderFlags & VF_Blend) == VF_Blend) printf (" VF_Blend");
+    if ((node->_renderFlags & VF_Proximity) == VF_Proximity) printf (" VF_Proximity");
+    if ((node->_renderFlags & VF_Collision) == VF_Collision) printf (" VF_Collision");
+    if ((node->_renderFlags & VF_globalLight) == VF_globalLight) printf (" VF_globalLight");
+    if ((node->_renderFlags & VF_hasVisibleChildren) == VF_hasVisibleChildren) printf (" VF_hasVisibleChildren");
+    if ((node->_renderFlags & VF_shouldSortChildren) == VF_shouldSortChildren) printf (" VF_shouldSortChildren");
+    if ((node->_renderFlags & VF_Other) == VF_Other) printf (" VF_Other");
+*/
+    /*
+    if ((node->_renderFlags & VF_inPickableGroup == VF_inPickableGroup) printf (" VF_inPickableGroup");
+    if ((node->_renderFlags & VF_PickingSensor == VF_PickingSensor) printf (" VF_PickingSensor");
+    */
+    printf ("\n");
+
+    //printf("PREP: %d REND: %d CH: %d FIN: %d RAY: %d HYP: %d\n",virt->prep, virt->rend, virt->children, virt->fin,
+    //       virt->rendray, hypersensitive);
+    //printf("%d state: vp %d geom %d light %d sens %d blend %d prox %d col %d ", renderLevel, 
+ //            render_vp,render_geom,render_light,render_sensitive,render_blend,render_proximity,render_collision); 
+    //printf("change %d ichange %d \n",node->_change, node->_ichange);
+#endif
+
+
+
+    // leaf-node filtering (we still do the transform-children stack)
+    // if we are doing Viewpoints, and we don't have a Viewpoint, don't bother doing anything here *
+    //if (renderstate()->render_vp == VF_Viewpoint) { 
+/*
+    if (p->renderstate.render_vp == VF_Viewpoint) { 
+        //if(tg->Bindable.activeLayer == 0)  //no Layerset nodes
+        if ((node->_renderFlags & VF_Viewpoint) != VF_Viewpoint) { 
+            #ifdef RENDERVERBOSE
+            printf ("doing Viewpoint, but this  node is not for us - just returning\n"); 
+            p->renderLevel--;
+            #endif
+            return; 
+        } 
+        if(p->renderstate.render_vp == VF_Viewpoint && render_foundLayerViewpoint()){ 
+            //on vp pass, just find first DEF/USE of bound viewpoint
+            return;
+        }
+    }
+*/
+#if 0
+    /* are we working through global PointLights, DirectionalLights or SpotLights, but none exist from here on down? */
+    if (p->renderstate.render_light ) { 
+        if((node->_renderFlags & VF_globalLight) != VF_globalLight) { 
+    #ifdef RENDERVERBOSE
+            printf ("doing globalLight, but this  node is not for us - just returning\n"); 
+            p->renderLevel--;
+    #endif
+            return; 
+        }
+    }
+    justGeom = p->renderstate.render_geom && !p->renderstate.render_sensitive && !p->renderstate.render_blend;
+    pushed_ray = FALSE;
+    pushed_sensor = FALSE;
+
+    if(virt->prep) {
+        //transform types will pushmatrix and multiply in their translation.rotation,scale here (and popmatrix in virt->fin)
+        DEBUG_RENDER("rs 2\n");
+        profile_start("prep");
+        if(justGeom)
+            profile_start("prepgeom");
+        virt->prep(node);  
+        profile_end("prep");
+        if(justGeom)
+            profile_end("prepgeom");
+        //if(p->renderstate.render_sensitive && !tg->RenderFuncs.hypersensitive) {
+        //    push_ray(); //upd_ray(); 
+        //    pushed_ray = TRUE;
+        //}
+        PRINT_GL_ERROR_IF_ANY("prep"); PRINT_NODE(node,virt);
+        if(p->renderstate.render_boxes) extent6f_draw(node->_extent);
+
+    }
+    if(p->renderstate.render_sensitive && !tg->RenderFuncs.hypersensitive) {
+        push_ray(); //upd_ray(); 
+        pushed_ray = TRUE;
+    }
+    if(p->renderstate.render_proximity && virt->proximity) {
+        DEBUG_RENDER("rs 2a\n");
+        profile_start("proximity");
+        virt->proximity(node);
+        profile_end("proximity");
+        PRINT_GL_ERROR_IF_ANY("render_proximity"); PRINT_NODE(node,virt);
+    }
+    if(p->renderstate.render_geom && ((node->_renderFlags & VF_USE) == VF_USE) && !p->renderstate.render_picking){
+        //picking sensor, transform sensor and generally any USE_NODE-USE_NODE scenario
+        //ideally we would come in here once per scenegraph USE per frame, even when stereo or quad views
+        //because we want to work in world coordinates (not view coordinates) so by the time
+        //we strip off the view matrix we would have duplicate entries with stereo
+        if(getWindex() == 0){
+            //just on first window of stereo or quad
+            //we don't do this in VF_Proximity because that pass doesn't go all the way to all geom nodes
+            //we could give it its own pass, but doing just the first window is a simple hack.
+            double modelviewMatrix[16];
+            //IF VIEW == 0
+            //GL_GET_MODELVIEWMATRIX
+            FW_GL_GETDOUBLEV(GL_MODELVIEW_MATRIX, modelviewMatrix);
+            //strip viewmatrix - will happen when we invert one of the USEUSE pair, and multiply
+            usehit_add2(node,modelviewMatrix,getpickablegroupdata());
+        }
+    }
+    if(p->renderstate.render_picking && node->_nodeType == NODE_Shape ){
+        //this is for when called from Component_Picking.c on a partial scenegraph,
+        //to get geometry nodes in the usehitB list
+        //I put vrit->rendray as a way to detect if its geometry, is there a better way?
+        double modelviewMatrix[16];
+        struct X3D_Shape *shapenode = (struct X3D_Shape*)node;
+        if(shapenode->geometry){
+            //IF VIEW == 0
+            //GL_GET_MODELVIEWMATRIX
+            FW_GL_GETDOUBLEV(GL_MODELVIEW_MATRIX, modelviewMatrix);
+            //strip viewmatrix - will happen when we invert one of the USEUSE pair, and multiply
+            usehitB_add2(shapenode->geometry,modelviewMatrix,getpickablegroupdata());
+        }
+    }
+    
+    if(p->renderstate.render_collision && virt->collision) {
+        DEBUG_RENDER("rs 2b\n");
+        profile_start("collision");
+        virt->collision(node);
+        profile_end("collision");
+        PRINT_GL_ERROR_IF_ANY("render_collision"); PRINT_NODE(node,virt);
+    }
+
+    if(p->renderstate.render_geom && !p->renderstate.render_sensitive && !p->renderstate.render_picking && virt->rend) {
+            DEBUG_RENDER("rs 3\n");
+            PRINT_GL_ERROR_IF_ANY("BEFORE render_geom"); PRINT_NODE(node,virt);
+            profile_start("rend");
+            virt->rend(node);
+            profile_end("rend");
+            PRINT_GL_ERROR_IF_ANY("render_geom"); PRINT_NODE(node,virt);
+    }
+    if(p->renderstate.render_other && virt->other )
+    {
+        virt->other(node);
+    } //other
+
+    if(p->renderstate.render_sensitive && ((node->_renderFlags & VF_Sensitive)|| Viewer()->LookatMode ==2)) {
+        DEBUG_RENDER("rs 5\n");
+        profile_start("sensitive");
+        push_sensor(node);
+        pushed_sensor = TRUE;
+        profile_end("sensitive");
+    }
+    if(p->renderstate.render_geom && p->renderstate.render_sensitive && !tg->RenderFuncs.hypersensitive && virt->rendray) {
+        DEBUG_RENDER("rs 6\n");
+        profile_start("rendray");
+        if(pickrayHitsMBB(node))
+            virt->rendray(node);
+        profile_end("rendray");
+        PRINT_GL_ERROR_IF_ANY("rs 6"); PRINT_NODE(node,virt);
+    }
+
+    /* May 16 2016: now we don't come into render_hier on hypersensitive
+    if((p->renderstate.render_sensitive) && (tg->RenderFuncs.hypersensitive == node)) {
+        DEBUG_RENDER("rs 7\n");
+        p->hyper_r1 = p->t_r123.p1; //tg->RenderFuncs.t_r1;
+        p->hyper_r2 = p->t_r123.p2; //tg->RenderFuncs.t_r2;
+        tg->RenderFuncs.hyperhit = 1;
+    }
+    */
+
+    /* start recursive section */
+    if(virt->children) { 
+        DEBUG_RENDER("rs 8 - has valid child node pointer\n");
+        //if(! (p->renderstate.render_vp == VF_Viewpoint && render_foundLayerViewpoint())){ //on vp pass, just find first DEF/USE of bound viewpoint
+            //printf("children ");
+            virt->children(node);
+        //}
+        //}else{
+        //    printf("skipping ");
+        //}
+        PRINT_GL_ERROR_IF_ANY("children"); PRINT_NODE(node,virt);
+    }
+    /* end recursive section */
+
+    if(p->renderstate.render_other && virt->other)
+    {
+    }
+
+    if(pushed_sensor)
+        pop_sensor();
+
+    if(virt->fin) {
+        DEBUG_RENDER("rs A\n");
+        profile_start("fin");
+        if(justGeom)
+            profile_start("fingeom");
+
+        virt->fin(node);
+        profile_end("fin");
+        if(justGeom)
+            profile_end("fingeom");
+        //if(p->renderstate.render_sensitive && virt == &virt_Transform) {
+        //    upd_ray();
+        //}
+        PRINT_GL_ERROR_IF_ANY("fin"); PRINT_NODE(node,virt);
+    }
+    if(pushed_ray)
+        pop_ray();
+
+#ifdef RENDERVERBOSE 
+    {
+        int i;
+        for(i=0;i<p->renderLevel;i++)printf(" ");
+    }
+    printf("%d (end render_node)\n",p->renderLevel);
+    p->renderLevel--;
+#endif
+#endif
+}
+//#undef RENDERVERBOSE
+
+
+void render_SEGMENTED_volume_data(s_shader_capabilities_t *caps, Node *segmentIDs, int itexture, NodeSegmentedVolumeData *node) {
     int myProg;
     GLint inids, ienable;
 
-    int *enabledIDs = node->segmentEnabled.p;
-    int nIDs = node->segmentEnabled.n;
+    /*int*/
+    const bool *enabledIDsb = node->segmentEnabled()->getValues();
+    int nIDs = node->segmentEnabled()->getSize();
+    int *enabledIDs = (int *)malloc(nIDs * sizeof(int));
+    for (int i = 0; i < nIDs; i++)
+        enabledIDs[i] = enabledIDsb[i];
     myProg = caps->myShaderProgram;
     if(segmentIDs){
-        struct X3D_Node *tmpN;
+        Node *tmpN;
         textureTableIndexStruct_s *tti;
-        ttglobal tg = gglobal();
+//        ttglobal tg = gglobal();
 
-        POSSIBLE_PROTO_EXPANSION(struct X3D_Node *, segmentIDs,tmpN);
-        tg->RenderFuncs.texturenode = (void*)tmpN;
+        POSSIBLE_PROTO_EXPANSION(Node *, segmentIDs,tmpN);
+        renderFuncs_texturenode = (Node*)tmpN;
 
         render_node(tmpN); //render_node(node->voxels); 
 
@@ -8827,31 +9219,815 @@ void render_SEGMENTED_volume_data(s_shader_capabilities_t *caps, struct X3D_Node
     glUniform1iv(ienable,nIDs,enabledIDs); 
 
     //similar to ISO, there are multiple rendering styles
-    if(node->renderStyle.n){
+    if(node->renderStyle()->getSize()){
         int i, *styleflags,instyles;
         GLint istyles;
 
-        styleflags = MALLOC(int*,sizeof(int)*node->renderStyle.n);
-        for(i=0;i<node->renderStyle.n;i++){
-            styleflags[i] = prep_volumestyle(node->renderStyle.p[i],0);
+        styleflags = MALLOC(int*,sizeof(int)*node->renderStyle()->getSize());
+        for(i=0;i<node->renderStyle()->getSize();i++){
+            styleflags[i] = prep_volumestyle(node->renderStyle()->getValue(i),0);
         }
         //printf("%d %d\n",styleflags[0],styleflags[1]);
         istyles = GET_UNIFORM(myProg,"fw_surfaceStyles");
-        glUniform1iv(istyles,node->renderStyle.n,styleflags);
+        glUniform1iv(istyles,node->renderStyle()->getSize(),styleflags);
         instyles = GET_UNIFORM(myProg,"fw_nStyles");
-        glUniform1i(instyles,node->renderStyle.n);
+        glUniform1i(instyles,node->renderStyle()->getSize());
     }
 
-
+    free(enabledIDs);
 
 }
 
+ttrenderstate renderstate()
+{
+    ppRenderFuncs p = renderFuncs_prv;
+    return &p->renderstate;
+}
 
+GLDOUBLE det3x3(GLDOUBLE* data)
+{
+    return -data[1]*data[10]*data[4] +data[0]*data[10]*data[5] -data[2]*data[5]*data[8] +data[1]*data[6]*data[8] +data[2]*data[4]*data[9] -data[0]*data[6]*data[9];
+}
+
+GLDOUBLE* matinverse98(GLDOUBLE* res, GLDOUBLE* mm)
+{
+    /*FLOPs 98 double: det3 9, 1/det 1, adj3x3 9x4=36, inv*T 13x4=52 */
+    //July 2016 THIS IS WRONG DON'T USE 
+    //see the glu equivalent elsewhere
+    //you can check with A*A-1 = I and this function doesn't give I
+    double Deta;
+    GLDOUBLE mcpy[16];
+    GLDOUBLE *m;
+
+    m = mm;
+    if(res == m) {
+    memcpy(mcpy,m,sizeof(GLDOUBLE)*16);
+    m = mcpy;
+    }
+
+    Deta = det3x3(m);
+    if(APPROX(Deta,0.0))
+        printf("deta 0\n");
+    Deta = 1.0 / Deta;
+
+    res[0] = (-m[9]*m[6] +m[5]*m[10])*Deta;
+    res[4] = (+m[8]*m[6] -m[4]*m[10])*Deta;
+    res[8] = (-m[8]*m[5] +m[4]*m[9])*Deta;
+    res[12] = ( m[12]*m[9]*m[6] -m[8]*m[13]*m[6] -m[12]*m[5]*m[10] +m[4]*m[13]*m[10] +m[8]*m[5]*m[14] -m[4]*m[9]*m[14])*Deta;
+
+    res[1] = (+m[9]*m[2] -m[1]*m[10])*Deta;
+    res[5] = (-m[8]*m[2] +m[0]*m[10])*Deta;
+    res[9] = (+m[8]*m[1] -m[0]*m[9])*Deta;
+    res[13] = (-m[12]*m[9]*m[2] +m[8]*m[13]*m[2] +m[12]*m[1]*m[10] -m[0]*m[13]*m[10] -m[8]*m[1]*m[14] +m[0]*m[9]*m[14])*Deta;
+
+    res[2] = (-m[5]*m[2] +m[1]*m[6])*Deta;
+    res[6] = (+m[4]*m[2] -m[0]*m[6])*Deta;
+    res[10] = (-m[4]*m[1] +m[0]*m[5])*Deta;
+    res[14] = ( m[12]*m[5]*m[2] -m[4]*m[13]*m[2] -m[12]*m[1]*m[6] +m[0]*m[13]*m[6] +m[4]*m[1]*m[14] -m[0]*m[5]*m[14])*Deta;
+
+    res[3] = (+m[5]*m[2]*m[11] -m[1]*m[6]*m[11])*Deta;
+    res[7] = (-m[4]*m[2]*m[11] +m[0]*m[6]*m[11])*Deta;
+    res[11] = (+m[4]*m[1]*m[11] -m[0]*m[5]*m[11])*Deta;
+    res[15] = (-m[8]*m[5]*m[2] +m[4]*m[9]*m[2] +m[8]*m[1]*m[6] -m[0]*m[9]*m[6] -m[4]*m[1]*m[10] +m[0]*m[5]*m[10])*Deta;
+
+    return res;
+}
+
+GLDOUBLE* matinverseFULL(GLDOUBLE* res, GLDOUBLE* mm){
+        matinverse98(res,mm);
+        return res;
+}
+
+float *matdouble2float4(float *rmat4, double *dmat4){
+    int i;
+    /* convert GLDOUBLE to float */
+    for (i=0; i<16; i++) {
+        rmat4[i] = (float)dmat4[i];
+    }
+    return rmat4;
+}
+
+GLDOUBLE* matmultiplyFULL(GLDOUBLE* r, GLDOUBLE* mm , GLDOUBLE* nn)
+{
+    /* full 4x4, will do perspectives 
+    FLOPs 64 double: 4x4x4 
+    r = mm x nn
+    */
+    GLDOUBLE tm[16],tn[16];
+    GLDOUBLE *m, *n;
+    int i,j,k;
+    /* prevent self-multiplication problems.*/
+    m = mm;
+    n = nn;
+    if(r == m) {
+    memcpy(tm,m,sizeof(GLDOUBLE)*16);
+    m = tm;
+    }
+    if(r == n) {
+    memcpy(tn,n,sizeof(GLDOUBLE)*16);
+    n = tn;
+    }
+    if(0){
+        if(1) for(i=0;i<3;i++){
+            if(mm[i +12] != 0.0){
+                double p = mm[i +12];
+                printf("Ft[%d]%f ",i,p);
+            }
+            if(nn[i + 12] != 0.0){
+                double p = nn[i +12];
+                printf("FT[%d]%f ",i,p);
+            }
+        }
+        if(1) for(i=0;i<3;i++){
+            if(mm[i*4 + 3] != 0.0){
+                double p = mm[i*4 + 3];
+                printf("Fp[%d]%f ",i,p);
+            }
+            if(nn[i*4 + 3] != 0.0){
+                double p = nn[i*4 + 3];
+                printf("FP[%d]%f ",i,p);
+            }
+        }
+    }
+    /* assume 4x4 homgenous transform */
+    for(i=0;i<4;i++)
+        for(j=0;j<4;j++)
+        {
+            r[i*4+j] = 0.0;
+            for(k=0;k<4;k++)
+                r[i*4+j] += m[i*4+k]*n[k*4+j];
+        }
+    return r;
+}
+
+/* Generic GLSL fragment shader, used on OpenGL ES. */
+/* DEFINES */ 
+#ifdef MOBILE 
+//precision highp float; 
+precision mediump float; 
+#endif //MOBILE 
+
+class vec2 {
+public:
+    float x;
+    float y;
+    vec2(void) {
+        x = 0;
+        y = 0;
+    }
+};
+ 
+class vec3 {
+public:
+    float x;
+    float y;
+    float z;
+    vec3(void) {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
+    vec3(float fx, float fy, float fz) {
+        x = fx;
+        y = fy;
+        z = fz;
+    }
+    vec3 operator*(vec3 &arg) {
+        vec3 ret;
+        ret.x = x * arg.x;
+        ret.y = y * arg.y;
+        ret.z = z * arg.z;
+        return ret;
+    }
+    vec3 operator+(const float &arg) {
+        vec3 ret;
+        ret.x = x + arg;
+        ret.y = y + arg;
+        ret.z = z + arg;
+        return ret;
+    }
+    vec3 operator-(const float &arg) {
+        vec3 ret;
+        ret.x = x - arg;
+        ret.y = y - arg;
+        ret.z = z - arg;
+        return ret;
+    }
+    vec3 operator*(const float &arg) {
+        vec3 ret;
+        ret.x = x * arg;
+        ret.y = y * arg;
+        ret.z = z * arg;
+        return ret;
+    }
+    bool operator<(const vec3 &arg) {
+        float len = sqrt(x * x + y * y + z * z);
+        float lenarg = sqrt(arg.x * arg.x + arg.y * arg.y + arg.z * arg.z);
+        if (len < lenarg)
+            return true;
+        return false;
+    }
+    vec3 operator/(const float &arg) {
+        vec3 ret;
+        ret.x = x / arg;
+        ret.y = y / arg;
+        ret.z = z / arg;
+        return ret;
+    }
+    vec3 operator-()
+    { 
+        return vec3(-x, -y, -z); 
+    }
+    vec3 operator-(const vec3 &arg) {
+        vec3 ret;
+        ret.x = x - arg.x;
+        ret.y = y - arg.y;
+        ret.z = z - arg.z;
+        return ret;
+    }
+    vec3 operator+(const vec3 &arg) {
+        vec3 ret;
+        ret.x = x + arg.x;
+        ret.y = y + arg.y;
+        ret.z = z + arg.z;
+        return ret;
+    }
+    vec3 operator*(const vec3 &arg) {
+        vec3 ret;
+        ret.x = x * arg.x;
+        ret.y = y * arg.y;
+        ret.z = z * arg.z;
+        return ret;
+    }
+    vec3 operator/(const vec3 &arg) {
+        vec3 ret;
+        ret.x = x / arg.x;
+        ret.y = y / arg.y;
+        ret.z = z / arg.z;
+        return ret;
+    }
+    vec3 divrev(const float &arg) {
+        vec3 ret;
+        ret.x = arg / x;
+        ret.y = arg / y;
+        ret.z = arg / z;
+        return ret;
+    }
+};
+
+vec3 floor(vec3 &arg) {
+    vec3 ret;
+    ret.x = floor(arg.x);
+    ret.y = floor(arg.y);
+    ret.z = floor(arg.z);
+    return ret;
+}
+
+float fract(float arg)
+{
+   return arg - floor(arg);
+}
+
+vec3 fract(vec3 arg)
+{
+   vec3 ret;
+   ret.x = arg.x - floor(arg.x);
+   ret.y = arg.y - floor(arg.y);
+   ret.z = arg.z - floor(arg.z);
+   return ret;
+}
+
+float length(vec3 arg)
+{
+    return sqrt(arg.x * arg.x + arg.y * arg.y + arg.z * arg.z);
+}
+
+float distance(vec3 p0, vec3 p1)
+{
+   return length(p0 - p1);
+}
+
+vec3 normalize(vec3 arg) 
+{
+    vec3 ret = arg;
+    float fx = arg.x,
+          fy = arg.y,
+          fz = arg.z;
+    float len = fx*fx + fy*fy + fz*fz;
+    if (len > 0) {
+        len = 1.0 / sqrt(len);
+        ret.x = arg.x * len;
+        ret.y = arg.y * len;
+        ret.z = arg.z * len;
+    }
+    return ret;
+}
+
+class vec4 {
+public:
+    float x;
+    float y;
+    float z;
+    float a;
+    vec4(void) {
+        x = 0;
+        y = 0;
+        z = 0;
+        a = 0;
+    }    
+    vec4(float fx, float fy, float fz, float fa) {
+        x = fx;
+        y = fy;
+        z = fz;
+        a = fa;
+    }
+    vec4 operator/(const float &arg) {
+        vec4 ret;
+        ret.x = x / arg;
+        ret.y = y / arg;
+        ret.z = z / arg;
+        ret.a = a / arg;
+        return ret;
+    }
+    vec4 normalize(vec4 arg) 
+    {
+        vec4 ret = arg;
+        float fx = arg.x,
+              fy = arg.y,
+              fz = arg.z,
+              fa = arg.a;
+        float len = fx*fx + fy*fy + fz*fz + fa*fa;
+        if (len > 0) {
+            len = 1.0 / sqrt(len);
+            ret.x = arg.x * len;
+            ret.y = arg.y * len;
+            ret.z = arg.z * len;
+            ret.a = arg.a * len;
+        }
+        return ret;
+    }
+};
+
+float mix(float arg1, float arg2, float arg3)
+{
+     return arg1 * (1 - arg3) + arg2 * arg3;
+}
+
+vec4 mix(vec4 arg1, vec4 arg2, float arg3) 
+{
+    vec4 ret;
+    ret.x = arg1.x * (1 - arg3) + arg2.x * arg3;
+    ret.y = arg1.y * (1 - arg3) + arg2.y * arg3;
+    ret.z = arg1.z * (1 - arg3) + arg2.z * arg3;
+    return ret;
+}
+
+float clamp(float arg, float minval, float maxval)
+{
+    return min(max(arg, minval), maxval);
+}
+
+class mat4 {
+public:
+    float data[16];
+    mat4()
+    {
+        data[0] = 1;
+        data[1] = 0;
+        data[2] = 0;
+        data[3] = 0;
+    
+        data[4] = 0;
+        data[5] = 1;
+        data[6] = 0;
+        data[7] = 0;
+    
+        data[8] = 0;
+        data[9] = 0;
+        data[10] = 1;
+        data[11] = 0;
+    
+        data[12] = 0;
+        data[13] = 0;
+        data[14] = 0;
+        data[15] = 1;
+    }
+    vec4 operator*(const vec4 &arg) 
+    {
+        vec4 ret;
+        ret.x = data[0]  * arg.x + data[1]  * arg.y + data[2]  * arg.z + data[3]  * arg.a;
+        ret.y = data[4]  * arg.x + data[5]  * arg.y + data[6]  * arg.z + data[7]  * arg.a;
+        ret.z = data[8]  * arg.x + data[9]  * arg.y + data[10] * arg.z + data[11] * arg.a;
+        ret.a = data[12] * arg.x + data[13] * arg.y + data[14] * arg.z + data[15] * arg.a  ;
+        return ret;
+    }
+};
+
+vec4 HeatMapColor(float value, float minValue, float maxValue) 
+{ 
+    //used for debugging. If min=0,max=1 then magenta is 0, blue,green,yellow, red is 1 
+    vec4 ret; 
+    int HEATMAP_COLORS_COUNT; 
+    vec4 colors[6]; 
+    HEATMAP_COLORS_COUNT = 6; 
+    colors[0] = vec4(0.32, 0.00, 0.32, 1.0); 
+    colors[1] = vec4( 0.00, 0.00, 1.00, 1.00); 
+    colors[2] = vec4(0.00, 1.00, 0.00, 1.00); 
+    colors[3] = vec4(1.00, 1.00, 0.00, 1.00); 
+    colors[4] = vec4(1.00, 0.60, 0.00, 1.00); 
+    colors[5] = vec4(1.00, 0.00, 0.00, 1.00); 
+    float ratio=(float(HEATMAP_COLORS_COUNT)-1.0)*clamp((value-minValue)/(maxValue-minValue),0.0,1.0); 
+    int indexMin=int(floor(ratio)); 
+    int indexMax= indexMin+1 < HEATMAP_COLORS_COUNT-1 ? indexMin+1 : HEATMAP_COLORS_COUNT-1; 
+    ret = mix(colors[indexMin], colors[indexMax], ratio-float(indexMin)); 
+    if(value < minValue) ret = vec4(0.0,0.0,0.0,1.0); 
+    if(value > maxValue) ret = vec4(1.0,1.0,1.0,1.0); 
+    return ret; 
+} 
+vec4 debug_color; 
+float hash(float n) 
+{ 
+    return fract(sin(n)*43758.5453); 
+} 
+float noise( vec3 xyz ) 
+{ 
+    // The noise function returns a value in the range -1.0f -> 1.0f 
+    vec3 p = floor(xyz); 
+    vec3 f = fract(xyz); 
+    vec3 a = -f*2.0f;
+    vec3 b = a+3.0f;     
+    f = f*f*b;
+    float n = p.x + p.y*57.0 + 113.0*p.z; 
+    
+    return mix(mix(mix( hash(n+0.0), hash(n+1.0),f.x), 
+                   mix( hash(n+57.0), hash(n+58.0),f.x),f.y), 
+               mix(mix( hash(n+113.0), hash(n+114.0),f.x), 
+                   mix( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z); 
+} 
+vec3 noise3(vec3 xyz, float range ){ 
+    vec3 rxyz = vec3(xyz); 
+    rxyz.x += noise(xyz)*range; 
+    rxyz.y += noise(xyz)*range; 
+    rxyz.z += noise(xyz)*range; 
+    return rxyz; 
+} 
+
+#define uniform 
+class sampler2D
+{
+};
+
+vec4 gl_FragCoord;
+/*varying*/ vec4 castle_vertex_eye; 
+/*varying*/ vec4 castle_Color; 
+uniform mat4 fw_ModelViewProjInverse; 
+//uniform float fw_FocalLength; 
+uniform vec4 fw_viewport; 
+uniform vec3 fw_dimensions; 
+//uniform vec3 fw_RayOrigin; 
+uniform sampler2D fw_Texture_unit0; 
+uniform sampler2D fw_Texture_unit1; 
+uniform sampler2D fw_Texture_unit2; 
+uniform sampler2D fw_Texture_unit3; 
+#ifdef TEX3D 
+uniform int tex3dTiles[3]; 
+uniform int repeatSTR[3]; 
+uniform int magFilter; 
+#endif //TEX3D 
+#ifdef SEGMENT 
+uniform int fw_nIDs; 
+uniform int fw_enableIDs[10]; 
+uniform int fw_surfaceStyles[2]; 
+uniform int fw_nStyles; 
+vec4 texture3Demu( sampler2D sampler, in vec3 texcoord3); 
+vec4 texture3Demu0( sampler2D sampler, in vec3 texcoord3, int magfilter); 
+bool inEnabledSegment(in vec3 texcoords, inout int jstyle){ 
+    bool inside = true; 
+    jstyle = 1; //DEFAULT 
+    vec4 segel = texture3Demu0(fw_Texture_unit1,texcoords,0); 
+    //convert from GL_FLOAT 0-1 to int 0-255 
+    //Q. is there a way to do int images in GLES2? 
+    int ID = int(floor(segel.a * 255.0 + .1)); 
+    //debug_color = HeatMapColor(float(ID),0.0,5.0); 
+    //debug_color.a = .2; 
+    if(ID < fw_nIDs){ 
+        //specs: The indices of this array corresponds to the segment identifier. 
+        inside = fw_enableIDs[ID] == 0 ? false : true; 
+    } 
+    if(inside){ 
+        int kstyle = fw_nStyles-1; 
+        kstyle = ID < fw_nStyles ? ID : kstyle; 
+        jstyle = fw_surfaceStyles[kstyle]; 
+        jstyle = jstyle == 1 ? 0 : jstyle; 
+    } 
+    return inside; 
+} 
+#endif //SEGMENT 
+#ifdef ISO 
+uniform float fw_stepSize; 
+uniform float fw_tolerance; 
+uniform float fw_surfaceVals[]; 
+uniform int fw_nVals; 
+uniform int fw_surfaceStyles[]; 
+uniform int fw_nStyles; 
+#endif //ISO 
+ 
+class Ray { 
+public:
+  vec3 Origin; 
+  vec3 Dir; 
+  Ray(vec3 o, float *d) 
+  {
+     Origin = o;
+     Dir.x = d[0];
+     Dir.y = d[1];
+     Dir.z = d[2];
+  }
+}; 
+
+class AABB { 
+public:
+  vec3 Min; 
+  vec3 Max; 
+  AABB(vec3 min, vec3 max)
+  {
+  Min = min;
+  Max = max;
+  }
+}; 
+
+bool IntersectBox(Ray r, AABB aabb, /*out*/ float t0, /*out*/ float t1) 
+{ 
+    vec3 invR = r.Dir.divrev(1.0f);
+    vec3 tbot = invR * (aabb.Min-r.Origin); 
+    vec3 ttop = invR * (aabb.Max-r.Origin); 
+    vec3 tmin = min(ttop, tbot); 
+    vec3 tmax = max(ttop, tbot); 
+    vec2 t;
+    t.x = max(tmin.x, tmin.y); 
+    t.y = max(tmin.x, tmin.z); 
+    t0 = max(t.x, t.y); 
+    t.x = min(tmax.x, tmax.y); 
+    t.y = min(tmax.x, tmax.z); 
+    t1 = min(t.x, t.y); 
+    return t0 <= t1; 
+} 
+/* PLUG-DECLARATIONS */ 
+
+vec4 gl_FragColor; 
+vec3 fw_TexCoord[1]; 
+#ifdef CLIP 
+#define FW_MAXCLIPPLANES 4 
+uniform int fw_nclipplanes; 
+uniform vec4 fw_clipplanes[FW_MAXCLIPPLANES]; 
+bool clip (in vec3 vertex_object){ 
+  bool iclip = false; 
+  for ( int i=0; i<fw_nclipplanes; i++ ) { 
+    if( dot( fw_clipplanes[i], vec4(vertex_object,1.0)) < 0.0) 
+        iclip = true; 
+  } 
+  return iclip; 
+} 
+#endif //CLIP 
+vec3 vertex_eye; 
+vec3 normal_eye; 
+vec4 raysum; 
+void mainShader(void) 
+{ 
+    debug_color = vec4(0.0, 0.0, 0.0, 0.0); 
+    float maxDist = length(fw_dimensions); //1.414214; //sqrt(2.0); 
+    int numSamples = 128; 
+    float fnumSamples = float(numSamples); 
+    float stepSize = maxDist/fnumSamples; 
+    float densityFactor = 5.0/fnumSamples; //.88; // 1.0=normal H3D, .5 see deeper  
+     
+    vec4 fragment_color; 
+    //vec4 raysum; 
+    float rayDirection[3]; 
+    //convert window to frustum 
+    rayDirection[0] = 2.0 * (gl_FragCoord.x - fw_viewport.x) / fw_viewport.z - 1.0f; 
+    rayDirection[1] = 2.0 * (gl_FragCoord.y - fw_viewport.y) / fw_viewport.a - 1.0f; 
+    rayDirection[2] = 0.0; 
+    vec3 rayOrigin; // = fw_RayOrigin; 
+    //the equivalent of gluUnproject 
+    //by unprojecting 2 points on ray here, this should also work with ortho viewpoint 
+    vec4 ray4 = vec4(rayDirection[0], rayDirection[1], rayDirection[2], 1.0f);
+    vec4 org4 = ray4; 
+    //if I back up the ray origin by -1.0 the front plane clipping works properly 
+    ray4.z = 0.0; //1.0; 
+    org4.z = -1.0; //0.0; 
+    ray4 = fw_ModelViewProjInverse * ray4; 
+    org4 = fw_ModelViewProjInverse * org4; 
+    ray4 = ray4 / ray4.a; 
+    org4 = org4 / org4.a; 
+    vec3 ray(ray4.x, ray4.y, ray4.z);
+    vec3 org(org4.x, org4.y, org4.z);
+    vec3 rayDir = normalize(ray - org); 
+    rayDirection[0] = rayDir.x;
+    rayDirection[1] = rayDir.y;
+    rayDirection[2] = rayDir.z;
+    rayOrigin.x = org4.x; 
+    rayOrigin.y = org4.y; 
+    rayOrigin.z = org4.z; 
+    
+    Ray eye = Ray( rayOrigin, rayDirection); 
+    vec3 half_dimensions = fw_dimensions * .5; 
+    vec3 minus_half_dimensions = half_dimensions * -1.0; 
+    AABB aabb = AABB(minus_half_dimensions,half_dimensions); 
+    
+    float tnear, tfar; 
+    IntersectBox(eye, aabb, tnear, tfar); 
+    if (tnear < 0.0) tnear = 0.0; 
+    vec3 rayStart = eye.Origin + eye.Dir * tnear; 
+    vec3 rayStop = eye.Origin + eye.Dir * tfar; 
+    // Perform the ray marching: 
+    vec3 pos = rayStart; 
+    vec3 step = normalize(rayStop-rayStart) * stepSize; 
+    float totaltravel = distance(rayStop, rayStart); 
+    float travel = totaltravel; 
+    float T = 1.0; 
+    vec3 Lo = vec3(0.0f, 0.0f, 0.0f); 
+    normal_eye.x = rayDirection[0]; 
+    normal_eye.y = rayDirection[1]; 
+    normal_eye.z = rayDirection[2]; 
+    vec3 pos2 = pos; 
+    // Transform from object space to texture coordinate space: 
+    pos2 = (pos2+half_dimensions)/fw_dimensions; 
+    pos2.x = clamp(pos2.x,0.001,.999); 
+    pos2.y = clamp(pos2.y,0.001,.999); 
+    pos2.z = clamp(pos2.z,0.001,.999); 
+    raysum = vec4(0.0f, 0.0f, 0.0f, 0.0f); 
+    float depth = 0.0; 
+    float lastdensity; 
+    float lastdensity_iso; 
+    
+    for (int i=0; i < numSamples; ++i) { 
+        //raysum = HeatMapColor(travel,0.0,2.0); 
+        //break; 
+       // ...lighting and absorption stuff here... 
+        pos2 = pos; 
+        vertex_eye = pos2; 
+        // Transform from object space to texture coordinate space: 
+        pos2 = (pos2+half_dimensions)/fw_dimensions; 
+        //pos2.z = 1.0 - pos2.z; //RHS to LHS 
+        pos2.x = clamp(pos2.x,0.001,.999); 
+        pos2.y = clamp(pos2.y,0.001,.999); 
+        pos2.z = clamp(pos2.z,0.001,.999); 
+        vec3 texcoord3 = pos2; 
+        bool iclip = false; 
+        #ifdef CLIP 
+        iclip = clip(vertex_eye); //clip(totaltravel - travel); 
+        #endif //CLIP 
+        if(!iclip) { 
+            fragment_color.x = 1.0; //do I need a default? seems not 
+            fragment_color.y = 0.0; //do I need a default? seems not 
+            fragment_color.z = 1.0; //do I need a default? seems not 
+            fragment_color.a = 1.0; //do I need a default? seems not 
+            /* PLUG: texture3D ( fragment_color, texcoord3) */ 
+            #ifdef SEGMENT 
+            int jstyle = 1; 
+            if(inEnabledSegment(texcoord3,jstyle)){ 
+            #endif //SEGMENT 
+            //assuming we had a scalar input image and put L into .a, 
+            // and computed gradient and put in .rgb : 
+            float density = fragment_color.a; //recover the scalar value 
+            vec3 gradient; //= fragment_color.rgb - vec3(.5,.5,.5); //we added 127 to (-127 to 127) in CPU gradient computation
+            gradient.x = fragment_color.x - 0.5; //we added 127 to (-127 to 127) in CPU gradient computation
+            gradient.y = fragment_color.y - 0.5; //we added 127 to (-127 to 127) in CPU gradient computation
+            gradient.z = fragment_color.z - 0.5; //we added 127 to (-127 to 127) in CPU gradient computation
+            //vec4 voxel = vec4(density,density,density,density); //this is where the black visual voxels come from
+            vec4 voxel = vec4(density,density,density,density); //this is where the black visual voxels come from
+            
+            #ifdef ISO 
+            if(i==0){ 
+                lastdensity = density; 
+                lastdensity_iso = 0.0; 
+            } 
+            int MODE = fw_nVals == 1 ? 1 : 3; 
+            MODE = fw_stepSize != 0.0 && MODE == 1 ? 2 : 1; 
+            #ifdef ISO_MODE3 
+            if(MODE == 3){ 
+                for(int i=0;i<fw_nVals;i++){ 
+                    float iso = fw_surfaceVals[i]; 
+                    if( sign( density - iso) != sign( lastdensity - iso) && length(gradient) > fw_tolerance ){ 
+                        voxel.a = 1.0; 
+                        int jstyle = min(i,fw_nStyles-1); 
+                        jstyle = fw_surfaceStyles[jstyle]; 
+                        if(jstyle == 1){ 
+                            /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ 
+                        } else if(jstyle == 2) { 
+                            /* PLUG: voxel_apply_OPACITY (voxel, gradient) */ 
+                        } else if(jstyle == 3) { 
+                            /* PLUG: voxel_apply_BLENDED (voxel, gradient) */ 
+                        } else if(jstyle == 4) { 
+                            /* PLUG: voxel_apply_BOUNDARY (voxel, gradient) */ 
+                        } else if(jstyle == 5) { 
+                            /* PLUG: voxel_apply_CARTOON (voxel, gradient) */ 
+                        } else if(jstyle == 6) { 
+                            /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ 
+                        } else if(jstyle == 7) { 
+                            /* PLUG: voxel_apply_EDGE (voxel, gradient) */ 
+                        } else if(jstyle == 8) { 
+                            /* PLUG: voxel_apply_PROJECTION (voxel, gradient) */ 
+                        } else if(jstyle == 9) { 
+                            /* PLUG: voxel_apply_SHADED (voxel, gradient) */ 
+                        } else if(jstyle == 10) { 
+                            /* PLUG: voxel_apply_SILHOUETTE (voxel, gradient) */ 
+                        } else if(jstyle == 11) { 
+                            /* PLUG: voxel_apply_TONE (voxel, gradient) */ 
+                        } 
+                    } else { 
+                        voxel = vec4(0.0f, 0.0f, 0.0f, 0.0f); //similar to discard 
+                    } 
+                } 
+                lastdensity = density; 
+            } 
+            #else //ISO_MODE3 
+            if(MODE == 1){ 
+                float iso = fw_surfaceVals[0]; 
+                if( sign( density - iso) != sign( lastdensity - iso) && length(gradient) > fw_tolerance ){ 
+                    //debug_color = HeatMapColor(iso,0.0,.3); 
+                    voxel.a = 1.0; 
+                    /* PLUG: voxel_apply (voxel, gradient) */ 
+                } else { 
+                    voxel = vec4(0.0); //similar to discard 
+                } 
+                lastdensity = density; 
+            } else if(MODE == 2){ 
+                float iso = fw_surfaceVals[0]; 
+                float density_iso = density / fw_stepSize; 
+                if( sign( density_iso - iso) != sign( lastdensity_iso - iso) && length(gradient) > fw_tolerance ){ 
+                    voxel.a = 1.0; 
+                    /* PLUG: voxel_apply (voxel, gradient) */ 
+                } else { 
+                    voxel = vec4(0.0); //similar to discard 
+                } 
+                lastdensity = density; 
+                lastdensity_iso = density_iso; 
+            }  
+            #endif //ISO_MODE3 
+            #else //ISO 
+            #ifdef SEGMENT 
+            //debug_color = HeatMapColor(float(jstyle),1.0,12.0); 
+            //debug_color.a = .2; 
+            if(jstyle == 1){ 
+                /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ 
+            } else if(jstyle == 2) { 
+                /* PLUG: voxel_apply_OPACITY (voxel, gradient) */ 
+            } else if(jstyle == 3) { 
+                /* PLUG: voxel_apply_BLENDED (voxel, gradient) */ 
+            } else if(jstyle == 4) { 
+                /* PLUG: voxel_apply_BOUNDARY (voxel, gradient) */ 
+            } else if(jstyle == 5) { 
+                /* PLUG: voxel_apply_CARTOON (voxel, gradient) */ 
+            } else if(jstyle == 6) { 
+                /* PLUG: voxel_apply_DEFAULT (voxel, gradient) */ 
+            } else if(jstyle == 7) { 
+                /* PLUG: voxel_apply_EDGE (voxel, gradient) */ 
+            } else if(jstyle == 8) { 
+                /* PLUG: voxel_apply_PROJECTION (voxel, gradient) */ 
+            } else if(jstyle == 9) { 
+                /* PLUG: voxel_apply_SHADED (voxel, gradient) */ 
+            } else if(jstyle == 10) { 
+                /* PLUG: voxel_apply_SILHOUETTE (voxel, gradient) */ 
+            } else if(jstyle == 11) { 
+                /* PLUG: voxel_apply_TONE (voxel, gradient) */ 
+            } 
+            #else //SEGMENT 
+            //non-iso rendering styles 
+            //void PLUG_voxel_apply (inout vec4 voxel, inout vec3 gradient) 
+            /* PLUG: voxel_apply (voxel, gradient) */ 
+            #endif //SEGMENT 
+            #endif //ISO 
+            density = voxel.a; 
+            //debug_color = HeatMapColor(densityFactor,0.134,.135); 
+            T = (1.0 - raysum.a); 
+            raysum.a += density * T; 
+            raysum.x += voxel.x  * T * density; 
+            raysum.y += voxel.y  * T * density; 
+            raysum.z += voxel.z  * T * density; 
+            if(raysum.a > .99) { 
+                break; 
+            } 
+            #ifdef SEGMENT 
+            } //if inEnabledSegment 
+            #endif //SEGMENT 
+        } //iclip 
+        travel -= stepSize; 
+        depth += stepSize; 
+        if(travel <= 0.0) break; 
+        pos = pos + step; 
+        
+    }  
+    //void PLUG_ray_apply (inout vec4 raysum) 
+    /* PLUG: ray_apply (raysum) */ 
+    if(true) gl_FragColor = raysum; 
+    else gl_FragColor = debug_color; 
+} 
 
 float *getTransformedClipPlanes();
-int getClipPlaneCount();
 void sendFogToShader(s_shader_capabilities_t *me);
-void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node **renderStyle, int nstyle, struct X3D_Node *voxels, struct X3D_VolumeData *node ) {
+void render_GENERIC_volume_data(s_shader_capabilities_t *caps, Node **renderStyle, int nstyle, Node *voxels, NodeVolumeData *node ) {
     static int once = 0;
     int myProg;
     //unsigned int volflags;
@@ -8864,17 +10040,17 @@ void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *
     GLint iviewport[4];
     float viewport[4];
     GLint vp, dim;
-    float *dimensions;
+    const float *dimensions;
 
-    ttglobal tg = gglobal();
+//    ttglobal tg = gglobal();
 
-    myProg = caps->myShaderProgram;
+//    myProg = caps->myShaderProgram;
 
     if(voxels){
-        struct X3D_Node *tmpN;
+        Node *tmpN;
         textureTableIndexStruct_s *tti;
-        POSSIBLE_PROTO_EXPANSION(struct X3D_Node *, voxels,tmpN);
-        tg->RenderFuncs.texturenode = (void*)tmpN;
+        POSSIBLE_PROTO_EXPANSION(Node *, voxels,tmpN);
+        renderFuncs_texturenode = (Node*)tmpN;
 
         //gradient > Oct 2016 we compute in textures.c if channels==1 and z>1 and put in rgb
         // - saves mallocing another RGBA 
@@ -8910,45 +10086,55 @@ void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *
             glActiveTexture(GL_TEXTURE0); 
             glBindTexture(GL_TEXTURE_2D,tti->OpenGLTexture); 
             FW_GL_TEXPARAMETERI( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
         }
     }
+
     if(nstyle){
         int i;
         for(i=0;i<nstyle;i++){
-            struct X3D_OpacityMapVolumeStyle *style0 = (struct X3D_OpacityMapVolumeStyle*)renderStyle[i];
-            if(style0->enabled){
-                render_volumestyle(renderStyle[i],myProg); //send uniforms
-                // if style uses a texture, it should be the next texture ie GL_TEXTURE0+1,2..
+            if (renderStyle[i]) {
+                NodeOpacityMapVolumeStyle *style0 = (NodeOpacityMapVolumeStyle*)renderStyle[i];
+                if(style0->enabled()->getValue()){
+                    render_volumestyle(renderStyle[i],myProg); //send uniforms
+                    // if style uses a texture, it should be the next texture ie GL_TEXTURE0+1,2..
+                }
             }
         }
     }
+fprintf(stderr, "before glerror 0\n");
+TheApp->printRenderErrors();
+#if 0
     //3.1 set uniforms: dimensions, focal length, fov (field of view), window size, modelview matrix
     //    set attributes vertices of triangles of bounding box
     // set box with vol.dimensions with triangles
     Vertices = GET_ATTRIB(myProg,"fw_Vertex");
     mvm = GET_UNIFORM(myProg,"fw_ModelViewMatrix"); //fw_ModelViewMatrix
     proj = GET_UNIFORM(myProg,"fw_ProjectionMatrix"); //fw_ProjectionMatrix
+#endif
+fprintf(stderr, "before glerror 1\n");
+TheApp->printRenderErrors();
     if(!once)
         ConsoleMessage("vertices %d mvm %d proj %d\n",Vertices,mvm,proj);
-    sendExplicitMatriciesToShader(mvm,proj,-1,NULL,-1);
+fprintf(stderr, "before glerror 1.7\n");
+TheApp->printRenderErrors();
+//    sendExplicitMatriciesToShader(mvm,proj,-1,NULL,-1);
+#if 0
     FW_GL_GETDOUBLEV(GL_MODELVIEW_MATRIX, modelviewMatrix);
     FW_GL_GETDOUBLEV(GL_PROJECTION_MATRIX, projMatrix);
     if(1){
         //see gluUnproject in Opengl_Utils.c
-        __gluMultMatricesd(modelviewMatrix, projMatrix, mvp);
-        if (!__gluInvertMatrixd(mvp, mvpinverse)) return;
+        gluMultMatricesd(modelviewMatrix, projMatrix, mvp);
+        if (!gluInvertMatrixd(mvp, mvpinverse)) return;
     }else{
         matmultiplyFULL(mvp,modelviewMatrix,projMatrix);
         //matmultiplyFULL(mvp,projMatrix,modelviewMatrix);
-        //if (!__gluInvertMatrixd(mvp, mvpinverse)) return;
+        //if (!gluInvertMatrixd(mvp, mvpinverse)) return;
         matinverseFULL(mvpinverse,mvp); //seems different than glu's. H0: just wrong H1: transopose H2: full inverse vs factorized
     }
     matdouble2float4(spmat,mvpinverse);
 
     mvpi = GET_UNIFORM(myProg,"fw_ModelViewProjInverse");
     GLUNIFORMMATRIX4FV(mvpi,1,GL_FALSE,spmat);
-
 
 //SEND CLIPPLANES?
     //sendClipplanesToShader(mysp);
@@ -8970,32 +10156,48 @@ void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *
     //}
     //if(haveShaderStyle){
         //send lights
+/*
         if (caps->haveLightInShader) {
             sendLightInfo(caps);
             sendFogToShader(caps);
         }
+*/
     //}
 
+#endif
+fprintf(stderr, "before glerror 2\n");
+TheApp->printRenderErrors();
 
-
+#if 0
     //get the current viewport
     glGetIntegerv(GL_VIEWPORT, iviewport); //xmin,ymin,w,h
+fprintf(stderr, "after glerror 0,2\n");
+TheApp->printRenderErrors();
     vp = GET_UNIFORM(myProg,"fw_viewport");
+fprintf(stderr, "after glerror 0,3\n");
+TheApp->printRenderErrors();
     viewport[0] = (float)iviewport[0]; //xmin
     viewport[1] = (float)iviewport[1]; //ymin
     viewport[2] = (float)iviewport[2]; //width
     viewport[3] = (float)iviewport[3]; //height
     GLUNIFORM4F(vp,viewport[0],viewport[1],viewport[2],viewport[3]);
-    dim = GET_UNIFORM(myProg,"fw_dimensions");
-    dimensions = node->dimensions.c;
-    GLUNIFORM3F(dim,dimensions[0],dimensions[1],dimensions[2]);
+#endif
+fprintf(stderr, "after glerror 0,5\n");
+TheApp->printRenderErrors();
+//    dim = GET_UNIFORM(myProg,"fw_dimensions");
+//    GLUNIFORM3F(dim,dimensions[0],dimensions[1],dimensions[2]);
+//    GLUNIFORM3F(dimensions[0],dimensions[1],dimensions[2]);
 
-    if(!once) ConsoleMessage("dim %d vp %d \n",dim,vp );
+//    if(!once) ConsoleMessage("dim %d vp %d \n",dim,vp );
 
+fprintf(stderr, "after glerror 1.1\n");
+TheApp->printRenderErrors();
     //3.2 draw with shader
-    glEnableVertexAttribArray(Vertices);
-    glVertexAttribPointer(Vertices, 3, GL_FLOAT, GL_FALSE, 0, node->_boxtris);
-    // https://www.opengl.org/wiki/Face_Culling
+//    glEnableVertexAttribArray(Vertices);
+//    glVertexAttribPointer(Vertices, 3, GL_FLOAT, GL_FALSE, 0, node->m_boxtris);
+TheApp->printRenderErrors();
+fprintf(stderr, "after glerror 1.1\n");
+     // https://www.opengl.org/wiki/Face_Culling
     glEnable(GL_CULL_FACE);
     //we want to draw only either back/far or front/near triangles, not both
     //so that we comput a ray only once.
@@ -9007,11 +10209,27 @@ void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *
     //assuming our triangles are defined CCW (normal)
     //setting front-face to GL_CW should ensure only the far/back triangles are rendered
     glFrontFace(GL_CW); 
-    glDrawArrays(GL_TRIANGLES,0,36);
+TheApp->printRenderErrors();
+fprintf(stderr, "after glerror 1.5\n");
+     
+//    glDrawArrays(GL_TRIANGLES,0,36);
+    dimensions = node->dimensions()->getValue();
+printf("dim 2 %f %f %f\n", dimensions[0],dimensions[1],dimensions[2]);
+     glBegin(GL_TRIANGLES);
+     for (int i = 0; i < 48; i += 4) {
+         for (int j = 0; j < 3; j++) {
+             glVertex3f(boxvert[boxtriindccw[i + j] * 3    ] * dimensions[0], 
+                        boxvert[boxtriindccw[i + j] * 3 + 1] * dimensions[1], 
+                        boxvert[boxtriindccw[i + j] * 3 + 2] * dimensions[2]);
+         }
+     }
+     glEnd();
+TheApp->printRenderErrors();
+fprintf(stderr, "after glerror 2\n");
     glDisable(GL_CULL_FACE);
     if(voxels){
-        tg->RenderFuncs.textureStackTop = 0;
-        tg->RenderFuncs.texturenode = NULL;
+        renderFuncs_textureStackTop = 0;
+        renderFuncs_texturenode = NULL;
     }
     if(nstyle){
         int i;
@@ -9020,9 +10238,11 @@ void render_GENERIC_volume_data(s_shader_capabilities_t *caps, struct X3D_Node *
     }
     once = 1;
 
+TheApp->printRenderErrors();
+fprintf(stderr, "after glerror\n");
 } 
 
-void child_SegmentedVolumeData(struct X3D_SegmentedVolumeData *node){
+void child_SegmentedVolumeData(NodeSegmentedVolumeData *node){
     // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#SegmentedVolumeData
     // VolumeData + 2 fields:
     //MFBool  [in,out] segmentEnabled     []
@@ -9031,7 +10251,8 @@ void child_SegmentedVolumeData(struct X3D_SegmentedVolumeData *node){
     static int once = 0;
     COMPILE_IF_REQUIRED
 
-    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+//    if (renderstate()->render_blend == (node->m_renderFlags & VF_Blend)) {
+    if (1) {
         int itexture = 1; //voxels=0,segmentIDs=1
 
         if(!once)
@@ -9039,17 +10260,20 @@ void child_SegmentedVolumeData(struct X3D_SegmentedVolumeData *node){
         //int nstyles = 0;
         //if(node->renderStyle) nstyles = 1;
 
-        caps = getVolumeProgram(node->renderStyle.p,node->renderStyle.n, SHADERFLAGS_VOLUME_DATA_SEGMENT);
+        Node *tmpNode = NULL; 
+        if (node->renderStyle()->getSize() > 0)
+            tmpNode = node->renderStyle()->getValue(0);
+        caps = getVolumeProgram(&tmpNode,node->renderStyle()->getSize(),SHADERFLAGS_VOLUME_DATA_SEGMENT);
         //get and set segment-specific uniforms
         itexture = 1; //voxels=0,segmentIDs=1
-        render_SEGMENTED_volume_data(caps,node->segmentIdentifiers,itexture,node);
+        render_SEGMENTED_volume_data(caps,node->segmentIdentifiers()->getValue(),itexture,node);
         //render generic volume 
-        render_GENERIC_volume_data(caps,node->renderStyle.p,node->renderStyle.n,node->voxels,(struct X3D_VolumeData*)node );
+        render_GENERIC_volume_data(caps,&tmpNode,node->renderStyle()->getSize(),node->voxels()->getValue(),(NodeVolumeData*)node );
         once = 1;
     } //if VF_Blend
 
 }
-void render_ISO_volume_data(s_shader_capabilities_t *caps,struct X3D_IsoSurfaceVolumeData *node){
+void render_ISO_volume_data(s_shader_capabilities_t *caps,NodeIsoSurfaceVolumeData *node){
     // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#IsoSurfaceVolumeData
     // VolumeData + 4 fields, minus 1 field
     //SFFloat [in,out] contourStepSize  0        (-INF,INF)
@@ -9062,26 +10286,26 @@ void render_ISO_volume_data(s_shader_capabilities_t *caps,struct X3D_IsoSurfaceV
     GLint istep, itol,ivals,invals;
     myProg= caps->myShaderProgram;
     istep = GET_UNIFORM(myProg,"fw_stepSize");
-    glUniform1f(istep,node->contourStepSize); 
+    glUniform1f(istep,node->contourStepSize()->getValue()); 
     itol = GET_UNIFORM(myProg,"fw_tolerance");
-    glUniform1f(itol,node->surfaceTolerance); 
+    glUniform1f(itol,node->surfaceTolerance()->getValue()); 
 
     ivals = GET_UNIFORM(myProg,"fw_surfaceVals");
-    glUniform1fv(ivals,node->surfaceValues.n,node->surfaceValues.p); 
+    glUniform1fv(ivals,node->surfaceValues()->getSize(),node->surfaceValues()->getValues()); 
     invals = GET_UNIFORM(myProg,"fw_nVals");
-    glUniform1i(invals,node->surfaceValues.n);
-    if(node->renderStyle.n){
+    glUniform1i(invals,node->surfaceValues()->getSize());
+    if(node->renderStyle()->getSize()){
         int i;
         // OLDCODE GLint istyles;
         GLint instyles;
-        int *styleflags = MALLOC(int*,sizeof(int)*node->renderStyle.n);
-        for(i=0;i<node->renderStyle.n;i++){
-            styleflags[i] = prep_volumestyle(node->renderStyle.p[i],0);
+        int *styleflags = MALLOC(int*,sizeof(int)*node->renderStyle()->getSize());
+        for(i=0;i<node->renderStyle()->getSize();i++){
+            styleflags[i] = prep_volumestyle(node->renderStyle()->getValue(i),0);
         }
         // OLDCODE istyles = GET_UNIFORM(myProg,"fw_surfaceStyles");
-        glUniform1iv(ivals,node->renderStyle.n,styleflags);
+        glUniform1iv(ivals,node->renderStyle()->getSize(),styleflags);
         instyles = GET_UNIFORM(myProg,"fw_nStyles");
-        glUniform1i(instyles,node->renderStyle.n);
+        glUniform1i(instyles,node->renderStyle()->getSize());
     }
 
     //renderstyle handling?
@@ -9091,7 +10315,7 @@ void render_ISO_volume_data(s_shader_capabilities_t *caps,struct X3D_IsoSurfaceV
     // then make a special shader to (equivalent to switch-case) on each voxel/gradient after iso value has been computed
 }
 
-void child_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
+void child_IsoSurfaceVolumeData(NodeIsoSurfaceVolumeData *node){
     // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#IsoSurfaceVolumeData
     // VolumeData + 4 fields:
     //SFFloat [in,out] contourStepSize  0        (-INF,INF)
@@ -9100,7 +10324,8 @@ void child_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
     //MFFloat [in,out] surfaceValues    []       (-INF,INF)
     static int once = 0;
     COMPILE_IF_REQUIRED
-    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+//    if (renderstate()->render_blend == (node->m_renderFlags & VF_Blend)) {
+    if (1) {
         unsigned int voldataflags;
         s_shader_capabilities_t *caps;
         int MODE;
@@ -9109,34 +10334,39 @@ void child_IsoSurfaceVolumeData(struct X3D_IsoSurfaceVolumeData *node){
             printf("child segmentedvolumedata \n");
         voldataflags = SHADERFLAGS_VOLUME_DATA_ISO;
 
-        MODE = node->surfaceValues.n == 1 ? 1 : 3;
-        MODE = node->contourStepSize != 0.0f && MODE == 1 ? 2 : 1;
+        MODE = node->surfaceValues()->getSize() == 1 ? 1 : 3;
+        MODE = node->contourStepSize()->getValue() != 0.0f && MODE == 1 ? 2 : 1;
         if(MODE == 3)
             voldataflags |= SHADERFLAGS_VOLUME_DATA_ISO_MODE3;
-        caps = getVolumeProgram(node->renderStyle.p,node->renderStyle.n, voldataflags);
+        Node *tmpNode = NULL;
+        if (node->renderStyle()->getSize() > 0)
+            tmpNode = node->renderStyle()->getValue(0);
+        caps = getVolumeProgram(&tmpNode,node->renderStyle()->getSize(), voldataflags);
         //get and set ISO-specific uniforms
         render_ISO_volume_data(caps,node);
         //render generic volume 
-        render_GENERIC_volume_data(caps,node->renderStyle.p,node->renderStyle.n,node->voxels,(struct X3D_VolumeData*)node );
+        render_GENERIC_volume_data(caps,&tmpNode,node->renderStyle()->getSize(),node->voxels()->getValue(),(NodeVolumeData*)node );
         once = 1;
     } //if VF_Blend
 }
 
-void child_VolumeData(struct X3D_VolumeData *node){
+void child_VolumeData(NodeVolumeData *node){
     // http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/volume.html#VolumeData
     // VolumeData 
     s_shader_capabilities_t *caps;
     static int once = 0;
     COMPILE_IF_REQUIRED
 
-    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+//    if (renderstate()->render_blend == (node->_renderFlags & VF_Blend)) {
+    if (1) {
         int nstyles = 0;
         if(!once)
             printf("child volumedata \n");
-        if(node->renderStyle) nstyles = 1;
-        caps = getVolumeProgram(&node->renderStyle,nstyles, SHADERFLAGS_VOLUME_DATA_BASIC);
+        if(node->renderStyle()->getValue()) nstyles = 1;
+        Node *tmpNode = node->renderStyle()->getValue();
+        caps = getVolumeProgram(&tmpNode,nstyles, SHADERFLAGS_VOLUME_DATA_BASIC);
         //render generic volume 
-        render_GENERIC_volume_data(caps,&node->renderStyle,nstyles,node->voxels,(struct X3D_VolumeData*)node );
+        render_GENERIC_volume_data(caps,&tmpNode,nstyles,node->voxels()->getValue(),(NodeVolumeData*)node );
         once = 1;
     } //if VF_Blend
 
@@ -9146,13 +10376,28 @@ void
 NodeImageTexture3D::load()
 {
     if (!m_loaded) {
+        MFString *urls = url();
+        MyString baseURL = "";
+        baseURL += TheApp->getImportURL();
+        bool validPath = false;
+        MyString path;
+        for (int i = 0; i < urls->getSize(); i++) {
+            URL urlI(baseURL, urls->getValue(i));
+            if (urls->getValue(i).length() == 0) continue;
+            if (m_scene->Download(urlI, &path)) {
+                validPath = true;
+                break;
+            }
+        }
+        if (!validPath)
+            return;
         RenderTextures_init((tRenderTextures*)&textures_prv);
         registerTexture(this);
+        m_textures_prv = textures_prv;
         int textureNumber = m_textureTableIndex;
         texture_load_from_file(getTableIndex(textureNumber), 
-                               (char *)url()->getValue(0).getData());
+                               (const char *)path);
         loadTextureNode(this, NULL);    
-        m_textures_prv = textures_prv;
         m_loaded = true;
     }
 }
@@ -9170,8 +10415,9 @@ NodeImageTexture3D::draw(int pass)
     Node *node = getParent();
     if (node->getType() == X3D_VOLUME_DATA) {
         NodeVolumeData *data = (NodeVolumeData *)node;
-        render_volume_data(data->renderStyle()->getValue(), 
-                           data->voxels()->getValue(), data);
+        Node *tmpNode = data->renderStyle()->getValue();
+        render_GENERIC_volume_data(NULL, &tmpNode, 1, 
+                                   data->voxels()->getValue(), data);
    }
 }
 # endif

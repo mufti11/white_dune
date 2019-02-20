@@ -86,7 +86,7 @@ prepare() {
 
 build() {
 	cd "\$pkgname-\$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R wdune" --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" # --with-optimization 
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R wdune" --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" --with-partial-fortify 
         make
 }
 

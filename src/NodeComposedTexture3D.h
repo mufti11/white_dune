@@ -79,6 +79,9 @@ public:
     fieldMacros(SFBool, scale, ProtoComposedTexture3D);
     fieldMacros(SFNode, textureProperties, ProtoComposedTexture3D);
     fieldMacros(MFString, url, ProtoComposedTexture3D);
+
+public:
+    int m_textureTableIndex;
 };
 
 #endif

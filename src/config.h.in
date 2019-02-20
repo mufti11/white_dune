@@ -421,7 +421,7 @@
 #undef HAVE_DEFAULT_TTF_FILE
 
 /* define if you have imlib2 */
-/* the code using imlib2 (NodeImageTexture3D) is not ready yet, won't compile */
+/* the part using imlib2 is not ready yet */
 /* #undef HAVE_LIBIMLIB2 */
 
 /* define if you have gles version 2 */

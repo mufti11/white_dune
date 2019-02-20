@@ -34,12 +34,13 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
+CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
 CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11  -fopenmp
-CFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-CXXFLAGS = $(CFLAGS)  -std=c++11  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lpng -ljpeg -lGLESv2 -lImlib2 -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
+CFLAGS = $(COMMON_FLAGS)  -fopenmp
+CXXFLAGS = -g $(COMMON_FLAGS)  -std=c++11  -fopenmp
+CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -std=c++11  -fopenmp
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lpng -ljpeg -lGLESv2 -lImlib2 -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -140,7 +141,6 @@ NODECLASSES = \
         NodeImageCubeMapTexture.o \
 	NodeImageTexture.o \
         NodeImageTexture3D.o \
-	NodeIndexedFaceSet.o \
 	NodeIndexedLineSet.o \
         NodeIndexedQuadSet.o \
 	NodeIndexedTriangleFanSet.o \
@@ -292,6 +292,9 @@ NODECLASSES = \
         NodeComment.o \
         NodeImport.o \
         NodeExport.o
+
+NOFORTCLASSES = \
+	NodeIndexedFaceSet.o
 
 EXTRACLASSES = \
         NodeSuperEllipsoid.o \
@@ -625,6 +628,7 @@ CLASSES = \
         $(TYPECLASSES) \
         $(NODEPARENTCLASSES) \
         $(NODECLASSES) \
+        $(NOFORTCLASSES) \
         $(EXTRACLASSES) \
         $(FONT23DCLASSES) \
 	parser.o \
@@ -654,6 +658,7 @@ SRCSBIGDUNECLASSES = $(BIGDUNECLASSES:.o=.cpp)
 SRCSTYPECLASSES = $(TYPECLASSES:.o=.cpp)
 SRCSNODEPARENTCLASSES = $(NODEPARENTCLASSES:.o=.cpp)
 SRCSNODECLASSES = $(NODECLASSES:.o=.cpp)
+SRCSNOFORTCLASSES = $(NOFORTCLASSES:.o=.cpp)
 SRCSEXTRACLASSES = $(EXTRACLASSES:.o=.cpp)
 
 TESTOJBS = selftest.o allNodesTest.o allNodesTestX3d.o \
@@ -695,6 +700,9 @@ SceneProtoMap.o: SceneProtoMap.cpp
 
 nebula/ExportNebula.o: nebula/ExportNebula.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ nebula/ExportNebula.cpp
+
+NodeIndexedFaceSet.o: NodeIndexedFaceSet.cpp
+	$(CXX) $(CXXFLAGS_NOFORT) -c -o $@ NodeIndexedFaceSet.cpp
 
 ../bin/dune: main.o $(OBJS) swt/lib/libswt.a  
 	$(CXX) main.o $(OBJS) $(LIBS) -o $@

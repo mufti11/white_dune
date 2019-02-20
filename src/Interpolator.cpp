@@ -144,9 +144,10 @@ Interpolator::findKey(float value) const
         if (k > value) {
            break;
         }
+        if (k >= 1.0) {
+           break;
+        }
     }
-    if (i == numKeys)
-        return numKeys - 1;
     return i;
 }
 
@@ -384,9 +385,15 @@ Interpolator::deleteKeys(int start, int end)
     const float *k = key->getValues();
     const float *v = keyValue->getValues();
 
-    if (start >= end) return;
+    if (start == numKeys)
+        start--;
+    if (end == numKeys)
+        end--;
 
-    int newLen = numKeys - (end - start);
+    if (start > end) return;
+
+    int newLen = numKeys - ((end - start) == 0 ? (end - start) + 1 :
+                                                 (end - start)) ;
     if (newLen <= 0) {
         newLen = 1;
         start++;

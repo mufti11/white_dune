@@ -83,6 +83,9 @@ public:
     fieldMacros(SFBool, isPickable, ProtoSegmentedVolumeData);
     fieldMacros(SFFloat, numberOfMaxSegments, ProtoSegmentedVolumeData);
     fieldMacros(SFBool, render, ProtoSegmentedVolumeData);
+
+public:
+    int m_renderFlags;
 };
 
 #endif

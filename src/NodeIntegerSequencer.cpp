@@ -87,6 +87,8 @@ NodeIntegerSequencer::getInterpolatedFieldValue(float k)
     m_fraction = k;
     MFInt32 *keyValue = (MFInt32 *) getField(m_keyValueField);
     int i = findKey(k);
+    if (i == key()->getSize())
+        i--;
     return keyValue->getSFValue(i);
 }
 

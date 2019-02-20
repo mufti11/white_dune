@@ -4946,5 +4946,7 @@ Fixed CSG operations
 
 Fixed error in Interpolators
 
+Fixed minor error in Interpolators
+
 contact: MUFTI <mufti@users.ourproject.org>
 

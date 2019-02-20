@@ -65,13 +65,21 @@ class NodeTextureProperties;
 #define FW_GL_GETDOUBLEV(aaa,bbb) fw_glGetDoublev(aaa,bbb);
 
 #define GLUNIFORM1F glUniform1f
+#define GLUNIFORM1I glUniform1i
+#define GLUNIFORM1IV glUniform1iv
+#define GLUNIFORM3F glUniform3f
 #define GLUNIFORM4F glUniform4f
 #define GLUNIFORM4FV glUniform4fv
+#define GLUNIFORMMATRIX4FV glUniformMatrix4fv
 
 #define USE_SHADER(aaa) glUseProgram(aaa)
 
 #define GET_UNIFORM(aaa,bbb) glGetUniformLocation(aaa,bbb)
 #define GET_ATTRIB(aaa,bbb) glGetAttribLocation(aaa,bbb)
+
+#define APPROX(a,b) (fabs((a)-(b))<0.00000001)
+
+#define X3D_NODE_CHECK
 
 #define MAX_LIGHT_STACK 8 //going down the transform stack, up to 7 local lights, with most-local as last
 
@@ -176,7 +184,6 @@ class NodeTextureProperties;
 
 #define HAVE_UNLIT_COLOR       0x4000000
 
-
 /* this is platform-dependent but there is no default so set one here */
 #ifndef MAX_MULTITEXTURE
 #define MAX_MULTITEXTURE 4
@@ -191,6 +198,8 @@ class NodeTextureProperties;
 #define DESIRE(whichOne,zzz) ((whichOne & zzz)==zzz)
 
 #define BOUNDARY_TO_GL(direct) direct##rc = GL_REPEAT;
+
+#define VF_Viewpoint 0x0001
 
 #define SHADERFLAGS_VOLUME_STYLE_DEFAULT    1
 #define SHADERFLAGS_VOLUME_STYLE_OPACITY    2
@@ -210,7 +219,7 @@ class NodeTextureProperties;
 
 #define CPV_REPLACE_PRIOR      0x08000
 
-struct Multi_Node { int n; struct X3D_Node * *p; };
+struct Multi_Node { int n; struct Node * *p; };
 
 #define X3D_EFFECT(node) (NodeEffect*)node)
 
@@ -236,15 +245,15 @@ struct X3D_EffectPart {
        int referenceCount; /* if this reaches zero, nobody wants it anymore */ 
        int _defaultContainer; /* holds the container */
        void* _gc; /* ptr to vector of ptrs to free */
-       struct X3D_Node* _executionContext; /* scene or protoInstance */
+       struct Node* _executionContext; /* scene or protoInstance */
  	/*** node specific data: *****/
-	struct X3D_Node *metadata;
+	struct Node *metadata;
 	struct Multi_String url;
 	struct Uni_String *type;
 	int __loadstatus;
 	void * _parentResource;
 	void * __loadResource;
-	struct X3D_Node *_shaderUserDefinedFields;
+	struct Node *_shaderUserDefinedFields;
 };
 
 //type
@@ -435,7 +444,8 @@ enum {
    newer Texture handling procedures
    each texture has this kind of structure
 */
-struct textureTableIndexStruct {
+class textureTableIndexStruct {
+public:
     Node*  scenegraphNode;
     int    nodeType;
     int    status;
@@ -455,16 +465,6 @@ struct textureTableIndexStruct {
     int textureNumber;
     int channels; //number of original image file image channels/components 0=no texture default, 1=Intensity 2=IntensityAlpha 3=RGB 4=RGBA
 };
-typedef struct textureTableIndexStruct textureTableIndexStruct_s;
-
-typedef struct pTextures{
-    struct Vector *activeTextureTable;
-    textureTableIndexStruct_s* loadThisTexture;
-
-    /* current index into loadparams that texture thread is working on */
-    int currentlyWorkingOn;// = -1;
-    int textureInProcess;// = -1;
-}* ppTextures;
 
 #define IBOOL int
 
@@ -788,11 +788,7 @@ typedef struct pOpenGL_Utils{
     int maxStackUsed;
 }* ppOpenGL_Utils;
 
-void *OpenGL_Utils_constructor(){
-    void *v = MALLOCV(sizeof(struct pOpenGL_Utils));
-    memset(v,0,sizeof(struct pOpenGL_Utils));
-    return v;
-}
+void *OpenGL_Utils_constructor();
 
 struct shaderTableEntry {
     //unsigned int whichOne;
@@ -866,7 +862,7 @@ typedef struct pRenderFuncs{
 	//struct point_XYZ ht1, ht2; not used
 	struct point_XYZ hyper_r1,hyper_r2; /* Transformed ray for the hypersensitive node */
 	struct currayhit rayph;
-	struct X3D_Node *rootNode;//=NULL;	/* scene graph root node */
+	struct Node *rootNode;//=NULL;	/* scene graph root node */
 	struct Vector *libraries; //vector of extern proto library scenes in X3D_Proto format that are parsed shallow (not instanced scenes) - the library protos will be in X3D_Proto->protoDeclares vector
 	struct X3D_Anchor *AnchorsAnchor;// = NULL;
 	struct currayhit rayHit; //,rayHitHyper;

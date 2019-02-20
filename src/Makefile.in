@@ -37,8 +37,9 @@ EGREP_PROBLEMS = @EGREP_PROBLEMS@
 CPPFLAGS= -I. -Iswt/include @CPPFLAGS@
 COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include @CPPFLAGS@ @COMMONFLAGS@
 CFLAGS_BIG = @OPTBIG@ $(COMMON_FLAGS) @CFLAGS@ @CXXFLAGS@
-CFLAGS = @OPTIM@ $(COMMON_FLAGS) @CFLAGS@
-CXXFLAGS = $(CFLAGS) @CXXFLAGS@
+CFLAGS = $(COMMON_FLAGS) @CFLAGS@
+CXXFLAGS = @OPTIM@ $(COMMON_FLAGS) @CXXFLAGS@
+CXXFLAGS_NOFORT = @NOFORT@ $(COMMON_FLAGS) @CXXFLAGS@
 LIBS = @STATIC@ @LDFLAGS@ -Lswt/lib -lswt -LSDLjoystick @SDL_JOYSTICK_LIBS@ @LIBS@
 NEBULA = @NEBULA@
 PARSER_CPP_CFLAG = @PARSER_CPP_CFLAG@
@@ -140,7 +141,6 @@ NODECLASSES = \
         NodeImageCubeMapTexture.o \
 	NodeImageTexture.o \
         NodeImageTexture3D.o \
-	NodeIndexedFaceSet.o \
 	NodeIndexedLineSet.o \
         NodeIndexedQuadSet.o \
 	NodeIndexedTriangleFanSet.o \
@@ -292,6 +292,9 @@ NODECLASSES = \
         NodeComment.o \
         NodeImport.o \
         NodeExport.o
+
+NOFORTCLASSES = \
+	NodeIndexedFaceSet.o
 
 EXTRACLASSES = \
         NodeSuperEllipsoid.o \
@@ -625,6 +628,7 @@ CLASSES = \
         $(TYPECLASSES) \
         $(NODEPARENTCLASSES) \
         $(NODECLASSES) \
+        $(NOFORTCLASSES) \
         $(EXTRACLASSES) \
         $(FONT23DCLASSES) \
 	parser.o \
@@ -654,6 +658,7 @@ SRCSBIGDUNECLASSES = $(BIGDUNECLASSES:.o=.cpp)
 SRCSTYPECLASSES = $(TYPECLASSES:.o=.cpp)
 SRCSNODEPARENTCLASSES = $(NODEPARENTCLASSES:.o=.cpp)
 SRCSNODECLASSES = $(NODECLASSES:.o=.cpp)
+SRCSNOFORTCLASSES = $(NOFORTCLASSES:.o=.cpp)
 SRCSEXTRACLASSES = $(EXTRACLASSES:.o=.cpp)
 
 TESTOJBS = selftest.o allNodesTest.o allNodesTestX3d.o \
@@ -695,6 +700,9 @@ SceneProtoMap.o: SceneProtoMap.cpp
 
 nebula/ExportNebula.o: nebula/ExportNebula.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ nebula/ExportNebula.cpp
+
+NodeIndexedFaceSet.o: NodeIndexedFaceSet.cpp
+	$(CXX) $(CXXFLAGS_NOFORT) -c -o $@ NodeIndexedFaceSet.cpp
 
 ../bin/dune: main.o @OBJS@ swt/lib/libswt.a @SDL_JOYSTICK_LIBS@ 
 	$(CXX) main.o @OBJS@ $(LIBS) -o $@

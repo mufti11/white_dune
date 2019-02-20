@@ -86,6 +86,8 @@ NodeBooleanSequencer::getInterpolatedFieldValue(float k)
     m_fraction = k;
     MFBool *keyValue = (MFBool *) getField(m_keyValueField);
     int i = findKey(k);
+    if (i == key()->getSize())
+        i--;
     return keyValue->getSFValue(i);
 }
 
