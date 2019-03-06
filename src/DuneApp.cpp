@@ -694,7 +694,6 @@ DuneApp::saveTempFiles(MainWindow *currentWindow, int useExtensionTxt)
         int writeFlags = TEMP_SAVE | SKIP_SAVED_TEST;
         if (scene->isX3d())
             writeFlags |= X3DV;
-//        const char *file = strdup(url.GetPath());
         const char *file = url.GetPath();
         if (wIter->item()->SaveFile(file, savefile, writeFlags)) {
             saveTempPath(wIter->item()->GetScene());
@@ -850,6 +849,7 @@ DuneApp::OnFileEdit(MainWindow *window, Scene* oldScene, char* filename)
     if (saveSuccess)
         if (system((const char*)command) != 0)
            commandFailed = true; 
+    swDestroyWindow(m_mainWnd);
     swEnableTimers();
     newMainWnd(m_mainWnd);
     if (!saveSuccess) { 
@@ -859,7 +859,6 @@ DuneApp::OnFileEdit(MainWindow *window, Scene* oldScene, char* filename)
     }
     if (commandFailed)
         TheApp->MessageBoxId(IDS_EDIT_COMMAND_ERROR);
-    swDestroyWindow(m_mainWnd);
     restoreTempFiles();
 }
 #endif

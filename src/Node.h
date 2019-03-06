@@ -742,6 +742,7 @@ public:
     virtual void      transformBranch() {}
     virtual void      transformForHandle(int handle) {}
     virtual void      preDraw() {}
+    virtual void      specialDraw() {}
     virtual void      draw() {}
     virtual void      draw(int pass) {}
     bool              canDraw() { return m_canDraw; }

@@ -360,6 +360,8 @@ Scene::Scene()
     setSelection(getRoot());
     setViewPorts();
     updateTime();
+//    m_viewpointUpdated = true;
+    m_viewpointUpdated = false;
 }
 
 void
@@ -374,6 +376,8 @@ Scene::updateViewpoint(void)
         m_currentViewpoint->unref();
     m_currentViewpoint = m_defaultViewpoint;
     m_currentViewpoint->ref();
+
+    m_viewpointUpdated = true;
 }
 
 Scene::~Scene()
@@ -3618,7 +3622,11 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
 
     glPushMatrix();
 
+    bool viewpointFlag = getViewpointUpdated();
+
     applyCamera();
+
+    m_viewpointUpdated = viewpointFlag; 
 
     glPopMatrix();
 
@@ -4335,6 +4343,7 @@ Scene::walkCamera(Vec3f walk, bool forward)
          Vec3f vec(dt * fspeed * walk.x * 2.0f, dt * fspeed * walk.y * 2.0f, 0);
          m_currentViewpoint->setPosition(pos + rot * vec);
     }
+    m_viewpointUpdated = true;
 }
 
 void               
@@ -4367,6 +4376,8 @@ Scene::moveCamera(float dx, float dy, float dz)
 
     float fspeed = m_currentNavigationInfo->speed()->getValue();
     m_currentViewpoint->setPosition(pos + rot * fspeed * Vec3f(dx, dy, dz));
+
+    m_viewpointUpdated = true;
 }
 
 void
@@ -4376,6 +4387,8 @@ Scene::turnCamera(float x, float y, float z, float ang)
     Quaternion r(Vec3f(x, y, z), ang);
 
     m_currentViewpoint->setOrientation(r * rot);
+
+    m_viewpointUpdated = true;
 }
 
 Quaternion oldRot;
@@ -4415,6 +4428,7 @@ Scene::orbitCamera(float dtheta, float dphi)
 
     m_currentViewpoint->setOrientation(newRot);
 
+    m_viewpointUpdated = true;
 }
 
 void
@@ -4434,6 +4448,8 @@ Scene::rollCamera(float dtheta)
     }
     m_currentViewpoint->setOrientation(newRot);
     applyCamera();
+
+    m_viewpointUpdated = true;
 }
 
 void
@@ -4444,6 +4460,8 @@ Scene::standUpCamera(void)
     rot.z = 0;
     m_currentViewpoint->setOrientation(rot);
     UpdateViews(NULL, UPDATE_PREVIEW);
+
+    m_viewpointUpdated = true;
 }
 
 Node *
@@ -4678,12 +4696,16 @@ Scene::applyCamera()
         ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
     else
         ((NodeViewpoint *)m_currentViewpoint)->apply();
+
+    m_viewpointUpdated = false;
 }
 
 void
 Scene::setCamera(Node *camera)
 {
     m_currentViewpoint = camera;
+
+    m_viewpointUpdated = true;
 }
 
 void

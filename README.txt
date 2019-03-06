@@ -441,6 +441,7 @@ ISTI Visual Computing Lab (meshlab polygom reducer)
 Harishankar Narayanan     (https://github.com/codetiger/Font23D)
 FTGL                      (https://sourceforge.net/projects/ftgl/)
 Poly2Tri                  (http://code.google.com/p/poly2tri/)
+Chris Rorden              (https://github.com/neurolabusc/vx)
 ==========================================================================
 
 Changed in white_dune Version 0.16:
@@ -4947,6 +4948,12 @@ Fixed CSG operations
 Fixed error in Interpolators
 
 Fixed minor error in Interpolators
+
+Added desktop start file to FreeBSD package
+
+Added initial ImageTexture3D rendering
+
+Added initial ImagePixel3D rendering
 
 contact: MUFTI <mufti@users.ourproject.org>
 

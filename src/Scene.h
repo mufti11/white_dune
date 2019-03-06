@@ -784,6 +784,8 @@ public:
                            m_viewports.append(node);
                         }
 
+     bool               getViewpointUpdated(void) { return m_viewpointUpdated; }
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -875,7 +877,7 @@ protected:
     List<SceneView *>   m_views;
 
     MyString            m_errors;
-    MyArray<FontInfo *>   m_fonts;
+    MyArray<FontInfo *> m_fonts;
 
     MyString            m_path;
 
@@ -991,6 +993,8 @@ protected:
     bool                m_saved_vrml;
     bool                m_saved_x3dv;
     bool                m_saved_x3dxml;
+
+    bool                m_viewpointUpdated;
 };
 
 bool writeCNodeData(Node *node, void *data);

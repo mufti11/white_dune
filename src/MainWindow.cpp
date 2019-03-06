@@ -1473,6 +1473,7 @@ MainWindow::destroyMainWindow(void) // but keep scene
        
     Stop();
     TheApp->SetBoolPreference("MaximizeWindows", swIsMaximized(m_wnd) != 0);
+    swDestroyWindow(m_wnd);
     delete m_treeView;
     m_treeView = NULL;
     delete m_S3DView;

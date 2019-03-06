@@ -77,7 +77,7 @@ NodeBillboard::transform()
     glGetFloatv(GL_MODELVIEW_MATRIX, mat);
 
     // compute the axis of rotation in eye coordinates
-    const float      *a = axisOfRotation()->getValue();
+    const float *a = axisOfRotation()->getValue();
 
     if (a[0] == 0.0f && a[1] == 0.0f && a[2] == 0.0f) {
         Matrix mat;

@@ -239,7 +239,6 @@ NodePixelTexture::bind(GLuint textureId, GLuint textureName)
 //        glTexParameterf(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameterf(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexImage2D(textureId, 0, m_components, 
                      m_textureWidth, m_textureHeight, 0,

@@ -64,8 +64,6 @@ public:
 class NodeTransform : public TransformNode {
 public:
                       NodeTransform(Scene *scene, Proto *proto);
-
-protected:
                      ~NodeTransform();
 
 public:

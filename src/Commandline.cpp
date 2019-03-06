@@ -719,6 +719,7 @@ void parseCommandlineUsage(
             printf("based on Polyrep.c of FreeWRL\n");
             printf("setColor(), drawQuad(), drawSky() and drawGround() in NodeBackground.cpp\n");
             printf("based on render_Background() in Bindable.c of FreeWRL\n");
+            printf("The ImageTexture3D reading code is also based on FreeWRL\n");
             printf("\n");
             printf(" Copyright (C) 1998 Tuomas J. Lukka\n");
             printf(" Copyright (C) 2002 John Stewart, CRC Canada.\n");
@@ -1350,7 +1351,39 @@ void parseCommandlineUsage(
             printf(" This file is compiled with libvcg: libvcg is licenced under\n");
             printf(" GNU General Public License 3\n");
 #endif
-
+            printf("\n");
+            printf("This file uses code from vx\n");
+            printf("https://github.com/neurolabusc/vx/blob/master/src/tex3d.inc\n");
+            printf("\n");
+            printf("****************************************************************************\n");
+            printf("This is a BSD 3-Clause License :: https://opensource.org/licenses/BSD-3-Clause\n");
+            printf("\n");
+            printf("The Software has been developed for research purposes only and is not a clinical tool\n");
+            printf("Copyright (c) 2014-2018 Chris Rorden. All rights reserved.\n");
+            printf("\n");
+            printf("Redistribution and use in source and binary forms, with or without\n");
+            printf("modification, are permitted provided that the following conditions\n");
+            printf("are met:\n");
+            printf("1. Redistributions of source code must retain the above copyright\n");
+            printf("   notice, this list of conditions and the following disclaimer.\n");
+            printf("2. Redistributions in binary form must reproduce the above copyright\n");
+            printf("   notice, this list of conditions and the following disclaimer in the\n");
+            printf("   documentation and/or other materials provided with the distribution.\n");
+            printf("3. The name of the copyright owner may be used to endorse or promote\n");
+            printf("   products derived from this software without specific prior written\n");
+            printf("   permission.\n");
+            printf("\n");
+            printf("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT OWNER ``AS IS'' AND ANY EXPRESS OR\n");
+            printf("IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n");
+            printf("MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO\n");
+            printf("EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,\n");
+            printf("INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n");
+            printf("BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,\n");
+            printf("DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF\n");
+            printf("LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE\n");
+            printf("OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF\n");
+            printf("ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n");
+            printf("****************************************************************************/\n");
 
             normalExit(0);
         }

@@ -33,6 +33,7 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "Texture3DNode.h"
 
 #include "KambiTextureCommonFields.h"
 
@@ -58,7 +59,7 @@ public:
     FieldIndex scale;
 };
 
-class NodePixelTexture3D : public Node {
+class NodePixelTexture3D : public Node, Texture3DNode {
 public:
                     NodePixelTexture3D(Scene *scene, Proto *proto);
 
@@ -66,6 +67,16 @@ public:
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 1; } 
     virtual Node   *copy() const { return new NodePixelTexture3D(*this); }
+
+    virtual void    draw(int pass);
+    virtual void    preDraw() 
+                        {
+                        loadTextureData(); 
+                        Texture3DNode::preDraw(); 
+                        }
+    virtual void    setField(int index, FieldValue *value, 
+                             int containerField = -1);
+    void            loadTextureData(); 
 
     fieldMacros(MFInt32, image,             ProtoPixelTexture3D);
     fieldMacros(SFBool,  repeatS,           ProtoPixelTexture3D);
@@ -78,7 +89,7 @@ public:
     fieldMacros(SFBool,   scale,             ProtoPixelTexture3D);
 
 public:
-    int m_textureTableIndex;
+    bool m_loaded;    
 };
 
 #endif

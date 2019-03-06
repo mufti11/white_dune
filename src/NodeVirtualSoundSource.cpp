@@ -97,6 +97,7 @@ NodeVirtualSoundSource::drawHandles()
     glPopName();
     gluDeleteQuadric(obj);
 
+    glPopAttrib();
     glPopMatrix();
 }
 

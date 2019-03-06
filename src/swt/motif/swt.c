@@ -378,15 +378,16 @@ swInitialize(int *argc, char **argv,int stereotype)
     int legal_depth_list[] = { 32, 24, 16, 15, 8, 4, 1 };
 
     int attribs[] = {
-         GLX_DEPTH_SIZE,  32,
-         GLX_RED_SIZE,     8,
-         GLX_ALPHA_SIZE,   8,
-         GLX_DOUBLEBUFFER, GL_TRUE,
+        GLX_DEPTH_SIZE,  32,
+        GLX_RED_SIZE,     8,
+        GLX_ALPHA_SIZE,   8,
+        GLX_DOUBLEBUFFER, GL_TRUE,
 #ifndef HAVE_NO_STEREO
-         GLX_STEREO,       GL_TRUE,
+        GLX_STEREO,       GL_TRUE,
 #endif
-         GLX_RGBA,         GL_TRUE,
-         0
+        GLX_RGBA,         GL_TRUE,
+        GLX_STENCIL_SIZE,  8,                       
+        0
     };
 
     int attribs1[] = {
@@ -398,7 +399,8 @@ swInitialize(int *argc, char **argv,int stereotype)
         /* placeholders for GLX_ACCUM_RED/BLUE/GREEN_SIZE */
         0,                 0,                       
         0,                 0,                       
-        0,                 0,                       
+        0,                 0,
+        GLX_STENCIL_SIZE,  8,                       
         0
     };
 
@@ -410,18 +412,20 @@ swInitialize(int *argc, char **argv,int stereotype)
         0,                 0,                       
         0,                 0,                       
         0,                 0,                       
+        GLX_STENCIL_SIZE,  8,                       
         0
     };
 
     int attribs3[] = {
         GLX_DEPTH_SIZE,   16,
-        GLX_RGBA,          GL_TRUE,
+        GLX_RGBA,         GL_TRUE,
+        GLX_STENCIL_SIZE, 8,                       
         0
     };
 
     int attribs4[] = {
         GLX_DEPTH_SIZE,   16,
-        GLX_RGBA,          GL_FALSE,
+        GLX_RGBA,         GL_FALSE,
         0
     };
     int errorflag = 0;

@@ -1397,6 +1397,7 @@ swMakeCurrent(SDC dc, SGLC context)
         }
     }
 
+/*
     if (stereoType == QUAD_BUFFER_STEREO) {
         int quadbuffer;
         glGetIntegerv(GL_STEREO, &quadbuffer);
@@ -1406,6 +1407,7 @@ swMakeCurrent(SDC dc, SGLC context)
             exit(1);
         }
     }
+*/
 }
 
 extern void

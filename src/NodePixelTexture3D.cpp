@@ -27,9 +27,7 @@
 #include "FieldValue.h"
 #include "MFInt32.h"
 #include "SFBool.h"
-#include "SFBool.h"
-#include "SFBool.h"
-#include "SFNode.h"
+#include "Scene.h"
 #include "DuneApp.h"
 
 ProtoPixelTexture3D::ProtoPixelTexture3D(Scene *scene)
@@ -75,5 +73,38 @@ ProtoPixelTexture3D::create(Scene *scene)
 NodePixelTexture3D::NodePixelTexture3D(Scene *scene, Proto *def)
   : Node(scene, def)
 {
-    m_textureTableIndex = 0;
+    m_imageData = NULL;                      
+    m_imageSizeX = 0;
+    m_imageSizeY = 0;
+    m_imageSizeZ = 0;
 }
+
+void
+NodePixelTexture3D::loadTextureData()
+{
+    if (!m_loaded) {
+        m_imageData =  (int *)image()->getValues() + 4;
+        m_imageSizeX = image()->getValue(0);
+        m_imageSizeY = image()->getValue(1);
+        m_imageSizeZ = image()->getValue(2);
+        loadTexture();
+    }
+}
+
+void
+NodePixelTexture3D::draw(int pass)
+{
+    if (pass == RENDER_PASS_NON_TRANSPARENT)
+        return;
+  
+    drawTexture3D((Node *)this, m_scene);
+}
+
+void    
+NodePixelTexture3D::setField(int index, FieldValue *value,    
+                             int containerField)
+{
+    m_loaded = false;
+    Node::setField(index, value, containerField);
+}
+

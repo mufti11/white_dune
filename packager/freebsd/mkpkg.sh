@@ -53,6 +53,14 @@ cp -r $WTMP/wdune-$VERSION/docs/* $PREFIX/share/doc/wdune/
 find $PREFIX/share/doc/wdune/ -type f -print | xargs chmod 644
 find $PREFIX/share/doc/wdune/ -type d -print | xargs chmod 755
 
+mkdir -p $PREFIX/share/applications/
+cp $WTMP/wdune-$VERSION/desktop/kde/dune.desktop $PREFIX/share/applications
+chmod 644 $PREFIX/share/applications/dune.desktop
+
+mkdir -p $PREFIX/share/pixmaps
+cp $WTMP/wdune-$VERSION/desktop/kde/dune.png $PREFIX/share/pixmaps
+chmod 644 $PREFIX/share/pixmaps/dune.png
+ 
 echo @name wdune-$VERSION > $WTMP/pkg-list
 
 if sh -c "ldd $PREFIX/bin/dune | grep jpeg > /dev/null" ; then

@@ -40,7 +40,7 @@ CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11  -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -std=c++11  -fopenmp
 CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -std=c++11  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lpng -ljpeg -lGLESv2 -lImlib2 -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lpng -ljpeg -lImlib2 -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -406,7 +406,8 @@ NODEPARENTCLASSES = \
         X3DNBodyCollidableNode.o \
         X3DNBodyCollisionSpaceNode.o \
         X3DRigidJointNode.o \
-        AnchoredJointNode.o
+        AnchoredJointNode.o \
+        Texture3DNode.o
 
 TYPECLASSES = \
 	SFBool.o \

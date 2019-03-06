@@ -119,15 +119,15 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
 %setup -q
 
 %build
-%configure \
-    --with-about="$VERSION1" \
-    --with-optimization \
-    --without-devil \
-    --with-helpurl="/usr/share/doc/wdune-docs/docs/" \
-    --with-protobaseurl="/usr/share/doc/wdune-docs/docs" \
-    --with-checkincommand="ci" \
-    --with-imageeditor="kolourpaint" \
-    --with-imageeditor4kids="kolourpaint" \
+%configure \\
+    --with-about="$VERSION1" \\
+    --with-optimization \\
+    --without-devil \\
+    --with-helpurl="/usr/share/doc/wdune-docs/docs/" \\
+    --with-protobaseurl="/usr/share/doc/wdune-docs/docs" \\
+    --with-checkincommand="ci" \\
+    --with-imageeditor="kolourpaint" \\
+    --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity
 %make_build 
 
@@ -149,10 +149,10 @@ install -m 644 -p man/dune.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune.1
 install -m 644 -p man/dune4kids.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune4kids.1
 install -m 644 -p man/illegal2vrml.1 $RPM_BUILD_ROOT/%{_mandir}/man1/illegal2vrml.1
 
-desktop-file-install                                    \
---add-category="Graphics"                               \
---delete-original                                       \
---dir=$RPM_BUILD_ROOT/%{_datadir}/applications          \
+desktop-file-install                                    \\
+--add-category="Graphics"                               \\
+--delete-original                                       \\
+--dir=$RPM_BUILD_ROOT/%{_datadir}/applications          \\
 $RPM_BUILD_ROOT/%{_datadir}/applications/dune.desktop
 
 %files

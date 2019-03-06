@@ -1418,23 +1418,6 @@ EOF
    IMLIB2_WARNING="no usable imlib2 library: no rendering of ImageTexture3D nodes"
 fi
 
-AC_CHECK_HEADER(GLES2/gl2.h,,GLES_ERROR=1)
-if test "X_$GLES_ERROR" != "X_1" ; then
-   AC_CHECK_LIB(GLESv2,glTexImage2D,,GLES_ERROR=1)
-fi
-if test "X_$GLES_ERROR" = "X_1" ; then
-   cat 1>&2 << EOF
-
-*** couldn't find working GLESv2 ***
-
-Couldn't find GLES2 develop package.
-This is not a fatal error; the package will be simply built without
-support to render ImageTexture3D nodes
-
-EOF
-   GLES_WARNING="no usable GLESv2GLESv2 library: no rendering of ImageTexture3D nodes"
-fi
-
    if test "X_$HAVE_OLPC" = "X_1" ; then
       AC_CHECK_LIB(expat, XML_ExpatVersion)
       AC_CHECK_LIB(freetype, FT_Library_Version)
@@ -1963,10 +1946,4 @@ if test "X_$IMLIB2_WARNING" != "X_" ; then
     echo " " $IMLIB2_WARNING 1>&2
 fi
 
-
-if test "X_$GLES2_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $GLES_WARNING 1>&2
-fi
 

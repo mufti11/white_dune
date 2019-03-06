@@ -33,6 +33,7 @@
 #include "DuneApp.h"
 #include "Scene.h"
 #include "NodeImageTexture3D.h"
+#include "NodePixelTexture3D.h"
 
 ProtoVolumeData::ProtoVolumeData(Scene *scene)
   : Proto(scene, "VolumeData")
@@ -87,16 +88,20 @@ NodeVolumeData::preDraw()
     if (node && (node->getType() == X3D_IMAGE_TEXTURE_3D)) {
         ((NodeImageTexture3D *)node)->preDraw();
     }
+    if (node && (node->getType() == X3D_PIXEL_TEXTURE_3D)) {
+        ((NodePixelTexture3D *)node)->preDraw();
+    }
 }
 
 void
 NodeVolumeData::draw(int pass)
 {
-    if (pass == RENDER_PASS_NON_TRANSPARENT)
-        return; 
     Node *node = voxels()->getValue();
     if (node && (node->getType() == X3D_IMAGE_TEXTURE_3D)) {
         ((NodeImageTexture3D *)node)->draw(pass);
+    }
+    if (node && (node->getType() == X3D_PIXEL_TEXTURE_3D)) {
+        ((NodePixelTexture3D *)node)->draw(pass);
     }
 }
 
