@@ -36,7 +36,11 @@ protected:
     int           m_imageSizeY;
     int           m_imageSizeZ;
     bool          m_loadedTexture;
+#ifdef HAVE_TEXTURE_3D
     GLuint        m_gTex3D;
+#else
+    MyArray<GLuint> m_gTex2Ds;
+#endif
 };
 
 #endif

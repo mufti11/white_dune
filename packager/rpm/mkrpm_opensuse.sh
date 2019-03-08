@@ -49,7 +49,7 @@ URL: http://wdune.ourproject.org/
 Source: ftp://ftp.ourproject.org/pub/wdune/$VERSION3.tar.bz2
 BuildRoot: /var/tmp/%{name}buildroot
 BuildRequires: gcc-c++, gawk, make, bash, fileutils, motif-devel, libXi-devel, libXmu-devel, libpng-devel, libjpeg-devel, glu-devel, libexpat-devel, flex, bison, libusb-devel, update-desktop-files, fdupes, libcgal-devel, libcurl-devel, ImageMagick, freetype2-devel, bitstream-vera-fonts
-Requires: rcs, firefox, pinta, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts
+Requires: rcs, firefox, pinta, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, imlib2-devel
 
 %description
 white_dune is a graphical X3D/VRML97 editor, 3D modeler and animation tool.

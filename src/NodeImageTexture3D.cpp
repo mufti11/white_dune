@@ -87,15 +87,12 @@ NodeImageTexture3D::NodeImageTexture3D(Scene *scene, Proto *def)
     m_imageSizeX = 0;
     m_imageSizeY = 0;
     m_imageSizeZ = 0;
-    m_textureTableIndex = 0;
 #ifdef HAVE_LIBIMLIB2
-# ifdef HAVE_LIBGLESV2
-    m_gTex3D = 0;
+    m_textureTableIndex = 0;
     m_loaded = false;
     m_loadedTexture = false;
     m_textures_prv = NULL;
     m_tableIndex = NULL;
-# endif
 #endif
 }
 

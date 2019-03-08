@@ -4953,7 +4953,9 @@ Added desktop start file to FreeBSD package
 
 Added initial ImageTexture3D rendering
 
-Added initial ImagePixel3D rendering
+Added initial PixelTexture3D rendering
+
+Fixed missing disable GL_LIGHTING in *Texture3D rendering
 
 contact: MUFTI <mufti@users.ourproject.org>
 

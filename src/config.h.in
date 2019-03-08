@@ -437,6 +437,9 @@
 # define HAVE_GNUC_ECGS_2_8 1
 #endif
 
+/* define if OpenGL support Texture3D */
+#define HAVE_TEXTURE_3D
+
 /*
    Define if the executable should only run with Windows XP and newer
  */

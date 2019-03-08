@@ -304,13 +304,13 @@
 #define HAVE_WWW_BROWSER "/usr/bin/xdg-open %s &"
 
 /* vrml browser to view vrml files*/
-#define HAVE_VRML_BROWSER "/usr/local/bin/freewrl %s"
+#define HAVE_VRML_BROWSER "/usr/bin/view3dscene %s"
 
 /* vrml browser to view vrml files with a remote command*/
 #define HAVE_VRML_REMOTE_BROWSER "/usr/bin/xdg-open %s"
 
 /* object editor for bitmap (.png/.jpg/.gif) files */
-#define HAVE_IMAGE_EDITOR ""
+#define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
 /* #undef HAVE_ANT */
@@ -319,10 +319,10 @@
 #define HAVE_TERM "/usr/bin/lxterminal --no-remote "
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS ""
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
 
 /* object editor for sound (.wav/.midi) files */
-#define HAVE_SOUND_EDITOR ""
+#define HAVE_SOUND_EDITOR "/usr/bin/audacity"
 
 /* object editor for movie (.mpeg) files */
 #define HAVE_MOVIE_EDITOR ""
@@ -438,6 +438,9 @@
 # define HAVE_GNUC_ECGS_2_8 1
 #endif
 
+/* define if OpenGL support Texture3D */
+#define HAVE_TEXTURE_3D
+
 /*
    Define if the executable should only run with Windows XP and newer
  */
@@ -537,7 +540,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99rc1411"
+#define HAVE_DUNE_VERSION "white_dune 0.99pl1416"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

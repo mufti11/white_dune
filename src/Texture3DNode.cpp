@@ -44,7 +44,9 @@ Texture3DNode::Texture3DNode()
     m_imageSizeY = 0;
     m_imageSizeZ = 0;
     m_loadedTexture = false;
+#ifdef HAVE_TEXTURE_3D
     m_gTex3D = 0;
+#endif
 }
 
 /* the following use code from vx 
@@ -83,25 +85,46 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 void
 Texture3DNode::loadTexture()
 {
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+#ifdef HAVE_TEXTURE_3D
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        glGenTextures(1, &m_gTex3D);
-        glBindTexture(GL_TEXTURE_3D, m_gTex3D);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+    glGenTextures(1, &m_gTex3D);
+    glBindTexture(GL_TEXTURE_3D, m_gTex3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 
+                 m_imageSizeX, m_imageSizeY, m_imageSizeZ, 0, GL_RGBA, 
+                 GL_UNSIGNED_BYTE, m_imageData);
+
+#else
+    m_gTex2Ds.resize(0);
+
+    for (int i = 0; i < m_imageSizeZ; i++) {
+        m_gTex2Ds[i] = 0;
+        glGenTextures(1, &m_gTex2Ds[i]);
+        glBindTexture(GL_TEXTURE_2D, m_gTex2Ds[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 
-                     m_imageSizeX, m_imageSizeY, m_imageSizeZ ,0, GL_RGBA, 
-                     GL_UNSIGNED_BYTE, m_imageData);
-
-        GLenum error=glGetError();
-        if (error != 0)
-            fprintf(stderr,"GL Error: %s\n",gluErrorString(error));
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
+                     m_imageSizeX, m_imageSizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     m_imageData + i * m_imageSizeX * m_imageSizeY);
+    }
+#endif
+    GLenum error=glGetError();
+    if (error != 0)
+        fprintf(stderr,"GL Error: %s\n",gluErrorString(error));
 }
 
 void
@@ -116,9 +139,20 @@ Texture3DNode::drawQuads(Node *node)
     if (dim[2] == 0)
         return;
 
-    float size = 4;
+    glColor3f(1, 1, 1);
+
+#ifdef HAVE_TEXTURE_3D
+    float size = 2;
+#else
+    float size = 1;
+#endif
     for (int i = 0; i < m_imageSizeZ; i++) {
-        float tz = -dim[2] / 2 + i * dim[2] / (m_imageSizeZ - 1);
+#ifdef HAVE_TEXTURE_3D
+#else
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, m_gTex2Ds[i]);
+#endif
+        float tz = (-dim[2] / 2) + (i * dim[2] / (m_imageSizeZ - 1));
         glBegin(GL_QUADS);
         glTexCoord3f(-1.0f, -1.0f, tz);
         glVertex3f(-dim[0] * size, -dim[1] * size, tz);
@@ -147,14 +181,16 @@ Texture3DNode::drawTexture3D(Node *node, Scene *scene)
     if (m_imageData == NULL)
         return;
 
-    glEnable(GL_ALPHA_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glAlphaFunc(GL_NOTEQUAL, 0);
+     glEnable(GL_ALPHA_TEST);
+     glEnable(GL_BLEND);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+     glAlphaFunc(GL_NOTEQUAL, 0);
 
-    glEnable(GL_TEXTURE_3D);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glBindTexture(GL_TEXTURE_3D, m_gTex3D);
+#ifdef HAVE_TEXTURE_3D
+     glEnable(GL_TEXTURE_3D);
+     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+     glBindTexture(GL_TEXTURE_3D, m_gTex3D);
+#endif 
 
      glPushMatrix();
   
@@ -170,15 +206,24 @@ Texture3DNode::drawTexture3D(Node *node, Scene *scene)
 
      glMatrixMode(GL_TEXTURE);
      glLoadIdentity();
-     glScalef(2, 2, 2);
+#ifdef HAVE_TEXTURE_3D
+     glScalef(2, 2, 4); // ???
+#endif
      glRotatef(RAD2DEG(frotation[3]),
                frotation[0], frotation[1], frotation[2]);
+
+      glDisable(GL_LIGHTING);
 
       drawQuads(node);
 
       glMatrixMode(GL_MODELVIEW);
       glPopMatrix();
 
+      glEnable(GL_LIGHTING);
+
       glDisable(GL_BLEND);
+#ifdef HAVE_TEXTURE_3D
       glBindTexture(GL_TEXTURE_3D, 0);
+      glDisable(GL_TEXTURE_3D);
+#endif
 }

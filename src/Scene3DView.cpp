@@ -248,7 +248,9 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
     else    
         drawViewPort(NULL, 0);
     swSwapBuffers(m_dc, m_glc);
+#ifndef _WIN32
     swInvalidateWindow(m_wnd);
+#endif
 }
 
 void Scene3DView::OnSize(int width, int height) 

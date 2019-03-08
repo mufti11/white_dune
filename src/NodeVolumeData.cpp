@@ -84,6 +84,7 @@ NodeVolumeData::NodeVolumeData(Scene *scene, Proto *def)
 void
 NodeVolumeData::preDraw()
 {
+#ifndef _WIN32
     Node *node = voxels()->getValue();
     if (node && (node->getType() == X3D_IMAGE_TEXTURE_3D)) {
         ((NodeImageTexture3D *)node)->preDraw();
@@ -91,6 +92,7 @@ NodeVolumeData::preDraw()
     if (node && (node->getType() == X3D_PIXEL_TEXTURE_3D)) {
         ((NodePixelTexture3D *)node)->preDraw();
     }
+#endif
 }
 
 void

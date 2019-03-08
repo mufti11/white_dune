@@ -11,7 +11,7 @@ package=whitedune
 
 build:
 	$(checkdir)
-	CXXFLAGS="-std=gnu++11" ./configure --prefix=/usr --with-uninstallcomment="dpkg -P whitedune" --with-optimization --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-checkincommand="ci" --with-imageeditor="gimp" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
+	CXXFLAGS="-std=gnu++11" ./configure --prefix=/usr --with-uninstallcomment="dpkg -P whitedune" --with-optimization --without-devil --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-checkincommand="ci" --with-imageeditor="gimp" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
 	$(MAKE) -j4
 	touch build
 

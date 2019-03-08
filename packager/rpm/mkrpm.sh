@@ -84,12 +84,13 @@ BuildRequires: mesa-libGLU-devel
 BuildRequires: expat-devel
 BuildRequires: flex
 BuildRequires: bison
+BuildRequires: imlib2-devel
 BuildRequires: libusb-devel
 BuildRequires: CGAL-devel
 BuildRequires: gmp-devel
 BuildRequires: libcurl-devel
 BuildRequires: ImageMagick
-BuildRequires: aqsis-core
+#BuildRequires: aqsis-core
 BuildRequires: freetype-devel 
 BuildRequires: imlib2-devel
 BuildRequires: bitstream-vera-sans-fonts
@@ -101,7 +102,7 @@ Requires: kolourpaint
 Requires: audacity
 Requires: lxterminal
 Requires: ImageMagick
-Requires: aqsis-core
+#Requires: aqsis-core
 Requires: bitstream-vera-sans-fonts
 Requires: xorg-x11-fonts-misc
 
@@ -127,8 +128,8 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
     --with-about="$VERSION1" \\
     --with-optimization \\
     --without-devil \\
-    --with-helpurl="/usr/share/doc/wdune-docs/docs/" \\
-    --with-protobaseurl="/usr/share/doc/wdune-docs/docs" \\
+    --with-helpurl="%{_docdir}/wdune-docs/docs/" \\
+    --with-protobaseurl="%{_docdir}/wdune-docs/docs" \\
     --with-checkincommand="ci" \\
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
@@ -173,14 +174,14 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune.desktop
 %{_mandir}/man1/dune4kids.1*
 %{_mandir}/man1/illegal2vrml.1*
 
-%changelog
-
 %package docs
 Summary: Documentation for white_dune
 %description docs
 Documentation for white_dune
 %files docs
 %doc README.txt docs
+
+%changelog
 
 EOT
 

@@ -962,10 +962,10 @@ DuneApp::OpenFile(const char *openpath)
 
 void DuneApp::OnFileClose(MainWindow *window)
 {
+
     if (!window->SaveModified()) {
         return;
     }
-
     List<MainWindow *>::Iterator *currentWindow = m_windows.find(window);
     SWND currentWnd = currentWindow->item()->getParentWindow();
     m_windows.remove(currentWindow);
