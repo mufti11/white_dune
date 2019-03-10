@@ -87,13 +87,11 @@ NodeImageTexture3D::NodeImageTexture3D(Scene *scene, Proto *def)
     m_imageSizeX = 0;
     m_imageSizeY = 0;
     m_imageSizeZ = 0;
-#ifdef HAVE_LIBIMLIB2
     m_textureTableIndex = 0;
     m_loaded = false;
     m_loadedTexture = false;
     m_textures_prv = NULL;
     m_tableIndex = NULL;
-#endif
 }
 
 // The following uses code from FreeWRL
@@ -149,9 +147,6 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ****************************************************************************/
 
-#ifdef HAVE_LIBIMLIB2
-
-#include <Imlib2.h>
 #include "Texture3DNode.h"
 
 ppTextures textures_prv = NULL;
@@ -452,6 +447,7 @@ struct DdsLoadInfo {
     };
 #endif //BGRA textures supported
 
+#ifndef _WIN32
 struct DdsLoadInfo loadInfoDXT1 = {
   true, false, false, 4, 8, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
 };
@@ -461,16 +457,20 @@ struct DdsLoadInfo loadInfoDXT3 = {
 struct DdsLoadInfo loadInfoDXT5 = {
   true, false, false, 4, 16, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
 };
+#endif
 
 struct DdsLoadInfo loadInfoRGB8 = {
   false, false, false, 1, 3, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE
 };
+
+#ifndef _WIN32
 struct DdsLoadInfo loadInfoBGR8 = {
   false, false, false, 1, 3, GL_RGB8, GL_BGR, GL_UNSIGNED_BYTE
 };
 struct DdsLoadInfo loadInfoBGR565 = {
   false, true, false, 1, 2, GL_RGB5, GL_RGB, GL_UNSIGNED_SHORT_5_6_5
 };
+#endif
 
 /* is this a DDS file? If so, get it, and subdivide it. Ignore MIPMAPS for now */
 /* see: http://www.mindcontrol.org/~hplus/graphics/dds-info/MyDDS.cpp */
@@ -749,6 +749,7 @@ int textureIsDDS(textureTableIndexStruct_s* this_tex, char *filename) {
         //rshift[3] = GetLowestBitPos(hdr.sPixelFormat.dwAlphaBitMask);
         bdata = NULL;
         if(hdr.sPixelFormat.dwFlags & DDPF_FOURCC){
+#ifndef _WIN32
             if( PF_IS_DXT1( hdr.sPixelFormat ) ) {
                 li = &loadInfoDXT1;
             }
@@ -758,7 +759,7 @@ int textureIsDDS(textureTableIndexStruct_s* this_tex, char *filename) {
             else if( PF_IS_DXT5( hdr.sPixelFormat ) ) {
                 li = &loadInfoDXT5;
             }
-  
+#endif  
             #if defined (GL_BGRA)
             else if( PF_IS_BGRA8( hdr.sPixelFormat ) ) {
                 li = &loadInfoBGRA8;
@@ -768,18 +769,19 @@ int textureIsDDS(textureTableIndexStruct_s* this_tex, char *filename) {
             }
             else if( PF_IS_INDEX8( hdr.sPixelFormat ) ) {
                 li = &loadInfoIndex8;
-            }
+            } else 
             #endif
-
-            else if( PF_IS_RGB8( hdr.sPixelFormat ) ) {
+            if( PF_IS_RGB8( hdr.sPixelFormat ) ) {
                 li = &loadInfoRGB8;
             }
+#ifndef _WIN32
             else if( PF_IS_BGR8( hdr.sPixelFormat ) ) {
                 li = &loadInfoBGR8;
             }
             else if( PF_IS_BGR565( hdr.sPixelFormat ) ) {
                 li = &loadInfoBGR565;
             }
+#endif
             //else {
             //    ConsoleMessage("CubeMap li failure\n");
             //    return FALSE;
@@ -1974,8 +1976,6 @@ NodeImageTexture3D::texture_load_from_file(textureTableIndexStruct_s* this_tex,
 /* LINUX */
 
 #if !defined (_MSC_VER) && !defined(_ANDROID) && !defined(ANDROIDNDK)
-    Imlib_Image image;
-    Imlib_Load_Error error_return;
     char *fname;
     int ret, imtype;
 
@@ -1993,64 +1993,6 @@ NodeImageTexture3D::texture_load_from_file(textureTableIndexStruct_s* this_tex,
         case IMAGETYPE_VOL:
             ret = loadImage3DVol(this_tex, fname); break;
         default:
-            //JAS     ret = FALSE;
-            //image = imlib_load_image_immediately(filename);
-            //image = imlib_load_image(filename);
-            image = imlib_load_image_with_error_return(filename,&error_return);
-            ret = (error_return == 0);
-
-            if (!image) {
-                const char *es = NULL;
-                switch(error_return){
-                    case IMLIB_LOAD_ERROR_NONE: es = "IMLIB_LOAD_ERROR_NONE";break;
-                    case IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST: es = "IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST";break;
-                    case IMLIB_LOAD_ERROR_FILE_IS_DIRECTORY: es = "IMLIB_LOAD_ERROR_FILE_IS_DIRECTORY";break;
-                    case IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_READ: es = "IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_READ";break;
-                    case IMLIB_LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT: es = "IMLIB_LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT";break;
-                    case IMLIB_LOAD_ERROR_PATH_TOO_LONG: es = "IMLIB_LOAD_ERROR_PATH_TOO_LONG";break;
-                    case IMLIB_LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT: es = "IMLIB_LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT";break;
-                    case IMLIB_LOAD_ERROR_PATH_COMPONENT_NOT_DIRECTORY: es = "IMLIB_LOAD_ERROR_PATH_COMPONENT_NOT_DIRECTORY";break;
-                    case IMLIB_LOAD_ERROR_PATH_POINTS_OUTSIDE_ADDRESS_SPACE: es = "IMLIB_LOAD_ERROR_PATH_POINTS_OUTSIDE_ADDRESS_SPACE";break;
-                    case IMLIB_LOAD_ERROR_TOO_MANY_SYMBOLIC_LINKS: es = "IMLIB_LOAD_ERROR_TOO_MANY_SYMBOLIC_LINKS";break;
-                    case IMLIB_LOAD_ERROR_OUT_OF_MEMORY: es = "IMLIB_LOAD_ERROR_OUT_OF_MEMORY";break;
-                    case IMLIB_LOAD_ERROR_OUT_OF_FILE_DESCRIPTORS: es = "IMLIB_LOAD_ERROR_OUT_OF_FILE_DESCRIPTORS";break;
-                    case IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_WRITE: es = "IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_WRITE";break;
-                    case IMLIB_LOAD_ERROR_OUT_OF_DISK_SPACE: es = "IMLIB_LOAD_ERROR_OUT_OF_DISK_SPACE";break;
-                    case IMLIB_LOAD_ERROR_UNKNOWN:
-                    default:
-                    es = "IMLIB_LOAD_ERROR_UNKNOWN";break;
-                }
-                ERROR_MSG("imlib load error = %d %s\n",error_return,es);
-                ERROR_MSG("load_texture_from_file: failed to load image: %s\n", filename);
-                return FALSE;
-            }
-            DEBUG_TEX("load_texture_from_file: Imlib2 succeeded to load image: %s\n", filename);
-
-            imlib_context_set_image(image);
-            imlib_image_flip_vertical(); /* FIXME: do we really need this ? */
-
-            /* store actual filename, status, ... */
-            this_tex->filename = (char *)filename;
-            this_tex->hasAlpha = (imlib_image_has_alpha() == 1);
-            this_tex->channels = this_tex->hasAlpha ? 4 : 3;
-            this_tex->frames = 1;
-            this_tex->x = imlib_image_get_width();
-            this_tex->y = imlib_image_get_height();
-
-            this_tex->texdata = (unsigned char *) imlib_image_get_data_for_reading_only(); 
-            {
-                int nchan;
-                //int nchan, imtype;
-                if(imtype == IMAGETYPE_JPEG)
-                    nchan = 3; //jpeg always rgb, no alpha
-                else
-                    nchan = sniffImageChannels_bruteForce(this_tex->texdata, this_tex->x, this_tex->y); 
-                //nchan = sniffImageChannels(fname);
-                if(nchan > -1) this_tex->channels = nchan;
-            }
-            //(Sept 5, 2016 change) assuming imlib gives BGRA:
-            texture_swap_B_R(this_tex); 
-            //this_tex->data should now be RGBA. (if not comment above line)
             break;
     }
 
@@ -2144,7 +2086,5 @@ NodeImageTexture3D::setField(int index, FieldValue *value,
     m_loaded = false;
     Node::setField(index, value, containerField);
 }
-
-#endif
 
 

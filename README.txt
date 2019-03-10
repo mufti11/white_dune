@@ -4957,5 +4957,11 @@ Added initial PixelTexture3D rendering
 
 Fixed missing disable GL_LIGHTING in *Texture3D rendering
 
+Stripped unneeded Imlib2 requirement
+
+Fixed Devil source path
+
+Fixed missing X3DOM extensions in VolumeData node
+
 contact: MUFTI <mufti@users.ourproject.org>
 

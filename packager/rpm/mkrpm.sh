@@ -89,8 +89,9 @@ BuildRequires: libusb-devel
 BuildRequires: CGAL-devel
 BuildRequires: gmp-devel
 BuildRequires: libcurl-devel
+BuildRequires: eigen3-devel
 BuildRequires: ImageMagick
-#BuildRequires: aqsis-core
+BuildRequires: aqsis-core
 BuildRequires: freetype-devel 
 BuildRequires: imlib2-devel
 BuildRequires: bitstream-vera-sans-fonts
@@ -98,13 +99,13 @@ BuildRequires: desktop-file-utils
 BuildRequires: xdg-utils
 BuildRequires: grep
 Requires: rcs
-Requires: kolourpaint
-Requires: audacity
-Requires: lxterminal
 Requires: ImageMagick
-#Requires: aqsis-core
+Requires: aqsis-core
 Requires: bitstream-vera-sans-fonts
 Requires: xorg-x11-fonts-misc
+Recommends: lxterminal
+Recommends: kolourpaint
+Recommends: audacity
 
 %description
 The white_dune program is a graphical X3D/VRML97 editor, 

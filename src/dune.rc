@@ -1752,7 +1752,7 @@ BEGIN
 #else
     LTEXT           "white_dune",IDC_STATIC,40,7,119,8,SS_NOPREFIX
 #endif
-    LTEXT           "Copyright (C)  2000-2018 Stephen F. White and others",
+    LTEXT           "Copyright (C)  2000-2019 Stephen F. White and others",
                     IDC_STATIC,40,18,185,11
     LTEXT           "GNU General Public License (GPL)",IDC_STATIC,40,33,185,
                     11
@@ -6038,7 +6038,7 @@ BEGIN
 #else
     LTEXT           "white_dune",IDC_STATIC,40,7,119,8,SS_NOPREFIX
 #endif
-    LTEXT           "Copyright (C)  2000-2018 Stephen F. White and others",
+    LTEXT           "Copyright (C)  2000-2019 Stephen F. White and others",
                     IDC_STATIC,40,18,185,11
     LTEXT           "GNU General Public License (GPL)",IDC_STATIC,40,33,185,
                     11
@@ -10272,7 +10272,7 @@ BEGIN
 #else
     LTEXT           "white_dune",IDC_STATIC,40,7,119,8,SS_NOPREFIX
 #endif
-    LTEXT           "Copyright (C) 2000-2018 Stephen F. White und Andere",
+    LTEXT           "Copyright (C) 2000-2019 Stephen F. White und Andere",
                     IDC_STATIC,40,18,185,11
     LTEXT           "GNU General Public License (GPL)",IDC_STATIC,40,33,185,
                     11
@@ -14503,7 +14503,7 @@ BEGIN
 #else
     LTEXT           "white_dune",IDC_STATIC,40,7,119,8,SS_NOPREFIX
 #endif
-    LTEXT           "Copyright (C)  2000-2018 Stephen F. White and others",
+    LTEXT           "Copyright (C)  2000-2019 Stephen F. White and others",
                     IDC_STATIC,40,18,185,11
     LTEXT           "GNU General Public License (GPL)",IDC_STATIC,40,33,185,
                     11
@@ -18742,7 +18742,7 @@ BEGIN
 #else
     LTEXT           "white_dune",IDC_STATIC,40,7,119,8,SS_NOPREFIX
 #endif
-    LTEXT           "Copyright (C)  2000-2018 Stephen F. White and others",
+    LTEXT           "Copyright (C)  2000-2019 Stephen F. White and others",
                     IDC_STATIC,40,18,185,11
     LTEXT           "GNU General Public License (GPL)",IDC_STATIC,40,33,185,
                     11

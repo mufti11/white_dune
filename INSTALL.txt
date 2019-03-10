@@ -150,6 +150,11 @@ library as sources, so you do not need to link any GLUT libraries any more.
 A needed library is the freetype2 library, it is used for Text/Text3D
 rendering.
 
+A not real needed library is the Devil library. It is usefull, if your
+VRML browser supports image formats like TGA (like the covise VRML
+browser), but this makes the image selection dialog more complicated.
+So it is a good idea to use "./configure --without-devil". 
+
 If you have a spaceball device connected to the serial port, it is 
 recommended to have the development version of libsball installed.
 
@@ -925,7 +930,7 @@ You can find sources, binaries and needed Micro$oft Visual C++ project
 files of the needed libraries at
 ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win32static11.zip
 for windows 7 32Bit or
-ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win64static13.zip
+ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win64static14.zip
 for windows 10 64Bit
 
 The later version also includes a updated libGLU library for 

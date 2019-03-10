@@ -4224,15 +4224,15 @@ doFileDialog(const char *title, SWND wnd, const char *filters, char *buf,
     swChAppleDir();
 
     newFilters = mystrdup(filters + strlen(filters) + 1);
-    if (strchr(newFilters, ';')) {
 #ifdef MOTIF_FILE_REGEX
+    if (strchr(newFilters, ';')) {
        newFilters=mkfilter(newFilters);
+    } else {
+       newFilters=mkfilter(newFilters);
+    }
 #else
        newFilters=mystrdup("*");
 #endif
-    } else {
-       newFilters=mystrdup(filters);
-    }
     str = XmStringCreateLocalized((String) newFilters);
     XtSetArg(av[ac], XmNpattern, str);  ac++;
     tstr = XmStringCreateLocalized((String) title);

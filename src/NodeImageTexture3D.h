@@ -41,18 +41,17 @@
 class NodeVolumeData;
 class MyMesh;
 
-#ifdef HAVE_LIBIMLIB2
-    class textureTableIndexStruct;
-    typedef textureTableIndexStruct textureTableIndexStruct_s;
-    class Vector;
-    typedef struct pTextures{
-        struct Vector *activeTextureTable;
-        textureTableIndexStruct_s* loadThisTexture;
+class textureTableIndexStruct;
+typedef textureTableIndexStruct textureTableIndexStruct_s;
+class Vector;
+typedef struct pTextures{
+    struct Vector *activeTextureTable;
+    textureTableIndexStruct_s* loadThisTexture;
 
-        /* current index into loadparams that texture thread is working on */
-        int currentlyWorkingOn;// = -1;
-        int textureInProcess;// = -1;
-    }* ppTextures;
+    /* current index into loadparams that texture thread is working on */
+    int currentlyWorkingOn;// = -1;
+    int textureInProcess;// = -1;
+}* ppTextures;
 #endif
 
 
@@ -91,7 +90,6 @@ public:
     virtual Node   *copy() const 
                         { return (Node *)new NodeImageTexture3D(*this); }
 
-#ifdef HAVE_LIBIMLIB2
     bool            texture_load_from_file(textureTableIndexStruct_s* tti, 
                                            const char*filename);
     virtual void    load();
@@ -103,7 +101,6 @@ public:
                         }
     virtual void    setField(int index, FieldValue *value, 
                              int containerField = -1);
-#endif
 
     fieldMacros(MFString, url,               ProtoImageTexture3D);
     fieldMacros(SFBool,   repeatS,           ProtoImageTexture3D);
@@ -118,11 +115,9 @@ public:
 
 public:
     bool                       m_loaded;
-#ifdef HAVE_LIBIMLIB2
     int                        m_textureTableIndex;
     ppTextures                 m_textures_prv;
     textureTableIndexStruct_s *m_tableIndex;
-#endif
 };
 
 // The following uses code from FreeWRL
@@ -150,8 +145,13 @@ public:
 #endif
 
 #define UNUSED(v) ((void) v)
+#ifdef _WIN32
+#define min(A,B) A < B ? A : B;
+#define max(A,B) A < B ? B : A;
+#else
 #define min(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
 #define max(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __b : __a; })
+#endif
 #define MALLOC(t,sz) ((t)malloc(sz))
 #define MALLOCV(_sz) (malloc(_sz))
 #define STRDUP strdup
@@ -393,7 +393,5 @@ void vector_popBack_(struct Vector*, size_t count);
 void* vector_releaseData_(int, struct Vector*);
 #define vector_releaseData(type, me) \
  vector_releaseData_((int)sizeof(type), me)
-
-#endif
 
 

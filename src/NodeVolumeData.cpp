@@ -53,20 +53,20 @@ ProtoVolumeData::ProtoVolumeData(Scene *scene)
 
     allowViewpointInside.set(
         addField(SFBOOL, "allowViewpointInside", new SFBool(true)));
-    setFieldFlags(allowViewpointInside, FF_X3D_ONLY);
+    setFieldFlags(allowViewpointInside, FF_X3DOM_ONLY);
 
     appearance.set(
         addExposedField(SFNODE, "appearance", new SFNode(),
                         VRML_APPEARANCE));
-    setFieldFlags(appearance, FF_X3D_ONLY);
+    setFieldFlags(appearance, FF_X3DOM_ONLY);
 
     isPickable.set(
         addField(SFBOOL, "isPickable", new SFBool(true)));
-    setFieldFlags(isPickable, FF_X3D_ONLY);
+    setFieldFlags(isPickable, FF_X3DOM_ONLY);
 
     render.set(
         addField(SFBOOL, "render", new SFBool(true)));
-    setFieldFlags(render, FF_X3D_ONLY);
+    setFieldFlags(render, FF_X3DOM_ONLY);
 }
 
 Node *
@@ -84,15 +84,13 @@ NodeVolumeData::NodeVolumeData(Scene *scene, Proto *def)
 void
 NodeVolumeData::preDraw()
 {
-#ifndef _WIN32
     Node *node = voxels()->getValue();
     if (node && (node->getType() == X3D_IMAGE_TEXTURE_3D)) {
-        ((NodeImageTexture3D *)node)->preDraw();
+        ((NodeImageTexture3D *)node)->Texture3DNode::preDraw();
     }
     if (node && (node->getType() == X3D_PIXEL_TEXTURE_3D)) {
         ((NodePixelTexture3D *)node)->preDraw();
     }
-#endif
 }
 
 void

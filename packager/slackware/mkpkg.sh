@@ -28,20 +28,24 @@
 
 # the newest version of white_dune is available at https://wdune.ourproject.org/
 
+set -e
+
 VERSION=`sh ../../batch/getversion.sh`
+cp -r ../../../wdune-$VERSION ../../../white_dune-$VERSION
+cp -r $HOME/vcglib ../../../white_dune-$VERSION
+(cd ../../../white_dune-$VERSION && make realclean)
+sh ../../batch/mktargzwhite_dune.sh
 cd /tmp
-rm -f wdune-$VERSION.tar.bz2
-wget ftp://ftp.ourproject.org/pub/wdune/wdune-$VERSION.tar.bz2
-MD5SUM=`md5sum wdune-$VERSION.tar.bz2 | awk '{print $1}'` 
+MD5SUM=`md5sum white_dune-$VERSION.tar.gz | awk '{print $1}'` 
 cd -
 
 cat > white_dune/white_dune.info << EOT
 PRGNAM="white_dune"
 VERSION="$VERSION"
 HOMEPAGE="https://wdune.ourproject.org/"
-DOWNLOAD="ftp://ftp.ourproject.org/pub/wdune/$VERSION.tar.bz2"
+DOWNLOAD="ftp://ftp.ourproject.org/pub/white_dune-$VERSION.tar.gz"
 MD5SUM="$MD5SUM"
-DOWNLOAD_x86_64="ftp://ftp.ourproject.org/pub/wdune/$VERSION.tar.bz2"
+DOWNLOAD_x86_64="ftp://ftp.ourproject.org/pub/white_dune-$VERSION.tar.gz"
 MD5SUM_x86_64="$MD5SUM"
 REQUIRES=""
 MAINTAINER="J. Scheurich"
@@ -64,7 +68,9 @@ PACKAGE_NAME=white_dune-$VERSION-`uname -m`-1.tgz &&
 
 ADD_FILES="COPYING INSTALL.txt README.txt" &&
 
-cd ../.. &&
+cd /tmp && gzip -cd /tmp/white_dune-$VERSION.tar.gz | tar -xf - &&
+
+cd /tmp/white_dune-$VERSION &&
 
 sh batch/fix_not_translated_rcfiles.sh &&
 make realclean &&
@@ -76,6 +82,7 @@ make realclean &&
 rm -fr /$PKG &&
 
 install -c -d /$PKG/$INSTALL_DIR /$PKG/usr/bin  /$PKG/usr/doc/$DUNE_DIR  /$PKG/usr/man/man1 &&
+install -c -d /$PKG/usr/share/applications /$PKG/usr/share/pixmaps &&
 install -c -m 644 ./$PACKAGE_DIR/$DESCRIPTION_DIR/slack-desc /$PKG/$INSTALL_DIR/slack-desc &&
 
 install -c -m 755 ./bin/$DUNE_BINARY /$PKG/usr/bin &&
@@ -86,9 +93,9 @@ install -c -m 644 ./$ADD_FILES /$PKG/usr/doc/$DUNE_DIR &&
 
 cp -fr  $DOCS_DIR/* /$PKG/usr/doc/$DUNE_DIR &&
 
-install -D -m 0644 desktp/kde/dune.desktop \
+install -D -m 0644 ./desktop/kde/dune.desktop \
         /$PKG/usr/share/applications/dune.desktop
-install -D -m 0644 desktp/kde/dune.png \
+install -D -m 0644 ./desktop/kde/dune.png \
         /$PKG/usr/share/pixmaps/dune.png
 
 cd /$PKG &&

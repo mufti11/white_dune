@@ -39,9 +39,8 @@
 #include "URL.h"
 #ifdef HAVE_LIBDEVIL
 # include <IL/ilu.h>
-#else
-# include "Image.h"
 #endif
+#include "Image.h"
 #include "Util.h"
 #include "Texture.h"
 
@@ -198,7 +197,6 @@ NodeImageTexture::~NodeImageTexture()
 void
 NodeImageTexture::update()
 {
-/*
     m_imageStatus = IMG_STATUS_UNLOADED;
     if (m_textureName != 0) glDeleteTextures(1, &m_textureName);
 #ifdef HAVE_LIBDEVIL
@@ -207,7 +205,6 @@ NodeImageTexture::update()
     delete [] m_image;
     m_image = NULL;
 #endif
-*/
 }
 
 void
@@ -233,9 +230,12 @@ NodeImageTexture::load()
     if (m_imageStatus == IMG_STATUS_LOADED)
         return;
     MFString *urls = url();
-    int width, height;
+    int width = 1;
+    int height = 1;
     unsigned char *data = NULL;
 
+    int errorflag = false;
+    char *lastCheckedPath = NULL;
     if (urls->getSize() == 0)
         return;
     if (m_imageStatus == IMG_STATUS_UNLOADED) {
@@ -260,7 +260,6 @@ NodeImageTexture::load()
         if (swHasVisual() == 0)
             return;
 #ifdef HAVE_LIBDEVIL
-        errorflag=true;
         if (ilLoadImage((char *)(const char *)m_path)) {
             width = ilGetInteger(IL_IMAGE_WIDTH);
             height = ilGetInteger(IL_IMAGE_HEIGHT);
@@ -310,13 +309,13 @@ NodeImageTexture::load()
 
 #ifdef HAVE_LIBDEVIL
     if (errorflag) {
-//        m_imageStatus = IMG_STATUS_ERROR;
+        m_imageStatus = IMG_STATUS_ERROR;
         reportLoadError(lastCheckedPath, NULL);
         return;
     }
 #else    
     if (data == NULL) { 
-//        m_imageStatus = IMG_STATUS_ERROR;
+        m_imageStatus = IMG_STATUS_ERROR;
         return;
     }
 #endif        

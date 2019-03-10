@@ -23,10 +23,10 @@
 #define HAVE_LIBCURL 1
 
 /* Define if you have the IL Library */
-/* #undef HAVE_LIBIL */
+#define HAVE_LIBIL 1
 
 /* Define if you have the ILU Library  */
-/* #undef HAVE_LIBILU */
+#define HAVE_LIBILU 1
 
 /* IL + ILU = DevIL */
 
@@ -37,10 +37,10 @@
 #endif
 
 /* Define if you have the jpeg Library */
-#define HAVE_LIBJPEG 1
+/* #undef HAVE_LIBJPEG */
 
 /* Define if you have the png Library  */
-#define HAVE_LIBPNG 1
+/* #undef HAVE_LIBPNG */
 
 /* Define if the link of the png Library fails cause of png_handle_unknown */
 /* #undef HAVE_NO_PNG_HANDLE_UNKNOWN */
@@ -421,9 +421,6 @@
 /* define if you have a tty file for UNIX/Linux fontrendering */
 #define HAVE_DEFAULT_TTF_FILE "/usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf"
 
-/* define if you have imlib2 */
-#define HAVE_LIBIMLIB2 1
-
 /* 
    Define if you want to document the method to uninstall white_dune
 */
@@ -540,7 +537,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99pl1416"
+#define HAVE_DUNE_VERSION "white_dune 0.99pl1420"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

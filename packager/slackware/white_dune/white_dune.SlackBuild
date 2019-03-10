@@ -23,7 +23,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=white_dune
-VERSION=0.99pl1333
+VERSION=0.99rc1418
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}		# the "_SBo" is required
 
@@ -77,17 +77,18 @@ export CFLAGS=$SLKCFLAGS
 export CXXFLAGS=$SLKCFLAGS
 ./configure --with-wwwbrowser=firefox \
  --with-helpurl="/usr/doc/$PRGNAM-$VERSION/docs" \
- --with-protobaseurl="/usr/doc/$PRGNAM-$VERSION/docs" \
+ --with-protobaseurl="/usr/doc/$PRGNAM-$VERSION/docs"
 make -j4
 
 install -c -d $PKG/install $PKG/usr/bin $PKG/usr/man/man1
+install -c -d /$PKG/usr/share/applications /$PKG/usr/share/pixmaps
 install -c -m 755 ./bin/dune /$PKG/usr/bin
 install -c -m 644 ./man/dune.1 /$PKG/usr/man/man1
 install -c -d $PKG/usr/doc/$PRGNAM-$VERSION
 cp -fr docs $PKG/usr/doc/$PRGNAM-$VERSION 
-install -D -m 0644 desktp/kde/dune.desktop \
+install -D -m 0644 desktop/kde/dune.desktop \
         $PKG/usr/share/applications/dune.desktop
-install -D -m 0644 desktp/kde/dune.png \
+install -D -m 0644 desktop/kde/dune.png \
         $PKG/usr/share/pixmaps/dune.png
 
 # Compress man pages

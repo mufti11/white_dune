@@ -71,6 +71,9 @@ int Image::test_file_extension(char *extension)
 bool
 Image::Open(const char *filename)
 {
+#ifdef HAVE_LIBDEVIL
+    return true;
+#else
     m_type=(Type)test_file_extension(file_extension(filename));
     switch (m_type)
        {
@@ -98,6 +101,7 @@ Image::Open(const char *filename)
               }
        }
     return false;
+#endif
 }
 
 void

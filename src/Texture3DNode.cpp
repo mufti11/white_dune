@@ -109,13 +109,10 @@ Texture3DNode::loadTexture()
         m_gTex2Ds[i] = 0;
         glGenTextures(1, &m_gTex2Ds[i]);
         glBindTexture(GL_TEXTURE_2D, m_gTex2Ds[i]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
                      m_imageSizeX, m_imageSizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -193,7 +190,8 @@ Texture3DNode::drawTexture3D(Node *node, Scene *scene)
 #endif 
 
      glPushMatrix();
-  
+
+#ifdef HAVE_TEXTURE_3D  
      glMatrixMode(GL_MODELVIEW);
      Quaternion quat = scene->getCamera()->getOrientation();
      SFRotation rot(quat);
@@ -206,11 +204,10 @@ Texture3DNode::drawTexture3D(Node *node, Scene *scene)
 
      glMatrixMode(GL_TEXTURE);
      glLoadIdentity();
-#ifdef HAVE_TEXTURE_3D
      glScalef(2, 2, 4); // ???
-#endif
      glRotatef(RAD2DEG(frotation[3]),
                frotation[0], frotation[1], frotation[2]);
+#endif
 
       glDisable(GL_LIGHTING);
 

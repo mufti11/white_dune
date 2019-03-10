@@ -72,8 +72,6 @@ NodeTextureTransform::bind()
     glMatrixMode(GL_MODELVIEW);
 }
 
-#include "swt.h"
-
 void
 NodeTextureTransform::unbind()
 {
