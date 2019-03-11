@@ -75,32 +75,3 @@ efence:
 	make
 
 # DO NOT DELETE this line -- it's make depend food
-swt.o: swt.c ../../config.h ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h \
- ../include/swtxinput.h ../../mysnprintf.h ../../config.h copy.xbm \
- copy_mask.xbm link.xbm link_mask.xbm error.xbm error_mask.xbm \
- cursor_none.xbm dune.xbm dune_mask.xbm ../include/stereoview.h \
- swt_structs.h
-browser.o: browser.c ../../config.h ../include/swt.h \
- ../include/keycodes.h ../include/swlanguages.h ../include/swDebugf.h \
- ../include/swttypedef.h ../../mysnprintf.h ../../config.h \
- ../include/WriteFlags.h
-tree.o: tree.c ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h \
- ../../mysnprintf.h ../../config.h
-header.o: header.c ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h \
- ../../mysnprintf.h ../../config.h
-groupbox.o: groupbox.c ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h
-statusbar.o: statusbar.c ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h \
- ../../mysnprintf.h ../../config.h
-toolbar.o: toolbar.c ../../config.h ../include/swt.h \
- ../include/keycodes.h ../include/swlanguages.h ../include/swDebugf.h \
- ../include/swttypedef.h
-util.o: util.c ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h
-resload.o: resload.c ../include/swt.h ../include/keycodes.h \
- ../include/swlanguages.h ../include/swDebugf.h ../include/swttypedef.h \
- ../include/res.h
