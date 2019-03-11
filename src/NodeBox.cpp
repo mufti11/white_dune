@@ -585,21 +585,21 @@ NodeBox::createMesh(bool cleanDoubleVertices, bool triangulate)
     };
 
     MFVec3f *coords = new MFVec3f();
-    for (int i = 0; i < sizeof(fpoint)/sizeof(float); i += 3)
+    for (unsigned int i = 0; i < sizeof(fpoint)/sizeof(float); i += 3)
         coords->appendSFValue(fpoint[i], fpoint[i + 1], fpoint[i + 2]); 
 
     MFInt32 *coordIndex = new MFInt32();
-    for (int i = 0; i < sizeof(icoordIndex)/sizeof(int); i++)
+    for (unsigned int i = 0; i < sizeof(icoordIndex)/sizeof(int); i++)
         coordIndex->appendSFValue(icoordIndex[i]);
 
     MFVec2f *texCoord = new MFVec2f();
-    for (int i = 0; i < sizeof(ftexCoord)/sizeof(float); i += 2)
+    for (unsigned int i = 0; i < sizeof(ftexCoord)/sizeof(float); i += 2)
         texCoord->appendSFValue(ftexCoord[i], ftexCoord[i + 1]);
     MyArray<MFVec2f *> texCoords;
     texCoords.append(texCoord);
 
     MFInt32 *texCoordIndex = new MFInt32();
-    for (int i = 0; i < sizeof(itexCoordIndex)/sizeof(int); i++)
+    for (unsigned int i = 0; i < sizeof(itexCoordIndex)/sizeof(int); i++)
         texCoordIndex->appendSFValue(itexCoordIndex[i]);
 
     MFVec3f *normals = NULL;

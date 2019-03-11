@@ -1388,9 +1388,6 @@ NodeNurbsSurface::toNurbs(int uTessel, int vTessel, int uDegree, int vDegree)
     int vOrder = vDegree + 1;
     int uOrder = uDegree + 1;
 
-    int oldUTess = uTessellation()->getValue();
-    int oldVTess = vTessellation()->getValue();
-
     int uTess = uTessel;
     int vTess = vTessel; 
 

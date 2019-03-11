@@ -4963,5 +4963,9 @@ Fixed Devil source path
 
 Fixed missing X3DOM extensions in VolumeData node
 
+Cleaned some -Wall warnings
+
+Fixed memory error in Interpolator.cpp
+
 contact: MUFTI <mufti@users.ourproject.org>
 

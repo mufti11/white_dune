@@ -235,7 +235,6 @@ Interpolator::getInterpolatedFieldValue(float k)
     interpolate(k, values);
     FieldValue *val = createKey(values);
     val->ref();
-    delete [] values;
     return val;
 }
 

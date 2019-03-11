@@ -733,7 +733,7 @@ static bool checkLinenumberOption(const char *linenumberOption)
     // check if linenumber option only contain blanks
     if (hasLinenumberOption) {
         hasLinenumberOption = false;
-        for (int i = 0; i < strlen(linenumberOption); i++)
+        for (unsigned int i = 0; i < strlen(linenumberOption); i++)
             if (linenumberOption[i] != ' ')
                 hasLinenumberOption = true;
     }
@@ -1214,7 +1214,7 @@ bool DuneApp::checkCommand(const char *oldCommand, bool checkForFile)
     bool hasPathSeperator = false;
     bool hasQuote = false;
     bool isInString = false;
-    for (int i = 0; i < strlen(command); i++)
+    for (unsigned int i = 0; i < strlen(command); i++)
         if ((command[i] == '/') || (command[i] == '\\'))
             hasPathSeperator = true;
         else if (command[i] == '"') {
@@ -1372,19 +1372,21 @@ DuneApp::searchIllegalChar(char *id)
             if ((id[0] > 0) && (id[0] <= 0x20))
                 invalidCharPosition = 0;
             else
-                for (int j = 0; j < sizeof(illegalFirstChars)/sizeof(int); j++)
+                for (unsigned int j = 0; 
+                     j < sizeof(illegalFirstChars)/sizeof(int); j++)
                     if (id[0] == illegalFirstChars[j]) {
                        invalidCharPosition = 0;
                        break;
                     }
     }
     if (invalidCharPosition == -1) 
-        for (int i = 1; i < strlen(id); i++)
+        for (unsigned int i = 1; i < strlen(id); i++)
             if ((!isalnum(id[i])) && (!isdigit(id[i]))) {
                 if ((id[i] > 0) && (id[i] <= 0x20))
                     invalidCharPosition = i;
                 else
-                    for (int j = 0; j < sizeof(illegalChars)/sizeof(int); j++)
+                    for (unsigned int j = 0; 
+                         j < sizeof(illegalChars)/sizeof(int); j++)
                         if (id[i] == illegalChars[j]) {
                             invalidCharPosition = i;
                             break;

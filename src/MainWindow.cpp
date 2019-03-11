@@ -1174,7 +1174,7 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
         m_nodeToolbar3Enabled = TheApp->GetBoolPreference("NodeToolbar3", !olpc);
     m_toolbarWindow->ShowToolbar(m_nodeToolbar3, m_nodeToolbar3Enabled);
 
-    for (int j = 0; j < ARRAYSIZE(buttonsVRML200x); j++) {
+    for (unsigned int j = 0; j < ARRAYSIZE(buttonsVRML200x); j++) {
         // replace NurbsGroup icon with combined NurbsGroup/NurbsSet icon
         if (buttonsVRML200x[j].type == VRML_NURBS_GROUP) {
             buttonsVRML200x[j].type = scene->getNumberBuildinProtos() + 1;
@@ -4895,9 +4895,10 @@ MainWindow::UpdateMenuKambiNodes(void)
                    kambi && ((node->getType() == KAMBI_KAMBI_APPEARANCE) ||
                    (node->getType() == VRML_APPEARANCE)) ? 0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_NEW_KAMBI_RENDERED_TEXTURE, SW_MENU_DISABLED,
-                   kambi || x3dom && 
+                   (kambi || x3dom) && 
                    ((node->getType() == KAMBI_KAMBI_APPEARANCE) ||
-                   (node->getType() == VRML_APPEARANCE)) ? 0 : SW_MENU_DISABLED);
+                    ((node->getType() == VRML_APPEARANCE) ? 
+                      0 : SW_MENU_DISABLED)));
 }
 
 void MainWindow::UpdateStaticMenuX3domNodes(void)
@@ -5369,7 +5370,7 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
                 if (!valid)
                     break;
                 valid = node->findValidFieldType(X3D_RIGID_BODY) != -1;
-                if (!valid)
+                if (!valid) {
                     if (node->matchNodeClass(RIGID_JOINT_NODE)) {
                         X3DRigidJointNode *joint = (X3DRigidJointNode *)node;
                         if (joint->body1()->getValue() == NULL)
@@ -5384,6 +5385,7 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
                         else if (contact->body2()->getValue() == NULL)
                             valid = true;
                     }
+                }
                 break;
               case X3D_BALL_JOINT:
               case X3D_DOUBLE_AXIS_HINGE_JOINT:
@@ -7006,7 +7008,6 @@ MainWindow::createViewpoint()
 //    node->jump((SFBool *)camera->jump()->copy());
     SFRotation *r = new SFRotation(camera->getOrientation());
     node->orientation(r);
-    char buf[4096];
     Vec3f pos = camera->getPosition();
     node->position(new SFVec3f(pos.x, pos.y, pos.z));
 //    node->description((SFString *)camera->description()->copy());
@@ -8922,7 +8923,7 @@ MainWindow::buildQuad()
         node = node->getParent();   
     if (node->getType() == VRML_INDEXED_FACE_SET) {
         NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)node;
-        char str[256], message[256], title[256];
+        char str[256], title[256];
         swLoadString(IDS_DUNE, title, 256);
         swLoadString(IDS_SELECT_TWO_TRIANGLE, str, 256);
         if ((m_scene->getSelectionMode() != SELECTION_MODE_FACES) ||
@@ -11107,7 +11108,7 @@ MainWindow::setHAnimJointWeight()
         }
         Node *node = m_scene->getLastSelectedHAnimJoint();
         if (node == NULL) {
-            char str[256], message[256], title[256];
+            char str[256], title[256];
             swLoadString(IDS_DUNE, title, 256);
             swLoadString(IDS_SELECT_HANIM_JOINT_FIRST, str, 256);
             swMessageBox(TheApp->mainWnd(), str, title, SW_MB_OK, SW_MB_ERROR);
@@ -12002,7 +12003,7 @@ bool
 MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
                      char *x3dPath)
 {
-    if (writeFlags & !SKIP_SAVED_TEST) {
+    if (!(writeFlags & SKIP_SAVED_TEST)) {
         if ((writeFlags & X3DV) && m_scene->getSavedX3dv())
             return true;
         if ((writeFlags & X3D_XML) && m_scene->getSavedX3dXml())

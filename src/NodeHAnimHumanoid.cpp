@@ -611,7 +611,7 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
      meshNodes.resize(0); 
 
      for (int i = 0; i < m_numMeshes; i++)
-         if (mfSkin->getValue(i))
+         if (mfSkin->getValue(i)) {
             if (mfSkin->getValue(i)->getType() == VRML_SHAPE)
                 mfSkin->getValue(i)->doWithBranch(searchMeshes, m_meshes,
                                                   false, false);
@@ -620,6 +620,7 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
                 mfSkin->getValue(i)->doWithBranch(addToMesh, m_meshes,
                                                   false, false);
             }
+         }
 
      m_numMeshes = numMeshes;
      for (int i = 0; i < meshNodes.size(); i++)

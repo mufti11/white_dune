@@ -184,105 +184,120 @@ code of gif.c/gif.h/kljcpyrght.h
 
 code of GpsMathLib.cpp/gpsdatum.h/gpsmath.h/gpsport.h
 
-/* @source JEEPS functions
-**
-** @author Copyright (C) 1999 Alan Bleasby
-** @version 1.0 
-** @modified Feb 04 2000 Alan Bleasby. First version
-** @@
-** 
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Library General Public
-** License as published by the Free Software Foundation; either
-** version 2 of the License, or (at your option) any later version.
-** 
-** This library is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-** Library General Public License for more details.
-** 
-** You should have received a copy of the GNU Library General Public
-** License along with this library; if not, write to the
-** Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-** MA 02110-1301, USA.
-*/
-//BOBMAX INSERT--------------------------------------------------------------------
+/* @source// This file is part of Eigen, a lightweight C++ template library
+// for linear algebra.
+//
+// Copyright (C) 2010 Manuel Yguel <manuel.yguel@gmail.com>
+//
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-***********************************************************
+#include "main.h"
+#include <unsupported/Eigen/Polynomials>
+#include <iostream>
 
-code of openglutfont.c/openglutfont.h
+using namespace std;
 
-/*
- * Portions copyright (C) 2004, the OpenGLUT project contributors.
- * OpenGLUT branched from freeglut in February, 2004.
- *
- * Copyright (c) 1999-2000 Pawel W. Olszta. All Rights Reserved.
- * Written by Pawel W. Olszta, <olszta@sourceforge.net>
- * Creation date: Thu Dec 2 1999
- *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
- * PAWEL W. OLSZTA BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+namespace Eigen {
+namespace internal {
+template<int Size>
+struct increment_if_fixed_size
+{
+  enum {
+    ret = (Size == Dynamic) ? Dynamic : Size+1
+  };
+};
+}
+}
 
-***********************************************************
+template<typename _Scalar, int _Deg>
+void realRoots_to_monicPolynomial_test(int deg)
+{
+  typedef internal::increment_if_fixed_size<_Deg>            Dim;
+  typedef Matrix<_Scalar,Dim::ret,1>                  PolynomialType;
+  typedef Matrix<_Scalar,_Deg,1>                      EvalRootsType;
 
- code of Quaternion::Quaternion(Vec3f from, Vec3f to) based on quaternion.cpp
- of libQGLViewer-2.2.4-1
- code of Vec3x::orthogonalVec() based on vec.cpp of libQGLViewer-2.2.4-1
+  PolynomialType pols(deg+1);
+  EvalRootsType roots = EvalRootsType::Random(deg);
+  roots_to_monicPolynomial( roots, pols );
 
- Copyright (C) 2002-2006 Gilles Debunne (Gilles.Debunne@imag.fr)
+  EvalRootsType evr( deg );
+  for( int i=0; i<roots.size(); ++i ){
+    evr[i] = std::abs( poly_eval( pols, roots[i] ) ); }
 
-This function is part of the QGLViewer library.
- Version 2.2.4-1, released on December 12, 2006.
+  bool evalToZero = evr.isZero( test_precision<_Scalar>() );
+  if( !evalToZero ){
+    cerr << evr.transpose() << endl; }
+  VERIFY( evalToZero );
+}
 
- http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
+template<typename _Scalar> void realRoots_to_monicPolynomial_scalar()
+{
+  CALL_SUBTEST_2( (realRoots_to_monicPolynomial_test<_Scalar,2>(2)) );
+  CALL_SUBTEST_3( (realRoots_to_monicPolynomial_test<_Scalar,3>(3)) );
+  CALL_SUBTEST_4( (realRoots_to_monicPolynomial_test<_Scalar,4>(4)) );
+  CALL_SUBTEST_5( (realRoots_to_monicPolynomial_test<_Scalar,5>(5)) );
+  CALL_SUBTEST_6( (realRoots_to_monicPolynomial_test<_Scalar,6>(6)) );
+  CALL_SUBTEST_7( (realRoots_to_monicPolynomial_test<_Scalar,7>(7)) );
+  CALL_SUBTEST_8( (realRoots_to_monicPolynomial_test<_Scalar,17>(17)) );
 
- libQGLViewer is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
+  CALL_SUBTEST_9( (realRoots_to_monicPolynomial_test<_Scalar,Dynamic>(
+          internal::random<int>(18,26) )) );
+}
 
- libQGLViewer is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with libQGLViewer; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-***********************************************************
 
-/* 
- * swSetFontPath() in swt/motif/swt.c based on
- * $Xorg: xset.c,v 1.6 2001/02/09 02:05:58 xorgcvs Exp $
- */
+template<typename _Scalar, int _Deg>
+void CauchyBounds(int deg)
+{
+  typedef internal::increment_if_fixed_size<_Deg>            Dim;
+  typedef Matrix<_Scalar,Dim::ret,1>                  PolynomialType;
+  typedef Matrix<_Scalar,_Deg,1>                      EvalRootsType;
 
-/*
+  PolynomialType pols(deg+1);
+  EvalRootsType roots = EvalRootsType::Random(deg);
+  roots_to_monicPolynomial( roots, pols );
+  _Scalar M = cauchy_max_bound( pols );
+  _Scalar m = cauchy_min_bound( pols );
+  _Scalar Max = roots.array().abs().maxCoeff();
+  _Scalar min = roots.array().abs().minCoeff();
+  bool eval = (M >= Max) && (m <= min);
+  if( !eval )
+  {
+    cerr << "Roots: " << roots << endl;
+    cerr << "Bounds: (" << m << ", " << M << ")" << endl;
+    cerr << "Min,Max: (" << min << ", " << Max << ")" << endl;
+  }
+  VERIFY( eval );
+}
 
-Copyright 1985, 1998  The Open Group
+template<typename _Scalar> void CauchyBounds_scalar()
+{
+  CALL_SUBTEST_2( (CauchyBounds<_Scalar,2>(2)) );
+  CALL_SUBTEST_3( (CauchyBounds<_Scalar,3>(3)) );
+  CALL_SUBTEST_4( (CauchyBounds<_Scalar,4>(4)) );
+  CALL_SUBTEST_5( (CauchyBounds<_Scalar,5>(5)) );
+  CALL_SUBTEST_6( (CauchyBounds<_Scalar,6>(6)) );
+  CALL_SUBTEST_7( (CauchyBounds<_Scalar,7>(7)) );
+  CALL_SUBTEST_8( (CauchyBounds<_Scalar,17>(17)) );
 
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation.
+  CALL_SUBTEST_9( (CauchyBounds<_Scalar,Dynamic>(
+          internal::random<int>(18,26) )) );
+}
 
-The above copyright notice and this permission notice shall be included in
+void test_polynomialutils()
+{
+  for(int i = 0; i < g_repeat; i++)
+  {
+    realRoots_to_monicPolynomial_scalar<double>();
+    realRoots_to_monicPolynomial_scalar<float>();
+    CauchyBounds_scalar<double>();
+    CauchyBounds_scalar<float>();
+  }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR

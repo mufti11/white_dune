@@ -519,9 +519,6 @@ NodeIndexedFaceSet::splitSelectedFaces(void)
     }
     if (newVertices && newCoordIndex && hasParent()) {
         Node *parent = getParent();
-        NodeShape *shape = NULL;
-        if (parent->getType() == VRML_SHAPE)
-            shape = (NodeShape *)parent;
         Node *grandParent = parent->getParent();
         if (grandParent == NULL)
             return NULL;
@@ -1051,7 +1048,6 @@ NodeIndexedFaceSet::snapTogether(void)
     if (ncoord == NULL)
         return;
     MFVec3f *point = ncoord->point();
-    MFInt32 *ci = coordIndex();
     int numVertices = m_scene->getSelectedHandlesSize();
     Vec3f sum(0, 0, 0);
     for (int i = 0; i < numVertices; i++) {
@@ -1178,7 +1174,6 @@ NodeIndexedFaceSet::getEgdeCoordIndex(int iface, Vec3f midPoint,
                                       int uLoop, int vLoop,
                                       int uPieces, int vPieces)
 {
-    int ret = -1;
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
         if (iface == i)
             continue;
@@ -1217,7 +1212,6 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
     }
     MyArray<CoordIndexMapper> coordIndexToAdded;
     int numAddedVertices = 0;
-    int numNewVertices = newVertices->getSFSize();
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
         FaceData *face = getMesh()->getFace(i);
         if ((!m_scene->isInSelectedHandles(i)) && (!symFaces.contains(i)))
@@ -1230,7 +1224,6 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
                 piecesV = u;
                 piecesU = v;
             }
-            int numCoordIndex = newCoordIndex->getSize();
             int off = newCoordIndex->getValue(offset);
             Vec3f vec = newVertices->getValue(off);
             int off1 = newCoordIndex->getValue(offset + 1);
@@ -1818,7 +1811,6 @@ build_mesh(Surface *meshOut, MyMesh *mesh, Matrix matrix)
 
     for (int i = 0; i < meshCoords->getSFSize(); i++) {
          int face = meshCoords->getValue(i);
-         Vec3f v = mesh->getVertices()->getVec(face);
          if (face > -1) {
              switch (vert) {
                case 0:
@@ -2094,7 +2086,6 @@ NodeIndexedFaceSet::meshReduce(float percent)
 
     TriEdgeCollapseQuadricParameter qparams;
     qparams.QualityThr = 0.3;
-    double TargetError = std::numeric_limits<double>::max();
     bool cleaningFlag = true;
     qparams.QualityCheck = true;
     qparams.NormalCheck = true;
@@ -2106,8 +2097,8 @@ NodeIndexedFaceSet::meshReduce(float percent)
     qparams.QualityWeight = false;
     
     if (cleaningFlag) {
-        int dup = tri::Clean<CMeshO>::RemoveDuplicateVertex(m);
-        int unref = tri::Clean<CMeshO>::RemoveUnreferencedVertex(m);
+        tri::Clean<CMeshO>::RemoveDuplicateVertex(m);
+        tri::Clean<CMeshO>::RemoveUnreferencedVertex(m);
     }
 
     vcg::tri::UpdateBounding<CMeshO>::Box(m);
@@ -2155,3 +2146,4 @@ NodeIndexedFaceSet::meshReduce(float percent)
 
 }
 #endif
+

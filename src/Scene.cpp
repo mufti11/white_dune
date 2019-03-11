@@ -1910,8 +1910,8 @@ Scene::writeRib(int filedes, const char *file)
     int currentfile = 0;
     for (int j = 0; j < frames; j++) {
         if (((numFramesPerFile >= framesPerFile) && (framesPerFile > 0)) || 
-            ((currentfile == 0) && (frames > 1)) && 
-            (TheApp->getNumExportFiles() > 1))  {
+            (((currentfile == 0) && (frames > 1)) && 
+             (TheApp->getNumExportFiles() > 1)))  {
             URL file(url);
             const char *ext = strstr(url, ".");
             if (ext != NULL)
@@ -3937,11 +3937,12 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
                     handle = pickBuffer[numNames - 1];
                     handleDepth = maxDepth;
                 }
-                if (selectMultipleHandles) 
+                if (selectMultipleHandles) {
                     if (m_deselect)
                         removeSelectedHandle(handle);
                     else
                         addSelectedHandle(handle);
+                }
                 depth = maxDepth;
             }
         } else if (*pickBuffer == PICKED_3DCURSOR) {
@@ -3954,11 +3955,12 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
     if (pickedNode)
         m_lastSelectedHandle = -1;
     else if (handle != -1)
-        if (!selectMultipleHandles)
+        if (!selectMultipleHandles) {
             if (m_deselect)
                 removeSelectedHandle(handle);
             else
                 setSelectedHandle(handle);
+        }
 
     if (glPath == NULL)
         return NULL;
@@ -6339,7 +6341,6 @@ Scene::addSelectionRange(int firstRangeHandle, int secondRangeHandle)
                  continue;
              if (i == secondRangeHandle)
                  continue;
-             bool alreadySelected = false;
              if (node->validHandle(i) &&
                  (node->getVertex(i) - first).length() - len <=
                  TheApp->GetHandleEpsilon()) {

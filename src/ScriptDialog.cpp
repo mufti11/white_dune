@@ -255,10 +255,10 @@ ScriptDialog::setWidgets(const char *eventString, int typeEnum,
         if (strcmp(eventString, eventOrField[i]) == 0)
            swComboBoxSetSelection(swGetDialogItem(m_dlg, IDC_EVENT_OR_FIELD), 
                                                   i);
-    for (int i=0;i<(sizeof(SfOrMf)/sizeof(const char*));i++)
+    for (unsigned int i=0;i<(sizeof(SfOrMf)/sizeof(const char*));i++)
         if (strcmp(sfOrMf, SfOrMf[i]) == 0)
            swComboBoxSetSelection(swGetDialogItem(m_dlg, IDC_SF_OR_MF), i);
-    for (int i=0;i<(sizeof(DataType)/sizeof(const char*));i++)
+    for (unsigned int i=0;i<(sizeof(DataType)/sizeof(const char*));i++)
         if (strcmp(dataType, DataType[i]) == 0)
            swComboBoxSetSelection(swGetDialogItem(m_dlg, IDC_DATATYPE), i);
     swSetText(swGetDialogItem(m_dlg, IDC_EVENT_NAME), eventName);
@@ -309,7 +309,7 @@ ScriptDialog::addEvent(bool onlyTry)
 
     bool invalidChars = false;
     if (isalpha(eventName[0])) {
-       for (int i=1; i < strlen(eventName); i++)
+       for (unsigned int i = 1; i < strlen(eventName); i++)
           if (!isalpha(eventName[i]) && (!isdigit(eventName[i])) &&
                (eventName[i] != '_'))
               invalidChars = true;
@@ -524,12 +524,12 @@ ScriptDialog::LoadData()
 
     SWND comboSfOrMf = swGetDialogItem(m_dlg, IDC_SF_OR_MF);
     swComboBoxDeleteAll(comboSfOrMf);
-    for (int i=0;i<(sizeof(SfOrMf)/sizeof(const char*));i++)
+    for (unsigned int i = 0; i < (sizeof(SfOrMf)/sizeof(const char*)); i++)
         swComboBoxAppendItem(comboSfOrMf, SfOrMf[i]);
 
     SWND comboDataType = swGetDialogItem(m_dlg, IDC_DATATYPE);
     swComboBoxDeleteAll(comboDataType);
-    for (int i=0;i<(sizeof(DataType)/sizeof(const char*));i++)
+    for (unsigned int i = 0; i < (sizeof(DataType)/sizeof(const char*)); i++)
         swComboBoxAppendItem(comboDataType, DataType[i]);
 
     scroll = swCreateScrolledWindow(XPOS, YPOS, XMAX-XPOS, YMAX-YPOS, m_dlg);

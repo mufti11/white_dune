@@ -23,10 +23,10 @@
 #define HAVE_LIBCURL 1
 
 /* Define if you have the IL Library */
-#define HAVE_LIBIL 1
+/* #undef HAVE_LIBIL */
 
 /* Define if you have the ILU Library  */
-#define HAVE_LIBILU 1
+/* #undef HAVE_LIBILU */
 
 /* IL + ILU = DevIL */
 
@@ -37,10 +37,10 @@
 #endif
 
 /* Define if you have the jpeg Library */
-/* #undef HAVE_LIBJPEG */
+#define HAVE_LIBJPEG 1
 
 /* Define if you have the png Library  */
-/* #undef HAVE_LIBPNG */
+#define HAVE_LIBPNG 1
 
 /* Define if the link of the png Library fails cause of png_handle_unknown */
 /* #undef HAVE_NO_PNG_HANDLE_UNKNOWN */
@@ -55,7 +55,7 @@
 #define HAVE_OMP 1
 
 /* define if you use the spaceball library */
-/* #undef HAVE_LIBSBALL */
+#define HAVE_LIBSBALL 1
 
 /* define if you have the libusb library */
 #ifndef __CYGWIN__
@@ -537,7 +537,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99pl1420"
+#define HAVE_DUNE_VERSION "white_dune 0.99pl1424"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

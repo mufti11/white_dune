@@ -928,7 +928,7 @@ MeshBasedNode::addToConvertedNodes(int flags)
             if (node->texCoord()->getValue() == NULL)
                 createTexCoordFromMesh(node);
         }   
-    } else if (flags && (C_SOURCE | CC_SOURCE | JAVA_SOURCE)) {
+    } else if (flags & (C_SOURCE | CC_SOURCE | JAVA_SOURCE)) {
         bool shouldBeIndexedFaceSet = (getType() != VRML_INDEXED_FACE_SET);
 
         int meshFlags = MESH_WANT_NORMAL | MESH_WANT_TEX_COORD;

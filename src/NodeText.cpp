@@ -243,12 +243,6 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps, float offs
         exit(0);
     }
 
-    short nCountour = 0;
-    nCountour = face->glyph->outline.n_contours;
-
-    int startIndex = 0, endIndex = 0;
-    FT_Outline* o = &face->glyph->outline;
-
     if (FT_HAS_KERNING(face) && prevCharIndex) {
         FT_Vector  kerning;
         FT_Get_Kerning(face, prevCharIndex, curCharIndex, FT_KERNING_DEFAULT,
@@ -344,7 +338,7 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps, float offs
 
                 cdt->Triangulate();
                 vector<Triangle*> ts = cdt->GetTriangles();
-                for (int i = 0; i < ts.size(); i++) {
+                for (unsigned int i = 0; i < ts.size(); i++) {
                     Triangle* ot = ts[i];
 
                     Tri t1;
@@ -437,7 +431,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
         }
 
         float offset = 0; 
-        for (int i = 0; i < strlen(str); i++) {
+        for (unsigned int i = 0; i < strlen(str); i++) {
             offset = AddCharacter(face, str[i], bezierSteps, offset, extrude);
         }
 

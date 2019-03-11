@@ -118,11 +118,11 @@ NodeHAnimJoint::drawJointHandles(float scale, Node *parent, Node *that)
 {
     if ((that == NULL) || (that == this)) {
         RenderState state;
-    TransformMode* tm=m_scene->getTransformMode();
-    if ((tm->tmode == TM_CENTER) && (that == this))
-        state.drawJointHandles(this, m_jointMatrix, scale, CENTER);
-    else
-        state.drawJointHandles(this, m_jointMatrix, scale);
+        TransformMode* tm=m_scene->getTransformMode();
+        if ((tm->tmode == TM_CENTER) && (that == this))
+            state.drawJointHandles(this, m_jointMatrix, scale, CENTER);
+        else
+            state.drawJointHandles(this, m_jointMatrix, scale);
         if (that == this)
             return;
     } else
@@ -142,6 +142,7 @@ NodeHAnimJoint::drawJointHandles(float scale, Node *parent, Node *that)
             childList->get(i)->drawJointHandles(scale, this, that);
         }
     }
+
     if (that == NULL) {
         glPopName();
         glPopName();

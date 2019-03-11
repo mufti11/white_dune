@@ -108,13 +108,14 @@ NodeNurbsSweptSurface::createExtrusion()
         m_extrusion = (NodeExtrusion *) m_scene->createNode("Extrusion");
 
     if (crossSectionCurve2D)
-        if (crossSectionCurve2D->getType() == VRML_NURBS_CURVE_2D)
+        if (crossSectionCurve2D->getType() == VRML_NURBS_CURVE_2D) {
             crossSectionCurve2D->setHandleRendering(HANDLE_RENDERING_XZ);
             if (m_crossSectionCurve == NULL) {
                 m_crossSectionCurve = (NodeNurbsCurve *) 
                                       m_scene->createNode("NurbsCurve");
                 m_crossSectionCurve->setInternal(true);
             }
+        }
 
     int len = crossSectionPoints->getSize() / 2;
     float *points = new float[len * 3];

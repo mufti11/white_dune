@@ -416,7 +416,8 @@ NodeData::getVariableName(void)
         if ((!isRoot) && hasName()) {
             m_variableName = "";
             bool isKeyWord = false;
-            for (int i = 0; i < sizeof(keyWords)/sizeof(const char *); i++)
+            for (unsigned int i = 0; 
+                 i < sizeof(keyWords)/sizeof(const char *); i++)
                 if (strcmp(m_name.getData(), keyWords[i]) == 0) {
                     isKeyWord = true;
                     m_variableName += m_scene->getUniqueNodeName(cName);
@@ -512,11 +513,12 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
         m_fields[index]->unref();
     m_fields[index] = value;
     m_fields[index]->ref();
-    if (isNode)
+    if (isNode) {
         if (containerField == -1)
             m_fields[index]->setContainerField(index);
         else
             m_fields[index]->setContainerField(containerField);
+    }
 
     if (value->getType() == SFNODE) {
         Node *child = ((SFNode *) value)->getValue();
@@ -2315,7 +2317,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
 {
     Proto *proto = getProto();
 
-    bool writeEvent = true;
     if (!getProto()->isLoaded())
         RET_ONERROR( writeCProcessEvent(f, indent, languageFlag, eventName) )
     else
@@ -2590,7 +2591,7 @@ NodeData::newEventName(int typeEnum, bool out)
     const char *typestr = typeEnumToString(typeEnum);
     if (typestr[0] == 'M')
         eventName += "m";
-    for (int i = 2; i < strlen(typestr); i++)
+    for (unsigned int i = 2; i < strlen(typestr); i++)
         eventName += tolower(typestr[i]);
     int counter = 0;
     bool foundflag;
@@ -2933,14 +2934,12 @@ NodeData::sendEvent(int eventOut, double timestamp, FieldValue *value)
     assert(eventOut >= 0 && eventOut <= m_numEventOuts);
 
     // handle IS
-    bool noIs = true;
     EventOut *evOut = m_proto->getEventOut(eventOut);
     if ((m_isEventOuts.size() > 0) && (m_isEventOuts[eventOut] != NULL))
         evOut = m_isEventOuts[eventOut];
     if (evOut && (evOut->getFlags() & FF_IS))
         for (int i = 0; i < evOut->getNumIs(); i++)
             if (evOut->getFlags() & EOF_IS_HIDDEN) {
-                noIs = false;
                 Node *isNode = evOut->getIsNode(i);
                 isNode->sendEvent(evOut->getIsField(i), timestamp, value);
             }
