@@ -1,7 +1,6 @@
-#VRML V2.0 utf8
+#X3D V3.0 utf8
+PROFILE Interchange
 
-PROTO CurveAnimation
-#
 # works at least with InstantPlayer
 #
 # A VRML Proto to account the data for a PositionInterpolator and a 
@@ -16,17 +15,17 @@ PROTO CurveAnimation
 #
 # EXTERNPROTO CurveAnimation
 #    [
-#    eventIn      SFFloat    set_fraction
-#    eventOut     SFVec3f    position_changed
-#    eventOut     SFRotation orientation_changed
-#    exposedField MFVec3f    controlPoint        
-#    exposedField SFInt32    tessellation        
-#    exposedField MFFloat    weight              
+#    input      SFFloat    set_fraction
+#    outputOnly     SFVec3f    position_changed
+#    outputOnly     SFRotation orientation_changed
+#    inputoutputOnly MFVec3f    controlPoint        
+#    inputoutputOnly SFInt32    tessellation        
+#    inputoutputOnly MFFloat    weight              
 #    field        MFFloat    knot                
 #    field        SFInt32    order               
-#    exposedField SFVec3f    rotationAxis
-#    exposedField SFBool     enableRotation
-#    exposedField SFBool     hover
+#    inputoutputOnly SFVec3f    rotationAxis
+#    inputoutputOnly SFBool     enableRotation
+#    inputoutputOnly SFBool     hover
 #    ]
 # [
 # "CurveAnimationPROTO.wrl"
@@ -48,18 +47,19 @@ PROTO CurveAnimation
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
 # Cambridge, MA 02139, USA.
 #
+PROTO CurveAnimation
    [
-   eventIn      SFFloat    set_fraction
-   eventOut     SFVec3f    position_changed
-   eventOut     SFRotation orientation_changed
-   exposedField MFVec3f    controlPoint          []
-   exposedField SFInt32    tessellation          0      # (-&infin;,&infin;)
-   exposedField MFFloat    weight                []     # (0,&infin;)
-   field        MFFloat    knot                  []     # (-&infin;,&infin;)
-   field        SFInt32    order                 3      # [2,&infin;) 
-   exposedField SFVec3f    rotationAxis          0 1 0
-   exposedField SFBool     enableRotation        TRUE  
-   exposedField SFBool     hover                 TRUE
+   inputOnly      SFFloat    set_fraction
+   outputOnly     SFVec3f    position_changed
+   outputOnly     SFRotation orientation_changed
+   inputOutput MFVec3f    controlPoint          []
+   inputOutput SFInt32    tessellation          0      # (-&infin;,&infin;)
+   inputOutput MFFloat    weight                []     # (0,&infin;)
+   field        MFFloat    knot                 []     # (-&infin;,&infin;)
+   field        SFInt32    order                3      # [2,&infin;) 
+   inputOutput SFVec3f    rotationAxis          0 1 0
+   inputOutput SFBool     enableRotation        TRUE  
+   inputOutput SFBool     hover                 TRUE
    ]
 {
 Group
@@ -68,45 +68,13 @@ Group
     [
     DEF POSITION_INTERPOLATOR PositionInterpolator 
       {
+      set_fraction IS set_fraction
       value_changed IS position_changed
       }
     DEF ORIENTATION_INTERPOLATOR OrientationInterpolator 
       {
+      set_fraction IS set_fraction
       value_changed IS orientation_changed
-      }
-    ]
-  }
-
-# nodes switched off, not rendered cause not part of the scenegraph anyway ....
-Switch 
-  {
-  choice 
-    [
-    Shape 
-      {
-      geometry IndexedFaceSet 
-        {
-        coord DEF NURBS_CONTROLPOINT_CONTAINER Coordinate 
-          {
-          point IS controlPoint
-          }
-        }
-      }
-    DEF NURBS_TESSELLATION_CONTAINER Switch 
-      {
-      whichChoice IS tessellation
-      }
-    DEF NURBS_WEIGHT_CONTAINER Text
-      {
-      length IS weight
-      }
-    DEF BOOL_CONTAINER Collision
-      {
-      collide IS enableRotation
-      }
-    DEF AXIS_CONTAINER Transform 
-      {
-      translation IS rotationAxis
       }
     ]
   }
@@ -115,42 +83,28 @@ DEF NURBS_SCRIPT Script
   {
   directOutput TRUE  
 
-  eventIn SFFloat set_fraction IS set_fraction
-  eventOut SFFloat set_fraction_out
+  inputOnly SFFloat set_fraction IS set_fraction
+  outputOnly SFFloat set_fraction_out
 
-  field SFNode controlPoint_container USE NURBS_CONTROLPOINT_CONTAINER
-  eventIn MFVec3f controlPoint_in
-  eventOut MFVec3f controlPoint_out
-  field MFVec3f controlPoint [] 
-
-  field SFNode tessellation_container USE NURBS_TESSELLATION_CONTAINER
-  eventIn SFInt32 tessellation_in 
-  eventOut SFInt32 tessellation_out 
-  field SFInt32 tessellation 0
-
-  field SFNode weight_container USE NURBS_WEIGHT_CONTAINER
-  eventIn MFFloat weight_in
-  eventOut MFFloat weight_out
-  field MFFloat weight []
+  inputOutput MFVec3f controlPoint IS controlPoint
+  inputOutput SFInt32 tessellation 16 # IS tessellation
+  inputOutput MFFloat weight IS weight
 
   field MFFloat knot IS knot
   field SFInt32 order IS order
 
-  field SFNode axis_container USE AXIS_CONTAINER
-  eventIn SFVec3f rotationAxis_in
-  eventOut SFVec3f rotationAxis_out
-  field SFVec3f rotationAxis 0 1 0
+  inputOutput SFVec3f rotationAxis IS rotationAxis
 
-  field SFNode bool_container USE BOOL_CONTAINER
-  eventIn SFBool enableRotation_in
-  eventOut SFBool enableRotation_out
   field SFBool enableRotation TRUE
 
-  eventOut MFFloat positionKey
-  eventOut MFVec3f positionKeyValue
+  outputOnly MFFloat positionKey
+  outputOnly MFVec3f positionKeyValue
 
-  eventOut MFFloat orientationKey
-  eventOut MFRotation orientationKeyValue
+  outputOnly MFFloat orientationKey
+  outputOnly MFRotation orientationKeyValue
+
+  field SFNode positionInterpolator USE POSITION_INTERPOLATOR 
+  field SFNode orientationInterpolator USE ORIENTATION_INTERPOLATOR 
 
   field MFFloat weights []
   field MFVec3f tess []
@@ -252,8 +206,6 @@ DEF NURBS_SCRIPT Script
        index = base;
 
        s=new SFVec3f(0.0, 0.0, 0.0);
-       du=new SFVec3f(0.0, 0.0, 0.0);
-       dv=new SFVec3f(0.0, 0.0, 0.0);
        w = 0.0;
        dw = 0.0;
        for (i = 0; i < order; i++) {
@@ -263,18 +215,12 @@ DEF NURBS_SCRIPT Script
            s.y += controlPoint[index].y * gain;
            s.z += controlPoint[index].z * gain;
            w += weight[index] * gain;
-           du.x += controlPoint[index].x * dgain;
-           du.y += controlPoint[index].y * dgain;
-           du.z += controlPoint[index].z * dgain;
-           dw += weight[index] * dgain;
            index++;
        }
        s.x = s.x / w;
        s.y = s.y / w;
        s.z = s.z / w;
-       n.x = (du.x - s.x * dw) / w;
-       n.y = (du.y - s.y * dw) / w;
-       n.z = (du.z - s.z * dw) / w;
+
        return s;
     }
 
@@ -301,6 +247,7 @@ DEF NURBS_SCRIPT Script
        quat[1] *= rlen;
        quat[2] *= rlen;
        quat[3] *= rlen;
+       return quat;
     }
 
     function quatMult(q1, q2) {
@@ -310,7 +257,7 @@ DEF NURBS_SCRIPT Script
        r[1] = q2[3] * q1[1] + q2[1] * q1[3] + q2[2] * q1[0] - q2[0] * q1[2];
        r[2] = q2[3] * q1[2] + q2[2] * q1[3] + q2[0] * q1[1] - q2[1] * q1[0];
        r[3] = q2[3] * q1[3] - q2[0] * q1[0] - q2[1] * q1[1] - q2[2] * q1[2];
-       quatNorm(r);
+       r = quatNorm(r);
        return r;
     }
 
@@ -355,18 +302,24 @@ DEF NURBS_SCRIPT Script
        var sinAngle;
 
        rotAxis = vec1.cross(vec2);
-       axisLength = rotAxis.length;
-       if (axisLength == 0)
-          axis = new SFVec3f(0, 0, 0);
-       else 
-          axis = new SFVec3f(rotAxis.x / axisLength, 
-                             rotAxis.y / axisLength, 
-                             rotAxis.z / axisLength);
+       axisLength = rotAxis.length();
+       axis = new MFFloat();
+       if (axisLength < 0.0000001) {
+          axis[0] = 0;
+          axis[1] = 0;
+          axis[2] = 0;
+       } else {
+          axis[0] = rotAxis.x / axisLength; 
+          axis[1] = rotAxis.y / axisLength; 
+          axis[2] = rotAxis.z / axisLength; 
+       }
        angle = accountAngle(vec1, vec2);
        sinAngle = Math.sin(0.5 * angle);
-       rot = newQuat(axis.x * sinAngle, axis.y * sinAngle, axis.z * sinAngle, 
+       rot = newQuat(axis[0] * sinAngle, 
+                     axis[1] * sinAngle, 
+                     axis[2] * sinAngle, 
                      Math.cos(0.5 * angle));
-       quatNorm(rot);
+       rot = quatNorm(rot);
        return rot;
     }
 
@@ -400,6 +353,7 @@ DEF NURBS_SCRIPT Script
        correctionX = newQuat(1, 0, 0, Math.cos(0.5 * Math.PI));
        correctionY = newQuat(0, 1, 0, Math.cos(0.5 * Math.PI));
        oldQuat = newQuat(0, 0, 1, 0);
+       quat = newQuat(0, 0, 1, 0);
        for (j = 0; j < (chainLength - 1); j++) {
           normal = rotationAxis;
           vector1 = new SFVec3f(0, 0, 1);
@@ -479,16 +433,14 @@ DEF NURBS_SCRIPT Script
 
        weights = new MFFloat();
 
-       dimension = order;
+       dimension = controlPoint.length;
 
        if (dimension == 0) return;
 
-/*
        if (knot.length != order + dimension) {
            print('no NurbsCurve: knot.length!=order+dimension');
            return;
        }
-*/
    
        if (weight.length == 0) {
           weights = new MFFloat();
@@ -521,75 +473,26 @@ DEF NURBS_SCRIPT Script
            index++;
            u += inc;
        }
-
-       sendToPositionInterpolator();
-       sendToOrientationInterpolator();
     }
 
     function initialize() {
-       controlPoint=controlPoint_container.point;
-       weight=weight_container.length;
-       tessellation=tessellation_container.whichChoice;
        makeChain();
-    }
-
-    function controlPoint_in(value, time) {
-       controlPoint=value;
-       controlPoint_out=value;
-       makeChain();
-    }    
-
-    function weight_in(value, time) {
-       weight=value;
-       weight_out=value;
-       makeChain();
-    }
-    
-    function tessellation_in(value, time) {
-       tessellation=value;
-       tessellation_out=value;
-       makeChain();
+       sendToPositionInterpolator();
+       sendToOrientationInterpolator();       
     }
 
     function set_fraction(value, time) {
-       rotation_axis = axis_container.translation;
-       enableRotationField = bool_container.collide;
        set_fraction_out = value;
     }
-
-    function rotationAxis_in(value, time) {
-       rotationAxis = value;
-       rotationAxis_out=value;
-       makeChain();
-    }
-
-    function enableRotation_in(value, time) {
-       enableRotation = value;
-       enableRotation_out=value;
-       makeChain();
-    }
     "
-   ]
-   }
+    ]
+  }
+#  ROUTE NURBS_SCRIPT.set_fraction_out TO POSITION_INTERPOLATOR.set_fraction
+  ROUTE NURBS_SCRIPT.positionKey TO POSITION_INTERPOLATOR.key
+  ROUTE NURBS_SCRIPT.positionKeyValue TO POSITION_INTERPOLATOR.keyValue
 
-   ROUTE NURBS_CONTROLPOINT_CONTAINER.point TO NURBS_SCRIPT.controlPoint_in
-   ROUTE NURBS_WEIGHT_CONTAINER.length TO NURBS_SCRIPT.weight_in
-   ROUTE NURBS_TESSELLATION_CONTAINER.whichChoice TO NURBS_SCRIPT.tessellation_in
-   ROUTE AXIS_CONTAINER.translation TO NURBS_SCRIPT.rotationAxis_in
-   ROUTE BOOL_CONTAINER.collide TO NURBS_SCRIPT.enableRotation_in
-
-   ROUTE NURBS_SCRIPT.set_fraction_out TO POSITION_INTERPOLATOR.set_fraction
-   ROUTE NURBS_SCRIPT.positionKey TO POSITION_INTERPOLATOR.key
-   ROUTE NURBS_SCRIPT.positionKeyValue TO POSITION_INTERPOLATOR.keyValue
-
-   ROUTE NURBS_SCRIPT.set_fraction_out TO ORIENTATION_INTERPOLATOR.set_fraction
-   ROUTE NURBS_SCRIPT.orientationKey TO ORIENTATION_INTERPOLATOR.key
-   ROUTE NURBS_SCRIPT.orientationKeyValue TO ORIENTATION_INTERPOLATOR.keyValue
-   
-#   ROUTE NURBS_SCRIPT.controlPoint_out TO NURBS_CONTROLPOINT_CONTAINER.coord
-#   ROUTE NURBS_SCRIPT.weight_out TO NURBS_WEIGHT_CONTAINER.length
-#   ROUTE NURBS_SCRIPT.tessellation_out TO NURBS_TESSELLATION_CONTAINER.whichChoice
-#   ROUTE NURBS_SCRIPT.rotationAxis_out TO AXIS_CONTAINER.translation
-#   ROUTE NURBS_SCRIPT.enableRotation_out TO BOOL_CONTAINER.collide
+#  ROUTE NURBS_SCRIPT.set_fraction_out TO ORIENTATION_INTERPOLATOR.set_fraction
+  ROUTE NURBS_SCRIPT.orientationKey TO ORIENTATION_INTERPOLATOR.key
+  ROUTE NURBS_SCRIPT.orientationKeyValue TO ORIENTATION_INTERPOLATOR.keyValue
 }
 

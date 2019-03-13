@@ -3577,7 +3577,8 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
     gluPerspective(fieldOfView, aspect, TheApp->GetNearClippingPlaneDist(),
                                         TheApp->GetFarClippingPlaneDist());
 
-    if (getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT) {
+    if (getSelection()->getNode() &&
+        getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT) {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         float dim = 4; // ???
@@ -3681,7 +3682,8 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
     if (m_headlight)
         enableHeadlight();
 
-    if (getSelection()->getNode()->getType() != X3D_ORTHO_VIEWPOINT) {
+    if (getSelection()->getNode() &&
+        getSelection()->getNode()->getType() != X3D_ORTHO_VIEWPOINT) {
         glPushMatrix();
         applyCamera();
         glLoadName(PICKED_RIGID_BODY_HANDLE);
@@ -4694,7 +4696,8 @@ Scene::isModified() const
 void
 Scene::applyCamera()
 {
-    if (getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT)
+    if (getSelection()->getNode() &&
+        getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT)
         ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
     else
         ((NodeViewpoint *)m_currentViewpoint)->apply();

@@ -4967,5 +4967,7 @@ Cleaned some -Wall warnings
 
 Fixed memory error in Interpolator.cpp
 
+Fixed CurveAnimationPROTO to run with freewrl
+
 contact: MUFTI <mufti@users.ourproject.org>
 

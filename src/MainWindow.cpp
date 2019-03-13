@@ -12355,6 +12355,11 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
                              "x3d (.x3d)\0*.x3d;*.X3D\0All Files (*.*)\0*.*\0\0",
                              path, 1024, ".x3d"))
             save = true; 
+    } else if (writeFlags & X3DV) {   
+        if (swSaveFileDialog(m_wnd, "Save As",
+                             "x3dv (.x3dv)\0*.x3dv;*.X3DV\0All Files (*.*)\0*.*\0\0",
+                             path, 1024, ".x3dv"))
+            save = true; 
     } else if (swSaveFileDialog(m_wnd, "Save As", fileSelectorText, path, 1024,
                                 ".wrl"))
         save = true; 
