@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for white_dune
+# Slackware build script for vcglib
 
 # Copyright 2019 J. "MUFTI" Scheurich Stuttgart/Germany
 # All rights reserved.
@@ -22,9 +22,9 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=white_dune
-SRCNAM=wdune
-VERSION=${VERSION:-0.99pl1432}
+PRGNAM=vcglib
+SRCNAM=v
+VERSION=1.0.1
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -56,13 +56,11 @@ else
 fi
 
 set -e
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $SRCNAM-$VERSION
-tar xvf $CWD/$SRCNAM-$VERSION.tar.bz2
-cd $SRCNAM-$VERSION
+rm -rf $SRCNAM$VERSION
+tar xvf $CWD/$SRCNAM$VERSION.tar.gz
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -70,33 +68,8 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-export CFLAGS=$SLKCFLAGS
-export CXXFLAGS=$SLKCFLAGS
-./configure \
- --with-wwwbrowser=firefox \
- --with-helpurl="/usr/doc/$PRGNAM-$VERSION/docs" \
- --with-protobaseurl="/usr/doc/$PRGNAM-$VERSION/docs"
-make
-
-install -c -d $PKG/install $PKG/usr/bin $PKG/usr/man/man1
-cp bin/* /$PKG/usr/bin
-install -c -m 644 ./man/dune.1 /$PKG/usr/man/man1
-install -c -d $PKG/usr/doc/$PRGNAM-$VERSION
-cp -fr docs $PKG/usr/doc/$PRGNAM-$VERSION
-install -D -m 0644 desktop/kde/dune.desktop \
-        $PKG/usr/share/applications/dune.desktop
-install -D -m 0644 desktop/kde/dune.png \
-        $PKG/usr/share/pixmaps/dune.png
-
-find $PKG/usr/man -type f -exec gzip -9 {} \;
-for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-
-find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-mkdir -p $PKG/install
-cat $CWD/slack-desc > $PKG/install/slack-desc
+install -c -d $PKG/usr/include/vcglib
+cp -r $PRGNAM-$VERSION/* /$PKG/usr/include/vcglib
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
-

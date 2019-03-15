@@ -17,7 +17,7 @@ sh $SELFDIR/batch/fixpermissions.sh
 OLD_CFLAGS="$CFLAGS"
 OLD_CXXFLAGS="$CXXFLAGS"
 
-CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/usr/local/include/eigenlib -I$SELFDIR/src -I$SELFDIR/vcglib -I$SELFDIR/vcglib/eigenlib -I$HOME/vcglib -I$SELFDIR/../vcglib -I$HOME/vcglib/eigenlib -I$SELFDIR/../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/"
+CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I$SELFDIR/src -I$SELFDIR/vcglib -I$SELFDIR/vcglib/eigenlib -I$HOME/vcglib -I$SELFDIR/../vcglib -I$HOME/vcglib/eigenlib -I$SELFDIR/../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/"
 export CPPFLAGS
 
 dnl Check for compiler programs

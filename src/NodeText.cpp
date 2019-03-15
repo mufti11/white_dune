@@ -394,6 +394,8 @@ static void initFreeType(const char *ttfFile)
 #define JUSTIFY_END 2
 #define JUSTIFY_MIDDLE 3
 
+#define SPACING 0.8
+
 void
 NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
 {
@@ -411,8 +413,15 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
     NodeFontStyle *fontStyle = (NodeFontStyle *) 
                     ((SFNode *) getField(fontStyle_Field()))->getValue();
 
-    float fsize = 1;
+    float fsize = SPACING;
     float fspacing = 1;
+
+    int ijustify = JUSTIFY_BEGIN;
+    if (fontStyle) {
+        fsize = fontStyle->size()->getValue() * SPACING;
+        fspacing = fontStyle->spacing()->getValue();
+    }
+
     MFVec3f *coords = new MFVec3f();
     MFInt32 *coordIndex = new MFInt32();
     int triangles = 0;
@@ -420,16 +429,12 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
         tris.resize(0);
         const char* str = string()->getValue(j);
 
-        int ijustify = JUSTIFY_BEGIN;
         if (fontStyle) {
-            fsize = fontStyle->size()->getValue();
-            fspacing = fontStyle->spacing()->getValue();
             if (strcmp(fontStyle->justify()->getValue(j), "MIDDLE") == 0)
                 ijustify = JUSTIFY_MIDDLE;
             if (strcmp(fontStyle->justify()->getValue(j), "END") == 0)
                 ijustify = JUSTIFY_END;
         }
-
         float offset = 0; 
         for (unsigned int i = 0; i < strlen(str); i++) {
             offset = AddCharacter(face, str[i], bezierSteps, offset, extrude);
@@ -456,13 +461,13 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
         for (int i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
             coords->appendSFValue(fsize * (t.a.x / height) + addX, 
-                                  fsize * (t.a.y / height - j * fspacing), 
+                                  fsize * (t.a.y / height) - j * fspacing, 
                                   t.a.z - extrude / 2);
             coords->appendSFValue(fsize * (t.b.x / height) + addX,
-                                  fsize * (t.b.y / height - j * fspacing), 
+                                  fsize * (t.b.y / height) - j * fspacing, 
                                   t.b.z - extrude / 2);
             coords->appendSFValue(fsize * (t.c.x / height) + addX, 
-                                  fsize * (t.c.y / height - j * fspacing), 
+                                  fsize * (t.c.y / height) - j * fspacing, 
                                   t.c.z - extrude / 2);
             coordIndex->appendSFValue(triangles++);
             coordIndex->appendSFValue(triangles++);

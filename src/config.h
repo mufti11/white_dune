@@ -537,7 +537,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99rc1431"
+#define HAVE_DUNE_VERSION "white_dune 0.99rc1435"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

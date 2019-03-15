@@ -433,7 +433,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/mufti/wdune-0.99pl1424'
+ac_pwd='/home/home/mufti/wdune-0.99rc1435'
 srcdir='.'
 AWK='gawk'
 test -n "$AWK" || AWK=awk
@@ -675,9 +675,9 @@ S["CXX"]="g++"
 S["OBJEXT"]="o"
 S["EXEEXT"]=""
 S["ac_ct_CC"]="gcc"
-S["CPPFLAGS"]=" -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcgl"\
-"ib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/inc"\
-"lude -I/usr/local/include -I/usr/local/include"
+S["CPPFLAGS"]=" -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcg"\
+"lib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R"\
+"6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include"
 S["LDFLAGS"]=" -L/usr/local/lib -L/usr/local/lib -g"
 S["CFLAGS"]=" -fopenmp"
 S["CC"]="gcc"
@@ -701,7 +701,6 @@ S["infodir"]="${datarootdir}/info"
 S["docdir"]="${datarootdir}/doc/${PACKAGE}"
 S["oldincludedir"]="/usr/include"
 S["includedir"]="${prefix}/include"
-S["runstatedir"]="${localstatedir}/run"
 S["localstatedir"]="${prefix}/var"
 S["sharedstatedir"]="${prefix}/com"
 S["sysconfdir"]="${prefix}/etc"
@@ -836,7 +835,7 @@ D["HAVE_LIBUSB"]=" 1"
 D["HAVE_SIGNAL_INT"]=" 1"
 D["HAVE_TYPENAME"]=" 1"
 D["HAVE_FPCLASSIFY"]=" 1"
-D["HAVE_DUNE_VERSION"]=" \"white_dune 0.99pl1424\""
+D["HAVE_DUNE_VERSION"]=" \"white_dune 0.99rc1435\""
 D["HAVE_NEW_NEW_HANDLER"]=" 1"
   for (key in D) D_is_set[key] = 1
   FS = ""

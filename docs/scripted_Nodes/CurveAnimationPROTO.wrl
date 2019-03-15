@@ -1,12 +1,12 @@
 #X3D V3.0 utf8
 PROFILE Interchange
 
-# works at least with InstantPlayer
+# works at least with InstantPlayer, freewrl
 #
 # A VRML Proto to account the data for a PositionInterpolator and a 
 # OrientationInterpolator from NurbsCurve data by scripting 
 # (slow)
-# Copyright (C) 2006 J. "MUFTI" Scheurich
+# Copyright (C) 2006, 2019 J. "MUFTI" Scheurich
 #
 # Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
 # Copyright (C) 1999 Stephen F. White
@@ -87,7 +87,7 @@ DEF NURBS_SCRIPT Script
   outputOnly SFFloat set_fraction_out
 
   inputOutput MFVec3f controlPoint IS controlPoint
-  inputOutput SFInt32 tessellation 16 # IS tessellation
+  inputOutput SFInt32 tessellation IS tessellation
   inputOutput MFFloat weight IS weight
 
   field MFFloat knot IS knot
@@ -482,16 +482,29 @@ DEF NURBS_SCRIPT Script
     }
 
     function set_fraction(value, time) {
-       set_fraction_out = value;
+    }
+
+    function controlPoint(value, time) {
+       initialize();
+    }
+
+    function tessellation(value, time) {
+       initialize();
+    }
+
+    function weight(value, time) {
+       initialize();
+    }
+
+    function rotationAxis(value, time) {
+       initialize();
     }
     "
     ]
   }
-#  ROUTE NURBS_SCRIPT.set_fraction_out TO POSITION_INTERPOLATOR.set_fraction
   ROUTE NURBS_SCRIPT.positionKey TO POSITION_INTERPOLATOR.key
   ROUTE NURBS_SCRIPT.positionKeyValue TO POSITION_INTERPOLATOR.keyValue
 
-#  ROUTE NURBS_SCRIPT.set_fraction_out TO ORIENTATION_INTERPOLATOR.set_fraction
   ROUTE NURBS_SCRIPT.orientationKey TO ORIENTATION_INTERPOLATOR.key
   ROUTE NURBS_SCRIPT.orientationKeyValue TO ORIENTATION_INTERPOLATOR.keyValue
 }

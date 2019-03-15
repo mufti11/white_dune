@@ -4967,7 +4967,11 @@ Cleaned some -Wall warnings
 
 Fixed memory error in Interpolator.cpp
 
-Fixed CurveAnimationPROTO to run with freewrl
+Fixed CurveAnimationPROTO to run with freewrl and instantplayer
+
+Fixed Text line spacing
+
+Added workaround for SceneTreeView scrolling error
 
 contact: MUFTI <mufti@users.ourproject.org>
 

@@ -14,7 +14,7 @@ SDL_JOYSTICK_SUBDIR =
 LIBS =   -L/usr/local/lib -L/usr/local/lib -g -lusb -lsball -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
 AWK = gawk
 
-CFLAGS =  -I/usr/local/include -I/usr/local/include/eigenlib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include   -I$$PWD -I$$PWD/..  -fopenmp
+CFLAGS =  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include   -I$$PWD -I$$PWD/..  -fopenmp
 RANLIB = /usr/bin/ranlib
 
 OBJS =  mini_SDL_joystick.o $(SDL_JOYSTICK_SUBDIR)/SDL_sysjoystick.o
