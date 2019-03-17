@@ -4235,6 +4235,8 @@ Node::getHumanoid()
 bool        
 Node::showFields() 
 { 
+    if (m_proto->showFields())
+        return true;
     return m_proto->showFields(m_scene->isX3d()); 
 }
 

@@ -63,6 +63,8 @@ CurveAnimationDialog::SaveData()
         m_direction = 1;
     else if (swGetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_RING)))
         m_direction = 3;
+    else if (swGetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_RING_CW)))
+        m_direction = 4;
     else 
         m_direction = 2;
 }
@@ -110,9 +112,16 @@ CurveAnimationDialog::LoadData()
     swSetText(swGetDialogItem(m_dlg, IDC_NPOINTS), buf);
     mysnprintf(buf, 128, "%d", m_degree);
     swSetText(swGetDialogItem(m_dlg, IDC_DEGREE), buf);
-    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_X), m_direction==0 ? 1 : 0);
-    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_Y), m_direction==1 ? 1 : 0);
-    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_Z), m_direction==2 ? 1 : 0);
+    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_X), 
+                               m_direction == 0 ? 1 : 0);
+    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_Y), 
+                               m_direction == 1 ? 1 : 0);
+    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_Z), 
+                               m_direction == 2 ? 1 : 0);
+    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_RING),
+                               m_direction == 3 ? 1 : 0);
+    swSetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_RING_CW),
+                               m_direction == 4 ? 1 : 0);
     if (m_keepDegree)
         swEnableWindow(swGetDialogItem(m_dlg, IDC_DEGREE), false);
 }

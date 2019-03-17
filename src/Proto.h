@@ -297,6 +297,7 @@ public:
     void                  setFromProtoLibrary() { m_fromProtoLibrary = true; }
 
     bool                  showFields(bool x3d);
+    virtual bool          showFields() { return false; }
     bool                  hasNumbers4kids(void);
 
     InterfaceArray       *getInterfaceData(void) 

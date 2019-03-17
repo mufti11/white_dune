@@ -6484,6 +6484,20 @@ MainWindow::createAnimation(void)
         return;
     if (!node->supportAnimation())
         return;
+    if (m_scene->isX3d() && (node->getType() == VRML_NURBS_SURFACE)) {
+        NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+        if (nurbs->controlPointX3D()->getValue())
+            node = nurbs->controlPointX3D()->getValue();
+        else
+            return;
+    }
+    if (m_scene->isX3d() && (node->getType() == VRML_NURBS_CURVE)) {
+        NodeNurbsCurve *nurbs = (NodeNurbsCurve *)node;
+        if (nurbs->controlPointX3D()->getValue())
+            node = nurbs->controlPointX3D()->getValue();
+        else
+            return;
+    }
     AnimationDialog dlg(m_wnd, node);
     if (dlg.DoModal() == IDCANCEL)
         return;
@@ -6575,7 +6589,7 @@ MainWindow::createCurveAnimation(void)
     if (!selection->supportCurveAnimation())
         return;
 
-    CurveAnimationDialog dlg(m_wnd, 9, 2, 2, m_scene, 5);
+    CurveAnimationDialog dlg(m_wnd, 9, 2, 3, m_scene, 5);
     if (dlg.DoModal() == IDOK) {
         int degree = dlg.getDegree();
         int dimension = dlg.getnPoints();
@@ -6598,10 +6612,23 @@ MainWindow::createCurveAnimation(void)
             int z = 1;
                 
             for (int i = 0; i < numPoints; i++) {
-                ring[i * 3 + x] = radius * sin(i * 2.0f * M_PI / (numPoints - 1));
-                ring[i * 3 + y] = radius * cos(i * 2.0f * M_PI / (numPoints - 1));;
+                ring[i * 3 + x] = radius * sin(i * 2.0f * 
+                                               M_PI / (numPoints - 1));
+                ring[i * 3 + y] = radius * cos(i * 2.0f *
+                                               M_PI / (numPoints - 1));;
                 ring[i * 3 + z] = 0;
-                weights[i] = 1.0f;
+                if ((i == 1) || (i == numPoints - 2)) {
+                    if (numPoints <= 12)
+                        weights[i] = sqrt(2.0f) / 2 * numPoints / 9;
+                    else
+                        weights[i] = 1;
+                    if (i == 1)
+                        ring[i * 3 + x] -= 2.5f / numPoints;
+                    else
+                        ring[i * 3 + x] += 2.5f / numPoints;
+                    ring[i * 3 + y] += 0.54 / numPoints;
+                } else 
+                    weights[i] = 1.0f;
             }
             float maxY = 1;
             ring[x] = 0;
@@ -6611,7 +6638,42 @@ MainWindow::createCurveAnimation(void)
             ring[(numPoints - 1) * 3 + y] = maxY;
             ring[(numPoints - 1) * 3 + z] = 0;
             curve->createControlPoints(new MFVec3f(ring, dimension * 3));
-
+        } else if (direction == 4) {        
+            int numPoints = dimension;
+            float *ring = new float[numPoints * 3];
+            float radius = 1.0;
+            int x = 0;
+            int y = 2;
+            int z = 1;
+                
+            for (int j = 0; j < numPoints; j++) {
+                int i = numPoints - 1 - j;
+                ring[i * 3 + x] = radius * sin(j * 2.0f * 
+                                               M_PI / (numPoints - 1));
+                ring[i * 3 + y] = radius * cos(j * 2.0f * 
+                                               M_PI / (numPoints - 1));;
+                ring[i * 3 + z] = 0;
+                if ((i == 1) || (i == numPoints - 2)) {
+                    if (numPoints <= 12)
+                        weights[i] = sqrt(2.0f) / 2 * numPoints / 9;
+                    else
+                        weights[i] = 1;
+                    if (i == 1)
+                        ring[i * 3 + x] += 2.5f / numPoints;
+                    else
+                        ring[i * 3 + x] -= 2.5f / numPoints;
+                    ring[i * 3 + y] += 0.54 / numPoints;
+                } else 
+                    weights[i] = 1.0f;
+            }
+            float maxY = 1;
+            ring[x] = 0;
+            ring[y] = maxY;
+            ring[z] = 0;
+            ring[(numPoints - 1) * 3 + x] = 0;
+            ring[(numPoints - 1) * 3 + y] = maxY;
+            ring[(numPoints - 1) * 3 + z] = 0;
+            curve->createControlPoints(new MFVec3f(ring, dimension * 3));
         } else {
             for (int i = 0; i < dimension; i++){
                 float point = ((float) i - 0.5 * (dimension - 1.0)) / 

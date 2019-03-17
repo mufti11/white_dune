@@ -780,8 +780,9 @@
 #define IDC_NURBS_CURVE_2D_SIZE             1317
 #define IDC_NURBS_CURVE_2D_POINTS           1318
 #define IDC_NURBS_CURVE_RING                1319
-#define IDC_RIB_TEXTURER                    1320
-#define IDC_IMAGE_CONVERTER                 1321
+#define IDC_NURBS_CURVE_RING_CW             1320
+#define IDC_RIB_TEXTURER                    1321
+#define IDC_IMAGE_CONVERTER                 1322
 
 #define IDC_STATIC_ALTGRTEXT                1995
 #define IDC_STATIC_SHIFTTEXT                1996

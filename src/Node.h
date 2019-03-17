@@ -1143,7 +1143,7 @@ public:
                                       int containerField = -1);
     bool             hasAncestor(Node *node) const;
     virtual int      getAnimatedNodeField(int field) { return -1; }
-    bool             supportAnimation(void);
+    virtual bool     supportAnimation(void);
     virtual bool     supportCurveAnimation(void) { return false; }
     bool             supportInteraction(void);
     virtual Colored *getColored() { return NULL; }

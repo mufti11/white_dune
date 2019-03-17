@@ -4973,5 +4973,11 @@ Fixed Text line spacing
 
 Added workaround for SceneTreeView scrolling error
 
+Enabled Animation icon for NurbsCurve and NurbsSurface in X3D mode
+
+Fixed showField for NurbsCurve
+
+Added workaround for CurveAnimation ring problem
+
 contact: MUFTI <mufti@users.ourproject.org>
 

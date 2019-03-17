@@ -104,6 +104,8 @@ public:
 
     virtual void    update();
 
+    virtual bool    supportAnimation(void) { return true; }
+
     Node           *toNurbs(int uTessel, int vTessel, 
                             int uDegree, int vDegree);
 

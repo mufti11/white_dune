@@ -139,7 +139,7 @@ NodeNurbsCurve::setField(int index, FieldValue *value, int cf)
                 return;
             }
             m_scene->setField(coord, coord->point_Field(), value);
-        } else {
+        } else if (controlPointX3D()->getType() == VRML_COORDINATE) {
             NodeCoordinate *coord = (NodeCoordinate *)
                                     controlPointX3D()->getValue();
             if (coord == NULL) {
@@ -187,7 +187,7 @@ NodeNurbsCurve::setControlPoints(MFVec3f *points)
         }
         Node::setField(controlPoint_Field(), points);
         ((Node *)coord)->Node::setField(coord->point_Field(), points);
-    } else {
+    } else if (controlPointX3D()->getType() == VRML_COORDINATE) {
         NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
         if (coord == NULL) {
             createControlPoints(points);
@@ -195,7 +195,8 @@ NodeNurbsCurve::setControlPoints(MFVec3f *points)
         }
         Node::setField(controlPoint_Field(), points);
         ((Node *)coord)->Node::setField(coord->point_Field(), points);
-    }
+    } else
+        Node::setField(controlPoint_Field(), points);
     m_chainDirty = true;
 }
 

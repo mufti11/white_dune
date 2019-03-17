@@ -65,6 +65,8 @@ public:
     virtual int     getNodeClass() const
                        { return PARAMETRIC_GEOMETRY_NODE | GEOMETRY_NODE; }
 
+    virtual bool      showFields() { return true; }
+
     FieldIndex controlPoint;
     FieldIndex controlPointX3D;
     FieldIndex tessellation;
@@ -121,6 +123,8 @@ public:
     virtual bool    canMoveTo(int direction) { return true; }
 
     virtual bool    maySetDefault(void) { return false; }
+
+    virtual bool    supportAnimation(void) { return true; }
 
     fieldMacros(MFVec3f, controlPoint,    ProtoNurbsCurve)
     fieldMacros(SFNode,  controlPointX3D, ProtoNurbsCurve)
