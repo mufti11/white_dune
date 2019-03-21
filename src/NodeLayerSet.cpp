@@ -65,7 +65,7 @@ NodeLayerSet::draw(int pass)
     glPushName(layers_Field());  // field
     glPushName(0);                 // index
     for (int j = 0; j < order()->getSize(); j++) {
-        int i = order()->getValue(j);
+        int i = order()->getValue(j) - 1;
         if ((i < 0) || (i >= n))
             continue;
         glLoadName(i);

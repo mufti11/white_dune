@@ -108,7 +108,7 @@ void ChannelView::OnSize(int width, int height)
     swInvalidateWindow(m_wnd);
 }
 
-void ChannelView::OnDraw(int x, int y, int width, int height)
+void ChannelView::OnDraw(int x, int y, int width, int height, bool update)
 {
     SDC dc = swCreateDC(m_wnd);
 //    swSetClipRect(dc, x, y, width, height);

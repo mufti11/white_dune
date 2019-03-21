@@ -1215,9 +1215,14 @@ MeshBasedNode::writeRib(int f, int indent)
             }
 
             if (validConverter) {
-                MyString texturerCommand;
+                MyString texturerCommand = "";;
                 texturerCommand += TheApp->GetRibTexturer();
-                validTexturer = texturerCommand.length() > 0;
+                if (texturerCommand.length() == 0) {
+#ifdef HAVE_RIB_TEXTURER
+                    texturerCommand += HAVE_RIB_TEXTURER;
+#endif
+                }
+                validTexturer = (texturerCommand.length() > 0);
                 texturerCommand += " ";
                 texturerCommand += tiffile;
                 texturerCommand += " ";
@@ -1249,7 +1254,7 @@ MeshBasedNode::writeRib(int f, int indent)
                  RET_ONERROR( mywritef(f, "\"texturename\" [\"%s\"]\n", 
                                        (const char *)texfile) ) 
              } else
-                 swDebugf("RIB texturer not found (or texture url invalid)");
+                 swDebugf("RIB texturer not found (or texture url invalid)\n");
 /*
             if (ntextureTransfrom) {
                 RET_ONERROR( mywritef(f, "texrep %f %f\n", 

@@ -57,7 +57,7 @@ FieldValue::writeDequoted(int filedes, const char *string)
     // remove if and last quotes 
     char *copy = (char *)malloc(strlen(string) + 1);
     char *copyptr = copy;
-    for (int i = 0; i < strlen(string); i++) {
+    for (unsigned int i = 0; i < strlen(string); i++) {
         bool copyChar = true;
         if (string[i] == '"') {
             if (i == 0)           
@@ -227,7 +227,7 @@ FieldValue::checkInput(char *line)
     bool hasExponentComma = false;
 
     bool whitespace = true;
-    for (int i = 0; i < strlen(line); i++) {
+    for (unsigned int i = 0; i < strlen(line); i++) {
         if ((line[i] == ' ') || (line[i] == '\t'))
             whitespace = true;
         else {

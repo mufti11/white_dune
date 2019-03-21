@@ -253,7 +253,7 @@ PanedWindow::OnLButtonUp(int x, int y, int modifiers)
 }
 
 void
-PanedWindow::OnDraw(int x, int y, int width, int height)
+PanedWindow::OnDraw(int x, int y, int width, int height, bool update)
 {
     if (!m_sashes) return;
 

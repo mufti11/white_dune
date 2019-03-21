@@ -1803,7 +1803,7 @@ static void mfstrsplit(MyArray<const char *> *toksArray, char *string)
         bool contLoop = true;
         for (j = 0; (j < len) && contLoop; j++) {
             contLoop = false;
-            for (int k = 0; k < strlen(wseps); k++) 
+            for (unsigned int k = 0; k < strlen(wseps); k++) 
                 if (string[j] == wseps[k]) {
                     contLoop = true;
                     break;

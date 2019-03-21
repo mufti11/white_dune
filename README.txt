@@ -4979,5 +4979,13 @@ Fixed showField for NurbsCurve
 
 Added workaround for CurveAnimation ring problem
 
+Fixed getNodeClass() of LayoutLayer
+
+Added workaround for Viewport rendering
+
+Fixed -files option for RIB file creation
+
+Added questionable Layout, LayoutLayer and LayOutGroup rendring
+
 contact: MUFTI <mufti@users.ourproject.org>
 

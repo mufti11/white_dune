@@ -53,3 +53,4 @@ NodeLayer::NodeLayer(Scene *scene, Proto *def)
   : GroupNode(scene, def)
 {
 }
+

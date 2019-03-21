@@ -54,7 +54,8 @@ public:
                         ChannelView(Scene *scene, SWND parent);
     virtual            ~ChannelView();
 
-    virtual void        OnDraw(int x, int y, int width, int height);
+    virtual void        OnDraw(int x, int y, int width, int height,
+                               bool update = false);
     virtual void        OnUpdate(SceneView *sender, int type, Hint *hint);
 
     virtual void        OnLButtonDown(int x, int y, int modifiers);

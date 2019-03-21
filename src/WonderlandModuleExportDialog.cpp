@@ -117,7 +117,7 @@ WonderlandModuleExportDialog::Validate()
     if ((prefix == NULL) || (strlen(prefix) == 0))
         invalidPrefix = true;
     else
-       for (int i = 0; i < strlen(prefix); i++)
+       for (unsigned int i = 0; i < strlen(prefix); i++)
            if ((!isascii(prefix[i])) || (!isalnum(prefix[i])))
                invalidPrefix = true;
     if (invalidPrefix) {

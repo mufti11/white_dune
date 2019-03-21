@@ -41,6 +41,9 @@
 #include "NodeNurbsGroup.h"
 #include "NodeCoordinate.h"
 #include "NodeViewport.h"
+#include "NodeLayout.h"
+#include "NodeLayoutLayer.h"
+#include "NodeLayoutGroup.h"
 
 static int 
 inputDeviceTimerCallback(void *data)
@@ -143,6 +146,8 @@ void Scene3DView::OnUpdate(SceneView *sender, int type, Hint *hint)
       CASE_UPDATE(UPDATE_SELECTION)
         swInvalidateWindow(m_wnd);
         break;
+      CASE_UPDATE(UPDATE_TIME)
+        OnDraw(0, 0, 0, 0, true);
     }
     if ((m_inputDeviceTimer == 0) && (TheApp->getNumberInputDevices() != 0))
         m_inputDeviceTimer = swSetTimer(m_wnd, INPUTDEVICE_TIME, 
@@ -150,20 +155,66 @@ void Scene3DView::OnUpdate(SceneView *sender, int type, Hint *hint)
 }
 
 void 
-Scene3DView::drawViewPort(Node *root, int count)
+Scene3DView::drawViewPort(Node *root, int count, bool update)
 {
     int width, height;
     if (!m_dc) m_dc = swCreateDC(m_wnd);
     if (!m_glc) m_glc = swCreateGLContext(m_dc);
     swMakeCurrent(m_dc, m_glc);
     swGetSize(m_wnd, &width, &height);
+    float scaleX = 1;
+    float scaleY = 1;
     if (root == NULL)
         glViewport(0, 0, width, height);
     else if (root->getType() == X3D_VIEWPORT) {
         NodeViewport *viewport = (NodeViewport *)root;
         const float *data = viewport->clipBoundary()->getValues();
         glViewport(width * data[0], height * data[2], 
-                   width * (data[1] - data[0]), height * (data[3] - data[2]));
+                   width * data[1], height * data[3]);
+    } else if (root->getType() == X3D_LAYOUT_LAYER) {
+        NodeLayoutLayer *layer = (NodeLayoutLayer *)root;
+        NodeViewport *viewport = (NodeViewport *)layer->viewport()->getValue();
+        if (viewport) { 
+            const float *data = viewport->clipBoundary()->getValues();
+            int dataSize = viewport->clipBoundary()->getSize();
+            bool sizeChangeAbleX = (dataSize < 1);
+            bool sizeChangeAbleY = (dataSize < 3);
+            float datacp[4];
+            datacp[0] = (dataSize > 0) ? data[0] : 0; 
+            datacp[1] = (dataSize > 1) ? data[1] : 1; 
+            datacp[2] = (dataSize > 2) ? data[2] : 0; 
+            datacp[3] = (dataSize > 3) ? data[3] : 1;
+            NodeLayout *layout = (NodeLayout *)layer->layout()->getValue();
+            if (layout)
+                layout->modifyViewportData(datacp, 
+                                           sizeChangeAbleX, sizeChangeAbleY, 
+                                           width, height, &scaleX, &scaleY);
+            glViewport(width * datacp[0], height * datacp[2], 
+                       width * datacp[1], height * datacp[3]);
+        }           
+    } else if (root->getType() == X3D_LAYOUT_GROUP) {
+        NodeLayoutGroup *group = (NodeLayoutGroup *)root;
+        NodeViewport *viewport = (NodeViewport *)group->viewport()->getValue();
+        if (viewport) { 
+            const float *data = viewport->clipBoundary()->getValues();
+            int dataSize = viewport->clipBoundary()->getSize();
+            bool sizeChangeAbleX = (dataSize < 1);
+            bool sizeChangeAbleY = (dataSize < 3);
+            float datacp[4];
+            datacp[0] = (dataSize > 0) ? data[0] : 0; 
+            datacp[1] = (dataSize > 1) ? data[1] : 1; 
+            datacp[2] = (dataSize > 2) ? data[2] : 0; 
+            datacp[3] = (dataSize > 3) ? data[3] : 1;
+            NodeLayout *layout = (NodeLayout *)group->layout()->getValue();
+            float scaleX;
+            float scaleY;
+            if (layout)
+                layout->modifyViewportData(datacp, 
+                                           sizeChangeAbleX, sizeChangeAbleY, 
+                                           width, height, &scaleX, &scaleY);
+            glViewport(width * data[0], height * data[2], 
+                       width * data[1], height * data[3]);
+        }
     }
     if (root == NULL)
         root = m_scene->getRoot();
@@ -190,7 +241,8 @@ Scene3DView::drawViewPort(Node *root, int count)
             else 
                 glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
         }
-        m_scene->drawScene(false,0,0,width,height,root,count);
+        m_scene->drawScene(false, 0, 0, width, height, root, update, 
+                           scaleX, scaleY);
         if (TheApp->useStereo())
             if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
                 m_scene->draw3dCursor(m_mouseX, m_mouseY);
@@ -217,7 +269,8 @@ Scene3DView::drawViewPort(Node *root, int count)
             else
                glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);        
         } 
-        m_scene->drawScene(false,0,0,width,height,root,count);
+        m_scene->drawScene(false, 0, 0, width, height, root, update, 
+                           scaleX, scaleY);
         if (TheApp->useStereo())
             if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN)) {
                 m_scene->draw3dCursor(m_mouseX, m_mouseY);
@@ -230,7 +283,8 @@ Scene3DView::drawViewPort(Node *root, int count)
         }
     else
        {
-       m_scene->drawScene(false,0,0,width,height,root,count);
+       m_scene->drawScene(false,0,0,width,height,root, update,
+                          scaleX, scaleY);
        if (m_button3down)
            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
                m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
@@ -239,14 +293,23 @@ Scene3DView::drawViewPort(Node *root, int count)
 }
 
 void Scene3DView::OnDraw(int /* x */, int /* y */,
-                         int /* width */, int /* height */) 
+                         int /* width */, int /* height */, bool update) 
 {
-    MyArray<NodeViewport *> *viewports = m_scene->getViewPorts();
+    MyArray<Node *> *viewports = m_scene->getViewPorts();
+    drawViewPort(NULL, 0, update);
     if (viewports->size() > 0)
         for (int i = 0; i < (*viewports).size(); i++)
             drawViewPort(viewports->get(i), i);
-    else    
-        drawViewPort(NULL, 0);
+    if (viewports->size() > 0) {
+        int width, height;
+        if (!m_dc) m_dc = swCreateDC(m_wnd);
+        if (!m_glc) m_glc = swCreateGLContext(m_dc);
+            swMakeCurrent(m_dc, m_glc);
+        swGetSize(m_wnd, &width, &height);
+        glViewport(0, 0, width, height);
+
+        m_scene->resetPerspective();
+    }
     swSwapBuffers(m_dc, m_glc);
 #ifndef _WIN32
     swInvalidateWindow(m_wnd);
@@ -404,13 +467,14 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
             if (TheApp->GetMouseMode() == MOUSE_WALK)
                 startWalking(true);
         }
-        if (!cursorChanged)
+        if (!cursorChanged) {
             if ((m_button2down) || (TheApp->GetMouseMode() == MOUSE_FOLLOW))
                 swSetCursor(m_wnd, m_cursorMove);
             if (TheApp->GetMouseMode() == MOUSE_ROLL)
                 swSetCursor(m_wnd, m_cursorRoll);
             else
                 swSetCursor(m_wnd, m_cursorRotate);
+        }
     }
     m_trackMouse = true;
     swSetCapture(m_wnd);
@@ -1072,8 +1136,6 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
     Node *camera=m_scene->getCamera();
     Quaternion viewrot=camera->getOrientation();
     Quaternion newrot;
-    bool rotation_changed=false;
-    bool translation_changed=false;
     TransformMode* tm=m_scene->getTransformMode();
     if (!inputDevice->getHeadNavigation()) 
        {
@@ -1081,7 +1143,6 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
        tm=&tmTracker;
        }
     if (tm->hasRotation()) {
-       rotation_changed=true; 
        Quaternion inputrot=inputDevice->get_quaternion(tm);
        inputrot.z=-inputrot.z;
        newrot=inputrot*viewrot; 
@@ -1089,8 +1150,6 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
     }
     if (tm->hasTranslation()) {
        Vec3f v= inputDevice->get_vector(tm);
-       if ((v[0]!=0) && (v[1]!=0) && (v[2]!=0))
-          translation_changed=true;
        Vec3f xyz;
        if ((inputDevice->isTracker()) || (inputDevice->isWand())) {
            xyz=newrot.conj()*(viewrot*v);

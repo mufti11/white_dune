@@ -360,8 +360,8 @@ Scene::Scene()
     setSelection(getRoot());
     setViewPorts();
     updateTime();
-//    m_viewpointUpdated = true;
     m_viewpointUpdated = false;
+    m_drawViewPorts = true;
 }
 
 void
@@ -516,8 +516,11 @@ static bool searchViewPort(Node *node, void *data)
 {
     Scene *scene = (Scene *)data;
     if (node->getType() == X3D_VIEWPORT) {
-        NodeViewport *viewport = (NodeViewport *)node;
-        scene->addViewPort(viewport);
+        scene->addViewPort(node);
+    } else if (node->getType() == X3D_LAYOUT_GROUP) {
+        scene->addViewPort(node);
+    } else if (node->getType() == X3D_LAYOUT_LAYER) {
+        scene->addViewPort(node);
     }
     return true;
 }     
@@ -1916,11 +1919,11 @@ Scene::writeRib(int filedes, const char *file)
             const char *ext = strstr(url, ".");
             if (ext != NULL)
                 ext++;
-            snprintf(filename, 4095, "%s/%s%d.%s", 
-                     ((const char *)file.GetPath()), 
+            snprintf(filename, 4095, "%s%d.%s", 
                      file.GetFileNameWithoutExtension(), ++currentfile, 
                      ext != NULL ? ext : "");
-            if (f != 1) {
+            if ((TheApp->getNumExportFiles() > 1) || 
+                ((TheApp->getNumExportFiles() == 1) && (f != 1))) {
                 swTruncateClose(f);
                 f = open(filename, O_WRONLY | O_CREAT,00666);
             }
@@ -1939,9 +1942,7 @@ Scene::writeRib(int filedes, const char *file)
         numFramesPerFile++;
     }
         
-    if (f != 1) {
-        swTruncateClose(f);
-    }
+    swTruncateClose(f);
 
     if (!running)
         stop();
@@ -3547,11 +3548,14 @@ Scene::redo()
 }
 
 void
-Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
-                 int count)
+Scene::drawScene(bool pick, int x, int y, float width, float height, 
+                 Node *root, bool useUpdate, float scaleX, float scaleY)
 {
-    if (root == NULL)
+    m_drawViewPorts = (root != getRoot());
+    if (root == NULL) {
         root = getRoot();
+        m_drawViewPorts = false;
+    }
     GLint v[4];
     float aspect;
 
@@ -3590,7 +3594,7 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    if (count == 0) {
+    if (!m_drawViewPorts) {
         glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     }
@@ -3617,6 +3621,8 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
     if (scale > 0)
         glScaled(1 / scale, 1 / scale, 1 / scale);
 
+    glScalef(scaleX, scaleY, 1.0f);
+
     // first pass:  pre-draw traversal
     // enable PointLights and SpotLights; pick up ViewPoints, Fogs.
     // Backgrounds and TimeSensors
@@ -3639,6 +3645,9 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
 
     if (m_currentFog)
         m_currentFog->apply();
+
+     if (useUpdate)
+         updateTime();
 
     // second pass:  main drawing traversal
 
@@ -3687,13 +3696,13 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
         glPushMatrix();
         applyCamera();
         glLoadName(PICKED_RIGID_BODY_HANDLE);
-        drawHandles(true);
+        drawHandles(root, true);
         glPopMatrix();
 
         glPushMatrix();
         applyCamera();
         glLoadName(PICKED_HANDLE);
-        drawHandles(false);
+        drawHandles(root, false);
         glPopMatrix();
     }
     glDisable(GL_LIGHT0);
@@ -3701,6 +3710,29 @@ Scene::drawScene(bool pick, int x, int y, float width, float height, Node *root,
     TheApp->printRenderErrors();
 
     m_numDraw++;
+}
+
+void
+Scene::resetPerspective(void)
+{
+    GLint v[4];
+    float aspect;
+
+    glGetIntegerv(GL_VIEWPORT, v);
+
+    if (v[3])
+        aspect = (GLfloat)v[2]/v[3];
+    else  // don't divide by zero, not that we should ever run into that...
+        aspect = 1.0f;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float fieldOfView = RAD2DEG(getCamera()->fov()->getValue() *
+                                getUnitAngle());
+    if (TheApp->hasFixFieldOfView())
+        fieldOfView = TheApp->getFixFieldOfView();
+    gluPerspective(fieldOfView, aspect, TheApp->GetNearClippingPlaneDist(),
+                                        TheApp->GetFarClippingPlaneDist());
 }
 
 void
@@ -4031,8 +4063,10 @@ Scene::finishDrawHandles(void)
 }
 
 void
-Scene::drawHandles(bool drawRigidBodyHandles)
+Scene::drawHandles(Node *root, bool drawRigidBodyHandles)
 {
+    if (root != getRoot())
+        return;
     glDisable(GL_DEPTH_TEST);
     switch (TheApp->GetHandleMode()) {
       case HM_NONE:
@@ -4043,7 +4077,7 @@ Scene::drawHandles(bool drawRigidBodyHandles)
             glPushMatrix();
             int len = m_selection->getPathLen();
             const int *path = m_selection->getPath();
-            Node *node = m_root;
+            Node *node = root;
             for (int i = 0; i < len;) {
                 int field = path[i++];
                 if (i >= len)
@@ -4064,9 +4098,9 @@ Scene::drawHandles(bool drawRigidBodyHandles)
             glPushMatrix();
             int len = m_selection->getPathLen();
             const int *path = m_selection->getPath();
-            Node *node = m_root;
-            Node *handlenode = m_root;
-            Node *lastnode = m_root;
+            Node *node = root;
+            Node *handlenode = root;
+            Node *lastnode = root;
             m_rigidBodyHandleNode = NULL;
             for (int i = 0; i < len;) {
                 int field = path[i++];
@@ -4092,7 +4126,7 @@ Scene::drawHandles(bool drawRigidBodyHandles)
                 }
             }
             lastnode = node;
-            node = m_root;
+            node = root;
             for (int i = 0; i < len;) {
                 int field = path[i++];
                 if (i >= len)
@@ -4124,7 +4158,7 @@ Scene::drawHandles(bool drawRigidBodyHandles)
         break;
       case HM_ALL:
         if (!drawRigidBodyHandles)
-            drawHandlesRec(m_root);
+            drawHandlesRec(root);
         break;
     }
     finishDrawHandles();   
@@ -6439,7 +6473,7 @@ Scene::warning(const char* string)
     swDebugf("%s\n", string);
 }
 
-MyArray<NodeViewport *> *
+MyArray<Node *> *
 Scene::getViewPorts() 
 { 
     return &m_viewports; 

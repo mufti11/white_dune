@@ -2817,7 +2817,7 @@ bool matchNodeClass(int nodeType, int childType, bool repeat)
         URL_NODE,
         PROTO_NODE
     };
-    for (int i = 0; i < (sizeof(typelist) / sizeof(int)); i++)
+    for (unsigned int i = 0; i < (sizeof(typelist) / sizeof(int)); i++)
         if ((nodeType & typelist[i]) && 
             (childType & typelist[i]))
             return true;

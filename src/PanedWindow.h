@@ -41,7 +41,8 @@ public:
     virtual void        OnMouseMove(int x, int y, int modifiers);
     virtual void        OnLButtonDown(int x, int y, int modifiers);
     virtual void        OnLButtonUp(int x, int y, int modifiers);
-    virtual void        OnDraw(int x, int y, int width, int height);
+    virtual void        OnDraw(int x, int y, int width, int height,
+                               bool update = false);
     virtual void        OnMouseLeave();
 
     const char         *getName(void) const { return "PanedWindow"; }

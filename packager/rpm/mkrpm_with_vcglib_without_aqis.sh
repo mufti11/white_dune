@@ -87,7 +87,7 @@ BuildRequires: libcurl-devel
 BuildRequires: eigen3-devel
 BuildRequires: vcglib-devel
 BuildRequires: ImageMagick
-BuildRequires: aqsis-core
+#BuildRequires: aqsis-core
 BuildRequires: freetype-devel 
 BuildRequires: imlib2-devel
 BuildRequires: bitstream-vera-sans-fonts
@@ -99,7 +99,7 @@ BuildRequires: pkgconfig(eigen3) pkgconfig(vcglib)
 BuildRequires: freeglut-devel
 Requires: rcs
 Requires: ImageMagick
-Requires: aqsis-core
+#Requires: aqsis-core
 Requires: bitstream-vera-sans-fonts
 Requires: xorg-x11-fonts-misc
 Recommends: vim

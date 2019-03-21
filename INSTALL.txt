@@ -336,6 +336,7 @@ There are some unusual options for running configure
 --with-covertuimap         allow creation of incomplete cover node TUIMap
 --with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla
 --with-vrmlbrowser=vrmlbrowser  VRML browser eg. view3dscene freewrl lookat...
+--with-x11-editor=editor   X11 text editor eg. gvim gedit ...
 --with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp kolourpaint xpaint imgworks...
 --with-soundeditor=soundeditor  object editor for sound (.wav) files eg. audacity rezound wavesurfer gnusound sweep soundeditor...
 --with-movieeditor=movieeditor  object editor for movie (.mpeg) files eg. cinelerra avidemux2 avidemux moviemaker...
@@ -553,6 +554,18 @@ Use this to configure your default vrmlbrowser to view VRML files.
 This can be needed if your default wwwbrowser (like netscape) has no 
 vrml plugin (like the one from FreeWRL) installed and you use a 
 standalone vrml browser program (like lookat) instead.
+
+========================
+--with-x11-editor=editor   
+========================
+
+Use this to configure your default X11 text editor eg. gvim gedit ...
+If no texteditor is found, a xterm clone is used with "-e vi".
+I recommend to use the lxterminal xterm clone with
+"lxterminal --no-remote -e vi"
+If you want to use a outer tty based editor like "nano", simply use e.g.
+"lxterminal --no-remote -e nano"
+in options->Text/Object Editor Settings...
 
 ==============================
 --with-imageeditor=imageeditor 

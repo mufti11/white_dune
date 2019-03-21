@@ -316,15 +316,16 @@ public:
 
     void                drawScene(bool pick = false, int x = 0, int y = 0,
                                   float width = 0, float height = 0,
-                                  Node *root = NULL, int count = 0);
+                                  Node *root = NULL, bool update = false,
+                                  float scaleX = 1, float scaleY = 1);
 
     int                 getNumDraw(void) { return m_numDraw; }
 
     Path               *pick(int x, int y, float width = 0, float height = 0);
     Path               *searchTransform(void);
-    void                drawHandles(bool drawRigidBodyHandles = false);
+    void                drawHandles(Node *root, 
+                                    bool drawRigidBodyHandles = false);
     void                finishDrawHandles(void);
-    void                drawRigidBodyHandles(void) { drawHandles(true); }
     void                drawHandlesRec(Node *node, bool drawOnlyJoints = false) 
                            const;
 
@@ -778,13 +779,17 @@ public:
                             m_saved_x3dv = false;
                             m_saved_x3dxml = false;
                         }
-     MyArray<NodeViewport *> *getViewPorts();
+     MyArray<Node *>   *getViewPorts();
      void               setViewPorts(void);
-     void               addViewPort(NodeViewport *node) {
+     void               addViewPort(Node *node) {
                            m_viewports.append(node);
                         }
 
      bool               getViewpointUpdated(void) { return m_viewpointUpdated; }
+
+     bool               getDrawViewports() { return m_drawViewPorts; }
+
+    void                resetPerspective(void);
 
 protected:
     int                 writeExtensionProtos(int f, int flag);
@@ -792,7 +797,6 @@ protected:
     void                buildInteractiveProtos(void);
     void                updateViewpoint(void);
     DownloadPathData    downloadPathIntern(const URL &url);
-
 protected:
     NodeMap             m_nodeMap;
     Node               *m_root;
@@ -871,7 +875,7 @@ protected:
     NodeFog            *m_currentFog;
     NodeBackground     *m_currentBackground;
 
-    MyArray<NodeViewport *> m_viewports;
+    MyArray<Node *>     m_viewports;
 
     bool                m_canUpdateViewsSelection;
     List<SceneView *>   m_views;
@@ -995,6 +999,8 @@ protected:
     bool                m_saved_x3dxml;
 
     bool                m_viewpointUpdated;
+
+    bool                m_drawViewPorts;
 };
 
 bool writeCNodeData(Node *node, void *data);

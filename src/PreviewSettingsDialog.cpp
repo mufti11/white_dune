@@ -87,7 +87,7 @@ void PreviewSettingsDialog::LoadData()
 
     SWND comboVrmlLevel = swGetDialogItem(m_dlg, IDC_BROWSER_VRML_LEVEL);
     swComboBoxDeleteAll(comboVrmlLevel);
-    for (int i=0;i<(sizeof(vrmlLevelStrings)/sizeof(const char*));i++)
+    for (unsigned int i=0;i<(sizeof(vrmlLevelStrings)/sizeof(const char*));i++)
         swComboBoxAppendItem(comboVrmlLevel, vrmlLevelStrings[i]);
 
     int comboSelection = 0;

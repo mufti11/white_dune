@@ -39,7 +39,8 @@ class Scene3DView : public SceneView
 public:
                         Scene3DView(Scene *scene, SWND parent);
     virtual            ~Scene3DView();
-    virtual void        OnDraw(int x, int y, int width, int height);
+    virtual void        OnDraw(int x, int y, int width, int height, 
+                               bool update = false);
     virtual void        OnKeyDown(int key, int x, int y, int modifiers);
     virtual void        OnKeyUp(int key, int x, int y, int modifiers);
     virtual void        OnMouseEnter();
@@ -66,7 +67,8 @@ public:
     void                Navigate3D(InputDevice * inputDevice);
     void                Handle3D(const Path* path,InputDevice* inputDevice, 
                                  int handle);
-    void                drawViewPort(Node* viewport, int count);
+    void                drawViewPort(Node* viewport, int count, 
+                                     bool update = false);
 
 protected:
     Quaternion         &getQuat(const Path* path);

@@ -430,7 +430,7 @@ void SceneGraphView::moveToTop(Node *moveNode, int x, Node* ignoreNode)
         m_maxYPosition = MAX(m_maxYPosition, getFirstYPosition());
 }
 
-void SceneGraphView::OnDraw(int x, int y, int width, int height)
+void SceneGraphView::OnDraw(int x, int y, int width, int height, bool update)
 {
     if (!swIsVisible(m_wnd))
         return;

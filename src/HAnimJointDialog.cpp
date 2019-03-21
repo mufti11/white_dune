@@ -94,13 +94,13 @@ HAnimJointDialog::Validate()
     if (parentIndex < 0)
         return false;
     if ((m_weight <= m_lowerlimit) && (m_weight > m_upperlimit)) {
-        char str[256], message[256], title[256];
+        char str[256], title[256];
         swLoadString(IDS_DUNE, title, 256);
         swLoadString(IDS_WEIGHT_0_1, str, 256);
         swMessageBox(TheApp->mainWnd(), str, title, SW_MB_OK, SW_MB_ERROR);
         return false;
     } else if ((m_weight < m_upperlimit) && (m_parent == NULL)) {
-        char str[256], message[256], title[256];            
+        char str[256], title[256];            
         swLoadString(IDS_DUNE, title, 256);            
         swLoadString(IDS_NOT_1_REQUIRES_PARENT, str, 256);                        
         swMessageBox(TheApp->mainWnd(), str, title, SW_MB_OK, SW_MB_ERROR);    

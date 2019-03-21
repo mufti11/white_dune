@@ -572,7 +572,7 @@ void InputDevice::set_factor(int axis_number,float value)
 
 void InputDevice::set_factor(const char* string,float value)
    {
-   for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+   for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
       if (stringncmp(string,axesinfo[i])==0)
          {
          set_factor(getAxisFromInformation(string),value);
@@ -616,7 +616,7 @@ void InputDevice::set_acceleration(int axis_number,float value)
 
 void InputDevice::set_acceleration(const char* string,float value)
    {
-   for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+   for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
       if (stringncmp(string,axesinfo[i])==0)
          {
          set_acceleration(getAxisFromInformation(string),value);
@@ -667,7 +667,7 @@ void InputDevice::set_zero_on_release(int axis_number,bool value)
 
 void InputDevice::set_zero_on_release(const char* string,bool value)
    {
-   for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+   for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
       if (stringncmp(string,axesinfo[i])==0)
          {
          set_zero_on_release(getAxisFromInformation(string),value);
@@ -720,7 +720,7 @@ void InputDevice::set_zero_size_fraction(int axis_number,float value)
 
 void InputDevice::set_zero_size_fraction(const char* string,float value)
    {
-   for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+   for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
       if (stringncmp(string,axesinfo[i])==0)
          {
          set_zero_size_fraction(getAxisFromInformation(string),value);
@@ -814,7 +814,7 @@ static int cut_out_till_next_comma(char* string)
 
 static bool string2int(int &value,const char* string)
    {
-   int characters_read;
+   unsigned int characters_read;
    
    sscanf(string,"%d%n",&value,&characters_read);
    if (characters_read!=strlen(string))
@@ -824,7 +824,7 @@ static bool string2int(int &value,const char* string)
 
 static bool string2float(float &value,const char* string)
    {
-   int characters_read;
+   unsigned int characters_read;
    
    sscanf(string,"%f%n",&value,&characters_read);
    if (characters_read!=strlen(string))
@@ -834,7 +834,7 @@ static bool string2float(float &value,const char* string)
 
 bool InputDevice::argument_is_axis(const char* string)
    {
-   for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+   for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
       if (stringncmp(string,axesinfo[i])==0)
          return true;
    if (stringncmp(string,"none")==0)
@@ -916,7 +916,7 @@ bool InputDevice::scan_argument(char *string,const char* argument)
    next=cut_out_till_next_comma(string);
    if (next!=1)
       {
-      int characters_read;
+      unsigned int characters_read;
       float fact;
       sscanf(string,"%f%n",&fact,&characters_read);
       if (characters_read!=strlen(string))
@@ -938,7 +938,7 @@ bool InputDevice::scan_argument(char *string,const char* argument)
    next=cut_out_till_next_comma(string);
    if (next!=1)
       {
-      int characters_read;
+      unsigned int characters_read;
       float accel;
       sscanf(string,"%f%n",&accel,&characters_read);
       if (characters_read!=strlen(string))
@@ -981,7 +981,7 @@ bool InputDevice::scan_argument(char *string,const char* argument)
        return true;
    if (next!=1)
       {
-      int characters_read;
+      unsigned int characters_read;
       float ignore;
       sscanf(string,"%f%n",&ignore,&characters_read);
       if (characters_read!=strlen(string))
@@ -1011,7 +1011,7 @@ void InputDevice::setAxisInformation(const char* info_string)
       string++;
 
    bool found=false;
-   for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+   for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
       {
       if (stringncmp(string,axesinfo[i])==0)
          {
@@ -1034,7 +1034,7 @@ void InputDevice::setAxisInformation(const char* info_string)
    if (!found)
       {   
       swDebugf("%s do not contain",info_string);
-      for (int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
+      for (unsigned int i=0;i<sizeof(axesinfo)/sizeof(char*);i++)
          swDebugf(" -%s or",axesinfo[i]);
       swDebugf(" -all=wheel\n");
       }
@@ -1100,30 +1100,6 @@ static void loopAddUnixDevices(StringArray *names, const char *device_base,
       offset++;        
       } while (checkUnixDevice(device));
    }
-
-static void appendNumbers(StringArray *names, int one2three=3)
-   {
-   names->resize(0);
-
-   MyString append;
-   append="";
-   append+="0";
-   names->append(append);
-
-   if (one2three > 1) 
-      {       
-      append="";
-      append+="1";
-      names->append(append);
-      }
-
-   if (one2three > 2) 
-      {       
-      append="";
-      append+="2";
-      names->append(append);
-      }
-}
 
 // Drivers for joystick-like devices
 
@@ -1288,6 +1264,31 @@ int main(int argc,char** argv)
 # endif
 #endif
 
+#ifdef _WIN32
+static void appendNumbers(StringArray *names, int one2three=3)
+   {
+   names->resize(0);
+
+   MyString append;
+   append="";
+   append+="0";
+   names->append(append);
+
+   if (one2three > 1) 
+      {       
+      append="";
+      append+="1";
+      names->append(append);
+      }
+
+   if (one2three > 2) 
+      {       
+      append="";
+      append+="2";
+      names->append(append);
+      }
+}
+#endif
 
 #ifdef DIRECTX_JOYSTICK
  

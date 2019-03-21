@@ -177,13 +177,13 @@ OutputApp::OutputSetDefaults()
 #ifdef HAVE_RIB_TEXTURER
     m_ribTexturer = strdup(HAVE_RIB_TEXTURER);
 #else
-    m_ribTexturer = strdup(" ");
+    m_ribTexturer = (char *)"";
 #endif
 
 #ifdef HAVE_IMAGE_CONVERTER
     m_imageConverter = strdup(HAVE_IMAGE_CONVERTER);
 #else
-    m_imageConverter = strdup(" ");
+    m_imageConverter = "";
 #endif
 
 
@@ -284,8 +284,12 @@ OutputApp::OutputLoadPreferences()
         free(m_cattExportPath);
     m_cattExportPath = strdup(TheApp->GetPreference("CattExportPath", ""));
 
+#ifndef _WIN32
     if (m_ribTexturer != NULL)
-        free(m_ribTexturer);
+        if (strlen(m_ribTexturer) != 0)
+            free(m_ribTexturer);
+#endif
+
 #ifdef HAVE_RIB_TEXTURER
     m_ribTexturer = strdup(TheApp->GetPreference("RibTexturer", 
                                                  HAVE_RIB_TEXTURER));
@@ -293,8 +297,11 @@ OutputApp::OutputLoadPreferences()
     m_ribTexturer = strdup(TheApp->GetPreference("RibTexturer", ""));
 #endif
 
+#ifndef _WIN32
     if (m_imageConverter != NULL)
         free(m_imageConverter);
+#endif
+
 #ifdef HAVE_IMAGE_CONVERTER
     m_imageConverter = strdup(TheApp->GetPreference("ImageConverter", 
                                                     HAVE_IMAGE_CONVERTER));

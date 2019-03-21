@@ -166,7 +166,7 @@ void Contour::SetParity(int parity)
 Contour::Contour(FT_Vector* contour, char* tags, unsigned int n, unsigned short bezierSteps)
 {
     Point prev, cur(contour[(n - 1) % n]), next(contour[0]);
-    Point a, b = next - cur;
+    Point a;
     double olddir, dir = atan2((next - cur).Y(), (next - cur).X());
     double angle = 0.0;
 

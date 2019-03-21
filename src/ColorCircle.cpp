@@ -328,7 +328,7 @@ void ColorCircle::ClearCircleCursor(int x, int y)
     int i, k, Color;
 
     for (i = 0; i <= 8; i++) {
-        for (k = 0; k <= 8 - 1; k++); // ??????
+        for (k = 0; k <= 8 - 1; k++)
         {
             Color = GetColorCircle((x + k) - 4, (y + i) - 4, &colors);
             if (Color != -1) {
@@ -351,7 +351,7 @@ void ColorCircle::ClearCircleCursor(int x, int y)
         }
     }
     for (i = 8; i >= 0; i--) {
-        for (k = 8; k >= 0 + 1; k--); // ??????
+        for (k = 8; k >= 0 + 1; k--)
         {
             Color = GetColorCircle((x + k) - 4, (y + i) - 4, &colors);
             if (Color != -1) {
@@ -379,14 +379,14 @@ void ColorCircle::DrawCircleCursor(int x, int y)
 
     swSetFGColor(m_dc, 0);
     for (i = 0; i <= 8; i++) {
-        for (k = 0; k <= 8 - 1; k++);
+        for (k = 0; k <= 8 - 1; k++)
         {
             swDrawPoint(m_dc, (x + k) - 4 , (y + i) - 4);
             swDrawPoint(m_dc, (x + i) - 4 , (y + k) - 4);
         }
     }
     for (i = 8; i >= 0; i--) {
-        for (k = 8; k >= 0 + 1; k--);
+        for (k = 8; k >= 0 + 1; k--)
         {
             swDrawPoint(m_dc, (x + k) - 4 , (y + i) - 4);
             swDrawPoint(m_dc, (x + i) - 4 , (y + k) - 4);
@@ -682,7 +682,7 @@ ColorCircle::AlphaTextEditInput(void *command)
         SetTextValue(AlphaValue, AlphaTextEdit);
         swScrollBarSetValue(AlphaScrollBar, (int) AlphaValue);
 
-        int Color = SetGetColorPoint(5, false);
+        int Color = AlphaColor;
         SetGetColorPoint(Color, true);
         SetColorPalette(Color);
     }
@@ -696,7 +696,7 @@ static void CloseButtonCB(void *data, void *id)
 void
 ColorCircle::CloseButtonCallback(void *id)
 {
-    float RedValue, GreenValue, BlueValue, AlphaValue;
+    float RedValue, GreenValue, BlueValue;
 
     OldColor(&RedValue, &GreenValue, &BlueValue, false);
           

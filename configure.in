@@ -17,7 +17,23 @@ sh $SELFDIR/batch/fixpermissions.sh
 OLD_CFLAGS="$CFLAGS"
 OLD_CXXFLAGS="$CXXFLAGS"
 
-CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I$SELFDIR/src -I$SELFDIR/vcglib -I$SELFDIR/vcglib/eigenlib -I$HOME/vcglib -I$SELFDIR/../vcglib -I$HOME/vcglib/eigenlib -I$SELFDIR/../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/"
+dnl search for vcglib flags via pkg-config
+dnl if not sucessfull guess different paths 
+VCGLIB_FLAGS=`pkg-config --cflags vcglib 2> /dev/null`
+if test "X_$VCGLIB_FLAGS" != "X_" ; then
+   CPPFLAGS="$CPPFLAGS $VCGLIB_FLAGS"
+else
+   CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I$SELFDIR/src -I$SELFDIR/vcglib -I$SELFDIR/vcglib/eigenlib -I$HOME/vcglib -I$SELFDIR/../vcglib -I$HOME/vcglib/eigenlib -I$SELFDIR/../vcglib/eigenlib"
+fi
+
+dnl search for freetype2 flags via pkg-config
+dnl if not sucessfull guess different paths
+FREETYPE2_FLAGS=`pkg-config --cflags freetype2 2> /dev/null`
+if test "X_$FREETYPE2_FLAGS" != "X_" ; then
+   CPPFLAGS="$CPPFLAGS $FREETYPE2_FLAGS"
+else
+   CPPFLAGS="$CPPFLAGS -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/"
+fi
 export CPPFLAGS
 
 dnl Check for compiler programs
@@ -151,6 +167,16 @@ AC_ARG_WITH(wwwbrowser,--with-wwwbrowser=wwwbrowser  webbrowser eg. netscape fir
 
 AC_ARG_WITH(vrmlbrowser,--with-vrmlbrowser=vrmlbrowser  VRML browser eg. firefox view3dscene freewrl ...,
             VRMLBROWSER="$withval";export VRMLBROWSER)
+if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
+   VRMLBROWSER="LD_LIBRARY_PATH=/usr/local/lib $VRMLBROWSER"
+   export VRMLBROWSER
+fi
+
+AC_ARG_WITH(vrmlbrowser,--with-x11-editor=editor  X11 text editor eg. gvim gedit ...,
+            X11_EDITOR="$withval";export X11_EDITOR)
+if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
+    AC_DEFINE_UNQUOTED(HAVE_X11_EDITOR,"$X11_EDITOR -f ")
+fi
 
 KNOWN_IMAGE_EDITORS="gimp imgworks krita kolourpaint xpaint gpaint"
 AC_ARG_WITH(imageeditor,--with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp krita xpaint imgworks...,
@@ -390,14 +416,25 @@ fi
 export GREP_FLAGS
 AC_SUBST(GREP_FLAGS)
 
-dnl add your favorite xterm replacement here...
-dnl beware of "xfce4-terminal": xfce4-terminal -e sh -c "something" is not working 8-(
-AC_PATH_PROGS(TERM,[lxterminal xterm rxvt gnome-terminal konsole aterm eterm])
-if (echo "$TERM" | grep "lxterminal" > /dev/null) ; then
-      AC_DEFINE_UNQUOTED(HAVE_TERM,"$TERM --no-remote ")
-else
-   if test "X_$TERM" != "X_" ; then
-      AC_DEFINE_UNQUOTED(HAVE_TERM,"${TERM}")
+if test "X_$X11_EDITOR" != "X_" ; then
+   AC_PATH_PROGS(X11_EDITOR,[gvim gedit])
+   if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
+      AC_DEFINE_UNQUOTED(HAVE_X11_EDITOR,"$X11_EDITOR -f ")
+   else
+      if test "X_$X11_EDITOR" != "X_" ; then
+         AC_DEFINE_UNQUOTED(HAVE_X11_EDITOR,"${X11_EDITOR}")
+      else
+         dnl add your favorite xterm replacement here...
+         dnl beware of "xfce4-terminal": xfce4-terminal -e sh -c "something" is not working 8-(
+         AC_PATH_PROGS(TERM,[lxterminal xterm rxvt gnome-terminal konsole aterm eterm])
+         if (echo "$TERM" | grep "lxterminal" > /dev/null) ; then
+             AC_DEFINE_UNQUOTED(HAVE_TERM,"$TERM --no-remote ")
+         else
+            if test "X_$TERM" != "X_" ; then
+               AC_DEFINE_UNQUOTED(HAVE_TERM,"${TERM}")
+            fi
+         fi
+      fi
    fi
 fi
 
@@ -700,6 +737,10 @@ fi
 if test "X_$VRMLBROWSER" = "X_" ;then
    dnl check for known vrmlbrowsers
    AC_PATH_PROGS(VRMLBROWSER,[view3dscene /opt/instantReality/bin/InstantPlayer /Applications/FreeWRL/FreeWRL.app/Contents/MacOS/FreeWRL freewrl cc3dglut xj3d vrwave lookat])
+   if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
+       VRMLBROWSER="LD_LIBRARY_PATH=/usr/local/lib $VRMLBROWSER"
+       export VRMLBROWSER
+   fi
 fi
 
 if test "X_$VRMLBROWSER" = "X_" ;then
@@ -708,24 +749,24 @@ if test "X_$VRMLBROWSER" = "X_" ;then
    fi 
 fi
 
-NETSCAPE_OPENURL=FALSE
+MOZILLA_OPENURL=FALSE
 if test  "`basename \"$WWWBROWSER\"`" = "netscape" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "mozilla" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "firefox" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "seamonkey" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "galeon" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 
-if test  "X_$NETSCAPE_OPENURL" = "X_TRUE" ; then
+if test  "X_$MOZILLA_OPENURL" = "X_TRUE" ; then
    VRMLREMOTEBROWSER="$WWWBROWSER -remote OpenURL\\\\(%s\\\\)"
 else
    VRMLREMOTEBROWSER="$WWWBROWSER %s"
@@ -736,21 +777,21 @@ if test "X_$VRMLBROWSER" != "X_" ;then
    AC_DEFINE_UNQUOTED(HAVE_VRML_BROWSER,"${VRMLBROWSER} %s")
 fi
 
-NETSCAPE_OPENURL=FALSE
+MOZILLA_OPENURL=FALSE
 if test  "`basename \"$WWWBROWSER\"`" = "netscape" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "mozilla" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "phoenix" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 if test  "`basename \"$WWWBROWSER\"`" = "galeon" ; then
-   NETSCAPE_OPENURL=TRUE
+   MOZILLA_OPENURL=TRUE
 fi
 
-if test  "X_$NETSCAPE_OPENURL" = "X_TRUE" ; then
+if test  "X_$MOZILLA_OPENURL" = "X_TRUE" ; then
    WWWREMOTEBROWSER="$WWWBROWSER -remote OpenURL\\\\(%s\\\\)"
 else
    if test "X_$WWWBROWSER" != "X_" ;then

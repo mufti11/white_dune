@@ -45,7 +45,8 @@ public:
 
     virtual const char *getName(void) const=0;
 
-    virtual void        OnDraw(int x, int y, int width, int height) {}
+    virtual void        OnDraw(int x, int y, int width, int height, 
+                               bool update = false) {}
     virtual void        OnSize(int width, int height) {}
     virtual void        OnMouseEnter() {m_scene->setHasFocus();}
     virtual void        OnMouseLeave() {m_scene->deleteHasFocus();}

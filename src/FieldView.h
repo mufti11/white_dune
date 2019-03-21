@@ -57,7 +57,8 @@ public:
 public:
 
         virtual void    OnUpdate(SceneView *sender, int type, Hint *hint);
-        virtual void    OnDraw(int x, int y, int width, int height);
+        virtual void    OnDraw(int x, int y, int width, int height,
+                               bool update = false);
         virtual void    OnSize(int width, int height);
         virtual void    OnLButtonDown(int x, int y, int modifiers);
         virtual void    OnLButtonUp(int x, int y, int modifiers);

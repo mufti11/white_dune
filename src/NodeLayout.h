@@ -60,6 +60,11 @@ public:
     virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeLayout(*this); }
 
+    void                  modifyViewportData(float *data, 
+                              bool sizeChangeAbleX, bool sizeChangeAbleY,
+                              int screenWidth, int screenHeight,
+                              float *scaleX, float *scaleY);
+
     fieldMacros(MFString, align,       ProtoLayout);
     fieldMacros(MFFloat,  offset,      ProtoLayout);
     fieldMacros(MFString, offsetUnits, ProtoLayout);

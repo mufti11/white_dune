@@ -61,3 +61,33 @@ NodeLayoutGroup::NodeLayoutGroup(Scene *scene, Proto *def)
   : Node(scene, def)
 {
 }
+
+void    
+NodeLayoutGroup::preDraw() 
+{ 
+    if (!m_scene->getDrawViewports())
+        children()->preDraw(); 
+}
+
+void    
+NodeLayoutGroup::draw(int pass) 
+{ 
+    if (m_scene->getDrawViewports()) {
+        glPushMatrix();
+
+        glMatrixMode(GL_MODELVIEW);
+        Vec3f pos = m_scene->getCamera()->getPosition();
+        glTranslatef(-pos.x, -pos.y, -pos.z);
+        Quaternion quat = m_scene->getCamera()->getOrientation();
+        SFRotation rot(quat);
+        const float *frotation = rot.getValue();
+        glRotatef(RAD2DEG(frotation[3]),
+                  frotation[0], frotation[1], frotation[2]);
+
+        children()->draw(pass, children_Field()); 
+
+        glPopMatrix();
+    }
+}
+
+

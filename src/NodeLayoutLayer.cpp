@@ -58,3 +58,35 @@ NodeLayoutLayer::NodeLayoutLayer(Scene *scene, Proto *def)
   : Node(scene, def)
 {
 }
+
+void    
+NodeLayoutLayer::preDraw() 
+{ 
+    if (!m_scene->getDrawViewports())
+        children()->preDraw();
+}
+
+void    
+NodeLayoutLayer::draw(int pass) 
+{ 
+    if (m_scene->getDrawViewports()) {
+        glPushMatrix();
+
+        glMatrixMode(GL_MODELVIEW);
+        Vec3f pos = m_scene->getCamera()->getPosition();
+        glTranslatef(pos.x, pos.y, pos.z);
+        Quaternion quat = m_scene->getCamera()->getOrientation();
+        SFRotation rot(quat);
+        const float *frotation = rot.getValue();
+        glRotatef(RAD2DEG(frotation[3]),
+                  frotation[0], frotation[1], frotation[2]);
+
+        glTranslatef(0, 0, -1.36);
+
+        children()->draw(pass, children_Field()); 
+
+        glPopMatrix();
+    }
+}
+
+

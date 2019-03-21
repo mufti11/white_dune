@@ -437,7 +437,6 @@ ScriptEdit::writeSFStringX3domUrl(int f, const char* string)
           case EL_EVENT_IN:
             {
               MyString name = proto->getEventIn(ind)->getName(false);
-              int type = proto->getEventIn(ind)->getType();
               text += " function ";
               text += name;
               cmptext = "";

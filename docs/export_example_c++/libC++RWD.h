@@ -586,9 +586,9 @@ static int CRWDPngLoad(FILE *f, png_structp *pngPtr, png_infop *infoPtr,
     return 0;
 }
 
-static int CRWDPngRead(png_structp *pngPtr, png_infop *infoPtr,
-                       struct ImageTextureExtraDataStruct *data, 
-                       unsigned int *components)
+static void CRWDPngRead(png_structp *pngPtr, png_infop *infoPtr,
+                        struct ImageTextureExtraDataStruct *data, 
+                        unsigned int *components)
 {
     int rowStride = *components * data->width;
     png_bytep *rowPtrs;

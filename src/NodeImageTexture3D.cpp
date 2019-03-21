@@ -365,64 +365,6 @@ void vector_ensureSpace_(int elSize, struct Vector* me, const char *fi, int line
     ASSERT(me->n<me->allocn);
 }
 
-static int sniffImageChannels_bruteForce(unsigned char *imageblob, int width, int height){
-    //iterates over entire 4byte-per-pixel RGBA image blob, or until it knows the answer,
-    // and returns number of channels 1=Luminance, 2=Lum-alpha 3=rgb 4=rgba
-    //detects by comparing alpha != 1 to detect alpha, and r != g != b to detect color
-    int i,ii4,j,jj4, hasAlpha, hasColor, channels;
-    hasAlpha = 0;
-    hasColor = 0;
-    channels = 4;
-    for(i=0;i<height;i++){
-        ii4 = i*width*4;
-        if(!hasColor){
-            //for gray-scale images, will need to scan the whole image looking for r != g != b
-            //not tested with lossy compression ie jpeg, but jpeg is usually RGB -not gray, and no alpha- 
-            // - so jpeg should exit color detection early anyway
-            for(j=0;j<width;j++){
-                jj4 = ii4 + j*4;
-                hasAlpha = hasAlpha || imageblob[jj4+3] != 255;
-                hasColor = hasColor || imageblob[jj4] != imageblob[jj4+1] || imageblob[jj4+1] != imageblob[jj4+2];
-            }
-        }else{
-            //color found, can stop looking for color. now just look for alpha
-            //- this is likely the most work, because if Alpha all 1s, it won't know until it scans whole image
-            for(j=3;j<width*4;j+=4){
-                hasAlpha = hasAlpha || imageblob[ii4 + j] != 255;
-            }
-        }
-        if(hasAlpha && hasColor)break; //got the maximum possible answer, can exit early
-    }
-    channels = hasColor ? 3 : 1;
-    channels = hasAlpha ? channels + 1 : channels;
-    return channels;
-}
-
-static void texture_swap_B_R(textureTableIndexStruct_s* this_tex)
-{
-    //swap red and blue // BGRA - converts back and forth from BGRA to RGBA 
-    //search for GL_RGBA in textures.c
-    int x,y,z,i,j,k,ipix,ibyte;
-    unsigned char R,B,*data;
-    x = this_tex->x;
-    y = this_tex->y;
-    z = this_tex->z;
-    data = this_tex->texdata;
-    for(i=0;i<z;i++){
-        for(j=0;j<y;j++){
-            for(k=0;k<x;k++)
-            {
-                ipix = (i*y + j)*x + k;
-                ibyte = ipix * 4; //assumes tti->texdata is 4 bytes per pixel, in BGRA or RGBA order
-                R = data[ibyte];
-                B = data[ibyte+2];
-                data[ibyte] = B;
-                data[ibyte+2] = R;
-            }
-        }
-    }
-}
-
 struct DdsLoadInfo {
   bool compressed;
   bool swap;
@@ -1475,7 +1417,8 @@ encoding: raw
         unsigned long long i,j,k;
         int ifieldtype, idatatype;
         // int kdatatype;
-        int idim, ilen, isize[4], iendian, iencoding, ifound,slen,klen, bsize;
+        int idim, isize[4], iendian, iencoding, ifound,slen,klen, bsize;
+        long long ilen;
         char line [2048];
         char cendian[256], cencoding[256];
         char *remainder;
@@ -1539,7 +1482,7 @@ encoding: raw
                     slen = strlen(remainder);
                     //find last non-blank, non CRLF 
                     klen = slen;
-                    for(i=0;i<slen;i++){
+                    for(long long i=0;i<slen;i++){
                         char c = remainder[slen-1 -i];
                         if(c == '\n' || c == '\r' || c == ' ') klen--;
                         else break;
@@ -1616,7 +1559,7 @@ encoding: raw
         //clean up dimensions
         if(isize[0] == 1){
             //remove degenerate dimension, found in some images
-            for(i=0;i<idim-1;i++){
+            for(long long i=0;i<idim-1;i++){
                 isize[i] = isize[i+1];
                 //spacing[i] = spacing[i+1];
             }
@@ -1648,7 +1591,7 @@ encoding: raw
 //                printf("swapping endian\n");
                 for(i=0;i<nvoxel;i++){
                     unsigned char * voxel = &data[i*bsize];
-                    for(j=0;j<bsize/2;j++){
+                    for(int j=0;j<bsize/2;j++){
                         char c;
                         k = bsize -1 - j;
                         c = voxel[j];
@@ -1660,11 +1603,11 @@ encoding: raw
         }else if(iencoding == NRRDENCODING_ASCII){
             int kvox = 0;
             //read all slices
-            for(i=0;i<isize[2];i++){
+            for(long long i=0;i<isize[2];i++){
                 //read a slice
-                for(j=0;j<isize[1];j++){
+                for(int j=0;j<isize[1];j++){
                     //read a row
-                    for(k=0;k<isize[0];k++){
+                    for(int k=0;k<isize[0];k++){
                         int rvi;
                         UNUSED(rvi);
 

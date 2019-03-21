@@ -60,7 +60,7 @@ InteractionDialog2::buildInterfaceData(void)
             for (int k = 0; k < outProto->getNumEventOuts(); k++) {
                 // when m_level == 0 filter out not recommended fields
                 int outFlags = outProto->getEventOut(k)->getFlags();
-                if (!(outFlags && EOF_RECOMMENDED))
+                if (!(outFlags & EOF_RECOMMENDED))
                     continue;
                 if (m_scene->isInvalidElement(outProto->getEventOut(k)))
                     continue;
@@ -97,7 +97,7 @@ InteractionDialog2::buildInterfaceData(void)
                                n++) {
                               // when m_level == 0 filter out not recommended fields
                               int outFlags = outProto->getEventOut(n)->getFlags();
-                              if (!(outFlags && EOF_RECOMMENDED))
+                              if (!(outFlags & EOF_RECOMMENDED))
                                   continue;
                               if (m_scene->isInvalidElement(outProto->getEventOut(n)))
                                   continue;

@@ -33,6 +33,7 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "Scene.h"
 
 class ProtoLayoutLayer : public Proto {
 public:
@@ -40,6 +41,7 @@ public:
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_LAYOUT_LAYER; }
+    virtual int     getNodeClass() const { return LAYER_NODE; }
 
     virtual bool    isX3dInternalProto(void) { return true; }
 
@@ -57,6 +59,9 @@ public:
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeLayoutLayer(*this); }
+
+    virtual void    preDraw(); 
+    virtual void    draw(int pass); 
 
     fieldMacros(MFNode, children,   ProtoLayoutLayer);
     fieldMacros(SFBool, isPickable, ProtoLayoutLayer);

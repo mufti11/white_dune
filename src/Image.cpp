@@ -50,7 +50,7 @@ int Image::test_file_extension(char *extension)
    /* copy extension and convert to lowercase */
    char case_extension[5];
    mystrncpy_secure(case_extension,extension+1,5);
-   for (int i=0;i<=strlen(case_extension);i++)
+   for (unsigned int i=0;i<=strlen(case_extension);i++)
       case_extension[i]=tolower(case_extension[i]);
    if (strcasecmp(case_extension,"jpeg")==0)
       return((int)JPEG);

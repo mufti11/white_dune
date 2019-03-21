@@ -33,6 +33,7 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "Scene.h"
 
 class ProtoLayoutGroup : public Proto {
 public:
@@ -59,6 +60,9 @@ public:
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeLayoutGroup(*this); }
+
+    virtual void    preDraw(); 
+    virtual void    draw(int pass); 
 
     fieldMacros(MFNode,  children,   ProtoLayoutGroup);
     fieldMacros(SFNode,  layout,     ProtoLayoutGroup);

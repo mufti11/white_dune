@@ -205,7 +205,7 @@ void FieldView::DeleteView()
     m_scroller = NULL;
 }
 
-void FieldView::OnDraw(int x, int y, int width, int height)
+void FieldView::OnDraw(int x, int y, int width, int height, bool update)
 {
     int n = m_items.size();
     

@@ -82,7 +82,8 @@ public:
         virtual void    OnMouseMove(int x, int y, int modifiers);
         void            DoMouseMove(int px, int py, int modifiers);
 
-        virtual void    OnDraw(int x, int y, int width, int height);
+        virtual void    OnDraw(int x, int y, int width, int height,
+                               bool update = false);
         virtual void    OnSize(int width, int height);
         virtual void    OnMouseLeave();
 

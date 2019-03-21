@@ -55,7 +55,7 @@ InteractionDialog::buildInterfaceData(void)
 
     bool m_eventInHasRecommendedFields = false;
     for (int i = 0; i < inProto->getNumEventIns(); i++)
-        if (inProto->getEventIn(i)->getFlags() &&
+        if (inProto->getEventIn(i)->getFlags() &
             EIF_RECOMMENDED)
             m_eventInHasRecommendedFields = true;
 
@@ -67,7 +67,7 @@ InteractionDialog::buildInterfaceData(void)
         // when level == 0 filter out not recommended fields
         int inFlags = inProto->getEventIn(i)->getFlags();
         if ((m_routeData->level == 0) && m_eventInHasRecommendedFields &&
-            !(inFlags && EIF_RECOMMENDED))
+            !(inFlags & EIF_RECOMMENDED))
             continue;
         if (scene->isInvalidElement(inProto->getEventIn(i)))
             continue;
@@ -79,7 +79,7 @@ InteractionDialog::buildInterfaceData(void)
                     // when m_level == 0 filter out not recommended fields
                     int outFlags = outProto->getEventOut(k)->getFlags();
                     if ((m_routeData->level == 0) && 
-                        !(outFlags && EOF_RECOMMENDED))
+                        !(outFlags & EOF_RECOMMENDED))
                         continue;
                     if (scene->isInvalidElement(outProto->getEventOut(k)))
                         continue;

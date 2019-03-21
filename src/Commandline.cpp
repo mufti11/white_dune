@@ -538,11 +538,12 @@ void parseCommandlineUsage(
                                   convert | SKIP_SAVED_TEST | 
                                   (tempSave ? TEMP_SAVE : 0)); 
                 if (fileDescriptor != 1) {
-                    if (rc != 0)
+                    if (rc != 0) {
                         myperror(url);
                         if (convert != RIB) // RIB files alread closed
                             if (swTruncateClose(fileDescriptor))
                                 myperror(url);
+                    }
                 }
             } else if (errno != 0)
                 myperror(argv[inputFileArg]);

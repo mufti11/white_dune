@@ -12115,8 +12115,6 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
         } else if (flags & RIB) {
             if (m_scene->writeRib(f, path) != 0)
                 writeError = true;
-            else if (swTruncateClose(f))
-                writeError = true;
         } else if (flags & LDRAW_DAT) {
             if (m_scene->writeLdrawDat(f, path) != 0)
                 writeError = true;
