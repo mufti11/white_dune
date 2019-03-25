@@ -1,7 +1,7 @@
 /*
  * NodeScreenFontStyle.h
  *
- * Copyright (C) 2009 J. "MUFTI" Scheurich
+ * Copyright (C) 1999 Stephen F. White, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SCREEN_FONT_STYLE_H
-#define _NODE_SCREEN_FONT_STYLE_H
+#ifndef _NODE_SCREEN_FONTSTYLE_H
+#define _NODE_SCREEN_FONTSTYLE_H
 
 #ifndef _NODE_H
 #include "Node.h"
@@ -32,47 +32,39 @@
 #include "Proto.h"
 #endif
 
+#include "FontStyleNode.h"
+
 #include "SFMFTypes.h"
 
-class ProtoScreenFontStyle : public Proto {
+class ProtoScreenFontStyle : public FontStyleProto {
 public:
                     ProtoScreenFontStyle(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_SCREEN_FONT_STYLE; }
-    virtual int     getNodeClass() const { return FONT_STYLE_NODE; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
+    virtual bool    isDeclaredInRwd_h() { return true; }      
 
-    FieldIndex family;
-    FieldIndex horizontal;
-    FieldIndex justify;
-    FieldIndex language;
-    FieldIndex leftToRight;
     FieldIndex pointSize;
-    FieldIndex spacing;
-    FieldIndex style;
-    FieldIndex topToBottom;
 };
 
-class NodeScreenFontStyle : public Node {
+class NodeScreenFontStyle : public FontStyleNode {
 public:
                     NodeScreenFontStyle(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Layout"; }
-    virtual int         getComponentLevel(void) const { return 2; }
-    virtual int         getX3dVersion(void) const { return 2; }
+    virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
+    virtual int     getX3dVersion(void) const { return 0; }
     virtual Node   *copy() const { return new NodeScreenFontStyle(*this); }
 
-    fieldMacros(MFString, family,      ProtoScreenFontStyle);
-    fieldMacros(SFBool,   horizontal,  ProtoScreenFontStyle);
-    fieldMacros(MFString, justify,     ProtoScreenFontStyle);
-    fieldMacros(SFString, language,    ProtoScreenFontStyle);
-    fieldMacros(SFBool,   leftToRight, ProtoScreenFontStyle);
-    fieldMacros(SFFloat,  pointSize,   ProtoScreenFontStyle);
-    fieldMacros(SFFloat,  spacing,     ProtoScreenFontStyle);
-    fieldMacros(SFString, style,       ProtoScreenFontStyle);
-    fieldMacros(SFBool,   topToBottom, ProtoScreenFontStyle);
+    virtual bool    hasNumbers4kids(void) { return true; } 
+
+    virtual float   getSizeX(void) const;
+    virtual float   getSizeY(void) const;
+    virtual bool    isScreenFontStyle(void) { return false; }
+
+    void            setField(int index, FieldValue *value, int cf = -1);
+
+    fieldMacros(SFFloat,  pointSize, ProtoScreenFontStyle)
 };
 
 #endif

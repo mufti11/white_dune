@@ -23,26 +23,12 @@
 #include "stdafx.h"
 
 #include "NodeScreenGroup.h"
-#include "Proto.h"
-#include "FieldValue.h"
-#include "MFNode.h"
-#include "MFNode.h"
-#include "MFNode.h"
-#include "SFVec3f.h"
-#include "SFVec3f.h"
-#include "DuneApp.h"
+#include "Scene.h"
+
 
 ProtoScreenGroup::ProtoScreenGroup(Scene *scene)
-  : Proto(scene, "ScreenGroup")
+  : ProtoStaticGroup(scene, "ScreenGroup")
 {
-    addEventIn(MFNODE, "addChildren");
-    addEventIn(MFNODE, "removeChildren");
-    children.set(
-        addExposedField(MFNODE, "children", new MFNode(), CHILD_NODE));
-    bboxCenter.set(
-        addField(SFVEC3F, "bboxCenter", new SFVec3f(0, 0, 0)));
-    bboxSize.set(
-        addField(SFVEC3F, "bboxSize", new SFVec3f(-1, -1, -1)));
 }
 
 Node *
@@ -52,6 +38,21 @@ ProtoScreenGroup::create(Scene *scene)
 }
 
 NodeScreenGroup::NodeScreenGroup(Scene *scene, Proto *def)
-  : Node(scene, def)
+  : NodeStaticGroup(scene, def)
 {
+}
+
+void    
+NodeScreenGroup::draw(int pass) 
+{ 
+     float approx = (m_scene->getWidth() + m_scene->getHeight()) / 2.0f;
+
+     float scale = 1;
+     if (approx != 0)
+         scale = 1.0f / approx;
+     glPushMatrix();
+     glScalef(scale, scale, scale);
+     glScalef(2, 2, 2);
+     children()->draw(pass, children_Field()); 
+     glPopMatrix();
 }

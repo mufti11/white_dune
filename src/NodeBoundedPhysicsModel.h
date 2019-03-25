@@ -44,6 +44,8 @@ public:
 
     virtual bool    isX3dInternalProto(void) { return true; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }
+
     FieldIndex enabled;
     FieldIndex geometry;
 };

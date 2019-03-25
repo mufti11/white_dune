@@ -299,7 +299,8 @@ OutputApp::OutputLoadPreferences()
 
 #ifndef _WIN32
     if (m_imageConverter != NULL)
-        free(m_imageConverter);
+        if (strlen(m_imageConverter) != 0)
+            free(m_imageConverter);
 #endif
 
 #ifdef HAVE_IMAGE_CONVERTER

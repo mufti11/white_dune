@@ -352,6 +352,7 @@
     <ClCompile Include="AnchoredJointNode.cpp" />
     <ClCompile Include="AnimationDialog.cpp" />
     <ClCompile Include="HAnimJointDialog.cpp" />
+    <ClCompile Include="FontStyleNode.cpp" />
     <ClCompile Include="ArrayDialog.cpp" />
     <ClCompile Include="BasicTransformNode.cpp" />
     <ClCompile Include="Box2NurbsDialog.cpp" />
@@ -713,7 +714,6 @@
     <ClCompile Include="NodeGeoTouchSensor.cpp" />
     <ClCompile Include="NodeGeoTransform.cpp" />
     <ClCompile Include="NodeGeoViewpoint.cpp" />
-    <ClCompile Include="NodeGravityPhysicsModel.cpp" />
     <ClCompile Include="NodeGroup.cpp">
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>

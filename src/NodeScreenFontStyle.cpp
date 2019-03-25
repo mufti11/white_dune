@@ -1,7 +1,7 @@
 /*
  * NodeScreenFontStyle.cpp
  *
- * Copyright (C) 2009 J. "MUFTI" Scheurich
+ * Copyright (C) 1999 Stephen F. White, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,45 +27,54 @@
 #include "FieldValue.h"
 #include "MFString.h"
 #include "SFBool.h"
-#include "MFString.h"
 #include "SFString.h"
-#include "SFBool.h"
 #include "SFFloat.h"
-#include "SFFloat.h"
-#include "SFString.h"
-#include "SFBool.h"
-#include "DuneApp.h"
+#include "Field.h"
+#include "Scene.h"
 
 ProtoScreenFontStyle::ProtoScreenFontStyle(Scene *scene)
-  : Proto(scene, "ScreenFontStyle")
+  : FontStyleProto(scene, "ScreenFontStyle")
 {
-    family.set(
-        addField(MFSTRING, "family", new MFString("SERIF")));
-    horizontal.set(
-        addField(SFBOOL, "horizontal", new SFBool(true)));
-    justify.set(
-        addField(MFSTRING, "justify", new MFString("BEGIN")));
-    language.set(
-        addField(SFSTRING, "language", new SFString("")));
-    leftToRight.set(
-        addField(SFBOOL, "leftToRight", new SFBool(true)));
     pointSize.set(
-        addField(SFFLOAT, "pointSize", new SFFloat(12.0)));
-    spacing.set(
-        addField(SFFLOAT, "spacing", new SFFloat(1.0)));
-    style.set(
-        addField(SFSTRING, "style", new SFString("PLAIN")));
-    topToBottom.set(
-        addField(SFBOOL, "topToBottom", new SFBool(true)));
+          addField(SFFLOAT, "pointSize", new SFFloat(12.0f), 
+                                         new SFFloat(0.0f)));
 }
 
 Node *
 ProtoScreenFontStyle::create(Scene *scene)
 { 
-    return new NodeScreenFontStyle(scene, this); 
+    return new NodeScreenFontStyle(scene, this);
 }
 
 NodeScreenFontStyle::NodeScreenFontStyle(Scene *scene, Proto *def)
-  : Node(scene, def)
+  : FontStyleNode(scene, def)
 {
 }
+
+void
+NodeScreenFontStyle::setField(int index, FieldValue *value, int cf)
+{
+    Node::setField(index, value, cf);
+    if (hasParent())
+        getParent()->update();
+}
+
+float   
+NodeScreenFontStyle::getSizeX(void) const 
+{ 
+     float sceneWidth = m_scene->getWidth();
+     if (sceneWidth != 0)
+         return pointSize()->getValue() / sceneWidth * 10.0f; // ??? 
+     return 1;
+}
+
+float   
+NodeScreenFontStyle::getSizeY(void) const 
+{ 
+     float sceneHeight = m_scene->getHeight();
+     if (sceneHeight != 0)
+         return pointSize()->getValue() / sceneHeight * 10.0f; // ??? 
+     return 1;
+}
+
+

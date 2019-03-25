@@ -4987,5 +4987,17 @@ Fixed -files option for RIB file creation
 
 Added questionable Layout, LayoutLayer and LayOutGroup rendring
 
+Added questionable ScreenFontStyle and ScreenGroup rendring
+
+Removed outdated node GravityPhysicsModel
+
+Added ParticleSystem, ConeEmitter, PointEmitter and ExplosionEmitter rendering
+
+Added ForcePhysicsModel and WindPhysicsModel rendering
+
+Added ParticleSystem to C++ export
+
+Fixed bug in update of toolbars
+
 contact: MUFTI <mufti@users.ourproject.org>
 

@@ -1,7 +1,7 @@
 /*
  * NodeScreenGroup.h
  *
- * Copyright (C) 2009 J. "MUFTI" Scheurich
+ * Copyright (C) 2009,2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,8 +33,9 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "NodeStaticGroup.h"
 
-class ProtoScreenGroup : public Proto {
+class ProtoScreenGroup : public ProtoStaticGroup {
 public:
                     ProtoScreenGroup(Scene *scene);
     virtual Node   *create(Scene *scene);
@@ -43,13 +44,9 @@ public:
     virtual int     getNodeClass() const { return GROUPING_NODE | CHILD_NODE; }
 
     virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex children;
-    FieldIndex bboxCenter;
-    FieldIndex bboxSize;
 };
 
-class NodeScreenGroup : public Node {
+class NodeScreenGroup : public NodeStaticGroup {
 public:
                     NodeScreenGroup(Scene *scene, Proto *proto);
 
@@ -58,9 +55,7 @@ public:
     virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeScreenGroup(*this); }
 
-    fieldMacros(MFNode,  children,   ProtoScreenGroup);
-    fieldMacros(SFVec3f, bboxCenter, ProtoScreenGroup);
-    fieldMacros(SFVec3f, bboxSize,   ProtoScreenGroup);
+    virtual void    draw(int pass);
 };
 
 #endif

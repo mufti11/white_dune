@@ -581,7 +581,6 @@ static NodeButton buttonsX3DComponents3[] = {
     { X3D_EXPLOSION_EMITTER,     ID_NEW_EXPLOSION_EMITTER,     false, true },
     { BS,                        0,                            true,  true },
     { X3D_BOUNDED_PHYSICS_MODEL, ID_NEW_BOUNDED_PHYSICS_MODEL, false, true },
-    { X3D_GRAVITY_PHYSICS_MODEL, ID_NEW_GRAVITY_PHYSICS_MODEL, false, true },
     { X3D_FORCE_PHYSICS_MODEL,   ID_NEW_FORCE_PHYSICS_MODEL,   false, true },
     { X3D_WIND_PHYSICS_MODEL,    ID_NEW_WIND_PHYSICS_MODEL,    false, true }
 };
@@ -3024,9 +3023,6 @@ MainWindow::OnCommand(void *vid)
       case ID_NEW_GEO_VIEWPOINT:
         createGeoViewpoint();
         break;
-      case ID_NEW_GRAVITY_PHYSICS_MODEL:
-        insertNode(PARTICLE_PHYSICS_MODEL_NODE, "GravityPhysicsModel");
-        break;
       case ID_NEW_GROUP:
         createNode("Group");
         break;
@@ -5223,402 +5219,406 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
 {
     if (node == NULL)
         return;
-    for (int i = 0; i < count; i++)
-        if (!buttons[i].alwaysEnabled) {
-            bool valid = true;
-            switch (buttons[i].type) {
-              case VRML_AUDIO_CLIP:
-                valid = (node->getType() == VRML_SOUND);
+    for (int i = 0; i < count; i++) { 
+        bool valid = true;
+        switch (buttons[i].type) {
+          case VRML_AUDIO_CLIP:
+            valid = (node->getType() == VRML_SOUND);
+            break;
+          case X3D_BOUNDED_PHYSICS_MODEL:
+          case X3D_FORCE_PHYSICS_MODEL:
+          case X3D_WIND_PHYSICS_MODEL:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_BOUNDED_PHYSICS_MODEL:
-              case X3D_FORCE_PHYSICS_MODEL:
-              case X3D_GRAVITY_PHYSICS_MODEL:
-              case X3D_WIND_PHYSICS_MODEL:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(PARTICLE_PHYSICS_MODEL_NODE) 
-                        != -1;
+            valid = node->findValidFieldType(PARTICLE_PHYSICS_MODEL_NODE) 
+                    != -1;
+            break;
+          case X3D_CONTOUR_POLYLINE_2D:
+            valid = node->findValidFieldType(NURBS_CONTROL_CURVE_NODE) != 
+                    -1;
+            break;
+          case X3D_COLOR_RGBA:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_CONTOUR_POLYLINE_2D:
-                valid = node->findValidFieldType(NURBS_CONTROL_CURVE_NODE) != 
-                        -1;
+          case VRML_COLOR:
+            valid = node->findValidFieldType(COLOR_NODE) != -1;
+            break;
+          case X3D_COORDINATE_DOUBLE:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_COLOR_RGBA:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case VRML_COLOR:
-                valid = node->findValidFieldType(COLOR_NODE) != -1;
-                break;
-              case X3D_COORDINATE_DOUBLE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case VRML_COORDINATE:
-              case VRML_GEO_COORDINATE:
-                valid = node->findValidFieldType(COORDINATE_NODE) != -1;
-                break;
-              case VRML_MOVIE_TEXTURE:
-                valid = getValidTexture();
-                if (node->getType() == VRML_SOUND)
+          case VRML_COORDINATE:
+          case VRML_GEO_COORDINATE:
+            valid = node->findValidFieldType(COORDINATE_NODE) != -1;
+            break;
+          case VRML_MOVIE_TEXTURE:
+            valid = getValidTexture();
+            if (node->getType() == VRML_SOUND)
+                valid = true;
+            break;
+          case VRML_IMAGE_TEXTURE:
+          case VRML_PIXEL_TEXTURE:
+          case X3DOM_IMAGE_TEXTURE_ATLAS:                
+          case X3DOM_REFINEMENT_TEXTURE:                
+            valid = getValidTexture();
+            break;
+          case VRML_TEXTURE_COORDINATE:
+            valid = node->findValidFieldType(TEXTURE_COORDINATE_NODE) != -1;
+            if (field != -1)
+                if (node->validChildType(field, TEXTURE_COORDINATE_NODE))
                     valid = true;
-                break;
-              case VRML_IMAGE_TEXTURE:
-              case VRML_PIXEL_TEXTURE:
-              case X3DOM_IMAGE_TEXTURE_ATLAS:                
-              case X3DOM_REFINEMENT_TEXTURE:                
-                valid = getValidTexture();
-                break;
-              case VRML_TEXTURE_COORDINATE:
-                valid = node->findValidFieldType(TEXTURE_COORDINATE_NODE) != -1;
+            if (!valid) {
+                valid = node->findValidFieldType(VRML_TEXTURE_COORDINATE) != -1;
                 if (field != -1)
-                    if (node->validChildType(field, TEXTURE_COORDINATE_NODE))
+                    if (node->validChildType(field, VRML_TEXTURE_COORDINATE))
                         valid = true;
-                if (!valid) {
-                    valid = node->findValidFieldType(VRML_TEXTURE_COORDINATE) != -1;
-                    if (field != -1)
-                        if (node->validChildType(field, VRML_TEXTURE_COORDINATE))
-                            valid = true;
+            }
+            break;
+          case X3D_TEXTURE_COORDINATE_GENERATOR:
+            valid = node->findValidFieldType(
+                          GENERATED_TEXTURE_COORDINATE_NODE) != -1;
+            if (field != -1)
+                if (node->validChildType(field, 
+                                         GENERATED_TEXTURE_COORDINATE_NODE))
+                    valid = true;
+            if (valid)
+                break;
+            break;
+          case X3D_TEXTURE_COORDINATE_3D:
+          case X3D_TEXTURE_COORDINATE_4D:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+            valid = node->findValidFieldType(TEXTURE_COORDINATE_NODE) != -1;
+            if (field != -1)
+                if (node->validChildType(field, TEXTURE_COORDINATE_NODE))
+                    valid = true;
+            break;
+          case X3D_TEXTURE_TRANSFORM_3D:
+          case X3D_TEXTURE_TRANSFORM_MATRIX_3D:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+          case VRML_TEXTURE_TRANSFORM:
+            valid = node->findFirstValidFieldType(TEXTURE_TRANSFORM_NODE) 
+                    != -1;
+            if (field != -1)
+                if (node->validChildType(field, TEXTURE_TRANSFORM_NODE))
+                    valid = true;
+            break;
+          case X3D_MULTI_TEXTURE:
+            valid = m_scene->isX3d() && getValidTexture() && 
+                    (node->getType() != X3D_MULTI_TEXTURE);
+            break;
+          case X3D_MULTI_TEXTURE_COORDINATE:
+            valid = m_scene->isX3d() &&  
+                    (node->findFirstValidFieldType(TEXTURE_COORDINATE_NODE) != 
+                     -1) && 
+                    (node->getType() != X3D_MULTI_TEXTURE_COORDINATE);
+            break;
+          case X3D_MULTI_TEXTURE_TRANSFORM:
+            valid = m_scene->isX3d() &&  
+                    (node->findFirstValidFieldType(TEXTURE_TRANSFORM_NODE) != 
+                     -1) && 
+                    (node->getType() != X3D_MULTI_TEXTURE_TRANSFORM);
+            break;
+          case X3D_TWO_SIDED_MATERIAL:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+          case VRML_MATERIAL:
+            valid = node->findValidFieldType(MATERIAL_NODE) != -1;
+            break;
+          case X3D_NURBS_TEXTURE_COORDINATE:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+            break;
+          case VRML_NURBS_TEXTURE_SURFACE:
+            valid = valid &&
+                    node->findFirstValidFieldType(
+                                NURBS_TEXTURE_COORDINATE_NODE) != -1;
+            break;
+          case X3D_NURBS_TRIMMED_SURFACE:
+          case X3D_NURBS_SWEPT_SURFACE:
+          case X3D_NURBS_SWUNG_SURFACE:
+            valid = m_scene->isX3d();
+            break;
+          case VRML_NURBS_CURVE_2D:
+            valid = (node->findFirstValidFieldType(NURBS_CONTROL_CURVE_NODE)
+                     != -1);
+            valid = valid || 
+                    (node->findFirstValidFieldType(VRML_NURBS_CURVE_2D) != 
+                     -1);
+            break;
+          case VRML_CONTOUR_2D:
+            valid = (node->getType() == VRML_TRIMMED_SURFACE) ||
+                    (node->getType() == X3D_NURBS_TRIMMED_SURFACE);
+            break;
+          case VRML_POLYLINE_2D:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+            break;
+          case X3D_RIGID_BODY:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+            valid = node->findValidFieldType(X3D_RIGID_BODY) != -1;
+            if (!valid) {
+                if (node->matchNodeClass(RIGID_JOINT_NODE)) {
+                    X3DRigidJointNode *joint = (X3DRigidJointNode *)node;
+                    if (joint->body1()->getValue() == NULL)
+                        valid = true;
+                    else if (joint->body2()->getValue() == NULL)
+                        valid = true; 
                 }
-                break;
-              case X3D_TEXTURE_COORDINATE_GENERATOR:
-                valid = node->findValidFieldType(
-                              GENERATED_TEXTURE_COORDINATE_NODE) != -1;
-                if (field != -1)
-                    if (node->validChildType(field, 
-                                             GENERATED_TEXTURE_COORDINATE_NODE))
-                        valid = true;
-                 if (valid)
-                     break;
-              case X3D_TEXTURE_COORDINATE_3D:
-              case X3D_TEXTURE_COORDINATE_4D:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(TEXTURE_COORDINATE_NODE) != -1;
-                if (field != -1)
-                    if (node->validChildType(field, TEXTURE_COORDINATE_NODE))
-                        valid = true;
-                break;
-              case X3D_TEXTURE_TRANSFORM_3D:
-              case X3D_TEXTURE_TRANSFORM_MATRIX_3D:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case VRML_TEXTURE_TRANSFORM:
-                valid = node->findFirstValidFieldType(TEXTURE_TRANSFORM_NODE) 
-                        != -1;
-                if (field != -1)
-                    if (node->validChildType(field, TEXTURE_TRANSFORM_NODE))
-                        valid = true;
-                break;
-              case X3D_MULTI_TEXTURE:
-                valid = m_scene->isX3d() && getValidTexture() && 
-                        (node->getType() != X3D_MULTI_TEXTURE);
-                break;
-              case X3D_MULTI_TEXTURE_COORDINATE:
-                valid = m_scene->isX3d() &&  
-                        (node->findFirstValidFieldType(TEXTURE_COORDINATE_NODE) != 
-                         -1) && 
-                        (node->getType() != X3D_MULTI_TEXTURE_COORDINATE);
-                break;
-              case X3D_MULTI_TEXTURE_TRANSFORM:
-                valid = m_scene->isX3d() &&  
-                        (node->findFirstValidFieldType(TEXTURE_TRANSFORM_NODE) != 
-                         -1) && 
-                        (node->getType() != X3D_MULTI_TEXTURE_TRANSFORM);
-                break;
-              case X3D_TWO_SIDED_MATERIAL:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case VRML_MATERIAL:
-                valid = node->findValidFieldType(MATERIAL_NODE) != -1;
-                break;
-              case X3D_NURBS_TEXTURE_COORDINATE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case VRML_NURBS_TEXTURE_SURFACE:
-                valid = valid &&
-                        node->findFirstValidFieldType(
-                                    NURBS_TEXTURE_COORDINATE_NODE) != -1;
-                break;
-              case X3D_NURBS_TRIMMED_SURFACE:
-              case X3D_NURBS_SWEPT_SURFACE:
-              case X3D_NURBS_SWUNG_SURFACE:
-                valid = m_scene->isX3d();
-                break;
-              case VRML_NURBS_CURVE_2D:
-                valid = (node->findFirstValidFieldType(NURBS_CONTROL_CURVE_NODE)
-                         != -1);
-                valid = valid || 
-                        (node->findFirstValidFieldType(VRML_NURBS_CURVE_2D) != 
-                         -1);
-                break;
-              case VRML_CONTOUR_2D:
-                valid = (node->getType() == VRML_TRIMMED_SURFACE) ||
-                        (node->getType() == X3D_NURBS_TRIMMED_SURFACE);
-                break;
-              case VRML_POLYLINE_2D:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case X3D_RIGID_BODY:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(X3D_RIGID_BODY) != -1;
-                if (!valid) {
-                    if (node->matchNodeClass(RIGID_JOINT_NODE)) {
-                        X3DRigidJointNode *joint = (X3DRigidJointNode *)node;
-                        if (joint->body1()->getValue() == NULL)
-                            valid = true;
-                        else if (joint->body2()->getValue() == NULL)
-                            valid = true; 
-                    }
-                    if (node->getType() == X3D_CONTACT) {
-                        NodeContact *contact = (NodeContact *)node;
-                        if (contact->body1()->getValue() == NULL)
-                            valid = true;                            
-                        else if (contact->body2()->getValue() == NULL)
-                            valid = true;
-                    }
-                }
-                break;
-              case X3D_BALL_JOINT:
-              case X3D_DOUBLE_AXIS_HINGE_JOINT:
-              case X3D_MOTOR_JOINT:
-              case X3D_SINGLE_AXIS_HINGE_JOINT:
-              case X3D_SLIDER_JOINT:
-              case X3D_UNIVERSAL_JOINT:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = (node->getType() == X3D_RIGID_BODY_COLLECTION);
-                break;
-              case X3D_COLLISION_COLLECTION:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = false;
-                if (node->getType() == X3D_RIGID_BODY_COLLECTION) {
-                    NodeRigidBodyCollection *coll = (NodeRigidBodyCollection *)node;
-                    if (coll->collider()->getValue() == NULL)
+                if (node->getType() == X3D_CONTACT) {
+                    NodeContact *contact = (NodeContact *)node;
+                    if (contact->body1()->getValue() == NULL)
                         valid = true;                            
-                }
-                if (node->getType() == X3D_COLLISION_SENSOR) {
-                    NodeCollisionSensor *sensor = (NodeCollisionSensor *)node;
-                    if (sensor->collider()->getValue() == NULL)
-                        valid = true;                            
-                }
-                break;
-              case X3D_COLLISION_SPACE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = false;
-                if (node->getType() == X3D_COLLISION_COLLECTION)
-                    valid = true;
-                if (node->getType() == X3D_COLLISION_SPACE)
-                    valid = true;
-                break;
-              case X3D_HANIM_JOINT:
-                valid = false;
-                if (node->getType() == X3D_HANIM_HUMANOID)
-                    valid = true;
-                if (node->getType() == X3D_HANIM_JOINT)
-                    valid = true;
-                if (node->getType() == VRML_COORDINATE)
-                    valid = true;
-                break;
-              case X3D_HANIM_SEGMENT:
-                valid = node->findValidFieldType(buttons[i].type) != -1;
-                if (node->getType() == X3D_HANIM_JOINT) {
-                    NodeHAnimJoint *joint = (NodeHAnimJoint *)node;
-                    if (field != joint->displacers_Field())
+                    else if (contact->body2()->getValue() == NULL)
                         valid = true;
                 }
+            }
+            break;
+          case X3D_BALL_JOINT:
+          case X3D_DOUBLE_AXIS_HINGE_JOINT:
+          case X3D_MOTOR_JOINT:
+          case X3D_SINGLE_AXIS_HINGE_JOINT:
+          case X3D_SLIDER_JOINT:
+          case X3D_UNIVERSAL_JOINT:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_HANIM_SITE:
-                valid = node->findValidFieldType(buttons[i].type) != -1;
-                if (node->getType() == X3D_HANIM_JOINT) {
-                    NodeHAnimJoint *joint = (NodeHAnimJoint *)node;
-                    if (field != joint->displacers_Field())
-                        valid = true;
-                }
+            valid = (node->getType() == X3D_RIGID_BODY_COLLECTION);
+            break;
+          case X3D_COLLISION_COLLECTION:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_CAD_FACE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(PRODUCT_STRUCTURE_CHILD_NODE)
-                        != -1;
+            valid = false;
+            if (node->getType() == X3D_RIGID_BODY_COLLECTION) {
+                NodeRigidBodyCollection *coll = (NodeRigidBodyCollection *)node;
+                if (coll->collider()->getValue() == NULL)
+                    valid = true;                            
+            }
+            if (node->getType() == X3D_COLLISION_SENSOR) {
+                NodeCollisionSensor *sensor = (NodeCollisionSensor *)node;
+                if (sensor->collider()->getValue() == NULL)
+                    valid = true;                            
+            }
+            break;
+          case X3D_COLLISION_SPACE:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_COMPOSED_CUBE_MAP_TEXTURE:
-              case X3D_GENERATED_CUBE_MAP_TEXTURE:
-              case X3D_IMAGE_CUBE_MAP_TEXTURE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = m_scene->isX3d() && getValidTexture();
+            valid = false;
+            if (node->getType() == X3D_COLLISION_COLLECTION)
+                valid = true;
+            if (node->getType() == X3D_COLLISION_SPACE)
+                valid = true;
+            break;
+          case X3D_HANIM_JOINT:
+            valid = false;
+            if (node->getType() == X3D_HANIM_HUMANOID)
+                valid = true;
+            if (node->getType() == X3D_HANIM_JOINT)
+                valid = true;
+            if (node->getType() == VRML_COORDINATE)
+                valid = true;
+            break;
+          case X3D_HANIM_SEGMENT:
+            valid = node->findValidFieldType(buttons[i].type) != -1;
+            if (node->getType() == X3D_HANIM_JOINT) {
+                NodeHAnimJoint *joint = (NodeHAnimJoint *)node;
+                if (field != joint->displacers_Field())
+                    valid = true;
+            }
+            break;
+          case X3D_HANIM_SITE:
+            valid = node->findValidFieldType(buttons[i].type) != -1;
+            if (node->getType() == X3D_HANIM_JOINT) {
+                NodeHAnimJoint *joint = (NodeHAnimJoint *)node;
+                if (field != joint->displacers_Field())
+                    valid = true;
+            }
+            break;
+          case X3D_CAD_FACE:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_COMPOSED_TEXTURE_3D:
-              case X3D_IMAGE_TEXTURE_3D:
-              case X3D_PIXEL_TEXTURE_3D:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = m_scene->isX3d() && getValidTexture3D();
+            valid = node->findValidFieldType(PRODUCT_STRUCTURE_CHILD_NODE)
+                    != -1;
+            break;
+          case X3D_COMPOSED_CUBE_MAP_TEXTURE:
+          case X3D_GENERATED_CUBE_MAP_TEXTURE:
+          case X3D_IMAGE_CUBE_MAP_TEXTURE:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_COMPOSED_SHADER:
-              case X3D_PACKAGED_SHADER:
-              case X3D_PROGRAM_SHADER:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(SHADER_NODE) != -1;
+            valid = m_scene->isX3d() && getValidTexture();
+            break;
+          case X3D_COMPOSED_TEXTURE_3D:
+          case X3D_IMAGE_TEXTURE_3D:
+          case X3D_PIXEL_TEXTURE_3D:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_PARTICLE_SYSTEM:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case X3D_CONE_EMITTER:
-              case X3D_EXPLOSION_EMITTER:
-              case X3D_POINT_EMITTER:
-              case X3D_POLYLINE_EMITTER:
-              case X3D_SURFACE_EMITTER:
-              case X3D_VOLUME_EMITTER:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(PARTICLE_EMITTER_NODE) != -1;
+            valid = m_scene->isX3d() && getValidTexture3D();
+            break;
+          case X3D_COMPOSED_SHADER:
+          case X3D_PACKAGED_SHADER:
+          case X3D_PROGRAM_SHADER:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_FLOAT_VERTEX_ATTRIBUTE:
-              case X3D_MATRIX_3_VERTEX_ATTRIBUTE:
-              case X3D_MATRIX_4_VERTEX_ATTRIBUTE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(VERTEX_ATTRIBUTE_NODE) != -1;
+            valid = node->findValidFieldType(SHADER_NODE) != -1;
+            break;
+          case X3D_PARTICLE_SYSTEM:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_LAYER:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(LAYER_NODE) != -1;
+            break;
+          case X3D_CONE_EMITTER:
+          case X3D_EXPLOSION_EMITTER:
+          case X3D_POINT_EMITTER:
+          case X3D_POLYLINE_EMITTER:
+          case X3D_SURFACE_EMITTER:
+          case X3D_VOLUME_EMITTER:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_LAYER_SET:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = (m_scene->getRoot() == node);
+            valid = node->findValidFieldType(PARTICLE_EMITTER_NODE) != -1;
+            break;
+          case X3D_FLOAT_VERTEX_ATTRIBUTE:
+          case X3D_MATRIX_3_VERTEX_ATTRIBUTE:
+          case X3D_MATRIX_4_VERTEX_ATTRIBUTE:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_LAYOUT_LAYER:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(LAYER_NODE) != -1;
+            valid = node->findValidFieldType(VERTEX_ATTRIBUTE_NODE) != -1;
+            break;
+          case X3D_LAYER:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_SCREEN_FONT_STYLE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-              case VRML_FONT_STYLE:
-                valid = node->findValidFieldType(FONT_STYLE_NODE) != -1;
+            valid = node->findValidFieldType(LAYER_NODE) != -1;
+            break;
+          case X3D_LAYER_SET:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_VOLUME_DATA:
-              case X3D_ISO_SURFACE_VOLUME_DATA:
-              case X3D_SEGMENTED_VOLUME_DATA:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(CHILD_NODE) != -1;
+            valid = (m_scene->getRoot() == node);
+            break;
+          case X3D_LAYOUT_LAYER:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
-              case X3D_BLENDED_VOLUME_STYLE:
-              case X3D_BOUNDARY_ENHANCEMENT_VOLUME_STYLE:
-              case X3D_CARTOON_VOLUME_STYLE:
-              case X3D_COMPOSED_VOLUME_STYLE:
-              case X3D_EDGE_ENHANCEMENT_VOLUME_STYLE:
-              case X3D_OPACITY_MAP_VOLUME_STYLE:
-              case X3D_PROJECTION_VOLUME_STYLE:
-              case X3D_SHADED_VOLUME_STYLE:
-              case X3D_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE:
-              case X3D_TONE_MAPPED_VOLUME_STYLE:
-              case X3DOM_MPR_VOLUME_STYLE:
-              case X3DOM_RADAR_VOLUME_STYLE:
-              case X3DOM_STIPPLE_VOLUME_STYLE:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(VOLUME_RENDER_STYLE_NODE) != 
-                        -1;
+            valid = node->findValidFieldType(LAYER_NODE) != -1;
+            break;
+          case X3D_SCREEN_FONT_STYLE:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
+          case VRML_FONT_STYLE:
+            valid = node->findValidFieldType(FONT_STYLE_NODE) != -1;
+            break;
+          case X3D_VOLUME_DATA:
+          case X3D_ISO_SURFACE_VOLUME_DATA:
+          case X3D_SEGMENTED_VOLUME_DATA:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+            valid = node->findValidFieldType(CHILD_NODE) != -1;
+            break;
+          case X3D_BLENDED_VOLUME_STYLE:
+          case X3D_BOUNDARY_ENHANCEMENT_VOLUME_STYLE:
+          case X3D_CARTOON_VOLUME_STYLE:
+          case X3D_COMPOSED_VOLUME_STYLE:
+          case X3D_EDGE_ENHANCEMENT_VOLUME_STYLE:
+          case X3D_OPACITY_MAP_VOLUME_STYLE:
+          case X3D_PROJECTION_VOLUME_STYLE:
+          case X3D_SHADED_VOLUME_STYLE:
+          case X3D_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE:
+          case X3D_TONE_MAPPED_VOLUME_STYLE:
+          case X3DOM_MPR_VOLUME_STYLE:
+          case X3DOM_RADAR_VOLUME_STYLE:
+          case X3DOM_STIPPLE_VOLUME_STYLE:
+            valid = m_scene->isX3d();
+            if (!valid)
+                break;
+            valid = node->findValidFieldType(VOLUME_RENDER_STYLE_NODE) != 
+                    -1;
+            break;
 
 
 // template for new X3D nodes inserted with insertNode(XXX_NODE, "....
 /*
-              case X3D_:
-                valid = m_scene->isX3d();
-                if (!valid)
-                    break;
-                valid = node->findValidFieldType(XXX_NODE) != -1;
+          case X3D_:
+            valid = m_scene->isX3d();
+            if (!valid)
                 break;
+            valid = node->findValidFieldType(XXX_NODE) != -1;
+            break;
 */
-              case DUNE_VRML_CUT:
-                valid = (m_vrmlCutNode == NULL);
-                if (node->getType() == DUNE_VRML_SCENE)
-                    valid = true;
+          case DUNE_VRML_CUT:
+            valid = (m_vrmlCutNode == NULL);
+            if (node->getType() == DUNE_VRML_SCENE)
+                valid = true;
+            break;
+          case KAMBI_KAMBI_APPEARANCE:
+            valid = node->getType() == VRML_SHAPE;
+            break;
+          case KAMBI_KAMBI_OCTREE_PROPERTIES:
+            valid = (node->getType() == KAMBI_KAMBI_NAVIGATION_INFO) ||
+                    (node->getType() == VRML_SHAPE);
+            break;
+          case KAMBI_RENDERED_TEXTURE:
+            valid = (node->getType() == VRML_APPEARANCE) ||
+                    (node->getType() == KAMBI_KAMBI_APPEARANCE);
+            break;
+          case KAMBI_PROJECTED_TEXTURE_COORDINATE:
+            valid = (node->findValidFieldType(GENERATED_TEXTURE_COORDINATE_NODE | 
+                                              TEXTURE_COORDINATE_NODE) 
+                    != -1);
+            break;
+          case KAMBI_MULTI_GENERATED_TEXTURE_COORDINATE:
+            if (node->getType() == 
+                                 KAMBI_MULTI_GENERATED_TEXTURE_COORDINATE) {
+                valid = false;
                 break;
-              case KAMBI_KAMBI_APPEARANCE:
-                valid = node->getType() == VRML_SHAPE;
-                break;
-              case KAMBI_KAMBI_OCTREE_PROPERTIES:
-                valid = (node->getType() == KAMBI_KAMBI_NAVIGATION_INFO) ||
-                        (node->getType() == VRML_SHAPE);
-                break;
-              case KAMBI_RENDERED_TEXTURE:
-                valid = (node->getType() == VRML_APPEARANCE) ||
-                        (node->getType() == KAMBI_KAMBI_APPEARANCE);
-                break;
-              case KAMBI_PROJECTED_TEXTURE_COORDINATE:
-                valid = (node->findValidFieldType(GENERATED_TEXTURE_COORDINATE_NODE | 
-                                                  TEXTURE_COORDINATE_NODE) 
-                        != -1);
-                break;
-              case KAMBI_MULTI_GENERATED_TEXTURE_COORDINATE:
-                if (node->getType() == 
-                                     KAMBI_MULTI_GENERATED_TEXTURE_COORDINATE) {
-                    valid = false;
-                    break;
-                }
-                valid = (node->findValidFieldType(GENERATED_TEXTURE_COORDINATE_NODE)
-                         != -1);
-                break;
-              case X3DOM_COLOR_MASK_MODE:
-              case X3DOM_DEPTH_MODE:
-              case X3DOM_COMMON_SURFACE_SHADER:
-              case X3DOM_SURFACE_SHADER_TEXTURE:
-                valid = node->getType() == VRML_APPEARANCE;
-                break;
-              case X3DOM_MULTI_PART:
-                valid = node->getType() == VRML_INLINE;
-                break;
-              case X3DOM_POP_GEOMETRY_LEVEL:
-                valid = node->getType() == X3DOM_POP_GEOMETRY;
-                break;
-              default:
-                valid = node->findValidFieldType(buttons[i].type) != -1;
             }
-            if (valid != buttons[i].enabled) {
-                swMenuSetFlags(m_menu, buttons[i].id, SW_MENU_DISABLED, 
-                               valid ? 0 : SW_MENU_DISABLED);
-                swToolbarSetButtonFlags(toolbar, i, SW_TB_DISABLED,
-                                        valid ? 0 : SW_TB_DISABLED);
-                buttons[i].enabled = valid;                
-            }
+            valid = (node->findValidFieldType(GENERATED_TEXTURE_COORDINATE_NODE)
+                     != -1);
+            break;
+          case X3DOM_COLOR_MASK_MODE:
+          case X3DOM_DEPTH_MODE:
+          case X3DOM_COMMON_SURFACE_SHADER:
+          case X3DOM_SURFACE_SHADER_TEXTURE:
+            valid = node->getType() == VRML_APPEARANCE;
+            break;
+          case X3DOM_MULTI_PART:
+            valid = node->getType() == VRML_INLINE;
+            break;
+          case X3DOM_POP_GEOMETRY_LEVEL:
+            valid = node->getType() == X3DOM_POP_GEOMETRY;
+            break;
+          default:
+            valid = node->findValidFieldType(buttons[i].type) != -1;
         }
+        if (buttons[i].alwaysEnabled)
+            valid = true;
+        if (valid != buttons[i].enabled) {
+            swMenuSetFlags(m_menu, buttons[i].id, SW_MENU_DISABLED, 
+                           valid ? 0 : SW_MENU_DISABLED);
+            swToolbarSetButtonFlags(toolbar, i, SW_TB_DISABLED,
+                                    valid ? 0 : SW_TB_DISABLED);
+            buttons[i].enabled = valid;                
+        }
+    }
 }
 
 static Node *searchIdxNode;
@@ -11860,7 +11860,10 @@ void MainWindow::Play()
         swKillTimer(m_timer);
         m_scene->stop();
     } else {
-        m_timer = swSetTimer(m_wnd, 10, timerCB, this);
+        int timeout = 10;
+        if (m_scene->hasParticleSystem())
+            timeout = 1;
+        m_timer = swSetTimer(m_wnd, timeout, timerCB, this);
         m_scene->start();
     }
     swToolbarSetButtonFlags(m_vcrToolbar, 4, SW_TB_CHECKED,

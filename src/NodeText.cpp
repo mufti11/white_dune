@@ -32,7 +32,7 @@
 #include "SFString.h"
 #include "SFBool.h"
 #include "Scene.h"
-#include "NodeFontStyle.h"
+#include "FontStyleNode.h"
 #include "FontInfo.h"
 #include "Util.h"
 #include "MyMesh.h"
@@ -115,7 +115,6 @@ NodeText::reInit(void)
 #include <freetype/ftglyph.h>
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
-//#include <vector>
 #include <iostream>
 #include <fstream>
 
@@ -410,15 +409,18 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
 
     FT_Set_Char_Size( face, height << 6, height << 6, 96, 96);
 
-    NodeFontStyle *fontStyle = (NodeFontStyle *) 
-                    ((SFNode *) getField(fontStyle_Field()))->getValue();
+    FontStyleNode *fontStyle = (FontStyleNode *)
+        ((SFNode *)getField(fontStyle_Field()))->getValue();
 
-    float fsize = SPACING;
+
+    float fsizeX = SPACING;
+    float fsizeY = SPACING;
     float fspacing = 1;
 
     int ijustify = JUSTIFY_BEGIN;
     if (fontStyle) {
-        fsize = fontStyle->size()->getValue() * SPACING;
+        fsizeX = fontStyle->getSizeX() * SPACING;
+        fsizeY = fontStyle->getSizeY() * SPACING;
         fspacing = fontStyle->spacing()->getValue();
     }
 
@@ -443,13 +445,13 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
         float maxX = FLT_MIN;
         for (int i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
-            float x1 = fsize * (t.a.x / height); 
+            float x1 = fsizeX * (t.a.x / height); 
             if (x1 > maxX)
                 maxX = x1;
-            float x2 = fsize * (t.b.x / height); 
+            float x2 = fsizeX * (t.b.x / height); 
             if (x2 > maxX)
                 maxX = x2;
-            float x3 = fsize * (t.c.x / height); 
+            float x3 = fsizeX * (t.c.x / height); 
             if (x3 > maxX)
                 maxX = x3;
         }
@@ -460,14 +462,14 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
             addX = -maxX;
         for (int i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
-            coords->appendSFValue(fsize * (t.a.x / height) + addX, 
-                                  fsize * (t.a.y / height) - j * fspacing, 
+            coords->appendSFValue(fsizeX * (t.a.x / height) + addX, 
+                                  fsizeY * (t.a.y / height) - j * fspacing, 
                                   t.a.z - extrude / 2);
-            coords->appendSFValue(fsize * (t.b.x / height) + addX,
-                                  fsize * (t.b.y / height) - j * fspacing, 
+            coords->appendSFValue(fsizeX * (t.b.x / height) + addX,
+                                  fsizeY * (t.b.y / height) - j * fspacing, 
                                   t.b.z - extrude / 2);
-            coords->appendSFValue(fsize * (t.c.x / height) + addX, 
-                                  fsize * (t.c.y / height) - j * fspacing, 
+            coords->appendSFValue(fsizeX * (t.c.x / height) + addX, 
+                                  fsizeY * (t.c.y / height) - j * fspacing, 
                                   t.c.z - extrude / 2);
             coordIndex->appendSFValue(triangles++);
             coordIndex->appendSFValue(triangles++);

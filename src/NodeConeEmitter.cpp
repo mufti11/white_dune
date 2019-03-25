@@ -36,7 +36,8 @@ ProtoConeEmitter::ProtoConeEmitter(Scene *scene)
 
     angle.set(
         addExposedField(SFFLOAT, "angle", 
-                        new SFFloat(M_PI / 4.0f / unitAngle)));
+                        new SFFloat(M_PI / 4.0f / unitAngle),
+                        new SFFloat(0), new SFFloat(M_PI / unitAngle)));
     direction.set(
         addExposedField(SFVEC3F, "direction", new SFVec3f(0, 1, 0)));
     position.set(

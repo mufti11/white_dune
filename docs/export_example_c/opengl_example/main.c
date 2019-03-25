@@ -83,8 +83,7 @@ GLUnurbsObj *theNurb;
 
 void display()
 {
-    CRWDdraw(navigation_matrix);
-   GLfloat knots[8] = {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0}; 
+    GLfloat knots[8] = {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0}; 
     GLfloat edgePt[5][2] = /* counter clockwise */ 
     {{0.0, 0.0}, {1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0}, 
      {0.0, 0.0}}; 
@@ -94,7 +93,8 @@ void display()
         {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0}; 
     GLfloat pwlPt[4][2] = /* clockwise */ 
         {{0.75, 0.5}, {0.5, 0.25}, {0.25, 0.5}}; 
-   gluBeginSurface(theNurb); 
+    CRWDdraw(navigation_matrix);
+    gluBeginSurface(theNurb); 
     gluNurbsSurface(theNurb, 
             8, knots, 
             8, knots, 

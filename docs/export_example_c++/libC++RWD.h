@@ -57,6 +57,8 @@ namespace CPPRWD
 
     void HAnimJointTreeRender(X3dNode *data, void *dataptr);
 
+    void ParticleSystemTreeRender(X3dNode *data, void *dataptr);
+
     bool TimeSensorSendEvents(X3dNode *data, const char *event, 
                               void* extraData);
 
@@ -118,6 +120,19 @@ static bool preRender = false;
 static bool initRender = false;
 
 static X3dSceneGraph scenegraph;
+
+static double getTimerTime(void)
+{
+#ifdef WIN32
+    struct _timeb t;
+    _ftime(&t);
+    return (double) t.time + t.millitm / 1000.0;
+#else
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return (double) t.tv_sec + (double) t.tv_usec / 1000000.0;
+#endif
+}
 
 void CPPRWD::error(const char *errormsg)
 {
@@ -645,7 +660,15 @@ void CPPRWD::ImageTextureRender(X3dNode *data, void *)
         *(extraVar->textureName) = 0;
 
         filename = *(imageTexture->url);
-
+#ifdef PICTURE_PATH
+        char *name = (char *)filename;
+        char *pathName = (char *)
+                         malloc(strlen(PICTURE_PATH) + strlen(name) + 2);
+        strcpy(pathName, PICTURE_PATH);
+        strcat(pathName, "/");
+        strcat(pathName, name);
+        filename = pathName;
+#endif
         if (!filename)
             return;
         else if (strlen(filename) == 0)
@@ -1283,18 +1306,224 @@ void CPPRWD::HAnimJointTreeRender(X3dNode *data, void *dataptr)
     }
 }
 
+struct ParticleSystemExtraDataStruct {
+    int m_enabled;
+    float m_force[3];
+    float *m_internPosition; 
+    float *m_internVector; 
+    double *m_lifeTime;
+    double *m_startTime; 
+    bool    m_particlesDirty;
+    double  m_internTime;
+    float   m_mass;
+};
 
-static double getTimerTime(void)
+void startParticle(struct X3dParticleSystem *system, int i, 
+                   struct ParticleSystemExtraDataStruct *extraVar)
 {
-#ifdef WIN32
-    struct _timeb t;
-    _ftime(&t);
-    return (double) t.time + t.millitm / 1000.0;
-#else
-    struct timeval t;
-    gettimeofday(&t, NULL);
-    return (double) t.tv_sec + (double) t.tv_usec / 1000000.0;
-#endif
+    float speed = 1;
+    extraVar->m_internPosition[3 * i] = 0;
+    extraVar->m_internPosition[3 * i + 1] = 0; 
+    extraVar->m_internPosition[3 * i + 2] = 0;
+    float alpha = (random() / (float)RAND_MAX) * 2.0 * M_PI;
+    float maxAngle = 2.0 * M_PI;
+    if (system->emitter)
+        if (system->emitter->getType() == X3dConeEmitterType)
+        {
+            X3dConeEmitter *emit = (X3dConeEmitter *) system->emitter;
+            maxAngle = emit->angle;
+        }
+    float angle = (random() / (float)RAND_MAX) * maxAngle; 
+
+    extraVar->m_internVector[3 * i] = speed * extraVar->m_force[0] * 
+                                      sin(angle) * cos(alpha);
+    extraVar->m_internVector[3 * i + 1] = speed * extraVar->m_force[1] * 
+                                          cos(angle);
+    extraVar->m_internVector[3 * i + 2]= speed * extraVar->m_force[2] * 
+                                         sin(angle) * sin(alpha);
+
+    if (system->emitter)
+        if (system->emitter->getType() == X3dConeEmitterType) 
+        {
+            X3dConeEmitter *emit = (X3dConeEmitter *) system->emitter;
+            extraVar->m_internPosition[3 * i] = emit->position[0];
+            extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
+            extraVar->m_internPosition[3 * i + 2] = emit->position[2];
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+/*
+            if ((emit->direction()[0] != 0) &&
+                (emit->direction()[1] != 0) &&
+                (emit->direction()[0] != 0)) 
+            {
+                extraVar->m_internVector[i * 3] = speed * emit->direction[0];
+                extraVar->m_internVector[i * 3 + 1] = speed * 
+                                                       emit->direction[1];
+                extraVar->m_internVector[i * 3 + 2] = speed *
+                                                      emit->direction[2];
+            }
+*/
+            extraVar->m_mass = emit->mass;
+        } 
+        else if (system->emitter->getType() == X3dPointEmitterType) 
+        {
+            X3dPointEmitter *emit = (X3dPointEmitter *) system->emitter;
+            extraVar->m_internPosition[i * 3] = emit->position[0];
+            extraVar->m_internPosition[i * 3 + 1] = emit->position[1]; 
+            extraVar->m_internPosition[i * 3 + 2] = emit->position[2];
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            if ((emit->direction[0] != 0) &&
+                (emit->direction[1] != 0) &&
+                (emit->direction[0] != 0)) {
+                extraVar->m_internVector[i * 3] = speed * 
+                                                  emit->direction[0];
+                extraVar->m_internVector[i * 3 + 1] = speed * 
+                                                      emit->direction[1];
+                extraVar->m_internVector[i * 3 + 2] = speed * 
+                                                      emit->direction[2];
+            }
+            extraVar->m_mass = emit->mass;
+        }
+        else if (system->emitter->getType() == X3dExplosionEmitterType) 
+        {
+            X3dExplosionEmitter *emit = (X3dExplosionEmitter *) system->emitter;
+            extraVar->m_internPosition[3 * i] = emit->position[0];
+            extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
+            extraVar->m_internPosition[3 * i + 2] = emit->position[2];
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            extraVar->m_mass = emit->mass;
+        }
+ 
+    extraVar->m_internVector[3 * i] = speed * extraVar->m_force[1] * 
+                                      cos(angle) * cos(alpha);
+    extraVar->m_internVector[3 * i + 1] = speed * extraVar->m_force[2] * 
+                                          sin(angle);
+    extraVar->m_internVector[3 * i + 2] = speed * extraVar->m_force[3] * 
+                                          cos(angle) * sin(alpha);
+
+    extraVar->m_lifeTime[i] = (random() / (float)RAND_MAX) * 
+                              (system->lifetimeVariation / 2.0f + 1) * 
+                              system->particleLifetime;
+    extraVar->m_startTime[i] = getTimerTime();
+}
+
+void CPPRWD::ParticleSystemTreeRender(X3dNode *data, void *dataptr)
+{
+    struct X3dParticleSystem *system = (struct X3dParticleSystem*)data;
+    struct ParticleSystemExtraDataStruct *extraVar;
+    int i;
+
+    if(initRender)
+    {
+        system->extra_data = malloc(sizeof(struct 
+                                           ParticleSystemExtraDataStruct));
+        if (system->appearance)
+            system->appearance->treeRender(NULL);
+        if (system->geometry)
+            system->geometry->treeRender(NULL);
+    }
+    extraVar = (struct ParticleSystemExtraDataStruct *)system->extra_data;
+    if (extraVar == NULL)
+        return;
+    if(initRender)
+    {
+         extraVar->m_enabled = 1;
+         if (strcmp(system->geometryType, "GEOMETRY") != 0) 
+         {
+             extraVar->m_enabled = 0;
+             fprintf(stderr, "%s%s\n", 
+                     "Warning: only ParticleSystem.geometryType ",
+                     "== GEOMETRY are rendered\n");
+         } else {
+             int numParticles = system->maxParticles;
+             extraVar->m_internPosition = (float *)malloc(numParticles * 
+                                               3 * sizeof(float)); 
+             extraVar->m_internVector = (float *)malloc(numParticles * 
+                                                        3 * sizeof(float));
+             extraVar->m_lifeTime = (double *)malloc(numParticles * 
+                                                     sizeof(double));
+             extraVar->m_startTime = (double *)malloc(numParticles * 
+                                                      sizeof(double));; 
+             for (int i = 0; i < numParticles; i++)
+                 startParticle(system, i, extraVar);                      
+         }
+         extraVar->m_particlesDirty = true;
+         extraVar->m_internTime = 0;
+         extraVar->m_mass = 0;
+
+         extraVar->m_force[0] = 0;
+         extraVar->m_force[1] = 0;
+         extraVar->m_force[2] = 0;
+    }
+    else if (!preRender)
+    {
+        if (extraVar->m_enabled) 
+        {
+            for (int j = 0; j < 3; j ++)
+                extraVar->m_force[j] += 0;
+    
+            for (int i = 0; i < system->physics_length; i++)
+                if (system->physics[i]) 
+                {
+                    X3dNode *phys = system->physics[i];
+                    if (phys->getType() == X3dForcePhysicsModelType) 
+                    {
+                        X3dForcePhysicsModel *model = (X3dForcePhysicsModel *)
+                                                      phys;
+                        const float *forceForce = model->force;
+                        for (int j = 0; j < 3; j ++)
+                            extraVar->m_force[j] += forceForce[j];
+                    } else if (phys->getType() == X3dWindPhysicsModelType) {
+                        X3dWindPhysicsModel *model = (X3dWindPhysicsModel *)
+                                                     phys;
+                        for (int j = 0; j < 3; j++)
+                            extraVar->m_force[j] += model->direction[j] *
+                                                    pow(10, 2.0f * 
+                                                            log(model->speed) * 
+                                                            0.64615f);
+                    }
+                }
+            int numberParticles = system->maxParticles;
+        
+            double t = getTimerTime();
+            double delta = 0;
+            if (extraVar->m_internTime == 0)
+                delta = 0;
+            else
+               delta = t - extraVar->m_internTime;
+            for (int i = 0; i < numberParticles; i++) 
+            {
+                if ((t - extraVar->m_startTime[i]) > extraVar->m_lifeTime[i])
+                    startParticle(system, i, extraVar);
+                else  
+                    for (int j = 0; j < 3; j++)
+                        extraVar->m_internVector[i * 3 + j] += 
+                            delta * extraVar->m_force[j];
+                float mass = extraVar->m_mass;
+                if (mass == 0.0f)
+                    mass = 1.0f;
+                for (int j = 0; j < 3; j++)
+                    extraVar->m_internPosition[3 * i + j] += 
+                        mass * extraVar->m_internVector[3 * i + j] * delta;
+        
+                glPushMatrix();
+                glTranslatef(extraVar->m_internPosition[3 * i],
+                             extraVar->m_internPosition[3 * i + 1],
+                             extraVar->m_internPosition[3 * i + 2]);
+                if (system->appearance)
+                    system->appearance->treeRender(NULL);
+                if (system->geometry)
+                    system->geometry->treeRender(NULL);
+//                if (appearance()->getValue())
+//                    appearance()->getValue()->unbind();
+                glPopMatrix();
+            }
+            extraVar->m_internTime = getTimerTime();
+
+        }
+    }
 }
 
 class CPPRWDTimeSensorData {
@@ -1681,6 +1910,7 @@ void CPPRWD::init()
     X3dPixelTexture::renderCallback = PixelTextureRender;
     X3dImageTexture::renderCallback = ImageTextureRender;
     X3dSwitch::treeRenderCallback = SwitchTreeRender;
+    X3dParticleSystem::treeRenderCallback = ParticleSystemTreeRender;
     X3dHAnimHumanoid::treeRenderCallback = HAnimHumanoidTreeRender;
     X3dHAnimJoint::treeRenderCallback = HAnimJointTreeRender;
     X3dTimeSensor::processEventCallback = TimeSensorSendEvents;

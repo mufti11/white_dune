@@ -49,8 +49,8 @@ if test "$CFLAGS" != "$OLD_CFLAGS"; then
  CFLAGS="$OLD_CFLAGS"
  echo reseting CFLAGS to $CFLAGS
 fi
-if test "$CXXFLAGS -std=c++11 " != "OLD_CXXFLAGS"; then
- CXXFLAGS="$OLD_CXXFLAGS -std=c++11 "
+if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
+ CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
  echo reseting CXXFLAGS to $CXXFLAGS
 fi
 

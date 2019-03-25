@@ -31,11 +31,12 @@ EmitterProto::EmitterProto(Scene *scene,  const char *name)
   : Proto(scene, name)
 {
     speed.set(
-        addExposedField(SFFLOAT, "speed", new SFFloat(0)));
+        addExposedField(SFFLOAT, "speed", new SFFloat(0), new SFFloat(0)));
     variation.set(
-        addExposedField(SFFLOAT, "variation", new SFFloat(0.25)));
+        addExposedField(SFFLOAT, "variation", new SFFloat(0.25),
+                        new SFFloat(0), new SFFloat(1)));
     mass.set(
-        addField(SFFLOAT, "mass", new SFFloat(0)));
+        addField(SFFLOAT, "mass", new SFFloat(0), new SFFloat(0)));
     surfaceArea.set(
         addField(SFFLOAT, "surfaceArea", new SFFloat(0)));
 }

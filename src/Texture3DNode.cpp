@@ -178,49 +178,49 @@ Texture3DNode::drawTexture3D(Node *node, Scene *scene)
     if (m_imageData == NULL)
         return;
 
-     glEnable(GL_ALPHA_TEST);
-     glEnable(GL_BLEND);
-     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-     glAlphaFunc(GL_NOTEQUAL, 0);
+    glEnable(GL_ALPHA_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glAlphaFunc(GL_NOTEQUAL, 0);
 
 #ifdef HAVE_TEXTURE_3D
-     glEnable(GL_TEXTURE_3D);
-     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-     glBindTexture(GL_TEXTURE_3D, m_gTex3D);
+    glEnable(GL_TEXTURE_3D);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glBindTexture(GL_TEXTURE_3D, m_gTex3D);
 #endif 
 
-     glPushMatrix();
+    glPushMatrix();
 
 #ifdef HAVE_TEXTURE_3D  
-     glMatrixMode(GL_MODELVIEW);
-     Quaternion quat = scene->getCamera()->getOrientation();
-     SFRotation rot(quat);
-     const float *frotation = rot.getValue();
-     glRotatef(RAD2DEG(frotation[3]),
-               frotation[0], frotation[1], frotation[2]);
-     Vec3f pos = scene->getCamera()->getPosition();
+    glMatrixMode(GL_MODELVIEW);
+    Quaternion quat = scene->getCamera()->getOrientation();
+    SFRotation rot(quat);
+    const float *frotation = rot.getValue();
+    glRotatef(RAD2DEG(frotation[3]),
+              frotation[0], frotation[1], frotation[2]);
+    Vec3f pos = scene->getCamera()->getPosition();
 //     glTranslatef(-pos.x, -pos.y, -pos.z);
 //     glScalef(2, 2, 2);
 
-     glMatrixMode(GL_TEXTURE);
-     glLoadIdentity();
-     glScalef(2, 2, 4); // ???
-     glRotatef(RAD2DEG(frotation[3]),
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glScalef(2, 2, 4); // ???
+    glRotatef(RAD2DEG(frotation[3]),
                frotation[0], frotation[1], frotation[2]);
 #endif
 
-      glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHTING);
 
-      drawQuads(node);
+    drawQuads(node);
 
-      glMatrixMode(GL_MODELVIEW);
-      glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 
-      glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
 
-      glDisable(GL_BLEND);
+    glDisable(GL_BLEND);
 #ifdef HAVE_TEXTURE_3D
-      glBindTexture(GL_TEXTURE_3D, 0);
-      glDisable(GL_TEXTURE_3D);
+    glBindTexture(GL_TEXTURE_3D, 0);
+    glDisable(GL_TEXTURE_3D);
 #endif
 }

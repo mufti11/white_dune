@@ -44,6 +44,8 @@ public:
 
     virtual bool    isX3dInternalProto(void) { return true; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }
+
     FieldIndex direction;
     FieldIndex enabled;
     FieldIndex gustiness;
@@ -60,6 +62,8 @@ public:
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; }    
     virtual Node   *copy() const { return new NodeWindPhysicsModel(*this); }
+
+    Vec3f getForce(void);
 
     fieldMacros(SFVec3f, direction,  ProtoWindPhysicsModel);
     fieldMacros(SFBool,  enabled,    ProtoWindPhysicsModel);

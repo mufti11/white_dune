@@ -34,6 +34,15 @@
 
 #include "SFMFTypes.h"
 
+enum {
+    PARTICLES_LINE,
+    PARTICLES_POINT,
+    PARTICLES_QUAD,
+    PARTICLES_SPRITE,
+    PARTICLES_TRIANGLE,
+    PARTICLES_GEOMETRY,
+};
+
 class ProtoParticleSystem : public Proto {
 public:
                     ProtoParticleSystem(Scene *scene);
@@ -42,6 +51,8 @@ public:
     virtual int     getType() const { return X3D_PARTICLE_SYSTEM; }
 
     virtual bool    isX3dInternalProto(void) { return true; }
+
+    virtual bool    isDeclaredInRwd_h() { return true; }
 
     FieldIndex appearance;
     FieldIndex createParticles;
@@ -72,6 +83,15 @@ public:
     virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeParticleSystem(*this); }
 
+    void            init(void);
+    virtual void    draw(int pass);
+    void            startParticle(int i);
+    virtual void    setField(int field, FieldValue *value, int cf = -1)
+                        {
+                        m_particlesDirty = true;
+                        Node::setField(field, value, cf);
+                        }
+
     fieldMacros(SFNode,   appearance,        ProtoParticleSystem);
     fieldMacros(SFBool,   createParticles,   ProtoParticleSystem);
     fieldMacros(SFNode,   geometry,          ProtoParticleSystem);
@@ -89,6 +109,18 @@ public:
     fieldMacros(MFNode,   physics,           ProtoParticleSystem);
     fieldMacros(SFNode,   texCoordRamp,      ProtoParticleSystem);
     fieldMacros(MFFloat,  texCoordKey,       ProtoParticleSystem);
+
+protected:
+    float m_force[3];
+    MyArray<Vec3f>  m_internPosition; 
+    MyArray<Vec3f>  m_internVector; 
+    MyArray<double> m_lifeTime;
+    MyArray<double> m_startTime; 
+    bool            m_particlesDirty;
+    double          m_internTime;
+    float           m_mass;
+    int             m_geometryType;
+    Node           *m_particleNode;
 };
 
 #endif

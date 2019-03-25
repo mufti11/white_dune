@@ -42,6 +42,8 @@ public:
 
     virtual int     getType() const { return X3D_EXPLOSION_EMITTER; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }
+
     virtual bool    isX3dInternalProto(void) { return true; }
 
     FieldIndex position;

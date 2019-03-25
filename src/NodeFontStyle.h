@@ -32,31 +32,23 @@
 #include "Proto.h"
 #endif
 
+#include "FontStyleNode.h"
+
 #include "SFMFTypes.h"
 
-class ProtoFontStyle : public WonderlandExportProto {
+class ProtoFontStyle : public FontStyleProto {
 public:
                     ProtoFontStyle(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_FONT_STYLE; }
-    virtual int     getNodeClass() const { return FONT_STYLE_NODE; }
 
     virtual bool    isDeclaredInRwd_h() { return true; }      
 
-    FieldIndex family;
-    FieldIndex horizontal;
-    FieldIndex justify;
-    FieldIndex language;
-    FieldIndex leftToRight;
     FieldIndex size;
-    FieldIndex spacing;
-    FieldIndex style;
-    FieldIndex topToBottom;
-    FieldIndex quality;
 };
 
-class NodeFontStyle : public Node {
+class NodeFontStyle : public FontStyleNode {
 public:
                     NodeFontStyle(Scene *scene, Proto *proto);
 
@@ -66,18 +58,12 @@ public:
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
+    virtual float   getSizeX(void) const { return size()->getValue(); }
+    virtual float   getSizeY(void) const { return size()->getValue(); }
+
     void            setField(int index, FieldValue *value, int cf = -1);
 
-    fieldMacros(MFString, family,      ProtoFontStyle)
-    fieldMacros(SFBool,   horizontal,  ProtoFontStyle)
-    fieldMacros(MFString, justify,     ProtoFontStyle)
-    fieldMacros(SFString, language,    ProtoFontStyle)
-    fieldMacros(SFBool,   leftToRight, ProtoFontStyle)
     fieldMacros(SFFloat,  size,        ProtoFontStyle)
-    fieldMacros(SFFloat,  spacing,     ProtoFontStyle)
-    fieldMacros(SFString, style,       ProtoFontStyle)
-    fieldMacros(SFBool,   topToBottom, ProtoFontStyle)
-    fieldMacros(SFFloat,  quality,     ProtoFontStyle)
 };
 
 #endif // _NODE_FONTSTYLE_H

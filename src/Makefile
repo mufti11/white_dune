@@ -36,11 +36,11 @@ EGREP_PROBLEMS = no
 
 CPPFLAGS= -I. -Iswt/include  -I/usr/include/vcglib -I/usr/include/eigen3  -I/usr/include/freetype2 -I/usr/include/libpng16   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
 COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/include/vcglib -I/usr/include/eigen3  -I/usr/include/freetype2 -I/usr/include/libpng16   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
-CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11  -fopenmp
+CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11 -Wno-nonnull-compare -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
-CXXFLAGS = -g $(COMMON_FLAGS)  -std=c++11  -fopenmp
-CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -std=c++11  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
+CXXFLAGS = -g $(COMMON_FLAGS)  -std=c++11 -Wno-nonnull-compare -fopenmp
+CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -std=c++11 -Wno-nonnull-compare -fopenmp
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -131,7 +131,6 @@ NODECLASSES = \
         NodeGeoTransform.o \
         NodeGeoViewpoint.o \
         NodeGeneratedCubeMapTexture.o \
-        NodeGravityPhysicsModel.o \
 	NodeGroup.o \
         NodeHAnimDisplacer.o \
         NodeHAnimHumanoid.o \
@@ -407,7 +406,8 @@ NODEPARENTCLASSES = \
         X3DNBodyCollisionSpaceNode.o \
         X3DRigidJointNode.o \
         AnchoredJointNode.o \
-        Texture3DNode.o
+        Texture3DNode.o \
+        FontStyleNode.o
 
 TYPECLASSES = \
 	SFBool.o \

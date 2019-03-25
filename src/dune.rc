@@ -1022,7 +1022,6 @@ BEGIN
             BEGIN
                 MENUITEM "ParticleSystem",              ID_NEW_PARTICLE_SYSTEM
                 MENUITEM "BoundedPhysicsModel",         ID_NEW_BOUNDED_PHYSICS_MODEL
-                MENUITEM "GravityPhysicsModel",         ID_NEW_GRAVITY_PHYSICS_MODEL
                 MENUITEM "ForcePhysicsModel",           ID_NEW_FORCE_PHYSICS_MODEL
                 MENUITEM "WindPhysicsModel",            ID_NEW_WIND_PHYSICS_MODEL
                 MENUITEM "VolumeEmitter",               ID_NEW_VOLUME_EMITTER
@@ -3748,7 +3747,6 @@ BEGIN
     ID_NEW_CONE_EMITTER        "Create a new X3D ConeEmitter node.\nX3D ConeEmitter"
     ID_NEW_EXPLOSION_EMITTER   "Create a new X3D ExplosionEmitter node.\nX3D ExplosionEmitter"
     ID_NEW_FORCE_PHYSICS_MODEL "Create a new X3D ForcePhysicsModel node.\nX3D ForcePhysicsModel"
-    ID_NEW_GRAVITY_PHYSICS_MODEL "Create a new X3D GravityPhysicsModel node.\nX3D GravityPhysicsModel"
     ID_NEW_PARTICLE_SYSTEM     "Create a new X3D ParticleSystem node.\nX3D ParticleSystem"
     ID_NEW_POINT_EMITTER       "Create a new X3D PointEmitter node.\nX3D PointEmitter"
     ID_NEW_POLYLINE_EMITTER    "Create a new X3D PolylineEmitter node.\nX3D PolylineEmitter"
@@ -5377,7 +5375,6 @@ BEGIN
            BEGIN
                MENUITEM "ParticleSystem",                 ID_NEW_PARTICLE_SYSTEM
                MENUITEM "BoundedPhysicsModel",            ID_NEW_BOUNDED_PHYSICS_MODEL
-               MENUITEM "GravityPhysicsModel",            ID_NEW_GRAVITY_PHYSICS_MODEL
                MENUITEM "ForcePhysicsModel",              ID_NEW_FORCE_PHYSICS_MODEL
                MENUITEM "WindPhysicsModel",               ID_NEW_WIND_PHYSICS_MODEL
                MENUITEM "VolumeEmitter",                  ID_NEW_VOLUME_EMITTER
@@ -8033,7 +8030,6 @@ BEGIN
     ID_FR_NEW_CONE_EMITTER        "Create a new X3D ConeEmitter node.\nX3D ConeEmitter"
     ID_FR_NEW_EXPLOSION_EMITTER   "Create a new X3D ExplosionEmitter node.\nX3D ExplosionEmitter"
     ID_FR_NEW_FORCE_PHYSICS_MODEL "Create a new X3D ForcePhysicsModel node.\nX3D ForcePhysicsModel"
-    ID_FR_NEW_GRAVITY_PHYSICS_MODEL "Create a new X3D GravityPhysicsModel node.\nX3D GravityPhysicsModel"
     ID_FR_NEW_PARTICLE_SYSTEM     "Create a new X3D ParticleSystem node.\nX3D ParticleSystem"
     ID_FR_NEW_POINT_EMITTER       "Create a new X3D PointEmitter node.\nX3D PointEmitter"
     ID_FR_NEW_POLYLINE_EMITTER    "Create a new X3D PolylineEmitter node.\nX3D PolylineEmitter"
@@ -9612,7 +9608,6 @@ BEGIN
            BEGIN
                MENUITEM "ParticleSystem",               ID_NEW_PARTICLE_SYSTEM
                MENUITEM "BoundedPhysicsModel",          ID_NEW_BOUNDED_PHYSICS_MODEL
-               MENUITEM "GravityPhysicsModel",          ID_NEW_GRAVITY_PHYSICS_MODEL
                MENUITEM "ForcePhysicsModel",            ID_NEW_FORCE_PHYSICS_MODEL
                MENUITEM "WindPhysicsModel",             ID_NEW_WIND_PHYSICS_MODEL
                MENUITEM "VolumeEmitter",                ID_NEW_VOLUME_EMITTER
@@ -12265,7 +12260,6 @@ BEGIN
     ID_DE_NEW_CONE_EMITTER          "Erzeuge einen neuen X3D ConeEmitter Knoten.\nX3D ConeEmitter"
     ID_DE_NEW_EXPLOSION_EMITTER     "Erzeuge einen neuen X3D ExplosionEmitter Knoten.\nX3D ExplosionEmitter"
     ID_DE_NEW_FORCE_PHYSICS_MODEL   "Erzeuge einen neuen X3D ForcePhysicsModel Knoten.\nX3D ForcePhysicsModel"
-    ID_DE_NEW_GRAVITY_PHYSICS_MODEL "Erzeuge einen neuen X3D GravityPhysicsModel Knoten.\nX3D GravityPhysicsModel"
     ID_DE_NEW_PARTICLE_SYSTEM       "Erzeuge einen neuen X3D ParticleSystem Knoten.\nX3D ParticleSystem"
     ID_DE_NEW_POINT_EMITTER         "Erzeuge einen neuen X3D PointEmitter Knoten.\nX3D PointEmitter"
     ID_DE_NEW_POLYLINE_EMITTER      "Erzeuge einen neuen X3D PolylineEmitter Knoten.\nX3D PolylineEmitter"
@@ -13846,7 +13840,6 @@ BEGIN
            BEGIN
                MENUITEM "ParticleSystem",               ID_NEW_PARTICLE_SYSTEM
                MENUITEM "BoundedPhysicsModel",          ID_NEW_BOUNDED_PHYSICS_MODEL
-               MENUITEM "GravityPhysicsModel",          ID_NEW_GRAVITY_PHYSICS_MODEL
                MENUITEM "ForcePhysicsModel",            ID_NEW_FORCE_PHYSICS_MODEL
                MENUITEM "WindPhysicsModel",             ID_NEW_WIND_PHYSICS_MODEL
                MENUITEM "VolumeEmitter",                ID_NEW_VOLUME_EMITTER
@@ -16505,7 +16498,6 @@ BEGIN
     ID_IT_NEW_CONE_EMITTER          "Crea un nuovo X3D ConeEmitter node.\nX3D ConeEmitter"
     ID_IT_NEW_EXPLOSION_EMITTER     "Crea un nuovo X3D ExplosionEmitter node.\nX3D ExplosionEmitter"
     ID_IT_NEW_FORCE_PHYSICS_MODEL   "Crea un nuovo X3D ForcePhysicsModel node.\nX3D ForcePhysicsModel"
-    ID_IT_NEW_GRAVITY_PHYSICS_MODEL "Crea un nuovo X3D GravityPhysicsModel node.\nX3D GravityPhysicsModel"
     ID_IT_NEW_PARTICLE_SYSTEM       "Crea un nuovo X3D ParticleSystem node.\nX3D ParticleSystem"
     ID_IT_NEW_POINT_EMITTER         "Crea un nuovo X3D PointEmitter node.\nX3D PointEmitter"
     ID_IT_NEW_POLYLINE_EMITTER      "Crea un nuovo X3D PolylineEmitter node.\nX3D PolylineEmitter"
@@ -18086,7 +18078,6 @@ BEGIN
             BEGIN
                 MENUITEM "ParticleSystem",              ID_NEW_PARTICLE_SYSTEM
                 MENUITEM "BoundedPhysicsModel",         ID_NEW_BOUNDED_PHYSICS_MODEL
-                MENUITEM "GravityPhysicsModel",         ID_NEW_GRAVITY_PHYSICS_MODEL
                 MENUITEM "ForcePhysicsModel",           ID_NEW_FORCE_PHYSICS_MODEL
                 MENUITEM "WindPhysicsModel",            ID_NEW_WIND_PHYSICS_MODEL
                 MENUITEM "VolumeEmitter",               ID_NEW_VOLUME_EMITTER
@@ -20747,7 +20738,6 @@ BEGIN
     ID_PT_NEW_CONE_EMITTER        "Create a new X3D ConeEmitter node.\nX3D ConeEmitter"
     ID_PT_NEW_EXPLOSION_EMITTER   "Create a new X3D ExplosionEmitter node.\nX3D ExplosionEmitter"
     ID_PT_NEW_FORCE_PHYSICS_MODEL "Create a new X3D ForcePhysicsModel node.\nX3D ForcePhysicsModel"
-    ID_PT_NEW_GRAVITY_PHYSICS_MODEL "Create a new X3D GravityPhysicsModel node.\nX3D GravityPhysicsModel"
     ID_PT_NEW_PARTICLE_SYSTEM     "Create a new X3D ParticleSystem node.\nX3D ParticleSystem"
     ID_PT_NEW_POINT_EMITTER       "Create a new X3D PointEmitter node.\nX3D PointEmitter"
     ID_PT_NEW_POLYLINE_EMITTER    "Create a new X3D PolylineEmitter node.\nX3D PolylineEmitter"

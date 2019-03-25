@@ -131,7 +131,6 @@ NODECLASSES = \
         NodeGeoTransform.o \
         NodeGeoViewpoint.o \
         NodeGeneratedCubeMapTexture.o \
-        NodeGravityPhysicsModel.o \
 	NodeGroup.o \
         NodeHAnimDisplacer.o \
         NodeHAnimHumanoid.o \
@@ -407,7 +406,8 @@ NODEPARENTCLASSES = \
         X3DNBodyCollisionSpaceNode.o \
         X3DRigidJointNode.o \
         AnchoredJointNode.o \
-        Texture3DNode.o
+        Texture3DNode.o \
+        FontStyleNode.o
 
 TYPECLASSES = \
 	SFBool.o \

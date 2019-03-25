@@ -791,6 +791,14 @@ public:
 
     void                resetPerspective(void);
 
+    int                 getWidth(void)  { return m_width; }
+    int                 getHeight(void) { return m_height; }
+
+    bool                hasParticleSystem(void) 
+                            { return m_hasParticleSystem; }
+    void                setParticleSystem(bool flag) 
+                            { m_hasParticleSystem = flag; }
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -1001,6 +1009,11 @@ protected:
     bool                m_viewpointUpdated;
 
     bool                m_drawViewPorts;
+
+    int                 m_width;
+    int                 m_height;
+
+    bool                m_hasParticleSystem;
 };
 
 bool writeCNodeData(Node *node, void *data);

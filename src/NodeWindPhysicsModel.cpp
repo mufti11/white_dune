@@ -55,3 +55,14 @@ NodeWindPhysicsModel::NodeWindPhysicsModel(Scene *scene, Proto *def)
   : Node(scene, def)
 {
 }
+
+Vec3f
+NodeWindPhysicsModel::getForce(void)
+{
+    Vec3f vec(direction()->getValue()[0],
+              direction()->getValue()[1],
+              direction()->getValue()[2]);
+    vec = vec * pow(10, 2.0f * log(speed()->getValue()) * 0.64615f);
+    return vec; 
+}
+

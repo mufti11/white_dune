@@ -126,7 +126,6 @@
 #include "NodeGeoTouchSensor.h"
 #include "NodeGeoTransform.h"
 #include "NodeGeoViewpoint.h" 
-#include "NodeGravityPhysicsModel.h"
 #include "NodeGroup.h"
 #include "NodeHAnimDisplacer.h"
 #include "NodeHAnimHumanoid.h"
@@ -521,8 +520,6 @@ SceneProtoMap::createProtoMap(ProtoMap *protos, Scene *scene, bool add)
                  new ProtoGeoTouchSensor(scene), add);
     addOrReplace(protos, "GeoTransform", new ProtoGeoTransform(scene), add);
     addOrReplace(protos, "GeoViewpoint", new ProtoGeoViewpoint(scene), add);
-    addOrReplace(protos, "GravityPhysicsModel", 
-                 new ProtoGravityPhysicsModel(scene), add);
     addOrReplace(protos, "Group", new ProtoGroup(scene), add);
     addOrReplace(protos, "HAnimDisplacer", 
                  new ProtoHAnimDisplacer(scene), add);

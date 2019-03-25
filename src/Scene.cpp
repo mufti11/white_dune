@@ -362,6 +362,9 @@ Scene::Scene()
     updateTime();
     m_viewpointUpdated = false;
     m_drawViewPorts = true;
+    m_width = 1024;
+    m_height = 768;
+    m_hasParticleSystem = false;
 }
 
 void
@@ -512,7 +515,7 @@ Scene::setNodes(NodeList *nodes)
     ((NodeGroup *)m_root)->children(new MFNode(nodes));
 }
 
-static bool searchViewPort(Node *node, void *data)
+static bool searchViewPortOrParticles(Node *node, void *data)
 {
     Scene *scene = (Scene *)data;
     if (node->getType() == X3D_VIEWPORT) {
@@ -521,6 +524,8 @@ static bool searchViewPort(Node *node, void *data)
         scene->addViewPort(node);
     } else if (node->getType() == X3D_LAYOUT_LAYER) {
         scene->addViewPort(node);
+    } else if (node->getType() == X3D_PARTICLE_SYSTEM) {
+        scene->setParticleSystem(true);
     }
     return true;
 }     
@@ -529,7 +534,8 @@ void
 Scene::setViewPorts(void)
 {
     m_viewports.resize(0);
-    m_root->doWithBranch(searchViewPort, this);
+    m_hasParticleSystem = false;
+    m_root->doWithBranch(searchViewPortOrParticles, this);
 }
 
 void
@@ -563,7 +569,8 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
     nodes->clearFlag(NODE_FLAG_TOUCHED);
     for (int i = 0; i < nodes->size(); i++)
         if (nodes->get(i))
-            nodes->get(i)->doWithBranch(searchViewPort, this, false);
+            nodes->get(i)->doWithBranch(searchViewPortOrParticles, this, 
+                                        false);
 }
 
 static bool loadInline(Node *node, void *data)
@@ -700,7 +707,7 @@ Scene::searchNodeType(int nodeType)
     NodeList *nodeList = new NodeList();
     for (int i = 0; i < m_nodeList.size(); i++)
         nodeList->append(m_nodeList[i]);  
-    /// delete returned NodeList after usage
+        /// delete returned NodeList after usage
     return nodeList;
 }
 
@@ -3551,6 +3558,9 @@ void
 Scene::drawScene(bool pick, int x, int y, float width, float height, 
                  Node *root, bool useUpdate, float scaleX, float scaleY)
 {
+    m_width = width;
+    m_height = height;
+
     m_drawViewPorts = (root != getRoot());
     if (root == NULL) {
         root = getRoot();
