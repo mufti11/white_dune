@@ -49,7 +49,7 @@ EXTERNPROTO SuperShape[
  ]
 [
   "SuperShapePROTO.wrl"
-  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperShapePROTO.wrl"
+  ".//docs/scripted_Nodes/SuperShapePROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/SuperShapePROTO.wrl"
 ]
 
@@ -70,7 +70,7 @@ EXTERNPROTO CurveAnimation[
  ]
 [
   "CurveAnimationPROTO.wrl"
-  "/usr/share/doc/whitedune/docs/scripted_Nodes/CurveAnimationPROTO.wrl"
+  ".//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
 ]
 
@@ -5703,7 +5703,7 @@ Transform {
                   ]
                 }
                 DEF Transform5 Transform {
-                  rotation 0.768117 0.633466 -9.336153e-2 3.210100
+                  rotation 0.768117 0.633466 -9.336159e-2 3.210100
                   translation 5.917241 2.859427 1.169944
                   center -2.414691 -0.298006 -0.163896
                   children [

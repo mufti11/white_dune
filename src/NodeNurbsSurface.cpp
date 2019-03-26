@@ -289,11 +289,13 @@ NodeNurbsSurface::convert2X3d(void)
     } else {
         MFVec3f *points = (MFVec3f *)getUntranslatedField(
            ((ProtoNurbsSurface *)getPrimaryProto())->controlPoint);
-        points->ref();
-        createControlPoints(points);
-        coord = (NodeCoordinate *)controlPointX3D()->getValue();
-        m_scene->changeRoutes(coord, coord->point_Field(), 
-                              this, controlPoint_Field());
+        if (points->getSize() > 0) {
+            points->ref();
+            createControlPoints(points);
+            coord = (NodeCoordinate *)controlPointX3D()->getValue();
+            m_scene->changeRoutes(coord, coord->point_Field(), 
+                                  this, controlPoint_Field());
+        }
     }
     return NULL;
 }

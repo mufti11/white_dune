@@ -21,7 +21,8 @@ run: classes/X3dSceneGraph.class classes/x3d.class
 	java $(LIBS) -cp .:classes:$(JARS) x3d
 
 robot.java: robot.x3dv
-	if test -x ../../../bin/dune ; then ../../../bin/dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java ; else dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java ; fi
+	(../../../bin/dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java) || \
+	dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java ; fi
 
 classes/X3dSceneGraph.class: robot.java
 	@if test "X_$$JOGL_HOME" = "X_" ; then echo environment variable '$$JOGL_HOME' should be set to the directory of jogl2.jar and native libraries 1>&2 ; fi

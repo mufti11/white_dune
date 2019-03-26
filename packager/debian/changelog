@@ -1,3 +1,10 @@
+whitedune (0.99pl1480-1) experimental; urgency=low
+
+  * Version 0.99pl1480 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Tue, 26 Mar 2019 19:46:35 +0100
+
 wdune (0.99pl1468-1) experimental; urgency=low
 
   * Version 0.99pl1468 debian package
