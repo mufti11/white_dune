@@ -1,5 +1,5 @@
 /* Copyright (c) Stefan Wolf, 2010. */
-/* Copyright (c) J. "MUFTI" Scheurich, 2015,2016. */
+/* Copyright (c) J. "MUFTI" Scheurich, 2015,2016, 2019. */
 
 /*
    Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-import com.jogamp.common.nio.Buffers;
+//import com.jogamp.common.nio.Buffers;
 
 import com.jogamp.newt.Window;
 import com.jogamp.newt.event.KeyAdapter;
@@ -61,6 +61,8 @@ import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
 
 import java.io.File;
+
+import java.util.Random;
 
 // draws a X3DV file with shapes (converted to) IndexedFaceSet nodes
 
@@ -340,6 +342,8 @@ public class x3d implements GLEventListener
         MyHAnimJointRenderCallback myHAnimJointRenderCallback = new MyHAnimJointRenderCallback();
         X3dHAnimJoint.setX3dHAnimJointRenderCallback(myHAnimJointRenderCallback);
 
+        MyParticleSystemRenderCallback myParticleSystemRenderCallback = new MyParticleSystemRenderCallback();
+        X3dParticleSystem.setX3dParticleSystemRenderCallback(myParticleSystemRenderCallback);
 
         MyTimeSensorProcessEventCallback myTimeSensorProcessEventCallback = new MyTimeSensorProcessEventCallback();
         X3dTimeSensor.setX3dTimeSensorProcessEventCallback(myTimeSensorProcessEventCallback);
@@ -691,8 +695,8 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
             }
             x3d.gl.glEnd();
         }
+        x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
     }
-    x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
 }
 
 class MyMaterialRenderCallback extends X3dMaterialRenderCallback
@@ -1158,7 +1162,6 @@ class MySwitchRenderCallback extends X3dSwitchRenderCallback
     }
 }
 
-
 class HAnimJointExtraDataStruct {
     public float jointMatrix[];
     public float thisMatrix[];
@@ -1350,8 +1353,6 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
     }
 }
 
-
-
 class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
 {
     public void render(X3dNode data)
@@ -1412,6 +1413,219 @@ class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
                      }
          }
      }
+}
+
+class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
+{
+    private static double getTimerTime() 
+    {
+        java.util.Date date = new java.util.Date();
+        return date.getTime() / 1000.0;
+    }
+
+    public void render(X3dNode data)
+    {
+        X3dParticleSystem system = (X3dParticleSystem)data;
+        if (system == null)
+            return;
+        if(x3d.initRender)
+        {
+             m_rand = new Random();
+             m_enabled = true;
+             if (!system.geometryType.equals("GEOMETRY")) 
+             {
+                 m_enabled = false;
+                 System.err.println( 
+                         "Warning: only Particlesystemem.geometryType " +
+                         "== GEOMETRY are rendered");
+             } else {
+                 int numParticles = system.maxParticles;
+                 m_internPosition = new float[numParticles * 3]; 
+                 m_internVector = new float[numParticles * 3];
+                 m_lifeTime = new double[numParticles];
+                 m_startTime = new double[numParticles]; 
+                 for (int i = 0; i < numParticles; i++)
+                     startParticle(system, i);                      
+             }
+             m_particlesDirty = true;
+             m_internTime = 0;
+             m_mass = 0;
+    
+             m_force[0] = 0;
+             m_force[1] = 0;
+             m_force[2] = 0;
+        }
+        else if (!x3d.preRender)
+        {
+            if (m_enabled) 
+            {
+                for (int j = 0; j < 3; j ++)
+                    m_force[j] += 0;
+        
+                for (int i = 0; i < system.physics.length; i++)
+                    if (system.physics[i] == null) 
+                    {
+                        X3dNode phys = system.physics[i];
+                        if (phys.getType() == X3dForcePhysicsModelType.type) 
+                        {
+                            X3dForcePhysicsModel model = (X3dForcePhysicsModel)
+                                                         phys;
+                            for (int j = 0; j < 3; j ++)
+                                m_force[j] += model.force[j];
+                        } else if (phys.getType() == X3dWindPhysicsModelType.type) {
+                            X3dWindPhysicsModel model = (X3dWindPhysicsModel)
+                                                         phys;
+                            for (int j = 0; j < 3; j++)
+                                m_force[j] += model.direction[j] *
+                                                        Math.pow(10, 2.0f * 
+                                                                Math.log(model.speed) * 
+                                                                0.64615f);
+                        }
+                    }
+                int numberParticles = system.maxParticles;
+            
+                double t = getTimerTime();
+                double delta = 0;
+                if (m_internTime == 0)
+                    delta = 0;
+                else
+                   delta = t - m_internTime;
+                for (int i = 0; i < numberParticles; i++) 
+                {
+                    if ((t - m_startTime[i]) > m_lifeTime[i])
+                        startParticle(system, i);
+                    else  
+                        for (int j = 0; j < 3; j++)
+                            m_internVector[i * 3 + j] += 
+                                delta * m_force[j];
+                    float mass = m_mass;
+                    if (mass == 0.0f)
+                        mass = 1.0f;
+                    for (int j = 0; j < 3; j++)
+                        m_internPosition[3 * i + j] += 
+                            mass * m_internVector[3 * i + j] * delta;
+            
+                    x3d.gl.glPushMatrix();
+                    x3d.gl.glTranslatef(m_internPosition[3 * i],
+                                        m_internPosition[3 * i + 1],
+                                        m_internPosition[3 * i + 2]);
+                    if (system.appearance != null)
+                        system.appearance.treeRender(null);
+                    if (system.geometry != null)
+                        system.geometry.treeRender(null);
+                    x3d.gl.glPopMatrix();
+                }
+                m_internTime = getTimerTime();
+    
+            }
+       }
+    }
+
+    boolean m_enabled;
+    float   m_force[];
+    float   m_internPosition[]; 
+    float   m_internVector[]; 
+    double  m_lifeTime[];
+    double  m_startTime[]; 
+    boolean m_particlesDirty;
+    double  m_internTime;
+    float   m_mass;
+    Random  m_rand;
+
+    void MyParticlesystememRenderCallback()
+    {
+        m_force = new float[3];
+    }
+
+    void startParticle(X3dParticleSystem system, int i)
+    {
+        float speed = 1;
+        m_internPosition[3 * i] = 0;
+        m_internPosition[3 * i + 1] = 0; 
+        m_internPosition[3 * i + 2] = 0;
+        float alpha = (m_rand.nextFloat()) * 2.0f * (float)Math.PI;
+        float maxAngle = 2.0f * (float)Math.PI;
+        if (system.emitter != null)
+            if (system.emitter.getType() == X3dConeEmitterType.type)
+            {
+                X3dConeEmitter emit = (X3dConeEmitter) system.emitter;
+                maxAngle = emit.angle;
+            }
+        float angle = (m_rand.nextFloat()) * maxAngle; 
+
+System.out.println("m_internVector " + m_internVector + " " + i);    
+        m_internVector[3 * i] = speed * m_force[0] * 
+                                (float)Math.sin(angle) * (float)Math.cos(alpha);
+        m_internVector[3 * i + 1] = speed * m_force[1] * 
+                                    (float)Math.cos(angle);
+        m_internVector[3 * i + 2]= speed * m_force[2] * 
+                                   (float)Math.sin(angle) * (float)Math.sin(alpha);
+    
+        if (system.emitter != null)
+            if (system.emitter.getType() == X3dConeEmitterType.type) 
+            {
+                X3dConeEmitter emit = (X3dConeEmitter) system.emitter;
+                m_internPosition[3 * i] = emit.position[0];
+                m_internPosition[3 * i + 1] = emit.position[1]; 
+                m_internPosition[3 * i + 2] = emit.position[2];
+                speed = (m_rand.nextFloat()) * 
+                        (emit.variation / 2.0f + 1) * emit.speed;
+    /*
+                if ((emit.direction()[0] != 0) &&
+                    (emit.direction()[1] != 0) &&
+                    (emit.direction()[0] != 0)) 
+                {
+                    m_internVector[i * 3] = speed * emit.direction[0];
+                    m_internVector[i * 3 + 1] = speed * 
+                                                           emit.direction[1];
+                    m_internVector[i * 3 + 2] = speed *
+                                                          emit.direction[2];
+                }
+    */
+                m_mass = emit.mass;
+            } 
+            else if (system.emitter.getType() == X3dPointEmitterType.type) 
+            {
+                X3dPointEmitter emit = (X3dPointEmitter) system.emitter;
+                m_internPosition[i * 3] = emit.position[0];
+                m_internPosition[i * 3 + 1] = emit.position[1]; 
+                m_internPosition[i * 3 + 2] = emit.position[2];
+                speed = (m_rand.nextFloat()) * 
+                        (emit.variation / 2.0f + 1) * emit.speed;
+                if ((emit.direction[0] != 0) &&
+                    (emit.direction[1] != 0) &&
+                    (emit.direction[0] != 0)) {
+                    m_internVector[i * 3] = speed * 
+                                                      emit.direction[0];
+                    m_internVector[i * 3 + 1] = speed * 
+                                                          emit.direction[1];
+                    m_internVector[i * 3 + 2] = speed * 
+                                                          emit.direction[2];
+                }
+                m_mass = emit.mass;
+            }
+            else if (system.emitter.getType() == X3dExplosionEmitterType.type) 
+            {
+                X3dExplosionEmitter emit = (X3dExplosionEmitter) system.emitter;
+                m_internPosition[3 * i] = emit.position[0];
+                m_internPosition[3 * i + 1] = emit.position[1]; 
+                m_internPosition[3 * i + 2] = emit.position[2];
+                speed = (m_rand.nextFloat()) * 
+                        (emit.variation / 2.0f + 1) * emit.speed;
+                m_mass = emit.mass;
+            }
+     
+        m_internVector[3 * i] = speed * m_force[1] * 
+                                (float)Math.cos(angle) * (float)Math.cos(alpha);
+        m_internVector[3 * i + 1] = speed * m_force[2] * (float)Math.sin(angle);
+        m_internVector[3 * i + 2] = speed * m_force[3] * 
+                                    (float)Math.cos(angle) * (float)Math.sin(alpha);
+    
+        m_lifeTime[i] = (m_rand.nextFloat()) * 
+                        (system.lifetimeVariation / 2.0f + 1) * 
+                        system.particleLifetime;
+        m_startTime[i] = getTimerTime();
+    }
 }
 
 

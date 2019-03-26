@@ -211,19 +211,19 @@ NodeNurbsCurve::createControlPoints(MFVec3f *points)
 Node *
 NodeNurbsCurve::convert2X3d(void)
 {
-    if (controlPointX3D()->getType() == X3D_COORDINATE_DOUBLE) {
-        NodeCoordinateDouble *coord = (NodeCoordinateDouble *)
-                                       controlPointX3D()->getValue();
-        if (coord != NULL) {
-            m_scene->changeRoutes(coord, coord->point_Field(),
-                                  this, controlPoint_Field());
-        }
+    NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
+    if (coord != NULL) {
+        coord->getVariableName();
+        m_scene->changeRoutes(coord, coord->point_Field(), 
+                              this, controlPoint_Field());
     } else {
-        NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
-        if (coord != NULL) {
-            m_scene->changeRoutes(coord, coord->point_Field(),
-                                  this, controlPoint_Field());
-        }
+        MFVec3f *points = (MFVec3f *)getUntranslatedField(
+           ((ProtoNurbsSurface *)getPrimaryProto())->controlPoint);
+        points->ref();
+        createControlPoints(points);
+        coord = (NodeCoordinate *)controlPointX3D()->getValue();
+        m_scene->changeRoutes(coord, coord->point_Field(), 
+                              this, controlPoint_Field());
     }
     return NULL;
 }

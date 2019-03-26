@@ -122,12 +122,13 @@ or all devices supported via the Xinput protocol.
 White_dune support quad-buffer stereo visuals. Under Linux, this can be used
 with Elsa Revelator, Crystal Eyes or Nvidia 3D Vision shutter-glasses and 
 special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
-%define _binaries_in_noarch_packages_terminate_build 0
+
 %package opengl-examples
 License: GPLv3+
 Summary: Compiled OpenGL examples for white_dune
 %description opengl-examples
 Compiled OpenGL examples for white_dune
+
 %package docs
 License: GPLv3+
 BuildArch: noarch
@@ -150,12 +151,9 @@ Documentation for white_dune
     --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity
 %make_build 
-(
-    cd docs/export_example_c++/opengl_example
-    make render_with_picture_path
-    cd -
-)
-
+pushd docs/export_example_c++/opengl_example
+make render_with_picture_path
+popd
 
 %install
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
@@ -173,8 +171,10 @@ install -m 644 -p desktop/kde/dune4kids.desktop $RPM_BUILD_ROOT/%{_datadir}/appl
 install -m 644 -p desktop/kde/dune4kids.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/dune4kids.png
 install -m 644 -p man/dune.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune.1
 install -m 644 -p man/dune4kids.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune4kids.1
-install -m 755 -p docs/export_example_c++/opengl_example/render_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/white_dune_opengl_example
 install -m 644 -p man/illegal2vrml.1 $RPM_BUILD_ROOT/%{_mandir}/man1/illegal2vrml.1
+install -m 755 -p docs/export_example_c++/opengl_example/render_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/white_dune_opengl_example
+# remove binary from noarch package
+rm docs/export_example_c++/opengl_example/render_with_picture_path 
 install -m 644 -p docs/export_example_c++/opengl_example/fin.png $RPM_BUILD_ROOT/%{_datadir}/white_dune/fin.png
 install -m 644 -p docs/export_example_c++/opengl_example/fire.png $RPM_BUILD_ROOT/%{_datadir}/white_dune/fire.png
 

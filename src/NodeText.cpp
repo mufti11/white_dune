@@ -517,7 +517,7 @@ deBackslashString(const char *string)
     ret[0] = 0;
   
     int retCounter = 0;
-    for (int i = 0; i < strlen(string); i++) {
+    for (unsigned int i = 0; i < strlen(string); i++) {
         if (string[i] == '\\')
             i++;
         ret[retCounter] = string[i];
@@ -557,13 +557,16 @@ NodeText::draw()
     MFString *mfstring = m_deBackslashedStrings;
     if (mfstring == NULL)
         return;
-    NodeFontStyle *fontStyle = (NodeFontStyle *) 
+    FontStyleNode *fontStyle = (FontStyleNode *) 
                     ((SFNode *) getField(fontStyle_Field()))->getValue();
 
-    float fsize = 1;
-    if (fontStyle)
-        fsize = fontStyle->size()->getValue();
-    
+    float fsizeX = 1;
+    float fsizeY = 1;
+    if (fontStyle) {
+        fsizeX = fontStyle->getSizeX();
+        fsizeY = fontStyle->getSizeX();
+    }
+
     GLfloat diff_color[4];
     GLfloat em_color[4];
 
@@ -591,10 +594,10 @@ NodeText::draw()
         const char  *str = mfstring->getValue(j);
         int n = strlen(str);
         glPushMatrix();
-        glTranslatef(0, -j * fsize, 0);
+        glTranslatef(0, -j * fsizeY, 0);
         const float GLUT_STROKE_ROMAN_SIZE = 119.05;
         float scale = 1/GLUT_STROKE_ROMAN_SIZE;
-        glScalef(scale * fsize, scale * fsize, 1.0);
+        glScalef(scale * fsizeX, scale * fsizeY, 1.0);
         for (int i = 0; i < n; i++)
             glutStrokeCharacter(GLUT_STROKE_ROMAN, str[i]);
         glPopMatrix();

@@ -24,6 +24,10 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 #include <jpeglib.h>
 #include <png.h>
 
+#ifdef _WIN32
+# define random(x) rand(x)
+#endif
+
 namespace CPPRWD
 {
 

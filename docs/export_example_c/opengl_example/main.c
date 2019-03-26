@@ -53,26 +53,6 @@
 #include "CExport.c"
 #include "libCRWD.h"
 #include <math.h>
-
-GLfloat ctlpoints[48] = {
--2.423965-1.093903,2.808455,
--0.500000,-1.500000,0,
-0.500000,-1.500000,0,
-2.423965,-1.093903,2.808455
--1.500000,-0.500000,0,
--0.500000,-0.500000,0,
-0.500000,-0.500000,0,
-1.500000,-0.500000,0,
--1.500000,0.500000,0,
--0.500000,0.500000,0,
-0.500000,0.500000,0,
-1.500000,0.500000,0,
--2.883405,3.385512,0.271763,
--0.500000,1.500000,0,
-0.500000,1.500000,0,
-2.883405,3.385512,0.271763
-};
-
 float view_rotx = 0.0f; 
 float view_roty = 0.0f;
 float view_rotz = 0.0f;
@@ -83,38 +63,7 @@ GLUnurbsObj *theNurb;
 
 void display()
 {
-    GLfloat knots[8] = {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0}; 
-    GLfloat edgePt[5][2] = /* counter clockwise */ 
-    {{0.0, 0.0}, {1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0}, 
-     {0.0, 0.0}}; 
-    GLfloat curvePt[4][2] = /* clockwise */ 
-    {{0.25, 0.5}, {0.25, 0.75}, {0.75, 0.75}, {0.75, 0.5}}; 
-    GLfloat curveKnots[8] = 
-        {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0}; 
-    GLfloat pwlPt[4][2] = /* clockwise */ 
-        {{0.75, 0.5}, {0.5, 0.25}, {0.25, 0.5}}; 
     CRWDdraw(navigation_matrix);
-    gluBeginSurface(theNurb); 
-    gluNurbsSurface(theNurb, 
-            8, knots, 
-            8, knots, 
-            4 * 3, 
-            3, 
-            &ctlpoints[0], 
-            4, 4, 
-            GL_MAP2_VERTEX_3); 
-    gluBeginTrim (theNurb); 
-        gluPwlCurve (theNurb, 5, &edgePt[0][0], 2, 
-                     GLU_MAP1_TRIM_2); 
-    gluEndTrim (theNurb); 
-    gluBeginTrim (theNurb); 
-        gluNurbsCurve (theNurb, 8, curveKnots, 2, 
-                &curvePt[0][0], 4, GLU_MAP1_TRIM_2); 
-        gluPwlCurve (theNurb, 3, &pwlPt[0][0], 2, 
-                     GLU_MAP1_TRIM_2); 
-    gluEndTrim (theNurb); 
-    gluEndSurface(theNurb); 
-
     glutSwapBuffers();
 }
 

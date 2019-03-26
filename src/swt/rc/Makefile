@@ -6,7 +6,7 @@ AWK = gawk
 LEX = flex --nounistd
 YACC = bison -y
 
-LIBS = 
+LIBS = -lfl
 LIBDIRS =
 INCDIRS = -I../include
 # WARNINGS = -Wall -Wwrite-strings

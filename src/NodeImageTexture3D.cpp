@@ -1310,7 +1310,7 @@ struct {
     {{"ulonglong", "unsigned long long", "unsigned long long int", "uint64", "uint64_t", NULL, NULL}, CDATATYPE_ulonglong, 8, "%llu" },
     {{"float", NULL,NULL,NULL,NULL, NULL,NULL},CDATATYPE_float,4, "%f" },
     {{"double", NULL,NULL,NULL,NULL, NULL,NULL},CDATATYPE_double,8, "%lf"},
-    {{NULL,NULL,NULL,NULL, NULL,NULL,NULL},0},
+    {{NULL,NULL,NULL,NULL, NULL,NULL,NULL},0, 0, ""},
 };
 
 enum {

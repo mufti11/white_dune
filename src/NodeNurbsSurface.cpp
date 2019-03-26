@@ -216,8 +216,14 @@ NodeNurbsSurface::setControlPoints(MFVec3f *points)
         }
         Node::setField(controlPoint_Field(), points);
         ((Node *)coord)->Node::setField(coord->point_Field(), points);
-    } else 
+    } else {
+        NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
+        if (coord == NULL) {
+            createControlPoints(points);
+            return;
+        }
         Node::setField(controlPoint_Field(), points);
+    }
     m_meshDirty = true;
 }
 
@@ -275,21 +281,19 @@ NodeNurbsSurface::convert2X3d(void)
         flipSide();
         ccw(new SFBool(true));
     }    
-    if (controlPointX3D()->getType() == X3D_COORDINATE_DOUBLE) {
-        NodeCoordinateDouble *coord = (NodeCoordinateDouble *)
-                                      controlPointX3D()->getValue();
-        if (coord != NULL) {
-            coord->getVariableName();
-            m_scene->changeRoutes(coord, coord->point_Field(), 
-                                  this, controlPoint_Field());
-        }
+    NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
+    if (coord != NULL) {
+        coord->getVariableName();
+        m_scene->changeRoutes(coord, coord->point_Field(), 
+                              this, controlPoint_Field());
     } else {
-        NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
-        if (coord != NULL) {
-            coord->getVariableName();
-            m_scene->changeRoutes(coord, coord->point_Field(), 
-                                  this, controlPoint_Field());
-        }
+        MFVec3f *points = (MFVec3f *)getUntranslatedField(
+           ((ProtoNurbsSurface *)getPrimaryProto())->controlPoint);
+        points->ref();
+        createControlPoints(points);
+        coord = (NodeCoordinate *)controlPointX3D()->getValue();
+        m_scene->changeRoutes(coord, coord->point_Field(), 
+                              this, controlPoint_Field());
     }
     return NULL;
 }

@@ -550,6 +550,20 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
         m_scene->setNotSaved();
 }
 
+FieldValue *
+NodeData::getUntranslatedField(int index) const
+{
+#ifdef DEBUG
+    assert(index >= 0 && index < m_numFields);
+#else
+    if ((index < 0) && (index >= m_numFields)) {
+        printf("Internal error in NodeData::getField\n");
+        return NULL;
+    }
+#endif
+    return m_fields[index];
+}
+
 void
 Node::addFieldNodeList(int index, NodeList *childList, int containerField)
 {
@@ -4054,9 +4068,10 @@ NodeData::convert2X3d(void) {
     setFlag(NODE_FLAG_CONVERTED);
     for (int i = 0; i < m_numFields; i++)
         if (m_fields[i] != NULL) {
-           if (m_fields[i]->getType() == SFNODE)
-               ((SFNode *) m_fields[i])->convert2X3d();
-           else if (m_fields[i]->getType() == MFNODE)
+           if (m_fields[i]->getType() == SFNODE) {
+               if (((SFNode *) m_fields[i])->getValue())
+                   ((SFNode *) m_fields[i])->getValue()->convert2X3d();
+           } else if (m_fields[i]->getType() == MFNODE)
                ((MFNode *) m_fields[i])->convert2X3d();
         }
     return NULL;
@@ -4069,9 +4084,10 @@ NodeData::convert2Vrml(void) {
     setFlag(NODE_FLAG_CONVERTED);
     for (int i = 0; i < m_numFields; i++)
         if (m_fields[i] != NULL) {
-           if (m_fields[i]->getType() == SFNODE)
-               ((SFNode *) m_fields[i])->convert2Vrml();
-           else if (m_fields[i]->getType() == MFNODE)
+           if (m_fields[i]->getType() == SFNODE) {
+               if (((SFNode *) m_fields[i])->getValue())
+                   ((SFNode *) m_fields[i])->getValue()->convert2Vrml();
+           } else if (m_fields[i]->getType() == MFNODE)
                ((MFNode *) m_fields[i])->convert2Vrml();
         }
     return NULL;

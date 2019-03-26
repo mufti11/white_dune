@@ -433,7 +433,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/home/mufti/wdune-0.99rc1435'
+ac_pwd='/home/mufti/wdune-0.99rc1475'
 srcdir='.'
 AWK='gawk'
 test -n "$AWK" || AWK=awk
@@ -612,8 +612,8 @@ cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
 S["ANT"]=""
-S["JAVA"]="echo"
-S["JAVAC"]="echo"
+S["JAVA"]="/usr/bin/java"
+S["JAVAC"]="/usr/bin/javac"
 S["TESTICONSIZE2"]="../batch/testiconsize2.sh /usr/bin/bmptopnm"
 S["TESTICONSIZE"]="../batch/testiconsize.sh /usr/bin/bmptopnm"
 S["BMPTOPNM"]="/usr/bin/bmptopnm"
@@ -649,7 +649,8 @@ S["SOUNDEDITOR"]="/usr/bin/audacity"
 S["IMAGEEDITOR4KIDS"]="/usr/bin/gpaint"
 S["IMAGEEDITOR"]="/usr/bin/gimp"
 S["WWWBROWSER"]="/usr/bin/xdg-open"
-S["TERM"]="/usr/bin/lxterminal -e"
+S["TERM"]="xterm-256color -e"
+S["X11_EDITOR"]=""
 S["GREP_FLAGS"]="--binary-files=text"
 S["EGREP_PROBLEMS"]="no"
 S["NOUNISTD"]="--nounistd"
@@ -670,14 +671,14 @@ S["NEBULA"]=""
 S["GIF"]="gif.o"
 S["CXXCPP"]="g++ -E"
 S["ac_ct_CXX"]="g++"
-S["CXXFLAGS"]=" -std=c++11  -fopenmp"
+S["CXXFLAGS"]=" -std=c++11 -Wno-nonnull-compare -fopenmp"
 S["CXX"]="g++"
 S["OBJEXT"]="o"
 S["EXEEXT"]=""
 S["ac_ct_CC"]="gcc"
 S["CPPFLAGS"]=" -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcg"\
-"lib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/  -I/usr/X11R6/include/ -I/usr/X11R"\
-"6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include"
+"lib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16  -I/usr/X11R6/include/ -I/usr/X11R6/LessT"\
+"if/Motif1.2/include -I/usr/local/include -I/usr/local/include"
 S["LDFLAGS"]=" -L/usr/local/lib -L/usr/local/lib -g"
 S["CFLAGS"]=" -fopenmp"
 S["CC"]="gcc"
@@ -775,7 +776,6 @@ D["HAVE_COVER_NODES_PROTO_URL"]=" \".//docs/coverNodes\""
 D["HAVE_UNINSTALL_COMMENT"]=" \"no information how to uninstall white_dune: possibly it has been installed from source\""
 D["HAVE_GIF"]=" 1"
 D["YYTEXT_POINTER"]=" 1"
-D["HAVE_TERM"]=" \"/usr/bin/lxterminal --no-remote \""
 D["HAVE_IMAGE_EDITOR"]=" \"/usr/bin/gimp\""
 D["HAVE_IMAGE_EDITOR4KIDS"]=" \"/usr/bin/gpaint\""
 D["HAVE_SOUND_EDITOR"]=" \"/usr/bin/audacity\""
@@ -835,7 +835,7 @@ D["HAVE_LIBUSB"]=" 1"
 D["HAVE_SIGNAL_INT"]=" 1"
 D["HAVE_TYPENAME"]=" 1"
 D["HAVE_FPCLASSIFY"]=" 1"
-D["HAVE_DUNE_VERSION"]=" \"white_dune 0.99rc1435\""
+D["HAVE_DUNE_VERSION"]=" \"white_dune 0.99rc1475\""
 D["HAVE_NEW_NEW_HANDLER"]=" 1"
   for (key in D) D_is_set[key] = 1
   FS = ""

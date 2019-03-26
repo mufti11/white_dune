@@ -2,7 +2,7 @@
   libC++RWD Library for C++ Rendering of White_dune Data (in Development)*/
 
 /* Copyright (c) Stefan Wolf, 2010. */
-/* Copyright (c) J. "MUFTI" Scheurich, 2010-2018. */
+/* Copyright (c) J. "MUFTI" Scheurich, 2010-2019. */
 
 /*
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -24,6 +24,10 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 #include <string.h>
 #include <jpeglib.h>
 #include <png.h>
+
+#ifdef _WIN32
+# define random(x) rand(x)
+#endif
 
 #define X3dNode void
 
@@ -1268,7 +1272,6 @@ void CRWDHAnimJointTreeRender(X3dNode *data, void *extraData)
     }
 }
 
-
 static double getTimerTime(void)
 {
 #ifdef WIN32
@@ -1280,6 +1283,245 @@ static double getTimerTime(void)
     gettimeofday(&t, NULL);
     return (double) t.tv_sec + (double) t.tv_usec / 1000000.0;
 #endif
+}
+
+struct ParticleSystemExtraDataStruct {
+    int m_enabled;
+    float m_force[3];
+    float *m_internPosition; 
+    float *m_internVector; 
+    double *m_lifeTime;
+    double *m_startTime; 
+    int     m_particlesDirty;
+    double  m_internTime;
+    float   m_mass;
+};
+
+void startParticle(struct X3dParticleSystem *system, int i, 
+                   struct ParticleSystemExtraDataStruct *extraVar)
+{
+    float angle; 
+    struct X3dConeEmitter *mayEmitter;
+    float speed = 1;
+    float alpha = (random() / (float)RAND_MAX) * 2.0 * M_PI;
+    float maxAngle = 2.0 * M_PI;;
+
+    extraVar->m_internPosition[3 * i] = 0;
+    extraVar->m_internPosition[3 * i + 1] = 0; 
+    extraVar->m_internPosition[3 * i + 2] = 0;
+
+    angle = (random() / (float)RAND_MAX) * maxAngle; 
+    mayEmitter = (struct X3dConeEmitter *) system->emitter;
+    if (system->emitter)
+        if (mayEmitter->m_type == X3dConeEmitterType)
+        {
+            struct X3dConeEmitter *emit = (struct X3dConeEmitter *) 
+                                          system->emitter;
+            maxAngle = emit->angle;
+        }
+
+    extraVar->m_internVector[3 * i] = speed * extraVar->m_force[0] * 
+                                      sin(angle) * cos(alpha);
+    extraVar->m_internVector[3 * i + 1] = speed * extraVar->m_force[1] * 
+                                          cos(angle);
+    extraVar->m_internVector[3 * i + 2]= speed * extraVar->m_force[2] * 
+                                         sin(angle) * sin(alpha);
+
+    if (system->emitter)
+        if (mayEmitter->m_type == X3dConeEmitterType) 
+        {
+            struct X3dConeEmitter *emit = (struct X3dConeEmitter *) 
+                                          system->emitter;
+            extraVar->m_internPosition[3 * i] = emit->position[0];
+            extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
+            extraVar->m_internPosition[3 * i + 2] = emit->position[2];
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+/*
+            if ((emit->direction()[0] != 0) &&
+                (emit->direction()[1] != 0) &&
+                (emit->direction()[0] != 0)) 
+            {
+                extraVar->m_internVector[i * 3] = speed * emit->direction[0];
+                extraVar->m_internVector[i * 3 + 1] = speed * 
+                                                       emit->direction[1];
+                extraVar->m_internVector[i * 3 + 2] = speed *
+                                                      emit->direction[2];
+            }
+*/
+            extraVar->m_mass = emit->mass;
+        } 
+        else if (mayEmitter->m_type == X3dPointEmitterType) 
+        {
+            struct X3dPointEmitter *emit = (struct X3dPointEmitter *) 
+                                           system->emitter;
+            extraVar->m_internPosition[i * 3] = emit->position[0];
+            extraVar->m_internPosition[i * 3 + 1] = emit->position[1]; 
+            extraVar->m_internPosition[i * 3 + 2] = emit->position[2];
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            if ((emit->direction[0] != 0) &&
+                (emit->direction[1] != 0) &&
+                (emit->direction[0] != 0)) {
+                extraVar->m_internVector[i * 3] = speed * 
+                                                  emit->direction[0];
+                extraVar->m_internVector[i * 3 + 1] = speed * 
+                                                      emit->direction[1];
+                extraVar->m_internVector[i * 3 + 2] = speed * 
+                                                      emit->direction[2];
+            }
+            extraVar->m_mass = emit->mass;
+        }
+        else if (mayEmitter->m_type == X3dExplosionEmitterType) 
+        {
+            struct X3dExplosionEmitter *emit = (struct X3dExplosionEmitter *) 
+                                               system->emitter;
+            extraVar->m_internPosition[3 * i] = emit->position[0];
+            extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
+            extraVar->m_internPosition[3 * i + 2] = emit->position[2];
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            extraVar->m_mass = emit->mass;
+        }
+ 
+    extraVar->m_internVector[3 * i] = speed * extraVar->m_force[1] * 
+                                      cos(angle) * cos(alpha);
+    extraVar->m_internVector[3 * i + 1] = speed * extraVar->m_force[2] * 
+                                          sin(angle);
+    extraVar->m_internVector[3 * i + 2] = speed * extraVar->m_force[3] * 
+                                          cos(angle) * sin(alpha);
+
+    extraVar->m_lifeTime[i] = (random() / (float)RAND_MAX) * 
+                              (system->lifetimeVariation / 2.0f + 1) * 
+                              system->particleLifetime;
+    extraVar->m_startTime[i] = getTimerTime();
+}
+
+void CRWDParticleSystemTreeRender(X3dNode *data, void *dataptr)
+{
+    struct X3dParticleSystem *system = (struct X3dParticleSystem*)data;
+    struct ParticleSystemExtraDataStruct *extraVar;
+    int i;
+
+    if(initRender)
+    {
+        system->extra_data = malloc(sizeof(struct 
+                                           ParticleSystemExtraDataStruct));
+        if (system->appearance)
+            X3dTreeRenderCallback(system->appearance, NULL);
+        if (system->geometry)
+            X3dTreeRenderCallback(system->geometry, NULL);
+    }
+    extraVar = (struct ParticleSystemExtraDataStruct *)system->extra_data;
+    if (extraVar == NULL)
+        return;
+    if(initRender)
+    {
+         extraVar->m_enabled = 1;
+         if (strcmp(system->geometryType, "GEOMETRY") != 0) 
+         {
+             extraVar->m_enabled = 0;
+             fprintf(stderr, "%s%s\n", 
+                     "Warning: only ParticleSystem.geometryType ",
+                     "== GEOMETRY are rendered\n");
+         } else {
+             int numParticles = system->maxParticles;
+             extraVar->m_internPosition = (float *)malloc(numParticles * 
+                                               3 * sizeof(float)); 
+             extraVar->m_internVector = (float *)malloc(numParticles * 
+                                                        3 * sizeof(float));
+             extraVar->m_lifeTime = (double *)malloc(numParticles * 
+                                                     sizeof(double));
+             extraVar->m_startTime = (double *)malloc(numParticles * 
+                                                      sizeof(double));; 
+             for (i = 0; i < numParticles; i++)
+                 startParticle(system, i, extraVar);                      
+         }
+         extraVar->m_particlesDirty = 1;
+         extraVar->m_internTime = 0;
+         extraVar->m_mass = 0;
+
+         extraVar->m_force[0] = 0;
+         extraVar->m_force[1] = 0;
+         extraVar->m_force[2] = 0;
+    }
+    else if (!preRender)
+    {
+        if (extraVar->m_enabled) 
+        {
+            int numberParticles;
+            double t;
+            double delta;
+            int i,j;
+
+            for (j = 0; j < 3; j ++)
+                extraVar->m_force[j] += 0;
+    
+            for (i = 0; i < system->physics_length; i++)
+            {
+                struct X3dForcePhysicsModel *mayForce = 
+                    (struct X3dForcePhysicsModel *)system->physics[i];
+
+                if (system->physics[i]) 
+                {
+                    X3dNode *phys = system->physics[i];
+                    if (mayForce->m_type == X3dForcePhysicsModelType) 
+                    {
+                        struct X3dForcePhysicsModel *model = 
+                            (struct X3dForcePhysicsModel *) phys;
+                        const float *forceForce = model->force;
+                        for (j = 0; j < 3; j ++)
+                            extraVar->m_force[j] += forceForce[j];
+                    } else if (mayForce->m_type == X3dWindPhysicsModelType) {
+                        struct X3dWindPhysicsModel *model = 
+                            (struct X3dWindPhysicsModel *) phys;
+                        for (j = 0; j < 3; j++)
+                            extraVar->m_force[j] += model->direction[j] *
+                                                    pow(10, 2.0f * 
+                                                            log(model->speed) * 
+                                                            0.64615f);
+                    }
+                }
+            }
+            numberParticles = system->maxParticles;
+        
+            t = getTimerTime();
+            delta = 0;
+            if (extraVar->m_internTime == 0)
+                delta = 0;
+            else
+               delta = t - extraVar->m_internTime;
+            for (i = 0; i < numberParticles; i++) 
+            {
+                int j;
+                float mass;
+                if ((t - extraVar->m_startTime[i]) > extraVar->m_lifeTime[i])
+                    startParticle(system, i, extraVar);
+                else  
+                    for (j = 0; j < 3; j++)
+                        extraVar->m_internVector[i * 3 + j] += 
+                            delta * extraVar->m_force[j];
+                mass = extraVar->m_mass;
+                if (mass == 0.0f)
+                    mass = 1.0f;
+                for (j = 0; j < 3; j++)
+                    extraVar->m_internPosition[3 * i + j] += 
+                        mass * extraVar->m_internVector[3 * i + j] * delta;
+        
+                glPushMatrix();
+                glTranslatef(extraVar->m_internPosition[3 * i],
+                             extraVar->m_internPosition[3 * i + 1],
+                             extraVar->m_internPosition[3 * i + 2]);
+                if (system->appearance)
+                    X3dTreeRenderCallback(system->appearance, NULL);
+                if (system->geometry)
+                    X3dTreeRenderCallback(system->geometry, NULL);
+                glPopMatrix();
+            }
+            extraVar->m_internTime = getTimerTime();
+
+        }
+    }
 }
 
 struct CRWDTimeSensorData {
@@ -1672,6 +1914,7 @@ void CRWDinit()
     X3dSwitchTreeRenderCallback = CRWDSwitchTreeRender;
     X3dHAnimHumanoidTreeRenderCallback = CRWDHAnimHumanoidTreeRender;
     X3dHAnimJointTreeRenderCallback = CRWDHAnimJointTreeRender;
+    X3dParticleSystemTreeRenderCallback = CRWDParticleSystemTreeRender;
     X3dTimeSensorProcessEventCallback = CRWDTimeSensorSendEvents;
     X3dPositionInterpolatorProcessEventCallback = CRWDPositionInterpolatorSendEvents;
     X3dOrientationInterpolatorProcessEventCallback = CRWDOrientationInterpolatorSendEvents;

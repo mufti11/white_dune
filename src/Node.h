@@ -631,6 +631,8 @@ public:
     virtual void        setField(FieldIndex index, FieldValue *value)
                             { setField((int) index, value); }
 
+    virtual FieldValue *getUntranslatedField(int index) const;
+
     const char       *getTreeLabel(void) { return m_treeLabel; }
     const MyString   &getName(void);
     const MyString   &getNameOrNewName(void);

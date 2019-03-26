@@ -4999,5 +4999,13 @@ Added ParticleSystem to C++ export
 
 Fixed bug in update of toolbars
 
+Removed wrong NURBS rendering from C export main program
+
+Added ParticleSystem to C and java export
+
+Simplified jogl_example export Makefile
+
+Fixed bug in NurbsSurface/NurbsCurve to X3D conversion
+
 contact: MUFTI <mufti@users.ourproject.org>
 
