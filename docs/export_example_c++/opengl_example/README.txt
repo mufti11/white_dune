@@ -1,8 +1,8 @@
 This file is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it.
 
-When you copy this directory e.g. to $HOME, you have to remove "../../../bin/"
-from the Makefile
+When you copy this directory e.g. to $HOME, you have to copy
+also ../libC++RWD.h in your e.g. $HOME
 
 To use this example on Linux/UNIX/MacOSX, modify the X3DV file, save it and type
 

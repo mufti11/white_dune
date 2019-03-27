@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=0.99pl1476
+pkgver=0.99pl1480
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -35,7 +35,7 @@ makedepends=(gcc
              lxterminal
              gimp
              audacity
-#             cinelerra-cv #not available under ArchLinuxARM
+             cinelerra-cv
              kolourpaint
              imagemagick
              netpbm
@@ -58,7 +58,7 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=(74c7ef7b909a1b3e11dab33e9404d385)
+md5sums=('4ef135618a445d154a2b6bb4d8fa6dda')
 validpgpkeys=()
 
 prepare() {
@@ -68,7 +68,7 @@ prepare() {
 
 build() {
 	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R wdune" --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" --with-partial-fortify 
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R wdune" --with-optimization --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" 
         make
 }
 

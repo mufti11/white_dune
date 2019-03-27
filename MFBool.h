@@ -1,0 +1,77 @@
+/*
+ * MFBool.h
+ *
+ * Copyright (C) 1999 Stephen F. White, 2008 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
+ * Cambridge, MA 02139, USA.
+ */
+
+#ifndef _MFBool_H
+#define _MFBool_H
+
+#ifndef _ARRAY_H
+#include "Array.h"
+#endif
+#ifndef _FIELDVALUE_H
+#include "FieldValue.h"
+#endif
+
+class MFBool : public MFieldValue {
+public:
+                        MFBool();
+                        MFBool(bool *values, int len);
+                        MFBool(MFBool *value);
+                        MFBool(const bool value);
+    virtual            ~MFBool();
+
+    virtual int         getType() const { return MFBOOL; }
+    virtual const char *getTypeName() const { return "MFBool"; }
+    virtual MyString    getString(int index, int stride) const;
+
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeXml(int filedes, int indent) const;
+
+    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual const char *getTypeC(int languageFlag) const;
+
+    virtual bool        readLine(int index, char *line);
+    virtual int         getNumbersPerType(void) const { return getStride(); }
+
+    virtual bool        equals(const FieldValue *value) const;
+    virtual int         getSFSize() const { return m_value.size(); }
+    virtual FieldValue *getSFValue(int index) const;
+    virtual void        setSFValue(int index, FieldValue *value);
+    virtual void        setSFValue(int index, const int value);
+    virtual FieldValue *copy();
+
+    bool                getValue(int index) const { return m_value[index]; }
+    const bool         *getValues() const { return m_value.getData(); }
+    int                 getSize() const { return m_value.size(); }
+
+    virtual void        insertSFValue(int index, FieldValue *value);
+    virtual void        insertSFValue(int index, const bool value);
+    virtual void        removeSFValue(int index) { m_value.remove(index); }
+
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
+
+    virtual bool        isX3DType() { return true; }
+
+    FieldValue         *getRandom(Scene *scene, int nodeType);
+protected:
+    MyArray<bool>       m_value;
+};
+
+#endif

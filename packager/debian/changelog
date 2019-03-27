@@ -1,3 +1,24 @@
+wdune (0.99pl1482-1) experimental; urgency=low
+
+  * Version 0.99pl1482 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Wed, 27 Mar 2019 13:01:10 +0100
+
+whitedune (0.99pl1482-1) experimental; urgency=low
+
+  * Version 0.99pl1482 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Wed, 27 Mar 2019 11:44:15 +0100
+
+wdune (0.99pl1480-1) experimental; urgency=low
+
+  * Version 0.99pl1480 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Tue, 26 Mar 2019 20:39:41 +0100
+
 whitedune (0.99pl1480-1) experimental; urgency=low
 
   * Version 0.99pl1480 debian package

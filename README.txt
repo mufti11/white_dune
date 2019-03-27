@@ -5007,5 +5007,7 @@ Simplified jogl_example export Makefile
 
 Fixed bug in NurbsSurface/NurbsCurve to X3D conversion
 
+Fixed selection error when creating a HAnimHumanoid node 
+
 contact: MUFTI <mufti@users.ourproject.org>
 
