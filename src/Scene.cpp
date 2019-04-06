@@ -347,8 +347,10 @@ Scene::Scene()
     m_canUpdateViewsSelection = true;
     m_variableCounter = 0;
     m_deselect = false;
+    zeroNumDataClasses();
     zeroNumDataFunctions();
-    zeroNumReducedDataFunctions();
+    m_startNumDataFunctions = 0;
+    m_numDataFunctionsPerClass = 0;
     m_numDraw = 0;
     m_lastSelectedHAnimJoint = NULL;
     m_downloaded = false;
@@ -707,7 +709,7 @@ Scene::searchNodeType(int nodeType)
     NodeList *nodeList = new NodeList();
     for (int i = 0; i < m_nodeList.size(); i++)
         nodeList->append(m_nodeList[i]);  
-        /// delete returned NodeList after usage
+        // delete returned NodeList after usage
     return nodeList;
 }
 
@@ -1840,7 +1842,6 @@ Scene::writeAc3d(int f, bool raven)
         }
         m_ac3dEmptyMaterial = materialIndex;
     }
-
     
     // write ac3d equivalent of empty material
     RET_ONERROR( mywritestr(f, "MATERIAL \"") )
@@ -2151,55 +2152,20 @@ Scene::writeCDeclaration(int f, int languageFlag)
 int
 Scene::writeCDataFunctionsCalls(int f, int languageFlag)
 {
-    zeroNumReducedDataFunctions();
-    int numFunctionCounter = 0;
-
-    if (languageFlag & MANY_JAVA_CLASSES)
-        RET_ONERROR( mywritef(f, "class data%sFunctionClass_%d {\n",
-                              TheApp->getCPrefix(), 
-                              getNumReducedDataFunctions()) )
-
-    RET_ONERROR( mywritestr(f, "    ") )
-    if (languageFlag & MANY_JAVA_CLASSES)
-        RET_ONERROR( mywritestr(f, "public static ") )
-    RET_ONERROR( mywritef(f, "void data%sFunction_%d() {\n",
-                          TheApp->getCPrefix(), getNumReducedDataFunctions()) )
-    numFunctionCounter++;
-    for (int i = 0; i < getNumDataFunctions(); i++) {
-        if (numFunctionCounter > MAX_JAVA_CALLS) {
+    int numDataFunctions = getNumDataFunctionsPerClass();
+    for (int i = 0; i < 1; i++) {
+        if (languageFlag & MANY_JAVA_CLASSES) {
             RET_ONERROR( mywritef(f, "    }\n") )
-            if (languageFlag & MANY_JAVA_CLASSES)
-                RET_ONERROR( mywritef(f, "}\n") )
-            increaseNumReducedDataFunctions();
-            if (languageFlag & MANY_JAVA_CLASSES)
-                RET_ONERROR( mywritef(f, "class data%sFunctionClass_%d {\n",
-                                      TheApp->getCPrefix(), 
-                                      getNumReducedDataFunctions()) )
-            RET_ONERROR( mywritestr(f, "    ") )
-            if (languageFlag & MANY_JAVA_CLASSES)
-                RET_ONERROR( mywritestr(f, "public static ") )
-            RET_ONERROR( mywritef(f, "void data%sFunction_%d() {\n",
-                                  TheApp->getCPrefix(),
-                                  getNumReducedDataFunctions()) ) 
+            RET_ONERROR( mywritef(f, "}\n") )
+            RET_ONERROR( mywritef(f, "class Data%sFunctionClass_%d {\n",
+                                  TheApp->getCPrefix(), getNumDataClasses()) )
         }
-
-        RET_ONERROR( mywritestr(f, "        ") ) 
-        if (languageFlag & MANY_JAVA_CLASSES)
-                RET_ONERROR( mywritef(f, "%sScenegraphFunctions%d.", 
-                                      TheApp->getCPrefix(), i) )        
-        RET_ONERROR( mywritef(f, "data%sFunction%d();\n", 
-                              TheApp->getCPrefix(), i) )
-
-        if (numFunctionCounter > MAX_JAVA_CALLS) {
-            numFunctionCounter = 0;
-        } else
-            numFunctionCounter++;
-
+        RET_ONERROR( mywritef(f, 
+            "     public static void data%sFunction%d() {\n",
+            TheApp->getCPrefix(), getNumDataClasses() + i) )
+        increaseNumDataClasses();
     }
-    increaseNumReducedDataFunctions();
-    RET_ONERROR( mywritef(f, "    }\n") )
-    if (languageFlag & MANY_JAVA_CLASSES)
-        RET_ONERROR( mywritef(f, "}\n") )
+
     return(0);
 }
 
@@ -2212,6 +2178,78 @@ struct WriteCStruct {
 
 bool writeCVariableNameLine(Node *node, const char *variableName,
                             struct WriteCStruct *cWrite, bool extraJavaClass);
+
+bool writeCSetWrittenFalse(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+
+    node->setWritten(false);
+
+    return true;
+}     
+
+class WriteData {
+public:
+    int languageFlag;
+    int filedes;
+};
+
+bool writeCCoordinateFirst(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+
+    WriteData *wdata = (WriteData *)data;
+    if (node->getType() == VRML_COORDINATE) {
+        bool isWritten = node->getWritten();
+        node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
+                                 true,true);
+    }
+    return true;
+}
+
+bool writeCIndexedFaceSetFirst(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+
+    WriteData *wdata = (WriteData *)data;
+    if (node->getType() == VRML_INDEXED_FACE_SET) {
+        bool isWritten = node->getWritten();
+        node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
+                                 true, true);
+    }   
+    return true;
+}
+
+bool writeCShapeFirst(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+
+    WriteData *wdata = (WriteData *)data;
+    if (node->getType() == VRML_SHAPE) {
+        bool isWritten = node->getWritten();
+        node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
+                                 true, true);
+    }   
+    return true;
+}
+
+bool writeCHAnimJointFirst(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+
+    WriteData *wdata = (WriteData *)data;
+    if (node->getType() == X3D_HANIM_JOINT) {
+        bool isWritten = node->getWritten();
+        node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
+                                 true, true);
+    }   
+    return true;
+}
 
 bool writeCNodeData(Node *node, void *data)
 {
@@ -2282,6 +2320,7 @@ bool writeCNodeData(Node *node, void *data)
     if (cWrite->languageFlag & MANY_JAVA_CLASSES) 
         if (extraJavaClass)
             RET_ONERROR( mywritestr(f, "}\n") )  
+
     return true;
 }
 
@@ -2329,8 +2368,7 @@ static bool writeCDynamicNodeCallback(Node *node, void *data)
     Proto *proto = node->getProto();
     if (proto->isDynamicProto())
         parameters->result = node->writeCDynamicNodeCallback(
-                                   parameters->filedes, 
-                                   parameters->languageFlag);
+                                 parameters->filedes, parameters->languageFlag);
     if (parameters->result != 0)
         return false;
     return true;
@@ -2474,12 +2512,16 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "abstract class ") )
         RET_ONERROR( mywritestr(f, TheApp->getCNodeName()) ) 
         RET_ONERROR( mywritestr(f, " {\n") )
-        RET_ONERROR( mywritestr(f, "    void treeRender(Object dataptr) {\n") )
+        RET_ONERROR( mywritestr(f, "    void treeRender(") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "Node dataptr, Object object) {\n") )
         RET_ONERROR( mywritestr(f, "        if (m_protoRoot != null)\n") )
         RET_ONERROR( mywritestr(f, "            m_protoRoot.") )
-        RET_ONERROR( mywritestr(f, "treeRender(dataptr);\n") )
+        RET_ONERROR( mywritestr(f, "treeRender(dataptr, object);\n") )
         RET_ONERROR( mywritestr(f, "    }\n") )
-        RET_ONERROR( mywritestr(f, "    void treeDoWithData(Object dataptr) {\n") )
+        RET_ONERROR( mywritestr(f, "    void treeDoWithData(") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "Node dataptr) {\n") )
         RET_ONERROR( mywritestr(f, "        if (m_protoRoot != null)\n") )
         RET_ONERROR( mywritestr(f, "            m_protoRoot.") )
         RET_ONERROR( mywritestr(f, "treeDoWithData(dataptr);\n") )
@@ -2500,7 +2542,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "RenderCallback {\n") )
         RET_ONERROR( mywritestr(f, "   public void render(") )
         RET_ONERROR( mywritestr(f, TheApp->getCNodeName()) ) 
-        RET_ONERROR( mywritestr(f, " node) {}\n") )
+        RET_ONERROR( mywritestr(f, " node, Object object) {}\n") )
         RET_ONERROR( mywritestr(f, "}\n") )
 
         RET_ONERROR( mywritestr(f, "class ") )
@@ -2508,7 +2550,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "TreeRenderCallback {\n") )
         RET_ONERROR( mywritestr(f, "   public void treeRender(") )
         RET_ONERROR( mywritestr(f, TheApp->getCNodeName()) ) 
-        RET_ONERROR( mywritestr(f, " node) {}\n") )
+        RET_ONERROR( mywritestr(f, " node, Object object) {}\n") )
         RET_ONERROR( mywritestr(f, "}\n") )
         RET_ONERROR( mywritestr(f, "\n") )
 
@@ -2529,7 +2571,6 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "{ return null; }\n") )
         RET_ONERROR( mywritestr(f, "}\n") )
 
-
         RET_ONERROR( mywritestr(f, "class ") )
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "TreeDoWithDataCallback {\n") )
@@ -2539,6 +2580,14 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "{}\n") )
         RET_ONERROR( mywritestr(f, "}\n") )
         RET_ONERROR( mywritestr(f, "\n") )
+
+        RET_ONERROR( mywritestr(f, "class ") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "CreateNormalsCallback {\n") )
+        RET_ONERROR( mywritestr(f, "   public void createNormals(") )
+        RET_ONERROR( mywritestr(f, TheApp->getCNodeName()) ) 
+        RET_ONERROR( mywritestr(f, " node, Object data) {}\n") )
+        RET_ONERROR( mywritestr(f, "}\n") )
 
         RET_ONERROR( mywritestr(f, "class ") )
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
@@ -2555,6 +2604,19 @@ Scene::writeC(int f, int languageFlag)
     }
     RET_ONERROR( writeCDeclaration(f, languageFlag) )
     RET_ONERROR( mywritestr(f, "\n") ) 
+    
+    int numDataFunctions = 0;        
+    MyArray<int> startFunctions;
+    MyArray<int> numFunctionsPerClass;
+
+    int startNumDataClasses = getNumDataClasses();
+    zeroNumDataFunctions();
+    setStartNumDataFunctions(0); 
+
+    WriteData data;
+    data.filedes = f;
+    data.languageFlag = languageFlag;
+
     if (languageFlag & MANY_JAVA_CLASSES) {
         struct WriteCStruct cWrite;
         cWrite.filedes = f;
@@ -2571,14 +2633,60 @@ Scene::writeC(int f, int languageFlag)
             return -1;
 
         getNodes()->clearFlag(NODE_FLAG_TOUCHED); // to handle DEF/USE
-        zeroNumDataFunctions();
+
         if (m_root->writeCDataAsFunctions(f, languageFlag))
             return -1;
+        RET_ONERROR( mywritestr(f, "\n") )        
 
+        if (languageFlag & MANY_JAVA_CLASSES) {
+            RET_ONERROR( mywritef(f, "class %sScenegraphFunctions%d {\n", 
+                                  TheApp->getCPrefix(), getNumDataClasses()) )
+            RET_ONERROR( mywritef(f, "    static void data%sFunction0() {",
+                                  TheApp->getCPrefix()) )
+        }
+
+        m_root->doWithBranch(writeCSetWrittenFalse, NULL);
+
+        m_root->doWithBranch(writeCCoordinateFirst, &data,
+                             true, false, false, true, false, true);
+        numFunctionsPerClass.append(getNumDataFunctions());
+        setNumDataFunctionsPerClass(getNumDataFunctions());
+        setStartNumDataFunctions(numDataFunctions);
+        startFunctions.append(numDataFunctions);
+        numDataFunctions += getNumDataFunctions(); 
+        RET_ONERROR( writeCDataFunctionsCalls(f, languageFlag) )
         RET_ONERROR( mywritestr(f, "\n") )        
-        RET_ONERROR( m_root->writeCDataFunctions(f, languageFlag) )
+
+        m_root->doWithBranch(writeCIndexedFaceSetFirst, &data,
+                             true, false, false, true, false, true);
+        numFunctionsPerClass.append(getNumDataFunctions());
+        setNumDataFunctionsPerClass(getNumDataFunctions());
+        startFunctions.append(numDataFunctions);
+        setStartNumDataFunctions(numDataFunctions);
+        numDataFunctions += getNumDataFunctions(); 
+        RET_ONERROR( writeCDataFunctionsCalls(f, languageFlag) )
         RET_ONERROR( mywritestr(f, "\n") )        
-        RET_ONERROR(writeCDataFunctionsCalls(f, languageFlag) )
+        m_root->doWithBranch(writeCShapeFirst, &data);
+        numFunctionsPerClass.append(getNumDataFunctions());
+
+        setStartNumDataFunctions(getNumDataFunctions());
+        setNumDataFunctionsPerClass(getNumDataFunctions());
+        startFunctions.append(numDataFunctions);
+        setStartNumDataFunctions(numDataFunctions);
+        numDataFunctions += getNumDataFunctions(); 
+        RET_ONERROR( writeCDataFunctionsCalls(f, languageFlag) )
+        RET_ONERROR( mywritestr(f, "\n") )        
+
+        m_root->doWithBranch(writeCHAnimJointFirst, &data,
+                             true, false, false, true, false, true);
+        numFunctionsPerClass.append(getNumDataFunctions());
+        setNumDataFunctionsPerClass(getNumDataFunctions());
+        setStartNumDataFunctions(numDataFunctions);
+        startFunctions.append(numDataFunctions);
+        numDataFunctions += getNumDataFunctions(); 
+        RET_ONERROR( writeCDataFunctionsCalls(f, languageFlag) )
+        RET_ONERROR( mywritestr(f, "    }\n") )        
+        RET_ONERROR( mywritestr(f, "}\n") )        
         RET_ONERROR( mywritestr(f, "\n") )        
     }
 
@@ -2637,6 +2745,7 @@ Scene::writeC(int f, int languageFlag)
         m_root->doWithBranch(writeCInstallDynamicNodeCallback, &parameters);
         if (parameters.result != 0)
             return -1;
+        RET_ONERROR( mywritestr(f, "    }\n\n") ) 
         RET_ONERROR( mywritestr(f, "}\n\n") ) 
         RET_ONERROR( writeCTreeCallback(f, "Render") )
         RET_ONERROR( mywritestr(f, "\n") ) 
@@ -2684,32 +2793,61 @@ Scene::writeC(int f, int languageFlag)
         }
     } else if (languageFlag & JAVA_SOURCE) {        
         if (!(languageFlag & MANY_JAVA_CLASSES)) {
-            zeroNumDataFunctions();
 
-            if (m_root->writeCDataAsFunctions(f, languageFlag))
+            if (m_root->writeCDataAsFunctions(f, languageFlag, true))
                 return -1;
 
-            RET_ONERROR(m_root->writeCDataFunctions(f, languageFlag) )
+            numFunctionsPerClass.append(getNumDataFunctions());
+            setNumDataFunctionsPerClass(getNumDataFunctions());
+            setStartNumDataFunctions(numDataFunctions);
+            startFunctions.append(numDataFunctions);
+            numDataFunctions += getNumDataFunctions(); 
 
             RET_ONERROR(writeCDataFunctionsCalls(f, languageFlag) )
+            RET_ONERROR( mywritestr(f, "    }\n") )    
         }
 
-
+        RET_ONERROR( mywritestr(f, "    ") )
+        RET_ONERROR( mywritestr(f, "public static boolean initThings = true;\n"))
         RET_ONERROR( mywritestr(f, "    ") )
         RET_ONERROR( mywritestr(f, TheApp->getCSceneGraphName()) ) 
         RET_ONERROR( mywritestr(f, "() {\n") )
 
         if (m_root->writeC(f, languageFlag))
             return -1;
+        for (int j = 0; j < getNumDataClasses(); j++) {
+            int start = startFunctions[j];
+            for (int i = 0; i < 1; i++) {
+                if (j == getNumDataClasses() - 1) {
+                    RET_ONERROR( mywritestr(f, "        if (initThings)\n") )
+                    RET_ONERROR( mywritestr(f, "    ") )
+                    RET_ONERROR( mywritestr(f, "        ") )
+                    if (languageFlag & MANY_JAVA_CLASSES)
+                        RET_ONERROR( mywritef(f, "%sScenegraphFunctions%d.",
+                                          TheApp->getCPrefix(), 0) )
+                    RET_ONERROR( mywritef(f, "data%sFunction%d();\n",
+                                          TheApp->getCPrefix(), 0) ) 
+                }
+                if (j == 2) {
+                    RET_ONERROR( mywritestr(f, "        if (initThings)\n") )
+                    RET_ONERROR( mywritestr(f, "    ") )
+                }
 
-        for (int i = 0; i < getNumReducedDataFunctions(); i++) {
-            RET_ONERROR( mywritestr(f, "        ") )
-            if (languageFlag & MANY_JAVA_CLASSES)
-                RET_ONERROR( mywritef(f, "data%sFunctionClass_%d.",
-                                      TheApp->getCPrefix(), i) )
-            RET_ONERROR( mywritef(f, "data%sFunction_%d();\n",
-                                      TheApp->getCPrefix(), i) ) 
+                RET_ONERROR( mywritestr(f, "        ") )
+                if (languageFlag & MANY_JAVA_CLASSES)
+                    RET_ONERROR( mywritef(f, "Data%sFunctionClass_%d.",
+                                          TheApp->getCPrefix(), j) )
+                RET_ONERROR( mywritef(f, "data%sFunction%d();\n",
+                                          TheApp->getCPrefix(), j) ) 
+
+                if (j == getNumDataClasses() - 1) 
+                    if (languageFlag & MANY_JAVA_CLASSES) {
+                        RET_ONERROR(m_root->writeCDataFunction(f, languageFlag,
+                                    true, true) )
+                    }
+            }
         }
+        RET_ONERROR( mywritestr(f , "    }\n") )
 
         parameters.result = 0;
         parameters.filedes = f;
@@ -2717,13 +2855,12 @@ Scene::writeC(int f, int languageFlag)
         m_root->doWithBranch(writeCInstallDynamicNodeCallback, &parameters);
         if (parameters.result != 0)
             return -1;
-        RET_ONERROR( mywritestr(f, "    }\n") ) 
         
         RET_ONERROR( mywritestr(f, "    ") ) 
         if (languageFlag & MANY_JAVA_CLASSES) 
             RET_ONERROR( mywritestr(f, "static ") )
         RET_ONERROR( mywritestr(f, "void render() ") )
-        RET_ONERROR( mywritestr(f, "{ root.treeRender(null); }\n") ) 
+        RET_ONERROR( mywritestr(f, "{ root.treeRender(null, null); }\n") ) 
         RET_ONERROR( mywritestr(f, "    ") ) 
         if (languageFlag & MANY_JAVA_CLASSES) 
             RET_ONERROR( mywritestr(f, "static ") )
@@ -2735,6 +2872,7 @@ Scene::writeC(int f, int languageFlag)
             value->writeCSendEventFunction(f, languageFlag);
         }
     }
+
     if (languageFlag & JAVA_SOURCE) {
         RET_ONERROR( mywritestr(f, "\n") )
         RET_ONERROR( mywritestr(f, "    void ") )
@@ -2757,7 +2895,6 @@ Scene::writeC(int f, int languageFlag)
             RET_ONERROR( mywritestr(f, "java.lang.System.err.print") )
         RET_ONERROR( mywritestr(f, "(stack[i].toString() + \"\\n\");\n") )
         RET_ONERROR( mywritestr(f, "    }\n") )
-        RET_ONERROR( mywritestr(f, "\n") )
     }
     RET_ONERROR( writeCRoutes(f, languageFlag) )
     if (languageFlag & JAVA_SOURCE)
@@ -2840,7 +2977,7 @@ static bool searchNodesOnlyOutputAndWriteCRoutes(Node *node, void *data)
 {
     WriteCFunctionCallData *cdata = (WriteCFunctionCallData *)data;
     if (node->hasOutputs() && !(node->hasInputs())) {
-        if (node->writeCAndFollowRoutes(cdata->filedes, 0, cdata->languageFlag, 
+        if (node->writeCAndFollowRoutes(cdata->filedes, 4, cdata->languageFlag, 
                                         false, "") != 0) {
             cdata->returnValue = -1;     
             return false;

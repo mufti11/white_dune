@@ -8,6 +8,6 @@ clean:
 	rm -f CExport.c render core
 
 CExport.c: Untitled.wrl
-	(../../../bin/dune -c robot.x3dv > C++Export.c) || \
-	dune -c robot.x3dv > C++Export.c
+	(../../../bin/dune -c Untitled.wrl > CExport.c) || \
+	dune -c Untitled.wrl > CExport.c
 

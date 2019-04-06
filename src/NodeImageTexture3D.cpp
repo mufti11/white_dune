@@ -336,8 +336,8 @@ void vector_ensureSpace_(int elSize, struct Vector* me, const char *fi, int line
         ASSERT(FALSE);
     }
     if(me->n == me->allocn) {
-        int istart, iend;
-        istart = me->allocn;
+//        int istart, iend;
+//        istart = me->allocn;
         if(me->allocn)
         {
             me->allocn*=2;
@@ -347,7 +347,7 @@ void vector_ensureSpace_(int elSize, struct Vector* me, const char *fi, int line
             me->allocn=1;
             me->n = 0;
         }
-        iend = me->allocn;
+//        iend = me->allocn;
 #ifdef DEBUG_MALLOC
         me->data=freewrlRealloc(line, fi,me->data, elSize*me->allocn);
 #else

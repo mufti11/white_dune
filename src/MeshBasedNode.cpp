@@ -170,7 +170,6 @@ Node *
 MeshBasedNode::toIndexedFaceSet(int meshFlags, bool cleanVertices,
                                 bool triangulate)
 {
-    bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
     bool wantSimpleQuadTriangulate = (meshFlags & MESH_SIMPLE_TRIANGULATE);
     if (meshDirty()) {
         if (m_mesh != NULL)
@@ -1141,9 +1140,6 @@ MeshBasedNode::writeRib(int f, int indent)
 
 //    m_mesh->optimize();
 
-    NodeColor *color = getColorNode();
-    NodeColorRGBA *colorRGBA = getColorRGBANode();
-
     NodeMaterial *nmaterial = getMaterialNode();
     NodeImageTexture *nimageTexture = getImageTextureNode();
     NodeTextureTransform *ntextureTransfrom = getTextureTransformNode();
@@ -1292,7 +1288,6 @@ MeshBasedNode::writeRib(int f, int indent)
     // search longest *Index
     int numIndex = COORD_INDEX;
     int numCoordIndices = 0;
-    MFVec3f* normals = m_mesh->getNormals();
     MFInt32 *normalIndex = m_mesh->getNormalIndex();
     if ((normalIndex == NULL) || (normalIndex->getSize() == 0))
         normalIndex = coordIndex;

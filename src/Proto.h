@@ -154,7 +154,8 @@ public:
     int                   writeCCallTreeField(int f, int i, 
                                               const char *treeFunctionName, 
                                               int languageFlag,
-                                              const char *functionName = NULL);
+                                              const char *functionName = NULL,
+                                              bool useObject = false);
 
     void                  buildExportNames(const char *nodeName = NULL);
     const char           *getClassName(void)
@@ -172,6 +173,11 @@ public:
                              { return m_treeRenderCallbackClass; }
     const char           *getTreeRenderCallbackName(void)
                              { return m_treeRenderCallbackName; }
+
+    const char           *getCreateNormalsCallbackClass(void)
+                             { return m_createNormalsCallbackClass; }
+    const char           *getCreateNormalsCallbackName(void)
+                             { return m_createNormalsCallbackName; }
 
     const char           *getDoWithDataCallbackClass(void)
                              { return m_doWithDataCallbackClass; }
@@ -421,6 +427,9 @@ protected:
 
     MyString              m_treeRenderCallbackClass;
     MyString              m_treeRenderCallbackName;
+
+    MyString              m_createNormalsCallbackClass;
+    MyString              m_createNormalsCallbackName;
 
     MyString              m_doWithDataCallbackClass;
     MyString              m_doWithDataCallbackName;

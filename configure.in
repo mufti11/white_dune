@@ -49,9 +49,32 @@ if test "$CFLAGS" != "$OLD_CFLAGS"; then
  CFLAGS="$OLD_CFLAGS"
  echo reseting CFLAGS to $CFLAGS
 fi
-if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
- CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
- echo reseting CXXFLAGS to $CXXFLAGS
+
+AC_LANG_PUSH([C++])    
+dnl Check if -W -Werror -Wno-nonnull-compare is supported
+dnl with the current $CC $CFLAGS $CPPFLAGS.
+AC_MSG_CHECKING(whether -Wno-nonnull-compare is supported)
+OLD_CXXFLAGS2=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -W -Werror -Wno-nonnull-compare"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+                  [[#include <stdio.h>]], [[return 0;]])], 
+                  [
+                  export NONNULL_SUPPORTED=yes;
+                  AC_MSG_RESULT([yes])
+                  ],
+                  [ 
+                  export NONNULL_SUPPORTED=no;
+                  AC_MSG_RESULT([no])
+                  ])
+dnl                  [[]], [NONNULL_SUPPORTED=yes], [NONNULL_SUPPORTED=no])
+CXXFLAGS=$OLD_CXXFLAGS2
+AC_LANG_POP()    
+
+if test "X_$NONNULL_SUPPORTED" = "X_yes"; then
+   if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
+      CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
+      echo reseting CXXFLAGS to $CXXFLAGS
+   fi
 fi
 
 dnl Warn about defect compilers
@@ -500,6 +523,8 @@ if test "X_$IMAGECONVERTER" = "X_" ; then
 fi
 if test "X_$IMAGECONVERTER" != "X_" ; then
    AC_DEFINE_UNQUOTED(HAVE_IMAGE_CONVERTER,"${IMAGECONVERTER}")
+else
+   echo "unable to convert textures to bmp for ac3d export and unable to convert textures for RIB export" 1>&2
 fi
 
 AC_PATH_PROGS(RIB_TEXTURER,[teqser txmake])
@@ -1813,12 +1838,6 @@ else
 fi
 AC_SUBST(TESTICONSIZE)
 AC_SUBST(TESTICONSIZE2)
-
-AC_PATH_PROGS(IMAGECONVERTER,[convert])
-if test "X_$IMAGECONVERTER" = "X_" ; then
-   echo "unable to convert textures to bmp for ac3d export" 1>&2
-fi
-AC_SUBST(IMAGECONVERTER)
 
 AC_PATH_PROGS(JAVAC,javac,echo)
 AC_SUBST(JAVAC)

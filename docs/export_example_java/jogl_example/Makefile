@@ -13,7 +13,7 @@ JARS=$$GLUEGEN_HOME/gluegen2-rt.jar:$$JOGL_HOME/jogl2.jar:/usr/lib/java/gluegen2
 JFLAGS=-Xlint:unchecked -g 
 
 # guess library path...
-LIBS=-Djava.library.path=/usr/lib/jogl/:/usr/lib64/jogl2/:/usr/lib64/
+LIBS=-Djava.library.path=/usr/lib/jogl/:/usr/lib/jni/:/usr/lib64/jogl2/:/usr/lib64/
 
 MEM="-J-Xmx2000m"
 
@@ -22,7 +22,7 @@ run: classes/X3dSceneGraph.class classes/x3d.class
 
 robot.java: robot.x3dv
 	(../../../bin/dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java) || \
-	dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java ; fi
+	dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java
 
 classes/X3dSceneGraph.class: robot.java
 	@if test "X_$$JOGL_HOME" = "X_" ; then echo environment variable '$$JOGL_HOME' should be set to the directory of jogl2.jar and native libraries 1>&2 ; fi

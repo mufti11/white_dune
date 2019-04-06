@@ -104,6 +104,8 @@ public class x3d implements GLEventListener
 
     public static void main(String[] args) 
     {
+        final x3d x3d = new x3d();
+
         java.awt.Frame frame = new java.awt.Frame("X3D Demo");
         frame.setSize(500, 500);
         frame.setLayout(new java.awt.BorderLayout());
@@ -112,7 +114,6 @@ public class x3d implements GLEventListener
         // GLCapabilities caps = new GLCapabilities(GLProfile.getDefault());
         // GLCanvas canvas = new GLCanvas(caps);
 
-        final x3d x3d = new x3d();
         canvas.addGLEventListener(x3d);
 
         frame.add(canvas, java.awt.BorderLayout.CENTER);
@@ -126,7 +127,7 @@ public class x3d implements GLEventListener
 
     public static void error(String errormsg)
     {
-        System.out.println(errormsg);
+        System.err.println(errormsg);
     }
 
 
@@ -148,7 +149,10 @@ public class x3d implements GLEventListener
         // Use debug pipeline
         // drawable.setGL(new DebugGL(drawable.getGL()));
 
-        X3dSceneGraph x3dSceneGraph = new X3dSceneGraph();
+        x3dSceneGraph.initThings = false;
+        x3dSceneGraph = new X3dSceneGraph();
+        x3dSceneGraph.initThings = false;
+        x3dSceneGraph = new X3dSceneGraph();
 
         x3d.gl = drawable.getGL().getGL2();
 
@@ -315,6 +319,9 @@ public class x3d implements GLEventListener
         MyIndexedFaceSetRenderCallback myIndexedFaceSetRenderCallback = new MyIndexedFaceSetRenderCallback();
         X3dIndexedFaceSet.setX3dIndexedFaceSetRenderCallback(myIndexedFaceSetRenderCallback);
 
+        MyIndexedFaceSetCreateNormalsCallback myIndexedFaceSetCreateNormalsCallback = new MyIndexedFaceSetCreateNormalsCallback();
+        X3dIndexedFaceSet.setX3dIndexedFaceSetCreateNormalsCallback(myIndexedFaceSetCreateNormalsCallback);
+
         MyMaterialRenderCallback myMaterialRenderCallback = new MyMaterialRenderCallback();
         X3dMaterial.setX3dMaterialRenderCallback(myMaterialRenderCallback);
 
@@ -332,6 +339,9 @@ public class x3d implements GLEventListener
 
         MyImageTextureRenderCallback myImageTextureRenderCallback = new MyImageTextureRenderCallback();
         X3dImageTexture.setX3dImageTextureRenderCallback(myImageTextureRenderCallback);
+
+        MyShapeRenderCallback myShapeRenderCallback = new MyShapeRenderCallback();
+        X3dShape.setX3dShapeRenderCallback(myShapeRenderCallback);
 
         MySwitchRenderCallback mySwitchRenderCallback = new MySwitchRenderCallback();
         X3dSwitch.setX3dSwitchRenderCallback(mySwitchRenderCallback);
@@ -399,7 +409,8 @@ public class x3d implements GLEventListener
         x3d.initRender = true;
     
         X3dNode rootNode = x3d.x3dSceneGraph.root;
-        rootNode.treeRender(null);
+        if (rootNode != null)
+            rootNode.treeRender(null, null);
 
         if(!x3d.viewPointExists)
         {
@@ -414,7 +425,7 @@ public class x3d implements GLEventListener
             viewpoint.orientation[1] = 0;
             viewpoint.orientation[2] = 1;
             viewpoint.orientation[3] = 0;
-            viewpoint.treeRender(null);
+            viewpoint.treeRender(null, null);
         }
 
         x3d.initRender = false;
@@ -533,7 +544,8 @@ class x3d2
         
         x3d.preRender = true;
     
-        rootNode.treeRender(null);
+        if (rootNode != null)
+            rootNode.treeRender(null, null);
 
         if(!x3d.lightExists)
         {
@@ -544,13 +556,14 @@ class x3d2
 
         x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
         x3d.preRender = false;
-        rootNode.treeRender(null);
+        if (rootNode != null)
+            rootNode.treeRender(null, null);
     }
 }
 
 class MyGroupRenderCallback extends X3dGroupRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dGroup group = (X3dGroup)data;
         if (group == null)
@@ -562,7 +575,7 @@ class MyGroupRenderCallback extends X3dGroupRenderCallback
                 {
                     if(!(x3d.preRender || x3d.initRender))
                         x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                    group.children[i].treeRender(null);
+                    group.children[i].treeRender(null, null);
                 }
         x3d.gl.glPopMatrix();
     }
@@ -570,7 +583,7 @@ class MyGroupRenderCallback extends X3dGroupRenderCallback
 
 class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         if(x3d.preRender)
         {
@@ -585,7 +598,14 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
             if (Xcoordinate == null)
                 return;
             X3dNormal Xnormal = (X3dNormal)Xindexedfaceset.normal;
-            X3dColor Xcolor = (X3dColor)Xindexedfaceset.color;
+            boolean colorRGBA = false;
+            X3dNode Xcolor = null;
+            if (Xindexedfaceset.color != null) 
+                if (Xindexedfaceset.color.getType() == X3dColorRGBAType.type) {
+                   Xcolor = (X3dColorRGBA)Xindexedfaceset.color;
+                   colorRGBA = true;
+                } else
+                   Xcolor = (X3dColor)Xindexedfaceset.color;
             X3dTextureCoordinate Xtexturecoordinate = (X3dTextureCoordinate)Xindexedfaceset.texCoord;
             int faces[] = null;
             float vertex[] = null;
@@ -601,8 +621,13 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
             {
                 x3d.gl.glEnable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
                 x3d.gl.glColorMaterial(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE);
-                colors = Xcolor.color;
-                color_len = Xcolor.color.length;
+                if (colorRGBA) {
+                    colors = ((X3dColorRGBA)Xcolor).color;
+                    color_len = ((X3dColorRGBA)Xcolor).color.length;
+                } else {
+                    colors = ((X3dColor)Xcolor).color;
+                    color_len = ((X3dColor)Xcolor).color.length;
+                }
                 colorpervertex = Xindexedfaceset.colorPerVertex;
             }
             if(Xindexedfaceset.colorIndex != null)
@@ -619,6 +644,8 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
             faces = Xindexedfaceset.coordIndex;
             normalindex = Xindexedfaceset.normalIndex;
             if(Xnormal!=null)normal = Xnormal.vector;
+            if (object != null)
+                normal = (float[])((FloatContainer)object).vector;
             vertex_len = Xcoordinate.point.length;
             if (Xindexedfaceset.coordIndex == null)
                 return;
@@ -654,7 +681,10 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
     
             x3d.gl.glBegin(GL2.GL_POLYGON);
             if((colors != null) && !colorpervertex)
-                x3d.gl.glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+                if (colorRGBA)
+                    x3d.gl.glColor4f(colors[4 * facecounter], colors[4 * facecounter + 1], colors[4 * facecounter + 2], colors[4 * facecounter + 3]);
+                else 
+                    x3d.gl.glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
     
             for(int i = 0; i != faces_len; i++)
             {
@@ -686,7 +716,11 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
                 else
                 {
                     if(normalpervertex && normal != null)x3d.gl.glNormal3f(normal[normalbuffer*3], normal[normalbuffer*3+1], normal[normalbuffer*3+2]);
-                    if((colors != null) && colorpervertex)x3d.gl.glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                    if((colors != null) && colorpervertex)
+                        if (colorRGBA)
+                            x3d.gl.glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                        else
+                            x3d.gl.glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
                     if(Xtexturecoordinate != null)
                         if((Xtexturecoordinate.point != null) && (texturecoordinateindex != null))
                             x3d.gl.glTexCoord2f(Xtexturecoordinate.point[texturebuffer*2], Xtexturecoordinate.point[texturebuffer*2+1]);
@@ -697,11 +731,116 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
         }
         x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
     }
+    public void createNormals(X3dNode data, Object extraVar) 
+    {
+    }
 }
 
+class MyIndexedFaceSetCreateNormalsCallback extends X3dIndexedFaceSetCreateNormalsCallback
+{
+    public void createNormals(X3dNode data, Object extraVar)
+    {
+        if(x3d.initRender)
+        {
+            X3dIndexedFaceSet Xindexedfaceset = (X3dIndexedFaceSet)data;
+            X3dCoordinate Xcoordinate = (X3dCoordinate)Xindexedfaceset.coord;
+            X3dNormal Xnormal = (X3dNormal)Xindexedfaceset.normal;
+            int normalIndex[] = Xindexedfaceset.normalIndex;
+            int normalIndexLen = 0;
+            if (normalIndex == null) {
+                normalIndex = Xindexedfaceset.coordIndex;
+                normalIndexLen = Xindexedfaceset.coordIndex.length;
+            } else
+                normalIndexLen = Xindexedfaceset.normalIndex.length;
+            int maxLen = -1;
+            for (int i = 0; i < normalIndexLen; i++)
+                if (normalIndex[i] > maxLen)
+                    maxLen = normalIndex[i];
+            maxLen++;
+            ((FloatContainer)extraVar).vector = new float[maxLen * 3];
+        }
+        else
+        {
+            X3dIndexedFaceSet Xindexedfaceset = (X3dIndexedFaceSet)data;
+            X3dCoordinate Xcoordinate = (X3dCoordinate)Xindexedfaceset.coord;
+            if (Xcoordinate == null)
+                return;
+            X3dNormal Xnormal = (X3dNormal)Xindexedfaceset.normal;
+            int normalIndex[] = Xindexedfaceset.normalIndex;
+            if (normalIndex == null)
+                normalIndex = Xindexedfaceset.coordIndex;
+            float vec[] = (float[])((FloatContainer)extraVar).vector;
+            float creaseAngle = Xindexedfaceset.creaseAngle;
+            int ci[] = Xindexedfaceset.coordIndex;
+            int ciLen = Xindexedfaceset.coordIndex.length;
+            float points[] = Xcoordinate.point;
+            int pointLen = Xcoordinate.point.length;
+            for (int i = 0; i < ciLen; i++) 
+            {
+                int first = -1;
+                int second = -1;
+                int third = -1;
+                if (ci[i] > -1) {
+                    if ((i > 0) && (ci[i - 1] > -1))
+                        first = i - 1;
+                    else 
+                    {
+                        for (int j = i; j < ciLen; j++)
+                            if (ci[j] < 0)
+                            {
+                                first = j - 1;
+                                break;
+                            }
+                        if (first == -1)
+                            first = ciLen - 1;
+                    }
+                    second = i;
+                    if ((i + 1 < ciLen) && (ci[i + 1] > -1))
+                        third = i + 1;
+                    else {
+                        for (int j = i; j > -1; j--)
+                            if (ci[j] < 0) 
+                            {
+                                third = j + 1;
+                                break;
+                            }
+                        if (third == -1)
+                            third = 0;
+                    }
+                    if ((first > -1) && (second > -1) && (third > -1)) 
+                    {
+                        float v1x = points[ci[first] * 3    ] - points[ci[second] * 3    ];
+                        float v1y = points[ci[first] * 3 + 1] - points[ci[second] * 3 + 1];
+                        float v1z = points[ci[first] * 3 + 2] - points[ci[second] * 3 + 2];
+    
+                        float v2x = points[ci[third] * 3    ] - points[ci[second] * 3    ];
+                        float v2y = points[ci[third] * 3 + 1] - points[ci[second] * 3 + 1];
+                        float v2z = points[ci[third] * 3 + 2] - points[ci[second] * 3 + 2];
+        
+                        float crossx = v1y * v2z - v1z * v2y;
+                        float crossy = v1z * v2x - v1x * v2z;
+                        float crossz = v1x * v2y - v1y * v2x;
+        
+                        float vLen = (float)Math.sqrt(crossx * crossx + crossy * crossy + crossz * crossz);
+                        if (vLen > 0) {
+                            vec[normalIndex[i] * 3    ] = - crossx / vLen;      
+                            vec[normalIndex[i] * 3 + 1] = - crossy / vLen;      
+                            vec[normalIndex[i] * 3 + 2] = - crossz / vLen;
+                        } else {
+                            vec[normalIndex[i] * 3    ] = 0;      
+                            vec[normalIndex[i] * 3 + 1] = 0;      
+                            vec[normalIndex[i] * 3 + 2] = 0;
+                        }
+                    }
+                }    
+            }
+        }    
+    }
+}
+    
 class MyMaterialRenderCallback extends X3dMaterialRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         if(x3d.preRender)
         {
@@ -729,7 +868,7 @@ class MyMaterialRenderCallback extends X3dMaterialRenderCallback
 
 class MyTextRenderCallback extends X3dTextRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         if(x3d.preRender)
         {
@@ -780,7 +919,7 @@ class TextureExtraDataStruct {
 
 class MyImageTextureRenderCallback extends X3dImageTextureRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dImageTexture imageTexture = (X3dImageTexture)data;
 
@@ -851,7 +990,7 @@ class MyImageTextureRenderCallback extends X3dImageTextureRenderCallback
  
 class MyPixelTextureRenderCallback extends X3dPixelTextureRenderCallback
 {      
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dPixelTexture pixelTexture = (X3dPixelTexture) data;
 
@@ -939,7 +1078,7 @@ class MyPixelTextureRenderCallback extends X3dPixelTextureRenderCallback
 
 class MyPointLightRenderCallback extends X3dPointLightRenderCallback
 {       
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         LightStruct lightStruct = (LightStruct)((X3dPointLight)data).extra_data;
         if(x3d.preRender)
@@ -974,7 +1113,7 @@ class MyPointLightRenderCallback extends X3dPointLightRenderCallback
 
 class MyDirectionalLightRenderCallback extends X3dDirectionalLightRenderCallback
 {       
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         LightStruct lightStruct = (LightStruct)
                                   ((X3dDirectionalLight)data).extra_data;
@@ -1022,7 +1161,7 @@ class MyDirectionalLightRenderCallback extends X3dDirectionalLightRenderCallback
 
 class MySpotLightRenderCallback extends X3dSpotLightRenderCallback
 {       
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         LightStruct lightStruct = (LightStruct)((X3dSpotLight)data).extra_data;
         if(x3d.preRender)
@@ -1072,7 +1211,7 @@ class MySpotLightRenderCallback extends X3dSpotLightRenderCallback
     
 class MyTransformRenderCallback extends X3dTransformRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dTransform transform = (X3dTransform)data;
         if(x3d.preRender || x3d.initRender)
@@ -1080,7 +1219,7 @@ class MyTransformRenderCallback extends X3dTransformRenderCallback
             if (transform.children != null)
                 for (int i = 0; i < transform.children.length; i++)
                     if (transform.children[i] != null)
-                        transform.children[i].treeRender(null);
+                        transform.children[i].treeRender(null, null);
         }
         else
         {
@@ -1097,7 +1236,7 @@ class MyTransformRenderCallback extends X3dTransformRenderCallback
                     if (transform.children[i] != null) 
                     {
                         x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                        transform.children[i].treeRender(null);
+                        transform.children[i].treeRender(null, null);
                     }
             x3d.gl.glPopMatrix();
         }
@@ -1107,7 +1246,7 @@ class MyTransformRenderCallback extends X3dTransformRenderCallback
 
 class MyViewpointRenderCallback extends X3dViewpointRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dViewpoint viewpoint = (X3dViewpoint)data;
         if(x3d.preRender || x3d.initRender)
@@ -1141,9 +1280,29 @@ class MyViewpointRenderCallback extends X3dViewpointRenderCallback
     }
 }    
 
+class MyShapeRenderCallback extends X3dShapeRenderCallback
+{
+    public void render(X3dNode data, Object object)
+    {
+        X3dShape shapeNode = (X3dShape)data;
+        if (shapeNode == null)
+            return;
+        x3d.gl.glPushMatrix();
+        if (shapeNode.appearance != null) {
+            X3dAppearance appear = (X3dAppearance)shapeNode.appearance;
+            appear.treeRender(appear, object);
+        }
+        if (shapeNode.geometry != null) {
+            X3dIndexedFaceSet faceset = (X3dIndexedFaceSet)shapeNode.geometry;
+            faceset.treeRender(faceset, object);
+        }
+        x3d.gl.glPopMatrix();
+    }
+}
+
 class MySwitchRenderCallback extends X3dSwitchRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dSwitch switchNode = (X3dSwitch)data;
         if (switchNode == null)
@@ -1156,10 +1315,14 @@ class MySwitchRenderCallback extends X3dSwitchRenderCallback
                 {
                     if(!(x3d.preRender || x3d.initRender))
                         x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                    switchNode.children[choice].treeRender(null);
+                    switchNode.children[choice].treeRender(null, null);
                 }
         x3d.gl.glPopMatrix();
     }
+}
+
+class FloatContainer {
+    public float[] vector;
 }
 
 class HAnimJointExtraDataStruct {
@@ -1171,6 +1334,7 @@ class HAnimHumanoidExtraDataStruct {
      public float origVertices[];
      public int origVertices_length;
      public float thisMatrix[];
+     FloatContainer floatContainer;
 };
 
 class HAnimJointExtra {
@@ -1262,7 +1426,7 @@ class HAnimJointExtra {
 
 class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dHAnimHumanoid humanoid = (X3dHAnimHumanoid)data;
         int i;
@@ -1273,6 +1437,7 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
             humanoid.extra_data = new HAnimHumanoidExtraDataStruct();
             ((HAnimHumanoidExtraDataStruct)humanoid.extra_data).thisMatrix = 
                 new float[16];
+            ((HAnimHumanoidExtraDataStruct)humanoid.extra_data).floatContainer = new FloatContainer();
         }
         extraVar = (HAnimHumanoidExtraDataStruct)humanoid.extra_data;
         if (extraVar == null)
@@ -1297,12 +1462,25 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
                 for (i = 0; i < humanoid.skeleton.length; i++)
                     if (humanoid.skeleton[i] != null) 
                     {
-                        humanoid.skeleton[i].treeRender(data);;
+                        humanoid.skeleton[i].treeRender(data, null);;
                     }       
             if (humanoid.skin != null)
-                for (i = 0; i < humanoid.skin.length; i++)
-                    if (humanoid.skin[i] != null)
-                        humanoid.skin[i].treeRender(data);
+                for (i = 0; i < humanoid.skin.length; i++) 
+                {
+                    if (humanoid.skin[i] != null) {
+                        humanoid.skin[i].treeRender(data, null);
+                        X3dIndexedFaceSet geometry = null;
+                        if (humanoid.skin[i].getType() == X3dShapeType.type) 
+                        {
+                            X3dShape shape = (X3dShape )humanoid.skin[i];
+                            if ((shape.geometry != null) && shape.geometry.getType() == X3dIndexedFaceSetType.type)
+                                geometry = (X3dIndexedFaceSet)shape.geometry;
+                        }
+                        if (geometry != null)
+                            geometry.createNormals(extraVar.floatContainer);
+                        humanoid.skin[i].treeRender(data, extraVar.floatContainer);
+                    }
+                }
         }
         else
         {   
@@ -1326,12 +1504,6 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
             }
             x3d.gl.glPushMatrix();
             x3d.gl.glMultMatrixf(extraVar.thisMatrix, 0);
-            if (humanoid.skin != null)
-                for (i = 0; i < humanoid.skin.length; i++)
-                    if (humanoid.skin[i] != null) {
-                        x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                        humanoid.skin[i].treeRender(data);
-                    }
             if (humanoid.skeleton != null)
                 for (i = 0; i < humanoid.skeleton.length; i++)
                     if (humanoid.skeleton[i] != null)
@@ -1346,8 +1518,25 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
                                         extraVar.origVertices, data);
                         }
                         x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                        humanoid.skeleton[i].treeRender(data);
+                        humanoid.skeleton[i].treeRender(data, null);
                     }
+            if (humanoid.skin != null) {
+                for (i = 0; i < humanoid.skin.length; i++)
+                    if (humanoid.skin[i] != null) {
+                        x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
+                        humanoid.skin[i].treeRender(data, null);
+                        X3dIndexedFaceSet geometry = null;
+                        if (humanoid.skin[i].getType() == X3dShapeType.type) 
+                        {
+                            X3dShape shape = (X3dShape )humanoid.skin[i];
+                            if ((shape.geometry != null) && shape.geometry.getType() == X3dIndexedFaceSetType.type)
+                                geometry = (X3dIndexedFaceSet)shape.geometry;
+                        }
+                        if (geometry != null)
+                            geometry.createNormals(extraVar.floatContainer);
+                        humanoid.skin[i].treeRender(data, extraVar.floatContainer);
+                    }
+            }
             x3d.gl.glPopMatrix();
         }
     }
@@ -1355,9 +1544,10 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
 
 class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
 {
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dHAnimJoint joint = (X3dHAnimJoint)data;
+
         HAnimJointExtraDataStruct extraVar;
         int i;
 
@@ -1383,7 +1573,7 @@ class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
                      if (joint.children[i] != null)
                      {
                          x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                         joint.children[i].treeRender(data);
+                         joint.children[i].treeRender(data, null);
                      }
          }
          else
@@ -1409,7 +1599,7 @@ class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
                      if (joint.children[i] != null)
                      {
                          x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
-                         joint.children[i].treeRender(data);
+                         joint.children[i].treeRender(data, null);
                      }
          }
      }
@@ -1423,7 +1613,7 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
         return date.getTime() / 1000.0;
     }
 
-    public void render(X3dNode data)
+    public void render(X3dNode data, Object object)
     {
         X3dParticleSystem system = (X3dParticleSystem)data;
         if (system == null)
@@ -1450,17 +1640,20 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
              m_particlesDirty = true;
              m_internTime = 0;
              m_mass = 0;
-    
-             m_force[0] = 0;
-             m_force[1] = 0;
-             m_force[2] = 0;
+             
+             if (m_force != null) {    
+                 m_force[0] = 0;
+                 m_force[1] = 0;
+                 m_force[2] = 0;
+             }
         }
         else if (!x3d.preRender)
         {
             if (m_enabled) 
             {
-                for (int j = 0; j < 3; j ++)
-                    m_force[j] += 0;
+                if (m_force != null)
+                    for (int j = 0; j < 3; j ++)
+                        m_force[j] += 0;
         
                 for (int i = 0; i < system.physics.length; i++)
                     if (system.physics[i] == null) 
@@ -1510,9 +1703,9 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
                                         m_internPosition[3 * i + 1],
                                         m_internPosition[3 * i + 2]);
                     if (system.appearance != null)
-                        system.appearance.treeRender(null);
+                        system.appearance.treeRender(null, null);
                     if (system.geometry != null)
-                        system.geometry.treeRender(null);
+                        system.geometry.treeRender(null, null);
                     x3d.gl.glPopMatrix();
                 }
                 m_internTime = getTimerTime();
@@ -1532,7 +1725,7 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
     float   m_mass;
     Random  m_rand;
 
-    void MyParticlesystememRenderCallback()
+    void MyParticleSystemRenderCallback()
     {
         m_force = new float[3];
     }
@@ -1553,7 +1746,8 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
             }
         float angle = (m_rand.nextFloat()) * maxAngle; 
 
-System.out.println("m_internVector " + m_internVector + " " + i);    
+        if (m_force == null)
+            return;
         m_internVector[3 * i] = speed * m_force[0] * 
                                 (float)Math.sin(angle) * (float)Math.cos(alpha);
         m_internVector[3 * i + 1] = speed * m_force[1] * 
@@ -1641,7 +1835,7 @@ class MyPositionInterpolatorProcessEventCallback extends X3dPositionInterpolator
         X3dPositionInterpolator interpolator = (X3dPositionInterpolator)node;
         if (interpolator.key.length * 3 != interpolator.keyValue.length) {
             if (!warned)
-               System.out.println("invalid PositionInterpolator: number keys do not match number values");
+               System.err.println("invalid PositionInterpolator: number keys do not match number values");
             warned = true;
             return false;
         }
@@ -1666,7 +1860,7 @@ class MyOrientationInterpolatorProcessEventCallback extends X3dOrientationInterp
         X3dOrientationInterpolator interpolator = (X3dOrientationInterpolator)node;
         if (interpolator.key.length * 4 != interpolator.keyValue.length) {
             if (!warned)
-               System.out.println("invalid OrientationInterpolator: number keys do not match number values");
+               System.err.println("invalid OrientationInterpolator: number keys do not match number values");
             warned = true;
             return false;
         }
@@ -1691,7 +1885,7 @@ class MyColorInterpolatorProcessEventCallback extends X3dColorInterpolatorProces
         X3dColorInterpolator interpolator = (X3dColorInterpolator)node;
         if (interpolator.key.length * 3 != interpolator.keyValue.length) {
             if (!warned)
-               System.out.println("invalid ColorInterpolator: number keys do not match number values");
+               System.err.println("invalid ColorInterpolator: number keys do not match number values");
             warned = true;
             return false;
         }
@@ -1716,7 +1910,7 @@ class MyScalarInterpolatorProcessEventCallback extends X3dScalarInterpolatorProc
         X3dScalarInterpolator interpolator = (X3dScalarInterpolator)node;
         if (interpolator.key.length != interpolator.keyValue.length) {
             if (!warned)
-               System.out.println("invalid ScalarInterpolator: number keys do not match number values");
+               System.err.println("invalid ScalarInterpolator: number keys do not match number values");
             warned = true;
             return false;
         }
@@ -1847,8 +2041,9 @@ class MyTimeSensorProcessEventCallback extends X3dTimeSensorProcessEventCallback
     };
 
     public boolean processEvent(X3dNode node, String event) {
-
         X3dTimeSensor timeSensor = (X3dTimeSensor)node;
+        if (timeSensor == null)
+            return false;
         double currentTime = 0;
         TimeSensorData dataPtr;
         double callTime;
@@ -2033,6 +2228,3 @@ class X3d_Interpolator
         }
     }
 }
-        
-
-    

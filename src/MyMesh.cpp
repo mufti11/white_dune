@@ -446,13 +446,13 @@ MyMesh::draw(int pass)
                 int index = -1; 
                 if (m_normalPerVertex) {
                     if (j < m_normalIndex->getSize())
-                          index = normalIndex[j] * 3;
+                        index = m_normalIndex->getValue(j) * 3;
                 } else {
                     if (m_normalIndex && (m_normalIndex->getSize() > 0)) {
                         if (i < m_normalIndex->getSize())
-                            index = normalIndex[i] * 3;
-                    } else
-                       index = i * 3;
+                            index = m_normalIndex->getValue(i) * 3;
+                     } else
+                        index = i * 3;
                 } 
                 if ((index >= 0) && (index < m_normals->getSize()))
                     glNormal3fv(normals + index);
@@ -507,6 +507,7 @@ MyMesh::drawNormals(void)
 
     glDisable(GL_LIGHTING);
     glBegin(GL_LINES);
+    glColor3f(1, 1, 1);
     for (int i = 0; i < m_numFaces; i++) {
         int offset = m_faces[i]->getOffset();
         int numVertices = m_faces[i]->getNumVertices();

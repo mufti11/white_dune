@@ -89,7 +89,8 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
         struct X3dIndexedFaceSet *Xindexedfaceset = (struct X3dIndexedFaceSet*)data;
         struct X3dCoordinate *Xcoordinate = (struct X3dCoordinate*)Xindexedfaceset->coord;
         struct X3dNormal *Xnormal = (struct X3dNormal*)Xindexedfaceset->normal;
-        struct X3dColor *Xcolor = (struct X3dColor*)Xindexedfaceset->color;
+        int colorRGBA = 0;
+        X3dNode *Xcolor = NULL;
         struct X3dTextureCoordinate *Xtexturecoordinate = (struct X3dTextureCoordinate*)Xindexedfaceset->texCoord;
         GLint *faces = NULL;
         GLfloat *vertex = NULL;
@@ -104,12 +105,24 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
         int buffer, normalbuffer, texturebuffer;
         int facecounter = 0;
 
+        if (Xindexedfaceset->color) 
+            if (((struct X3dColorRGBA*)Xindexedfaceset->color)->m_type == X3dColorRGBAType) {
+                Xcolor = (struct X3dColorRGBA*)Xindexedfaceset->color;
+                colorRGBA = 1;
+            } else
+                Xcolor = (struct X3dColor*)Xindexedfaceset->color;;
+
         if(Xcolor != NULL)
         {
             glEnable(GL_COLOR_MATERIAL); 
             glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-            colors = Xcolor->color;
-            color_len = Xcolor->color_length;
+            if (colorRGBA) {
+                colors = ((struct X3dColorRGBA *)Xcolor)->color;
+                color_len = ((struct X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((struct X3dColor *)Xcolor)->color;
+                color_len = ((struct X3dColor *)Xcolor)->color_length;
+            }
             colorpervertex = Xindexedfaceset->colorPerVertex;
         }
         if(Xindexedfaceset->colorIndex != NULL)
@@ -126,6 +139,8 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
         faces = Xindexedfaceset->coordIndex;
         normalindex = Xindexedfaceset->normalIndex;
         if(Xnormal!=NULL)normal = Xnormal->vector;
+        if (extraData != NULL)
+            normal = (float *)extraData;
         vertex_len = Xcoordinate->point_length;
         faces_len = Xindexedfaceset->coordIndex_length;
         if(Xnormal != NULL)normal_len = Xnormal->vector_length;
@@ -152,7 +167,11 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
 
         glBegin(GL_POLYGON);
         if(colors && !colorpervertex)
-            glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+            if (colorRGBA)
+                glColor4f(colors[4 * facecounter], colors[4 * facecounter + 1], colors[4 * facecounter + 2], colors[4 * facecounter + 3]);
+            else 
+                glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+
 
         for(i = 0; i != faces_len; i ++)
         {
@@ -183,7 +202,52 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
             else
             {
                 if(normalpervertex && normal != NULL)glNormal3f(normal[normalbuffer*3], normal[normalbuffer*3+1], normal[normalbuffer*3+2]);
-                if(colors && colorpervertex)glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                if(colors && !colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[4 * facecounter], colors[4 * facecounter + 1], colors[4 * facecounter + 2], colors[4 * facecounter + 3]);
+                    else 
+                         glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+            }
+        }
+        for(i = 0; i != faces_len; i++)
+        {
+            buffer = faces[i];
+            if (buffer < 0) {
+                glEnd();
+                if (i != faces_len - 1)
+                    glBegin(GL_POLYGON);
+            }
+
+            if(normalindex != NULL)
+                normalbuffer = normalindex[i];
+            else 
+                normalbuffer = buffer;
+            if(texturecoordinateindex != NULL)
+                texturebuffer = texturecoordinateindex[i];
+            else
+                texturebuffer = buffer;
+            if(buffer == -1 && (normalbuffer == -1 || normalindex != NULL))
+            {
+                facecounter++;
+                glEnd();
+                glBegin(GL_POLYGON);
+                if(colors && !colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[4 * facecounter], colors[4 * facecounter + 1], colors[4 * facecounter + 2], colors[4 * facecounter + 3]);
+                    else
+                        glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+            }
+            else if(((buffer == -1 && normalbuffer != -1) || (buffer != -1 && normalbuffer == -1)) && normalindex != NULL)
+                error("Error in normalIndex");
+            else
+            {
+                if(normalpervertex && normal != NULL)
+                    glNormal3f(normal[normalbuffer*3], normal[normalbuffer*3+1], normal[normalbuffer*3+2]);
+                if(colors && color_len > 0 && colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
                 if(Xtexturecoordinate)
                     if((Xtexturecoordinate->point) && (texturecoordinateindex))
                         glTexCoord2f(Xtexturecoordinate->point[texturebuffer*2], Xtexturecoordinate->point[texturebuffer*2+1]);
@@ -193,6 +257,108 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
         glEnd();
     }
     glDisable(GL_COLOR_MATERIAL); 
+}
+
+void CRWDIndexedFaceSetCreateNormals(X3dNode *data, void* extraData)
+{
+    if(initRender)
+    {
+        struct X3dIndexedFaceSet *Xindexedfaceset = (struct X3dIndexedFaceSet*)data;
+        struct X3dCoordinate *Xcoordinate = (struct X3dCoordinate*)Xindexedfaceset->coord;
+        struct X3dNormal *Xnormal = (struct X3dNormal*)Xindexedfaceset->normal;
+        int *normalIndex = Xindexedfaceset->normalIndex;
+        int normalIndexLen = Xindexedfaceset->normalIndex_length;
+        int maxLen = -1;
+        float **vec;
+        int i;
+
+        if (normalIndex == NULL) {
+            normalIndex = Xindexedfaceset->coordIndex;
+            normalIndexLen = Xindexedfaceset->coordIndex_length;
+        } 
+        for (i = 0; i < normalIndexLen; i++)
+            if (normalIndex[i] > maxLen)
+                maxLen = normalIndex[i];
+        maxLen++;
+        vec = (float **)extraData;
+        *vec = (float *)malloc(maxLen * sizeof(float) * 3);
+    }
+    else
+    {
+        struct X3dIndexedFaceSet *Xindexedfaceset = (struct X3dIndexedFaceSet*)data;
+        struct X3dCoordinate *Xcoordinate = (struct X3dCoordinate*)Xindexedfaceset->coord;
+        struct X3dNormal *Xnormal = (struct X3dNormal*)Xindexedfaceset->normal;
+        int *normalIndex = Xindexedfaceset->normalIndex;
+        float *vec = *(float **)extraData;
+        float creaseAngle = Xindexedfaceset->creaseAngle;
+        int *ci = Xindexedfaceset->coordIndex;
+        int ciLen = Xindexedfaceset->coordIndex_length;
+        float *points = Xcoordinate->point;
+        int pointLen = Xcoordinate->point_length;
+        int i, j;
+
+        if (normalIndex == NULL)
+            normalIndex = Xindexedfaceset->coordIndex;
+        for (i = 0; i < ciLen; i++) 
+        {
+            int first = -1;
+            int second = -1;
+            int third = -1;
+            if (ci[i] > -1) {
+                if ((i > 0) && (ci[i - 1] > -1))
+                    first = i - 1;
+                else 
+                {
+                    for (j = i; j < ciLen; j++)
+                        if (ci[j] < 0)
+                        {
+                            first = j - 1;
+                            break;
+                        }
+                    if (first == -1)
+                        first = ciLen - 1;
+                }
+                second = i;
+                if ((i + 1 < ciLen) && (ci[i + 1] > -1))
+                    third = i + 1;
+                else {
+                    for (j = i; j > -1; j--)
+                        if (ci[j] < 0) 
+                        {
+                            third = j + 1;
+                            break;
+                        }
+                    if (third == -1)
+                        third = 0;
+                }
+                if ((first > -1) && (second > -1) && (third > -1)) 
+                {
+                    float v1x = points[ci[first] * 3    ] - points[ci[second] * 3    ];
+                    float v1y = points[ci[first] * 3 + 1] - points[ci[second] * 3 + 1];
+                    float v1z = points[ci[first] * 3 + 2] - points[ci[second] * 3 + 2];
+
+                    float v2x = points[ci[third] * 3    ] - points[ci[second] * 3    ];
+                    float v2y = points[ci[third] * 3 + 1] - points[ci[second] * 3 + 1];
+                    float v2z = points[ci[third] * 3 + 2] - points[ci[second] * 3 + 2];
+    
+                    float crossx = v1y * v2z - v1z * v2y;
+                    float crossy = v1z * v2x - v1x * v2z;
+                    float crossz = v1x * v2y - v1y * v2x;
+    
+                    float vLen = sqrt(crossx * crossx + crossy * crossy + crossz * crossz);
+                    if (vLen > 0) {
+                        vec[normalIndex[i] * 3    ] = - crossx / vLen;      
+                        vec[normalIndex[i] * 3 + 1] = - crossy / vLen;      
+                        vec[normalIndex[i] * 3 + 2] = - crossz / vLen;
+                    } else {
+                        vec[normalIndex[i] * 3    ] = 0;      
+                        vec[normalIndex[i] * 3 + 1] = 0;      
+                        vec[normalIndex[i] * 3 + 2] = 0;
+                    }
+                }
+            }    
+        }
+    }
 }
 
 void CRWDTextRender(X3dNode *data, void* extraData)
@@ -1046,6 +1212,7 @@ struct HAnimHumanoidExtraDataStruct {
      float *origVertices;
      int origVertices_length;
      float thisMatrix[16];
+     float *normalData;
 };
 
 void applyJoint(X3dNode *data, X3dNode *x3dcoord, float *origVertices, 
@@ -1159,10 +1326,23 @@ void CRWDHAnimHumanoidTreeRender(X3dNode *data, void *extraData)
                 {
                     X3dTreeRenderCallback(humanoid->skeleton[i], extraData);
                 }       
-        if (humanoid->skin)
+        if (humanoid->skin) {
             for (i = 0; i < humanoid->skin_length; i++)
                 if (humanoid->skin[i])
                     X3dTreeRenderCallback(humanoid->skin[i], extraData);
+            for (i = 0; i < humanoid->skin_length; i++)
+                if (humanoid->skin[i]) {
+                    struct X3dIndexedFaceSet *geometry = NULL;
+                    if (((struct X3dShape *)humanoid->skin[i])->m_type == X3dShapeType) {
+                        struct X3dShape *shape = (struct X3dShape *)humanoid->skin[i];
+                        if (shape->geometry && ((struct X3dIndexedFaceSet *)shape->geometry)->m_type == X3dIndexedFaceSetType)
+                            geometry = (struct X3dIndexedFaceSet *)shape->geometry;
+                    }
+                    if (geometry)
+                        X3dIndexedFaceSetCreateNormalsCallback(geometry, &extraVar->normalData);
+                    X3dTreeRenderCallback(humanoid->skin[i], extraVar->normalData);
+               }
+        }
     }
     else
     {
@@ -1189,12 +1369,6 @@ void CRWDHAnimHumanoidTreeRender(X3dNode *data, void *extraData)
         }
         glPushMatrix();
         glMultMatrixf(extraVar->thisMatrix);
-        if (humanoid->skin)
-            for (i = 0; i < humanoid->skin_length; i++)
-                if (humanoid->skin[i]) {
-                    glDisable(GL_TEXTURE_2D);
-                    X3dTreeRenderCallback(humanoid->skin[i], extraData);
-                }
         if (humanoid->skeleton)
             for (i = 0; i < humanoid->skeleton_length; i++)
                 if (humanoid->skeleton[i])
@@ -1210,7 +1384,21 @@ void CRWDHAnimHumanoidTreeRender(X3dNode *data, void *extraData)
                     glDisable(GL_TEXTURE_2D);
                     X3dTreeRenderCallback(humanoid->skeleton[i], extraData);
                 }
-         glPopMatrix();
+        if (humanoid->skin)
+            for (i = 0; i < humanoid->skin_length; i++)
+                if (humanoid->skin[i]) {
+                    struct X3dIndexedFaceSet *geometry = NULL;
+                    glDisable(GL_TEXTURE_2D);
+                    if (((struct X3dShape *)humanoid->skin[i])->m_type == X3dShapeType) {
+                        struct X3dShape *shape = (struct X3dShape *)humanoid->skin[i];
+                        if (shape->geometry && ((struct X3dIndexedFaceSet *)shape->geometry)->m_type == X3dIndexedFaceSetType)
+                            geometry = (struct X3dIndexedFaceSet *)shape->geometry;
+                    }
+                    if (geometry)
+                        X3dIndexedFaceSetCreateNormalsCallback(geometry, &extraVar->normalData);
+                    X3dTreeRenderCallback(humanoid->skin[i], extraVar->normalData);
+                }
+        glPopMatrix();
     }
 }
 
@@ -1901,6 +2089,7 @@ void CRWDinit()
     GLint zero[4] = {0, 0, 0, 0};
 
     X3dIndexedFaceSetRenderCallback = CRWDIndexedFaceSetRender;
+    X3dIndexedFaceSetCreateNormalsCallback = CRWDIndexedFaceSetCreateNormals;
     X3dTextRenderCallback = CRWDTextRender;
     X3dPointLightRenderCallback = CRWDPointLightRender;
     X3dDirectionalLightRenderCallback = CRWDDirectionalLightRender;

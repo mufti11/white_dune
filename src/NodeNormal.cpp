@@ -59,7 +59,7 @@ void
 NodeNormal::drawHandles()
 {
     if (hasParent())
-        getParent()->drawNormals();
+        ((MeshBasedNode *)getParent())->drawNormals();
 }
 
 void

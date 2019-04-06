@@ -91,6 +91,7 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_variableName = "";
     m_isConvertedInCurveAnimaton = false;
     setCounter4SceneTreeViewToZero();
+    m_written = false;
     m_scene->addNode((Node*)this);
 }
 
@@ -1532,41 +1533,9 @@ NodeData::removeRoutes(void)
 }
 
 int         
-Node::writeCDataFunctions(int filedes, int languageFlag)
+Node::writeCDataFunctionFields(int filedes, int languageFlag, 
+                               bool forward, bool cont)
 {
-    if (m_convertedNodes.size() > 0) {
-        for (int i = 0; i < m_convertedNodes.size(); i++)
-            RET_ONERROR( m_convertedNodes[i]->writeCDataFunctions(filedes, 
-                                                                  languageFlag))
-        return 0;
-    }
-
-    if (m_numberCDataFunctions > 0) {
-        if (languageFlag & MANY_JAVA_CLASSES)
-            RET_ONERROR( mywritef(filedes, "class %sScenegraphFunctions%d {\n", 
-                                  TheApp->getCPrefix(), 
-                                  m_scene->getNumDataFunctions()) )
-        RET_ONERROR( mywritestr(filedes , "    ") )
-        if (languageFlag & MANY_JAVA_CLASSES)
-            RET_ONERROR( mywritestr(filedes , "static ") )
-        RET_ONERROR( mywritef(filedes , "void data%sFunction%d() {\n",
-                              TheApp->getCPrefix(),
-                              m_scene->increaseNumDataFunctions()) )
-
-        for (int i = 0; i < m_numberCDataFunctions; i++)
-            if (languageFlag & MANY_JAVA_CLASSES) {
-                RET_ONERROR( mywritef(filedes , 
-                                      "        new %sDataClass%d();\n", 
-                                      getVariableName(), i) )
-            } else 
-                RET_ONERROR( mywritef(filedes , 
-                                      "        %sDataFunction%d();\n", 
-                                      getVariableName(), i) )
-        RET_ONERROR( mywritestr(filedes , "    }\n") )
-        if (languageFlag & MANY_JAVA_CLASSES)
-            RET_ONERROR( mywritestr(filedes , "}\n") )
-    }
-
     for (int i = 0; i < m_numFields; i++) {
         Field *field = m_proto->getField(i);
         FieldValue *value = m_fields[i];
@@ -1574,31 +1543,122 @@ Node::writeCDataFunctions(int filedes, int languageFlag)
         if (field->getType() == SFNODE) {
             if (value) {
                 Node *node = ((SFNode *)value)->getValue();
-                if (node && (node != this)) // avoid simple cyclic scenegraph
-                    RET_ONERROR( node->writeCDataFunctions(filedes, 
-                                                           languageFlag) )
+                if (node && (node != this)) { // avoid simple cyclic scenegraph
+                    RET_ONERROR( node->writeCDataFunction(filedes, 
+                                                          languageFlag,
+                                                          forward, cont) )
+                }
             }
         } else if (field->getType() == MFNODE) {
             if (value) {
                 MFNode *nodes = (MFNode *)value;
                 for (int i = 0; i < nodes->getSize(); i++) {
                     Node *node = nodes->getValue(i);
-                    if (node && (node != this)) //avoid simple cyclic scenegraph
-                        RET_ONERROR( node->writeCDataFunctions(filedes, 
-                                                               languageFlag) )
+                    if (node && (node != this)) { //avoid simple cyclic scenegraph
+                        RET_ONERROR( node->writeCDataFunction(filedes, 
+                                                              languageFlag,
+                                                              forward, cont) )
+                    }
                 }
             }
         }
     }
+    if (!cont)
+        RET_ONERROR( mywritestr(filedes , "    }\n") )
+    return 0;
+}
+
+int         
+Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
+{
+    if (getWritten())
+        return 0;
+
+    if (m_convertedNodes.size() > 0) {
+        for (int i = 0; i < m_convertedNodes.size(); i++)
+            RET_ONERROR( m_convertedNodes[i]->writeCDataFunction(filedes, 
+                                                                 languageFlag,
+                                                                 cont) )
+        return 0;
+    }
+
+    if (forward)
+        writeCDataFunctionFields(filedes, languageFlag, forward, cont);
+
+    if (m_numberCDataFunctions > 0) {
+        if (!cont) {
+            RET_ONERROR( mywritestr(filedes , "    ") )
+            if (languageFlag & MANY_JAVA_CLASSES)
+                RET_ONERROR( mywritestr(filedes , "static ") )
+                RET_ONERROR( mywritef(filedes , "void data%sFunction%d() {\n",
+                             TheApp->getCPrefix(),
+                             m_scene->getNumDataFunctions()) )
+        }
+        m_scene->increaseNumDataFunctions();
+        RET_ONERROR( mywritestr(filedes, "    ") )
+        if (languageFlag & MANY_JAVA_CLASSES)
+            RET_ONERROR( mywritestr(filedes, "    ") )
+        RET_ONERROR( writeCVariable(filedes, languageFlag) )    
+        RET_ONERROR( mywritestr(filedes, " = new ") )
+            RET_ONERROR( mywritestr(filedes, getClassName()) )
+        RET_ONERROR( mywritestr(filedes, "();\n") )    
+
+        if (languageFlag & JAVA_SOURCE) {       
+            if (languageFlag & MANY_JAVA_CLASSES)
+                RET_ONERROR( mywritestr(filedes, "    ") )
+        }
+        RET_ONERROR( mywritestr(filedes, "    ") )
+        RET_ONERROR( writeCVariable(filedes, languageFlag) )    
+        RET_ONERROR( mywritestr(filedes, ".m_parent = ") )
+
+        if (hasParent()) {
+            if (languageFlag & (C_SOURCE | CC_SOURCE))        
+                RET_ONERROR( mywritestr(filedes, "&") )    
+            RET_ONERROR( getParent()->writeCVariable(filedes, languageFlag) )    
+        } else {
+            if (languageFlag & JAVA_SOURCE)
+                RET_ONERROR( mywritestr(filedes, "null") )            
+            else 
+                RET_ONERROR( mywritestr(filedes, "NULL") )            
+        } 
+        RET_ONERROR( mywritestr(filedes, ";\n") )  
+
+        if ( m_numberCDataFunctions > 0) { 
+            if (languageFlag & MANY_JAVA_CLASSES)
+                RET_ONERROR( mywritef(filedes , 
+                                      "        new %sDataClass0();\n", 
+                                      getVariableName()) )
+            else 
+                RET_ONERROR( mywritef(filedes , 
+                                      "        %sDataFunction0();\n", 
+                                      getVariableName()) )
+        }
+        for (int i = 1; i < m_numberCDataFunctions; i++)
+            if (languageFlag & MANY_JAVA_CLASSES)
+                RET_ONERROR( mywritef(filedes , 
+                                      "        new %sDataClass%d();\n", 
+                                      getVariableName(), i) )
+            else 
+                RET_ONERROR( mywritef(filedes , 
+                                      "        %sDataFunction%d();\n", 
+                                      getVariableName(), i) )
+    }
+
+    if (!forward)
+        writeCDataFunctionFields(filedes, languageFlag, forward, cont);
+
     if (hasProtoNodes()) {
         Node *protoRoot = ((NodePROTO *)this)->getProtoRoot();
-        RET_ONERROR( protoRoot->writeCDataFunctions(filedes, languageFlag) )
+        RET_ONERROR( protoRoot->writeCDataFunction(filedes, languageFlag, cont))
 
         NodePROTO *nodeProto = (NodePROTO *)this;
-        for (int i = 1; i < nodeProto->getNumProtoNodes(); i++)
-            RET_ONERROR( nodeProto->getProtoNode(i)->writeCDataFunctions(
-                             filedes, languageFlag) )
+        for (int i = 1; i < nodeProto->getNumProtoNodes(); i++) {
+            RET_ONERROR( nodeProto->getProtoNode(i)->writeCDataFunction(
+                             filedes, languageFlag, cont) )
+       }
     }
+
+    setWritten(true);
     return 0;
 }
 
@@ -1630,16 +1690,8 @@ Node::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "Init(&") )
         RET_ONERROR( writeCVariable(f, languageFlag) )
         RET_ONERROR( mywritestr(f, ");\n") )    
-    } else if ((writeInside) && (languageFlag & JAVA_SOURCE)) {
-        RET_ONERROR( mywritestr(f, "    ") )
-        RET_ONERROR( mywritestr(f, "    ") )
-        if (languageFlag & MANY_JAVA_CLASSES)
-            RET_ONERROR( mywritestr(f, "    ") )
-        RET_ONERROR( writeCVariable(f, languageFlag) )    
-        RET_ONERROR( mywritestr(f, " = new ") )
-        RET_ONERROR( mywritestr(f, getClassName()) )
-        RET_ONERROR( mywritestr(f, "();\n") )    
-    } 
+    }
+
 
     if (languageFlag & (C_SOURCE | CC_SOURCE)) {
         for (int i = 0; i < m_numFields; i++)
@@ -1658,27 +1710,6 @@ Node::writeC(int f, int languageFlag)
     } 
 
     if (writeInside) {
-        if (languageFlag & JAVA_SOURCE) {       
-            RET_ONERROR( mywritestr(f, "    ") )
-            if (languageFlag & MANY_JAVA_CLASSES)
-                RET_ONERROR( mywritestr(f, "    ") )
-        }
-        RET_ONERROR( mywritestr(f, "    ") )
-        RET_ONERROR( writeCVariable(f, languageFlag) )    
-        RET_ONERROR( mywritestr(f, ".m_parent = ") )
-
-        if (hasParent()) {
-            if (languageFlag & (C_SOURCE | CC_SOURCE))        
-                RET_ONERROR( mywritestr(f, "&") )    
-            RET_ONERROR( getParent()->writeCVariable(f, languageFlag) )    
-        } else {
-            if (languageFlag & JAVA_SOURCE)
-                RET_ONERROR( mywritestr(f, "null") )            
-            else 
-                RET_ONERROR( mywritestr(f, "NULL") )            
-        } 
-        RET_ONERROR( mywritestr(f, ";\n") )  
-
         if (hasProtoNodes()) {
             if (languageFlag & JAVA_SOURCE) {       
                 RET_ONERROR( mywritestr(f, "    ") )
@@ -1727,7 +1758,7 @@ Node::writeC(int f, int languageFlag)
 }
 
 int
-Node::writeCDataAsFunctions(int f, int languageFlag)
+Node::writeCDataAsFunctions(int f, int languageFlag, bool cont)
 {
     if (m_convertedNodes.size() > 0) {
         for (int i = 0; i < m_convertedNodes.size(); i++)
@@ -1753,23 +1784,23 @@ Node::writeCDataAsFunctions(int f, int languageFlag)
     m_numberCDataFunctions = 0;
 
     for (int i = 0; i < m_numFields; i++)
-        RET_ONERROR( writeCElementFunction(f, EL_FIELD, i, languageFlag, true) 
-                   )
+        RET_ONERROR( writeCElementFunction(f, EL_FIELD, i, languageFlag, true,
+                                           cont) )
     for (int i = 0; i < m_numFields; i++)
-        RET_ONERROR( writeCElementFunction(f, EL_FIELD, i, languageFlag, false) 
-                   )
+        RET_ONERROR( writeCElementFunction(f, EL_FIELD, i, languageFlag, false,
+                                           cont) )
     for (int i = 0; i < m_numEventIns; i++)
         RET_ONERROR( writeCElementFunction(f, EL_EVENT_IN, i, languageFlag, 
-                                           true))
+                                           true, cont))
     for (int i = 0; i < m_numEventIns; i++)
         RET_ONERROR( writeCElementFunction(f, EL_EVENT_IN, i, languageFlag, 
-                                           false))
+                                           false, cont))
     for (int i = 0; i < m_numEventOuts; i++)
         RET_ONERROR( writeCElementFunction(f, EL_EVENT_OUT, i, languageFlag, 
-                                           true))
+                                           true, cont))
     for (int i = 0; i < m_numEventOuts; i++)
         RET_ONERROR( writeCElementFunction(f, EL_EVENT_OUT, i, languageFlag, 
-                                           false))
+                                           false, cont))
 
     if (hasProtoNodes()) {
         Node *protoRoot = ((NodePROTO *)this)->getProtoRoot();
@@ -1778,19 +1809,19 @@ Node::writeCDataAsFunctions(int f, int languageFlag)
         NodePROTO *nodeProto = (NodePROTO *)this;
         for (int i = 1; i < nodeProto->getNumProtoNodes(); i++)
             RET_ONERROR( nodeProto->getProtoNode(i)->writeCDataAsFunctions(
-                             f, languageFlag) )
+                             f, languageFlag, cont) )
     }
     return 0;
 }
 
 int
 Node::writeCElementFunction(int f, int elementType, int i, int languageFlag, 
-                            bool nodeFlag)
+                            bool nodeFlag, bool cont)
 {
     if (m_convertedNodes.size() > 0) {
         for (int j = 0; j < m_convertedNodes.size(); j++)
             RET_ONERROR( m_convertedNodes[j]->writeCElementFunction(f, 
-                               elementType, i, languageFlag, nodeFlag) )
+                               elementType, i, languageFlag, nodeFlag, cont) )
         return 0;
     }
 
@@ -1827,7 +1858,7 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
     }
 
     if (value->writeType(languageFlag)) {
-        if (languageFlag & MANY_JAVA_CLASSES) {
+        if ((!cont) && languageFlag & MANY_JAVA_CLASSES) {
             RET_ONERROR( mywritef(f, "    class %sDataClass%d {\n", 
                                   getVariableName(), m_numberCDataFunctions,  
                                   (const char*)getClassName()) )    
@@ -1855,7 +1886,7 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
         int numberFunctions = mvalue->getSFSize() / maxNumberElements + 1;
         int offset = 0;
         for (int i = 0; i < numberFunctions; i++) {
-            if (languageFlag & MANY_JAVA_CLASSES) {
+            if ((!cont) && languageFlag & MANY_JAVA_CLASSES) {
                 RET_ONERROR( mywritef(f, "    class %sDataClass%d {\n", 
                                       getVariableName(), 
                                       m_numberCDataFunctions,  
@@ -1919,6 +1950,7 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
             }
         }
     }
+
     return 0;
 }
 
@@ -1970,18 +2002,18 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
             MFNode *nodes = (MFNode *)value;
             for (int i = 0; i < nodes->getSize(); i++) {
                 Node *node = nodes->getValue(i);
-                if (node && (node != this)) // avoid simple cyclic scenegraph
+                if (node && (node != this)) { // avoid simple cyclic scenegraph
+                     if (languageFlag & JAVA_SOURCE)
+                         RET_ONERROR( mywritestr(f, "    ") )
                      RET_ONERROR( node->writeC(f, languageFlag) )
+                }
             }
         }
     } else if (!nodeFlag) {
         if (value->isArrayInC()) {
-            if (languageFlag & JAVA_SOURCE) {
+            if (languageFlag & JAVA_SOURCE)
                 RET_ONERROR( mywritestr(f, "    ") )
-                if (languageFlag & MANY_JAVA_CLASSES)  
-                    RET_ONERROR( mywritestr(f, "    ") )
-            }
-            RET_ONERROR( mywritestr(f, "    {\n") )
+            RET_ONERROR( mywritestr(f, "         {\n") )
         }
         RET_ONERROR( mywritestr(f, "    ") )
         if (languageFlag & JAVA_SOURCE) {       
@@ -2107,7 +2139,8 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
                                                eventName) )
         return 0; 
     } 
-    RET_ONERROR( indentf(f, indent + 4) )
+
+    RET_ONERROR( indentf(f, indent) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "if (") )
@@ -2120,14 +2153,14 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
     RET_ONERROR( mywritestr(f, ") {\n") )
 
     if (languageFlag & JAVA_SOURCE) {
-        RET_ONERROR( indentf(f, indent + 12) )
+        RET_ONERROR( indentf(f, indent + 8) )
         RET_ONERROR( mywritestr(f, "try {\n") )
         RET_ONERROR( mywritestr(f, "    ") )
     }  
 
-    RET_ONERROR( indentf(f, indent + 8) )
+    RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, "    ") )
+        RET_ONERROR( mywritestr(f, "   ") )
     RET_ONERROR( mywritestr(f, "nextEvent = ") )
     RET_ONERROR( writeCProcessEventCallback(f, languageFlag) )
     if (languageFlag & JAVA_SOURCE)
@@ -2147,16 +2180,16 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
     RET_ONERROR( mywritestr(f, ");\n") )
 
     if (languageFlag & JAVA_SOURCE) {
-        RET_ONERROR( indentf(f, indent + 12) )
+        RET_ONERROR( indentf(f, indent + 8) )
         RET_ONERROR( mywritestr(f, "} catch (Exception e) {\n") )
-        RET_ONERROR( indentf(f, indent + 16) )
+        RET_ONERROR( indentf(f, indent + 12) )
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "ShowError(e);\n") )
-        RET_ONERROR( indentf(f, indent + 12) )
+        RET_ONERROR( indentf(f, indent + 8) )
         RET_ONERROR( mywritestr(f, "}\n") )
     }
 
-    RET_ONERROR( indentf(f, indent + 8) )
+    RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "if (nextEvent) {\n") )
@@ -2176,7 +2209,7 @@ NodeData::writeCSendEvent(int f, int indent, int languageFlag,
     if (target->getExposedField() != NULL)
         targetVariableName = target->getExposedField()->getName(true);
 
-    return writeCDowithEvent(f, indent,  languageFlag, targetVariableName,
+    return writeCDowithEvent(f, indent + 4,  languageFlag, targetVariableName,
                              sourceVariableName, sNode, 
                              isArrayInC(target->getType()), target->getType());
 }
@@ -2222,7 +2255,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                             Node *sNode, bool isArray, int type)
 { 
     if ((languageFlag & JAVA_SOURCE) && isArray) {
-        RET_ONERROR( indentf(f, indent + 16) )
+        RET_ONERROR( indentf(f, indent + 12) )
         RET_ONERROR( mywritestr(f, "if ((") )
         RET_ONERROR( writeCVariable(f, languageFlag) )
         RET_ONERROR( mywritestr(f, ".") )
@@ -2260,7 +2293,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
         RET_ONERROR( mywritestr(f, "];\n") )
     }
 
-    RET_ONERROR( indentf(f, indent + 12) )
+    RET_ONERROR( indentf(f, indent + 8) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     if ((languageFlag & JAVA_SOURCE) && isArray) {
@@ -2319,7 +2352,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
     RET_ONERROR( mywritestr(f, ");\n") )
 
     if ((languageFlag & JAVA_SOURCE) && isArray) {
-        RET_ONERROR( indentf(f, indent + 16) )
+        RET_ONERROR( indentf(f, indent + 12) )
         RET_ONERROR( mywritestr(f, "}\n") )
     }
     return 0;
@@ -2330,11 +2363,10 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                             bool writeSensorNodes, const char *eventName)
 {
     Proto *proto = getProto();
-
     if (!getProto()->isLoaded())
         RET_ONERROR( writeCProcessEvent(f, indent, languageFlag, eventName) )
     else
-        indent = indent - 8;
+        indent = indent - 4;
 
     if (isInsideProto()) {
         Node *parentNode = getProtoParent();
@@ -2420,6 +2452,15 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             EventIn *target = sNode->getProto()->getEventIn(s.getField());
             EventOut *source = proto->getEventOut(i);
 
+            RET_ONERROR( indentf(f, indent + 8) )
+            if (languageFlag & JAVA_SOURCE) {
+                RET_ONERROR( indentf(f, indent + 4) )
+                RET_ONERROR( mywritestr(f, "if (") )
+                RET_ONERROR( sNode->writeCVariable(f, languageFlag) )
+                RET_ONERROR( mywritestr(f, " != null) ") )
+            }
+            RET_ONERROR( mywritestr(f, "{\n") )
+
             if (isInsideProto()) {
                 sNode = m_scene->searchProtoNodeId(sNode->getId());
                 if (sNode == NULL) {
@@ -2445,8 +2486,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                         source = timer->getProto()->getEventOut(eventOut);
                     }     
 
-                    if (writeCSendEvent(f, indent, languageFlag, target, source,
-                                        inter) != 0)
+                    if (writeCSendEvent(f, indent, languageFlag, target, 
+                                        source, inter) != 0)
                         return -1;
                     if (writeCEndSendEvent(f, indent, languageFlag) !=0)
                         return -1;
@@ -2499,7 +2540,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                                     sNode) != 0)
                     return -1;
 
-        
             const char *targetVariableName = target->getName(true);
             if (target->getExposedField() != NULL)
                 targetVariableName = target->getExposedField()->getName(true);
@@ -2513,9 +2553,14 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                    m_scene->addToSensorNodes(sNode);
             }
 
-            RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 8,
+            RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 12,
                              languageFlag, writeSensorNodes, 
                              targetVariableName) )
+
+            RET_ONERROR( indentf(f, indent + 8) )
+            if (languageFlag & JAVA_SOURCE)
+                RET_ONERROR( mywritestr(f, "    ") )
+            RET_ONERROR( mywritestr(f, "}\n") )
 
         }
     }
@@ -2528,11 +2573,11 @@ Node::writeCEndSendEvent(int f, int indent, int languageFlag)
 {
     if (getProto()->isLoaded())
         return 0;
-    RET_ONERROR( indentf(f, indent + 8) )
+    RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "}\n") )
-    RET_ONERROR( indentf(f, indent + 4) )
+    RET_ONERROR( indentf(f, indent) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "}\n") )
@@ -2578,8 +2623,7 @@ Node::writeCInstallDynamicNodeCallback(int f, int languageFlag, Proto *proto)
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, proto->getCName(true)) )
         RET_ONERROR( mywritestr(f, "ProcessEventCallback(var);\n") )
-        RET_ONERROR( mywritestr(f, "    ") )
-        RET_ONERROR( mywritestr(f, "    }\n") )
+        RET_ONERROR( mywritestr(f, "        }\n") )
     }
     return 0;
 }
@@ -3001,7 +3045,7 @@ NodeData::receiveEvent(int eventIn, double timestamp, FieldValue *value)
             // set the appropriate field
             setField(field, value);
             m_scene->OnFieldChange((Node*)this, field);
-        // fire off an event here?
+            // fire off an event here?
         }
     }        
 }
@@ -3289,7 +3333,8 @@ Node::doWithSiblings(DoWithNodeCallback callback, void *data,
 
 bool Node::doWithBranch(DoWithNodeCallback callback, void *data, 
                         bool searchInRest, bool skipBranch, 
-                        bool skipProto, bool callSelf, bool skipInline)
+                        bool skipProto, bool callSelf, bool skipInline,
+                        bool searchInConvertedNodes)
 {
     if (this == NULL)
         return false;
@@ -3299,13 +3344,19 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
         NodePROTO *nodeProto = (NodePROTO *)this;
         for (int i = 0; i < nodeProto->getNumProtoNodes(); i++)
             if (!(nodeProto->getProtoNode(i)->doWithBranch(callback, data,
-                                                           false, true, 
-                                                           false, true)))
+                  false, true, false, true, skipInline, 
+                  searchInConvertedNodes)))
                 return false;
     }
     // search in current node itself
     if (callSelf)
         searchOn = callback(this, data);
+    if (searchOn)
+        for (int i = 0; i < getNumConvertedNodes(); i++) {
+            searchOn = callback(getConvertedNode(i), data);
+            if (!searchOn)
+                break;
+        }
     if (searchOn) {
         // search in children of of current node
         for (int i = 0; i < m_proto->getNumFields(); i++) {
@@ -3331,7 +3382,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                     }
                     if (!child->doWithBranch(callback, data, false, 
                                              skipBranch, skipProto, callSelf, 
-                                             skipInline)) {
+                                             skipInline, searchInConvertedNodes)) {
                         if (skipBranch)
                             continue;
                         else
@@ -3369,7 +3420,8 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                             if (!child->doWithBranch(callback, data, 
                                                      false, skipBranch, 
                                                      skipProto, callSelf, 
-                                                     skipInline)) {
+                                                     skipInline,
+                                                     searchInConvertedNodes)) {
                                 if (skipBranch)
                                     continue;
                                 else
@@ -3402,7 +3454,9 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                                                   return false; 
                                     }
                                     if (!child->doWithBranch(callback, data, 
-                                                             false)) {
+                                           false, skipBranch, skipProto, 
+                                           callSelf, skipInline,
+                                           searchInConvertedNodes)) {
                                         if (skipBranch)
                                             continue;
                                         else

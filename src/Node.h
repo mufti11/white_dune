@@ -751,11 +751,10 @@ public:
     virtual void      unbind() {}
     virtual void      bind(GLuint textureId, GLuint textureUnit) {}
     virtual void      load() {}
-    virtual void      drawHandles(void) {}
+    virtual void      drawHandles() {}
     virtual void      updateHandles() {}
     virtual void      drawJointHandles(float scale, Node *parent, Node *that)
                           {}
-    virtual void      drawNormals() {}
     /// countPolygons() do not count polygons in primitives
     virtual int       countPolygons(void) {return 0;}
     virtual int       countPrimitives(void) {return 0;}
@@ -1011,6 +1010,8 @@ public:
     virtual SFFloat    *fov() { return NULL; };
     virtual void        getMatrix(float* matrix) {}
     void                apply(bool useStereo = false) {}
+    bool                getWritten(void) { return m_written; }
+    void                setWritten(bool flag) { m_written = flag; }
 
 protected:
     const char        *searchIsName(int i, int type);
@@ -1076,6 +1077,7 @@ protected:
     MyArray<Field *>        m_isFields;
     MyArray<ExposedField *> m_isExposedFields;
     int                m_counter4SceneTreeView;
+    bool               m_written;
 };
    
 
@@ -1178,7 +1180,8 @@ public:
                                   bool skipBranch = false,
                                   bool skipProto = false,
                                   bool callSelf = true,
-                                  bool skipInline = true);
+                                  bool skipInline = true,
+                                  bool searchInConvertedNodes = false);
 
     bool             doWithSimilarBranch(DoWithSimilarBranchCallback 
                                          callback, Node *similarNode, 
@@ -1220,14 +1223,18 @@ public:
     virtual bool     isHumanoid(void) { return false; }
 
     virtual int      writeC(int filedes, int languageFlag);
-    int              writeCDataAsFunctions(int filedes, int languageFlag);
+    int              writeCDataAsFunctions(int filedes, int languageFlag,
+                                           bool cont = false);
     int              writeCDataAsClasses(int filedes, int languageFlag);
-    int              writeCDataFunctions(int filedes, int languageFlag);
+    int              writeCDataFunction(int filedes, int languageFlag,
+                                        bool forward, bool cont = false);
+    int              writeCDataFunctionFields(int filedes, int languageFlag,
+                                              bool forward, bool cont);
     int              writeCElement(int f, int elementType, int i, 
                                    int languageFlag, bool nodeFlag);
     int              writeCElementFunction(int f, int elementType, 
                                            int i, int languageFlag, 
-                                           bool nodeFlag);
+                                           bool nodeFlag, bool cont = false);
     int              writeCElementClass(int f, int elementType, int i, 
                                         int languageFlag, bool nodeFlag);
     int              writeCAndFollowRoutes(int f, int indent, 

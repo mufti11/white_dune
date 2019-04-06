@@ -35,6 +35,8 @@ namespace CPPRWD
 
     void IndexedFaceSetRender(X3dNode *data, void*);
 
+    void IndexedFaceSetCreateNormals(X3dNode *data, void*);
+
     void TextRender(X3dNode *data, void* extraData);
 
     void ImageTextureRender(X3dNode *data, void*);
@@ -173,7 +175,14 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
         X3dIndexedFaceSet *Xindexedfaceset = (X3dIndexedFaceSet*)data;
         X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xindexedfaceset->coord;
         X3dNormal *Xnormal = (X3dNormal*)Xindexedfaceset->normal;
-        X3dColor *Xcolor = (X3dColor*)Xindexedfaceset->color;
+        bool colorRGBA = false;
+        X3dNode *Xcolor = NULL;
+        if (Xindexedfaceset->color) 
+            if (Xindexedfaceset->color->getType() == X3dColorRGBAType) {
+                Xcolor = (X3dColorRGBA*)Xindexedfaceset->color;
+                colorRGBA = true;
+            } else
+                Xcolor = (X3dColor*)Xindexedfaceset->color;;
         X3dTextureCoordinate *Xtexturecoordinate = (X3dTextureCoordinate*)Xindexedfaceset->texCoord;
         GLint *faces = NULL;
         GLfloat *vertex = NULL;
@@ -188,8 +197,13 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
         {
             glEnable(GL_COLOR_MATERIAL); //Maybe needfull
             glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-            colors = Xcolor->color;
-            color_len = Xcolor->color_length;
+            if (colorRGBA) {
+                colors = ((X3dColorRGBA *)Xcolor)->color;
+                color_len = ((X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((X3dColor *)Xcolor)->color;
+                color_len = ((X3dColor *)Xcolor)->color_length;
+            }
             colorpervertex = Xindexedfaceset->colorPerVertex;
         }
         if(Xindexedfaceset->colorIndex != NULL)
@@ -206,6 +220,8 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
         faces = Xindexedfaceset->coordIndex;
         normalindex = Xindexedfaceset->normalIndex;
         if(Xnormal!=NULL)normal = Xnormal->vector;
+        if (extraData != NULL)
+            normal = (float *)extraData;
         vertex_len = Xcoordinate->point_length;
         faces_len = Xindexedfaceset->coordIndex_length;
         if(Xnormal != NULL)normal_len = Xnormal->vector_length;
@@ -234,7 +250,10 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
 
         glBegin(GL_POLYGON);
         if(colors && !colorpervertex)
-            glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+            if (colorRGBA)
+                glColor4f(colors[4 * facecounter], colors[4 * facecounter + 1], colors[4 * facecounter + 2], colors[4 * facecounter + 3]);
+            else 
+                glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
 
         for(int i = 0; i != faces_len; i++)
         {
@@ -259,15 +278,22 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
                 glEnd();
                 glBegin(GL_POLYGON);
                 if(colors && !colorpervertex)
-                    glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
+                    if (colorRGBA)
+                        glColor4f(colors[4 * facecounter], colors[4 * facecounter + 1], colors[4 * facecounter + 2], colors[4 * facecounter + 3]);
+                    else
+                        glColor3f(colors[3 * facecounter], colors[3 * facecounter + 1], colors[3 * facecounter + 2]);
             }
             else if(((buffer == -1 && normalbuffer != -1) || (buffer != -1 && normalbuffer == -1)) && normalindex != NULL)
                 error("Error in normalIndex");
             else
             {
-                if(normalpervertex && normal != NULL)glNormal3f(normal[normalbuffer*3], normal[normalbuffer*3+1], normal[normalbuffer*3+2]);
+                if(normalpervertex && normal != NULL)
+                    glNormal3f(normal[normalbuffer*3], normal[normalbuffer*3+1], normal[normalbuffer*3+2]);
                 if(colors && color_len > 0 && colorpervertex)
-                    glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
                 if(Xtexturecoordinate)
                     if((Xtexturecoordinate->point) && (texturecoordinateindex))
                         glTexCoord2f(Xtexturecoordinate->point[texturebuffer*2], Xtexturecoordinate->point[texturebuffer*2+1]);
@@ -279,6 +305,102 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
     glDisable(GL_COLOR_MATERIAL);
 }
 
+void CPPRWD::IndexedFaceSetCreateNormals(X3dNode *data, void* extraData)
+{
+    if(initRender)
+    {
+        X3dIndexedFaceSet *Xindexedfaceset = (X3dIndexedFaceSet*)data;
+        X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xindexedfaceset->coord;
+        X3dNormal *Xnormal = (X3dNormal*)Xindexedfaceset->normal;
+        int *normalIndex = Xindexedfaceset->normalIndex;
+        int normalIndexLen = Xindexedfaceset->normalIndex_length;
+        if (normalIndex == NULL) {
+            normalIndex = Xindexedfaceset->coordIndex;
+            normalIndexLen = Xindexedfaceset->coordIndex_length;
+        } 
+        int maxLen = -1;
+        for (int i = 0; i < normalIndexLen; i++)
+            if (normalIndex[i] > maxLen)
+                maxLen = normalIndex[i];
+        maxLen++;
+        float **vec = (float **)extraData;
+        *vec = (float *)malloc(maxLen * sizeof(float) * 3);
+    }
+    else
+    {
+        X3dIndexedFaceSet *Xindexedfaceset = (X3dIndexedFaceSet*)data;
+        X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xindexedfaceset->coord;
+        X3dNormal *Xnormal = (X3dNormal*)Xindexedfaceset->normal;
+        int *normalIndex = Xindexedfaceset->normalIndex;
+        if (normalIndex == NULL)
+            normalIndex = Xindexedfaceset->coordIndex;
+        float *vec = *(float **)extraData;
+        float creaseAngle = Xindexedfaceset->creaseAngle;
+        int *ci = Xindexedfaceset->coordIndex;
+        int ciLen = Xindexedfaceset->coordIndex_length;
+        float *points = Xcoordinate->point;
+        int pointLen = Xcoordinate->point_length;
+        for (int i = 0; i < ciLen; i++) 
+        {
+            int first = -1;
+            int second = -1;
+            int third = -1;
+            if (ci[i] > -1) {
+                if ((i > 0) && (ci[i - 1] > -1))
+                    first = i - 1;
+                else 
+                {
+                    for (int j = i; j < ciLen; j++)
+                        if (ci[j] < 0)
+                        {
+                            first = j - 1;
+                            break;
+                        }
+                    if (first == -1)
+                        first = ciLen - 1;
+                }
+                second = i;
+                if ((i + 1 < ciLen) && (ci[i + 1] > -1))
+                    third = i + 1;
+                else {
+                    for (int j = i; j > -1; j--)
+                        if (ci[j] < 0) 
+                        {
+                            third = j + 1;
+                            break;
+                        }
+                    if (third == -1)
+                        third = 0;
+                }
+                if ((first > -1) && (second > -1) && (third > -1)) 
+                {
+                    float v1x = points[ci[first] * 3    ] - points[ci[second] * 3    ];
+                    float v1y = points[ci[first] * 3 + 1] - points[ci[second] * 3 + 1];
+                    float v1z = points[ci[first] * 3 + 2] - points[ci[second] * 3 + 2];
+
+                    float v2x = points[ci[third] * 3    ] - points[ci[second] * 3    ];
+                    float v2y = points[ci[third] * 3 + 1] - points[ci[second] * 3 + 1];
+                    float v2z = points[ci[third] * 3 + 2] - points[ci[second] * 3 + 2];
+    
+                    float crossx = v1y * v2z - v1z * v2y;
+                    float crossy = v1z * v2x - v1x * v2z;
+                    float crossz = v1x * v2y - v1y * v2x;
+    
+                    float vLen = sqrt(crossx * crossx + crossy * crossy + crossz * crossz);
+                    if (vLen > 0) {
+                        vec[normalIndex[i] * 3    ] = - crossx / vLen;      
+                        vec[normalIndex[i] * 3 + 1] = - crossy / vLen;      
+                        vec[normalIndex[i] * 3 + 2] = - crossz / vLen;
+                    } else {
+                        vec[normalIndex[i] * 3    ] = 0;      
+                        vec[normalIndex[i] * 3 + 1] = 0;      
+                        vec[normalIndex[i] * 3 + 2] = 0;
+                    }
+                }
+            }    
+        }
+    }
+}
 
 void CPPRWD::TextRender(X3dNode *data, void* extraData)
 {
@@ -733,9 +855,10 @@ void CPPRWD::ImageTextureRender(X3dNode *data, void *)
     } 
     else 
     {
-        X3dNode *textureTransform;
-        textureTransform = ((struct X3dAppearance *)imageTexture->m_parent)->
-                           textureTransform;
+        X3dNode *textureTransform = NULL;
+        if (imageTexture->m_parent)
+            textureTransform = ((struct X3dAppearance *)imageTexture->m_parent)->
+                               textureTransform;
 
         if (textureTransform)
             textureTransformBind(textureTransform);
@@ -810,9 +933,10 @@ void CPPRWD::PixelTextureRender(X3dNode *data, void*)
         }
     }
     else {
-        X3dNode *textureTransform;
-        textureTransform = ((X3dAppearance *)pixelTexture->m_parent)->
-                           textureTransform;
+        X3dNode *textureTransform = NULL;
+        if (pixelTexture->m_parent)
+            textureTransform = ((X3dAppearance *)pixelTexture->m_parent)->
+                               textureTransform;
                 
         if (textureTransform)
             textureTransformBind(textureTransform);
@@ -1087,6 +1211,7 @@ struct HAnimHumanoidExtraDataStruct {
      float *origVertices;
      int origVertices_length;
      float thisMatrix[16];
+     float *normalData;
 };
 
 void applyJoint(X3dNode *data, X3dNode *x3dcoord, float *origVertices, 
@@ -1200,9 +1325,24 @@ void CPPRWD::HAnimHumanoidTreeRender(X3dNode *data, void *dataptr)
                     humanoid->skeleton[i]->treeRender(dataptr);;
                 }       
         if (humanoid->skin)
+        {
             for (i = 0; i < humanoid->skin_length; i++)
                 if (humanoid->skin[i])
                     humanoid->skin[i]->treeRender(dataptr);
+            for (i = 0; i < humanoid->skin_length; i++)
+                if (humanoid->skin[i]) {
+                    glDisable(GL_TEXTURE_2D);
+                    X3dIndexedFaceSet *geometry = NULL;
+                    if (humanoid->skin[i]->getType() == X3dShapeType) {
+                        X3dShape *shape = (X3dShape *)humanoid->skin[i];
+                        if (shape->geometry && shape->geometry->getType() == X3dIndexedFaceSetType)
+                            geometry = (X3dIndexedFaceSet *)shape->geometry;
+                    }
+                    if (geometry)
+                        geometry->createNormals(&extraVar->normalData);
+                    humanoid->skin[i]->treeRender(extraVar->normalData);
+                }
+        }
     }
     else
     {
@@ -1222,17 +1362,12 @@ void CPPRWD::HAnimHumanoidTreeRender(X3dNode *data, void *dataptr)
             glTranslatef(humanoid->center[0] * -1, humanoid->center[1] * -1, humanoid->center[2] * -1);
             glGetFloatv(GL_MODELVIEW_MATRIX, extraVar->thisMatrix);
             glPopMatrix();
-            for (i = 0; i < coord->point_length; i++)
-                coord->point[i] = 0;
+            if (coord)
+                for (i = 0; i < coord->point_length; i++)
+                    coord->point[i] = 0;
         }
         glPushMatrix();
         glMultMatrixf(extraVar->thisMatrix);
-        if (humanoid->skin)
-            for (i = 0; i < humanoid->skin_length; i++)
-                if (humanoid->skin[i]) {
-                    glDisable(GL_TEXTURE_2D);
-                    humanoid->skin[i]->treeRender(dataptr);
-                }
         if (humanoid->skeleton)
             for (i = 0; i < humanoid->skeleton_length; i++)
                 if (humanoid->skeleton[i])
@@ -1249,6 +1384,20 @@ void CPPRWD::HAnimHumanoidTreeRender(X3dNode *data, void *dataptr)
                     humanoid->skeleton[i]->treeRender(dataptr);
                 }
         glPopMatrix();
+        if (humanoid->skin)
+            for (i = 0; i < humanoid->skin_length; i++)
+                if (humanoid->skin[i]) {
+                    glDisable(GL_TEXTURE_2D);
+                    X3dIndexedFaceSet *geometry = NULL;
+                    if (humanoid->skin[i]->getType() == X3dShapeType) {
+                        X3dShape *shape = (X3dShape *)humanoid->skin[i];
+                        if (shape->geometry && shape->geometry->getType() == X3dIndexedFaceSetType)
+                            geometry = (X3dIndexedFaceSet *)shape->geometry;
+                    }
+                    if (geometry)
+                        geometry->createNormals(&extraVar->normalData);
+                    humanoid->skin[i]->treeRender(extraVar->normalData);
+                }
     }
 }
 
@@ -1520,8 +1669,6 @@ void CPPRWD::ParticleSystemTreeRender(X3dNode *data, void *dataptr)
                     system->appearance->treeRender(NULL);
                 if (system->geometry)
                     system->geometry->treeRender(NULL);
-//                if (appearance()->getValue())
-//                    appearance()->getValue()->unbind();
                 glPopMatrix();
             }
             extraVar->m_internTime = getTimerTime();
@@ -1905,6 +2052,7 @@ void CPPRWD::init()
     X3dTransform::treeRenderCallback = TransformTreeRender;
     X3dGroup::treeRenderCallback = GroupTreeRender;
     X3dIndexedFaceSet::renderCallback = IndexedFaceSetRender;
+    X3dIndexedFaceSet::createNormalsCallback = IndexedFaceSetCreateNormals;
     X3dText::renderCallback = TextRender;
     X3dPointLight::renderCallback = PointLightRender;
     X3dDirectionalLight::renderCallback = DirectionalLightRender;

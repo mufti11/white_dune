@@ -3711,9 +3711,56 @@ if test "$CFLAGS" != "$OLD_CFLAGS"; then
  CFLAGS="$OLD_CFLAGS"
  echo reseting CFLAGS to $CFLAGS
 fi
-if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
- CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
- echo reseting CXXFLAGS to $CXXFLAGS
+
+ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether -Wno-nonnull-compare is supported" >&5
+$as_echo_n "checking whether -Wno-nonnull-compare is supported... " >&6; }
+OLD_CXXFLAGS2=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -W -Werror -Wno-nonnull-compare"
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdio.h>
+int
+main ()
+{
+return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+                  export NONNULL_SUPPORTED=yes;
+                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+else
+
+                  export NONNULL_SUPPORTED=no;
+                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+CXXFLAGS=$OLD_CXXFLAGS2
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+if test "X_$NONNULL_SUPPORTED" = "X_yes"; then
+   if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
+      CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
+      echo reseting CXXFLAGS to $CXXFLAGS
+   fi
 fi
 
 
@@ -5191,6 +5238,8 @@ if test "X_$IMAGECONVERTER" != "X_" ; then
 #define HAVE_IMAGE_CONVERTER "${IMAGECONVERTER}"
 _ACEOF
 
+else
+   echo "unable to convert textures to bmp for ac3d export and unable to convert textures for RIB export" 1>&2
 fi
 
 for ac_prog in teqser txmake
@@ -7947,8 +7996,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
    SAVE_LIBS="$LIBS"
    LIBS="$LIBS -lCGAL"
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -10212,56 +10260,6 @@ else
    TESTICONSIZE2="../batch/testiconsize2.sh $BMPTOPNM"
 fi
 
-
-
-for ac_prog in convert
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_IMAGECONVERTER+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $IMAGECONVERTER in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_IMAGECONVERTER="$IMAGECONVERTER" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_IMAGECONVERTER="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-IMAGECONVERTER=$ac_cv_path_IMAGECONVERTER
-if test -n "$IMAGECONVERTER"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $IMAGECONVERTER" >&5
-$as_echo "$IMAGECONVERTER" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  test -n "$IMAGECONVERTER" && break
-done
-
-if test "X_$IMAGECONVERTER" = "X_" ; then
-   echo "unable to convert textures to bmp for ac3d export" 1>&2
-fi
 
 
 for ac_prog in javac

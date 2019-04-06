@@ -215,13 +215,22 @@ public:
     int                 increaseNumDataFunctions(void) 
                            { return m_numDataFunctions++; }
 
-    void                zeroNumReducedDataFunctions(void) 
-                           { m_numReducedDataFunctions = 0; }
-    int                 getNumReducedDataFunctions(void)
-                           { return m_numReducedDataFunctions; }
-    void                increaseNumReducedDataFunctions(void)
-                           { m_numReducedDataFunctions++; }
+    void                zeroNumDataClasses(void) { m_numDataClasses = 0; }
+    int                 getNumDataClasses(void)
+                           { return m_numDataClasses; }
+    int                 increaseNumDataClasses(void) 
+                           { return m_numDataClasses++; }
 
+    int                 getStartNumDataFunctions(void)
+                           { return m_startNumDataFunctions; }
+    void                setStartNumDataFunctions(int i)
+                           { m_startNumDataFunctions = i; }
+
+    int                 getNumDataFunctionsPerClass(void)
+                           { return m_numDataFunctionsPerClass; }
+    void                setNumDataFunctionsPerClass(int i)
+                           { m_numDataFunctionsPerClass = i; }
+                                                 
     int                 writeAc3d(int filedes, bool raven = false);
     void                collectAc3dMaterialInfo(char *name, Node *node);
     bool                hasEmptyMaterial(void);
@@ -946,9 +955,10 @@ protected:
     MyArray<Proto *>    m_writtenExtensionProtos;
     bool                m_importIntoVrmlScene;
 
+    int                 m_numDataClasses;
     int                 m_numDataFunctions;
-    int                 m_numReducedDataFunctions;
-
+    int                 m_startNumDataFunctions;
+    int                 m_numDataFunctionsPerClass;
     bool                m_writeKanimNow;
 
     StringMap           m_ac3dMaterialIndexMap;

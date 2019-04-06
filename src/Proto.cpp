@@ -260,6 +260,9 @@ Proto::buildExportNames(const char *nodeName)
     m_treeRenderCallbackClass = buildCallbackClass("TreeRender");
     m_treeRenderCallbackName = buildCallbackName("treeRender");
 
+    m_createNormalsCallbackClass = buildCallbackClass("CreateNormals");
+    m_createNormalsCallbackName = buildCallbackName("createNormals");
+
     m_doWithDataCallbackClass = buildCallbackClass("DoWithData");
     m_doWithDataCallbackName = buildCallbackName("doWithData");
 
@@ -895,13 +898,13 @@ int Proto::write(int f, int indent, int flags) const
             TheApp->incSelectionLinenumber();
             RET_ONERROR( mywritestr(f, "{\n") )
             TheApp->incSelectionLinenumber();
-            if (TheApp->GetkrFormating()) {
-                indent = indent + TheApp->GetIndent();               
+            if (TheApp->GetkrFormating())
+                indent = indent + TheApp->GetIndent();
+
+            for (int i = 0; i < m_protoNodes.size(); i++) {
                 RET_ONERROR( indentf(f, indent) )
-            }
-            for (int i = 0; i < m_protoNodes.size(); i++) 
                 RET_ONERROR( m_protoNodes.get(i)->write(f, indent) )
-    
+            }
             for (int i = 0; i < m_protoNodes.size(); i++) 
                 RET_ONERROR( m_protoNodes.get(i)->writeRoutes(f, indent) )
             m_scene->writeRouteStrings(f, indent, true);
@@ -1492,6 +1495,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "    int getType() const ") )
         RET_ONERROR( mywritef(f, "{ return %d; }\n", getType()) )
         RET_ONERROR( mywritestr(f, "\n") )
+
         RET_ONERROR( mywritestr(f, "    static ") )
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "Callback ") )
@@ -1501,6 +1505,13 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "Callback ") )
         RET_ONERROR( mywritestr(f, "treeRenderCallback;\n") )
+
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "    static ") )
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, "Callback ") )
+            RET_ONERROR( mywritestr(f, "createNormalsCallback;\n") )
+        }
 
         RET_ONERROR( mywritestr(f, "    static ") )
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
@@ -1557,6 +1568,24 @@ Proto::writeCDeclaration(int f, int languageFlag)
             RET_ONERROR( mywritestr(f, " = node;\n") ) 
             RET_ONERROR( mywritestr(f, "    }\n\n") ) 
     
+            if (getType() == VRML_INDEXED_FACE_SET) {
+                RET_ONERROR( mywritestr(f, "    static ") ) 
+                RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+                RET_ONERROR( mywritestr(f, " ") ) 
+                RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
+                RET_ONERROR( mywritestr(f, ";\n") ) 
+        
+                RET_ONERROR( mywritestr(f, "    static void set") ) 
+                RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+                RET_ONERROR( mywritestr(f, "(") ) 
+                RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+                RET_ONERROR( mywritestr(f, " node) {\n") ) 
+                RET_ONERROR( mywritestr(f, "        ") ) 
+                RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
+                RET_ONERROR( mywritestr(f, " = node;\n") ) 
+                RET_ONERROR( mywritestr(f, "    }\n\n") ) 
+            } 
+
             RET_ONERROR( mywritestr(f, "    static ") ) 
             RET_ONERROR( mywritestr(f, getDoWithDataCallbackClass()) )
             RET_ONERROR( mywritestr(f, " ") ) 
@@ -1651,6 +1680,13 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, getTreeRenderCallbackClass()) )
         RET_ONERROR( mywritestr(f, " = NULL;\n") )
 
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, "Callback ") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+            RET_ONERROR( mywritestr(f, " = NULL;\n") )
+        }
+
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "Callback ") )
         RET_ONERROR( mywritestr(f, getDoWithDataCallbackClass()) )
@@ -1716,6 +1752,22 @@ Proto::writeCDeclaration(int f, int languageFlag)
 
         RET_ONERROR( mywritestr(f, "    }\n") )
         RET_ONERROR( mywritestr(f, "}\n") )
+
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "void ") )
+            RET_ONERROR( mywritestr(f, getClassName()) )
+            RET_ONERROR( mywritestr(f, "CreateNormals(") )
+            RET_ONERROR( mywritestr(f, TheApp->getCNodeName()) ) 
+            RET_ONERROR( mywritestr(f, "* self, void *dataptr) {") )
+            RET_ONERROR( mywritestr(f, "\n") )
+            RET_ONERROR( mywritestr(f, "    if (") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+            RET_ONERROR( mywritestr(f, ")\n") )
+            RET_ONERROR( mywritestr(f, "        ") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+            RET_ONERROR( mywritestr(f, "(self, dataptr);\n") )
+            RET_ONERROR( mywritestr(f, "}\n") )
+        }
 
         // functions
         RET_ONERROR( mywritestr(f, "void ") )
@@ -1797,6 +1849,15 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "renderCallback(this, dataptr);") )
         RET_ONERROR( mywritestr(f, "\n    }\n") )
 
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "    virtual void createNormals(void *dataptr) {\n") )
+            RET_ONERROR( mywritestr(f, "        if (") )
+            RET_ONERROR( mywritestr(f, "createNormalsCallback)\n") )
+            RET_ONERROR( mywritestr(f, "            ") )
+            RET_ONERROR( mywritestr(f, "createNormalsCallback(this, dataptr);") )
+            RET_ONERROR( mywritestr(f, "\n    }\n") )
+        }
+
         RET_ONERROR( mywritestr(f, "    virtual void treeDoWithData(void *dataptr)") )
         RET_ONERROR( mywritestr(f, " {\n") )
         RET_ONERROR( mywritestr(f, "        int i;\n") )
@@ -1851,6 +1912,14 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "::") )
         RET_ONERROR( mywritestr(f, "treeRenderCallback = NULL;\n") )
 
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, "Callback ") )
+            RET_ONERROR( mywritestr(f, getClassName()) )
+            RET_ONERROR( mywritestr(f, "::") )
+            RET_ONERROR( mywritestr(f, "createNormalsCallback = NULL;\n") )
+        }
+
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "Callback ") )
         RET_ONERROR( mywritestr(f, getClassName()) )
@@ -1879,7 +1948,9 @@ Proto::writeCDeclaration(int f, int languageFlag)
     }
     if (languageFlag & JAVA_SOURCE) {
         // memberfunctions
-        RET_ONERROR( mywritestr(f, "    void treeRender(Object dataptr) {\n") )
+        RET_ONERROR( mywritestr(f, "    void treeRender(") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "Node dataptr, Object object) {\n") )
         RET_ONERROR( mywritestr(f, "        if (") )
         RET_ONERROR( mywritestr(f, getClassName()) ) 
         RET_ONERROR( mywritestr(f, ".") )
@@ -1889,15 +1960,15 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, getClassName()) ) 
         RET_ONERROR( mywritestr(f, ".") )
         RET_ONERROR( mywritestr(f, getTreeRenderCallbackName()) )
-        RET_ONERROR( mywritestr(f, ".treeRender(this);\n") )
+        RET_ONERROR( mywritestr(f, ".treeRender(this, object);\n") )
         RET_ONERROR( mywritestr(f, "            return;\n") )
         RET_ONERROR( mywritestr(f, "        }\n") )
         for (int i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeRender", languageFlag,
-                                             "renderCallback") )
+                                             "renderCallback", true) )
         RET_ONERROR( mywritestr(f, "        if (m_protoRoot != null)\n") )
         RET_ONERROR( mywritestr(f, "            m_protoRoot.") )
-        RET_ONERROR( mywritestr(f, "treeRender(dataptr);\n") )
+        RET_ONERROR( mywritestr(f, "treeRender(dataptr, object);\n") )
         RET_ONERROR( mywritestr(f, "        if (") )
         RET_ONERROR( mywritestr(f, getClassName()) ) 
         RET_ONERROR( mywritestr(f, ".") )
@@ -1907,10 +1978,12 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, getClassName()) ) 
         RET_ONERROR( mywritestr(f, ".") )
         RET_ONERROR( mywritestr(f, getRenderCallbackName()) )
-        RET_ONERROR( mywritestr(f, ".render(this);\n") )
+        RET_ONERROR( mywritestr(f, ".render(this, object);\n") )
         RET_ONERROR( mywritestr(f, "    }\n") )
 
-        RET_ONERROR( mywritestr(f, "    void treeDoWithData(Object dataptr) {\n") )
+        RET_ONERROR( mywritestr(f, "    void treeDoWithData(") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "Node dataptr) {\n") )
         RET_ONERROR( mywritestr(f, "        if (") )
         RET_ONERROR( mywritestr(f, getClassName()) ) 
         RET_ONERROR( mywritestr(f, ".") )
@@ -1942,36 +2015,70 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, ".doWithData(this);\n") )
         RET_ONERROR( mywritestr(f, "    }\n") )
 
-        RET_ONERROR( mywritestr(f, "}") )
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "    void createNormals(Object dataptr) {\n") )
+            RET_ONERROR( mywritestr(f, "        if (") )
+            RET_ONERROR( mywritestr(f, getClassName()) ) 
+            RET_ONERROR( mywritestr(f, ".") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
+            RET_ONERROR( mywritestr(f, " != null) {\n") )
+            RET_ONERROR( mywritestr(f, "            ") )
+            RET_ONERROR( mywritestr(f, getClassName()) ) 
+            RET_ONERROR( mywritestr(f, ".") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
+            RET_ONERROR( mywritestr(f, ".createNormals(this, dataptr);\n") )
+            RET_ONERROR( mywritestr(f, "            return;\n") )
+            RET_ONERROR( mywritestr(f, "        }\n") )
+            RET_ONERROR( mywritestr(f, "        if (") )
+            RET_ONERROR( mywritestr(f, getClassName()) ) 
+            RET_ONERROR( mywritestr(f, ".") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
+            RET_ONERROR( mywritestr(f, " != null)\n") )
+            RET_ONERROR( mywritestr(f, "            ") )
+            RET_ONERROR( mywritestr(f, getClassName()) ) 
+            RET_ONERROR( mywritestr(f, ".") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
+            RET_ONERROR( mywritestr(f, ".createNormals(this, dataptr);\n") )
+            RET_ONERROR( mywritestr(f, "    }\n") )
+        }    
+        RET_ONERROR( mywritestr(f, "}\n") )
     }
 
     RET_ONERROR( mywritestr(f, "\n\n") )
 
     if (languageFlag & JAVA_SOURCE) {
-         // "callbacks"
-         RET_ONERROR( mywritestr(f, "class ") )
-         RET_ONERROR( mywritestr(f, getRenderCallbackClass()) )
-         RET_ONERROR( mywritestr(f, " extends ") )
-         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-         RET_ONERROR( mywritestr(f, "RenderCallback {}\n") )
+        // "callbacks"
+        RET_ONERROR( mywritestr(f, "class ") )
+        RET_ONERROR( mywritestr(f, getRenderCallbackClass()) )
+        RET_ONERROR( mywritestr(f, " extends ") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "RenderCallback {}\n") )
 
-         RET_ONERROR( mywritestr(f, "class ") )
-         RET_ONERROR( mywritestr(f, getTreeRenderCallbackClass()) )
-         RET_ONERROR( mywritestr(f, " extends ") )
-         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-         RET_ONERROR( mywritestr(f, "TreeRenderCallback {}\n") )
+        RET_ONERROR( mywritestr(f, "class ") )
+        RET_ONERROR( mywritestr(f, getTreeRenderCallbackClass()) )
+        RET_ONERROR( mywritestr(f, " extends ") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "TreeRenderCallback {}\n") )
 
-         RET_ONERROR( mywritestr(f, "class ") )
-         RET_ONERROR( mywritestr(f, getDoWithDataCallbackClass()) )
-         RET_ONERROR( mywritestr(f, " extends ") )
-         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-         RET_ONERROR( mywritestr(f, "DoWithDataCallback {};\n") )
+        RET_ONERROR( mywritestr(f, "class ") )
+        RET_ONERROR( mywritestr(f, getDoWithDataCallbackClass()) )
+        RET_ONERROR( mywritestr(f, " extends ") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "DoWithDataCallback {};\n") )
 
-         RET_ONERROR( mywritestr(f, "class ") )
-         RET_ONERROR( mywritestr(f, getTreeDoWithDataCallbackClass()) )
-         RET_ONERROR( mywritestr(f, " extends ") )
-         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-         RET_ONERROR( mywritestr(f, "TreeDoWithDataCallback {};\n") )
+        RET_ONERROR( mywritestr(f, "class ") )
+        RET_ONERROR( mywritestr(f, getTreeDoWithDataCallbackClass()) )
+        RET_ONERROR( mywritestr(f, " extends ") )
+        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "TreeDoWithDataCallback {};\n") )
+
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "class ") )
+            RET_ONERROR( mywritestr(f, getCreateNormalsCallbackClass()) )
+            RET_ONERROR( mywritestr(f, " extends ") )
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, "CreateNormalsCallback {}\n") )
+        }
 
          RET_ONERROR( mywritestr(f, "class ") )
          RET_ONERROR( mywritestr(f, getProcessEventCallbackClass()) )
@@ -2126,7 +2233,8 @@ Proto::writeCConstructorField(int f, int i, int languageFlag)
 
 int 
 Proto::writeCCallTreeField(int f, int i, const char *treeFunctionName, 
-                           int languageFlag, const char *functionName)
+                           int languageFlag, const char *functionName,
+                           bool useObject)
 {
     bool x3d = true;
 
@@ -2234,7 +2342,10 @@ Proto::writeCCallTreeField(int f, int i, const char *treeFunctionName,
         lowFirst += tolower(treeFunctionName[0]);
         RET_ONERROR( mywritestr(f, lowFirst) )
         RET_ONERROR( mywritestr(f, treeFunctionName + 1) )
-        RET_ONERROR( mywritestr(f, "(dataptr);\n") )
+        RET_ONERROR( mywritestr(f, "(dataptr") )
+        if (useObject)
+            RET_ONERROR( mywritestr(f, ", object") )
+        RET_ONERROR( mywritestr(f, ");\n") )
     }
     return(0);
 }

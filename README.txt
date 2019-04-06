@@ -5009,5 +5009,17 @@ Fixed bug in NurbsSurface/NurbsCurve to X3D conversion
 
 Fixed selection error when creating a HAnimHumanoid node 
 
+Fixed ColorRGA problem in C/C++ export libraries
+
+Fixed Normal node data creation of HAnimHumanoid C/C++ export
+
+Fixed minor formatting error when writing PROTO
+
+Changed desktop icons from ,png to .bmp in packagers
+
+Added human animation to C++ export example
+
+Modified java export
+
 contact: MUFTI <mufti@users.ourproject.org>
 

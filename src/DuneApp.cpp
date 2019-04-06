@@ -467,8 +467,7 @@ DuneApp::SaveTempFile(Scene *scene, const char *name, int writeFlags,
         int f = open(path, O_WRONLY | O_CREAT,00666);
         if (f == -1) {
             if (scene->write(f, path, (writeFlags | SKIP_SAVED_TEST | 
-                             (TEMP_SAVE & (~XITE)))
-                != 0))
+                             (TEMP_SAVE & (~XITE)))))
                writeError = true;
             else if (swTruncateClose(f))
                 writeError = true;
@@ -525,13 +524,13 @@ void DuneApp::OnFilePreview(Scene* scene)
     stopTrackers();
 #endif
     char wrlpath[1024] = { 0 };
-    char posixPath[1024] = { 0 };
     if (swBrowserGetVrmlLevel(GetBrowser()) & XITE) {
         mystrncpy_secure(wrlpath, SaveTempFile(scene, ".dune_preview", PURE_X3DV), 1024);
 #ifdef _WIN32
-        // X_ITE nneds posix path
-        toPosixPath(posixPath, wrlpath, 1024);
-        mystrncpy_secure(wrlpath, posixPath, 1024);
+    char posixPath[1024] = { 0 };
+    // X_ITE nneds posix path
+    toPosixPath(posixPath, wrlpath, 1024);
+    mystrncpy_secure(wrlpath, posixPath, 1024);
 #endif
     }
     bool saveSuccess = false;
@@ -1012,7 +1011,6 @@ void DuneApp::Exit()
 
 void DuneApp::UpdateAllWindows()
 {
-    int count = 0;
     for (List<MainWindow *>::Iterator *i = m_windows.first(); i; i = i->next())
         i->item()->GetScene()->UpdateViews(NULL, UPDATE_ALL);
 }
