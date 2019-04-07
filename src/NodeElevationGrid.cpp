@@ -215,8 +215,8 @@ NodeElevationGrid::createMesh(bool cleanDoubleVertices, bool triangulate)
     }
     MFVec3f *v = new MFVec3f(vertices, size * 3);
     MFInt32 *coordIndex = new MFInt32(ci, cindex);
-    if (colorPerVertex()->getValue()) 
-        colorIndex = coordIndex; {
+    if (colorPerVertex()->getValue()) { 
+        colorIndex = coordIndex;
         colorIndex->ref();
     }
 

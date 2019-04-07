@@ -234,8 +234,6 @@ NodeImageTexture::load()
     int height = 1;
     unsigned char *data = NULL;
 
-    int errorflag = false;
-    char *lastCheckedPath = NULL;
     if (urls->getSize() == 0)
         return;
     if (m_imageStatus == IMG_STATUS_UNLOADED) {
@@ -260,6 +258,8 @@ NodeImageTexture::load()
         if (swHasVisual() == 0)
             return;
 #ifdef HAVE_LIBDEVIL
+        int errorflag = false;
+        char *lastCheckedPath = NULL;
         if (ilLoadImage((char *)(const char *)m_path)) {
             width = ilGetInteger(IL_IMAGE_WIDTH);
             height = ilGetInteger(IL_IMAGE_HEIGHT);

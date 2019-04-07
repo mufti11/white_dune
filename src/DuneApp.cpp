@@ -533,7 +533,6 @@ void DuneApp::OnFilePreview(Scene* scene)
     mystrncpy_secure(wrlpath, posixPath, 1024);
 #endif
     }
-    bool saveSuccess = false;
     char *temppath = SaveTempFile(scene,".dune_preview",
                                   swBrowserGetVrmlLevel(TheApp->GetBrowser()),
                                   wrlpath[0] ? wrlpath : NULL);
@@ -553,7 +552,7 @@ void DuneApp::OnFilePreview(Scene* scene)
     swTextEditGetSettings(m_textedit,
                           &textEditCommand, &textEditLinenumberOption,
                           &textEditUseExtensionTxt);
-    saveSuccess = saveTempFiles(m_currentWindow, textEditUseExtensionTxt);
+    saveTempFiles(m_currentWindow, textEditUseExtensionTxt);
     if (strlen(temppath) != 0) {
         int remote = swBrowserGetRemote(GetBrowser());
         if (swBrowserGetVrmlLevel(GetBrowser()) & (X3DOM | XITE))

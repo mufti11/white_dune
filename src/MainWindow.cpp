@@ -8087,6 +8087,8 @@ MainWindow::moveBranchTo(const char* nodeName, const char* fieldName)
     Node *current = m_scene->getSelection()->getNode();
     if (current->isInvalidChildNode())
         return;
+    if (!current->isInScene(m_scene))
+        return;
     Node *node = insertNode(nodeName);
     int field = node->getProto()->lookupField(fieldName);
     if (field == INVALID_INDEX)
@@ -8230,6 +8232,8 @@ MainWindow::moveBranchToInline()
 {
     Node *current = m_scene->getSelection()->getNode();
     if (current->isInvalidChildNode())
+        return;
+    if (!current->isInScene(m_scene))
         return;
     char path[1024];
     path[0] = '\0';
@@ -8400,6 +8404,8 @@ MainWindow::moveBranchToParent(void)
 {
     Node *current = m_scene->getSelection()->getNode();
     if (current->isInvalidChildNode())
+        return;
+    if (!current->isInScene(m_scene))
         return;
     Node *target = current; 
     int targetField = -1;
@@ -9221,7 +9227,6 @@ MainWindow::meshReduce(void) {
         mysnprintf(mesg, 255, "polygons before: %d  now: %d",
                    face->getMesh()->getNumFaces(), 
                    faceSet->getMesh()->getNumFaces());
-        NodeShape *shape = (NodeShape *)face->getParent();
         if (faceSet != NULL) {            
             m_scene->setSelection(m_scene->replaceNode(face, faceSet));
             m_scene->UpdateViews(NULL, UPDATE_SELECTION);
@@ -9491,7 +9496,6 @@ void MainWindow::moveTo(int direction)
             continue;
         int constrain = m_scene->getConstrain();
         int field = -1;
-        Vec3f v = node->getHandle(handle, &constrain, &field);
         if ((m_scene->getSelectionMode() == SELECTION_MODE_VERTICES) ||
             (parent->getType() != VRML_INDEXED_FACE_SET)) {
             Vec3f v = node->getHandle(handle, &constrain, &field);
@@ -9824,7 +9828,6 @@ void MainWindow::rebuildControlPoints()
     Node* nurbsNode = NULL;
 
     if (type == VRML_NURBS_SURFACE) {
-        NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
         Sphere2NurbsDialog dlg(m_wnd, 8, 8, 2, 2);
         if (dlg.DoModal() == IDOK) {
             int narcslong = dlg.getNarcslong();

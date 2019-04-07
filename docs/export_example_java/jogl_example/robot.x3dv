@@ -1,7 +1,26 @@
-#X3D V3.0 utf8
+#X3D V3.2 utf8
 PROFILE Immersive
 COMPONENT NURBS:1
+COMPONENT ParticleSystems:4
 COMPONENT Rendering:3
+
+PROTO box [
+  initializeOnly SFVec3f size 2 2 2
+]
+{
+  Transform {
+    children 
+      Shape {
+        appearance Appearance {
+          material Material {
+          }
+        }
+        geometry Box {
+          size IS size
+        }
+      }
+  }
+}
 
 EXTERNPROTO SuperShape[
  initializeOnly SFBool bottom
@@ -30,41 +49,3121 @@ EXTERNPROTO SuperShape[
  ]
 [
   "SuperShapePROTO.wrl"
-  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperShapePROTO.wrl"
+  ".//docs/scripted_Nodes/SuperShapePROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/SuperShapePROTO.wrl"
 ]
 
 
-WorldInfo {
-  info [
-    "License:"
-    "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:"
-    "1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer."
-    "2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution."
-    "3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission."
-    ""
-    "THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF"
-    "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,"
-    "INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS"
-    "OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR"
-    "TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-  ]
-  title "white_dune C++ export example"
-}
+EXTERNPROTO CurveAnimation[
+ initializeOnly MFFloat knot
+ initializeOnly SFInt32 order
+ initializeOnly SFBool closed
+ inputOutput MFVec3f controlPoint
+ inputOutput SFInt32 tessellation
+ inputOutput MFFloat weight
+ inputOutput SFVec3f rotationAxis
+ inputOutput SFBool enableRotation
+ inputOutput SFBool hover
+ inputOnly SFFloat set_fraction
+ outputOnly SFVec3f position_changed
+ outputOnly SFRotation orientation_changed
+ ]
+[
+  "CurveAnimationPROTO.wrl"
+  ".//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
+  "http://wdune.ourproject.org//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
+]
 
-DEF Viewpoint1 Viewpoint {
-}
 
 Transform {
-  translation 0 0 -17.559999
+  translation 0 0 -3.200939
   children [
+    WorldInfo {
+      info [
+        "License:"
+        "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:"
+        "1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer."
+        "2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution."
+        "3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission."
+        ""
+        "THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF"
+        "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,"
+        "INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS"
+        "OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR"
+        "TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+      ]
+      title "white_dune C++ export example"
+    }
+    DEF Viewpoint1 Viewpoint {
+      position 0 0 19.380001
+    }
     Transform {
-      translation 2.203995 -0.330663 -20.414368
+      translation 2.203995 -0.330663 -36.874367
       children [
+        Transform {
+          translation 1.128234e-3 7.687727e-5 -7.191875
+          children 
+            DEF Transform9_0 Transform {
+              rotation -6.009621e-8 -1 5.777257e-8 0.946378
+              translation 6.788678 0 2.522110
+              children 
+                DEF Transform8_0 Transform {
+                  rotation 0 -1 0 3.140000
+                  translation 0.999966 0 -1.113417e-3
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material DEF Material5 Material {
+                          diffuseColor 0.490196 0.596078 0.949020
+                          shininess 4.000000e-2
+                          specularColor 0.921569 0.909804 1
+                        }
+                      }
+                      geometry DEF NurbsSurface1_0 NurbsPatchSurface {
+                        uDimension 9
+                        vDimension 10
+                        uKnot [
+                          0
+                          0
+                          0
+                          0.250000
+                          0.250000
+                          0.500000
+                          0.500000
+                          0.750000
+                          0.750000
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          0
+                          1
+                          1
+                          2
+                          2
+                          3
+                          3
+                          4
+                          4
+                          4
+                          4
+                        ]
+                        vOrder 4
+                        controlPoint DEF Coordinate2 Coordinate {
+                          point [
+                            0.264868 0.801063 3.619308
+                            0.187290 0.477380 2.574463
+                            0.264868 0.675117 3.640839
+                            0.187290 0.477380 2.574463
+                            0.264868 0.675117 3.640839
+                            0.187290 0.477380 2.574463
+                            0.264868 0.675117 3.640839
+                            0.187290 0.477380 2.574463
+                            0.264868 0.704494 3.657776
+                            0 0.002817 1.452124
+                            -0.190655 0.320245 2.260192
+                            -0.269626 0.675117 3.196395
+                            -0.190655 0.634515 2.260192
+                            0.264868 0.897339 3.196395
+                            0.565235 0.634515 2.260192
+                            0.799363 0.675117 3.196395
+                            0.565235 0.320245 2.260192
+                            0 0.012609 1.457769
+                            0 -0.449169 -0.048948
+                            -0.485866 -0.469149 1.291260
+                            -0.779229 0.562597 2.463642
+                            -0.625333 1.466119 0.963195
+                            0 1.401919 1.723135
+                            0.625333 1.466119 0.963195
+                            0.779229 0.562597 2.463642
+                            0.485866 -0.469149 1.291260
+                            0 -0.449169 -0.048948
+                            0 -0.912513 -1.578075
+                            -0.094486 -0.565681 -0.798883
+                            -0.689179 0.112519 0.226062
+                            -0.868715 0.423260 -1.089299
+                            0 0.733856 -1.590853
+                            0.868715 0.423260 -1.089299
+                            0.689179 0.112520 0.226062
+                            0.094486 -0.565681 -0.798883
+                            0 -0.912513 -1.578075
+                            0 -0.393269 -2.190800
+                            -0.145899 -0.278083 -1.549130
+                            -0.722222 0 -0.444444
+                            -0.894869 0.118272 -1.675570
+                            0 0.167262 -2.369613
+                            0.894869 0.118272 -1.675570
+                            0.722222 0 -0.444444
+                            0.145899 -0.278083 -1.549130
+                            0 -0.393269 -2.190800
+                            0 -0.393269 -2.190800
+                            -0.729493 -0.278083 -1.549130
+                            -0.944444 0 -0.888889
+                            -0.894869 0.118272 -1.675570
+                            0 0.167262 -2.369613
+                            0.894869 0.118272 -1.675570
+                            0.944444 0 -0.888889
+                            0.729493 -0.278083 -1.549130
+                            0 -0.393269 -2.190800
+                            0 -0.393269 -2.190800
+                            -0.875392 -0.278083 -1.549130
+                            -1 0 -1
+                            -0.894869 0.118272 -1.675570
+                            0 0.167262 -2.369613
+                            0.894869 0.118272 -1.675570
+                            1 0 -1
+                            0.875392 -0.278083 -1.549130
+                            0 -0.393269 -2.190800
+                            0 -0.393269 -2.190800
+                            -0.875392 -0.278083 -1.549130
+                            -1 0 -1
+                            -0.894869 0.118272 -1.675570
+                            0 0.167262 -2.369613
+                            0.894869 0.118272 -1.675570
+                            1 0 -1
+                            0.875392 -0.278083 -1.549130
+                            0 -0.393269 -2.190800
+                            0 -0.685566 -1.640238
+                            -0.583594 -0.484769 -1.159823
+                            -0.666667 0 -1
+                            -0.619383 0.243530 -1.392156
+                            0 0.344404 -1.968806
+                            0.619383 0.243530 -1.392156
+                            0.666667 0 -1
+                            0.583594 -0.484769 -1.159823
+                            0 -0.685566 -1.640238
+                            0 0.452943 1.993454
+                            0 0.320279 1.409585
+                            0 0.452943 1.993454
+                            0 0.320279 1.409585
+                            0 0.452943 1.993454
+                            0 0.320279 1.409585
+                            0 0.452943 1.993454
+                            0 0.320279 1.409585
+                            0 0.452943 1.993454
+                          ]
+                        }
+                        weight [
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                          0.707107
+                          1
+                        ]
+                      }
+                    }
+                    Transform {
+                      translation 0 1.073080 2.636453
+                      children [
+                        Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.490196 0.596078 0.949020
+                              shininess 4.000000e-2
+                              specularColor 0.921569 0.909804 1
+                            }
+                            texture ImageTexture {
+                              url "fin.png"
+                            }
+                            textureTransform TextureTransform {
+                              rotation -1.570000
+                            }
+                          }
+                          geometry DEF NurbsSurface2_0 NurbsPatchSurface {
+                            uDimension 4
+                            vDimension 4
+                            uKnot [
+                              0
+                              0
+                              0
+                              0
+                              1
+                              1
+                              1
+                              1
+                            ]
+                            vKnot [
+                              0
+                              0
+                              0
+                              0
+                              1
+                              1
+                              1
+                              1
+                            ]
+                            uOrder 4
+                            vOrder 4
+                            solid FALSE
+                            controlPoint DEF Coordinate3 Coordinate {
+                              point [
+                                0 -0.721140 -1.212555
+                                0 -0.500000 -1.500000
+                                0 0.500000 -1.500000
+                                0 0.734316 -0.622844
+                                0 -1.460937 -0.461472
+                                0 -0.500000 -0.500000
+                                0 0.500000 -0.500000
+                                0 1.500000 -0.500000
+                                0.700831 -1.500000 0.500000
+                                0.700831 -0.500000 0.500000
+                                0.700831 0.500000 0.500000
+                                0.757172 1.500000 0.500000
+                                0 -1.500000 1.500000
+                                0 -0.500000 1.500000
+                                0 0.367991 1.824126
+                                0 1.500000 1.500000
+                              ]
+                            }
+                            weight [
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                            ]
+                          }
+                        }
+                        DEF CoordinateInterpolator2_0 CoordinateInterpolator {
+                          key [
+                            0
+                            0.257053
+                            0.521921
+                            0.762800
+                            0.995825
+                          ]
+                          keyValue [
+                            0 -0.721140 -1.212555
+                            0 -0.500000 -1.500000
+                            0 0.500000 -1.500000
+                            0 0.734316 -0.622844
+                            0 -1.460937 -0.461472
+                            0 -0.500000 -0.500000
+                            0 0.500000 -0.500000
+                            0 1.500000 -0.500000
+                            0 -1.500000 0.500000
+                            0 -0.500000 0.500000
+                            0 0.500000 0.500000
+                            0.056341 1.500000 0.500000
+                            0 -1.500000 1.500000
+                            0 -0.500000 1.500000
+                            0 0.367991 1.824126
+                            0 1.500000 1.500000
+                            0 -0.721140 -1.212555
+                            0 -0.500000 -1.500000
+                            0 0.500000 -1.500000
+                            0 0.734316 -0.622844
+                            0 -1.460937 -0.461472
+                            0 -0.500000 -0.500000
+                            0 0.500000 -0.500000
+                            0 1.500000 -0.500000
+                            0.970723 -1.500000 0.500000
+                            0.970723 -0.500000 0.500000
+                            0.970723 0.500000 0.500000
+                            1.027063 1.500000 0.500000
+                            0 -1.500000 1.500000
+                            0 -0.500000 1.500000
+                            0 0.367991 1.824126
+                            0 1.500000 1.500000
+                            0 -0.721140 -1.212555
+                            0 -0.500000 -1.500000
+                            0 0.500000 -1.500000
+                            0 0.734316 -0.622844
+                            0 -1.460937 -0.461472
+                            0 -0.500000 -0.500000
+                            0 0.500000 -0.500000
+                            0 1.500000 -0.500000
+                            0 -1.500000 0.500000
+                            0 -0.500000 0.500000
+                            0 0.500000 0.500000
+                            0.056341 1.500000 0.500000
+                            0 -1.500000 1.500000
+                            0 -0.500000 1.500000
+                            0 0.367991 1.824126
+                            0 1.500000 1.500000
+                            0 -0.721140 -1.212555
+                            0 -0.500000 -1.500000
+                            0 0.500000 -1.500000
+                            0 0.734316 -0.622844
+                            0 -1.460937 -0.461472
+                            0 -0.500000 -0.500000
+                            0 0.500000 -0.500000
+                            0 1.500000 -0.500000
+                            -1.774446 -1.500000 0.500000
+                            -1.774446 -0.500000 0.500000
+                            -1.774446 0.500000 0.500000
+                            -1.718106 1.500000 0.500000
+                            0 -1.500000 1.500000
+                            0 -0.500000 1.500000
+                            0 0.367991 1.824126
+                            0 1.500000 1.500000
+                            0 -0.721140 -1.212555
+                            0 -0.500000 -1.500000
+                            0 0.500000 -1.500000
+                            0 0.734316 -0.622844
+                            0 -1.460937 -0.461472
+                            0 -0.500000 -0.500000
+                            0 0.500000 -0.500000
+                            0 1.500000 -0.500000
+                            0 -1.500000 0.500000
+                            0 -0.500000 0.500000
+                            0 0.500000 0.500000
+                            0.056341 1.500000 0.500000
+                            0 -1.500000 1.500000
+                            0 -0.500000 1.500000
+                            0 0.367991 1.824126
+                            0 1.500000 1.500000
+                          ]
+                        }
+                        Transform {
+                          rotation -0.660438 0.686587 -0.304008 0.938989
+                          translation 2.251053 -0.988301 -2.891426
+                          center -1.746731 0 0
+                          scale 0.313887 0.313887 0.313887
+                          children 
+                            Shape {
+                              appearance Appearance {
+                                material Material {
+                                  diffuseColor 0.490196 0.596078 0.949020
+                                  shininess 4.000000e-2
+                                  specularColor 0.921569 0.909804 1
+                                }
+                              }
+                              geometry NurbsPatchSurface {
+                                uDimension 4
+                                vDimension 4
+                                uKnot [
+                                  0
+                                  0
+                                  0
+                                  0
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                                vKnot [
+                                  0
+                                  0
+                                  0
+                                  0
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                                uOrder 4
+                                vOrder 4
+                                solid FALSE
+                                controlPoint Coordinate {
+                                  point [
+                                    0.926996 -0.110488 -1.384164
+                                    0.478166 0.161256 -1.390543
+                                    -0.523072 0.406032 -1.276953
+                                    -0.432014 0.234763 -0.960474
+                                    1.012726 -0.761037 -1.057822
+                                    0.388092 -0.258769 -1.121836
+                                    -0.474981 0.452575 -0.192251
+                                    -0.974972 -0.225937 -0.424634
+                                    1.282167 -0.700920 -0.281272
+                                    0.388092 -0.258769 -0.121836
+                                    -0.457722 0.266233 0.681212
+                                    -1.282167 -0.700920 -0.281272
+                                    0.948440 -2.630203 -0.059282
+                                    0 -0.754474 0.141407
+                                    -0.764243 -0.441771 0.809180
+                                    -1.746731 -0.269001 0.984222
+                                  ]
+                                }
+                                weight [
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                              }
+                            }
+                        }
+                        Transform {
+                          rotation 0.660438 0.686587 -0.304008 -0.938989
+                          translation -2.251053 -0.988301 -2.891426
+                          center 1.746731 0 0
+                          scale 0.313887 0.313887 0.313887
+                          children 
+                            Shape {
+                              appearance Appearance {
+                                material Material {
+                                  diffuseColor 0.490196 0.596078 0.949020
+                                  shininess 4.000000e-2
+                                  specularColor 0.921569 0.909804 1
+                                }
+                              }
+                              geometry NurbsPatchSurface {
+                                uDimension 4
+                                vDimension 4
+                                uKnot [
+                                  0
+                                  0
+                                  0
+                                  0
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                                vKnot [
+                                  0
+                                  0
+                                  0
+                                  0
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                                uOrder 4
+                                vOrder 4
+                                solid FALSE
+                                controlPoint Coordinate {
+                                  point [
+                                    -0.926996 -0.110488 -1.384164
+                                    -0.478166 0.161256 -1.390543
+                                    0.523072 0.406032 -1.276953
+                                    0.432014 0.234763 -0.960474
+                                    -1.012726 -0.761037 -1.057822
+                                    -0.388092 -0.258769 -1.121836
+                                    0.474981 0.452575 -0.192251
+                                    0.974972 -0.225937 -0.424634
+                                    -1.282167 -0.700920 -0.281272
+                                    -0.388092 -0.258769 -0.121836
+                                    0.457722 0.266233 0.681212
+                                    1.282167 -0.700920 -0.281272
+                                    -0.948440 -2.630203 -0.059282
+                                    0 -0.754474 0.141407
+                                    0.764243 -0.441771 0.809180
+                                    1.746731 -0.269001 0.984222
+                                  ]
+                                }
+                                weight [
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                              }
+                            }
+                        }
+                      ]
+                    }
+                    Transform {
+                      translation -0.274451 0.643754 -1.273219
+                      children [
+                        Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.941176 0.945098 1
+                            }
+                          }
+                          geometry Sphere {
+                            radius 0.219236
+                          }
+                        }
+                        Transform {
+                          translation 0 4.000000e-2 -0.180000
+                          children 
+                            Shape {
+                              appearance Appearance {
+                                material Material {
+                                  diffuseColor 0.372549 0.152941 0.164706
+                                  specularColor 0.941176 0.945098 1
+                                }
+                              }
+                              geometry Sphere {
+                                radius 0.119236
+                              }
+                            }
+                        }
+                      ]
+                    }
+                    Transform {
+                      translation 0.274451 0.643754 -1.273219
+                      children [
+                        Shape {
+                          appearance Appearance {
+                            material Material {
+                              diffuseColor 0.941176 0.945098 1
+                            }
+                          }
+                          geometry Sphere {
+                            radius 0.219236
+                          }
+                        }
+                        Transform {
+                          translation 0 4.000000e-2 -0.180000
+                          children 
+                            Shape {
+                              appearance Appearance {
+                                material Material {
+                                  diffuseColor 0.372549 0.152941 0.164706
+                                  specularColor 0.941176 0.945098 1
+                                }
+                              }
+                              geometry Sphere {
+                                radius 0.119236
+                              }
+                            }
+                        }
+                      ]
+                    }
+                    DEF CoordinateInterpolator2_23 CoordinateInterpolator {
+                      key [
+                        0
+                        0.257053
+                        0.521921
+                        0.762800
+                        0.995825
+                      ]
+                      keyValue [
+                        0 -0.721140 -1.212555
+                        0 -0.500000 -1.500000
+                        0 0.500000 -1.500000
+                        0 0.734316 -0.622844
+                        0 -1.460937 -0.461472
+                        0 -0.500000 -0.500000
+                        0 0.500000 -0.500000
+                        0 1.500000 -0.500000
+                        0 -1.500000 0.500000
+                        0 -0.500000 0.500000
+                        0 0.500000 0.500000
+                        0.056341 1.500000 0.500000
+                        0 -1.500000 1.500000
+                        0 -0.500000 1.500000
+                        0 0.367991 1.824126
+                        0 1.500000 1.500000
+                        0 -0.721140 -1.212555
+                        0 -0.500000 -1.500000
+                        0 0.500000 -1.500000
+                        0 0.734316 -0.622844
+                        0 -1.460937 -0.461472
+                        0 -0.500000 -0.500000
+                        0 0.500000 -0.500000
+                        0 1.500000 -0.500000
+                        0.970723 -1.500000 0.500000
+                        0.970723 -0.500000 0.500000
+                        0.970723 0.500000 0.500000
+                        1.027063 1.500000 0.500000
+                        0 -1.500000 1.500000
+                        0 -0.500000 1.500000
+                        0 0.367991 1.824126
+                        0 1.500000 1.500000
+                        0 -0.721140 -1.212555
+                        0 -0.500000 -1.500000
+                        0 0.500000 -1.500000
+                        0 0.734316 -0.622844
+                        0 -1.460937 -0.461472
+                        0 -0.500000 -0.500000
+                        0 0.500000 -0.500000
+                        0 1.500000 -0.500000
+                        0 -1.500000 0.500000
+                        0 -0.500000 0.500000
+                        0 0.500000 0.500000
+                        0.056341 1.500000 0.500000
+                        0 -1.500000 1.500000
+                        0 -0.500000 1.500000
+                        0 0.367991 1.824126
+                        0 1.500000 1.500000
+                        0 -0.721140 -1.212555
+                        0 -0.500000 -1.500000
+                        0 0.500000 -1.500000
+                        0 0.734316 -0.622844
+                        0 -1.460937 -0.461472
+                        0 -0.500000 -0.500000
+                        0 0.500000 -0.500000
+                        0 1.500000 -0.500000
+                        -1.774446 -1.500000 0.500000
+                        -1.774446 -0.500000 0.500000
+                        -1.774446 0.500000 0.500000
+                        -1.718106 1.500000 0.500000
+                        0 -1.500000 1.500000
+                        0 -0.500000 1.500000
+                        0 0.367991 1.824126
+                        0 1.500000 1.500000
+                        0 -0.721140 -1.212555
+                        0 -0.500000 -1.500000
+                        0 0.500000 -1.500000
+                        0 0.734316 -0.622844
+                        0 -1.460937 -0.461472
+                        0 -0.500000 -0.500000
+                        0 0.500000 -0.500000
+                        0 1.500000 -0.500000
+                        0 -1.500000 0.500000
+                        0 -0.500000 0.500000
+                        0 0.500000 0.500000
+                        0.056341 1.500000 0.500000
+                        0 -1.500000 1.500000
+                        0 -0.500000 1.500000
+                        0 0.367991 1.824126
+                        0 1.500000 1.500000
+                      ]
+                    }
+                    Transform {
+                      translation 0 1.212601 0.347067
+                      scale 1 0.247994 0.533675
+                      children 
+                        Shape {
+                          appearance Appearance {
+                            material USE Material5
+                            texture ImageTexture {
+                              url "fin.png"
+                            }
+                          }
+                          geometry NurbsPatchSurface {
+                            uDimension 4
+                            vDimension 5
+                            uKnot [
+                              0
+                              0
+                              0
+                              0
+                              1
+                              1
+                              1
+                              1
+                            ]
+                            vKnot [
+                              0
+                              0
+                              0
+                              0
+                              0
+                              1
+                              1
+                              1
+                              1
+                              1
+                            ]
+                            uOrder 4
+                            vOrder 5
+                            solid FALSE
+                            controlPoint Coordinate {
+                              point [
+                                0 -3.231162 -1.143518
+                                0 -0.500000 -1.500000
+                                0 2.307008 -1.556077
+                                0 0.427086 -0.765898
+                                0 -1.932790 -0.660879
+                                0 -0.500000 -0.750000
+                                0 0.427086 -0.765898
+                                0 2.979154 -0.556146
+                                0 -1.500000 0
+                                0 -0.500000 0
+                                0 0.917074 0.001488
+                                0 2.483917 0.328920
+                                0 -1.500000 0.750000
+                                0 -0.500000 0.750000
+                                0 -0.272426 0.468253
+                                0 -0.245362 0.139248
+                                0 -1.500000 1.500000
+                                0 -1.121523 1.601772
+                                0 -0.227789 1.761585
+                                0 -0.081820 1.580106
+                              ]
+                            }
+                            weight [
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                              1
+                            ]
+                          }
+                        }
+                    }
+                    DEF CoordinateInterpolator5 CoordinateInterpolator {
+                      key [
+                        0
+                        0.236842
+                        0.497371
+                        0.762105
+                        0.997897
+                      ]
+                      keyValue [
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.704494 3.706641
+                        0 0.002817 1.452124
+                        -0.377945 0.320245 2.294745
+                        -0.534494 0.675117 3.245260
+                        -0.377945 0.634515 2.294745
+                        0 0.897339 3.245260
+                        0.377945 0.634515 2.294745
+                        0.534494 0.675117 3.245260
+                        0.377945 0.320245 2.294745
+                        0 0.012609 1.457769
+                        0 -0.449169 -0.048948
+                        -0.485866 -0.469149 1.291260
+                        -0.779229 0.562597 2.463642
+                        -0.625333 1.466119 0.963195
+                        0 1.401919 1.723135
+                        0.625333 1.466119 0.963195
+                        0.779229 0.562597 2.463642
+                        0.485866 -0.469149 1.291260
+                        0 -0.449169 -0.048948
+                        0 -0.912513 -1.578075
+                        -0.094486 -0.565681 -0.798883
+                        -0.689179 0.112519 0.226062
+                        -0.868715 0.423260 -1.089299
+                        0 0.598580 -1.540501
+                        0.868715 0.423260 -1.089299
+                        0.689179 0.112520 0.226062
+                        0.094486 -0.565681 -0.798883
+                        0 -0.912513 -1.578075
+                        0 -1.028350 -1.960357
+                        -0.145899 -0.727153 -1.386182
+                        -0.722222 0 -0.444444
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.722222 0 -0.444444
+                        0.145899 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.729493 -0.727153 -1.386182
+                        -0.944444 0 -0.888889
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.944444 0 -0.888889
+                        0.729493 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -0.685566 -1.640238
+                        -0.583594 -0.484769 -1.159823
+                        -0.666667 0 -1
+                        -0.619383 0.243530 -1.392156
+                        0 0.344404 -1.968806
+                        0.619383 0.243530 -1.392156
+                        0.666667 0 -1
+                        0.583594 -0.484769 -1.159823
+                        0 -0.685566 -1.640238
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0.414011 0.871981 3.579669
+                        0.292750 0.477380 2.555007
+                        0.414011 0.675117 3.613324
+                        0.292750 0.477380 2.555007
+                        0.414011 0.675117 3.613324
+                        0.292750 0.477380 2.555007
+                        0.414011 0.675117 3.613324
+                        0.292750 0.477380 2.555007
+                        0.414011 0.704494 3.630261
+                        0 0.002817 1.452124
+                        -0.085195 0.320245 2.240736
+                        -0.120483 0.675117 3.168880
+                        -0.085195 0.634515 2.240736
+                        0.414011 0.897339 3.168880
+                        0.670695 0.634515 2.240736
+                        0.948506 0.675117 3.168880
+                        0.670695 0.320245 2.240736
+                        0 0.012609 1.457769
+                        0 -0.449169 -0.048948
+                        -0.485866 -0.469149 1.291260
+                        -0.779229 0.562597 2.463642
+                        -0.625333 1.466119 0.963195
+                        0 1.401919 1.723135
+                        0.625333 1.466119 0.963195
+                        0.779229 0.562597 2.463642
+                        0.485866 -0.469149 1.291260
+                        0 -0.449169 -0.048948
+                        0 -0.912513 -1.578075
+                        -0.094486 -0.565681 -0.798883
+                        -0.689179 0.112519 0.226062
+                        -0.868715 0.423260 -1.089299
+                        0 0.810027 -1.619206
+                        0.868715 0.423260 -1.089299
+                        0.689179 0.112520 0.226062
+                        0.094486 -0.565681 -0.798883
+                        0 -0.912513 -1.578075
+                        0 -0.035665 -2.320559
+                        -0.145899 -0.025219 -1.640883
+                        -0.722222 0 -0.444444
+                        -0.875608 -0.020823 -1.642285
+                        0 -0.029448 -2.322542
+                        0.875608 -0.020823 -1.642285
+                        0.722222 0 -0.444444
+                        0.145899 -0.025219 -1.640883
+                        0 -0.035665 -2.320559
+                        0 -0.035665 -2.320559
+                        -0.729493 -0.025219 -1.640883
+                        -0.944444 0 -0.888889
+                        -0.875608 -0.020823 -1.642285
+                        0 -0.029448 -2.322542
+                        0.875608 -0.020823 -1.642285
+                        0.944444 0 -0.888889
+                        0.729493 -0.025219 -1.640883
+                        0 -0.035665 -2.320559
+                        0 -0.035665 -2.320559
+                        -0.875392 -0.025219 -1.640883
+                        -1 0 -1
+                        -0.875608 -0.020823 -1.642285
+                        0 -0.029448 -2.322542
+                        0.875608 -0.020823 -1.642285
+                        1 0 -1
+                        0.875392 -0.025219 -1.640883
+                        0 -0.035665 -2.320559
+                        0 -0.035665 -2.320559
+                        -0.875392 -0.025219 -1.640883
+                        -1 0 -1
+                        -0.875608 -0.020823 -1.642285
+                        0 -0.029448 -2.322542
+                        0.875608 -0.020823 -1.642285
+                        1 0 -1
+                        0.875392 -0.025219 -1.640883
+                        0 -0.035665 -2.320559
+                        0 -0.685566 -1.640238
+                        -0.583594 -0.484769 -1.159823
+                        -0.666667 0 -1
+                        -0.619383 0.243530 -1.392156
+                        0 0.344404 -1.968806
+                        0.619383 0.243530 -1.392156
+                        0.666667 0 -1
+                        0.583594 -0.484769 -1.159823
+                        0 -0.685566 -1.640238
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.704494 3.706641
+                        0 0.002817 1.452124
+                        -0.377945 0.320245 2.294745
+                        -0.534494 0.675117 3.245260
+                        -0.377945 0.634515 2.294745
+                        0 0.897339 3.245260
+                        0.377945 0.634515 2.294745
+                        0.534494 0.675117 3.245260
+                        0.377945 0.320245 2.294745
+                        0 0.012609 1.457769
+                        0 -0.449169 -0.048948
+                        -0.485866 -0.469149 1.291260
+                        -0.779229 0.562597 2.463642
+                        -0.625333 1.466119 0.963195
+                        0 1.401919 1.723135
+                        0.625333 1.466119 0.963195
+                        0.779229 0.562597 2.463642
+                        0.485866 -0.469149 1.291260
+                        0 -0.449169 -0.048948
+                        0 -0.912513 -1.578075
+                        -0.094486 -0.565681 -0.798883
+                        -0.689179 0.112519 0.226062
+                        -0.868715 0.423260 -1.089299
+                        0 0.598580 -1.540501
+                        0.868715 0.423260 -1.089299
+                        0.689179 0.112520 0.226062
+                        0.094486 -0.565681 -0.798883
+                        0 -0.912513 -1.578075
+                        0 -1.028350 -1.960357
+                        -0.145899 -0.727153 -1.386182
+                        -0.722222 0 -0.444444
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.722222 0 -0.444444
+                        0.145899 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.729493 -0.727153 -1.386182
+                        -0.944444 0 -0.888889
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.944444 0 -0.888889
+                        0.729493 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -0.685566 -1.640238
+                        -0.583594 -0.484769 -1.159823
+                        -0.666667 0 -1
+                        -0.619383 0.243530 -1.392156
+                        0 0.344404 -1.968806
+                        0.619383 0.243530 -1.392156
+                        0.666667 0 -1
+                        0.583594 -0.484769 -1.159823
+                        0 -0.685566 -1.640238
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        -0.623314 0.675117 3.673715
+                        -0.440750 0.477380 2.597710
+                        -0.623314 0.675117 3.673715
+                        -0.440750 0.477380 2.597710
+                        -0.623314 0.675117 3.673715
+                        -0.440750 0.477380 2.597710
+                        -0.623314 0.675117 3.673715
+                        -0.440750 0.477380 2.597710
+                        -0.623314 0.704494 3.690652
+                        0 0.002817 1.452124
+                        -0.818694 0.320245 2.283440
+                        -1.157808 0.675117 3.229271
+                        -0.818694 0.634515 2.283440
+                        -0.623314 0.897339 3.229271
+                        -0.062805 0.634515 2.283440
+                        -0.088820 0.675117 3.229271
+                        -0.062805 0.320245 2.283440
+                        0 0.012609 1.457769
+                        0 -0.449169 -0.048948
+                        -0.485866 -0.469149 1.291260
+                        -0.779229 0.562597 2.463642
+                        -0.625333 1.466119 0.963195
+                        0 1.401919 1.723135
+                        0.625333 1.466119 0.963195
+                        0.779229 0.562597 2.463642
+                        0.485866 -0.469149 1.291260
+                        0 -0.449169 -0.048948
+                        0 -0.912513 -1.578075
+                        -0.094486 -0.565681 -0.798883
+                        -0.689179 0.112519 0.226062
+                        -0.868715 0.423260 -1.089299
+                        0 0.598580 -1.540501
+                        0.868715 0.423260 -1.089299
+                        0.689179 0.112520 0.226062
+                        0.094486 -0.565681 -0.798883
+                        0 -0.912513 -1.578075
+                        0 -1.028350 -1.960357
+                        -0.145899 -0.727153 -1.386182
+                        -0.722222 0 -0.444444
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.722222 0 -0.444444
+                        0.145899 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.729493 -0.727153 -1.386182
+                        -0.944444 0 -0.888889
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.944444 0 -0.888889
+                        0.729493 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -0.685566 -1.640238
+                        -0.583594 -0.484769 -1.159823
+                        -0.666667 0 -1
+                        -0.619383 0.243530 -1.392156
+                        0 0.344404 -1.968806
+                        0.619383 0.243530 -1.392156
+                        0.666667 0 -1
+                        0.583594 -0.484769 -1.159823
+                        0 -0.685566 -1.640238
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.675117 3.689704
+                        0 0.477380 2.609016
+                        0 0.704494 3.706641
+                        0 0.002817 1.452124
+                        -0.377945 0.320245 2.294745
+                        -0.534494 0.675117 3.245260
+                        -0.377945 0.634515 2.294745
+                        0 0.897339 3.245260
+                        0.377945 0.634515 2.294745
+                        0.534494 0.675117 3.245260
+                        0.377945 0.320245 2.294745
+                        0 0.012609 1.457769
+                        0 -0.449169 -0.048948
+                        -0.485866 -0.469149 1.291260
+                        -0.779229 0.562597 2.463642
+                        -0.625333 1.466119 0.963195
+                        0 1.401919 1.723135
+                        0.625333 1.466119 0.963195
+                        0.779229 0.562597 2.463642
+                        0.485866 -0.469149 1.291260
+                        0 -0.449169 -0.048948
+                        0 -0.912513 -1.578075
+                        -0.094486 -0.565681 -0.798883
+                        -0.689179 0.112519 0.226062
+                        -0.868715 0.423260 -1.089299
+                        0 0.598580 -1.540501
+                        0.868715 0.423260 -1.089299
+                        0.689179 0.112520 0.226062
+                        0.094486 -0.565681 -0.798883
+                        0 -0.912513 -1.578075
+                        0 -1.028350 -1.960357
+                        -0.145899 -0.727153 -1.386182
+                        -0.722222 0 -0.444444
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.722222 0 -0.444444
+                        0.145899 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.729493 -0.727153 -1.386182
+                        -0.944444 0 -0.888889
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        0.944444 0 -0.888889
+                        0.729493 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -1.028350 -1.960357
+                        -0.875392 -0.727153 -1.386182
+                        -1 0 -1
+                        -0.929075 0.365295 -1.734681
+                        0 0.516605 -2.453209
+                        0.929075 0.365295 -1.734681
+                        1 0 -1
+                        0.875392 -0.727153 -1.386182
+                        0 -1.028350 -1.960357
+                        0 -0.685566 -1.640238
+                        -0.583594 -0.484769 -1.159823
+                        -0.666667 0 -1
+                        -0.619383 0.243530 -1.392156
+                        0 0.344404 -1.968806
+                        0.619383 0.243530 -1.392156
+                        0.666667 0 -1
+                        0.583594 -0.484769 -1.159823
+                        0 -0.685566 -1.640238
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                        0 0.320279 1.409585
+                        0 0.452943 1.993454
+                      ]
+                    }
+                  ]
+                }
+            }
+        }
+        DEF A Transform {
+          translation -3.077357 -0.281994 0
+          children 
+            Transform {
+              rotation 0.999676 1.701895e-2 -1.892380e-2 1.012303
+              translation -4.096462 1.722631 -2.704607
+              children [
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                    texture ImageTexture {
+                      url "fire.png"
+                    }
+                  }
+                  geometry DEF NurbsPatchSurface1 NurbsPatchSurface {
+                    uDimension 4
+                    vDimension 4
+                    uKnot [
+                      0
+                      0
+                      0
+                      0
+                      1
+                      1
+                      1
+                      1
+                    ]
+                    vKnot [
+                      0
+                      0
+                      0
+                      0
+                      1
+                      1
+                      1
+                      1
+                    ]
+                    uOrder 4
+                    vOrder 4
+                    solid FALSE
+                    controlPoint DEF Coordinate1 Coordinate {
+                      point [
+                        -1.501945 -0.000455 -1.499187
+                        -0.572494 0.618680 -2.492496
+                        0.572494 0.618680 -2.492496
+                        1.501945 -0.000455 -1.499187
+                        -1.500000 0 -0.500000
+                        -0.500000 0 -0.500000
+                        0.500000 0 -0.500000
+                        1.500000 0 -0.500000
+                        -2.650951 -0.544165 1.319504
+                        -0.500000 0 0.500000
+                        0.500000 0 0.500000
+                        2.650951 -0.544165 1.319504
+                        -1.500000 0 1.500000
+                        0 -0.258703 1.842262
+                        0 -0.258703 1.842262
+                        1.500000 0 1.500000
+                      ]
+                    }
+                    weight [
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                    ]
+                  }
+                }
+                DEF TimeSensor5 TimeSensor {
+                  cycleInterval 10
+                  loop TRUE
+                }
+                DEF CoordinateInterpolator3 CoordinateInterpolator {
+                  key [
+                    0
+                    0.000552
+                    0.001246
+                    0.006280
+                    0.006983
+                    0.012211
+                    0.017565
+                    0.018156
+                    0.023347
+                    0.034187
+                    0.039711
+                    0.045229
+                    0.050613
+                    0.056169
+                    0.061752
+                    0.062431
+                    0.099809
+                    0.110929
+                    0.111652
+                    0.116744
+                    0.183731
+                    0.188062
+                    0.192484
+                    0.196939
+                    0.201297
+                    0.205643
+                    0.210020
+                    0.214388
+                    0.231546
+                    0.235979
+                    0.240476
+                    0.245040
+                    0.249558
+                    0.254010
+                    0.258460
+                    0.262940
+                    0.267511
+                    0.285046
+                    0.289477
+                    0.294045
+                    0.424805
+                    0.429279
+                    0.433955
+                    0.438662
+                    0.443312
+                    0.447924
+                    0.456906
+                    0.470511
+                    0.475263
+                    0.479862
+                    0.484442
+                    0.489168
+                    0.494034
+                    0.498699
+                    0.521422
+                    0.596681
+                    0.596858
+                    0.601212
+                    0.606096
+                    0.610868
+                    0.615659
+                    0.620615
+                    0.630229
+                    0.635187
+                    0.639913
+                    0.659083
+                    0.659817
+                    0.664210
+                    0.673738
+                    0.678680
+                    0.688210
+                    0.688990
+                    0.693431
+                    0.694056
+                    0.698494
+                    0.708397
+                    0.709057
+                    0.713539
+                    0.718344
+                    0.723430
+                    0.752965
+                    0.762752
+                    0.767802
+                    0.772935
+                    0.777917
+                    0.783292
+                    0.788403
+                    0.788984
+                    0.793810
+                    0.798808
+                    0.799413
+                    0.804267
+                    0.804886
+                    0.824789
+                    0.968994
+                    0.973886
+                    0.974571
+                    0.979606
+                    0.995236
+                  ]
+                  keyValue [
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.500000 0 0.500000
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.500000 0 0.500000
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -2.529489 -0.195545 -1.142009
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    2.529489 -0.195545 -1.142009
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.500713 0.000013 0.499948
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.500713 0.000013 0.499948
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -2.605722 -0.233823 -1.077447
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    2.605722 -0.233823 -1.077447
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.501609 0.000029 0.499883
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.501609 0.000029 0.499883
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -2.681956 -0.272100 -1.012884
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    2.681956 -0.272100 -1.012884
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.508111 0.000146 0.499410
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.508111 0.000146 0.499410
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -2.758189 -0.310378 -0.948321
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    2.758189 -0.310378 -0.948321
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.509019 0.000162 0.499344
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.509019 0.000162 0.499344
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -2.834423 -0.348656 -0.883759
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    2.834423 -0.348656 -0.883759
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.515770 0.000283 0.498853
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.515770 0.000283 0.498853
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.061904 -0.383295 -0.818358
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.061904 -0.383295 -0.818358
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.522685 0.000408 0.498350
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.522685 0.000408 0.498350
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.213762 -0.419754 -0.753376
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.213762 -0.419754 -0.753376
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.523449 0.000421 0.498295
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.523449 0.000421 0.498295
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.289996 -0.458031 -0.688813
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.289996 -0.458031 -0.688813
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.530152 0.000542 0.497807
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.530152 0.000542 0.497807
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.365620 -0.456212 -0.688394
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.365620 -0.456212 -0.688394
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.544152 0.000793 0.496789
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.544152 0.000793 0.496789
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.441244 -0.454393 -0.687975
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.441244 -0.454393 -0.687975
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.551286 0.000921 0.496270
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.551286 0.000921 0.496270
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.516260 -0.412478 -0.751700
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.516260 -0.412478 -0.751700
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.558414 0.001049 0.495751
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.558414 0.001049 0.495751
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.591275 -0.370562 -0.815424
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.591275 -0.370562 -0.815424
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.565366 0.001174 0.495246
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.565366 0.001174 0.495246
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.590666 -0.330465 -0.879568
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.590666 -0.330465 -0.879568
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.572542 0.001303 0.494724
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.572542 0.001303 0.494724
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.589448 -0.250272 -1.007855
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.589448 -0.250272 -1.007855
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.579753 0.001433 0.494199
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.579753 0.001433 0.494199
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.663854 -0.168260 -1.135723
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.663854 -0.168260 -1.135723
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.580629 0.001449 0.494136
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.580629 0.001449 0.494136
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.666899 -0.368743 -0.815005
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.666899 -0.368743 -0.815005
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.628902 0.002316 0.490625
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.628902 0.002316 0.490625
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.748613 -0.767890 -0.173150
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.748613 -0.767890 -0.173150
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.643264 0.002574 0.489580
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.643264 0.002574 0.489580
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.749832 -0.848083 -0.044862
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.749832 -0.848083 -0.044862
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.644198 0.002591 0.489512
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.644198 0.002591 0.489512
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -3.674816 -0.889999 0.018862
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    3.674816 -0.889999 0.018862
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.650774 0.002709 0.489034
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.650774 0.002709 0.489034
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -1.737288 0.004263 0.482741
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    1.737288 0.004263 0.482741
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.304461 -0.009379 0.479598
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.304461 -0.009379 0.479598
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.871633 -0.023022 0.476455
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.871633 -0.023022 0.476455
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -3.297584 0.004336 0.413964
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    3.297584 0.004336 0.413964
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -3.794431 0.029989 0.351081
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    3.794431 0.029989 0.351081
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -4.007691 0.062463 0.289768
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    4.007691 0.062463 0.289768
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -4.220381 0.057347 0.288590
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    4.220381 0.057347 0.288590
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -4.291278 0.055642 0.288197
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    4.291278 0.055642 0.288197
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -4.361032 -0.021244 0.408071
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    4.361032 -0.021244 0.408071
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -4.003124 -0.238257 0.770837
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    4.003124 -0.238257 0.770837
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -3.717825 -0.344205 0.952809
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    3.717825 -0.344205 0.952809
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -3.433668 -0.374974 1.014514
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    3.433668 -0.374974 1.014514
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -3.291875 -0.371563 1.015300
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    3.291875 -0.371563 1.015300
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -3.079185 -0.366447 1.016479
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    3.079185 -0.366447 1.016479
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.796169 -0.322036 0.957917
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.796169 -0.322036 0.957917
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.442257 -0.275920 0.899748
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.442257 -0.275920 0.899748
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.229568 -0.270804 0.900926
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.229568 -0.270804 0.900926
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.298751 -0.385279 1.080934
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.298751 -0.385279 1.080934
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.438832 -0.501459 1.260549
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.438832 -0.501459 1.260549
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.500000 0 1.500000
+                    0.500000 0 1.500000
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.332885 -0.146597 1.741771
+                    0.332885 -0.146597 1.741771
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.263000 -0.217875 1.858824
+                    0.263000 -0.217875 1.858824
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.191453 -0.398552 2.150885
+                    0.191453 -0.398552 2.150885
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.189792 -0.507951 2.325893
+                    0.189792 -0.507951 2.325893
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.187576 -0.653816 2.559237
+                    0.187576 -0.653816 2.559237
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.118245 -0.688628 2.617955
+                    0.118245 -0.688628 2.617955
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.117137 -0.761560 2.734627
+                    0.117137 -0.761560 2.734627
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    -0.048914 -0.723440 2.676672
+                    0.048914 -0.723440 2.676672
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.504642 2.326655
+                    0 -0.504642 2.326655
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.432912 2.209463
+                    0 -0.432912 2.209463
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.361170 2.092253
+                    0 -0.361170 2.092253
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.327547 2.032992
+                    0 -0.327547 2.032992
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.230721 1.854422
+                    0 -0.230721 1.854422
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.243957 1.848690
+                    0 -0.243957 1.848690
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500000 0 -1.500000
+                    0.500000 0 -1.500000
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.500023 0.001515 -1.502423
+                    0.500023 0.001515 -1.502423
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.503971 0.004451 -1.507292
+                    0.503971 0.004451 -1.507292
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.565205 0.138762 -1.724758
+                    0.565205 0.138762 -1.724758
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.641242 0.176941 -1.789154
+                    0.641242 0.176941 -1.789154
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.718493 0.295106 -1.981506
+                    0.718493 0.295106 -1.981506
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.871174 0.411457 -2.174277
+                    0.871174 0.411457 -2.174277
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.948426 0.529622 -2.366629
+                    0.948426 0.529622 -2.366629
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.025677 0.647787 -2.558982
+                    1.025677 0.647787 -2.558982
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.103536 0.805946 -2.815312
+                    1.103536 0.805946 -2.815312
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.179573 0.844124 -2.879709
+                    1.179573 0.844124 -2.879709
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.403431 0.678709 -2.625050
+                    1.403431 0.678709 -2.625050
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.553682 0.635087 -2.561908
+                    1.553682 0.635087 -2.561908
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.628504 0.593279 -2.498348
+                    1.628504 0.593279 -2.498348
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.703326 0.551472 -2.434788
+                    1.703326 0.551472 -2.434788
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.778755 0.549657 -2.435205
+                    1.778755 0.549657 -2.435205
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.854184 0.547843 -2.435624
+                    1.854184 0.547843 -2.435624
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.930221 0.586022 -2.500020
+                    1.930221 0.586022 -2.500020
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -2.233153 0.658751 -2.629648
+                    2.233153 0.658751 -2.629648
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -2.384619 0.695115 -2.694462
+                    2.384619 0.695115 -2.694462
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -2.536085 0.731480 -2.759276
+                    2.536085 0.731480 -2.759276
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -2.612121 0.769659 -2.823672
+                    2.612121 0.769659 -2.823672
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -2.537907 0.851460 -2.951211
+                    2.537907 0.851460 -2.951211
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.938118 1.105933 -3.331736
+                    1.938118 1.105933 -3.331736
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.863296 1.147741 -3.395296
+                    1.863296 1.147741 -3.395296
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.563401 1.274978 -3.585558
+                    1.563401 1.274978 -3.585558
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.337113 1.280421 -3.584304
+                    1.337113 1.280421 -3.584304
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.185647 1.244056 -3.519490
+                    1.185647 1.244056 -3.519490
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -1.034181 1.207692 -3.454676
+                    1.034181 1.207692 -3.454676
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.958145 1.169513 -3.390280
+                    0.958145 1.169513 -3.390280
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.957537 1.129520 -3.326302
+                    0.957537 1.129520 -3.326302
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.880893 1.051348 -3.197927
+                    0.880893 1.051348 -3.197927
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.880286 1.011355 -3.133949
+                    0.880286 1.011355 -3.133949
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.879678 0.971361 -3.069971
+                    0.879678 0.971361 -3.069971
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.879071 0.931368 -3.005993
+                    0.879071 0.931368 -3.005993
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.803034 0.893189 -2.941597
+                    0.803034 0.893189 -2.941597
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.802427 0.853196 -2.877619
+                    0.802427 0.853196 -2.877619
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.725175 0.735031 -2.685266
+                    0.725175 0.735031 -2.685266
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.649138 0.696852 -2.620870
+                    0.649138 0.696852 -2.620870
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.500000 0 -1.500000
+                    -0.572494 0.618680 -2.492496
+                    0.572494 0.618680 -2.492496
+                    1.500000 0 -1.500000
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -1.505890 -0.001378 -1.497538
+                    -0.572494 0.618680 -2.492496
+                    0.572494 0.618680 -2.492496
+                    1.505890 -0.001378 -1.497538
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -2.149540 -0.084351 -1.336536
+                    -0.572494 0.618680 -2.492496
+                    0.572494 0.618680 -2.492496
+                    2.149540 -0.084351 -1.336536
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -2.225774 -0.122628 -1.271973
+                    -0.572494 0.618680 -2.492496
+                    0.572494 0.618680 -2.492496
+                    2.225774 -0.122628 -1.271973
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -2.377022 -0.118990 -1.271135
+                    -0.572494 0.618680 -2.492496
+                    0.572494 0.618680 -2.492496
+                    2.377022 -0.118990 -1.271135
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                    -2.453256 -0.157268 -1.206572
+                    -0.572494 0.618680 -2.492496
+                    0.572494 0.618680 -2.492496
+                    2.453256 -0.157268 -1.206572
+                    -1.500000 0 -0.500000
+                    -0.500000 0 -0.500000
+                    0.500000 0 -0.500000
+                    1.500000 0 -0.500000
+                    -2.650951 -0.544165 1.319504
+                    -0.500000 0 0.500000
+                    0.500000 0 0.500000
+                    2.650951 -0.544165 1.319504
+                    -1.500000 0 1.500000
+                    0 -0.258703 1.842262
+                    0 -0.258703 1.842262
+                    1.500000 0 1.500000
+                  ]
+                }
+              ]
+            }
+        }
         Transform {
           children [
             Transform {
-              translation 2.732870 -5.811242 9
+              translation 2.285394 -2.203037 9
               children 
                 Billboard {
                   children 
@@ -89,16 +3188,16 @@ Transform {
             }
             Transform {
               rotation 0 -1 0 0.100019
-              translation 4.163387 -1.040298 10.781535
+              translation -8.525464 1.138017 9.440307
               children [
                 Shape {
                   appearance Appearance {
                     material DEF Material3 Material {
-                      diffuseColor 0.894255 0.349213 0.542329
+                      diffuseColor 0.800000 0.581824 0.804351
                       emissiveColor 3.921569e-3 2.352941e-2 3.921569e-3
-                      shininess 0.696590
+                      shininess 0.887375
                       specularColor 0.960784 1 0.984314
-                      transparency 0.171466
+                      transparency 0.254801
                     }
                   }
                   geometry Sphere {
@@ -207,7 +3306,7 @@ Transform {
                 }
             }
             Transform {
-              translation 2.291922 3.594910 14.890015
+              translation 2.603047 5.131953 11.630568
               children 
                 Shape {
                   appearance Appearance {
@@ -223,9 +3322,9 @@ Transform {
                     string [
                       "white_dune"
                       ""
-                      " compiled"
+                      "compiled"
                       ""
-                      " java/jogl"
+                      "java/jogl"
                     ]
                   }
                 }
@@ -263,22 +3362,6 @@ Transform {
                   }
                 }
             }
-            Transform {
-              translation 2.732870 0 9
-              children 
-                Shape {
-                  appearance Appearance {
-                    material Material {
-                    }
-                  }
-                  geometry Text {
-                    fontStyle FontStyle {
-                      size 2
-                    }
-                    string "Test"
-                  }
-                }
-            }
           ]
         }
         Transform {
@@ -295,8 +3378,8 @@ Transform {
                     1 0 1
                     1 0 -1
                     -1 0 -1
-                    -1.289464 -0.360676 1.058281
-                    1.299302 -0.323537 1.037654
+                    -1.429671 -0.535376 1.086511
+                    1.444275 -0.480248 1.055892
                     1 1 1
                     1 1 -1
                     -1 1 -1
@@ -310,8 +3393,8 @@ Transform {
                     1 1 1
                     1 1 -1
                     -1 1 -1
-                    -1.273634 1.446024 0.944454
-                    1.168692 1.568214 0.915702
+                    -1.406174 1.662064 0.917550
+                    1.250401 1.843439 0.874870
                   ]
                 }
                 texCoord TextureCoordinate {
@@ -768,7 +3851,7 @@ Transform {
                         }
                     }
                     DEF Transform4 Transform {
-                      rotation 0.978801 -6.952423e-2 -0.192650 2.780445
+                      rotation 0.973603 -7.045743e-2 -0.217100 2.757126
                       translation -5.917241 2.859427 1.169944
                       center 2.414691 -0.298006 -0.163896
                       children [
@@ -1111,7 +4194,7 @@ Transform {
                           }
                         }
                         DEF Transform3 Transform {
-                          rotation 0.978775 -8.865585e-2 -0.184772 2.225861
+                          rotation 0.923835 -0.379287 5.168429e-2 1.211036
                           translation -3.649116 0.939808 -0.736953
                           center 2.553767 -0.354530 -0.174232
                           children [
@@ -2622,7 +5705,7 @@ Transform {
                       ]
                     }
                     DEF Transform5 Transform {
-                      rotation 0.751270 0.659173 -3.292822e-2 3.054781
+                      rotation 0.729595 0.648138 0.218195 3.369686
                       translation 5.917241 2.859427 1.169944
                       center -2.414691 -0.298006 -0.163896
                       children [
@@ -2965,7 +6048,7 @@ Transform {
                           }
                         }
                         DEF Transform6 Transform {
-                          rotation -0.150588 -0.984706 8.761719e-2 1.275751
+                          rotation -0.608835 -0.727515 0.316294 1.783787
                           translation 3.649116 0.939808 -0.736953
                           center -2.553767 -0.354530 -0.174232
                           children [
@@ -4714,7 +7797,7 @@ Transform {
                         material DEF Material2_9 Material {
                           diffuseColor 0.600000 0.600000 0.600000
                           specularColor 0.996078 0.960784 1
-                          transparency 0.321917
+                          transparency 0.320483
                         }
                       }
                       geometry IndexedFaceSet {
@@ -6329,7 +9412,7 @@ Transform {
                         material DEF Material2_10 Material {
                           diffuseColor 0.600000 0.600000 0.600000
                           specularColor 0.996078 0.960784 1
-                          transparency 0.321917
+                          transparency 0.320483
                         }
                       }
                       geometry IndexedFaceSet {
@@ -7958,7 +11041,7 @@ Transform {
                       children 
                         DEF Transform7 Transform {
                           rotation 0 -1 0 0
-                          translation 0 -19.704800 0
+                          translation 0 -18.531916 0
                           children [
                             DEF TimeSensor6 TimeSensor {
                               cycleInterval 10
@@ -9214,6 +12297,188 @@ Transform {
                 }
             }
         }
+        Transform {
+          rotation 0 0 -1 0.890118
+          translation -5.128631e-3 -6.918703 -9.364258
+          children 
+            ParticleSystem {
+              appearance Appearance {
+                material Material {
+                }
+                texture ImageTexture {
+                  url "fire.png"
+                }
+              }
+              geometry IndexedFaceSet {
+                coord Coordinate {
+                  point [
+                    0 -1 0
+                    0 -1 0
+                    0 -1 0
+                    0 -1 0
+                    0 -1 0
+                    0 -1 0
+                    0 -0.489042 -0.872260
+                    -0.833762 -0.489042 -0.256280
+                    -0.506878 -0.489042 0.709868
+                    0.506878 -0.489042 0.709868
+                    0.833762 -0.489042 -0.256281
+                    0 -0.489042 -0.872260
+                    0 0.489042 -0.872260
+                    -0.833762 0.489042 -0.256280
+                    -0.506878 0.489042 0.709868
+                    0.506878 0.489042 0.709868
+                    0.833762 0.489042 -0.256281
+                    0 0.489042 -0.872260
+                    0 1 0
+                    0 1 0
+                    0 1 0
+                    0 1 0
+                    0 1 0
+                    0 1 0
+                  ]
+                }
+                normal Normal {
+                  vector [
+                    -0.349829 -0.808335 -0.473512
+                    -0.554521 -0.810744 0.187615
+                    0 -0.811614 0.584194
+                    0.554521 -0.810744 0.187615
+                    0.349829 -0.808335 -0.473512
+                    0.349829 -0.808335 -0.473512
+                    0 -0.489042 -0.872260
+                    -0.833762 -0.489042 -0.256280
+                    -0.506878 -0.489042 0.709868
+                    0.506878 -0.489042 0.709868
+                    0.833762 -0.489042 -0.256281
+                    0 -0.489042 -0.872260
+                    0 0.489042 -0.872260
+                    -0.833762 0.489042 -0.256281
+                    -0.506878 0.489042 0.709868
+                    0.506878 0.489042 0.709868
+                    0.833762 0.489042 -0.256281
+                    0 0.489042 -0.872260
+                    -0.349829 0.808335 -0.473512
+                    -0.554521 0.810745 0.187615
+                    0 0.811614 0.584194
+                    0.554521 0.810744 0.187615
+                    0.349829 0.808335 -0.473512
+                    0.349829 0.808335 -0.473512
+                  ]
+                }
+                texCoord TextureCoordinate {
+                  point [
+                    0 0
+                    0.200000 0
+                    0.400000 0
+                    0.600000 0
+                    0.800000 0
+                    1 0
+                    0 0.333333
+                    0.200000 0.333333
+                    0.400000 0.333333
+                    0.600000 0.333333
+                    0.800000 0.333333
+                    1 0.333333
+                    0 0.666667
+                    0.200000 0.666667
+                    0.400000 0.666667
+                    0.600000 0.666667
+                    0.800000 0.666667
+                    1 0.666667
+                    0 1
+                    0.200000 1
+                    0.400000 1
+                    0.600000 1
+                    0.800000 1
+                    1 1
+                  ]
+                }
+                colorIndex [
+                  0 1 7 6 -1 
+                  1 2 8 7 -1 
+                  2 3 9 8 -1 
+                  3 4 10 9 -1 
+                  4 5 11 10 -1 
+                  6 7 13 12 -1 
+                  7 8 14 13 -1 
+                  8 9 15 14 -1 
+                  9 10 16 15 -1 
+                  10 11 17 16 -1 
+                  12 13 19 18 -1 
+                  13 14 20 19 -1 
+                  14 15 21 20 -1 
+                  15 16 22 21 -1 
+                  16 17 23 22 -1 
+                ]
+                coordIndex [
+                  0 1 7 6 -1 
+                  1 2 8 7 -1 
+                  2 3 9 8 -1 
+                  3 4 10 9 -1 
+                  4 5 11 10 -1 
+                  6 7 13 12 -1 
+                  7 8 14 13 -1 
+                  8 9 15 14 -1 
+                  9 10 16 15 -1 
+                  10 11 17 16 -1 
+                  12 13 19 18 -1 
+                  13 14 20 19 -1 
+                  14 15 21 20 -1 
+                  15 16 22 21 -1 
+                  16 17 23 22 -1 
+                ]
+                creaseAngle 1.570000
+                normalIndex [
+                  0 1 7 6 -1 
+                  1 2 8 7 -1 
+                  2 3 9 8 -1 
+                  3 4 10 9 -1 
+                  4 5 11 10 -1 
+                  6 7 13 12 -1 
+                  7 8 14 13 -1 
+                  8 9 15 14 -1 
+                  9 10 16 15 -1 
+                  10 11 17 16 -1 
+                  12 13 19 18 -1 
+                  13 14 20 19 -1 
+                  14 15 21 20 -1 
+                  15 16 22 21 -1 
+                  16 17 23 22 -1 
+                ]
+                texCoordIndex [
+                  0 1 7 6 -1 
+                  1 2 8 7 -1 
+                  2 3 9 8 -1 
+                  3 4 10 9 -1 
+                  4 5 11 10 -1 
+                  6 7 13 12 -1 
+                  7 8 14 13 -1 
+                  8 9 15 14 -1 
+                  9 10 16 15 -1 
+                  10 11 17 16 -1 
+                  12 13 19 18 -1 
+                  13 14 20 19 -1 
+                  14 15 21 20 -1 
+                  15 16 22 21 -1 
+                  16 17 23 22 -1 
+                ]
+              }
+              lifetimeVariation 0.500000
+              maxParticles 40
+              particleLifetime 1.980000
+              emitter ConeEmitter {
+                speed 0.200000
+                mass 0.360000
+                angle 1.445398
+              }
+              geometryType "GEOMETRY"
+              physics 
+                ForcePhysicsModel {
+                  force 0.200000 -0.200000 0.200000
+                }
+            }
+        }
       ]
     }
     Group {
@@ -9841,163 +13106,70 @@ Transform {
         }
       ]
     }
+    Transform {
+      translation 1.234457 -1.668194 5.533890e-2
+      scale 0.400000 0.460000 0.500000
+      children 
+        box {
+        }
+    }
+    DEF CurveAnimation1 CurveAnimation {
+      controlPoint [
+        0 0 4.500000
+        -3.709402 0 3.451981
+        -8.640000 0 0
+        -6.109404 0 -3.181980
+        0 0 -4.500000
+        6.109404 0 -3.181980
+        8.640000 0 0
+        3.709402 0 3.451981
+        0 0 4.500000
+      ]
+      weight [
+        1
+        0.707107
+        1
+        1
+        1
+        1
+        1
+        0.707107
+        1
+      ]
+      knot [
+        0
+        0
+        0
+        1
+        2
+        3
+        4
+        5
+        6
+        7
+        7
+        7
+      ]
+    }
     DEF TimeSensor7 TimeSensor {
       cycleInterval 10
       loop TRUE
     }
-    DEF PositionInterpolator1 PositionInterpolator {
-      key [
-        0
-        0.031250
-        0.062500
-        0.093750
-        0.125000
-        0.156250
-        0.187500
-        0.218750
-        0.250000
-        0.281250
-        0.312500
-        0.343750
-        0.375000
-        0.406250
-        0.437500
-        0.468750
-        0.500000
-        0.531250
-        0.562500
-        0.593750
-        0.625000
-        0.656250
-        0.687500
-        0.718750
-        0.750000
-        0.781250
-        0.812500
-        0.843750
-        0.875000
-        0.906250
-        0.937500
-        0.968750
-        1
-      ]
-      keyValue [
-        0 0 4.500000
-        -1.750881 0 4.490009
-        -3.633194 0 4.171503
-        -5.383793 0 3.519567
-        -6.723590 0 2.606067
-        -7.507069 0 1.595446
-        -7.897880 0 0.709544
-        -7.998588 0 -0.072093
-        -7.846002 0 -0.794328
-        -7.451205 0 -1.491634
-        -6.837307 0 -2.154846
-        -6.051326 0 -2.729856
-        -5.094094 0 -3.215673
-        -3.965610 0 -3.612296
-        -2.672864 0 -3.918218
-        -1.336432 0 -4.107426
-        0 0 -4.170495
-        1.336432 0 -4.107426
-        2.672864 0 -3.918218
-        3.965610 0 -3.612296
-        5.094094 0 -3.215673
-        6.051326 0 -2.729856
-        6.837307 0 -2.154846
-        7.451205 0 -1.491634
-        7.846002 0 -0.794328
-        7.998588 0 -0.072093
-        7.897880 0 0.709544
-        7.507069 0 1.595446
-        6.723590 0 2.606067
-        5.383793 0 3.519567
-        3.633194 0 4.171503
-        1.750881 0 4.490009
-        0 0 4.500000
-      ]
-    }
-    DEF OrientationInterpolator5 OrientationInterpolator {
-      key [
-        0
-        0.031250
-        0.062500
-        0.093750
-        0.125000
-        0.156250
-        0.187500
-        0.218750
-        0.250000
-        0.281250
-        0.312500
-        0.343750
-        0.375000
-        0.406250
-        0.437500
-        0.468750
-        0.500000
-        0.531250
-        0.562500
-        0.593750
-        0.625000
-        0.656250
-        0.687500
-        0.718750
-        0.750000
-        0.781250
-        0.812500
-        0.843750
-        0.875000
-        0.906250
-        0.937500
-        0.968750
-        1
-      ]
-      keyValue [
-        0 1 0 4.706683
-        0 1 0 4.544767
-        0 1 0 4.355894
-        0 1 0 4.113969
-        0 1 0 3.801055
-        0 1 0 3.557058
-        0 1 0 3.269730
-        0 1 0 2.933385
-        0 1 0 2.626416
-        0 1 0 2.394788
-        0 1 0 2.202405
-        0 1 0 2.040443
-        0 1 0 1.908776
-        0 1 0 1.803166
-        0 1 0 1.711438
-        0 1 0 1.617953
-        0 1 0 1.523638
-        0 1 0 1.430153
-        0 1 0 1.338425
-        0 1 0 1.232815
-        0 1 0 1.101147
-        0 1 0 0.939185
-        0 1 0 0.746801
-        0 1 0 0.515172
-        0 1 0 0.208196
-        0 -1 0 0.128117
-        0 -1 0 0.415459
-        0 -1 0 0.659459
-        0 -1 0 0.972374
-        0 -1 0 1.214299
-        0 -1 0 1.403172
-        0 -1 0 1.565088
-        0 -1 0 1.565088
-      ]
-    }
   ]
 }
 
+ROUTE CoordinateInterpolator2_0.value_changed TO Coordinate3.set_point
+ROUTE CoordinateInterpolator5.value_changed TO Coordinate2.set_point
+ROUTE TimeSensor5.fraction_changed TO CoordinateInterpolator3.set_fraction
+ROUTE CoordinateInterpolator3.value_changed TO Coordinate1.set_point
 ROUTE TimeSensor4.fraction_changed TO ColorInterpolator1.set_fraction
 ROUTE ColorInterpolator1.value_changed TO Material3.set_diffuseColor
 ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator1.set_fraction
 ROUTE ScalarInterpolator1.value_changed TO Material3.set_transparency
 ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator2.set_fraction
 ROUTE ScalarInterpolator2.value_changed TO Material3.set_shininess
+ROUTE TimeSensor2_0_0.fraction_changed TO CoordinateInterpolator2_0.set_fraction
+ROUTE TimeSensor2_0_0.fraction_changed TO CoordinateInterpolator5.set_fraction
 ROUTE TimeSensor8.fraction_changed TO CoordinateInterpolator1.set_fraction
 ROUTE CoordinateInterpolator1.value_changed TO Coordinate4.set_point
 ROUTE TimeSensor3.fraction_changed TO OrientationInterpolator1.set_fraction
@@ -10015,252 +13187,7 @@ ROUTE TimeSensor6.fraction_changed TO ColorInterpolator2.set_fraction
 ROUTE ColorInterpolator2.value_changed TO Material2.set_diffuseColor
 ROUTE TimeSensor2.fraction_changed TO PositionInterpolator2.set_fraction
 ROUTE PositionInterpolator2.value_changed TO Transform7.set_translation
-ROUTE TimeSensor7.fraction_changed TO PositionInterpolator1.set_fraction
-ROUTE TimeSensor7.fraction_changed TO OrientationInterpolator5.set_fraction
-
-Transform {
-  translation -2.691338 0.194454 -5.276594
-  scale 0.262011 0.262011 0.262011
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0.874510 0.109804 0.200000
-          specularColor 0.909804 1 0.980392
-        }
-      }
-      geometry NurbsPatchSurface {
-        uDimension 9
-        vDimension 5
-        uKnot [
-          0
-          0
-          0
-          0.250000
-          0.250000
-          0.500000
-          0.500000
-          0.750000
-          0.750000
-          1
-          1
-          1
-        ]
-        vKnot [
-          0
-          0
-          0
-          0.500000
-          0.500000
-          1
-          1
-          1
-        ]
-        controlPoint DEF Coordinate1 Coordinate {
-          point [
-            0 -1.471119 0
-            0 -1.040238 0
-            0 -1.471119 0
-            0 -1.040238 0
-            0 -1.471119 0
-            0 -1.040238 0
-            0 -1.471119 0
-            0 -1.040238 0
-            0 -1.471119 0
-            0 -0.707107 -0.707107
-            -0.500000 -0.500000 -0.500000
-            -0.707107 -0.707107 0
-            -0.500000 -0.500000 0.500000
-            0 -0.707107 0.707107
-            0.500000 -0.500000 0.500000
-            0.707107 -0.707107 0
-            0.500000 -0.500000 -0.500000
-            0 -0.707107 -0.707107
-            0 0 -1
-            -0.707107 0 -0.707107
-            -1 0 0
-            -0.707107 0 0.707107
-            0 0 1
-            0.707107 0 0.707107
-            1 0 0
-            0.707107 0 -0.707107
-            0 0 -1
-            0 0.707107 -0.707107
-            -0.500000 0.500000 -0.500000
-            -1.173377 1.281839 0.003413
-            -0.500000 0.500000 0.500000
-            0 0.707107 0.707107
-            0.500000 0.500000 0.500000
-            1.178799 1.275211 0.007526
-            0.500000 0.500000 -0.500000
-            0 0.707107 -0.707107
-            0 1 0
-            0 0.707107 0
-            0 1 0
-            0 0.707107 0
-            0 1 0
-            0 0.707107 0
-            0 1 0
-            0 0.707107 0
-            0 1 0
-          ]
-        }
-        weight [
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          0.500000
-          0.707107
-          0.500000
-          0.707107
-          0.500000
-          0.707107
-          0.500000
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          0.500000
-          0.707107
-          0.500000
-          0.707107
-          0.500000
-          0.707107
-          0.500000
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-          0.707107
-          1
-        ]
-        uClosed TRUE
-        vClosed TRUE
-      }
-    }
-    DEF TimeSensor5 TimeSensor {
-      cycleInterval 1.360000
-      loop TRUE
-    }
-    DEF CoordinateInterpolator2 CoordinateInterpolator {
-      key [
-        0
-        1
-      ]
-      keyValue [
-        0 -1 0
-        0 -0.707107 0
-        0 -1 0
-        0 -0.707107 0
-        0 -1 0
-        0 -0.707107 0
-        0 -1 0
-        0 -0.707107 0
-        0 -1 0
-        0 -0.707107 -0.707107
-        -0.500000 -0.500000 -0.500000
-        -0.707107 -0.707107 0
-        -0.500000 -0.500000 0.500000
-        0 -0.707107 0.707107
-        0.500000 -0.500000 0.500000
-        0.707107 -0.707107 0
-        0.500000 -0.500000 -0.500000
-        0 -0.707107 -0.707107
-        0 0 -1
-        -0.707107 0 -0.707107
-        -1 0 0
-        -0.707107 0 0.707107
-        0 0 1
-        0.707107 0 0.707107
-        1 0 0
-        0.707107 0 -0.707107
-        0 0 -1
-        0 0.707107 -0.707107
-        -0.500000 0.500000 -0.500000
-        -0.707107 0.707107 0
-        -0.500000 0.500000 0.500000
-        0 0.707107 0.707107
-        0.500000 0.500000 0.500000
-        0.717030 0.694978 0.007526
-        0.500000 0.500000 -0.500000
-        0 0.707107 -0.707107
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 -2.038800 0
-        0 -1.441649 0
-        0 -2.038800 0
-        0 -1.441649 0
-        0 -2.038800 0
-        0 -1.441649 0
-        0 -2.038800 0
-        0 -1.441649 0
-        0 -2.038800 0
-        0 -0.707107 -0.707107
-        -0.500000 -0.500000 -0.500000
-        -0.707107 -0.707107 0
-        -0.500000 -0.500000 0.500000
-        0 -0.707107 0.707107
-        0.500000 -0.500000 0.500000
-        0.707107 -0.707107 0
-        0.500000 -0.500000 -0.500000
-        0 -0.707107 -0.707107
-        0 0 -1
-        -0.707107 0 -0.707107
-        -1 0 0
-        -0.707107 0 0.707107
-        0 0 1
-        0.707107 0 0.707107
-        1 0 0
-        0.707107 0 -0.707107
-        0 0 -1
-        0 0.707107 -0.707107
-        -0.500000 0.500000 -0.500000
-        -1.735215 1.974371 0.007526
-        -0.500000 0.500000 0.500000
-        0 0.707107 0.707107
-        0.500000 0.500000 0.500000
-        1.735215 1.974371 0.007526
-        0.500000 0.500000 -0.500000
-        0 0.707107 -0.707107
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 0.707107 0
-        0 1 0
-        0 0.707107 0
-        0 1 0
-      ]
-    }
-  ]
-}
-
-ROUTE TimeSensor5.fraction_changed TO CoordinateInterpolator2.set_fraction
-ROUTE CoordinateInterpolator2.value_changed TO Coordinate1.set_point
+ROUTE CurveAnimation1.position_changed TO Transform9_0.set_translation
+ROUTE CurveAnimation1.orientation_changed TO Transform9_0.set_rotation
+ROUTE TimeSensor7.fraction_changed TO CurveAnimation1.set_fraction
 

@@ -363,7 +363,7 @@ NodeNurbsTrimmedSurface::drawOrCreateMesh(void)
     for (int i = 0; i < cpAndWSFSize; i++) {
         float w0 = (w[i] > 0.0) ? w[i] : 1.0; 
         for (int j = 0; j < 3; j++) {
-            float p = cp[i * 3 + j] / w[i];
+            float p = cp[i * 3 + j] / w0;
             if (p > boundingBoxMax[j])
                 boundingBoxMax[j] = p + 0.1f;
             if (p < boundingBoxMin[j])

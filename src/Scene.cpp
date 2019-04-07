@@ -2152,7 +2152,6 @@ Scene::writeCDeclaration(int f, int languageFlag)
 int
 Scene::writeCDataFunctionsCalls(int f, int languageFlag)
 {
-    int numDataFunctions = getNumDataFunctionsPerClass();
     for (int i = 0; i < 1; i++) {
         if (languageFlag & MANY_JAVA_CLASSES) {
             RET_ONERROR( mywritef(f, "    }\n") )
@@ -2202,9 +2201,8 @@ bool writeCCoordinateFirst(Node *node, void *data)
 
     WriteData *wdata = (WriteData *)data;
     if (node->getType() == VRML_COORDINATE) {
-        bool isWritten = node->getWritten();
         node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
-                                 true,true);
+                                 true, true);
     }
     return true;
 }
@@ -2216,7 +2214,6 @@ bool writeCIndexedFaceSetFirst(Node *node, void *data)
 
     WriteData *wdata = (WriteData *)data;
     if (node->getType() == VRML_INDEXED_FACE_SET) {
-        bool isWritten = node->getWritten();
         node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
                                  true, true);
     }   
@@ -2230,7 +2227,6 @@ bool writeCShapeFirst(Node *node, void *data)
 
     WriteData *wdata = (WriteData *)data;
     if (node->getType() == VRML_SHAPE) {
-        bool isWritten = node->getWritten();
         node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
                                  true, true);
     }   
@@ -2244,7 +2240,6 @@ bool writeCHAnimJointFirst(Node *node, void *data)
 
     WriteData *wdata = (WriteData *)data;
     if (node->getType() == X3D_HANIM_JOINT) {
-        bool isWritten = node->getWritten();
         node->writeCDataFunction(wdata->filedes, wdata->languageFlag, 
                                  true, true);
     }   
@@ -2609,7 +2604,6 @@ Scene::writeC(int f, int languageFlag)
     MyArray<int> startFunctions;
     MyArray<int> numFunctionsPerClass;
 
-    int startNumDataClasses = getNumDataClasses();
     zeroNumDataFunctions();
     setStartNumDataFunctions(0); 
 
@@ -2816,7 +2810,6 @@ Scene::writeC(int f, int languageFlag)
         if (m_root->writeC(f, languageFlag))
             return -1;
         for (int j = 0; j < getNumDataClasses(); j++) {
-            int start = startFunctions[j];
             for (int i = 0; i < 1; i++) {
                 if (j == getNumDataClasses() - 1) {
                     RET_ONERROR( mywritestr(f, "        if (initThings)\n") )

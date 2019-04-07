@@ -37,18 +37,18 @@ VERSION4=`awk -v x="$VERSION2" -v rev="$REV" 'BEGIN {split(x, a, rev);print a[2]
 . /etc/os-release
 VERSION5=wdune-$VERSION3
 VERSION6=$VERSION3
-VERSION=$VERSION1
+VERSION=wdune$VERSION2
 
 (
    cd ../../.. && 
    rm -rf /tmp/$VERSION && \
-   cp -r $VERSION /tmp/ && \
-   cd /tmp/$VERSION && 
+   cp -r $VERSION1 /tmp/ && \
+   cd /tmp/$VERSION1 && 
    sh -x batch/fix_not_translated_rcfiles.sh &&
    make realclean && rm -rf desktop/macosx desktop/irix
 ) && \
-(cd /tmp && tar -cpf - $VERSION) | \
-bzip2 -c > $MKRPM_SRC/$VERSION.tar.bz2
+(cd /tmp && tar -cpf - $VERSION1) | \
+bzip2 -c > $MKRPM_SRC/$VERSION1.tar.bz2
 
 if test "$UNAME_A"="$UNAME_PS2"; then
    # disable optimization on Playstation 2 cause of compiler bugs
@@ -131,7 +131,7 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
 License: BSD and MIT
 Summary: Compiled OpenGL examples for white_dune
 Requires: freeglut
-Requires: %{name}%{?_isa} = %{name}-%{version}
+Requires: %{name}%{version}-%{release}%{?_isa} = %{name}%{version}-%{release}%{?dist}
 %description opengl-examples
 Compiled OpenGL examples for white_dune
 

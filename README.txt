@@ -5021,5 +5021,11 @@ Added human animation to C++ export example
 
 Modified java export
 
+Fixed CurveAnimation java export
+
+Fixed crash when clicking to a PROTO
+
+Fixed crash is scenegraph branch commands
+
 contact: MUFTI <mufti@users.ourproject.org>
 

@@ -467,12 +467,12 @@ public class x3d implements GLEventListener
             x3d.gl.glTranslatef(fcenter[0], fcenter[1], 0.0f);
             x3d.gl.glTranslatef(ftranslation[0], ftranslation[1], 0.0f);
             x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
+            x3d.gl.glPopMatrix();
         }
     }
     
     static void textureTransformUnBind()
     {
-        x3d.gl.glPopMatrix();
     }
     
     static void renderByteTexture(TextureExtraDataStruct extraData,

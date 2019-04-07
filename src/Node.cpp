@@ -1563,7 +1563,7 @@ Node::writeCDataFunctionFields(int filedes, int languageFlag,
             }
         }
     }
-    if (!cont)
+    if ((!cont) && (!isConvertedInCurveAnimaton()))
         RET_ONERROR( mywritestr(filedes , "    }\n") )
     return 0;
 }
@@ -1578,6 +1578,7 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
         for (int i = 0; i < m_convertedNodes.size(); i++)
             RET_ONERROR( m_convertedNodes[i]->writeCDataFunction(filedes, 
                                                                  languageFlag,
+                                                                 forward,
                                                                  cont) )
         return 0;
     }
@@ -1586,13 +1587,15 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
         writeCDataFunctionFields(filedes, languageFlag, forward, cont);
 
     if (m_numberCDataFunctions > 0) {
-        if (!cont) {
+        if (!cont){
             RET_ONERROR( mywritestr(filedes , "    ") )
-            if (languageFlag & MANY_JAVA_CLASSES)
+            if ((languageFlag & MANY_JAVA_CLASSES) &&
+                !isConvertedInCurveAnimaton()) {
                 RET_ONERROR( mywritestr(filedes , "static ") )
                 RET_ONERROR( mywritef(filedes , "void data%sFunction%d() {\n",
                              TheApp->getCPrefix(),
                              m_scene->getNumDataFunctions()) )
+            }
         }
         m_scene->increaseNumDataFunctions();
         RET_ONERROR( mywritestr(filedes, "    ") )
@@ -1649,7 +1652,8 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
 
     if (hasProtoNodes()) {
         Node *protoRoot = ((NodePROTO *)this)->getProtoRoot();
-        RET_ONERROR( protoRoot->writeCDataFunction(filedes, languageFlag, cont))
+        RET_ONERROR( protoRoot->writeCDataFunction(filedes, languageFlag, 
+                                                   forward, cont))
 
         NodePROTO *nodeProto = (NodePROTO *)this;
         for (int i = 1; i < nodeProto->getNumProtoNodes(); i++) {
@@ -1864,7 +1868,7 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
                                   (const char*)getClassName()) )    
             RET_ONERROR( mywritef(f, "        public %sDataClass%d() {\n", 
                                   getVariableName(), m_numberCDataFunctions) )
-        } else 
+        } else
             RET_ONERROR( mywritef(f, "    void %sDataFunction%d() {\n", 
                                   getVariableName(), m_numberCDataFunctions,  
                                   (const char*)getClassName()) )    
@@ -2449,11 +2453,13 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
 
             Node *sNode = s.getNode();
 
+            bool isCurveAnimation = (sNode->getType() == DUNE_CURVE_ANIMATION);
+
             EventIn *target = sNode->getProto()->getEventIn(s.getField());
             EventOut *source = proto->getEventOut(i);
 
             RET_ONERROR( indentf(f, indent + 8) )
-            if (languageFlag & JAVA_SOURCE) {
+            if ((languageFlag & JAVA_SOURCE) && !isCurveAnimation) {
                 RET_ONERROR( indentf(f, indent + 4) )
                 RET_ONERROR( mywritestr(f, "if (") )
                 RET_ONERROR( sNode->writeCVariable(f, languageFlag) )
@@ -2561,7 +2567,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             if (languageFlag & JAVA_SOURCE)
                 RET_ONERROR( mywritestr(f, "    ") )
             RET_ONERROR( mywritestr(f, "}\n") )
-
         }
     }
     writeCEndSendEvent(f, indent, languageFlag);
@@ -4060,6 +4065,8 @@ bool
 Node::isDeepInsideProto(void)
 {
     if (m_insideProto)
+        return true;
+    if (isPROTO())
         return true;
     if (this == NULL)
         return false;

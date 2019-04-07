@@ -7,11 +7,11 @@ render: ../libC++RWD.h C++Export.cc main.cpp
 
 # set special picture path for Fedora OpenGL example binary
 render_with_picture_path: ../libC++RWD.h C++Export.cc main.cpp
-	g++ -g $(CXXFLAGS) -Wno-unused-variable $(LDFLAGS) -o $@ \
+	g++ -g $(CXXFLAGS) -Wno-unused-variable -Wno-dangling-else \
+            -Wno-sign-compare -Wno-narrowing -Wno-unused-but-set-variable \
+            $(LDFLAGS) -o $@ -I. -I.. main.cpp \
             -DPICTURE_PATH=\"/usr/share/white_dune/opengl_example/\" \
-            -I. -I.. -Wno-narrowing main.cpp -lglut -lGLU -lGL -lXmu -lX11 \
-            -ljpeg -lpng
-
+            -lglut -lGLU -lGL -lXmu -lX11 -ljpeg -lpng
 
 clean:
 	rm -f C++Export.cc render render_with_picture_path core
