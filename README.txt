@@ -5027,5 +5027,9 @@ Fixed crash when clicking to a PROTO
 
 Fixed crash is scenegraph branch commands
 
+Fixed error in HAnimJoint creation
+
+Fixed error in HAnimHumanoid java rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 

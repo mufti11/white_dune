@@ -1357,7 +1357,7 @@ class HAnimJointExtra {
          X3dCoordinate coord = (X3dCoordinate)x3dcoord;
          int i;
          HAnimJointExtraDataStruct extraVar;
-         float mayMatrix[];
+         float mayMatrix[] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
     
          extraVar = (HAnimJointExtraDataStruct)(joint.extra_data);
          if (extraVar == null)
@@ -1432,12 +1432,15 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
         int i;
         HAnimHumanoidExtraDataStruct extraVar;
         X3dCoordinate coord = (X3dCoordinate)humanoid.skinCoord;
+
         if(x3d.initRender)
         {
             humanoid.extra_data = new HAnimHumanoidExtraDataStruct();
             ((HAnimHumanoidExtraDataStruct)humanoid.extra_data).thisMatrix = 
                 new float[16];
             ((HAnimHumanoidExtraDataStruct)humanoid.extra_data).floatContainer = new FloatContainer();
+            if (coord == null)
+                System.err.println("Warning: Humanoid.skinCoord not set");
         }
         extraVar = (HAnimHumanoidExtraDataStruct)humanoid.extra_data;
         if (extraVar == null)
@@ -1503,7 +1506,7 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
                         coord.point[i] = 0;
             }
             x3d.gl.glPushMatrix();
-            x3d.gl.glMultMatrixf(extraVar.thisMatrix, 0);
+//            x3d.gl.glMultMatrixf(extraVar.thisMatrix, 0);
             if (humanoid.skeleton != null)
                 for (i = 0; i < humanoid.skeleton.length; i++)
                     if (humanoid.skeleton[i] != null)
@@ -1593,6 +1596,7 @@ class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
                  x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, extraVar.thisMatrix, 0);
                  x3d.gl.glPopMatrix();
              }
+             x3d.gl.glPushMatrix();
              x3d.gl.glMultMatrixf(extraVar.thisMatrix, 0);
              if (joint.children != null)
                  for (i = 0; i < joint.children.length; i++)
@@ -1601,6 +1605,7 @@ class MyHAnimJointRenderCallback extends X3dHAnimJointRenderCallback
                          x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
                          joint.children[i].treeRender(data, null);
                      }
+             x3d.gl.glPopMatrix();
          }
      }
 }

@@ -11127,6 +11127,8 @@ MainWindow::insertHAnimJoint()
             MFInt32 *indices = (MFInt32 *)joint->skinCoordIndex()->copy();
             for (int i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
+                if (handle >= NO_HANDLE)
+                    continue;
                 int f = indices->find(handle);
                 if (f < 0) {
                     indices->appendSFValue(handle);
@@ -11275,6 +11277,8 @@ MainWindow::removeHAnimJointWeight()
                                        joint->skinCoordIndex()->copy();
                     for (int i = 0; i < handles.size(); i++) {
                         int handle = handles[i];
+                        if (handle >= NO_HANDLE)
+                            continue;
                         int f = indices->find(handle);
                         if (f > -1) {
                             indices->removeSFValue(f);
