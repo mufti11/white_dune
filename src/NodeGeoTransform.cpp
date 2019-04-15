@@ -1,7 +1,7 @@
 /*
  * NodeGeoTransform.cpp
  *
- * Copyright (C) 2009 J. "MUFTI" Scheurich
+ * Copyright (C) 2009, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,13 +37,14 @@
 #include "SFVec3f.h"
 #include "SFNode.h"
 #include "MFString.h"
+#include "Scene.h"
 #include "DuneApp.h"
+
+#include "NodeGeoOrigin.h"
 
 ProtoGeoTransform::ProtoGeoTransform(Scene *scene)
   : GeoProto(scene, "GeoTransform")
 {
-    addEventIn(MFNODE, "addChildren");
-    addEventIn(MFNODE, "removeChildren");
     children.set(
         addExposedField(MFNODE, "children", new MFNode()));
     geoCenter.set(
@@ -68,6 +69,9 @@ ProtoGeoTransform::ProtoGeoTransform(Scene *scene)
     render.set(
         addExposedField(SFBOOL, "render", new SFBool(true)));
     setFieldFlags(render, FF_X3DOM_ONLY);
+
+    addEventIn(MFNODE, "addChildren");
+    addEventIn(MFNODE, "removeChildren");
 }
 
 Node *
@@ -79,4 +83,107 @@ ProtoGeoTransform::create(Scene *scene)
 NodeGeoTransform::NodeGeoTransform(Scene *scene, Proto *def)
   : GeoNode(scene, def)
 {
+    m_matrixDirty = true;
 }
+
+void
+NodeGeoTransform::transform()
+{
+    const double *fcenter = geoCenter()->getValue();
+    const float *frotation = rotation()->getValue();
+    const float *fscale = scale()->getValue();
+    const float *fscaleOrientation = scaleOrientation()->getValue();
+    const float *ftranslation = translation()->getValue();
+
+    if (m_matrixDirty) {
+        double rotAngle = frotation[3];
+        double oriAngle = fscaleOrientation[3];
+        if (m_scene) {
+            double angleUnit = m_scene->getUnitAngle();
+            if (angleUnit != 0) {
+               rotAngle *= angleUnit;
+               oriAngle *= angleUnit;
+            }
+        }
+        double identity[16] = { 1, 0, 0, 0,
+                                0, 1, 0, 0,
+                                0, 0, 1, 0,
+                                0, 0, 0, 1 };
+        glPushMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixd(identity);
+        glTranslatef(ftranslation[0], ftranslation[1], ftranslation[2]);
+        glTranslated(fcenter[0], fcenter[1], fcenter[2]);
+        glRotatef(RAD2DEG(rotAngle), 
+              frotation[0], frotation[1], frotation[2]);
+        glRotatef(RAD2DEG(oriAngle), 
+              fscaleOrientation[0], fscaleOrientation[1], fscaleOrientation[2]);
+        glScalef(fscale[0], fscale[1], fscale[2]);
+        glRotatef(-RAD2DEG(oriAngle), 
+              fscaleOrientation[0], fscaleOrientation[1], fscaleOrientation[2]);
+        glTranslated(-fcenter[0], -fcenter[1], -fcenter[2]);
+
+        glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+
+        m_matrixDirty = false;
+        glPopMatrix();
+    }
+//for (int i = 0; i < 16; i++)
+//printf("%lf ", m_matrix[i]);
+//printf("\n");
+    glMultMatrixd(m_matrix);
+}
+
+void
+NodeGeoTransform::preDraw()
+{
+    NodeList *childList = children()->getValues();
+
+    glPushMatrix();
+    transform();
+
+    for (int i = 0; i < childList->size(); i++)
+        if (childList->get(i) != this)
+            childList->get(i)->preDraw();
+
+    glPopMatrix();
+}
+
+void
+NodeGeoTransform::draw(int pass)
+{
+    int i;
+    NodeList *childList = children()->getValues();
+    int n = childList->size();
+
+    glPushMatrix();
+
+    NodeGeoOrigin *origin = (NodeGeoOrigin *)geoOrigin()->getValue();
+
+    transform();
+
+    if (origin) {
+        Vec3d vec = origin->getVec();
+        glTranslated(vec.x, vec.y, vec.z);
+    }
+
+    for (i = 0; i < n; i++)
+        childList->get(i)->bind();
+
+    glPushName(children_Field());  // field
+    glPushName(0);                 // index
+    for (i = 0; i < n; i++) {
+        glLoadName(i);
+        if (childList->get(i) != this)
+            childList->get(i)->draw(pass);
+    }
+    glPopName();
+    glPopName();
+
+    for (i = 0; i < n; i++)
+        childList->get(i)->unbind();
+
+    glPopMatrix();
+}
+
+

@@ -192,7 +192,7 @@ void Triangle::MarkConstrainedEdge(int index)
   constrained_edge[index] = true;
 }
 
-void Triangle::MarkConstrainedEdge(Edge& edge)
+void Triangle::MarkConstrainedEdge(TriEdge& edge)
 {
   MarkConstrainedEdge(edge.p, edge.q);
 }

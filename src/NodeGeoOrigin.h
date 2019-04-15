@@ -61,6 +61,7 @@ public:
 
     void            setField(int index, FieldValue *value, int cf = -1);
     Node           *convert2Vrml(void);
+    Vec3d           getVec(void);
 
     fieldMacros(SFString, geoCoords,    ProtoGeoOrigin)
     fieldMacros(SFVec3d,  geoCoordsX3D, ProtoGeoOrigin)

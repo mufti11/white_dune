@@ -33,7 +33,7 @@ ViewpointDialog::ViewpointDialog(SWND parent, int idd, Scene *scene)
 {
     Node *viewpoint = scene->getCamera();
     m_dist = 0;
-    Vec3f vec = viewpoint->getPosition();
+    Vec3d vec = viewpoint->getPosition();
     if (viewpoint)
         m_dist = sqrt((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
     m_viewpointData = NULL;

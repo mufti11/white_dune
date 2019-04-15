@@ -9,18 +9,16 @@
 
 */
 
-void myTextDoWithData(Pre_Node *self, void *data) {
-    struct Pre_Text* text = (struct Pre_Text *) self;
-    if (text)
-        if (text->string_length > 0)
-            printf("%s\n", text->string[0]);
+void myViewpointDoWithData(Pre_Node *self, void *data) {
+    struct Pre_Viewpoint* viewpoint = (struct Pre_Viewpoint *) self;
+    if (viewpoint)
+        printf("%s\n", viewpoint->description);
 }
 
-void myTextDoWithData2(Pre2_Node *self, void *data) {
-    struct Pre2_Text* text = (struct Pre2_Text *) self;
-    if (text)
-        if (text->string_length > 0)
-            printf("%s\n", text->string[0]);
+void myViewpointDoWithData2(Pre2_Node *self, void *data) {
+    struct Pre2_Viewpoint* viewpoint = (struct Pre2_Viewpoint *) self;
+    if (viewpoint)
+        printf("%s\n", viewpoint->description);
 }
 
 void myAnchorTreeDoWithData(Pre_Node *self, void *data) {
@@ -33,13 +31,13 @@ int main(int argc, char** argv) {
     struct Pre_SceneGraph sceneGraph;
     struct Pre2_SceneGraph appendedSceneGraph;
 
-    Pre_TextDoWithDataCallback = &myTextDoWithData;
+    Pre_ViewpointDoWithDataCallback = &myViewpointDoWithData;
     Pre_AnchorTreeDoWithDataCallback = &myAnchorTreeDoWithData;
 
     Pre_SceneGraphInit(&sceneGraph);
     Pre_GroupTreeDoWithData(&sceneGraph.root, NULL);
 
-    Pre2_TextDoWithDataCallback = &myTextDoWithData2;
+    Pre2_ViewpointDoWithDataCallback = &myViewpointDoWithData2;
 
     Pre2_SceneGraphInit(&appendedSceneGraph);
     Pre2_GroupTreeDoWithData(&appendedSceneGraph.root, NULL);

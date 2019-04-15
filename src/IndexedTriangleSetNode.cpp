@@ -34,6 +34,7 @@
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeIndexedLineSet.h"
@@ -82,7 +83,12 @@ IndexedTriangleSetNode::draw()
     if (ncoord != NULL) {
         glPushName(coord_Field());       // field coord
         glPushName(0);                   // index 0
-        ((NodeCoordinate *)ncoord)->draw(this);
+        if (ncoord->getType() == VRML_COORDINATE)
+            ((NodeCoordinate *)ncoord)->draw(this);
+        else if (ncoord->getType() == VRML_GEO_COORDINATE) {
+            setDoubleMesh(true);
+            ((NodeGeoCoordinate *)ncoord)->draw(this);
+        }
         glPopName();
         glPopName();
     }

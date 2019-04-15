@@ -40,7 +40,7 @@
 
 namespace p2t {
 
-struct Edge;
+struct TriEdge;
 
 struct Point {
 
@@ -54,7 +54,7 @@ struct Point {
   }
 
   /// The edges this point constitutes an upper ending point
-  std::vector<Edge*> edge_list;
+  std::vector<TriEdge*> edge_list;
 
   /// Construct using coordinates.
   Point(double x, double y) : x(x), y(y) {}
@@ -120,12 +120,12 @@ struct Point {
 };
 
 // Represents a simple polygon's edge
-struct Edge {
+struct TriEdge {
 
   Point* p, *q;
 
   /// Constructor
-  Edge(Point& p1, Point& p2) : p(&p1), q(&p2)
+  TriEdge(Point& p1, Point& p2) : p(&p1), q(&p2)
   {
     if (p1.y > p2.y) {
       q = &p1;
@@ -168,7 +168,7 @@ void MarkNeighbor(Point* p1, Point* p2, Triangle* t);
 void MarkNeighbor(Triangle& t);
 
 void MarkConstrainedEdge(int index);
-void MarkConstrainedEdge(Edge& edge);
+void MarkConstrainedEdge(TriEdge& edge);
 void MarkConstrainedEdge(Point* p, Point* q);
 
 int Index(const Point* p);
@@ -186,7 +186,7 @@ void SetDelunayEdgeCCW(const Point& p, bool e);
 void SetDelunayEdgeCW(const Point& p, bool e);
 
 bool Contains(const Point* p);
-bool Contains(const Edge& e);
+bool Contains(const TriEdge& e);
 bool Contains(const Point* p, const Point* q);
 void Legalize(Point& point);
 void Legalize(Point& opoint, Point& npoint);
@@ -298,7 +298,7 @@ inline bool Triangle::Contains(const Point* p)
   return p == points_[0] || p == points_[1] || p == points_[2];
 }
 
-inline bool Triangle::Contains(const Edge& e)
+inline bool Triangle::Contains(const TriEdge& e)
 {
   return Contains(e.p) && Contains(e.q);
 }

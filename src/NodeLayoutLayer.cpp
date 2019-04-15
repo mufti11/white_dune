@@ -73,7 +73,7 @@ NodeLayoutLayer::draw(int pass)
         glPushMatrix();
 
         glMatrixMode(GL_MODELVIEW);
-        Vec3f pos = m_scene->getCamera()->getPosition();
+        Vec3d pos = m_scene->getCamera()->getPosition();
         glTranslatef(pos.x, pos.y, pos.z);
         Quaternion quat = m_scene->getCamera()->getOrientation();
         SFRotation rot(quat);

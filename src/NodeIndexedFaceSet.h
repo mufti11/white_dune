@@ -34,8 +34,11 @@
 #ifndef _DUNEAPP_H
 #include "DuneApp.h"
 #endif
+//#ifndef _MY_MESH_H
+//#include "MyMesh.h"
+//#endif
 #ifndef _MY_MESH_H
-#include "MyMesh.h"
+class MyMesh;
 #endif
 #ifndef _VEC3F_H
 #include "Vec3f.h"

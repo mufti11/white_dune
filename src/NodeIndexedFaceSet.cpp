@@ -40,6 +40,7 @@
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeIndexedLineSet.h"
@@ -146,7 +147,12 @@ NodeIndexedFaceSet::draw()
     if (ncoord != NULL) {
         glPushName(coord_Field());       // field coord
         glPushName(0);                   // index 0
-        ((NodeCoordinate *)ncoord)->draw(this);
+        if (ncoord->getType() == VRML_COORDINATE)
+            ((NodeCoordinate *)ncoord)->draw(this);
+        else if (ncoord->getType() == VRML_GEO_COORDINATE) {
+            setDoubleMesh(true);
+            ((NodeGeoCoordinate *)ncoord)->draw(this);
+        }
         glPopName();
         glPopName();
     }
@@ -309,10 +315,10 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     MFInt32 *normalIndex = getNormalIndex();
     MFInt32 *texCoordIndex = getTexCoordIndex();
    
-    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
+//    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
+    if (!coord)
         return;
 
-    MFVec3f *coords = ((NodeCoordinate *)coord)->point();
     MFVec3f *normals = NULL;
     MFFloat *colors = NULL;
 
@@ -355,10 +361,24 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     if (bnormalPerVertex)
         meshFlags |= MESH_NORMAL_PER_VERTEX;
 
-    m_mesh = new MyMesh(this, coords, coordIndex, normals, normalIndex, colors, 
-                        colorIndex, texCoords, texCoordIndex,
-                        creaseAngle()->getFixedAngle(m_scene->getUnitAngle()), 
-                        meshFlags, transparency);
+    if (coord->getType() == VRML_COORDINATE) {
+        MFVec3f *coords = ((NodeCoordinate *)coord)->point();
+        m_mesh = new MyMesh(this, coords, coordIndex, normals, normalIndex, 
+                            colors, colorIndex, texCoords, texCoordIndex,
+                            creaseAngle()->getFixedAngle(
+                                m_scene->getUnitAngle()), 
+                            meshFlags, transparency);
+        m_isDoubleMesh = false;
+    } else if (coord->getType() == VRML_GEO_COORDINATE) {
+        MFVec3d *coords = ((NodeGeoCoordinate *)coord)->pointX3D();
+        m_meshDouble = new MyMeshDouble(this, coords, coordIndex, normals, 
+                                        normalIndex, colors, colorIndex, 
+                                        texCoords, texCoordIndex, 
+                                        creaseAngle()->getFixedAngle(
+                                            m_scene->getUnitAngle()), 
+                                        meshFlags, transparency);
+        m_isDoubleMesh = true;
+    }
 }
 
 Node * 
@@ -1851,8 +1871,8 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
     
         CGAL::Polygon_mesh_processing::parameters::all_default();
 
-//        CGAL::Polygon_mesh_processing::stitch_borders(surface1); 	
-//        CGAL::Polygon_mesh_processing::stitch_borders(surface2); 	
+//        CGAL::Polygon_mesh_processing::stitch_borders(surface1);
+//        CGAL::Polygon_mesh_processing::stitch_borders(surface2); 
 
     /*
         if (CGAL::Polygon_mesh_processing::does_self_intersect(surface1)) {

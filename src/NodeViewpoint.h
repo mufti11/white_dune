@@ -38,6 +38,7 @@
 #include "Vec3f.h"
 #endif
 
+#include "ViewpointNode.h"
 #include "swt.h"
 
 #include "SFMFTypes.h"
@@ -45,7 +46,7 @@
 #include "KambiViewpointCommonFields.h"
 #include "DuneApp.h"
 
-class ProtoViewpoint : public Proto {
+class ProtoViewpoint : public ViewpointProto {
 public:
                         ProtoViewpoint(Scene *scene);
     virtual Node       *create(Scene *scene);
@@ -56,88 +57,42 @@ public:
 
     virtual bool        isDeclaredInRwd_h() { return true; }      
 
-    FieldIndex centerOfRotation;
-    FieldIndex description;
-    FieldIndex descriptionX3D;
-    FieldIndex fieldOfView;
-    FieldIndex jump;
-    FieldIndex orientation;
     FieldIndex position;
-    FieldIndex retainUserOffsets;
     FieldIndex type;
-    FieldIndex direction;
-    FieldIndex up;
-    FieldIndex gravityUp;
+
+    virtual int     writeProto(int filedes) 
+                       {
+                       return ((Node *)this)->writeProto(filedes, 
+                                    "urn:inet:www.hlrs.de:library:COVER",
+                                    "coverNodes"
+#ifdef HAVE_COVER_NODES_PROTO_URL
+                                    , HAVE_COVER_NODES_PROTO_URL
+#endif
+                                                              );
+                       }
+    virtual bool    isCoverNode(void) { return true; }
 
     kambiViewpointCommonFieldIndex()
-
-    FieldIndex bind;
-    FieldIndex isActive;
-    FieldIndex zFar;
-    FieldIndex zNear;
-
-    // not fields but eventIn/eventOut
-    FieldIndex set_bind;
 };
 
 
-class NodeViewpoint : public CoverNode {
+class NodeViewpoint : public ViewpointNode {
 public:
                         NodeViewpoint(Scene *scene, Proto *proto);
 
-    virtual int         getProfile(void) const;
     virtual int         getX3dVersion(void) const { return 0; }
     virtual Node       *copy() const { return new NodeViewpoint(*this); }
 
-    virtual bool        hasNumbers4kids(void) { return true; } 
+    Vec3d               getPosition() const;
+    void                setPosition(const Vec3d &pos);
 
     virtual void        flip(int index);
     virtual void        swap(int fromTo);
 
-    virtual void        preDraw(bool useStereo = TheApp->useStereo());
-    void                apply(bool useStereo = TheApp->useStereo());
-    void                transformForViewpoint(bool useStereo);
-
-    virtual bool        hasCoverFields(void) { return true; }   
-    virtual bool        hasKambiFields(void) { return true; }
-
-    Vec3f               getPosition() const;
-    Quaternion          getOrientation() const;
-
-    void                setPosition(const Vec3f &pos);
-    void                setOrientation(const Quaternion &quat);
-
-    SFFloat            *fov() { return fieldOfView(); };
-
-    virtual bool        supportCurveAnimation(void) { return true; }
-
-    virtual int         getAnimationCommentID(void);
-
-    void                getMatrix(float* matrix);
-
-    fieldMacros(SFVec3f,    centerOfRotation,  ProtoViewpoint)
-    fieldMacros(SFString,   description,       ProtoViewpoint)
-    fieldMacros(SFString,   descriptionX3D,    ProtoViewpoint)
-    fieldMacros(SFFloat,    fieldOfView,       ProtoViewpoint)
-    fieldMacros(SFBool,     jump,              ProtoViewpoint)
-    fieldMacros(SFRotation, orientation,       ProtoViewpoint)
     fieldMacros(SFVec3f,    position,          ProtoViewpoint)
-    fieldMacros(SFBool,     retainUserOffsets, ProtoViewpoint)
     fieldMacros(SFString,   type,              ProtoViewpoint)
-    fieldMacros(MFVec3f,    direction,         ProtoViewpoint)
-    fieldMacros(MFVec3f,    up,                ProtoViewpoint)
-    fieldMacros(SFVec3f,    gravityUp,         ProtoViewpoint)
 
     kambiViewpointCommonFieldMacros(ProtoViewpoint)
-
-    fieldMacros(SFBool,     bind, ProtoViewpoint)
-    fieldMacros(SFBool,     isActive, ProtoViewpoint)
-    fieldMacros(SFFloat,    zFar, ProtoViewpoint)
-    fieldMacros(SFFloat,    zNear, ProtoViewpoint)
-
-    fieldMacros(SFBool,     set_bind,          ProtoViewpoint)
-protected:
-    float                   m_matrix[16];
 };
 
-#endif // _NODE_VIEWPOINT_H
+#endif

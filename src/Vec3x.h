@@ -149,4 +149,11 @@ public:
      T x, y, z;
 };
 
+typedef Vec3x<double> Vec3d;
+typedef Vec3x<float> Vec3f;
+
+Vec3d operator+(const Vec3d &v, Vec3f vec);
+Vec3d operator-(const Vec3d &v, Vec3f vec);
+
+
 #endif // _VEC3X_H

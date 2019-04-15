@@ -25,13 +25,12 @@
 #include "NodeTextureCoordinate.h"
 #include "Proto.h"
 #include "FieldValue.h"
-#include "MFVec2f.h"
-
 #include "Scene.h"
 #include "NodeIndexedFaceSet.h"
 #include "MFVec3f.h"
+#include "MFVec2f.h"
 #include "MFInt32.h"
-
+#include "MyMesh.h"
 
 ProtoTextureCoordinate::ProtoTextureCoordinate(Scene *scene)
   : WonderlandExportProto(scene, "TextureCoordinate")
@@ -70,7 +69,7 @@ NodeTextureCoordinate::setTextureCoordinateFromIndexedFaceSet()
         if (texCoordIndex->getSize() != coordIndex->getSize()) {
             texCoordIndex = coordIndex;
         }
-    MFVec2f *tc = generateTextureCoordinates(coords, texCoordIndex);
+    MFVec2f *tc = generateTextureCoordinates(coords, texCoordIndex, 0.0f);
     if (tc != NULL)
         setField(point_Field(), tc);
     }

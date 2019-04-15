@@ -32,16 +32,16 @@
 
 namespace p2t {
 
-AdvancingFront::AdvancingFront(Node& head, Node& tail)
+AdvancingFront::AdvancingFront(TriNode& head, TriNode& tail)
 {
   head_ = &head;
   tail_ = &tail;
   search_node_ = &head;
 }
 
-Node* AdvancingFront::LocateNode(double x)
+TriNode* AdvancingFront::LocateNode(double x)
 {
-  Node* node = search_node_;
+  TriNode* node = search_node_;
 
   if (x < node->value) {
     while ((node = node->prev) != NULL) {
@@ -61,17 +61,17 @@ Node* AdvancingFront::LocateNode(double x)
   return NULL;
 }
 
-Node* AdvancingFront::FindSearchNode(double x)
+TriNode* AdvancingFront::FindSearchNode(double x)
 {
   (void)x; // suppress compiler warnings "unused parameter 'x'"
   // TODO: implement BST index
   return search_node_;
 }
 
-Node* AdvancingFront::LocatePoint(const Point* point)
+TriNode* AdvancingFront::LocatePoint(const Point* point)
 {
   const double px = point->x;
-  Node* node = FindSearchNode(px);
+  TriNode* node = FindSearchNode(px);
   const double nx = node->point->x;
 
   if (px == nx) {

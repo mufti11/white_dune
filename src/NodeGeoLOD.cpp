@@ -22,13 +22,21 @@
 #include <stdio.h>
 #include "stdafx.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifndef _WIN32
+# include <unistd.h>
+#endif
+
 #include "NodeGeoLOD.h"
+#include "NodeGeoOrigin.h"
 #include "Proto.h"
 #include "MFVec3f.h"
 #include "ExposedField.h"
 #include "Field.h"
 #include "RenderState.h"
 #include "DuneApp.h"
+#include "resource.h"
 #include "Util.h"
 #include "Vec3f.h"
 #include "Scene.h"
@@ -127,5 +135,164 @@ NodeGeoLOD::convert2Vrml(void)
     return NULL;
 }
 
+void
+NodeGeoLOD::draw(int pass)
+{
+    Node *node = NULL;
+    switch (m_nodeToDrawIndex) {
+      case 0:
+        node = m_child1;
+        break;
+      case 1:   
+        node = m_child2;
+        break;
+      case 2:   
+        node = m_child3;
+        break;
+      case 3:   
+        node = m_child4;
+        break;
+      default:
+        node = m_root;
+    }
 
+    if (node != NULL) {
+        glPushName(-1);  // field offset
 
+        node->bind();
+
+        glPushName(0);
+
+        glLoadName(m_nodeToDrawIndex);
+        node->draw(pass);
+
+        glPopName();
+
+        node->unbind();
+
+        glPopName();
+    }
+}
+
+void
+NodeGeoLOD::preDraw()
+{
+    accountNodeToDrawIndex();
+
+    Node *node = NULL;
+    switch (m_nodeToDrawIndex) {
+      case 0:
+        node = m_child1;
+        break;
+      case 1:   
+        node = m_child2;
+        break;
+      case 2:   
+        node = m_child3;
+        break;
+      case 3:   
+        node = m_child4;
+        break;
+      default:
+        node = m_root;
+    }
+
+    if (node != NULL)
+        node->preDraw();
+}
+
+void
+NodeGeoLOD::accountNodeToDrawIndex()
+{
+    int tmpNodeToDrawIndex = -1;
+
+    tmpNodeToDrawIndex = 4 - 1;
+    Matrixd matrix;
+    const double *fcenter = centerX3D()->getValue();
+
+    glPushMatrix();
+    glTranslated(fcenter[0], fcenter[1], fcenter[2]);
+    glGetDoublev(GL_MODELVIEW_MATRIX, matrix);
+    glPopMatrix();
+    
+    NodeGeoOrigin *origin = (NodeGeoOrigin *)geoOrigin()->getValue();
+
+    Vec3d vec;
+    if (origin)
+        vec = origin->getVec();
+
+    Vec3d v(matrix[12], matrix[13], matrix[14]);
+    MFFloat *mfrange = range();
+    if (tmpNodeToDrawIndex > mfrange->getSize())
+        tmpNodeToDrawIndex = mfrange->getSize();
+    // vrml97/part1/nodesRef.html#LOD
+    // | An empty range field ... a hint to the browser that it may
+    // | choose a level automatically to maintain a constant display rate.
+    // we choose the first level 8-(
+    if (mfrange->getSize() > 0)
+        for (int i = tmpNodeToDrawIndex; i >= 0; i--)
+            if (i < mfrange->getSize()) 
+                if ((v - vec).length() < mfrange->getValues()[i])
+                    tmpNodeToDrawIndex = i;
+
+    m_nodeToDrawIndex = -1;
+    if (tmpNodeToDrawIndex >= 0)
+        m_nodeToDrawIndex = tmpNodeToDrawIndex;
+}
+
+void
+NodeGeoLOD::loadChild(Node *node, MFString *urls)
+{
+    if (urls->getSize() == 0)
+        return;
+    MyString m_baseURL = "";
+    m_baseURL += TheApp->getImportURL();
+    for (int i = 0; i < urls->getSize(); i++) {
+        MyString path;
+        URL urlI(m_baseURL, urls->getValue(i));
+        if (urls->getValue(i).length() == 0) continue;
+        if (m_scene->Download(urlI, &path)) {
+            TheApp->setImportURL(urlI.GetPath());
+            struct stat fileStat;
+            MyString filename = "";
+            filename += path;
+            if (stat(filename, &fileStat) == 0) {
+                if (S_ISREG(fileStat.st_mode)) {
+                    bool oldX3d = m_scene->isX3d();
+                    FILE *file = fopen(filename, "rb");
+                    if (file == NULL) {
+                        TheApp->MessageBoxPerror(IDS_URL_FILE_FAILED, filename);
+                        continue;
+                    }
+//                    double oldUnitLength = getUnitLength();
+//                    pushUnitLength();
+                    TheApp->setImportFile(filename);
+                    m_scene->parse(file, m_child1, -1, SCAN_FOR_BOTH);
+//                    node->setUnitLength(oldUnitLength / getUnitLength());
+//                    popUnitLength();
+                    fclose(file);
+                    if (oldX3d && (!m_scene->isX3d()))
+                        m_scene->setX3d();
+                    else if ((!oldX3d) && m_scene->isX3d())             
+                        m_scene->setVrml();
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void
+NodeGeoLOD::load()
+{
+    m_root = NULL;
+    loadChild(m_root, rootUrl());
+    m_child1 = NULL;
+    loadChild(m_child1, child1Url());
+    m_child2 = NULL;
+    loadChild(m_child2, child2Url());
+    m_child3 = NULL;
+    loadChild(m_child3, child3Url());
+    m_child4 = NULL;
+    loadChild(m_child4, child4Url());
+}

@@ -329,7 +329,7 @@ NodeSuperShape::createMesh(SuperShapeData &data)
     MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, data.texCoord);    
     if (texCoords.size() == 0) {
-        MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex);
+        MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex, 0.0f);
         texCoords.append(texCoord);
     }
 

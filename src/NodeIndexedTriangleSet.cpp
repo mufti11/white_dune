@@ -34,6 +34,7 @@
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeIndexedLineSet.h"
@@ -73,10 +74,15 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     bool bcolorPerVertex = colorPerVertex()->getValue();
     bool bnormalPerVertex = normalPerVertex()->getValue();
    
-    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
+    if (!coord)
         return;
 
-    MFVec3f *coords = ((NodeCoordinate *)coord)->point();
+    MFVec3f *coords = NULL;
+    MFVec3d *coordsDouble = NULL;
+    if (coord->getType() == VRML_COORDINATE)
+        coords = ((NodeCoordinate *)coord)->point();
+    else
+        coordsDouble = ((NodeGeoCoordinate *)coord)->pointX3D();
     MFVec3f *normals = NULL;
     MFFloat *colors = NULL;
 
@@ -99,7 +105,8 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
 
     MFInt32 *indices = index();
 
-    if (coords->getSFSize() > 0) {
+    if ((coords && (coords->getSFSize() > 0)) ||
+        (coordsDouble && (coordsDouble->getSFSize() > 0))) {
         int numFaces = indices->getSFSize() / 3;
         int *meshIndices = (numFaces == 0) ? NULL : new int[numFaces * 4];
         for (int i = 0; i < numFaces; i++) {
@@ -136,9 +143,15 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         meshFlags |= MESH_NORMAL_PER_VERTEX;
     }
 
-    m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
-                        NULL, texCoords, NULL, creaseAngle, meshFlags, 
-                        transparency);
+    if (coords)
+        m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
+                            NULL, texCoords, NULL, creaseAngle, meshFlags, 
+                            transparency);
+   else
+        m_meshDouble = new MyMeshDouble(this, coordsDouble, m_coordIndex, 
+                                        normals, NULL, colors, NULL, texCoords, 
+                                        NULL, creaseAngle, meshFlags, 
+                                        transparency);
 }
 
 void

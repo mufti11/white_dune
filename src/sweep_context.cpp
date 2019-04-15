@@ -100,7 +100,7 @@ void SweepContext::InitEdges(const std::vector<Point*>& polyline)
   size_t num_points = polyline.size();
   for (size_t i = 0; i < num_points; i++) {
     size_t j = i < num_points - 1 ? i + 1 : 0;
-    edge_list.push_back(new Edge(*polyline[i], *polyline[j]));
+    edge_list.push_back(new TriEdge(*polyline[i], *polyline[j]));
   }
 }
 
@@ -114,13 +114,13 @@ void SweepContext::AddToMap(Triangle* triangle)
   map_.push_back(triangle);
 }
 
-Node& SweepContext::LocateNode(const Point& point)
+TriNode& SweepContext::LocateNode(const Point& point)
 {
   // TODO implement search tree
   return *front_->LocateNode(point.x);
 }
 
-void SweepContext::CreateAdvancingFront(const std::vector<Node*>& nodes)
+void SweepContext::CreateAdvancingFront(const std::vector<TriNode*>& nodes)
 {
 
   (void) nodes;
@@ -129,9 +129,9 @@ void SweepContext::CreateAdvancingFront(const std::vector<Node*>& nodes)
 
   map_.push_back(triangle);
 
-  af_head_ = new Node(*triangle->GetPoint(1), *triangle);
-  af_middle_ = new Node(*triangle->GetPoint(0), *triangle);
-  af_tail_ = new Node(*triangle->GetPoint(2));
+  af_head_ = new TriNode(*triangle->GetPoint(1), *triangle);
+  af_middle_ = new TriNode(*triangle->GetPoint(0), *triangle);
+  af_tail_ = new TriNode(*triangle->GetPoint(2));
   front_ = new AdvancingFront(*af_head_, *af_tail_);
 
   // TODO: More intuitive if head is middles next and not previous?
@@ -142,7 +142,7 @@ void SweepContext::CreateAdvancingFront(const std::vector<Node*>& nodes)
   af_tail_->prev = af_middle_;
 }
 
-void SweepContext::RemoveNode(Node* node)
+void SweepContext::RemoveNode(TriNode* node)
 {
   delete node;
 }
@@ -151,7 +151,7 @@ void SweepContext::MapTriangleToNodes(Triangle& t)
 {
   for (int i = 0; i < 3; i++) {
     if (!t.GetNeighbor(i)) {
-      Node* n = front_->LocatePoint(t.PointCW(*t.GetPoint(i)));
+      TriNode* n = front_->LocatePoint(t.PointCW(*t.GetPoint(i)));
       if (n)
         n->triangle = &t;
     }

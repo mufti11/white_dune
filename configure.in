@@ -1746,8 +1746,8 @@ done
 if test "X_$LIBDUMA_A" != "X_" ; then 
     echo $LIBDUMA_A
     AC_MSG_CHECKING(for strdup extraction)
-    CURRENT_DIR=$SELFDIR
     for i in /usr/lib /usr/lib/debug/usr/lib /usr/lib/debug/usr/lib64 ; do
+        pushd $PWD
         cd /tmp && 
             if ar x $i/libc.a strdup.o 2>/dev/null ; then 
                 echo yes
@@ -1762,7 +1762,7 @@ if test "X_$LIBDUMA_A" != "X_" ; then
             else
                 echo no
             fi
-        cd $CURRENT_DIR
+        popd
     done
 else
     echo none 

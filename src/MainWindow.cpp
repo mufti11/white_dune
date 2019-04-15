@@ -379,17 +379,17 @@ static NodeButton buttonsVRML200x[] = {
     { VRML_NURBS_POSITION_INTERPOLATOR, ID_NEW_NURBS_POSITION_INTERPOLATOR, 
                                                                 true,  true },
     { BS,                         0,                            true,  true },
-    { VRML_GEO_ELEVATION_GRID,    ID_NEW_GEO_ELEVATION_GRID,    true,  true },
     { VRML_GEO_LOCATION,          ID_NEW_GEO_LOCATION,          true,  true },
+    { VRML_GEO_ELEVATION_GRID,    ID_NEW_GEO_ELEVATION_GRID,    true,  true },
+    { X3D_GEO_TRANSFORM,          ID_NEW_GEO_TRANSFORM,         true,  true },
     { VRML_GEO_ORIGIN,            ID_NEW_GEO_ORIGIN,            false, true },
     { VRML_GEO_LOD,               ID_NEW_GEO_LOD,               true,  true },
     { VRML_GEO_COORDINATE,        ID_NEW_GEO_COORDINATE,        false, true },
     { VRML_GEO_VIEWPOINT,         ID_NEW_GEO_VIEWPOINT,         true,  true },
+    { X3D_GEO_PROXIMITY_SENSOR,   ID_NEW_GEO_PROXIMITY_SENSOR,  true,  true },
     { VRML_GEO_TOUCH_SENSOR,      ID_NEW_GEO_TOUCH_SENSOR,      true,  true },
     { VRML_GEO_POSITION_INTERPOLATOR, ID_NEW_GEO_POSITION_INTERPOLATOR, 
                                                                 true,  true },
-    { X3D_GEO_PROXIMITY_SENSOR,   ID_NEW_GEO_PROXIMITY_SENSOR,  true,  true },
-    { X3D_GEO_TRANSFORM,          ID_NEW_GEO_TRANSFORM,         true,  true },
     { X3D_GEO_METADATA,           ID_NEW_GEO_METADATA,          true,  true },
     { BS,                         0,                            true,  true },
     { VRML_INLINE_LOAD_CONTROL,   ID_NEW_INLINE_LOAD_CONTROL,   true,  true },
@@ -4337,14 +4337,14 @@ MainWindow::setViewpoint(void)
         MFFloat *avatarSize = navi->avatarSize();
         avatarSize->setValue(3, dist);
         Node *camera = m_scene->getCamera();
-        Vec3f vec = camera->getPosition();
+        Vec3d vec = camera->getPosition();
         vec.normalize(); 
         vec = vec * dist;
         camera->setPosition(vec);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
     if (viewData) {
-        Vec3f vec(viewData[0], viewData[1], viewData[2]);
+        Vec3d vec(viewData[0], viewData[1], viewData[2]);
         vec.normalize();
         vec = vec * dist;
         SFRotation *rot = new SFRotation(viewData[3], viewData[4], viewData[5],
@@ -4382,7 +4382,7 @@ MainWindow::setTarget(void)
     vec.x = mat[3][0];
     vec.y = mat[3][1];
     vec.z = mat[3][2];
-    Vec3f viewVec = viewpoint->getPosition();
+    Vec3d viewVec = viewpoint->getPosition();
     if (viewpoint)
         dist = sqrt((viewVec.x - vec.x) * (viewVec.x - vec.x) +
                     (viewVec.y - vec.y) * (viewVec.y - vec.y) +
@@ -6404,8 +6404,8 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
         if (camera) {
             SFRotation *sfRotation = new SFRotation(camera->getOrientation());
             Quaternion quad = sfRotation->getQuat();
-            Vec3f vec = camera->getPosition();
-            Vec3f ten(0, 0, -10);
+            Vec3d vec = camera->getPosition();
+            Vec3d ten(0, 0, -10);
             vec += ten * quad;
             nTransform->rotation(new SFRotation(*sfRotation));
             if (TheApp->getCreateAtZero(0))
@@ -6414,7 +6414,7 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
                 vec.y = 0;
             if (TheApp->getCreateAtZero(2))
                 vec.z = 0;
-            nTransform->translation(new SFVec3f(vec));
+            nTransform->translation(new SFVec3f(Vec3f(vec.x, vec.y, vec.z)));
         }
     if (TheApp->is4Kids()) {
         // make Material node visible
@@ -7070,7 +7070,7 @@ MainWindow::createViewpoint()
 //    node->jump((SFBool *)camera->jump()->copy());
     SFRotation *r = new SFRotation(camera->getOrientation());
     node->orientation(r);
-    Vec3f pos = camera->getPosition();
+    Vec3d pos = camera->getPosition();
     node->position(new SFVec3f(pos.x, pos.y, pos.z));
 //    node->description((SFString *)camera->description()->copy());
     m_scene->execute(new MoveCommand(node, NULL, -1, m_scene->getRoot(), 
@@ -7091,7 +7091,7 @@ MainWindow::createGeoViewpoint()
     SFRotation r(camera->getOrientation());
     node->orientation(r);
     char buf[4096];
-    Vec3f pos = camera->getPosition();
+    Vec3d pos = camera->getPosition();
     mysnprintf(buf, 4095, "%g %g %g", pos.x, pos.y, pos.z);
     node->position(new SFString(buf));
 //    node->description((SFString *)camera->description()->copy());
@@ -9170,7 +9170,7 @@ MainWindow::simpleJoin()
         }
         NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
                                    NodeIndexedFaceSet::simpleJoin(facesets);
-		
+
         if (face == NULL)
             return;          
         face->solid(new SFBool(false));
@@ -12225,7 +12225,8 @@ bool MainWindow::OnFileExportCC()
 
 bool MainWindow::OnFileExportJava()
 {
-    return OnFileSaveAs(JAVA_SOURCE | TRIANGULATE | TEMP_EXPORT);
+    return OnFileSaveAs(JAVA_SOURCE | MANY_JAVA_CLASSES | TRIANGULATE | 
+                        TEMP_EXPORT);
 }
 
 bool MainWindow::OnFileExportAc3d()

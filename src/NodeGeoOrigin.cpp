@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include "stdafx.h"
 
+#include "GpsMathLib.h"
+
 #include "NodeGeoOrigin.h"
 #include "GeoMacros.h"
 #include "Proto.h"
@@ -96,3 +98,15 @@ NodeGeoOrigin::convert2Vrml(void)
     return NULL;
 }
 
+Vec3d
+NodeGeoOrigin::getVec(void) 
+{
+        double latN, longE, H, xxx, yyy, zzz;
+
+        latN = geoCoordsX3D()->getValue()[0];
+        longE = geoCoordsX3D()->getValue()[1];
+        H = geoCoordsX3D()->getValue()[2];
+        Wgs84LatLonHToWgs84XYZ(latN, longE, H, &xxx, &yyy, &zzz ); 
+
+        return Vec3d(xxx, yyy, zzz);
+}

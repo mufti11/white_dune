@@ -5031,5 +5031,13 @@ Fixed error in HAnimJoint creation
 
 Fixed error in HAnimHumanoid java rendering
 
+Added workaround for crash when creating a GeoViewpoint
+
+Updated test directory
+
+Added Geospatial rendering
+
+Added double types to Script dialog
+
 contact: MUFTI <mufti@users.ourproject.org>
 

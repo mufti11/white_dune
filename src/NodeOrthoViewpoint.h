@@ -75,7 +75,7 @@ public:
     void                apply(bool useStereo = TheApp->useStereo());
     void                transformForViewpoint(bool useStereo);
 
-    Vec3f               getPosition() const;
+    Vec3d               getPosition() const;
     Quaternion          getOrientation() const;
 
     void                setPosition(const Vec3f &pos);

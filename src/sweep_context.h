@@ -44,8 +44,8 @@ const double kAlpha = 0.3;
 
 struct Point;
 class Triangle;
-struct Node;
-struct Edge;
+struct TriNode;
+struct TriEdge;
 class AdvancingFront;
 
 class SweepContext {
@@ -66,11 +66,11 @@ Point* tail() const;
 
 size_t point_count() const;
 
-Node& LocateNode(const Point& point);
+TriNode& LocateNode(const Point& point);
 
-void RemoveNode(Node* node);
+void RemoveNode(TriNode* node);
 
-void CreateAdvancingFront(const std::vector<Node*>& nodes);
+void CreateAdvancingFront(const std::vector<TriNode*>& nodes);
 
 /// Try to map a node to all sides of this triangle that don't have a neighbor
 void MapTriangleToNodes(Triangle& t);
@@ -94,12 +94,12 @@ void MeshClean(Triangle& triangle);
 std::vector<Triangle*> &GetTriangles();
 std::list<Triangle*> &GetMap();
 
-std::vector<Edge*> edge_list;
+std::vector<TriEdge*> edge_list;
 
 struct Basin {
-  Node* left_node;
-  Node* bottom_node;
-  Node* right_node;
+  TriNode* left_node;
+  TriNode* bottom_node;
+  TriNode* right_node;
   double width;
   bool left_highest;
 
@@ -118,7 +118,7 @@ struct Basin {
 };
 
 struct EdgeEvent {
-  Edge* constrained_edge;
+  TriEdge* constrained_edge;
   bool right;
 
   EdgeEvent() : constrained_edge(NULL), right(false)
@@ -144,7 +144,7 @@ Point* head_;
 // tail point used with advancing front
 Point* tail_;
 
-Node *af_head_, *af_middle_, *af_tail_;
+TriNode *af_head_, *af_middle_, *af_tail_;
 
 void InitTriangulation();
 void InitEdges(const std::vector<Point*>& polyline);

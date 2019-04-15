@@ -946,7 +946,7 @@ protected:
 
     bool                m_xrayRendering;
 
-    Vec3f               m_turnPointPos;
+    Vec3d               m_turnPointPos;
     Quaternion          m_turnPointRot;
 
     double              m_oldWalkTime;

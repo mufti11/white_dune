@@ -1003,9 +1003,9 @@ public:
     long               getId(void);
 
     // for Node*Viewpoint
-    virtual Vec3f       getPosition() const { return Vec3f(); }
+    virtual Vec3d       getPosition() const { return Vec3d(); }
     virtual Quaternion  getOrientation() const { return Quaternion(); } 
-    virtual void        setPosition(const Vec3f &pos) {}
+    virtual void        setPosition(const Vec3d &pos) {}
     virtual void        setOrientation(const Quaternion &quat)  {}
     virtual SFFloat    *fov() { return NULL; };
     virtual void        getMatrix(float* matrix) {}

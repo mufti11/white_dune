@@ -10,7 +10,7 @@ grep class `dirname $0`/../src/*.h | grep '{' | grep -v template |
     grep -v StringBuf | grep -v Iterator | grep -v Pair | grep -v Stack |
     grep -v gmp | grep -v Vectoriser | grep -v SweepContext |
     grep -v AdvancingFront | grep -v shapes | grep -v Contour | 
-    grep -v PointFtgl |
+    grep -v PointFtgl | grep -v MyMeshX | grep -v NodeImageTexture3D.h |
 awk '
 BEGIN { 
    print "#include \"DuneApp.h\"\n#include \"stdio.h\"\n" 
@@ -25,7 +25,7 @@ BEGIN {
       list[l++]="//" $0 "\nif (sizeof(" class ")==0) { printf(\"zero length class " class "\");}"
    }
 END {
-   print "main() {";
+   print "int main(int argv, char** argc) {";
    for (i=0;i<l;i++) 
       print list[i];
    print "exit(0);";

@@ -1,7 +1,7 @@
 /*
  * NodeGeoCoordinate.h
  *
- * Copyright (C) 1999 Stephen F. White
+ * Copyright (C) 1999 Stephen F. White, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@
 
 #include "SFMFTypes.h"
 
+class MyMeshDouble;
+
 class ProtoGeoCoordinate : public GeoProto {
 public:
                     ProtoGeoCoordinate(Scene *scene);
@@ -56,13 +58,57 @@ public:
     virtual int     getX3dVersion(void) const { return 0; }
     virtual Node   *copy() const { return new NodeGeoCoordinate(*this); }
 
-    void            setField(int index, FieldValue *value, int cf = -1);
+    Node           *convert2Vrml(void);
 
     void            drawHandles(void);
-    Node           *convert2Vrml(void);
+    Vec3f           getHandle(int handle, int *constraint, int *field);
+    void            setHandle(int handle, const Vec3f &v);
+    void            setBeginHandles(void);
+    void            setEndHandles(void);
+    void            setHandleLines(int handle, const Vec3f &v);
+    void            setHandleFaces(int handle, const Vec3f &v);
+    void            setHandleVertices(int handle, const Vec3f &v);
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+
+    virtual int     getNumVertex(void) 
+                        { return point()->getSFSize(); }  
+    virtual Vec3f   getVertex(int i)
+                        { return pointX3D()->getMFVec3f()->getVec(i); }
+
+    virtual bool    validHandle(int handle);
+    virtual bool    checkHandle(int handle);
+    virtual int     getMaxHandle(void);
+
+    bool            setHandle(MFVec3f *value, int handle,
+                              const Vec3f &newV, const Vec3f &oldV,
+                              bool changeNow,
+                              bool bypassChecks = false);
+
+    virtual void    update();
+    MyMeshDouble *getDoubleMesh(void);
+    void draw(Node *node);
+
+    virtual bool    canMoveTo(int direction) { return true; }
+
+    virtual NodeColor *getColorNode() { 
+                        if (hasParent())
+                            return getParent()->getColorNode();
+                        return NULL;     
+                    }
+    virtual NodeColorRGBA *getColorRGBANode() { 
+                        if (hasParent())
+                            return getParent()->getColorRGBANode();
+                        return NULL;     
+                    }
 
     fieldMacros(MFString, point,    ProtoGeoCoordinate)
     fieldMacros(MFVec3d,  pointX3D, ProtoGeoCoordinate)
+protected:
+    MyArray<Vec3f> m_selectedVertices;
+    MyArray<Vec3f> m_selectedVertices2;
+    MyArray<Vec3f> m_selectedVerticesWithoutX;
+    MyArray<bool> m_validSymVerticesHandles;
+    MyArray<int> m_selectedVerticesHandles;
 };
 
 #endif // _NODE_GEO_COORDINATE_H

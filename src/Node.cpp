@@ -1132,7 +1132,8 @@ NodeData::writeField(int f, int indent, int i, bool script)
     if (hasIsName)
         RET_ONERROR( writeIs(f, indent, name, isName) )
     else if (value) {
-        if (script || !value->equals(field->getDefault(x3d))) {                
+        if (script || (value->getRefs() &&
+                       !value->equals(field->getDefault(x3d)))) {
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f , name) )
             RET_ONERROR( mywritestr(f ," ") )
@@ -1629,22 +1630,24 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
         if ( m_numberCDataFunctions > 0) { 
             if (languageFlag & MANY_JAVA_CLASSES)
                 RET_ONERROR( mywritef(filedes , 
-                                      "        new %sDataClass0();\n", 
-                                      getVariableName()) )
+                                      "        new %s%sDataClass0();\n", 
+                                      TheApp->getPrefix(), getVariableName()) )
             else 
                 RET_ONERROR( mywritef(filedes , 
-                                      "        %sDataFunction0();\n", 
-                                      getVariableName()) )
+                                      "        %s%sDataFunction0();\n", 
+                                      TheApp->getPrefix(), getVariableName()) )
         }
         for (int i = 1; i < m_numberCDataFunctions; i++)
             if (languageFlag & MANY_JAVA_CLASSES)
                 RET_ONERROR( mywritef(filedes , 
-                                      "        new %sDataClass%d();\n", 
-                                      getVariableName(), i) )
+                                      "        new %s%sDataClass%d();\n", 
+                                      TheApp->getPrefix(), getVariableName(), 
+                                      i) )
             else 
                 RET_ONERROR( mywritef(filedes , 
-                                      "        %sDataFunction%d();\n", 
-                                      getVariableName(), i) )
+                                      "        %s%sDataFunction%d();\n", 
+                                      TheApp->getPrefix(), getVariableName(), 
+                                      i) )
     }
 
     if (!forward)
@@ -1737,6 +1740,10 @@ Node::writeC(int f, int languageFlag)
                                                                 languageFlag))
         }  
     }
+ 
+    if (languageFlag & C_SOURCE)
+        if (this == m_scene->getRoot())
+            RET_ONERROR( mywritestr(f, "    {\n") )    
 
     if (languageFlag & C_SOURCE) {
         RET_ONERROR( mywritestr(f, "    self->") )
@@ -1863,11 +1870,13 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
 
     if (value->writeType(languageFlag)) {
         if ((!cont) && languageFlag & MANY_JAVA_CLASSES) {
-            RET_ONERROR( mywritef(f, "    class %sDataClass%d {\n", 
-                                  getVariableName(), m_numberCDataFunctions,  
+            RET_ONERROR( mywritef(f, "    class %s%sDataClass%d {\n", 
+                                  TheApp->getPrefix(), getVariableName(), 
+                                  m_numberCDataFunctions,  
                                   (const char*)getClassName()) )    
-            RET_ONERROR( mywritef(f, "        public %sDataClass%d() {\n", 
-                                  getVariableName(), m_numberCDataFunctions) )
+            RET_ONERROR( mywritef(f, "        public %s%sDataClass%d() {\n", 
+                                  TheApp->getPrefix(), getVariableName(), 
+                                  m_numberCDataFunctions) )
         } else
             RET_ONERROR( mywritef(f, "    void %sDataFunction%d() {\n", 
                                   getVariableName(), m_numberCDataFunctions,  
@@ -1891,12 +1900,12 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
         int offset = 0;
         for (int i = 0; i < numberFunctions; i++) {
             if ((!cont) && languageFlag & MANY_JAVA_CLASSES) {
-                RET_ONERROR( mywritef(f, "    class %sDataClass%d {\n", 
-                                      getVariableName(), 
+                RET_ONERROR( mywritef(f, "    class %s%sDataClass%d {\n", 
+                                      TheApp->getPrefix(), getVariableName(), 
                                       m_numberCDataFunctions,  
                                       (const char*)getClassName()) )    
-                RET_ONERROR( mywritef(f, "        public %sDataClass%d() {\n",
-                                      getVariableName(), 
+                RET_ONERROR( mywritef(f, "        public %s%sDataClass%d() {\n",
+                                      TheApp->getPrefix(), getVariableName(), 
                                       m_numberCDataFunctions) )    
             } else
                 RET_ONERROR( mywritef(f, "    void %sDataFunction%d() {\n", 
@@ -2017,7 +2026,7 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
         if (value->isArrayInC()) {
             if (languageFlag & JAVA_SOURCE)
                 RET_ONERROR( mywritestr(f, "    ") )
-            RET_ONERROR( mywritestr(f, "         {\n") )
+            RET_ONERROR( mywritestr(f, "    {\n") )
         }
         RET_ONERROR( mywritestr(f, "    ") )
         if (languageFlag & JAVA_SOURCE) {       

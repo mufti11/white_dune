@@ -434,20 +434,23 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
                                    break;
                                 continue;
                             }    
-                            for (; item != NULL; 
-                                item = swTreeGetNextItem(m_tree, item)) {
-                                tmpItem = item;
+                            for (; tmpItem != NULL; 
+                                tmpItem = swTreeGetNextItem(m_tree, item)) {
                                 if (tmpItem) {
-                                    item = tmpItem;
                                     TreeNode *t = (TreeNode *) 
                                         swTreeGetItemData(m_tree, item);
                                     if (t && t->node && t->node->isEqual(node))
+                                    {
+                                        item = tmpItem;
                                         isNode = true;
+                                    }
                                     if (t->node == updatePath->getNode()) {
+                                        item = tmpItem;
                                         endloops=true;
                                         break;
                                     }
                                     if (isNode && t && t->field == field) {
+                                        item = tmpItem;
                                         break;
                                     }
                                 }

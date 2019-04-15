@@ -32,58 +32,49 @@
 #include "Proto.h"
 #endif
 
+#include "ViewpointNode.h"
 #include "SFMFTypes.h"
 
-class ProtoGeoViewpoint : public GeoProto {
+class ProtoGeoViewpoint : public ViewpointProto {
 public:
                     ProtoGeoViewpoint(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_GEO_VIEWPOINT; }
+    virtual int     getNodeClass() const 
+                        { return CHILD_NODE | VIEWPOINT_NODE; }
 
-    FieldIndex centerOfRotation;
-    FieldIndex description;
-    FieldIndex fieldOfView;
-    FieldIndex headlight;
-    FieldIndex navType;
-    FieldIndex jump;
-    FieldIndex orientation;
     FieldIndex position;
     FieldIndex positionX3D;
-    FieldIndex retainUserOffsets;
-    FieldIndex speedFactor;
-    FieldIndex elevationScaling;
 
-    // not fields but eventIn/eventOut
-    FieldIndex set_bind;
+    FieldIndex geoOrigin;
+    FieldIndex geoSystem;
 
     virtual int     translateField(int field) const;
 };
 
-class NodeGeoViewpoint : public GeoNode {
+class NodeGeoViewpoint : public ViewpointNode {
 public:
                     NodeGeoViewpoint(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
+    virtual const char* getComponentName(void) const { return "Geospatial"; }
+    virtual int         getComponentLevel(void) const { return 1; }
     virtual Node   *copy() const { return new NodeGeoViewpoint(*this); }
 
     void            setField(int index, FieldValue *value, int cf = -1);
     Node           *convert2Vrml(void);
 
-    fieldMacros(SFVec3d,    centerOfRotation,  ProtoGeoViewpoint)
-    fieldMacros(SFString,   description,       ProtoGeoViewpoint)
-    fieldMacros(SFFloat,    fieldOfView,       ProtoGeoViewpoint)
-    fieldMacros(SFBool,     headlight,         ProtoGeoViewpoint)
-    fieldMacros(SFBool,     jump,              ProtoGeoViewpoint)
-    fieldMacros(MFString,   navType,           ProtoGeoViewpoint)
-    fieldMacros(SFRotation, orientation,       ProtoGeoViewpoint)
-    fieldMacros(SFString,   position,          ProtoGeoViewpoint)
-    fieldMacros(SFVec3d,    positionX3D,       ProtoGeoViewpoint)
-    fieldMacros(SFBool,     retainUserOffsets, ProtoGeoViewpoint)
-    fieldMacros(SFFloat,    speedFactor,       ProtoGeoViewpoint)
-    fieldMacros(SFBool,     elevationScaling,  ProtoGeoViewpoint)
-    fieldMacros(SFBool,     set_bind,          ProtoGeoViewpoint)
+    void            apply(bool useStereo = TheApp->useStereo());
+
+    Vec3d           getPosition() const;       
+
+    fieldMacros(SFString,   position,    ProtoGeoViewpoint)
+    fieldMacros(SFVec3d,    positionX3D, ProtoGeoViewpoint)
+
+    fieldMacros(SFNode,     geoOrigin,   ProtoGeoViewpoint)
+    fieldMacros(MFString,   geoSystem,   ProtoGeoViewpoint)
 };
 
 #endif // _NODE_GEO_VIEWPOINT_H

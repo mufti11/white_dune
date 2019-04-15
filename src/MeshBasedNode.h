@@ -36,11 +36,14 @@ class MFVec3f;
 class MFVec2f;
 class MFInt32;
 class MyMesh;
+class MyMeshDouble;
 class FaceData;
 class NodeIndexedFaceSet;
 
 class MeshBased {
 public:
+    void            updateMesh(void);
+    
     virtual void    meshDraw();
     virtual void    drawNormals();
 
@@ -65,10 +68,20 @@ public:
     MFVec3f        *getSmoothNormals(void);
     MFInt32        *getSmoothNormalIndex(void);
 
-    bool            meshDirty(void) { return (m_mesh == NULL) || m_meshDirty; }
+    void            setDoubleMesh(bool flag) { m_isDoubleMesh = flag; }
+    bool            getDoubleMesh(void) { return m_isDoubleMesh; }
+
+    bool            meshDirty(void) 
+                        {
+                        if (m_isDoubleMesh)
+                            return (m_meshDouble == NULL) || m_meshDirty; 
+                        return (m_mesh == NULL) || m_meshDirty; 
+                        }
 
 protected:
     MyMesh         *m_mesh;
+    MyMeshDouble   *m_meshDouble;
+    bool            m_isDoubleMesh;  
     bool            m_meshDirty;
 };
 
@@ -155,6 +168,7 @@ public:
     NodeIndexedFaceSet *subdivide(void);
 
     virtual MyMesh *getMesh(void);
+    virtual MyMeshDouble *getMeshDouble(void);
 };
 
 #endif // _MESH_BASED_NODE_H

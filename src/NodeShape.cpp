@@ -161,7 +161,7 @@ NodeShape::isLit() const
 void
 NodeShape::doSpecularPass(Node *appearance, Node *geometry)
 {
-    if (!glIsEnabled(GL_TEXTURE_2D)) return;
+//    if (!glIsEnabled(GL_TEXTURE_2D)) return;
 
     if (appearance != NULL) {
         Node *material = ((SFNode *) 

@@ -29,6 +29,7 @@
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "DuneApp.h"
 #include "Util.h"
 
@@ -67,7 +68,11 @@ NodePointSet::draw()
     if (ncoord != NULL) {
         glPushName(coord_Field());       // field coord
         glPushName(0);                   // index 0
-        ((NodeCoordinate *)ncoord)->draw(this);
+        if (ncoord->getType() == VRML_COORDINATE)
+            ((NodeCoordinate *)ncoord)->draw(this);
+        else if (ncoord->getType() == VRML_GEO_COORDINATE) {
+            ((NodeGeoCoordinate *)ncoord)->draw(this);
+        }
         glPopName();
         glPopName();
     }
@@ -110,17 +115,28 @@ NodePointSet::pointDraw()
         Util::myGlColor4fv(c);
     }
 
-    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
+    if (!coord)
         return;
 
-    MFVec3f *coords = ((NodeCoordinate *) coord)->point();
-    int coordSize = coords->getSFSize();
+    MFVec3f *coords = NULL;
+    MFVec3d *coordsDouble = NULL;
+    int coordSize;
+    if (coord->getType() == VRML_COORDINATE) {
+        coords = ((NodeCoordinate *) coord)->point();
+        coordSize = coords->getSFSize();
+    } else {
+        coordsDouble = ((NodeGeoCoordinate *) coord)->pointX3D();
+        coordSize = coordsDouble->getSFSize();
+    }
 
     glBegin(GL_POINTS);
     for (int i = 0; i < coordSize; i++) {
         if (i < colorSize)
             Util::myGlColor3fv(colors->getValues() + i * colorInc);
-        glVertex3fv(coords->getValue(i));
+        if (coords)
+            glVertex3fv(coords->getValue(i));
+        else
+            glVertex3dv(coordsDouble->getValue(i));
     }
     glEnd();
     glEnable(GL_LIGHTING);

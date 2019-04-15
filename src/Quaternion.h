@@ -41,12 +41,14 @@ public:
     Quaternion  operator *(float f) const;
     Quaternion  operator *(const Quaternion &q2) const;
     Vec3f       operator *(const Vec3f &v) const;
+    Vec3d       operator *(const Vec3d &v) const;
 
 public:
     float       x, y, z, w;
 };
 
 Vec3f      operator *(const Vec3f &v,const Quaternion &q);
+Vec3d      operator *(const Vec3d &v,const Quaternion &q);
 
 inline void printf(Quaternion quat) { printf("%f %f %f %f\n", 
                                              quat.x, quat.y, quat.z, quat.w); }

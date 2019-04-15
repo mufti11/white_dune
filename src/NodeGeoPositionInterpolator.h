@@ -1,7 +1,7 @@
 /*
  * NodeGeoPositionInterpolator.h
  *
- * Copyright (C) 1999 Stephen F. White
+ * Copyright (C) 1999 Stephen F. White, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,24 +32,26 @@
 #include "Proto.h"
 #endif
 
+#include "Interpolator.h"
 #include "SFMFTypes.h"
 
-class ProtoGeoPositionInterpolator : public GeoProto {
+class ProtoGeoPositionInterpolator : public ProtoInterpolator {
 public:
                     ProtoGeoPositionInterpolator(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_GEO_POSITION_INTERPOLATOR; }
 
-    FieldIndex key;
-    FieldIndex keyValue;
-    FieldIndex keyValueX3D;
+    FieldIndex keyValueVRML;
     FieldIndex onGreatCircle;
+
+    FieldIndex geoOrigin;
+    FieldIndex geoSystem;
 
     virtual int     translateField(int field) const;
 };
 
-class NodeGeoPositionInterpolator : public GeoNode {
+class NodeGeoPositionInterpolator : public Interpolator {
 public:
                     NodeGeoPositionInterpolator(Scene *scene, Proto *proto);
 
@@ -64,24 +66,28 @@ public:
 
     virtual bool    hasX3domOnoutputchange(void) { return true; } 
 
-/*
-    virtual FieldValue *createKey(float *value) const;
-    virtual FieldValue *createKeys(float *values, int numKeys) const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
 
-    ADD_FLIP
-    ADD_SWAP
-*/
+    virtual float       getKeyValue(int channel, int index) const;
 
-    void            setField(int index, FieldValue *value, int cf = -1);
+    virtual FieldValue *getInterpolatedFieldValue(float k);
 
-    Node           *convert2Vrml(void);
+    virtual void        setKeyValue(int channel, int index, float value);
 
-    fieldMacros(MFFloat,  key,           ProtoGeoPositionInterpolator);
-    fieldMacros(MFString, keyValue,      ProtoGeoPositionInterpolator)
-    fieldMacros(MFVec3d,  keyValueX3D,   ProtoGeoPositionInterpolator)
+    virtual void        insertKey(int pos, float key, const float *values);
+
+    void                interpolate(float key, double *values); 
+
+    void                setField(int index, FieldValue *value, int cf = -1);
+
+    Node               *convert2Vrml(void);
+
+    fieldMacros(MFVec3d,  keyValue,      ProtoGeoPositionInterpolator)
+    fieldMacros(MFString, keyValueVRML,  ProtoGeoPositionInterpolator)
     fieldMacros(SFBool,   onGreatCircle, ProtoGeoPositionInterpolator) 
+    fieldMacros(SFNode,   geoOrigin,     ProtoGeoPositionInterpolator)
+    fieldMacros(MFString, geoSystem,     ProtoGeoPositionInterpolator)
 };
 
 #endif // _NODE_GEO_POSITION_INTERPOLATOR_H
-
-

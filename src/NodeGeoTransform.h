@@ -67,6 +67,17 @@ public:
 
     virtual bool    showFields() { return true; }
 
+    virtual void    transform();
+
+    virtual void    setField(int field, FieldValue *value, int cf = -1)
+                        { 
+                        m_matrixDirty = true; 
+                        Node::setField(field, value, cf);
+                        }
+
+    virtual void    preDraw();
+    virtual void    draw(int pass); 
+
     fieldMacros(MFNode, children, ProtoGeoTransform);
     fieldMacros(SFVec3d, geoCenter, ProtoGeoTransform);
     fieldMacros(SFRotation, rotation, ProtoGeoTransform);
@@ -77,6 +88,10 @@ public:
     fieldMacros(SFVec3f, bboxSize, ProtoGeoTransform);
     fieldMacros(SFBool, globalGeoOrigin, ProtoGeoTransform);
     fieldMacros(SFBool, render, ProtoGeoTransform)
+
+protected:
+    bool              m_matrixDirty;
+    Matrixd           m_matrix;
 };
 
 #endif

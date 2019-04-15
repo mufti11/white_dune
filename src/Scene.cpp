@@ -102,6 +102,7 @@ extern "C" {
 #include "NodeNavigationInfo.h"
 #include "NodeViewpoint.h"
 #include "NodeOrthoViewpoint.h"
+#include "NodeGeoViewpoint.h"
 #include "NodeBackground.h"
 #include "NodeCurveAnimation.h"
 #include "NodeFog.h"
@@ -609,7 +610,8 @@ static bool loadMultimedia(Node *node, void *data)
 {
     if ((node->getType() == VRML_IMAGE_TEXTURE) ||
         (node->getType() == VRML_AUDIO_CLIP) ||
-        (node->getType() == VRML_MOVIE_TEXTURE) || 
+        (node->getType() == VRML_MOVIE_TEXTURE) ||
+        (node->getType() == VRML_GEO_LOD) || 
         (node->getType() == X3DOM_BINARY_GEOMETRY) ||
         (node->getType() == X3DOM_EXTERNAL_GEOMETRY) ||
         (node->getType() == X3DOM_POP_GEOMETRY_LEVEL) ||
@@ -2160,7 +2162,7 @@ Scene::writeCDataFunctionsCalls(int f, int languageFlag)
                                   TheApp->getCPrefix(), getNumDataClasses()) )
         }
         RET_ONERROR( mywritef(f, 
-            "     public static void data%sFunction%d() {\n",
+            "    public static void data%sFunction%d() {\n",
             TheApp->getCPrefix(), getNumDataClasses() + i) )
         increaseNumDataClasses();
     }
@@ -2630,7 +2632,6 @@ Scene::writeC(int f, int languageFlag)
 
         if (m_root->writeCDataAsFunctions(f, languageFlag))
             return -1;
-        RET_ONERROR( mywritestr(f, "\n") )        
 
         if (languageFlag & MANY_JAVA_CLASSES) {
             RET_ONERROR( mywritef(f, "class %sScenegraphFunctions%d {\n", 
@@ -4503,7 +4504,7 @@ Scene::startWalking()
 void
 Scene::walkCamera(Vec3f walk, bool forward)
 {
-    Vec3f pos(m_currentViewpoint->getPosition());
+    Vec3d pos(m_currentViewpoint->getPosition());
     Quaternion rot(m_currentViewpoint->getOrientation());
     float fspeed = m_currentNavigationInfo->speed()->getValue();
     double dt = swGetCurrentTime() - m_oldWalkTime;
@@ -4515,7 +4516,7 @@ Scene::walkCamera(Vec3f walk, bool forward)
         rot.normalize();
         m_currentViewpoint->setOrientation(newRot);
         float z = dt * walk.z * 2.0f;
-        m_currentViewpoint->setPosition(pos + rot * fspeed * Vec3f(0, 0, z));
+        m_currentViewpoint->setPosition(pos + rot * fspeed * Vec3d(0, 0, z));
         UpdateViews(NULL, UPDATE_REDRAW_3D);
     } else {
          Vec3f vec(dt * fspeed * walk.x * 2.0f, dt * fspeed * walk.y * 2.0f, 0);
@@ -4549,7 +4550,7 @@ Scene::changeTurnPointDistance(float factor)
 void
 Scene::moveCamera(float dx, float dy, float dz)
 {
-    Vec3f pos = m_currentViewpoint->getPosition();
+    Vec3d pos = m_currentViewpoint->getPosition();
     Quaternion rot = m_currentViewpoint->getOrientation();
 
     float fspeed = m_currentNavigationInfo->speed()->getValue();
@@ -4581,7 +4582,7 @@ Scene::setTurnPoint(void)
 void
 Scene::orbitCamera(float dtheta, float dphi)
 {    
-    Vec3f pos(m_currentViewpoint->getPosition());
+    Vec3d pos(m_currentViewpoint->getPosition());
     Quaternion rot(m_currentViewpoint->getOrientation());
     Quaternion up(Vec3f(0.0f, 1.0f, 0.0f), dtheta);
     Quaternion around(Vec3f(1.0f, 0.0f, 0.0f), dphi);
@@ -4599,7 +4600,7 @@ Scene::orbitCamera(float dtheta, float dphi)
 
     dist = dist * fdist;
 
-    Vec3f newPos = m_turnPointPos - dist + dist * m_turnPointRot.conj() * 
+    Vec3d newPos = m_turnPointPos - dist + dist * m_turnPointRot.conj() * 
                                                   newRot;
     if (TheApp->GetMouseMode() == MOUSE_EXAMINE)
         m_currentViewpoint->setPosition(newPos);
@@ -4612,14 +4613,14 @@ Scene::orbitCamera(float dtheta, float dphi)
 void
 Scene::rollCamera(float dtheta)
 {    
-    Vec3f pos(m_currentViewpoint->getPosition());
+    Vec3d pos(m_currentViewpoint->getPosition());
     Quaternion rot(m_currentViewpoint->getOrientation());
     Quaternion roll(Vec3f(0.0f, 0.0f, -1.0f), dtheta);
     Quaternion newRot(roll * rot);
     newRot.normalize();
     rot.normalize();
 
-    Vec3f newPos(rot.conj() * pos * newRot);
+    Vec3d newPos(rot.conj() * pos * newRot);
 
     if (TheApp->GetMouseMode() == MOUSE_EXAMINE) {
         m_currentViewpoint->setPosition(newPos);
@@ -4748,6 +4749,10 @@ Scene::setSelection(Path *path)
             m_currentViewpoint = (NodeViewpoint *)node;
             applyCamera();
         }
+        if (node->getType() == VRML_GEO_VIEWPOINT) {
+            m_currentViewpoint = (NodeGeoViewpoint *)node;
+            applyCamera();
+        }
         if (node->getType() == VRML_NAVIGATION_INFO) {
             m_currentNavigationInfo = (NodeNavigationInfo *)node;
             applyNavigationInfo();
@@ -4873,6 +4878,8 @@ Scene::applyCamera()
     if (getSelection()->getNode() &&
         getSelection()->getNode()->getType() == X3D_ORTHO_VIEWPOINT)
         ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
+    else if (m_currentViewpoint->getType() == VRML_GEO_VIEWPOINT)
+        ((NodeGeoViewpoint *)m_currentViewpoint)->apply();
     else
         ((NodeViewpoint *)m_currentViewpoint)->apply();
 
@@ -4999,7 +5006,8 @@ void
 Scene::OnFieldChange(Node *node, int field, int index)
 {
     static double time = 0;
-    if (node->getType() == VRML_VIEWPOINT)
+    if ((node->getType() == VRML_VIEWPOINT) || 
+        (node->getType() == VRML_GEO_VIEWPOINT))
         if (node != getSelection()->getNode())
             return;
     if ((!m_running) || (!(time == m_currentTime)))
@@ -6094,6 +6102,8 @@ static bool searchBindableNodes(Node *node, void *data)
 {
     Scene *scene = (Scene *)data;
     if (node->getType() == VRML_VIEWPOINT)
+        scene->addViewpoint(node);
+    if (node->getType() == VRML_GEO_VIEWPOINT)
         scene->addViewpoint(node);
     else if (node->getType() == X3D_ORTHO_VIEWPOINT)
         scene->addViewpoint(node);

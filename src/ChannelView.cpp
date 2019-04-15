@@ -238,12 +238,12 @@ static float getStep(float ratio)
 {
     float step = 1.0f;
 
-    while (ratio > GRID_MIN) {
+    while ((ratio != 0) && (ratio > GRID_MIN)) {
         ratio *= 0.1f;
         step *= 0.1f;
     }
 
-    while (ratio < GRID_MIN) {
+    while ((ratio != 0) && (ratio < GRID_MIN)) {
         ratio *= 10.0f;
         step *= 10.0f;
     }

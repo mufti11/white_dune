@@ -81,15 +81,15 @@ NodeBillboard::transform()
 
     if (a[0] == 0.0f && a[1] == 0.0f && a[2] == 0.0f) {
         Matrix mat;
-        Vec3f cam(m_scene->getCamera()->getPosition());
+        Vec3d cam(m_scene->getCamera()->getPosition());
 
         // rotate local Z axis into billboard->viewer vector
 
-        Vec3f bvec(cam);
+        Vec3d bvec(cam);
         bvec.normalize();
-        static const Vec3f zvec(0.0f, 0.0f, 1.0f);
+        static const Vec3d zvec(0.0f, 0.0f, 1.0f);
 
-        Vec3f axis1(bvec.cross(zvec));
+        Vec3d axis1(bvec.cross(zvec));
         axis1.normalize();
 
         float phi = (float) acos(bvec.dot(zvec));

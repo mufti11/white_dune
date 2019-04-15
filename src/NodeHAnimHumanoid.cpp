@@ -525,7 +525,7 @@ static bool searchMeshes(Node *node, void *data)
             firstMaterial = (NodeMaterial *)node;
     } else if (node->isMeshBasedNode()) {
         MyMesh **mesh = (MyMesh **)data;
-        mesh[numMeshes] = node->getMesh()->copy();
+        mesh[numMeshes] = (MyMesh *)node->getMesh()->copy();
         numMeshes++;
         meshNodes.append((MeshBasedNode *)node);
     }
@@ -547,7 +547,7 @@ static bool addToMesh(Node *node, void *data)
     } else if (node->isMeshBasedNode() && node->getMesh()) {
         MyMesh **mesh = (MyMesh **)data;
         if (newSkinMesh) {
-            mesh[numMeshes] = node->getMesh()->copy();
+            mesh[numMeshes] = (MyMesh *)node->getMesh()->copy();
             int numVertices = mesh[numMeshes]->getVertices()->getSFSize();
             MFColorRGBA *color = new MFColorRGBA();
             for (int i = 0; i < numVertices; i++)

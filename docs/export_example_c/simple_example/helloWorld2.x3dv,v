@@ -1,0 +1,150 @@
+head	1.7;
+access;
+symbols;
+locks
+	mufti:1.7; strict;
+comment	@# @;
+
+
+1.7
+date	2019.04.13.10.05.09;	author mufti;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2019.04.13.10.05.09;	author mufti;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2019.04.13.10.04.58;	author mufti;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2019.04.13.10.04.57;	author mufti;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2019.04.13.10.04.15;	author mufti;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2019.04.13.10.03.11;	author mufti;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2019.04.13.10.03.11;	author mufti;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.7
+log
+@*** empty log message ***
+@
+text
+@#X3D V3.0 utf8
+PROFILE Interchange
+
+Viewpoint {
+  description "Hello 2"
+  position 0 0 10.100000
+}
+
+@
+
+
+1.6
+log
+@*** empty log message ***
+@
+text
+@d5 2
+@
+
+
+1.5
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.4
+log
+@*** empty log message ***
+@
+text
+@d4 3
+@
+
+
+1.3
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d2 1
+a2 36
+PROFILE Immersive
+
+PROTO Test
+  [
+  initializeOnly SFColor diffuseColor 0 0 0
+  inputOutput MFString string "Hello PROTO"
+  ]
+{
+Transform
+  {
+  children 
+    Shape
+      {
+      appearance Appearance
+	{
+	material Material
+	  {
+	  }
+	}
+      geometry Text
+	{
+	string IS string
+	}
+      }
+  }
+
+}
+
+Transform
+  {
+  translation -3.37999987 2.53999996 0
+  children 
+    Test
+      {
+      }
+  }
+@

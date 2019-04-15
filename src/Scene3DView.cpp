@@ -1148,7 +1148,7 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
        camera->setOrientation(newrot);
     }
     if (tm->hasTranslation()) {
-       Vec3f v= inputDevice->get_vector(tm);
+       Vec3f v = inputDevice->get_vector(tm);
        Vec3f xyz;
        if ((inputDevice->isTracker()) || (inputDevice->isWand())) {
            xyz=newrot.conj()*(viewrot*v);
@@ -1157,11 +1157,11 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
        v[0]=xyz.x;
        v[1]=xyz.y;
        v[2]=xyz.z;
-       Vec3f vcamera=camera->getPosition();
+       Vec3d vcamera=camera->getPosition();
        v[0]=v[0]+vcamera.x;
        v[1]=v[1]+vcamera.y;
        v[2]=v[2]+vcamera.z;
-       camera->setPosition(v);
+       camera->setPosition(Vec3d(v.x, v.y, v.z));
     }
     m_scene->applyCamera();
     swInvalidateWindow(m_wnd);

@@ -33,9 +33,9 @@
 #include "Vec3f.h"
 #include "Scene.h"
 #include "NodeIndexedFaceSet.h"
-#include "NodeIndexedLineSet.h"
-#include "NodePointSet.h"
+#include "NodeNormal.h"
 #include "NodeShape.h"
+#include "MyMesh.h"
 
 ProtoGeoElevationGrid::ProtoGeoElevationGrid(Scene *scene)
   : GeoProto(scene, "GeoElevationGrid")
@@ -156,7 +156,7 @@ ProtoGeoElevationGrid::translateField(int field) const
 
 
 NodeGeoElevationGrid::NodeGeoElevationGrid(Scene *scene, Proto *def)
-  : GeoNode(scene, def)
+  : MeshBasedNode(scene, def)
 {
 }
 
@@ -210,7 +210,7 @@ NodeGeoElevationGrid::convert2Vrml(void)
     height(new MFFloat(dheight, heightX3D()->getSize()));
 
     const double fcreaseAngle = creaseAngleX3D()->getValue();
-    creaseAngle(new SFFloat(fcreaseAngle));
+    creaseAngle(new SFDouble(fcreaseAngle));
 
     const double *values = geoGridOriginX3D()->getValue();
     char buf[4096];
@@ -269,4 +269,142 @@ NodeGeoElevationGrid::getMaxHandle(void)
     return xDimension()->getValue() * zDimension()->getValue() - 1;
 }
 
+#define HEIGHT(i, j) ((i) + (j) * ixDimension < heightX3D()->getSize() ? \
+                      fheight[(i) + (j) * ixDimension] : 0)
+
+void
+NodeGeoElevationGrid::createMesh(bool cleanDoubleVertices, bool triangulate)
+{
+    Node *ncolor = color()->getValue();
+    Node *nnormal = normal()->getValue();
+    const double *fheight = heightX3D()->getValues();
+    int ixDimension = xDimension()->getValue();
+    int izDimension = zDimension()->getValue();
+
+    if (ixDimension == 0 || izDimension == 0) return;
+
+    MFVec3f *normals = nnormal ? ((NodeNormal *)nnormal)->vector() : NULL;
+    int meshFlags = 0;   
+    int numColorComponents = 3;
+    MFFloat *colors = NULL;
+    int colorSize = 0;
+    MFFloat *localColors = NULL;
+    MFInt32 *colorIndex = NULL;
+    if (ncolor) {
+        if (ncolor->getType() == VRML_COLOR) {
+            colors = ((NodeColor *)ncolor)->color();
+            colorSize = ((NodeColor *)ncolor)->color()->getSize();
+        } else if (ncolor->getType() == X3D_COLOR_RGBA) {
+            colors = ((NodeColorRGBA *)ncolor)->color();
+            colorSize = ((NodeColorRGBA *)ncolor)->color()->getSize();
+            meshFlags |= MESH_COLOR_RGBA;
+            numColorComponents = 4;
+        }
+        if (colorPerVertex()->getValue()) 
+            localColors = new MFFloat(colors->getValues(), colors->getSize());
+        else {
+            localColors = new MFFloat();
+            int numColors = 0;
+            int nColorC = numColorComponents;
+            for (int iz = 0; iz < izDimension - 1; iz++) {
+                for (int ix = 0; ix < ixDimension - 1; ix++) {
+                    for (int j = 0; j < nColorC; j++) {
+                        int index = (iz * (ixDimension - 1) + ix) * nColorC + j;
+                        int localIndex = numColors * nColorC * 2 + j;
+                        if (index < colorSize) {
+                            localColors->setValue(localIndex, 
+                                                  colors->getValue(index));
+                            localColors->setValue(localIndex + nColorC, 
+                                                  colors->getValue(index));
+                        } else
+                            swDebugf("not enough colors in ElevationGrid\n"); 
+                    }
+                    numColors++;
+                }
+            }
+        }
+    }
+
+    int size = ixDimension * izDimension;
+    double *vertices = new double[size * 3];
+
+    int index = 0;
+    int cindex = 0;
+
+    int *ci = new int[size * 8];
+
+    bool warning = false;
+    for (int j = 0; j < izDimension; j++) {
+        for (int i = 0; i < ixDimension; i++) {
+            if (((i + j * ixDimension) > height()->getSize()) && !warning) {
+                MyString valError = "";
+                valError += "validation error: ElevationGrid.height size ";
+                valError.catInt(height()->getSize());
+                valError += " do not fit to ixDimension=";
+                valError.catInt(ixDimension);
+                valError += " * izDimension=";
+                valError.catInt(izDimension);
+                TheApp->PrintMessageWindows(valError);
+                warning = true;
+                continue;
+            }
+            vertices[index * 3    ] = i * xSpacingX3D()->getValue();
+            vertices[index * 3 + 1] = HEIGHT(i, j);
+            vertices[index * 3 + 2] = j * zSpacingX3D()->getValue();
+            index++;
+            if ((j < izDimension-1) && (i < ixDimension-1)) {
+                ci[cindex++] = j * ixDimension + i;
+                ci[cindex++] = (j+1) * ixDimension + (i+1);
+                ci[cindex++] = j * ixDimension + (i+1);
+                ci[cindex++] = -1;
+                ci[cindex++] = j * ixDimension + i;
+                ci[cindex++] = (j+1) * ixDimension + i;
+                ci[cindex++] = (j+1) * ixDimension + (i+1);
+                ci[cindex++] = -1;
+            }
+        }
+    }
+    MFVec3d *v = new MFVec3d(vertices, size * 3);
+    MFInt32 *coordIndex = new MFInt32(ci, cindex);
+    if (colorPerVertex()->getValue()) { 
+        colorIndex = coordIndex;
+        colorIndex->ref();
+    }
+
+    MyArray<MFVec2f *> texCoords;
+    Util::getTexCoords(texCoords, texCoord()->getValue());    
+
+    if (ccw()->getValue())
+        meshFlags |= MESH_CCW;
+    if (solid()->getValue())
+        meshFlags |= MESH_SOLID;
+    if (colorPerVertex()->getValue())
+        meshFlags |= MESH_COLOR_PER_VERTEX;
+    if (normalPerVertex()->getValue())
+        meshFlags |= MESH_NORMAL_PER_VERTEX;
+
+    setDoubleMesh(true);
+    m_meshDouble = new MyMeshDouble(this, v, coordIndex, normals, NULL,
+                                    colorPerVertex()->getValue() ? colors : 
+                                                                   localColors, 
+                                    NULL, texCoords, NULL, 
+                                    creaseAngle()->getFixedAngle(
+                                        m_scene->getUnitAngle()), meshFlags);
+}
+void
+NodeGeoElevationGrid::draw()
+{
+    NodeGeoOrigin *origin = (NodeGeoOrigin *)geoOrigin()->getValue();
+ 
+    if (origin) {
+        Vec3d vec = origin->getVec();
+        glTranslated(vec.x, vec.y, vec.z);
+    }
+    setDoubleMesh(true);
+    updateMesh();
+    m_meshDouble->draw();
+}
+
 GeometryNodeMacros(NodeGeoElevationGrid)
+
+

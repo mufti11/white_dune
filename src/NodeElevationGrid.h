@@ -40,6 +40,7 @@ public:
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_ELEVATION_GRID; }
+    virtual int     getNodeClass() const { return GEOMETRY_NODE; }
 
     virtual bool    isMesh(void) { return true; }
 

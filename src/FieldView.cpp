@@ -361,8 +361,10 @@ void FieldView::UpdateAll(bool resetSelection)
                 if (m_selectedProto != NULL) {
                     value = m_selectedProto->getField(i)->getDefault(true);
                     value->ref();
-                } else if (m_selectedNode != NULL)
+                } else if (m_selectedNode != NULL) {
                     value = m_selectedNode->getField(i);
+                    value->ref();
+                }
                 Rect r1;
                 GetItemRect(numFields, &r1);
                 Rect rect(width0, r1.top, width0 + width1 - 1, r1.bottom);
@@ -377,6 +379,7 @@ void FieldView::UpdateAll(bool resetSelection)
 */
                 numFields++;
             }
+            RefreshItemList();
         }
     }
 
@@ -439,7 +442,7 @@ void FieldView::DrawItem(int index, SDC dc)
         swFillRect(dc, r.left, r.top, r.Width(), r.Height());
         swSetBGColor(dc, bg);
         if (parent->GetValue() && field) {
-            if (parent->GetValue()->equals(field->getDefault(x3d))) {
+            if (!parent->GetValue()->isDefaultValue()) {
                 fg = swGetWindowColor(m_window, SW_COLOR_HIGHLIGHT);
             } else {
                 fg = swGetWindowColor(m_window, SW_COLOR_TEXT);
@@ -500,8 +503,8 @@ void FieldView::DrawItem(int index, SDC dc)
         fg = swGetWindowColor(m_window, SW_COLOR_WINDOW_BG);
         int bg = swGetWindowColor(m_window, SW_COLOR_HIGHLIGHT);
         swSetBGColor(dc, bg);
-    } else if (parent->GetValue()) {
-        if (parent->GetValue()->equals(field->getDefault(x3d))) {
+    } else if (parent && parent->GetValue() && field) {
+        if (!parent->GetValue()->isDefaultValue()) {
             fg = swGetWindowColor(m_window, SW_COLOR_HIGHLIGHT);
             int bg = swGetWindowColor(m_window, SW_COLOR_WINDOW_BG);
             swSetBGColor(dc, bg);

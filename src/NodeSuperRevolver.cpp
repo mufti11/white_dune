@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include "stdafx.h"
 
+#include "MyMesh.h"
 #include "NodeSuperRevolver.h"
 #include "Proto.h"
 #include "DuneApp.h"
@@ -275,7 +276,7 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
                              cleanDoubleVertices);    
 
     MFInt32 *coordIndex = new MFInt32(ci, cindex);
-    MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex);
+    MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex, 0.0f);
     MyArray<MFVec2f *> texCoords;
     texCoords.append(texCoord);
 

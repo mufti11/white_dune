@@ -35,7 +35,9 @@
 #include "NodeMaterial.h"
 #include "NodeImageTexture.h"
 #include "NodeTextureTransform.h"
+#include "NodeGeoOrigin.h"
 #include "GeometryNode.h"
+#include "MeshBasedNode.h"
 
 #include "SFMFTypes.h"
 
@@ -46,6 +48,8 @@ public:
 
     virtual int     getType() const { return VRML_GEO_ELEVATION_GRID; }
     virtual int     getNodeClass() const { return GEOMETRY_NODE; }
+
+    virtual bool    isMesh(void) { return true; }
 
     FieldIndex color;
     FieldIndex normal;
@@ -73,13 +77,17 @@ public:
     virtual int     translateField(int field) const;
 };
 
-class NodeGeoElevationGrid : public GeoNode {
+class NodeGeoElevationGrid : public MeshBasedNode {
 public:
                     NodeGeoElevationGrid(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
+    virtual const char* getComponentName(void) const { return "Geospatial"; }
+    virtual int         getComponentLevel(void) const { return 1; }
     virtual Node   *copy() const { return new NodeGeoElevationGrid(*this); }
+
+    virtual void    draw();
 
     virtual bool    hasTwoSides(void) { return true; }
     virtual bool    isDoubleSided(void) { return !solid()->getValue(); }
@@ -113,7 +121,7 @@ public:
     fieldMacros(MFDouble, heightX3D,        ProtoGeoElevationGrid)
     fieldMacros(SFBool,   ccw,              ProtoGeoElevationGrid)
     fieldMacros(SFBool,   colorPerVertex,   ProtoGeoElevationGrid)
-    fieldMacros(SFFloat,  creaseAngle,      ProtoGeoElevationGrid)
+    fieldMacros(SFDouble, creaseAngle,      ProtoGeoElevationGrid)
     fieldMacros(SFDouble, creaseAngleX3D,   ProtoGeoElevationGrid)
     fieldMacros(SFString, geoGridOrigin,    ProtoGeoElevationGrid)
     fieldMacros(SFVec3d,  geoGridOriginX3D, ProtoGeoElevationGrid)
@@ -125,7 +133,16 @@ public:
     fieldMacros(SFInt32,  zDimension,       ProtoGeoElevationGrid)
     fieldMacros(SFString, zSpacing,         ProtoGeoElevationGrid)
     fieldMacros(SFDouble, zSpacingX3D,      ProtoGeoElevationGrid)
+
+    fieldMacros(SFNode,   geoOrigin, GeoProto)
+    fieldMacros(MFString, geoSystem, GeoProto)
+
+
     x3domGeometryCommonFieldMacros(ProtoGeoElevationGrid)
+
+protected:
+    void            createMesh(bool cleanDoubleVertices = true,
+                               bool triangulate = true);
 };
 
 #endif // _NODE_GEO_ELEVATION_GRID_H

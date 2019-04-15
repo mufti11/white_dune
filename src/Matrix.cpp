@@ -86,6 +86,20 @@ Matrix::operator *(const Vec3f &v) const
     return r * iw;
 }
 
+Vec3d
+Matrix::operator *(const Vec3d &v) const
+{
+    Vec3d r;
+    float iw;
+
+    r.x = m_mat[0][0]*v.x + m_mat[1][0]*v.y + m_mat[2][0]*v.z + m_mat[3][0];
+    r.y = m_mat[0][1]*v.x + m_mat[1][1]*v.y + m_mat[2][1]*v.z + m_mat[3][1];
+    r.z = m_mat[0][2]*v.x + m_mat[1][2]*v.y + m_mat[2][2]*v.z + m_mat[3][2];
+    iw = 1.0f / (m_mat[0][3]*v.x + m_mat[1][3]*v.y + m_mat[2][3]*v.z + m_mat[3][3]);
+    
+    return r * iw;
+}
+
 void
 Matrix::getValue(float mat[4][4]) const
 {

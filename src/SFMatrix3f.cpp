@@ -112,11 +112,11 @@ SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag) cons
     if (languageFlag & C_SOURCE)
         RET_ONERROR( mywritestr(filedes, "9") )
     RET_ONERROR( mywritestr(filedes, "] = { ") )
-    RET_ONERROR( mywritef(filedes, "%gf, %gf, %gf, ",
+    RET_ONERROR( mywritef(filedes, "%g, %g, %g, ",
                           m_value[0], m_value[1], m_value[2]) )
-    RET_ONERROR( mywritef(filedes, "%gf, %gf, %gf, ",
+    RET_ONERROR( mywritef(filedes, "%g, %g, %g, ",
                           m_value[3], m_value[4], m_value[5]) )
-    RET_ONERROR( mywritef(filedes, "%gf, %gf, %gf\n", 
+    RET_ONERROR( mywritef(filedes, "%g, %g, %g\n", 
                           m_value[6], m_value[7], m_value[8]) )
     RET_ONERROR( mywritestr(filedes, " };\n") )
     return 0;

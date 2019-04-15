@@ -1342,6 +1342,8 @@ static int sniffImageFileHeader(char *filename) {
     UNUSED(rvt);
 
     FILE* fp = fopen(filename,"rb");
+    if (fp == NULL)
+        return -1;
     rvt=fread(header,20,1,fp);
     fclose(fp);
 
@@ -1580,9 +1582,9 @@ encoding: raw
         //read data
         if(iencoding == NRRDENCODING_RAW){
             int dataLittleEndian;
-            size_t nelem_read, element_size = 0L;
+            size_t element_size = 0L;
             element_size = bsize;
-            nelem_read = fread(data,element_size, (size_t)nvoxel,fp);
+            fread(data,element_size, (size_t)nvoxel,fp);
 //            printf("num elems read = %llu elemsize %ld bytes requeted = %llu %llu\n",(unsigned long long)nelem_read,(long)bsize,bsize*nvoxel,totalbytes);
             //endian conversion
             dataLittleEndian = iendian == NRRDENDIAN_LITTLE ? TRUE : FALSE;

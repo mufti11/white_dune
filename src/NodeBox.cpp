@@ -35,7 +35,6 @@
 #include "MFNode.h"
 #include "SFNode.h"
 #include "SFInt32.h"
-//#include "MFFloat.h"
 #include "MFVec3f.h"
 #include "NodeShape.h"
 #include "NodeAppearance.h"
@@ -46,6 +45,7 @@
 #include "NodeNurbsGroup.h"
 #include "NodeNurbsSurface.h"
 #include "Util.h"
+#include "MyMesh.h"
 
 ProtoBox::ProtoBox(Scene *scene)
   : Proto(scene, "Box")

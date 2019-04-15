@@ -41,6 +41,7 @@
 #include "NodeTextureTransform.h"
 #include "NodeShape.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "NodePointSet.h"
 #include "Util.h"
 #include "LdrawDefines.h"
@@ -98,7 +99,11 @@ NodeIndexedLineSet::draw()
     if (ncoord != NULL) {
         glPushName(coord_Field());       // field coord
         glPushName(0);                   // index 0
-        ((NodeCoordinate *)ncoord)->draw(this);
+        if (ncoord->getType() == VRML_COORDINATE)
+            ((NodeCoordinate *)ncoord)->draw(this);
+        else if (ncoord->getType() == VRML_GEO_COORDINATE) {
+            ((NodeGeoCoordinate *)ncoord)->draw(this);
+        }
         glPopName();
         glPopName();
     }
@@ -144,11 +149,19 @@ NodeIndexedLineSet::lineDraw()
         Util::myGlColor4fv(c);
     }
 
-    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
+    if (!coord)
         return;
 
-    MFVec3f *coords = ((NodeCoordinate *) coord)->point();
-    int coordSize = coords->getSize();
+    MFVec3f *coords = NULL;
+    MFVec3d *coordsDouble = NULL;
+    int coordSize;
+    if (coord->getType() == VRML_COORDINATE) {
+        coords = ((NodeCoordinate *) coord)->point();
+        coordSize = coords->getSize();
+    } else {
+        coordsDouble = ((NodeGeoCoordinate *) coord)->pointX3D();
+        coordSize = coordsDouble->getSize();
+    }
 
     bool inSet = false;
 
@@ -183,7 +196,10 @@ NodeIndexedLineSet::lineDraw()
                     Util::myGlColor3fv(colors->getValues() + cindex);
             }
             if (index < coordSize) {
-                glVertex3fv(coords->getValue(index));
+                if (coords)
+                    glVertex3fv(coords->getValue(index));
+                else
+                    glVertex3dv(coordsDouble->getValue(index));
             }
         }
     }

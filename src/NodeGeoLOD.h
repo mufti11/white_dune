@@ -71,6 +71,12 @@ public:
 
     virtual bool    showFields() { return true; } 
 
+    virtual void    preDraw();
+    virtual void    draw(int pass);
+    void            accountNodeToDrawIndex();
+    void            loadChild(Node *node, MFString *urls);
+    virtual void    load();
+
     fieldMacros(SFVec3f,  bboxCenter, ProtoGeoLOD)
     fieldMacros(SFVec3f,  bboxSize,   ProtoGeoLOD)
     fieldMacros(SFString, center,     ProtoGeoLOD)
@@ -84,6 +90,14 @@ public:
     fieldMacros(MFNode,   rootNode,   ProtoGeoLOD)
     fieldMacros(SFString, referenceBindableDescription, ProtoGeoLOD)
     fieldMacros(SFBool,   render,     ProtoGeoLOD)
+
+protected:
+    int m_nodeToDrawIndex;
+    Node *m_root;
+    Node *m_child1;
+    Node *m_child2;
+    Node *m_child3;
+    Node *m_child4;
 };
 
 #endif // _NODE_GEO_LOD_H

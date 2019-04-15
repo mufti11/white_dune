@@ -198,9 +198,9 @@ Texture3DNode::drawTexture3D(Node *node, Scene *scene)
     const float *frotation = rot.getValue();
     glRotatef(RAD2DEG(frotation[3]),
               frotation[0], frotation[1], frotation[2]);
-    Vec3f pos = scene->getCamera()->getPosition();
-//     glTranslatef(-pos.x, -pos.y, -pos.z);
-//     glScalef(2, 2, 2);
+//    Vec3d pos = scene->getCamera()->getPosition();
+//    glTranslatef(-pos.x, -pos.y, -pos.z);
+//    glScalef(2, 2, 2);
 
     glMatrixMode(GL_TEXTURE);
     glLoadIdentity();

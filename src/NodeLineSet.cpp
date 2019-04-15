@@ -41,6 +41,7 @@
 #include "NodeTextureTransform.h"
 #include "NodeShape.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "Util.h"
 #include "LdrawDefines.h"
 
@@ -91,7 +92,11 @@ NodeLineSet::draw()
     if (ncoord != NULL) {
         glPushName(coord_Field());       // field coord
         glPushName(0);                   // index 0
-        ((NodeCoordinate *)ncoord)->draw(this);
+        if (ncoord->getType() == VRML_COORDINATE)
+             ((NodeCoordinate *)ncoord)->draw(this);
+        else if (ncoord->getType() == VRML_GEO_COORDINATE) {
+            ((NodeGeoCoordinate *)ncoord)->draw(this);
+        }
         glPopName();
         glPopName();
     }

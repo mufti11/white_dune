@@ -65,6 +65,9 @@ public:
 
     virtual bool    showFields() { return true; } 
 
+    virtual void      preDraw();
+    virtual void      draw(int pass); 
+
     fieldMacros(MFNode,   children,     ProtoGeoLocation)
     fieldMacros(SFString, geoCoords,    ProtoGeoLocation)
     fieldMacros(SFVec3d,  geoCoordsX3D, ProtoGeoLocation)

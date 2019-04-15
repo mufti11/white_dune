@@ -26,6 +26,7 @@
 #include "Scene.h"
 #include "Vec3f.h"
 #include "FaceData.h"
+#include "MyMesh.h"
 extern "C" {
 #include "subd_mesh.h"
 #include "subd.h"

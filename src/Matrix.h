@@ -36,6 +36,7 @@ public:
 
     Matrix          operator*(const Matrix &m) const;
     Vec3f           operator*(const Vec3f& v) const;
+    Vec3d           operator*(const Vec3d& v) const;
 
     operator        float *() { return (float *) m_mat; }
     operator        const float *() const { return (const float *) m_mat; }

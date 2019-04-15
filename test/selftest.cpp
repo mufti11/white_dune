@@ -137,6 +137,16 @@ int main(int argc, char *argv[])
                continue;
            if (strcmp(str, "CollidableShape") == 0)
                continue;
+           if (strcmp(str, "BooleanSequencer") == 0)
+               continue;
+           if (strcmp(str, "IntegerSequencer") == 0)
+               continue;
+           if (strcmp(str, "NurbsCurve") == 0)
+               continue;
+           if (strcmp(str, "NurbsSweptSurface") == 0)
+               continue;
+           if (strcmp(str, "NurbsSwungSurface") == 0)
+               continue;
 
            seed = time(0);
            printf("    srand48(%ld%s);\n", seed, "L");

@@ -36,23 +36,23 @@
 
 namespace p2t {
 
-struct Node;
+struct TriNode;
 
 // Advancing front node
-struct Node {
+struct TriNode {
   Point* point;
   Triangle* triangle;
 
-  Node* next;
-  Node* prev;
+  TriNode* next;
+  TriNode* prev;
 
   double value;
 
-  Node(Point& p) : point(&p), triangle(NULL), next(NULL), prev(NULL), value(p.x)
+  TriNode(Point& p) : point(&p), triangle(NULL), next(NULL), prev(NULL), value(p.x)
   {
   }
 
-  Node(Point& p, Triangle& t) : point(&p), triangle(&t), next(NULL), prev(NULL), value(p.x)
+  TriNode(Point& p, Triangle& t) : point(&p), triangle(&t), next(NULL), prev(NULL), value(p.x)
   {
   }
 
@@ -62,53 +62,53 @@ struct Node {
 class AdvancingFront {
 public:
 
-AdvancingFront(Node& head, Node& tail);
+AdvancingFront(TriNode& head, TriNode& tail);
 // Destructor
 ~AdvancingFront();
 
-Node* head();
-void set_head(Node* node);
-Node* tail();
-void set_tail(Node* node);
-Node* search();
-void set_search(Node* node);
+TriNode* head();
+void set_head(TriNode* node);
+TriNode* tail();
+void set_tail(TriNode* node);
+TriNode* search();
+void set_search(TriNode* node);
 
 /// Locate insertion point along advancing front
-Node* LocateNode(double x);
+TriNode* LocateNode(double x);
 
-Node* LocatePoint(const Point* point);
+TriNode* LocatePoint(const Point* point);
 
 private:
 
-Node* head_, *tail_, *search_node_;
+TriNode* head_, *tail_, *search_node_;
 
-Node* FindSearchNode(double x);
+TriNode* FindSearchNode(double x);
 };
 
-inline Node* AdvancingFront::head()
+inline TriNode* AdvancingFront::head()
 {
   return head_;
 }
-inline void AdvancingFront::set_head(Node* node)
+inline void AdvancingFront::set_head(TriNode* node)
 {
   head_ = node;
 }
 
-inline Node* AdvancingFront::tail()
+inline TriNode* AdvancingFront::tail()
 {
   return tail_;
 }
-inline void AdvancingFront::set_tail(Node* node)
+inline void AdvancingFront::set_tail(TriNode* node)
 {
   tail_ = node;
 }
 
-inline Node* AdvancingFront::search()
+inline TriNode* AdvancingFront::search()
 {
   return search_node_;
 }
 
-inline void AdvancingFront::set_search(Node* node)
+inline void AdvancingFront::set_search(TriNode* node)
 {
   search_node_ = node;
 }

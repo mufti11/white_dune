@@ -132,10 +132,11 @@ NodeOrthoViewpoint::transformForViewpoint(bool useStereo)
     glTranslatef(-pos[0], -pos[1], -pos[2]);
 }
 
-Vec3f
+Vec3d
 NodeOrthoViewpoint::getPosition() const
 {
-    return Vec3f(((NodeOrthoViewpoint *)this)->position()->getValue());
+     Vec3f vec(((NodeOrthoViewpoint *)this)->position()->getValue());
+     return Vec3d(vec.x, vec.y, vec.z);
 }
 
 void NodeOrthoViewpoint::setPosition(const Vec3f &pos)

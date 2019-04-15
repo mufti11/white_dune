@@ -64,7 +64,10 @@ static const char *DataType[] = {
     "String",
     "Time",
     "Vec2f",
-    "Vec3f"
+    "Vec3f",
+    "Double",
+    "Vec2d",
+    "Vec3d"
 };
 
 

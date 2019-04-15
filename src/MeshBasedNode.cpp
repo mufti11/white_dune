@@ -68,6 +68,8 @@ MeshBasedNode::MeshBasedNode(Scene *scene, Proto *proto)
 {
     assert(proto->isMesh());
     m_mesh = NULL;
+    m_meshDouble = NULL;
+    m_isDoubleMesh = false;
     m_meshDirty = true;
 }
 
@@ -75,95 +77,119 @@ MeshBasedNode::~MeshBasedNode()
 {
     delete m_mesh;
     m_mesh = NULL;
+    delete m_meshDouble;
+    m_meshDouble = NULL;
 }
 
+void 
+MeshBased::updateMesh(void)
+{
+    if (meshDirty()) {
+        if (m_isDoubleMesh) {
+            delete m_meshDouble;
+            m_meshDouble = NULL;
+            createMesh(this);
+        } else {
+            delete m_mesh;
+            m_mesh = NULL;
+            createMesh(this);
+        }
+        m_meshDirty = false;
+    }
+}
 
 void
 MeshBased::meshDraw()
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(this);
-        m_meshDirty = false;
+    updateMesh();
+
+    if (m_isDoubleMesh) {    
+        if (!m_meshDouble) return;
+
+        m_meshDouble->sort();
+        m_meshDouble->draw();
+    } else {
+        if (!m_mesh) return;
+
+        m_mesh->sort();
+        m_mesh->draw();
     }
-
-    if (!m_mesh) return;
-
-    m_mesh->sort();
-    m_mesh->draw();
 }
 
 void
 MeshBased::drawNormals()
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(this);
-        m_meshDirty = false;
+    updateMesh();
+
+    if (m_isDoubleMesh) {
+       if (!m_meshDouble) return;
+
+       m_meshDouble->drawNormals();
+    } else {
+       if (!m_mesh) return;
+
+       m_mesh->drawNormals();
     }
-
-    if (!m_mesh) return;
-
-    m_mesh->drawNormals();
 }
 
 MyMesh *
 MeshBasedNode::getMesh(void) {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(this);
-        m_meshDirty = false;
-    }
+    updateMesh(); 
     return m_mesh;
 }
 
+MyMeshDouble *
+MeshBasedNode::getMeshDouble(void) {
+    updateMesh(); 
+    return m_meshDouble;
+}
 
 bool    
 MeshBasedNode::hasColor(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(this);
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (!m_meshDouble) return false;
+
+        return m_meshDouble->hasColor();
+    } else {
+        if (!m_mesh) return false;
+
+        return m_mesh->hasColor();
     }
-
-    if (!m_mesh) return false;
-
-    return m_mesh->hasColor();
 }
 
 bool    
 MeshBasedNode::hasColorRGBA(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(this);
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (!m_meshDouble) return false;
+
+        return m_meshDouble->hasColorRGBA();
+    } else {
+        if (!m_mesh) return false;
+
+        return m_mesh->hasColorRGBA();
     }
-
-    if (!m_mesh) return false;
-
-    return m_mesh->hasColorRGBA();
 }
 
 bool    
 MeshBasedNode::hasColorPerVertex(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(this);
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+         if (!m_meshDouble) return false;
+
+         return m_meshDouble->colorPerVertex();
+    } else {
+         if (!m_mesh) return false;
+
+         return m_mesh->colorPerVertex();
     }
-
-    if (!m_mesh) return false;
-
-    return m_mesh->colorPerVertex();
 }
 
 Node * 
@@ -171,20 +197,25 @@ MeshBasedNode::toIndexedFaceSet(int meshFlags, bool cleanVertices,
                                 bool triangulate)
 {
     bool wantSimpleQuadTriangulate = (meshFlags & MESH_SIMPLE_TRIANGULATE);
-    if (meshDirty()) {
-        if (m_mesh != NULL)
-            delete m_mesh;
-        m_mesh = NULL;
-        createMesh(cleanVertices, triangulate);
-        if (wantSimpleQuadTriangulate)
-            m_mesh->simpleQuadTriangulate();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
 
+    if (m_isDoubleMesh) {
+       if (!m_meshDouble) return NULL;
+
+       if (wantSimpleQuadTriangulate)
+           m_meshDouble->simpleQuadTriangulate();
+
+       m_meshDirty = true;
+    
+       return m_meshDouble->toIndexedFaceSet(meshFlags, m_scene);
+    }
     if (!m_mesh) return NULL;
 
-    m_meshDirty = true;
+    if (wantSimpleQuadTriangulate)
+        m_mesh->simpleQuadTriangulate();
 
+    m_meshDirty = true;
+    
     return m_mesh->toIndexedFaceSet(meshFlags, m_scene);
 }
 
@@ -210,22 +241,18 @@ MeshBasedNode::toTriangleSet(int meshFlags)
     bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
     bool wantTexCoord = (meshFlags & MESH_WANT_TEX_COORD);
 
-    if (meshDirty()) {
-        float creaseAngle = m_mesh ? m_mesh->creaseAngle() : 0;
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(true);
-        if (m_mesh)
-            m_mesh->setCreaseAngle(creaseAngle);
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (!m_meshDouble) return NULL;
+    } else {
+        if (!m_mesh) return NULL;
     }
-
-    if (!m_mesh) return NULL;
-
     MyMesh *mesh = triangulateMesh();
 
-    NodeCoordinate *ncoord = (NodeCoordinate *)m_scene->createNode("Coordinate");
     MFVec3f *vertices = mesh->getVertices();
+
+    NodeCoordinate *ncoord = (NodeCoordinate *)m_scene->createNode("Coordinate");
     MFVec3f *points = new MFVec3f();
 
     MFInt32 *coordIndices = mesh->getCoordIndex();
@@ -342,20 +369,21 @@ MeshBasedNode::toIndexedTriangleSet(int meshFlags)
     bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
     bool wantTexCoord = (meshFlags & MESH_WANT_TEX_COORD);
 
-    if (meshDirty()) {
-        float creaseAngle = m_mesh ? m_mesh->creaseAngle() : 0;
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(true);
-        if (m_mesh)
-            m_mesh->setCreaseAngle(creaseAngle);
-        m_meshDirty = false;
-    }
+    updateMesh(); 
 
-    if (!m_mesh) return NULL;
+    bool solid;
+    bool ccw;
+    if (m_isDoubleMesh) {
+        if (!m_meshDouble) return NULL;
 
-    bool solid = m_mesh->solid();
-    bool ccw = m_mesh->ccw();
+        solid = m_meshDouble->solid();
+        ccw = m_meshDouble->ccw();
+    } else {
+        if (!m_mesh) return NULL;
+
+        solid = m_mesh->solid();
+        ccw = m_mesh->ccw();
+   }
 
     NodeTriangleSet *triangles = (NodeTriangleSet *)toTriangleSet(meshFlags);
     if (triangles == NULL)
@@ -414,26 +442,28 @@ MeshBasedNode::toIndexedTriangleSet(int meshFlags)
 Node * 
 MeshBasedNode::alreadyTriangulatedToIndexedTriangleSet(bool hasCcw)
 {
-    if (meshDirty()) {
-        float creaseAngle = m_mesh ? m_mesh->creaseAngle() : 0;
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh(true);
-        if (m_mesh)
-            m_mesh->setCreaseAngle(creaseAngle);
-        m_meshDirty = false;
+    updateMesh(); 
+
+    bool solid;
+    bool ccw;
+    MFInt32 *coordIndices;
+    if (m_isDoubleMesh) {
+        if (!m_meshDouble) return NULL;
+
+        coordIndices = m_mesh->getCoordIndex();
+        solid = m_meshDouble->solid();
+        ccw = m_meshDouble->ccw();
+    } else {
+        if (!m_mesh) return NULL;
+
+        coordIndices = m_mesh->getCoordIndex();
+        solid = m_mesh->solid();
+        ccw = m_mesh->ccw();
     }
 
-    if (!m_mesh) return NULL;
-
-    // already triangulated
-
-    MFInt32 *coordIndices = m_mesh->getCoordIndex();
-    MFInt32 *indices = new MFInt32();
-    bool solid = m_mesh->solid();
-    bool ccw = m_mesh->ccw();
     bool drawFront = !solid || !ccw;
     bool drawBack = !solid || ccw;
+    MFInt32 *indices = new MFInt32();
     if (hasCcw) {
         drawFront = true;
         drawBack = false;
@@ -458,21 +488,36 @@ MeshBasedNode::alreadyTriangulatedToIndexedTriangleSet(bool hasCcw)
                                m_scene->createNode("IndexedTriangleSet");
     node->coord(new SFNode(ncoord));
     NodeNormal *nnormal = NULL;
-    if (m_mesh->getNormals()) {
-        nnormal = (NodeNormal *)m_scene->createNode("Normal");
-        nnormal->vector(m_mesh->getNormals());
+    if (m_isDoubleMesh) {
+        if (m_meshDouble->getNormals()) {
+            nnormal = (NodeNormal *)m_scene->createNode("Normal");
+            nnormal->vector(m_meshDouble->getNormals());
+        }
+    } else {
+        if (m_mesh->getNormals()) {
+            nnormal = (NodeNormal *)m_scene->createNode("Normal");
+            nnormal->vector(m_mesh->getNormals());
+        }
     }
     if (nnormal)
         node->normal(new SFNode(nnormal));
     node->normalPerVertex(new SFBool(m_mesh->normalPerVertex()));
     node->index(new MFInt32(indices));
-    node->solid(new SFBool(m_mesh->solid()));
-    node->ccw(new SFBool(m_mesh->ccw()));
+    node->solid(new SFBool(solid));
+    node->ccw(new SFBool(ccw));
     NodeTextureCoordinate *ntexCoord = NULL;
-    if (m_mesh->getTexCoords()) {
-        ntexCoord = (NodeTextureCoordinate *)
-                    m_scene->createNode("TextureCoordinate");
-        ntexCoord->point(m_mesh->getTexCoords());
+    if (m_isDoubleMesh) {
+        if (m_meshDouble->getTexCoords()) {
+            ntexCoord = (NodeTextureCoordinate *)
+                        m_scene->createNode("TextureCoordinate");
+           ntexCoord->point(m_meshDouble->getTexCoords());
+        }
+    } else {
+        if (m_mesh->getTexCoords()) {
+            ntexCoord = (NodeTextureCoordinate *)
+                        m_scene->createNode("TextureCoordinate");
+           ntexCoord->point(m_mesh->getTexCoords());
+        }
     }
     if (ntexCoord)
         node->texCoord(new SFNode(ntexCoord));
@@ -484,41 +529,46 @@ MeshBasedNode::alreadyTriangulatedToIndexedTriangleSet(bool hasCcw)
 Vec3f
 MeshBasedNode::getMinBoundingBox(void) 
 { 
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     Vec3f ret(0, 0, 0);
-    if (m_mesh && m_mesh->getVertices())
-        return m_mesh->getVertices()->getMinBoundingBox();
+    if (m_isDoubleMesh) {
+        if (m_mesh && m_meshDouble->getVertices())
+           return m_meshDouble->getVertices()->getMFVec3f()->
+                      getMinBoundingBox();
+    } else {
+        if (m_mesh && m_mesh->getVertices())
+           return m_mesh->getVertices()->getMinBoundingBox();
+    }
     return ret;
 }
 
 Vec3f
 MeshBasedNode::getMaxBoundingBox(void) 
 { 
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     Vec3f ret(0, 0, 0);
-    if (m_mesh && m_mesh->getVertices())
-        return m_mesh->getVertices()->getMaxBoundingBox();
+    if (m_isDoubleMesh) {
+        if (m_mesh && m_meshDouble->getVertices())
+           return m_meshDouble->getVertices()->getMFVec3f()->
+                      getMaxBoundingBox();
+    } else {
+        if (m_mesh && m_mesh->getVertices())
+           return m_mesh->getVertices()->getMaxBoundingBox();
+    }
     return ret;
 }
 
 MFVec3f *
 MeshBased::getVertices(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return NULL;
+        return m_meshDouble->getVertices()->getMFVec3f();
     }
     if (m_mesh == NULL)
         return NULL;
@@ -528,11 +578,12 @@ MeshBased::getVertices(void)
 MFVec2f *
 MeshBased::getTextureCoordinates()
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return NULL;
+        return m_meshDouble->generateTextureCoordinates();
     }
     if (m_mesh == NULL)
         return NULL;
@@ -542,11 +593,12 @@ MeshBased::getTextureCoordinates()
 MFInt32 *
 MeshBased::getTexCoordIndex()
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return NULL;
+        return m_meshDouble->getCoordIndex();
     }
     if (m_mesh == NULL)
         return NULL;
@@ -699,11 +751,11 @@ MeshBasedNode::optimizeNormals(int *coordIndex, MFVec3f *vertices,
 int 
 MeshBasedNode::countPolygons(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (!m_meshDouble) return 0;
+        return m_meshDouble->countPolygons();
     }
     if (!m_mesh) return 0;
     return m_mesh->countPolygons();
@@ -724,6 +776,11 @@ MeshBasedNode::countPolygons1Sided(void)
 MFVec3f *
 MeshBased::getSmoothNormals(void)
 {
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return NULL;
+        return m_meshDouble->getSmoothNormals();
+    }
     if (m_mesh == NULL)
         return NULL;
     return m_mesh->getSmoothNormals();
@@ -732,10 +789,17 @@ MeshBased::getSmoothNormals(void)
 MFInt32 *
 MeshBased::getSmoothNormalIndex(void)
 {
-    if (m_mesh == NULL)
-        return NULL;
-    MFInt32 *i = m_mesh->getNormalIndex();
-    
+    MFInt32 *i;
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return NULL;
+        i = m_meshDouble->getNormalIndex();
+    } else {
+        if (m_mesh == NULL)
+            return NULL;
+        i = m_mesh->getNormalIndex();
+    }    
+
     if (i && (i->getValues() != NULL)) {
         i =  new MFInt32((int *)((MFInt32 *)i->copy())->getValues(), 
                          i->getSize());
@@ -748,9 +812,16 @@ MeshBasedNode::setTexCoordFromMesh(Node *ntexCoord)
 {
     if (ntexCoord->getType() != VRML_TEXTURE_COORDINATE)
         return;
-    if (m_mesh == NULL)
-        return;
-    MFVec2f *v = m_mesh->getTexCoords();
+    MFVec2f *v;
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return;
+        v = m_meshDouble->getTexCoords();
+    } else {
+        if (m_mesh == NULL)
+            return;
+        v = m_mesh->getTexCoords();
+    }
     if (v != NULL) {
         int field = ((NodeTextureCoordinate *)ntexCoord)->point_Field();
         m_scene->setField(ntexCoord, field, v);
@@ -764,7 +835,6 @@ MeshBasedNode::write(int f, int indent)
     if (flags & TRIANGULATE) {
         bool shouldBeIndexedTriangleSet = shouldConvertToIndexedTriangleSet();
         bool shouldBeTriangleSet = shouldConvertToTriangleSet();
-
 
         if (shouldBeTriangleSet) {
             Node *node = (NodeTriangleSet *)toTriangleSet();
@@ -795,16 +865,16 @@ MeshBasedNode::writeXml(int f, int indent, int containerField)
 {
     int flags = m_scene->getWriteFlags();
     if (flags & X3D_4_WONDERLAND) {
-        if (meshDirty()) {
-            delete m_mesh;
-            m_mesh = NULL;
-            createMesh(false);
-            m_meshDirty = false;
+        updateMesh(); 
+
+        MFFloat *mfcolors;
+        if (m_isDoubleMesh) {
+           if (!m_meshDouble) return -1;
+           mfcolors = m_meshDouble->getColors();
+        } else {
+           if (!m_mesh) return -1;
+           mfcolors = m_mesh->getColors();
         }
-
-        if (!m_mesh) return -1;
-
-        MFFloat *mfcolors = m_mesh->getColors();
         MFColor *colors = NULL;
         if (mfcolors != NULL) {
             float *fcolors = (float *)mfcolors->getValues();
@@ -844,10 +914,15 @@ MeshBasedNode::writeXml(int f, int indent, int containerField)
                 }
             }
         }    
-        int numVertices = m_mesh->getVertices()->getSFSize();
+        int numVertices;
+        if (m_isDoubleMesh)
+            numVertices = m_meshDouble->getVertices()->getSFSize();
+        else 
+            numVertices = m_mesh->getVertices()->getSFSize();
         int errorID = -1;
         bool validColors = false;
-        if (m_mesh->colorPerVertex()) {
+        if (m_isDoubleMesh ? m_meshDouble->colorPerVertex() :
+                             m_mesh->colorPerVertex()) {
             if (hasColors) {
                 if (numVertices == colors->getSFSize())
                     validColors = true;
@@ -971,18 +1046,19 @@ MeshBasedNode::addToConvertedNodes(int flags)
 int
 MeshBasedNode::writeAc3d(int f, int indent)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return 0;
+
+        m_meshDouble->optimize();
+    } else {
+        if (m_mesh == NULL)
+            return 0;
+
+        m_mesh->optimize();
     }
-
-    if (m_mesh == NULL)
-        return 0;
-
-    m_mesh->optimize();
-
     NodeColor *color = getColorNode();
 
     NodeMaterial *nmaterial = getMaterialNode();
@@ -1040,9 +1116,17 @@ MeshBasedNode::writeAc3d(int f, int indent)
             }
         }
     }
-    MFFloat *colors = m_mesh->getColors();
-    MFInt32 *colorIndex = m_mesh->getColorIndex();
-    bool colorPerVertexProblem = m_mesh->colorPerVertex();
+    MFFloat *colors;
+    MFInt32 *colorIndex;
+    bool colorPerVertexProblem;
+    colors = m_mesh->getColors();
+    if (m_isDoubleMesh) {
+        colorIndex = m_meshDouble->getColorIndex();
+        colorPerVertexProblem = m_meshDouble->colorPerVertex();
+    } else {
+        colorIndex = m_mesh->getColorIndex();
+        colorPerVertexProblem = m_mesh->colorPerVertex();
+    }
     if (!colors || (colors && (colors->getSize() == 0)))
         if (colorPerVertexProblem)
             colorPerVertexProblem = false;
@@ -1055,7 +1139,12 @@ MeshBasedNode::writeAc3d(int f, int indent)
         swDebugf("Warning: color node of %s node can not ", name);
         swDebugf("be exported to AC3D cause of colorPerVertex TRUE\n");
     }
-    RET_ONERROR( mywritef(f, "crease %f\n", RAD2DEG(m_mesh->creaseAngle())) )
+    if (m_isDoubleMesh)
+        RET_ONERROR( mywritef(f, "crease %f\n", 
+                              RAD2DEG(m_meshDouble->creaseAngle())) )
+    else
+        RET_ONERROR( mywritef(f, "crease %f\n", RAD2DEG(m_mesh->creaseAngle()))
+                   )
     MFVec3f *vertices = getVertices();
     RET_ONERROR( mywritef(f, "numvert %d\n", vertices->getSFSize()) )
     Matrix matrix;
@@ -1067,15 +1156,27 @@ MeshBasedNode::writeAc3d(int f, int indent)
         v = matrix * v;
         RET_ONERROR( mywritef(f, "%f %f %f\n", -v.z, v.y, -v.x) )
     }
-    RET_ONERROR( mywritef(f, "numsurf %d\n", m_mesh->getNumFaces()) )
-    int surfaceFlags = 0x00; // polygon
-    surfaceFlags += m_mesh->solid() ? 1 << 4 : 1 << 5; // strange flat/smooth shading rules for the "virtual accoustics" program
-    MFVec2f* texCoords = NULL;
-    if (m_mesh->getTexCoords() == NULL)
-        texCoords = m_mesh->generateTextureCoordinates();
+    if (m_isDoubleMesh)
+        RET_ONERROR( mywritef(f, "numsurf %d\n", m_meshDouble->getNumFaces()) )
     else
-        texCoords = m_mesh->getTexCoords();
-    for (int i = 0; i < m_mesh->getNumFaces(); i++) {
+        RET_ONERROR( mywritef(f, "numsurf %d\n", m_mesh->getNumFaces()) )
+    int surfaceFlags = 0x00; // polygon
+    surfaceFlags += (m_isDoubleMesh ? m_meshDouble->solid() : m_mesh->solid()) ?
+                    1 << 4 : 1 << 5; // strange flat/smooth shading rules for the "virtual accoustics" program
+    MFVec2f* texCoords = NULL;
+    if (m_isDoubleMesh) {
+        if (m_mesh->getTexCoords() == NULL)
+            texCoords = m_meshDouble->generateTextureCoordinates();
+        else
+            texCoords = m_meshDouble->getTexCoords();
+    } else {
+        if (m_mesh->getTexCoords() == NULL)
+            texCoords = m_mesh->generateTextureCoordinates();
+        else
+            texCoords = m_mesh->getTexCoords();
+    }
+    for (int i = 0; i < m_isDoubleMesh ? m_meshDouble->getNumFaces() : 
+                                         m_mesh->getNumFaces(); i++) {
         RET_ONERROR( mywritef(f, "SURF 0x%x\n", surfaceFlags) )
         int index = -1; 
         bool materialToWrite = true;
@@ -1124,21 +1225,23 @@ MeshBasedNode::writeAc3d(int f, int indent)
 int
 MeshBasedNode::writeRib(int f, int indent)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return 0;
+        if (!m_meshDouble->validMesh())
+            return 0;
+        if (m_meshDouble->getNumFaces() == 0)
+            return 0;
+    } else {
+        if (m_mesh == NULL)
+            return 0;
+        if (!m_mesh->validMesh())
+            return 0;
+        if (m_mesh->getNumFaces() == 0)
+            return 0;
     }
-
-    if (m_mesh == NULL)
-        return 0;
-    if (!m_mesh->validMesh())
-        return 0;
-    if (m_mesh->getNumFaces() == 0)
-        return 0;
-
-//    m_mesh->optimize();
 
     NodeMaterial *nmaterial = getMaterialNode();
     NodeImageTexture *nimageTexture = getImageTextureNode();
@@ -1271,16 +1374,27 @@ MeshBasedNode::writeRib(int f, int indent)
     MFInt32 *coordIndex = getCoordIndexFromMesh();
     const int *ci = coordIndex->getValues();
     const float *colors = NULL;
-    if (m_mesh->getColors())
-        colors =  m_mesh->getColors()->getValues();
     int numColors = 0;
-    if (m_mesh->getColors())
+    MFInt32 *colorIndex;
+    bool colorPerVertex;
+    MFInt32 *texCoordIndex;
+    if (m_isDoubleMesh) {
+        if (m_mesh->getColors())
+            colors = m_meshDouble->getColors()->getValues();
+        numColors = m_meshDouble->getColors()->getSFSize();
+        colorIndex = m_meshDouble->getColorIndex();
+        colorPerVertex = m_meshDouble->colorPerVertex();
+        texCoordIndex = m_meshDouble->getTexCoordIndex();
+    } else {
+        if (m_mesh->getColors())
+            colors = m_mesh->getColors()->getValues();
         numColors = m_mesh->getColors()->getSFSize();
-    MFInt32 *colorIndex = m_mesh->getColorIndex();
+        colorIndex = m_mesh->getColorIndex();
+        colorPerVertex = m_mesh->colorPerVertex();
+        texCoordIndex = m_mesh->getTexCoordIndex();
+    }
     if ((colorIndex == NULL) || (colorIndex->getSize() == 0))
         colorIndex = coordIndex;
-    bool colorPerVertex = m_mesh->colorPerVertex();
-    MFInt32 *texCoordIndex = m_mesh->getTexCoordIndex();
     if (texCoordIndex == NULL)
         texCoordIndex = coordIndex;
 
@@ -1291,7 +1405,11 @@ MeshBasedNode::writeRib(int f, int indent)
     MFInt32 *normalIndex = m_mesh->getNormalIndex();
     if ((normalIndex == NULL) || (normalIndex->getSize() == 0))
         normalIndex = coordIndex;
-    bool normalPerVertex = m_mesh->normalPerVertex();
+    bool normalPerVertex;
+    if (m_isDoubleMesh)
+        normalPerVertex = m_meshDouble->normalPerVertex();
+    else
+        normalPerVertex = m_mesh->normalPerVertex();
     int numNormalIndices = 0;
     for (int i = 0; i < normalIndex->getSize(); i++)
         if (normalIndex->getValue(i) > -1)
@@ -1344,8 +1462,17 @@ MeshBasedNode::writeRib(int f, int indent)
     RET_ONERROR( mywritef(f, "]\n") )
     RET_ONERROR( mywritef(f, "[\n") )
     int numCi = 0;
-    for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-        FaceData *face = m_mesh->getFace(i);
+    int numFaces;
+    if (m_isDoubleMesh)
+        numFaces = m_meshDouble->getNumFaces();
+    else
+        numFaces = m_mesh->getNumFaces();
+    for (int i = 0; i < numFaces; i++) {
+        FaceData *face;
+        if (m_isDoubleMesh)
+            face = m_meshDouble->getFace(i);
+        else
+            face = m_mesh->getFace(i);
         int numVertices = face->getNumVertices();
         int offset = face->getOffset();
         for (int j = offset; j < offset + numVertices; j++) {
@@ -1370,9 +1497,17 @@ MeshBasedNode::writeRib(int f, int indent)
     matrix = viewpointMatrix * transformMatrix;
     glPopMatrix();
 
+    if (m_isDoubleMesh)
+        numFaces = m_meshDouble->getNumFaces();
+    else
+        numFaces = m_mesh->getNumFaces();
     RET_ONERROR( mywritef(f, "\"P\" [\n") )
-    for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-        FaceData *face = m_mesh->getFace(i);
+    for (int i = 0; i < numFaces; i++) {
+        FaceData *face;
+        if (m_isDoubleMesh)
+            face = m_meshDouble->getFace(i);
+        else
+            face = m_mesh->getFace(i);
         int numVertices = face->getNumVertices();
         int offset = face->getOffset();
         for (int j = offset; j < offset + numVertices; j++) {
@@ -1392,16 +1527,33 @@ MeshBasedNode::writeRib(int f, int indent)
     RET_ONERROR( mywritef(f, "\"N\" [\n") )
     if (!normalPerVertex) {
         int numFaces = 0;
-        for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-            FaceData *face = m_mesh->getFace(i);
+        int numFace;
+        if (m_isDoubleMesh)
+            numFace = m_meshDouble->getNumFaces();
+        else
+           numFace = m_mesh->getNumFaces();
+        for (int i = 0; i < numFace; i++) {
+            FaceData *face;
+            if (m_isDoubleMesh)
+                face = m_meshDouble->getFace(i);
+            else
+                face = m_mesh->getFace(i);
             int numVertices = face->getNumVertices();
             int offset = face->getOffset();
             for (int j = offset; j < offset + numVertices; j++) {
                 int k = numFaces * 3;
-                RET_ONERROR( mywritef(f, "%f %f %f\n", 
-                                      m_mesh->getNormals()->getValue(k)[0], 
-                                      m_mesh->getNormals()->getValue(k)[1], 
-                                      m_mesh->getNormals()->getValue(k)[2]) ) 
+                if (m_isDoubleMesh)
+                    RET_ONERROR( mywritef(f, "%f %f %f\n", 
+                                    m_meshDouble->getNormals()->getValue(k)[0], 
+                                    m_meshDouble->getNormals()->getValue(k)[1], 
+                                    m_meshDouble->getNormals()->getValue(k)[2])
+                               )
+                else
+                    RET_ONERROR( mywritef(f, "%f %f %f\n", 
+                                          m_mesh->getNormals()->getValue(k)[0], 
+                                          m_mesh->getNormals()->getValue(k)[1], 
+                                          m_mesh->getNormals()->getValue(k)[2])
+                                ) 
             }
             numFaces++;
         }
@@ -1410,9 +1562,15 @@ MeshBasedNode::writeRib(int f, int indent)
             int j = normalIndex->getValue(i);
             if (j > -1)  {
                 Vec3f norm;
-                norm.x = m_mesh->getNormals()->getValue(j)[0];   
-                norm.y = m_mesh->getNormals()->getValue(j)[1];   
-                norm.z = m_mesh->getNormals()->getValue(j)[2];   
+                if (m_isDoubleMesh) {
+                    norm.x = m_meshDouble->getNormals()->getValue(j)[0];   
+                    norm.y = m_meshDouble->getNormals()->getValue(j)[1];   
+                    norm.z = m_meshDouble->getNormals()->getValue(j)[2];   
+                } else {
+                    norm.x = m_mesh->getNormals()->getValue(j)[0];   
+                    norm.y = m_mesh->getNormals()->getValue(j)[1];   
+                    norm.z = m_mesh->getNormals()->getValue(j)[2];   
+                }
                 RET_ONERROR( mywritef(f, "%f %f %f\n", norm.x, norm.y, norm.z) )
             }
         }
@@ -1425,8 +1583,18 @@ MeshBasedNode::writeRib(int f, int indent)
             coffset = 4;
         if (!colorPerVertex) {
             int numFaces = 0;
-            for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-                FaceData *face = m_mesh->getFace(i);
+            int numFace;
+            if (m_isDoubleMesh)
+                numFace = m_meshDouble->getNumFaces();
+            else
+                numFace = m_mesh->getNumFaces();
+
+            for (int i = 0; i < numFace; i++) {
+                FaceData *face;
+                if (m_isDoubleMesh)
+                    face = m_meshDouble->getFace(i);
+                else
+                    face = m_mesh->getFace(i);
                 int numVertices = face->getNumVertices();
                 int offset = face->getOffset();
                 for (int j = offset; j < offset + numVertices; j++) {
@@ -1454,8 +1622,17 @@ MeshBasedNode::writeRib(int f, int indent)
             RET_ONERROR( mywritef(f, "\"Os\" [\n") )
             if (!colorPerVertex) {
                 int numFaces = 0;
-                for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-                    FaceData *face = m_mesh->getFace(i);
+                int numFace;
+                if (m_isDoubleMesh)
+                    numFace = m_meshDouble->getNumFaces();
+                else
+                    numFace = m_mesh->getNumFaces();
+                for (int i = 0; i < numFace; i++) {
+                    FaceData *face;
+                    if (m_isDoubleMesh)
+                        face = m_meshDouble->getFace(i);
+                    else
+                        face = m_mesh->getFace(i);
                     int numVertices = face->getNumVertices();
                     int offset = face->getOffset();
                     for (int j = offset; j < offset + numVertices; j++) {
@@ -1479,7 +1656,11 @@ MeshBasedNode::writeRib(int f, int indent)
             RET_ONERROR( mywritef(f, "]\n") )
         }
     }
-    MFVec2f* texCoords = m_mesh->getTexCoords();
+    MFVec2f* texCoords;
+    if (m_isDoubleMesh)
+        texCoords = m_meshDouble->getTexCoords();
+    else
+        texCoords = m_mesh->getTexCoords();
     RET_ONERROR( mywritef(f, "\"st\" [\n") )
     for (int i = 0; i < texCoordIndex->getSFSize(); i++) {
         int j = texCoordIndex->getValue(i);
@@ -1511,18 +1692,19 @@ MeshBasedNode::writeCattGeo(int filedes, int indent)
         return -1;
     delete [] filename;
 
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL) 
+            return 0;
+
+        m_meshDouble->optimize();
+    } else {
+        if (m_mesh == NULL) 
+            return 0;
+
+        m_mesh->optimize();
     }
-
-    if (m_mesh == NULL) 
-        return 0;
-
-    m_mesh->optimize();
-
     NodeMaterial *nmaterial = getMaterialNode();
    
     RET_ONERROR( mywritestr(f, "OBJECT") )
@@ -1551,14 +1733,32 @@ MeshBasedNode::writeCattGeo(int filedes, int indent)
 
     RET_ONERROR( mywritestr(f, "PLANES") )
     RET_ONERROR( mywritestr(f, swGetLinefeedString()) )
-    bool meshCcw = m_mesh->ccw();
+    bool meshCcw;
+    if (m_isDoubleMesh)
+        meshCcw = m_meshDouble->ccw();
+    else
+        meshCcw = m_mesh->ccw();
     // write both sides, if solid is false
-    int sides = m_mesh->solid() ? 1 : 2;
+    int sides;
+    if (m_isDoubleMesh)
+        sides = m_meshDouble->solid() ? 1 : 2;
+    else
+        sides = m_mesh->solid() ? 1 : 2;
     for (int side = 1; side < (sides + 1); side++) {
         if (side == 2)
-                meshCcw = !meshCcw;
-        for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-            FaceData *face = m_mesh->getFace(i);
+            meshCcw = !meshCcw;
+        int numFaces;
+        if (m_isDoubleMesh)
+            numFaces = m_meshDouble->getNumFaces();
+        else
+            numFaces = m_mesh->getNumFaces();
+
+        for (int i = 0; i < numFaces; i++) {
+            FaceData *face;
+            if (m_isDoubleMesh)
+                face = m_meshDouble->getFace(i);
+            else
+                face = m_mesh->getFace(i);
             RET_ONERROR( mywritef(f, "[%d ", 
                                   m_scene->getAndIncCattGeoPlaneCounter()) )
             if (nmaterial)
@@ -1567,7 +1767,11 @@ MeshBasedNode::writeCattGeo(int filedes, int indent)
             else
                 RET_ONERROR( mywritestr(f, UNKNOWN_MATERIAL) )
             RET_ONERROR( mywritestr(f, " / ") )
-            MFInt32 *mfcoordIndex = m_mesh->getCoordIndex();
+            MFInt32 *mfcoordIndex;
+            if (m_isDoubleMesh)
+                mfcoordIndex = m_meshDouble->getCoordIndex();
+            else
+                mfcoordIndex = m_mesh->getCoordIndex();
             if (meshCcw)
                 for (int j = face->getNumVertices() - 1; j >= 0; j--) {
                     int ref = mfcoordIndex->getValue(face->getOffset() + j);
@@ -1596,29 +1800,44 @@ MeshBasedNode::writeCattGeo(int filedes, int indent)
 int
 MeshBasedNode::writeLdrawDat(int f, int indent)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+           return 0;
+
+        if (m_meshDouble->getMaxNumberEdgesPerFace() > 4)
+            m_meshDouble->triangulate(NULL);
+    } else {
+        if (m_mesh == NULL)
+           return 0;
+
+        if (m_mesh->getMaxNumberEdgesPerFace() > 4)
+            m_mesh->triangulate(NULL);
     }
-
-    if (m_mesh == NULL)
-        return 0;
-
-    if (m_mesh->getMaxNumberEdgesPerFace() > 4)
-        m_mesh->triangulate(NULL);
-
     MFVec3f *vertices = getVertices();
-    MFInt32 *mfcoordIndex = m_mesh->getCoordIndex();
+    MFInt32 *mfcoordIndex;
+    if (m_isDoubleMesh)
+        mfcoordIndex = m_meshDouble->getCoordIndex();
+    else
+        mfcoordIndex = m_mesh->getCoordIndex();
     Matrix matrix;
     glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat *) matrix);
     RET_ONERROR( mywritestr(f, "0 //") )
     if (hasName())
         RET_ONERROR( mywritef(f, " %s", (const char *)getName()))
     RET_ONERROR( mywritef(f, " %s\n", (const char *)getProto()->getName(false)))
-    for (int i = 0; i < m_mesh->getNumFaces(); i++) {
-        FaceData *face = m_mesh->getFace(i);
+    int numFaces;
+    if (m_isDoubleMesh)
+        numFaces = m_meshDouble->getNumFaces();
+    else
+        numFaces = m_mesh->getNumFaces();
+    for (int i = 0; i < numFaces; i++) {
+        FaceData *face;
+        if (m_isDoubleMesh)
+            face = m_meshDouble->getFace(i);
+        else
+            face = m_mesh->getFace(i);
         if (face->getNumVertices() == 4) 
             RET_ONERROR( mywritestr(f, "4 ") )
         else if (face->getNumVertices() == 3)
@@ -1638,9 +1857,21 @@ MeshBasedNode::writeLdrawDat(int f, int indent)
                 node = ((NodeIndexedFaceSet *)this)->color()->getValue();
             NodeColor *colorNode = (NodeColor *)node;
 
-            MFFloat *colors = m_mesh->getColors();
-            MFInt32 *colorIndex = m_mesh->getColorIndex();
-            bool colorPerVertexProblem = m_mesh->colorPerVertex();
+            MFFloat *colors;
+            if (m_isDoubleMesh)
+                colors =  m_meshDouble->getColors();
+            else
+                colors = m_mesh->getColors();
+            MFInt32 *colorIndex;
+            if (m_isDoubleMesh)
+                colorIndex = m_meshDouble->getColorIndex();
+            else
+                colorIndex = m_mesh->getColorIndex();
+            bool colorPerVertexProblem;
+            if (m_isDoubleMesh)
+                colorPerVertexProblem = m_meshDouble->colorPerVertex();
+            else
+                colorPerVertexProblem = m_mesh->colorPerVertex();
             if (!colors || (colors && (colors->getSize() == 0)))
                 if (colorPerVertexProblem)
                     colorPerVertexProblem = false;
@@ -1687,15 +1918,17 @@ MeshBasedNode::writeLdrawDat(int f, int indent)
 void
 MeshBased::smoothNormals(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
-    if (m_mesh == NULL)
-        return;
-    m_mesh->smoothNormals();
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+           return;
+        m_meshDouble->smoothNormals();
+    } else {
+        if (m_mesh == NULL)
+           return;
+        m_mesh->smoothNormals();
+   }
 }
 
 void
@@ -1734,12 +1967,8 @@ void
 MeshBasedNode::optimizeMesh(MFVec3f **newCoord, MFInt32 **newCoordIndex,
                             float epsilon)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return;
     m_mesh->optimize(epsilon);
@@ -1750,17 +1979,13 @@ MeshBasedNode::optimizeMesh(MFVec3f **newCoord, MFInt32 **newCoordIndex,
 MyMesh *           
 MeshBasedNode::triangulateMesh(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return NULL;
 
 #ifdef HAVE_GLUNEWTESS
-    return m_mesh->triangulate(this);
+    return (MyMesh *)m_mesh->triangulate(this);
 #else
     if (m_mesh->getMaxNumberEdgesPerFace() <= 4) {
         m_mesh->simpleQuadTriangulate();
@@ -1773,12 +1998,8 @@ MeshBasedNode::triangulateMesh(void)
 MyMesh *           
 MeshBasedNode::simpleQuadTriangulateMesh(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return NULL;
 
@@ -1792,12 +2013,8 @@ MeshBasedNode::simpleQuadTriangulateMesh(void)
 MFVec3f *
 MeshBased::getCoordFromMesh()
 { 
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return NULL;
     return m_mesh->getVertices(); 
@@ -1806,12 +2023,8 @@ MeshBased::getCoordFromMesh()
 MFInt32 *
 MeshBased::getCoordIndexFromMesh()
 { 
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return NULL;
     return m_mesh->getCoordIndex(); 
@@ -1820,12 +2033,8 @@ MeshBased::getCoordIndexFromMesh()
 bool
 MeshBased::isFlat(void)
 { 
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return false;
     return (m_mesh->creaseAngle() == 0.0f);
@@ -1834,12 +2043,8 @@ MeshBased::isFlat(void)
 bool       
 MeshBasedNode::canSimpleTriangulate(void)
 {
-    if (meshDirty()) {
-        delete m_mesh;
-        m_mesh = NULL;
-        createMesh();
-        m_meshDirty = false;
-    }
+    updateMesh(); 
+
     if (m_mesh == NULL)
         return false;
     // is simpleQuadTriangulate() possible ?

@@ -72,7 +72,7 @@ public:
 
     virtual void        insertKey(int pos, float key, const float *values);
  
-    fieldMacros(MFBool, keyValue, ProtoIntegerSequencer)
+    fieldMacros(MFInt32, keyValue, ProtoIntegerSequencer)
 };
 
 #endif // _NODE_INTEGER_SEQUENCER_H

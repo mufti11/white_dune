@@ -226,6 +226,14 @@ Quaternion::operator *(const Vec3f &v) const
     return Vec3f(r.x, r.y, r.z);
 }
 
+Vec3d
+Quaternion::operator *(const Vec3d &v) const
+{
+    Quaternion r(conj() * Quaternion(v.x, v.y, v.z, 0.0f) * *this);
+
+    return Vec3d(r.x, r.y, r.z);
+}
+
 float
 Quaternion::norm() const
 {
@@ -260,6 +268,11 @@ Quaternion::normalize()
 }
 
 Vec3f operator *(const Vec3f &v,const Quaternion &q)
+{ 
+    return q * v; 
+}
+
+Vec3d operator *(const Vec3d &v,const Quaternion &q)
 { 
     return q * v; 
 }

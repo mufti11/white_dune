@@ -4046,6 +4046,7 @@ BEGIN
     IDS_DE_WONDERLAND_BILLBOARD_CAN_000_001_010 "Warnung: Wonderland Billboard unterstuetzt nur die folgenden axisOfRotation Werte:\n0,0,0\n0,0,1\n0,1,0"
     IDS_DE_SHOULD_HAVE_MATERIAL_GEO   "Warnung: das Verzeichnis %s sollte eine material.geo Datei enthalten"
     IDS_DE_INLINE_FILE_FAILED         "Sorry, lesen von Inline file %s gescheitert"
+    IDS_DE_URL_FILE_FAILED            "Sorry, lesen von file %s gescheitert"
     IDS_DE_EXTERNPROTO_FILE_FAILED    "Sorry, kein PROTO file fuer EXTERNPROTO %s\n(z.B. ""%s"") auf der Festplatte gefunden:\nDefault Werte der PROTO-Felder sind nicht bekannt"
     IDS_DE_SYNTAX_ERROR               "syntax error"
     IDS_DE_DEVICE_NOT_RECOMMENDED     " (nicht empfehlenswert)"

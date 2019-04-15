@@ -306,7 +306,7 @@ NodeSuperEllipsoid::createMesh(SuperEllipsoidData *data, bool cleanVertices)
     MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
     if (texCoords.size() == 0) {
-        MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex);
+        MFVec2f *texCoord = generateTextureCoordinates(vert, coordIndex, 0.0f);
         texCoords.append(texCoord);
     }
 

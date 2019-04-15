@@ -438,10 +438,13 @@ void parseCommandlineUsage(
             else if (strcmp(argv[convertionArgument]+1,"3c++")==0)
                 convert = CC_SOURCE | TRIANGULATE;
 
-            else if (strcmp(argv[convertionArgument]+1,"java")==0)
+            else if (strcmp(argv[convertionArgument]+1,"java")==0) {
                 convert |= JAVA_SOURCE;
-            else if (strcmp(argv[convertionArgument]+1,"3java")==0)
+                convert |= MANY_JAVA_CLASSES; // default
+            } else if (strcmp(argv[convertionArgument]+1,"3java")==0) {
                 convert |= JAVA_SOURCE | TRIANGULATE;
+                convert |= MANY_JAVA_CLASSES; // default
+            }
         } 
         bool tempSave = true;
         if (strcmp(argv[convertionArgument], "-o") == 0) {
@@ -460,6 +463,7 @@ void parseCommandlineUsage(
         }
         if (strcmp(argv[convertionArgument],"-wonderland")==0) {
             convert |= WONDERLAND | TRIANGULATE;
+            convert |= MANY_JAVA_CLASSES; // default
             checkNotEnoughArgumentsError(argc, ++convertionArgument);
             url = argv[convertionArgument];
             if (strlen(TheApp->getCPrefix()) == 0)

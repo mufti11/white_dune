@@ -407,7 +407,8 @@ NODEPARENTCLASSES = \
         X3DRigidJointNode.o \
         AnchoredJointNode.o \
         Texture3DNode.o \
-        FontStyleNode.o
+        FontStyleNode.o \
+        ViewpointNode.o
 
 TYPECLASSES = \
 	SFBool.o \
@@ -603,6 +604,7 @@ DUNECLASSES = \
         WonderlandModuleExport.o \
         WriteWonderlandCellRenderCode.o \
         MeshSubdivide.o \
+        Vec3x.o \
         quadric_simp.o \
         illegal2vrml.o $(NEBULA)
 

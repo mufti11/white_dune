@@ -36,6 +36,8 @@
 #include "NodeIndexedLineSet.h"
 #include "NodePointSet.h"
 
+#include "NodeGeoOrigin.h"
+
 ProtoGeoLocation::ProtoGeoLocation(Scene *scene)
   : GeoProto(scene, "GeoLocation")
 {
@@ -105,6 +107,56 @@ NodeGeoLocation::convert2Vrml(void)
     SFString *string = new SFString(buf);
     geoCoords(string);    
     return NULL;
+}
+
+void
+NodeGeoLocation::preDraw()
+{
+    NodeList *childList = children()->getValues();
+
+    glPushMatrix();
+    transform();
+
+    for (int i = 0; i < childList->size(); i++)
+        if (childList->get(i) != this)
+            childList->get(i)->preDraw();
+
+    glPopMatrix();
+}
+
+void
+NodeGeoLocation::draw(int pass)
+{
+    int i;
+    NodeList *childList = children()->getValues();
+    int n = childList->size();
+
+    glPushMatrix();
+
+    NodeGeoOrigin *origin = (NodeGeoOrigin *)geoOrigin()->getValue();
+
+    if (origin) {
+        Vec3d vec = origin->getVec();
+        glTranslated(vec.x, vec.y, vec.z);
+    }
+
+    for (i = 0; i < n; i++)
+        childList->get(i)->bind();
+
+    glPushName(children_Field());  // field
+    glPushName(0);                 // index
+    for (i = 0; i < n; i++) {
+        glLoadName(i);
+        if (childList->get(i) != this)
+            childList->get(i)->draw(pass);
+    }
+    glPopName();
+    glPopName();
+
+    for (i = 0; i < n; i++)
+        childList->get(i)->unbind();
+
+    glPopMatrix();
 }
 
 

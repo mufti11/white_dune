@@ -44,9 +44,9 @@
 namespace p2t {
 
 class SweepContext;
-struct Node;
+struct TriNode;
 struct Point;
-struct Edge;
+struct TriEdge;
 class Triangle;
 
 class Sweep
@@ -83,7 +83,7 @@ private:
    * @param point
    * @return
    */
-  Node& PointEvent(SweepContext& tcx, Point& point);
+  TriNode& PointEvent(SweepContext& tcx, Point& point);
 
    /**
      *
@@ -92,7 +92,7 @@ private:
      * @param edge
      * @param node
      */
-  void EdgeEvent(SweepContext& tcx, Edge* edge, Node* node);
+  void EdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode* node);
 
   void EdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* triangle, Point& point);
 
@@ -104,14 +104,14 @@ private:
    * @param node
    * @return
    */
-  Node& NewFrontTriangle(SweepContext& tcx, Point& point, Node& node);
+  TriNode& NewFrontTriangle(SweepContext& tcx, Point& point, TriNode& node);
 
   /**
    * Adds a triangle to the advancing front to fill a hole.
    * @param tcx
    * @param node - middle node, that is the bottom of the hole
    */
-  void Fill(SweepContext& tcx, Node& node);
+  void Fill(SweepContext& tcx, TriNode& node);
 
   /**
    * Returns true if triangle was legalized
@@ -167,11 +167,11 @@ private:
    * @param tcx
    * @param n
    */
-  void FillAdvancingFront(SweepContext& tcx, Node& n);
+  void FillAdvancingFront(SweepContext& tcx, TriNode& n);
 
   // Decision-making about when to Fill hole.
   // Contributed by ToolmakerSteve2
-  bool LargeHole_DontFill(const Node* node) const;
+  bool LargeHole_DontFill(const TriNode* node) const;
   bool AngleExceeds90Degrees(const Point* origin, const Point* pa, const Point* pb) const;
   bool AngleExceedsPlus90DegreesOrIsNegative(const Point* origin, const Point* pa, const Point* pb) const;
   double Angle(const Point* origin, const Point* pa, const Point* pb) const;
@@ -181,12 +181,12 @@ private:
    * @param node - middle node
    * @return the angle between 3 front nodes
    */
-  double HoleAngle(const Node& node) const;
+  double HoleAngle(const TriNode& node) const;
 
   /**
    * The basin angle is decided against the horizontal line [1,0]
    */
-  double BasinAngle(const Node& node) const;
+  double BasinAngle(const TriNode& node) const;
 
   /**
    * Fills a basin that has formed on the Advancing Front to the right
@@ -197,7 +197,7 @@ private:
    * @param tcx
    * @param node - starting node, this or next node will be left node
    */
-  void FillBasin(SweepContext& tcx, Node& node);
+  void FillBasin(SweepContext& tcx, TriNode& node);
 
   /**
    * Recursive algorithm to fill a Basin with triangles
@@ -206,29 +206,29 @@ private:
    * @param node - bottom_node
    * @param cnt - counter used to alternate on even and odd numbers
    */
-  void FillBasinReq(SweepContext& tcx, Node* node);
+  void FillBasinReq(SweepContext& tcx, TriNode* node);
 
-  bool IsShallow(SweepContext& tcx, Node& node);
+  bool IsShallow(SweepContext& tcx, TriNode& node);
 
   bool IsEdgeSideOfTriangle(Triangle& triangle, Point& ep, Point& eq);
 
-  void FillEdgeEvent(SweepContext& tcx, Edge* edge, Node* node);
+  void FillEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode* node);
 
-  void FillRightAboveEdgeEvent(SweepContext& tcx, Edge* edge, Node* node);
+  void FillRightAboveEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode* node);
 
-  void FillRightBelowEdgeEvent(SweepContext& tcx, Edge* edge, Node& node);
+  void FillRightBelowEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode& node);
 
-  void FillRightConcaveEdgeEvent(SweepContext& tcx, Edge* edge, Node& node);
+  void FillRightConcaveEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode& node);
 
-  void FillRightConvexEdgeEvent(SweepContext& tcx, Edge* edge, Node& node);
+  void FillRightConvexEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode& node);
 
-  void FillLeftAboveEdgeEvent(SweepContext& tcx, Edge* edge, Node* node);
+  void FillLeftAboveEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode* node);
 
-  void FillLeftBelowEdgeEvent(SweepContext& tcx, Edge* edge, Node& node);
+  void FillLeftBelowEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode& node);
 
-  void FillLeftConcaveEdgeEvent(SweepContext& tcx, Edge* edge, Node& node);
+  void FillLeftConcaveEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode& node);
 
-  void FillLeftConvexEdgeEvent(SweepContext& tcx, Edge* edge, Node& node);
+  void FillLeftConvexEdgeEvent(SweepContext& tcx, TriEdge* edge, TriNode& node);
 
   void FlipEdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* t, Point& p);
 
@@ -276,7 +276,7 @@ private:
 
   void FinalizationPolygon(SweepContext& tcx);
 
-  std::vector<Node*> nodes_;
+  std::vector<TriNode*> nodes_;
 
 };
 
