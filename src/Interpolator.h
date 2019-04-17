@@ -73,9 +73,8 @@ public:
     void                deleteKeys(int start, int end);
     virtual void        interpolate(float k, float *values);
     virtual FieldValue *getInterpolatedFieldValue(float k);
-    void                sendInterpolatedEvent(double timestamp, float k);
-    void                sendInterpolatedValue(double timestamp, float k);
-
+    virtual void        sendInterpolatedEvent(double timestamp, float k);
+    void                sendInterpolatedValue(double, float);
     virtual int         getNumChannels() const = 0;
     virtual FieldValue *createKey(void *value) const = 0;
     virtual FieldValue *createKeys(void *value, int numKeys) const = 0;
@@ -96,6 +95,7 @@ public:
     int                 value_changed_Field() { return m_value_changedField; }
 
     fieldMacros(MFFloat, key, ProtoInterpolator);
+
     // keyValue can not use FieldMacros cause datatype is various at this point
 
     virtual bool        hasX3domOnoutputchange(void) { return true; }

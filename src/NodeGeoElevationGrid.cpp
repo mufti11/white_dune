@@ -389,7 +389,7 @@ NodeGeoElevationGrid::createMesh(bool cleanDoubleVertices, bool triangulate)
                                                                    localColors, 
                                     NULL, texCoords, NULL, 
                                     creaseAngle()->getFixedAngle(
-                                        m_scene->getUnitAngle()), meshFlags);
+                                        m_scene->getUnitAngle()), meshFlags, 0);
 }
 void
 NodeGeoElevationGrid::draw()

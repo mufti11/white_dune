@@ -49,6 +49,9 @@ public:
     FieldIndex geoSystem;
 
     virtual int     translateField(int field) const;
+
+    // not fields but eventIn/eventOut
+    FieldIndex geovalue_changed;
 };
 
 class NodeGeoPositionInterpolator : public Interpolator {
@@ -79,15 +82,19 @@ public:
 
     void                interpolate(float key, double *values); 
 
+    virtual void        sendInterpolatedEvent(double timestamp, float k);
+
     void                setField(int index, FieldValue *value, int cf = -1);
 
     Node               *convert2Vrml(void);
 
-    fieldMacros(MFVec3d,  keyValue,      ProtoGeoPositionInterpolator)
-    fieldMacros(MFString, keyValueVRML,  ProtoGeoPositionInterpolator)
-    fieldMacros(SFBool,   onGreatCircle, ProtoGeoPositionInterpolator) 
-    fieldMacros(SFNode,   geoOrigin,     ProtoGeoPositionInterpolator)
-    fieldMacros(MFString, geoSystem,     ProtoGeoPositionInterpolator)
+    fieldMacros(MFVec3d,  keyValue,         ProtoGeoPositionInterpolator)
+    fieldMacros(MFString, keyValueVRML,     ProtoGeoPositionInterpolator)
+    fieldMacros(SFBool,   onGreatCircle,    ProtoGeoPositionInterpolator) 
+    fieldMacros(SFNode,   geoOrigin,        ProtoGeoPositionInterpolator)
+    fieldMacros(MFString, geoSystem,        ProtoGeoPositionInterpolator)
+
+    fieldMacros(SFVec3d,  geovalue_changed, ProtoGeoPositionInterpolator)
 };
 
 #endif // _NODE_GEO_POSITION_INTERPOLATOR_H

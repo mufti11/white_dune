@@ -551,7 +551,7 @@ NodeNurbsSurface::createMesh(const Vec3f *controlPoints, bool cleanVertices,
     MyArray<MFVec2f *>texCoords;
     texCoords.append(mfTexCoord);
     m_mesh = new MyMesh(this, vertices, coordIndex, normal, NULL,
-                        NULL, NULL, texCoords, NULL, 1.57, meshFlags);
+                        NULL, NULL, texCoords, NULL, 1.57, meshFlags, 0);
     delete [] weights;
 }
 

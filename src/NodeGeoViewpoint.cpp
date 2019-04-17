@@ -100,13 +100,20 @@ void
 NodeGeoViewpoint::apply(bool useStereo)
 {
     Vec3d vec;
+    SFRotation rot;
 
     NodeGeoOrigin *origin = (NodeGeoOrigin *)geoOrigin()->getValue();
 
-    if (origin)
+    if (origin) {
         vec = origin->getVec();
+        Vec3d vecNorm(vec);
+        vecNorm.normalize();
+        Vec3f norm(vecNorm.x, vecNorm.y, vecNorm.z);
+        Quaternion quat(Vec3f(0, 1, 0), norm);
+        rot = SFRotation(quat);
+    }
 
-    ViewpointNode::apply(useStereo, vec);
+    ViewpointNode::apply(useStereo, vec, rot);
 }
 
 Vec3d  
@@ -114,5 +121,5 @@ NodeGeoViewpoint::getPosition() const
 {
     return Vec3d(positionX3D()->getValue()[0],
                  positionX3D()->getValue()[1],
-                 positionX3D()->getValue()[2]);
+                 -positionX3D()->getValue()[2] / (2 * 40000));  
 }

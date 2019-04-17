@@ -34,9 +34,11 @@
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
 #include "NodeCoordinate.h"
+#include "NodeGeoCoordinate.h"
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeIndexedLineSet.h"
+#include "NodeFogCoordinate.h"
 #include "Util.h"
 
 ProtoIndexedTriangleFanSet::ProtoIndexedTriangleFanSet(Scene *scene)
@@ -71,7 +73,13 @@ NodeIndexedTriangleFanSet::createMesh(bool cleanDouble, bool triangulate)
     if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
         return;
 
-    MFVec3f *coords = ((NodeCoordinate *)coord)->point();
+    MFVec3f *coords = NULL;
+    MFVec3d *coordsDouble = NULL;
+    if (coord->getType() == VRML_COORDINATE)
+        coords = ((NodeCoordinate *)coord)->point();
+    else
+        coordsDouble = ((NodeGeoCoordinate *)coord)->pointX3D();
+
     MFVec3f *normals = NULL;
     MFFloat *colors = NULL;
 
@@ -123,6 +131,12 @@ NodeIndexedTriangleFanSet::createMesh(bool cleanDouble, bool triangulate)
         }
     }
 
+    MFFloat *fogCoords = NULL;
+    if (fogCoord()->getValue())
+        if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
+            fogCoords = ((NodeFogCoordinate *) 
+                         (fogCoord()->getValue()))->depth();
+
     MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
     
@@ -146,7 +160,15 @@ NodeIndexedTriangleFanSet::createMesh(bool cleanDouble, bool triangulate)
     meshFlags |= MESH_COLOR_PER_VERTEX;
     if (bnormalPerVertex)
         meshFlags |= MESH_NORMAL_PER_VERTEX;
+    float creaseAngle = M_PI / 2.0f;
 
-    m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
-                        NULL, texCoords, NULL, 0, meshFlags, transparency);
+    if (coords)
+        m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
+                            NULL, texCoords, NULL, creaseAngle, meshFlags, 
+                            transparency, fogCoords);
+   else
+        m_meshDouble = new MyMeshDouble(this, coordsDouble, m_coordIndex, 
+                                        normals, NULL, colors, NULL, texCoords, 
+                                        NULL, creaseAngle, meshFlags, 
+                                        transparency, fogCoords);
 }

@@ -103,6 +103,11 @@
 #include <GL/gl.h>
 #include "GL/glu.h"
 
+// the include of gl.h should do this
+#ifdef HAVE_GLFOGCOORDF
+ extern "C" void glFogCoordf(GLfloat coord);
+#endif
+
 #define MY_CPLUSPLUS 1
 #include "mysnprintf.h"
 

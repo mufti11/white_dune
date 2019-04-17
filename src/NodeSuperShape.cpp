@@ -341,7 +341,7 @@ NodeSuperShape::createMesh(SuperShapeData &data)
     meshFlags |= MESH_NORMAL_PER_VERTEX;
 
     m_mesh = new MyMesh(this, vert, coordIndex, NULL, NULL, NULL, NULL, 
-                        texCoords, NULL, data.creaseAngle, meshFlags);
+                        texCoords, NULL, data.creaseAngle, meshFlags, 0);
 }
 
 int

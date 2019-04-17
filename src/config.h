@@ -75,6 +75,9 @@
 #   define snprintf mysnprintf
 #endif
 
+/* Define if you have glFogCoordf.  */
+#define HAVE_GLFOGCOORDF 1
+
 /* Define if you have glDeleteTextures.  */
 #define HAVE_GLDELETETEXTURES 1
 
@@ -537,7 +540,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99pl1543"
+#define HAVE_DUNE_VERSION "white_dune 0.99pl1551"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

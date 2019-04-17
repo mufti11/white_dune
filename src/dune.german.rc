@@ -768,7 +768,7 @@ BEGIN
            MENUITEM "&Normal (braucht IndexedFaceSet oder ElevationGrid)", ID_NEW_NORMAL
            MENUITEM "&Color (braucht *Set oder *ElevationGrid)", ID_NEW_COLOR
            MENUITEM "&TextureCoordinate (braucht IndexedFaceSet oder ElevationGrid)", ID_NEW_TEXTURE_COORDINATE
-           MENUITEM "&FontStyle (braucht Text) (nicht dargestellt)", ID_NEW_FONT_STYLE
+           MENUITEM "&FontStyle (braucht Text)",        ID_NEW_FONT_STYLE
            POPUP "VRML97 Amendment 1/X3D S&ubknoten"
            BEGIN
                MENUITEM "Contour2D (braucht TrimmedSurface)", ID_NEW_CONTOUR_2D
@@ -777,9 +777,9 @@ BEGIN
                    MENUITEM "NurbsCurve2D",             ID_NEW_NURBS_CURVE_2D
                    MENUITEM "(Contour)Polyline2D",      ID_NEW_CONTOUR_POLYLINE_2D
                END
-               MENUITEM "CoordinateDouble (braucht Indexed*Set oder PointSet, nicht dargestellt)", ID_NEW_COORDINATE_DOUBLE
+               MENUITEM "CoordinateDouble (braucht Indexed*Set oder PointSet)", ID_NEW_COORDINATE_DOUBLE
                MENUITEM "ColorRGBA (braucht Indexed*Set, PointSet oder ElevationGrid)", ID_NEW_COLOR_RGBA
-               MENUITEM "FogCoordinate (braucht *Set, nicht dargestellt)",  ID_NEW_FOG_COORDINATE
+               MENUITEM "FogCoordinate (braucht *Set)",  ID_NEW_FOG_COORDINATE
                MENUITEM "TextureCoordinateGenerator (braucht IndexedFaceSet oder ElevationGrid oder Multi*TextureCoordinate, nicht dargestellt)", ID_NEW_TEXTURE_COORDINATE_GENERATOR
                MENUITEM "NurbsTextureCoordinate (braucht NurbsPatchSurface) (nicht dargestellt)", ID_NEW_NURBS_TEXTURE_COORDINATE
                MENUITEM "MultiTextureCoordinate",           ID_NEW_MULTI_TEXTURE_COORDINATE
@@ -858,8 +858,8 @@ BEGIN
                MENUITEM "SplineScalarInterpolator (nicht dargestellt)", ID_NEW_SPLINE_SCALAR_INTERPOLATOR
                MENUITEM "SplinePositionInterpolator (nicht dargestellt)", ID_NEW_SPLINE_POSITION_INTERPOLATOR
                MENUITEM "SplinePositionInterpolator2D (nicht dargestellt)", ID_NEW_SPLINE_POSITION_INTERPOLATOR_2D
-               MENUITEM "PositionInterpolator2D (nicht dargestellt)", ID_NEW_POSITION_INTERPOLATOR_2D
-               MENUITEM "CoordinateInterpolator2D (nicht dargestellt)", ID_NEW_COORDINATE_INTERPOLATOR_2D
+               MENUITEM "PositionInterpolator2D",       ID_NEW_POSITION_INTERPOLATOR_2D
+               MENUITEM "CoordinateInterpolator2D",     ID_NEW_COORDINATE_INTERPOLATOR_2D
                MENUITEM "SquadOrientationInterpolator (nicht dargestellt)", ID_NEW_SQUAD_ORIENTATION_INTERPOLATOR
                MENUITEM "EaseInEaseOut (nicht dargestellt)",  ID_NEW_EASE_IN_EASE_OUT
            END
@@ -871,17 +871,17 @@ BEGIN
        END
        POPUP "Geospatial (X3D/VRML97 Amendment 1)"
        BEGIN
-           MENUITEM "GeoElevationGrid (nicht dargestellt)", ID_NEW_GEO_ELEVATION_GRID
-           MENUITEM "GeoLOD (nicht dargestellt)",           ID_NEW_GEO_LOD
-           MENUITEM "GeoViewpoint (nicht dargestellt)",     ID_NEW_GEO_VIEWPOINT
-           MENUITEM "GeoCoordinate (braucht Indexed*Set oder PointSet) (nicht dargestellt)",    ID_NEW_GEO_COORDINATE
-           MENUITEM "GeoLocation (nicht dargestellt)",      ID_NEW_GEO_LOCATION
-           MENUITEM "GeoOrigin (nicht dargestellt)",        ID_NEW_GEO_ORIGIN
-           MENUITEM "GeoPositionInterpolator (nicht dargestellt)", ID_NEW_GEO_POSITION_INTERPOLATOR
-           MENUITEM "GeoTouchSensor (nicht dargestellt)",   ID_NEW_GEO_TOUCH_SENSOR
-           MENUITEM "GeoMetadata (nicht dargestellt)",      ID_NEW_GEO_METADATA
-           MENUITEM "GeoProximitySensor",                   ID_NEW_GEO_PROXIMITY_SENSOR
-           MENUITEM "GeoTransform (nicht dargestellt)",     ID_NEW_GEO_TRANSFORM
+           MENUITEM "GeoElevationGrid",                 ID_NEW_GEO_ELEVATION_GRID
+           MENUITEM "GeoLOD",                           ID_NEW_GEO_LOD
+           MENUITEM "GeoViewpoint",                     ID_NEW_GEO_VIEWPOINT
+           MENUITEM "GeoCoordinate (braucht Indexed*Set oder PointSet)", ID_NEW_GEO_COORDINATE
+           MENUITEM "GeoLocation",                      ID_NEW_GEO_LOCATION
+           MENUITEM "GeoOrigin",                        ID_NEW_GEO_ORIGIN
+           MENUITEM "GeoPositionInterpolator",          ID_NEW_GEO_POSITION_INTERPOLATOR
+           MENUITEM "GeoTouchSensor",                   ID_NEW_GEO_TOUCH_SENSOR
+           MENUITEM "GeoMetadata",                      ID_NEW_GEO_METADATA
+           MENUITEM "GeoProximitySensor",               ID_NEW_GEO_PROXIMITY_SENSOR
+           MENUITEM "GeoTransform",                     ID_NEW_GEO_TRANSFORM
        END
        POPUP "X3D misc components"
        BEGIN
@@ -3360,15 +3360,15 @@ BEGIN
     ID_DE_NEW_NURBS_POSITION_INTERPOLATOR "Fuege einen neuen VRML97 Amd. 1 NurbsPositionInterpolator Knoten ein (nicht dargestellt)\nVRML97 Amd. 1 NurbsPositionInterpolator (nicht dargestellt)"
     ID_DE_NEW_COORDINATE_DEFORMER "Fuege einen neuen VRML97 Amd. 1 CoordinateDeformer Knoten ein (nicht dargestellt)\nVRML97 Amd. 1 CoordinateDeformer (nicht dargestellt)"
     ID_DE_NEW_INLINE_LOAD_CONTROL "Erzeuge einen neuen VRML97 Amd. 1 InlineLoadControl Knoten\nVRML97 Amd. 1 InlineLoadControl"
-    ID_DE_NEW_GEO_ELEVATION_GRID  "Erzeuge einen neuen VRML97 Amd. 1 GeoElevationGrid Knoten (nicht dargestellt)\nVRML97 Amd. 1 GeoElevationGrid"
-    ID_DE_NEW_GEO_LOD             "Erzeuge einen neuen VRML97 Amd. 1 GeoLOD Knoten (nicht dargestellt)\nVRML97 Amd. 1 GeoLOD"
-    ID_DE_NEW_GEO_VIEWPOINT       "Erzeuge einen neuen VRML97 Amd. 1 GeoViewpoint Knoten (nicht dargestellt)\nVRML97 Amd. 1 GeoViewpoint"
-    ID_DE_NEW_GEO_COORDINATE      "Fuege einen neuen VRML97 Amd. 1 GeoCoordinate Knoten ein (braucht Indexed*Set oder PointSet) (nicht dargestellt)\nVRML97 Amd. 1 GeoCoordinate"
-    ID_DE_NEW_GEO_LOCATION        "Erzeuge einen neuen VRML97 Amd. 1 GeoLocation Knoten (nicht dargestellt)\nVRML97 Amd. 1 GeoLocation"
-    ID_DE_NEW_GEO_ORIGIN          "Fuege einen neuen VRML97 Amd. 1 GeoOrigin Knoten ein (nicht dargestellt)\nVRML97 Amd. 1 GeoOrigin"
-    ID_DE_NEW_GEO_POSITION_INTERPOLATOR "Erzeuge einen neuen VRML97 Amd. 1 GeoPositionInterpolator Knoten (nicht dargestellt)\nVRML97 Amd. 1 GeoPositionInterpolator"
-    ID_DE_NEW_GEO_TOUCH_SENSOR    "Erzeuge einen neuen VRML97 Amd. 1 GeoTouchSensor Knoten(nicht dargestellt)\nVRML97 Amd. 1 GeoTouchSensor"
-    ID_DE_NEW_GEO_METADATA        "Fuege einen neuen X3D GeoMetadata Knoten ein (nicht dargestellt)\nVRML97 Amd. 1 GeoMetadata"
+    ID_DE_NEW_GEO_ELEVATION_GRID  "Erzeuge einen neuen VRML97 Amd. 1 GeoElevationGrid Knoten\nVRML97 Amd. 1 GeoElevationGrid"
+    ID_DE_NEW_GEO_LOD             "Erzeuge einen neuen VRML97 Amd. 1 GeoLOD Knoten\nVRML97 Amd. 1 GeoLOD"
+    ID_DE_NEW_GEO_VIEWPOINT       "Erzeuge einen neuen VRML97 Amd. 1 GeoViewpoint Knoten\nVRML97 Amd. 1 GeoViewpoint"
+    ID_DE_NEW_GEO_COORDINATE      "Fuege einen neuen VRML97 Amd. 1 GeoCoordinate Knoten ein (braucht Indexed*Set oder PointSet)\nVRML97 Amd. 1 GeoCoordinate"
+    ID_DE_NEW_GEO_LOCATION        "Erzeuge einen neuen VRML97 Amd. 1 GeoLocation Knoten\nVRML97 Amd. 1 GeoLocation"
+    ID_DE_NEW_GEO_ORIGIN          "Fuege einen neuen VRML97 Amd. 1 GeoOrigin Knoten ein\nVRML97 Amd. 1 GeoOrigin"
+    ID_DE_NEW_GEO_POSITION_INTERPOLATOR "Erzeuge einen neuen VRML97 Amd. 1 GeoPositionInterpolator Knoten\nVRML97 Amd. 1 GeoPositionInterpolator"
+    ID_DE_NEW_GEO_TOUCH_SENSOR    "Erzeuge einen neuen VRML97 Amd. 1 GeoTouchSensor Knoten\nVRML97 Amd. 1 GeoTouchSensor"
+    ID_DE_NEW_GEO_METADATA        "Fuege einen neuen X3D GeoMetadata Knoten ein\nVRML97 Amd. 1 GeoMetadata"
     ID_DE_NEW_GEO_PROXIMITY_SENSOR    "Erzeuge einen neuen X3D GeoProximitySensor Knoten.\nX3D GeoProximitySensor"
     ID_DE_NEW_GEO_TRANSFORM    "Erzeuge einen neuen X3D GeoTransform Knoten.\nX3D GeoTransform"
 END
@@ -3419,9 +3419,9 @@ BEGIN
     ID_DE_NEW_MULTI_TEXTURE_TRANSFORM "Erzeuge einen neuen X3D MultiTextureTransform Knoten\nX3D MultiTextureTransform"
     ID_DE_NEW_FILL_PROPERTIES "Erzeuge einen neuen X3D FillProperties Knoten\nX3D FillProperties"
     ID_DE_NEW_LINE_PROPERTIES "Erzeuge einen neuen X3D LineProperties Knoten\nX3D LineProperties"
-    ID_DE_NEW_COORDINATE_DOUBLE "Fuege einen neuen CoordinateDouble Knoten ein (braucht Indexed*Set or PointSet, nicht dargestellt).\nCoordinateDouble (braucht Indexed*Set or PointSet, nicht dargestellt)"
+    ID_DE_NEW_COORDINATE_DOUBLE "Fuege einen neuen CoordinateDouble Knoten ein (braucht Indexed*Set or PointSet).\nCoordinateDouble (braucht Indexed*Set or PointSet)"
     ID_DE_NEW_COLOR_RGBA      "Fuege einen neuen X3D ColorRGBA Knoten ein (braucht Indexed*Set oder PointSet oder ElevationGrid).\nX3D ColorRGBA (braucht Indexed*Set oder PointSet oder ElevationGrid)"
-    ID_DE_NEW_NURBS_TEXTURE_COORDINATE "Fuege einen neuen X3D NurbsTextureCoordinate Knoten ein (braucht NurbsPatchSurface) (nicht dargestellt)\nX3D NurbsTextureCoordinate (braucht NurbsPatchSurface) (nicht dargestellt)"
+    ID_DE_NEW_NURBS_TEXTURE_COORDINATE "Fuege einen neuen X3D NurbsTextureCoordinate Knoten ein (braucht NurbsPatchSurface, nicht dargetellt)\nX3D NurbsTextureCoordinate (braucht NurbsPatchSurface) (nicht dargestellt)"
     ID_DE_NEW_TEXTURE_COORDINATE_GENERATOR "Fuege einen neuen X3D TextureCoordinateGenerator Knoten (nicht dargestellt, braucht IndexedFaceSet oder ElevationGrid  oder Multi*TextureCoordinate).\nX3D TextureCoordinateGenerator (nicht dargestellt, braucht IndexedFaceSet oder ElevationGrid oder Multi*TextureCoordinate)"
     ID_DE_NEW_BOOLEAN_FILTER  "Erzeuge einen neuen X3D BooleanFilter Knoten.\nX3D BooleanFilter"
     ID_DE_NEW_BOOLEAN_TOGGLE  "Erzeuge einen neuen X3D BooleanToggle Knoten.\nX3D BooleanToggle"
@@ -3461,7 +3461,7 @@ BEGIN
     ID_DE_NEW_NORMAL           "Fuege einen neuen Normal Knoten ein (braucht IndexedFaceSet).\nNormal (braucht IndexedFaceSet)"
     ID_DE_NEW_COLOR            "Fuege einen neuen Color Knoten ein (braucht Indexed*Set oder PointSet oder ElevationGrid).\nColor (braucht Indexed*Set oder PointSet oder ElevationGrid)"
     ID_DE_NEW_TEXTURE_COORDINATE "Fuege einen neuen TextureCoordinate Knoten ein (braucht IndexedFaceSet).\nTextureCoordinate (braucht IndexedFaceSet)"
-    ID_DE_NEW_FONT_STYLE       "Fuege einen neuen FontStyle Knoten ein (braucht Text) (nicht dargestellt).\nFontStyle (braucht Text) (nicht dargestellt)"
+    ID_DE_NEW_FONT_STYLE       "Fuege einen neuen FontStyle Knoten ein (braucht Text).\nFontStyle (braucht Text)"
 END
 
 STRINGTABLE DISCARDABLE

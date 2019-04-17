@@ -318,7 +318,8 @@ NodeSuperEllipsoid::createMesh(SuperEllipsoidData *data, bool cleanVertices)
     meshFlags |= MESH_NORMAL_PER_VERTEX;
 
     m_mesh = new MyMesh(this, vert, coordIndex, NULL, NULL, NULL, NULL, 
-                        texCoords, NULL, creaseAngle()->getValue(), meshFlags);
+                        texCoords, NULL, creaseAngle()->getValue(), meshFlags, 
+                        0);
 }
 
 void

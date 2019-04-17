@@ -756,7 +756,7 @@ BEGIN
        BEGIN
            MENUITEM "&Anchor",                          ID_NEW_ANCHOR
            MENUITEM "&Inline",                          ID_NEW_INLINE
-           POPUP "VRML97 Amendment 1/X3D WWW"
+           POPUP "VRML97 Amendment 1/X3D"
            BEGIN
                MENUITEM "InlineLoadControl",            ID_NEW_INLINE_LOAD_CONTROL
            END
@@ -768,18 +768,18 @@ BEGIN
            MENUITEM "&Normal (a besoin d' IndexedFaceSet ou d' ElevationGrid)", ID_NEW_NORMAL
            MENUITEM "&Color (a besoin d' *Set, PointSet ou d' *ElevationGrid)", ID_NEW_COLOR
            MENUITEM "&TextureCoordinate (a besoin d' IndexedFaceSet ou d' ElevationGrid)", ID_NEW_TEXTURE_COORDINATE
-           MENUITEM "&FontStyle (a besoin de Text, non représenté)", ID_NEW_FONT_STYLE
+           MENUITEM "&FontStyle (a besoin de Text)",    ID_NEW_FONT_STYLE
            POPUP "VRML97 Amendment 1/X3D Sous-noeud"
            BEGIN
-               MENUITEM "Contour2D (a besoin de TrimmedSurface", ID_NEW_CONTOUR_2D
+               MENUITEM "Contour2D (a besoin de TrimmedSurface)", ID_NEW_CONTOUR_2D
                POPUP "Contour2D/Nurbs Forme Sous-noeud"
                BEGIN
                    MENUITEM "NurbsCurve2D",             ID_NEW_NURBS_CURVE_2D
                    MENUITEM "(Contour)Polyline2D",      ID_NEW_CONTOUR_POLYLINE_2D
                END
-               MENUITEM "CoordinateDouble (a besoin d' Indexed*Set ou de PointSet, non représenté)", ID_NEW_COORDINATE_DOUBLE
+               MENUITEM "CoordinateDouble (a besoin d' Indexed*Set ou de PointSet)", ID_NEW_COORDINATE_DOUBLE
                MENUITEM "ColorRGBA (a besoin d' Indexed*Set, PointSet ou d' ElevationGrid)", ID_NEW_COLOR_RGBA
-               MENUITEM "FogCoordinate (a besoin de *Set, non représenté)", ID_NEW_FOG_COORDINATE
+               MENUITEM "FogCoordinate (a besoin de *Set)", ID_NEW_FOG_COORDINATE
                MENUITEM "TextureCoordinateGenerator (a besoin d' IndexedFaceSet, d' ElevationGrid ou de Multi*TextureCoordinate, non représenté)", ID_NEW_TEXTURE_COORDINATE_GENERATOR
                MENUITEM "NurbsTextureCoordinate (a besoin de NurbsPatchSurface, non représenté)", ID_NEW_NURBS_TEXTURE_COORDINATE
                MENUITEM "MultiTextureCoordinate",       ID_NEW_MULTI_TEXTURE_COORDINATE
@@ -858,8 +858,8 @@ BEGIN
                MENUITEM "SplineScalarInterpolator (non représenté)", ID_NEW_SPLINE_SCALAR_INTERPOLATOR
                MENUITEM "SplinePositionInterpolator (non représenté)", ID_NEW_SPLINE_POSITION_INTERPOLATOR
                MENUITEM "SplinePositionInterpolator2D (non représenté)", ID_NEW_SPLINE_POSITION_INTERPOLATOR_2D
-               MENUITEM "PositionInterpolator2D (non représenté)", ID_NEW_POSITION_INTERPOLATOR_2D
-               MENUITEM "CoordinateInterpolator2D (non représenté)", ID_NEW_COORDINATE_INTERPOLATOR_2D
+               MENUITEM "PositionInterpolator2D",         ID_NEW_POSITION_INTERPOLATOR_2D
+               MENUITEM "CoordinateInterpolator2D",       ID_NEW_COORDINATE_INTERPOLATOR_2D
                MENUITEM "SquadOrientationInterpolator (non représenté)", ID_NEW_SQUAD_ORIENTATION_INTERPOLATOR
                MENUITEM "EaseInEaseOut (non représenté)", ID_NEW_EASE_IN_EASE_OUT
            END
@@ -871,17 +871,17 @@ BEGIN
        END
        POPUP "Geospatial (X3D/VRML97 Amendement 1)"
        BEGIN
-           MENUITEM "GeoElevationGrid (non représenté)",  ID_NEW_GEO_ELEVATION_GRID
-           MENUITEM "GeoLOD (non représenté)",            ID_NEW_GEO_LOD
-           MENUITEM "GeoViewpoint (non représenté)",      ID_NEW_GEO_VIEWPOINT
-           MENUITEM "GeoCoordinate (a besoin d' Indexed*Set ou de PointSet, non représenté)", ID_NEW_GEO_COORDINATE
-           MENUITEM "GeoLocation (non représenté)",       ID_NEW_GEO_LOCATION
-           MENUITEM "GeoOrigin (non représenté)",         ID_NEW_GEO_ORIGIN
-           MENUITEM "GeoPositionInterpolator (non représenté)", ID_NEW_GEO_POSITION_INTERPOLATOR
-           MENUITEM "GeoTouchSensor (non représenté)",    ID_NEW_GEO_TOUCH_SENSOR
-           MENUITEM "GeoMetadata (non représenté)",       ID_NEW_GEO_METADATA
+           MENUITEM "GeoElevationGrid",                   ID_NEW_GEO_ELEVATION_GRID
+           MENUITEM "GeoLOD",                             ID_NEW_GEO_LOD
+           MENUITEM "GeoViewpoint",                       ID_NEW_GEO_VIEWPOINT
+           MENUITEM "GeoCoordinate (a besoin d' Indexed*Set ou de PointSet)", ID_NEW_GEO_COORDINATE
+           MENUITEM "GeoLocation",                        ID_NEW_GEO_LOCATION
+           MENUITEM "GeoOrigin",                          ID_NEW_GEO_ORIGIN
+           MENUITEM "GeoPositionInterpolator",            ID_NEW_GEO_POSITION_INTERPOLATOR
+           MENUITEM "GeoTouchSensor",                     ID_NEW_GEO_TOUCH_SENSOR
+           MENUITEM "GeoMetadata",                        ID_NEW_GEO_METADATA
            MENUITEM "GeoProximitySensor",                 ID_NEW_GEO_PROXIMITY_SENSOR
-           MENUITEM "GeoTransform (non représenté)",      ID_NEW_GEO_TRANSFORM
+           MENUITEM "GeoTransform",                       ID_NEW_GEO_TRANSFORM
        END
        POPUP "X3D misc components"
        BEGIN

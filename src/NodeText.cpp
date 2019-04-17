@@ -224,7 +224,8 @@ void combineCallback(GLdouble coords[3], GLdouble *vertex_data[4], GLfloat weigh
 }
 
 
-float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps, float offset, float extrude) 
+float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps, 
+                   float offset, float extrude) 
 {
     static FT_UInt prevCharIndex = 0, curCharIndex = 0;
         static FT_Pos  prev_rsb_delta = 0;
@@ -418,10 +419,12 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
     float fspacing = 1;
 
     int ijustify = JUSTIFY_BEGIN;
+    bool bleftToRight = true;
     if (fontStyle) {
         fsizeX = fontStyle->getSizeX() * SPACING;
         fsizeY = fontStyle->getSizeY() * SPACING;
         fspacing = fontStyle->spacing()->getValue();
+        bleftToRight = fontStyle->leftToRight()->getValue();
     }
 
     MFVec3f *coords = new MFVec3f();
@@ -438,8 +441,14 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
                 ijustify = JUSTIFY_END;
         }
         float offset = 0; 
+        if (bleftToRight)
+            if (strlen(str) > 0)
+                offset = strlen(str) + 1;
         for (unsigned int i = 0; i < strlen(str); i++) {
-            offset = AddCharacter(face, str[i], bezierSteps, offset, extrude);
+            int ind = i;
+            if (!bleftToRight)
+                ind = strlen(str) - 1 - i;
+            offset = AddCharacter(face, str[ind], bezierSteps, offset, extrude);
         }
 
         float maxX = FLT_MIN;

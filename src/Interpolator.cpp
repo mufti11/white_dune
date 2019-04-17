@@ -279,7 +279,6 @@ Interpolator::sendInterpolatedValue(double timestamp, float k)
     }
 }
 
-
 void
 Interpolator::interpolate(float key, float *values)
 {

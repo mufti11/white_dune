@@ -1350,7 +1350,9 @@ AC_CHECK_LIB(GL, glBegin , , GL_ERROR=1)
 if test "X_$GL_ERROR" = "X_1" ; then
    AC_CHECK_LIB(MesaGL, glBegin , GL_ERROR=0)
 fi
+
 AC_CHECK_FUNCS(glVertex3f)
+AC_CHECK_FUNCS(glFogCoordf)
 AC_CHECK_FUNCS(glDeleteTextures)
 AC_CHECK_FUNCS(glGenTextures)
 AC_CHECK_FUNCS(glBindTexture)

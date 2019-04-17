@@ -716,9 +716,11 @@ DuneApp::saveTempFiles(MainWindow *currentWindow, int useExtensionTxt)
      while (wIter != NULL) {
          MainWindow *windowToDelete = wIter->item();
          wIter = wIter->next();
-         windowToDelete->destroyMainWindow();
-         m_windows.remove(m_windows.find(windowToDelete));
+         if (windowToDelete != NULL) {
+             windowToDelete->destroyMainWindow();
+             m_windows.remove(m_windows.find(windowToDelete));
 // fix me         delete windowToDelete;
+         }
      }
      swUpdate();
      return true;

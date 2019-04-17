@@ -41,6 +41,7 @@
 #include "swt.h"
 
 #include "SFMFTypes.h"
+#include "SFRotation.h"
 #include "CoverNode.h"
 #include "KambiViewpointCommonFields.h"
 #include "DuneApp.h"
@@ -80,9 +81,9 @@ public:
     virtual Node       *copy() const { return new ViewpointNode(*this); }
 
     virtual void        preDraw(bool useStereo = TheApp->useStereo());
-    void                apply(bool useStereo = TheApp->useStereo(), 
-                              Vec3d vec = Vec3d());
-    void                transformForViewpoint(bool useStereo, Vec3d vec);
+    void                apply(bool useStereo, Vec3d vec, SFRotation rot);
+    void                transformForViewpoint(bool useStereo, Vec3d vec, 
+                                              SFRotation rot);
 
     virtual Vec3d       getPosition() const;
     

@@ -288,7 +288,8 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
     meshFlags |= MESH_NORMAL_PER_VERTEX;
 
     m_mesh = new MyMesh(this, vert, coordIndex, NULL, NULL, NULL, NULL, 
-                        texCoords, NULL, creaseAngle()->getValue(), meshFlags);
+                        texCoords, NULL, creaseAngle()->getValue(), meshFlags,
+                        0);
     if (sidesClosed)
         m_mesh->triangulate(this);
     m_meshDirty = false;

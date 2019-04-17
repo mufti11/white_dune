@@ -42,6 +42,7 @@
 #include "NodeShape.h"
 #include "NodeCoordinate.h"
 #include "NodeGeoCoordinate.h"
+#include "NodeFogCoordinate.h"
 #include "Util.h"
 #include "LdrawDefines.h"
 
@@ -134,11 +135,23 @@ NodeLineSet::lineDraw()
         Util::myGlColor4fv(c);
     }
 
-    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
-        return;
+    MFVec3f *coords = NULL;
+    MFVec3d *coordsDouble = NULL;
+    int coordSize;
+    if (coord->getType() == VRML_COORDINATE) {
+        coords = ((NodeCoordinate *) coord)->point();
+        coordSize = coords->getSize();
+    } else {
+        coordsDouble = ((NodeGeoCoordinate *) coord)->pointX3D();
+        coordSize = coordsDouble->getSize();
+    }
 
-    MFVec3f *coords = ((NodeCoordinate *) coord)->point();
-    int coordSize = coords->getSFSize();
+    MFFloat *fogDepth = NULL;
+    if (fogCoord()->getValue())
+        if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
+            fogDepth = ((NodeFogCoordinate *) 
+                         (fogCoord()->getValue()))->depth();
+
 
     int numVertices = 0;
     for (int i = 0; i < vertexCount()->getSize(); i++) {
@@ -149,7 +162,19 @@ NodeLineSet::lineDraw()
                     Util::myGlColor3fv(colors->getValues() + numVertices * 3);
             }
             if (numVertices < coordSize) {
-                glVertex3fv(coords->getValue(numVertices));
+                if (coords)
+                    glVertex3fv(coords->getValue(j));
+                else
+                    glVertex3dv(coordsDouble->getValue(j));
+#ifdef HAVE_GLFOGCOORDF
+                if (fogDepth) {
+                    int fogIndex = fogDepth->getSize() - 1;
+                    if (i < fogDepth->getSize())
+                        fogIndex = i;
+                    if (fogIndex > -1)
+                        glFogCoordf(fogDepth->getValue(fogIndex));
+               }
+#endif
             }
             numVertices++;    
         }

@@ -153,7 +153,7 @@ public:
                                 MyArray<MFVec2f *>texCoords, 
                                 MFInt32 *texCoordIndex,
                                 float creaseAngle, int meshFlags, 
-                                float transparency = 0);
+                                float transparency, MFFloat *fogCoords = NULL);
     virtual            ~MyMeshX();
                 
     MyMeshX            *copy(void);
@@ -182,6 +182,7 @@ public:
     bool                convex()               { return m_convex; }
     bool                colorPerVertex()       { return m_colorPerVertex; }
     bool                normalPerVertex()      { return m_normalPerVertex; }
+    MFFloat            *getFogCoords()         { return m_fogCoords; }
 
     void                addCoords(MFInt32 *coords, float *color, 
                                   MFFloat *colors, bool rgbaColor, 
@@ -276,6 +277,7 @@ private:
     bool                m_colorPerVertex;
     bool                m_colorRGBA;
     float               m_transparency;
+    MFFloat            *m_fogCoords;    
 
     bool                m_isTriangulated;
 
@@ -318,10 +320,10 @@ public:
            MFVec3f *normals, MFInt32 *normalIndex, MFFloat *colors, 
            MFInt32 *colorIndex, MyArray<MFVec2f *>texCoords, 
            MFInt32 *texCoordIndex, float creaseAngle, int meshFlags, 
-           float transparency = 0) :
+           float transparency, MFFloat *fogCoords = NULL) :
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
-                transparency)  {}
+                transparency, fogCoords)  {}
     virtual void drawVertex(const float *v); 
 };
 
@@ -333,10 +335,10 @@ public:
                  MFVec3f *normals, MFInt32 *normalIndex, MFFloat *colors, 
                  MFInt32 *colorIndex, MyArray<MFVec2f *>texCoords, 
                  MFInt32 *texCoordIndex, float creaseAngle, int meshFlags, 
-                 float transparency = 0) :
+                 float transparency, MFFloat *fogCoords = NULL) :
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
-                transparency)  {}
+                transparency, fogCoords)  {}
     virtual void drawVertex(const double *v); 
 };
 
@@ -348,7 +350,7 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
      MeshBasedNode *node, MFX *vertices, MFInt32 *coordIndex, MFVec3f *normals,
      MFInt32 *normalIndex, MFFloat *colors, MFInt32 *colorIndex,
      MyArray<MFVec2f *>texCoords, MFInt32 *texCoordIndex, float creaseAngle, 
-     int meshFlags, float transparency)
+     int meshFlags, float transparency, MFFloat *fogCoords)
 {
     m_node = node;
 
@@ -411,6 +413,9 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
         m_texCoordIndex = m_coordIndex;
     if (m_texCoordIndex)
         m_texCoordIndex->ref();
+    m_fogCoords = fogCoords;
+    if (m_fogCoords)
+        m_fogCoords->ref();
 
     m_faces = NULL;
     m_numFaces = 0;
@@ -648,6 +653,9 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass)
     const float *colors = m_colors ? m_colors->getValues() : NULL;
     const int *colorIndex = m_colorIndex ? m_colorIndex->getValues() : NULL;
 
+    const float *fogDepth = m_colors ? m_fogCoords->getValues() : NULL;
+    int numFogDepth = m_fogCoords ? m_fogCoords->getSize() : 0;
+
     bool ccw = m_ccw;
     bool solid = m_solid;
     int meshFlags = getMeshFlags();
@@ -746,6 +754,16 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass)
                 if ((index >= 0) && (index < m_normals->getSize()))
                     glNormal3fv(normals + index);
             }
+#ifdef HAVE_GLFOGCOORDF
+            if (fogDepth) {
+                int fogIndex = numFogDepth - 1;
+                    if (coordIndex[j] < numFogDepth)
+                        fogIndex = coordIndex[j];
+                    if (fogIndex > -1)
+                        glFogCoordf(fogDepth[fogIndex]);
+               }
+#endif
+
             drawVertex(vertices + coordIndex[j] * 3);            
         }
         glEnd();

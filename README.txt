@@ -5039,5 +5039,11 @@ Added Geospatial rendering
 
 Added double types to Script dialog
 
+Fixed GeoCoordinate problem for *Triangle*Set nodes
+
+Added FogCoord rendering
+
+Fixed FontStyle.leftToRight rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 

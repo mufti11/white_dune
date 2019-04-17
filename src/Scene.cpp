@@ -79,6 +79,7 @@ extern "C" {
 #include "MoveCommand.h"
 #include "Node.h"
 #include "SFNode.h"
+#include "SFRotation.h"
 #include "SFTime.h"
 #include "MFNode.h"
 #include "Proto.h"
@@ -4881,7 +4882,8 @@ Scene::applyCamera()
     else if (m_currentViewpoint->getType() == VRML_GEO_VIEWPOINT)
         ((NodeGeoViewpoint *)m_currentViewpoint)->apply();
     else
-        ((NodeViewpoint *)m_currentViewpoint)->apply();
+        ((NodeViewpoint *)m_currentViewpoint)->apply(TheApp->useStereo(),
+                                                     Vec3d(), SFRotation());
 
     m_viewpointUpdated = false;
 }

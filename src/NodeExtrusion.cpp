@@ -681,7 +681,7 @@ void NodeExtrusion::createMesh(bool cleanDoubleVertices, bool triangulate)
     MyArray<MFVec2f *>texCoords;
     m_mesh = new MyMesh(this, vertices, coordIndex, NULL, NULL,
                         NULL, NULL, texCoords, NULL, creaseAngle()->getValue(), 
-                        meshFlags);
+                        meshFlags, 0);
 //#ifdef HAVE_GLUNEWTESS
 //    m_mesh->triangulate();
 //#endif

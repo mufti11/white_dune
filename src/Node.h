@@ -1124,158 +1124,158 @@ public:
                                 getParentField(m_geometricParentIndex);
                            }
 
-    Node            *getParent(int index) const 
-                         { return index == -1 ? NULL: m_parents[index].m_node; }
-    int              getParentField(int index) const 
-                         { return index == -1 ? -1 : m_parents[index].m_field; }
+    Node             *getParent(int index) const 
+                          { 
+                          return index == -1 ? NULL: m_parents[index].m_node; 
+                          }
+    int               getParentField(int index) const 
+                          { 
+                          return index == -1 ? -1 : m_parents[index].m_field;
+                          }
 
-    int              getParentFieldOrProtoParentField(void) const;
-    Node            *searchParent(int nodeType) const; 
-    Node            *searchParentField(int parentfield) const; 
-    int              getParentIndex(void) const;
-    FieldValue      *getParentFieldValue(void) const;
+    int               getParentFieldOrProtoParentField(void) const;
+    Node             *searchParent(int nodeType) const; 
+    Node             *searchParentField(int parentfield) const; 
+    int               getParentIndex(void) const;
+    FieldValue       *getParentFieldValue(void) const;
 
-    bool             hasBranchInputs(void);
+    bool              hasBranchInputs(void);
 
-    virtual int      write(int filedes, int indent);
-    virtual int      writeXml(int filedes, int indent, 
-                              int containerField = -1);
+    virtual int       write(int filedes, int indent);
+    virtual int       writeXml(int filedes, int indent, 
+                               int containerField = -1);
 
-    bool             isInScene(Scene* scene) const;
-    virtual void     addFieldNodeList(int index, NodeList *value,
+    bool              isInScene(Scene* scene) const;
+    virtual void      addFieldNodeList(int index, NodeList *value,
                                       int containerField = -1);
-    bool             hasAncestor(Node *node) const;
-    virtual int      getAnimatedNodeField(int field) { return -1; }
-    virtual bool     supportAnimation(void);
-    virtual bool     supportCurveAnimation(void) { return false; }
-    bool             supportInteraction(void);
-    virtual Colored *getColored() { return NULL; }
-    virtual int      getAnimationCommentID(void) { return -1; }
-    virtual int      getInteractionCommentID(void) { return -1; }
-    virtual bool     isInvalidChild(void);
-    virtual bool     hasBoundingBox(void) { return false; }
-    virtual Vec3f    getMinBoundingBox(void);
-    virtual Vec3f    getMaxBoundingBox(void);
-    virtual void     flip(int index) {}
-    virtual void     swap(int fromTo) {}
-    virtual bool     showFields(); 
-    virtual bool     isEXTERNPROTO(void) { return false; }
+    bool              hasAncestor(Node *node) const;
+    virtual int       getAnimatedNodeField(int field) { return -1; }
+    virtual bool      supportAnimation(void);
+    virtual bool      supportCurveAnimation(void) { return false; }
+    bool              supportInteraction(void);
+    virtual Colored  *getColored() { return NULL; }
+    virtual int       getAnimationCommentID(void) { return -1; }
+    virtual int       getInteractionCommentID(void) { return -1; }
+    virtual bool      isInvalidChild(void);
+    virtual bool      hasBoundingBox(void) { return false; }
+    virtual Vec3f     getMinBoundingBox(void);
+    virtual Vec3f     getMaxBoundingBox(void);
+    virtual void      flip(int index) {}
+    virtual void      swap(int fromTo) {}
+    virtual bool      showFields(); 
+    virtual bool      isEXTERNPROTO(void) { return false; }
     // for Hanim
-    virtual void     applyJoint(int skinNum, MyMesh *mesh, MFVec3f *vertices,
-                                Node *parent) {}
-    virtual bool     getMatrixDirty(void) { return false; }
+    virtual void      applyJoint(int skinNum, MyMesh *mesh, MFVec3f *vertices,
+                                 Node *parent) {}
+    virtual bool      getMatrixDirty(void) { return false; }
 
-    void             appendTo(NodeList* nodelist);
-    void             appendComment(Node *node);
+    void              appendTo(NodeList* nodelist);
+    void              appendComment(Node *node);
 
-    void             doWithParents(DoWithNodeCallback callback, void *data,
-                                   bool searchInRest = true, 
-                                   bool callSelf = true);
-    void             doWithSiblings(DoWithNodeCallback callback, void *data,
+    void              doWithParents(DoWithNodeCallback callback, void *data,
                                     bool searchInRest = true, 
-                                    bool callSelf = true);
+                                   bool callSelf = true);
+    void              doWithSiblings(DoWithNodeCallback callback, void *data,
+                                     bool searchInRest = true, 
+                                     bool callSelf = true);
 
-    bool             doWithBranch(DoWithNodeCallback callback, void *data,
-                                  bool searchInRest = true, 
-                                  bool skipBranch = false,
-                                  bool skipProto = false,
-                                  bool callSelf = true,
-                                  bool skipInline = true,
-                                  bool searchInConvertedNodes = false);
+    bool              doWithBranch(DoWithNodeCallback callback, void *data,
+                                   bool searchInRest = true, 
+                                   bool skipBranch = false,
+                                   bool skipProto = false,
+                                   bool callSelf = true,
+                                   bool skipInline = true,
+                                   bool searchInConvertedNodes = false);
 
-    bool             doWithSimilarBranch(DoWithSimilarBranchCallback 
-                                         callback, Node *similarNode, 
-                                         void *data);
+    bool              doWithSimilarBranch(DoWithSimilarBranchCallback 
+                                          callback, Node *similarNode, 
+                                          void *data);
 
-    void             doWithAllElements(DoWithAllElementsCallback callback, 
-                                       void *data);
+    void              doWithAllElements(DoWithAllElementsCallback callback, 
+                                        void *data);
 
-    parentFlag       getParentFlag(int index) const 
-                         { 
-                         return m_parents.get(index).m_parentFlag; 
-                         }
+    parentFlag        getParentFlag(int index) const 
+                          { return m_parents.get(index).m_parentFlag; }
 
-    void             setParentFlag(int index, parentFlag flag) 
-                         { 
-                         m_parents[index].m_parentFlag = flag; 
-                         }
+    void              setParentFlag(int index, parentFlag flag) 
+                          { m_parents[index].m_parentFlag = flag; }
 
-    bool             isFirstUSE(void)
-                         { 
-                         if (isPROTO())
-                             return m_geometricParentIndex == 1; 
-                         else
-                             return m_geometricParentIndex == 0; 
-                         }
-    bool             isUnused(void) { return m_geometricParentIndex == -1; }
+    bool              isFirstUSE(void)
+                          { 
+                          if (isPROTO())
+                              return m_geometricParentIndex == 1; 
+                          else
+                              return m_geometricParentIndex == 0; 
+                          }
+    bool              isUnused(void) { return m_geometricParentIndex == -1; }
 
-    void             copyChildrenTo(Node *copyedNode, 
-                                    bool copyNonNodes = false);
-    void             copyOutputsTo(Node *copyedNode);
+    void              copyChildrenTo(Node *copyedNode, 
+                                     bool copyNonNodes = false);
+    void              copyOutputsTo(Node *copyedNode);
 
-    int              getPrevSiblingIndex(void);
-    int              getNextSiblingIndex(void);
+    int               getPrevSiblingIndex(void);
+    int               getNextSiblingIndex(void);
 
-    Node            *getPrevSibling(void);
-    Node            *getNextSibling(void);
+    Node             *getPrevSibling(void);
+    Node             *getNextSibling(void);
 
-    virtual bool     isJoint(void) { return false; }
-    virtual bool     isHumanoid(void) { return false; }
+    virtual bool      isJoint(void) { return false; }
+    virtual bool      isHumanoid(void) { return false; }
 
-    virtual int      writeC(int filedes, int languageFlag);
-    int              writeCDataAsFunctions(int filedes, int languageFlag,
-                                           bool cont = false);
-    int              writeCDataAsClasses(int filedes, int languageFlag);
-    int              writeCDataFunction(int filedes, int languageFlag,
-                                        bool forward, bool cont = false);
-    int              writeCDataFunctionFields(int filedes, int languageFlag,
-                                              bool forward, bool cont);
-    int              writeCElement(int f, int elementType, int i, 
-                                   int languageFlag, bool nodeFlag);
-    int              writeCElementFunction(int f, int elementType, 
-                                           int i, int languageFlag, 
-                                           bool nodeFlag, bool cont = false);
-    int              writeCElementClass(int f, int elementType, int i, 
-                                        int languageFlag, bool nodeFlag);
-    int              writeCAndFollowRoutes(int f, int indent, 
-                                           int languageFlag, 
-                                           bool writeSensorNodes,
-                                           const char *eventName);
-    int              writeCProcessEvent(int f, int indent, int languageFlag, 
-                                        const char *eventName);
-    int              writeCEndSendEvent(int f, int indent, int languageFlag);
-    int              writeCProcessEventCallback(int f, int languageFlag);
-    virtual int      writeCDynamicNodeCallback(int f, int languageFlag) 
-                         { return 0; }
-    int              writeCInstallDynamicNodeCallback(int f, int languageFlag,
-                                                      Proto *proto);
+    virtual int       writeC(int filedes, int languageFlag);
+    int               writeCDataAsFunctions(int filedes, int languageFlag,
+                                            bool cont = false);
+    int               writeCDataAsClasses(int filedes, int languageFlag);
+    int               writeCDataFunction(int filedes, int languageFlag,
+                                         bool forward, bool cont = false);
+    int               writeCDataFunctionFields(int filedes, int languageFlag,
+                                               bool forward, bool cont);
+    int               writeCElement(int f, int elementType, int i, 
+                                    int languageFlag, bool nodeFlag);
+    int               writeCElementFunction(int f, int elementType, 
+                                            int i, int languageFlag, 
+                                            bool nodeFlag, bool cont = false);
+    int               writeCElementClass(int f, int elementType, int i, 
+                                         int languageFlag, bool nodeFlag);
+    int               writeCAndFollowRoutes(int f, int indent, 
+                                            int languageFlag, 
+                                            bool writeSensorNodes,
+                                            const char *eventName);
+    int               writeCProcessEvent(int f, int indent, int languageFlag, 
+                                         const char *eventName);
+    int               writeCEndSendEvent(int f, int indent, int languageFlag);
+    int               writeCProcessEventCallback(int f, int languageFlag);
+    virtual int       writeCDynamicNodeCallback(int f, int languageFlag) 
+                          { return 0; }
+    int               writeCInstallDynamicNodeCallback(int f, int languageFlag,
+                                                       Proto *proto);
 
-    virtual void     writeCWarning(void) {}
+    virtual void      writeCWarning(void) {}
 
-    virtual bool     canWriteCattGeo();
-    virtual int      writeCattGeo(int filedes, int indent);
-    int              getGeometricParentIndex(void) const
-                         { return m_geometricParentIndex; }
-    Path            *getPath() const;
-    bool             isDeepInsideProto(void);
+    virtual bool      canWriteCattGeo();
+    virtual int       writeCattGeo(int filedes, int indent);
+    int               getGeometricParentIndex(void) const
+                          { return m_geometricParentIndex; }
+    Path             *getPath() const;
+    bool              isDeepInsideProto(void);
 
-    virtual char    *buildExportMaterialName(const char *name)
-                         { return mystrdup(name); }
-    char*            getExportMaterialName(const char *defaultName);
+    virtual char     *buildExportMaterialName(const char *name)
+                          { return mystrdup(name); }
+    char*             getExportMaterialName(const char *defaultName);
 
-    int              getContainerField(void); 
-    void             setContainerField(int containerField);
+    int               getContainerField(void); 
+    void              setContainerField(int containerField);
 
-    Node            *getProtoParent(void) { return m_protoParent; }
-    void             setProtoParent(Node *n) { m_protoParent = n; }
-    void             setNodePROTO(NodePROTO *node);
+    Node             *getProtoParent(void) { return m_protoParent; }
+    void              setProtoParent(Node *n) { m_protoParent = n; }
+    void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
 protected:
-    int              m_geometricParentIndex;
-    NodeList        *m_commentsList;
-    int              m_numberCDataFunctions;
-    int              m_containerField;
-    Node            *m_protoParent;
+    int               m_geometricParentIndex;
+    NodeList         *m_commentsList;
+    int               m_numberCDataFunctions;
+    int               m_containerField;
+    Node             *m_protoParent;
 };
 
 #endif // _NODE_H

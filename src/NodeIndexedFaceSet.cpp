@@ -45,6 +45,7 @@
 #include "NodeTextureCoordinate.h"
 #include "NodeIndexedLineSet.h"
 #include "NodeShape.h"
+#include "NodeFogCoordinate.h"
 #include "Util.h"
 #include "MoveCommand.h"
 #include "Field.h"
@@ -336,6 +337,12 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         }
     }    
 
+    MFFloat *fogCoords = NULL;
+    if (fogCoord()->getValue())
+        if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
+            fogCoords = ((NodeFogCoordinate *) 
+                         (fogCoord()->getValue()))->depth();
+
     MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
 
@@ -367,7 +374,7 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                             colors, colorIndex, texCoords, texCoordIndex,
                             creaseAngle()->getFixedAngle(
                                 m_scene->getUnitAngle()), 
-                            meshFlags, transparency);
+                            meshFlags, transparency, fogCoords);
         m_isDoubleMesh = false;
     } else if (coord->getType() == VRML_GEO_COORDINATE) {
         MFVec3d *coords = ((NodeGeoCoordinate *)coord)->pointX3D();
@@ -376,7 +383,7 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                                         texCoords, texCoordIndex, 
                                         creaseAngle()->getFixedAngle(
                                             m_scene->getUnitAngle()), 
-                                        meshFlags, transparency);
+                                        meshFlags, transparency, fogCoords);
         m_isDoubleMesh = true;
     }
 }

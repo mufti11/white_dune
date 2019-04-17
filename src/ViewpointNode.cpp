@@ -111,7 +111,7 @@ ViewpointNode::preDraw(bool useStereo)
     glPushMatrix();
     glLoadIdentity();
     if (m_scene->isCurrentViewpoint(this)) 
-        transformForViewpoint(useStereo, Vec3d());
+        transformForViewpoint(useStereo, Vec3d(), SFRotation());
     glMultMatrixf((GLfloat *) matrix2);
     glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
@@ -120,7 +120,7 @@ ViewpointNode::preDraw(bool useStereo)
 }
 
 void 
-ViewpointNode::apply(bool useStereo, Vec3d vec)
+ViewpointNode::apply(bool useStereo, Vec3d vec, SFRotation rot)
 {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -135,11 +135,12 @@ ViewpointNode::apply(bool useStereo, Vec3d vec)
     }
     glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
-    transformForViewpoint(useStereo, vec);
+    transformForViewpoint(useStereo, vec, rot);
 }
 
 void 
-ViewpointNode::transformForViewpoint(bool useStereo, Vec3d vec)
+ViewpointNode::transformForViewpoint(bool useStereo, Vec3d vec, 
+                                     SFRotation extrarot)
 {
     double unitAngle = m_scene->getUnitAngle();
 
@@ -165,6 +166,14 @@ ViewpointNode::transformForViewpoint(bool useStereo, Vec3d vec)
     glTranslatef(eyeposition, 0, 0);
     glRotatef(eyeangle, 0,1,0);
     glRotatef(-RAD2DEG(rot[3] * unitAngle), rot[0], rot[1], rot[2]);
+    if (!((vec.x == 0) && (vec.y == 0) && (vec.z == 0))) {
+        // is a GeoViewpoint: strange rotations
+        const float *erot = extrarot.getValue();
+        glRotatef(RAD2DEG(erot[3] / 2 * unitAngle), erot[0], erot[1], erot[2]);
+        glRotatef(270 - 45 + 22.5, 0, 0, 1);
+        glRotatef(22.5, 1, 0, 0);
+        glRotatef(22.5, 0, 1, 0);
+    }
     glTranslated(-pos.x, -pos.y, -pos.z);
     glTranslated(-vec.x, -vec.y, -vec.z);
 }

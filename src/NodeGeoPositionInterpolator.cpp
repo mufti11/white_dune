@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include "stdafx.h"
 
+#include "swt.h"
+
 #include "NodeGeoPositionInterpolator.h"
 #include "GeoMacros.h"
 #include "Proto.h"
@@ -49,8 +51,9 @@ ProtoGeoPositionInterpolator::ProtoGeoPositionInterpolator(Scene *scene)
           addExposedField(SFBOOL, "onGreatCircle", new SFBool(false)));
     setFieldFlags(onGreatCircle, FF_X3DOM_ONLY);
 
-    addEventOut(SFSTRING, "geovalue_changed", FF_VRML_ONLY | EOF_RECOMMENDED);
-    addEventOut(SFVEC3D , "geovalue_changed", FF_X3D_ONLY | EOF_RECOMMENDED);
+    geovalue_changed.set(
+        addEventOut(SFVEC3D , "geovalue_changed", FF_X3D_ONLY));
+    addEventOut(SFSTRING, "geovalue_changed", FF_VRML_ONLY);
 }
 
 Node *
@@ -236,5 +239,14 @@ NodeGeoPositionInterpolator::interpolate(float key, double *values)
         values[i] = val1 + (val2 - val1) * alpha;
     }
 }
+
+void
+NodeGeoPositionInterpolator::sendInterpolatedEvent(double timestamp, float k)
+{
+    Interpolator::sendInterpolatedEvent(timestamp, k);
+    Node::sendEvent(geovalue_changed_Field(), timestamp, 
+                    getInterpolatedFieldValue(k));
+}
+
 
 

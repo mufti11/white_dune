@@ -38,6 +38,7 @@
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeIndexedLineSet.h"
+#include "NodeFogCoordinate.h"
 #include "Util.h"
 
 ProtoIndexedTriangleSet::ProtoIndexedTriangleSet(Scene *scene)
@@ -83,17 +84,17 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         coords = ((NodeCoordinate *)coord)->point();
     else
         coordsDouble = ((NodeGeoCoordinate *)coord)->pointX3D();
-    MFVec3f *normals = NULL;
-    MFFloat *colors = NULL;
 
     MyArray<MFVec2f *> texCoords;
     Util::getTexCoords(texCoords, texCoord()->getValue());    
 
+    MFVec3f *normals = NULL;
     if (normal()->getValue())
         if (normal()->getValue()->getType() == VRML_NORMAL)
             normals = ((NodeNormal *)(normal()->getValue()))->vector();
     
     int meshFlags = 0;
+    MFFloat *colors = NULL;
     if (color()->getValue()) {
         if (color()->getValue()->getType() == VRML_COLOR) 
             colors = ((NodeColor *)(color()->getValue()))->color();
@@ -121,6 +122,12 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         m_coordIndex->ref();
     }
 
+    MFFloat *fogCoords = NULL;
+    if (fogCoord()->getValue())
+        if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE) 
+            fogCoords = ((NodeFogCoordinate *)
+                         (fogCoord()->getValue()))->depth();
+
     float transparency = 0;
     if (hasParent())
         transparency = getParent()->getTransparency();
@@ -137,21 +144,17 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         m_colorPerVertexWarning = true;
     }
     meshFlags |= MESH_COLOR_PER_VERTEX;
-    float creaseAngle = 0;
-    if (bnormalPerVertex) {
-        creaseAngle = 1.57f;
-        meshFlags |= MESH_NORMAL_PER_VERTEX;
-    }
+    float creaseAngle = M_PI / 2.0f;
 
     if (coords)
         m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
                             NULL, texCoords, NULL, creaseAngle, meshFlags, 
-                            transparency);
+                            transparency, fogCoords);
    else
         m_meshDouble = new MyMeshDouble(this, coordsDouble, m_coordIndex, 
                                         normals, NULL, colors, NULL, texCoords, 
                                         NULL, creaseAngle, meshFlags, 
-                                        transparency);
+                                        transparency, fogCoords);
 }
 
 void

@@ -74,6 +74,9 @@
 #   define snprintf mysnprintf
 #endif
 
+/* Define if you have glFogCoordf.  */
+#undef HAVE_GLFOGCOORDF
+
 /* Define if you have glDeleteTextures.  */
 #undef HAVE_GLDELETETEXTURES
 

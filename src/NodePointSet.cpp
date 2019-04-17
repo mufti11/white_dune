@@ -30,6 +30,7 @@
 #include "NodeColorRGBA.h"
 #include "NodeCoordinate.h"
 #include "NodeGeoCoordinate.h"
+#include "NodeFogCoordinate.h"
 #include "DuneApp.h"
 #include "Util.h"
 
@@ -129,6 +130,12 @@ NodePointSet::pointDraw()
         coordSize = coordsDouble->getSFSize();
     }
 
+    MFFloat *fogDepth = NULL;
+    if (fogCoord()->getValue())
+        if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
+            fogDepth = ((NodeFogCoordinate *) 
+                         (fogCoord()->getValue()))->depth();
+
     glBegin(GL_POINTS);
     for (int i = 0; i < coordSize; i++) {
         if (i < colorSize)
@@ -137,6 +144,15 @@ NodePointSet::pointDraw()
             glVertex3fv(coords->getValue(i));
         else
             glVertex3dv(coordsDouble->getValue(i));
+#ifdef HAVE_GLFOGCOORDF
+            if (fogDepth) {
+                int fogIndex = fogDepth->getSize() - 1;
+                if (i < fogDepth->getSize())
+                    fogIndex = i;
+                if (fogIndex > -1)
+                    glFogCoordf(fogDepth->getValue(fogIndex));
+           }
+#endif
     }
     glEnd();
     glEnable(GL_LIGHTING);

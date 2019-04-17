@@ -769,7 +769,7 @@ BEGIN
            MENUITEM "&Normal (occorre IndexedFaceSet or ElevationGrid)", ID_NEW_NORMAL
            MENUITEM "&Color (occorre *Set or *ElevationGrid)", ID_NEW_COLOR
            MENUITEM "&TextureCoordinate (occorre IndexedFaceSet or ElevationGrid)", ID_NEW_TEXTURE_COORDINATE
-           MENUITEM "&FontStyle (occorre Text) (non renderizzato)", ID_NEW_FONT_STYLE
+           MENUITEM "&FontStyle (occorre Text)",        ID_NEW_FONT_STYLE
            POPUP "VRML97 Amendment 1/X3D S&ubnode"
            BEGIN
                MENUITEM "Contour2D (occorre TrimmedSurface)", ID_NEW_CONTOUR_2D
@@ -778,9 +778,9 @@ BEGIN
                    MENUITEM "NurbsCurve2D", ID_NEW_NURBS_CURVE_2D
                    MENUITEM "(Contour)Polyline2D", ID_NEW_CONTOUR_POLYLINE_2D
                END
-               MENUITEM "CoordinateDouble (occorre Indexed*Set or PointSet, non renderizzato)", ID_NEW_COORDINATE_DOUBLE
+               MENUITEM "CoordinateDouble (occorre Indexed*Set or PointSet)", ID_NEW_COORDINATE_DOUBLE
                MENUITEM "ColorRGBA (occorre Indexed*Set or PointSet or ElevationGrid)", ID_NEW_COLOR_RGBA
-               MENUITEM "FogCoordinate (occorre *Set, non renderizzato)",  ID_NEW_FOG_COORDINATE
+               MENUITEM "FogCoordinate (occorre *Set)",  ID_NEW_FOG_COORDINATE
                MENUITEM "TextureCoordinateGenerator (occorre IndexedFaceSet or ElevationGrid or Multi*TextureCoordinate or Multi*TextureCoordinate, non renderizzato)", ID_NEW_TEXTURE_COORDINATE_GENERATOR
                MENUITEM "NurbsTextureCoordinate (non renderizzato, occorre NurbsPatchSurface)", ID_NEW_NURBS_TEXTURE_COORDINATE
                MENUITEM "MultiTextureCoordinate",       ID_NEW_MULTI_TEXTURE_COORDINATE
@@ -861,8 +861,8 @@ BEGIN
                 MENUITEM "SplineScalarInterpolator (non renderizzato)",  ID_NEW_SPLINE_SCALAR_INTERPOLATOR
                 MENUITEM "SplinePositionInterpolator (non renderizzato)",  ID_NEW_SPLINE_POSITION_INTERPOLATOR
                 MENUITEM "SplinePositionInterpolator2D (non renderizzato)", ID_NEW_SPLINE_POSITION_INTERPOLATOR_2D
-                MENUITEM "PositionInterpolator2D (non renderizzato)", ID_NEW_POSITION_INTERPOLATOR_2D
-                MENUITEM "CoordinateInterpolator2D (non renderizzato)", ID_NEW_COORDINATE_INTERPOLATOR_2D
+                MENUITEM "PositionInterpolator2D",      ID_NEW_POSITION_INTERPOLATOR_2D
+                MENUITEM "CoordinateInterpolator2D",    ID_NEW_COORDINATE_INTERPOLATOR_2D
                 MENUITEM "SquadOrientationInterpolator (non renderizzato)", ID_NEW_SQUAD_ORIENTATION_INTERPOLATOR
                 MENUITEM "EaseInEaseOut (non renderizzato)", ID_NEW_EASE_IN_EASE_OUT
             END
@@ -874,17 +874,17 @@ BEGIN
        END
        POPUP "Geospatial (X3D/VRML97 Amendment 1)"
        BEGIN
-           MENUITEM "GeoElevationGrid (non renderizzato)", ID_NEW_GEO_ELEVATION_GRID
-           MENUITEM "GeoLOD (non renderizzato)",         ID_NEW_GEO_LOD
-           MENUITEM "GeoViewpoint (non renderizzato)",   ID_NEW_GEO_VIEWPOINT
-           MENUITEM "GeoCoordinate (occorre Indexed*Set or PointSet) (non renderizzato)",    ID_NEW_GEO_COORDINATE
-           MENUITEM "GeoLocation (non renderizzato)",    ID_NEW_GEO_LOCATION
-           MENUITEM "GeoOrigin (non renderizzato)",      ID_NEW_GEO_ORIGIN
-           MENUITEM "GeoPositionInterpolator (non renderizzato)", ID_NEW_GEO_POSITION_INTERPOLATOR
-           MENUITEM "GeoTouchSensor (non renderizzato)", ID_NEW_GEO_TOUCH_SENSOR
-           MENUITEM "GeoMetadata",                       ID_NEW_GEO_METADATA
-           MENUITEM "GeoProximitySensor",                ID_NEW_GEO_PROXIMITY_SENSOR
-           MENUITEM "GeoTransform (non renderizzato)",   ID_NEW_GEO_TRANSFORM
+           MENUITEM "GeoElevationGrid",                 ID_NEW_GEO_ELEVATION_GRID
+           MENUITEM "GeoLOD",                           ID_NEW_GEO_LOD
+           MENUITEM "GeoViewpoint",                     ID_NEW_GEO_VIEWPOINT
+           MENUITEM "GeoCoordinate (occorre Indexed*Set or PointSet)", ID_NEW_GEO_COORDINATE
+           MENUITEM "GeoLocation",                      ID_NEW_GEO_LOCATION
+           MENUITEM "GeoOrigin",                        ID_NEW_GEO_ORIGIN
+           MENUITEM "GeoPositionInterpolator",          ID_NEW_GEO_POSITION_INTERPOLATOR
+           MENUITEM "GeoTouchSensor",                   ID_NEW_GEO_TOUCH_SENSOR
+           MENUITEM "GeoMetadata",                      ID_NEW_GEO_METADATA
+           MENUITEM "GeoProximitySensor",               ID_NEW_GEO_PROXIMITY_SENSOR
+           MENUITEM "GeoTransform",                     ID_NEW_GEO_TRANSFORM
        END
        POPUP "misc X3D components"
        BEGIN
@@ -908,10 +908,10 @@ BEGIN
            END
            POPUP "CADGeometry"
            BEGIN
-               MENUITEM "CADAssembly",                      ID_NEW_CAD_ASSEMBLY
-               MENUITEM "CADFace",                          ID_NEW_CAD_FACE
-               MENUITEM "CADLayer",                         ID_NEW_CAD_LAYER
-               MENUITEM "CADPart",                          ID_NEW_CAD_PART
+               MENUITEM "CADAssembly",                  ID_NEW_CAD_ASSEMBLY
+               MENUITEM "CADFace",                      ID_NEW_CAD_FACE
+               MENUITEM "CADLayer",                     ID_NEW_CAD_LAYER
+               MENUITEM "CADPart",                      ID_NEW_CAD_PART
            END
            POPUP "RigidBodyPhysics"
            BEGIN
@@ -3359,15 +3359,15 @@ BEGIN
     ID_IT_NEW_NURBS_POSITION_INTERPOLATOR "Inserisci un nuovo VRML97 Amd. 1 NurbsPositionInterpolator (non renderizzato)\nVRML97 Amd. 1 NurbsPositionInterpolator (non renderizzato)"
     ID_IT_NEW_COORDINATE_DEFORMER "Inserisci un nuovo VRML97 Amd. 1 CoordinateDeformer (non renderizzato)\nVRML97 Amd. 1 CoordinateDeformer (non renderizzato)"
     ID_IT_NEW_INLINE_LOAD_CONTROL "Crea un nuovo VRML97 Amd. 1 InlineLoadControl\nVRML97 Amd. 1 InlineLoadControl"
-    ID_IT_NEW_GEO_ELEVATION_GRID  "Crea un nuovo VRML97 Amd. 1 GeoElevationGrid (non renderizzato)\nVRML97 Amd. 1 GeoElevationGrid"
-    ID_IT_NEW_GEO_LOD             "Crea un nuovo VRML97 Amd. 1 GeoLOD (non renderizzato)\nVRML97 Amd. 1 GeoLOD"
-    ID_IT_NEW_GEO_VIEWPOINT       "Crea un nuovo VRML97 Amd. 1 GeoViewpoint (non renderizzato)\nVRML97 Amd. 1 GeoViewpoint"
-    ID_IT_NEW_GEO_COORDINATE      "Inserisci un nuovo VRML97 Amd. 1 GeoCoordinate  (occorre Indexed*Set or PointSet)(non renderizzato)\nVRML97 Amd. 1 GeoCoordinate"
-    ID_IT_NEW_GEO_LOCATION        "Crea un nuovo VRML97 Amd. 1 GeoLocation (non renderizzato)\nVRML97 Amd. 1 GeoLocation"
-    ID_IT_NEW_GEO_ORIGIN          "Inserisci un nuovo VRML97 Amd. 1 GeoOrigin (non renderizzato)\nVRML97 Amd. 1 GeoOrigin"
-    ID_IT_NEW_GEO_POSITION_INTERPOLATOR "Crea un nuovo VRML97 Amd. 1 GeoPositionInterpolator (non renderizzato)\nVRML97 Amd. 1 GeoPositionInterpolator"
-    ID_IT_NEW_GEO_TOUCH_SENSOR    "Crea un nuovo VRML97 Amd. 1 GeoTouchSensor (non renderizzato)\nVRML97 Amd. 1 GeoTouchSensor"
-    ID_IT_NEW_GEO_METADATA        "Inserisci un nuovo X3D GeoMetadata (non renderizzato)\nX3D GeoMetadata"
+    ID_IT_NEW_GEO_ELEVATION_GRID  "Crea un nuovo VRML97 Amd. 1 GeoElevationGrid\nVRML97 Amd. 1 GeoElevationGrid"
+    ID_IT_NEW_GEO_LOD             "Crea un nuovo VRML97 Amd. 1 GeoLOD\nVRML97 Amd. 1 GeoLOD"
+    ID_IT_NEW_GEO_VIEWPOINT       "Crea un nuovo VRML97 Amd. 1 GeoViewpoint\nVRML97 Amd. 1 GeoViewpoint"
+    ID_IT_NEW_GEO_COORDINATE      "Inserisci un nuovo VRML97 Amd. 1 GeoCoordinate  (occorre Indexed*Set or PointSet)\nVRML97 Amd. 1 GeoCoordinate"
+    ID_IT_NEW_GEO_LOCATION        "Crea un nuovo VRML97 Amd. 1 GeoLocation\nVRML97 Amd. 1 GeoLocation"
+    ID_IT_NEW_GEO_ORIGIN          "Inserisci un nuovo VRML97 Amd. 1 GeoOrigin\nVRML97 Amd. 1 GeoOrigin"
+    ID_IT_NEW_GEO_POSITION_INTERPOLATOR "Crea un nuovo VRML97 Amd. 1 GeoPositionInterpolator\nVRML97 Amd. 1 GeoPositionInterpolator"
+    ID_IT_NEW_GEO_TOUCH_SENSOR    "Crea un nuovo VRML97 Amd. 1 GeoTouchSensor\nVRML97 Amd. 1 GeoTouchSensor"
+    ID_IT_NEW_GEO_METADATA        "Inserisci un nuovo X3D GeoMetadata\nX3D GeoMetadata"
     ID_IT_NEW_GEO_PROXIMITY_SENSOR    "Crea un nuovo X3D GeoProximitySensor node.\nX3D GeoProximitySensor"
     ID_IT_NEW_GEO_TRANSFORM    "Crea un nuovo X3D GeoTransform node.\nX3D GeoTransform"
 END
@@ -3418,7 +3418,7 @@ BEGIN
     ID_IT_NEW_MULTI_TEXTURE_TRANSFORM "Insert a new X3D MultiTextureTransform Node.\nX3D MultiTextureTransform"
     ID_IT_NEW_FILL_PROPERTIES "Inserisci un nuovo X3D FillProperties Node.\nX3D FillProperties"
     ID_IT_NEW_LINE_PROPERTIES "Inserisci un nuovo X3D LineProperties Node.\nX3D LineProperties"
-    ID_IT_NEW_COORDINATE_DOUBLE "Inserisci un nuovo CoordinateDouble node (occorre Indexed*Set or PointSet, non renderizzato).\nCoordinateDouble (occorre Indexed*Set or PointSet, non renderizzato)"
+    ID_IT_NEW_COORDINATE_DOUBLE "Inserisci un nuovo CoordinateDouble node (occorre Indexed*Set or PointSet, non renderizzato).\nCoordinateDouble (occorre Indexed*Set or PointSet)"
     ID_IT_NEW_COLOR_RGBA      "Inserisci un nuovo X3D ColorRGBA node (occorre Indexed*Set or PointSet or ElevationGrid).\nX3D ColorRGBA (occorre Indexed*Set or PointSet or ElevationGrid)"
     ID_IT_NEW_NURBS_TEXTURE_COORDINATE "Inserisci un nuovo X3D NurbsTextureCoordinate (occorre Nurbs(Patch)Surface) (non renderizzato)\nX3D NurbsTextureCoordinate (occorre Nurbs(Patch)Surface) (non renderizzato)"
     ID_IT_NEW_TEXTURE_COORDINATE_GENERATOR "Inserisci un nuovo X3D TextureCoordinateGenerator node (non renderizzato, occorre IndexedFaceSet or ElevationGrid or Multi*TextureCoordinate).\nX3D TextureCoordinateGenerator (occorre IndexedFaceSet or ElevationGrid or Multi*TextureCoordinate)"

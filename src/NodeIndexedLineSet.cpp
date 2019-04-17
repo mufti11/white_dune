@@ -43,6 +43,7 @@
 #include "NodeCoordinate.h"
 #include "NodeGeoCoordinate.h"
 #include "NodePointSet.h"
+#include "NodeFogCoordinate.h"
 #include "Util.h"
 #include "LdrawDefines.h"
 
@@ -163,6 +164,12 @@ NodeIndexedLineSet::lineDraw()
         coordSize = coordsDouble->getSize();
     }
 
+    MFFloat *fogDepth = NULL;
+    if (fogCoord()->getValue())
+        if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
+            fogDepth = ((NodeFogCoordinate *) 
+                        (fogCoord()->getValue()))->depth();
+
     bool inSet = false;
 
     int numLine = 0;
@@ -200,6 +207,15 @@ NodeIndexedLineSet::lineDraw()
                     glVertex3fv(coords->getValue(index));
                 else
                     glVertex3dv(coordsDouble->getValue(index));
+#ifdef HAVE_GLFOGCOORDF
+                if (fogDepth) {
+                    int fogIndex = fogDepth->getSize() - 1;
+                    if (index < fogDepth->getSize())
+                        fogIndex = index;
+                    if (fogIndex > -1)
+                        glFogCoordf(fogDepth->getValue(fogIndex));
+               }
+#endif
             }
         }
     }
