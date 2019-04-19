@@ -147,6 +147,8 @@ int main(int argc, char *argv[])
                continue;
            if (strcmp(str, "NurbsSwungSurface") == 0)
                continue;
+           if (strncmp(str, "Geo", 3) == 0)
+               continue;
 
            seed = time(0);
            printf("    srand48(%ld%s);\n", seed, "L");

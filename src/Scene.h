@@ -808,6 +808,11 @@ public:
     void                setParticleSystem(bool flag) 
                             { m_hasParticleSystem = flag; }
 
+    bool                hasMovieTexture(void) 
+                            { return m_hasMovieTexture; }
+    void                setMovieTexture(bool flag) 
+                            { m_hasMovieTexture = flag; }
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -1024,6 +1029,7 @@ protected:
     int                 m_height;
 
     bool                m_hasParticleSystem;
+    bool                m_hasMovieTexture;
 };
 
 bool writeCNodeData(Node *node, void *data);

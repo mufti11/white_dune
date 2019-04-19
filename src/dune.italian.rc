@@ -793,7 +793,7 @@ BEGIN
            MENUITEM "&Material (occorre Appearance)",   ID_NEW_MATERIAL
            MENUITEM "&ImageTexture (occorre Appearance)", ID_NEW_IMAGE_TEXTURE
            MENUITEM "&PixelTexture (occorre Appearance)", ID_NEW_PIXEL_TEXTURE
-           MENUITEM "M&ovieTexture (occorre Appearance) (non renderizzato)", ID_NEW_MOVIE_TEXTURE
+           MENUITEM "M&ovieTexture (occorre Appearance)", ID_NEW_MOVIE_TEXTURE
            MENUITEM "&TextureTransform (occorre Appearance)", ID_NEW_TEXTURE_TRANSFORM
            POPUP "X3D Material/Texture"
            BEGIN
@@ -3471,7 +3471,7 @@ BEGIN
     ID_IT_NEW_TWO_SIDED_MATERIAL "Inserisci un nuovo X3D TwoSidedMaterial node (occorre Appearance)\nX3D TwoSidedMaterial (occorre Appearance)"
     ID_IT_NEW_IMAGE_TEXTURE    "Inserisci un nuovo ImageTexture node (occorre Appearance)\nImageTexture (occorre Appearance)"
     ID_IT_NEW_PIXEL_TEXTURE    "Inserisci un nuovo PixelTexture node (occorre Appearance)\nPixelTexture (occorre Appearance)"
-    ID_IT_NEW_MOVIE_TEXTURE    "Inserisci un nuovo MovieTexture node (occorre Appearance) (non renderizzato)\nMovieTexture (occorre Appearance) (non renderizzato)"
+    ID_IT_NEW_MOVIE_TEXTURE    "Inserisci un nuovo MovieTexture node (occorre Appearance)\nMovieTexture (occorre Appearance)"
     ID_IT_NEW_TEXTURE_TRANSFORM "Inserisci un nuovo TextureTransform node (occorre Appearance)\nTextureTransform (occorre Appearance)"
     ID_IT_NEW_TEXTURE_PROPERTIES "Inserisci un nuovo X3D TextureProperties node.\nX3D TextureProperties"
 END

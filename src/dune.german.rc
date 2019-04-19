@@ -792,7 +792,7 @@ BEGIN
            MENUITEM "&Material (braucht Appearance)",   ID_NEW_MATERIAL
            MENUITEM "&ImageTexture (braucht Appearance)", ID_NEW_IMAGE_TEXTURE
            MENUITEM "&PixelTexture (braucht Appearance)", ID_NEW_PIXEL_TEXTURE
-           MENUITEM "M&ovieTexture (braucht Appearance) (nicht dargestellt)",           ID_NEW_MOVIE_TEXTURE
+           MENUITEM "M&ovieTexture (braucht Appearance)", ID_NEW_MOVIE_TEXTURE
            MENUITEM "&TextureTransform (braucht Appearance)", ID_NEW_TEXTURE_TRANSFORM
            POPUP "X3D Material/Texture"
            BEGIN
@@ -3471,7 +3471,7 @@ BEGIN
     ID_DE_NEW_TWO_SIDED_MATERIAL "Fuege einen neuen X3D TwoSidedMaterial Knoten ein (braucht Appearance)\nX3D TwoSidedMaterial (braucht Appearance)"
     ID_DE_NEW_IMAGE_TEXTURE    "Fuege einen neuen ImageTexture Knoten ein (braucht Appearance)\nImageTexture (braucht Appearance)"
     ID_DE_NEW_PIXEL_TEXTURE    "Fuege einen neuen PixelTexture Knoten ein (braucht Appearance)\nPixelTexture (braucht Appearance)"
-    ID_DE_NEW_MOVIE_TEXTURE    "Fuege einen neuen MovieTexture Knoten ein (braucht Appearance) (nicht dargestellt)\nMovieTexture (braucht Appearance) (nicht dargestellt)"
+    ID_DE_NEW_MOVIE_TEXTURE    "Fuege einen neuen MovieTexture Knoten ein (braucht Appearance)\nMovieTexture (braucht Appearance)"
     ID_DE_NEW_TEXTURE_TRANSFORM "Fuege einen neuen TextureTransform Knoten ein (braucht Appearance)\nTextureTransform (braucht Appearance)"
     ID_DE_NEW_TEXTURE_PROPERTIES "Fuege einen neuen X3D TextureProperties Knoten ein\nX3D TextureProperties"END
 

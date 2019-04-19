@@ -84,6 +84,14 @@ public:
 
     virtual void    load();  
 
+#ifdef HAVE_FFMPEG
+    virtual void    bind();
+    virtual void    unbind();
+
+    virtual bool    isTransparent(void) { return m_isTransparent; }
+    virtual int     textureGlColorMode(void) { return m_glColorMode; }
+#endif
+
     fieldMacros(SFString, description,       ProtoMovieTexture)
     fieldMacros(SFBool,   loop,              ProtoMovieTexture)
     fieldMacros(SFFloat,  pitch,             ProtoMovieTexture)
@@ -103,6 +111,20 @@ public:
     fieldMacros(SFBool,   hideChildren,      ProtoMovieTexture)
     fieldMacros(SFInt32,  origChannelCount,  ProtoMovieTexture)
     fieldMacros(SFBool,   scale,             ProtoMovieTexture)
+
+protected:
+    bool m_loaded;
+    double m_startTime;
+    unsigned int m_textureName;
+    bool m_isTransparent;
+    int m_glColorMode;
+
+public:
+     int m_duration_changed;
+     void *m_fw_movie;
+     int m_loadstatus;
+     float m_speed;
+     int m_sourceNumber;
 };
 
 #endif // _NODE_MOVIETEXTURE_H

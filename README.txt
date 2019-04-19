@@ -384,7 +384,8 @@ Maksim Diachkov           (slackware Linux package generation, added russian
 Johannes Schoepfer        (patch of slackware Linux package generation)
 John Stewart/FreeWRL      (codebase of 
                            NodeIndexedFaceSet::generateTextureCoordinates, 
-                           Background sphere)
+                           Background sphere, ImageTexture3D loading,
+                           MovieTexture loading)
 Sam Lantinga/SDL          (codebase of SDLJoystick)
 Max Horn/SDL              (darwin/SDL_sysjoystick.c)
 Thomas Rothermel          (primitive to nurbssurface conversion, 
@@ -5044,6 +5045,12 @@ Fixed GeoCoordinate problem for *Triangle*Set nodes
 Added FogCoord rendering
 
 Fixed FontStyle.leftToRight rendering
+
+Fixed DEVIL related errors
+
+Added MovieTexture rendering
+
+Fixed FontStyle.horizontal
 
 contact: MUFTI <mufti@users.ourproject.org>
 

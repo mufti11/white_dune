@@ -369,6 +369,7 @@ Scene::Scene()
     m_width = 1024;
     m_height = 768;
     m_hasParticleSystem = false;
+    m_hasMovieTexture = false;
 }
 
 void
@@ -534,12 +535,23 @@ static bool searchViewPortOrParticles(Node *node, void *data)
     return true;
 }     
 
+static bool searchMovieTexture(Node *node, void *data)
+{
+    Scene *scene = (Scene *)data;
+    if (node->getType() == VRML_MOVIE_TEXTURE) {
+        scene->setMovieTexture(true);
+    }
+    return true;
+}     
+
 void
 Scene::setViewPorts(void)
 {
     m_viewports.resize(0);
     m_hasParticleSystem = false;
+    m_hasMovieTexture = false;
     m_root->doWithBranch(searchViewPortOrParticles, this);
+    m_root->doWithBranch(searchMovieTexture, this);
 }
 
 void

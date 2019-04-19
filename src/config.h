@@ -10,22 +10,22 @@
 /* Define if you have the ANSI C header files.  */
 /* #undef STDC_HEADERS */
 
-/* Define if you have the expat Library */
+/* Define if you have the expat library */
 #define HAVE_LIBEXPAT 1
 
-/* Define if you have the vcg Library (include files only)*/
+/* Define if you have the vcg library (include files only)*/
 #define HAVE_LIBVCG 1
 
-/* Define if you have the CGAL Library */
+/* Define if you have the CGAL library */
 #define HAVE_LIBCGAL 1
 
-/* Define if you have the curl Library */
+/* Define if you have the curl library */
 #define HAVE_LIBCURL 1
 
-/* Define if you have the IL Library */
+/* Define if you have the IL library */
 /* #undef HAVE_LIBIL */
 
-/* Define if you have the ILU Library  */
+/* Define if you have the ILU library  */
 /* #undef HAVE_LIBILU */
 
 /* IL + ILU = DevIL */
@@ -36,10 +36,10 @@
 # endif
 #endif
 
-/* Define if you have the jpeg Library */
+/* Define if you have the jpeg library */
 #define HAVE_LIBJPEG 1
 
-/* Define if you have the png Library  */
+/* Define if you have the png library  */
 #define HAVE_LIBPNG 1
 
 /* Define if the link of the png Library fails cause of png_handle_unknown */
@@ -48,8 +48,11 @@
 /* Define if you want to use the gif loading routines */
 #define HAVE_GIF 1
 
-/* Define if you have the z Library  */
+/* Define if you have the z library  */
 #define HAVE_LIBZ 1
+
+/* Define if you have the ffmpeg libraries (see configure/configure.in */
+#define HAVE_FFMPEG 1
 
 /* Define if you have OpenMP */
 #define HAVE_OMP 1
@@ -540,7 +543,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 0.99pl1551"
+#define HAVE_DUNE_VERSION "white_dune 1.000"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

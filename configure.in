@@ -110,7 +110,6 @@ export LIBS
 
 AC_ARG_WITH(iconscale2,--with-iconscale2         used to scale major icons by factor 2,
             AC_DEFINE(HAVE_ICON_SCALE_2))
-
 AC_ARG_WITH(devil,--without-devil           do not use DevIL library to load textureimages ,
             DEVIL=no)
 
@@ -1548,6 +1547,34 @@ AC_TRY_LINK(
             echo  no;AC_DEFINE(HAVE_NO_PNG_HANDLE_UNKNOWN)
            )
 
+AC_CHECK_LIB(avcodec, av_parser_init, ,FFMPEG_ERROR=1)
+AC_CHECK_LIB(avutil, av_expr_eval, ,FFMPEG_ERROR=1)
+AC_CHECK_LIB(avformat, avformat_configuration, ,FFMPEG_ERROR=1)
+AC_CHECK_LIB(avresample, avresample_config, ,FFMPEG_ERROR=1)
+AC_CHECK_LIB(swscale, swscale_configuration, ,FFMPEG_ERROR=1)
+AC_CHECK_LIB(swresample, swr_init, ,FFMPEG_ERROR=1)
+if test "X_$FFMPEG_ERROR" = "X_1" ; then
+     cat 1>&2 << EOF
+
+*** couldn't find matching ffmpeg version ***
+
+Couldn't find ffmpeg, the movie library.
+This is not a fatal error; the package will be simply built without
+support to display MovieTexture.  It is recommended to add it, download and 
+install it from:
+
+	https://ffmpeg.org/
+
+and re-run configure.
+The development version (-dev/-devel) of the following libraries are need:
+libavcodec libavutil libavformat  libavresample libswscale libswresample
+
+EOF
+         FFMPEG_WARNING="no usable ffmpeg libraries: no rendering of MovieTexture"
+else
+    AC_DEFINE(HAVE_FFMPEG)
+fi
+
 AC_CHECK_HEADER(linux/joystick.h,AC_DEFINE(LINUX_JOYSTICK))
 AC_CHECK_HEADER(sball.h, SBALL_HEADER=yes;export SBALL_HEADER)
 if test "X_$SBALL_HEADER" = "X_yes" ; then
@@ -1930,6 +1957,12 @@ if test "X_$EXPAT_WARNING" != "X_" ; then
     echo " " 1>&2
     echo "Warning:" 1>&2
     echo " " $EXPAT_WARNING 1>&2
+fi
+
+if test "X_$FFMPEG_WARNING" != "X_" ; then
+    echo " " 1>&2
+    echo "Warning:" 1>&2
+    echo " " $FFMPEG_WARNING 1>&2
 fi
 
 if test "X_$IMAGEEDITOR" = "X_" ; then

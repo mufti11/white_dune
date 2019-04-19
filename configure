@@ -708,6 +708,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -847,6 +848,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1099,6 +1101,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1236,7 +1247,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1389,6 +1400,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -3816,7 +3828,6 @@ if test "${with_iconscale2+set}" = set; then :
   withval=$with_iconscale2; $as_echo "#define HAVE_ICON_SCALE_2 1" >>confdefs.h
 
 fi
-
 
 
 # Check whether --with-devil was given.
@@ -9627,6 +9638,311 @@ fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for av_parser_init in -lavcodec" >&5
+$as_echo_n "checking for av_parser_init in -lavcodec... " >&6; }
+if ${ac_cv_lib_avcodec_av_parser_init+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lavcodec  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char av_parser_init ();
+int
+main ()
+{
+return av_parser_init ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_avcodec_av_parser_init=yes
+else
+  ac_cv_lib_avcodec_av_parser_init=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avcodec_av_parser_init" >&5
+$as_echo "$ac_cv_lib_avcodec_av_parser_init" >&6; }
+if test "x$ac_cv_lib_avcodec_av_parser_init" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVCODEC 1
+_ACEOF
+
+  LIBS="-lavcodec $LIBS"
+
+else
+  FFMPEG_ERROR=1
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for av_expr_eval in -lavutil" >&5
+$as_echo_n "checking for av_expr_eval in -lavutil... " >&6; }
+if ${ac_cv_lib_avutil_av_expr_eval+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lavutil  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char av_expr_eval ();
+int
+main ()
+{
+return av_expr_eval ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_avutil_av_expr_eval=yes
+else
+  ac_cv_lib_avutil_av_expr_eval=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avutil_av_expr_eval" >&5
+$as_echo "$ac_cv_lib_avutil_av_expr_eval" >&6; }
+if test "x$ac_cv_lib_avutil_av_expr_eval" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVUTIL 1
+_ACEOF
+
+  LIBS="-lavutil $LIBS"
+
+else
+  FFMPEG_ERROR=1
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for avformat_configuration in -lavformat" >&5
+$as_echo_n "checking for avformat_configuration in -lavformat... " >&6; }
+if ${ac_cv_lib_avformat_avformat_configuration+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lavformat  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char avformat_configuration ();
+int
+main ()
+{
+return avformat_configuration ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_avformat_avformat_configuration=yes
+else
+  ac_cv_lib_avformat_avformat_configuration=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avformat_avformat_configuration" >&5
+$as_echo "$ac_cv_lib_avformat_avformat_configuration" >&6; }
+if test "x$ac_cv_lib_avformat_avformat_configuration" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVFORMAT 1
+_ACEOF
+
+  LIBS="-lavformat $LIBS"
+
+else
+  FFMPEG_ERROR=1
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for avresample_config in -lavresample" >&5
+$as_echo_n "checking for avresample_config in -lavresample... " >&6; }
+if ${ac_cv_lib_avresample_avresample_config+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lavresample  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char avresample_config ();
+int
+main ()
+{
+return avresample_config ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_avresample_avresample_config=yes
+else
+  ac_cv_lib_avresample_avresample_config=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avresample_avresample_config" >&5
+$as_echo "$ac_cv_lib_avresample_avresample_config" >&6; }
+if test "x$ac_cv_lib_avresample_avresample_config" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVRESAMPLE 1
+_ACEOF
+
+  LIBS="-lavresample $LIBS"
+
+else
+  FFMPEG_ERROR=1
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for swscale_configuration in -lswscale" >&5
+$as_echo_n "checking for swscale_configuration in -lswscale... " >&6; }
+if ${ac_cv_lib_swscale_swscale_configuration+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lswscale  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char swscale_configuration ();
+int
+main ()
+{
+return swscale_configuration ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_swscale_swscale_configuration=yes
+else
+  ac_cv_lib_swscale_swscale_configuration=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_swscale_swscale_configuration" >&5
+$as_echo "$ac_cv_lib_swscale_swscale_configuration" >&6; }
+if test "x$ac_cv_lib_swscale_swscale_configuration" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSWSCALE 1
+_ACEOF
+
+  LIBS="-lswscale $LIBS"
+
+else
+  FFMPEG_ERROR=1
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for swr_init in -lswresample" >&5
+$as_echo_n "checking for swr_init in -lswresample... " >&6; }
+if ${ac_cv_lib_swresample_swr_init+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lswresample  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char swr_init ();
+int
+main ()
+{
+return swr_init ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_swresample_swr_init=yes
+else
+  ac_cv_lib_swresample_swr_init=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_swresample_swr_init" >&5
+$as_echo "$ac_cv_lib_swresample_swr_init" >&6; }
+if test "x$ac_cv_lib_swresample_swr_init" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSWRESAMPLE 1
+_ACEOF
+
+  LIBS="-lswresample $LIBS"
+
+else
+  FFMPEG_ERROR=1
+fi
+
+if test "X_$FFMPEG_ERROR" = "X_1" ; then
+     cat 1>&2 << EOF
+
+*** couldn't find matching ffmpeg version ***
+
+Couldn't find ffmpeg, the movie library.
+This is not a fatal error; the package will be simply built without
+support to display MovieTexture.  It is recommended to add it, download and
+install it from:
+
+	https://ffmpeg.org/
+
+and re-run configure.
+The development version (-dev/-devel) of the following libraries are need:
+libavcodec libavutil libavformat  libavresample libswscale libswresample
+
+EOF
+         FFMPEG_WARNING="no usable ffmpeg libraries: no rendering of MovieTexture"
+else
+    $as_echo "#define HAVE_FFMPEG 1" >>confdefs.h
+
+fi
+
 ac_fn_c_check_header_mongrel "$LINENO" "linux/joystick.h" "ac_cv_header_linux_joystick_h" "$ac_includes_default"
 if test "x$ac_cv_header_linux_joystick_h" = xyes; then :
   $as_echo "#define LINUX_JOYSTICK 1" >>confdefs.h
@@ -11776,6 +12092,12 @@ if test "X_$EXPAT_WARNING" != "X_" ; then
     echo " " 1>&2
     echo "Warning:" 1>&2
     echo " " $EXPAT_WARNING 1>&2
+fi
+
+if test "X_$FFMPEG_WARNING" != "X_" ; then
+    echo " " 1>&2
+    echo "Warning:" 1>&2
+    echo " " $FFMPEG_WARNING 1>&2
 fi
 
 if test "X_$IMAGEEDITOR" = "X_" ; then

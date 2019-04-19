@@ -225,10 +225,10 @@ void combineCallback(GLdouble coords[3], GLdouble *vertex_data[4], GLfloat weigh
 
 
 float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps, 
-                   float offset, float extrude) 
+                   float offset, float extrude, bool horizontal) 
 {
     static FT_UInt prevCharIndex = 0, curCharIndex = 0;
-        static FT_Pos  prev_rsb_delta = 0;
+    static FT_Pos  prev_rsb_delta = 0;
 
     curCharIndex = FT_Get_Char_Index( face, ch );
     if (FT_Load_Glyph( face, curCharIndex, FT_LOAD_DEFAULT ))
@@ -242,19 +242,16 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
         printf("Invalid Glyph Format\n");
         exit(0);
     }
-
     if (FT_HAS_KERNING(face) && prevCharIndex) {
         FT_Vector  kerning;
         FT_Get_Kerning(face, prevCharIndex, curCharIndex, FT_KERNING_DEFAULT,
                        &kerning );
         offset += kerning.x >> 6;
     }
-
     if (prev_rsb_delta - face->glyph->lsb_delta >= 32)
         offset -= 1.0f;
     else if ( prev_rsb_delta - face->glyph->lsb_delta < -32 )
         offset += 1.0f;
-
     prev_rsb_delta = face->glyph->rsb_delta;                       
 
     Vectoriser *vectoriser = new Vectoriser(face->glyph, bezierSteps);
@@ -265,26 +262,26 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
             const double* d1 = contour->GetPoint(p);
             const double* d2 = contour->GetPoint(p + 1);
             Tri t1;
-            t1.a.x = (d1[0]/64.0f) + offset;
-            t1.a.y = d1[1]/64.0f;
+            t1.a.x = (d1[0]/64.0f) + (horizontal ? offset : 0);
+            t1.a.y = (d1[1]/64.0f) + (!horizontal ? offset : 0);
             t1.a.z = 0.0f;
-            t1.b.x = (d2[0]/64.0f) + offset;
-            t1.b.y = d2[1]/64.0f;
+            t1.b.x = (d2[0]/64.0f) + (horizontal ? offset : 0);
+            t1.b.y = (d2[1]/64.0f) + (!horizontal ? offset : 0);
             t1.b.z = 0.0f;
-            t1.c.x = (d1[0]/64.0f) + offset;
-            t1.c.y = d1[1]/64.0f;
+            t1.c.x = (d1[0]/64.0f) + (horizontal ? offset : 0);
+            t1.c.y = (d1[1]/64.0f) + (!horizontal ? offset : 0);
             t1.c.z = extrude;
             tris.append(t1);
 
             Tri t2;
-            t2.a.x = (d1[0]/64.0f) + offset;
-            t2.a.y = d1[1]/64.0f;
+            t2.a.x = (d1[0]/64.0f) + (horizontal ? offset : 0);
+            t2.a.y = (d1[1]/64.0f) + (!horizontal ? offset : 0);
             t2.a.z = extrude;
-            t2.c.x = (d2[0]/64.0f) + offset;
-            t2.c.y = d2[1]/64.0f;
+            t2.c.x = (d2[0]/64.0f) + (horizontal ? offset : 0);
+            t2.c.y = (d2[1]/64.0f) + (!horizontal ? offset : 0);
             t2.c.z = extrude;
-            t2.b.x = (d2[0]/64.0f) + offset;
-            t2.b.y = d2[1]/64.0f;
+            t2.b.x = (d2[0]/64.0f) + (horizontal ? offset : 0);
+            t2.b.y = (d2[1]/64.0f) + (!horizontal ? offset : 0);
             t2.b.z = 0.0f;
             tris.append(t2);
         }
@@ -312,8 +309,8 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
                     for (size_t p = 0; p < contour->PointCount(); ++p) {
                         const double* d1 = contour->GetPoint(p);
                         double *d = new double[3];
-                        d[0] = d1[0] / 64.0f + offset;
-                        d[1] = d1[1] / 64.0f;
+                        d[0] = d1[0] / 64.0f + horizontal ? offset : 0;
+                        d[1] = d1[1] / 64.0f + !horizontal ? offset : 0;;
                         d[2] = d1[2] / 64.0f;
                         gluTessVertex(tobj, (GLdouble *)d, (GLvoid *)d);
                     }
@@ -341,27 +338,30 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
                 for (unsigned int i = 0; i < ts.size(); i++) {
                     Triangle* ot = ts[i];
 
+                    float xoffset = !horizontal ? offset : 0;
+                    float yoffset = !horizontal ? offset : 0;
+
                     Tri t1;
-                    t1.a.x = ot->GetPoint(0)->x;
-                    t1.a.y = ot->GetPoint(0)->y;
+                    t1.a.x = ot->GetPoint(0)->x - xoffset;
+                    t1.a.y = ot->GetPoint(0)->y - yoffset;
                     t1.a.z = 0.0f;
-                    t1.b.x = ot->GetPoint(1)->x;
-                    t1.b.y = ot->GetPoint(1)->y;
+                    t1.b.x = ot->GetPoint(1)->x - xoffset;
+                    t1.b.y = ot->GetPoint(1)->y - yoffset;
                     t1.b.z = 0.0f;
-                    t1.c.x = ot->GetPoint(2)->x;
-                    t1.c.y = ot->GetPoint(2)->y;
+                    t1.c.x = ot->GetPoint(2)->x - xoffset;
+                    t1.c.y = ot->GetPoint(2)->y - yoffset;
                     t1.c.z = 0.0f;
                     tris.append(t1);
 
                     Tri t2;
-                    t2.a.x = ot->GetPoint(1)->x;
-                    t2.a.y = ot->GetPoint(1)->y;
+                    t2.a.x = ot->GetPoint(1)->x - xoffset;
+                    t2.a.y = ot->GetPoint(1)->y - yoffset;
                     t2.a.z = extrude;
-                    t2.b.x = ot->GetPoint(0)->x;
-                    t2.b.y = ot->GetPoint(0)->y;
+                    t2.b.x = ot->GetPoint(0)->x - xoffset;
+                    t2.b.y = ot->GetPoint(0)->y - yoffset;
                     t2.b.z = extrude;
-                    t2.c.x = ot->GetPoint(2)->x;
-                    t2.c.y = ot->GetPoint(2)->y;
+                    t2.c.x = ot->GetPoint(2)->x - xoffset;
+                    t2.c.y = ot->GetPoint(2)->y - yoffset;
                     t2.c.z = extrude;
                     tris.append(t2);
                 }
@@ -374,7 +374,11 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
     vectoriser = NULL;
 
     prevCharIndex = curCharIndex;
-    float chSize = face->glyph->advance.x >> 6;
+    float chSize;
+    if (horizontal)
+        chSize = face->glyph->advance.x >> 6;
+    else
+        chSize = 64;
     return offset + chSize;
 }
 
@@ -413,18 +417,19 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
     FontStyleNode *fontStyle = (FontStyleNode *)
         ((SFNode *)getField(fontStyle_Field()))->getValue();
 
-
     float fsizeX = SPACING;
     float fsizeY = SPACING;
     float fspacing = 1;
+    bool bleftToRight = true;
+    bool bhorizontal = true;
 
     int ijustify = JUSTIFY_BEGIN;
-    bool bleftToRight = true;
     if (fontStyle) {
         fsizeX = fontStyle->getSizeX() * SPACING;
         fsizeY = fontStyle->getSizeY() * SPACING;
         fspacing = fontStyle->spacing()->getValue();
         bleftToRight = fontStyle->leftToRight()->getValue();
+        bhorizontal = fontStyle->horizontal()->getValue();
     }
 
     MFVec3f *coords = new MFVec3f();
@@ -441,14 +446,12 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
                 ijustify = JUSTIFY_END;
         }
         float offset = 0; 
-        if (bleftToRight)
-            if (strlen(str) > 0)
-                offset = strlen(str) + 1;
         for (unsigned int i = 0; i < strlen(str); i++) {
             int ind = i;
-            if (!bleftToRight)
+            if (bhorizontal && !bleftToRight)
                 ind = strlen(str) - 1 - i;
-            offset = AddCharacter(face, str[ind], bezierSteps, offset, extrude);
+            offset = AddCharacter(face, str[ind], bezierSteps, offset, extrude, 
+                                  bhorizontal);
         }
 
         float maxX = FLT_MIN;
@@ -471,15 +474,27 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
             addX = -maxX;
         for (int i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
-            coords->appendSFValue(fsizeX * (t.a.x / height) + addX, 
-                                  fsizeY * (t.a.y / height) - j * fspacing, 
-                                  t.a.z - extrude / 2);
-            coords->appendSFValue(fsizeX * (t.b.x / height) + addX,
-                                  fsizeY * (t.b.y / height) - j * fspacing, 
-                                  t.b.z - extrude / 2);
-            coords->appendSFValue(fsizeX * (t.c.x / height) + addX, 
-                                  fsizeY * (t.c.y / height) - j * fspacing, 
-                                  t.c.z - extrude / 2);
+            if (bhorizontal) {
+                coords->appendSFValue(fsizeX * (t.a.x / height) + addX, 
+                                      fsizeY * (t.a.y / height) - j * fspacing, 
+                                      t.a.z - extrude / 2);
+                coords->appendSFValue(fsizeX * (t.b.x / height) + addX,
+                                      fsizeY * (t.b.y / height) - j * fspacing, 
+                                      t.b.z - extrude / 2);
+                coords->appendSFValue(fsizeX * (t.c.x / height) + addX, 
+                                      fsizeY * (t.c.y / height) - j * fspacing, 
+                                      t.c.z - extrude / 2);
+            } else {
+                coords->appendSFValue(fsizeX * (t.a.x / height) + j * fspacing, 
+                                      fsizeY * (t.a.y / height), 
+                                      t.a.z - extrude / 2);
+                coords->appendSFValue(fsizeX * (t.b.x / height) + j * fspacing,
+                                      fsizeY * (t.b.y / height),
+                                      t.b.z - extrude / 2);
+                coords->appendSFValue(fsizeX * (t.c.x / height) + j * fspacing, 
+                                      fsizeY * (t.c.y / height) ,
+                                      t.c.z - extrude / 2);
+            }
             coordIndex->appendSFValue(triangles++);
             coordIndex->appendSFValue(triangles++);
             coordIndex->appendSFValue(triangles++);
