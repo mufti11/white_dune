@@ -36,6 +36,10 @@ else
 fi
 export CPPFLAGS
 
+dnl guess ffmeg flags 
+CPPFLAGS="$CPPFLAGS -I/usr/include/ffmpeg/ "
+export CPPFLAGS
+
 dnl Check for compiler programs
 
 AC_PROG_CC
@@ -1550,7 +1554,6 @@ AC_TRY_LINK(
 AC_CHECK_LIB(avcodec, av_parser_init, ,FFMPEG_ERROR=1)
 AC_CHECK_LIB(avutil, av_expr_eval, ,FFMPEG_ERROR=1)
 AC_CHECK_LIB(avformat, avformat_configuration, ,FFMPEG_ERROR=1)
-AC_CHECK_LIB(avresample, avresample_config, ,FFMPEG_ERROR=1)
 AC_CHECK_LIB(swscale, swscale_configuration, ,FFMPEG_ERROR=1)
 AC_CHECK_LIB(swresample, swr_init, ,FFMPEG_ERROR=1)
 if test "X_$FFMPEG_ERROR" = "X_1" ; then
@@ -1567,7 +1570,7 @@ install it from:
 
 and re-run configure.
 The development version (-dev/-devel) of the following libraries are need:
-libavcodec libavutil libavformat  libavresample libswscale libswresample
+libavcodec libavutil libavformat libswscale libswresample
 
 EOF
          FFMPEG_WARNING="no usable ffmpeg libraries: no rendering of MovieTexture"

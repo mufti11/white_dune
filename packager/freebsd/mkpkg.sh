@@ -75,9 +75,12 @@ echo @pkgdep `pkg info | egrep ^xorg-libraries- | awk '{print $1}'` >> $WTMP/pkg
 
 mkdir $WTMP/manifest
 
+FVERSION=`awk -v version=$VERSION 'BEGIN { c1=substr(version,1,1); c3=substr(version,3,1); sub(c1 "." c3, c1 "." c3 ".", version); print version }'`
+export FVERSION
+
 cat >> $WTMP/manifest/+MANIFEST << EOT
 name: wdune
-version: $VERSION
+version: $FVERSION
 comment: "graphical VRML97/X3D editor"
 origin: graphics/wdune
 desc: "graphical VRML97/X3D editor, 3D modeller and animation tool"
@@ -94,7 +97,7 @@ EOT
 (cd /tmp && 
 pkg create -p $WTMP/pkg-list -m $WTMP/manifest wdune-$VERSION)
 
-mv /tmp/wdune-$VERSION.txz /tmp/wdune-FreeBSD-$VERSION.txz
+mv /tmp/wdune-$FVERSION.txz /tmp/wdune-FreeBSD-$VERSION.txz
 echo use \"pkg add /tmp/wdune-FreeBSD-$VERSION.txz\" to install
-rm -r $WTMP
+#rm -r $WTMP
 

@@ -1,2 +1,2 @@
 clean:
-	rm -rf pkg wdune-0.99* src/*
+	rm -rf pkg wdune-1* src/*

@@ -42,6 +42,7 @@ makedepends=(gcc
              libjpeg-turbo
              zlib
              expat
+             ffmpeg
              gcc
              flex
              bison

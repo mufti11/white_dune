@@ -379,6 +379,8 @@ bool movie_load(NodeMovieTexture *node){
         }
         const char *fname = filename;
         loaded = movie_load_from_file((char *)fname,&opaque);
+        if (opaque == NULL)
+            return false;
         retval = loaded > -1 ? TRUE : FALSE;
         if(loaded){
             int freq,channels,size,bits;
@@ -1187,8 +1189,9 @@ void
 NodeMovieTexture::bind()
 {
     if (!m_loaded) {
-        movie_load(this);
-        m_loaded = true;
+        m_loaded = movie_load(this);
+        if (!m_loaded)
+            return;
         m_startTime = swGetCurrentTime();
 
         if (m_textureName != 0) glDeleteTextures(1, &m_textureName);
@@ -1203,7 +1206,7 @@ NodeMovieTexture::bind()
 
     float fraction = fmod(swGetCurrentTime() - m_startTime, fw_movie->duration);
 
-    if (!loop()->getValue())
+    if ((!m_scene->isRunning()) || (!loop()->getValue()))
         fraction = 0;
     
     int nchan = fw_movie->nchan; //RGB24 == 3, RGBA == 4
