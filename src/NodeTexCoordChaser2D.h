@@ -33,35 +33,47 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "ChaserNode.h"
 
 #include "MFVec2f.h"
 
-class ProtoTexCoordChaser2D : public Proto {
+class ProtoTexCoordChaser2D : public ChaserProto {
 public:
                     ProtoTexCoordChaser2D(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_TEX_COORD_CHASER_2D; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex duration;
     FieldIndex initialDestination;
     FieldIndex initialValue;
 };
 
-class NodeTexCoordChaser2D : public Node {
+class NodeTexCoordChaser2D : public ChaserNode {
 public:
                     NodeTexCoordChaser2D(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeTexCoordChaser2D(*this); }
 
-    fieldMacros(SFTime,  duration,           ProtoTexCoordChaser2D);
+    void            dynamics(MFVec2f *add, MFVec2f *dest, MFVec2f *val, 
+                             float mult);
+
+    virtual void    sendChasedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+
     fieldMacros(MFVec2f, initialDestination, ProtoTexCoordChaser2D);
     fieldMacros(MFVec2f, initialValue,       ProtoTexCoordChaser2D);
+protected:
+    MFVec2f m_value;
+    MFVec2f *m_destination;
+    MyArray<MFVec2f *> m_destinations;
+    MyArray<double> m_event_times;
+    double m_lastTick;
+    bool m_active;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

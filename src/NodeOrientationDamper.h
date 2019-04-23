@@ -33,37 +33,40 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "DamperNode.h"
 
-class ProtoOrientationDamper : public Proto {
+class ProtoOrientationDamper : public DamperProto {
 public:
                     ProtoOrientationDamper(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_ORIENTATION_DAMPER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex tau;
-    FieldIndex tolerance;
     FieldIndex initialDestination;
     FieldIndex initialValue;
-    FieldIndex order;
 };
 
-class NodeOrientationDamper : public Node {
+class NodeOrientationDamper : public DamperNode {
 public:
                     NodeOrientationDamper(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeOrientationDamper(*this); }
 
-    fieldMacros(SFTime,     tau,                ProtoOrientationDamper);
-    fieldMacros(SFFloat,    tolerance,          ProtoOrientationDamper);
+    virtual void    sendDampedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
     fieldMacros(SFRotation, initialDestination, ProtoOrientationDamper);
     fieldMacros(SFRotation, initialValue,       ProtoOrientationDamper);
-    fieldMacros(SFInt32,    order,              ProtoOrientationDamper);
+
+protected:
+    SFRotation m_value1;
+    SFRotation m_value2;
+    SFRotation m_value3;
+    SFRotation m_value4;
+    SFRotation m_value5;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

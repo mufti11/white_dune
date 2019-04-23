@@ -25,30 +25,21 @@ fi
 UNAME_A=`uname -a`
 UNAME_PS2="Linux $USER 2.2.1 #1 Wed Nov 14 18:28:00 JST 2001 mips unknown"
 
-VERSION1=wdune-`sh ../../batch/getversion.sh`
-VERSION2=`echo $VERSION1 | awk '{gsub("wdune-","",$0);print $0}'`
-REV=pl
-if test "X_"`echo $VERSION1 | grep rc` != "X_" ; then
-    REV=rc
-fi
-export REV
-VERSION3=`awk -v x="$VERSION2" -v rev="$REV" 'BEGIN {split(x, a, rev);print a[1]}'`
-VERSION4=`awk -v x="$VERSION2" -v rev="$REV" 'BEGIN {split(x, a, rev);print a[2]}'`
+VERSION1=`sh ../../batch/getversion.sh`
 . /etc/os-release
-VERSION5=wdune-$VERSION3
-VERSION6=$VERSION3
-VERSION=wdune$VERSION2
+VERSION=$VERSION1
+VERSION2=wdune-$VERSION1
 
 (
    cd ../../.. && 
-   rm -rf /tmp/$VERSION && \
-   cp -r $VERSION1 /tmp/ && \
-   cd /tmp/$VERSION1 && 
+   rm -rf /tmp/$VERSION2 && \
+   cp -r $VERSION2 /tmp/ && \
+   cd /tmp/$VERSION2 && 
    sh -x batch/fix_not_translated_rcfiles.sh &&
    make realclean && rm -rf desktop/macosx desktop/irix
 ) && \
-(cd /tmp && tar -cpf - $VERSION1) | \
-bzip2 -c > $MKRPM_SRC/$VERSION1.tar.bz2
+(cd /tmp && tar -cpf - $VERSION2) | \
+bzip2 -c > $MKRPM_SRC/$VERSION2.tar.bz2
 
 if test "$UNAME_A"="$UNAME_PS2"; then
    # disable optimization on Playstation 2 cause of compiler bugs
@@ -60,18 +51,15 @@ else
 fi
 
 RPM_BUILD_ROOT='$RPM_BUILD_ROOT'
-REVISION="$REV""$VERSION4"
 cat > /tmp/wdune.spec << EOT 
 Summary: A graphical X3D/VRML97 editor, simple 3D modeler and animation tool
 Name: wdune
-%global extraver $REVISION
-%global upstream_version %{version}%{?extraver}
-Version: $VERSION6
-Release: 2%{?extraver}%{?dist}
+Version: $VERSION
+Release: 2%{?dist}
 #Copyright: GPL
 License: GPLv2+ and GPLv3+ and LGPLv3+ and BSD and Public Domain
 URL: http://wdune.ourproject.org/
-Source: ftp://ftp.ourproject.org/pub/wdune/wdune-%{upstream_version}.tar.bz2
+Source: ftp://ftp.ourproject.org/pub/wdune/wdune-%{version}.tar.bz2
 BuildRequires: gcc-c++
 BuildRequires: gawk
 BuildRequires: make
@@ -144,13 +132,14 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 Documentation for white_dune
 
 %prep
-%setup -q -n "wdune-%{upstream_version}"
+%setup -q -n "wdune-%{version}"
 
 %build
 %configure \
-    --with-about="white_dune-%{upstream_version}" \\
+    --with-about="white_dune-%{version}" \\
     --with-optimization \\
     --without-devil \\
+    --without-ffmpeg \\
     --with-helpurl="%{_docdir}/wdune-docs/docs/" \\
     --with-protobaseurl="%{_docdir}/wdune-docs/docs" \\
     --with-checkincommand="ci" \\
@@ -210,6 +199,8 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %{_mandir}/man1/dune4kids.1*
 %{_mandir}/man1/illegal2vrml.1*
 %files opengl-examples
+%dir %{_datadir}/white_dune/
+%dir %{_datadir}/white_dune/opengl_example/
 %{_bindir}/white_dune_opengl_example
 %{_datadir}/white_dune/opengl_example/fin.png
 %{_datadir}/white_dune/opengl_example/fire.png

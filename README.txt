@@ -5052,5 +5052,7 @@ Added MovieTexture rendering
 
 Fixed FontStyle.horizontal
 
+Added Followers component rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 

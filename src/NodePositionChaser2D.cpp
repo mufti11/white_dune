@@ -31,18 +31,12 @@
 #include "DuneApp.h"
 
 ProtoPositionChaser2D::ProtoPositionChaser2D(Scene *scene)
-  : Proto(scene, "PositionChaser2D")
+  : ChaserProto(scene, "PositionChaser2D", SFVEC2F)
 {
-    addEventIn(SFVEC2F, "set_destination");
-    addEventIn(SFVEC2F, "set_value");
-    duration.set(
-        addField(SFTIME, "duration", new SFTime(0)));
     initialDestination.set(
         addField(SFVEC2F, "initialDestination", new SFVec2f(0, 0)));
     initialValue.set(
         addField(SFVEC2F, "initialValue", new SFVec2f(0, 0)));
-    addEventOut(SFBOOL, "isActive");
-    addEventOut(SFVEC2F, "value_changed");
 }
 
 Node *
@@ -52,6 +46,67 @@ ProtoPositionChaser2D::create(Scene *scene)
 }
 
 NodePositionChaser2D::NodePositionChaser2D(Scene *scene, Proto *def)
-  : Node(scene, def)
+  : ChaserNode(scene, def)
 {
+    m_lastTick = 0;
+    m_initialDestination_Field = getProto()->lookupEventIn(
+                                     "initialDestination");
+    m_initialValue_Field = getProto()->lookupEventIn("initialValue");
 }
+
+void   
+NodePositionChaser2D::sendChasedEvent(int eventIn, double timestamp, 
+                                      FieldValue* value)
+{
+    double now = timestamp;
+
+    if (eventIn == m_set_value_Field) 
+        m_value = ((SFVec2f *)value)->getValue();
+    else if (eventIn == m_initialDestination_Field)
+        initialDestination((SFVec2f *)value);
+    else if (eventIn == m_initialValue_Field)
+        initialValue((SFVec2f *)value);
+    else if (eventIn == m_set_destination_Field)
+        m_destination = ((SFVec2f *)value)->getVec();
+
+    if (!m_lastTick) {
+        m_lastTick = now;
+        return;
+    }
+
+    double dduration = duration()->getValue();
+    const float *f = initialDestination()->getValue();
+    Vec2f initDest(f[0], f[1]);
+    const float *v = initialValue()->getValue();
+    Vec2f initVal(v[0], v[1]);
+
+    // throw out times and durations too old
+    for (int i = m_event_times.size() - 1; i > -1; i--)
+        if (m_event_times[i] < (now - dduration)) {
+            m_event_times.remove(i);
+            m_destinations.remove(i);
+        }
+    m_event_times.append(now);
+    m_destinations.append(m_destination);
+
+    Vec2f outputValue = initDest;      
+    for (int i = 0; i < m_event_times.size(); i++) {
+        Vec2f dnmin1;
+        if (i == 0)
+            dnmin1 = initVal;
+        else
+            dnmin1 = m_destinations[i - 1];
+        Vec2f dn = m_destinations[i];
+        if ((now - m_event_times[i]) > dduration)
+            outputValue += dn - dnmin1;
+        else
+            outputValue += (dn - dnmin1) * 
+                           (1 - cos(M_PI * (now - m_event_times[i] / 
+                            dduration))) / 2;
+    } 
+
+    sendEvent(m_value_changed_Field, timestamp, new SFVec2f(outputValue));
+
+    m_lastTick= now;
+}
+

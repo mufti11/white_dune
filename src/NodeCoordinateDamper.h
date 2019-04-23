@@ -33,37 +33,42 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "DamperNode.h"
 
-class ProtoCoordinateDamper : public Proto {
+class ProtoCoordinateDamper : public DamperProto {
 public:
                     ProtoCoordinateDamper(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_COORDINATE_DAMPER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex tau;
-    FieldIndex tolerance;
     FieldIndex initialDestination;
     FieldIndex initialValue;
-    FieldIndex order;
 };
 
-class NodeCoordinateDamper : public Node {
+class NodeCoordinateDamper : public DamperNode {
 public:
                     NodeCoordinateDamper(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeCoordinateDamper(*this); }
 
-    fieldMacros(SFTime,  tau,                ProtoCoordinateDamper);
-    fieldMacros(SFFloat, tolerance,          ProtoCoordinateDamper);
+    void            dynamics(MFVec3f *dest, MFVec3f *val, float alpha);
+
+    virtual void    sendDampedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
     fieldMacros(MFVec3f, initialDestination, ProtoCoordinateDamper);
     fieldMacros(MFVec3f, initialValue,       ProtoCoordinateDamper);
-    fieldMacros(SFInt32, order,              ProtoCoordinateDamper);
+
+protected:
+    MFVec3f *m_value1;
+    MFVec3f *m_value2;
+    MFVec3f *m_value3;
+    MFVec3f *m_value4;
+    MFVec3f *m_value5;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

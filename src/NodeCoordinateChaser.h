@@ -33,33 +33,45 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "ChaserNode.h"
 
-class ProtoCoordinateChaser : public Proto {
+class ProtoCoordinateChaser : public ChaserProto {
 public:
                     ProtoCoordinateChaser(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_COORDINATE_CHASER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex duration;
     FieldIndex initialDestination;
     FieldIndex initialValue;
 };
 
-class NodeCoordinateChaser : public Node {
+class NodeCoordinateChaser : public ChaserNode {
 public:
                     NodeCoordinateChaser(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeCoordinateChaser(*this); }
 
-    fieldMacros(SFTime,  duration,           ProtoCoordinateChaser);
+    void            dynamics(MFVec3f *add, MFVec3f *dest, MFVec3f *val, 
+                             float mult);
+
+    virtual void    sendChasedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+
     fieldMacros(MFVec3f, initialDestination, ProtoCoordinateChaser);
     fieldMacros(MFVec3f, initialValue,       ProtoCoordinateChaser);
+protected:
+    MFVec3f m_value;
+    MFVec3f *m_destination;
+    MyArray<MFVec3f *> m_destinations;
+    MyArray<double> m_event_times;
+    double m_lastTick;
+    bool m_active;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

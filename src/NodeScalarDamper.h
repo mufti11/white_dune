@@ -33,37 +33,40 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "DamperNode.h"
 
-class ProtoScalarDamper : public Proto {
+class ProtoScalarDamper : public DamperProto {
 public:
                     ProtoScalarDamper(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_SCALAR_DAMPER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex tau;
-    FieldIndex tolerance;
     FieldIndex initialDestination;
     FieldIndex initialValue;
-    FieldIndex order;
 };
 
-class NodeScalarDamper : public Node {
+class NodeScalarDamper : public DamperNode {
 public:
                     NodeScalarDamper(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeScalarDamper(*this); }
 
-    fieldMacros(SFTime,  tau,                ProtoScalarDamper);
-    fieldMacros(SFFloat, tolerance,          ProtoScalarDamper);
+    virtual void    sendDampedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
     fieldMacros(SFFloat, initialDestination, ProtoScalarDamper);
     fieldMacros(SFFloat, initialValue,       ProtoScalarDamper);
-    fieldMacros(SFInt32, order,              ProtoScalarDamper);
+
+protected:
+    float m_value1;
+    float m_value2;
+    float m_value3;
+    float m_value4;
+    float m_value5;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

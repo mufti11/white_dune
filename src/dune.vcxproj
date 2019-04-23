@@ -301,46 +301,6 @@
     <ClCompile Include="advancing_front.cpp" />
     <ClCompile Include="cdt.cpp" />
     <ClCompile Include="Contour.cpp" />
-    <ClCompile Include="NurbsCurve2DDialog.cpp" />
-    <ClCompile Include="NodeBinaryGeometry.cpp" />
-    <ClCompile Include="NodeBlock.cpp" />
-    <ClCompile Include="NodeColorChaser.cpp" />
-    <ClCompile Include="NodeColorMaskMode.cpp" />
-    <ClCompile Include="NodeCommonSurfaceShader.cpp" />
-    <ClCompile Include="NodeCoordinateChaser.cpp" />
-    <ClCompile Include="NodeDepthMode.cpp" />
-    <ClCompile Include="NodeDish.cpp" />
-    <ClCompile Include="NodeDynamicLOD.cpp" />
-    <ClCompile Include="NodeEnvironment.cpp" />
-    <ClCompile Include="NodeExternalGeometry.cpp" />
-    <ClCompile Include="NodeField.cpp" />
-    <ClCompile Include="NodeImageGeometry.cpp" />
-    <ClCompile Include="NodeImageTextureAtlas.cpp" />
-    <ClCompile Include="NodeMesh.cpp" />
-    <ClCompile Include="NodeMPRVolumeStyle.cpp" />
-    <ClCompile Include="NodeMultiPart.cpp" />
-    <ClCompile Include="NodeNozzle.cpp" />
-    <ClCompile Include="NodeParam.cpp" />
-    <ClCompile Include="NodeParticleSet.cpp" />
-    <ClCompile Include="NodePlane.cpp" />
-    <ClCompile Include="NodePopGeometry.cpp" />
-    <ClCompile Include="NodePopGeometryLevel.cpp" />
-    <ClCompile Include="NodePyramid.cpp" />
-    <ClCompile Include="NodeRadarVolumeStyle.cpp" />
-    <ClCompile Include="NodeRectangularTorus.cpp" />
-    <ClCompile Include="NodeRefinementTexture.cpp" />
-    <ClCompile Include="NodeRemoteSelectionGroup.cpp" />
-    <ClCompile Include="NodeScalarDamper.cpp" />
-    <ClCompile Include="NodeSlopedCylinder.cpp" />
-    <ClCompile Include="NodeSnout.cpp" />
-    <ClCompile Include="NodeSolidOfRevolution.cpp" />
-    <ClCompile Include="NodeSphereSegment.cpp" />
-    <ClCompile Include="NodeStippleVolumeStyle.cpp" />
-    <ClCompile Include="NodeSurfaceShaderTexture.cpp" />
-    <ClCompile Include="NodeTexCoordChaser2D.cpp" />
-    <ClCompile Include="NodeTorus.cpp" />
-    <ClCompile Include="NodeUniform.cpp" />
-    <ClCompile Include="NodeViewfrustum.cpp" />
     <ClCompile Include="PointFtgl.cpp" />
     <ClCompile Include="quadric_simp.cpp" />
     <ClCompile Include="shapes.cpp" />
@@ -363,6 +323,7 @@
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
     </ClCompile>
+    <ClCompile Include="ChaserNode.cpp" />
     <ClCompile Include="CheckBoxWindow.cpp" />
     <ClCompile Include="ColorCircle.cpp" />
     <ClCompile Include="Commandline.cpp" />
@@ -374,6 +335,7 @@
     <ClCompile Include="CoverDefDialog.cpp" />
     <ClCompile Include="CurveAnimationDialog.cpp" />
     <ClCompile Include="Cylinder2NurbsDialog.cpp" />
+    <ClCompile Include="DamperNode.cpp" />
     <ClCompile Include="DefDialog.cpp" />
     <ClCompile Include="Dialog.cpp">
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
@@ -1030,6 +992,46 @@
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AnySuitable</InlineFunctionExpansion>
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AnySuitable</InlineFunctionExpansion>
     </ClCompile>
+    <ClCompile Include="NurbsCurve2DDialog.cpp" />
+    <ClCompile Include="NodeBinaryGeometry.cpp" />
+    <ClCompile Include="NodeBlock.cpp" />
+    <ClCompile Include="NodeColorChaser.cpp" />
+    <ClCompile Include="NodeColorMaskMode.cpp" />
+    <ClCompile Include="NodeCommonSurfaceShader.cpp" />
+    <ClCompile Include="NodeCoordinateChaser.cpp" />
+    <ClCompile Include="NodeDepthMode.cpp" />
+    <ClCompile Include="NodeDish.cpp" />
+    <ClCompile Include="NodeDynamicLOD.cpp" />
+    <ClCompile Include="NodeEnvironment.cpp" />
+    <ClCompile Include="NodeExternalGeometry.cpp" />
+    <ClCompile Include="NodeField.cpp" />
+    <ClCompile Include="NodeImageGeometry.cpp" />
+    <ClCompile Include="NodeImageTextureAtlas.cpp" />
+    <ClCompile Include="NodeMesh.cpp" />
+    <ClCompile Include="NodeMPRVolumeStyle.cpp" />
+    <ClCompile Include="NodeMultiPart.cpp" />
+    <ClCompile Include="NodeNozzle.cpp" />
+    <ClCompile Include="NodeParam.cpp" />
+    <ClCompile Include="NodeParticleSet.cpp" />
+    <ClCompile Include="NodePlane.cpp" />
+    <ClCompile Include="NodePopGeometry.cpp" />
+    <ClCompile Include="NodePopGeometryLevel.cpp" />
+    <ClCompile Include="NodePyramid.cpp" />
+    <ClCompile Include="NodeRadarVolumeStyle.cpp" />
+    <ClCompile Include="NodeRectangularTorus.cpp" />
+    <ClCompile Include="NodeRefinementTexture.cpp" />
+    <ClCompile Include="NodeRemoteSelectionGroup.cpp" />
+    <ClCompile Include="NodeScalarDamper.cpp" />
+    <ClCompile Include="NodeSlopedCylinder.cpp" />
+    <ClCompile Include="NodeSnout.cpp" />
+    <ClCompile Include="NodeSolidOfRevolution.cpp" />
+    <ClCompile Include="NodeSphereSegment.cpp" />
+    <ClCompile Include="NodeStippleVolumeStyle.cpp" />
+    <ClCompile Include="NodeSurfaceShaderTexture.cpp" />
+    <ClCompile Include="NodeTexCoordChaser2D.cpp" />
+    <ClCompile Include="NodeTorus.cpp" />
+    <ClCompile Include="NodeUniform.cpp" />
+    <ClCompile Include="NodeViewfrustum.cpp" />
     <ClCompile Include="NurbsArc.cpp" />
     <ClCompile Include="NurbsCurve2NurbsSurfDialog.cpp" />
     <ClCompile Include="NurbsCurveDegreeElevate.cpp" />

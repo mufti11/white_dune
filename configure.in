@@ -114,10 +114,11 @@ export LIBS
 
 AC_ARG_WITH(iconscale2,--with-iconscale2         used to scale major icons by factor 2,
             AC_DEFINE(HAVE_ICON_SCALE_2))
-AC_ARG_WITH(devil,--without-devil           do not use DevIL library to load textureimages ,
+
+AC_ARG_WITH(devil,--without-devil           do not use DevIL library to load textureimages,
             DEVIL=no)
 
-AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use convex hull ,
+AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use convex hull,
             CGAL=no)
 
 AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version of the CGAL library,
@@ -125,6 +126,9 @@ AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version o
 
 AC_ARG_WITH(omp,--without-omp             do not use OpenMP (usefull on raspberry PI),
             OMP=no)
+
+AC_ARG_WITH(ffmpeg,--without-ffmpeg          do not use ffmpeg libraries to load movie texture,
+            FFMPEG=no)
 
 AC_ARG_WITH(png_handle_unknown,--without-png_handle_unknown  use if link fails cause of png_handle_unknown,
             AC_DEFINE(HAVE_NO_PNG_HANDLE_UNKNOWN))
@@ -1551,13 +1555,14 @@ AC_TRY_LINK(
             echo  no;AC_DEFINE(HAVE_NO_PNG_HANDLE_UNKNOWN)
            )
 
-AC_CHECK_LIB(avcodec, av_parser_init, ,FFMPEG_ERROR=1)
-AC_CHECK_LIB(avutil, av_expr_eval, ,FFMPEG_ERROR=1)
-AC_CHECK_LIB(avformat, avformat_configuration, ,FFMPEG_ERROR=1)
-AC_CHECK_LIB(swscale, swscale_configuration, ,FFMPEG_ERROR=1)
-AC_CHECK_LIB(swresample, swr_init, ,FFMPEG_ERROR=1)
-if test "X_$FFMPEG_ERROR" = "X_1" ; then
-     cat 1>&2 << EOF
+if test "X_$FFMPEG" != "X_no" ; then
+   AC_CHECK_LIB(avcodec, av_parser_init, ,FFMPEG_ERROR=1)
+   AC_CHECK_LIB(avutil, av_expr_eval, ,FFMPEG_ERROR=1)
+   AC_CHECK_LIB(avformat, avformat_configuration, ,FFMPEG_ERROR=1)
+   AC_CHECK_LIB(swscale, swscale_configuration, ,FFMPEG_ERROR=1)
+   AC_CHECK_LIB(swresample, swr_init, ,FFMPEG_ERROR=1)
+   if test "X_$FFMPEG_ERROR" = "X_1" ; then
+      cat 1>&2 << EOF
 
 *** couldn't find matching ffmpeg version ***
 
@@ -1574,8 +1579,9 @@ libavcodec libavutil libavformat libswscale libswresample
 
 EOF
          FFMPEG_WARNING="no usable ffmpeg libraries: no rendering of MovieTexture"
-else
-    AC_DEFINE(HAVE_FFMPEG)
+   else
+      AC_DEFINE(HAVE_FFMPEG)
+   fi
 fi
 
 AC_CHECK_HEADER(linux/joystick.h,AC_DEFINE(LINUX_JOYSTICK))

@@ -317,3 +317,75 @@ Quaternion::Quaternion(Vec3f from, Vec3f to)
        w = (float) cos(angle * 0.5f);
     }
 }
+
+/****************************************************************************
+    ... is part of the FreeWRL/FreeX3D Distribution.
+
+    Copyright 2009 CRC Canada. (http://www.crc.gc.ca)
+
+    FreeWRL/FreeX3D is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    FreeWRL/FreeX3D is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with FreeWRL/FreeX3D.  If not, see <http://www.gnu.org/licenses/>.
+****************************************************************************/
+
+#define DELTA 0.0001
+/*
+ * Code from www.gamasutra.com/features/19980703/quaternions_01.htm,
+ * Listing 5.
+ *
+ * SLERP(p, q, t) = [p sin((1 - t)a) + q sin(ta)] / sin(a)
+ *
+ * where a is the arc angle, quaternions pq = cos(q) and 0 <= t <= 1
+ */
+void
+quaternion_slerp(Quaternion *ret, const Quaternion *q1, const Quaternion *q2, 
+                 const double t)
+{
+    double omega, cosom, sinom, scale0, scale1, q2_array[4];
+
+    cosom =
+        q1->x * q2->x +
+        q1->y * q2->y +
+        q1->z * q2->z +
+        q1->w * q2->w;
+
+    if (cosom < 0.0) {
+        cosom = -cosom;
+        q2_array[0] = -q2->x;
+        q2_array[1] = -q2->y;
+        q2_array[2] = -q2->z;
+        q2_array[3] = -q2->w;
+    } else {
+        q2_array[0] = q2->x;
+        q2_array[1] = q2->y;
+        q2_array[2] = q2->z;
+        q2_array[3] = q2->w;
+    }
+
+    /* calculate coefficients */
+    if ((1.0 - cosom) > DELTA) {
+        /* standard case (SLERP) */
+        omega = acos(cosom);
+        sinom = sin(omega);
+        scale0 = sin((1.0 - t) * omega) / sinom;
+        scale1 = sin(t * omega) / sinom;
+    } else {
+        /* q1 & q2 are very close, so do linear interpolation */
+        scale0 = 1.0 - t;
+        scale1 = t;
+    }
+    ret->x = scale0 * q1->x + scale1 * q2_array[0];
+    ret->y = scale0 * q1->y + scale1 * q2_array[1];
+    ret->z = scale0 * q1->z + scale1 * q2_array[2];
+    ret->w = scale0 * q1->w + scale1 * q2_array[3];
+}
+

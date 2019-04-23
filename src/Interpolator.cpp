@@ -220,10 +220,10 @@ Interpolator::getNearestKeys(float k, float *k1, float *k2, int *pos1, int *pos2
 void
 Interpolator::receiveEvent(int eventIn, double timestamp, FieldValue *value)
 {
-    float fraction=((SFFloat *) value)->getValue();
-    if (eventIn == m_set_fractionField)
+    if (eventIn == m_set_fractionField) {
+        float fraction=((SFFloat *) value)->getValue();
         sendInterpolatedEvent(timestamp, fraction);
-    else
+    } else
         Node::receiveEvent(eventIn, timestamp, value);
 }
 

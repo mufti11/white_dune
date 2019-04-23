@@ -715,7 +715,7 @@ int movie_load_from_file(char *fname, void **opaque){
         return -1; // Couldn't find stream information
 
     // Dump information about file onto standard error
-    av_dump_format(pFormatCtx, 0, fname, 0);
+    // av_dump_format(pFormatCtx, 0, fname, 0);
     //fw_movie.pFormatCtx = pFormatCtx;
 
     pCodecCtxOrig = NULL;

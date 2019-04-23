@@ -31,18 +31,12 @@
 #include "DuneApp.h"
 
 ProtoScalarChaser::ProtoScalarChaser(Scene *scene)
-  : Proto(scene, "ScalarChaser")
+  : ChaserProto(scene, "ScalarChaser", SFFLOAT)
 {
-    addEventIn(SFFLOAT, "set_destination");
-    addEventIn(SFFLOAT, "set_value");
-    duration.set(
-        addField(SFTIME, "duration", new SFTime(0)));
     initialDestination.set(
         addField(SFFLOAT, "initialDestination", new SFFloat(0)));
     initialValue.set(
         addField(SFFLOAT, "initialValue", new SFFloat(0)));
-    addEventOut(SFBOOL, "isActive");
-    addEventOut(SFFLOAT, "value_changed");
 }
 
 Node *
@@ -52,6 +46,65 @@ ProtoScalarChaser::create(Scene *scene)
 }
 
 NodeScalarChaser::NodeScalarChaser(Scene *scene, Proto *def)
-  : Node(scene, def)
+  : ChaserNode(scene, def)
 {
+    m_lastTick = 0;
+    m_initialDestination_Field = getProto()->lookupEventIn(
+                                     "initialDestination");
+    m_initialValue_Field = getProto()->lookupEventIn("initialValue");
 }
+
+void   
+NodeScalarChaser::sendChasedEvent(int eventIn, double timestamp, 
+                                  FieldValue* value)
+{
+    double now = timestamp;
+
+    if (eventIn == m_set_value_Field) 
+        m_value = ((SFFloat *)value)->getValue();
+    else if (eventIn == m_initialDestination_Field)
+        initialDestination((SFFloat *)value);
+    else if (eventIn == m_initialValue_Field)
+        initialValue((SFFloat *)value);
+    else if (eventIn == m_set_destination_Field)
+        m_destination = ((SFFloat *)value)->getValue();
+
+    if (!m_lastTick) {
+        m_lastTick = now;
+        return;
+    }
+
+    double dduration = duration()->getValue();
+    float initDest = initialDestination()->getValue();
+    float initVal = initialValue()->getValue();
+
+    // throw out times and durations too old
+    for (int i = m_event_times.size() - 1; i > -1; i--)
+        if (m_event_times[i] < (now - dduration)) {
+            m_event_times.remove(i);
+            m_destinations.remove(i);
+        }
+    m_event_times.append(now);
+    m_destinations.append(m_destination);
+
+    float outputValue = initDest;      
+    for (int i = 0; i < m_event_times.size(); i++) {
+        float dnmin1;
+        if (i == 0)
+            dnmin1 = initVal;
+        else
+            dnmin1 = m_destinations[i - 1];
+        float dn = m_destinations[i];
+        if ((now - m_event_times[i]) > dduration)
+            outputValue += dn - dnmin1;
+        else
+            outputValue += (dn - dnmin1) * 
+                           (1 - cos(M_PI * (now - m_event_times[i] / 
+                            dduration))) / 2;
+    } 
+
+    sendEvent(m_value_changed_Field, timestamp, new SFFloat(outputValue));
+
+    m_lastTick= now;
+}
+

@@ -98,6 +98,10 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
+    SFRotation          slerp(SFRotation rot, double t);
+    SFRotation          inverse(void);
+    SFRotation          multiply(SFRotation rot);
+
     FieldValue         *getRandom(Scene *scene, int nodetype);
 private:
     Quaternion          m_quaternion;

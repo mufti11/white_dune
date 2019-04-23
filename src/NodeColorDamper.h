@@ -33,37 +33,42 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "DamperNode.h"
 
-class ProtoColorDamper : public Proto {
+class ProtoColorDamper : public DamperProto {
 public:
                     ProtoColorDamper(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_COLOR_DAMPER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex tau;
-    FieldIndex tolerance;
     FieldIndex initialDestination;
     FieldIndex initialValue;
-    FieldIndex order;
 };
 
-class NodeColorDamper : public Node {
+class NodeColorDamper : public DamperNode {
 public:
                     NodeColorDamper(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeColorDamper(*this); }
 
-    fieldMacros(SFTime,  tau,                ProtoColorDamper);
-    fieldMacros(SFFloat, tolerance,          ProtoColorDamper);
+    Vec3f           dynamics(Vec3f dest, Vec3f val, float alpha);
+    float           distanceHSV(Vec3f a, Vec3f b);
+
+    virtual void    sendDampedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
     fieldMacros(SFColor, initialDestination, ProtoColorDamper);
     fieldMacros(SFColor, initialValue,       ProtoColorDamper);
-    fieldMacros(SFInt32, order,              ProtoColorDamper);
+
+    Vec3f m_value1;
+    Vec3f m_value2;
+    Vec3f m_value3;
+    Vec3f m_value4;
+    Vec3f m_value5;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

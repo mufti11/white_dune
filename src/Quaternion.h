@@ -50,6 +50,11 @@ public:
 Vec3f      operator *(const Vec3f &v,const Quaternion &q);
 Vec3d      operator *(const Vec3d &v,const Quaternion &q);
 
+void       quaternion_slerp(Quaternion *ret, 
+                            const Quaternion *q1, const Quaternion *q2, 
+                            const double t);
+
+
 inline void printf(Quaternion quat) { printf("%f %f %f %f\n", 
                                              quat.x, quat.y, quat.z, quat.w); }
 

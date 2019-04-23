@@ -110,7 +110,7 @@ NodeBooleanSequencer::setKeyValue(int channel, int index, float value)
     MFBool *keyValue = (MFBool *) getField(m_keyValueField);
 
     bool val = false;
-    if (value >= 1.0f)
+    if (value >= 0.5f)
         val = true;
     keyValue->setSFValue(index * getNumChannels() + channel, val);
     m_scene->OnFieldChange(this, m_keyValueField, index);

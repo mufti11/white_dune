@@ -3559,7 +3559,9 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
+    ID_DE_NEW_COLOR_CHASER         "Erzeuge einen neuen ColorChaser Knoten.\nColorChaser"
     ID_DE_NEW_COLOR_DAMPER         "Erzeuge einen neuen ColorDamper Knoten.\nColorDamper"
+    ID_DE_NEW_COORDINATE_CHASER    "Erzeuge einen neuen CoordinateChaser Knoten.\nCoordinateChaser"
     ID_DE_NEW_COORDINATE_DAMPER    "Erzeuge einen neuen CoordinateDamper Knoten.\nCoordinateDamper"
     ID_DE_NEW_ORIENTATION_CHASER   "Erzeuge einen neuen OrientationChaser Knoten.\nOrientationChaser"
     ID_DE_NEW_ORIENTATION_DAMPER   "Erzeuge einen neuen OrientationDamper Knoten.\nOrientationDamper"
@@ -3568,6 +3570,8 @@ BEGIN
     ID_DE_NEW_POSITION_DAMPER      "Erzeuge einen neuen PositionDamper Knoten.\nPositionDamper"
     ID_DE_NEW_POSITION_DAMPER_2D   "Erzeuge einen neuen PositionDamper2D Knoten.\nPositionDamper2D"
     ID_DE_NEW_SCALAR_CHASER        "Erzeuge einen neuen ScalarChaser Knoten.\nScalarChaser"
+    ID_DE_NEW_SCALAR_DAMPER        "Erzeuge einen neuen ScalarDamper Knoten.\nScalarDamper"
+    ID_DE_NEW_TEX_COORD_CHASER_2D  "Erzeuge einen neuen TexCoordChaser2D Knoten.\nTexCoordChaser2D"
     ID_DE_NEW_TEX_COORD_DAMPER_2D  "Erzeuge einen neuen TexCoordDamper2D Knoten.\nTexCoordDamper2D"
 END
 
@@ -4138,14 +4142,14 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
-IDS_DE_SELECT_TWO_TRIANGLE      "waehlen Sie bitte zwei benachbarte Dreiecke (Flaechen)" 
-IDS_DE_MESH_INTERSECT_SELF      "IndexedFaceSet %d ueberschneidet sich selbst"
-IDS_DE_NOT_A_VOLUME             "IndexedFaceSet %d ist nicht geschlossen"
-IDS_DE_SELECT_A_INDEXEDFACESET  "waehlen Sie bitte ein IndexedFaceSet an"
-IDS_DE_CGAL_EXCEPTION           "CGAL exception: %s"
-IDS_DE_URL_SHOULD_BEGIN_WITH    "URL sollte mit https, http oder ftp beginnen"
-IDS_DE_SELECT_FIRST_VERTEX      "waehlen Sie bitte einen ersten Punkt an, um den Bereich festzulegen"
-IDS_DE_SELECT_NEXT_VERTEX       "waehlen Sie bitte einen weiteren Punkt an, um den Bereich festzulegen"
+    IDS_DE_SELECT_TWO_TRIANGLE      "waehlen Sie bitte zwei benachbarte Dreiecke (Flaechen)" 
+    IDS_DE_MESH_INTERSECT_SELF      "IndexedFaceSet %d ueberschneidet sich selbst"
+    IDS_DE_NOT_A_VOLUME             "IndexedFaceSet %d ist nicht geschlossen"
+    IDS_DE_SELECT_A_INDEXEDFACESET  "waehlen Sie bitte ein IndexedFaceSet an"
+    IDS_DE_CGAL_EXCEPTION           "CGAL exception: %s"
+    IDS_DE_URL_SHOULD_BEGIN_WITH    "URL sollte mit https, http oder ftp beginnen"
+    IDS_DE_SELECT_FIRST_VERTEX      "waehlen Sie bitte einen ersten Punkt an, um den Bereich festzulegen"
+    IDS_DE_SELECT_NEXT_VERTEX       "waehlen Sie bitte einen weiteren Punkt an, um den Bereich festzulegen"
 END
 
 STRINGTABLE DISCARDABLE

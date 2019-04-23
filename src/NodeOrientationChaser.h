@@ -33,31 +33,25 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "ChaserNode.h"
 
-class ProtoOrientationChaser : public Proto {
+class ProtoOrientationChaser : public ChaserProto {
 public:
                     ProtoOrientationChaser(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_ORIENTATION_CHASER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex duration;
     FieldIndex initialDestination;
     FieldIndex initialValue;
 };
 
-class NodeOrientationChaser : public Node {
+class NodeOrientationChaser : public ChaserNode {
 public:
                     NodeOrientationChaser(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeOrientationChaser(*this); }
 
-    fieldMacros(SFTime,     duration,           ProtoOrientationChaser);
     fieldMacros(SFRotation, initialDestination, ProtoOrientationChaser);
     fieldMacros(SFRotation, initialValue,       ProtoOrientationChaser);
 };

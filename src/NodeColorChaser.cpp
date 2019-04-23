@@ -31,18 +31,12 @@
 #include "DuneApp.h"
 
 ProtoColorChaser::ProtoColorChaser(Scene *scene)
-  : Proto(scene, "ColorChaser")
+  : ChaserProto(scene, "ColorChaser", SFCOLOR)
 {
-    addEventIn(SFCOLOR, "set_destination");
-    addEventIn(SFCOLOR, "set_value");
-    duration.set(
-        addField(SFTIME, "duration", new SFTime(0)));
     initialDestination.set(
         addField(SFCOLOR, "initialDestination", new SFColor(0, 0, 0)));
     initialValue.set(
         addField(SFCOLOR, "initialValue", new SFColor(0, 0, 0)));
-    addEventOut(SFBOOL, "isActive");
-    addEventOut(SFCOLOR, "value_changed");
 }
 
 Node *
@@ -52,6 +46,6 @@ ProtoColorChaser::create(Scene *scene)
 }
 
 NodeColorChaser::NodeColorChaser(Scene *scene, Proto *def)
-  : Node(scene, def)
+  : ChaserNode(scene, def)
 {
 }

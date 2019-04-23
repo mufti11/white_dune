@@ -446,3 +446,25 @@ SFRotation::getRandom(Scene *scene, int nodeType)
     return new SFRotation(vec.x, vec.y, vec.z, vec.w);
 }
 
+SFRotation          
+SFRotation::slerp(SFRotation rot, double t)
+{
+    Quaternion ret;
+    Quaternion q = rot.getQuat();
+    quaternion_slerp(&ret, &m_quaternion, &q, t);
+    return SFRotation(ret); 
+}
+
+SFRotation          
+SFRotation::inverse(void)
+{
+    return SFRotation(m_quaternion.conj());
+}
+
+SFRotation          
+SFRotation::multiply(SFRotation rot)
+{
+    Quaternion q = rot.getQuat();
+    return SFRotation(m_quaternion * q); 
+}
+

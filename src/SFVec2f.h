@@ -25,12 +25,20 @@
 #ifndef _FIELDVALUE_H
 #include "FieldValue.h"
 #endif
+#ifndef _VEC2F_H
+# include "Vec2f.h"
+#endif
 
 class SFVec2f : public FieldValue {
 public:
                         SFVec2f(float x, float y);
                         SFVec2f(const float *values);
                         SFVec2f(void); // silly default
+                        SFVec2f(const Vec2f &v)
+                            {
+                            m_value[0] = v.x; 
+                            m_value[1] = v.y; 
+                            }
 
     virtual int         getType() const { return SFVEC2F; }
     virtual const char *getTypeName() const { return "SFVec2f"; }
@@ -60,6 +68,8 @@ public:
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     bool                supportAnimation(bool x3d) const { return x3d; }
+
+    Vec2f               getVec(void);
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
                            { return new SFVec2f(FLOAT_RAND(), FLOAT_RAND()); }

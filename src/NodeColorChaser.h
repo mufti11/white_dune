@@ -33,8 +33,9 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "ChaserNode.h"
 
-class ProtoColorChaser : public Proto {
+class ProtoColorChaser : public ChaserProto {
 public:
                     ProtoColorChaser(Scene *scene);
     virtual Node   *create(Scene *scene);
@@ -43,21 +44,16 @@ public:
 
     virtual bool    isX3dInternalProto(void) { return true; }
 
-    FieldIndex duration;
     FieldIndex initialDestination;
     FieldIndex initialValue;
 };
 
-class NodeColorChaser : public Node {
+class NodeColorChaser : public ChaserNode {
 public:
                     NodeColorChaser(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeColorChaser(*this); }
 
-    fieldMacros(SFTime,  duration,           ProtoColorChaser);
     fieldMacros(SFColor, initialDestination, ProtoColorChaser);
     fieldMacros(SFColor, initialValue,       ProtoColorChaser);
 };

@@ -3568,7 +3568,9 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
+    ID_IT_NEW_COLOR_CHASER         "Crea un nuovo ColorChaser node.\nColorChaser"
     ID_IT_NEW_COLOR_DAMPER         "Crea un nuovo ColorDamper node.\nColorDamper"
+    ID_IT_NEW_COORDINATE_CHASER    "Crea un nuovo CoordinateChaser node.\nCoordinateChaser"
     ID_IT_NEW_COORDINATE_DAMPER    "Crea un nuovo CoordinateDamper node.\nCoordinateDamper"
     ID_IT_NEW_ORIENTATION_CHASER   "Crea un nuovo OrientationChaser node.\nOrientationChaser"
     ID_IT_NEW_ORIENTATION_DAMPER   "Crea un nuovo OrientationDamper node.\nOrientationDamper"
@@ -3577,6 +3579,8 @@ BEGIN
     ID_IT_NEW_POSITION_DAMPER      "Crea un nuovo PositionDamper node.\nPositionDamper"
     ID_IT_NEW_POSITION_DAMPER_2D   "Crea un nuovo PositionDamper2D node.\nPositionDamper2D"
     ID_IT_NEW_SCALAR_CHASER        "Crea un nuovo ScalarChaser node.\nScalarChaser"
+    ID_IT_NEW_SCALAR_DAMPER        "Crea un nuovo ScalarDamper node.\nScalarDamper"
+    ID_IT_NEW_TEX_COORD_CHASER_2D  "Crea un nuovo TexCoordChaser2D node.\nTexCoordChaser2D"
     ID_IT_NEW_TEX_COORD_DAMPER_2D  "Crea un nuovo TexCoordDamper2D node.\nTexCoordDamper2D"
 END
 
@@ -4147,14 +4151,14 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
-IDS_IT_SELECT_TWO_TRIANGLE      "select two neightboured triangles (faces)" 
-IDS_IT_MESH_INTERSECT_SELF      "IndexedFaceSet %d intersects self"
-IDS_IT_NOT_A_VOLUME             "IndexedFaceSet %d is not closed"
-IDS_IT_SELECT_A_INDEXEDFACESET  "select a IndexedFaceSet"
-IDS_IT_CGAL_EXCEPTION           "CGAL exception: %s"
-IDS_IT_URL_SHOULD_BEGIN_WITH    "URL should begin with https, http or ftp"
-IDS_IT_SELECT_FIRST_VERTEX      "select first vertex to define selection range"
-IDS_IT_SELECT_NEXT_VERTEX       "select next vertex to define selection range"
+    IDS_IT_SELECT_TWO_TRIANGLE      "select two neightboured triangles (faces)" 
+    IDS_IT_MESH_INTERSECT_SELF      "IndexedFaceSet %d intersects self"
+    IDS_IT_NOT_A_VOLUME             "IndexedFaceSet %d is not closed"
+    IDS_IT_SELECT_A_INDEXEDFACESET  "select a IndexedFaceSet"
+    IDS_IT_CGAL_EXCEPTION           "CGAL exception: %s"
+    IDS_IT_URL_SHOULD_BEGIN_WITH    "URL should begin with https, http or ftp"
+    IDS_IT_SELECT_FIRST_VERTEX      "select first vertex to define selection range"
+    IDS_IT_SELECT_NEXT_VERTEX       "select next vertex to define selection range"
 END
 
 STRINGTABLE DISCARDABLE

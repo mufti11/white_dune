@@ -33,33 +33,40 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "ChaserNode.h"
 
-class ProtoScalarChaser : public Proto {
+class ProtoScalarChaser : public ChaserProto {
 public:
                     ProtoScalarChaser(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_SCALAR_CHASER; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex duration;
     FieldIndex initialDestination;
     FieldIndex initialValue;
 };
 
-class NodeScalarChaser : public Node {
+class NodeScalarChaser : public ChaserNode {
 public:
                     NodeScalarChaser(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodeScalarChaser(*this); }
 
-    fieldMacros(SFTime,  duration,           ProtoScalarChaser);
+    virtual void    sendChasedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
     fieldMacros(SFFloat, initialDestination, ProtoScalarChaser);
     fieldMacros(SFFloat, initialValue,       ProtoScalarChaser);
+
+protected:
+    SFFloat m_value;
+    float m_destination;
+    MyArray<float> m_destinations;
+    MyArray<double> m_event_times;
+    double m_lastTick;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif

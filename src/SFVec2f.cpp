@@ -210,3 +210,11 @@ SFVec2f::getEcmaScriptComment(MyString name, int flags) const
     }
     return ret;
 }
+
+Vec2f        
+SFVec2f::getVec(void)
+{
+    Vec2f v(m_value[0], m_value[1]);
+    return v;
+}
+

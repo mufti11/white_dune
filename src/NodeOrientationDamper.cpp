@@ -33,23 +33,12 @@
 #include "DuneApp.h"
 
 ProtoOrientationDamper::ProtoOrientationDamper(Scene *scene)
-  : Proto(scene, "OrientationDamper")
+  : DamperProto(scene, "OrientationDamper", SFROTATION)
 {
-    addEventIn(SFROTATION, "set_destination");
-    addEventIn(SFROTATION, "set_value");
-    tau.set(
-        addExposedField(SFTIME, "tau", new SFTime(0)));
-    tolerance.set(
-        addExposedField(SFFLOAT, "tolerance", new SFFloat(-1)));
     initialDestination.set(
         addField(SFROTATION, "initialDestination", new SFRotation(0, 1, 0, 0)));
     initialValue.set(
         addField(SFROTATION, "initialValue", new SFRotation(0, 1, 0, 0)));
-    order.set(
-        addField(SFINT32, "order", new SFInt32(3),
-                 new SFInt32(0), new SFInt32(5)));
-    addEventOut(SFBOOL, "isActive");
-    addEventOut(SFROTATION, "value_changed");
 }
 
 Node *
@@ -59,6 +48,81 @@ ProtoOrientationDamper::create(Scene *scene)
 }
 
 NodeOrientationDamper::NodeOrientationDamper(Scene *scene, Proto *def)
-  : Node(scene, def)
+  : DamperNode(scene, def)
 {
+    m_initialDestination_Field = getProto()->lookupEventIn(
+                                     "initialDestination");
+    m_initialValue_Field = getProto()->lookupEventIn("initialValue");
 }
+
+void   
+NodeOrientationDamper::sendDampedEvent(int eventIn, double timestamp, 
+                                       FieldValue * value)
+{
+    double now = timestamp;
+
+    if (eventIn == m_set_value_Field) 
+        m_value1 = m_value2 = m_value3 = m_value4 = m_value5 = 
+                   ((SFRotation *)value)->getValue();
+    else if (eventIn == m_initialDestination_Field)
+        initialDestination((SFRotation *)value);
+    else if (eventIn == m_initialValue_Field)
+        initialValue((SFRotation *)value);
+    else if (eventIn == m_set_destination_Field)
+        initialDestination((SFRotation *)value);
+
+    if (!m_lastTick) {
+        m_lastTick = now;
+        return;
+    }
+
+    float ftau = tau()->getValue();
+    float iorder = order()->getValue();
+    SFRotation input = *initialDestination();
+
+    double delta = now - m_lastTick;
+    double alpha = exp(-delta / ftau);
+
+    m_value1 = iorder > 0 && ftau ? input.slerp(m_value1, alpha) : input;
+
+    m_value2 = iorder > 1 && ftau ? m_value1.slerp(m_value2, alpha) : m_value1;
+    m_value3 = iorder > 1 && ftau ? m_value2.slerp(m_value3, alpha) : m_value2;
+    m_value4 = iorder > 1 && ftau ? m_value3.slerp(m_value4, alpha) : m_value3;
+    m_value5 = iorder > 1 && ftau ? m_value4.slerp(m_value5, alpha) : m_value4;
+
+    float dist = fabs(m_value1.inverse().multiply(input).getValue()[3]);
+    if (iorder > 1) {
+       float dist2 = fabs(m_value2.inverse().multiply(m_value1).getValue()[3]);
+       if (dist2 > dist)
+           dist = dist2;
+    }
+    if (iorder > 2) {
+       float dist3 = fabs(m_value3.inverse().multiply(m_value2).getValue()[3]);
+       if (dist3 > dist)
+           dist = dist3;
+    }
+    if (iorder > 3) {
+       float dist4 = fabs(m_value4.inverse().multiply(m_value3).getValue()[3]);
+       if (dist4 > dist)
+           dist = dist4;
+    }
+    if (iorder > 4) {
+       float dist5 = fabs(m_value5.inverse().multiply(m_value4).getValue()[3]);
+       if (dist5 > dist)
+           dist = dist5;
+    }
+
+    float eps = 0.001f;
+
+    if (dist < eps) {
+        m_value1 = m_value2 = m_value3 = m_value4 = m_value5 = input;
+        sendEvent(m_value_changed_Field, timestamp, new SFRotation(input));
+        stopTimer();
+        return;
+    }
+
+    sendEvent(m_value_changed_Field, timestamp, new SFRotation(m_value5));
+
+    m_lastTick= now;
+}
+

@@ -408,7 +408,9 @@ NODEPARENTCLASSES = \
         AnchoredJointNode.o \
         Texture3DNode.o \
         FontStyleNode.o \
-        ViewpointNode.o
+        ViewpointNode.o \
+        DamperNode.o \
+        ChaserNode.o
 
 TYPECLASSES = \
 	SFBool.o \

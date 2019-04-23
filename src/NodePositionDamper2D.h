@@ -33,37 +33,41 @@
 #endif
 
 #include "SFMFTypes.h"
+#include "DamperNode.h"
+#include "Vec2f.h"
 
-class ProtoPositionDamper2D : public Proto {
+class ProtoPositionDamper2D : public DamperProto {
 public:
                     ProtoPositionDamper2D(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_POSITION_DAMPER_2D; }
 
-    virtual bool    isX3dInternalProto(void) { return true; }
-
-    FieldIndex tau;
-    FieldIndex tolerance;
     FieldIndex initialDestination;
     FieldIndex initialValue;
-    FieldIndex order;
 };
 
-class NodePositionDamper2D : public Node {
+class NodePositionDamper2D : public DamperNode {
 public:
                     NodePositionDamper2D(Scene *scene, Proto *proto);
 
-    virtual const char* getComponentName(void) const { return "Followers"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual int     getX3dVersion(void) const { return 2; } 
     virtual Node   *copy() const { return new NodePositionDamper2D(*this); }
 
-    fieldMacros(SFTime,  tau,                ProtoPositionDamper2D);
-    fieldMacros(SFFloat, tolerance,          ProtoPositionDamper2D);
+    virtual void    sendDampedEvent(int eventIn, double timestamp, 
+                                    FieldValue * value);
+
     fieldMacros(SFVec2f, initialDestination, ProtoPositionDamper2D);
     fieldMacros(SFVec2f, initialValue,       ProtoPositionDamper2D);
-    fieldMacros(SFInt32, order,              ProtoPositionDamper2D);
+
+protected:
+    Vec2f m_value1;
+    Vec2f m_value2;
+    Vec2f m_value3;
+    Vec2f m_value4;
+    Vec2f m_value5;
+
+    int m_initialDestination_Field;
+    int m_initialValue_Field;
 };
 
 #endif
