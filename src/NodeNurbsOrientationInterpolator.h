@@ -47,13 +47,13 @@ public:
     virtual bool    isX3dInternalProto(void) { return true; }
 
     FieldIndex      dimension;
-    FieldIndex      controlPoints;
+    FieldIndex      controlPoint;
     FieldIndex      knot;
     FieldIndex      order;
     FieldIndex      weight;
 };
 
-class NodeNurbsOrientationInterpolator : public Node {
+class NodeNurbsOrientationInterpolator : public Node, NurbsCurve {
 public:
                     NodeNurbsOrientationInterpolator(Scene *scene, 
                                                      Proto *proto);
@@ -66,15 +66,46 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
 
+    virtual void    draw();
+    virtual void    drawHandles(void);
+
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+
+    virtual Vec3f   getHandle(int handle, int *constraint, int *field);
+    virtual void    setHandle(int handle, const Vec3f &v);
+
+    virtual bool    avoidProtoOnPureVrml(void) { return true; }
+    virtual int     writeProto(int filedes);
+    int             write(int filedes, int indent);
+
+    void            createNurbsCurve();
+
+    virtual Node   *toNurbsCurve(void);
+
+    void            receiveEvent(int eventIn, double timestamp, 
+                                 FieldValue *value);
+
+    void            update() { m_nurbsCurveDirty = true; }
+
     virtual void    flip(int index);
     virtual void    swap(int fromTo);
 
     virtual bool    maySetDefault(void) { return false; }
 
     fieldMacros(SFInt32,  dimension,     ProtoNurbsOrientationInterpolator)
-    fieldMacros(SFNode,   controlPoints, ProtoNurbsOrientationInterpolator)
+    fieldMacros(SFNode,   controlPoint,  ProtoNurbsOrientationInterpolator)
     fieldMacros(MFDouble, knot,          ProtoNurbsOrientationInterpolator)
     fieldMacros(SFInt32,  order,         ProtoNurbsOrientationInterpolator)
     fieldMacros(MFDouble, weight,        ProtoNurbsOrientationInterpolator)
+protected:
+    MFVec3f        *getControlPoints(void);
+    void            setControlPoints(const MFVec3f *points);
+protected:
+    NodeNurbsCurve *m_nurbsCurve;
+    bool            m_nurbsCurveDirty;
+    MyArray<float>  m_chain;
+    float           m_chainLength;
+    FieldIndex      m_set_fractionField;
+    FieldIndex      m_value_changedField;
 };
 #endif 

@@ -20,10 +20,15 @@ white_dune under M$Windows do not have a installation procedure.
 It should run on all win32 compatible windows versions from scratch (except 
 early versions of Windows 95, which requires the installation of OpenGL first). 
 
+Currently there are only 64 Bit binary versions of white_dune for 
+Windows 7 or Windows 10 available. These are win32 compatible.
+If you need a 32 Bit version or older Windows version of white_dune, 
+you have to build it and the needed libraries.
+
 white_dune under M$Windows usually stores some configuration information in 
 the user section of the registry. It is possible to remove this information 
 with the commandline argument "-uninstall", eg. by typing
-    path_to\dune.exe -uninstall
+    path\to\dune.exe -uninstall
 on the commandline.
 You may need to run this after installation to get rid of deprecated 
 configuration information.
@@ -101,6 +106,12 @@ Systems supported by "packager" directory
 You will find the binary package files either in /tmp or in the usual 
 systemdependend place like /usr/src/Redhat or $HOME/lppdir/bff 
 
+On some systems (e.g. freebsd) you need to copy the vcglib directory
+(http://vcg.isti.cnr.it/vcglib/) into the wdune directory.
+On some systems it is sufficent to have the vcglib directory in the
+$HOME directory.
+Watch the output of configure, if it would find the vcglib.
+
 Non root or if your Systems is not (yet) supported by the packager directory
 ============================================================================
 
@@ -149,6 +160,10 @@ library as sources, so you do not need to link any GLUT libraries any more.
 
 A needed library is the freetype2 library, it is used for Text/Text3D
 rendering.
+
+Needed libraries are the ffmpeg libraries, they are used for MovieTexture
+rendering. Unfortunatly, the ffmpeg libraries are not available under
+Fedora Linux and MacOSX, so there is no MovieTexture rendering. 
 
 A not real needed library is the Devil library. It is usefull, if your
 VRML browser supports image formats like TGA (like the covise VRML
@@ -203,13 +218,14 @@ On some versions of the MacOSX development system ("Xcode") it is important
 to click to the "UNIX Development Support" button during the installation
 of the MacOSX development/Xcode package. Otherwise it gets difficult to
 compile even simple things with gcc/g++ on the commandline.
+Modern MacOSX Versions use clang/clang++ instead of gcc/g++.
 
 UNIX/Linux compile procedure
 ============================
 
-If you got a .tar.gz file then you can extract it with
+If you got a .tar.bz2 file then you can extract it with
 
-$ gzip -cd white_dune-whatever.tar.gz | tar -xvf -
+$ bzip2 -cd white_dune-whatever.tar.bz2 | tar -xvf -
 
 and change into the main directory with
 
@@ -325,6 +341,7 @@ There are some unusual options for running configure
 
 --with-oldmotif            used for compatibility with old motif/lesstif versions
 --without-devil 	   do not use DevIL library to load textureimages
+--without-ffmpeg 	   do not use the ffmpeg libraries to render MovieTextures
 --without-omp              do not use OpenMP (usefull on raspberry PI)
 --without-cgal             do not use CGAL library e.g. to use convex hull
 --without-png_handle_unknown  use if link fails cause of png_handle_unknown
@@ -410,6 +427,14 @@ cause the VRML97 standard only demand support for JPEG and PNG image file
 formats and recommend GIF. 
 It looks like some of the supported imageformats of the DevIL library
 do not work on big endian machines (e.g. Apple PowerMac, Sun SPARC, SGI MIPS)
+
+================
+--without-ffmpeg
+================
+
+Do not use the ffmpeg libraries to render MovieTexture.
+The ffmpeg libraries are not available on Fedora Linux, MacOSX and Microsoft
+Windows.
 
 ==============
 --without-cgal
@@ -924,7 +949,7 @@ need to run this file from the "cmd" program may need to "cd" into
 the white_dune_directory\batch directory first)
 
 jpg_png_zlib.bat (recommended, version which need the expat, jpeg, libpng 
-                  and zlib libraries)
+                  zlib, GLU, freetype2 etc. libraries)
 nt.bat           (version without the need of a noncommon library)
 
 The usage of jpg_png_zlib.bat is recommended. You get a version, which can 
@@ -941,10 +966,8 @@ batch\jpg_png_zlib.bat.
 
 You can find sources, binaries and needed Micro$oft Visual C++ project 
 files of the needed libraries at
-ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win32static11.zip
-for windows 7 32Bit or
 ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win64static14.zip
-for windows 10 64Bit
+for windows 7/10 64Bit
 
 The later version also includes a updated libGLU library for 
 NurbsTrimmedSurface compatibility.
@@ -1023,5 +1046,5 @@ For build instructions for the GNU CYGWIN system see
 "BUILD INSTRUCTIONS FOR UNIX/Linux".
 ==========================================================================
 
-MUFTI (rusmufti@helpdesk.bera.rus.uni-stuttgart.de)
+MUFTI (mufti11@web.de)
 

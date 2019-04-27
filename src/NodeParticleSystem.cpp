@@ -52,6 +52,7 @@
 #include "NodeConeEmitter.h"
 #include "NodeExplosionEmitter.h"
 #include "NodePointEmitter.h"
+#include "NodePolylineEmitter.h"
 
 #include "NodeIndexedFaceSet.h"
 #include "NodeIndexedLineSet.h"
@@ -151,6 +152,8 @@ NodeParticleSystem::draw(int pass)
     if (!m_scene->isRunning()) {
         if (appearance()->getValue())
             appearance()->getValue()->bind();
+        else
+            glColor3f(0.8, 0.8, 0.8);
         glPushMatrix();
         if (m_geometryType == PARTICLES_SPRITE)
             glRotatef(RAD2DEG(frotation[3]),
@@ -198,12 +201,9 @@ NodeParticleSystem::draw(int pass)
             m_internVector[i].z += delta * m_force[2];
         }
         float mass = m_mass;
-        if (mass == 0.0f)
-            mass = 1.0f;
         m_internPosition[i].x += mass * m_internVector[i].x * delta;
         m_internPosition[i].y += mass * m_internVector[i].y * delta;
         m_internPosition[i].z += mass * m_internVector[i].z * delta;
-
         glPushMatrix();
         glTranslatef(m_internPosition[i].x,
                      m_internPosition[i].y,
@@ -222,6 +222,12 @@ NodeParticleSystem::draw(int pass)
     m_internTime = swGetCurrentTime();
 }
 
+class LineIndices {
+public:
+    int coord1;
+    int coord2;
+};
+
 void NodeParticleSystem::startParticle(int i)
 {
     float speed = 1;
@@ -238,6 +244,8 @@ void NodeParticleSystem::startParticle(int i)
         }
     float angle = (random() / (float)RAND_MAX) * maxAngle; 
 
+    bool setInternVector = false;
+
     if (emitter()->getValue())
         if (emitter()->getValue()->getType() == X3D_CONE_EMITTER) {
             NodeConeEmitter *emit = (NodeConeEmitter *)
@@ -248,15 +256,6 @@ void NodeParticleSystem::startParticle(int i)
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation()->getValue() / 2.0f + 1) *
                     emit->speed()->getValue();
-/*
-            if ((emit->direction()->getValue()[0] != 0) &&
-                (emit->direction()->getValue()[1] != 0) &&
-                (emit->direction()->getValue()[0] != 0)) {
-                m_internVector[i].x = speed * emit->direction()->getValue()[0];
-                m_internVector[i].y = speed * emit->direction()->getValue()[1];
-                m_internVector[i].z = speed * emit->direction()->getValue()[2];
-            }
-*/
             m_mass = emit->mass()->getValue();
         } else if (emitter()->getValue()->getType() == X3D_POINT_EMITTER) {
             NodePointEmitter *emit = (NodePointEmitter *) 
@@ -267,9 +266,11 @@ void NodeParticleSystem::startParticle(int i)
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation()->getValue() / 2.0f + 1) *
                     emit->speed()->getValue();
+            m_mass = emit->mass()->getValue();
             if ((emit->direction()->getValue()[0] != 0) &&
                 (emit->direction()->getValue()[1] != 0) &&
                 (emit->direction()->getValue()[0] != 0)) {
+                    setInternVector = true;
                 m_internVector[i].x = speed * 
                                       emit->direction()->getValue()[0];
                 m_internVector[i].y = speed * 
@@ -277,7 +278,6 @@ void NodeParticleSystem::startParticle(int i)
                 m_internVector[i].z = speed * 
                                       emit->direction()->getValue()[2];
             }
-            m_mass = emit->mass()->getValue();
         } else if (emitter()->getValue()->getType() == 
                    X3D_EXPLOSION_EMITTER) {
             NodeExplosionEmitter *emit = (NodeExplosionEmitter *) 
@@ -289,12 +289,79 @@ void NodeParticleSystem::startParticle(int i)
                     (emit->variation()->getValue() / 2.0f + 1) *
                     emit->speed()->getValue();
             m_mass = emit->mass()->getValue();
+        } else if (emitter()->getValue()->getType() == X3D_POLYLINE_EMITTER) {
+            NodePolylineEmitter *emit = (NodePolylineEmitter *) 
+                                        emitter()->getValue();
+            NodeCoordinate *ncoord = (NodeCoordinate *)
+                                     emit->coord()->getValue();
+            m_mass = emit->mass()->getValue();
+            int numLines = 0;
+            MFVec3f *coords = NULL;
+            MyArray<LineIndices> lineIndices;
+            if (ncoord) {
+                coords = ncoord->point();
+                bool startLine = true;
+                bool validLine = false;
+                for (int i = 0; i < emit->coordIndex()->getSize(); i++) {
+                    if (emit->coordIndex()->getValue(i) < 0) {
+                        startLine = true;
+                        validLine = false;
+                    } else if (!validLine)
+                        validLine = true;  
+                    else if (emit->coordIndex()->getValue(i) != 
+                             emit->coordIndex()->getValue(i - 1)) {
+                         LineIndices line;
+                         line.coord1 = emit->coordIndex()->getValue(i);
+                         line.coord2 = emit->coordIndex()->getValue(i - 1);
+                         lineIndices.append(line);
+                    }
+                }
+                numLines = lineIndices.size();
+            }
+            if (coords && (numLines > 0)) {
+                int numLine = (random() / (float)RAND_MAX) * numLines;
+                if (numLine == numLines)
+                    numLine--;
+                int coord1 = lineIndices[numLine].coord1;              
+                int coord2 = lineIndices[numLine].coord2;
+                if ((coord1 < coords->getSFSize()) && 
+                    (coord2 < coords->getSFSize())) {
+                    Vec3f point1 = coords->getVec(coord1);              
+                    Vec3f point2 = coords->getVec(coord2);
+                    Vec3f vec = point1 - point2;
+                    float ran = (random() / (float)RAND_MAX);
+                    Vec3f startPoint = point2 + vec * ran;
+                    m_internPosition[i].x = startPoint.x;
+                    m_internPosition[i].y = startPoint.y;
+                    m_internPosition[i].z = startPoint.z;
+                } else {
+                    m_internPosition[i].x = 0;
+                    m_internPosition[i].y = 0;
+                    m_internPosition[i].z = 0;
+                }
+            } else {
+                m_internPosition[i].x = 0;
+                m_internPosition[i].y = 0;
+                m_internPosition[i].z = 0;
+            }
+            if ((emit->direction()->getValue()[0] != 0) &&
+                (emit->direction()->getValue()[1] != 0) &&
+                (emit->direction()->getValue()[0] != 0)) {
+                setInternVector = true;
+                m_internVector[i].x = speed * 
+                                      emit->direction()->getValue()[0];
+                m_internVector[i].y = speed * 
+                                      emit->direction()->getValue()[1];
+                m_internVector[i].z = speed * 
+                                      emit->direction()->getValue()[2];
+            }
         }
 
-    m_internVector[i].x = speed * m_force[0] * sin(angle) * cos(alpha);
-    m_internVector[i].y = speed * m_force[1] * cos(angle);
-    m_internVector[i].z = speed * m_force[2] * sin(angle) * sin(alpha);
-
+    if (!setInternVector) {
+        m_internVector[i].x = speed * m_force[0] * sin(angle) * cos(alpha);
+        m_internVector[i].y = speed * m_force[1] * cos(angle);
+        m_internVector[i].z = speed * m_force[2] * sin(angle) * sin(alpha);
+    }
     m_lifeTime[i] = (random() / (float)RAND_MAX) * 
                     (lifetimeVariation()->getValue() / 2.0f + 1) *
                     particleLifetime()->getValue(); 

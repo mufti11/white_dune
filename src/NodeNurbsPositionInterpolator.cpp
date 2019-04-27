@@ -23,6 +23,7 @@
 #include "stdafx.h"
 
 #include "NodeNurbsPositionInterpolator.h"
+#include "NodeNurbsCurve.h"
 #include "NodeCoordinate.h"
 #include "Proto.h"
 #include "DuneApp.h"
@@ -34,6 +35,8 @@
 #include "SFBool.h"
 #include "Vec2f.h"
 #include "MoveCommand.h"
+#include "RenderState.h"
+#include "Util.h"
 
 ProtoNurbsPositionInterpolator::ProtoNurbsPositionInterpolator(Scene *scene)
   : Proto(scene, "NurbsPositionInterpolator")
@@ -41,18 +44,15 @@ ProtoNurbsPositionInterpolator::ProtoNurbsPositionInterpolator(Scene *scene)
     dimension.set(
           addExposedField(SFINT32, "dimension", new SFInt32(0)));
     setFieldFlags(dimension, FF_VRML_ONLY);
-    keyValue.set(
-          addExposedField(MFVEC3F, "keyValue", new MFVec3f()));
-    setFieldFlags(keyValue, FF_VRML_ONLY | EIF_RECOMMENDED);
     controlPoint.set(
           addExposedField(SFNODE, "controlPoint", new SFNode(NULL), 
                           COORDINATE_NODE));
     setFieldFlags(controlPoint, FF_X3D_ONLY);
-    keyWeight.set(
-          addExposedField(MFFLOAT, "keyWeight", new MFFloat(), 
-                          new SFFloat(0.0f), NULL, "weight"));
+    weight.set(
+          addExposedField(MFDOUBLE, "keyWeight", new MFFloat(), 
+                          new MFDouble(0.0f), NULL, "weight"));
     knot.set(
-          addField(MFFLOAT, "knot", new MFFloat()));
+          addField(MFDOUBLE, "knot", new MFDouble()));
     order.set(
           addField(SFINT32, "order", new SFInt32(4), new SFInt32(2)));
     getField(order)->addX3dDefault(new SFInt32(3));
@@ -72,15 +72,6 @@ void
 NodeNurbsPositionInterpolator::setField(int fieldIndex, FieldValue *value, 
                                         int cf)
 {
-    if (fieldIndex == keyValue_Field()) 
-        setControlPoints((MFVec3f *)value);
-    if (fieldIndex == controlPoint_Field()) {
-        Node *pointNode = controlPoint()->getValue();
-        if (!pointNode)
-            pointNode = (NodeCoordinate *) m_scene->createNode("Coordinate");
-        if (pointNode != NULL)
-            value = ((NodeCoordinate *)pointNode)->point();
-    }
     m_nurbsCurveDirty = true;
     Node::setField(fieldIndex, value, cf);   
 }
@@ -91,6 +82,8 @@ NodeNurbsPositionInterpolator::NodeNurbsPositionInterpolator(Scene *scene, Proto
     m_nurbsCurveDirty = true;
     m_nurbsCurve = (NodeNurbsCurve *) scene->createNode("NurbsCurve");
     m_nurbsCurve->setInternal(true);
+    m_set_fractionField.set(getProto()->lookupEventIn("set_fraction"));
+    m_value_changedField.set(getProto()->lookupEventOut("value_changed"));
 }
 
 NodeNurbsPositionInterpolator::~NodeNurbsPositionInterpolator()
@@ -104,7 +97,7 @@ NodeNurbsPositionInterpolator::getControlPoints(void)
     Node *pointNode = controlPoint()->getValue();
     if (pointNode)
         return ((NodeCoordinate *)pointNode)->point();
-    return keyValue();
+    return NULL;
 }
 
 void
@@ -115,7 +108,6 @@ NodeNurbsPositionInterpolator::setControlPoints(const MFVec3f *points)
          coord = (NodeCoordinate *) m_scene->createNode("Coordinate");
     if (coord != NULL)
         coord->setField(coord->point_Field(), new MFVec3f(points));
-    Node::setField(keyValue_Field(), new MFVec3f(points));
 }
 
 void
@@ -124,11 +116,12 @@ NodeNurbsPositionInterpolator::createNurbsCurve()
     float *points = new float[getControlPoints()->getSize()];
     for (int i = 0; i < getControlPoints()->getSize(); i++)
          points[i] = getControlPoints()->getValues()[i];
-    setControlPoints(new MFVec3f(points, getControlPoints()->getSize()));
-    float *weights = new float[keyWeight()->getSize()];
-    for (int i = 0; i < keyWeight()->getSize(); i++)
-         weights[i] = keyWeight()->getValues()[i];
-    m_nurbsCurve->weight(new MFFloat(weights, keyWeight()->getSize()));
+    m_nurbsCurve->setControlPoints(new MFVec3f(points, 
+                                               getControlPoints()->getSize()));
+    float *weights = new float[weight()->getSize()];
+    for (int i = 0; i < weight()->getSize(); i++)
+         weights[i] = weight()->getValues()[i];
+    m_nurbsCurve->weight(new MFFloat(weights, weight()->getSize()));
     float *knots = new float[knot()->getSize()];
     for (int i = 0; i < knot()->getSize(); i++)
          knots[i] = knot()->getValues()[i];
@@ -136,11 +129,14 @@ NodeNurbsPositionInterpolator::createNurbsCurve()
     m_nurbsCurve->order(new SFInt32(order()->getValue()));
     const Vec3f *chain = m_nurbsCurve->getChain();
     int chainLength = m_nurbsCurve->getChainLength();
+    m_chainLength = 0;
     float *fchain = new float[chainLength * 3];
     for (int i = 0; i < chainLength; i++) {
          fchain[i * 3    ] = chain[i].x;
          fchain[i * 3 + 1] = chain[i].y;
          fchain[i * 3 + 2] = chain[i].z;
+         if (i > 0)
+             m_chainLength += (chain[i] - chain[i - 1]).length();
     }   
     m_nurbsCurveDirty = false;
 }
@@ -185,7 +181,6 @@ int
 NodeNurbsPositionInterpolator::write(int filedes, int indent) 
 {
     if (m_scene->isPureVRML()) {
-/*        
         Node *node = m_nurbsCurve->toPositionInterpolator();
         if (node == NULL) 
            return 1;
@@ -195,7 +190,6 @@ NodeNurbsPositionInterpolator::write(int filedes, int indent)
 
         RET_ONERROR( node->write(filedes, indent) )
         node->unref();
-*/
     } else
         RET_ONERROR( Node::write(filedes, indent) )
     return 0;
@@ -206,36 +200,64 @@ NodeNurbsPositionInterpolator::draw()
 {
     if (m_nurbsCurveDirty) {
         createNurbsCurve();
+        m_nurbsCurve->createChain();
         m_nurbsCurveDirty = false;
     }
 
     if (!m_nurbsCurve) return;
 
+    float c[3] = { 1.0f, 1.0f, 1.0f };
+    Util::myGlMaterial3fv(GL_FRONT, GL_EMISSION, c);
     m_nurbsCurve->draw();
 }
 
-void  
+void
 NodeNurbsPositionInterpolator::drawHandles()
 {
-    if (m_nurbsCurveDirty) {
-        createNurbsCurve();
-        m_nurbsCurveDirty = false;
+    if (getControlPoints() == NULL)
+        return;
+    int iDimension = getControlPoints()->getSize() / 3;
+    RenderState state;
+
+    if (weight()->getSize() != iDimension) {
+        return;
     }
 
-    if (!m_nurbsCurve) return;
+    glPushName(0);
+    glDisable(GL_LIGHTING);
+    Util::myGlColor3f(1.0f, 1.0f, 1.0f);
 
-    m_nurbsCurve->drawHandles();
+    glLoadName(NO_HANDLE);
+    glBegin(GL_LINE_STRIP);
+    for (int i = 0; i < iDimension; i++) {
+        const float *v = getControlPoints()->getValue(i);
+        float w = weight()->getValue(i);
+        glVertex3f(v[0] / w, v[1] / w, v[2] / w);
+    }
+    glEnd();
+    
+    state.startDrawHandles();
+    for (int ci = 0; ci < iDimension; ci++) {
+        state.setHandleColor(m_scene, ci);
+        glLoadName(ci);
+        state.drawHandle(Vec3f(getControlPoints()->getValue(ci)) / 
+                               weight()->getValue(ci));
+    }
+    state.endDrawHandles();
+    draw();
+    glPopName();
+    glEnable(GL_LIGHTING);
 }
 
 Vec3f
 NodeNurbsPositionInterpolator::getHandle(int handle, int *constraint,
                                          int *field)
 {
-    *field = keyValue_Field() ;
+    *field = controlPoint_Field() ;
 
     if (handle >= 0 && handle < getControlPoints()->getSize() / 3) {
         Vec3f ret((Vec3f)getControlPoints()->getValue(handle) / 
-                   keyWeight()->getValue(handle));
+                   weight()->getValue(handle));
         return ret;
     } else {
         return Vec3f(0.0f, 0.0f, 0.0f);
@@ -245,11 +267,11 @@ NodeNurbsPositionInterpolator::getHandle(int handle, int *constraint,
 void
 NodeNurbsPositionInterpolator::setHandle(int handle, const Vec3f &v) 
 {
-    MFVec3f    *oldValue = getControlPoints();
-    MFVec3f    *newValue = (MFVec3f *)oldValue->copy();
+    MFVec3f *oldValue = getControlPoints();
+    MFVec3f *newValue = (MFVec3f *)oldValue->copy();
 
     if (handle >= 0 && handle < oldValue->getSize() / 3) {
-        Vec3f v2 = v * keyWeight()->getValue(handle); 
+        Vec3f v2 = v * weight()->getValue(handle); 
         m_nurbsCurveDirty = true;
         newValue->setValue(handle * 3, v2.x);
         newValue->setValue(handle * 3+1, v2.y);
@@ -280,7 +302,7 @@ NodeNurbsPositionInterpolator::toNurbsCurve(void)
   NodeNurbsCurve *node = (NodeNurbsCurve *) m_scene->createNode("NurbsCurve");
   
   float *tmpControlPoints = new float[getControlPoints()->getSize()];
-  float *tmpWeights = new float[keyWeight()->getSize()];
+  float *tmpWeights = new float[weight()->getSize()];
   float *tmpKnots = new float[knot()->getSize()];
   int tmpOrder = order()->getValue();  
   
@@ -288,8 +310,8 @@ NodeNurbsPositionInterpolator::toNurbsCurve(void)
     tmpControlPoints[i] = getControlPoints()->getValues()[i];
   }
 
-  for(int i=0; i<(keyWeight()->getSFSize()); i++){
-    tmpWeights[i] = keyWeight()->getValue(i);
+  for(int i=0; i<(weight()->getSFSize()); i++){
+    tmpWeights[i] = weight()->getValue(i);
   }
   
   for(int i=0; i<(knot()->getSFSize()); i++){
@@ -298,46 +320,51 @@ NodeNurbsPositionInterpolator::toNurbsCurve(void)
     
   node->knot(new MFFloat(tmpKnots, knot()->getSFSize()));
   node->setField(node->order_Field(), new SFInt32(tmpOrder));
-  node->setControlPoints(new MFVec3f(tmpControlPoints, keyValue()->getSize()));
-  node->weight(new MFFloat(tmpWeights, keyWeight()->getSFSize()));
+  node->setControlPoints(new MFVec3f(tmpControlPoints, 
+                                     getControlPoints()->getSize()));
+  node->weight(new MFFloat(tmpWeights, weight()->getSFSize()));
 
   return node;
 }
 
-Node *
-NodeNurbsPositionInterpolator::convert2X3d(void)
+void
+NodeNurbsPositionInterpolator::receiveEvent(int eventIn, double timestamp, 
+                                            FieldValue *value)
 {
-    MFVec3f *points = keyValue();
-    int len = points->getSize();
-    float *floats = new float[len];
-    for (int i = 0; i < len; i++)
-        floats[i] = points->getValues()[i];
-    setControlPoints(new MFVec3f(floats, len));
-    NodeCoordinate *node = (NodeCoordinate *)controlPoint()->getValue();
-    if (node)
-        m_scene->changeRoutes(node, node->point_Field(), this, keyValue_Field());
-    m_scene->UpdateViews(NULL, UPDATE_REDRAW, NULL);
-    return NULL;
-}
+    if (m_nurbsCurveDirty) {
+        createNurbsCurve();
+        m_nurbsCurve->createChain();
+        m_nurbsCurveDirty = false;
+    }
 
-Node *
-NodeNurbsPositionInterpolator::convert2Vrml(void) 
-{
-    NodeCoordinate *node = (NodeCoordinate *)controlPoint()->getValue();
-    if (node != NULL) {
-        int len = node->point()->getSize();
-        float *floats = new float[len];
-        for (int i = 0; i < len; i++)
-            floats[i] = node->point()->getValues()[i];
-        setControlPoints(new MFVec3f(floats, len));
-        setControlPoints(new MFVec3f(floats, len));
-        m_scene->changeRoutes(this, keyValue_Field(), node, node->point_Field());
-        m_scene->execute(new MoveCommand(node, this, controlPoint_Field(),
-                                        NULL, -1));
+    if (!m_nurbsCurve) return;
+
+    if (eventIn == m_set_fractionField) {
+        float fraction = ((SFFloat *) value)->getValue();
+        float posChain = fraction * m_chainLength;
+        float pos = 0;
+        float oldPos = pos;
+        const Vec3f *chain = m_nurbsCurve->getChain();
+        int chainLength = m_nurbsCurve->getChainLength();
+        for (int i = 0; i < chainLength; i++) {
+             if (pos >= posChain) {
+                 if (i == 0) {
+                     sendEvent(m_value_changedField, timestamp, 
+                               new SFVec3f(chain[0].x, chain[0].y, chain[0].z));
+                     break;
+                 } else {
+                     Vec3f vec = chain[i - 1] + ((chain[i] - chain[i - 1]) *
+                                                 (pos - oldPos));
+                     sendEvent(m_value_changedField, timestamp, 
+                               new SFVec3f(vec.x, vec.y, vec.z));
+                     break;
+                 }
+             }
+             if (i > 0)
+                 pos += (chain[i] - chain[i - 1]).length();
+             oldPos = pos;
+        }
     } else
-        keyValue(new MFVec3f());
-    m_scene->UpdateViews(NULL, UPDATE_REDRAW, NULL);
-    return NULL;
+        Node::receiveEvent(eventIn, timestamp, value);
 }
-
 

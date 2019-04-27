@@ -62,6 +62,8 @@ public:
     virtual int     getX3dVersion(void) const { return 2; }
     virtual Node   *copy() const { return new NodeDISEntityTypeMapping(*this); }
 
+    virtual void    load();
+
     fieldMacros(MFString, url, ProtoDISEntityTypeMapping);
     fieldMacros(SFInt32, category, ProtoDISEntityTypeMapping);
     fieldMacros(SFInt32, country, ProtoDISEntityTypeMapping);
@@ -70,6 +72,9 @@ public:
     fieldMacros(SFInt32, kind, ProtoDISEntityTypeMapping);
     fieldMacros(SFInt32, specific, ProtoDISEntityTypeMapping);
     fieldMacros(SFInt32, subcategory, ProtoDISEntityTypeMapping);
+
+protected:
+    MyString m_baseURL;
 };
 
 #endif

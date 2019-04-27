@@ -27,12 +27,7 @@
 #include "FieldValue.h"
 #include "MFString.h"
 #include "SFInt32.h"
-#include "SFInt32.h"
-#include "SFInt32.h"
-#include "SFInt32.h"
-#include "SFInt32.h"
-#include "SFInt32.h"
-#include "SFInt32.h"
+#include "Scene.h"
 #include "DuneApp.h"
 
 ProtoDISEntityTypeMapping::ProtoDISEntityTypeMapping(Scene *scene)
@@ -65,4 +60,27 @@ ProtoDISEntityTypeMapping::create(Scene *scene)
 NodeDISEntityTypeMapping::NodeDISEntityTypeMapping(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+}
+
+void
+NodeDISEntityTypeMapping::load()
+{
+    MFString *urls = url();
+    int width = 1;
+    int height = 1;
+    unsigned char *data = NULL;
+
+    int errorflag = false;
+    char *lastCheckedPath = NULL;
+
+    if (urls->getSize() == 0)
+        return;
+    m_baseURL = "";
+    m_baseURL += TheApp->getImportURL();
+    for (int i = 0; i < urls->getSize(); i++) {
+        MyString path;
+        URL urlI(m_baseURL, urls->getValue(i));
+        if (urls->getValue(i).length() == 0) continue;
+        m_scene->Download(urlI, &path);
+    }
 }

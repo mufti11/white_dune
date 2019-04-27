@@ -401,6 +401,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
         }
         bool isNode = false;
         STREEITEM tmpItem = item;
+        STREEITEM oldTmpItem = NULL;
         Node *oldNode = node;
         if (i < len) {
             int pos = path[i++]; 
@@ -434,9 +435,12 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
                                    break;
                                 continue;
                             }    
-                            for (; tmpItem != NULL; 
+                            for (; tmpItem != NULL;
+                                oldTmpItem = tmpItem,
                                 tmpItem = swTreeGetNextItem(m_tree, item)) {
                                 if (tmpItem) {
+                                    if (tmpItem == oldTmpItem)
+                                        break;
                                     TreeNode *t = (TreeNode *) 
                                         swTreeGetItemData(m_tree, item);
                                     if (t && t->node && t->node->isEqual(node))

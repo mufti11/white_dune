@@ -5054,5 +5054,11 @@ Fixed FontStyle.horizontal
 
 Added Followers component rendering
 
+Added PolylineEmitter rendering
+
+Fixed missing save of NurbsCurve.coordinate in X3D mode
+
+Fixed crash in MyMesh
+
 contact: MUFTI <mufti@users.ourproject.org>
 

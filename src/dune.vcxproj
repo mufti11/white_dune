@@ -1033,6 +1033,7 @@
     <ClCompile Include="NodeUniform.cpp" />
     <ClCompile Include="NodeViewfrustum.cpp" />
     <ClCompile Include="NurbsArc.cpp" />
+    <ClCompile Include="NurbsCurve.cpp" />
     <ClCompile Include="NurbsCurve2NurbsSurfDialog.cpp" />
     <ClCompile Include="NurbsCurveDegreeElevate.cpp" />
     <ClCompile Include="NurbsCurveDialog.cpp" />

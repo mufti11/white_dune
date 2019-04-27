@@ -22,25 +22,7 @@
 #ifndef _NODE_NURBS_CURVE_H
 #define _NODE_NURBS_CURVE_H
 
-#ifndef _GEOMETRY_NODE_H
-# include "GeometryNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
-# include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
-# include "Proto.h"
-#endif
-#ifndef _VEC3F_H
-# include "Vec3f.h"
-#endif
-#ifndef _SFMFTYPES_H
-# include "SFMFTypes.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-#include "ChainBasedNode.h"
+#include "NurbsCurve.h"
 
 typedef enum {
     NURBS_ROT_X_AXIS,
@@ -48,10 +30,6 @@ typedef enum {
     NURBS_ROT_Z_AXIS,
     NURBS_ROT_POINT_TO_POINT
 } NurbsRot;
-
-class MFVec3f;
-
-
 
 class ProtoNurbsCurve : public Proto {
 public:
@@ -76,7 +54,7 @@ public:
     FieldIndex order;
 };
 
-class NodeNurbsCurve : public ChainBasedGeometryNode {
+class NodeNurbsCurve : public ChainBasedGeometryNode, NurbsCurve {
 public:
                     NodeNurbsCurve(Scene *scene, Proto *proto);
 
@@ -142,23 +120,12 @@ public:
     void            createControlPoints(MFVec3f *points);
     void            backupFieldsAppend(int field);
 
-protected:
-    static int      findSpan(int dimension, int order, float u, 
-                             const float knots[]);
-    static void     basisFuns(int span, float u, int order,
-                              const float knots[], float basis[], 
-                              float deriv[]);
-    static Vec3f    curvePoint(int dimension, int order, 
-                               const float knots[],
-                               const Vec3f controlPoints[],
-                               const float weight[], float u);
     virtual void    setHandle(MFVec3f *newValue, int handle, float newWeight,
                               const Vec3f &newV, const Vec3f &oldV,
                               bool already_changed = false);
     virtual void    setHandle(float newWeight, 
                               const Vec3f &newV, const Vec3f &oldV);
 private:
-    int             m_dimension;
     bool            m_isInternal;
 };
 

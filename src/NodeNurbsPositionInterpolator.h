@@ -1,7 +1,7 @@
 /*
  * NodeNurbsPositionInterpolator.h
  *
- * Copyright (C) 1999 Stephen F. White, 2004 J. "MUFTI" Scheurich
+ * Copyright (C) 1999 Stephen F. White, 2004, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +28,12 @@
 #ifndef _PROTO_H
 #include "Proto.h"
 #endif
-#include "NodeNurbsCurve.h"
+#include "NurbsCurve.h"
 
 #include "SFMFTypes.h"
 
 class Mesh;
+class NodeNurbsCurve;
 
 class ProtoNurbsPositionInterpolator : public Proto {
 public:
@@ -44,14 +45,13 @@ public:
                        { return CHILD_NODE | INTERPOLATOR_NODE; }
 
     FieldIndex      dimension;
-    FieldIndex      keyValue;
     FieldIndex      controlPoint;
-    FieldIndex      keyWeight;
+    FieldIndex      weight;
     FieldIndex      knot;
     FieldIndex      order;
 };
 
-class NodeNurbsPositionInterpolator : public Node {
+class NodeNurbsPositionInterpolator : public Node, NurbsCurve {
 public:
                     NodeNurbsPositionInterpolator(Scene *scene, Proto *proto);
                     ~NodeNurbsPositionInterpolator();
@@ -80,14 +80,15 @@ public:
 
     virtual Node   *toNurbsCurve(void);
 
-    Node           *convert2X3d(void);
-    Node           *convert2Vrml(void);
+    void            receiveEvent(int eventIn, double timestamp, 
+                                 FieldValue *value);
+
+    void            update() { m_nurbsCurveDirty = true; }
 
     fieldMacros(SFInt32, dimension,         ProtoNurbsPositionInterpolator)
-    fieldMacros(MFVec3f, keyValue,          ProtoNurbsPositionInterpolator)
     fieldMacros(SFNode,  controlPoint,      ProtoNurbsPositionInterpolator)
-    fieldMacros(MFFloat, keyWeight,         ProtoNurbsPositionInterpolator)
-    fieldMacros(MFFloat, knot,              ProtoNurbsPositionInterpolator)
+    fieldMacros(MFDouble, weight,           ProtoNurbsPositionInterpolator)
+    fieldMacros(MFDouble, knot,             ProtoNurbsPositionInterpolator)
     fieldMacros(SFInt32, order,             ProtoNurbsPositionInterpolator)
 protected:
     MFVec3f        *getControlPoints(void);
@@ -96,5 +97,8 @@ protected:
     NodeNurbsCurve *m_nurbsCurve;
     bool            m_nurbsCurveDirty;
     MyArray<float>  m_chain;
+    float           m_chainLength;
+    FieldIndex      m_set_fractionField;
+    FieldIndex      m_value_changedField;
 };
 #endif // _NODE_NURBS_POSITION_INTERPOLATOR_H

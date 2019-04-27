@@ -653,7 +653,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass)
     const float *colors = m_colors ? m_colors->getValues() : NULL;
     const int *colorIndex = m_colorIndex ? m_colorIndex->getValues() : NULL;
 
-    const float *fogDepth = m_colors ? m_fogCoords->getValues() : NULL;
+    const float *fogDepth = m_fogCoords ? m_fogCoords->getValues() : NULL;
     int numFogDepth = m_fogCoords ? m_fogCoords->getSize() : 0;
 
     bool ccw = m_ccw;

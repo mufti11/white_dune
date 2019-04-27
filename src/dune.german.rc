@@ -852,9 +852,9 @@ BEGIN
            MENUITEM "&ScalarInterpolator",              ID_NEW_SCALAR_INTERPOLATOR
            POPUP "VRML97 Amendment 1/X3D Interpolator"
            BEGIN
-               MENUITEM "NurbsPositionInterpolator (nicht dargestellt)", ID_NEW_NURBS_POSITION_INTERPOLATOR
+               MENUITEM "NurbsPositionInterpolator",    ID_NEW_NURBS_POSITION_INTERPOLATOR
                MENUITEM "NurbsSurfaceInterpolator (nicht dargestellt)", ID_NEW_NURBS_SURFACE_INTERPOLATOR
-               MENUITEM "NurbsOrientationInterpolator (nicht dargestellt)", ID_NEW_NURBS_ORIENTATION_INTERPOLATOR
+               MENUITEM "NurbsOrientationInterpolator", ID_NEW_NURBS_ORIENTATION_INTERPOLATOR
                MENUITEM "SplineScalarInterpolator (nicht dargestellt)", ID_NEW_SPLINE_SCALAR_INTERPOLATOR
                MENUITEM "SplinePositionInterpolator (nicht dargestellt)", ID_NEW_SPLINE_POSITION_INTERPOLATOR
                MENUITEM "SplinePositionInterpolator2D (nicht dargestellt)", ID_NEW_SPLINE_POSITION_INTERPOLATOR_2D
@@ -3357,7 +3357,7 @@ BEGIN
     ID_DE_NEW_NURBS_CURVE_2D   "Fuege einen neuen VRML97 Amd. 1 NurbsCurve2D Knoten ein (braucht Contour2D)\nVRML97 Amd. 1 NurbsCurve2D (braucht Contour2D)"
     ID_DE_NEW_CONTOUR_POLYLINE_2D "Fuege einen neuen VRML97 Amd. 1 Polyline2D/X3D ContourPolyline2D Knoten ein (braucht Contour2D)\nVRML97 Amd. 1 Polyline2D/X3D ContourPolyline2D (braucht Contour2D)"
     ID_DE_NEW_NURBS_TEXTURE_SURFACE "Fuege einen neuen VRML97 Amd. 1 NurbsTextureSurface Knoten ein (braucht Nurbs(Patch)Surface) (nicht dargestellt)\nVRML97 Amd. 1 NurbsTextureSurface (braucht Nurbs(Patch)Surface)"
-    ID_DE_NEW_NURBS_POSITION_INTERPOLATOR "Fuege einen neuen VRML97 Amd. 1 NurbsPositionInterpolator Knoten ein (nicht dargestellt)\nVRML97 Amd. 1 NurbsPositionInterpolator (nicht dargestellt)"
+    ID_DE_NEW_NURBS_POSITION_INTERPOLATOR "Fuege einen neuen VRML97 Amd. 1 NurbsPositionInterpolator Knoten ein\nVRML97 Amd. 1 NurbsPositionInterpolator"
     ID_DE_NEW_COORDINATE_DEFORMER "Fuege einen neuen VRML97 Amd. 1 CoordinateDeformer Knoten ein (nicht dargestellt)\nVRML97 Amd. 1 CoordinateDeformer (nicht dargestellt)"
     ID_DE_NEW_INLINE_LOAD_CONTROL "Erzeuge einen neuen VRML97 Amd. 1 InlineLoadControl Knoten\nVRML97 Amd. 1 InlineLoadControl"
     ID_DE_NEW_GEO_ELEVATION_GRID  "Erzeuge einen neuen VRML97 Amd. 1 GeoElevationGrid Knoten\nVRML97 Amd. 1 GeoElevationGrid"
@@ -3403,7 +3403,7 @@ BEGIN
     ID_DE_NEW_HANIM_SITE      "Erzeuge einen neuen X3D HAnimSite Node (nicht dargestellt).\nX3D HAnimSite (nicht dargestellt)"
     ID_DE_NEW_POSITION_INTERPOLATOR_2D "Erzeuge einen neuen X3D PositionInterpolator2D Knoten\nX3D PositionInterpolator2D"
     ID_DE_NEW_COORDINATE_INTERPOLATOR_2D "Erzeuge einen neuen X3D CoordinateInterpolator2D Knoten\nX3D CoordinateInterpolator2D"
-    ID_DE_NEW_NURBS_ORIENTATION_INTERPOLATOR "Fuege einen neuen X3D NurbsOrientaInterpolator Knoten ein (nicht dargestellt)\nX3D NurbsOrientationInterpolator (nicht dargestellt)"
+    ID_DE_NEW_NURBS_ORIENTATION_INTERPOLATOR "Fuege einen neuen X3D NurbsOrientaInterpolator Knoten ein\nX3D NurbsOrientationInterpolator"
     ID_DE_NEW_NURBS_SURFACE_INTERPOLATOR "Fuege einen neuen X3D NurbsSurfaceInterpolator Knoten ein (nicht dargestellt)\nX3D NurbsSurfaceInterpolator (nicht dargestellt)"
     ID_DE_NEW_SPLINE_POSITION_INTERPOLATOR    "Erzeuge einen neuen X3D SplinePositionInterpolator Knoten ein (nicht dargestellt)\nX3D SplinePositionInterpolator (nicht dargestellt)"
     ID_DE_NEW_SPLINE_POSITION_INTERPOLATOR_2D    "Erzeuge einen neuen X3D SplinePositionInterpolator2D Knoten ein (nicht dargestellt)\nX3D SplinePositionInterpolator2D(nicht dargestellt)"

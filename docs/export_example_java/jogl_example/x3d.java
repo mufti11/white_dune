@@ -1697,8 +1697,6 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
                             m_internVector[i * 3 + j] += 
                                 delta * m_force[j];
                     float mass = m_mass;
-                    if (mass == 0.0f)
-                        mass = 1.0f;
                     for (int j = 0; j < 3; j++)
                         m_internPosition[3 * i + j] += 
                             mass * m_internVector[3 * i + j] * delta;

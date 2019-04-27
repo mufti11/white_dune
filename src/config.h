@@ -174,7 +174,7 @@
 #define HAVE_VOID_PTR_SIZE_8 1
 
 /* Define if you want double size icons (automatically set on OLPC) */
-#define HAVE_ICON_SCALE_2 1
+/* #undef HAVE_ICON_SCALE_2 */
 
 /* Define if your C++ compiler support "typename" */
 #define HAVE_TYPENAME 1
@@ -543,7 +543,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.010"
+#define HAVE_DUNE_VERSION "white_dune 1.020"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

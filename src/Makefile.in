@@ -606,6 +606,7 @@ DUNECLASSES = \
         WonderlandModuleExport.o \
         WriteWonderlandCellRenderCode.o \
         MeshSubdivide.o \
+        NurbsCurve.o \
         Vec3x.o \
         quadric_simp.o \
         illegal2vrml.o $(NEBULA)
