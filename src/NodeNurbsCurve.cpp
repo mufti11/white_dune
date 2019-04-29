@@ -57,6 +57,8 @@
 #include "NodeCurveAnimation.h"
 #include "NodeSuperExtrusion.h"
 #include "NodeSuperRevolver.h"
+#include "NodeNurbsPositionInterpolator.h"
+#include "NodeNurbsOrientationInterpolator.h"
 #include "NodeCoordinateDouble.h"
 #include "resource.h"
 
@@ -108,7 +110,9 @@ ProtoNurbsCurve::create(Scene *scene)
 NodeNurbsCurve::NodeNurbsCurve(Scene *scene, Proto *proto)
   : ChainBasedGeometryNode(scene, proto)
 {
+    m_inRepair = false;
     m_isInternal = false;
+    repairKnotAndWeight();
 }
 
 
@@ -167,6 +171,16 @@ NodeNurbsCurve::setField(int index, FieldValue *value, int cf)
         for (int i = 0; i < getNumParents(); i++)
             getParent(i)->update();
     }
+    repairKnotAndWeight();
+}
+
+void
+NodeNurbsCurve::update()
+{
+    repairKnotAndWeight();
+    m_chainDirty = true;
+    if (m_isInternal && hasParent())
+        getParent()->update();
 }
 
 MFVec3f *
@@ -205,7 +219,6 @@ NodeNurbsCurve::setControlPoints(MFVec3f *points)
         ((Node *)coord)->Node::setField(coord->point_Field(), points);
     }
 
-//        Node::setField(controlPoint_Field(), points);
     m_chainDirty = true;
 }
 
@@ -405,15 +418,6 @@ NodeNurbsCurve::setHandle(int handle, const Vec3f &v)
             getParent(i)->update();
     }
 }
-
-void
-NodeNurbsCurve::update()
-{
-    m_chainDirty = true;
-    if (m_isInternal && hasParent())
-        getParent()->update();
-}
-
 
 void
 NodeNurbsCurve::setHandle(MFVec3f *value, int handle, float newWeight,
@@ -724,6 +728,71 @@ NodeNurbsCurve::toCurveAnimation(void)
     return node;
 }
 
+Node*
+NodeNurbsCurve::toNurbsPositionInterpolator(void)
+{
+  NodeNurbsPositionInterpolator *node = (NodeNurbsPositionInterpolator *)
+      m_scene->createNode("NurbsPositionInterpolator");
+  
+  float *tmpControlPoints = new float[getControlPoints()->getSize()];
+  double *tmpWeights = new double[weight()->getSize()];
+  double *tmpKnots = new double[knot()->getSize()];
+  int tmpOrder = order()->getValue();  
+  
+  for(int i=0; i<(getControlPoints()->getSize()); i++){
+    tmpControlPoints[i] = getControlPoints()->getValues()[i];
+  }
+
+  for(int i=0; i<(weight()->getSFSize()); i++){
+    tmpWeights[i] = weight()->getValue(i);
+  }
+  
+  for(int i=0; i<(knot()->getSFSize()); i++){
+    tmpKnots[i] = knot()->getValue(i);
+  }
+    
+  node->knot(new MFDouble(tmpKnots, knot()->getSFSize()));
+  node->setField(node->order_Field(), new SFInt32(tmpOrder));
+  node->setControlPoints(new MFVec3f(tmpControlPoints, 
+                                     getControlPoints()->getSize()));
+  node->weight(new MFDouble(tmpWeights, weight()->getSFSize()));
+
+  return node;
+}  
+
+
+Node*
+NodeNurbsCurve::toNurbsOrientationInterpolator(void)
+{
+  NodeNurbsOrientationInterpolator *node = (NodeNurbsOrientationInterpolator *)
+      m_scene->createNode("NurbsOrientationInterpolator");
+  
+  float *tmpControlPoints = new float[getControlPoints()->getSize()];
+  double *tmpWeights = new double[weight()->getSize()];
+  double *tmpKnots = new double[knot()->getSize()];
+  int tmpOrder = order()->getValue();  
+  
+  for(int i=0; i<(getControlPoints()->getSize()); i++){
+    tmpControlPoints[i] = getControlPoints()->getValues()[i];
+  }
+
+  for(int i=0; i<(weight()->getSFSize()); i++){
+    tmpWeights[i] = weight()->getValue(i);
+  }
+  
+  for(int i=0; i<(knot()->getSFSize()); i++){
+    tmpKnots[i] = knot()->getValue(i);
+  }
+    
+  node->knot(new MFDouble(tmpKnots, knot()->getSFSize()));
+  node->setField(node->order_Field(), new SFInt32(tmpOrder));
+  node->setControlPoints(new MFVec3f(tmpControlPoints, 
+                                     getControlPoints()->getSize()));
+  node->weight(new MFDouble(tmpWeights, weight()->getSFSize()));
+
+  return node;
+}  
+
 void 
 NodeNurbsCurve::revolveFlatter(int change, int zero)
 {
@@ -848,5 +917,55 @@ NodeNurbsCurve::backupFieldsAppend(int field)
 {
     m_scene->addNextCommand();
     m_scene->backupFieldsAppend(this, field);
+}
+
+void
+NodeNurbsCurve::repairKnotAndWeight()
+{
+    if (m_inRepair)
+        return;
+
+    m_inRepair = true;
+
+    MFVec3f *controlPoints = getControlPoints();
+    int iorder = order()->getValue();
+
+    if (controlPoints) { 
+        if (controlPoints->getSFSize() > weight()->getSize()) {
+            MFFloat *oldWeights = weight();
+            MFFloat *newWeights = new MFFloat();
+            for (int i = 0; i < oldWeights->getSize(); i++)
+                newWeights->appendSFValue(oldWeights->getValue(i));
+            for (int i = oldWeights->getSize(); i < controlPoints->getSFSize();
+                 i++)
+                newWeights->appendSFValue(1);
+            weight(newWeights);
+        }     
+        if (controlPoints->getSFSize() > knot()->getSize() - iorder) {
+            MFFloat *oldKnots = knot();
+            MFFloat *newKnots = new MFFloat();
+            for (int i = 0; i < oldKnots->getSize(); i++)
+                if (i > (oldKnots->getSize() - iorder + 1))
+                    if ((controlPoints->getSFSize() - iorder + 1) > 0)
+                        newKnots->appendSFValue(controlPoints->getSFSize() - 
+                                                iorder + 1);
+                    else
+                        newKnots->appendSFValue(0);
+                else if (oldKnots->getValue(i) > 0)
+                    newKnots->appendSFValue(oldKnots->getValue(i));
+            for (int i = oldKnots->getSize(); i < controlPoints->getSFSize() +
+                                                  iorder; i++) {
+                if (i < iorder - 1)
+                    newKnots->appendSFValue(0);
+                else if (i < (controlPoints->getSFSize() - iorder + 1))
+                    newKnots->appendSFValue(i - iorder + 1);
+                else 
+                    newKnots->appendSFValue(controlPoints->getSFSize() - 
+                                            iorder + 1);
+            }
+            knot(newKnots);
+        }
+    }
+    m_inRepair = false;
 }
 

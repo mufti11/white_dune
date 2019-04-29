@@ -43,7 +43,7 @@ public:
     virtual int     getNodeClass() const
                        { return PARAMETRIC_GEOMETRY_NODE | GEOMETRY_NODE; }
 
-    virtual bool      showFields() { return true; }
+    virtual bool    showFields() { return true; }
 
     FieldIndex controlPoint;
     FieldIndex controlPointX3D;
@@ -75,6 +75,8 @@ public:
     virtual int     repairField(int field) const;
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
+    void            repairKnotAndWeight();
+
     Node           *convert2X3d(void);
     Node           *convert2Vrml(void);
 
@@ -90,6 +92,8 @@ public:
     Node           *toSuperExtrusion(void);
     Node           *toSuperRevolver(void);
     virtual Node   *toCurveAnimation(void);
+    Node           *toNurbsPositionInterpolator(void);
+    Node           *toNurbsOrientationInterpolator(void);
 
     virtual Node   *toNurbs(int narcs, int pDegree, float rDegree, Vec3f &P1, Vec3f &P2);
 
@@ -126,6 +130,7 @@ public:
     virtual void    setHandle(float newWeight, 
                               const Vec3f &newV, const Vec3f &oldV);
 private:
+    bool            m_inRepair;
     bool            m_isInternal;
 };
 

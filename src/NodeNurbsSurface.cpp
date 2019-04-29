@@ -126,8 +126,10 @@ ProtoNurbsSurface::create(Scene *scene)
 NodeNurbsSurface::NodeNurbsSurface(Scene *scene, Proto *proto)
   : MeshMorphingNode(scene, proto)
 {
+    m_inRepair = false;
     m_numExtraVertices = 0;
     m_createExtraTess = true;
+    repairKnotAndWeight();
     setField(controlPointX3D_Field(), controlPointX3D());
 }
 
@@ -185,12 +187,24 @@ NodeNurbsSurface::setField(int index, FieldValue *value, int cf)
         }
     } 
     Node::setField(index, value, cf);
+    repairKnotAndWeight();
     m_meshDirty = true;
 }
 
 MFVec3f *
 NodeNurbsSurface::getControlPoints(void)
 {
+    Node *control = controlPointX3D()->getValue();
+    if (control && control->getType() == X3D_COORDINATE_DOUBLE) {
+        NodeCoordinateDouble *coord = (NodeCoordinateDouble *)
+                                      controlPointX3D()->getValue();
+        if (coord != NULL)
+            return coord->point()->getMFVec3f();
+    } else if (control && control->getType() == VRML_COORDINATE) {
+        NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
+        if (coord != NULL)
+            return coord->point();
+    }
     return controlPoint();
 }
 
@@ -239,6 +253,7 @@ void
 NodeNurbsSurface::update() 
 { 
     m_meshDirty = true;
+    repairKnotAndWeight();
 }
 
 void
@@ -1480,4 +1495,93 @@ NodeNurbsSurface::toNurbs(int uTessel, int vTessel, int uDegree, int vDegree)
     setCreateExtraTess(true);
     return node;   
 }
+
+void
+NodeNurbsSurface::repairKnotAndWeight()
+{
+    MFVec3f *controlPoints = getControlPoints();
+
+    int iuorder = uOrder()->getValue();
+    int ivorder = uOrder()->getValue();
+
+    int iuDimension = uDimension()->getValue();
+    int ivDimension = vDimension()->getValue();
+
+    // avoid recursive calls
+    if (m_inRepair)
+        return;
+    m_inRepair = true;
+    if (controlPoints) { 
+        if (controlPoints->getSFSize() > weight()->getSize()) {
+            MFFloat *oldWeights = weight();
+            MFFloat *newWeights = new MFFloat();
+            for (int i = 0; i < oldWeights->getSize(); i++)
+                newWeights->appendSFValue(oldWeights->getValue(i));
+            for (int i = oldWeights->getSize(); i < controlPoints->getSFSize();
+                 i++)
+                newWeights->appendSFValue(1);
+            weight(newWeights);
+        }     
+        if (uDimension()->getValue() > uKnot()->getSize() - iuorder) {
+            MFFloat *oldKnots = uKnot();
+            MFFloat *newKnots = new MFFloat();
+            for (int i = 0; i < oldKnots->getSize(); i++)
+                if (i > (oldKnots->getSize() - iuorder)) {
+                    if ((iuDimension - iuorder) > 0)
+                        newKnots->appendSFValue(iuDimension - iuorder + 1);
+                    else
+                        newKnots->appendSFValue(0);
+                } else if (oldKnots->getValue(i) > 0)
+                    newKnots->appendSFValue(oldKnots->getValue(i));
+            int size = newKnots->getSize();
+            for (int i = size; i < (iuDimension + iuorder - 1); 
+                i++) {
+                if (i < iuorder - 1)
+                    newKnots->appendSFValue(0);
+                else if (((i - iuorder + 1) > 0) &&
+                         (iuDimension - iuorder + 1) < 1) {
+                    if ((i - iuorder + 1) > -1) 
+                        newKnots->appendSFValue(i - iuorder + 1);
+                    else
+                        newKnots->appendSFValue(0);
+                } else if ((iuDimension - iuorder + 1) < 0)
+                    newKnots->appendSFValue(0);
+                else
+                    newKnots->appendSFValue(iuDimension - iuorder + 2);
+            }
+            uKnot(newKnots);
+        }
+        if (vDimension()->getValue() > vKnot()->getSize() - ivorder) {
+            MFFloat *oldKnots = vKnot();
+            MFFloat *newKnots = new MFFloat();
+            for (int i = 0; i < oldKnots->getSize(); i++)
+                if (i > (oldKnots->getSize() - ivorder))  {
+                    if ((ivDimension - ivorder + 1) > 0)
+                        newKnots->appendSFValue(ivDimension - ivorder + 1);
+                    else
+                        newKnots->appendSFValue(0);
+                } else if (oldKnots->getValue(i) > 0)
+                    newKnots->appendSFValue(oldKnots->getValue(i));
+            int size = newKnots->getSize();
+            for (int i = size; i < (ivDimension + ivorder - 1); 
+                 i++) {
+                if (i < ivorder - 1)
+                    newKnots->appendSFValue(0);
+                else if (((i - ivorder + 1) > 0) &&
+                          (ivDimension - ivorder + 1) < 1) {
+                    if ((i - ivorder + 1) > -1)
+                       newKnots->appendSFValue(i - ivorder + 1);
+                    else
+                        newKnots->appendSFValue(0);
+                } else if ((ivDimension - ivorder + 1) < 0)
+                    newKnots->appendSFValue(0);
+                else 
+                    newKnots->appendSFValue(ivDimension - ivorder + 2);
+            }
+            vKnot(newKnots);
+        }
+    }
+    m_inRepair = false;
+}
+
 

@@ -117,8 +117,10 @@ NodeNurbsOrientationInterpolator::setControlPoints(const MFVec3f *points)
     NodeCoordinate *coord = (NodeCoordinate *)controlPoint()->getValue();
     if (!coord)
          coord = (NodeCoordinate *) m_scene->createNode("Coordinate");
-    if (coord != NULL)
+    if (coord != NULL) {
+        controlPoint(new SFNode(coord));
         coord->setField(coord->point_Field(), new MFVec3f(points));
+    }
 }
 
 void

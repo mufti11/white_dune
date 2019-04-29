@@ -5060,5 +5060,7 @@ Fixed missing save of NurbsCurve.coordinate in X3D mode
 
 Fixed crash in MyMesh
 
+Added automatic knot and weight generation on NurbsSurface/NurbsCurve
+
 contact: MUFTI <mufti@users.ourproject.org>
 

@@ -119,7 +119,7 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
 License: BSD and MIT
 Summary: Compiled OpenGL examples for white_dune
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: freeglut
+Requires: freeglut%{?_isa}
 %description opengl-examples
 Compiled OpenGL examples for white_dune
 

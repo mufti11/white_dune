@@ -24,7 +24,7 @@
 
 PRGNAM=white_dune
 SRCNAM=wdune
-VERSION=${VERSION:-0.99pl1456}
+VERSION=${VERSION:-1.020}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -85,8 +85,8 @@ install -c -d $PKG/usr/doc/$PRGNAM-$VERSION
 cp -fr docs $PKG/usr/doc/$PRGNAM-$VERSION
 install -D -m 0644 desktop/kde/dune.desktop \
         $PKG/usr/share/applications/dune.desktop
-install -D -m 0644 desktop/kde/dune.bmp \
-        $PKG/usr/share/pixmaps/dune.bmp
+install -D -m 0644 desktop/kde/dune.png \
+        $PKG/usr/share/pixmaps/dune.png
 
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done

@@ -43,6 +43,7 @@ public:
     virtual int     getType() const { return VRML_NURBS_POSITION_INTERPOLATOR; }
     int             getNodeClass() const 
                        { return CHILD_NODE | INTERPOLATOR_NODE; }
+    virtual bool    showFields() { return true; }  
 
     FieldIndex      dimension;
     FieldIndex      controlPoint;
@@ -85,14 +86,15 @@ public:
 
     void            update() { m_nurbsCurveDirty = true; }
 
+    MFVec3f        *getControlPoints(void);
+    void            setControlPoints(const MFVec3f *points);
+
     fieldMacros(SFInt32, dimension,         ProtoNurbsPositionInterpolator)
     fieldMacros(SFNode,  controlPoint,      ProtoNurbsPositionInterpolator)
     fieldMacros(MFDouble, weight,           ProtoNurbsPositionInterpolator)
     fieldMacros(MFDouble, knot,             ProtoNurbsPositionInterpolator)
     fieldMacros(SFInt32, order,             ProtoNurbsPositionInterpolator)
-protected:
-    MFVec3f        *getControlPoints(void);
-    void            setControlPoints(const MFVec3f *points);
+
 protected:
     NodeNurbsCurve *m_nurbsCurve;
     bool            m_nurbsCurveDirty;

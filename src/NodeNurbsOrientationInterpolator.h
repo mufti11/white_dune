@@ -43,8 +43,7 @@ public:
                        { return X3D_NURBS_ORIENTATION_INTERPOLATOR; }
     int             getNodeClass() const 
                        { return CHILD_NODE | INTERPOLATOR_NODE; }
-
-    virtual bool    isX3dInternalProto(void) { return true; }
+    virtual bool    showFields() { return true; }  
 
     FieldIndex      dimension;
     FieldIndex      controlPoint;
@@ -92,14 +91,15 @@ public:
 
     virtual bool    maySetDefault(void) { return false; }
 
+    MFVec3f        *getControlPoints(void);
+    void            setControlPoints(const MFVec3f *points);
+
     fieldMacros(SFInt32,  dimension,     ProtoNurbsOrientationInterpolator)
     fieldMacros(SFNode,   controlPoint,  ProtoNurbsOrientationInterpolator)
     fieldMacros(MFDouble, knot,          ProtoNurbsOrientationInterpolator)
     fieldMacros(SFInt32,  order,         ProtoNurbsOrientationInterpolator)
     fieldMacros(MFDouble, weight,        ProtoNurbsOrientationInterpolator)
-protected:
-    MFVec3f        *getControlPoints(void);
-    void            setControlPoints(const MFVec3f *points);
+
 protected:
     NodeNurbsCurve *m_nurbsCurve;
     bool            m_nurbsCurveDirty;

@@ -397,6 +397,8 @@ protected:
     void                toNurbsCurve();
     void                toSuperRevolver();
     void                toSuperExtrusion();
+    void                toNurbsPositionInterpolator();
+    void                toNurbsOrientationInterpolator();
     void                toExtrusion();
     void                toIndexedFaceSet();
     void                toIndexedTriangleSet();

@@ -1483,6 +1483,8 @@ BEGIN
         MENUITEM "Convert to &PointSet",                 ID_TO_POINTSET
         MENUITEM SEPARATOR
         MENUITEM "To CurveAnimation (need NurbsCurve)",  ID_TO_CURVE_ANIMATION
+        MENUITEM "To NurbsPositionInterpolator (need NurbsCurve)",  ID_TO_NURBS_POSITION_INTERPOLATOR
+        MENUITEM "To NurbsOrientationInterpolator (need NurbsCurve)",  ID_TO_NURBS_ORIENTATION_INTERPOLATOR
         MENUITEM "To Position-/Orientation-Interpolator (need CurveAnimation)", ID_TO_POSITION_AND_ROTATION_INTERPOLATORS
         MENUITEM "Copy to PositionInterpolator",         ID_TO_POSITION_INTERPOLATOR
         MENUITEM "Copy to OrientationInterpolator XZ-plane", ID_TO_ORIENTATION_INTERPOLATOR_XZ

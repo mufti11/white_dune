@@ -89,6 +89,8 @@
 #include "NodeNurbsSurface.h"
 #include "NodeNurbsCurve.h"
 #include "NodeNurbsCurve2D.h"
+#include "NodeNurbsPositionInterpolator.h"
+#include "NodeNurbsOrientationInterpolator.h"
 #include "NodeNurbsSweptSurface.h"
 #include "NodeNurbsSwungSurface.h"
 #include "NodeNurbsTrimmedSurface.h"
@@ -2503,6 +2505,12 @@ MainWindow::OnCommand(void *vid)
         break;
       case ID_TO_SUPER_REVOLVER:
         toSuperRevolver();
+        break;
+      case ID_TO_NURBS_POSITION_INTERPOLATOR:
+        toNurbsPositionInterpolator();
+        break;
+      case ID_TO_NURBS_ORIENTATION_INTERPOLATOR:
+        toNurbsOrientationInterpolator();
         break;
       case ID_TO_EXTRUSION:
         toExtrusion();
@@ -6090,6 +6098,8 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_TO_NURBS_CURVE, SW_MENU_DISABLED, 
                    (node->getType() == DUNE_SUPER_EXTRUSION) || 
                    (node->getType() == DUNE_SUPER_REVOLVER) ||
+                   (node->getType() == VRML_NURBS_POSITION_INTERPOLATOR) ||
+                   (node->getType() == X3D_NURBS_ORIENTATION_INTERPOLATOR) ||
                    (node->getType() == DUNE_CURVE_ANIMATION) ?
                    0 : SW_MENU_DISABLED);    
 
@@ -6125,6 +6135,14 @@ MainWindow::UpdateToolbarSelection(void)
 
     swMenuSetFlags(m_menu, ID_TO_CURVE_ANIMATION, SW_MENU_DISABLED, 
                    (node->getType() == VRML_NURBS_CURVE) ? 
+                   0 : SW_MENU_DISABLED);
+
+    swMenuSetFlags(m_menu, ID_TO_NURBS_POSITION_INTERPOLATOR, SW_MENU_DISABLED, 
+                   (node->getType() == VRML_NURBS_CURVE) ? 
+                   0 : SW_MENU_DISABLED);
+
+    swMenuSetFlags(m_menu, ID_TO_NURBS_ORIENTATION_INTERPOLATOR, 
+                   SW_MENU_DISABLED, (node->getType() == VRML_NURBS_CURVE) ? 
                    0 : SW_MENU_DISABLED);
 
     swMenuSetFlags(m_menu, ID_TO_POSITION_AND_ROTATION_INTERPOLATORS, 
@@ -10304,6 +10322,20 @@ MainWindow::toNurbsCurve()
         Node *node2 = createGeometryNode(nurbsCurveNode, true);
         parent = node2->getParent();
         m_scene->setSelection(node2);
+    } else if (type == VRML_NURBS_POSITION_INTERPOLATOR) {
+        NodeNurbsPositionInterpolator *interpolator = 
+            (NodeNurbsPositionInterpolator *)node;
+        nurbsCurveNode = interpolator->toNurbsCurve();
+        Node *node2 = createGeometryNode(nurbsCurveNode, true);
+        parent = node2->getParent();
+        m_scene->setSelection(node2);
+    } else if (type == X3D_NURBS_ORIENTATION_INTERPOLATOR) {
+        NodeNurbsOrientationInterpolator *interpolator = 
+            (NodeNurbsOrientationInterpolator *)node;
+        nurbsCurveNode = interpolator->toNurbsCurve();
+        Node *node2 = createGeometryNode(nurbsCurveNode, true);
+        parent = node2->getParent();
+        m_scene->setSelection(node2);
     }
 
     m_scene->UpdateViews(NULL, UPDATE_SELECTION);
@@ -10356,6 +10388,44 @@ MainWindow::toSuperExtrusion()
         m_scene->setSelection(m_scene->replaceNode(node, superExtrusionNode));
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
+}
+
+void
+MainWindow::toNurbsPositionInterpolator()
+{
+    Node *node = m_scene->getSelection()->getNode(); 
+    int type = node->getType();
+    Node *parent = node->getParent();
+
+    Node* nurbsNode = NULL;
+
+    if (type == VRML_NURBS_CURVE) {
+        nurbsNode = ((NodeNurbsCurve *)node)->toNurbsPositionInterpolator();
+        m_scene->execute(new MoveCommand(nurbsNode, NULL, -1, 
+                                         m_scene->getRoot(), 
+                                         m_scene->getRootField()));
+        m_scene->setSelection(nurbsNode);
+    } 
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+}
+
+void
+MainWindow::toNurbsOrientationInterpolator()
+{
+    Node *node = m_scene->getSelection()->getNode(); 
+    int type = node->getType();
+    Node *parent = node->getParent();
+
+    Node* nurbsNode = NULL;
+
+    if (type == VRML_NURBS_CURVE) {
+        nurbsNode = ((NodeNurbsCurve *)node)->toNurbsOrientationInterpolator();
+        m_scene->execute(new MoveCommand(nurbsNode, NULL, -1, 
+                                         m_scene->getRoot(), 
+                                         m_scene->getRootField()));
+        m_scene->setSelection(nurbsNode);
+    } 
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
 
 void

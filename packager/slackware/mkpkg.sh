@@ -36,7 +36,7 @@ DOWNLOAD="ftp://ftp.ourproject.org/pub/wdune/wdune-$VERSION.tar.bz2"
 MD5SUM="$MD5SUM"
 DOWNLOAD_x86_64=""
 MD5SUM_x86_64=""
-REQUIRES="CGAL vcglib"
+REQUIRES="CGAL vcglib ffmpeg"
 MAINTAINER="J. Scheurich"
 EMAIL="mufti11@web.de"
 EOT

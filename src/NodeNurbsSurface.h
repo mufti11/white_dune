@@ -117,6 +117,8 @@ public:
     virtual int     repairField(int field) const;
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
+    void            repairKnotAndWeight();
+
     void            rotate(SFRotation rot);
 
     virtual Node   *degreeElevate(int newUDegree, int newVDegree); 
@@ -218,6 +220,7 @@ protected:
     void            setCreateExtraTess(bool flag) { m_createExtraTess = flag; }
 
 protected:
+    bool            m_inRepair;
     int             m_numExtraVertices;
     bool            m_createExtraTess;
 };
