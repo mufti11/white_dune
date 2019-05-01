@@ -573,7 +573,7 @@ static NodeButton buttonsX3DComponents3[] = {
     { X3D_CAD_LAYER,             ID_NEW_CAD_LAYER,             true,  true },
     { X3D_CAD_PART,              ID_NEW_CAD_PART,              true,  true },
     { BS,                        0,                            true,  true },
-    { X3D_PARTICLE_SYSTEM,       ID_NEW_PARTICLE_SYSTEM,       false, true },
+    { X3D_PARTICLE_SYSTEM,       ID_NEW_PARTICLE_SYSTEM,       true,  true },
     { BS,                        0,                            true,  true },
     { X3D_VOLUME_EMITTER,        ID_NEW_VOLUME_EMITTER,        false, true },
     { X3D_SURFACE_EMITTER,       ID_NEW_SURFACE_EMITTER,       false, true },
@@ -10703,16 +10703,9 @@ MainWindow::toCurveAnimation()
     if (node->getType() == VRML_NURBS_CURVE) {
         Node *animation = node->toCurveAnimation();
         if (animation != NULL) {
-            Node *parent = node->getParent();
-            int parentField = node->getParentField();
-            if ((parent == NULL) || (parentField == -1)) {
-                parent =m_scene->getRoot();
-                parentField =m_scene->getRootField();
-            }
-            m_scene->execute(new MoveCommand(node, parent, parentField,
-                            NULL, -1));
-            m_scene->execute(new MoveCommand(animation, NULL, -1,  
-                                            parent, parentField));
+            m_scene->execute(new MoveCommand(animation, NULL, -1,
+                                             m_scene->getRoot(), 
+                                             m_scene->getRootField()));
             m_scene->setSelection(animation);
             m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         }

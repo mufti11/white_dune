@@ -807,9 +807,10 @@ void CRWDImageTextureRender(X3dNode *data, void *extraData)
     } 
     else 
     {
-        X3dNode *textureTransform;
-        textureTransform = ((struct X3dAppearance *)imageTexture->m_parent)->
-                           textureTransform;
+        X3dNode *textureTransform = NULL;
+        if (imageTexture->m_parent)
+            textureTransform = ((struct X3dAppearance *)
+                                imageTexture->m_parent)->textureTransform;
 
         if (textureTransform)
             textureTransformBind(textureTransform);
@@ -1373,6 +1374,7 @@ void CRWDHAnimHumanoidTreeRender(X3dNode *data, void *extraData)
             for (i = 0; i < humanoid->skeleton_length; i++)
                 if (humanoid->skeleton[i])
                 {
+                    glPushMatrix();
                     if (preRender) 
                     {
                         struct X3dHAnimJoint *mayJoint = humanoid->skeleton[i];
@@ -1383,6 +1385,7 @@ void CRWDHAnimHumanoidTreeRender(X3dNode *data, void *extraData)
                     }
                     glDisable(GL_TEXTURE_2D);
                     X3dTreeRenderCallback(humanoid->skeleton[i], extraData);
+                    glPopMatrix();
                 }
         if (humanoid->skin)
             for (i = 0; i < humanoid->skin_length; i++)
@@ -1492,7 +1495,8 @@ void startParticle(struct X3dParticleSystem *system, int i,
     struct X3dConeEmitter *mayEmitter;
     float speed = 1;
     float alpha = (random() / (float)RAND_MAX) * 2.0 * M_PI;
-    float maxAngle = 2.0 * M_PI;;
+    float maxAngle = 2.0 * M_PI;
+    int setInternVector = 0;
 
     extraVar->m_internPosition[3 * i] = 0;
     extraVar->m_internPosition[3 * i + 1] = 0; 
@@ -1518,31 +1522,20 @@ void startParticle(struct X3dParticleSystem *system, int i,
     if (system->emitter)
         if (mayEmitter->m_type == X3dConeEmitterType) 
         {
-            struct X3dConeEmitter *emit = (struct X3dConeEmitter *) 
+            struct X3dConeEmitter *emit = (struct X3dConeEmitter *)
                                           system->emitter;
+            extraVar->m_mass = emit->mass;
             extraVar->m_internPosition[3 * i] = emit->position[0];
             extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
             extraVar->m_internPosition[3 * i + 2] = emit->position[2];
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation / 2.0f + 1) * emit->speed;
-/*
-            if ((emit->direction()[0] != 0) &&
-                (emit->direction()[1] != 0) &&
-                (emit->direction()[0] != 0)) 
-            {
-                extraVar->m_internVector[i * 3] = speed * emit->direction[0];
-                extraVar->m_internVector[i * 3 + 1] = speed * 
-                                                       emit->direction[1];
-                extraVar->m_internVector[i * 3 + 2] = speed *
-                                                      emit->direction[2];
-            }
-*/
-            extraVar->m_mass = emit->mass;
         } 
         else if (mayEmitter->m_type == X3dPointEmitterType) 
         {
-            struct X3dPointEmitter *emit = (struct X3dPointEmitter *) 
+            struct X3dPointEmitter *emit = (struct X3dPointEmitter *)
                                            system->emitter;
+            extraVar->m_mass = emit->mass;
             extraVar->m_internPosition[i * 3] = emit->position[0];
             extraVar->m_internPosition[i * 3 + 1] = emit->position[1]; 
             extraVar->m_internPosition[i * 3 + 2] = emit->position[2];
@@ -1551,6 +1544,7 @@ void startParticle(struct X3dParticleSystem *system, int i,
             if ((emit->direction[0] != 0) &&
                 (emit->direction[1] != 0) &&
                 (emit->direction[0] != 0)) {
+                setInternVector = 1;
                 extraVar->m_internVector[i * 3] = speed * 
                                                   emit->direction[0];
                 extraVar->m_internVector[i * 3 + 1] = speed * 
@@ -1558,27 +1552,185 @@ void startParticle(struct X3dParticleSystem *system, int i,
                 extraVar->m_internVector[i * 3 + 2] = speed * 
                                                       emit->direction[2];
             }
-            extraVar->m_mass = emit->mass;
         }
         else if (mayEmitter->m_type == X3dExplosionEmitterType) 
         {
-            struct X3dExplosionEmitter *emit = (struct X3dExplosionEmitter *) 
+            struct X3dExplosionEmitter *emit = (struct X3dExplosionEmitter *)
                                                system->emitter;
+            extraVar->m_mass = emit->mass;
             extraVar->m_internPosition[3 * i] = emit->position[0];
             extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
             extraVar->m_internPosition[3 * i + 2] = emit->position[2];
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation / 2.0f + 1) * emit->speed;
-            extraVar->m_mass = emit->mass;
         }
- 
-    extraVar->m_internVector[3 * i] = speed * extraVar->m_force[1] * 
-                                      cos(angle) * cos(alpha);
-    extraVar->m_internVector[3 * i + 1] = speed * extraVar->m_force[2] * 
-                                          sin(angle);
-    extraVar->m_internVector[3 * i + 2] = speed * extraVar->m_force[3] * 
-                                          cos(angle) * sin(alpha);
+        else if (mayEmitter->m_type == X3dPolylineEmitterType) 
+        {
+            struct X3dPolylineEmitter *emit = (struct X3dPolylineEmitter *)
+                                              system->emitter;
+            struct X3dCoordinate *ncoord = (struct X3dCoordinate *)emit->coord;
+            int numLines = 0;
+            float *coords = NULL;
+            int *lineIndicesCoord1 = (int *)malloc(sizeof(int));
+            int *lineIndicesCoord2 = (int *)malloc(sizeof(int));
 
+            extraVar->m_mass = emit->mass;
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            if (ncoord) 
+            {
+                int j;
+                int startLine = 1;
+                int validLine = 0;
+                coords = ncoord->point;
+                for (j = 0; j < emit->coordIndex_length; j++) {
+                    if (emit->coordIndex[j] < 0) 
+                    {
+                        startLine = 1;
+                        validLine = 0;
+                    } else if (!validLine)
+                        validLine = 1;  
+                    else if (emit->coordIndex[j] != emit->coordIndex[j - 1]) 
+                    {
+                         numLines++;
+                         lineIndicesCoord1 = (int *)realloc(lineIndicesCoord1,
+                                                            numLines *
+                                                            sizeof(int));
+                         lineIndicesCoord2 = (int *)realloc(lineIndicesCoord2,
+                                                            numLines *
+                                                            sizeof(int));
+                         lineIndicesCoord1[numLines - 1] = emit->coordIndex[j];
+                         lineIndicesCoord2[numLines - 1] = emit->coordIndex[j - 
+                                                                            1];
+                    }
+                }
+            }
+            if (coords && (numLines > 0))
+            {
+                int numLine = (random() / (float)RAND_MAX) * numLines;
+                int coord1 = lineIndicesCoord1[numLine];              
+                int coord2 = lineIndicesCoord2[numLine];
+                if (numLine == numLines)
+                    numLine--;
+                if ((coord1 * 3 < ncoord->point_length) && 
+                    (coord2 * 3 < ncoord->point_length))
+                {
+                    float point1x = coords[coord1 * 3];              
+                    float point1y = coords[coord1 * 3 + 1];              
+                    float point1z = coords[coord1 * 3 + 2];              
+                    float point2x = coords[coord2 * 3];              
+                    float point2y = coords[coord2 * 3 + 1];              
+                    float point2z = coords[coord2 * 3 + 2];              
+                    float vecx = point1x - point2x;
+                    float vecy = point1y - point2y;
+                    float vecz = point1z - point2z;
+                    float ran = (random() / (float)RAND_MAX);
+                    float startPointx = point2x + vecx * ran;
+                    float startPointy = point2y + vecy * ran;
+                    float startPointz = point2z + vecz * ran;
+                    extraVar->m_internPosition[i * 3    ] = startPointx;
+                    extraVar->m_internPosition[i * 3 + 1] = startPointy;
+                    extraVar->m_internPosition[i * 3 + 2] = startPointz;
+                } 
+                else 
+                {
+                    extraVar->m_internPosition[i * 3    ] = 0;
+                    extraVar->m_internPosition[i * 3 + 1] = 0;
+                    extraVar->m_internPosition[i * 3 + 2] = 0;
+                }
+            } 
+            else 
+            {
+                extraVar->m_internPosition[i * 3    ] = 0;
+                extraVar->m_internPosition[i * 3 + 1] = 0;
+                extraVar->m_internPosition[i * 3 + 2] = 0;
+            }
+            free(lineIndicesCoord1);
+            free(lineIndicesCoord2);
+            if ((emit->direction[0] != 0) &&
+                (emit->direction[1] != 0) &&
+                (emit->direction[0] != 0))
+            {
+                setInternVector = 1;
+                extraVar->m_internVector[3 * i] = speed * 
+                                                  emit->direction[0];
+                extraVar->m_internVector[3 * i + 1] = speed * 
+                                                      emit->direction[1];
+                extraVar->m_internVector[3 * i + 1] = speed * 
+                                                      emit->direction[2];
+            }
+        }
+        else if (mayEmitter->m_type == X3dVolumeEmitterType) 
+        {
+            struct X3dVolumeEmitter *emit = (struct X3dVolumeEmitter *)
+                                            system->emitter;
+            struct X3dCoordinate *ncoord = (struct X3dCoordinate *)emit->coord;
+            int numPoints = 0;
+            float *coords = NULL;
+            float *coordArray = (float *)malloc(sizeof(float));
+
+            extraVar->m_mass = emit->mass;
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            if (ncoord) {
+                int j;
+                coords = ncoord->point;
+                for (j = 0; j < emit->coordIndex_length; j++)
+                {
+                    int index = emit->coordIndex[j];
+                    if (index > -1)
+                    {
+                        numPoints++;
+                        coordArray = (float *)realloc(coordArray, 
+                                                      numPoints * 3 *
+                                                      sizeof(float));
+                        coordArray[(numPoints - 1) * 3    ] = 
+                            coords[index * 3    ];
+                        coordArray[(numPoints - 1) * 3 + 1] = 
+                            coords[index * 3 + 1];
+                        coordArray[(numPoints - 1) * 3 + 2] = 
+                            coords[index * 3 + 2];
+                    }
+                }
+            }
+            if (coords && (numPoints > 0)) {
+                int numPoint = (random() / (float)RAND_MAX) * numPoints;
+                extraVar->m_internPosition[i * 3    ] = 
+                    coordArray[numPoint * 3    ];
+                extraVar->m_internPosition[i * 3 + 1] = 
+                    coordArray[numPoint * 3 + 1];
+                extraVar->m_internPosition[i * 3 + 2] =
+                    coordArray[numPoint * 3 + 2]; 
+            }
+            free(coordArray);
+        }
+        else if (mayEmitter->m_type == X3dSurfaceEmitterType) 
+        {
+            static int once = 0;
+            struct X3dSurfaceEmitter *emit = (struct X3dSurfaceEmitter *)
+                                             system->emitter;
+            extraVar->m_mass = emit->mass;
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation / 2.0f + 1) * emit->speed;
+            if (!once) 
+            {
+                fprintf(stderr, "Sorry, C/C++/java export of SurfaceEmitter is not supported\n");
+                once = 1;
+            }
+            extraVar->m_internPosition[i * 3    ] = 0;
+            extraVar->m_internPosition[i * 3 + 1] = 0;
+            extraVar->m_internPosition[i * 3 + 2] = 0;
+        }
+
+    if (!setInternVector)
+    {
+        extraVar->m_internVector[3 * i] = speed * extraVar->m_force[1] * 
+                                          cos(angle) * cos(alpha);
+        extraVar->m_internVector[3 * i + 1] = speed * extraVar->m_force[2] * 
+                                              sin(angle);
+        extraVar->m_internVector[3 * i + 2] = speed * extraVar->m_force[3] * 
+                                              cos(angle) * sin(alpha);
+    }
     extraVar->m_lifeTime[i] = (random() / (float)RAND_MAX) * 
                               (system->lifetimeVariation / 2.0f + 1) * 
                               system->particleLifetime;

@@ -1409,7 +1409,9 @@ BEGIN
         MENUITEM "Convertir en Indexed&LineSet",      ID_TO_INDEXED_LINESET
         MENUITEM "Convertir en &PointSet",            ID_TO_POINTSET
         MENUITEM SEPARATOR
-        MENUITEM "Convertir en CurveAnimation (a besoin de NurbsCurve)", ID_TO_CURVE_ANIMATION
+        MENUITEM "Copier en CurveAnimation (a besoin de NurbsCurve)", ID_TO_CURVE_ANIMATION
+        MENUITEM "Copier en NurbsPositionInterpolator (a besoin de NurbsCurve)",  ID_TO_NURBS_POSITION_INTERPOLATOR
+        MENUITEM "Copier en NurbsOrientationInterpolator (a besoin de NurbsCurve)",  ID_TO_NURBS_ORIENTATION_INTERPOLATOR
         MENUITEM "Convertir en Position-/Orientation-Interpolator (a besoin de CurveAnimation)", ID_TO_POSITION_AND_ROTATION_INTERPOLATORS
         MENUITEM "Copier en PositionInterpolator",    ID_TO_POSITION_INTERPOLATOR
         MENUITEM "Copier en OrientationInterpolator  XZ-Plane", ID_TO_ORIENTATION_INTERPOLATOR_XZ

@@ -47,12 +47,16 @@
 #include "MFFloat.h"
 #include "DuneApp.h"
 #include "Scene.h"
+#include "MyMesh.h"
+
 #include "NodeForcePhysicsModel.h"
 #include "NodeWindPhysicsModel.h"
 #include "NodeConeEmitter.h"
 #include "NodeExplosionEmitter.h"
 #include "NodePointEmitter.h"
 #include "NodePolylineEmitter.h"
+#include "NodeVolumeEmitter.h"
+#include "NodeSurfaceEmitter.h"
 
 #include "NodeIndexedFaceSet.h"
 #include "NodeIndexedLineSet.h"
@@ -250,23 +254,23 @@ void NodeParticleSystem::startParticle(int i)
         if (emitter()->getValue()->getType() == X3D_CONE_EMITTER) {
             NodeConeEmitter *emit = (NodeConeEmitter *)
                                     emitter()->getValue();
-            m_internPosition[i].x = emit->position()->getValue()[0];
-            m_internPosition[i].y = emit->position()->getValue()[1]; 
-            m_internPosition[i].z = emit->position()->getValue()[2];
+            m_mass = emit->mass()->getValue();
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation()->getValue() / 2.0f + 1) *
                     emit->speed()->getValue();
-            m_mass = emit->mass()->getValue();
+            m_internPosition[i].x = emit->position()->getValue()[0];
+            m_internPosition[i].y = emit->position()->getValue()[1]; 
+            m_internPosition[i].z = emit->position()->getValue()[2];
         } else if (emitter()->getValue()->getType() == X3D_POINT_EMITTER) {
             NodePointEmitter *emit = (NodePointEmitter *) 
                                      emitter()->getValue();
             m_internPosition[i].x = emit->position()->getValue()[0];
             m_internPosition[i].y = emit->position()->getValue()[1]; 
             m_internPosition[i].z = emit->position()->getValue()[2];
+            m_mass = emit->mass()->getValue();
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation()->getValue() / 2.0f + 1) *
                     emit->speed()->getValue();
-            m_mass = emit->mass()->getValue();
             if ((emit->direction()->getValue()[0] != 0) &&
                 (emit->direction()->getValue()[1] != 0) &&
                 (emit->direction()->getValue()[0] != 0)) {
@@ -282,19 +286,22 @@ void NodeParticleSystem::startParticle(int i)
                    X3D_EXPLOSION_EMITTER) {
             NodeExplosionEmitter *emit = (NodeExplosionEmitter *) 
                                          emitter()->getValue();
-            m_internPosition[i].x = emit->position()->getValue()[0];
-            m_internPosition[i].y = emit->position()->getValue()[1]; 
-            m_internPosition[i].z = emit->position()->getValue()[2];
+            m_mass = emit->mass()->getValue();
             speed = (random() / (float)RAND_MAX) * 
                     (emit->variation()->getValue() / 2.0f + 1) *
                     emit->speed()->getValue();
-            m_mass = emit->mass()->getValue();
+            m_internPosition[i].x = emit->position()->getValue()[0];
+            m_internPosition[i].y = emit->position()->getValue()[1]; 
+            m_internPosition[i].z = emit->position()->getValue()[2];
         } else if (emitter()->getValue()->getType() == X3D_POLYLINE_EMITTER) {
             NodePolylineEmitter *emit = (NodePolylineEmitter *) 
                                         emitter()->getValue();
             NodeCoordinate *ncoord = (NodeCoordinate *)
                                      emit->coord()->getValue();
             m_mass = emit->mass()->getValue();
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation()->getValue() / 2.0f + 1) *
+                    emit->speed()->getValue();
             int numLines = 0;
             MFVec3f *coords = NULL;
             MyArray<LineIndices> lineIndices;
@@ -355,8 +362,81 @@ void NodeParticleSystem::startParticle(int i)
                 m_internVector[i].z = speed * 
                                       emit->direction()->getValue()[2];
             }
+        } else if (emitter()->getValue()->getType() == X3D_VOLUME_EMITTER) {
+            NodeVolumeEmitter *emit = (NodeVolumeEmitter *) 
+                                        emitter()->getValue();
+            NodeCoordinate *ncoord = (NodeCoordinate *)
+                                     emit->coord()->getValue();
+            m_mass = emit->mass()->getValue();
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation()->getValue() / 2.0f + 1) *
+                    emit->speed()->getValue();
+            int numPoints = 0;
+            MFVec3f *coords = NULL;
+            MyArray<Vec3f> coordArray;
+            if (ncoord) {
+                coords = ncoord->point();
+                for (int i = 0; i < emit->coordIndex()->getSize(); i++) {
+                    int index = emit->coordIndex()->getValue(i);
+                    if (index > -1) {
+                        coordArray.append(coords->getVec(index));
+                    }
+                }
+                numPoints = coordArray.size();
+            }
+            if (coords && (numPoints > 0)) {
+                int numPoint = (random() / (float)RAND_MAX) * numPoints;
+                Vec3f startPoint = coordArray[numPoint];
+                m_internPosition[i].x = startPoint.x;
+                m_internPosition[i].y = startPoint.y;
+                m_internPosition[i].z = startPoint.z;
+            }
+        } else if (emitter()->getValue()->getType() == X3D_SURFACE_EMITTER) {
+            NodeSurfaceEmitter *emit = (NodeSurfaceEmitter *) 
+                                        emitter()->getValue();
+            Node *geom = emit->surface()->getValue();
+            m_mass = emit->mass()->getValue();
+            speed = (random() / (float)RAND_MAX) * 
+                    (emit->variation()->getValue() / 2.0f + 1) *
+                    emit->speed()->getValue();
+            if (geom && geom->isMesh()) {
+                MeshBasedNode *meshNode = (MeshBasedNode *)geom;
+                int numFaces = 0; 
+                MyMesh *mesh = meshNode->getMesh();
+                if (mesh)
+                    numFaces = mesh->getNumFaces();
+                if (numFaces) {
+                    MFVec3f *vertices = mesh->getVertices();
+                    int numFace = (random() / (float)RAND_MAX) * numFaces;
+                    FaceData *face = mesh->getFace(numFace);
+                    int numVertices = face->getNumVertices();
+                    int offset = face->getOffset();
+                    Vec3f mid;
+                    bool isFirst = true;
+                    Vec3f first;
+                    for (int j = offset; j < offset + numVertices; j++) {
+                         int k = mesh->getCoordIndex()->getValue(j);
+                         if (k > -1) {                                 
+                             mid.x += vertices->getValue(k)[0];
+                             mid.y += vertices->getValue(k)[1];
+                             mid.z += vertices->getValue(k)[2];
+                             if (isFirst == true) {
+                                 first = mid;
+                                 isFirst = false;
+                             }
+                         }
+                    }
+                    mid = mid / numVertices;
+                    Vec3f vec = mid - first;
+                    float lenX = vec.x * 2 * (random() / (float)RAND_MAX);
+                    float lenY = vec.y * 2 * (random() / (float)RAND_MAX);
+                    float lenZ = vec.z * 2 * (random() / (float)RAND_MAX);
+                    m_internPosition[i].x = first.x + lenX;
+                    m_internPosition[i].y = first.y + lenY;
+                    m_internPosition[i].z = first.z + lenZ;
+                }
+            }
         }
-
     if (!setInternVector) {
         m_internVector[i].x = speed * m_force[0] * sin(angle) * cos(alpha);
         m_internVector[i].y = speed * m_force[1] * cos(angle);

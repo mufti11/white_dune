@@ -400,6 +400,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             break;
         }
         bool isNode = false;
+        bool isNotSFNode = true;
         STREEITEM tmpItem = item;
         STREEITEM oldTmpItem = NULL;
         Node *oldNode = node;
@@ -408,6 +409,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             if (value->getType() == SFNODE) {
                 node = ((SFNode *) value)->getValue();
                 item = swTreeGetFirstChild(m_tree, item);
+                isNotSFNode = false;
             } else if ((value->getType() == MFNODE) && (pos > -1)) {
                 node = ((MFNode *) value)->getValue(pos);
                 item = swTreeGetFirstChild(m_tree, item);
@@ -417,8 +419,8 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             } else
                break;
         }
-        bool showAllFields = TheApp->GetShowAllFields() || 
-                             oldNode->showFields();
+        bool showAllFields = isNotSFNode && (TheApp->GetShowAllFields() || 
+                                             oldNode->showFields());
         if (showAllFields) {
             Proto *proto = oldNode->getProto();
             {
@@ -533,15 +535,6 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
         } else if (field->getType() == SFNODE) {
             SFNode *value = (SFNode *) node->getField(i);
             const char *name = (const char *) field->getName(x3d);
-            if (showAllFields) {
-                fieldItem = swTreeInsertItem(m_tree, SW_INSERT_LAST_CHILD,
-                                             item, name);
-                swTreeSetItemData(m_tree, fieldItem, new TreeNode(i, NULL));
-                swTreeSetItemImage(m_tree, fieldItem, m_bitmapItems - 2, 
-                                   m_bitmapItems - 2);
-                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD,
-                              fieldItem);
-            } else
             InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
         }
     }

@@ -1661,7 +1661,7 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
                         m_force[j] += 0;
         
                 for (int i = 0; i < system.physics.length; i++)
-                    if (system.physics[i] == null) 
+                    if (system.physics[i] != null) 
                     {
                         X3dNode phys = system.physics[i];
                         if (phys.getType() == X3dForcePhysicsModelType.type) 
@@ -1727,9 +1727,11 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
     double  m_internTime;
     float   m_mass;
     Random  m_rand;
+    private  static boolean once;
 
-    void MyParticleSystemRenderCallback()
+    public MyParticleSystemRenderCallback()
     {
+        once = false;
         m_force = new float[3];
     }
 
@@ -1757,67 +1759,168 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
                                     (float)Math.cos(angle);
         m_internVector[3 * i + 2]= speed * m_force[2] * 
                                    (float)Math.sin(angle) * (float)Math.sin(alpha);
+        boolean setInternVector = false;
     
-        if (system.emitter != null)
-            if (system.emitter.getType() == X3dConeEmitterType.type) 
-            {
-                X3dConeEmitter emit = (X3dConeEmitter) system.emitter;
-                m_internPosition[3 * i] = emit.position[0];
-                m_internPosition[3 * i + 1] = emit.position[1]; 
-                m_internPosition[3 * i + 2] = emit.position[2];
-                speed = (m_rand.nextFloat()) * 
-                        (emit.variation / 2.0f + 1) * emit.speed;
-    /*
-                if ((emit.direction()[0] != 0) &&
-                    (emit.direction()[1] != 0) &&
-                    (emit.direction()[0] != 0)) 
-                {
-                    m_internVector[i * 3] = speed * emit.direction[0];
-                    m_internVector[i * 3 + 1] = speed * 
-                                                           emit.direction[1];
-                    m_internVector[i * 3 + 2] = speed *
-                                                          emit.direction[2];
-                }
-    */
-                m_mass = emit.mass;
-            } 
-            else if (system.emitter.getType() == X3dPointEmitterType.type) 
-            {
-                X3dPointEmitter emit = (X3dPointEmitter) system.emitter;
-                m_internPosition[i * 3] = emit.position[0];
-                m_internPosition[i * 3 + 1] = emit.position[1]; 
-                m_internPosition[i * 3 + 2] = emit.position[2];
-                speed = (m_rand.nextFloat()) * 
-                        (emit.variation / 2.0f + 1) * emit.speed;
-                if ((emit.direction[0] != 0) &&
-                    (emit.direction[1] != 0) &&
-                    (emit.direction[0] != 0)) {
-                    m_internVector[i * 3] = speed * 
-                                                      emit.direction[0];
-                    m_internVector[i * 3 + 1] = speed * 
-                                                          emit.direction[1];
-                    m_internVector[i * 3 + 2] = speed * 
-                                                          emit.direction[2];
-                }
-                m_mass = emit.mass;
+        if (system.emitter == null)
+            return;
+        if (system.emitter.getType() == X3dConeEmitterType.type) {
+            X3dConeEmitter emit = (X3dConeEmitter)system.emitter;
+            m_mass = emit.mass;
+            m_internPosition[3 * i] = emit.position[0];
+            m_internPosition[3 * i + 1] = emit.position[1]; 
+            m_internPosition[3 * i + 2] = emit.position[2];
+            speed = (m_rand.nextFloat()) * 
+                    (emit.variation / 2.0f + 1) * emit.speed;
+        } else if (system.emitter.getType() == X3dPointEmitterType.type) {
+            X3dPointEmitter emit = (X3dPointEmitter)system.emitter;
+            m_mass = emit.mass;
+            m_internPosition[i * 3] = emit.position[0];
+            m_internPosition[i * 3 + 1] = emit.position[1]; 
+            m_internPosition[i * 3 + 2] = emit.position[2];
+            speed = (m_rand.nextFloat()) * 
+                    (emit.variation / 2.0f + 1) * emit.speed;
+            if ((emit.direction[0] != 0) &&
+                (emit.direction[1] != 0) &&
+                (emit.direction[0] != 0)) {
+                setInternVector = true;
+                m_internVector[i * 3    ] = speed * emit.direction[0];
+                m_internVector[i * 3 + 1] = speed * emit.direction[1];
+                m_internVector[i * 3 + 2] = speed * emit.direction[2];
             }
-            else if (system.emitter.getType() == X3dExplosionEmitterType.type) 
-            {
-                X3dExplosionEmitter emit = (X3dExplosionEmitter) system.emitter;
-                m_internPosition[3 * i] = emit.position[0];
-                m_internPosition[3 * i + 1] = emit.position[1]; 
-                m_internPosition[3 * i + 2] = emit.position[2];
-                speed = (m_rand.nextFloat()) * 
-                        (emit.variation / 2.0f + 1) * emit.speed;
-                m_mass = emit.mass;
+        } else if (system.emitter.getType() == X3dExplosionEmitterType.type) {
+            X3dExplosionEmitter emit = (X3dExplosionEmitter)system.emitter;
+            m_mass = emit.mass;
+            m_internPosition[3 * i    ] = emit.position[0];
+            m_internPosition[3 * i + 1] = emit.position[1]; 
+            m_internPosition[3 * i + 2] = emit.position[2];
+            speed = (m_rand.nextFloat()) * 
+                    (emit.variation / 2.0f + 1) * emit.speed;
+        } else if (system.emitter.getType() == X3dPolylineEmitterType.type) {
+            X3dPolylineEmitter emit = (X3dPolylineEmitter)system.emitter;
+            m_mass = emit.mass;
+            X3dCoordinate ncoord = (X3dCoordinate)emit.coord;
+            speed = (m_rand.nextFloat()) * 
+                    (emit.variation / 2.0f + 1) * emit.speed;
+            int numLines = 0;
+            float coords[] = null;
+            int lineIndicesCoord1[] = new int[emit.coordIndex.length];
+            int lineIndicesCoord2[] = new int[emit.coordIndex.length];
+            if (ncoord != null) {
+                coords = ncoord.point;
+                boolean startLine = true;
+                boolean validLine = false;
+                for (int j = 0; j < emit.coordIndex.length; j++) {
+                    if (emit.coordIndex[j] < 0) {
+                        startLine = true;
+                        validLine = false;
+                    } else if (!validLine)
+                        validLine = true;  
+                    else if (emit.coordIndex[j] != emit.coordIndex[j - 1]) {
+                         numLines++;
+                         lineIndicesCoord1[numLines - 1] = emit.coordIndex[j];
+                         lineIndicesCoord2[numLines - 1] = emit.coordIndex[j - 
+                                                                            1];
+                    }
+                }
             }
-     
-        m_internVector[3 * i] = speed * m_force[1] * 
-                                (float)Math.cos(angle) * (float)Math.cos(alpha);
-        m_internVector[3 * i + 1] = speed * m_force[2] * (float)Math.sin(angle);
-        m_internVector[3 * i + 2] = speed * m_force[3] * 
-                                    (float)Math.cos(angle) * (float)Math.sin(alpha);
-    
+            if ((coords != null) && (numLines > 0)) {
+                int numLine = (int)((m_rand.nextFloat()) * numLines);
+                if (numLine == numLines)
+                    numLine--;
+                int coord1 = lineIndicesCoord1[numLine];              
+                int coord2 = lineIndicesCoord2[numLine];
+                if ((coord1 * 3 < ncoord.point.length) && 
+                    (coord2 * 3 < ncoord.point.length)) {
+                    float point1x = coords[coord1 * 3];              
+                    float point1y = coords[coord1 * 3 + 1];              
+                    float point1z = coords[coord1 * 3 + 2];              
+                    float point2x = coords[coord2 * 3];              
+                    float point2y = coords[coord2 * 3 + 1];              
+                    float point2z = coords[coord2 * 3 + 2];              
+                    float vecx = point1x - point2x;
+                    float vecy = point1y - point2y;
+                    float vecz = point1z - point2z;
+                    float ran = (m_rand.nextFloat());
+                    float startPointx = point2x + vecx * ran;
+                    float startPointy = point2y + vecy * ran;
+                    float startPointz = point2z + vecz * ran;
+                    m_internPosition[i * 3    ] = startPointx;
+                    m_internPosition[i * 3 + 1] = startPointy;
+                    m_internPosition[i * 3 + 2] = startPointz;
+                } else {
+                    m_internPosition[i * 3    ] = 0;
+                    m_internPosition[i * 3 + 1] = 0;
+                    m_internPosition[i * 3 + 2] = 0;
+                }
+            } else {
+                m_internPosition[i * 3    ] = 0;
+                m_internPosition[i * 3 + 1] = 0;
+                m_internPosition[i * 3 + 2] = 0;
+            }
+            if ((emit.direction[0] != 0) &&
+                (emit.direction[1] != 0) &&
+                (emit.direction[0] != 0))
+            {
+                setInternVector = true;
+                m_internVector[3 * i    ] = speed * emit.direction[0];
+                m_internVector[3 * i + 1] = speed * emit.direction[1];
+                m_internVector[3 * i + 1] = speed * emit.direction[2];
+            }
+        } else if (system.emitter.getType() == X3dVolumeEmitterType.type) {
+            X3dVolumeEmitter emit = (X3dVolumeEmitter)system.emitter;
+            m_mass = emit.mass;
+            X3dCoordinate ncoord = (X3dCoordinate)emit.coord;
+            speed = (m_rand.nextFloat()) * 
+                    (emit.variation / 2.0f + 1) * emit.speed;
+            int numPoints = 0;
+            float coords[] = null;
+            float coordArray[] = new float[3 * emit.coordIndex.length];
+            if (ncoord != null) {
+                coords = ncoord.point;
+                for (int j = 0; j < emit.coordIndex.length; j++) {
+                    int index = emit.coordIndex[j];
+                    if (index > -1) {
+                        numPoints++;
+                        coordArray[(numPoints - 1) * 3    ] = 
+                            coords[index * 3    ];
+                        coordArray[(numPoints - 1) * 3 + 1] = 
+                            coords[index * 3 + 1];
+                        coordArray[(numPoints - 1) * 3 + 2] = 
+                            coords[index * 3 + 2];
+                    }
+                }
+            }
+            if ((coords != null) && (numPoints > 0)) {
+                int numPoint = (int)((m_rand.nextFloat()) * numPoints);
+                m_internPosition[i * 3    ] = 
+                    coordArray[numPoint * 3    ];
+                m_internPosition[i * 3 + 1] = 
+                    coordArray[numPoint * 3 + 1];
+                m_internPosition[i * 3 + 2] =
+                    coordArray[numPoint * 3 + 2]; 
+            }
+        } else if (system.emitter.getType() == X3dSurfaceEmitterType.type) {
+            X3dSurfaceEmitter emit = (X3dSurfaceEmitter)system.emitter;
+            m_mass = emit.mass;
+            speed = (m_rand.nextFloat()) * 
+                    (emit.variation / 2.0f + 1) * emit.speed;
+            if (!once) {
+                System.err.println("Sorry, C/C++/java export of SurfaceEmitter is not supported");
+                once = true;
+            }
+            m_internPosition[i * 3    ] = 0;
+            m_internPosition[i * 3 + 1] = 0;
+            m_internPosition[i * 3 + 2] = 0;
+        }
+
+        if (!setInternVector) {
+            m_internVector[3 * i] = speed * m_force[0] * 
+                (float)Math.cos(angle) * (float)Math.cos(alpha);
+            m_internVector[3 * i + 1] = speed * m_force[1] * 
+                (float)Math.sin(angle);
+            m_internVector[3 * i + 2] = speed * m_force[2] *
+                (float)Math.cos(angle) * (float)Math.sin(alpha);
+        }
         m_lifeTime[i] = (m_rand.nextFloat()) * 
                         (system.lifetimeVariation / 2.0f + 1) * 
                         system.particleLifetime;

@@ -5062,5 +5062,19 @@ Fixed crash in MyMesh
 
 Added automatic knot and weight generation on NurbsSurface/NurbsCurve
 
+Added VolumeEmitter rendering
+
+Fixed NurbsCurve to CurveAnimation conversion
+
+Added workaround for wrong selection in "show all field names" mode 
+
+Added SurfaceEmitter rendering
+
+Fixed crash in C export rendering code
+
+Fixed error in java export Particlesystem rendering
+
+Updated Emitter code of C/C++/java export 
+
 contact: MUFTI <mufti@users.ourproject.org>
 
