@@ -38,8 +38,6 @@
 #include "MyMesh.h"
 #endif
 
-typedef MyMesh* MyMeshPtr;
-
 #include "swt.h"
 
 #include "SFMFTypes.h"
@@ -137,7 +135,7 @@ public:
     fieldMacros(MFNode,   viewpoints,  ProtoHAnimHumanoid)
 
     int           m_numMeshes;
-    MyMeshPtr    *m_meshes;
+    MyMesh      **m_meshes;
     MyArray<MeshBasedNode *> m_meshNodes;
     MFVec3f     **m_origVertices;
     NodeMaterial *m_material;

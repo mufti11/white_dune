@@ -107,12 +107,12 @@ MeshBased::meshDraw()
         if (!m_meshDouble) return;
 
         m_meshDouble->sort();
-        m_meshDouble->draw();
+        m_meshDouble->draw(-1);
     } else {
         if (!m_mesh) return;
 
         m_mesh->sort();
-        m_mesh->draw();
+        m_mesh->draw(-1);
     }
 }
 

@@ -158,12 +158,12 @@ public:
                 
     MyMeshX            *copy(void);
 
-    void                draw() { draw(-1); }
-    void                draw(int meshFlags);
+//    void                draw() { draw(-1); }
+    void                draw(int pass, void (drawVert)(X *));
     void                drawNormals(void);
     void                sort();
 
-    virtual void        drawVertex(const X *v) {}
+//    virtual void        drawVertex(const X *v) {}
     bool                validMesh(void) { return m_vertices != NULL; }  
 
     MFX                *getVertices(void)      { return m_vertices; }
@@ -324,7 +324,8 @@ public:
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
                 transparency, fogCoords)  {}
-    virtual void drawVertex(const float *v); 
+    void static drawVertex(float *v); 
+    void draw(int pass) { MyMeshX::draw(pass, &drawVertex); }
 };
 
 template class MyMeshX<double, MFVec3d, Vec3d>;
@@ -339,7 +340,8 @@ public:
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
                 transparency, fogCoords)  {}
-    virtual void drawVertex(const double *v); 
+    void static drawVertex(double *v); 
+    void draw(int pass) { MyMeshX::draw(pass, &drawVertex); }
 };
 
 template <typename X, typename MFX>
@@ -604,7 +606,7 @@ MyMeshX<X, MFX, VEC3X>::buildFaces(void)
 
 template <class X,class MFX,class VEC3X>
 void
-MyMeshX<X, MFX, VEC3X>::draw(int pass)
+MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
 {
     if ((pass == 1) && m_colorRGBA)
         return;
@@ -764,7 +766,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass)
                }
 #endif
 
-            drawVertex(vertices + coordIndex[j] * 3);            
+            drawVert((X *)(vertices + coordIndex[j] * 3));            
         }
         glEnd();
     }

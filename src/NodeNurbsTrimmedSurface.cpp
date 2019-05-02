@@ -244,7 +244,7 @@ NodeNurbsTrimmedSurface::draw(void)
         createMesh();
     }
     if (!m_meshDirty && (m_mesh != NULL))
-        m_mesh->draw();
+        m_mesh->draw(-1);
 #else
     glPushMatrix(); 
 

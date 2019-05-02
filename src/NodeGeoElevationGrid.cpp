@@ -402,7 +402,7 @@ NodeGeoElevationGrid::draw()
     }
     setDoubleMesh(true);
     updateMesh();
-    m_meshDouble->draw();
+    m_meshDouble->draw(-1);
 }
 
 GeometryNodeMacros(NodeGeoElevationGrid)

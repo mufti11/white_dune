@@ -26,12 +26,12 @@
 
 #include "MyMesh.h"
 
-void MyMesh::drawVertex(const float *v)
+void MyMesh::drawVertex(float *v)
 {
      glVertex3fv(v);
 }
 
-void MyMeshDouble::drawVertex(const double *v)
+void MyMeshDouble::drawVertex(double *v)
 {
      glVertex3dv(v);
 }

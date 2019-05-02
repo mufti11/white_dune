@@ -547,6 +547,7 @@ static bool addToMesh(Node *node, void *data)
     } else if (node->isMeshBasedNode() && node->getMesh()) {
         MyMesh **mesh = (MyMesh **)data;
         if (newSkinMesh) {
+            ((MeshBasedNode *)node)->createMesh((MyMesh *)node->getMesh()->copy());
             mesh[numMeshes] = (MyMesh *)node->getMesh()->copy();
             int numVertices = mesh[numMeshes]->getVertices()->getSFSize();
             MFColorRGBA *color = new MFColorRGBA();
@@ -599,7 +600,7 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
          return;
      m_numMeshes = mfSkin->getSize();
 
-     m_meshes = new MyMeshPtr[m_numMeshes];
+     m_meshes = new MyMesh *[m_numMeshes];
      m_origVertices = new MFVec3f*[m_numMeshes];
      for (int i = 0; i < m_numMeshes; i++) {
          m_meshes[i] = NULL;

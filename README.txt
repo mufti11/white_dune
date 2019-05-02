@@ -5076,5 +5076,7 @@ Fixed error in java export Particlesystem rendering
 
 Updated Emitter code of C/C++/java export 
 
+Fixed HAnimHumanoid rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 
