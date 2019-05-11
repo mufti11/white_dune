@@ -1,7 +1,7 @@
 /*
  * NodeNurbsCurve.cpp
  *
- * Copyright (C) 2003 Th. Rothermel
+ * Copyright (C) 2003 Th. Rothermel, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -930,7 +930,7 @@ NodeNurbsCurve::repairKnotAndWeight()
     MFVec3f *controlPoints = getControlPoints();
     int iorder = order()->getValue();
 
-    if (controlPoints) { 
+    if (controlPoints && controlPoints->getSFSize() > 0) { 
         if (controlPoints->getSFSize() > weight()->getSize()) {
             MFFloat *oldWeights = weight();
             MFFloat *newWeights = new MFFloat();
@@ -942,24 +942,17 @@ NodeNurbsCurve::repairKnotAndWeight()
             weight(newWeights);
         }     
         if (controlPoints->getSFSize() > knot()->getSize() - iorder) {
-            MFFloat *oldKnots = knot();
             MFFloat *newKnots = new MFFloat();
-            for (int i = 0; i < oldKnots->getSize(); i++)
-                if (i > (oldKnots->getSize() - iorder + 1))
-                    if ((controlPoints->getSFSize() - iorder + 1) > 0)
-                        newKnots->appendSFValue(controlPoints->getSFSize() - 
-                                                iorder + 1);
-                    else
-                        newKnots->appendSFValue(0);
-                else if (oldKnots->getValue(i) > 0)
-                    newKnots->appendSFValue(oldKnots->getValue(i));
-            for (int i = oldKnots->getSize(); i < controlPoints->getSFSize() +
+            for (int i = 0; i < controlPoints->getSFSize() +
                                                   iorder; i++) {
                 if (i < iorder - 1)
                     newKnots->appendSFValue(0);
-                else if (i < (controlPoints->getSFSize() - iorder + 1))
-                    newKnots->appendSFValue(i - iorder + 1);
-                else 
+                else if ((i - iorder + 2) < controlPoints->getSFSize()) {
+                    if ((i - iorder + 1) > -1)
+                        newKnots->appendSFValue(i - iorder + 1);
+                    else
+                        newKnots->appendSFValue(0);
+                } else 
                     newKnots->appendSFValue(controlPoints->getSFSize() - 
                                             iorder + 1);
             }
@@ -969,3 +962,81 @@ NodeNurbsCurve::repairKnotAndWeight()
     m_inRepair = false;
 }
 
+void
+NodeNurbsCurve::extrudePoints(int from, int to, int points, bool xSymetric)
+{
+    if (xSymetric)
+        m_scene->removeSelectedHandles();
+    MFVec3f *controlPoints = (MFVec3f *)getControlPoints()->copy();
+    MFFloat *weights = (MFFloat *)weight()->copy();
+    Vec3f vecFrom = controlPoints->getVec(from);
+    Vec3f vecTo   = controlPoints->getVec(to);
+    Vec3f inc;
+    Vec3f mdiff = vecFrom - vecTo;
+    float min = fabs(mdiff.x);
+    int direction = 0;
+    if (fabs(mdiff.y) < min) {
+        direction = 1;
+        min = mdiff.y;
+    }
+    if (fabs(mdiff.z) < min) {
+        direction = 2;
+        min = mdiff.z;
+    }
+    switch (direction) {
+      case 0:
+        inc.x = 2 * TheApp->GetHandleEpsilon();
+        break;
+      case 1: 
+        inc.y = 2 *TheApp->GetHandleEpsilon();
+        break;
+      case 2:
+        inc.z = 2 * TheApp->GetHandleEpsilon();
+        break;
+    }
+    Vec3f vecStart = vecFrom + inc;
+    Vec3f vecEnd = vecTo + inc;
+    Vec3f diff = (vecEnd - vecStart) / points;
+    for (int i = 0; i < points; i++) {
+        Vec3f vec = vecStart + diff * i;
+        if (xSymetric)
+            controlPoints->insertSFValue(from + i + 1, vec.x, vec.y, vec.z);
+        else
+            controlPoints->insertSFValue(from, vec.x, vec.y, vec.z);
+    }
+    for (int i = from; i < from + points; i++)
+        weights->insertSFValue(from, 1);
+    controlPoints->ref();
+    setControlPoints(controlPoints);
+    for (int i = 0; i < points; i++) {
+        if (xSymetric)
+            m_scene->addSelectedHandle(from + i + 1);
+        else
+            m_scene->addSelectedHandle(from + i);
+    }
+    weights->ref();
+    weight(new MFFloat(weights));
+    knot(new MFFloat());
+    repairKnotAndWeight();    
+    controlPoints = getControlPoints();
+    if (TheApp->GetXSymetricMode() && xSymetric) {
+        int symFrom = -1;
+        int symTo = -1;
+        float eps = TheApp->GetHandleEpsilon();
+        for (int i = 0; i < controlPoints->getSFSize(); i++) {
+            if (i != from)
+                if (((controlPoints->getVec(i).x + vecFrom.x) < eps) &&
+                    ((controlPoints->getVec(i).y - vecFrom.y) < eps) &&
+                    ((controlPoints->getVec(i).z - vecFrom.z) < eps))
+                    symFrom = i;
+            if (i != to)
+                if (((controlPoints->getVec(i).x + vecTo.x) < eps) &&
+                    ((controlPoints->getVec(i).y - vecTo.y) < eps) &&
+                    ((controlPoints->getVec(i).z - vecTo.z) < eps))
+                    symTo = i;
+        }
+        if ((symFrom > -1) && (symTo > -1)) {
+            extrudePoints(symFrom, symTo, points, false);
+        }
+    }
+}

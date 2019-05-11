@@ -237,7 +237,7 @@ NodeElevationGrid::createMesh(bool cleanDoubleVertices, bool triangulate)
                        /*colorPerVertex()->getValue() ? colorIndex : */NULL, 
                        texCoords, NULL, 
                        creaseAngle()->getFixedAngle(m_scene->getUnitAngle()), 
-                       meshFlags, 0);
+                       meshFlags, 0, NULL, texCoord()->getValue());
 }
 
 MFVec2f *

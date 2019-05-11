@@ -533,7 +533,9 @@ DIALOGCLASSES = \
         ToIndexedFaceSetDialog.o \
         HAnimJointDialog.o \
         ViewpointDialog.o \
-        NurbsCurve2DDialog.o
+        NurbsCurve2DDialog.o \
+        InsertToNurbsCurveDialog.o \
+        InsertToNurbsSurfaceDialog.o
 
 APPCLASSES = \
 	DuneApp.o \

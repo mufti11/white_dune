@@ -28,6 +28,7 @@
 #include "Node.h"
 #include "Util.h"
 #include "swt.h"
+#include "MyMesh.h"
 #include "MeshBasedNode.h"
 #include "NodeShape.h"
 #include "NodeAppearance.h"
@@ -141,6 +142,25 @@ NodeMultiTexture::bind()
 #endif
     if (textureUnits <= 0) 
         return;
+#ifdef HAVE_MULTI_TEXTURE
+    MyMesh *mesh = NULL;
+    if (hasParent()) {
+        Node *parent = getParent();
+        if (parent->hasParent()) {
+            parent = parent->getParent();
+            if (parent->getType() == VRML_SHAPE) {
+                NodeShape *shape = (NodeShape *)parent;
+                if (shape->geometry()->getValue()) {
+                    if (shape->geometry()->getValue()->isMeshBasedNode()) {
+                        MeshBasedNode *meshBased = (MeshBasedNode *)
+                            shape->geometry()->getValue();
+                       mesh = meshBased->getMesh();
+                   }
+               }
+            }
+        }                     
+    }
+#endif
     m_textureObjects = new GLuint[textureUnits];
     glGenTextures(textureUnits, m_textureObjects);
     for (int i = 0; i < textureUnits; i++) {
@@ -152,9 +172,31 @@ NodeMultiTexture::bind()
             nTexture->load();
 #ifdef HAVE_MULTI_TEXTURE
             glActiveTexture(GL_TEXTURE0 + i);
-            glClientActiveTexture(GL_TEXTURE0 + i);
+            glClientActiveTexture(GL_TEXTURE0 + i);                    
 #endif
             nTexture->bind(GL_TEXTURE_2D, m_textureObjects[i]);
+#ifdef HAVE_MULTI_TEXTURE
+            glDisable(GL_TEXTURE_GEN_S);
+            glDisable(GL_TEXTURE_GEN_T);
+            if (mesh && (mesh->getTexCoordParameter(i) == TEX_GEN_SPHERE)) {
+                glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+                glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+                glEnable(GL_TEXTURE_GEN_S);
+                glEnable(GL_TEXTURE_GEN_T);
+            } else if (mesh && (mesh->getTexCoordParameter(i) == 
+                                TEX_GEN_CAMERA_SPACE_NORMAL)) {
+                glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+                glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+                glEnable(GL_TEXTURE_GEN_S);
+                glEnable(GL_TEXTURE_GEN_T);
+            } if (mesh && (mesh->getTexCoordParameter(i) == 
+                                TEX_GEN_SPHERE_REFLECT)) {
+                glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+                glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+                glEnable(GL_TEXTURE_GEN_S);
+                glEnable(GL_TEXTURE_GEN_T);
+            }   
+#endif
         }
     }
 #ifdef HAVE_MULTI_TEXTURE

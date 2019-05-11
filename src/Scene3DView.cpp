@@ -453,7 +453,7 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 node->transformForHandle(handle);
                 m_scene->projectPoint(v.x, v.y, v.z, &px, &py, &pz);
                 m_scene->unProjectPoint((float) x, (float) height - (float) y, 
-                                       pz, &o.x, &o.y, &o.z);
+                                        pz, &o.x, &o.y, &o.z);
                 glPopMatrix();
     
                 m_offset = v - o;
@@ -759,6 +759,17 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 glPopMatrix();
                 v += m_offset;
             } else {
+                Vec3f vec;
+                float px, py, pz;
+                glPushMatrix();
+                glLoadIdentity();
+                m_scene->transform(m_scene->getSelection());
+                node->transformForHandle(handle);
+                m_scene->projectPoint(old.x, old.y, old.z, &px, &py, &pz);
+                m_scene->unProjectPoint((float) x, (float) height - y, pz, 
+                                       &vec.x, &vec.y, &vec.z);
+                glPopMatrix();
+
                 float x1, y1, z1;
                 float x2, y2, z2;
                 Matrix mat;
@@ -783,25 +794,13 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
 
                 switch (constrain) {
                   case CONSTRAIN_X:
-                    y1 -= v.y;
-                    z1 -= v.z;
-                    y2 -= v.y;
-                    z2 -= v.z;
-                    v.x = constrainLine(y1, z1, x1, y2, z2, x2);
+                    v.x = vec.x + m_offset.x;
                     break;
                   case CONSTRAIN_Y:
-                    x1 -= v.x;
-                    z1 -= v.z;
-                    x2 -= v.x;
-                    z2 -= v.z;
-                    v.y = constrainLine(x1, z1, y1, x2, z2, y2);
+                    v.y = vec.y + m_offset.y;
                     break;
                   case CONSTRAIN_Z:
-                    x1 -= v.x;
-                    y1 -= v.y;
-                    x2 -= v.x;
-                    y2 -= v.y;
-                    v.z = constrainLine(x1, y1, z1, x2, y2, z2);
+                    v.z = vec.z + m_offset.z;
                     break;
                   case CONSTRAIN_XY:
                     v.x = constrainLine(y1 - v.y, z1 - v.z, x1, 
@@ -842,7 +841,8 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                     if (!m_backedUp) {
                         m_scene->addNextCommand();
                         m_scene->backupFieldsStart();
-                        if (node->getType() == VRML_NURBS_SURFACE) {
+                        if ((node->getType() == VRML_NURBS_SURFACE) &&
+                            (field > -1)) {
                             NodeNurbsSurface *surf = (NodeNurbsSurface *) node;
                             surf->backupFieldsAppend(field);
                             if (m_scene->getXSymetricMode()) {
@@ -851,7 +851,8 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                                 if (nurbsGroup != NULL)
                                     nurbsGroup->backupFieldsAppend(node, field);
                             }
-                        } else if (node->getType() == VRML_NURBS_CURVE) {
+                        } else if ((node->getType() == VRML_NURBS_CURVE) &&
+                                   (field > -1)) {
                             NodeNurbsCurve *curve = (NodeNurbsCurve *) node;
                             curve->backupFieldsAppend(field);
                         } else if (field > -1)
@@ -1240,7 +1241,8 @@ float Scene3DView::constrainLine(float x1, float y1, float z1,
     float dx = x1 - x2;
     float dy = y1 - y2;
     if (dx == 0.0f && dy == 0.0f) 
-        return z2;
+        return 0;
+//        return z2;
     float alpha = (x1 * dx + y1 * dy) / (dx * dx + dy * dy);
 
     return (1.0f - alpha) * z1 + alpha * z2;

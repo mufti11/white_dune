@@ -111,6 +111,11 @@ M4_IDD(VIEWPOINT)
 M4_IDD(OPEN_URL)
 M4_IDD(NURBS_CURVE_2D)
 M4_IDD(INSET)
+M4_IDD(INSERT_TO_NURBS_CURVE)
+M4_IDD(INSERT_TO_NURBS_SURFACE)
+M4_IDD(NURBS_SURFACE_SYMETRIC_X) 
+M4_IDD(NURBS_SURFACE_SYMETRIC_Y) 
+M4_IDD(NURBS_SURFACE_SYMETRIC_Z) 
 
 `#define' IDC_SPIN1                           1000
 `#define' IDC_EDIT1                           1001
@@ -413,6 +418,19 @@ M4_IDD(INSET)
 `#define' IDC_NURBS_CURVE_RING_CW             1320
 `#define' IDC_RIB_TEXTURER                    1321
 `#define' IDC_IMAGE_CONVERTER                 1322
+`#define' IDC_OPTIONS_AFLOCK                  1323
+`#define' IDC_COVER_NAMES                     1324
+`#define' IDC_NODE                            1325
+`#define' IDC_PARENT                          1326
+`#define' IDC_NURBS_FROM                      1327
+`#define' IDC_NURBS_TO                        1328
+`#define' IDC_NURBS_POINTS                    1329
+`#define' IDC_NURBS_FROM_U                    1330
+`#define' IDC_NURBS_FROM_V                    1331
+`#define' IDC_NURBS_TO_U                      1332
+`#define' IDC_NURBS_TO_V                      1333
+`#define' IDC_NURBS_POINTS_U                  1334
+`#define' IDC_NURBS_POINTS_V                  1335
 
 `#define' IDC_STATIC_ALTGRTEXT                1995
 `#define' IDC_STATIC_SHIFTTEXT                1996
@@ -481,10 +499,6 @@ M4_IDD(INSET)
 `#define' IDC_BUTTON_RETURN                   2059
 `#define' IDC_BUTTON_ALTGR                    2060
 `#define' IDC_BUTTON_SHIFT                    2061
-`#define' IDC_OPTIONS_AFLOCK                  2062
-`#define' IDC_COVER_NAMES                     2063
-`#define' IDC_NODE                            2064
-`#define' IDC_PARENT                          2065
 
 // still to be done id's
 `#define' ID_INPUT_DEVICE_NEW                 10000
@@ -884,7 +898,12 @@ M4_ID(DEGREE_ELEVATE_UP)
 M4_ID(U_DEGREE_ELEVATE_UP)
 M4_ID(V_DEGREE_ELEVATE_UP)
 M4_ID(SET_WEIGHTS_TO_1)
+M4_ID(INSERT_TO_NURBS_CURVE)
+M4_ID(INSERT_TO_NURBS_SURFACE)
 M4_ID(REBUILD_NURBS_CONTROL_POINTS)
+M4_ID(MAKE_NURBS_SURFACE_SYMETRIC_X)
+M4_ID(MAKE_NURBS_SURFACE_SYMETRIC_Y)
+M4_ID(MAKE_NURBS_SURFACE_SYMETRIC_Z)
 M4_ID(SET_EXPLODE)
 M4_ID(SET_JOIN_SIBLINGS)
 M4_ID(ARRAY)
@@ -897,6 +916,15 @@ M4_ID(MOVE_TO_Z)
 M4_ID(SCALE_BY_X)
 M4_ID(SCALE_BY_Y)
 M4_ID(SCALE_BY_Z)
+M4_ID(SAME_MIN_X)
+M4_ID(SAME_MIN_Y)
+M4_ID(SAME_MIN_Z)
+M4_ID(SAME_X)
+M4_ID(SAME_Y)
+M4_ID(SAME_Z)
+M4_ID(SAME_MAX_X)
+M4_ID(SAME_MAX_Y)
+M4_ID(SAME_MAX_Z)
 M4_ID(SET_DEFAULT)
 M4_ID(CENTER_TO_ZERO)
 M4_ID(CENTER_TO_MID)
@@ -1422,7 +1450,7 @@ M4_ID(NEW_NODE_BY_NAME)
 `#ifndef' APSTUDIO_READONLY_SYMBOLS
 `#define' _APS_3D_CONTROLS                    1
 `#define' _APS_NEXT_RESOURCE_VALUE          M4_IDD_NUM
-`#define' _APS_NEXT_CONTROL_VALUE           2064
+`#define' _APS_NEXT_CONTROL_VALUE           3000
 `#define' _APS_NEXT_COMMAND_VALUE           M4_ID_NUM
 `#define' _APS_NEXT_SYMED_VALUE             M4_ABOUT_NUM
 `#endif'

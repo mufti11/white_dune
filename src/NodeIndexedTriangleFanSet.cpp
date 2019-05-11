@@ -170,5 +170,6 @@ NodeIndexedTriangleFanSet::createMesh(bool cleanDouble, bool triangulate)
         m_meshDouble = new MyMeshDouble(this, coordsDouble, m_coordIndex, 
                                         normals, NULL, colors, NULL, texCoords, 
                                         NULL, creaseAngle, meshFlags, 
-                                        transparency, fogCoords);
+                                        transparency, fogCoords, 
+                                        texCoord()->getValue());
 }

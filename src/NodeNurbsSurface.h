@@ -118,6 +118,8 @@ public:
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
     void            repairKnotAndWeight();
+    void            extrudePoints(int uFrom, int uTo, int uPoints,
+                                  int vFrom, int vTo, int vPoints);
 
     void            rotate(SFRotation rot);
 
@@ -196,6 +198,8 @@ public:
     virtual Node   *toNurbsTrimmedSurface(void);
 
     int             getNumExtraVertices(void) { return m_numExtraVertices; }
+
+    void            makeXSymetric(bool plus);
 
 protected:
     static int      findSpan(int dimension, int order, float u,

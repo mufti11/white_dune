@@ -83,6 +83,8 @@
 #include "NodeCoordinate.h"
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
+#include "NodeTextureCoordinateGenerator.h"
+#include "NodeMultiTextureCoordinate.h"
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
 #include "Scene.h"
@@ -104,6 +106,12 @@ enum {
     MESH_COLOR_RGBA         = 1<<6, 
     MESH_SIMPLE_TRIANGULATE = 1<<7,
     MESH_TRIANGULATED       = 1<<8
+};
+
+enum {
+   TEX_GEN_SPHERE,
+   TEX_GEN_CAMERA_SPACE_NORMAL,
+   TEX_GEN_SPHERE_REFLECT
 };
 
 class FaceData;
@@ -153,7 +161,8 @@ public:
                                 MyArray<MFVec2f *>texCoords, 
                                 MFInt32 *texCoordIndex,
                                 float creaseAngle, int meshFlags, 
-                                float transparency, MFFloat *fogCoords = NULL);
+                                float transparency, MFFloat *fogCoords = NULL,
+                                Node *texCoordGen = NULL);
     virtual            ~MyMeshX();
                 
     MyMeshX            *copy(void);
@@ -183,6 +192,7 @@ public:
     bool                colorPerVertex()       { return m_colorPerVertex; }
     bool                normalPerVertex()      { return m_normalPerVertex; }
     MFFloat            *getFogCoords()         { return m_fogCoords; }
+    Node               *getTexCoordGen()       { return m_texCoordGen; }
 
     void                addCoords(MFInt32 *coords, float *color, 
                                   MFFloat *colors, bool rgbaColor, 
@@ -236,6 +246,12 @@ public:
     Node               *toIndexedFaceSet(int meshFlags, Scene* scene);
     MFVec3f            *getSmoothNormals(void);
     MFInt32            *getSmoothNormalIndex(void);
+    int                 getTexCoordParameter(int i)
+                             {
+                             if (i < m_texCoordParameter.size())
+                                 return m_texCoordParameter[i];
+                             return -1;
+                             }
 #ifdef HAVE_GLUNEWTESS
     void                addNewVertex(VertexInfo * vertexInfo);
     void                endNewPolygon(void);
@@ -278,6 +294,7 @@ private:
     bool                m_colorRGBA;
     float               m_transparency;
     MFFloat            *m_fogCoords;    
+    Node               *m_texCoordGen;    
 
     bool                m_isTriangulated;
 
@@ -291,6 +308,7 @@ private:
     MyArray<Vec3f>      m_smoothNormalsArray;
     MyArray<bool>       m_validVertices;
 
+    MyArray<int>        m_texCoordParameter;
 #ifdef HAVE_GLUNEWTESS
     MyArray<VertexInfo> m_verticesInfo;
 
@@ -320,10 +338,11 @@ public:
            MFVec3f *normals, MFInt32 *normalIndex, MFFloat *colors, 
            MFInt32 *colorIndex, MyArray<MFVec2f *>texCoords, 
            MFInt32 *texCoordIndex, float creaseAngle, int meshFlags, 
-           float transparency, MFFloat *fogCoords = NULL) :
+           float transparency, MFFloat *fogCoords = NULL, 
+           Node *texCoordGen = NULL) :
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
-                transparency, fogCoords)  {}
+                transparency, fogCoords, texCoordGen) {}
     void static drawVertex(float *v); 
     void draw(int pass) { MyMeshX::draw(pass, &drawVertex); }
 };
@@ -336,10 +355,11 @@ public:
                  MFVec3f *normals, MFInt32 *normalIndex, MFFloat *colors, 
                  MFInt32 *colorIndex, MyArray<MFVec2f *>texCoords, 
                  MFInt32 *texCoordIndex, float creaseAngle, int meshFlags, 
-                 float transparency, MFFloat *fogCoords = NULL) :
+                 float transparency, MFFloat *fogCoords = NULL,
+                 Node *texCoordGen = NULL) :
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
-                transparency, fogCoords)  {}
+                transparency, fogCoords, texCoordGen) {}
     void static drawVertex(double *v); 
     void draw(int pass) { MyMeshX::draw(pass, &drawVertex); }
 };
@@ -352,7 +372,7 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
      MeshBasedNode *node, MFX *vertices, MFInt32 *coordIndex, MFVec3f *normals,
      MFInt32 *normalIndex, MFFloat *colors, MFInt32 *colorIndex,
      MyArray<MFVec2f *>texCoords, MFInt32 *texCoordIndex, float creaseAngle, 
-     int meshFlags, float transparency, MFFloat *fogCoords)
+     int meshFlags, float transparency, MFFloat *fogCoords, Node *texCoordGen)
 {
     m_node = node;
 
@@ -418,6 +438,43 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
     m_fogCoords = fogCoords;
     if (m_fogCoords)
         m_fogCoords->ref();
+    m_texCoordGen = texCoordGen;
+    m_texCoordParameter.resize(0);
+    if (m_texCoordGen &&
+        m_texCoordGen->getType() == X3D_TEXTURE_COORDINATE_GENERATOR) {
+        NodeTextureCoordinateGenerator *texGen = 
+            (NodeTextureCoordinateGenerator *)m_texCoordGen;
+        if (strcmp(texGen->mode()->getValue(), "SPHERE") == 0)
+            m_texCoordParameter.append(TEX_GEN_SPHERE);
+        else if (strcmp(texGen->mode()->getValue(), "CAMERASPACENORMAL") == 0)
+            m_texCoordParameter.append(TEX_GEN_CAMERA_SPACE_NORMAL);
+        else if (strcmp(texGen->mode()->getValue(), "SPHERE-REFLECT") == 0)
+            m_texCoordParameter.append(TEX_GEN_SPHERE_REFLECT);
+    } else if (m_texCoordGen &&
+               m_texCoordGen->getType() == X3D_MULTI_TEXTURE_COORDINATE) {
+        NodeMultiTextureCoordinate *multiTexCoord = 
+            (NodeMultiTextureCoordinate *)m_texCoordGen;
+        for (int i = 0; i < multiTexCoord->texCoord()->getSize(); i++) {
+            if (multiTexCoord->texCoord()->getValue(i) && 
+               multiTexCoord->texCoord()->getValue(i)->getType() == 
+                   X3D_TEXTURE_COORDINATE_GENERATOR) {
+               NodeTextureCoordinateGenerator *texGen = 
+                   (NodeTextureCoordinateGenerator *)
+                   multiTexCoord->texCoord()->getValue(i);
+                if (strcmp(texGen->mode()->getValue(), "SPHERE") == 0)
+                    m_texCoordParameter.append(TEX_GEN_SPHERE);
+                else if (strcmp(texGen->mode()->getValue(), 
+                                "CAMERASPACENORMAL") == 0)
+                    m_texCoordParameter.append(TEX_GEN_CAMERA_SPACE_NORMAL);
+                else if (strcmp(texGen->mode()->getValue(), "SPHERE-REFLECT") 
+                         == 0)
+                    m_texCoordParameter.append(TEX_GEN_SPHERE_REFLECT);
+                else
+                    m_texCoordParameter.append(-1);
+            } else
+                m_texCoordParameter.append(-1);
+        }
+    }
 
     m_faces = NULL;
     m_numFaces = 0;
@@ -529,7 +586,8 @@ MyMeshX<X, MFX, VEC3X>::copy(void)
                                getTexCoordIndex() ? (MFInt32 *)
                                                     getTexCoordIndex()->copy() :
                                                     NULL,
-                               m_creaseAngle, getMeshFlags(), m_transparency);
+                               m_creaseAngle, getMeshFlags(), m_transparency,
+                               getFogCoords(), getTexCoordGen());
     return mesh;
 }
 

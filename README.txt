@@ -59,7 +59,7 @@ Dune is delicious and nutritious.  Dune is fun for the whole family.
 README of white_dune
 ====================
 
- * Copyright (C) 2000 Stephen F. White, 2000-2018 J. "MUFTI" Scheurich, others
+ * Copyright (C) 2000 Stephen F. White, 2000-2019 J. "MUFTI" Scheurich, others
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,7 +79,6 @@ window), it let you already use more X3D/VRML97 features then most other
 graphical VRML97/X3D producing tools.
 
 White_dune do not support the VRML1/Inventor fileformats.
-White_dune do not support XML encoded X3D files by itself. 
 White_dune support XML encoded X3D files if it has been
 compiled/linked against the expat library.
 
@@ -93,10 +92,7 @@ VRML amendment 1 NURBS nodes together with a VRML97/X3D browser which do not
 support the VRML amendment 1 standard yet.
 
 Similarly white_dune support the most important nodes of the X3D NURBS
-component. Unfortunatly, it do not render the NurbsSwungSurface (cause
-the X3D standard is rather unclear how it could be implemented),
-do not support the NurbsTrimmedSurface node and do not support NURBS
-interpolators (yet).
+component. 
 
 The mesh modelling features of white_dune can not compare 
 to general purpose 3D modellers with VRML97 export like maya, 
@@ -107,8 +103,8 @@ add interaction or scripting) or use white_dune as a intergration tool via
 the VRML/X3D "Inline" command (to avoid a broken toolchain).
 
 Examples for open source 3D modellers with mesh VRML97 export are 
-wings3D or Art of Illusion. Blender also support the export of
-XML encoded X3D files.
+wings3D or Art of Illusion. 
+Blender support the export of XML encoded X3D files.
 
 Since version 0.27beta white_dune has support for 3D-modelling based
 on the so called "superformula":
@@ -116,7 +112,7 @@ on the so called "superformula":
         pow(pow(fabs(cos(m * angle / 4.0) / a), n2) + 
             pow(fabs(cos(m * angle / 4.0) / b), n3), -1.0 / n1)
 
-This formula has been found by a horticultural engeneer a few years ago and 
+This formula has been found by a horticultural engeneer in 1997 and 
 can be used to form n-symetric shapes similar to shapes in nature like flowers,
 leafs or starfishs.
 Superformula based shapes are not part of VRML97 by itself and are 
@@ -150,19 +146,19 @@ Italian   | done (need update) | done (need update) | done (need update) |
 ----------+--------------------+--------------------+--------------------+------
 French    | done               | almost done        |                    | 
 ----------+--------------------+--------------------+--------------------+------
-Portugense| In development 
+Portugense| done               |                    |                    | 
 
 Minimal system requirements: 
 white_dune-0.30pl8 has been sucessfully compiled and run sucessfully on a 
 PC with Intel 80486 DX2/50, 18MB RAM (according to free(1)), 640x480 screen 
 resolution and a 8-Bit graphicscard (256 colors) running Linux 1.2.
-Note: Modern mesa3d/OpenGL implementations usually do not work anymore with 
-a 8-Bit graphicscard. With this system, you can animate a simple box 
-(8 polygons) a bit faster than 1 frame per second. It can take a few seconds, 
-till you get reaction to a mouse drag in the 3D window. 
+With this system, you can animate a simple box (8 polygons) a bit faster than 
+1 frame per second. It can take a few seconds, till you get reaction to a 
+mouse drag in the 3D window. 
 Even simple actions can cause white_dune to run into swapspace. 
 You need 72MB swapspace and a day to compile white_dune on this system.
-
+Note: Modern mesa3d/OpenGL implementations usually do not work anymore with 
+a 8-Bit graphicscard. 
 
 white_dune has support for stereoscopic "toe in" view via "quadbuffer" 
 capable stereo visuals ("stereo in a window"), not splitscreen stereo.
@@ -240,8 +236,9 @@ can use (as root):
 
    Option "Stereo" "1" 
    Option "Stereo" "2" 
-   Option "Stereo" "3" 
-   Option "Stereo" "4" 
+   Option "Stereo" "3"
+   ... 
+   Option "Stereo" "10" 
 
    to the Section "Device".
 
@@ -291,7 +288,6 @@ can use (as root):
 
 There is also experimental support for anaglyph glasses (red/green and 
 red/blue) via the OpenGL accumlation buffer (see -anaglyph option). 
-Graphiccards with fast hardware support for the accumlation buffer are rare 8-(
 
 Currently, white_dune is on its way to become a immersive vrml97 editor
 with the possibilty to use 3D inputdevices. 
@@ -346,7 +342,7 @@ copyright information.
 Linux 2.4.x, 2.6.x using lesstif or openmotif, Mesa or Nvidia OpenGL and gcc 3
 Solaris 2.10 using lesstif and the sun compilers
 For some other versions of the Microsoft compilers, you need to change
-click to src/dune.vcxproj and select "build" (?)
+click to src/dune.vcxproj and select "build".
 
 (For white_dune: Run the batchfile batch/nt.bat before, to generate a 
 WIN32 matching config.h file. If you have the jpeg/png/expat etc. libraries 
@@ -403,7 +399,7 @@ Satoshi Konno/cybergarage (codebase of cap creation of
 Haining Zhi               (translation of german tutorial to english language, 
                            experimental M$Windows inputdevice drivers,
                            inputdevice settings) 
-Free Software Foundation, Inc/gcc (lex string parsing rule)
+Free Software Foundation  (gcc (lex string parsing rule))
 orbisnap                  (patches to NodeExtrusion::createMesh)
 Dr. Guido Kramann         (free human animation motion capture VRML files)
 Alan Bleasby/JEEPS        (functions for geospatial component)
@@ -5077,6 +5073,14 @@ Fixed error in java export Particlesystem rendering
 Updated Emitter code of C/C++/java export 
 
 Fixed HAnimHumanoid rendering
+
+Fixed error in constraint handle settings
+
+Fixed deadlock situation after Selection->Range
+
+Fixed automatic knot generation
+
+Added make X symetric for NurbsSurface
 
 contact: MUFTI <mufti@users.ourproject.org>
 

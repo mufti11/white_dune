@@ -77,6 +77,9 @@ public:
 
     void            repairKnotAndWeight();
 
+    void            extrudePoints(int from, int to, int points, 
+                                  bool xSymetric = true);
+
     Node           *convert2X3d(void);
     Node           *convert2Vrml(void);
 

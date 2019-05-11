@@ -181,6 +181,8 @@
 #include "HAnimJointDialog.h"
 #include "ViewpointDialog.h"
 #include "NurbsCurve2DDialog.h"
+#include "InsertToNurbsCurveDialog.h"
+#include "InsertToNurbsSurfaceDialog.h"
 
 #ifdef HAVE_AFLOCK
 # include "AflockSettingsDialog.h"
@@ -220,6 +222,12 @@
 #define BUFSIZE 1024
 
 #define MFDouble MFFloat
+
+enum {
+    SAME_MIN,
+    SAME,
+    SAME_MAX
+};
 
 static int standardButtons[] = {
     0,  ID_DUNE_FILE_NEW,
@@ -2362,11 +2370,55 @@ MainWindow::OnCommand(void *vid)
       case ID_SCALE_BY_Z:
         scaleBy(2);
         break;
+      case ID_SAME_MAX_X:
+        same(0, SAME_MAX);
+        break;
+      case ID_SAME_MAX_Y:
+        same(1, SAME_MAX);
+        break;
+      case ID_SAME_MAX_Z:
+        same(2, SAME_MAX);
+        break;
+      case ID_SAME_X:
+        same(0, SAME);
+        break;
+      case ID_SAME_Y:
+        same(1, SAME);
+        break;
+      case ID_SAME_Z:
+        same(2, SAME);
+        break;
+      case ID_SAME_MIN_X:
+        same(0, SAME_MIN);
+        break;
+      case ID_SAME_MIN_Y:
+        same(1, SAME_MIN);
+        break;
+      case ID_SAME_MIN_Z:
+        same(2, SAME_MIN);
+        break;
       case ID_REMOVE_ILLEGAL_NODES:
         removeIllegalNodes();
         break;
       case ID_REBUILD_NURBS_CONTROL_POINTS:
         rebuildControlPoints();
+        break;
+      case ID_MAKE_NURBS_SURFACE_SYMETRIC_X:
+        makeNurbSurfaceSymetricX();
+        break;
+/*
+      case ID_MAKE_NURBS_SURFACE_SYMETRIC_Y:
+        makeNurbSurfaceSymetric(1);
+        break;
+      case ID_MAKE_NURBS_SURFACE_SYMETRIC_Z:
+        makeNurbSurfaceSymetric(2);
+        break;
+*/
+      case ID_INSERT_TO_NURBS_CURVE:
+        insertToNurbsCurve();
+        break;
+      case ID_INSERT_TO_NURBS_SURFACE:
+        insertToNurbsSurface();
         break;
       case ID_DEGREE_ELEVATE_UP:
         degreeElevate(1);
@@ -5859,6 +5911,26 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_SCALE_BY_Z, SW_MENU_DISABLED, 
                    node->canMoveTo(2) ? 0 : SW_MENU_DISABLED);
 
+    swMenuSetFlags(m_menu, ID_SAME_MIN_X, SW_MENU_DISABLED, 
+                   node->canMoveTo(0) ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_SAME_MIN_Y, SW_MENU_DISABLED, 
+                   node->canMoveTo(1) ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_SAME_MIN_Z, SW_MENU_DISABLED, 
+                   node->canMoveTo(2) ? 0 : SW_MENU_DISABLED);
+
+    swMenuSetFlags(m_menu, ID_SAME_X, SW_MENU_DISABLED, 
+                   node->canMoveTo(0) ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_SAME_Y, SW_MENU_DISABLED, 
+                   node->canMoveTo(1) ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_SAME_Z, SW_MENU_DISABLED, 
+                   node->canMoveTo(2) ? 0 : SW_MENU_DISABLED);
+
+    swMenuSetFlags(m_menu, ID_SAME_MAX_X, SW_MENU_DISABLED, 
+                   node->canMoveTo(0) ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_SAME_MAX_Y, SW_MENU_DISABLED, 
+                   node->canMoveTo(1) ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_SAME_MAX_Z, SW_MENU_DISABLED, 
+                   node->canMoveTo(2) ? 0 : SW_MENU_DISABLED);
 
 
     swMenuSetFlags(m_menu, ID_BRANCH_TO_PARENT, SW_MENU_DISABLED, 
@@ -6003,7 +6075,14 @@ MainWindow::UpdateToolbarSelection(void)
         canDegreeElevate = true;
     }
     swMenuSetFlags(m_menu, ID_REBUILD_NURBS_CONTROL_POINTS, SW_MENU_DISABLED,
-                   node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED);
+                   node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED
+                  );
+    swMenuSetFlags(m_menu, ID_INSERT_TO_NURBS_CURVE, SW_MENU_DISABLED,
+                   node->getType() == VRML_NURBS_CURVE ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_INSERT_TO_NURBS_SURFACE, SW_MENU_DISABLED,
+                   (node->getType() == VRML_NURBS_SURFACE && 
+                   (!TheApp->GetXSymetricMode())) ? 0 : SW_MENU_DISABLED
+                  );
     swMenuSetFlags(m_menu, ID_DEGREE_ELEVATE_UP, SW_MENU_DISABLED,
                    canDegreeElevate ? 0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_DEGREE_ELEVATE_DOWN, SW_MENU_DISABLED,
@@ -6045,6 +6124,7 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
                    0 : SW_MENU_DISABLED);
+/*
     swMenuSetFlags(m_menu, ID_MAKE_SYMETRIC_Y, SW_MENU_DISABLED, 
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
@@ -6053,7 +6133,7 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
                    0 : SW_MENU_DISABLED);
-    
+*/    
     bool toNurbs = false;
     if (node->hasParent()) {
         Node *parent = node->getParent();
@@ -9696,6 +9776,155 @@ void MainWindow::scaleBy(int direction)
     swInvalidateWindow(m_wnd);
 }
 
+void MainWindow::same(int direction,int whichSame)
+{
+    float sameValue = 0;
+    Node *node = m_scene->getSelection()->getNode(); 
+    if (m_scene->getSelectedHandlesSize() > 1)
+        node->startSetMultiHandles();
+    MyArray<int> selectedVerticesHandles;
+    MyArray<Vec3f> selectedVertices;
+    Node* parent = node;
+    if (node->getType() == VRML_COORDINATE)
+        parent = node->getParent();
+    for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+        int handle = m_scene->getSelectedHandle(i);
+        if ((handle < 0) || (handle >= NO_HANDLE))
+            continue;
+        int constrain = m_scene->getConstrain();
+        int field = -1;
+        if ((m_scene->getSelectionMode() == SELECTION_MODE_VERTICES) ||
+            (parent->getType() != VRML_INDEXED_FACE_SET)) {
+            Vec3f vec = node->getHandle(handle, &constrain, &field);
+            m_scene->backupFieldsStart();
+            m_scene->backupFieldsAppend(node, field);
+            m_scene->backupFieldsDone();
+            selectedVerticesHandles.append(handle);
+            selectedVertices.append(vec);    
+        } else if (m_scene->getSelectionMode() == SELECTION_MODE_FACES) {
+            MyMesh *mesh = node->getMesh();
+            if (mesh == NULL)
+                return;
+            MFVec3f *point = mesh->getVertices();
+            MFInt32 *ci = mesh->getCoordIndex();
+            FaceData *face = mesh->getFace(handle);
+            int offset = face->getOffset();
+            for (int j = offset; j < offset + face->getNumVertices(); j++) {
+                int coordIndex = ci->getValue(j);
+                if (coordIndex >= point->getSFSize())
+                    continue;
+                Vec3f vec = point->getValue(coordIndex);
+                bool isInSelectedVertices = false;
+                for (int n = 0; n < selectedVertices.size(); n++)
+                    if (selectedVerticesHandles[n] == coordIndex) {
+                        isInSelectedVertices = true;
+                        break;
+                    }
+                if (!isInSelectedVertices) {
+                   selectedVerticesHandles.append(coordIndex);
+                   selectedVertices.append(vec);    
+                }
+            }
+        } else if (m_scene->getSelectionMode() == SELECTION_MODE_LINES) {
+            MyMesh *mesh = node->getMesh();
+            if (mesh == NULL)
+                return;
+            MFVec3f *point = mesh->getVertices();
+            MFInt32 *ci = mesh->getCoordIndex();
+            int numLine = mesh->getLine(handle).begin;
+            int coordIndex1 = ci->getValue(numLine);
+            Vec3f vec1 = point->getValue(coordIndex1);
+            bool isInSelectedVertices = false;
+            for (int n = 0; n < selectedVertices.size(); n++)
+                 if (selectedVerticesHandles[n] == coordIndex1) {
+                     isInSelectedVertices = true;
+                     break;
+                 }
+             if (!isInSelectedVertices) {
+                 selectedVerticesHandles.append(coordIndex1);
+                 selectedVertices.append(vec1);    
+             }
+            int coordIndex2 = ci->getValue(mesh->getLine(handle).end);
+            Vec3f vec2 = point->getValue(coordIndex2);
+            for (int n = 0; n < selectedVertices.size(); n++)
+                 if (selectedVerticesHandles[n] == coordIndex2) {
+                     isInSelectedVertices = true;
+                     break;
+                 }
+             if (!isInSelectedVertices) {
+                 selectedVerticesHandles.append(coordIndex2);
+                 selectedVertices.append(vec2);    
+             }
+        }
+    }
+    if (whichSame == SAME_MAX)
+        sameValue = FLT_MIN;
+    else if (whichSame == SAME_MIN)
+        sameValue = FLT_MAX;
+    int constrain = m_scene->getConstrain();
+    int field = -1;
+    for (int j = 0; j < selectedVerticesHandles.size(); j++) {
+        Vec3f vec = node->getHandle(selectedVerticesHandles[j], &constrain, 
+                                    &field);
+        switch (direction) {
+          case 0: 
+            switch (whichSame) {
+              case SAME_MAX:
+                if (vec.x > sameValue)
+                    sameValue = vec.x;
+                break;
+              case SAME:
+                sameValue += vec.x;
+                break;
+              case SAME_MIN:
+                if (vec.x < sameValue)
+                    sameValue = vec.x;
+                break;
+            }
+            break;
+          case 1: 
+            switch (whichSame) {
+              case SAME_MAX:
+                if (vec.y > sameValue)
+                    sameValue = vec.y;
+                break;
+              case SAME:
+                sameValue += vec.y;
+                break;
+              case SAME_MIN:
+                if (vec.y < sameValue)
+                    sameValue = vec.y;
+                break;
+            }
+            break;
+          case 2: 
+            switch (whichSame) {
+              case SAME_MAX:
+                if (vec.z > sameValue)
+                    sameValue = vec.z;
+                break;
+              case SAME:
+                sameValue += vec.z;
+                break;
+              case SAME_MIN:
+                if (vec.z < sameValue)
+                    sameValue = vec.z;
+                break;
+            }
+        }
+    }
+    if ((whichSame == SAME) && (selectedVerticesHandles.size() != 0))
+        sameValue /= selectedVerticesHandles.size(); 
+    for (int j = 0; j < selectedVerticesHandles.size(); j++) {
+        Vec3f vec = node->getHandle(selectedVerticesHandles[j], &constrain, 
+                                    &field);
+        moveTo(node, selectedVerticesHandles[j], direction, vec, sameValue);
+    }
+    if (m_scene->getSelectedHandlesSize() > 1)
+        node->endSetMultiHandles();
+    swInvalidateWindow(m_wnd);
+}
+
 void MainWindow::setDefault()
 {
     Node *node = m_scene->getSelection()->getNode(); 
@@ -9865,6 +10094,112 @@ void MainWindow::rebuildControlPoints()
     }
 }
 
+void                
+MainWindow::makeNurbSurfaceSymetricX()
+{
+    Node *node = m_scene->getSelection()->getNode();
+    if (node && (node->getType() == VRML_COORDINATE))
+        node = node->getParent();
+    if (node && node->getType() != VRML_NURBS_SURFACE)
+        return;
+    NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+    int idd = IDD_NURBS_SURFACE_SYMETRIC_X;
+/*
+    switch (direction) {
+      case 1:
+        idd = IDD_NURBS_SURFACE_SYMETRIC_Y;
+        break;
+      case 2:
+        idd = IDD_NURBS_SURFACE_SYMETRIC_Z;
+        break;
+    }
+*/
+    OneBoolDialog dlg(m_wnd, idd, true);
+    if (dlg.DoModal() == IDCANCEL)
+        return;
+
+    nurbs->makeXSymetric(dlg.GetValue());
+    m_scene->setSelection(m_scene->replaceNode(node, nurbs));
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+}
+
+void 
+MainWindow::insertToNurbsCurve()
+{
+    Node *node = m_scene->getSelection()->getNode(); 
+    int type = node->getType();
+
+    if (type == VRML_NURBS_CURVE) {
+        int min = INT_MAX;
+        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+             int handle = m_scene->getSelectedHandle(i);
+             if (handle < NO_HANDLE && handle > -1 && handle < min)
+                 min = handle;
+        }
+        if (min == INT_MAX)
+            min = 0;
+        int max = 0;
+        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+             int handle = m_scene->getSelectedHandle(i);
+             if (handle < NO_HANDLE && handle > max)
+                 max = handle;
+        }
+        InsertToNurbsCurveDialog dlg(m_wnd, min, max);        
+        if (dlg.DoModal() == IDOK) {
+           int from = dlg.getFrom();
+           int to = dlg.getTo();
+           int points = dlg.getPoints();
+           NodeNurbsCurve *nurbs = (NodeNurbsCurve *)node;
+           nurbs->extrudePoints(from, to, points);
+        }
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+    }
+}
+
+void 
+MainWindow::insertToNurbsSurface()
+{
+    Node *node = m_scene->getSelection()->getNode(); 
+    int type = node->getType();
+
+    if (type == VRML_NURBS_SURFACE) {
+        NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+        int uDim = nurbs->uDimension()->getValue();
+        int umin = INT_MAX;
+        int umax = 0;
+        int vmin = INT_MAX;
+        int vmax = 0;
+        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+             int handle = m_scene->getSelectedHandle(i);
+             if (handle < NO_HANDLE && handle > -1) {
+                 if (handle % uDim < umin)
+                     umin = handle % uDim;
+                 if (handle % uDim > umax)
+                     umax = handle % uDim;
+                 if (handle / uDim < vmin)
+                     vmin = handle / uDim;
+                 if (handle / uDim > vmax)
+                     vmax = handle / uDim;
+             }
+        }
+        if (umin == INT_MAX)
+            umin = 0;
+        if (vmin == INT_MAX)
+            vmin = 0;
+        InsertToNurbsSurfaceDialog dlg(m_wnd, umin, umax, vmin, vmax);        
+        if (dlg.DoModal() == IDOK) {
+           int ufrom = dlg.getFromU();
+           int uto = dlg.getToU();
+           int upoints = dlg.getPointsU();
+           int vfrom = dlg.getFromV();
+           int vto = dlg.getToV();
+           int vpoints = dlg.getPointsV();
+           nurbs->extrudePoints(ufrom, uto, upoints, vfrom, vto, vpoints);
+        }
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+    }
+}
+
 void MainWindow::degreeElevate(int degree)
 {
     Node *node = m_scene->getSelection()->getNode(); 
@@ -9899,6 +10234,7 @@ void MainWindow::degreeElevate(int degree)
         newNode = node->degreeElevate(newDegree);
         insertNewNurbsNode(newNode, parent);
     }
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
 
 void MainWindow::uDegreeElevate(int degree)
@@ -9917,6 +10253,7 @@ void MainWindow::uDegreeElevate(int degree)
         //SFRotation rot(0, 1, 0, M_PI / 2.0);
         //((NodeNurbsSurface *)nurbsNode)->rotate(rot);
         insertNewNurbsNode(nurbsNode, parent);
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 
@@ -9936,6 +10273,7 @@ void MainWindow::vDegreeElevate(int degree)
         //SFRotation rot(0, 1, 0, M_PI / 2.0);
         //((NodeNurbsSurface *)nurbsNode)->rotate(rot);
         insertNewNurbsNode(nurbsNode, parent);
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 
@@ -9964,7 +10302,7 @@ MainWindow::setWeightsTo1(void)
         if (newNurbs != NULL)
             insertNewNurbsNode(newNurbs, parent);
     }
-
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
 
 
@@ -10000,6 +10338,7 @@ MainWindow::elongateNurbs()
             controlPoints[(i*3)+2] = (direction == 2 ? point : 0);
         }
         node->elongateNurbs(m_scene->getSelectedHandle(0), controlPoints);
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 
@@ -10010,6 +10349,7 @@ MainWindow::linearUknot(void)
     if (node->getType() == VRML_NURBS_SURFACE) {
         NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
         nurbs->linearUknot();
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 
@@ -10019,6 +10359,7 @@ void MainWindow::linearVknot(void)
     if (node->getType() == VRML_NURBS_SURFACE) {
         NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
         nurbs->linearVknot();
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 

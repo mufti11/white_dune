@@ -52,6 +52,9 @@ public:
     FieldIndex repeatT;
     FieldIndex blendMode;
     FieldIndex textureProperties;
+#ifdef HAVE_TEXTUREIMAGE_MODE
+    FieldIndex mode;
+#endif
     kambiTextureCommonFieldIndex()
     kambiVrmlTextureCommonFieldIndex()
     FieldIndex crossOrigin;
@@ -94,6 +97,9 @@ public:
     fieldMacros(SFBool,   repeatT,           ProtoPixelTexture)
     fieldMacros(SFInt32,  blendMode,         ProtoPixelTexture)
     fieldMacros(SFNode,   textureProperties, ProtoPixelTexture);
+#ifdef HAVE_TEXTUREIMAGE_MODE
+    fieldMacros(SFInt32,  mode,              ProtoPixelTexture)
+#endif
     kambiTextureCommonFieldMacros(ProtoPixelTexture)
     kambiVrmlTextureCommonFieldMacros(ProtoPixelTexture)
     fieldMacros(SFString, crossOrigin,       ProtoPixelTexture);

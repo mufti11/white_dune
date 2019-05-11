@@ -50,8 +50,6 @@
 #include "NodeInline.h"
 #include "NodeComment.h"
 
-#define HANDLE_SIZE 2.0f
-
 NodeData::NodeData(Scene *scene, Proto *proto)
 {
     static int identifier_source = 0;

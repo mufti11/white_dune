@@ -617,7 +617,7 @@ NodeNurbsSurface::drawHandles()
         return;
     }
 
-    glPushName(iuDimension * ivDimension + 1);
+    glPushName(NO_HANDLE);
     glDisable(GL_LIGHTING);
     Util::myGlColor3f(1.0f, 1.0f, 1.0f);
     if (TheApp->GetHandleMeshAlways() || 
@@ -722,6 +722,9 @@ NodeNurbsSurface::setHandle(MFVec3f *value, int handle, float newWeight,
                             const Vec3f &newV, const Vec3f &oldV,
                             bool already_changed, bool bypassChecks)
 {
+    if (handle == NO_HANDLE)
+        return;
+
     bool changed = false;
     MFVec3f *newValue = (MFVec3f *) value->copy();
 
@@ -1511,7 +1514,7 @@ NodeNurbsSurface::repairKnotAndWeight()
     if (m_inRepair)
         return;
     m_inRepair = true;
-    if (controlPoints) { 
+    if (controlPoints && controlPoints->getSFSize() > 0) { 
         if (controlPoints->getSFSize() > weight()->getSize()) {
             MFFloat *oldWeights = weight();
             MFFloat *newWeights = new MFFloat();
@@ -1523,60 +1526,42 @@ NodeNurbsSurface::repairKnotAndWeight()
             weight(newWeights);
         }     
         if (uDimension()->getValue() > uKnot()->getSize() - iuorder) {
-            MFFloat *oldKnots = uKnot();
             MFFloat *newKnots = new MFFloat();
-            for (int i = 0; i < oldKnots->getSize(); i++)
-                if (i > (oldKnots->getSize() - iuorder)) {
-                    if ((iuDimension - iuorder) > 0)
-                        newKnots->appendSFValue(iuDimension - iuorder + 1);
-                    else
-                        newKnots->appendSFValue(0);
-                } else if (oldKnots->getValue(i) > 0)
-                    newKnots->appendSFValue(oldKnots->getValue(i));
-            int size = newKnots->getSize();
-            for (int i = size; i < (iuDimension + iuorder - 1); 
+            float knotDiv = iuDimension - iuorder + 2;
+            for (int i = 0; i < (iuDimension + iuorder); 
                 i++) {
                 if (i < iuorder - 1)
                     newKnots->appendSFValue(0);
-                else if (((i - iuorder + 1) > 0) &&
-                         (iuDimension - iuorder + 1) < 1) {
-                    if ((i - iuorder + 1) > -1) 
-                        newKnots->appendSFValue(i - iuorder + 1);
+                else if (i < iuDimension) {
+                    if ((i - iuorder + 1) > -1)
+                        newKnots->appendSFValue((i - iuorder + 1) / knotDiv);
                     else
                         newKnots->appendSFValue(0);
                 } else if ((iuDimension - iuorder + 1) < 0)
                     newKnots->appendSFValue(0);
                 else
-                    newKnots->appendSFValue(iuDimension - iuorder + 2);
+                    newKnots->appendSFValue((iuDimension - iuorder + 2) /
+                                            knotDiv);
             }
             uKnot(newKnots);
         }
         if (vDimension()->getValue() > vKnot()->getSize() - ivorder) {
-            MFFloat *oldKnots = vKnot();
             MFFloat *newKnots = new MFFloat();
-            for (int i = 0; i < oldKnots->getSize(); i++)
-                if (i > (oldKnots->getSize() - ivorder))  {
-                    if ((ivDimension - ivorder + 1) > 0)
-                        newKnots->appendSFValue(ivDimension - ivorder + 1);
-                    else
-                        newKnots->appendSFValue(0);
-                } else if (oldKnots->getValue(i) > 0)
-                    newKnots->appendSFValue(oldKnots->getValue(i));
-            int size = newKnots->getSize();
-            for (int i = size; i < (ivDimension + ivorder - 1); 
+            float knotDiv = ivDimension - ivorder + 2;
+            for (int i = 0; i < (ivDimension + ivorder); 
                  i++) {
                 if (i < ivorder - 1)
                     newKnots->appendSFValue(0);
-                else if (((i - ivorder + 1) > 0) &&
-                          (ivDimension - ivorder + 1) < 1) {
+                else if (i < ivDimension) {
                     if ((i - ivorder + 1) > -1)
-                       newKnots->appendSFValue(i - ivorder + 1);
+                       newKnots->appendSFValue((i - ivorder + 1) / knotDiv);
                     else
                         newKnots->appendSFValue(0);
                 } else if ((ivDimension - ivorder + 1) < 0)
                     newKnots->appendSFValue(0);
                 else 
-                    newKnots->appendSFValue(ivDimension - ivorder + 2);
+                    newKnots->appendSFValue((ivDimension - ivorder + 2) / 
+                                            knotDiv);
             }
             vKnot(newKnots);
         }
@@ -1584,4 +1569,124 @@ NodeNurbsSurface::repairKnotAndWeight()
     m_inRepair = false;
 }
 
+
+void
+NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints, 
+                                int vFrom, int vTo, int vPoints)
+{
+    m_scene->removeSelectedHandles();
+
+    int iuDimension = uDimension()->getValue();
+    int ivDimension = vDimension()->getValue();
+
+    MFVec3f *controlPoints = (MFVec3f *)getControlPoints()->copy();
+    MFVec3f *oldControlPoints = (MFVec3f *)getControlPoints();
+    MFFloat *weights = (MFFloat *)weight()->copy();
+    Vec3f vecFrom = controlPoints->getVec(uFrom + vFrom * iuDimension);
+    Vec3f vecTo   = controlPoints->getVec(uTo + vTo * iuDimension);
+    Vec3f inc;
+    Vec3f diff = vecFrom - vecTo;
+    float min = fabs(diff.x);
+    int direction = 0;
+    if (fabs(diff.y) < min) {
+        direction = 1;
+        min = diff.y;
+    }
+    if (fabs(diff.z) < min) {
+        direction = 2;
+        min = diff.z;
+    }
+    switch (direction) {
+      case 0:
+        inc.x = 2 * TheApp->GetHandleEpsilon();
+        break;
+      case 1:
+        inc.y = 2 *TheApp->GetHandleEpsilon();
+        break;
+      case 2:
+        inc.z = 2 * TheApp->GetHandleEpsilon();
+        break;
+    }
+
+    for (int j = vFrom; j < vFrom + vPoints; j++)
+        for (int i = 0; i < iuDimension; i++) {
+            Vec3f add;
+            if ((i >= uFrom) && (i <= uTo))
+                add = inc;
+            Vec3f vec = oldControlPoints->getVec(j * iuDimension + i) + add;
+            int insert = j * iuDimension + i; 
+            controlPoints->insertSFValue(insert, vec.x, vec.y, vec.z);
+        }
+
+    vDimension(new SFInt32(ivDimension + vPoints));
+
+    controlPoints->ref();
+    setControlPoints(controlPoints);
+    for (int i = 0; i < uPoints; i++)
+        for (int j = 0; j < uPoints; j++) 
+             m_scene->addSelectedHandle((uFrom + i) + 
+                                        (vFrom + j) * iuDimension);
+    weight(new MFFloat());
+    uKnot(new MFFloat());
+    vKnot(new MFFloat());
+    repairKnotAndWeight();    
+}
+
+void            
+NodeNurbsSurface::makeXSymetric(bool plus)
+{
+    MFVec3f *vertices = (MFVec3f *)getControlPoints()->copy();
+    int iuDimension = uDimension()->getValue();
+    int ivDimension = vDimension()->getValue();
+
+    int offset = 0;
+    int mid = vertices->getSFSize() / 2;
+    if (vertices->getSFSize() % 2 == 1) {
+        offset = 1;  
+        Vec3f midVec = vertices->getVec(mid);
+/*
+        switch(direction) {
+          case 0:
+*/
+            midVec.x = 0;
+/*
+            break;
+          case 1:
+            midVec.y = 0;
+            break;
+          case 2:
+            midVec.z = 0;
+            break;
+        }
+*/
+        vertices->setVec(mid, midVec);
+    }
+    int numVertices = vertices->getSFSize();
+    MyArray<int> doubleChanges;
+    for (int i = 0; i < numVertices; i++) {
+        int u = i % iuDimension;
+        int v = i / iuDimension;
+        Vec3f vec = vertices->getVec(i);
+        Vec3f res = vec;
+        int index;
+        if (((vec.x > 0) && plus) || ((vec.x < 0) && !plus)) {
+            int index = v * iuDimension + (iuDimension - 1 - u);
+            res.x = -vertices->getVec(i).x;
+            res.y =  vertices->getVec(i).y;
+            res.z =  vertices->getVec(i).z;
+            int doit = true;
+            for (int j = 0; j < doubleChanges.size(); j++)
+                 if (index == doubleChanges[j]) {
+                     doit = false;
+                     break;
+                 }
+            if (doit) {
+                doubleChanges.append(index);
+                vertices->setVec(index, res); 
+            }
+        }
+    }
+    setControlPoints(vertices);
+    m_meshDirty = true;
+}
 

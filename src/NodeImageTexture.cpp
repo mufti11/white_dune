@@ -43,6 +43,8 @@
 #include "Image.h"
 #include "Util.h"
 #include "Texture.h"
+#include "MyMesh.h"
+#include "NodeShape.h"
 
 ProtoImageTexture::ProtoImageTexture(Scene *scene)
   : WonderlandExportProto(scene, "ImageTexture")
@@ -77,7 +79,6 @@ ProtoImageTexture::ProtoImageTexture(Scene *scene)
           addField(SFINT32, "mode", new SFInt32(0), 
                    new SFInt32(0), new SFInt32(3)));
 #endif
-
     textureProperties.set(
         addField(SFNODE, "textureProperties", new SFNode(), 
                  X3D_TEXTURE_PROPERTIES));
@@ -486,6 +487,45 @@ NodeImageTexture::bind()
     }
     bind(GL_TEXTURE_2D, m_textureName);
 
+    MyMesh *mesh = NULL;
+    if (hasParent()) {
+        Node *parent = getParent();
+        if (parent->hasParent()) {
+            parent = parent->getParent();
+            if (parent->getType() == VRML_SHAPE) {
+                NodeShape *shape = (NodeShape *)parent;
+                if (shape->geometry()->getValue()) {
+                    if (shape->geometry()->getValue()->isMeshBasedNode()) {
+                        MeshBasedNode *meshBased = (MeshBasedNode *)
+                            shape->geometry()->getValue();
+                       mesh = meshBased->getMesh();
+                   }
+               }
+            }
+        }                     
+    }
+    if (mesh && (mesh->getTexCoordParameter(0) == TEX_GEN_SPHERE)) {
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+        glEnable(GL_TEXTURE_GEN_S);
+        glEnable(GL_TEXTURE_GEN_T);
+    } 
+#ifndef _WIN32
+      else if (mesh && (mesh->getTexCoordParameter(0) == 
+                        TEX_GEN_CAMERA_SPACE_NORMAL)) {
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+        glEnable(GL_TEXTURE_GEN_S);
+        glEnable(GL_TEXTURE_GEN_T);
+    } else if (mesh && (mesh->getTexCoordParameter(0) == 
+                        TEX_GEN_SPHERE_REFLECT)) {
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+        glEnable(GL_TEXTURE_GEN_S);
+        glEnable(GL_TEXTURE_GEN_T);
+    }
+#endif
+
 #ifdef HAVE_TEXTUREIMAGE_MODE
     switch (mode()->getValue()) {
       case 1:
@@ -514,8 +554,11 @@ void
 NodeImageTexture::unbind()
 {
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_TEXTURE_GEN_S);
-    glDisable(GL_TEXTURE_GEN_T);
+    Node *parent = getParent();
+    if (hasParent() && parent->getType() != X3D_MULTI_TEXTURE) {
+        glDisable(GL_TEXTURE_GEN_S);
+        glDisable(GL_TEXTURE_GEN_T);
+    }
 }
 
 int

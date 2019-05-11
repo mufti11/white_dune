@@ -374,7 +374,8 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                             colors, colorIndex, texCoords, texCoordIndex,
                             creaseAngle()->getFixedAngle(
                                 m_scene->getUnitAngle()), 
-                            meshFlags, transparency, fogCoords);
+                            meshFlags, transparency, fogCoords, 
+                            texCoord()->getValue());
         m_isDoubleMesh = false;
     } else if (coord->getType() == VRML_GEO_COORDINATE) {
         MFVec3d *coords = ((NodeGeoCoordinate *)coord)->pointX3D();
@@ -383,7 +384,8 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                                         texCoords, texCoordIndex, 
                                         creaseAngle()->getFixedAngle(
                                             m_scene->getUnitAngle()), 
-                                        meshFlags, transparency, fogCoords);
+                                        meshFlags, transparency, fogCoords,
+                                        texCoord()->getValue());
         m_isDoubleMesh = true;
     }
 }

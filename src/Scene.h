@@ -69,6 +69,7 @@
 #include "x3dFlags.h"
 
 #include "TransformMode.h"
+#include "RenderState.h"
 #include "NodeFlags.h"
 
 #include "ProtoMap.h"
@@ -340,6 +341,11 @@ public:
 
     void                setSelectedHandle(int handle)
                            { 
+                           if (handle == NO_HANDLE)  {
+                               m_firstSelectionRangeHandle = -1;
+                               setSelectionMode(SELECTION_MODE_VERTICES);
+                               return;
+                           }
                            m_isNewSelectedHandle = !isInSelectedHandles(handle);
                            m_lastSelectedHandle = handle;
                            addSelectedHandle(handle);

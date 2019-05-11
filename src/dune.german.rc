@@ -203,17 +203,38 @@ BEGIN
         MENUITEM "Wenig/viel Glanz (braucht Material)", ID_CHANGE_MATERIAL_SHININESS
         MENUITEM "Text (braucht Text)",                 ID_CHANGE_ONE_TEXT
         MENUITEM SEPARATOR
-        POPUP "&Verschiebe angewaehlte Punkte zu"
+        POPUP "Veraendere angewaehlte Punkte"
         BEGIN
-            MENUITEM "&x (rot)",                        ID_MOVE_TO_X
-            MENUITEM "&y (gruen)",                      ID_MOVE_TO_Y
-            MENUITEM "&z (blau)",                       ID_MOVE_TO_Z
-        END
-        POPUP "Skaliere angewaehlte Punkte"
-        BEGIN
-            MENUITEM "&x (rot)",                        ID_SCALE_BY_X
-            MENUITEM "&y (gruen)",                      ID_SCALE_BY_Y
-            MENUITEM "&z (blau)",                       ID_SCALE_BY_Z
+            POPUP "&Verschiebe angewaehlte Punkte zu"
+            BEGIN
+                MENUITEM "&x (rot)",                    ID_MOVE_TO_X
+                MENUITEM "&y (gruen)",                  ID_MOVE_TO_Y
+                MENUITEM "&z (blau)",                   ID_MOVE_TO_Z
+            END
+            POPUP "Skaliere angewaehlte Punkte"
+            BEGIN
+                MENUITEM "&x (rot)",                    ID_SCALE_BY_X
+                MENUITEM "&y (gruen)",                  ID_SCALE_BY_Y
+                MENUITEM "&z (blau)",                   ID_SCALE_BY_Z
+            END
+            POPUP "Verschiebe zugleich min"
+            BEGIN
+                MENUITEM "&x (rot)",                    ID_SAME_MIN_X
+                MENUITEM "&y (gruen)",                  ID_SAME_MIN_Y
+                MENUITEM "&z (blau)",                   ID_SAME_MIN_Z
+            END
+            POPUP "Verschiebe zugleich"
+            BEGIN
+                MENUITEM "&x (rot)",                    ID_SAME_X
+                MENUITEM "&y (gruen)",                  ID_SAME_Y
+                MENUITEM "&z (blau)",                   ID_SAME_Z
+            END
+            POPUP "Verschiebe zugleich max"
+            BEGIN
+                MENUITEM "&x (rot)",                    ID_SAME_MAX_X
+                MENUITEM "&y (gruen)",                  ID_SAME_MAX_Y
+                MENUITEM "&z (blau)",                   ID_SAME_MAX_Z
+            END
         END
         MENUITEM "Setze Startwerte",                    ID_SET_DEFAULT
         POPUP "&Umklappen"
@@ -1318,17 +1339,38 @@ BEGIN
             MENUITEM "&yz",                             ID_SWAP_YZ
             MENUITEM "&zx",                             ID_SWAP_XZ
         END
-        POPUP "Ve&rschiebe zu"
+        POPUP "Veraendere angewaehlte Punkte"
         BEGIN
-            MENUITEM "&x",                              ID_MOVE_TO_X
-            MENUITEM "&y",                              ID_MOVE_TO_Y
-            MENUITEM "&z",                              ID_MOVE_TO_Z
-        END
-        POPUP "Scaliere um Faktor"
-        BEGIN
-            MENUITEM "&x",                              ID_SCALE_BY_X
-            MENUITEM "&y",                              ID_SCALE_BY_Y
-            MENUITEM "&z",                              ID_SCALE_BY_Z
+            POPUP "&Verschiebe angewaehlte Punkte zu"
+            BEGIN
+                MENUITEM "&x",                          ID_MOVE_TO_X
+                MENUITEM "&y",                          ID_MOVE_TO_Y
+                MENUITEM "&z",                          ID_MOVE_TO_Z
+            END
+            POPUP "Skaliere angewaehlte Punkte"
+            BEGIN
+                MENUITEM "&x",                          ID_SCALE_BY_X
+                MENUITEM "&y",                          ID_SCALE_BY_Y
+                MENUITEM "&z",                          ID_SCALE_BY_Z
+            END
+            POPUP "Verschiebe zugleich min"
+            BEGIN
+                MENUITEM "&x",                          ID_SAME_MIN_X
+                MENUITEM "&y",                          ID_SAME_MIN_Y
+                MENUITEM "&z",                          ID_SAME_MIN_Z
+            END
+            POPUP "Verschiebe zugleich"
+            BEGIN
+                MENUITEM "&x",                          ID_SAME_X
+                MENUITEM "&y",                          ID_SAME_Y
+                MENUITEM "&z",                          ID_SAME_Z
+            END
+            POPUP "Verschiebe zugleich max"
+            BEGIN
+                MENUITEM "&x",                          ID_SAME_MAX_X
+                MENUITEM "&y",                          ID_SAME_MAX_Y
+                MENUITEM "&z",                          ID_SAME_MAX_Z
+            END
         END
         MENUITEM "Setze default Werte (behalte Szenengraph)",  ID_SET_DEFAULT
 #ifdef HAVE_LIBCGAL
@@ -1347,6 +1389,9 @@ BEGIN
         POPUP "NURBS aendern"
         BEGIN
             MENUITEM "Neue Kontrollpunkte",             ID_REBUILD_NURBS_CONTROL_POINTS
+            MENUITEM "Mache X symetrisch",              ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+//            MENUITEM "Extrude NurbsCurve",              ID_INSERT_TO_NURBS_CURVE
+//            MENUITEM "Extrude NurbsSurfacex (vermeide Xsymmetric)", ID_INSERT_TO_NURBS_SURFACE
             MENUITEM "Graderhoehung",                   ID_DEGREE_ELEVATE_UP
             MENUITEM "Graderhoehung U",                 ID_U_DEGREE_ELEVATE_UP
             MENUITEM "Graderhoehung V",                 ID_V_DEGREE_ELEVATE_UP
@@ -2953,6 +2998,76 @@ BEGIN
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
+IDD_INSERT_TO_NURBS_CURVE DIALOG DISCARDABLE  0, 0, 150, 80
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Fuege in NurbsCurve ein"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "von:",IDC_STATIC,15,5,30,8
+    EDITTEXT        IDC_NURBS_FROM,60,5,30,14,ES_AUTOHSCROLL
+    LTEXT           "bis:",IDC_STATIC,15,20,30,8
+    EDITTEXT        IDC_NURBS_TO,60,20,30,14,ES_AUTOHSCROLL
+    LTEXT           "&Punkte:",IDC_STATIC,15,45,30,8
+    EDITTEXT        IDC_NURBS_POINTS,60,45,30,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,60,60,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,80,60,60,14
+END
+
+IDD_DE_INSERT_TO_NURBS_SURFACE DIALOG DISCARDABLE  0, 0, 150, 140
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Fuege in NurbsSurface ein"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "u von:",IDC_STATIC,15,5,30,8
+    EDITTEXT        IDC_NURBS_FROM_U,60,5,30,14,ES_AUTOHSCROLL
+    LTEXT           "u bis:",IDC_STATIC,15,20,30,8
+    EDITTEXT        IDC_NURBS_TO_U,60,20,30,14,ES_AUTOHSCROLL
+    LTEXT           "&u Punkte:",IDC_STATIC,15,35,30,8
+    EDITTEXT        IDC_NURBS_POINTS_U,60,35,30,14,ES_AUTOHSCROLL
+    LTEXT           "v von:",IDC_STATIC,15,60,30,8
+    EDITTEXT        IDC_NURBS_FROM_V,60,60,30,14,ES_AUTOHSCROLL
+    LTEXT           "v bis:",IDC_STATIC,15,75,30,8
+    EDITTEXT        IDC_NURBS_TO_V,60,75,30,14,ES_AUTOHSCROLL
+    LTEXT           "&v Punkte:",IDC_STATIC,15,90,30,8
+    EDITTEXT        IDC_NURBS_POINTS_V,60,90,30,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,110,60,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,80,110,60,14
+END
+
+
+IDD_DE_NURBS_SURFACE_SYMETRIC_X DIALOG DISCARDABLE  0, 0, 180, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "plus x"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "plus x (roter,Pfeil)",
+                    IDC_VALUE,5,20,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,120,25,50,14
+END
+
+IDD_DE_NURBS_SURFACE_SYMETRIC_Y DIALOG DISCARDABLE  0, 0, 180, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "plus y"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "plus y (gruener Pfeil)",
+                    IDC_VALUE,5,20,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,120,25,50,14
+END
+
+IDD_DE_NURBS_SURFACE_SYMETRIC_Z DIALOG DISCARDABLE  0, 0, 180, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "plus z"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "plus z (blauer Pfeil)",
+                    IDC_VALUE,5,20,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,120,25,50,14
 END
 
 

@@ -213,12 +213,13 @@ NodeTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     if (coords)
         m_mesh = new MyMesh(this, coords, m_coordIndex, normals, NULL, colors, 
                             NULL, texCoords, NULL, creaseAngle, meshFlags, 
-                            transparency, fogCoords);
+                            transparency, fogCoords, texCoord()->getValue());
    else
         m_meshDouble = new MyMeshDouble(this, coordsDouble, m_coordIndex, 
                                         normals, NULL, colors, NULL, texCoords, 
                                         NULL, creaseAngle, meshFlags, 
-                                        transparency, fogCoords);
+                                        transparency, fogCoords, 
+                                        texCoord()->getValue());
 }
 
 Node * 

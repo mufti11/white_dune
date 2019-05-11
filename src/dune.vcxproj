@@ -301,6 +301,8 @@
     <ClCompile Include="advancing_front.cpp" />
     <ClCompile Include="cdt.cpp" />
     <ClCompile Include="Contour.cpp" />
+    <ClCompile Include="InsertToNurbsCurveDialog.cpp" />
+    <ClCompile Include="InsertToNurbsSurfaceDialog.cpp" />
     <ClCompile Include="PointFtgl.cpp" />
     <ClCompile Include="quadric_simp.cpp" />
     <ClCompile Include="shapes.cpp" />
@@ -1305,6 +1307,7 @@
     <ClInclude Include="gif.h" />
     <ClInclude Include="HelpSettingsDialog.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="InsertToNurbsSurfaceDialog.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="jpegLoad.h" />
     <ClInclude Include="kljcpyrght.h" />

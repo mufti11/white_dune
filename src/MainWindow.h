@@ -365,8 +365,12 @@ protected:
     void                scaleBy(Node *node, int handle, int direction, Vec3f v,
                                 float value);
     void                scaleBy(int direction);
+    void                same(int direction, int whichSame);
     void                setDefault();
     void                rebuildControlPoints();
+    void                makeNurbSurfaceSymetricX();
+    void                insertToNurbsCurve();
+    void                insertToNurbsSurface();
     void                degreeElevate(int degree);
     void                uDegreeElevate(int degree);
     void                vDegreeElevate(int degree);

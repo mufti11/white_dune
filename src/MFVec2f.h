@@ -69,9 +69,13 @@ public:
     virtual void        insertSFValue(int index, float x, float y);
 
     virtual void        appendSFValue(float x, float y) 
-                           { insertSFValue(getSFSize(), x, y); }
+                            { insertSFValue(getSFSize(), x, y); }
                         
-    virtual void        removeSFValue(int index) { m_value.remove(index); }
+    virtual void        removeSFValue(int index) 
+                            { 
+                            m_value.remove(2 * index); 
+                            m_value.remove(2 * index); 
+                            }
 
     void                flip(int index);
     void                swap(int fromTo);

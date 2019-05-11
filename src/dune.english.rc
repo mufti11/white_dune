@@ -224,17 +224,38 @@ BEGIN
         MENUITEM "Change shininess (need Material)",    ID_CHANGE_MATERIAL_SHININESS
         MENUITEM "Change Text (need Text)",             ID_CHANGE_ONE_TEXT
         MENUITEM SEPARATOR
-        POPUP "Move selected points to"
+        POPUP "Modify selected Points"
         BEGIN
-            MENUITEM "&x (red)",                        ID_MOVE_TO_X
-            MENUITEM "&y (green)",                      ID_MOVE_TO_Y
-            MENUITEM "&z (blue)",                       ID_MOVE_TO_Z
-        END
-        POPUP "Scale selected points"
-        BEGIN
-            MENUITEM "&x (red)",                        ID_SCALE_BY_X
-            MENUITEM "&y (green)",                      ID_SCALE_BY_Y
-            MENUITEM "&z (blue)",                       ID_SCALE_BY_Z
+            POPUP "Move selected points to"
+            BEGIN
+                MENUITEM "&x (red)",                    ID_MOVE_TO_X
+                MENUITEM "&y (green)",                  ID_MOVE_TO_Y
+                MENUITEM "&z (blue)",                   ID_MOVE_TO_Z
+            END
+            POPUP "Scale selected points"
+            BEGIN
+                MENUITEM "&x (red)",                    ID_SCALE_BY_X
+                MENUITEM "&y (green)",                  ID_SCALE_BY_Y
+                MENUITEM "&z (blue)",                   ID_SCALE_BY_Z
+            END
+            POPUP "Move to same min"
+            BEGIN
+                MENUITEM "&x (red)",                    ID_SAME_MIN_X
+                MENUITEM "&y (green)",                  ID_SAME_MIN_Y
+                MENUITEM "&z (blue)",                   ID_SAME_MIN_Z
+            END
+            POPUP "Move to same"
+            BEGIN
+                MENUITEM "&x (red)",                    ID_SAME_X
+                MENUITEM "&y (green)",                  ID_SAME_Y
+                MENUITEM "&z (blue)",                   ID_SAME_Z
+            END
+            POPUP "Move to same max"
+            BEGIN
+                MENUITEM "&x (red)",                    ID_SAME_MAX_X
+                MENUITEM "&y (green)",                  ID_SAME_MAX_Y
+                MENUITEM "&z (blue)",                   ID_SAME_MAX_Z
+            END
         END
         MENUITEM "Set start values",                    ID_SET_DEFAULT
         POPUP "F&lip"
@@ -1341,17 +1362,38 @@ BEGIN
             MENUITEM "&yz",                              ID_SWAP_YZ
             MENUITEM "&zx",                              ID_SWAP_XZ
         END
-        POPUP "Move to"
+        POPUP "Modify selected Points"
         BEGIN
-            MENUITEM "&x",                               ID_MOVE_TO_X
-            MENUITEM "&y",                               ID_MOVE_TO_Y
-            MENUITEM "&z",                               ID_MOVE_TO_Z
-        END
-        POPUP "Scale by factor"
-        BEGIN
-            MENUITEM "&x",                               ID_SCALE_BY_X
-            MENUITEM "&y",                               ID_SCALE_BY_Y
-            MENUITEM "&z",                               ID_SCALE_BY_Z
+            POPUP "Move selected points to"
+            BEGIN
+                MENUITEM "&x",                          ID_MOVE_TO_X
+                MENUITEM "&y",                          ID_MOVE_TO_Y
+                MENUITEM "&z",                          ID_MOVE_TO_Z
+            END
+            POPUP "Scale selected points"
+            BEGIN
+                MENUITEM "&x",                          ID_SCALE_BY_X
+                MENUITEM "&y",                          ID_SCALE_BY_Y
+                MENUITEM "&z",                          ID_SCALE_BY_Z
+            END
+            POPUP "Move to same min"
+            BEGIN
+                MENUITEM "&x",                          ID_SAME_MIN_X
+                MENUITEM "&y",                          ID_SAME_MIN_Y
+                MENUITEM "&z",                          ID_SAME_MIN_Z
+            END
+            POPUP "Move to same"
+            BEGIN
+                MENUITEM "&x",                          ID_SAME_X
+                MENUITEM "&y",                          ID_SAME_Y
+                MENUITEM "&z",                          ID_SAME_Z
+            END
+            POPUP "Move to same max"
+            BEGIN
+                MENUITEM "&x",                          ID_SAME_MAX_X
+                MENUITEM "&y",                          ID_SAME_MAX_Y
+                MENUITEM "&z",                          ID_SAME_MAX_Z
+            END
         END
         MENUITEM "Set default values (keep scenegraph)", ID_SET_DEFAULT
 #ifdef HAVE_LIBCGAL
@@ -1370,6 +1412,15 @@ BEGIN
         POPUP "NURBS operations"
         BEGIN
             MENUITEM "Rebuild controlpoints",            ID_REBUILD_NURBS_CONTROL_POINTS
+            MENUITEM "Make X symetric",                  ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+//            POPUP "Make symetric"
+//            BEGIN
+//                 MENUITEM "x",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+//                 MENUITEM "y",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
+//                 MENUITEM "z",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
+//            END
+//            MENUITEM "Extrude NurbsCurve",               ID_INSERT_TO_NURBS_CURVE
+//            MENUITEM "Extrude NurbsSurfacex (avoid Xsymmetric)", ID_INSERT_TO_NURBS_SURFACE
             MENUITEM "Elevate degree up",                ID_DEGREE_ELEVATE_UP
             MENUITEM "Elevate U degree up",              ID_U_DEGREE_ELEVATE_UP
             MENUITEM "Elevate V degree up",              ID_V_DEGREE_ELEVATE_UP
@@ -3039,6 +3090,75 @@ BEGIN
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
+IDD_INSERT_TO_NURBS_CURVE DIALOG DISCARDABLE  0, 0, 150, 80
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "insert to NurbsCurve"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "from:",IDC_STATIC,15,5,30,8
+    EDITTEXT        IDC_NURBS_FROM,60,5,30,14,ES_AUTOHSCROLL
+    LTEXT           "to:",IDC_STATIC,15,20,30,8
+    EDITTEXT        IDC_NURBS_TO,60,20,30,14,ES_AUTOHSCROLL
+    LTEXT           "&points:",IDC_STATIC,15,45,30,8
+    EDITTEXT        IDC_NURBS_POINTS,60,45,30,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,60,60,14
+    PUSHBUTTON      "Cancel",IDCANCEL,80,60,60,14
+END
+
+IDD_INSERT_TO_NURBS_SURFACE DIALOG DISCARDABLE  0, 0, 150, 140
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "insert to NurbsSurface"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "u From:",IDC_STATIC,15,5,30,8
+    EDITTEXT        IDC_NURBS_FROM_U,60,5,30,14,ES_AUTOHSCROLL
+    LTEXT           "u To:",IDC_STATIC,15,20,30,8
+    EDITTEXT        IDC_NURBS_TO_U,60,20,30,14,ES_AUTOHSCROLL
+    LTEXT           "&u Points:",IDC_STATIC,15,35,30,8
+    EDITTEXT        IDC_NURBS_POINTS_U,60,35,30,14,ES_AUTOHSCROLL
+    LTEXT           "v From:",IDC_STATIC,15,60,30,8
+    EDITTEXT        IDC_NURBS_FROM_V,60,60,30,14,ES_AUTOHSCROLL
+    LTEXT           "v To:",IDC_STATIC,15,75,30,8
+    EDITTEXT        IDC_NURBS_TO_V,60,75,30,14,ES_AUTOHSCROLL
+    LTEXT           "&v Points:",IDC_STATIC,15,90,30,8
+    EDITTEXT        IDC_NURBS_POINTS_V,60,90,30,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,110,60,14
+    PUSHBUTTON      "Cancel",IDCANCEL,80,110,60,14
+END
+
+IDD_NURBS_SURFACE_SYMETRIC_X DIALOG DISCARDABLE  0, 0, 180, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "plus x"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "plus x (red arrow)",
+                    IDC_VALUE,5,20,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
+END
+
+IDD_NURBS_SURFACE_SYMETRIC_Y DIALOG DISCARDABLE  0, 0, 180, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "plus y"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "plus y (green arrow)",
+                    IDC_VALUE,5,20,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
+END
+
+IDD_NURBS_SURFACE_SYMETRIC_Z DIALOG DISCARDABLE  0, 0, 180, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "plus z"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "plus z (blue arrow)",
+                    IDC_VALUE,5,20,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
 
