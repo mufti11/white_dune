@@ -43,6 +43,7 @@ ModellingApp::ModellingDefaults()
     m_xSymetricMode = true;    
     m_humanoidScale = 0.05;
     m_weights1 = false;
+    m_extrusionAmount = 0.2;
 }
 
 void ModellingApp::ModellingLoadPreferences()
@@ -66,6 +67,8 @@ void ModellingApp::ModellingLoadPreferences()
     const char* humaniodBuf = TheApp->GetPreference("HumanoidJointScale", 
                                                     "0.1");
     m_humanoidScale = atof(humaniodBuf);
+    const char* extrusionBuf = TheApp->GetPreference("ExtrusionAmount", "0.2");
+    m_extrusionAmount = atof(extrusionBuf);
     m_weights1 = TheApp->GetBoolPreference("Weights1", false);
 }
 
@@ -84,6 +87,8 @@ void ModellingApp::ModellingSavePreferences()
     TheApp->SetBoolPreference("XSymetric", m_xSymetricMode);
     mysnprintf(buf, 127, "%f", m_humanoidScale);
     TheApp->SetPreference("HumanoidJointScale", buf);
+    mysnprintf(buf, 127, "%f", m_extrusionAmount);
+    TheApp->SetPreference("ExtrusionAmount", buf);
     TheApp->SetBoolPreference("Weights1", m_weights1);
 }
 

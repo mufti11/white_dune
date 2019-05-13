@@ -2404,16 +2404,14 @@ MainWindow::OnCommand(void *vid)
         rebuildControlPoints();
         break;
       case ID_MAKE_NURBS_SURFACE_SYMETRIC_X:
-        makeNurbSurfaceSymetricX();
+        makeNurbSurfaceSymetric(0);
         break;
-/*
       case ID_MAKE_NURBS_SURFACE_SYMETRIC_Y:
         makeNurbSurfaceSymetric(1);
         break;
       case ID_MAKE_NURBS_SURFACE_SYMETRIC_Z:
         makeNurbSurfaceSymetric(2);
         break;
-*/
       case ID_INSERT_TO_NURBS_CURVE:
         insertToNurbsCurve();
         break;
@@ -6080,8 +6078,7 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_INSERT_TO_NURBS_CURVE, SW_MENU_DISABLED,
                    node->getType() == VRML_NURBS_CURVE ? 0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_INSERT_TO_NURBS_SURFACE, SW_MENU_DISABLED,
-                   (node->getType() == VRML_NURBS_SURFACE && 
-                   (!TheApp->GetXSymetricMode())) ? 0 : SW_MENU_DISABLED
+                   node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED
                   );
     swMenuSetFlags(m_menu, ID_DEGREE_ELEVATE_UP, SW_MENU_DISABLED,
                    canDegreeElevate ? 0 : SW_MENU_DISABLED);
@@ -9076,7 +9073,7 @@ MainWindow::extrude() {
     }
     if (node->getType() == VRML_INDEXED_FACE_SET) {
         ((NodeIndexedFaceSet *)node)->extrudeFaces(
-            2 * TheApp->GetHandleEpsilon());
+            TheApp->getExtrusionAmount());
     }
     m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
@@ -10095,7 +10092,7 @@ void MainWindow::rebuildControlPoints()
 }
 
 void                
-MainWindow::makeNurbSurfaceSymetricX()
+MainWindow::makeNurbSurfaceSymetric(int direction)
 {
     Node *node = m_scene->getSelection()->getNode();
     if (node && (node->getType() == VRML_COORDINATE))
@@ -10104,7 +10101,6 @@ MainWindow::makeNurbSurfaceSymetricX()
         return;
     NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
     int idd = IDD_NURBS_SURFACE_SYMETRIC_X;
-/*
     switch (direction) {
       case 1:
         idd = IDD_NURBS_SURFACE_SYMETRIC_Y;
@@ -10113,12 +10109,12 @@ MainWindow::makeNurbSurfaceSymetricX()
         idd = IDD_NURBS_SURFACE_SYMETRIC_Z;
         break;
     }
-*/
     OneBoolDialog dlg(m_wnd, idd, true);
     if (dlg.DoModal() == IDCANCEL)
         return;
 
-    nurbs->makeXSymetric(dlg.GetValue());
+    nurbs->makeSymetric(direction, dlg.GetValue());
+    nurbs->makeSymetric(direction, dlg.GetValue()); // ???
     m_scene->setSelection(m_scene->replaceNode(node, nurbs));
     m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }

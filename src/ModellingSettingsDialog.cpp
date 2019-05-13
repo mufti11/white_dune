@@ -90,6 +90,8 @@ void ModellingSettingsDialog::LoadData()
     swSetText(swGetDialogItem(m_dlg, IDC_HANDLE_SCALE), buf);
     mysnprintf(buf, 128, "%g", TheApp->getHumanoidScale());
     swSetText(swGetDialogItem(m_dlg, IDC_HUMANOID_JOINT_SCALE), buf);
+    mysnprintf(buf, 128, "%g", TheApp->getExtrusionAmount());
+    swSetText(swGetDialogItem(m_dlg, IDC_EXTRUSION_AMOUNT), buf);
     SWND combo = swGetDialogItem(m_dlg, IDC_ROTATION_ORDER);
     swComboBoxDeleteAll(combo);
     for (int i = 0; i < 24; i++) {
@@ -176,6 +178,8 @@ ModellingSettingsDialog::SaveData()
     TheApp->SetPreferenceHandleScale(atof(buf));    
     swGetText(swGetDialogItem(m_dlg, IDC_HUMANOID_JOINT_SCALE), buf, 128);
     TheApp->setHumanoidScale(atof(buf));
+    swGetText(swGetDialogItem(m_dlg, IDC_EXTRUSION_AMOUNT), buf, 128);
+    TheApp->setExtrusionAmount(atof(buf));
 
     int sel = swComboBoxGetSelection(swGetDialogItem(m_dlg, IDC_ROTATION_ORDER));
     TheApp->SetRotationOrder(rot[sel]);

@@ -985,13 +985,13 @@ NodeNurbsCurve::extrudePoints(int from, int to, int points, bool xSymetric)
     }
     switch (direction) {
       case 0:
-        inc.x = 2 * TheApp->GetHandleEpsilon();
+        inc.x = TheApp->getExtrusionAmount();
         break;
       case 1: 
-        inc.y = 2 *TheApp->GetHandleEpsilon();
+        inc.y = TheApp->getExtrusionAmount();;
         break;
       case 2:
-        inc.z = 2 * TheApp->GetHandleEpsilon();
+        inc.z = TheApp->getExtrusionAmount();;
         break;
     }
     Vec3f vecStart = vecFrom + inc;

@@ -1389,9 +1389,14 @@ BEGIN
         POPUP "NURBS aendern"
         BEGIN
             MENUITEM "Neue Kontrollpunkte",             ID_REBUILD_NURBS_CONTROL_POINTS
-            MENUITEM "Mache X symetrisch",              ID_MAKE_NURBS_SURFACE_SYMETRIC_X
-//            MENUITEM "Extrude NurbsCurve",              ID_INSERT_TO_NURBS_CURVE
-//            MENUITEM "Extrude NurbsSurfacex (vermeide Xsymmetric)", ID_INSERT_TO_NURBS_SURFACE
+            POPUP "Mache symetrisch"
+            BEGIN
+                 MENUITEM "x",                          ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+                 MENUITEM "y",                          ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
+//                 MENUITEM "z",                          ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
+            END
+            MENUITEM "Extrude NurbsCurve",              ID_INSERT_TO_NURBS_CURVE
+            MENUITEM "Extrude NurbsSurface",            ID_INSERT_TO_NURBS_SURFACE
             MENUITEM "Graderhoehung",                   ID_DEGREE_ELEVATE_UP
             MENUITEM "Graderhoehung U",                 ID_U_DEGREE_ELEVATE_UP
             MENUITEM "Graderhoehung V",                 ID_V_DEGREE_ELEVATE_UP

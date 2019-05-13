@@ -431,6 +431,7 @@ M4_IDD(NURBS_SURFACE_SYMETRIC_Z)
 `#define' IDC_NURBS_TO_V                      1333
 `#define' IDC_NURBS_POINTS_U                  1334
 `#define' IDC_NURBS_POINTS_V                  1335
+`#define' IDC_EXTRUSION_AMOUNT                1336
 
 `#define' IDC_STATIC_ALTGRTEXT                1995
 `#define' IDC_STATIC_SHIFTTEXT                1996

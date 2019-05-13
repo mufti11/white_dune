@@ -368,7 +368,7 @@ protected:
     void                same(int direction, int whichSame);
     void                setDefault();
     void                rebuildControlPoints();
-    void                makeNurbSurfaceSymetricX();
+    void                makeNurbSurfaceSymetric(int direction);
     void                insertToNurbsCurve();
     void                insertToNurbsSurface();
     void                degreeElevate(int degree);

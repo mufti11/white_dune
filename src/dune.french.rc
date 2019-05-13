@@ -314,7 +314,7 @@ BEGIN
 #ifdef HAVE_LIBVCG
         MENUITEM "Mesh reduce",                          ID_MESH_REDUCE
 #endif
-            POPUP "Make symetric"
+        POPUP "Make symetric"
         BEGIN
             MENUITEM "x",                                ID_MAKE_SYMETRIC_X
             MENUITEM "Y",                                ID_MAKE_SYMETRIC_Y
@@ -1389,9 +1389,14 @@ BEGIN
         POPUP "Changer NURBS"
         BEGIN
             MENUITEM "Rebuild controlpoints",     ID_REBUILD_NURBS_CONTROL_POINTS
-            MENUITEM "Make X symetric",           ID_MAKE_NURBS_SURFACE_SYMETRIC_X
-//            MENUITEM "Extrude NurbsCurve",        ID_INSERT_TO_NURBS_CURVE
-//            MENUITEM "Extrude NurbsSurfacex (avoid Xsymmetric)", ID_INSERT_TO_NURBS_SURFACE
+            POPUP "Make symetric"
+            BEGIN
+                 MENUITEM "x",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+                 MENUITEM "y",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
+//                 MENUITEM "z",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
+            END
+            MENUITEM "Extrude NurbsCurve",        ID_INSERT_TO_NURBS_CURVE
+            MENUITEM "Extrude NurbsSurface",      ID_INSERT_TO_NURBS_SURFACE
             MENUITEM "Augmentation de grade",     ID_DEGREE_ELEVATE_UP
             MENUITEM "Augmentation de grade U",   ID_U_DEGREE_ELEVATE_UP
             MENUITEM "Augmentation de grade V",   ID_V_DEGREE_ELEVATE_UP

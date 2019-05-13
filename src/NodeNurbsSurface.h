@@ -199,7 +199,7 @@ public:
 
     int             getNumExtraVertices(void) { return m_numExtraVertices; }
 
-    void            makeXSymetric(bool plus);
+    void            makeSymetric(int direction, bool plus);
 
 protected:
     static int      findSpan(int dimension, int order, float u,

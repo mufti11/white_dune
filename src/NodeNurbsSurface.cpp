@@ -1598,42 +1598,50 @@ NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints,
     }
     switch (direction) {
       case 0:
-        inc.x = 2 * TheApp->GetHandleEpsilon();
+        inc.x = TheApp->getExtrusionAmount();
         break;
       case 1:
-        inc.y = 2 *TheApp->GetHandleEpsilon();
+        inc.y = TheApp->getExtrusionAmount();
         break;
       case 2:
-        inc.z = 2 * TheApp->GetHandleEpsilon();
+        inc.z = TheApp->getExtrusionAmount();
         break;
     }
 
+    int mult = uOrder()->getValue();
+    if (mult < 1)
+        mult = 1;
     for (int j = vFrom; j < vFrom + vPoints; j++)
-        for (int i = 0; i < iuDimension; i++) {
-            Vec3f add;
-            if ((i >= uFrom) && (i <= uTo))
-                add = inc;
-            Vec3f vec = oldControlPoints->getVec(j * iuDimension + i) + add;
-            int insert = j * iuDimension + i; 
-            controlPoints->insertSFValue(insert, vec.x, vec.y, vec.z);
-        }
+        for (int k = 0; k < mult; k++)
+            for (int i = 0; i < iuDimension; i++) {
+                Vec3f add;
+                if ((i >= uFrom) && (i <= uTo) && (k == mult - 1))
+                    add = inc;
+                Vec3f vec = oldControlPoints->getVec(j * iuDimension + i) + add;
+                int insert = j * iuDimension + i; 
+                controlPoints->insertSFValue(insert, vec.x, vec.y, vec.z);
+            }
 
-    vDimension(new SFInt32(ivDimension + vPoints));
+    vDimension(new SFInt32(ivDimension + mult * vPoints));
 
     controlPoints->ref();
     setControlPoints(controlPoints);
-    for (int i = 0; i < uPoints; i++)
-        for (int j = 0; j < uPoints; j++) 
-             m_scene->addSelectedHandle((uFrom + i) + 
-                                        (vFrom + j) * iuDimension);
     weight(new MFFloat());
     uKnot(new MFFloat());
     vKnot(new MFFloat());
     repairKnotAndWeight();    
+    if (m_scene->getXSymetricMode()) {
+        makeSymetric(0, (uFrom < iuDimension / 2) ? false : true);
+        makeSymetric(0, (uFrom < iuDimension / 2) ? false : true); // ???
+    }
+    for (int i = 0; i < uPoints; i++)
+        for (int j = 0; j < vPoints; j++) 
+             m_scene->addSelectedHandle((uFrom + i) + 
+                                        (vFrom + j) * iuDimension);
 }
 
 void            
-NodeNurbsSurface::makeXSymetric(bool plus)
+NodeNurbsSurface::makeSymetric(int direction, bool plus)
 {
     MFVec3f *vertices = (MFVec3f *)getControlPoints()->copy();
     int iuDimension = uDimension()->getValue();
@@ -1644,12 +1652,9 @@ NodeNurbsSurface::makeXSymetric(bool plus)
     if (vertices->getSFSize() % 2 == 1) {
         offset = 1;  
         Vec3f midVec = vertices->getVec(mid);
-/*
         switch(direction) {
           case 0:
-*/
             midVec.x = 0;
-/*
             break;
           case 1:
             midVec.y = 0;
@@ -1658,7 +1663,6 @@ NodeNurbsSurface::makeXSymetric(bool plus)
             midVec.z = 0;
             break;
         }
-*/
         vertices->setVec(mid, midVec);
     }
     int numVertices = vertices->getSFSize();
@@ -1669,22 +1673,63 @@ NodeNurbsSurface::makeXSymetric(bool plus)
         Vec3f vec = vertices->getVec(i);
         Vec3f res = vec;
         int index;
-        if (((vec.x > 0) && plus) || ((vec.x < 0) && !plus)) {
-            int index = v * iuDimension + (iuDimension - 1 - u);
-            res.x = -vertices->getVec(i).x;
-            res.y =  vertices->getVec(i).y;
-            res.z =  vertices->getVec(i).z;
-            int doit = true;
-            for (int j = 0; j < doubleChanges.size(); j++)
-                 if (index == doubleChanges[j]) {
-                     doit = false;
-                     break;
-                 }
-            if (doit) {
-                doubleChanges.append(index);
-                vertices->setVec(index, res); 
+        switch(direction) {
+          case 0:
+            if (((vec.x > 0) && plus) || ((vec.x < 0) && !plus)) {
+                int index = v * iuDimension + (iuDimension - 1 - u);
+                res.x = -vertices->getVec(i).x;
+                res.y =  vertices->getVec(i).y;
+                res.z =  vertices->getVec(i).z;
+                int doit = true;
+                for (int j = 0; j < doubleChanges.size(); j++)
+                    if (index == doubleChanges[j]) {
+                        doit = false;
+                        break;
+                    }
+                if (doit) {
+                    doubleChanges.append(index);
+                    vertices->setVec(index, res); 
+                }
             }
-        }
+            break;
+          case 1:
+            if (((vec.y > 0) && plus) || ((vec.y < 0) && !plus)) {
+                int index = numVertices - 1 - 
+                            (v * iuDimension + (iuDimension - 1 - u));
+                res.x =  vertices->getVec(i).x;
+                res.y = -vertices->getVec(i).y;
+                res.z =  vertices->getVec(i).z;
+                int doit = true;
+                for (int j = 0; j < doubleChanges.size(); j++)
+                    if (index == doubleChanges[j]) {
+                        doit = false;
+                        break;
+                    }
+                if (doit) {
+                    doubleChanges.append(index);
+                    vertices->setVec(index, res); 
+                }
+            }
+            break;
+          case 2:
+            if (((vec.z > 0) && plus) || ((vec.z < 0) && !plus)) {
+                int index = (ivDimension - 1 - v) * iuDimension + u;
+                res.x =  vertices->getVec(i).x;
+                res.y =  vertices->getVec(i).y;
+                res.z = -vertices->getVec(i).z;
+                int doit = true;
+                for (int j = 0; j < doubleChanges.size(); j++)
+                    if (index == doubleChanges[j]) {
+                        doit = false;
+                        break;
+                    }
+                if (doit) {
+                    doubleChanges.append(index);
+                    vertices->setVec(index, res); 
+                }
+            }
+            break;
+       }
     }
     setControlPoints(vertices);
     m_meshDirty = true;

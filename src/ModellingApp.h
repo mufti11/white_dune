@@ -66,6 +66,11 @@ public:
     void                setHumanoidScale(float f) { m_humanoidScale = f; }
     void                setWeights1(bool flag) { m_weights1 = flag; }
     bool                getWeights1(void) { return m_weights1; }
+    float               getExtrusionAmount(void)
+                            { return m_extrusionAmount; }
+    void                setExtrusionAmount(float f)
+                            { m_extrusionAmount = f; }
+
     void                ModellingDefaults();
 
 private: 
@@ -82,6 +87,7 @@ private:
     int                 m_maxInlinesToLoad;
     int                 m_maxKeysInChannelView;
     bool                m_weights1;
+    float               m_extrusionAmount;
 };
 
 #endif
