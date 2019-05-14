@@ -5082,5 +5082,12 @@ Fixed automatic knot generation
 
 Added make X symetric for NurbsSurface
 
+Added make Y symetric for NurbsSurface
+
+Added NURBS extrusion
+
+Fixed missing HAnimHumanoid.skinCoord in SceneTreeView 
+
 contact: MUFTI <mufti@users.ourproject.org>
+
 

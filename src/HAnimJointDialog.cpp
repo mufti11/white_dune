@@ -71,7 +71,7 @@ HAnimJointDialog::SaveData()
     int nodeIndex = swComboBoxGetSelection(comboNode);
     if ((nodeIndex == 0) && (m_node == NULL))
         m_node = NULL;
-    else if (nodeIndex > -1)
+    else if (nodeIndex > 0)
         m_node = m_scene->use(m_joints[nodeIndex]);
 
     SWND comboParent = swGetDialogItem(m_dlg, IDC_JOINT_PARENT);
@@ -143,9 +143,9 @@ HAnimJointDialog::LoadData()
     for (int i = 0;i < m_joints.size(); i++)
         swComboBoxAppendItem(comboNode, m_joints[i]);
 
-    if (m_parent != NULL)
-        m_joints[0] = m_parent->getName();
-    else
+    if (m_parent != NULL) {
+        m_joints[0] = m_parent->getNameOrNewName();
+    } else
         m_joints[0] = "NULL";
      
     for (int i = 0;i < m_joints.size(); i++)

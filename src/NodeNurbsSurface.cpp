@@ -1711,27 +1711,10 @@ NodeNurbsSurface::makeSymetric(int direction, bool plus)
                 }
             }
             break;
-          case 2:
-            if (((vec.z > 0) && plus) || ((vec.z < 0) && !plus)) {
-                int index = (ivDimension - 1 - v) * iuDimension + u;
-                res.x =  vertices->getVec(i).x;
-                res.y =  vertices->getVec(i).y;
-                res.z = -vertices->getVec(i).z;
-                int doit = true;
-                for (int j = 0; j < doubleChanges.size(); j++)
-                    if (index == doubleChanges[j]) {
-                        doit = false;
-                        break;
-                    }
-                if (doit) {
-                    doubleChanges.append(index);
-                    vertices->setVec(index, res); 
-                }
-            }
-            break;
-       }
+        }
     }
-    setControlPoints(vertices);
+    if (direction < 2)
+        setControlPoints(vertices);
     m_meshDirty = true;
 }
 
