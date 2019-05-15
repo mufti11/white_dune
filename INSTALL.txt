@@ -349,6 +349,8 @@ There are some unusual options for running configure
 --with-helpurl=\"helpurl\" URL of the \"docs\" directory
 --with-vrmlnodesurl=\"vrmlnodesurl\" URL of ISO standard vrml97 node list e.g. downloaded version of  http://www.web3d.org/x3d/specifications/vrml/ISO-IEC-14772-IS-VRML97WithAmendment1/part1/nodesRef.html
 --with-protobaseurl=\"url\" URL of base directory of PROTOs for needed EXTERNPROTO statements
+--with-debian              optimize library usage for debian
+--with-x3domurl=\"x3domurl\" URL to X3DOM support files
 --with-coverwave           allow creation of deprecated cover node Wave
 --with-covertuimap         allow creation of incomplete cover node TUIMap
 --with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla
@@ -549,6 +551,18 @@ The PROTOs in the matching directory are only placeholders, they do nothing.
 Somewhat similar to the vrml97Amendment1 directory, for nodes which act
 as containers for data needed for other fileformats than VRML/X3D 
 (e.g. catt 8).
+
+=============
+--with-debian
+=============
+
+Optimize library usage for debian, e.g. the libdl library is not needed.
+
+============================
+--with-x3domurl=\"x3domurl\"
+============================
+
+URL to X3DOM support files
 
 ================
 --with-coverwave

@@ -161,6 +161,9 @@ fi
 AC_ARG_WITH(protobaseurl, --with-protobaseurl=\"url\" URL of base directory of PROTOs for needed EXTERNPROTO statements,
             PROTO_BASE_URL="$withval";export PROTO_BASE_URL)
 
+AC_ARG_WITH(debian,--with-debian             optimize library usage for debian,
+            DEBIAN=yes;export DEBIAN)
+
 AC_ARG_WITH(x3domurl,--with-x3domurl=\"x3domurl\" URL to X3DOM support files,
             X3DDOMURL="$withval";export X3DOMURL)
 if test "X_$X3DOMURL" != "X_" ; then
@@ -1075,7 +1078,9 @@ if test "X_$OMP" != "X_no" ; then
 fi
 
 dnl Checks for libraries.
-AC_HAVE_LIBRARY(dl)
+if test "X_$DEBIAN" = "X_" ; then 
+   AC_HAVE_LIBRARY(dl)
+fi
 if test "X_$NEBULA" != "X_" ;then
    AC_HAVE_LIBRARY(stlport_gcc)
 fi
@@ -1091,7 +1096,9 @@ AC_CHECK_LIB(X11, XCreateWindow)
 AC_CHECK_FUNCS(XkbKeycodeToKeysym)
 AC_CHECK_LIB(Xmu, XmuLookupStandardColormap)
 AC_CHECK_LIB(Xt, XtCreateWidget)
-AC_CHECK_LIB(Xext, XShmQueryVersion)
+if test "X_$DEBIAN" = "X_" ; then 
+   AC_CHECK_LIB(Xext, XShmQueryVersion)
+fi
 AC_HAVE_LIBRARY(Xp)
 AC_CHECK_LIB(Xm, XmCreateMainWindow , ,MOTIF_ERROR=1)
 if test "X_$MOTIF_ERROR" = "X_1" ; then
@@ -1132,7 +1139,7 @@ if test "X_$TTF_FILE" = "X_0" ; then
          TTF_ERROR=0
          echo $i
          break
-     fi
+      fi
   done
 fi
 if test "X_$TTF_ERROR" = "X_1" ; then
@@ -1159,68 +1166,70 @@ EOF
 fi
 
 if test "X_$CGALHEADERS" != "X_yes" ; then
- if test "X_$CGAL" != "X_no" ; then
-   AC_MSG_CHECKING(for libCGAL)
-   AC_LANG_PUSH(C++)
-   SAVE_LIBS="$LIBS"
-   LIBS="$LIBS -lCGAL"
-   AC_TRY_LINK([], [;], ,CGAL_ERROR=1)
-   AC_LANG_POP(C++)
-  if test "X_$CGAL_ERROR" = "X_1" ; then
-   echo no
-   LIBS="$SAVE_LIBS"
-   cat 1>&2 << EOF
+  if test "X_$CGAL" != "X_no" ; then
+    AC_MSG_CHECKING(for libCGAL)
+    AC_LANG_PUSH(C++)
+    SAVE_LIBS="$LIBS"
+    LIBS="$LIBS -lCGAL"
+    AC_TRY_LINK([], [;], ,CGAL_ERROR=1)
+    AC_LANG_POP(C++)
+    if test "X_$CGAL_ERROR" = "X_1" ; then
+      echo no
+    LIBS="$SAVE_LIBS"
+    cat 1>&2 << EOF
 
  *** couldn't find a working CGAL development system ***
 
  if CGAL is not available, the convex hull and CSG functions are not available 
 
 EOF
-  else
-   AC_DEFINE(HAVE_LIBCGAL)
-   echo yes
-   AC_CHECK_LIB(gmp, __gmpn_sub_1, , GMP_ERROR=1)
-   if test "X_$GMP_ERROR" = "X_1" ; then
-       echo CGAL requires libgmp 1>&2
-   fi
-   AC_CHECK_LIB(mpfr, mpfr_set, , MPFR_ERROR=1)
-   if test "X_$GMP_ERROR" = "X_1" ; then
-       echo CGAL requires libmpfr 1>&2
-   fi
-   AC_MSG_CHECKING([for libboost_thread])
-   AC_LANG_PUSH(C++)
-   SAVE_LIBS="$LIBS"
-   LIBS="$LIBS -lboost_thread"
-   AC_TRY_LINK([], [;], ,BOOST_THREAD_ERROR=1)
-   AC_LANG_POP(C++)
-   if test "X_$BOOST_THREAD_ERROR" == "X_1"; then
-       msg=no
-       LIBS="$SAVE_LIBS"
-   else
-       msg=yes
-   fi
-   AC_MSG_RESULT($msg)
-   if test "X_$BOOST_THREAD_ERROR" = "X_1" ; then
-       echo CGAL may require libboost_thread 1>&2
-   fi
-   AC_MSG_CHECKING([for libboost_system])
-   AC_LANG_PUSH(C++)
-   SAVE_LIBS="$LIBS"
-   LIBS="$LIBS -lboost_system"
-   AC_TRY_LINK([], [;], ,BOOST_SYSTEM_ERROR=1)
-   AC_LANG_POP(C++)
-   if test "X_$BOOST_SYSTEM_ERROR" == "X_1"; then
-       msg=no
-       LIBS="$SAVE_LIBS"
-   else
-       msg=yes
-   fi
-   AC_MSG_RESULT($msg)
-   if test "X_$BOOST_SYSTEM_ERROR" = "X_1" ; then
-       echo CGAL may require libboost_system 1>&2
-   fi
-  fi
- fi
+    else
+      AC_DEFINE(HAVE_LIBCGAL)
+      echo yes
+      AC_CHECK_LIB(gmp, __gmpn_sub_1, , GMP_ERROR=1)
+      if test "X_$GMP_ERROR" = "X_1" ; then
+          echo CGAL requires libgmp 1>&2
+      fi
+      AC_CHECK_LIB(mpfr, mpfr_set, , MPFR_ERROR=1)
+      if test "X_$GMP_ERROR" = "X_1" ; then
+        echo CGAL requires libmpfr 1>&2
+      fi
+      if test "X_$DEBIAN" = "X_" ; then 
+        AC_MSG_CHECKING([for libboost_thread])
+        AC_LANG_PUSH(C++)
+        SAVE_LIBS="$LIBS"
+        LIBS="$LIBS -lboost_thread"
+        AC_TRY_LINK([], [;], ,BOOST_THREAD_ERROR=1)
+        AC_LANG_POP(C++)
+        if test "X_$BOOST_THREAD_ERROR" == "X_1"; then
+          msg=no
+          LIBS="$SAVE_LIBS"
+        else
+          msg=yes
+        fi
+        AC_MSG_RESULT($msg)
+        if test "X_$BOOST_THREAD_ERROR" = "X_1" ; then
+          echo CGAL may require libboost_thread 1>&2
+        fi
+        AC_MSG_CHECKING([for libboost_system])
+        AC_LANG_PUSH(C++)
+        SAVE_LIBS="$LIBS"
+        LIBS="$LIBS -lboost_system"
+        AC_TRY_LINK([], [;], ,BOOST_SYSTEM_ERROR=1)
+        AC_LANG_POP(C++)
+        if test "X_$BOOST_SYSTEM_ERROR" == "X_1"; then
+          msg=no
+          LIBS="$SAVE_LIBS"
+        else
+          msg=yes
+        fi
+        AC_MSG_RESULT($msg)
+        if test "X_$BOOST_SYSTEM_ERROR" = "X_1" ; then
+          echo CGAL may require libboost_system 1>&2
+        fi
+      fi
+    fi
+  fi 
 fi
 if test "X_$CGALHEADERS" = "X_yes" ; then
 AC_CHECK_HEADER(CGAL/compiler_config.h,,CGAL_ERROR=1)

@@ -747,6 +747,7 @@ with_helpurl
 with_vrmlnodesurl
 with_x3durl
 with_protobaseurl
+with_debian
 with_x3domurl
 with_coverwave
 with_covertuimap
@@ -1455,6 +1456,7 @@ Optional Packages:
 --with-x3durl=\"x3durl\" URL of ISO standard X3D e.g. downloaded version of http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01
             X3DURL="$withval";export X3DURL
 --with-protobaseurl=\"url\" URL of base directory of PROTOs for needed EXTERNPROTO statements
+--with-debian             optimize library usage for debian
 --with-x3domurl=\"x3domurl\" URL to X3DOM support files
 --with-coverwave          allow creation of deprecated cover node Wave
 --with-covertuimap        allow creation of incomplete cover node TUIMap
@@ -3935,6 +3937,13 @@ fi
 # Check whether --with-protobaseurl was given.
 if test "${with_protobaseurl+set}" = set; then :
   withval=$with_protobaseurl; PROTO_BASE_URL="$withval";export PROTO_BASE_URL
+fi
+
+
+
+# Check whether --with-debian was given.
+if test "${with_debian+set}" = set; then :
+  withval=$with_debian; DEBIAN=yes;export DEBIAN
 fi
 
 
@@ -7407,7 +7416,8 @@ ac_cv_lib_gomp=ac_cv_lib_gomp_main
  fi
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -ldl" >&5
+if test "X_$DEBIAN" = "X_" ; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -ldl" >&5
 $as_echo_n "checking for main in -ldl... " >&6; }
 if ${ac_cv_lib_dl_main+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -7447,6 +7457,7 @@ _ACEOF
 fi
 ac_cv_lib_dl=ac_cv_lib_dl_main
 
+fi
 if test "X_$NEBULA" != "X_" ;then
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lstlport_gcc" >&5
 $as_echo_n "checking for main in -lstlport_gcc... " >&6; }
@@ -7757,7 +7768,8 @@ _ACEOF
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XShmQueryVersion in -lXext" >&5
+if test "X_$DEBIAN" = "X_" ; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XShmQueryVersion in -lXext" >&5
 $as_echo_n "checking for XShmQueryVersion in -lXext... " >&6; }
 if ${ac_cv_lib_Xext_XShmQueryVersion+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -7802,6 +7814,7 @@ _ACEOF
 
 fi
 
+fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lXp" >&5
 $as_echo_n "checking for main in -lXp... " >&6; }
 if ${ac_cv_lib_Xp_main+:} false; then :
@@ -7931,7 +7944,7 @@ _ACEOF
          TTF_ERROR=0
          echo $i
          break
-     fi
+      fi
   done
 fi
 if test "X_$TTF_ERROR" = "X_1" ; then
@@ -8009,18 +8022,18 @@ EOF
 fi
 
 if test "X_$CGALHEADERS" != "X_yes" ; then
- if test "X_$CGAL" != "X_no" ; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libCGAL" >&5
+  if test "X_$CGAL" != "X_no" ; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libCGAL" >&5
 $as_echo_n "checking for libCGAL... " >&6; }
-   ac_ext=cpp
+    ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-   SAVE_LIBS="$LIBS"
-   LIBS="$LIBS -lCGAL"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    SAVE_LIBS="$LIBS"
+    LIBS="$LIBS -lCGAL"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -8038,27 +8051,27 @@ else
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-   ac_ext=c
+    ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-  if test "X_$CGAL_ERROR" = "X_1" ; then
-   echo no
-   LIBS="$SAVE_LIBS"
-   cat 1>&2 << EOF
+    if test "X_$CGAL_ERROR" = "X_1" ; then
+      echo no
+    LIBS="$SAVE_LIBS"
+    cat 1>&2 << EOF
 
  *** couldn't find a working CGAL development system ***
 
  if CGAL is not available, the convex hull and CSG functions are not available
 
 EOF
-  else
-   $as_echo "#define HAVE_LIBCGAL 1" >>confdefs.h
+    else
+      $as_echo "#define HAVE_LIBCGAL 1" >>confdefs.h
 
-   echo yes
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __gmpn_sub_1 in -lgmp" >&5
+      echo yes
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __gmpn_sub_1 in -lgmp" >&5
 $as_echo_n "checking for __gmpn_sub_1 in -lgmp... " >&6; }
 if ${ac_cv_lib_gmp___gmpn_sub_1+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -8105,10 +8118,10 @@ else
   GMP_ERROR=1
 fi
 
-   if test "X_$GMP_ERROR" = "X_1" ; then
-       echo CGAL requires libgmp 1>&2
-   fi
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for mpfr_set in -lmpfr" >&5
+      if test "X_$GMP_ERROR" = "X_1" ; then
+          echo CGAL requires libgmp 1>&2
+      fi
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for mpfr_set in -lmpfr" >&5
 $as_echo_n "checking for mpfr_set in -lmpfr... " >&6; }
 if ${ac_cv_lib_mpfr_mpfr_set+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -8155,20 +8168,21 @@ else
   MPFR_ERROR=1
 fi
 
-   if test "X_$GMP_ERROR" = "X_1" ; then
-       echo CGAL requires libmpfr 1>&2
-   fi
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libboost_thread" >&5
+      if test "X_$GMP_ERROR" = "X_1" ; then
+        echo CGAL requires libmpfr 1>&2
+      fi
+      if test "X_$DEBIAN" = "X_" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libboost_thread" >&5
 $as_echo_n "checking for libboost_thread... " >&6; }
-   ac_ext=cpp
+        ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-   SAVE_LIBS="$LIBS"
-   LIBS="$LIBS -lboost_thread"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+        SAVE_LIBS="$LIBS"
+        LIBS="$LIBS -lboost_thread"
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -8186,34 +8200,34 @@ else
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-   ac_ext=c
+        ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-   if test "X_$BOOST_THREAD_ERROR" == "X_1"; then
-       msg=no
-       LIBS="$SAVE_LIBS"
-   else
-       msg=yes
-   fi
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $msg" >&5
+        if test "X_$BOOST_THREAD_ERROR" == "X_1"; then
+          msg=no
+          LIBS="$SAVE_LIBS"
+        else
+          msg=yes
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $msg" >&5
 $as_echo "$msg" >&6; }
-   if test "X_$BOOST_THREAD_ERROR" = "X_1" ; then
-       echo CGAL may require libboost_thread 1>&2
-   fi
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libboost_system" >&5
+        if test "X_$BOOST_THREAD_ERROR" = "X_1" ; then
+          echo CGAL may require libboost_thread 1>&2
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libboost_system" >&5
 $as_echo_n "checking for libboost_system... " >&6; }
-   ac_ext=cpp
+        ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-   SAVE_LIBS="$LIBS"
-   LIBS="$LIBS -lboost_system"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+        SAVE_LIBS="$LIBS"
+        LIBS="$LIBS -lboost_system"
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -8231,25 +8245,26 @@ else
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-   ac_ext=c
+        ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-   if test "X_$BOOST_SYSTEM_ERROR" == "X_1"; then
-       msg=no
-       LIBS="$SAVE_LIBS"
-   else
-       msg=yes
-   fi
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $msg" >&5
+        if test "X_$BOOST_SYSTEM_ERROR" == "X_1"; then
+          msg=no
+          LIBS="$SAVE_LIBS"
+        else
+          msg=yes
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $msg" >&5
 $as_echo "$msg" >&6; }
-   if test "X_$BOOST_SYSTEM_ERROR" = "X_1" ; then
-       echo CGAL may require libboost_system 1>&2
-   fi
+        if test "X_$BOOST_SYSTEM_ERROR" = "X_1" ; then
+          echo CGAL may require libboost_system 1>&2
+        fi
+      fi
+    fi
   fi
- fi
 fi
 if test "X_$CGALHEADERS" = "X_yes" ; then
 ac_fn_c_check_header_mongrel "$LINENO" "CGAL/compiler_config.h" "ac_cv_header_CGAL_compiler_config_h" "$ac_includes_default"
