@@ -58,8 +58,8 @@ cp $WTMP/wdune-$VERSION/desktop/kde/dune.desktop $PREFIX/share/applications
 chmod 644 $PREFIX/share/applications/dune.desktop
 
 mkdir -p $PREFIX/share/pixmaps
-cp $WTMP/wdune-$VERSION/desktop/kde/dune.bmp $PREFIX/share/pixmaps
-chmod 644 $PREFIX/share/pixmaps/dune.bmp
+cp $WTMP/wdune-$VERSION/desktop/kde/dune.png $PREFIX/share/pixmaps
+chmod 644 $PREFIX/share/pixmaps/dune.png
  
 echo @name wdune-$VERSION > $WTMP/pkg-list
 

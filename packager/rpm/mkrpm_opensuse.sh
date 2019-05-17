@@ -141,9 +141,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/dune4kids
 /usr/bin/illegal2vrml
 /usr/share/applications/dune.desktop
-/usr/share/pixmaps/dune.bmp
+/usr/share/pixmaps/dune.png
 /usr/share/applications/dune4kids.desktop
-/usr/share/pixmaps/dune4kids.bmp
+/usr/share/pixmaps/dune4kids.png
 /usr/share/man/man1/dune.1*
 /usr/share/man/man1/dune4kids.1*
 /usr/share/man/man1/illegal2vrml.1*
