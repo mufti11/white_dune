@@ -5088,6 +5088,12 @@ Added NURBS extrusion
 
 Fixed missing HAnimHumanoid.skinCoord in SceneTreeView 
 
+Updated usage_docs directory
+
+Updated dune4kids menus
+
+Added NURBS neighbour selection
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

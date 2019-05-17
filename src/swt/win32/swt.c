@@ -3573,7 +3573,10 @@ swCreateToolbar(SWND parent, SBITMAP bitmap, int width, int height, int count,
 
     for (i = 0; i < count; i++) {
          buttons[i].iBitmap = buttonInfo[i*2];
-         buttons[i].idCommand = buttonInfo[i*2+1];
+         if (buttonInfo[i*2+1] == 0)
+             buttons[i].idCommand = -1;
+         else
+             buttons[i].idCommand = buttonInfo[i*2+1];
          buttons[i].fsState = TBSTATE_ENABLED;
          buttons[i].fsStyle = buttonInfo[i*2] == -1 ? TBSTYLE_SEP : 0;
          buttons[i].dwData = 0;

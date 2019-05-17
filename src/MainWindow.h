@@ -292,6 +292,7 @@ protected:
     void                OnEditDelete();
     void                OnEditFind();
     void                OnEditFindAgain();
+    void                selectNeighbours(bool u = true);
     void                setSelectionMode(int mode);
     void                Record();
     char               *getFileSelectorText(void);

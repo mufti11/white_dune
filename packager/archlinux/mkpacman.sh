@@ -101,9 +101,9 @@ package() {
         mkdir -p "\$pkgdir/usr/share/doc/\$name/docs"
         cp -r "docs" "\$pkgdir/usr/share/doc/\$name/"
         install -Dm644 desktop/kde/dune.desktop \$pkgdir/usr/share/applications/dune.desktop
-	install -Dm644 desktop/kde/dune.bmp \$pkgdir/usr/share/pixmaps/dune.bmp
+	install -Dm644 desktop/kde/dune.png \$pkgdir/usr/share/pixmaps/dune.png
 	install -Dm644 desktop/kde/dune4kids.desktop \$pkgdir/usr/share/applications/dune4kids.desktop
-	install -Dm644 desktop/kde/dune4kids.bmp \$pkgdir/usr/share/pixmaps/dune4kids.bmp
+	install -Dm644 desktop/kde/dune4kids.png \$pkgdir/usr/share/pixmaps/dune4kids.png
 }
 EOT
 

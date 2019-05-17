@@ -5,7 +5,7 @@
 /*
  * dune_de.html 
  *
- * Copyright (C) 2006-2018 J. "MUFTI" Scheurich
+ * Copyright (C) 2006-2019 J. "MUFTI" Scheurich
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -150,6 +150,14 @@
    <li>
     <h4><a href="#nurbsrebuild">NURBS Neubau</a>
                                          (neu in Version 0.99pl1090)</h4>
+   </li>
+   <li>
+    <h4><a href="#nurbssymetric">NURBS symetrisch machen</a>
+                                         (neu in Version 1.068)</h4>
+   </li>
+   <li>
+    <h4><a href="#nurbsextrusion">NURBS Extrusion</a>
+                                         (neu in Version1.072)</h4>
    </li>
    <li>
     <h4><a href="#nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a>
@@ -2937,6 +2945,42 @@ und
 <br><br><img src=sonne3.png><br><br>
 herausziehen.
 <br><br><img src=sonne4.png><br><br>
+</li>
+<li>
+    <h4><a name="nurbssymetric">NURBS symetrisch machen</a>
+                                 <small>(neu in Version 1.068)</small></h4>
+<p>
+Um eine NURBS-Fl&auml;che X oder Y symetrisch zu machen, muss 
+Nurbs(Patch)Surface angew&auml;hlt werden und <em>Aktion -&gt; NURBS aendern
+-&gt; Mache symetrisch -&gt; x/y</em> benutzt werden.<br>
+<img src=nurbssurfacesym.png><br>
+Dabei muss angegeben werden, welche Seite gespiegelt werden soll.<br>
+<img src=nurbssurfacesym2.png><br>
+<br>
+<img src=nurbssurfacesym3.png><br>
+</p>
+</li>
+<li>
+    <h4><a name="nurbsextrusion">NURBS Extrusion</a>
+                                  <small>(neu in Version1.072)</small></h4>
+<p>
+Wird aus einer NURBS Fl&auml;che ein Kontrollpunkt herausgezogen, 
+entsteht eine Situation, bei der der n&auml;chste Kontollpunkt
+nicht ver&auml;endert werden kann, ohne die Struktur des Objects (z.B. Kugel)
+grundlegend zu ver&auml;ndern.<br>  
+Um den Effekt zu vermeiden, m&uuml;ssen neue
+Kontrollpunkte an der richtigen Stelle eingef&uuml;gt werden.<br>
+Das Ergebnis ist eine NURBS Extrusion.<br>
+Wird eine Kugel mit jeweils 8 u und 6 v Kontrollpunkten angelegt und je 
+2 u/v-Kontrollpunkte angew&auml;hlt,<br> 
+<img src=nurbsextrude1.png><br>
+k&ouml;nnen mit <em>Aktion -&gt; NURBS aendern -&gt; Extrude NurbsSurface</em>
+je 2 Punkte eingef&uuml;gt/herausgezogen werden.<br>
+Je 2 Punkte weil das die Voreinstellung im folgenden Dialog ist:<br>
+<img src=nurbsextrude2.png><br>
+Dabei enstehen 4 Punkte, die im folgenden herausgezogen werden:<br>
+<img src=nurbsextrude3.png><br>
+</p>
 </li>
 <li> <h4><a name="nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a>
 <small>(neu in Version 0.25beta)</small></h4>

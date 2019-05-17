@@ -150,6 +150,14 @@
     <h4><a href="#nurbsrebuild">NURBS rebuild</a>
                                          (new in Version 0.99pl1090)</h4>
     </li>
+   <li>
+    <h4><a href="#nurbssymetric">make NURBS symetric</a>
+                                         (neu in Version 1.068)</h4>
+   </li>
+   <li>
+    <h4><a href="#nurbsextrusion">NURBS extrusion</a>
+                                         (neu in Version1.072)</h4>
+   </li>
     <li>
      <h4><a href="#nurbsindexedfaceset">Building IndexedFaceSet</a>
                                           (new in Version 0.25beta)</h4>
@@ -2678,6 +2686,40 @@ and
 <br><br><img src=sonne3.png><br><br>
 drawn out.
 <br><br><img src=sonne4.png><br><br>
+</li>
+<li>
+    <h4><a name="nurbssymetric">make NURBS symetric</a>
+                                 <small>(neu in Version 1.068)</small></h4>
+<p>
+To make a NURBS surface X or Y symetric zu, a has to be selected and 
+<em>Action -&gt; NURBS operations -&gt; Make symetric -&gt; x/y</em> 
+has to be used.<br>
+<img src=nurbssurfacesym.png><br>
+The infomation which side is mirrored has to be set.<br>
+<img src=nurbssurfacesym2.png><br>
+<br>
+<img src=nurbssurfacesym3.png><br>
+</p>
+</li>
+<li>
+    <h4><a name="nurbsextrusion">NURBS extrusion</a>
+                                  <small>(neu in Version1.072)</small></h4>
+<p>
+When a controlpoint is pulled out of a NURBS surface, a situation occures
+that the next contolpoint will change the structure of the object (e.g.
+sphere) bascially.<br>
+To avoid this, new controlpoints have to be inserted at the right place.<br>
+The result is a NURBS extrusion. <br>
+If a sphere with 6 u and 8 v control points is used and
+4 u/v control points are selected,<br> 
+<img src=nurbsextrude1.png><br>
+2 points each u/v can be added/pulled out with
+<em>Actions -&gt; NURBS operations -&gt; Extrude NurbsSurface</em>.<br>
+2 points cause this is the preset in the following dialog:<br>
+<img src=nurbsextrude2.png><br>
+4 points has been created, they are pulled out:<br>
+<img src=nurbsextrude3.png><br>
+</p>
 </li>
 <li> <h4><a name="nurbsindexedfaceset">Building IndexedFaceSet</a>
 <small>(new in Version 0.25beta)</small></h4>

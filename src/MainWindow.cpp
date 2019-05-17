@@ -2022,6 +2022,15 @@ MainWindow::OnCommand(void *vid)
              m_statusBar->SetText(message);
         }
         break;
+      case ID_DUNE_SELECTION_NEIGHBOUR:
+        selectNeighbours();
+        break;
+      case ID_DUNE_SELECTION_NEIGHBOUR_U:
+        selectNeighbours(true);
+        break;
+      case ID_DUNE_SELECTION_NEIGHBOUR_V:
+        selectNeighbours(false);
+        break;
       case ID_DUNE_GET_OLD_SELECTION:
         m_scene->restoreSelectedHandles();
         m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);        
@@ -5737,6 +5746,13 @@ MainWindow::UpdateToolbarSelection(void)
     UpdateMenuCoverNodes();
     UpdateMenuKambiNodes();
 
+    swMenuSetFlags(m_menu, ID_DUNE_SELECTION_NEIGHBOUR_U, SW_MENU_DISABLED, 
+                   (node->getType() == VRML_NURBS_SURFACE) ?
+                   0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_DUNE_SELECTION_NEIGHBOUR_V, SW_MENU_DISABLED, 
+                   (node->getType() == VRML_NURBS_SURFACE) ?
+                   0 : SW_MENU_DISABLED);
+
     swMenuSetFlags(m_menu, ID_INTERACTION, SW_MENU_DISABLED,
                    node->supportInteraction() ? 0 : SW_MENU_DISABLED);
     swToolbarSetButtonFlags(m_standardToolbar, m_interactionIconPos, 
@@ -6073,6 +6089,15 @@ MainWindow::UpdateToolbarSelection(void)
         canDegreeElevate = true;
     }
     swMenuSetFlags(m_menu, ID_REBUILD_NURBS_CONTROL_POINTS, SW_MENU_DISABLED,
+                   node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED
+                  );
+    swMenuSetFlags(m_menu, ID_MAKE_NURBS_SURFACE_SYMETRIC_X, SW_MENU_DISABLED,
+                   node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED
+                  );
+    swMenuSetFlags(m_menu, ID_MAKE_NURBS_SURFACE_SYMETRIC_Y, SW_MENU_DISABLED,
+                   node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED
+                  );
+    swMenuSetFlags(m_menu, ID_MAKE_NURBS_SURFACE_SYMETRIC_Z, SW_MENU_DISABLED,
                    node->getType() == VRML_NURBS_SURFACE ? 0 : SW_MENU_DISABLED
                   );
     swMenuSetFlags(m_menu, ID_INSERT_TO_NURBS_CURVE, SW_MENU_DISABLED,
@@ -13088,6 +13113,58 @@ void MainWindow::setSelectionMode(int mode)
     m_scene->setSelectionMode(mode);
 }
 
+void MainWindow::selectNeighbours(bool uHandles)
+{
+    Node *node = m_scene->getSelection()->getNode();
+    OneBoolDialog dlg(m_wnd, IDD_SELECT_NEIGHBOUR, true);
+    if (dlg.DoModal() == IDCANCEL)
+        return;
+
+    int numHandles = m_scene->getSelectedHandlesSize();
+    if (node != NULL) {    
+        if (node->getType() == VRML_NURBS_CURVE) {
+            NodeNurbsCurve *nurbs = (NodeNurbsCurve *) node;
+            int size = nurbs->controlPoint()->getSFSize();
+            for (int i = 0; i < numHandles; i++) {
+                int handle = m_scene->getSelectedHandle(i);
+                if (dlg.GetValue()) {
+                    if (handle < size - 1)
+                        m_scene->setSelectedHandle(handle + 1);
+                } else {
+                    if (handle > 0)
+                        m_scene->setSelectedHandle(handle - 1);
+                }
+            }
+        } else if (node->getType() == VRML_NURBS_SURFACE) {
+            NodeNurbsSurface *nurbs = (NodeNurbsSurface *) node;
+            int usize = nurbs->uDimension()->getValue();
+            int vsize = nurbs->vDimension()->getValue();
+            for (int i = 0; i < numHandles; i++) {
+                int handle = m_scene->getSelectedHandle(i);
+                int u = handle % usize;
+                int v = handle / usize;
+                if (uHandles) { 
+                    if (dlg.GetValue()) {
+                        if (u < usize - 1)
+                            m_scene->setSelectedHandle(u + 1 + v * usize);
+                    } else {
+                        if (handle > 0)
+                            m_scene->setSelectedHandle(u - 1 + v * usize);
+                   }
+                } else {
+                    if (dlg.GetValue()) {
+                        if (v < vsize - 1)
+                            m_scene->setSelectedHandle(u + (v + 1)* usize);
+                    } else {
+                        if (v > 0)
+                            m_scene->setSelectedHandle(u + (v - 1) * usize);
+                   }
+                }
+            }
+        }
+        m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
+    }
+}
 
 bool MainWindow::SaveModified()
 {
