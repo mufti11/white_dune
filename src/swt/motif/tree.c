@@ -898,11 +898,11 @@ setCurrent(STree *tree, STreeItem *item)
         iPos = itemPos;
         if (iPos < y) {
             swSetScrollPosition(tree->scroller, x, iPos);
-        } else if (iPos + tree->itemHeight > y + h) {
+        } else if (iPos + 2* tree->itemHeight - h > y + h) {
             swSetScrollPosition(tree->scroller, x, 
                                 iPos + 2 * tree->itemHeight - h);
         } else
-            swSetScrollPosition(tree->scroller, x, 0);
+            swSetScrollPosition(tree->scroller, x, y);
 
         if (tree->callback) {
             tree->callback(tree->data, SW_TREE_SELECT, item);

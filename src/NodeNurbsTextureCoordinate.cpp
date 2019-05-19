@@ -50,6 +50,9 @@
 #include "Util.h"
 #include "Field.h"
 #include "ExposedField.h"
+#include "NodeNurbsSurface.h"
+#include "NodeNurbsTrimmedSurface.h"
+#include "MyMesh.h"
 
 ProtoNurbsTextureCoordinate::ProtoNurbsTextureCoordinate(Scene *scene)
   : Proto(scene, "NurbsTextureCoordinate")
@@ -84,8 +87,110 @@ ProtoNurbsTextureCoordinate::create(Scene *scene)
 NodeNurbsTextureCoordinate::NodeNurbsTextureCoordinate(Scene *scene, Proto *proto)
   : Node(scene, proto)
 {
+    m_nurbs = (NodeNurbsSurface *)m_scene->createNode("NurbsSurface");;
+    m_dirty = true;
+    m_points = new MFVec2f();
 }
 
 NodeNurbsTextureCoordinate::~NodeNurbsTextureCoordinate()
 {
+}
+
+MFVec2f *
+NodeNurbsTextureCoordinate::getPoint()
+{
+    if (m_dirty)
+        createNurbsData();
+    return m_points;
+}
+
+void
+NodeNurbsTextureCoordinate::createNurbsData()
+{
+    m_dirty = false;
+
+    float *newControlPoints = new float[controlPoint()->getSFSize() * 3];
+    float *newWeights = (float *)weight()->getValues();
+    for (int i = 0; i < controlPoint()->getSFSize(); i++) {
+        newControlPoints[i * 3] = controlPoint()->getValue(i)[0];
+        newControlPoints[i * 3 + 1] = controlPoint()->getValue(i)[1];
+        newControlPoints[i * 3 + 2] = 0;
+    }
+    int newUDimension = uDimension()->getValue();
+    float *newUKnots = (float *)uKnot()->getValues();
+    int newUOrder = uOrder()->getValue();
+    int newVDimension = vDimension()->getValue();
+    float *newVKnots = (float *)vKnot()->getValues();
+    int newVOrder = vOrder()->getValue();
+    
+    m_nurbs->uKnot(new MFFloat(newUKnots, newUDimension + newUOrder));
+    m_nurbs->vKnot(new MFFloat(newVKnots, newVDimension + newVOrder));
+    m_nurbs->setField(m_nurbs->uOrder_Field(), new SFInt32(newUOrder));
+    m_nurbs->setField(m_nurbs->vOrder_Field(), new SFInt32(newVOrder));
+    m_nurbs->setField(m_nurbs->uDimension_Field(), new SFInt32(newUDimension));
+    m_nurbs->weight(new MFFloat(newWeights, controlPoint()->getSFSize()));
+    m_nurbs->createControlPoints(new MFVec3f(newControlPoints, 
+                                 controlPoint()->getSize()));
+    int uTess = 0;
+    int vTess = 0;
+    if (hasParent())
+        if (getParent()->getType() == VRML_NURBS_SURFACE) {
+            NodeNurbsSurface *surface = (NodeNurbsSurface *)getParent();
+            uTess = surface->uTessellation()->getValue();
+            vTess = surface->vTessellation()->getValue();
+        } else if (getParent()->getType() == X3D_NURBS_TRIMMED_SURFACE) {
+            NodeNurbsTrimmedSurface *surface = (NodeNurbsTrimmedSurface *)
+                                               getParent();
+            uTess = surface->uTessellation()->getValue();
+            vTess = surface->vTessellation()->getValue();
+        }
+    m_nurbs->uTessellation(new SFInt32(uTess));
+    m_nurbs->vTessellation(new SFInt32(vTess));
+
+    m_nurbs->createMesh();
+
+    MyMesh *mesh = m_nurbs->getMesh();
+    for (int i = 0; i < m_points->getSFSize(); i++)
+        m_points->removeSFValue(0);
+    if (mesh != NULL) {
+        float minX = 0;
+        float maxX = 0;
+        float minY = 0;
+        float maxY = 0;
+        if (mesh->getVertices()->getSFSize() > 0) {
+            minX = mesh->getVertices()->getVec(0).x;
+            maxX = mesh->getVertices()->getVec(0).x;
+            minY = mesh->getVertices()->getVec(0).y;
+            maxY = mesh->getVertices()->getVec(0).y;
+        }
+        for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
+            Vec3f vec = mesh->getVertices()->getVec(i);
+            if (vec.x < minX)
+                minX = vec.x;
+            if (vec.x > maxX)
+                maxX = vec.x;
+            if (vec.y < minY)
+                minY = vec.y;
+            if (vec.y > maxY)
+                maxY = vec.y;
+        }
+        float divX = maxX - minX;
+        if (divX == 0)
+            divX = 1;
+        float divY = maxY - minY;
+        if (divY == 0)
+            divY = 1;        
+        for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
+            Vec3f vec = mesh->getVertices()->getVec(i);
+            m_points->appendSFValue((vec.x - minX) / divX,
+                                    (vec.y - minY) / divY);
+        }
+    }
+}
+
+void    
+NodeNurbsTextureCoordinate::setField(int index, FieldValue *value, int cf)
+{
+    Node::setField(index, value, cf);
+    m_dirty = true;
 }

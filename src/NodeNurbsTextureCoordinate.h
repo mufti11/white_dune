@@ -38,7 +38,7 @@
 # include "SFMFTypes.h"
 #endif
 
-class NodeNurbsGroup;
+class NodeNurbsSurface;
 
 class ProtoNurbsTextureCoordinate : public Proto {
 public:
@@ -73,6 +73,10 @@ public:
 
     virtual bool    maySetDefault(void) { return false; }
 
+    MFVec2f        *getPoint();
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+    void            createNurbsData(void);
+
     fieldMacros(SFInt32, uDimension,    ProtoNurbsTextureCoordinate)
     fieldMacros(SFInt32, vDimension,    ProtoNurbsTextureCoordinate)
     fieldMacros(MFFloat, uKnot,         ProtoNurbsTextureCoordinate)
@@ -81,6 +85,12 @@ public:
     fieldMacros(SFInt32, vOrder,        ProtoNurbsTextureCoordinate)
     fieldMacros(MFVec2f, controlPoint,  ProtoNurbsTextureCoordinate)
     fieldMacros(MFFloat, weight,        ProtoNurbsTextureCoordinate)
+
+protected:
+    NodeNurbsSurface *m_nurbs;
+    MFVec2f *m_points;
+    bool m_dirty;
 };
 
 #endif
+

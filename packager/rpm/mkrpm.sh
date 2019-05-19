@@ -168,9 +168,9 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune.desktop
 %{_bindir}/dune4kids
 %{_bindir}/illegal2vrml
 %{_datadir}/applications/dune.desktop
-%{_datadir}/pixmaps/dune.bmp
+%{_datadir}/pixmaps/dune.png
 %{_datadir}/applications/dune4kids.desktop
-%{_datadir}/pixmaps/dune4kids.bmp
+%{_datadir}/pixmaps/dune4kids.png
 %{_mandir}/man1/dune.1*
 %{_mandir}/man1/dune4kids.1*
 %{_mandir}/man1/illegal2vrml.1*

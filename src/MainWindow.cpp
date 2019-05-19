@@ -375,7 +375,9 @@ static NodeButton buttons3[] = {
 static NodeButton buttonsVRML200x[] = {
     { VRML_NURBS_CURVE,           ID_NEW_NURBS_CURVE,           true,  true },
     { VRML_NURBS_SURFACE,         ID_NEW_NURBS_PLANE_ZX,        true,  true },
-    { VRML_NURBS_TEXTURE_SURFACE, ID_NEW_NURBS_TEXTURE_SURFACE, false, true },
+    { X3D_NURBS_TEXTURE_COORDINATE, 
+                                  ID_NEW_NURBS_TEXTURE_COORDINATE, 
+                                                                false, true },
     { BS,                         0,                            true,  true },
     { LAST_NODE + 1,              ID_NEW_NURBS_GROUP,           true,  true },
     { BS,                         0,                            true,  true },
@@ -3263,10 +3265,11 @@ MainWindow::OnCommand(void *vid)
         createGeometryNode("NurbsSwungSurface");
         break;
       case ID_NEW_NURBS_TEXTURE_COORDINATE:
-        insertNode(NURBS_TEXTURE_COORDINATE_NODE, "NurbsTextureCoordinate");
-        break;
       case ID_NEW_NURBS_TEXTURE_SURFACE:
-        insertNode(NURBS_TEXTURE_COORDINATE_NODE, "NurbsTextureSurface");
+        if (m_scene->isX3d())
+            insertNode(NURBS_TEXTURE_COORDINATE_NODE, "NurbsTextureCoordinate");
+        else
+            insertNode(NURBS_TEXTURE_COORDINATE_NODE, "NurbsTextureSurface");
         break;
       case ID_NEW_NURBS_TRIMMED_SURFACE:
         createGeometryNode("NurbsTrimmedSurface");
@@ -5400,8 +5403,9 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
             break;
           case X3D_NURBS_TEXTURE_COORDINATE:
             valid = m_scene->isX3d();
-            if (!valid)
-                break;
+            valid = valid &&
+                    node->findFirstValidFieldType(
+                                NURBS_TEXTURE_COORDINATE_NODE) != -1;
             break;
           case VRML_NURBS_TEXTURE_SURFACE:
             valid = valid &&

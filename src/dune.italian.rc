@@ -820,9 +820,8 @@ BEGIN
                MENUITEM "ColorRGBA (occorre Indexed*Set or PointSet or ElevationGrid)", ID_NEW_COLOR_RGBA
                MENUITEM "FogCoordinate (occorre *Set)",  ID_NEW_FOG_COORDINATE
                MENUITEM "TextureCoordinateGenerator (occorre IndexedFaceSet or ElevationGrid or Multi*TextureCoordinate or Multi*TextureCoordinate, non renderizzato)", ID_NEW_TEXTURE_COORDINATE_GENERATOR
-               MENUITEM "NurbsTextureCoordinate (non renderizzato, occorre NurbsPatchSurface)", ID_NEW_NURBS_TEXTURE_COORDINATE
+               MENUITEM "NurbsTextureCoordinate/Surface (occorre NurbsPatchSurface)", ID_NEW_NURBS_TEXTURE_COORDINATE
                MENUITEM "MultiTextureCoordinate",       ID_NEW_MULTI_TEXTURE_COORDINATE
-               MENUITEM "NurbsTextureSurface (occorre Nurbs(Patch)Surface) (non renderizzato)", ID_NEW_NURBS_TEXTURE_SURFACE
            END
        END
        POPUP "&Material/Texture"
@@ -3504,7 +3503,8 @@ BEGIN
     ID_IT_NEW_CONTOUR_2D       "Inserisci un nuovo VRML97 Amd. 1 Contour2D (occorre TrimmedSurface)\nVRML97 Amd. 1 Contour2D (occorre TrimmedSurface)"
     ID_IT_NEW_NURBS_CURVE_2D   "Inserisci un nuovo VRML97 Amd. 1 NurbsCurve2D (occorre Contour2D)\nVRML97 Amd. 1 NurbsCurve2D (occorre Contour2D)"
     ID_IT_NEW_CONTOUR_POLYLINE_2D "Inserisci un nuovo VRML97 Amd. 1 Polyline2D/X3D ContourPolyline2D (occorre Contour2D)\nVRML97 Amd. 1 Polyline2D/X3D ContourPolyline2D (occorre Contour2D)"
-    ID_IT_NEW_NURBS_TEXTURE_SURFACE "Inserisci un nuovo VRML97 Amd. 1 NurbsTextureSurface (occorre Nurbs(Patch)Surface) (non renderizzato)\nVRML97 Amd. 1 NurbsTextureSurface (occorre Nurbs(Patch)Surface) (non renderizzato)"
+    ID_IT_NEW_NURBS_TEXTURE_SURFACE "Inserisci un nuovo VRML97 Amd. 1 NurbsTextureCoordinate/Surface (occorre Nurbs(Patch)Surface) (non renderizzato)\nX3D NurbsTextureCoordinate/VRML97 Amd. 1 NurbsTextureSurface (occorre Nurbs(Patch)Surface) (non renderizzato)"
+    ID_IT_NEW_NURBS_TEXTURE_COORDINATE "Inserisci un nuovo VRML97 Amd. 1 NurbsTextureCoordinate/Surface (occorre Nurbs(Patch)Surface)\nX3D NurbsTextureCoordinate/VRML97 Amd. 1 NurbsTextureSurface (occorre Nurbs(Patch)Surface)"
     ID_IT_NEW_NURBS_POSITION_INTERPOLATOR "Inserisci un nuovo VRML97 Amd. 1 NurbsPositionInterpolator\nVRML97 Amd. 1 NurbsPositionInterpolator"
     ID_IT_NEW_COORDINATE_DEFORMER "Inserisci un nuovo VRML97 Amd. 1 CoordinateDeformer (non renderizzato)\nVRML97 Amd. 1 CoordinateDeformer (non renderizzato)"
     ID_IT_NEW_INLINE_LOAD_CONTROL "Crea un nuovo VRML97 Amd. 1 InlineLoadControl\nVRML97 Amd. 1 InlineLoadControl"
@@ -3569,7 +3569,6 @@ BEGIN
     ID_IT_NEW_LINE_PROPERTIES "Inserisci un nuovo X3D LineProperties Node.\nX3D LineProperties"
     ID_IT_NEW_COORDINATE_DOUBLE "Inserisci un nuovo CoordinateDouble node (occorre Indexed*Set or PointSet, non renderizzato).\nCoordinateDouble (occorre Indexed*Set or PointSet)"
     ID_IT_NEW_COLOR_RGBA      "Inserisci un nuovo X3D ColorRGBA node (occorre Indexed*Set or PointSet or ElevationGrid).\nX3D ColorRGBA (occorre Indexed*Set or PointSet or ElevationGrid)"
-    ID_IT_NEW_NURBS_TEXTURE_COORDINATE "Inserisci un nuovo X3D NurbsTextureCoordinate (occorre Nurbs(Patch)Surface) (non renderizzato)\nX3D NurbsTextureCoordinate (occorre Nurbs(Patch)Surface) (non renderizzato)"
     ID_IT_NEW_TEXTURE_COORDINATE_GENERATOR "Inserisci un nuovo X3D TextureCoordinateGenerator node (non renderizzato, occorre IndexedFaceSet or ElevationGrid or Multi*TextureCoordinate).\nX3D TextureCoordinateGenerator (occorre IndexedFaceSet or ElevationGrid or Multi*TextureCoordinate)"
     ID_IT_NEW_BOOLEAN_FILTER   "Inserisci un nuovo X3D BooleanFilter Node.\nX3D BooleanFilter"
     ID_IT_NEW_BOOLEAN_TOGGLE   "Inserisci un nuovo X3D BooleanToggle Node.\nX3D BooleanToggle"

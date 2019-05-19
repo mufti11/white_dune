@@ -5094,6 +5094,10 @@ Updated dune4kids menus
 
 Added NURBS neighbour selection
 
+Added NurbsTextureCoordinate rendering
+
+Fixed scroll error in SceneTree
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

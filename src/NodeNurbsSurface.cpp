@@ -52,6 +52,7 @@
 #include "MoveCommand.h"
 #include "NodeNurbsTrimmedSurface.h"
 #include "NodeCoordinateDouble.h"
+#include "NodeNurbsTextureCoordinate.h"
 #include "resource.h"
 
 ProtoNurbsSurface::ProtoNurbsSurface(Scene *scene)
@@ -364,7 +365,7 @@ NodeNurbsSurface::createMesh(const Vec3f *controlPoints, bool cleanVertices,
     bool hasTexCoords = false;
     int size = iuTess * ivTess;
     MFVec2f *mfTexCoord = new MFVec2f(size);
-    if (texCoord()->getValue()) 
+    if (texCoord()->getValue()) {
         if (texCoord()->getValue()->getType() == VRML_TEXTURE_COORDINATE) {
             NodeTextureCoordinate *ntexCoord = (NodeTextureCoordinate *)
                                                texCoord()->getValue();
@@ -373,6 +374,16 @@ NodeNurbsSurface::createMesh(const Vec3f *controlPoints, bool cleanVertices,
                     mfTexCoord->setSFValue(i, ntexCoord->point()->getSFValue(i));
                 hasTexCoords = true;
             }
+        }
+        if (texCoord()->getValue()->getType() == X3D_NURBS_TEXTURE_COORDINATE) {
+            NodeNurbsTextureCoordinate *ntexCoord = 
+                (NodeNurbsTextureCoordinate *)texCoord()->getValue();
+            if (ntexCoord->getPoint()) {
+                for (int i = 0; i < ntexCoord->getPoint()->getSFSize(); i++)
+                    mfTexCoord->setSFValue(i, ntexCoord->getPoint()->getSFValue(i));
+                hasTexCoords = true;
+            }
+        }
     }
 
     if (iuTess <= 0) iuTess = TheApp->getTessellation();
