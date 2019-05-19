@@ -1,3 +1,17 @@
+wdune (1.082-1) experimental; urgency=low
+
+  * Version 1.082 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Sun, 19 May 2019 04:49:40 +0200
+
+whitedune (1.082-1) experimental; urgency=low
+
+  * Version 1.082 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Sun, 19 May 2019 04:04:11 +0200
+
 wdune (1.078-1) experimental; urgency=low
 
   * Version 1.078 debian package

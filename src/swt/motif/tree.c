@@ -888,21 +888,18 @@ setCurrent(STree *tree, STreeItem *item)
         swGetScrollPosition(tree->scroller, &x, &y);
         swGetScrollViewportSize(tree->scroller, &w, &h);
         itemPos = item->index * tree->itemHeight;
-        if (itemPos + 3 * tree->itemHeight > h) {
-            if (itemPos + 3 * tree->itemHeight > y) {
-                swSetScrollSizes(tree->scroller, w, y);
-            } else 
-                swSetScrollSizes(tree->scroller, w, 
-                                 itemPos + 3 * tree->itemHeight);
-        }
+        if (itemPos + 3 * tree->itemHeight > y + h) {
+            swSetScrollSizes(tree->scroller, w, y + h);
+        } else 
+            swSetScrollSizes(tree->scroller, w, itemPos + 3 * tree->itemHeight);
         iPos = itemPos;
         if (iPos < y) {
             swSetScrollPosition(tree->scroller, x, iPos);
-        } else if (iPos + 2* tree->itemHeight - h > y + h) {
+        } else if (iPos + 3 * tree->itemHeight > y + h) {
             swSetScrollPosition(tree->scroller, x, 
-                                iPos + 2 * tree->itemHeight - h);
+                                iPos + 3 * tree->itemHeight - h);
         } else
-            swSetScrollPosition(tree->scroller, x, y);
+            swSetScrollPosition(tree->scroller, x, y );
 
         if (tree->callback) {
             tree->callback(tree->data, SW_TREE_SELECT, item);
