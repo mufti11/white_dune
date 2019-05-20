@@ -38,28 +38,17 @@
 # include "SFMFTypes.h"
 #endif
 
-class NodeNurbsGroup;
+#include "NodeNurbsTextureCoordinate.h"
 
-class ProtoNurbsTextureSurface : public Proto {
+class ProtoNurbsTextureSurface : public ProtoNurbsTextureCoordinate {
 public:
                     ProtoNurbsTextureSurface(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_NURBS_TEXTURE_SURFACE; }
-    virtual int     getNodeClass() const 
-                       { return NURBS_TEXTURE_COORDINATE_NODE; }
-
-    FieldIndex uDimension;
-    FieldIndex vDimension;
-    FieldIndex uKnot;
-    FieldIndex vKnot;
-    FieldIndex uOrder;
-    FieldIndex vOrder;
-    FieldIndex controlPoint;
-    FieldIndex weight;
 };
 
-class NodeNurbsTextureSurface : public Node {
+class NodeNurbsTextureSurface : public NodeNurbsTextureCoordinate {
 public:
                     NodeNurbsTextureSurface(Scene *scene, Proto *proto);
 protected:
@@ -69,45 +58,9 @@ public:
     virtual int     getX3dVersion(void) const { return -1; }
     virtual Node   *copy() const { return new NodeNurbsTextureSurface(*this); }
 
-/*
-    virtual void    drawHandles(void);
-
-    virtual Vec3f   getHandle(int handle, int *constraint, int *field);
-    virtual void    setHandle(int handle, const Vec3f &v);
-*/
-
-    virtual void    setField(int index, FieldValue *value, int cf = -1);
-
-    virtual Node   *degreeElevate(int newUDegree, int newVDegree); 
-
-    virtual void    flip(int index);
-    virtual void    swap(int fromTo);
-
-    virtual bool    maySetDefault(void) { return false; }
-
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
     int             writeProto(int filedes);
     int             write(int filedes, int indent);
-
-    fieldMacros(SFInt32, uDimension,    ProtoNurbsTextureSurface)
-    fieldMacros(SFInt32, vDimension,    ProtoNurbsTextureSurface)
-    fieldMacros(MFFloat, uKnot,         ProtoNurbsTextureSurface)
-    fieldMacros(MFFloat, vKnot,         ProtoNurbsTextureSurface)
-    fieldMacros(SFInt32, uOrder,        ProtoNurbsTextureSurface)
-    fieldMacros(SFInt32, vOrder,        ProtoNurbsTextureSurface)
-    fieldMacros(MFVec2f, controlPoint,  ProtoNurbsTextureSurface)
-    fieldMacros(MFFloat, weight,        ProtoNurbsTextureSurface)
-
-/*
-    virtual void    setHandle(MFVec3f *newValue, int handle, float newWeight,
-                              const Vec3f &newV, const Vec3f &oldV,
-                              bool already_changed = false);
-    virtual void    setHandle(float newWeight, 
-                              const Vec3f &newV, const Vec3f &oldV);
-*/
-
-protected:
-    NodeNurbsGroup *findNurbsGroup();
 };
 
 #endif // _NODE_NURBS_TEXTURE_SURFACE_H

@@ -5098,6 +5098,10 @@ Added NurbsTextureCoordinate rendering
 
 Fixed scroll error in SceneTree
 
+Fixed NurbsTextureSurface/Coodinate nodes
+
+Fixed missing undo operation for NURBS extrusion
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

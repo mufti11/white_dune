@@ -1526,11 +1526,13 @@ NodeNurbsSurface::repairKnotAndWeight()
         return;
     m_inRepair = true;
     if (controlPoints && controlPoints->getSFSize() > 0) { 
-        if (controlPoints->getSFSize() > weight()->getSize()) {
+        if (controlPoints->getSFSize() != weight()->getSize()) {
             MFFloat *oldWeights = weight();
             MFFloat *newWeights = new MFFloat();
-            for (int i = 0; i < oldWeights->getSize(); i++)
+            for (int i = 0; (i < oldWeights->getSize()) && 
+                            (i < controlPoints->getSFSize()); i++)
                 newWeights->appendSFValue(oldWeights->getValue(i));
+printf("controlpointsize %d\n", controlPoints->getSFSize());
             for (int i = oldWeights->getSize(); i < controlPoints->getSFSize();
                  i++)
                 newWeights->appendSFValue(1);
@@ -1585,6 +1587,14 @@ void
 NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints, 
                                 int vFrom, int vTo, int vPoints)
 {
+    m_scene->backupFieldsStart();
+    backupFieldsAppend(controlPoint_Field());
+    m_scene->backupFieldsAppend(this, uKnot_Field());
+    m_scene->backupFieldsAppend(this, vKnot_Field());
+    m_scene->backupFieldsAppend(this, vDimension_Field());
+    m_scene->backupFieldsAppend(this, weight_Field());
+    m_scene->backupFieldsDone();
+
     m_scene->removeSelectedHandles();
 
     int iuDimension = uDimension()->getValue();
@@ -1630,6 +1640,7 @@ NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints,
                     add = inc;
                 Vec3f vec = oldControlPoints->getVec(j * iuDimension + i) + add;
                 int insert = j * iuDimension + i; 
+printf("insert %d\n", insert);
                 controlPoints->insertSFValue(insert, vec.x, vec.y, vec.z);
             }
 
@@ -1637,9 +1648,15 @@ NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints,
 
     controlPoints->ref();
     setControlPoints(controlPoints);
-    weight(new MFFloat());
-    uKnot(new MFFloat());
-    vKnot(new MFFloat());
+    MFFloat *newWeight = new MFFloat();
+    newWeight->ref();
+    weight(newWeight);
+    MFFloat *newUKnot = new MFFloat();
+    newUKnot->ref();
+    uKnot(newUKnot);
+    MFFloat *newVKnot = new MFFloat();
+    newVKnot->ref();
+    vKnot(newVKnot);
     repairKnotAndWeight();    
     if (m_scene->getXSymetricMode()) {
         makeSymetric(0, (uFrom < iuDimension / 2) ? false : true);

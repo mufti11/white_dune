@@ -45,8 +45,6 @@
 #include "NodeCoordinate.h"
 #include "NodeNormal.h"
 #include "NodeTextureCoordinate.h"
-#include "NodeIndexedFaceSet.h"
-#include "NodeNurbsGroup.h"
 #include "Util.h"
 #include "Field.h"
 #include "ExposedField.h"
@@ -54,8 +52,22 @@
 #include "NodeNurbsTrimmedSurface.h"
 #include "MyMesh.h"
 
+ProtoNurbsTextureCoordinate::ProtoNurbsTextureCoordinate(Scene *scene,
+                                                         const char *name)
+  : Proto(scene, name)
+{
+    addElements();
+}
+
 ProtoNurbsTextureCoordinate::ProtoNurbsTextureCoordinate(Scene *scene)
   : Proto(scene, "NurbsTextureCoordinate")
+{
+    addElements();
+}
+
+
+void
+ProtoNurbsTextureCoordinate::addElements(void)
 {
     uDimension.set(
           addField(SFINT32, "uDimension", new SFInt32(0), new SFInt32(0)));
@@ -128,9 +140,10 @@ NodeNurbsTextureCoordinate::createNurbsData()
     m_nurbs->setField(m_nurbs->uOrder_Field(), new SFInt32(newUOrder));
     m_nurbs->setField(m_nurbs->vOrder_Field(), new SFInt32(newVOrder));
     m_nurbs->setField(m_nurbs->uDimension_Field(), new SFInt32(newUDimension));
+    m_nurbs->setField(m_nurbs->vDimension_Field(), new SFInt32(newVDimension));
     m_nurbs->weight(new MFFloat(newWeights, controlPoint()->getSFSize()));
     m_nurbs->createControlPoints(new MFVec3f(newControlPoints, 
-                                 controlPoint()->getSize()));
+                                 controlPoint()->getSize() / 2 * 3));
     int uTess = 0;
     int vTess = 0;
     if (hasParent())

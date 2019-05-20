@@ -43,6 +43,8 @@ class NodeNurbsSurface;
 class ProtoNurbsTextureCoordinate : public Proto {
 public:
                     ProtoNurbsTextureCoordinate(Scene *scene);
+                    ProtoNurbsTextureCoordinate(Scene *scene, const char *name);
+    void            addElements(void);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_NURBS_TEXTURE_COORDINATE; }

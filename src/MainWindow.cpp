@@ -5339,12 +5339,6 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
             if (field != -1)
                 if (node->validChildType(field, TEXTURE_COORDINATE_NODE))
                     valid = true;
-            if (!valid) {
-                valid = node->findValidFieldType(VRML_TEXTURE_COORDINATE) != -1;
-                if (field != -1)
-                    if (node->validChildType(field, VRML_TEXTURE_COORDINATE))
-                        valid = true;
-            }
             break;
           case X3D_TEXTURE_COORDINATE_GENERATOR:
             valid = node->findValidFieldType(
@@ -5402,15 +5396,13 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
             valid = node->findValidFieldType(MATERIAL_NODE) != -1;
             break;
           case X3D_NURBS_TEXTURE_COORDINATE:
-            valid = m_scene->isX3d();
             valid = valid &&
                     node->findFirstValidFieldType(
                                 NURBS_TEXTURE_COORDINATE_NODE) != -1;
             break;
           case VRML_NURBS_TEXTURE_SURFACE:
-            valid = valid &&
-                    node->findFirstValidFieldType(
-                                NURBS_TEXTURE_COORDINATE_NODE) != -1;
+            valid = node->findFirstValidFieldType(
+                              NURBS_TEXTURE_COORDINATE_NODE) != -1;
             break;
           case X3D_NURBS_TRIMMED_SURFACE:
           case X3D_NURBS_SWEPT_SURFACE:
