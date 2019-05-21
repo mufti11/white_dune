@@ -5102,6 +5102,8 @@ Fixed NurbsTextureSurface/Coodinate nodes
 
 Fixed missing undo operation for NURBS extrusion
 
+Fixed double move when moving handles
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

@@ -834,6 +834,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
             if (node->getType() == VRML_COORDINATE)
                 ((NodeCoordinate *)node)->setBeginHandles();
 
+            MyArray<Vec3f> alreadyHandledVertices;
             for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
                 int handle = m_scene->getSelectedHandle(i);
                 if (v != old) {
@@ -860,7 +861,24 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                         m_scene->backupFieldsDone();
                         m_backedUp = true;
                     }
-                    node->setHandle(handle, oldv + diff);
+                    if (m_scene->getXSymetricMode()) {
+                        float eps = TheApp->GetHandleEpsilon();
+                        bool alreadyHandled = false;
+                        for (int i; i < alreadyHandledVertices.size(); i++) {
+                            Vec3f vec = alreadyHandledVertices[i];
+                            if ((fabs(oldv.x - vec.x) < eps) &&
+                                (oldv.y == vec.y) && 
+                                (oldv.z == vec.z)) {
+                                alreadyHandled = true;
+                                break;
+                            }
+                        }                    
+                        if (!alreadyHandled) {
+                            node->setHandle(handle, oldv + diff);
+                            alreadyHandledVertices.append(oldv);                
+                        }
+                    } else 
+                        node->setHandle(handle, oldv + diff);
                 }
                 if (m_scene->getSelectedHandlesSize() > 1)
                     node->startSetMultiHandles();
