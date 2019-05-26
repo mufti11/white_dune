@@ -1532,7 +1532,6 @@ NodeNurbsSurface::repairKnotAndWeight()
             for (int i = 0; (i < oldWeights->getSize()) && 
                             (i < controlPoints->getSFSize()); i++)
                 newWeights->appendSFValue(oldWeights->getValue(i));
-printf("controlpointsize %d\n", controlPoints->getSFSize());
             for (int i = oldWeights->getSize(); i < controlPoints->getSFSize();
                  i++)
                 newWeights->appendSFValue(1);
@@ -1640,7 +1639,6 @@ NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints,
                     add = inc;
                 Vec3f vec = oldControlPoints->getVec(j * iuDimension + i) + add;
                 int insert = j * iuDimension + i; 
-printf("insert %d\n", insert);
                 controlPoints->insertSFValue(insert, vec.x, vec.y, vec.z);
             }
 

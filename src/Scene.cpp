@@ -370,6 +370,7 @@ Scene::Scene()
     m_height = 768;
     m_hasParticleSystem = false;
     m_hasMovieTexture = false;
+    m_infoHandles = false;
 }
 
 void

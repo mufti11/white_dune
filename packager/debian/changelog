@@ -1,3 +1,10 @@
+wdune (1.088-1) experimental; urgency=low
+
+  * Version 1.088 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Tue, 21 May 2019 11:29:08 +0200
+
 wdune (1.084-1) experimental; urgency=low
 
   * Version 1.084 debian package

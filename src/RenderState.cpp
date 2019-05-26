@@ -109,7 +109,9 @@ RenderState::drawHandle(const Vec3d &pos)
 void
 RenderState::setHandleColor(Scene *scene, int handle)
 {
-    if (scene->isInSelectedHandles(handle))
+    if (scene->getInfoHandles())
+        Util::myGlColor3f(1.0f, 0.0f, 0.0f);
+    else if (scene->isInSelectedHandles(handle))
         Util::myGlColor3f(0.0f, 1.0f, 0.0f);
     else
         Util::myGlColor3f(1.0f, 1.0f, 1.0f);

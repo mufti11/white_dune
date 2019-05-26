@@ -73,6 +73,7 @@ NodeHAnimJoint::NodeHAnimJoint(Scene *scene, Proto *def)
   : NodeTransform(scene, def)
 {
     m_jointMatrix = Matrix::identity();
+    m_coord = NULL;
 }
 
 void
@@ -100,18 +101,42 @@ NodeHAnimJoint::getComponentName(void) const
     return name;
 }
 
+static bool searchCoord(Node *node, void *data)
+{
+    NodeCoordinate **ret = (NodeCoordinate **)data;
+    if (node->getType() == VRML_COORDINATE) {
+        NodeCoordinate *coord = (NodeCoordinate *)node;
+        coord->getScene()->setInfoHandles(true);
+        coord->drawHandles();
+        coord->getScene()->setInfoHandles(false);
+        *ret = coord;
+    }
+    return true;     
+}
+
 void    
 NodeHAnimJoint::drawHandles(void)
 {
     if (m_scene->getSelection())
         if (m_scene->getSelection()->getNode() == this) {
             NodeHAnimHumanoid *human = this->getHumanoid();
-            if (human)
+            if (human) {
+                m_scene->setLastSelectedHAnimJoint(this);
+                human->doWithBranch(searchCoord, &m_coord, false, false);
                 human->drawJointHandle(TheApp->GetHandleScale(), this);
+            }
             return;
         }
     updateHandles();    
 }
+
+void    
+NodeHAnimJoint::setHandle(int handle, const Vec3f &v) 
+{
+    if (handle > NO_HANDLE)
+        NodeTransform::setHandle(handle, v);
+}
+
 
 void
 NodeHAnimJoint::drawJointHandles(float scale, Node *parent, Node *that)

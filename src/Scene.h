@@ -110,7 +110,8 @@ enum {
      SELECTION_MODE_FACES = 0,
      SELECTION_MODE_VERTICES = 1,
      SELECTION_MODE_LINES = 2,
-     SELECTION_HANIM_JOINT_WEIGHT = 3
+     SELECTION_HANIM_JOINT_WEIGHT = 3,
+     SELECTION_VERTICES_OF_HANIM_JOINT = 4
 };
 
 enum {
@@ -773,6 +774,8 @@ public:
     bool                getDeselect(void) { return m_deselect; }
     Node               *searchProtoNodeId(long id);
     int                 getProtoType(Proto *proto);
+    void                setLastSelectedHAnimJoint(Node *n) 
+                           { m_lastSelectedHAnimJoint = n; }
     Node               *getLastSelectedHAnimJoint(void) 
                            { return m_lastSelectedHAnimJoint; }
     double              getCurrentTime(void) { return m_currentTime; }
@@ -818,6 +821,10 @@ public:
                             { return m_hasMovieTexture; }
     void                setMovieTexture(bool flag) 
                             { m_hasMovieTexture = flag; }
+
+    void                  setInfoHandles(bool flag) 
+                              { m_infoHandles = flag; }
+    bool                  getInfoHandles(void) { return m_infoHandles; }
 
 protected:
     int                 writeExtensionProtos(int f, int flag);
@@ -1036,6 +1043,10 @@ protected:
 
     bool                m_hasParticleSystem;
     bool                m_hasMovieTexture;
+
+    Node               *m_orthoViewpoint;
+
+    bool                m_infoHandles;
 };
 
 bool writeCNodeData(Node *node, void *data);

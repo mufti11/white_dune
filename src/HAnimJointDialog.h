@@ -44,7 +44,8 @@ class HAnimJointDialog : public Dialog {
 public:
                         HAnimJointDialog(SWND parent, int idd, 
                                          Scene *scene, float value,
-                                         bool nodesFromScene = false);
+                                         bool nodesFromScene = false,
+                                         bool newJoint = true);
     virtual            ~HAnimJointDialog();
 
     void                LoadData();
@@ -61,6 +62,7 @@ private:
     float               m_upperlimit;
     float               m_lowerlimit;
     MyArray<MyString>   m_joints;
+    bool                m_newJoint;
 };
 
 #endif

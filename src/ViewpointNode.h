@@ -87,9 +87,9 @@ public:
 
     virtual Vec3d       getPosition() const;
     
-    Quaternion          getOrientation() const;
+    virtual Quaternion  getOrientation() const;
 
-    void                setOrientation(const Quaternion &quat);
+    virtual void        setOrientation(const Quaternion &quat);
 
     SFFloat            *fov() { return fieldOfView(); };
 

@@ -32,7 +32,8 @@
 #include "NodeHAnimHumanoid.h"
 
 HAnimJointDialog::HAnimJointDialog(SWND parent, int idd, Scene *scene,
-                                   float value, bool nodesFromScene)
+                                   float value, bool nodesFromScene,
+                                   bool newJoint)
   : Dialog(parent, idd)
 {
     m_weight = value;
@@ -52,6 +53,7 @@ HAnimJointDialog::HAnimJointDialog(SWND parent, int idd, Scene *scene,
         m_node = NULL;
     }
     m_parent = nparent;
+    m_newJoint = newJoint;
     LoadData();
 }
 
@@ -71,7 +73,9 @@ HAnimJointDialog::SaveData()
     int nodeIndex = swComboBoxGetSelection(comboNode);
     if ((nodeIndex == 0) && (m_node == NULL))
         m_node = NULL;
-    else if (nodeIndex > 0)
+    else if (nodeIndex == 1)
+        m_node = NULL;
+    else if (nodeIndex > 1)
         m_node = m_scene->use(m_joints[nodeIndex]);
 
     SWND comboParent = swGetDialogItem(m_dlg, IDC_JOINT_PARENT);
@@ -124,9 +128,11 @@ HAnimJointDialog::LoadData()
     swComboBoxDeleteAll(comboParent);  
 
     if (m_node != NULL)
-        m_joints[0] = m_node->getName(); 
+        m_joints.append(m_node->getName());
+    if (m_newJoint) 
+        m_joints.append("new HAimJoint"); 
     else
-        m_joints[0] = "new HAimJoint"; 
+        m_joints.append("split HAimJoint into 2 joints"); 
 
     const NodeList *nodes = m_scene->getNodes();
     for (int i = 0; i < nodes->size(); i++) {

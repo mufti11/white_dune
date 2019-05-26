@@ -87,18 +87,6 @@ void
 NodeOrthoViewpoint::apply(bool useStereo)
 {
     glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-    if (m_scene->isCurrentViewpoint(this)) {
-        double unitAngle = m_scene->getUnitAngle();
-        const float *rot = orientation()->getValue();
-        const float *pos = position()->getValue();
-
-        glRotatef(RAD2DEG(-rot[3] * unitAngle), rot[0], rot[1], rot[2]);
-        glTranslatef(-pos[0], -pos[1], -pos[2]);
-    }
-    glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
-    glPopMatrix();
     transformForViewpoint(useStereo);
 }
 
@@ -139,9 +127,10 @@ NodeOrthoViewpoint::getPosition() const
      return Vec3d(vec.x, vec.y, vec.z);
 }
 
-void NodeOrthoViewpoint::setPosition(const Vec3f &pos)
+void NodeOrthoViewpoint::setPosition(const Vec3d &pos)
 {
-    m_scene->setField(this, position_Field(), new SFVec3f(pos));
+    m_scene->setField(this, position_Field(), 
+                            new SFVec3f(pos.x, pos.y, pos.z));
 }
 
 Quaternion 

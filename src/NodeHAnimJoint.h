@@ -82,6 +82,8 @@ public:
     virtual void    preDraw() {}
     virtual void    draw(int pass) {} 
 
+    virtual void    setHandle(int handle, const Vec3f &v);
+
     void            getJointMatrix(Matrix &matrix) 
                         { m_jointMatrix.copyTo(matrix); } 
 
@@ -97,6 +99,7 @@ public:
     fieldMacros(MFFloat,    ulimit,           ProtoHAnimJoint)
 protected:
     Matrix m_jointMatrix;
+    NodeCoordinate *m_coord;
 };
 
 #endif

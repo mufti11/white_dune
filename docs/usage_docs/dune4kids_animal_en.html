@@ -1,0 +1,436 @@
+<h1>Building a animated 4 legged animal with white_dune 4kids and white_dune</h1>
+<p>
+This tutorial is long, difficult (cause it requires both the 4kids and
+the complicated full version of white_dune) and the result is not prefect.<br>
+You should have read another dune4kids tutorial first.<br>
+This tutorial requires <a href="https://wdune.ourproject.org">white_dune</a>
+version 1.100 or higher.
+</p>
+<h2>Building the body and legs</h2>
+<p>
+We begin with the menu command <em>Change -&gt; Show (sometimes) numbers</em>
+<br>
+The menu entry <em>Change -&gt; X mirrored modelling</em> has to be set.
+<br>
+We add a "Superegg" (Superellipsoid) with <em>New -&gt; 'Superegg'</em>.<br>
+<img src="animal1.png"><br><br>
+The "n2" paramter has to be changed, to make the body more bluff.
+<br>
+<img src="animal2.png"><br><br>
+Use <em>Change -&gt; Male deformable (NURBS)</em>.<br>
+A dialog will open:
+<br>
+<img src="animal3.png"><br><br>
+In this dialog, you need to change the numbers and press OK.
+<br>
+<img src="animal4.png"><br><br>
+A grid on the object will appear.
+<br>
+<img src="animal5.png"><br><br>
+Click (select) a point, which is wide enough from the mid of the object.
+<br>
+<img src="animal6.png"><br><br>
+Use <em>Selection -&gt; Neighbours -&gt; u</em>.<br>
+A dialog will open:
+<br>
+<img src="animal7.png"><br><br>
+In this dialog press the "plus" button and press OK.
+<br>
+Use <em>Selection -&gt; Neighbours -&gt; v</em><br>
+A dialog will open:
+<br>
+<img src="animal7.png"><br><br>
+In this dialog press the "plus" button and press OK.<br>
+4 points have been selected<br>
+<img src="animal8.png"><br><br>
+Use <em>Change -&gt; Extrude NurbsSurface</em><br>
+A dialog will open:<br>
+<img src="animal9.png"><br><br>
+Press OK.<br>
+Cause <em>Change -&gt; X mirrored modelling</em> has been set, the NURBS 
+object is extruded at each side
+<br>
+<img src="animal10.png"><br><br>
+Drag a green point with the mouse and pull the points out (point to
+a green point, hold down the left mouse key and move the mouse).
+<br>
+<img src="animal11.png"><br><br>
+You should press the "Mouse Navigation" button 
+<br>
+<img src="animal12.png"><br><br>
+and rotate the object near to the X/Z (red/blue) plane.
+<br>
+<img src="animal13.png"><br><br>
+Drag the green points to the z (blue) direction.
+<br>
+<img src="animal14.png"><br><br>
+Zoom to the object (middle mouse drag) to repair some points,
+<br>
+<img src="animal15.png"><br><br>
+Select the right points with drags of the right mousebuttons.
+<br>
+<img src="animal16.png"><br><br>
+Limit the mouse movement to the X (red) direction
+<br>
+<img src="animal17.png"><br><br>
+Drag the points in the X (red) direction
+<br>
+<img src="animal18.png"><br><br>
+Select some the points at the lower part of the leg.
+<br>
+<img src="animal19.png"><br><br>
+Unlimit the mouse movement
+<br>
+<img src="animal20.png"><br><br>
+Move the points with mouse.
+<br>
+<img src="animal21.png"><br><br>
+Select more points with the mouse
+<br>
+<img src="animal22.png"><br><br>
+and move then in X/Z (red/blue) direction.
+<br>
+<img src="animal23.png"><br><br>
+Select a point on the other side of the object
+<br>
+<img src="animal24.png"><br><br>
+Use <em>Selection -&gt; Neighbours -&gt; u</em><br>
+A dialog will open:
+<br>
+<img src="animal25.png"><br><br>
+Press the plus button and press OK.
+<br>
+Use <em>Selection -&gt; Neighbours -&gt; v</em><br>
+A dialog will open:
+<br>
+<img src="animal26.png"><br><br>
+Press OK.<br>
+4 points has been selected.<br>
+Use <em>Change -&gt; Extrude NurbsSurface</em> and press OK in the Dialog.
+<br>
+<img src="animal27.png"><br><br>
+<br>
+<img src="animal28.png"><br><br>
+Press the "Mouse Navigation" button.
+<br>
+<img src="animal29.png"><br><br>
+Release the "Mouse Navigation" button.
+<br>
+Move the green points in X/Z (red/blue) direction.
+<br>
+<img src="animal30.png"><br><br>
+<br>
+<img src="animal31.png"><br><br>
+<br>
+<img src="animal32.png"><br><br>
+<br>
+<img src="animal33.png"><br><br>
+Navigate and highlight the grid.
+<br>
+<img src="animal34.png"><br><br>
+Select the upper mid of the object.
+<br>
+<img src="animal35.png"><br><br>
+Use <em>Selection -&gt; Range</em> and select a point two points away from
+mid.<br>
+Limit the movement to X/Z (red/blue) directions. 
+<br>
+<img src="animal36.png"><br><br>
+Drag the points to form a neck.
+<br>
+<img src="animal37.png"><br><br>
+Select some points to form a mouth.
+<br>
+<img src="animal38.png"><br><br>
+Drag the points.
+<br>
+<img src="animal39.png"><br><br>
+<br>
+<img src="animal40.png"><br><br>
+Select some points and drag them to complete the mouth and create ears.
+<br>
+<img src="animal41.png"><br><br>
+Navigate
+<br>
+<img src="animal42.png"><br><br>
+Select the NurbsSurface and use 
+<em>Change -&gt; Change to -&gt; IndexedFaceSet</em>
+<br>
+<img src="animal43.png"><br><br>
+Save the file and reopen it in the full version of white_dune (if you 
+have no icon for this (M$Windows/Mac), use <em>Options -&gt; Start next 
+time with full white_dune version)</em>.<br>
+</p>
+<h2>Animating the legs</h2>
+<p>
+Use <em>Create -&gt; X3D misc Components &gt; HAnim &gt; 
+HanimHumanoid</em>.<br>
+Move the shape node into the HanimHumanoid node.
+<br>
+<img src="animal44.png"><br><br>
+Attention, your object will not be visible for the next time.
+<br>
+<img src="animal45.png"><br><br>
+Set the viewpoint view <em>Actions -&gt; set Viewpoint</em> to -x axis
+</em><br>
+<img src="animal48.png"><br><br>
+Select Coordinate in HAnimHumanoid/Shape/IndexedFaceSet
+<br>
+<img src="animal49.png"><br><br>
+Drag the right mouse button to select the most of the body.
+<br>
+<img src="animal50.png"><br><br>
+You usually need more than 1 drag.
+<br>
+<img src="animal51.png"><br><br>
+Use <em>Selection -&gt; HAnimJoint weight</em>.<br>
+Use <em>Create -&gt; X3D misc Components &gt; HAnim &gt; 
+HanimJoint</em>.<br>
+A dialog will appear
+<br>
+<img src="animal52.png"><br><br>
+A DEF Dialog will appear
+<br>
+<img src="animal52a.png"><br><br>
+Press OK.<br>
+Select the skelekton field and use <em>Edit -&gt; USE</em>
+<br>
+<img src="animal53.png"><br><br>
+The body will appear:
+<br>
+<img src="animal54.png"><br><br>
+</p>
+<h2><a name="getleg">Getting a leg</a></h2>
+<p>
+Select the HanimHumanoid node
+<br>
+<img src="animal55.png"><br><br>
+Select the Coordinate node.
+<br>
+<img src="animal56.png"><br><br>
+Drag the right mouse to select the upper part of the leg
+<br>
+<img src="animal57.png"><br><br>
+Use <em>Create -&gt; X3D misc Components &gt; HAnim &gt; 
+HanimJoint</em>.<br>
+A dialog will appear
+<br>
+<img src="animal58.png"><br><br>
+A DEF Dialog will appear
+<br>
+<img src="animal59.png"><br><br>
+Press OK<br>
+Select the first HAnimJoint in skelton
+<br>
+<img src="animal60.png"><br><br>
+and use <em>Edit -&gt; USE</em>
+<br>
+<img src="animal61.png"><br><br>
+Select the HAnimHumanoid node
+<br>
+<img src="animal62.png"><br><br>
+Select the Coordinate node and select the upper part of the leg.
+<br>
+<img src="animal63.png"><br><br>
+Use <em>Create -&gt; X3D misc Components &gt; HAnim &gt; 
+HanimJoint</em>.<br>
+A dialog will appear
+<br>
+<img src="animal64.png"><br><br>
+A DEF Dialog will appear
+<br>
+<img src="animal65.png"><br><br>
+Select the joint of the upper part of the leg
+<br>
+<img src="animal66.png"><br><br>
+and use <em>Edit -&gt; USE</em>
+<br>
+<img src="animal67.png"><br><br>
+Goto <a href="#getleg">Getting a leg</a> to repeat the commands for the
+other leg pair (cause for the X mirred modelling, the other side leg has 
+been created too).
+</p>
+<a name="splittinglegpair"><h2>Splitting the leg pair</h2></a>
+<p>
+<img src="animal68.png"><br><br>
+Select the leg pair you want to split
+<br>
+<img src="animal69.png"><br><br>
+Select the Coordinate node
+<br>
+<img src="animal70.png"><br><br>
+Select the points you want to split
+<br>
+<img src="animal71.png"><br><br>
+Use <em>Actions -&gt; HAnimJoint weight &gt; Set HAnimJoint weight</em>.
+<br>
+A dialog will appear:
+<br>
+<img src="animal72.png"><br><br>
+Select "split HAimJoint into 2 joints" as "joint:" and press OK.
+<br>
+A DEF Dialog appears:
+<br>
+<img src="animal72a.png"><br><br>
+Press OK.
+<br>
+<img src="animal73.png"><br><br>
+Select the first HAnimJoint and use <em>Edit -&gt; use</em>
+<br>
+<img src="animal74.png"><br><br>
+<br>
+<img src="animal75.png"><br><br>
+<br>
+Continue with <a href="splittinglegpair">splitting the next leg pair</a>.<br>
+There are 3 leg pairs left.
+</p>
+<p>
+Move the joints in the skeleton, so that the lower part of the legs are
+children of the HAnimjoint of the upper part of the leg.
+<br>
+<img src="animal77.png"><br><br>
+Move the joints in the skeleton, so that the upper part of the legs are
+children of the first HAnimjoint.
+<br>
+<img src="animal78.png"><br><br>
+Use <em>Mode -&gt; Center</em> to move the center of the joint to the place
+where you want rotation.
+<br>
+<img src="animal79.png"><br><br>
+The center must be correct in each X, Y and Z direction.
+<br>
+<img src="animal80.png"><br><br>
+<br>
+The center should be X symetric
+<img src="animal81.png"><br><br>
+</p>
+<p>
+Select the symetric joint and set the center values accordingly.
+<br>
+<img src="animal82.png"><br><br>
+Set centers for each joint. There are 6 joints left.
+</p>
+<p>
+Use <em>Mode -&gt; Move</em>
+<br>
+<img src="animal83.png"><br><br>
+The HAnimHumanoid is not complete. You need to set the skinCoord field with
+the Coordinate node.<br>
+Select the Coordinate.
+<br>
+<img src="animal84.png"><br><br>
+Use <em>Edit -&gt; DEF</em> and press OK.
+<br>
+<img src="animal85.png"><br><br>
+Use <em>Edit -&gt; USE</em>
+<br>
+<img src="animal86.png"><br><br>
+The joint handles are too small for this huge mdell.<br>
+Use <em>Options -&gt; Modelling Settings</em>
+<br>
+<img src="animal87.png"><br><br>
+Change the value of the "Humanoid handle size" and press OK.
+<br>
+<img src="animal88.png"><br><br>
+<br>
+<img src="animal89.png"><br><br>
+</p>
+<h2><a name="animatinglegs">Animating the legs</a></h2>
+<p>
+Click to the HAnimJoint handle for the leg you want to animate.
+The handle becomes bigger.
+<br>
+<img src="animal90.png"><br><br>
+Click to the animation icon. A dialog will appear:
+<br>
+<img src="animal91.png"><br><br>
+Set the length of the animation to 1 second and choose rotation.
+<br>
+<img src="animal92.png"><br><br>
+Use <em>View -&gt; Channel View</em>
+<br>
+<img src="animal93.png"><br><br>
+<br>
+Add a point at the left side of the channel view.<br>
+This means that the animation will return to its first value at end of the
+animation. 
+<img src="animal94.png"><br><br>
+Set the channel view cursor to 0.5, press the record button, and change the
+rotation of the joint. 
+<br>
+<img src="animal95.png"><br><br>
+Continue with the joint for the lower part of the leg
+<br>
+<img src="animal96.png"><br><br>
+Click to the animation icon. A dialog will appear:
+<br>
+<img src="animal97.png"><br><br>
+Reuse the old TimeSensor and choose rotation.
+<br>
+<img src="animal98.png"><br><br>
+<br>
+Add a point at the left side of the channel view.<br>
+<img src="animal94.png"><br><br>
+<br>
+Set the channel view cursor to 0.5, press the record button, and change the
+rotation of the joint. 
+<img src="animal100.png"><br><br>
+</p>
+<p>
+Continue <a href="#animatinglegs">animating the legs</a>
+<br>
+<img src="animal101.png"><br><br>
+</p>
+<h2>Adding eyes</h2>
+<p>
+To add eyes, first move the HAnimHumanoid into the Tranfrom.
+<br>
+<img src="animal102.png"><br><br>
+Select the Transform 
+<br>
+<img src="animal103.png"><br><br>
+Use <em>Create -&gt; Shape -&gt; Sphere</em>
+<br>
+<img src="animal104.png"><br><br>
+Move the Sphere to the intended position of the eye
+<br>
+<img src="animal105.png"><br><br>
+Make the sphere smaller
+<br>
+<img src="animal107.png"><br><br>
+Select the Material node and select the diffuseColor field
+<br>
+<img src="animal108.png"><br><br>
+Press the Color Circle icon.
+<br>
+<img src="animal109.png"><br><br>
+Choose a white color.
+<br>
+<img src="animal110.png"><br><br>
+Select the second transform.
+<br>
+<img src="animal111.png"><br><br>
+Use <em>Create -&gt; Shape -&gt; Sphere</em>
+<br>
+<img src="animal112.png"><br><br>
+Make the sphere smaller and move it.
+<br>
+<img src="animal113.png"><br><br>
+Select the Material node and select the diffuseColor field
+<br>
+<img src="animal114.png"><br><br>
+Choose a brown color, use the right bar to choose darkness.
+<br>
+<img src="animal115.png"><br><br>
+You can select specularColor to add a glow effect
+<br>
+<img src="animal116.png"><br><br>
+Select the second Tranform.
+<br>
+<img src="animal117.png"><br><br>
+<br>
+Use <em>Edit -&gt; Copy</em> and <em>Edit -&gt; Paste symetric -&gt; x</em>
+<br>
+<img src="animal118.png"><br><br>
+Your animation is ready
+</p>

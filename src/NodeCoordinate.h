@@ -85,6 +85,8 @@ public:
                               bool changeNow,
                               bool bypassChecks = false);
 
+    void            selectSymetricHandles(void);
+
     virtual void    update();
 
     virtual void    flip(int index);

@@ -114,6 +114,7 @@
 #include "NodeIndexedLineSet.h"
 #include "NodePointSet.h"
 #include "NodeViewpoint.h"
+#include "NodeOrthoViewpoint.h"
 #include "NodeNavigationInfo.h"
 
 #include "NodeLineSet.h"
@@ -4419,9 +4420,8 @@ MainWindow::setViewpoint(void)
         vec = vec * dist;
         SFRotation *rot = new SFRotation(viewData[3], viewData[4], viewData[5],
                                          viewData[6]);
-        Node *camera = m_scene->getCamera();
-        camera->setPosition(vec);
-        camera->setOrientation(rot->getQuat());
+        m_scene->getCamera()->setPosition(vec);
+        m_scene->getCamera()->setOrientation(rot->getQuat());
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
     m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D, NULL);
@@ -5506,6 +5506,13 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
             if (node->getType() == X3D_HANIM_JOINT) {
                 NodeHAnimJoint *joint = (NodeHAnimJoint *)node;
                 if (field != joint->displacers_Field())
+                    valid = true;
+            }
+            if (node->getType() == X3D_HANIM_HUMANOID) {
+                NodeHAnimHumanoid *human = (NodeHAnimHumanoid *)node;
+                if (field == human->sites_Field())
+                    valid = true;
+                if (field == human->viewpoints_Field())
                     valid = true;
             }
             break;
@@ -11519,6 +11526,8 @@ MainWindow::insertHAnimJoint()
             m_scene->setSelection(node);
             m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         } else if (current->getType() == VRML_COORDINATE) {
+            NodeCoordinate *coord = (NodeCoordinate *)current;
+            coord->selectSymetricHandles();
             int numHandles = m_scene->getSelectedHandlesSize();
             if (numHandles == 0)
                 return;
@@ -11575,6 +11584,7 @@ MainWindow::insertHAnimJoint()
                 parent->skinCoordIndex(indices);
                 parent->skinCoordWeight(weights);
             }    
+            m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
         }
     }
 }
@@ -11602,7 +11612,7 @@ MainWindow::setHAnimJointWeight()
             swMessageBox(TheApp->mainWnd(), str, title, SW_MB_OK, SW_MB_ERROR);
             return;
         }
-        HAnimJointDialog dlg(m_wnd, IDD_HANIM_JOINT, m_scene, 1, true); 
+        HAnimJointDialog dlg(m_wnd, IDD_HANIM_JOINT, m_scene, 1, true, false); 
         if (dlg.DoModal() == IDCANCEL)
             return;
         float weight = dlg.GetWeight();
@@ -11610,7 +11620,9 @@ MainWindow::setHAnimJointWeight()
         if (human == NULL)
             return;
         NodeHAnimJoint *joint = (NodeHAnimJoint *)dlg.GetNode(); 
+        bool newJoint = false;
         if (joint == NULL) {
+            newJoint = true;
             joint = (NodeHAnimJoint *)m_scene->createNode("HAnimJoint");
             m_scene->execute(new MoveCommand(joint, NULL, -1, human, 
                                              human->joints_Field()));
@@ -11620,17 +11632,44 @@ MainWindow::setHAnimJointWeight()
             dlg.DoModal();
             m_scene->UpdateViews(NULL, UPDATE_SELECTION_NAME);
         }
-        MFFloat *weights = (MFFloat *)joint->skinCoordWeight()->copy();
-        MFInt32 *indices = (MFInt32 *)joint->skinCoordIndex()->copy();
-        for (int i = 0; i < handles.size(); i++) {
-            int handle = handles[i];
-            int f = indices->find(handle);
-            if (f < 0) {
-                indices->appendSFValue(handle);
-                weights->appendSFValue(weight);
-            } else
-                weights->setSFValue(f, weight);
+        NodeHAnimJoint *oldJoint = (NodeHAnimJoint *)node;
+        MFFloat *oldWeights = (MFFloat *)oldJoint->skinCoordWeight()->copy();
+        MFInt32 *oldIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
+        MFFloat *newWeights = (MFFloat *)oldJoint->skinCoordWeight()->copy();
+        MFInt32 *newIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
+        MFFloat *weights =  new MFFloat();
+        MFInt32 *indices = new MFInt32();
+        if (newJoint) {
+            for (int i = 0; i < handles.size(); i++) {
+                int handle = handles[i];
+                int index = newIndices->find(handle);
+                if (index > -1) {
+                    newIndices->removeSFValue(index);
+                    newWeights->removeSFValue(index);
+                }
+            }
+            oldJoint->skinCoordIndex(newIndices);
+            oldJoint->skinCoordWeight(newWeights);
+            for (int j = 0; j < handles.size(); j++) {
+                int handle = handles[j];
+                int index = oldIndices->find(handle);
+                if (index > -1) {
+                    indices->appendSFValue(handle);
+                    weights->appendSFValue(weight);
+               }
+           }
+        } else {
+            for (int i = 0; i < handles.size(); i++) {
+                int handle = handles[i];
+                int f = indices->find(handle);
+                if (f < 0) {
+                    indices->appendSFValue(handle);
+                    weights->appendSFValue(weight);
+               }
+            }
         }
+        delete oldWeights;
+        delete oldIndices;
         joint->skinCoordIndex(indices);
         joint->skinCoordWeight(weights);
         if (weight < 1) {
@@ -11651,6 +11690,7 @@ MainWindow::setHAnimJointWeight()
             parent->skinCoordIndex(indices);
             parent->skinCoordWeight(weights);
         }    
+        m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
     }
 }
 
@@ -11753,6 +11793,24 @@ MainWindow::insertHAnimSite()
                 Node *node = m_scene->createNode("HAnimSite");
                 m_scene->execute(new MoveCommand(node, NULL, -1, current, 
                                                 joint->children_Field()));
+                m_scene->setSelection(node);
+                m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+            }
+        }
+        if (current->getType() == X3D_HANIM_HUMANOID) {
+            int field = m_scene->getSelection()->getField();
+            NodeHAnimHumanoid *human = (NodeHAnimHumanoid *)current;
+            if (field == human->sites_Field()) {
+                Node *node = m_scene->createNode("HAnimSite");
+                m_scene->execute(new MoveCommand(node, NULL, -1, current, 
+                                                 human->sites_Field()));
+                m_scene->setSelection(node);
+                m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+            }
+            if (field == human->viewpoints_Field()) {
+                Node *node = m_scene->createNode("HAnimSite");
+                m_scene->execute(new MoveCommand(node, NULL, -1, current, 
+                                                human->viewpoints_Field()));
                 m_scene->setSelection(node);
                 m_scene->UpdateViews(NULL, UPDATE_SELECTION);
             }

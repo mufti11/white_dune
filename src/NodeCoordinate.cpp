@@ -794,3 +794,15 @@ NodeCoordinate::subdivide(void)
         faceSet->subdivide();
 
 }
+
+void            
+NodeCoordinate::selectSymetricHandles(void)
+{
+     for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+          int handle = m_scene->getSelectedHandle(i);
+          if (!validHandle(handle))
+             continue;
+          if (checkHandle(handle))
+              m_scene->addSelectedHandle(handle);                
+    }
+}

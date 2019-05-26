@@ -283,7 +283,7 @@ Scene3DView::drawViewPort(Node *root, int count, bool update)
         }
     else
        {
-       m_scene->drawScene(false,0,0,width,height,root, update,
+       m_scene->drawScene(false, 0, 0, width, height, root, update,
                           scaleX, scaleY);
        if (m_button3down)
            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
@@ -328,26 +328,32 @@ void Scene3DView::OnKeyDown(int key, int x, int y, int modifiers)
     switch (key) {
       case SW_UP:
         m_scene->moveCamera(0.0f, 0.0f, -1.0f);
+        m_scene->applyCamera();
         swInvalidateWindow(m_wnd);
         break;
       case SW_DOWN:
         m_scene->moveCamera(0.0f, 0.0f, 1.0f);
+        m_scene->applyCamera();
         swInvalidateWindow(m_wnd);
         break;
       case SW_KEY_LEFT:
         m_scene->turnCamera(0.0f, 1.0f, 0.0f, 0.10f);
+        m_scene->applyCamera();
         swInvalidateWindow(m_wnd);
         break;
       case SW_KEY_RIGHT:
         m_scene->turnCamera(0.0f, 1.0f, 0.0f, -0.10f);
+        m_scene->applyCamera();
         swInvalidateWindow(m_wnd);
         break;
       case SW_MOUSE4:
         m_scene->moveCamera(0.0f, 0.0f, 0.1f);
+        m_scene->applyCamera();
         swInvalidateWindow(m_wnd);
         break;
       case SW_MOUSE5:
         m_scene->moveCamera(0.0f, 0.0f, -0.1f);
+        m_scene->applyCamera();
         swInvalidateWindow(m_wnd);
         break;       
       default:
@@ -690,18 +696,21 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 m_scene->moveCamera(-dx * 0.05f, dy * 0.05f, 0.0f);
                 m_trackX = x;
                 m_trackY = y;
+                m_scene->applyCamera();
                 swInvalidateWindow(m_wnd);
             } else if (TheApp->GetMouseMode() == MOUSE_ROLL) {
                 swSetCursor(m_wnd, m_cursorRoll);
                 m_scene->rollCamera(-DEG2RAD(dx * 0.5f));
                 m_trackX = x;
                 m_trackY = y;
+                m_scene->applyCamera();
                 swInvalidateWindow(m_wnd);
             } else {
                 swSetCursor(m_wnd, m_cursorRotate);
                 m_scene->orbitCamera(-DEG2RAD(dx * 0.5f), -DEG2RAD(dy * 0.5f));
                 m_trackX = x;
                 m_trackY = y;
+                m_scene->applyCamera();
                 swInvalidateWindow(m_wnd);
             }
         } else if (modifiers & SW_SHIFT) {
@@ -916,6 +925,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
             } else {
                 swSetCursor(m_wnd, m_cursorRotate);
                 m_scene->orbitCamera(-DEG2RAD(dx * 0.5f), -DEG2RAD(dy * 0.5f));
+                m_scene->applyCamera();
                 m_trackX = x;
                 m_trackY = y;
             }
@@ -931,6 +941,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
             } else {
                 swSetCursor(m_wnd, m_cursorZoom);
                 m_scene->moveCamera(0.0f, 0.0f, -dy * 0.25f);
+                m_scene->applyCamera();
                 m_trackX = x;
                 m_trackY = y;
             }

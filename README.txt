@@ -5104,6 +5104,10 @@ Fixed missing undo operation for NURBS extrusion
 
 Fixed double move when moving handles
 
+Added "split HAnimJoint into 2 joints" to HAnimJointDialog
+
+
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

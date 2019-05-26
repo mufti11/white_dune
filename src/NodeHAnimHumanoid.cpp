@@ -74,7 +74,7 @@ void ProtoHAnimHumanoid::addElements(void)
     version.set(
            addExposedField(SFSTRING, "version", new SFString()));
     viewpoints.set(
-           addExposedField(MFNODE, "viewpoints", new MFNode(), VRML_VIEWPOINT));
+           addExposedField(MFNODE, "viewpoints", new MFNode(), X3D_HANIM_SITE));
 }
 
 ProtoHAnimHumanoid::ProtoHAnimHumanoid(Scene *scene) 

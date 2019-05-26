@@ -82,6 +82,8 @@ public:
     float               getMaxValue();
     float               getMinValue();
 
+    int                 find(float f) { return m_value.find(f); }
+
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     float              *getRandomFloats(int sfsize);

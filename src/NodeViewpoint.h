@@ -83,8 +83,8 @@ public:
     virtual int         getX3dVersion(void) const { return 0; }
     virtual Node       *copy() const { return new NodeViewpoint(*this); }
 
-    Vec3d               getPosition() const;
-    void                setPosition(const Vec3d &pos);
+    virtual Vec3d       getPosition() const;
+    virtual void        setPosition(const Vec3d &pos);
 
     virtual void        flip(int index);
     virtual void        swap(int fromTo);

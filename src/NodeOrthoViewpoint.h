@@ -72,14 +72,15 @@ public:
     virtual int         getX3dVersion(void) const { return 2; } 
     virtual Node       *copy() const { return new NodeOrthoViewpoint(*this); }
 
-    void                apply(bool useStereo = TheApp->useStereo());
+    virtual void        apply(bool useStereo = TheApp->useStereo());
+    virtual void        preDraw() { apply(); }
     void                transformForViewpoint(bool useStereo);
 
-    Vec3d               getPosition() const;
-    Quaternion          getOrientation() const;
+    virtual Vec3d       getPosition() const;
+    virtual Quaternion  getOrientation() const;
 
-    void                setPosition(const Vec3f &pos);
-    void                setOrientation(const Quaternion &quat);
+    virtual void        setPosition(const Vec3d &pos);
+    virtual void        setOrientation(const Quaternion &quat);
 
     SFFloat            *fov() { static SFFloat f(M_PI / 4); return &f; }
 

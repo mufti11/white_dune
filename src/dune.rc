@@ -375,7 +375,7 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "Standard Interpolators (need CurveAnimation)", ID_TO_POSITION_AND_ROTATION_INTERPOLATORS
         END
-        MENUITEM "Set Viewoint",                        ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                       ID_VIEWPOINT
         MENUITEM SEPARATOR
         POPUP "Handles"
         BEGIN
@@ -1500,7 +1500,7 @@ BEGIN
             MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
             MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
         END
-        MENUITEM "Set Viewoint",                         ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                        ID_VIEWPOINT
         MENUITEM "Xray rendering",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Set path of all URLs to",              ID_SET_URL
     END
@@ -3087,7 +3087,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
-IDD_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 197, 74
+IDD_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 240, 74
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HanimJoint weights"
 FONT 8, "MS Sans Serif"
@@ -3100,8 +3100,8 @@ BEGIN
     LTEXT           "parent:",IDC_STATIC,15,52,30,8
     COMBOBOX        IDC_JOINT_PARENT,45,45,48,57,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+    DEFPUSHBUTTON   "OK",IDOK,180,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,25,50,14
 END
 
 IDD_VIEWPOINT DIALOG DISCARDABLE  0, 0, 255, 135
@@ -4885,7 +4885,7 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "Convertir en standard Interpolators (a besoin de CurveAnimation)", ID_TO_POSITION_AND_ROTATION_INTERPOLATORS
         END
-        MENUITEM "Set Viewoint",                          ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                         ID_VIEWPOINT
         MENUITEM SEPARATOR
         POPUP "Prise"
         BEGIN
@@ -6008,7 +6008,7 @@ BEGIN
             MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
             MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
         END
-        MENUITEM "Set Viewoint",                   ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                  ID_VIEWPOINT
         MENUITEM "Vue radiographique",             ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Placer chemin de tout les URLs", ID_SET_URL
     END
@@ -7523,7 +7523,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
-IDD_FR_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 197, 74
+IDD_FR_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 240, 74
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HanimJoint weight"
 FONT 8, "MS Sans Serif"
@@ -7536,8 +7536,8 @@ BEGIN
     LTEXT           "parent:",IDC_STATIC,15,52,30,8
     COMBOBOX        IDC_JOINT_PARENT,45,45,48,57,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+    DEFPUSHBUTTON   "OK",IDOK,180,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,25,50,14
 END
 
 IDD_FR_VIEWPOINT DIALOG DISCARDABLE  0, 0, 255, 135
@@ -10394,7 +10394,7 @@ BEGIN
             MENUITEM "Setze HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_SET
             MENUITEM "Loesche HanimJoint weight",       ID_HANIM_JOINT_WEIGHT_REMOVE
         END
-        MENUITEM "Setze Viewoint",                      ID_VIEWPOINT
+        MENUITEM "Setze Viewpoint",                     ID_VIEWPOINT
         MENUITEM "Roentgenblick",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Setze Pfad aller URLs",               ID_SET_URL
     END
@@ -11915,7 +11915,7 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,120,25,50,14
 END
 
-IDD_DE_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 197, 74
+IDD_DE_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 240, 74
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HanimJoint weight"
 FONT 8, "MS Sans Serif"
@@ -11928,8 +11928,8 @@ BEGIN
     LTEXT           "parent:",IDC_STATIC,15,52,30,8
     COMBOBOX        IDC_JOINT_PARENT,45,45,48,57,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,140,25,50,14
+    DEFPUSHBUTTON   "OK",IDOK,180,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,180,25,50,14
 END
 
 IDD_DE_VIEWPOINT DIALOG DISCARDABLE  0, 0, 255, 135
@@ -13653,7 +13653,7 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "standart Interpolators (occorre CurveAnimation)", ID_TO_POSITION_AND_ROTATION_INTERPOLATORS
         END
-        MENUITEM "Set Viewoint",                        ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                       ID_VIEWPOINT
         MENUITEM SEPARATOR
         POPUP "Maniglie"
         BEGIN
@@ -14779,7 +14779,7 @@ BEGIN
             MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
             MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
         END
-        MENUITEM "Set Viewoint",                        ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                       ID_VIEWPOINT
         MENUITEM "Rendering raggi X",                   ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Imposta il percorso delle URL",       ID_SET_URL
     END
@@ -16297,7 +16297,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
-IDD_IT_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 197, 74
+IDD_IT_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 240, 74
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HanimJoint weight"
 FONT 8, "MS Sans Serif"
@@ -16310,8 +16310,8 @@ BEGIN
     LTEXT           "parent:",IDC_STATIC,15,52,30,8
     COMBOBOX        IDC_JOINT_PARENT,45,45,48,57,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+    DEFPUSHBUTTON   "OK",IDOK,180,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,25,50,14
 END
 
 IDD_IT_VIEWPOINT DIALOG DISCARDABLE  0, 0, 255, 135
@@ -18045,7 +18045,7 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "standard Interpolators (necessidade CurveAnimation)", ID_TO_POSITION_AND_ROTATION_INTERPOLATORS
         END
-        MENUITEM "Set Viewoint",                        ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                       ID_VIEWPOINT
         MENUITEM SEPARATOR
         POPUP "Manipular"
         BEGIN
@@ -19170,7 +19170,7 @@ BEGIN
             MENUITEM "Set HanimJoint weight",            ID_HANIM_JOINT_WEIGHT_SET
             MENUITEM "Remove HanimJoint weight",         ID_HANIM_JOINT_WEIGHT_REMOVE
         END
-        MENUITEM "Set Viewoint",                         ID_VIEWPOINT
+        MENUITEM "Set Viewpoint",                        ID_VIEWPOINT
         MENUITEM "Xray rendering",                       ID_TOGGLE_XRAY_RENDERING
         MENUITEM "Set path of all URLs to",              ID_SET_URL
     END
@@ -20690,7 +20690,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
-IDD_PT_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 197, 74
+IDD_PT_HANIM_JOINT DIALOG DISCARDABLE  0, 0, 240, 74
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HanimJoint weight"
 FONT 8, "MS Sans Serif"
@@ -20703,8 +20703,8 @@ BEGIN
     LTEXT           "parent:",IDC_STATIC,15,52,30,8
     COMBOBOX        IDC_JOINT_PARENT,45,45,48,57,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+    DEFPUSHBUTTON   "OK",IDOK,180,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,25,50,14
 END
 
 IDD_PT_VIEWPOINT DIALOG DISCARDABLE  0, 0, 255, 135
