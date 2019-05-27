@@ -139,6 +139,7 @@ public:
     MyArray<MeshBasedNode *> m_meshNodes;
     MFVec3f     **m_origVertices;
     NodeMaterial *m_material;
+    Node         *m_texture;
     MyArray<int>  m_hasNoWeightArray;
     bool          m_hasNoWeightArrayDirty;
 };

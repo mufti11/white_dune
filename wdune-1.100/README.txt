@@ -5106,9 +5106,7 @@ Fixed double move when moving handles
 
 Added "split HAnimJoint into 2 joints" to HAnimJointDialog
 
-Added animated 4 legged animal tutorial
 
-Added texture rendering to HAnimHumanoid node
 
 contact: MUFTI <mufti@users.ourproject.org>
 

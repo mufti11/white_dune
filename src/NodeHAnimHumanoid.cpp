@@ -498,6 +498,9 @@ NodeHAnimHumanoid::draw(int pass)
     if (m_material)
         m_material->bind();     
 
+    if (m_texture)
+        m_texture->bind();     
+
     glPushName(info_Field());  // field
     if (m_meshes != NULL)
         for (int i = 0; i < m_numMeshes; i++)
@@ -516,6 +519,7 @@ NodeHAnimHumanoid::draw(int pass)
 static int numMeshes = 0;
 
 static NodeMaterial *firstMaterial = NULL;
+static Node *firstTexture = NULL;
 static MyArray<MeshBasedNode *> meshNodes; 
 
 static bool searchMeshes(Node *node, void *data)
@@ -523,6 +527,12 @@ static bool searchMeshes(Node *node, void *data)
     if (node->getType() == VRML_MATERIAL) {
         if (firstMaterial == NULL)
             firstMaterial = (NodeMaterial *)node;
+    } else if (node->getType() == VRML_IMAGE_TEXTURE) {
+        if (firstTexture == NULL)
+            firstTexture = node;
+    } else if (node->getType() == VRML_PIXEL_TEXTURE) {
+        if (firstTexture == NULL)
+            firstTexture = node;
     } else if (node->isMeshBasedNode()) {
         MyMesh **mesh = (MyMesh **)data;
         mesh[numMeshes] = (MyMesh *)node->getMesh()->copy();
@@ -609,6 +619,7 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
 
      numMeshes = 0;
      firstMaterial = NULL;     
+     firstTexture = NULL;     
      meshNodes.resize(0); 
 
      for (int i = 0; i < m_numMeshes; i++)
@@ -635,6 +646,8 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
 
      if (firstMaterial)
          m_material = firstMaterial;
+     if (firstTexture)
+         m_texture = firstTexture;
 
      NodeList *childList = getBasicChildren()->getValues();
      int n = childList->size();
