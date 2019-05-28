@@ -79,9 +79,6 @@ public:
                         { if (hasParent()) getParent()->updateHandles(); }
     virtual bool    getMatrixDirty(void) { return m_matrixDirty; }
 
-    virtual void    preDraw() {}
-    virtual void    draw(int pass) {} 
-
     virtual void    setHandle(int handle, const Vec3f &v);
 
     void            getJointMatrix(Matrix &matrix) 

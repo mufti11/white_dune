@@ -5110,6 +5110,8 @@ Added animated 4 legged animal tutorial
 
 Added texture rendering to HAnimHumanoid node
 
+Fixed missing HAnim 1 rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

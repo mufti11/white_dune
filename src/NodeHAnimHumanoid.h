@@ -134,12 +134,15 @@ public:
     fieldMacros(SFString, version,     ProtoHAnimHumanoid)
     fieldMacros(MFNode,   viewpoints,  ProtoHAnimHumanoid)
 
+public:
+    MyArray<NodeMaterial *> m_materials;
+    MyArray <Node *> m_textures;
+
+protected:
     int           m_numMeshes;
     MyMesh      **m_meshes;
     MyArray<MeshBasedNode *> m_meshNodes;
     MFVec3f     **m_origVertices;
-    NodeMaterial *m_material;
-    Node         *m_texture;
     MyArray<int>  m_hasNoWeightArray;
     bool          m_hasNoWeightArrayDirty;
 };

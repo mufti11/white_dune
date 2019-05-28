@@ -95,7 +95,6 @@ NodeHAnimHumanoid::NodeHAnimHumanoid(Scene *scene, Proto *def)
     m_meshes = NULL;
     m_numMeshes = 0;
     m_matrixDirty = true;
-    m_material = NULL;
     m_hasNoWeightArrayDirty = true;
 }
 
@@ -422,9 +421,6 @@ static bool searchDirty(Node *node, void *data)
 void
 NodeHAnimHumanoid::preDraw()
 {
-    if (skin()->getSize() == 0)
-        return;
-
     bool matrixDirty = false;
     NodeList *childList = getBasicChildren()->getValues();
 
@@ -469,8 +465,6 @@ NodeHAnimHumanoid::draw(int pass)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glAlphaFunc(GL_NOTEQUAL, 0);
     }
-    if (skin()->getSize() == 0)
-        return;
 
     NodeList *childList = getBasicChildren()->getValues();
     int n = childList->size();
@@ -495,44 +489,42 @@ NodeHAnimHumanoid::draw(int pass)
     for (int i = 0; i < n; i++)
         childList->get(i)->unbind();
 
-    if (m_material)
-        m_material->bind();     
-
-    if (m_texture)
-        m_texture->bind();     
-
     glPushName(info_Field());  // field
-    if (m_meshes != NULL)
+    if (m_meshes != NULL) {
         for (int i = 0; i < m_numMeshes; i++)
             if (m_meshes[i] != NULL) {
                 glLoadName(info_Field());
+                if (m_materials[i])
+                    m_materials[i]->bind();
+                if (m_textures[i])
+                    m_textures[i]->bind();
                 m_meshes[i]->draw(pass);
+                if (m_materials[i])
+                    m_materials[i]->unbind();
+                if (m_textures[i])
+                    m_textures[i]->unbind();
             }
-    glPopName();
+    }
 
-    if (m_material)
-        m_material->unbind();     
+    glPopName();
 
     glPopMatrix();
 }
 
 static int numMeshes = 0;
 
-static NodeMaterial *firstMaterial = NULL;
-static Node *firstTexture = NULL;
+int skinNumber = -1;
 static MyArray<MeshBasedNode *> meshNodes; 
+NodeHAnimHumanoid *human = NULL;
 
 static bool searchMeshes(Node *node, void *data)
 {
     if (node->getType() == VRML_MATERIAL) {
-        if (firstMaterial == NULL)
-            firstMaterial = (NodeMaterial *)node;
+        human->m_materials[skinNumber] = (NodeMaterial *)node;
     } else if (node->getType() == VRML_IMAGE_TEXTURE) {
-        if (firstTexture == NULL)
-            firstTexture = node;
+        human->m_textures[skinNumber] = (NodeMaterial *)node;
     } else if (node->getType() == VRML_PIXEL_TEXTURE) {
-        if (firstTexture == NULL)
-            firstTexture = node;
+        human->m_textures[skinNumber] = (NodeMaterial *)node;
     } else if (node->isMeshBasedNode()) {
         MyMesh **mesh = (MyMesh **)data;
         mesh[numMeshes] = (MyMesh *)node->getMesh()->copy();
@@ -548,8 +540,6 @@ static float currentColor[4] = { 0.8, 0.8, 0.8, 1 };
 static bool addToMesh(Node *node, void *data)
 {
     if (node->getType() == VRML_MATERIAL) {
-        if (firstMaterial == NULL)
-            firstMaterial = (NodeMaterial *)node;
         NodeMaterial *material = (NodeMaterial *)node;
         for (int i = 0; i < 3; i++)
             currentColor[i] = material->diffuseColor()->getValue(i);
@@ -617,17 +607,23 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
          m_origVertices[i] = NULL;
      }
 
+     human = this;
+     m_materials.resize(0);
+     for (int i = 0; i < m_numMeshes; i++)
+         m_materials[i] = NULL;
+     m_textures.resize(0);
+     for (int i = 0; i < m_numMeshes; i++)
+         m_textures[i] = NULL;
      numMeshes = 0;
-     firstMaterial = NULL;     
-     firstTexture = NULL;     
      meshNodes.resize(0); 
 
      for (int i = 0; i < m_numMeshes; i++)
          if (mfSkin->getValue(i)) {
-            if (mfSkin->getValue(i)->getType() == VRML_SHAPE)
+            if (mfSkin->getValue(i)->getType() == VRML_SHAPE) {
+                skinNumber = i;
                 mfSkin->getValue(i)->doWithBranch(searchMeshes, m_meshes,
                                                   false, false);
-            else {
+            } else {
                 newSkinMesh = true;
                 mfSkin->getValue(i)->doWithBranch(addToMesh, m_meshes,
                                                   false, false);
@@ -638,16 +634,10 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
      for (int i = 0; i < meshNodes.size(); i++)
          m_meshNodes.append(meshNodes[i]);
 
-
      for (int i = 0; i < m_numMeshes; i++) {
          if (m_meshes[i] != NULL)
              m_origVertices[i] = (MFVec3f *)m_meshes[i]->getVertices()->copy();
      }
-
-     if (firstMaterial)
-         m_material = firstMaterial;
-     if (firstTexture)
-         m_texture = firstTexture;
 
      NodeList *childList = getBasicChildren()->getValues();
      int n = childList->size();
@@ -787,5 +777,3 @@ NodeHAnimHumanoid::writeRib(int filedes, int indent)
     }
     return ret;    
 }
-
-
