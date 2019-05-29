@@ -5112,6 +5112,8 @@ Added texture rendering to HAnimHumanoid node
 
 Fixed missing HAnim 1 rendering
 
+Fixed splitted morphing rendering
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 
