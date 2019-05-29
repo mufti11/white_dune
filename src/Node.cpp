@@ -4336,6 +4336,15 @@ Node::setContainerField(int containerField)
     m_containerField = containerField;
 }
 
+NodeList
+Node::getParents(void)
+{
+    NodeList ret;
+    for (int i = 0; i < getNumParents(); i++)
+        ret.append(getParent(i));
+    return ret;
+}
+
 bool       
 NodeData::isPROTO(void) const 
 { 

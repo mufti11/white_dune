@@ -52,17 +52,19 @@ NodeMultiTextureCoordinate::setField(int index, FieldValue *value, int cf)
 {
     Node::setField(index, value, cf);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
 NodeMultiTextureCoordinate::update()
 {
    if (hasParent()) {
-       Node *parent = getParent();
-       if (parent->isMeshBasedNode()) {
-           MeshBasedNode *mesh = (MeshBasedNode *)parent;
-           mesh->update();
+       for (int i = 0; i < getNumParents(); i++) {
+           Node *parent = getParent(i);
+           if (parent->isMeshBasedNode()) {
+               MeshBasedNode *mesh = (MeshBasedNode *)parent;
+               mesh->update();
+           }
        }
    }        
 }

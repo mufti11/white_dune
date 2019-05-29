@@ -1,9 +1,9 @@
-whitedune (1.106-1) experimental; urgency=low
+whitedune (1.110-1) experimental; urgency=low
 
-  * Version 1.106 debian package
+  * Version 1.110 debian package
     For details see the README file of the source package
 
- -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Wed, 29 May 2019 04:20:55 +0200
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Wed, 29 May 2019 12:50:51 +0200
 
 wdune (1.104-1) experimental; urgency=low
 

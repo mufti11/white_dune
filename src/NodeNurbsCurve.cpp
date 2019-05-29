@@ -179,8 +179,8 @@ NodeNurbsCurve::update()
 {
     repairKnotAndWeight();
     m_chainDirty = true;
-    if (m_isInternal && hasParent())
-        getParent()->update();
+    if (m_isInternal || hasParent())
+        getParents().update();
 }
 
 MFVec3f *

@@ -5114,6 +5114,8 @@ Fixed missing HAnim 1 rendering
 
 Fixed splitted morphing rendering
 
+Fixed multiple parent update problem
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

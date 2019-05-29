@@ -64,7 +64,7 @@ NodeContourPolyline2D::setField(int index, FieldValue *value, int cf)
 {
     Node::setField(index, value, cf);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
@@ -129,7 +129,7 @@ NodeContourPolyline2D::setHandle(int handle, const Vec3f &v)
     }
     m_scene->setField(this, lineSegments_Field(), newValue);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 

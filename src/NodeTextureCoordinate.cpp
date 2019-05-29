@@ -54,14 +54,14 @@ NodeTextureCoordinate::setField(int index, FieldValue *value, int cf)
 {
     Node::setField(index, value, cf);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
 NodeTextureCoordinate::setTextureCoordinateFromIndexedFaceSet()
 {
-    Node* parent = ((Node *)this)->getParent();
-    if (parent->getType() == VRML_INDEXED_FACE_SET) {
+    Node* parent = getParent();
+    if (parent && parent->getType() == VRML_INDEXED_FACE_SET) {
         NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet*) parent;
         MFVec3f *coords = faceSet->getCoordinates();   
         MFInt32 *coordIndex = faceSet->getCoordIndex();
@@ -78,11 +78,13 @@ NodeTextureCoordinate::setTextureCoordinateFromIndexedFaceSet()
 void
 NodeTextureCoordinate::update()
 {
-   if (hasParent()) {
-       Node *parent = getParent();
-       if (parent->getType() == X3D_MULTI_TEXTURE_COORDINATE) {
-           parent->update();
-       }
-   }        
+    if (hasParent()) {
+        for (int i = 0; i < getNumParents(); i++) {
+            Node *parent = getParent(i);
+            if (parent->getType() == X3D_MULTI_TEXTURE_COORDINATE) {
+                parent->update();
+            }
+        }
+    }        
 }
 

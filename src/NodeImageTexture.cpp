@@ -489,20 +489,24 @@ NodeImageTexture::bind()
 
     MyMesh *mesh = NULL;
     if (hasParent()) {
-        Node *parent = getParent();
-        if (parent->hasParent()) {
-            parent = parent->getParent();
-            if (parent->getType() == VRML_SHAPE) {
-                NodeShape *shape = (NodeShape *)parent;
-                if (shape->geometry()->getValue()) {
-                    if (shape->geometry()->getValue()->isMeshBasedNode()) {
-                        MeshBasedNode *meshBased = (MeshBasedNode *)
-                            shape->geometry()->getValue();
-                       mesh = meshBased->getMesh();
-                   }
-               }
-            }
-        }                     
+        for (int i = 0; i < getNumParents(); i++) {
+            Node *parent = getParent(i);
+            if (parent->hasParent()) {
+                for (int j = 0; j < getNumParents(); j++) {
+                    parent = parent->getParent(j);
+                    if (parent->getType() == VRML_SHAPE) {
+                        NodeShape *shape = (NodeShape *)parent;
+                        if (shape->geometry()->getValue()) {
+                            if (shape->geometry()->getValue()->isMeshBasedNode()) {
+                                MeshBasedNode *meshBased = (MeshBasedNode *)
+                                    shape->geometry()->getValue();
+                               mesh = meshBased->getMesh();
+                           }
+                       }
+                    }
+                }
+            }                     
+        }
     }
     if (mesh && (mesh->getTexCoordParameter(0) == TEX_GEN_SPHERE)) {
         glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);

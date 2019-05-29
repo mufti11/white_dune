@@ -177,8 +177,7 @@ void
 NodeContour2D::setField(int index, FieldValue *value, int cf)
 {
     if (hasParent()) {
-        Node *parent = getParent();
-        parent->update();
+        getParents().update();
     }
     Node::setField(index, value, cf);
 }
@@ -187,7 +186,7 @@ void
 NodeContour2D::update()
 {
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 

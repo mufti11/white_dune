@@ -41,6 +41,7 @@ public:
     void            setZeroCounter4SceneTreeView(void) const;
     NodeList*       copy() 
                        { return (NodeList  *)new NodeArray((NodeArray)*this); }
+    virtual void    update();
     virtual bool    canWriteAc3d();
     virtual int     writeAc3d(int filedes, int indent) const;
     virtual int     writeRib(int filedes, int indent) const;

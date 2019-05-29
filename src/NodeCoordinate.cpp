@@ -666,14 +666,14 @@ NodeCoordinate::flip(int index)
     if (coords != NULL)
         coords->flip(index);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
 NodeCoordinate::update()
 {
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
@@ -683,7 +683,7 @@ NodeCoordinate::swap(int fromTo)
     if (coords != NULL)
         coords->swap(fromTo);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 NodeNurbsGroup *
@@ -691,17 +691,22 @@ NodeCoordinate::findNurbsGroup()
 {
     // find NurbsSet/NurbsGroup in 
     if (hasParent()) {
-        Node* parent = getParent();
-        if (parent->getType() == VRML_NURBS_SURFACE) {
-            if (parent->hasParent()) {
-                Node* grandParent = parent->getParent();
-                if (grandParent->getType() == VRML_NURBS_GROUP) {
-                    return (NodeNurbsGroup *) grandParent;
-                } else if (grandParent->getType() == VRML_SHAPE)
-                    if (grandParent->hasParent())
-                        if (grandParent->getParent()->getType() == 
-                            VRML_NURBS_GROUP)
-                            return (NodeNurbsGroup *) grandParent->getParent();
+        for (int i = 0; i < getNumParents(); i++) {
+            Node* parent = getParent(i);
+            if (parent->getType() == VRML_NURBS_SURFACE) {
+                if (parent->hasParent()) {
+                    for (int j = 0; j < getNumParents(); j++) {
+                        Node* grandParent = parent->getParent(j);
+                        if (grandParent->getType() == VRML_NURBS_GROUP) {
+                            return (NodeNurbsGroup *) grandParent;
+                        } else if (grandParent->getType() == VRML_SHAPE)
+                            if (grandParent->hasParent())
+                                if (grandParent->getParent()->getType() == 
+                                    VRML_NURBS_GROUP)
+                                    return (NodeNurbsGroup *) 
+                                           grandParent->getParent();
+                    }
+                }
             }
         } 
     }

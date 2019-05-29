@@ -52,5 +52,5 @@ NodeMultiGeneratedTextureCoordinate::setField(int index, FieldValue *value,
 {
     Node::setField(index, value, cf);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }

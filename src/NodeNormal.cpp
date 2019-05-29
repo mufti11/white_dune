@@ -51,7 +51,7 @@ void
 NodeNormal::setField(int index, FieldValue *value, int cf)
 {
     if (hasParent())
-        getParent()->update();
+        getParents().update();
     Node::setField(index, value, cf);
 }
 
@@ -69,7 +69,7 @@ NodeNormal::flip(int index)
     if (normals != NULL)
         normals->flip(index);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
@@ -79,5 +79,5 @@ NodeNormal::swap(int fromTo)
     if (normals != NULL)
          normals->swap(fromTo);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }

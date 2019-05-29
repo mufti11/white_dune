@@ -217,3 +217,11 @@ NodeList::doWithBranch(DoWithNodeCallback callback, void *data,
     return true;
 }
 
+void
+NodeList::update()
+{
+    for (int i = 0; i < size(); i++)
+        if (get(i) != NULL)
+            get(i)->update();
+}
+

@@ -76,7 +76,7 @@ NodePolyline2D::setField(int index, FieldValue *value, int cf)
 {
     Node::setField(index, value, cf);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 int

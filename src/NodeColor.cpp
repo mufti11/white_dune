@@ -58,7 +58,7 @@ NodeColor::setField(int index, FieldValue *value, int cf)
 {
     Node::setField(index, value, cf);
     if (hasParent())
-        getParent()->update();
+        getParents().update();
 }
 
 void
