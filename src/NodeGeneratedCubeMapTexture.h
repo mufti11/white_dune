@@ -40,6 +40,7 @@ public:
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3D_GENERATED_CUBE_MAP_TEXTURE; }
+    virtual int     getNodeClass() const { return TEXTURE_NODE; }
 
     virtual bool    isX3dInternalProto(void) { return true; }
 

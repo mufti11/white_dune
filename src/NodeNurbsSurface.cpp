@@ -1601,7 +1601,6 @@ NodeNurbsSurface::extrudePoints(int uFrom, int uTo, int uPoints,
 
     MFVec3f *controlPoints = (MFVec3f *)getControlPoints()->copy();
     MFVec3f *oldControlPoints = (MFVec3f *)getControlPoints();
-    MFFloat *weights = (MFFloat *)weight()->copy();
     Vec3f vecFrom = controlPoints->getVec(uFrom + vFrom * iuDimension);
     Vec3f vecTo   = controlPoints->getVec(uTo + vTo * iuDimension);
     Vec3f inc;
@@ -1671,12 +1670,9 @@ NodeNurbsSurface::makeSymetric(int direction, bool plus)
 {
     MFVec3f *vertices = (MFVec3f *)getControlPoints()->copy();
     int iuDimension = uDimension()->getValue();
-    int ivDimension = vDimension()->getValue();
 
-    int offset = 0;
     int mid = vertices->getSFSize() / 2;
     if (vertices->getSFSize() % 2 == 1) {
-        offset = 1;  
         Vec3f midVec = vertices->getVec(mid);
         switch(direction) {
           case 0:
@@ -1698,7 +1694,6 @@ NodeNurbsSurface::makeSymetric(int direction, bool plus)
         int v = i / iuDimension;
         Vec3f vec = vertices->getVec(i);
         Vec3f res = vec;
-        int index;
         switch(direction) {
           case 0:
             if (((vec.x > 0) && plus) || ((vec.x < 0) && !plus)) {

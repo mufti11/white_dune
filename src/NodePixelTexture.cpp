@@ -286,7 +286,7 @@ NodePixelTexture::bind()
             if (parent->hasParent()) {
                 for (int j = 0; j < getNumParents(); j++) {
                     parent = parent->getParent(j);
-                    if (parent->getType() == VRML_SHAPE) {
+                    if (parent && parent->getType() == VRML_SHAPE) {
                         NodeShape *shape = (NodeShape *)parent;
                         if (shape->geometry()->getValue()) {
                             if (shape->geometry()->getValue()->isMeshBasedNode()

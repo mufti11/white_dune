@@ -340,7 +340,6 @@ NodeNurbsOrientationInterpolator::receiveEvent(int eventIn, double timestamp,
         float fraction = ((SFFloat *) value)->getValue();
         float posChain = fraction * m_chainLength;
         float pos = 0;
-        float oldPos = pos;
         const Vec3f *chain = m_nurbsCurve->getChain();
         int chainLength = m_nurbsCurve->getChainLength();
         for (int i = 0; i < chainLength; i++) {
@@ -353,7 +352,6 @@ NodeNurbsOrientationInterpolator::receiveEvent(int eventIn, double timestamp,
              }
              if (i > 0)
                  pos += (chain[i] - chain[i - 1]).length();
-             oldPos = pos;
         }
     } else
         Node::receiveEvent(eventIn, timestamp, value);

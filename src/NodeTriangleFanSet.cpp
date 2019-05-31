@@ -136,7 +136,6 @@ NodeTriangleFanSet::createMesh(bool cleanDoubleVertices, bool triangulate)
 {
     Node *coord = ((SFNode *) getField(coord_Field()))->getValue();
     bool bcolorPerVertex = colorPerVertex()->getValue();
-    bool bnormalPerVertex = normalPerVertex()->getValue();
    
     MFVec3f *coords = NULL;
     MFVec3d *coordsDouble = NULL;

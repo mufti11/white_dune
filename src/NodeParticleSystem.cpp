@@ -250,7 +250,7 @@ void NodeParticleSystem::startParticle(int i)
 
     bool setInternVector = false;
 
-    if (emitter()->getValue())
+    if (emitter()->getValue()) {
         if (emitter()->getValue()->getType() == X3D_CONE_EMITTER) {
             NodeConeEmitter *emit = (NodeConeEmitter *)
                                     emitter()->getValue();
@@ -307,11 +307,9 @@ void NodeParticleSystem::startParticle(int i)
             MyArray<LineIndices> lineIndices;
             if (ncoord) {
                 coords = ncoord->point();
-                bool startLine = true;
                 bool validLine = false;
                 for (int i = 0; i < emit->coordIndex()->getSize(); i++) {
                     if (emit->coordIndex()->getValue(i) < 0) {
-                        startLine = true;
                         validLine = false;
                     } else if (!validLine)
                         validLine = true;  
@@ -437,6 +435,7 @@ void NodeParticleSystem::startParticle(int i)
                 }
             }
         }
+    }
     if (!setInternVector) {
         m_internVector[i].x = speed * m_force[0] * sin(angle) * cos(alpha);
         m_internVector[i].y = speed * m_force[1] * cos(angle);

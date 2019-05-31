@@ -326,8 +326,6 @@ void FieldView::UpdateAll(bool resetSelection)
     int width0 = GetColumnWidth(0);
     int width1 = GetColumnWidth(1);
 
-    bool x3d = m_scene->isX3d();
-
 /*
     Array<MyString> collapsedNames;
     if (m_selectedNode) {

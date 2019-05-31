@@ -422,43 +422,39 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
         bool showAllFields = isNotSFNode && (TheApp->GetShowAllFields() || 
                                              oldNode->showFields());
         if (showAllFields) {
-            Proto *proto = oldNode->getProto();
-            {
-                STREEITEM tmp = swTreeGetFirstChild(m_tree, item);
-                if (!isNull(tmp)) {
-                    item = tmp;
-                    if (value->getType() == MFNODE) {
-                        MFNode* mfNode = (MFNode *)value;
-                        for (int n = 0; n < mfNode->getSize(); n++) { 
-                            if (n == 0) {
+            STREEITEM tmp = swTreeGetFirstChild(m_tree, item);
+            if (!isNull(tmp)) {
+                item = tmp;
+                if (value->getType() == MFNODE) {
+                    MFNode* mfNode = (MFNode *)value;
+                    for (int n = 0; n < mfNode->getSize(); n++) { 
+                        if (n == 0) {
+                            TreeNode *t = (TreeNode *) 
+                                          swTreeGetItemData(m_tree, item);
+                            if (t && t->node && t->node->isEqual(node))
+                               break;
+                            continue;
+                        }    
+                        for (; tmpItem != NULL;
+                            oldTmpItem = tmpItem,
+                            tmpItem = swTreeGetNextItem(m_tree, item)) {
+                            if (tmpItem) {
+                                if (tmpItem == oldTmpItem)
+                                    break;
                                 TreeNode *t = (TreeNode *) 
-                                              swTreeGetItemData(m_tree, item);
-                                if (t && t->node && t->node->isEqual(node))
-                                   break;
-                                continue;
-                            }    
-                            for (; tmpItem != NULL;
-                                oldTmpItem = tmpItem,
-                                tmpItem = swTreeGetNextItem(m_tree, item)) {
-                                if (tmpItem) {
-                                    if (tmpItem == oldTmpItem)
-                                        break;
-                                    TreeNode *t = (TreeNode *) 
-                                        swTreeGetItemData(m_tree, item);
-                                    if (t && t->node && t->node->isEqual(node))
-                                    {
-                                        item = tmpItem;
-                                        isNode = true;
-                                    }
-                                    if (t->node == updatePath->getNode()) {
-                                        item = tmpItem;
-                                        endloops=true;
-                                        break;
-                                    }
-                                    if (isNode && t && t->field == field) {
-                                        item = tmpItem;
-                                        break;
-                                    }
+                                    swTreeGetItemData(m_tree, item);
+                                if (t && t->node && t->node->isEqual(node)) {
+                                    item = tmpItem;
+                                    isNode = true;
+                                }
+                                if (t->node == updatePath->getNode()) {
+                                    item = tmpItem;
+                                    endloops=true;
+                                    break;
+                                }
+                                if (isNode && t && t->field == field) {
+                                    item = tmpItem;
+                                    break;
                                 }
                             }
                         }

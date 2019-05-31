@@ -40,6 +40,7 @@ public:
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return X3DOM_IMAGE_TEXTURE_ATLAS; }
+    virtual int     getNodeClass() const { return TEXTURE_NODE; }
 
     FieldIndex url;
     FieldIndex repeatS;

@@ -703,7 +703,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
     const X *vertices = m_vertices->getValues();
     const int *coordIndex = m_coordIndex->getValues();
     const float *normals = m_normals ? m_normals->getValues() : NULL;
-    const int *normalIndex = m_normalIndex ? m_normalIndex->getValues() : NULL;
+//    const int *normalIndex = m_normalIndex ? m_normalIndex->getValues() : NULL;
     const float *texCoords = (m_texCoords.size() > 0) ? 
                               m_texCoords[0] ? m_texCoords[0]->getValues() 
                               : NULL
@@ -1216,8 +1216,8 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         int i = coordIndex[n];
         if ((i < 0) || (i >= nVerts))
             continue;
-            m_smoothNormalsArray[i] += m_normals->getVec(
-                                           m_normalIndex->getValue(n));
+        m_smoothNormalsArray[i] += m_normals->getVec(m_normalIndex->getValue(n)
+                                                    );
     }
     for (int i = 0; i < m_smoothNormalsArray.size(); i++)
         m_smoothNormalsArray[i].normalize();
@@ -1940,7 +1940,6 @@ Node *
 MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
 {
     bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
-    bool wantSimpleQuadTriangulate = (meshFlags & MESH_SIMPLE_TRIANGULATE);
 
     NodeCoordinate *ncoord = (NodeCoordinate *)scene->createNode("Coordinate");
     MFVec3f *points = new MFVec3f();

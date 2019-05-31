@@ -83,6 +83,6 @@ bool notURN(const char* url);
 char *replaceHome(const char *path);
 bool mkdir_parents4file(const char *path);
 void myperror(const char *string);
-void toPosixPath(char *target, char *source, int len);
+void toPosixPath(char *target, char *source, unsigned int len);
 
 #endif // _URL_H

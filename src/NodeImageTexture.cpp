@@ -235,9 +235,6 @@ NodeImageTexture::load()
     int height = 1;
     unsigned char *data = NULL;
 
-    int errorflag = false;
-    char *lastCheckedPath = NULL;
-
     if (urls->getSize() == 0)
         return;
     if (m_imageStatus == IMG_STATUS_UNLOADED) {
@@ -262,6 +259,9 @@ NodeImageTexture::load()
         if (swHasVisual() == 0)
             return;
 #ifdef HAVE_LIBDEVIL
+        int errorflag = false;
+        char *lastCheckedPath = NULL;
+
         if (ilLoadImage((char *)(const char *)m_path)) {
             width = ilGetInteger(IL_IMAGE_WIDTH);
             height = ilGetInteger(IL_IMAGE_HEIGHT);
@@ -491,10 +491,10 @@ NodeImageTexture::bind()
     if (hasParent()) {
         for (int i = 0; i < getNumParents(); i++) {
             Node *parent = getParent(i);
-            if (parent->hasParent()) {
+            if (parent && parent->hasParent()) {
                 for (int j = 0; j < getNumParents(); j++) {
                     parent = parent->getParent(j);
-                    if (parent->getType() == VRML_SHAPE) {
+                    if (parent && parent->getType() == VRML_SHAPE) {
                         NodeShape *shape = (NodeShape *)parent;
                         if (shape->geometry()->getValue()) {
                             if (shape->geometry()->getValue()->isMeshBasedNode()) {

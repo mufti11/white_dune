@@ -5116,6 +5116,12 @@ Fixed splitted morphing rendering
 
 Fixed multiple parent update problem
 
+Fixed -Wall warnings if possible
+
+Fixed missing nodeClass of *CubeMapTexture
+
+Fixed crash in getParent()->getParent() of Image/PixelTexture
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

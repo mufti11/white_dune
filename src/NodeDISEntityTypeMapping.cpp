@@ -66,13 +66,6 @@ void
 NodeDISEntityTypeMapping::load()
 {
     MFString *urls = url();
-    int width = 1;
-    int height = 1;
-    unsigned char *data = NULL;
-
-    int errorflag = false;
-    char *lastCheckedPath = NULL;
-
     if (urls->getSize() == 0)
         return;
     m_baseURL = "";

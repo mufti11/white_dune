@@ -10308,8 +10308,6 @@ MainWindow::setWeightsTo1(void)
     int type = node->getType();
     Node *parent = node->getParent();
                           
-    Node* nurbsNode = NULL;
-                    
     if (type == VRML_NURBS_SURFACE) {
         NodeNurbsSurface *oldNurbs = (NodeNurbsSurface *)node;
         Node *newNurbs = oldNurbs->setWeightsTo1();
@@ -10644,7 +10642,6 @@ void
 MainWindow::toNurbsTrimmedSurface()
 {
     Node *node =m_scene->getSelection()->getNode(); 
-    int type = node->getType();
     if (!node->hasParent())
         return;
     Node *parent = node->getParent();
@@ -10760,7 +10757,6 @@ MainWindow::toNurbsPositionInterpolator()
 {
     Node *node = m_scene->getSelection()->getNode(); 
     int type = node->getType();
-    Node *parent = node->getParent();
 
     Node* nurbsNode = NULL;
 
@@ -10779,7 +10775,6 @@ MainWindow::toNurbsOrientationInterpolator()
 {
     Node *node = m_scene->getSelection()->getNode(); 
     int type = node->getType();
-    Node *parent = node->getParent();
 
     Node* nurbsNode = NULL;
 

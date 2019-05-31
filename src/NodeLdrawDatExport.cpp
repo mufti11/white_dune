@@ -110,7 +110,7 @@ NodeLdrawDatExport::writeProto(int f)
 }
 
 bool
-NodeLdrawDatExport::checkMissingData(int fieldIndex, int limit) 
+NodeLdrawDatExport::checkMissingData(int fieldIndex, unsigned int limit) 
 {
     Field *field = m_proto->getField(fieldIndex);
     if (field->getType() == SFSTRING) {

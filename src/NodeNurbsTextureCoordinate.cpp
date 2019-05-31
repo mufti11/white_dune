@@ -146,7 +146,7 @@ NodeNurbsTextureCoordinate::createNurbsData()
                                  controlPoint()->getSize() / 2 * 3));
     int uTess = 0;
     int vTess = 0;
-    if (hasParent())
+    if (hasParent()) {
         if (getParent()->getType() == VRML_NURBS_SURFACE) {
             NodeNurbsSurface *surface = (NodeNurbsSurface *)getParent();
             uTess = surface->uTessellation()->getValue();
@@ -157,6 +157,7 @@ NodeNurbsTextureCoordinate::createNurbsData()
             uTess = surface->uTessellation()->getValue();
             vTess = surface->vTessellation()->getValue();
         }
+    }
     m_nurbs->uTessellation(new SFInt32(uTess));
     m_nurbs->vTessellation(new SFInt32(vTess));
 

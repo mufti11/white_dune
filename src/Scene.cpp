@@ -4090,18 +4090,16 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
     int glPathLen = 0;
     unsigned depth = UINT_MAX;
     unsigned handleDepth = 0;
-    bool pickedHandle = false;
     bool pickedNode = false;
     int handle = -1;
 
     for (int i = 0; i < hits; i++) {
         unsigned numNames = *pickBuffer++;
-        unsigned minDepth = *pickBuffer++;
+//        unsigned minDepth = *pickBuffer++;
         unsigned maxDepth = *pickBuffer++;
         if (*pickBuffer == PICKED_NODE) {
             if (depth >= maxDepth) {
                 pickedNode = true;
-                pickedHandle = false;
                 glPath = pickBuffer + 1;
                 glPathLen = numNames - 1;
                 depth = maxDepth;
@@ -4120,7 +4118,6 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
                               SELECTION_HANIM_JOINT_WEIGHT;
             if ((!isCoord) || isVertices || (handleDepth <= maxDepth)) {
                 if (pickBuffer[numNames - 1] != NO_HANDLE) {
-                    pickedHandle = true;
                     pickedNode = false;
                     glPath = pickBuffer + 1;
                     glPathLen = numNames - 2;

@@ -166,7 +166,7 @@ AnimationDialog::LoadData()
 
     for (int i = 0; i < m_eventInNames.size(); i++) {
         m_window.setInitButtonsPressed(i,false);
-        if (TheApp->is4Kids())
+        if (TheApp->is4Kids()) {
             if (m_animationNode->getType() == VRML_TRANSFORM) {
                 if (strcmp((const char *)m_eventInNames[i], "set_rotation") == 0)
                     m_window.setInitButtonsPressed(i, true);
@@ -200,7 +200,8 @@ AnimationDialog::LoadData()
                 if (strcmp((const char *)m_eventInNames[i], "set_size") == 0)
                     m_window.setInitButtonsPressed(i, true);
             }
-       }            
+        }            
+    }
 }
 
 void  AnimationDialog::SaveData()

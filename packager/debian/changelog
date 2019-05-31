@@ -1,3 +1,10 @@
+wdune (1.110-1) experimental; urgency=low
+
+  * Version 1.110 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Wed, 29 May 2019 13:35:17 +0200
+
 whitedune (1.110-1) experimental; urgency=low
 
   * Version 1.110 debian package

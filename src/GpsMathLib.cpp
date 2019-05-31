@@ -3420,7 +3420,7 @@ void GPS_Math_VderGrinten_EN_To_LatLon(double E, double N, double *phi,
         *lambda = (double)GPS_PI * (xpy-(double)1.+
                   pow((double)1.+((double)2.*xx2-tyy2)+xpy*xpy,(double).5)) /
                       ((double)2.*xx) + M0;
-        if(*phi>po2)
+    if(*phi>po2)
         *phi = po2;
     else if(*phi<-po2)
         *phi = -po2;

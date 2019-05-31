@@ -107,7 +107,7 @@ CoverDefDialog::LoadData()
 {
     SWND comboCoverNames = swGetDialogItem(m_dlg, IDC_COVER_NAMES);
     swComboBoxDeleteAll(comboCoverNames);
-    for (int i=0;i<(sizeof(coverNames)/sizeof(const char*));i++)
+    for (unsigned int i=0; i<(sizeof(coverNames)/sizeof(const char*)); i++)
         swComboBoxAppendItem(comboCoverNames, coverNames[i]);
 
     if (m_node->hasName())

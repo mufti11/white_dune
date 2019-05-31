@@ -56,10 +56,14 @@ find $PREFIX/share/doc/wdune/ -type d -print | xargs chmod 755
 mkdir -p $PREFIX/share/applications/
 cp $WTMP/wdune-$VERSION/desktop/kde/dune.desktop $PREFIX/share/applications
 chmod 644 $PREFIX/share/applications/dune.desktop
+cp $WTMP/wdune-$VERSION/desktop/kde/dune4kids.desktop $PREFIX/share/applications
+chmod 644 $PREFIX/share/applications/dune4kids.desktop
 
 mkdir -p $PREFIX/share/pixmaps
 cp $WTMP/wdune-$VERSION/desktop/kde/dune.png $PREFIX/share/pixmaps
 chmod 644 $PREFIX/share/pixmaps/dune.png
+cp $WTMP/wdune-$VERSION/desktop/kde/dune4kids.png $PREFIX/share/pixmaps
+chmod 644 $PREFIX/share/pixmaps/dune4kids.png
  
 echo @name wdune-$VERSION > $WTMP/pkg-list
 

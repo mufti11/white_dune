@@ -759,7 +759,7 @@ bool
 URL::isCurrentDirectory(const char *path)
 {
     int numSlash = 0;
-    for (int i = 0; i < strlen(path); i++)
+    for (unsigned int i = 0; i < strlen(path); i++)
         if (path[i] == '/')
             numSlash++;
     if (numSlash == 0)
@@ -792,7 +792,7 @@ bool mkdir_parents4file(const char *mypath)
 {
      MyString ret = "";
      const char *path = replaceHome(mypath);
-     for (int i = 0; i < strlen(path); i++)
+     for (unsigned int i = 0; i < strlen(path); i++)
          if ((i != 0) && ((path[i] == '/') || (path[i] == '\\'))) {
 #ifdef _WIN32
              if (_mkdir(ret) == -1)
@@ -815,11 +815,11 @@ void myperror(const char *string)
     TheApp->MessageBoxPerror(string);
 }
 
-void toPosixPath(char *target, char *source, int len)
+void toPosixPath(char *target, char *source, unsigned int len)
 {
     if (len > 0) {
         target[0] = '/';
-        int i;
+        unsigned int i = 0;
         for (i = 0; (i < strlen(source)) && (i < len - 1); i++)
             if (source[i] == '\\')
                 target[i + 1] = '/';

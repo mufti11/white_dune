@@ -74,7 +74,7 @@ public:
     virtual bool    canWriteLdrawDat() { return true; }
     virtual int     writeLdrawDatHeader(int filedes, const char *filename);
 
-    bool            checkMissingData(int field, int limit = -1);
+    bool            checkMissingData(int field, unsigned int limit = 0);
 
     fieldMacros(SFString, partDescription, ProtoLdrawDatExport)
     fieldMacros(SFString, author,          ProtoLdrawDatExport)
