@@ -54,7 +54,7 @@
 float view_rotx = 0.0f; 
 float view_roty = 0.0f;
 float view_rotz = 0.0f;
-float view_dist = 0.0f;
+float view_dist = -10.0f;
 float navigation_matrix[16];
 
 void display()
@@ -95,6 +95,7 @@ void onMouseClick(int button, int state, int x, int y)
         left_button = 1;
         clicked_x = x;
         clicked_y = y;        
+        CPPRWD::setMouseClick(x, y);
     }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
@@ -114,8 +115,11 @@ void onMouseMove(int x, int y)
 {
     if (left_button)
     {
-        view_roty -= (clicked_x - x) / 5.0;
-        view_rotx -= (clicked_y - y) / 5.0;
+        CPPRWD::setMouseMove(x, clicked_x, y, clicked_y);
+        if (!CPPRWD::hasHit()) {
+            view_roty -= (clicked_x - x) / 5.0;
+            view_rotx -= (clicked_y - y) / 5.0;
+        }
         clicked_x = x;
         clicked_y = y;
     }
@@ -145,14 +149,20 @@ void onSpecialKeyClick(int key, int x, int y)
     }
 }
 
+void onReshape(int width, int height)
+{
+    CPPRWD::setWidthHeight(width, height);
+}
 
 int main(int argc, char **argv)
 {
     glutInitWindowSize(600, 600);
+    CPPRWD::setWidthHeight(600, 600);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("white_dune C++ viewer");
     CPPRWD::init();
+    glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
     glutSpecialFunc(onSpecialKeyClick);

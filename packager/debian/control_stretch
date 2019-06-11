@@ -23,6 +23,9 @@ Description: Graphical X3D/VRML97 editor, simple NURBS/Superformula 3D modeller 
    wings3d, art of illusion etc. and add interaction/scripting 
  - a tool to manipulate 3D data with 3D input devices (e.g. joystick/spaceball)
  - a tool to view 3D data with quadbuffer stereoview (e.g. shutterglases)
- - a open framework to create or process 3D data and store it as a ISO standard 
+ - a open framework to create or process 3D data and store it as a ISO standard  
  
- 
+Package: wdune-docs
+Architecture: any
+Description: Documentation for white_dune
+

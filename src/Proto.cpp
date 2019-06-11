@@ -1496,6 +1496,12 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "{ return %d; }\n", getType()) )
         RET_ONERROR( mywritestr(f, "\n") )
 
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "    void setGlName(int number)") )
+            RET_ONERROR( mywritestr(f, "{ glName_number = number; }\n") )
+            RET_ONERROR( mywritestr(f, "\n") )
+        }
+
         RET_ONERROR( mywritestr(f, "    static ") )
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "Callback ") )
@@ -1584,7 +1590,11 @@ Proto::writeCDeclaration(int f, int languageFlag)
                 RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
                 RET_ONERROR( mywritestr(f, " = node;\n") ) 
                 RET_ONERROR( mywritestr(f, "    }\n\n") ) 
-            } 
+
+                RET_ONERROR( mywritestr(f, "    void setGlName(int number)") )
+                RET_ONERROR( mywritestr(f, "{ glName_number = number; }\n") )
+                RET_ONERROR( mywritestr(f, "\n") )
+            }
 
             RET_ONERROR( mywritestr(f, "    static ") ) 
             RET_ONERROR( mywritestr(f, getDoWithDataCallbackClass()) )
@@ -1641,6 +1651,17 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, ";") )
         RET_ONERROR( mywritestr(f, "\n\n") )
     }
+
+    if (languageFlag & C_SOURCE)
+        if (getType() == VRML_INDEXED_FACE_SET) {
+            RET_ONERROR( mywritestr(f, "    void setGlName(") )
+            RET_ONERROR( mywritestr(f, "struct X3dIndexedFaceSet* self, int number)\n") )
+            RET_ONERROR( mywritestr(f, "{\n") ) 
+            RET_ONERROR( mywritestr(f, "    self->glName_number = number;\n") )
+            RET_ONERROR( mywritestr(f, "}\n") ) 
+            RET_ONERROR( mywritestr(f, "\n") )
+        }
+
     if (languageFlag & (CC_SOURCE | JAVA_SOURCE))
         RET_ONERROR( mywritestr(f, "    ") )
     if (languageFlag & C_SOURCE)
@@ -2386,10 +2407,12 @@ int
 Proto::writeCExtraFields(int f, int languageFlag)
 {
     if ((languageFlag & C_SOURCE) | (languageFlag & CC_SOURCE)) {
-            RET_ONERROR( mywritestr(f, "    void * extra_data;\n") )
+            RET_ONERROR( mywritestr(f, "    void* extra_data;\n") )
     } else if ((languageFlag & JAVA_SOURCE)) {
             RET_ONERROR( mywritestr(f, "    Object extra_data;\n") )
     }
+    if (getType() == VRML_INDEXED_FACE_SET)
+        RET_ONERROR( mywritestr(f, "    int glName_number;\n") )
     return 0;
 }
 

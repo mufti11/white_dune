@@ -1250,6 +1250,7 @@ public:
                           { return 0; }
     int               writeCInstallDynamicNodeCallback(int f, int languageFlag,
                                                        Proto *proto);
+    int               writeCGetParent(int filedes, int languageFlag);
 
     virtual void      writeCWarning(void) {}
 

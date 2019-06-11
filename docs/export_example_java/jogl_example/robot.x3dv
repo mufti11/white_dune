@@ -51,7 +51,7 @@ EXTERNPROTO SuperShape[
  ]
 [
   "SuperShapePROTO.wrl"
-  "/usr/share/doc/wdune/docs/scripted_Nodes/SuperShapePROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperShapePROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/SuperShapePROTO.wrl"
 ]
 
@@ -72,7 +72,7 @@ EXTERNPROTO CurveAnimation[
  ]
 [
   "CurveAnimationPROTO.wrl"
-  "/usr/share/doc/wdune/docs/scripted_Nodes/CurveAnimationPROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/CurveAnimationPROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
 ]
 
@@ -97,8 +97,6 @@ WorldInfo {
 Transform {
   translation 0 0 -16.700001
   children [
-    DEF Viewpoint1 Viewpoint {
-    }
     Transform {
       translation 2.203995 -0.330663 -20.414368
       children [
@@ -106,8 +104,8 @@ Transform {
           translation 1.128234e-3 7.687727e-5 -7.191875
           children 
             DEF Transform9_0 Transform {
-              rotation -4.649140e-8 1 -4.600061e-8 1.459225
-              translation 0.920834 0 -4.127039
+              rotation 4.348137e-8 1 -4.323937e-8 4.686380
+              translation -0.219541 0 4.498747
               children 
                 DEF Transform8_0 Transform {
                   rotation 0 -1 0 3.140000
@@ -157,23 +155,23 @@ Transform {
                         vOrder 4
                         controlPoint DEF Coordinate2 Coordinate {
                           point [
-                            0.336044 0.834907 3.600391
-                            0.237619 0.477380 2.565178
-                            0.336044 0.675117 3.627708
-                            0.237619 0.477380 2.565178
-                            0.336044 0.675117 3.627708
-                            0.237619 0.477380 2.565178
-                            0.336044 0.675117 3.627708
-                            0.237619 0.477380 2.565178
-                            0.336044 0.704494 3.644645
+                            0.001839 0.675991 3.689215
+                            0.001300 0.477380 2.608776
+                            0.001839 0.675117 3.689365
+                            0.001300 0.477380 2.608776
+                            0.001839 0.675117 3.689365
+                            0.001300 0.477380 2.608776
+                            0.001839 0.675117 3.689365
+                            0.001300 0.477380 2.608776
+                            0.001839 0.704494 3.706302
                             0 0.002817 1.452124
-                            -0.140326 0.320245 2.250907
-                            -0.198450 0.675117 3.183264
-                            -0.140326 0.634515 2.250907
-                            0.336044 0.897339 3.183264
-                            0.615564 0.634515 2.250907
-                            0.870539 0.675117 3.183264
-                            0.615564 0.320245 2.250907
+                            -0.376645 0.320245 2.294505
+                            -0.532655 0.675117 3.244921
+                            -0.376645 0.634515 2.294505
+                            0.001839 0.897339 3.244921
+                            0.379245 0.634515 2.294505
+                            0.536333 0.675117 3.244921
+                            0.379245 0.320245 2.294505
                             0 0.012609 1.457769
                             0 -0.449169 -0.048948
                             -0.485866 -0.469149 1.291260
@@ -188,47 +186,47 @@ Transform {
                             -0.094486 -0.565681 -0.798883
                             -0.689179 0.112519 0.226062
                             -0.868715 0.423260 -1.089299
-                            0 0.770207 -1.604384
+                            0 0.599519 -1.540851
                             0.868715 0.423260 -1.089299
                             0.689179 0.112520 0.226062
                             0.094486 -0.565681 -0.798883
                             0 -0.912513 -1.578075
-                            0 -0.222608 -2.252726
-                            -0.145899 -0.157408 -1.592917
+                            0 -1.023941 -1.961957
+                            -0.145899 -0.724036 -1.387313
                             -0.722222 0 -0.444444
-                            -0.885677 0.051891 -1.659685
-                            0 0.073385 -2.347149
-                            0.885677 0.051891 -1.659685
+                            -0.928838 0.363580 -1.734271
+                            0 0.514180 -2.452629
+                            0.928838 0.363580 -1.734271
                             0.722222 0 -0.444444
-                            0.145899 -0.157408 -1.592917
-                            0 -0.222608 -2.252726
-                            0 -0.222608 -2.252726
-                            -0.729493 -0.157408 -1.592917
+                            0.145899 -0.724036 -1.387313
+                            0 -1.023941 -1.961957
+                            0 -1.023941 -1.961957
+                            -0.729493 -0.724036 -1.387313
                             -0.944444 0 -0.888889
-                            -0.885677 0.051891 -1.659685
-                            0 0.073385 -2.347149
-                            0.885677 0.051891 -1.659685
+                            -0.928838 0.363580 -1.734271
+                            0 0.514180 -2.452629
+                            0.928838 0.363580 -1.734271
                             0.944444 0 -0.888889
-                            0.729493 -0.157408 -1.592917
-                            0 -0.222608 -2.252726
-                            0 -0.222608 -2.252726
-                            -0.875392 -0.157408 -1.592917
+                            0.729493 -0.724036 -1.387313
+                            0 -1.023941 -1.961957
+                            0 -1.023941 -1.961957
+                            -0.875392 -0.724036 -1.387313
                             -1 0 -1
-                            -0.885677 0.051891 -1.659685
-                            0 0.073385 -2.347149
-                            0.885677 0.051891 -1.659685
+                            -0.928838 0.363580 -1.734271
+                            0 0.514180 -2.452629
+                            0.928838 0.363580 -1.734271
                             1 0 -1
-                            0.875392 -0.157408 -1.592917
-                            0 -0.222608 -2.252726
-                            0 -0.222608 -2.252726
-                            -0.875392 -0.157408 -1.592917
+                            0.875392 -0.724036 -1.387313
+                            0 -1.023941 -1.961957
+                            0 -1.023941 -1.961957
+                            -0.875392 -0.724036 -1.387313
                             -1 0 -1
-                            -0.885677 0.051891 -1.659685
-                            0 0.073385 -2.347149
-                            0.885677 0.051891 -1.659685
+                            -0.928838 0.363580 -1.734271
+                            0 0.514180 -2.452629
+                            0.928838 0.363580 -1.734271
                             1 0 -1
-                            0.875392 -0.157408 -1.592917
-                            0 -0.222608 -2.252726
+                            0.875392 -0.724036 -1.387313
+                            0 -1.023941 -1.961957
                             0 -0.685566 -1.640238
                             -0.583594 -0.484769 -1.159823
                             -0.666667 0 -1
@@ -396,10 +394,10 @@ Transform {
                                 0 -0.500000 -0.500000
                                 0 0.500000 -0.500000
                                 0 1.500000 -0.500000
-                                0.725965 -1.500000 0.500000
-                                0.725965 -0.500000 0.500000
-                                0.725965 0.500000 0.500000
-                                0.782306 1.500000 0.500000
+                                0.094215 -1.500000 0.500000
+                                0.094215 -0.500000 0.500000
+                                0.094215 0.500000 0.500000
+                                0.150556 1.500000 0.500000
                                 0 -1.500000 1.500000
                                 0 -0.500000 1.500000
                                 0 0.367991 1.824126
@@ -1428,21 +1426,21 @@ Transform {
                     solid FALSE
                     controlPoint DEF Coordinate1 Coordinate {
                       point [
-                        -1.500000 0 -1.500000
-                        -0.500000 0.000002 -1.500004
-                        0.500000 0.000002 -1.500004
-                        1.500000 0 -1.500000
+                        -2.646193 -0.254143 -1.043172
+                        -0.500000 0 -1.500000
+                        0.500000 0 -1.500000
+                        2.646193 -0.254143 -1.043172
                         -1.500000 0 -0.500000
                         -0.500000 0 -0.500000
                         0.500000 0 -0.500000
                         1.500000 0 -0.500000
-                        -2.650951 -0.544165 1.319504
+                        -1.505061 0.000091 0.499632
                         -0.500000 0 0.500000
                         0.500000 0 0.500000
-                        2.650951 -0.544165 1.319504
+                        1.505061 0.000091 0.499632
                         -1.500000 0 1.500000
-                        0 -0.258703 1.842262
-                        0 -0.258703 1.842262
+                        -0.500000 0 1.500000
+                        0.500000 0 1.500000
                         1.500000 0 1.500000
                       ]
                     }
@@ -3195,11 +3193,11 @@ Transform {
                 Shape {
                   appearance Appearance {
                     material DEF Material3 Material {
-                      diffuseColor 0.959594 0.452648 0.285589
+                      diffuseColor 0.800000 0.800000 0.795151
                       emissiveColor 3.921569e-3 2.352941e-2 3.921569e-3
-                      shininess 0.661987
+                      shininess 0.278465
                       specularColor 0.960784 1 0.984314
-                      transparency 0.137836
+                      transparency 1.035597e-3
                     }
                   }
                   geometry Sphere {
@@ -3207,8 +3205,7 @@ Transform {
                   }
                 }
                 DEF TimeSensor4 TimeSensor {
-                  cycleInterval 10
-                  loop TRUE
+                  cycleInterval 3
                 }
                 DEF ColorInterpolator1 ColorInterpolator {
                   key [
@@ -3396,8 +3393,8 @@ Transform {
                     1 0 1
                     1 0 -1
                     -1 0 -1
-                    -1.127779 -0.159214 1.025727
-                    1.132122 -0.142820 1.016622
+                    -1.023253 -0.028974 1.004682
+                    1.024044 -0.025990 1.003025
                     1 1 1
                     1 1 -1
                     -1 1 -1
@@ -3411,8 +3408,8 @@ Transform {
                     1 1 1
                     1 1 -1
                     -1 1 -1
-                    -1.120791 1.196890 0.975480
-                    1.074466 1.250828 0.962788
+                    -1.021982 1.035830 0.995538
+                    1.013551 1.045646 0.993228
                   ]
                 }
                 texCoord TextureCoordinate {
@@ -3520,6 +3517,8 @@ Transform {
               children 
                 Group {
                   children [
+                    DEF TouchSensor1 TouchSensor {
+                    }
                     Transform {
                       translation 0 6.785928 0
                       children 
@@ -3869,7 +3868,7 @@ Transform {
                         }
                     }
                     DEF Transform4 Transform {
-                      rotation 0.980580 -4.387170e-2 -0.191147 3.114855
+                      rotation 0.992504 -8.934405e-2 -8.339240e-2 2.793340
                       translation -5.917241 2.859427 1.169944
                       center 2.414691 -0.298006 -0.163896
                       children [
@@ -4212,7 +4211,7 @@ Transform {
                           }
                         }
                         DEF Transform3 Transform {
-                          rotation 0.969067 -0.230154 -8.909941e-2 1.878113
+                          rotation 0.955584 -0.273245 0.110442 2.149665
                           translation -3.649116 0.939808 -0.736953
                           center 2.553767 -0.354530 -0.174232
                           children [
@@ -5723,7 +5722,7 @@ Transform {
                       ]
                     }
                     DEF Transform5 Transform {
-                      rotation -0.807967 -0.574787 0.129654 2.941957
+                      rotation 0.779493 0.610057 -0.142204 3.340008
                       translation 5.917241 2.859427 1.169944
                       center -2.414691 -0.298006 -0.163896
                       children [
@@ -6066,7 +6065,7 @@ Transform {
                           }
                         }
                         DEF Transform6 Transform {
-                          rotation -0.429201 -0.902077 4.520020e-2 1.774788
+                          rotation -0.593000 -0.613747 0.521217 2.517942
                           translation 3.649116 0.939808 -0.736953
                           center -2.553767 -0.354530 -0.174232
                           children [
@@ -7815,10 +7814,9 @@ Transform {
                         material DEF Material2_9 Material {
                           diffuseColor 0.600000 0.600000 0.600000
                           specularColor 0.996078 0.960784 1
-                          transparency 0.322733
                         }
                       }
-                      geometry IndexedFaceSet {
+                      geometry DEF IndexedFaceSet1 IndexedFaceSet {
                         coord Coordinate {
                           point [
                             -1.733030 5.293310 2.824840
@@ -9430,7 +9428,6 @@ Transform {
                         material DEF Material2_10 Material {
                           diffuseColor 0.600000 0.600000 0.600000
                           specularColor 0.996078 0.960784 1
-                          transparency 0.322733
                         }
                       }
                       geometry IndexedFaceSet {
@@ -11059,7 +11056,7 @@ Transform {
                       children 
                         DEF Transform7 Transform {
                           rotation 0 -1 0 0
-                          translation 0 -17.750668 0
+                          translation 0 -19.455782 0
                           children [
                             DEF TimeSensor6 TimeSensor {
                               cycleInterval 10
@@ -12569,10 +12566,7 @@ Transform {
       ]
     }
     Group {
-      children [
-        DEF Viewpoint1_2 Viewpoint {
-          position -4.835352 -0.374279 19.490290
-        }
+      children 
         Transform {
           translation 0 0 -9.060000
           children 
@@ -13189,7 +13183,6 @@ Transform {
                 }
             }
         }
-      ]
     }
     Transform {
       translation 6.665299 -1.079968 -6.720000
@@ -13247,8 +13240,8 @@ Transform {
           scale 5 5 5
           children [
             DEF Transform1 Transform {
-              rotation -2.725021e-8 -1 2.648584e-8 2.261199
-              translation 0.198133 0 -1.250743
+              rotation 1.208430e-8 1 4.169824e-9 1.364550
+              translation -0.215749 -7.666791e-2 0.168506
               children [
                 WorldInfo {
                   info [
@@ -13280,24 +13273,20 @@ Transform {
                   groundColor 0.051000 0.051000 0.051000
                   skyColor 0.051000 0.051000 0.051000
                 }
-                Viewpoint {
-                  orientation -0.839930 -0.514232 -0.173445 0.159838
-                  position -0.448354 1.089694 2.148279
-                }
                 HAnimHumanoid {
                   rotation -1 0 0 0
                   center 0.250607 0.858573 0
                   joints [
                     DEF HumanoidRoot HAnimJoint {
-                      rotation 0 0 1 4.802679e-2
+                      rotation 0 0 -1 9.793179e-2
                       center 0 0.812784 0
                       children [
                         DEF hanim_vk5 HAnimJoint {
-                          rotation -4.988688e-3 -0.994752 0.102196 1.184021e-2
+                          rotation -2.167816e-3 0.996107 8.813078e-2 7.048549e-2
                           center 0 0.820000 0
                           children [
                             DEF hanim_skulbase HAnimJoint {
-                              rotation 0 1 0 2.195648e-2
+                              rotation 0 -1 0 7.236519e-2
                               center 0 1.364723 -3.827345e-2
                               skinCoordIndex [
                                 8311 
@@ -28371,15 +28360,15 @@ Transform {
                               ]
                             }
                             DEF hanim_r_shoulder HAnimJoint {
-                              rotation 1 0 0 0.115215
+                              rotation -1 0 0 7.187582e-2
                               center -0.134002 1.280000 -5.500000e-2
                               children 
                                 DEF hanim_r_elbow HAnimJoint {
-                                  rotation -1 0 0 0.298690
+                                  rotation -1 0 0 0.394841
                                   center -0.200000 1.030000 -5.500000e-2
                                   children 
                                     DEF hanim_r_wrist HAnimJoint {
-                                      rotation -0.456297 -0.816347 -0.354077 0.123507
+                                      rotation -0.864143 0.348083 -0.363449 0.116471
                                       center -0.245291 0.824404 -3.550172e-3
                                       skinCoordIndex [
                                         9750 
@@ -29003,15 +28992,15 @@ Transform {
                               ]
                             }
                             DEF hanim_l_shoulder HAnimJoint {
-                              rotation 1 0 0 3.801132e-2
+                              rotation 1 0 0 0.102966
                               center 0.134002 1.280000 -5.500000e-2
                               children 
                                 DEF hanim_l_elbow HAnimJoint {
-                                  rotation -1 0 0 0.286247
+                                  rotation -1 0 0 8.805764e-2
                                   center 0.200000 1.030000 -5.500000e-2
                                   children 
                                     DEF hanim_l_wrist HAnimJoint {
-                                      rotation -0.186078 -0.977535 9.899493e-2 0.508193
+                                      rotation -2.003563e-2 -0.999743 1.065002e-2 0.463293
                                       center 0.245291 0.824404 -3.550172e-3
                                       skinCoordIndex [
                                         9134 
@@ -32724,15 +32713,15 @@ Transform {
                           ]
                         }
                         DEF hanim_r_hip HAnimJoint {
-                          rotation -0.674071 -6.815920e-3 0.738635 0.206160
+                          rotation -0.653067 7.828735e-2 0.753243 0.245316
                           center -9e-2 0.780000 -3.000000e-2
                           children 
                             DEF hanim_r_knee HAnimJoint {
-                              rotation 1 0 0 0.172081
+                              rotation 1 0 0 0.862833
                               center -0.150511 0.398249 -5.236495e-2
                               children 
                                 DEF hanim_r_ankle HAnimJoint {
-                                  rotation -1 0 0 4.395705e-2
+                                  rotation -1 0 0 5.537812e-2
                                   center 1.751101e-2 0 0
                                   skinCoordIndex [
                                     9829 
@@ -33292,15 +33281,15 @@ Transform {
                           ]
                         }
                         DEF hanim_l_hip HAnimJoint {
-                          rotation -0.924492 -7.435595e-2 -0.373880 0.423439
+                          rotation -0.847012 -1.184743e-3 -0.531572 0.280369
                           center 9e-2 0.780000 -3.000000e-2
                           children 
                             DEF hanim_l_knee HAnimJoint {
-                              rotation 1 0 0 1.040368
+                              rotation 1 0 0 0.306893
                               center 0.150511 0.398249 -5.236495e-2
                               children 
                                 DEF hanim_l_ankle HAnimJoint {
-                                  rotation -1 0 0 0.327732
+                                  rotation -1 0 0 9.034631e-2
                                   skinCoordIndex [
                                     9045 
                                     9044 
@@ -62997,6 +62986,7 @@ ROUTE TimeSensor2_0_0.fraction_changed TO CoordinateInterpolator2_0.set_fraction
 ROUTE TimeSensor2_0_0.fraction_changed TO CoordinateInterpolator5.set_fraction
 ROUTE TimeSensor8.fraction_changed TO CoordinateInterpolator1.set_fraction
 ROUTE CoordinateInterpolator1.value_changed TO Coordinate4.set_point
+ROUTE TouchSensor1.touchTime TO TimeSensor4.set_startTime
 ROUTE TimeSensor3.fraction_changed TO OrientationInterpolator1.set_fraction
 ROUTE OrientationInterpolator1.value_changed TO Transform3.set_rotation
 ROUTE TimeSensor3.fraction_changed TO OrientationInterpolator4.set_fraction
@@ -63051,4 +63041,27 @@ ROUTE Walk_Time.fraction_changed TO lower_bodyRotInterp_BasicWalk.set_fraction
 ROUTE CurveAnimation2.position_changed TO Transform1.set_translation
 ROUTE CurveAnimation2.orientation_changed TO Transform1.set_rotation
 ROUTE TimeSensor9.fraction_changed TO CurveAnimation2.set_fraction
+
+DEF Viewpoint2 Viewpoint {
+  position 0 0 -14.800023
+}
+
+DEF TimeSensor10 TimeSensor {
+  cycleInterval 5
+  loop TRUE
+}
+
+DEF PositionInterpolator1 PositionInterpolator {
+  key [
+    0
+    1
+  ]
+  keyValue [
+    0 0 -5
+    0 0 -14.800023
+  ]
+}
+
+ROUTE TimeSensor10.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Viewpoint2.set_position
 

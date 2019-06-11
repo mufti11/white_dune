@@ -43,6 +43,8 @@ public:
     virtual int     getNodeClass() const { return SENSOR_NODE | CHILD_NODE; }
     virtual int     getProfile(void) const { return PROFILE_INTERACTIVE; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
     FieldIndex autoOffset;
     FieldIndex axisRotation;
     FieldIndex description;

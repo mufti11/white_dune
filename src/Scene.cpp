@@ -371,6 +371,7 @@ Scene::Scene()
     m_hasParticleSystem = false;
     m_hasMovieTexture = false;
     m_infoHandles = false;
+    m_glName = 0;
 }
 
 void
@@ -2386,6 +2387,15 @@ static bool writeCDynamicNodeCallback(Node *node, void *data)
     return true;
 }
 
+static bool writeCParentCallback(Node *node, void *data)
+{
+    WriteCDynamicNodeData *parameters = (WriteCDynamicNodeData *)data;
+    parameters->result = node->writeCGetParent(parameters->filedes, parameters->languageFlag);
+    if (parameters->result != 0)
+        return false;
+    return true;
+}
+
 static bool writeCInstallDynamicNodeCallback(Node *node, void *data)
 {
     WriteCDynamicNodeData *parameters = (WriteCDynamicNodeData *)data;
@@ -2725,6 +2735,7 @@ Scene::writeC(int f, int languageFlag)
     m_root->doWithBranch(writeCNodeData, &cWrite);
     if (cWrite.ret !=0)
         return -1;
+
     if (languageFlag & C_SOURCE) {
         RET_ONERROR( mywritestr(f, "};\n\n") )
 
@@ -2762,6 +2773,22 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( writeCTreeCallback(f, "DoWithData") )
         RET_ONERROR( mywritestr(f, "\n") ) 
 
+        RET_ONERROR( mywritef(f, "%s%s *", TheApp->getCPrefix(), "Node") )
+        RET_ONERROR( mywritef(f, "getNodeFromGlName(") )
+        RET_ONERROR( mywritef(f, "struct %sSceneGraph *self, int glName) {\n",
+                              TheApp->getCPrefix()) )
+        RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 
+        for (int i = 0; i < m_glNameData.size(); i++) {
+            RET_ONERROR( mywritef(f, "       case %d:\n", 
+                                 m_glNameData[i].glName) )
+            RET_ONERROR( mywritestr(f, "         return ") )         
+            RET_ONERROR( mywritef(f, "&self->%s;\n", (const char *)
+                                               m_glNameData[i].nodeName) )
+        }
+        RET_ONERROR( mywritestr(f, "    }\n") ) 
+        RET_ONERROR( mywritestr(f, "    return NULL;\n") ) 
+        RET_ONERROR( mywritestr(f, "}\n") ) 
+
         for (int i = 0; i < LAST_TYPE; i++) {
             FieldValue *value = typeDefaultValue(i);
             value->writeCSendEventFunction(f, languageFlag);
@@ -2782,6 +2809,9 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "void doWithData(void *data) ") )
         RET_ONERROR( mywritestr(f, "{ root.treeDoWithData(data); }\n") ) 
 
+        RET_ONERROR( mywritestr(f, "    ") ) 
+        RET_ONERROR( mywritef(f, "%sNode *", TheApp->getCPrefix()) ) 
+        RET_ONERROR( mywritestr(f, "getNodeFromGlName(int glName);\n") ) 
         RET_ONERROR( mywritestr(f, "};\n\n") ) 
 
         RET_ONERROR( mywritestr(f, TheApp->getCSceneGraphName()) ) 
@@ -2796,7 +2826,24 @@ Scene::writeC(int f, int languageFlag)
         m_root->doWithBranch(writeCInstallDynamicNodeCallback, &parameters);
         if (parameters.result != 0)
             return -1;
+
         RET_ONERROR( mywritestr(f, "}\n") ) 
+
+        RET_ONERROR( mywritef(f, "%s%s *", TheApp->getCPrefix(), "Node") )
+        RET_ONERROR( mywritef(f, "%s::",TheApp->getCSceneGraphName()) ) 
+        RET_ONERROR( mywritef(f, "getNodeFromGlName(int glName) {\n") )
+        RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 
+        for (int i = 0; i < m_glNameData.size(); i++) {
+            RET_ONERROR( mywritef(f, "       case %d:\n", 
+                                 m_glNameData[i].glName) )
+            RET_ONERROR( mywritestr(f, "         return ") )         
+            RET_ONERROR( mywritef(f, "&%s;\n", (const char *)
+                                               m_glNameData[i].nodeName) )
+        }
+        RET_ONERROR( mywritestr(f, "    }\n") ) 
+        RET_ONERROR( mywritestr(f, "    return NULL;\n") ) 
+        RET_ONERROR( mywritestr(f, "}\n") ) 
+    
         for (int i = 0; i < LAST_TYPE; i++) {
             FieldValue *value = typeDefaultValue(i);
             value->writeCSendEventFunction(f, languageFlag);
@@ -2814,6 +2861,7 @@ Scene::writeC(int f, int languageFlag)
             numDataFunctions += getNumDataFunctions(); 
 
             RET_ONERROR(writeCDataFunctionsCalls(f, languageFlag) )
+
             RET_ONERROR( mywritestr(f, "    }\n") )    
         }
 
@@ -2856,6 +2904,8 @@ Scene::writeC(int f, int languageFlag)
                     }
             }
         }
+        RET_ONERROR( mywritestr(f, "        setParents();\n") )
+
         RET_ONERROR( mywritestr(f , "    }\n") )
 
         parameters.result = 0;
@@ -2864,7 +2914,7 @@ Scene::writeC(int f, int languageFlag)
         m_root->doWithBranch(writeCInstallDynamicNodeCallback, &parameters);
         if (parameters.result != 0)
             return -1;
-        
+            
         RET_ONERROR( mywritestr(f, "    ") ) 
         if (languageFlag & MANY_JAVA_CLASSES) 
             RET_ONERROR( mywritestr(f, "static ") )
@@ -2875,6 +2925,41 @@ Scene::writeC(int f, int languageFlag)
             RET_ONERROR( mywritestr(f, "static ") )
         RET_ONERROR( mywritestr(f, "void doWithData() ") )
         RET_ONERROR( mywritestr(f, "{ root.treeDoWithData(null); }\n") ) 
+
+
+        RET_ONERROR( mywritef(f, "    static %s%s ", 
+                                 TheApp->getCPrefix(), "Node") )
+        RET_ONERROR( mywritef(f, "getNodeFromGlName(") )
+        RET_ONERROR( mywritef(f, "int glName) {\n") )
+        RET_ONERROR( mywritestr(f, "        switch (glName) {\n") ) 
+        for (int i = 0; i < m_glNameData.size(); i++) {
+            RET_ONERROR( mywritef(f, "           case %d:\n", 
+                                  m_glNameData[i].glName) )
+            RET_ONERROR( mywritestr(f, "             return ") )
+            MyString className = "";
+            if (m_glNameData[i].node->hasName()) 
+                className += TheApp->getCSceneGraphName();
+            else {
+                className += TheApp->getCPrefix();
+                className += m_glNameData[i].nodeName;
+            }
+            RET_ONERROR( mywritef(f, "%s.%s;\n", 
+                                     (const char *)className,
+                                     (const char *)m_glNameData[i].nodeName
+                                 ) )
+        }
+        RET_ONERROR( mywritef(f, "        }\n") )
+        RET_ONERROR( mywritef(f, "    return null;\n") )
+        RET_ONERROR( mywritef(f, "    }\n") )
+
+        RET_ONERROR( mywritestr(f, "    public void setParents() {\n") )
+        parameters.result = 0;
+        parameters.filedes = f;
+        parameters.languageFlag = languageFlag;
+        m_root->doWithBranch(writeCParentCallback, &parameters);
+        if (parameters.result != 0)
+            return -1;
+        RET_ONERROR( mywritestr(f, "    }\n") )
 
         for (int i = 0; i < LAST_TYPE; i++) {
             FieldValue *value = typeDefaultValue(i);

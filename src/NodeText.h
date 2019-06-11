@@ -46,7 +46,7 @@ public:
 
     virtual int     getType() const { return VRML_TEXT; }
 
-    virtual bool    isDeclaredInRwd_h() { return true; } 
+//    virtual bool    isDeclaredInRwd_h() { return true; } 
 
 #ifdef HAVE_LIBFREETYPE
     virtual bool    isMesh(void) { return true; }

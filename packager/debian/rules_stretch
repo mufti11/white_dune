@@ -64,10 +64,22 @@ endef
 
 # Below here is fairly generic really
 
-binary:		binary-indep binary-arch
+binary:		binary-indep binary-arch 
 
 checkroot:
 	$(checkdir)
 	test $$(id -u) = 0
+
+wdune-docs: 
+	dh_testdir
+	dh_installdirs  -p$@
+	dh_installdocs  -p$@
+	dh_installman  -p$@
+	dh_fixperms  -p$@
+	dh_makeshlibs -p$@
+	dh_installdeb  -p$@
+	dh_gencontrol  -p$@
+	dh_md5sums  -p$@
+	dh_builddeb  -p$@
 
 .PHONY: binary binary-arch binary-indep clean checkroot

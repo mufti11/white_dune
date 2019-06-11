@@ -1,7 +1,7 @@
 /*libC++RWD Library for C++ Rendering of White_dune Data (in Development)*/
 
 /* Copyright (c) Stefan Wolf, 2010. */
-/* Copyright (c) J. "MUFTI" Scheurich, 2015-2018. */
+/* Copyright (c) J. "MUFTI" Scheurich, 2015-2019. */
 
 /*
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -30,7 +30,6 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 
 namespace CPPRWD
 {
-
     void error(const char *errormsg);
 
     void IndexedFaceSetRender(X3dNode *data, void*);
@@ -68,6 +67,12 @@ namespace CPPRWD
     bool TimeSensorSendEvents(X3dNode *data, const char *event, 
                               void* extraData);
 
+    bool TouchSensorSendEvents(X3dNode *data, const char *event, 
+                               void *extraData);
+
+    bool PlaneSensorSendEvents(X3dNode *data, const char *event,
+                               void *extraData);
+
     float interpolate(float t, float key, float oldKey,
                                float value, float oldValue);
 
@@ -100,6 +105,16 @@ namespace CPPRWD
 
     void processEvents();
 
+    void processHits(GLint hits, GLuint *pickBuffer);
+
+    void setMouseClick(int x, int y);
+
+    void setMouseMove(int x, int old_x, int y, int old_y);
+
+    bool hasHit(void);
+
+    void setWidthHeight(int width, int height);
+
     void init();
 
     void finalize();
@@ -115,17 +130,60 @@ namespace CPPRWD
 static bool viewpointRendered = false;
 static bool viewPointExists = false;
 
+static X3dNode *viewpoint1 = NULL;
+
 static short lightExists = 0;
 static int numLights = 0;
 
-static GLfloat viewpoint1Position[] = { 0, 0, 10 };
-
 static float projectionMatrix[16];
+static float fieldOfViewdegree = 45;
 
 static bool preRender = false;
 static bool initRender = false;
 
 static X3dSceneGraph scenegraph;
+
+static int mouseX = -1;
+static int mouseY = -1;
+static bool clicked = false;
+
+void CPPRWD::setMouseClick(int x, int y)
+{
+     mouseX = x;
+     mouseY = y;
+     clicked = true;
+}
+
+static int mouseXMove = -1;
+static int mouseXOld = -1;
+static int mouseYMove = -1;
+static int mouseYOld = -1;
+static bool moved = false;
+
+void CPPRWD::setMouseMove(int x, int y, int x_old, int y_old)
+{
+    mouseXMove = x;
+    mouseXOld = x_old;
+    mouseYMove = y;
+    mouseYOld = y_old;
+    moved = true;
+}
+
+static int width;
+static int height;
+
+void CPPRWD::setWidthHeight(int w, int h)
+{
+    width = w;
+    height = h;
+}
+
+bool isHit = false;
+
+bool CPPRWD::hasHit(void)
+{
+     return isHit;
+}
 
 static double getTimerTime(void)
 {
@@ -229,6 +287,7 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
         normalpervertex = Xindexedfaceset->normalPerVertex;
         int buffer, normalbuffer, texturebuffer = 0;
         int facecounter = 0;
+        glPushName(Xindexedfaceset->glName_number);
         if (Xindexedfaceset->ccw != 0)
         {
            glFrontFace(GL_CCW);
@@ -301,6 +360,7 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
             }
         }
         glEnd();
+        glPopName();
     }
     glDisable(GL_COLOR_MATERIAL);
 }
@@ -1112,6 +1172,17 @@ void CPPRWD::GroupTreeRender(X3dNode *data, void *dataptr)
     glPopMatrix();
 }
 
+static void transformData(X3dTransform *transform)
+{
+        glTranslatef(transform->translation[0], transform->translation[1], transform->translation[2]);
+        glTranslatef(transform->center[0], transform->center[1], transform->center[2]);
+        glRotatef( ((transform->rotation[3] / M_PI) * 180.0f), transform->rotation[0], transform->rotation[1], transform->rotation[2]);
+        glRotatef( ((transform->scaleOrientation[3] / M_PI) * 180.0f), transform->scaleOrientation[0], transform->scaleOrientation[1], transform->scaleOrientation[2]);
+        glScalef(transform->scale[0], transform->scale[1], transform->scale[2]);
+        glRotatef( ((transform->scaleOrientation[3] / M_PI) * 180.0f) * -1.0f, transform->scaleOrientation[0], transform->scaleOrientation[1], transform->scaleOrientation[2]);
+        glTranslatef(transform->center[0] * -1.0f, transform->center[1] * -1.0f, transform->center[2] * -1.0f);
+}
+
 void CPPRWD::TransformTreeRender(X3dNode *data, void *dataptr)
 {
     X3dTransform *transform = (X3dTransform*)data;
@@ -1125,13 +1196,7 @@ void CPPRWD::TransformTreeRender(X3dNode *data, void *dataptr)
     else
     {
         glPushMatrix();
-        glTranslatef(transform->translation[0], transform->translation[1], transform->translation[2]);
-        glTranslatef(transform->center[0], transform->center[1], transform->center[2]);
-        glRotatef( ((transform->rotation[3] / M_PI) * 180.0f), transform->rotation[0], transform->rotation[1], transform->rotation[2]);
-        glRotatef( ((transform->scaleOrientation[3] / M_PI) * 180.0f), transform->scaleOrientation[0], transform->scaleOrientation[1], transform->scaleOrientation[2]);
-        glScalef(transform->scale[0], transform->scale[1], transform->scale[2]);
-        glRotatef( ((transform->scaleOrientation[3] / M_PI) * 180.0f) * -1.0f, transform->scaleOrientation[0], transform->scaleOrientation[1], transform->scaleOrientation[2]);
-        glTranslatef(transform->center[0] * -1.0f, transform->center[1] * -1.0f, transform->center[2] * -1.0f);
+        transformData(transform);
         if (transform->children)
             for (int i = 0; i < transform->children_length; i++)
                 if (transform->children[i]) 
@@ -1149,29 +1214,21 @@ void CPPRWD::ViewpointRender(X3dNode *data, void*)
     if(preRender || initRender)
     {
         viewPointExists = true;
-
+        
         if(!viewpointRendered)
         {
             viewpointRendered = true;
-            for (int i = 0; i < 3; i++)
-                viewpoint1Position[i] = viewpoint->position[i];
+            viewpoint1 = viewpoint;
+//            for (int i = 0; i < 3; i++)
+//                viewpoint1Position[i] = viewpoint->position[i];
 
-            glMatrixMode(GL_PROJECTION);
-            float fieldOfViewdegree = ((viewpoint->fieldOfView / M_PI) * 180.0f);
+            fieldOfViewdegree = ((viewpoint->fieldOfView / M_PI) * 180.0f);
 
-            if(initRender) {
-                gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
-                glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
-            } else if(preRender)
-                glLoadMatrixf(projectionMatrix);
-
-            glRotatef( ( -(viewpoint->orientation[3] / (2*M_PI) ) * 360), viewpoint->orientation[0], viewpoint->orientation[1], viewpoint->orientation[2]);
+            glMatrixMode(GL_MODELVIEW);
+            glRotatef(( -(viewpoint->orientation[3] / (2*M_PI) ) * 360), viewpoint->orientation[0], viewpoint->orientation[1], viewpoint->orientation[2]);
             glTranslatef(-viewpoint->position[0], -viewpoint->position[1], -viewpoint->position[2]);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
-    }
-    else
-    {
     }
 }
 
@@ -1886,6 +1943,21 @@ bool CPPRWD::TimeSensorSendEvents(X3dNode *data, const char *event,
     return true;
 }
 
+
+bool CPPRWD::TouchSensorSendEvents(X3dNode *data, const char *event,
+                                   void *extraData)
+{
+    X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)data;
+    return true;
+}
+
+bool CPPRWD::PlaneSensorSendEvents(X3dNode *data, const char *event,
+                                   void *extraData)
+{
+    X3dPlaneSensor *planeSensor = (struct X3dPlaneSensor *)data;
+    return hasHit();
+}
+
 float CPPRWD::interpolate(float t, float key, float oldKey, 
                                   float value, float oldValue)
 {
@@ -2151,6 +2223,9 @@ bool CPPRWD::PositionInterpolator2DSendEvents(X3dNode *data, const char *event,
                         interpolator->key_length, 2, 0); 
     return true;
 }
+
+#define PICK_BUFFER_SIZE 65536
+#define PICK_REGION_SIZE 2.5
         
 X3dNode *rootNode = &scenegraph.root;
 //X3dNode *rootNode = &scenegraph.DEFNAME;
@@ -2172,8 +2247,13 @@ void CPPRWD::draw(float *matrix)
 
     viewpointRendered = false;
     
-    preRender = true;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
+    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+    glMatrixMode(GL_MODELVIEW);
+
+    preRender = true;
     rootNode->treeRender(NULL);
 
     if(!lightExists)
@@ -2186,7 +2266,193 @@ void CPPRWD::draw(float *matrix)
 
     glMatrixMode(GL_MODELVIEW);
     preRender = false;
+    glRenderMode(GL_RENDER);
     rootNode->treeRender(NULL);
+
+    if (clicked || moved) {
+        // render to pickbuffer
+        GLuint pickBuffer[PICK_BUFFER_SIZE];
+        glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
+        glRenderMode(GL_SELECT);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        GLint v[4];
+        glGetIntegerv(GL_VIEWPORT, v);
+        gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
+
+        gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+        glMatrixMode(GL_MODELVIEW);
+
+        preRender = true;
+        rootNode->treeRender(NULL);
+
+        glInitNames();
+        glMatrixMode(GL_MODELVIEW);
+        preRender = false;
+        rootNode->treeRender(NULL);
+
+        GLint hits = glRenderMode(GL_RENDER);
+        if (hits < 0) // overflow flag has been set, ignore
+            hits = - hits;
+        processHits(hits, pickBuffer);
+    }
+}
+
+void
+projectPoint(GLdouble x, GLdouble y, GLdouble z, GLdouble *wx, GLdouble *wy, GLdouble *wz)
+{
+    GLdouble mmat[16], pmat[16];
+    GLdouble winx, winy, winz;
+    GLint viewport[4];
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, mmat);
+    glGetDoublev(GL_PROJECTION_MATRIX, pmat);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    gluProject(x, y, z, mmat, pmat, viewport, &winx, &winy, &winz);
+
+    *wx =  winx;
+    *wy =  winy;
+    *wz =  winz;
+}
+
+void
+unProjectPoint(GLdouble wx, GLdouble wy, GLdouble wz, GLdouble *x, GLdouble *y, GLdouble *z)
+{
+    GLdouble mmat[16], pmat[16];
+    GLdouble objx, objy, objz;
+    GLint viewport[4];
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, mmat);
+    glGetDoublev(GL_PROJECTION_MATRIX, pmat);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    gluUnProject(wx, wy, wz, mmat, pmat, viewport, &objx, &objy, &objz);
+
+    *x = objx;
+    *y = objy;
+    *z = objz;
+}
+
+void transform(X3dNode *node)
+{
+    for (X3dNode *parent = node->m_parent; parent != NULL; 
+         parent = parent->m_parent)
+        if (parent->getType() == X3dTransformType) {
+            X3dTransform *transform = (X3dTransform *)parent;
+            transformData(transform);
+        }
+}
+
+float constrainLine(float x1, float y1, float z1, 
+                    float x2, float y2, float z2)
+{
+    float dx = x1 - x2;
+    float dy = y1 - y2;
+    if (dx == 0.0f && dy == 0.0f) 
+        return 0;
+    float alpha = (x1 * dx + y1 * dy) / (dx * dx + dy * dy);
+
+    return (1.0f - alpha) * z1 + alpha * z2;
+}
+
+void handleSibling(X3dNode *sibling) 
+{
+    if (clicked && sibling->getType() == X3dTouchSensorType) {
+        X3dTouchSensor *touchSensor = (X3dTouchSensor *)sibling;
+        touchSensor->touchTime = getTimerTime();
+    }
+/*
+    if (moved && sibling->getType() == X3dPlaneSensorType) {
+        X3dPlaneSensor *planeSensor = (X3dPlaneSensor *)sibling;
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+        if (viewpoint1) {
+            X3dViewpoint *viewpoint = (X3dViewpoint *)viewpoint1;
+            glTranslatef(-viewpoint->position[0], 
+                         -viewpoint->position[1], 
+                         -viewpoint->position[2]);
+            glRotatef(( (viewpoint->orientation[3] / (2*M_PI) ) * 360), 
+                        viewpoint->orientation[0], 
+                        viewpoint->orientation[1], 
+                        viewpoint->orientation[2]);
+        }
+        transform(planeSensor);
+
+        GLdouble px, py, pz;
+        projectPoint((GLdouble)mouseXMove, (GLdouble)(height - mouseYMove), 0, &px, &py, &pz);
+        GLdouble vx, vy, vz;
+        unProjectPoint((GLdouble)mouseXMove, (GLdouble)(height - mouseYMove), pz, &vx, &vy, &vz);
+        glPopMatrix();
+        float diffx = vx; // + offsetx;
+        float diffy = vy; // + offsety;
+        float diffz = vz; // + offsetz;
+        planeSensor->translation_changed[0] = -diffx;
+        planeSensor->translation_changed[1] = -diffy;
+        planeSensor->translation_changed[2] = 0;
+    }
+*/
+    isHit = true;
+}
+
+void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
+{
+    unsigned depth = UINT_MAX;
+    int hit = -1;
+    for (int i = 0; i < hits; i++) {
+        unsigned numNames = *pickBuffer++;
+        unsigned minDepth = *pickBuffer++;
+        unsigned maxDepth = *pickBuffer++;
+        for (int i = 0; i < numNames; i++) {
+           int buffer = *pickBuffer++;
+           if (maxDepth < depth) {
+               depth = maxDepth; 
+               hit = buffer;
+           }
+        } 
+    }    
+    isHit = false;
+    if (hit > -1) {
+        X3dNode *node = scenegraph.getNodeFromGlName(hit);
+        if (node)
+             for (X3dNode *parent = node->m_parent; parent != NULL; 
+                 parent = parent->m_parent) {
+                 if (parent->getType() == X3dGroupType) {
+                     X3dGroup *group = (X3dGroup *)parent;
+                     for (int i = 0; i < group->children_length; i++)
+                         if (group->children[i] && 
+                             group->children[i] != node) {
+                             if (group->children[i]->getType() == 
+                                 X3dTouchSensorType) {
+                                 handleSibling(group->children[i]);
+                             }
+                             if (group->children[i]->getType() == 
+                                 X3dPlaneSensorType) {
+                                 handleSibling(group->children[i]);
+                             }
+                         }
+                 }
+                 if (parent->getType() == X3dTransformType) {
+                     X3dTransform *transform = (X3dTransform *)parent;
+                     for (int i = 0; i < transform->children_length; i++)
+                         if (transform->children[i] && 
+                             transform->children[i] != node) {
+                             if (transform->children[i]->getType() == 
+                                 X3dTouchSensorType) {
+                                 handleSibling(transform->children[i]);
+                             }
+                             if (transform->children[i]->getType() == 
+                                 X3dPlaneSensorType) {
+                                 handleSibling(transform->children[i]);
+                             }
+                         }
+                 }
+             }     
+    }
+    clicked = false;
+    moved = false;
 }
 
 void CPPRWD::init()
@@ -2208,6 +2474,8 @@ void CPPRWD::init()
     X3dHAnimHumanoid::treeRenderCallback = HAnimHumanoidTreeRender;
     X3dHAnimJoint::treeRenderCallback = HAnimJointTreeRender;
     X3dTimeSensor::processEventCallback = TimeSensorSendEvents;
+    X3dTouchSensor::processEventCallback = TouchSensorSendEvents;
+    X3dPlaneSensor::processEventCallback = PlaneSensorSendEvents;
     X3dPositionInterpolator::processEventCallback = PositionInterpolatorSendEvents;
     X3dOrientationInterpolator::processEventCallback = OrientationInterpolatorSendEvents;
     X3dColorInterpolator::processEventCallback = ColorInterpolatorSendEvents;
@@ -2242,6 +2510,9 @@ void CPPRWD::init()
 
     preRender = false;
     initRender = true;
+
+    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+    glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
 
     rootNode->treeRender(NULL);
 

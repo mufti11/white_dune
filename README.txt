@@ -5122,6 +5122,10 @@ Fixed missing nodeClass of *CubeMapTexture
 
 Fixed crash in getParent()->getParent() of Image/PixelTexture
 
+Added interactive TouchSensor.touchTime support on C/C++/java export
+
+Fixed Viewpoint handling in java/jogl export
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

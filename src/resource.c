@@ -5144,7 +5144,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 2056, "END", 492, 94, 26, 26, 0, 1248, 1249, -1 },
     { RCT_BUTTON, 2058, "P DN", 524, 94, 26, 26, 0, 1249, -1, -1 },
     { RCT_DIALOG, 100, "About dune", 0, 0, 287, 240, 0, 1250, -1, 1251 },
-    { RCT_LABEL, -1, "white_dune 1.112", 40, 7, 140, 8, 0, 1251, 1252, -1 },
+    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 1251, 1252, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 1252, 1253, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 1253, 1254, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 1254, 1255, -1 },
@@ -7082,7 +7082,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 3186, 3187, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 3187, -1, -1 },
     { RCT_DIALOG, 104, "About dune", 0, 0, 287, 240, 0, 3188, -1, 3189 },
-    { RCT_LABEL, -1, "white_dune 1.112", 40, 7, 140, 8, 0, 3189, 3190, -1 },
+    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 3189, 3190, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 3190, 3191, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 3191, 3192, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 3192, 3193, -1 },
@@ -9018,7 +9018,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 5122, 5123, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 5123, -1, -1 },
     { RCT_DIALOG, 102, "Informationen zu dune", 0, 0, 287, 240, 0, 5124, -1, 5125 },
-    { RCT_LABEL, -1, "white_dune 1.112", 40, 7, 140, 8, 0, 5125, 5126, -1 },
+    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 5125, 5126, -1 },
     { RCT_LABEL, -1, "Copyright (C) 2000-2019 Stephen F. White und Andere", 40, 18, 185, 11, 0, 5126, 5127, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 5127, 5128, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 5128, 5129, -1 },
@@ -10955,7 +10955,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 7059, 7060, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 7060, -1, -1 },
     { RCT_DIALOG, 103, "Info su Dune", 0, 0, 287, 240, 0, 7061, -1, 7062 },
-    { RCT_LABEL, -1, "white_dune 1.112", 40, 7, 140, 8, 0, 7062, 7063, -1 },
+    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 7062, 7063, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 7063, 7064, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 7064, 7065, -1 },
     { RCT_BUTTON, 1, "Accetta", 230, 5, 28, 14, 0, 7065, 7066, -1 },
@@ -12892,7 +12892,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 8996, 8997, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 8997, -1, -1 },
     { RCT_DIALOG, 101, "About dune", 0, 0, 287, 240, 0, 8998, -1, 8999 },
-    { RCT_LABEL, -1, "white_dune 1.112", 40, 7, 140, 8, 0, 8999, 9000, -1 },
+    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 8999, 9000, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 9000, 9001, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 9001, 9002, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 9002, 9003, -1 },
@@ -13681,8 +13681,8 @@ static int palette2[16] = {
 
 static unsigned char bitmap2[24] = {
     0x00, 0x00, 0x00, 0x08, 0x88, 0x87, 0x09, 0x99, 0x97, 0x09, 
-    0x99, 0x97, 0x08, 0x88, 0x87, 0x07, 0x77, 0x77, 0x00, 0x00, 
-    0x00, 0x00, 0x00, 0x00, };
+    0x99, 0x97, 0x08, 0x88, 0x87, 0x07, 0x77, 0x77, 0xff, 0xff, 
+    0xff, 0xff, 0xff, 0xff, };
 
 static int palette3[16] = {
     0x00000000, 0x00000080, 0x00008000, 0x00008080, 
@@ -13693,8 +13693,8 @@ static int palette3[16] = {
 
 static unsigned char bitmap3[24] = {
     0x00, 0x00, 0x00, 0x08, 0xcc, 0x87, 0x09, 0xdd, 0x97, 0x09, 
-    0xdd, 0x97, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0x00, 0x00, 
-    0x00, 0x00, 0x00, 0x00, };
+    0xdd, 0x97, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0x8e, 0x4c, 
+    0xa5, 0x55, 0x00, 0x00, };
 
 static int palette4[16] = {
     0x00000000, 0x00000080, 0x00008000, 0x00008080, 
@@ -13705,7 +13705,7 @@ static int palette4[16] = {
 
 static unsigned char bitmap4[24] = {
     0x00, 0x00, 0x00, 0x08, 0xcc, 0x87, 0x08, 0xcc, 0x87, 0x08, 
-    0xcc, 0x87, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0x00, 0x00, 
+    0xcc, 0x87, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0xff, 0xff, 
     0x00, 0x00, 0x00, 0x00, };
 
 static int palette5[16] = {
@@ -13717,8 +13717,8 @@ static int palette5[16] = {
 
 static unsigned char bitmap5[24] = {
     0x77, 0x77, 0x70, 0x78, 0x88, 0x80, 0x78, 0x88, 0x80, 0x78, 
-    0x88, 0x80, 0x78, 0x88, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 
-    0x00, 0x00, 0x00, 0x00, };
+    0x88, 0x80, 0x78, 0x88, 0x80, 0x00, 0x00, 0x00, 0x8e, 0x4c, 
+    0xa5, 0x55, 0x00, 0x00, };
 
 static int palette6[16] = {
     0x00000000, 0x00000080, 0x00008000, 0x00008080, 

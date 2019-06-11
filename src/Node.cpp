@@ -1567,6 +1567,34 @@ Node::writeCDataFunctionFields(int filedes, int languageFlag,
     return 0;
 }
 
+int 
+Node::writeCGetParent(int filedes, int languageFlag)
+{
+    if (getType() == DUNE_CURVE_ANIMATION)
+        return 0;
+
+    RET_ONERROR( mywritestr(filedes, "         if (") )
+    RET_ONERROR( writeCVariable(filedes, languageFlag) )
+    if (languageFlag & JAVA_SOURCE)
+        RET_ONERROR( mywritestr(filedes, " != null") )
+    RET_ONERROR( mywritestr(filedes, ")\n") )
+
+    RET_ONERROR( mywritestr(filedes, "              ") )
+    RET_ONERROR( writeCVariable(filedes, languageFlag) )
+    RET_ONERROR( mywritestr(filedes, ".m_parent = ") )
+
+    if (hasParent()) {
+        RET_ONERROR( getParent()->writeCVariable(filedes, languageFlag) )
+    } else {
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(filedes, "null") )            
+        else 
+            RET_ONERROR( mywritestr(filedes, "NULL") )            
+    } 
+    RET_ONERROR( mywritestr(filedes, ";\n") )  
+    return 0;
+}
+
 int         
 Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
 {
@@ -1610,13 +1638,17 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
                 RET_ONERROR( mywritestr(filedes, "    ") )
         }
         RET_ONERROR( mywritestr(filedes, "    ") )
+        if (languageFlag & C_SOURCE)
+            RET_ONERROR( mywritestr(filedes, "self->") )    
         RET_ONERROR( writeCVariable(filedes, languageFlag) )    
         RET_ONERROR( mywritestr(filedes, ".m_parent = ") )
 
         if (hasParent()) {
             if (languageFlag & (C_SOURCE | CC_SOURCE))        
                 RET_ONERROR( mywritestr(filedes, "&") )    
-            RET_ONERROR( getParent()->writeCVariable(filedes, languageFlag) )    
+            if (languageFlag & C_SOURCE)
+                RET_ONERROR( mywritestr(filedes, "self->") )    
+            RET_ONERROR( getParent()->writeCVariable(filedes, languageFlag) )
         } else {
             if (languageFlag & JAVA_SOURCE)
                 RET_ONERROR( mywritestr(filedes, "null") )            
@@ -1681,6 +1713,34 @@ Node::writeC(int f, int languageFlag)
     if (m_proto->isMismatchingProto())
         return 0;   
 
+    if (isMeshBasedNode()) {
+        RET_ONERROR( mywritef(f, "    ") )
+        if (languageFlag & C_SOURCE)
+            RET_ONERROR( mywritef(f, "setGlName(&self->%s, %d);\n", getVariableName(),
+                                  m_scene->getGlName()) )
+        else {
+            if (languageFlag & JAVA_SOURCE) {
+                MyString className = "";
+                if (hasName()) 
+                    className += TheApp->getCSceneGraphName();
+                else {
+                   className += TheApp->getCPrefix();
+                   className += getVariableName();
+                }
+                RET_ONERROR( mywritef(f, "%s.", (const char *)className) )
+            }
+            RET_ONERROR( mywritef(f, "%s.setGlName(%d);\n", getVariableName(), 
+                                  m_scene->getGlName()) )
+        }
+        CGlNameData data;
+        data.glName = m_scene->getGlName();
+        data.node = this;
+        data.nodeName = "";
+        data.nodeName += getVariableName();
+        m_scene->m_glNameData.append(data);
+        m_scene->increaseGlName();
+    }
+
     // allows several nodetypes to output a warning via inheritance
     writeCWarning();
 
@@ -1698,6 +1758,21 @@ Node::writeC(int f, int languageFlag)
     }
 
 
+    if (languageFlag & (C_SOURCE | CC_SOURCE)) {
+        if (languageFlag & C_SOURCE)
+            RET_ONERROR( mywritestr(f, "    self->") )      
+        RET_ONERROR( mywritestr(f, getVariableName()) )    
+        RET_ONERROR( mywritestr(f, ".m_parent = (X3dNode *)") )  
+        if (getParent() == NULL)
+            RET_ONERROR( mywritestr(f, "NULL") )
+        else { 
+            RET_ONERROR( mywritestr(f, "&") )
+            if (languageFlag & C_SOURCE)
+                RET_ONERROR( mywritestr(f, "self->") )      
+            RET_ONERROR( mywritestr(f, getParent()->getVariableName()) )    
+        }
+        RET_ONERROR( mywritestr(f, ";\n") )  
+    }
     if (languageFlag & (C_SOURCE | CC_SOURCE)) {
         for (int i = 0; i < m_numFields; i++)
             RET_ONERROR( writeCElement(f, EL_FIELD, i, languageFlag, true) )    

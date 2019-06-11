@@ -41,6 +41,8 @@ static int aspect = 1;
 static short viewpointRendered = 0;
 static short viewPointExists = 0;
 
+static float fieldOfViewdegree = 45;
+
 static short lightExists = 0;
 static int numLights = 0;
 
@@ -53,6 +55,8 @@ static short initRender = 0;
 
 static struct X3dSceneGraph scenegraph;
 
+#define PICK_BUFFER_SIZE 65536
+#define PICK_REGION_SIZE 2.5
 
 static void error(const char *errormsg)
 {
@@ -74,6 +78,26 @@ static int allocLight(void)
     }
     
     return (GL_LIGHT0 + numLights++);
+}
+
+static int mouseX = -1;
+static int mouseY = -1;
+static int clicked = 0;
+
+void setMouseClick(int x, int y)
+{
+     mouseX = x;
+     mouseY = y;
+     clicked = -1;
+}
+
+static int width;
+static int height;
+
+void setWidthHeight(int w, int h)
+{
+    width = w;
+    height = h;
 }
 
 void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
@@ -146,6 +170,7 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
         if(Xnormal != NULL)normal_len = Xnormal->vector_length;
         normalindex_len = Xindexedfaceset->normalIndex_length;
         normalpervertex = Xindexedfaceset->normalPerVertex;
+        glPushName(Xindexedfaceset->glName_number);
         if (Xindexedfaceset->ccw != 0)
         {
            glFrontFace(GL_CCW);
@@ -255,6 +280,7 @@ void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
             }
         }
         glEnd();
+        glPopName();
     }
     glDisable(GL_COLOR_MATERIAL); 
 }
@@ -1153,20 +1179,13 @@ void CRWDViewpointRender(X3dNode *data, void* extraData)
 
         if(!viewpointRendered)
         {
-            float fieldOfViewdegree;
             viewpointRendered = -1;
             for (i = 0; i < 3; i++)
                 viewpoint1Position[i] = viewpoint->position[i];
 
-            glMatrixMode(GL_PROJECTION);
             fieldOfViewdegree = ( (viewpoint->fieldOfView / M_PI ) * 180.0f);
 
-            if(initRender) {
-                gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
-                glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
-            } else if(preRender)
-                glLoadMatrixf(projectionMatrix);
-
+            glMatrixMode(GL_MODELVIEW);
             glRotatef( ( -(viewpoint->orientation[3] / (2*M_PI) ) * 360), viewpoint->orientation[0], viewpoint->orientation[1], viewpoint->orientation[2]);
             glTranslatef(-viewpoint->position[0], -viewpoint->position[1], -viewpoint->position[2]);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1929,6 +1948,11 @@ int CRWDTimeSensorSendEvents(X3dNode *data, const char *event, void* extraData)
     return 1;
 }
 
+int CRWDTouchSensorSendEvents(X3dNode *data, const char *event, void* extraData)
+{
+    return 1;
+}
+
 static float interpolate(float t, float key, float oldKey, 
                          float value, float oldValue)
 {
@@ -2202,6 +2226,71 @@ int CRWDPositionInterpolator2DSendEvents(X3dNode *data, const char *event,
     return 1;
 }
 
+
+void handleSibling(X3dNode *sibling) 
+{
+    if (((struct X3dTouchSensor *)sibling)->m_type == X3dTouchSensorType) {
+        struct X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)sibling;
+        touchSensor->touchTime = getTimerTime();
+    }
+}
+
+void processHits(GLint hits, GLuint *pickBuffer)
+{
+    unsigned depth = UINT_MAX;
+    int hit = -1;
+    int i, j;
+    for (i = 0; i < hits; i++) {
+        unsigned numNames = *pickBuffer++;
+        unsigned minDepth = *pickBuffer++;
+        unsigned maxDepth = *pickBuffer++;
+        for (j = 0; j < numNames; j++) {
+           int buffer = *pickBuffer++;
+           if (maxDepth < depth) {
+               depth = maxDepth; 
+               hit = buffer;
+           }
+        } 
+    }    
+    if (hit > -1) {
+        X3dNode *parent;
+        X3dNode *node = getNodeFromGlName(&scenegraph, hit);
+        if (node)
+             for (parent = ((struct X3dGroup *)node)->m_parent; parent != NULL; 
+                 parent = ((struct X3dGroup *)parent)->m_parent) {
+                 X3dNode *sibling = NULL;
+                 if (((struct X3dGroup *)parent)->m_type == X3dGroupType) {
+                     int i;
+                     struct X3dGroup *group = (struct X3dGroup *)parent;
+                     for (i = 0; i < group->children_length; i++)
+                         if (group->children[i] && 
+                             group->children[i] != node) {
+                             if (((struct X3dGroup *)group->children[i])->m_type == 
+                                 X3dTouchSensorType) {
+                                 sibling = group->children[i];
+                                 handleSibling(sibling);
+                             }
+                         }
+                 }
+                 if (((struct X3dTransform *)parent)->m_type == X3dTransformType) {
+                     int i;
+                     struct X3dTransform *transform = (struct X3dTransform *)parent;
+                     for (i = 0; i < transform->children_length; i++)
+                         if (transform->children[i] && 
+                             transform->children[i] != node) {
+                             if (((struct X3dTransform *)
+                                  transform->children[i])->m_type == 
+                                 X3dTouchSensorType) {
+                                 sibling = transform->children[i];
+                                 handleSibling(sibling);
+                             }
+                         }
+                 }
+             }     
+    }
+    clicked = 0;
+}
+
 X3dNode *rootNode = &scenegraph.root;
 /*X3dNode *rootNode = &scenegraph.DEFNAME;*/
 
@@ -2210,9 +2299,18 @@ void CRWDdraw(float *matrix)
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glLoadMatrixf(matrix);
+    glMatrixMode(GL_MODELVIEW);
+
+    viewpointRendered = 0;
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+    glMatrixMode(GL_MODELVIEW);
 
     viewpointRendered = 0;
     
@@ -2229,7 +2327,39 @@ void CRWDdraw(float *matrix)
     } 
     preRender = 0;
 
+    glRenderMode(GL_RENDER);
     X3dTreeRenderCallback(rootNode, NULL);
+
+    if (clicked) {
+        GLint v[4];
+        GLint hits;
+        /* render to pickbuffer */
+        GLuint pickBuffer[PICK_BUFFER_SIZE];
+        glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
+        glRenderMode(GL_SELECT);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glGetIntegerv(GL_VIEWPORT, v);
+        gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
+
+        gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+        glMatrixMode(GL_MODELVIEW);
+
+        preRender = -1;
+        X3dTreeRenderCallback(rootNode, NULL);
+
+        glInitNames();
+        glMatrixMode(GL_MODELVIEW);
+        preRender = 0;
+
+        X3dTreeRenderCallback(rootNode, NULL);
+
+        hits = glRenderMode(GL_RENDER);
+        if (hits < 0) /* overflow flag has been set, ignore */
+            hits = - hits;
+        processHits(hits, pickBuffer);
+    }
 }
 
 void CRWDprocessEvents() {
@@ -2257,6 +2387,7 @@ void CRWDinit()
     X3dHAnimJointTreeRenderCallback = CRWDHAnimJointTreeRender;
     X3dParticleSystemTreeRenderCallback = CRWDParticleSystemTreeRender;
     X3dTimeSensorProcessEventCallback = CRWDTimeSensorSendEvents;
+    X3dTouchSensorProcessEventCallback = CRWDTouchSensorSendEvents;
     X3dPositionInterpolatorProcessEventCallback = CRWDPositionInterpolatorSendEvents;
     X3dOrientationInterpolatorProcessEventCallback = CRWDOrientationInterpolatorSendEvents;
     X3dColorInterpolatorProcessEventCallback = CRWDColorInterpolatorSendEvents;

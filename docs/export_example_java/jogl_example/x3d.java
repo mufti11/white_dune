@@ -41,7 +41,7 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-//import com.jogamp.common.nio.Buffers;
+import com.jogamp.common.nio.Buffers;
 
 import com.jogamp.newt.Window;
 import com.jogamp.newt.event.KeyAdapter;
@@ -106,7 +106,7 @@ public class x3d implements GLEventListener
     {
         final x3d x3d = new x3d();
 
-        java.awt.Frame frame = new java.awt.Frame("X3D Demo");
+        java.awt.Frame frame = new java.awt.Frame("white_dune java viewer");
         frame.setSize(500, 500);
         frame.setLayout(new java.awt.BorderLayout());
 
@@ -131,17 +131,11 @@ public class x3d implements GLEventListener
     }
 
 
-    private static double getTimerTime() 
+    public static double getTimerTime() 
     {
         java.util.Date date = new java.util.Date();
         return date.getTime() / 1000.0;
     }
-    
-    class TimeSensorData 
-    {
-        public double startTime;
-        public double stopTime;
-    };
     
     @Override
     public void init(GLAutoDrawable drawable) 
@@ -181,6 +175,8 @@ public class x3d implements GLEventListener
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) 
     {
+        x3d2.setWidthHeight(width, height);
+
         GL2 gl = drawable.getGL().getGL2();
 
         float h = (float)height / (float)width;
@@ -191,7 +187,7 @@ public class x3d implements GLEventListener
         gl.glFrustum(-1.0f, 1.0f, -h, h, 5.0f, 60.0f);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(0.0f, 0.0f, -20.0f);
+        gl.glTranslatef(0.0f, 0.0f, -10.0f);
     }
 
     @Override
@@ -226,7 +222,6 @@ public class x3d implements GLEventListener
 
         // Rotate the entire assembly of x3d window based on how the user
         // dragged the mouse around
-        x3d.gl.glPushMatrix();
         x3d.gl.glMatrixMode(GL2.GL_MODELVIEW_MATRIX);
         x3d.gl.glLoadIdentity();
         x3d.gl.glTranslatef(0.0f, 0.0f, view_dist);
@@ -238,8 +233,6 @@ public class x3d implements GLEventListener
 
         // draw scenegraph
         x3d2.drawX3d(navigation_matrix);
-
-        x3d.gl.glPopMatrix();
     }
 
     class x3dKeyAdapter extends KeyAdapter 
@@ -266,6 +259,7 @@ public class x3d implements GLEventListener
             prevMouseX = e.getX();
             prevMouseY = e.getY();
             mouseBotton = e.getButton();
+            x3d2.setMouseClick(prevMouseX, prevMouseY); 
           }
     
         @Override
@@ -325,9 +319,6 @@ public class x3d implements GLEventListener
         MyMaterialRenderCallback myMaterialRenderCallback = new MyMaterialRenderCallback();
         X3dMaterial.setX3dMaterialRenderCallback(myMaterialRenderCallback);
 
-        MyTextRenderCallback myTextRenderCallback = new MyTextRenderCallback();
-        X3dText.setX3dTextRenderCallback(myTextRenderCallback);
-
         MyPointLightRenderCallback myPointLightRenderCallback = new MyPointLightRenderCallback();
         X3dPointLight.setX3dPointLightRenderCallback(myPointLightRenderCallback);
 
@@ -357,6 +348,9 @@ public class x3d implements GLEventListener
 
         MyTimeSensorProcessEventCallback myTimeSensorProcessEventCallback = new MyTimeSensorProcessEventCallback();
         X3dTimeSensor.setX3dTimeSensorProcessEventCallback(myTimeSensorProcessEventCallback);
+
+        MyTouchSensorProcessEventCallback myTouchSensorProcessEventCallback = new MyTouchSensorProcessEventCallback();
+        X3dTouchSensor.setX3dTouchSensorProcessEventCallback(myTouchSensorProcessEventCallback);
 
         MyPositionInterpolatorProcessEventCallback myPositionInterpolatorProcessEventCallback = new MyPositionInterpolatorProcessEventCallback();
         X3dPositionInterpolator.setX3dPositionInterpolatorProcessEventCallback(myPositionInterpolatorProcessEventCallback);
@@ -533,9 +527,38 @@ class x3d2
 {   
     static X3dNode rootNode = x3d.x3dSceneGraph.root;
     //static X3dNode rootNode = x3d.x3dSceneGraph.DEFNAME;
-    
+
+    public static float fieldOfViewdegree = 45;
+
+    public static int PICK_BUFFER_SIZE = 65536;
+    public static float PICK_REGION_SIZE = 2.5f;
+
+    public static int mouseX = -1;
+    public static int mouseY = -1;
+    public static boolean clicked = false;
+
+    public static void setMouseClick(int x, int y) 
+    {
+        mouseX = x;
+        mouseY = y;
+        clicked = true;
+    }
+
+    public static int width = 600;
+    public static int height = 600;
+
+    public static void setWidthHeight(int w, int h)
+    {
+        width = w;
+        height = h;
+    }
+
     static void drawX3d(float matrix[])
     {
+        x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
+        x3d.gl.glLoadIdentity();
+        x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+
         x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
 
         x3d.gl.glLoadMatrixf(matrix, 0);    
@@ -558,6 +581,104 @@ class x3d2
         x3d.preRender = false;
         if (rootNode != null)
             rootNode.treeRender(null, null);
+
+        if (clicked) {
+            // render to pickbuffer
+            IntBuffer pickBuffer = Buffers.newDirectIntBuffer(PICK_BUFFER_SIZE); 
+            x3d.gl.glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
+            x3d.gl.glRenderMode(GL2.GL_SELECT);
+            x3d.gl.glInitNames(); 
+
+            x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
+            x3d.gl.glLoadIdentity();
+            int v[] = new int[4];
+            x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, v, 0);
+            x3d.glu.gluPickMatrix(mouseX, (height - mouseY), 1, 1, v, 0);
+
+            x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+    
+            x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
+    
+            x3d.gl.glLoadMatrixf(matrix, 0);    
+    
+            x3d.viewpointRendered = false;
+            
+            x3d.preRender = true;
+        
+            if (rootNode != null)
+                rootNode.treeRender(null, null);
+    
+            x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
+            x3d.preRender = false;
+            if (rootNode != null)
+                rootNode.treeRender(null, null);
+       
+            int hits = x3d.gl.glRenderMode(GL2.GL_RENDER);
+            if (hits < 0) // overflow flag has been set, ignore
+                hits = - hits;
+            processHits(hits, pickBuffer);
+        }
+    }
+
+    public static void handleSibling(X3dNode sibling) 
+    {
+        if (sibling.getType() == X3dTouchSensorType.type) {
+            X3dTouchSensor touchSensor = (X3dTouchSensor )sibling;
+            touchSensor.touchTime = x3d.getTimerTime();
+        }
+    }
+
+    public static void processHits(int hits, IntBuffer pickBuffer)
+    {
+        int depth = Integer.MAX_VALUE;
+        int hit = -1;
+        int bufferPtr = 0;
+        for (int j = 0; j < hits; j++) {
+            int numNames = pickBuffer.get(bufferPtr++);
+            int minDepth = pickBuffer.get(bufferPtr++);
+            int maxDepth = pickBuffer.get(bufferPtr++);
+            for (int i = 0; i < numNames; i++) {
+                int buffer = pickBuffer.get(bufferPtr++);
+                if (maxDepth < depth) {
+                    depth = maxDepth; 
+                    hit = buffer;
+                }
+            } 
+        }    
+        if (hit > -1) {
+            X3dNode node = x3d.x3dSceneGraph.getNodeFromGlName(hit);
+            if (node != null)
+                 for (X3dNode parent = node.m_parent; 
+                      parent != null; 
+                      parent = parent.m_parent) {
+                     X3dNode sibling = null;
+                     if (parent.getType() == X3dGroupType.type) {
+                         X3dGroup group = (X3dGroup)parent;
+                         for (int i = 0; i < group.children.length; i++)
+                             if (group.children[i] != null && 
+                                 group.children[i] != node) {
+                                 if (group.children[i].getType() == 
+                                     X3dTouchSensorType.type) {
+                                     sibling = group.children[i];
+                                     handleSibling(sibling);
+                                 }
+                             }
+                     }
+                     if (parent.getType() == X3dTransformType.type) {
+                         X3dTransform transform = (X3dTransform)parent;
+                         for (int i = 0; i < transform.children.length; i++)
+                             if (transform.children[i] != null && 
+                                 transform.children[i] != node) {
+                                 if (transform.children[i].getType() == 
+                                     X3dTouchSensorType.type) {
+                                     sibling = transform.children[i];
+                                     handleSibling(sibling);
+                                 }
+                             }
+                     }
+                 }     
+        }
+        clicked = false;
     }
 }
 
@@ -568,7 +689,6 @@ class MyGroupRenderCallback extends X3dGroupRenderCallback
         X3dGroup group = (X3dGroup)data;
         if (group == null)
             return;
-        x3d.gl.glPushMatrix();
         if (group.children != null)
             for (int i = 0; i < group.children.length; i++)
                 if (group.children[i] != null) 
@@ -577,7 +697,6 @@ class MyGroupRenderCallback extends X3dGroupRenderCallback
                         x3d.gl.glDisable(GL2.GL_TEXTURE_2D);
                     group.children[i].treeRender(null, null);
                 }
-        x3d.gl.glPopMatrix();
     }
 }
 
@@ -660,6 +779,7 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
             int normalbuffer = 0;
             int texturebuffer = 0;
             int facecounter = 0;
+            x3d.gl.glPushName(Xindexedfaceset.glName_number);
             if (Xindexedfaceset.ccw)
             {
                x3d.gl.glFrontFace(GL2.GL_CCW);
@@ -728,6 +848,7 @@ class MyIndexedFaceSetRenderCallback extends X3dIndexedFaceSetRenderCallback
                 }
             }
             x3d.gl.glEnd();
+            x3d.gl.glPopName();
         }
         x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
     }
@@ -865,48 +986,6 @@ class MyMaterialRenderCallback extends X3dMaterialRenderCallback
         }
     }
 }    
-
-class MyTextRenderCallback extends X3dTextRenderCallback
-{
-    public void render(X3dNode data, Object object)
-    {
-        if(x3d.preRender)
-        {
-        }
-        else if(x3d.initRender)
-        {
-        }
-        else
-        {
-            X3dText text = (X3dText)data;
-            x3d.gl.glPushAttrib(GL2.GL_ENABLE_BIT);
-        
-            x3d.gl.glDisable(GL2.GL_LIGHTING);
-            x3d.gl.glDisable(GL2.GL_BLEND);
-            
-            x3d.gl.glEnable(GL2.GL_LINE_SMOOTH);
-        
-            float fsize = 1;
-            X3dFontStyle fontStyle = (X3dFontStyle)text.fontStyle;
-            if (fontStyle != null)
-               fsize = fontStyle.size;
-        
-            for (int j = 0; j < text.string.length;j++) 
-            {
-                String str = text.string[j];
-                x3d.gl.glPushMatrix();
-                x3d.gl.glTranslatef(0, -j * fsize, 0);
-                final float GLUT_STROKE_ROMAN_SIZE = 119.05f;
-                float scale = 1/GLUT_STROKE_ROMAN_SIZE;
-                x3d.gl.glScalef(scale * fsize, scale * fsize, 1.0f);
-                for (int i = 0; i < str.length(); i++)
-                    x3d.glut.glutStrokeCharacter(GLUT.STROKE_ROMAN, str.charAt(i));
-                x3d.gl.glPopMatrix();
-            }
-            x3d.gl.glPopAttrib();
-        }
-    }
-}
 
 class TextureExtraDataStruct {
     public int height;
@@ -1259,16 +1338,8 @@ class MyViewpointRenderCallback extends X3dViewpointRenderCallback
                 for (int i = 0; i < 3; i++)
                     x3d.viewpoint1Position[i] = viewpoint.position[i];
     
-                x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
-                float fieldOfViewdegree = ((viewpoint.fieldOfView / (float)Math.PI) * 180.0f);
-    
-                if(x3d.initRender) {
-                    x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
-                    x3d.gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, x3d.projectionMatrix, 0);
-                }
-                x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
-                x3d.gl.glLoadMatrixf(x3d.projectionMatrix, 0);
-    
+                x3d2.fieldOfViewdegree = ((viewpoint.fieldOfView / (float)Math.PI) * 180.0f);
+
                 x3d.gl.glRotatef( ( -(viewpoint.orientation[3] / (2*(float)Math.PI) ) * 360), viewpoint.orientation[0], viewpoint.orientation[1], viewpoint.orientation[2]);
                 x3d.gl.glTranslatef(-viewpoint.position[0], -viewpoint.position[1], -viewpoint.position[2]);
                 x3d.gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
@@ -2165,44 +2236,46 @@ class MyTimeSensorProcessEventCallback extends X3dTimeSensorProcessEventCallback
     
         if (!timeSensor.enabled)
             return false;
-    
+
         currentTime = getTimerTime();
     
-        if (timeSensor.isActive) {
-            timeSensor.time = currentTime;
-        } else {
-            if (timeSensor.startTime > dataPtr.stopTime)
-                dataPtr.startTime = timeSensor.startTime;
-        }
+        if (currentTime > dataPtr.stopTime) {
+            dataPtr.startTime = timeSensor.startTime;
+            dataPtr.stopTime = timeSensor.startTime + timeSensor.cycleInterval;
+        } 
+
         if (!timeSensor.loop) { 
-            if (dataPtr.stopTime > dataPtr.startTime) {
-                if (timeSensor.isActive) {
-                    dataPtr.stopTime = currentTime;
-                    timeSensor.isActive = true;
-                    return true;  
-                }
-                return false;
-            }
-            if (currentTime > (dataPtr.startTime + 
-                               timeSensor.cycleInterval)) {
+            if (currentTime > dataPtr.stopTime) {
                 timeSensor.fraction_changed = 1.0f;
                 if (timeSensor.isActive) {
                     dataPtr.stopTime = currentTime;
                     timeSensor.isActive = false;
-                    return true;
                 }
                 return false;
-            }
-            if (currentTime < timeSensor.startTime)
+            } else
+            if (currentTime < timeSensor.startTime) {
                 return false;
+            }
         }
-
+    
         timeSensor.isActive = true;
-                
+                    
         callTime = currentTime - dataPtr.startTime;
-        timeSensor.fraction_changed = (float)(callTime % 
-                                              timeSensor.cycleInterval) /
-                                      (float)timeSensor.cycleInterval;
+        timeSensor.fraction_changed = (float)((callTime %  
+                                               timeSensor.cycleInterval) / 
+                                              timeSensor.cycleInterval);
+        return true;
+    }
+}
+
+class MyTouchSensorProcessEventCallback extends X3dTouchSensorProcessEventCallback 
+{
+    public boolean processEvent(X3dNode node, String event) {
+        X3dTouchSensor touchSensor = (X3dTouchSensor)node;
+        if (touchSensor == null)
+            return false;
+        if (!touchSensor.enabled)
+            return false;
         return true;
     }
 }

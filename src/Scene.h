@@ -126,6 +126,13 @@ struct WriteCDynamicNodeData {
     int result;
 };
 
+class CGlNameData {
+public:
+    int glName;
+    Node *node;
+    MyString nodeName;
+};
+
 class Scene {
 public:
                         Scene();
@@ -822,9 +829,12 @@ public:
     void                setMovieTexture(bool flag) 
                             { m_hasMovieTexture = flag; }
 
-    void                  setInfoHandles(bool flag) 
-                              { m_infoHandles = flag; }
-    bool                  getInfoHandles(void) { return m_infoHandles; }
+    void                setInfoHandles(bool flag) 
+                            { m_infoHandles = flag; }
+    bool                getInfoHandles(void) { return m_infoHandles; }
+
+    int                 getGlName(void) { return m_glName; }   
+    void                increaseGlName(void) { m_glName++; }   
 
 protected:
     int                 writeExtensionProtos(int f, int flag);
@@ -1047,6 +1057,11 @@ protected:
     Node               *m_orthoViewpoint;
 
     bool                m_infoHandles;
+
+    int                 m_glName;               
+
+public:
+    MyArray<CGlNameData> m_glNameData;               
 };
 
 bool writeCNodeData(Node *node, void *data);

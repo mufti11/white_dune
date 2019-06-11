@@ -34,8 +34,8 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
+CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
 CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11 -Wno-nonnull-compare -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -std=c++11 -Wno-nonnull-compare -fopenmp

@@ -56,7 +56,7 @@
 float view_rotx = 0.0f; 
 float view_roty = 0.0f;
 float view_rotz = 0.0f;
-float view_dist = 0.0f;
+float view_dist = -10.0f;
 float navigation_matrix[16];
 
 GLUnurbsObj *theNurb;
@@ -99,6 +99,7 @@ void onMouseClick(int button, int state, int x, int y)
         left_button = 1;
         clicked_x = x;
         clicked_y = y;        
+        setMouseClick(x, y);
     }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
@@ -149,20 +150,26 @@ void onSpecialKeyClick(int key, int x, int y)
     }
 }
 
+void onReshape(int width, int height)
+{
+    setWidthHeight(width, height);
+}
 
 int main(int argc, char **argv)
 {
     glutInitWindowSize(600, 600);
+    setWidthHeight(600, 600);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("white_dune C viewer");
     CRWDinit();
+    glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(animation);
     glutDisplayFunc(display);
-   theNurb = gluNewNurbsRenderer(); 
+    theNurb = gluNewNurbsRenderer(); 
     gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 50.0); 
     gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL); 
 
