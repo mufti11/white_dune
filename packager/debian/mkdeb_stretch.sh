@@ -55,7 +55,13 @@ cat Makefile.in.debian_extension >> /tmp/$VERSION_DEBIAN/src/Makefile.in
    export CFLAGS="-g -O2"
    export LDFLAGS="-g"
    export DEB_BUILD_OPTIONS="nostrip noopt debug"
-   dpkg-buildpackage -i -D -us -uc -rfakeroot -T build -T wdune-docs
+   cp wune.install /tmp/$VERSION_DEBIAN/debian/
+   mkdir -p /tmp/$VERSION_DEBIAN/share/applications/
+   cp desktop/kde/dune.png /tmp/$VERSION_DEBIAN/share/applications/
+   cp desktop/kde/dune.desktop /tmp/$VERSION_DEBIAN/share/applications/
+   cp desktop/kde/dune4kids.png /tmp/$VERSION_DEBIAN/share/applications/
+   cp desktop/kde/dune4kids.desktop /tmp/$VERSION_DEBIAN/share/applications/
+   dpkg-buildpackage -i -D -us -uc -rfakeroot -T wdune -T wdune-docs
 ) &&
 cp /tmp/$VERSION_DEBIAN/debian/changelog . &&
 VERSION_DEB=`awk -v ver=$VERSION_DEBIAN 'BEGIN {gsub("-","_",ver);print ver}'` &&

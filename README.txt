@@ -5126,8 +5126,6 @@ Added interactive TouchSensor.touchTime support on C/C++/java export
 
 Fixed Viewpoint handling in java/jogl export
 
-Added debian stretch -docs subpackage
-
 contact: MUFTI <mufti@users.ourproject.org>
 
 
