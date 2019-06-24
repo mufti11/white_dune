@@ -45,6 +45,8 @@ public:
 
     virtual bool    isDeclaredInRwd_h() { return true; }      
 
+    virtual bool    isCRouteSource(void) { return true; }
+
     FieldIndex autoOffset;
     FieldIndex axisRotation;
     FieldIndex description;

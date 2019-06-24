@@ -53,32 +53,33 @@
 #include "CExport.c"
 #include "libCRWD.h"
 #include <math.h>
-float view_rotx = 0.0f; 
-float view_roty = 0.0f;
-float view_rotz = 0.0f;
-float view_dist = -10.0f;
-float navigation_matrix[16];
+float rotx = 0.0f; 
+float roty = 0.0f;
+float rotz = 0.0f;
+float dist = -10.0f;
 
 GLUnurbsObj *theNurb;
 
 void display()
 {
-    CRWDdraw(navigation_matrix);
+    CRWDdraw();
     glutSwapBuffers();
 }
 
 void animation()
 {
-    usleep(100);
+/*
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0, 0, view_dist);
-    glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
-    glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-    glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
-    glGetFloatv(GL_MODELVIEW_MATRIX, navigation_matrix);
+    glRotatef(rotx, 1.0f, 0.0f, 0.0f);
+    glRotatef(roty, 0.0f, 1.0f, 0.0f);
+    glRotatef(rotz, 0.0f, 0.0f, 1.0f);
+*/
+    display();
     CRWDprocessEvents();
     display();
+    usleep(10);
 }
 
 int left_button = 0;
@@ -101,6 +102,10 @@ void onMouseClick(int button, int state, int x, int y)
         clicked_y = y;        
         setMouseClick(x, y);
     }	
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
+    { 
+        setMouseRelease(x, y);
+    }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
         middle_button = 1;
@@ -119,14 +124,24 @@ void onMouseMove(int x, int y)
 {
     if (left_button)
     {
-        view_roty -= (clicked_x - x) / 5.0;
-        view_rotx -= (clicked_y - y) / 5.0;
+        static int init = 1;
+        if (init) {
+            setMouseMove(x, x, y, y);
+            init = 0;
+        } else
+            setMouseMove(x, clicked_x, y, clicked_y);
+        if (!hasHit()) {
+            roty -= (clicked_x - x) / 5.0;
+            rotx -= (clicked_y - y) / 5.0;
+            setView(dist, rotx, roty, rotz); 
+        }
         clicked_x = x;
         clicked_y = y;
     }
     if (middle_button || right_button )
     {
         view_dist += (clicked_y - y) / 5.0;
+        setView(view_dist, view_rotx, view_roty, view_rotz); 
         clicked_x = x;
         clicked_y = y;
     }
@@ -173,6 +188,7 @@ int main(int argc, char **argv)
     gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 50.0); 
     gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL); 
 
+    setView(view_dist, view_rotx, view_roty, view_rotz); 
     glutMainLoop();
     return 0;
 }

@@ -1685,6 +1685,16 @@ Proto::writeCDeclaration(int f, int languageFlag)
             RET_ONERROR( writeCConstructorField(f, i, languageFlag) )
     if (languageFlag & (CC_SOURCE | JAVA_SOURCE))
         RET_ONERROR( mywritestr(f, "    ") )
+    RET_ONERROR( mywritestr(f, "    ") )
+    if (languageFlag & C_SOURCE)
+        RET_ONERROR( mywritestr(f, "self->") )
+    RET_ONERROR( mywritestr(f, "extra_data = ") )
+    if (languageFlag & JAVA_SOURCE)
+        RET_ONERROR( mywritestr(f, "null;\n") )       
+    else
+        RET_ONERROR( mywritestr(f, "NULL;\n") )
+    if (languageFlag & (CC_SOURCE | JAVA_SOURCE))
+        RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "}\n") )
     if (languageFlag & C_SOURCE)
         RET_ONERROR( mywritestr(f, "\n") )
@@ -2413,6 +2423,16 @@ Proto::writeCExtraFields(int f, int languageFlag)
     }
     if (getType() == VRML_INDEXED_FACE_SET)
         RET_ONERROR( mywritestr(f, "    int glName_number;\n") )
+    if (getType() == VRML_TRANSFORM) {
+        RET_ONERROR( mywritestr(f, "    int num_route_source;\n") )
+        if ((languageFlag & C_SOURCE) | (languageFlag & CC_SOURCE)) {
+            RET_ONERROR( mywritef(f, "    %sNode **route_sources;\n", 
+                                     TheApp->getCPrefix()) )
+        } else if ((languageFlag & JAVA_SOURCE)) {
+            RET_ONERROR( mywritef(f, "    %sNode route_sources[];\n", 
+                                     TheApp->getCPrefix()) )
+        }
+    }
     return 0;
 }
 

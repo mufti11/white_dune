@@ -46,9 +46,9 @@ static float fieldOfViewdegree = 45;
 static short lightExists = 0;
 static int numLights = 0;
 
-static GLfloat viewpoint1Position[] = { 0, 0, 10 };
+static X3dNode *viewpoint1 = NULL;
 
-static float projectionMatrix[16];
+static double projectionMatrix[16];
 
 static short preRender = 0;
 static short initRender = 0;
@@ -83,12 +83,36 @@ static int allocLight(void)
 static int mouseX = -1;
 static int mouseY = -1;
 static int clicked = 0;
+static int released = 0;
 
 void setMouseClick(int x, int y)
 {
      mouseX = x;
      mouseY = y;
      clicked = -1;
+     released = 0;
+}
+
+void setMouseRelease(int x, int y)
+{
+     mouseX = x;
+     mouseY = y;
+     released = 1;
+}
+
+static int mouseXMove = -1;
+static int mouseXOld = -1;
+static int mouseYMove = -1;
+static int mouseYOld = -1;
+static int moved = 0;
+
+void setMouseMove(int x, int x_old, int y, int y_old)
+{
+    mouseXMove = x;
+    mouseXOld = x_old;
+    mouseYMove = y;
+    mouseYOld = y_old;
+    moved = 1;
 }
 
 static int width;
@@ -98,6 +122,166 @@ void setWidthHeight(int w, int h)
 {
     width = w;
     height = h;
+}
+
+static float view_dist = -10;
+static float view_rotx;
+static float view_roty;
+static float view_rotz;
+static float navigationMatrix[16];
+
+void setView(float dist, float rotx, float roty, float rotz)
+{
+    view_dist = dist;
+    view_rotx = rotx;
+    view_roty = roty;
+    view_rotz = rotz;
+}
+
+int isHit = 0;
+
+int hasHit(void)
+{
+     return isHit;
+}
+
+
+static float mod1(float x) 
+{
+    if (x == 0)
+        return 0;
+    if (x - (int)x == 0)
+        return 1;
+    return x - (int)x;
+}
+
+static void normalizeAxis(float* value)
+{
+    float rlen = (float) sqrt(value[0] * value[0] + 
+                              value[1] * value[1] +  
+                              value[2] * value[2] );  
+    if (rlen > 0.000000001f) { 
+        rlen = 1.0f / rlen; 
+        value[0] *= rlen;
+        value[1] *= rlen;
+        value[2] *= rlen;
+    }
+}
+
+static void normalizeQuaternion(float* value)
+{
+    float rlen = (float) sqrt(value[0] * value[0] + 
+                              value[1] * value[1] +  
+                              value[2] * value[2] +  
+                              value[3] * value[3] );  
+    if (rlen > 0.000000001f) { 
+        rlen = 1.0f / rlen; 
+        value[0] *= rlen;
+        value[1] *= rlen;
+        value[2] *= rlen;
+        value[3] *= rlen;
+    }
+}
+
+static void SFRotation2quaternion(float* ret, float *rot)
+{
+    int i;
+    float s = (float) sin(rot[3] * 0.5f);
+    ret[0] = rot[0];
+    ret[1] = rot[1];
+    ret[2] = rot[2];
+    normalizeAxis(ret);
+    for (i = 0; i < 3; i++)
+        ret[i] = ret[i] * s;
+    ret[3] = (float) cos(rot[3] * 0.5);
+
+    normalizeQuaternion(ret);
+}
+
+static void quaternion2SFRotation(float* ret, float *q)
+{
+    int i;
+    float s = 2 * (float) asin(mod1(q[3]));
+    ret[0] = q[0];
+    ret[1] = q[1];
+    ret[2] = q[2];
+    for (i = 0; i < 3; i++)
+        ret[i] = ret[i] * s;
+    ret[3] = 2 * (float) acos(mod1(q[3]));
+}
+
+static void quaternionMult(float *ret, float *q1, float *q2)
+{
+    ret[0] = q2[3] * q1[0] + q2[0] * q1[3] + q2[1] * q1[2] - q2[2] * q1[1];
+    ret[1] = q2[3] * q1[1] + q2[1] * q1[3] + q2[2] * q1[0] - q2[0] * q1[2];
+    ret[2] = q2[3] * q1[2] + q2[2] * q1[3] + q2[0] * q1[1] - q2[1] * q1[0];
+    ret[3] = q2[3] * q1[3] - q2[0] * q1[0] - q2[1] * q1[1] - q2[2] * q1[2];
+}
+
+static void quaternionMultVec(float *ret, float *q, float *vec)
+{
+    float quat[4];
+    float quat2[4];
+    float quat3[4];
+    float quat4[4];
+
+    quat[0] = -q[0];
+    quat[1] = -q[1];
+    quat[2] = -q[2];
+    quat[3] =  q[3];
+
+    quat2[0] = vec[0];
+    quat2[1] = vec[1];
+    quat2[2] = vec[2];
+    quat2[3] = 0;
+
+    quaternionMult(quat3, quat, quat2);
+    normalizeQuaternion(quat3);
+    quat[0] = q[0];
+    quat[1] = q[1];
+    quat[2] = q[2];
+    quat[3] = q[3];
+
+    quaternionMult(quat4, quat3, quat);
+    normalizeQuaternion(quat4);
+
+    ret[0] = quat4[0];
+    ret[1] = quat4[1];
+    ret[2] = quat4[2]; 
+}
+
+
+static void quaternionFromEuler(float *ret, float yaw, float pitch, float roll)
+{
+    double cy = cos(yaw * 0.5);
+    double sy = sin(yaw * 0.5);
+    double cp = cos(pitch * 0.5);
+    double sp = sin(pitch * 0.5);
+    double cr = cos(roll * 0.5);
+    double sr = sin(roll * 0.5);
+
+    ret[0] = cy * cp * sr - sy * sp * cr;
+    ret[1] = sy * cp * sr + cy * sp * cr;
+    ret[2] = sy * cp * cr - cy * sp * sr;
+    ret[3] = cy * cp * cr + sy * sp * sr;
+
+    normalizeQuaternion(ret);
+}
+
+static void SFRotationFromEuler(float *ret, float rotx, float roty, float rotz)
+{
+    float quat[4];
+    quaternionFromEuler(quat, rotz * 2 * M_PI / 360.0, 
+                              roty * 2 * M_PI / 360.0, 
+                              rotx * 2 * M_PI / 360.0);
+    quaternion2SFRotation(ret, quat);
+}
+
+static void multMatrix4Vec(float *ret, float *mat, float* vec)
+{
+    ret[0] = mat[0] * vec[0] + mat[1] * vec[1] + mat[2] * vec[2];
+    ret[1] = mat[4] * vec[0] + mat[5] * vec[1] + mat[6] * vec[2];
+    ret[2] = mat[8] * vec[0] + mat[9] * vec[1] + mat[10] * vec[2];
 }
 
 void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
@@ -1179,9 +1363,8 @@ void CRWDViewpointRender(X3dNode *data, void* extraData)
 
         if(!viewpointRendered)
         {
+            viewpoint1 = viewpoint;
             viewpointRendered = -1;
-            for (i = 0; i < 3; i++)
-                viewpoint1Position[i] = viewpoint->position[i];
 
             fieldOfViewdegree = ( (viewpoint->fieldOfView / M_PI ) * 180.0f);
 
@@ -1948,9 +2131,111 @@ int CRWDTimeSensorSendEvents(X3dNode *data, const char *event, void* extraData)
     return 1;
 }
 
-int CRWDTouchSensorSendEvents(X3dNode *data, const char *event, void* extraData)
+int CRWDTouchSensorSendEvents(X3dNode *data, const char *event,
+                              void *extraData)
 {
-    return 1;
+    struct X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)data;
+    touchSensor->isActive = !released;            
+    return touchSensor->enabled;
+}
+
+int CRWDPlaneSensorSendEvents(X3dNode *data, const char *event,
+                              void *extraData)
+{
+    struct X3dPlaneSensor *planeSensor = (struct X3dPlaneSensor *)data;
+    if (planeSensor->maxPosition[0] > planeSensor->minPosition[0]) {
+        if (planeSensor->translation_changed[0] > planeSensor->maxPosition[0])
+            planeSensor->translation_changed[0] = planeSensor->maxPosition[0];
+        if (planeSensor->translation_changed[0] < planeSensor->minPosition[0])
+            planeSensor->translation_changed[0] = planeSensor->minPosition[0];
+    }
+    if (planeSensor->maxPosition[1] > planeSensor->minPosition[1]) {
+        if (planeSensor->translation_changed[1] > planeSensor->maxPosition[1])
+            planeSensor->translation_changed[1] = planeSensor->maxPosition[1];
+        if (planeSensor->translation_changed[1] < planeSensor->minPosition[1])
+            planeSensor->translation_changed[1] = planeSensor->minPosition[1];
+    }
+    return planeSensor->enabled;
+}
+
+int CRWDCylinderSensorSendEvents(X3dNode *data, const char *event,
+                                 void *extraData)
+{
+    struct X3dCylinderSensor *cylinderSensor = (struct X3dCylinderSensor *)data;
+    if (cylinderSensor->maxAngle > cylinderSensor->minAngle) {
+        if (cylinderSensor->rotation_changed[3] > cylinderSensor->maxAngle)
+            cylinderSensor->rotation_changed[3] = cylinderSensor->maxAngle;
+        if (cylinderSensor->rotation_changed[3] < cylinderSensor->minAngle)
+            cylinderSensor->rotation_changed[3] = cylinderSensor->minAngle;
+    }
+    return cylinderSensor->enabled;
+}
+
+int CRWDSphereSensorSendEvents(X3dNode *data, const char *event,
+                               void *extraData)
+{
+    struct X3dSphereSensor *sphereSensor = (struct X3dSphereSensor *)data;
+    return sphereSensor->enabled;
+}
+
+int CRWDProximitySensorSendEvents(X3dNode *data, const char *event,
+                                  void *extraData)
+{
+    struct X3dProximitySensor *proximitySensor = (struct X3dProximitySensor *)
+                                                 data;
+    int enabled = proximitySensor->enabled;
+    if ((proximitySensor->size[0] == 0) || 
+        (proximitySensor->size[1] == 0) || 
+        (proximitySensor->size[2] == 0))
+        enabled = 0;
+    else {
+        struct X3dViewpoint *viewpoint = (struct X3dViewpoint *)viewpoint1;
+        float xmax =  proximitySensor->size[0] / 2 + proximitySensor->center[0];
+        float xmin = -proximitySensor->size[0] / 2 + proximitySensor->center[0];
+        float ymax =  proximitySensor->size[1] / 2 + proximitySensor->center[1];
+        float ymin = -proximitySensor->size[1] / 2 + proximitySensor->center[1];
+        float zmax =  proximitySensor->size[2] / 2 + proximitySensor->center[2];
+        float zmin = -proximitySensor->size[2] / 2 + proximitySensor->center[2];
+        if (1) {
+/*
+            (viewpoint->position) &&
+            (viewpoint->position[0] > xmin) &&
+            (viewpoint->position[1] < ymax) &&
+            (viewpoint->position[1] > ymin) &&
+            (viewpoint->position[2] < zmax) &&
+            (viewpoint->position[2] > zmin)) {
+*/
+
+           float rot[4];
+           float vec[3];
+           SFRotationFromEuler(rot, view_rotx, view_roty, view_rotz);
+           proximitySensor->orientation_changed[0] = rot[0];
+           proximitySensor->orientation_changed[1] = rot[1];
+           proximitySensor->orientation_changed[2] = rot[2];
+           proximitySensor->orientation_changed[3] = -rot[3];
+
+           proximitySensor->position_changed[0] = 0;
+           proximitySensor->position_changed[1] = 0;
+           proximitySensor->position_changed[2] = -view_dist;
+
+           multMatrix4Vec(vec, navigationMatrix, 
+                          proximitySensor->position_changed);
+           proximitySensor->position_changed[0] = vec[0];
+           proximitySensor->position_changed[1] = vec[1];
+           proximitySensor->position_changed[2] = vec[2];
+/*
+           proximitySensor->position_changed[0] = viewpoint->position[0];
+           proximitySensor->position_changed[1] = viewpoint->position[1];
+           proximitySensor->position_changed[2] = viewpoint->position[2];
+           proximitySensor->orientation_changed[0] = viewpoint->orientation[0];
+           proximitySensor->orientation_changed[1] = viewpoint->orientation[1];
+           proximitySensor->orientation_changed[2] = viewpoint->orientation[2];
+           proximitySensor->orientation_changed[3] = viewpoint->orientation[3];
+*/
+       } else
+           enabled = 0;
+    }
+    return enabled;
 }
 
 static float interpolate(float t, float key, float oldKey, 
@@ -2226,12 +2511,148 @@ int CRWDPositionInterpolator2DSendEvents(X3dNode *data, const char *event,
     return 1;
 }
 
+static void transform4HandleData(struct X3dTransform *transform)
+{
+        glTranslatef(transform->translation[0], transform->translation[1], transform->translation[2]);
+}
+
+static void transform(X3dNode *node)
+{
+    X3dNode *parent;
+    int i;
+    for (parent = ((struct X3dTransform *)node)->m_parent; parent != NULL; 
+         parent = ((struct X3dTransform *)parent)->m_parent)
+        if (((struct X3dTransform *)parent)->m_type == X3dTransformType) {
+            struct X3dTransform *transform = (struct X3dTransform *)parent;
+            int hasTransform = 0;
+            for (i = 0; i < transform->num_route_source; i++)
+                if (transform->route_sources[i] == node)
+                    hasTransform = 1;
+            if (!hasTransform)
+                transform4HandleData(transform);            
+        }
+}
+
+struct CylinderSensorExtraDataStruct {
+    float x_sum;
+};
 
 void handleSibling(X3dNode *sibling) 
 {
-    if (((struct X3dTouchSensor *)sibling)->m_type == X3dTouchSensorType) {
+    if (clicked &&
+        ((struct X3dTouchSensor *)sibling)->m_type == X3dTouchSensorType) {
         struct X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)sibling;
         touchSensor->touchTime = getTimerTime();
+        isHit = -1;
+    }
+    if (moved && 
+        ((struct X3dPlaneSensor *)sibling)->m_type == X3dPlaneSensorType) {
+        int x = mouseXMove;
+        int y = mouseYMove;
+        GLdouble model[16];
+        GLdouble proj[16];
+        GLint view[4];
+        GLdouble pan_x, pan_y, pan_z;
+        struct X3dPlaneSensor *planeSensor = (struct X3dPlaneSensor *)sibling;
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+        transform(planeSensor);
+        glTranslatef(0, 0, view_dist);
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixd(projectionMatrix);
+        glMatrixMode(GL_MODELVIEW);
+        glGetDoublev(GL_MODELVIEW_MATRIX, model);
+        glGetDoublev(GL_PROJECTION_MATRIX, proj);
+        glGetIntegerv(GL_VIEWPORT, view);
+        gluProject((GLdouble)x, (GLdouble)y, 0.0, model, proj, view, 
+                    &pan_x, &pan_y, &pan_z);   
+        gluUnProject((GLdouble)x, (GLdouble)y, pan_z, model, proj, view,
+                     &pan_x, &pan_y, &pan_z);
+        pan_y = -pan_y;
+        glPopMatrix();
+        planeSensor->translation_changed[0] = (float)pan_x;
+        planeSensor->translation_changed[1] = (float)pan_y;
+        planeSensor->translation_changed[2] = 0;
+        isHit = -1;
+    }
+    if (moved && 
+        ((struct X3dCylinderSensor *)sibling)->m_type == 
+         X3dCylinderSensorType) {
+        struct X3dCylinderSensor *cylinderSensor = (struct X3dCylinderSensor *)
+                                                   sibling;
+        float rot1[4];
+        float quat[4];
+     
+        struct CylinderSensorExtraDataStruct *extraVar = NULL; 
+        if (cylinderSensor->extra_data == NULL) {
+            struct CylinderSensorExtraDataStruct *extraVar;
+            cylinderSensor->extra_data = malloc(sizeof(struct
+                                                CylinderSensorExtraDataStruct));
+            extraVar = (struct CylinderSensorExtraDataStruct *)
+                       cylinderSensor->extra_data;
+            extraVar->x_sum = 0;
+        }
+        extraVar = (struct CylinderSensorExtraDataStruct *) 
+                   cylinderSensor->extra_data;
+
+        rot1[0] = 0;
+        rot1[1] = 1;
+        rot1[2] = 0;
+        rot1[3] = (mouseXMove - mouseXOld + extraVar->x_sum) / 20.f;
+        SFRotation2quaternion(quat, rot1);
+        quaternion2SFRotation(cylinderSensor->rotation_changed, quat);
+        extraVar->x_sum += mouseXMove - mouseXOld; 
+        isHit = -1;
+    }
+    if (moved &&
+        ((struct X3dSphereSensor *)sibling)->m_type == 
+         X3dSphereSensorType) {
+        struct X3dSphereSensor *sphereSensor = (struct X3dSphereSensor *)
+                                               sibling;
+
+        float q1[4];
+        float q2[4];
+        float rot1[4];
+        float rot2[4];
+        float quat[4];
+        float rotSphere[4];
+        float rotSphere2[4];
+        float qSphere[4];
+        float qSphere2[4];
+        float quat2[4];
+        float quat3[4];
+        float quat4[4];
+
+        rot1[0] = 0;
+        rot1[1] = 1;
+        rot1[2] = 0;
+        rot1[3] = (mouseXMove - mouseXOld) / 20.f;
+        rot2[0] = 1;
+        rot2[1] = 0;
+        rot2[2] = 0;
+        rot2[3] = (mouseYMove - mouseYOld) / 20.f;
+
+        rotSphere[0] =  sphereSensor->rotation_changed[0];
+        rotSphere[1] =  sphereSensor->rotation_changed[1];
+        rotSphere[2] =  sphereSensor->rotation_changed[2];
+        rotSphere[3] = -sphereSensor->rotation_changed[3];
+        rotSphere2[0] = sphereSensor->rotation_changed[0];
+        rotSphere2[1] = sphereSensor->rotation_changed[1],
+        rotSphere2[2] = sphereSensor->rotation_changed[2],
+        rotSphere2[3] = sphereSensor->rotation_changed[3];
+
+        SFRotation2quaternion(q1, rot1);
+        SFRotation2quaternion(q2, rot2);
+        quaternionMult(quat, q1, q2);
+        SFRotation2quaternion(qSphere, rotSphere);
+        SFRotation2quaternion(qSphere2, rotSphere2);
+        quaternionMult(quat2, quat, qSphere); 
+        quaternionMult(quat3, qSphere2, quat2); 
+        quaternionMult(quat4, quat3, qSphere2); 
+        quaternion2SFRotation(sphereSensor->rotation_changed, quat4);
+        normalizeAxis(sphereSensor->rotation_changed);
+        isHit = -1;
     }
 }
 
@@ -2252,7 +2673,9 @@ void processHits(GLint hits, GLuint *pickBuffer)
            }
         } 
     }    
+    isHit = 0;
     if (hit > -1) {
+        int type;
         X3dNode *parent;
         X3dNode *node = getNodeFromGlName(&scenegraph, hit);
         if (node)
@@ -2265,10 +2688,17 @@ void processHits(GLint hits, GLuint *pickBuffer)
                      for (i = 0; i < group->children_length; i++)
                          if (group->children[i] && 
                              group->children[i] != node) {
-                             if (((struct X3dGroup *)group->children[i])->m_type == 
+                             if (clicked && 
+                                 ((struct X3dGroup *)group->children[i])->m_type == 
                                  X3dTouchSensorType) {
                                  sibling = group->children[i];
                                  handleSibling(sibling);
+                             }
+                             type = ((struct X3dGroup *)group->children[i])->m_type;
+                             if ((moved && type == X3dPlaneSensorType) ||
+                                 (moved && type == X3dCylinderSensorType) ||
+                                 (moved && type == X3dSphereSensorType)) {
+                                 handleSibling(group->children[i]);
                              }
                          }
                  }
@@ -2278,44 +2708,50 @@ void processHits(GLint hits, GLuint *pickBuffer)
                      for (i = 0; i < transform->children_length; i++)
                          if (transform->children[i] && 
                              transform->children[i] != node) {
-                             if (((struct X3dTransform *)
+                             if (clicked && ((struct X3dTransform *)
                                   transform->children[i])->m_type == 
                                  X3dTouchSensorType) {
                                  sibling = transform->children[i];
                                  handleSibling(sibling);
+                             }
+                             type = ((struct X3dTransform *)transform->children[i])->m_type;
+                             if ((moved && type == X3dPlaneSensorType) ||
+                                 (moved && type == X3dCylinderSensorType) ||
+                                 (moved && type == X3dSphereSensorType)) {
+                                 handleSibling(transform->children[i]);
                              }
                          }
                  }
              }     
     }
     clicked = 0;
+    moved = 0;
 }
 
 X3dNode *rootNode = &scenegraph.root;
 /*X3dNode *rootNode = &scenegraph.DEFNAME;*/
 
-void CRWDdraw(float *matrix)
+void CRWDdraw()
 {
+    float rot[4];
+
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glLoadMatrixf(matrix);
-    glMatrixMode(GL_MODELVIEW);
+    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
 
-    viewpointRendered = 0;
-    
-    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
-    glMatrixMode(GL_MODELVIEW);
+    glTranslatef(0, 0, view_dist);
+    SFRotationFromEuler(rot, view_rotx, view_roty, view_rotz);
+    glRotatef(rot[3] * 360.0 / ( 2 * M_PI), rot[0], rot[1], rot[2]);
+    glGetFloatv(GL_MODELVIEW_MATRIX, navigationMatrix);
 
     viewpointRendered = 0;
     
     preRender = -1;
-
     X3dTreeRenderCallback(rootNode, NULL);
 
     if(!lightExists)
@@ -2325,12 +2761,12 @@ void CRWDdraw(float *matrix)
             light = allocLight();
         glEnable(light);
     } 
-    preRender = 0;
 
+    preRender = 0;
     glRenderMode(GL_RENDER);
     X3dTreeRenderCallback(rootNode, NULL);
 
-    if (clicked) {
+    if (clicked || moved) {
         GLint v[4];
         GLint hits;
         /* render to pickbuffer */
@@ -2341,9 +2777,13 @@ void CRWDdraw(float *matrix)
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glGetIntegerv(GL_VIEWPORT, v);
-        gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
+        if (clicked)
+            gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
+        if (moved)
+            gluPickMatrix((GLdouble)mouseXMove, (GLdouble)(height - mouseYMove), 1, 1, v);
 
-        gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
+        glMatrixMode(GL_PROJECTION);
+        gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
         glMatrixMode(GL_MODELVIEW);
 
         preRender = -1;
@@ -2352,7 +2792,6 @@ void CRWDdraw(float *matrix)
         glInitNames();
         glMatrixMode(GL_MODELVIEW);
         preRender = 0;
-
         X3dTreeRenderCallback(rootNode, NULL);
 
         hits = glRenderMode(GL_RENDER);
@@ -2388,6 +2827,10 @@ void CRWDinit()
     X3dParticleSystemTreeRenderCallback = CRWDParticleSystemTreeRender;
     X3dTimeSensorProcessEventCallback = CRWDTimeSensorSendEvents;
     X3dTouchSensorProcessEventCallback = CRWDTouchSensorSendEvents;
+    X3dPlaneSensorProcessEventCallback = CRWDPlaneSensorSendEvents;
+    X3dCylinderSensorProcessEventCallback = CRWDCylinderSensorSendEvents;
+    X3dSphereSensorProcessEventCallback = CRWDSphereSensorSendEvents;
+    X3dProximitySensorProcessEventCallback = CRWDProximitySensorSendEvents;
     X3dPositionInterpolatorProcessEventCallback = CRWDPositionInterpolatorSendEvents;
     X3dOrientationInterpolatorProcessEventCallback = CRWDOrientationInterpolatorSendEvents;
     X3dColorInterpolatorProcessEventCallback = CRWDColorInterpolatorSendEvents;
@@ -2395,6 +2838,15 @@ void CRWDinit()
     X3dCoordinateInterpolatorProcessEventCallback = CRWDCoordinateInterpolatorSendEvents;
     X3dNormalInterpolatorProcessEventCallback = CRWDNormalInterpolatorSendEvents;
     X3dPositionInterpolator2DProcessEventCallback = CRWDPositionInterpolator2DSendEvents;
+
+    glViewport(0 ,0, width, height);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
+    glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);
+    glMatrixMode(GL_MODELVIEW);
+
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);

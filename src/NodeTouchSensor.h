@@ -41,6 +41,8 @@ public:
 
     virtual bool    isDeclaredInRwd_h() { return true; }      
 
+    virtual bool    isCRouteSource(void) { return true; }       
+
     virtual int     getType() const { return VRML_TOUCH_SENSOR; }
     virtual int     getNodeClass() const { return SENSOR_NODE | CHILD_NODE; }
 

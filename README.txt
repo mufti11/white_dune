@@ -5126,6 +5126,22 @@ Added interactive TouchSensor.touchTime support on C/C++/java export
 
 Fixed Viewpoint handling in java/jogl export
 
+Added interactive PlaneSensor.translation_changed support on C++/C/java export
+
+Added interactive CylinderSensor.rotation_changed support on C++/C/java export
+
+Added interactive SphereSensor.rotation_changed support on C++/C/java export
+
+Added interactive ProximitySensor.position_changed support on C++/C/java export
+
+Added interactive ProximitySensor.rotation_changed support on C++/C/java export
+
+Fixed layout error in script dialog
+
+Added interactive TouchSensor.isActive support on C++/C/java export
+
+Fixed switch.choice -1 crash in java export
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 

@@ -246,7 +246,8 @@ NodeScript::writeCDynamicNodeCallback(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, m_proto->getCName(true)) )
         RET_ONERROR( mywritestr(f, "SendEventsCallback(") )
-        RET_ONERROR( mywritestr(f, "X3dNode *node, const char *event,") )
+        RET_ONERROR( mywritef(f, "%sNode *node, const char *event,", 
+                                 TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "void* data)\n") )
         RET_ONERROR( mywritestr(f, "{\n") )
         if (source) {
@@ -263,7 +264,8 @@ NodeScript::writeCDynamicNodeCallback(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, m_proto->getCName(true)) )
         RET_ONERROR( mywritestr(f, "SendEventsCallback(") )
-        RET_ONERROR( mywritestr(f, "X3dNode *node, const char *event,") )
+        RET_ONERROR( mywritef(f, "%sNode *node, const char *event,",
+                                 TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "void* data)\n") )
         RET_ONERROR( mywritestr(f, "{\n") )
         if (source) {

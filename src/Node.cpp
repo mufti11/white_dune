@@ -1740,6 +1740,91 @@ Node::writeC(int f, int languageFlag)
         m_scene->m_glNameData.append(data);
         m_scene->increaseGlName();
     }
+    if (getType() == VRML_TRANSFORM) {
+        int numRouteSources = 0;
+        for (int i = 0; i < m_numEventIns; i++)
+            for (SocketList::Iterator *j = m_inputs[i].first(); j != NULL; 
+                 j = j->next()) 
+                if (j->item().getNode()->getProto()->isCRouteSource()) {
+                    numRouteSources++;
+                }
+        RET_ONERROR( mywritestr(f, "    ") )
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(f, "        ") )
+        if (languageFlag & C_SOURCE)
+            RET_ONERROR( mywritestr(f, "self->") )
+        MyString className = "";
+        if (languageFlag & JAVA_SOURCE) {
+            if (hasName()) 
+                className += TheApp->getCSceneGraphName();
+            else {
+                className += TheApp->getCPrefix();
+                className += getVariableName();
+            }
+            RET_ONERROR( mywritef(f, "%s.", (const char *)className) )
+        }
+        RET_ONERROR( mywritef(f, "%s.route_sources = ", getVariableName()) )
+        if (numRouteSources == 0) {
+            if (languageFlag & JAVA_SOURCE)
+                RET_ONERROR( mywritestr(f, " null;\n") )
+            else
+                RET_ONERROR( mywritestr(f, " NULL;\n") )
+        } else {
+            if (languageFlag & C_SOURCE)
+                RET_ONERROR( mywritef(f, 
+                                 "(%sNode **)malloc(%d * sizeof(%sNode *));\n",
+                                 TheApp->getCPrefix(), numRouteSources,
+                                 TheApp->getCPrefix()) )
+            else if (languageFlag & CC_SOURCE)
+                RET_ONERROR( mywritef(f, "new %sNode*[%d];\n",
+                                      TheApp->getCPrefix(), numRouteSources) )
+            else if (languageFlag & JAVA_SOURCE)
+                RET_ONERROR( mywritef(f, "new %sNode[%d];\n",
+                                      TheApp->getCPrefix(), numRouteSources) )
+        }
+        numRouteSources = 0;
+        for (int i = 0; i < m_numEventIns; i++)
+            for (SocketList::Iterator *j = m_inputs[i].first(); j != NULL; 
+                 j = j->next()) 
+                if (j->item().getNode()->getProto()->isCRouteSource()) {
+                    RET_ONERROR( mywritestr(f, "    ") ) 
+                    if (languageFlag & JAVA_SOURCE)
+                        RET_ONERROR( mywritef(f, "        %s.", 
+                                                 (const char *)className) )
+                    if (languageFlag & C_SOURCE)
+                        RET_ONERROR( mywritestr(f, "self->") )
+                    RET_ONERROR( mywritef(f, "%s.route_sources[%d] = ", 
+                                 getVariableName(), numRouteSources) )
+                    if (languageFlag & (C_SOURCE | CC_SOURCE))
+                        RET_ONERROR( mywritestr(f, "&") ) 
+                    if (languageFlag & JAVA_SOURCE)
+                        RET_ONERROR( mywritef(f, "%s.", 
+                                                 (const char *)className) )
+                    if (languageFlag & C_SOURCE)
+                        RET_ONERROR( mywritestr(f, "self->") )
+                    RET_ONERROR( mywritestr(f, 
+                        j->item().getNode()->getVariableName()) )
+                    RET_ONERROR( mywritestr(f, ";\n") ) 
+                    numRouteSources++;
+                }
+
+        RET_ONERROR( mywritef(f, "    ") )
+        if (languageFlag & C_SOURCE)
+            RET_ONERROR( mywritestr(f, "self->") )
+        if (languageFlag & JAVA_SOURCE) {
+            MyString className = "";
+            if (hasName()) 
+                className += TheApp->getCSceneGraphName();
+            else {
+                className += TheApp->getCPrefix();
+                className += getVariableName();
+            }
+            RET_ONERROR( mywritef(f, "        %s.", (const char *)className) )
+        }
+        RET_ONERROR( mywritef(f, "%s.num_route_source = %d;\n", 
+                                 getVariableName(), numRouteSources) )
+        
+    }
 
     // allows several nodetypes to output a warning via inheritance
     writeCWarning();
@@ -1759,10 +1844,12 @@ Node::writeC(int f, int languageFlag)
 
 
     if (languageFlag & (C_SOURCE | CC_SOURCE)) {
+            RET_ONERROR( mywritestr(f, "    ") )      
         if (languageFlag & C_SOURCE)
-            RET_ONERROR( mywritestr(f, "    self->") )      
+            RET_ONERROR( mywritestr(f, "self->") )      
         RET_ONERROR( mywritestr(f, getVariableName()) )    
-        RET_ONERROR( mywritestr(f, ".m_parent = (X3dNode *)") )  
+        RET_ONERROR( mywritef(f, ".m_parent = (%sNode *)", TheApp->getCPrefix())
+                   )  
         if (getParent() == NULL)
             RET_ONERROR( mywritestr(f, "NULL") )
         else { 
@@ -2089,8 +2176,6 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
             for (int i = 0; i < nodes->getSize(); i++) {
                 Node *node = nodes->getValue(i);
                 if (node && (node != this)) { // avoid simple cyclic scenegraph
-                     if (languageFlag & JAVA_SOURCE)
-                         RET_ONERROR( mywritestr(f, "    ") )
                      RET_ONERROR( node->writeC(f, languageFlag) )
                 }
             }

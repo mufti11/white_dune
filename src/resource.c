@@ -5144,7 +5144,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 2056, "END", 492, 94, 26, 26, 0, 1248, 1249, -1 },
     { RCT_BUTTON, 2058, "P DN", 524, 94, 26, 26, 0, 1249, -1, -1 },
     { RCT_DIALOG, 100, "About dune", 0, 0, 287, 240, 0, 1250, -1, 1251 },
-    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 1251, 1252, -1 },
+    { RCT_LABEL, -1, "white_dune 1.154.3", 40, 7, 140, 8, 0, 1251, 1252, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 1252, 1253, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 1253, 1254, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 1254, 1255, -1 },
@@ -5326,7 +5326,7 @@ RCNode swResources[9752] = {
     { RCT_TEXTEDIT, 1322, "", 19, 354, 170, 12, 4, 1430, -1, -1 },
     { RCT_DIALOG, 265, "Script Editor", 0, 0, 383, 194, 0, 1431, -1, 1432 },
     { RCT_COMBOBOX, 1041, "", 31, 5, 48, 57, 0, 1432, 1433, -1 },
-    { RCT_COMBOBOX, 1042, "", 85, 5, 26, 49, 0, 1433, 1434, -1 },
+    { RCT_COMBOBOX, 1042, "", 85, 5, 35, 49, 0, 1433, 1434, -1 },
     { RCT_COMBOBOX, 1008, "", 115, 5, 42, 130, 0, 1434, 1435, -1 },
     { RCT_TEXTEDIT, 1043, "", 170, 11, 103, 12, 4, 1435, 1436, -1 },
     { RCT_BUTTON, 1252, "Add", 306, 6, 65, 14, 0, 1436, 1437, -1 },
@@ -7082,7 +7082,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 3186, 3187, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 3187, -1, -1 },
     { RCT_DIALOG, 104, "About dune", 0, 0, 287, 240, 0, 3188, -1, 3189 },
-    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 3189, 3190, -1 },
+    { RCT_LABEL, -1, "white_dune 1.154.3", 40, 7, 140, 8, 0, 3189, 3190, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 3190, 3191, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 3191, 3192, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 3192, 3193, -1 },
@@ -7262,7 +7262,7 @@ RCNode swResources[9752] = {
     { RCT_TEXTEDIT, 1322, "", 19, 354, 170, 12, 4, 3366, -1, -1 },
     { RCT_DIALOG, 269, "Script Editor", 0, 0, 383, 194, 0, 3367, -1, 3368 },
     { RCT_COMBOBOX, 1041, "", 31, 5, 48, 57, 0, 3368, 3369, -1 },
-    { RCT_COMBOBOX, 1042, "", 85, 5, 26, 49, 0, 3369, 3370, -1 },
+    { RCT_COMBOBOX, 1042, "", 85, 5, 35, 49, 0, 3369, 3370, -1 },
     { RCT_COMBOBOX, 1008, "", 115, 5, 42, 130, 0, 3370, 3371, -1 },
     { RCT_TEXTEDIT, 1043, "", 170, 11, 103, 12, 4, 3371, 3372, -1 },
     { RCT_BUTTON, 1252, "Add", 306, 6, 65, 14, 0, 3372, 3373, -1 },
@@ -9018,7 +9018,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 5122, 5123, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 5123, -1, -1 },
     { RCT_DIALOG, 102, "Informationen zu dune", 0, 0, 287, 240, 0, 5124, -1, 5125 },
-    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 5125, 5126, -1 },
+    { RCT_LABEL, -1, "white_dune 1.154.3", 40, 7, 140, 8, 0, 5125, 5126, -1 },
     { RCT_LABEL, -1, "Copyright (C) 2000-2019 Stephen F. White und Andere", 40, 18, 185, 11, 0, 5126, 5127, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 5127, 5128, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 5128, 5129, -1 },
@@ -9198,7 +9198,7 @@ RCNode swResources[9752] = {
     { RCT_TEXTEDIT, 1322, "", 19, 354, 170, 12, 4, 5302, -1, -1 },
     { RCT_DIALOG, 267, "Script Editor", 0, 0, 383, 194, 0, 5303, -1, 5304 },
     { RCT_COMBOBOX, 1041, "", 31, 5, 48, 57, 0, 5304, 5305, -1 },
-    { RCT_COMBOBOX, 1042, "", 85, 5, 26, 49, 0, 5305, 5306, -1 },
+    { RCT_COMBOBOX, 1042, "", 85, 5, 35, 49, 0, 5305, 5306, -1 },
     { RCT_COMBOBOX, 1008, "", 111, 5, 42, 119, 0, 5306, 5307, -1 },
     { RCT_TEXTEDIT, 1043, "", 170, 11, 103, 12, 4, 5307, 5308, -1 },
     { RCT_BUTTON, 1252, "Hinzufuegen", 306, 6, 65, 14, 0, 5308, 5309, -1 },
@@ -10955,7 +10955,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 7059, 7060, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 7060, -1, -1 },
     { RCT_DIALOG, 103, "Info su Dune", 0, 0, 287, 240, 0, 7061, -1, 7062 },
-    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 7062, 7063, -1 },
+    { RCT_LABEL, -1, "white_dune 1.154.3", 40, 7, 140, 8, 0, 7062, 7063, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 7063, 7064, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 7064, 7065, -1 },
     { RCT_BUTTON, 1, "Accetta", 230, 5, 28, 14, 0, 7065, 7066, -1 },
@@ -11135,7 +11135,7 @@ RCNode swResources[9752] = {
     { RCT_TEXTEDIT, 1322, "", 19, 354, 170, 12, 4, 7239, -1, -1 },
     { RCT_DIALOG, 268, "Script Editor", 0, 0, 383, 194, 0, 7240, -1, 7241 },
     { RCT_COMBOBOX, 1041, "", 31, 5, 48, 57, 0, 7241, 7242, -1 },
-    { RCT_COMBOBOX, 1042, "", 85, 5, 26, 49, 0, 7242, 7243, -1 },
+    { RCT_COMBOBOX, 1042, "", 85, 5, 35, 49, 0, 7242, 7243, -1 },
     { RCT_COMBOBOX, 1008, "", 115, 5, 42, 130, 0, 7243, 7244, -1 },
     { RCT_TEXTEDIT, 1043, "", 170, 11, 103, 12, 4, 7244, 7245, -1 },
     { RCT_BUTTON, 1252, "Aggiungi", 306, 6, 65, 14, 0, 7245, 7246, -1 },
@@ -12892,7 +12892,7 @@ RCNode swResources[9752] = {
     { RCT_BUTTON, 1, "OK", 500, 14, 50, 14, 0, 8996, 8997, -1 },
     { RCT_BUTTON, 2, "Cancel", 500, 36, 50, 14, 0, 8997, -1, -1 },
     { RCT_DIALOG, 101, "About dune", 0, 0, 287, 240, 0, 8998, -1, 8999 },
-    { RCT_LABEL, -1, "white_dune 1.123", 40, 7, 140, 8, 0, 8999, 9000, -1 },
+    { RCT_LABEL, -1, "white_dune 1.154.3", 40, 7, 140, 8, 0, 8999, 9000, -1 },
     { RCT_LABEL, -1, "Copyright (C)  2000-2019 Stephen F. White and others", 40, 18, 185, 11, 0, 9000, 9001, -1 },
     { RCT_LABEL, -1, "GNU General Public License (GPL)", 40, 33, 185, 11, 0, 9001, 9002, -1 },
     { RCT_BUTTON, 1, "OK", 230, 5, 28, 14, 0, 9002, 9003, -1 },
@@ -13072,7 +13072,7 @@ RCNode swResources[9752] = {
     { RCT_TEXTEDIT, 1322, "", 19, 354, 170, 12, 4, 9176, -1, -1 },
     { RCT_DIALOG, 266, "Script Editor", 0, 0, 383, 194, 0, 9177, -1, 9178 },
     { RCT_COMBOBOX, 1041, "", 31, 5, 48, 57, 0, 9178, 9179, -1 },
-    { RCT_COMBOBOX, 1042, "", 85, 5, 26, 49, 0, 9179, 9180, -1 },
+    { RCT_COMBOBOX, 1042, "", 85, 5, 35, 49, 0, 9179, 9180, -1 },
     { RCT_COMBOBOX, 1008, "", 115, 5, 42, 130, 0, 9180, 9181, -1 },
     { RCT_TEXTEDIT, 1043, "", 170, 11, 103, 12, 4, 9181, 9182, -1 },
     { RCT_BUTTON, 1252, "Add", 266, 6, 65, 14, 0, 9182, 9183, -1 },
@@ -13681,8 +13681,8 @@ static int palette2[16] = {
 
 static unsigned char bitmap2[24] = {
     0x00, 0x00, 0x00, 0x08, 0x88, 0x87, 0x09, 0x99, 0x97, 0x09, 
-    0x99, 0x97, 0x08, 0x88, 0x87, 0x07, 0x77, 0x77, 0xff, 0xff, 
-    0xff, 0xff, 0xff, 0xff, };
+    0x99, 0x97, 0x08, 0x88, 0x87, 0x07, 0x77, 0x77, 0x00, 0x00, 
+    0x00, 0x00, 0x00, 0x00, };
 
 static int palette3[16] = {
     0x00000000, 0x00000080, 0x00008000, 0x00008080, 
@@ -13693,8 +13693,8 @@ static int palette3[16] = {
 
 static unsigned char bitmap3[24] = {
     0x00, 0x00, 0x00, 0x08, 0xcc, 0x87, 0x09, 0xdd, 0x97, 0x09, 
-    0xdd, 0x97, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0x8e, 0x4c, 
-    0xa5, 0x55, 0x00, 0x00, };
+    0xdd, 0x97, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0x00, 0x00, 
+    0x00, 0x00, 0x00, 0x00, };
 
 static int palette4[16] = {
     0x00000000, 0x00000080, 0x00008000, 0x00008080, 
@@ -13705,7 +13705,7 @@ static int palette4[16] = {
 
 static unsigned char bitmap4[24] = {
     0x00, 0x00, 0x00, 0x08, 0xcc, 0x87, 0x08, 0xcc, 0x87, 0x08, 
-    0xcc, 0x87, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0xff, 0xff, 
+    0xcc, 0x87, 0x08, 0xcc, 0x87, 0x07, 0x77, 0x77, 0x00, 0x00, 
     0x00, 0x00, 0x00, 0x00, };
 
 static int palette5[16] = {
@@ -13717,8 +13717,8 @@ static int palette5[16] = {
 
 static unsigned char bitmap5[24] = {
     0x77, 0x77, 0x70, 0x78, 0x88, 0x80, 0x78, 0x88, 0x80, 0x78, 
-    0x88, 0x80, 0x78, 0x88, 0x80, 0x00, 0x00, 0x00, 0x8e, 0x4c, 
-    0xa5, 0x55, 0x00, 0x00, };
+    0x88, 0x80, 0x78, 0x88, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 
+    0x00, 0x00, 0x00, 0x00, };
 
 static int palette6[16] = {
     0x00000000, 0x00000080, 0x00008000, 0x00008080, 

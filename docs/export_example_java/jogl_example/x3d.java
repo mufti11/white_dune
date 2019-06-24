@@ -77,6 +77,8 @@ public class x3d implements GLEventListener
     public static boolean viewPointExists = false;
     public static float viewpoint1Position[] = { 0, 0, 10 };
 
+    public static X3dNode viewpoint1 = null;
+
     public static boolean lightExists = false;
    
     public static boolean preRender = false;
@@ -84,15 +86,15 @@ public class x3d implements GLEventListener
    
     public static X3dSceneGraph x3dSceneGraph = new X3dSceneGraph();
 
-    public static float[] projectionMatrix = new float[16];
+    public static double[] projectionMatrix = new double[16];
    
     public static X3dPointLight pointlight = null;
 
     private static int numLights = 0;
 
-    private static float view_rotx = 0.0f, view_roty = 0.0f;
-    private static final float view_rotz = 0.0f;
-    private static float view_dist = -10.0f;
+    public static float view_rotx = 0.0f, view_roty = 0.0f;
+    public static final float view_rotz = 0.0f;
+    public static float view_dist = -10.0f;
 
     private static int prevMouseX, prevMouseY;
     private static int mouseBotton;
@@ -224,7 +226,7 @@ public class x3d implements GLEventListener
         // dragged the mouse around
         x3d.gl.glMatrixMode(GL2.GL_MODELVIEW_MATRIX);
         x3d.gl.glLoadIdentity();
-        x3d.gl.glTranslatef(0.0f, 0.0f, view_dist);
+        x3d.gl.glTranslatef(0.0f, 0.0f, x3d.view_dist);
         x3d.gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         x3d.gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
         x3d.gl.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
@@ -260,16 +262,24 @@ public class x3d implements GLEventListener
             prevMouseY = e.getY();
             mouseBotton = e.getButton();
             x3d2.setMouseClick(prevMouseX, prevMouseY); 
-          }
+        }
     
         @Override
     	public void mouseReleased(MouseEvent e) {
-          }
+            x3d2.setMouseRelease(e.getX(), e.getY()); 
+        }
     
+        private boolean init = false;
+
         @Override
         public void mouseDragged(MouseEvent e) {
             final int x = e.getX();
             final int y = e.getY();
+            if (!init) {
+                prevMouseX = x;
+                prevMouseY = y;    
+                init = true;        
+            }
             int width=0, height=0;
             Object source = e.getSource();
             if(source instanceof Window) {
@@ -291,11 +301,15 @@ public class x3d implements GLEventListener
             float thetaX = 360.0f * ( (float)(y-prevMouseY)/(float)height);
     
             if (mouseBotton == MouseEvent.BUTTON1) {
-                view_rotx += thetaX;
-                view_roty += thetaY;
+                if (!x3d2.hasHit()) {
+                    view_rotx += thetaX;
+                    view_roty += thetaY;
+                }
             } else {
                 view_dist += ( (float)(prevMouseY-y)/(float)height * 10.0f);
             }
+
+            x3d2.setMouseMove(x, y, prevMouseX, prevMouseY); 
 
             prevMouseX = x;
             prevMouseY = y;    
@@ -352,6 +366,18 @@ public class x3d implements GLEventListener
         MyTouchSensorProcessEventCallback myTouchSensorProcessEventCallback = new MyTouchSensorProcessEventCallback();
         X3dTouchSensor.setX3dTouchSensorProcessEventCallback(myTouchSensorProcessEventCallback);
 
+        MyPlaneSensorProcessEventCallback myPlaneSensorProcessEventCallback = new MyPlaneSensorProcessEventCallback();
+        X3dPlaneSensor.setX3dPlaneSensorProcessEventCallback(myPlaneSensorProcessEventCallback);
+
+        MyCylinderSensorProcessEventCallback myCylinderSensorProcessEventCallback = new MyCylinderSensorProcessEventCallback();
+        X3dCylinderSensor.setX3dCylinderSensorProcessEventCallback(myCylinderSensorProcessEventCallback);
+
+        MySphereSensorProcessEventCallback mySphereSensorProcessEventCallback = new MySphereSensorProcessEventCallback();
+        X3dSphereSensor.setX3dSphereSensorProcessEventCallback(mySphereSensorProcessEventCallback);
+
+        MyProximitySensorProcessEventCallback myProximitySensorProcessEventCallback = new MyProximitySensorProcessEventCallback();
+        X3dProximitySensor.setX3dProximitySensorProcessEventCallback(myProximitySensorProcessEventCallback);
+
         MyPositionInterpolatorProcessEventCallback myPositionInterpolatorProcessEventCallback = new MyPositionInterpolatorProcessEventCallback();
         X3dPositionInterpolator.setX3dPositionInterpolatorProcessEventCallback(myPositionInterpolatorProcessEventCallback);
 
@@ -372,6 +398,12 @@ public class x3d implements GLEventListener
 
         MyPositionInterpolator2DProcessEventCallback myPositionInterpolator2DProcessEventCallback = new MyPositionInterpolator2DProcessEventCallback();
         X3dPositionInterpolator2D.setX3dPositionInterpolator2DProcessEventCallback(myPositionInterpolator2DProcessEventCallback);
+
+        x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
+        x3d.gl.glLoadIdentity();
+        x3d.glu.gluPerspective(x3d2.fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
+        x3d.gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+        x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
 
         x3d.gl.glColorMaterial(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT);
         x3d.gl.glColorMaterial(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE);
@@ -536,12 +568,35 @@ class x3d2
     public static int mouseX = -1;
     public static int mouseY = -1;
     public static boolean clicked = false;
+    public static int mouseXMove = -1;
+    public static int mouseYMove = -1;
+    public static int mouseXOld = -1;
+    public static int mouseYOld = -1;
+    public static boolean moved = false;
+    public static boolean released = false;
 
     public static void setMouseClick(int x, int y) 
     {
         mouseX = x;
         mouseY = y;
         clicked = true;
+        released = false;  
+    }
+
+    public static void setMouseRelease(int x, int y) 
+    {
+        mouseX = x;
+        mouseY = y;
+        released = true;  
+    }
+
+    public static void setMouseMove(int x, int y, int x_old, int y_old) 
+    {
+        mouseXMove = x;
+        mouseYMove = y;
+        mouseXOld = x_old;
+        mouseYOld = y_old;
+        moved = true;
     }
 
     public static int width = 600;
@@ -553,6 +608,137 @@ class x3d2
         height = h;
     }
 
+
+    static float mod1(float x) 
+    {
+        if (x == 0)
+            return 0;
+        if (x - (int)x == 0)
+            return 1;
+        return x - (int)x;
+    }
+
+    static void normalizeAxis(float[] value)
+    {
+        float rlen = (float) Math.sqrt(value[0] * value[0] + 
+                                       value[1] * value[1] +  
+                                       value[2] * value[2] );  
+        if (rlen > 0.000000001f) { 
+            rlen = 1.0f / rlen; 
+            value[0] *= rlen;
+            value[1] *= rlen;
+            value[2] *= rlen;
+        }
+    }
+    
+    static void normalizeQuaternion(float[] value)
+    {
+        float rlen = (float) Math.sqrt(value[0] * value[0] + 
+                                       value[1] * value[1] +  
+                                       value[2] * value[2] +  
+                                       value[3] * value[3] );  
+        if (rlen > 0.000000001f) { 
+            rlen = 1.0f / rlen; 
+            value[0] *= rlen;
+            value[1] *= rlen;
+            value[2] *= rlen;
+            value[3] *= rlen;
+        }
+    }
+    
+    static void SFRotation2quaternion(float ret[], float rot[])
+    {
+        float s = (float) Math.sin(rot[3] * 0.5f);
+        ret[0] = rot[0];
+        ret[1] = rot[1];
+        ret[2] = rot[2];
+        normalizeAxis(ret);
+        for (int i = 0; i < 3; i++)
+            ret[i] = ret[i] * s;
+        ret[3] = (float) Math.cos(rot[3] * 0.5);
+    
+        normalizeQuaternion(ret);
+    }
+    
+    static void quaternion2SFRotation(float ret[], float q[])
+    {
+        float s = 2 * (float) Math.asin(mod1(q[3]));
+        ret[0] = q[0];
+        ret[1] = q[1];
+        ret[2] = q[2];
+        for (int i = 0; i < 3; i++)
+            ret[i] = ret[i] * s;
+        ret[3] = 2 * (float) Math.acos(mod1(q[3]));
+    }
+    
+    static void quaternionMult(float ret[], float q1[], float q2[])
+    {
+        ret[0] = q2[3] * q1[0] + q2[0] * q1[3] + q2[1] * q1[2] - q2[2] * q1[1];
+        ret[1] = q2[3] * q1[1] + q2[1] * q1[3] + q2[2] * q1[0] - q2[0] * q1[2];
+        ret[2] = q2[3] * q1[2] + q2[2] * q1[3] + q2[0] * q1[1] - q2[1] * q1[0];
+        ret[3] = q2[3] * q1[3] - q2[0] * q1[0] - q2[1] * q1[1] - q2[2] * q1[2];
+    }
+    
+    static void quaternionMultVec(float ret[], float q[], float vec[])
+    {
+        float quat[] = new float[4];;
+        quat[0] = -q[0];
+        quat[1] = -q[1];
+        quat[2] = -q[2];
+        quat[3] =  q[3];
+        float quat2[] = new float[4];;
+        quat2[0] = vec[0];
+        quat2[1] = vec[1];
+        quat2[2] = vec[2];
+        quat2[3] = 0;
+        float quat3[] = new float[4];;
+        quaternionMult(quat3, quat, quat2);
+        normalizeQuaternion(quat3);
+        quat[0] = q[0];
+        quat[1] = q[1];
+        quat[2] = q[2];
+        quat[3] = q[3];
+        float quat4[] = new float[4];
+        quaternionMult(quat4, quat3, quat);
+        normalizeQuaternion(quat4);
+        ret[0] = quat4[0];
+        ret[1] = quat4[1];
+        ret[2] = quat4[2]; 
+    }
+    
+    static void quaternionFromEuler(float ret[], float yaw, float pitch, float roll)
+    {
+        double cy = Math.cos(yaw * 0.5);
+        double sy = Math.sin(yaw * 0.5);
+        double cp = Math.cos(pitch * 0.5);
+        double sp = Math.sin(pitch * 0.5);
+        double cr = Math.cos(roll * 0.5);
+        double sr = Math.sin(roll * 0.5);
+    
+        ret[0] = (float)(cy * cp * sr - sy * sp * cr);
+        ret[1] = (float)(sy * cp * sr + cy * sp * cr);
+        ret[2] = (float)(sy * cp * cr - cy * sp * sr);
+        ret[3] = (float)(cy * cp * cr + sy * sp * sr);
+    
+        normalizeQuaternion(ret);
+    }
+    
+    static void SFRotationFromEuler(float ret[], float rotx, float roty, float rotz)
+    {
+        float quat[] = new float[4];
+        quaternionFromEuler(quat, rotz * 2 * (float)Math.PI / 360.0f, 
+                                  roty * 2 * (float)Math.PI / 360.0f, 
+                                  rotx * 2 * (float)Math.PI / 360.0f);
+        quaternion2SFRotation(ret, quat);
+    }
+    
+    static void multMatrix4Vec(float ret[], float mat[], float vec[])
+    {
+        ret[0] = mat[0] * vec[0] + mat[1] * vec[1] + mat[2] * vec[2];
+        ret[1] = mat[4] * vec[0] + mat[5] * vec[1] + mat[6] * vec[2];
+        ret[2] = mat[8] * vec[0] + mat[9] * vec[1] + mat[10] * vec[2];
+    }
+    
     static void drawX3d(float matrix[])
     {
         x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -582,7 +768,7 @@ class x3d2
         if (rootNode != null)
             rootNode.treeRender(null, null);
 
-        if (clicked) {
+        if (clicked || moved) {
             // render to pickbuffer
             IntBuffer pickBuffer = Buffers.newDirectIntBuffer(PICK_BUFFER_SIZE); 
             x3d.gl.glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
@@ -593,7 +779,10 @@ class x3d2
             x3d.gl.glLoadIdentity();
             int v[] = new int[4];
             x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, v, 0);
-            x3d.glu.gluPickMatrix(mouseX, (height - mouseY), 1, 1, v, 0);
+            if (clicked)
+                x3d.glu.gluPickMatrix(mouseX, (height - mouseY), 1, 1, v, 0);
+            if (moved)
+                x3d.glu.gluPickMatrix(mouseXMove, (height - mouseYMove), 1, 1, v, 0);
 
             x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
     
@@ -620,11 +809,125 @@ class x3d2
         }
     }
 
+    private static void transform4HandleData(X3dTransform transform)
+    {
+        x3d.gl.glTranslatef(transform.translation[0], transform.translation[1], transform.translation[2]);
+    }
+
+    private static void transform(X3dNode node)
+    {
+        for (X3dNode parent = node.m_parent; parent != null; 
+             parent = parent.m_parent)
+            if (parent.getType() == X3dTransformType.type) {
+                X3dTransform transform = (X3dTransform)parent;
+                boolean hasTransform = false;
+                for (int i = 0; i < transform.num_route_source; i++)
+                    if (transform.route_sources[i] == node)
+                        hasTransform = true;
+                if (!hasTransform)
+                    transform4HandleData(transform);            
+            }
+     }
+
+    static class CylinderSensorExtraDataStruct {
+        public float x_sum;
+    };
+
+    private static boolean isHit = false;
+
+    public static boolean hasHit() {
+        return isHit;
+    }
+
     public static void handleSibling(X3dNode sibling) 
     {
         if (sibling.getType() == X3dTouchSensorType.type) {
             X3dTouchSensor touchSensor = (X3dTouchSensor )sibling;
             touchSensor.touchTime = x3d.getTimerTime();
+            isHit = true;
+        }
+        if (moved && sibling.getType() == X3dPlaneSensorType.type) {
+            X3dPlaneSensor planeSensor = (X3dPlaneSensor)sibling;
+            x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
+            x3d.gl.glPushMatrix();
+            x3d.gl.glLoadIdentity();
+            transform(planeSensor);
+            x3d.gl.glTranslatef(0, 0, x3d.view_dist);
+            x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
+            x3d.gl.glLoadMatrixd(x3d.projectionMatrix, 0);
+            x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
+            int x = mouseXMove;
+            int y = mouseYMove;
+            float model[] = new float[16];
+            float proj[] = new float[16];
+            int view[] = new int[4];
+            float pan[] = new float[3];
+            x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, model, 0);
+            x3d.gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, proj, 0);
+            x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, view, 0);
+            x3d.glu.gluProject(x, y, 0.0f, model, 0, proj, 0, view, 0, pan, 0);
+            x3d.glu.gluUnProject(x, y, pan[2], model, 0, proj, 0, view, 0,
+                                 pan, 0);
+            pan[1] = -pan[1];
+            x3d.gl.glPopMatrix();
+            planeSensor.translation_changed[0] = pan[0];
+            planeSensor.translation_changed[1] = pan[1];
+            planeSensor.translation_changed[2] = 0;
+            isHit = true;
+        }
+        if (moved && sibling.getType() == X3dCylinderSensorType.type) {
+            X3dCylinderSensor cylinderSensor = (X3dCylinderSensor)sibling;
+         
+            CylinderSensorExtraDataStruct extraVar = null; 
+            if (cylinderSensor.extra_data == null) {
+                cylinderSensor.extra_data = new
+                                             CylinderSensorExtraDataStruct();
+                CylinderSensorExtraDataStruct extraVar2 = 
+                    (CylinderSensorExtraDataStruct)cylinderSensor.extra_data;
+                extraVar2.x_sum = 0;
+            }
+            extraVar = (CylinderSensorExtraDataStruct)cylinderSensor.extra_data;
+    
+            float rot1[] = { 0, 1, 0, (mouseXMove - mouseXOld + extraVar.x_sum) / 20.f};
+            float quat[] = new float[4];
+            SFRotation2quaternion(quat, rot1);
+            quaternion2SFRotation(cylinderSensor.rotation_changed, quat);
+            extraVar.x_sum += mouseXMove - mouseXOld; 
+            isHit = true;
+        }
+        if (moved && sibling.getType() == X3dSphereSensorType.type) {
+            X3dSphereSensor sphereSensor = (X3dSphereSensor)sibling;
+    
+            float rot1[] = { 0, 1, 0, (mouseXMove - mouseXOld) / 20.f};
+            float rot2[] = { 1, 0, 0, (mouseYMove - mouseYOld) / 20.f};
+    
+            float q1[] = new float[4];
+            SFRotation2quaternion(q1, rot1);
+            float q2[] = new float[4];
+            SFRotation2quaternion(q2, rot2);
+            float quat[] = new float[4];
+            quaternionMult(quat, q1, q2);
+            float rotSphere[] = { sphereSensor.rotation_changed[0],
+                                  sphereSensor.rotation_changed[1],
+                                  sphereSensor.rotation_changed[2],
+                                 -sphereSensor.rotation_changed[3] };
+            float qSphere[] = new float[4];
+            SFRotation2quaternion(qSphere, rotSphere);
+            float rotSphere2[] = { sphereSensor.rotation_changed[0],
+                                   sphereSensor.rotation_changed[1],
+                                   sphereSensor.rotation_changed[2],
+                                   sphereSensor.rotation_changed[3] };
+            float qSphere2[] = new float[4];
+            SFRotation2quaternion(qSphere2, rotSphere2);
+            float quat2[] = new float[4];
+            quaternionMult(quat2, quat, qSphere); 
+            float quat3[] = new float[4];
+            quaternionMult(quat3, qSphere2, quat2); 
+            float quat4[] = new float[4];
+            quaternionMult(quat4, quat3, qSphere2); 
+            quaternion2SFRotation(sphereSensor.rotation_changed, quat4);
+            normalizeAxis(sphereSensor.rotation_changed);
+            isHit = true;
         }
     }
 
@@ -645,6 +948,7 @@ class x3d2
                 }
             } 
         }    
+        isHit = false;
         if (hit > -1) {
             X3dNode node = x3d.x3dSceneGraph.getNodeFromGlName(hit);
             if (node != null)
@@ -654,31 +958,51 @@ class x3d2
                      X3dNode sibling = null;
                      if (parent.getType() == X3dGroupType.type) {
                          X3dGroup group = (X3dGroup)parent;
-                         for (int i = 0; i < group.children.length; i++)
+                         for (int i = 0; i < group.children.length; i++) {
                              if (group.children[i] != null && 
                                  group.children[i] != node) {
-                                 if (group.children[i].getType() == 
+                                 if (clicked && group.children[i].getType() == 
                                      X3dTouchSensorType.type) {
                                      sibling = group.children[i];
                                      handleSibling(sibling);
                                  }
-                             }
+                                 if ((moved && group.children[i].getType() == 
+                                      X3dPlaneSensorType.type) ||
+                                      (moved && group.children[i].getType() == 
+                                      X3dCylinderSensorType.type) ||
+                                      (moved && group.children[i].getType() == 
+                                      X3dSphereSensorType.type)) {
+                                     handleSibling(group.children[i]);
+                                 }
+                            }
+                         }
                      }
                      if (parent.getType() == X3dTransformType.type) {
                          X3dTransform transform = (X3dTransform)parent;
-                         for (int i = 0; i < transform.children.length; i++)
+                         for (int i = 0; i < transform.children.length; i++) {
                              if (transform.children[i] != null && 
                                  transform.children[i] != node) {
-                                 if (transform.children[i].getType() == 
+                                 if (clicked &&
+                                     transform.children[i].getType() == 
                                      X3dTouchSensorType.type) {
                                      sibling = transform.children[i];
                                      handleSibling(sibling);
                                  }
+                                 if ((moved && transform.children[i].getType() == 
+                                     X3dPlaneSensorType.type) ||
+                                     (moved && transform.children[i].getType() == 
+                                     X3dCylinderSensorType.type) ||
+                                     (moved && transform.children[i].getType() == 
+                                     X3dSphereSensorType.type)) {
+                                     handleSibling(transform.children[i]);
+                                 }
                              }
+                         }
                      }
                  }     
         }
         clicked = false;
+        moved = false;
     }
 }
 
@@ -1335,6 +1659,8 @@ class MyViewpointRenderCallback extends X3dViewpointRenderCallback
             if(!x3d.viewpointRendered)
             {
                 x3d.viewpointRendered = true;
+                x3d.viewpoint1 = viewpoint;
+
                 for (int i = 0; i < 3; i++)
                     x3d.viewpoint1Position[i] = viewpoint.position[i];
     
@@ -1380,7 +1706,7 @@ class MySwitchRenderCallback extends X3dSwitchRenderCallback
             return;
         x3d.gl.glPushMatrix();
         int choice = switchNode.whichChoice;
-        if (switchNode.children != null)
+        if (choice > -1 && switchNode.children != null)
             if (choice < switchNode.children.length)
                 if (switchNode.children[choice] != null) 
                 {
@@ -2272,11 +2598,110 @@ class MyTouchSensorProcessEventCallback extends X3dTouchSensorProcessEventCallba
 {
     public boolean processEvent(X3dNode node, String event) {
         X3dTouchSensor touchSensor = (X3dTouchSensor)node;
+        touchSensor.isActive = !x3d2.released;
         if (touchSensor == null)
             return false;
         if (!touchSensor.enabled)
             return false;
         return true;
+    }
+}
+
+class MyPlaneSensorProcessEventCallback extends X3dPlaneSensorProcessEventCallback 
+{
+    public boolean processEvent(X3dNode node, String event) {
+        X3dPlaneSensor planeSensor = (X3dPlaneSensor)node;
+        if (planeSensor.maxPosition[0] > planeSensor.minPosition[0]) {
+            if (planeSensor.translation_changed[0] > planeSensor.maxPosition[0])
+                planeSensor.translation_changed[0] = planeSensor.maxPosition[0];
+            if (planeSensor.translation_changed[0] < planeSensor.minPosition[0])
+                planeSensor.translation_changed[0] = planeSensor.minPosition[0];
+        }
+        if (planeSensor.maxPosition[1] > planeSensor.minPosition[1]) {
+            if (planeSensor.translation_changed[1] > planeSensor.maxPosition[1])
+                planeSensor.translation_changed[1] = planeSensor.maxPosition[1];
+            if (planeSensor.translation_changed[1] < planeSensor.minPosition[1])
+                planeSensor.translation_changed[1] = planeSensor.minPosition[1];
+        }
+        return planeSensor.enabled;
+    }
+}
+
+class MyCylinderSensorProcessEventCallback extends X3dCylinderSensorProcessEventCallback 
+{
+    public boolean processEvent(X3dNode node, String event) {
+        X3dCylinderSensor cylinderSensor = (X3dCylinderSensor)node;
+        if (cylinderSensor.maxAngle > cylinderSensor.minAngle) {
+            if (cylinderSensor.rotation_changed[3] > cylinderSensor.maxAngle)
+                cylinderSensor.rotation_changed[3] = cylinderSensor.maxAngle;
+            if (cylinderSensor.rotation_changed[3] < cylinderSensor.minAngle)
+                cylinderSensor.rotation_changed[3] = cylinderSensor.minAngle;
+        }
+        return cylinderSensor.enabled;
+    }
+}
+
+class MySphereSensorProcessEventCallback extends X3dSphereSensorProcessEventCallback 
+{
+    public boolean processEvent(X3dNode node, String event) {
+        X3dSphereSensor sphereSensor = (X3dSphereSensor)node;
+        return sphereSensor.enabled;
+    }
+}
+
+class MyProximitySensorProcessEventCallback extends X3dProximitySensorProcessEventCallback 
+{
+    public boolean processEvent(X3dNode node, String event) {
+        X3dProximitySensor proximitySensor = (X3dProximitySensor)node;
+        boolean enabled = proximitySensor.enabled;
+        if ((proximitySensor.size[0] == 0) || 
+            (proximitySensor.size[1] == 0) || 
+            (proximitySensor.size[2] == 0))
+            enabled = false;
+        else {
+            X3dViewpoint viewpoint = (X3dViewpoint)x3d.viewpoint1;
+            float xmax =  proximitySensor.size[0] / 2 + proximitySensor.center[0];
+            float xmin = -proximitySensor.size[0] / 2 + proximitySensor.center[0];
+            float ymax =  proximitySensor.size[1] / 2 + proximitySensor.center[1];
+            float ymin = -proximitySensor.size[1] / 2 + proximitySensor.center[1];
+            float zmax =  proximitySensor.size[2] / 2 + proximitySensor.center[2];
+            float zmin = -proximitySensor.size[2] / 2 + proximitySensor.center[2];
+            if ((viewpoint.position != null) &&
+                (viewpoint.position[0] > xmin) &&
+                (viewpoint.position[1] < ymax) &&
+                (viewpoint.position[1] > ymin) &&
+                (viewpoint.position[2] < zmax) &&
+                (viewpoint.position[2] > zmin)) {
+               float rot[] = new float[4];
+               x3d2.SFRotationFromEuler(rot, x3d.view_rotx, x3d.view_roty, x3d.view_rotz);
+               proximitySensor.orientation_changed[0] = rot[0];
+               proximitySensor.orientation_changed[1] = rot[1];
+               proximitySensor.orientation_changed[2] = rot[2];
+               proximitySensor.orientation_changed[3] = -rot[3];
+    
+               proximitySensor.position_changed[0] = 0;
+               proximitySensor.position_changed[1] = 0;
+               proximitySensor.position_changed[2] = -x3d.view_dist;
+    
+               float vec[]= new float[3];
+               x3d2.multMatrix4Vec(vec, x3d.navigation_matrix, 
+                                   proximitySensor.position_changed);
+               proximitySensor.position_changed[0] = vec[0];
+               proximitySensor.position_changed[1] = vec[1];
+               proximitySensor.position_changed[2] = vec[2];
+    /*
+               proximitySensor.position_changed[0] = viewpoint.position[0];
+               proximitySensor.position_changed[1] = viewpoint.position[1];
+               proximitySensor.position_changed[2] = viewpoint.position[2];
+               proximitySensor.orientation_changed[0] = viewpoint.orientation[0];
+               proximitySensor.orientation_changed[1] = viewpoint.orientation[1];
+               proximitySensor.orientation_changed[2] = viewpoint.orientation[2];
+               proximitySensor.orientation_changed[3] = viewpoint.orientation[3];
+    */
+           } else
+               enabled = false;
+        }
+        return enabled;
     }
 }
 

@@ -94,10 +94,6 @@ WorldInfo {
   title "white_dune C++ export example"
 }
 
-DEF Viewpoint1 Viewpoint {
-  position 0 0 13.900015
-}
-
 Transform {
   translation 2.203995 -0.330663 -20.414368
   children [
@@ -3187,89 +3183,6 @@ Transform {
                 }
             }
         }
-        DEF Transform2 Transform {
-          rotation 0 -1 0 0.100019
-          translation -9.363168 -1.552592 9.424097
-          children [
-            Shape {
-              appearance Appearance {
-                material DEF Material3 Material {
-                  diffuseColor 0.934289 0.507724 0.302351
-                  emissiveColor 3.921569e-3 2.352941e-2 3.921569e-3
-                  shininess 0.661105
-                  specularColor 0.960784 1 0.984314
-                  transparency 0.129821
-                }
-              }
-              geometry Sphere {
-                radius 0.680000
-              }
-            }
-            DEF TimeSensor4 TimeSensor {
-              cycleInterval 10
-            }
-            DEF ColorInterpolator1 ColorInterpolator {
-              key [
-                0
-                0.330275
-                0.569954
-                0.719037
-                0.989637
-              ]
-              keyValue [
-                0.800000 0.800000 0.800000
-                0.800000 0.800000 0.391304
-                1 0.364706 0.258824
-                0.800000 0.335404 0.795031
-                0.800000 0.770186 0.811475
-              ]
-            }
-            DEF ScalarInterpolator1 ScalarInterpolator {
-              key [
-                0
-                0.868394
-                0.977745
-              ]
-              keyValue [
-                0
-                0.229508
-                0.919255
-              ]
-            }
-            DEF ScalarInterpolator2 ScalarInterpolator {
-              key [
-                0
-                0.035608
-                0.071217
-                0.115727
-                0.143917
-                0.167656
-                0.203264
-                0.232938
-                0.310089
-                0.397626
-                0.611276
-                0.924332
-              ]
-              keyValue [
-                0.200000
-                0.913043
-                0.111801
-                0.919255
-                0.881988
-                0.012422
-                0.906832
-                0.931677
-                0.018634
-                0.658385
-                0.664596
-                0.931677
-              ]
-            }
-            DEF PlaneSensor1 PlaneSensor {
-            }
-          ]
-        }
         DEF TimeSensor2_0_0 TimeSensor {
           cycleInterval 0.560000
           loop TRUE
@@ -3277,7 +3190,7 @@ Transform {
       ]
     }
     Transform {
-      translation -14.438698 -6.480000 -16.260000
+      translation -14.438698 -7.069058 -16.260000
       children [
         Transform {
           rotation 0 -1 0 0.100019
@@ -3286,7 +3199,7 @@ Transform {
             Shape {
               appearance Appearance {
                 material DEF Material4 Material {
-                  diffuseColor 1 0.987460 0.816672
+                  diffuseColor 1 0.772891 0.655581
                 }
               }
               geometry Sphere {
@@ -3319,30 +3232,6 @@ Transform {
               }
               geometry Sphere {
                 radius 0.320000
-              }
-            }
-        }
-        Transform {
-          translation 0.524154 -1.616367 9
-          children 
-            Shape {
-              appearance Appearance {
-                material Material {
-                  diffuseColor 1 0 0.800000
-                }
-              }
-              geometry Text {
-                fontStyle FontStyle {
-                  spacing 1.180000
-                  size 2
-                }
-                string [
-                  "white_dune"
-                  ""
-                  " compiled"
-                  ""
-                  " OpenGL"
-                ]
               }
             }
         }
@@ -5268,7 +5157,7 @@ Transform {
                           ]
                         }
                         Transform {
-                          rotation 0.985911 0.166917 1.083358e-2 0.754261
+                          rotation 0.985911 0.166917 1.083391e-2 0.754261
                           translation -3.955506 0.940085 -0.847734
                           center 2.553767 -0.354530 -0.174232
                           children 
@@ -12589,13 +12478,6 @@ ROUTE CoordinateInterpolator2_0.value_changed TO Coordinate3.set_point
 ROUTE CoordinateInterpolator5.value_changed TO Coordinate2.set_point
 ROUTE TimeSensor5.fraction_changed TO CoordinateInterpolator3.set_fraction
 ROUTE CoordinateInterpolator3.value_changed TO Coordinate1.set_point
-ROUTE TimeSensor4.fraction_changed TO ColorInterpolator1.set_fraction
-ROUTE ColorInterpolator1.value_changed TO Material3.set_diffuseColor
-ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator1.set_fraction
-ROUTE ScalarInterpolator1.value_changed TO Material3.set_transparency
-ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator2.set_fraction
-ROUTE ScalarInterpolator2.value_changed TO Material3.set_shininess
-ROUTE PlaneSensor1.translation_changed TO Transform2.set_translation
 ROUTE TimeSensor2_0_0.fraction_changed TO CoordinateInterpolator2_0.set_fraction
 ROUTE TimeSensor2_0_0.fraction_changed TO CoordinateInterpolator5.set_fraction
 ROUTE TimeSensor10.fraction_changed TO ColorInterpolator3.set_fraction
@@ -13246,7 +13128,7 @@ Group {
   ]
 }
 
-Transform {
+DEF Transform9 Transform {
   translation -4.296992 -2.602278 0
   scale 0.400000 0.460000 0.500000
   children 
@@ -32787,7 +32669,7 @@ Group {
                       ]
                     }
                     DEF hanim_r_hip HAnimJoint {
-                      rotation 0.889474 -9.133103e-2 0.447767 0.334392
+                      rotation 0.889474 -9.133025e-2 0.447767 0.334392
                       center -9e-2 0.780000 -3.000000e-2
                       children 
                         DEF hanim_r_knee HAnimJoint {
@@ -33355,7 +33237,7 @@ Group {
                       ]
                     }
                     DEF hanim_l_hip HAnimJoint {
-                      rotation -0.964786 -2.303046e-2 -0.262025 0.493449
+                      rotation -0.964786 -2.303047e-2 -0.262025 0.493449
                       center 9e-2 0.780000 -3.000000e-2
                       children 
                         DEF hanim_l_knee HAnimJoint {
@@ -63132,4 +63014,197 @@ Transform {
       }
     }
 }
+
+DEF Transform8 Transform {
+  children 
+    Transform {
+      rotation 0 0 -1 0
+      translation -7.864548 -4.099253 -21.410551
+      children 
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 1 0 0.800000
+            }
+          }
+          geometry Text {
+            fontStyle FontStyle {
+              spacing 1.180000
+              size 2
+            }
+            string [
+              "white_dune"
+              ""
+              " compiled"
+              ""
+              " OpenGL"
+            ]
+          }
+        }
+    }
+}
+
+DEF ProximitySensor1 ProximitySensor {
+  size 100 100 100
+}
+
+ROUTE ProximitySensor1.position_changed TO Transform8.set_translation
+ROUTE ProximitySensor1.orientation_changed TO Transform8.set_rotation
+
+Transform {
+  children 
+    DEF Transform2 Transform {
+      children [
+        DEF TimeSensor4 TimeSensor {
+          cycleInterval 10
+        }
+        DEF ColorInterpolator1 ColorInterpolator {
+          key [
+            0
+            0.330275
+            0.569954
+            0.719037
+            0.989637
+          ]
+          keyValue [
+            0.800000 0.800000 0.800000
+            0.800000 0.800000 0.391304
+            1 0.364706 0.258824
+            0.800000 0.335404 0.795031
+            0.800000 0.770186 0.811475
+          ]
+        }
+        DEF ScalarInterpolator1 ScalarInterpolator {
+          key [
+            0
+            0.868394
+            0.977745
+          ]
+          keyValue [
+            0
+            0.229508
+            0.919255
+          ]
+        }
+        DEF ScalarInterpolator2 ScalarInterpolator {
+          key [
+            0
+            0.035608
+            0.071217
+            0.115727
+            0.143917
+            0.167656
+            0.203264
+            0.232938
+            0.310089
+            0.397626
+            0.611276
+            0.924332
+          ]
+          keyValue [
+            0.200000
+            0.913043
+            0.111801
+            0.919255
+            0.881988
+            0.012422
+            0.906832
+            0.931677
+            0.018634
+            0.658385
+            0.664596
+            0.931677
+          ]
+        }
+        DEF PlaneSensor1 PlaneSensor {
+        }
+        Shape {
+          appearance Appearance {
+            material DEF Material3 Material {
+              diffuseColor 0.800000 0.654776 0.807110
+              emissiveColor 3.921569e-3 2.352941e-2 3.921569e-3
+              shininess 0.926111
+              specularColor 0.960784 1 0.984314
+              transparency 0.541195
+            }
+          }
+          geometry Sphere {
+            radius 0.680000
+          }
+        }
+      ]
+    }
+}
+
+ROUTE TouchSensor1.touchTime TO TimeSensor4.set_startTime
+ROUTE TimeSensor4.fraction_changed TO ColorInterpolator1.set_fraction
+ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator1.set_fraction
+ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator2.set_fraction
+ROUTE ColorInterpolator1.value_changed TO Material3.set_diffuseColor
+ROUTE ScalarInterpolator2.value_changed TO Material3.set_shininess
+ROUTE ScalarInterpolator1.value_changed TO Material3.set_transparency
+ROUTE PlaneSensor1.translation_changed TO Transform2.set_translation
+
+DEF SphereSensor1 SphereSensor {
+}
+
+ROUTE SphereSensor1.rotation_changed TO Transform9.set_rotation
+
+DEF Switch1 Switch {
+  children 
+    Transform {
+      translation -2.690932 0 0
+      scale 0.416361 0.416361 0.416361
+      children 
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Text {
+            string [
+              "mouse"
+              "released"
+            ]
+          }
+        }
+    }
+}
+
+DEF Script1 Script {
+  inputOnly SFBool bool_in
+  outputOnly SFInt32 int_out
+  url [
+    "ecmascript:
+
+ // eventOut SFInt32 int_out //
+
+// insert program code only into functions
+
+ function bool_in(value)
+    {
+    // value  SFBool
+    int_out = value;    
+    }
+"
+    "c:
+    struct X3dScript_Script1 *self = (struct X3dScript_Script1 *)node;
+    self->int_out = self->bool_in;
+"
+    "c++:
+    X3dScript_Script1 *self = (X3dScript_Script1 *)node;
+    self->int_out = self->bool_in;
+"
+    "java:
+    X3dScript_Script1 self = (X3dScript_Script1)node;
+    if (self.bool_in)
+        self.int_out = -1;
+    else
+        self.int_out = 0;
+"
+  ]
+}
+
+ROUTE TouchSensor1.isActive TO Script1.bool_in
+ROUTE Script1.int_out TO Switch1.set_whichChoice
 

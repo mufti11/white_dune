@@ -551,75 +551,22 @@ White_dune can export the data of the VRML97/X3DV scenengraph to the
 programing languages C, C++ or java ("X3D-compiler").<br>
 You will find the details in the <a href="dune_1.html#sect12">manpage of
 white_dune</a>.<br>
-There is a library in development for the programing language C 
+There is a library for each of the programing languages C/C++ 
 to render 3D objects and animation with OpenGL. You will find examples
-in the directory <a href="../export_example_c">docs/export_example_c</a> 
+in the directory 
+<a href="../export_example_c/opengl_example">
+docs/export_example_c/opengl_example</a> 
 of the source archive. The similar example for the programing language C++
 can be found in the directory 
-<a href="../export_example_c++">docs/export_example_c++</a>.
+<a href="../export_example_c++/opengl_example">
+docs/export_example_c++/opengl_example</a>.
 <br>
-For the programing language java there is a possiblity to render 3D objects
-and animation with the Java Monkey Engine (JME, Version 2).<br>
-The matching examples can be found in the directory 
-<a href="../export_example_java">docs/export_example_java</a>.<br>
-The export to sourcecode of a module of <a href="openwonderland.org">
-Open Wonderland</a>(a internet 3d multiuser environment).<br>
-Beside the rendering of 3D objects and animation there is also interaction
-(via the VRML97/X3D sensornodes) possible. But not all X3D nodes and not the
-wohl runtime behaviour) are supported (yet).<br>
-In difference to VRML/X3D and traditional OpenGL supports 
-Open Wonderland no graphical 3D objects, which are made from polygons
-with more the 3 or 4 edges (despite Open Wonderland internally uses OpenGL).
-Therefore white_dune trianglulates this objects before the wonderland export.
-<br>
-This is not so easy for morphing animation of 3D objects made of polygons
-with more than 4 edges. This 3d objects do not support morphing animation
-in the Open Wonderland export.<br>
-To find out, if a X3D node is supported in Open Wonderland, you need 
-to look at the right, lower side of its icons: there is a small blue point
-(as at the icon for Box)<br>
-<img src="box_wonderland.jpg"/>
-<br>
-if the node is supported in Open Wonderland.<br>
-The question about which interactions are possible is decided in the 
-RouteView window. For sensornodes and interpolators (only this nodes)
-the supported events are marked with colors.<br>
-A blue or lila mark of the events of a node in the routeview means
-the support of the event in the Open Wonderland exporter, while a
-red or no mark means no Open Wonderland support (yet).
-A red mark means a often used event, a lila mark should show a mix of 
-red and blue: these events are often used as well as supported by the
-Open Wonderland exporter.<br>
-<img src="wonderland_sensor_routeview.jpg"/>
-In the example above, the TouchSensor node is shown in the routeview 
-together with some of it's eventnames.  
-<ul>
-  <li>
-      The event "set_enabled" and "isActive" are marked blue: they are 
-      supported by the Open Wonderland Exporter.
-  </li>
-  <li>
-      The event "hitPoint_changed" is marked red: it is not supported by
-      the Open Wonderland Exporter (yet).
-  </li>
-  <li>
-      The event "touchTime" is marked lila: it is supported by
-      the Open Wonderland Exporter.
-  </li>
-</ul>
-For example a route information way can be built from the 
-TouchSensor.isActive event (blue marked) to a script node. At the script
-node a small, self written java program build a new event, that another
-route information way lead in a event of another Open Wonderland supported
-node.<br>
-For example a route information way can also built from the 
-TouchSensor.touchTime (lila marked) to a TimeSensor.set_startTime event
-(also lila marked), to start a simple animation (cause simple animation in
-X3D are made from the ROUTE commands "TimeSensor (e.g. with field loop FALSE)
--&gt; interpolator &gt; animated node").<br>
-The event TouchSensor.hitPoint_changed (red marked) is often used in
-X3D, but is not supported by the Open Wonderland exporter.
-</p>
+There is a library for the programing language java
+to render 3D objects and animation with java OpenGL (jogl). You will find 
+examples in the directory 
+<a href="../export_example_java/jogl_example">
+docs/export_example_java/jogl_example</a> 
+of the source archive. 
 <h3><a name="waskann">What "white_dune" can not do/can do</a></h3>
 <p>
 <ul>

@@ -1,9 +1,16 @@
-wdune (1.123-1) experimental; urgency=low
+whitedune (1.155-1) experimental; urgency=low
 
-  * Version 1.123 debian package
+  * Version 1.155 debian package
     For details see the README file of the source package
 
- -- J. "MUFTI" Scheurich <mufti@zentux.rus.uni-stuttgart.de>  Thu, 13 Jun 2019 06:05:05 +0200
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Mon, 24 Jun 2019 14:38:00 +0200
+
+whitedune (1.137-1) experimental; urgency=low
+
+  * Version 1.137 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Mon, 17 Jun 2019 17:11:39 +0200
 
 wdune (1.123-1) experimental; urgency=low
 

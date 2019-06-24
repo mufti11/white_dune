@@ -350,6 +350,8 @@ public:
     void                  setUnitLength(double u) { m_unitLength = u; }
     void                  setUnitAngle(double u) { m_unitAngle = u; }
 
+    virtual bool          isCRouteSource(void) { return false; } 
+
 protected:
     Proto                *copy() const { return new Proto(*this); }
     int                   addField(int fieldType, const MyString &name,

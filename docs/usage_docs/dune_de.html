@@ -576,80 +576,30 @@ White_dune kann die Daten des VRML97/X3DV Szenengraphen in den
 Programmiersprachen C, C++ oder java exportieren ("X3D-compiler").<br>
 Details dazu findet man in der <a href="dune_1.html#sect12">Manpage von 
 white_dune</a>.<br>
-F&uuml;r die Programmiersprache C gibt es eine in der Entwicklung befindliche
+F&uuml;r die Programmiersprachen C/C++ gibt es jeweils eine
 Bibleothek, mit deren Hilfe man 3D-Objekte und Animationen mit Hilfe
-von OpenGL rendern kann. Beispiele dazu finden sich im 
-Verzeichnis <a href="../export_example_c">docs/export_example_c</a> des
-Sourcearchives. Die entsprechenden Beispiele f&uuml;r die Programmiersprache C++ 
-finden sich im Verzeichnis 
-<a href="../export_example_c++">docs/export_example_c++</a>.
+von OpenGL rendern kann. Beispiele dazu finden sich im Verzeichnis 
+<a href="../export_example_c/opengl_example">
+docs/export_example_c/opengl_example</a> 
+des Sourcearchives. Die entsprechenden Beispiele f&uuml;r die 
+Programmiersprache C++ finden sich im Verzeichnis 
+<a href="../export_example_c++/opengl_example">
+docs/export_example_c++/oepngl_example</a>.
 <br>
-F&uuml;r die Programmiersprache java existiert eine M&ouml;glichkeit, 3D-Objekte 
-und Animationen mit der Java Monkey Engine (JME, Version 2) zu rendern.<br>
-Die entsprechenden Beispiele finden sich im Verzeichnis 
-<a href="../export_example_java">docs/export_example_java</a>.<br>
-Darauf basiert auch der in white_dune eingebaute Export zu Quellcode f&uuml;r
-ein Module in <a href="openwonderland.org">Open Wonderland</a>(einer
-Internet-3D-Multiuserumgebung).<br>
-Dabei ist neben der Anzeige von 3D-Objekten und Animation auch Interaktion 
-(mit Hilfe der VRML97/X3D Sensorknoten) m&ouml;glich. Allerdings werden
-(bisher) nicht alle X3D Knoten und nicht das gesamte Laufzeitverhalten 
-unterst&uuml;tzt.<br>
-Im Gegensatz zu VRML/X3D und traditionellem OpenGL unterst&uuml;tzt
-Open Wonderland keine graphischen 3D-Objekte, die aus Polygonen mit mehr
-als 3 oder 4 Eckpunkten bestehen (obwohl Open Wonderland intern OpenGL
-verwendet). Deshalb trianguliert white_dune diese Objekte beim 
-Wonderland-Export.<br>
-Das funktioniert aber nicht so einfach bei der Morphing-Animation von 
-3D-Objekte mit Polygonen mit mehr als 4 Eckpunkten, diese 3D-Objekte 
-unterst&uuml;tzen beim Open Wonderland Export keine Morphing-Animation.<br>
-Ob ein bestimmter X3D Knoten in Open Wonderland unterst&uuml;tzt wird, sieht man
-am rechten unteren Rand seines Icons: dort befindet sich ein kleiner blauer
-Punkt (wie beim Icon f&uuml;r Box)<br>
-<img src="box_wonderland.jpg"/>
+F&uuml;r die Programmiersprachen C/C++ gibt es jeweils eine
+Bibleothek, mit deren Hilfe man 3D-Objekte und Animationen mit Hilfe
+von OpenGL rendern kann. Beispiele dazu finden sich im Verzeichnis 
+<a href="../export_example_c/opengl_example">
+docs/export_example_c/opengl_example</a> bzw. 
+<a href="../export_example_c++/opengl_example">
+docs/export_example_c++/opengl_example</a> des Sourcearchives. 
 <br>
-wenn der Knoten in Open Wonderland unterst&uuml;tzt wird.<br>
-Die Frage, welche Interaktionen m&ouml;glich sind, entscheidet sich im
-RouteView-Fenster. Bei SensorKnoten und Interpolatoren (nur bei diesen) sind
-die unterst&uuml;tzten Events farbig markiert.<br>
-Eine blaue oder lila Markierung der Events eines Knotens im RouteView 
-bedeutet, dass der Event vom Wonderland Exporter unterst&uuml;tzt wird, 
-w&auml;hrend eine rote oder keine Markierung bedeutet, dass der
-Event vom Wonderland Exporter (noch) nicht unterst&uuml;tzt wird.
-Eine rote Markierung bedeutet, dass es sich um einen oft benutzen Event
-handelt, eine lila Markierung soll eine Mischung zwischen roter und blauer
-Markierung andeuten: diese Events sind sowohl oft benutzt als auch vom
-Wonderland Exporter unterst&uuml;tzt.<br>
-<img src="wonderland_sensor_routeview.jpg"/>
-Im Beispiel wird ein TouchSensor im RouteView-Fenster gezeigt, zusammen
-mit einigen seiner EventNamen. 
-<ul>
-  <li>
-      Die Events "set_enabled" und "isActive" sind blau markiert, wird also 
-      vom Wonderland Exporter unterst&uuml;tzt.
-  </li>
-  <li>
-      Das Event "hitPoint_changed" ist rot markiert, wird also vom 
-      Wonderland Exporter (noch) nicht unterst&uuml;tzt.
-  </li>
-  <li>
-      Das Event "touchTime" ist lila markiert, wird also vom 
-      Wonderland Exporter unterst&uuml;tzt.
-  </li>
-</ul>
-Es kann zum Beispiel ein Route-Informationsverbindungsweg vom 
-TouchSensor.isActive Event (blau markiert) zu einem ScriptKnoten 
-gef&uuml;hrt werden, um von dort Information mit einem kleinen, 
-selbstgeschriebenen java-Programm in einem anderen Event eines anderen 
-von Wonderland unterst&uuml;tzten Knoten zu leiten.<br> 
-Es kann zum Beispiel auch ein Route-Informationsverbindungsweg von
-TouchSensor.touchTime (lila markiert) in einen TimeSensor.set_startTime Event
-(&uuml;brigens auch lila markiert) gef&uuml;hrt werden, um damit eine
-einfache Animation zu starten (denn einfache Animationen in X3D bestehen auch
-den ROUTE Befehlen "TimeSensor (ggf. mit Feld loop FALSE) -&gt; 
-Interpolator &gt; animierter Knoten").<br>
-Der Event TouchSensor.hitPoint_changed (rot markiert) wird zwar in
-X3D oft benutzt, wird aber nicht vom Wonderland-Export unterst&uuml;tzt.
+F&uuml;r die Programmiersprachen java gibt es jeweils eine
+Bibleothek, mit deren Hilfe man 3D-Objekte und Animationen mit Hilfe
+von java OpenGL (jogl) rendern kann. Beispiele dazu finden sich im Verzeichnis 
+<a href="../export_example_java/jogl_example">
+docs/export_example_java/jogl_example</a> 
+des Sourcearchives.
 </p>
 <h3><a name="waskann">Was "white_dune" nicht kann und was es kann</a></h3>
 <p>

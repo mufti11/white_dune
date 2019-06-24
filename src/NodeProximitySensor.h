@@ -42,6 +42,10 @@ public:
     virtual int     getType() const { return VRML_PROXIMITY_SENSOR; }
     virtual int     getNodeClass() const { return SENSOR_NODE | CHILD_NODE; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
+    virtual bool    isCRouteSource(void) { return true; }
+
     FieldIndex center;
     FieldIndex size;
     FieldIndex enabled;

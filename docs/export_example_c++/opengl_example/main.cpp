@@ -51,30 +51,29 @@
 #include <math.h>
 #include <unistd.h>
 
-float view_rotx = 0.0f; 
-float view_roty = 0.0f;
-float view_rotz = 0.0f;
-float view_dist = -10.0f;
-float navigation_matrix[16];
+float rotx = 0.0f; 
+float roty = 0.0f;
+float rotz = 0.0f;
+float dist = -10.0f;
 
 void display()
 {
-    CPPRWD::draw(navigation_matrix);
+    CPPRWD::draw();
     glutSwapBuffers();
 }
 
 void processEvents()
 {
-    usleep(100);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0, 0, view_dist);
-    glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
-    glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-    glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
-    glGetFloatv(GL_MODELVIEW_MATRIX, navigation_matrix);
+    glTranslatef(0, 0, dist);
+    glRotatef(rotx, 1.0f, 0.0f, 0.0f);
+    glRotatef(roty, 0.0f, 1.0f, 0.0f);
+    glRotatef(rotz, 0.0f, 0.0f, 1.0f);
+    display();
     CPPRWD::processEvents();
     display();
+    usleep(10);
 }
 
 int left_button = 0;
@@ -97,6 +96,10 @@ void onMouseClick(int button, int state, int x, int y)
         clicked_y = y;        
         CPPRWD::setMouseClick(x, y);
     }	
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
+    { 
+        CPPRWD::setMouseRelease(x, y);
+    }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
         middle_button = 1;
@@ -115,17 +118,24 @@ void onMouseMove(int x, int y)
 {
     if (left_button)
     {
-        CPPRWD::setMouseMove(x, clicked_x, y, clicked_y);
+        static bool init = true;
+        if (init) {
+            CPPRWD::setMouseMove(x, x, y, y);
+            init = false;
+        } else
+            CPPRWD::setMouseMove(x, clicked_x, y, clicked_y);
         if (!CPPRWD::hasHit()) {
-            view_roty -= (clicked_x - x) / 5.0;
-            view_rotx -= (clicked_y - y) / 5.0;
+            roty -= (clicked_x - x) / 5.0;
+            rotx -= (clicked_y - y) / 5.0;
+            CPPRWD::setView(dist, rotx, roty, rotz); 
         }
         clicked_x = x;
         clicked_y = y;
     }
     if (middle_button || right_button )
     {
-        view_dist += (clicked_y - y) / 5.0;
+        dist += (clicked_y - y) / 5.0;
+        CPPRWD::setView(dist, rotx, roty, rotz); 
         clicked_x = x;
         clicked_y = y;
     }
@@ -151,23 +161,26 @@ void onSpecialKeyClick(int key, int x, int y)
 
 void onReshape(int width, int height)
 {
+    glViewport(0, 0, width, height);
     CPPRWD::setWidthHeight(width, height);
 }
 
 int main(int argc, char **argv)
 {
-    glutInitWindowSize(600, 600);
-    CPPRWD::setWidthHeight(600, 600);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(600, 600);
+    glViewport(0, 0, 600, 600);
+    CPPRWD::setWidthHeight(600, 600);
+    CPPRWD::setView(dist, rotx, roty, rotz); 
     glutCreateWindow("white_dune C++ viewer");
-    CPPRWD::init();
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(processEvents);
     glutDisplayFunc(display);
+    CPPRWD::init();
     glutMainLoop();
     return 0;
 }
