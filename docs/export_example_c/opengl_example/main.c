@@ -50,6 +50,7 @@
 #include <windows.h>
 #endif
 #include <stdio.h>
+extern void reInitSensor(void *);
 #include "CExport.c"
 #include "libCRWD.h"
 #include <math.h>
@@ -62,21 +63,13 @@ GLUnurbsObj *theNurb;
 
 void display()
 {
-    CRWDdraw();
+    CRWDdraw(1);
     glutSwapBuffers();
 }
 
 void animation()
 {
-/*
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0, 0, view_dist);
-    glRotatef(rotx, 1.0f, 0.0f, 0.0f);
-    glRotatef(roty, 0.0f, 1.0f, 0.0f);
-    glRotatef(rotz, 0.0f, 0.0f, 1.0f);
-*/
-    display();
+    CRWDdraw(0);
     CRWDprocessEvents();
     display();
     usleep(10);
@@ -147,6 +140,12 @@ void onMouseMove(int x, int y)
     }
 }
 
+void onMouseMovePassive(int x, int y)
+{
+     setMousePosition(x, y);
+}
+
+
 void onSpecialKeyClick(int key, int x, int y)
 {
     switch (key) {
@@ -181,6 +180,7 @@ int main(int argc, char **argv)
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
+    glutPassiveMotionFunc(onMouseMovePassive);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(animation);
     glutDisplayFunc(display);

@@ -2412,6 +2412,7 @@ static bool writeCInstallDynamicNodeCallback(Node *node, void *data)
 int 
 Scene::writeC(int f, int languageFlag) 
 {
+    m_scriptTypeWritten = false;
     if (languageFlag & C_SOURCE)
         RET_ONERROR( mywritestr(f, "/*") )
     else
@@ -3127,6 +3128,30 @@ Scene::writeCRoutes(int filedes, int languageFlag)
     cdata.languageFlag = languageFlag;
     cdata.returnValue = 0;
     m_root->doWithBranch(searchNodesOnlyOutputAndWriteCRoutes, &cdata);
+    for (int i = 0; i < m_sensorNodes.size(); i++) {
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(filedes, "    ") )
+        RET_ONERROR( mywritestr(filedes, "    ") )
+        MyString className = "";
+        if (languageFlag & JAVA_SOURCE) {
+            if (m_sensorNodes[i]->hasName()) 
+                className += TheApp->getCSceneGraphName();
+            else {
+                className += TheApp->getCPrefix();
+                className += m_sensorNodes[i]->getVariableName();
+            }
+            RET_ONERROR( mywritestr(filedes, "Extra.") )
+        }
+        RET_ONERROR( mywritestr(filedes, "reInitSensor(") )
+        if (languageFlag & JAVA_SOURCE) {
+            RET_ONERROR( mywritef(filedes, "%s.", (const char *)className) )
+        } else
+            RET_ONERROR( mywritestr(filedes, "&(self->") )
+        RET_ONERROR( mywritestr(filedes, m_sensorNodes[i]->getVariableName()) )
+        if (!(languageFlag & JAVA_SOURCE))
+            RET_ONERROR( mywritestr(filedes, ")") )
+        RET_ONERROR( mywritestr(filedes, ");\n") )
+    }
     removeSensorNodes();
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(filedes, "    ") )

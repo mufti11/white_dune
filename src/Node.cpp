@@ -2642,6 +2642,11 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 }
             }
 
+            if ((getNodeClass() & SENSOR_NODE) && 
+                hasOutputsOrIs()) {
+                m_scene->addToSensorNodes(this);
+            }
+
             bool replaceEventOut = false;
             if (sNode->getType() == DUNE_CURVE_ANIMATION) {
                 NodeCurveAnimation *curve = (NodeCurveAnimation *) sNode;
@@ -2716,15 +2721,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             const char *targetVariableName = target->getName(true);
             if (target->getExposedField() != NULL)
                 targetVariableName = target->getExposedField()->getName(true);
-
-            if ((sNode->getNodeClass() & SENSOR_NODE) && 
-                sNode->hasOutputsOrIs()) {
-                if (writeSensorNodes && 
-                    (sNode->getType() != VRML_TIME_SENSOR)) {
-                    continue;
-                } else
-                   m_scene->addToSensorNodes(sNode);
-            }
 
             RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 12,
                              languageFlag, writeSensorNodes, 

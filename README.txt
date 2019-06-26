@@ -5142,6 +5142,10 @@ Added interactive TouchSensor.isActive support on C++/C/java export
 
 Fixed switch.choice -1 crash in java export
 
+Fixed export bug, when 2 or more ScriptNodes are used
+
+Added interactive TouchSensor.isOver support on C++/C/java export
+
 contact: MUFTI <mufti@users.ourproject.org>
 
 
