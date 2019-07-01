@@ -1,0 +1,3466 @@
+head	1.16;
+access;
+symbols;
+locks
+	mufti:1.16; strict;
+comment	@# @;
+
+
+1.16
+date	2019.06.30.13.52.21;	author mufti;	state Exp;
+branches;
+next	1.15;
+
+1.15
+date	2019.06.30.13.52.21;	author mufti;	state Exp;
+branches;
+next	1.14;
+
+1.14
+date	2019.06.30.13.52.13;	author mufti;	state Exp;
+branches;
+next	1.13;
+
+1.13
+date	2019.06.30.13.52.13;	author mufti;	state Exp;
+branches;
+next	1.12;
+
+1.12
+date	2019.06.30.13.50.48;	author mufti;	state Exp;
+branches;
+next	1.11;
+
+1.11
+date	2019.06.30.13.50.48;	author mufti;	state Exp;
+branches;
+next	1.10;
+
+1.10
+date	2019.06.30.13.45.27;	author mufti;	state Exp;
+branches;
+next	1.9;
+
+1.9
+date	2019.06.30.13.45.26;	author mufti;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	2019.06.30.11.44.30;	author mufti;	state Exp;
+branches;
+next	1.7;
+
+1.7
+date	2019.06.30.11.44.30;	author mufti;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2019.06.30.11.44.21;	author mufti;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2019.06.30.11.44.21;	author mufti;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2019.06.30.11.25.01;	author mufti;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2019.06.30.11.25.01;	author mufti;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2019.06.30.11.24.50;	author mufti;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2019.06.30.11.24.50;	author mufti;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.16
+log
+@*** empty log message ***
+@
+text
+@#VRML V2.0 utf8
+
+DEF Switch2 Switch {
+  choice [
+    Group {
+      children [
+        DEF BOX1_HIDE Transform {
+          children 
+            DEF BOX1_SWITCH Switch {
+              choice 
+                DEF BOX1_MOVE Transform {
+                  scale 1.500000 1.500000 1.500000
+                  children [
+                    DEF BOX1_SENSOR TouchSensor {
+                    }
+                    Inline {
+                      url "bill.wrl"
+                    }
+                  ]
+                }
+            }
+        }
+        DEF BOX1_HIT_CHECK Script {
+          eventIn SFVec3f translation_in
+          eventIn SFVec3f box_position
+          eventOut SFInt32 deleted_out
+          eventOut SFInt32 choice_out
+          url [
+            "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+            "c++:
+   X3dScript_BOX1_HIT_CHECK *self = (X3dScript_BOX1_HIT_CHECK *)node;
+   static bool BOX1_HIT_CHECK_init = false;
+   if (!BOX1_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX1_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+          ]
+          field SFInt32           deleted 0
+          field SFVec3f           box 1e4 1e4 1e4
+          field SFFloat           boxsize 1.500000
+        }
+        DEF BOX1_MOVE_ON Script {
+          eventIn SFVec3f translation_in
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+            "c++:
+   X3dScript_BOX1_MOVE_ON *self = (X3dScript_BOX1_MOVE_ON *)node;
+   static bool BOX1_MOVE_ON_init = false;
+   if (!BOX1_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX1_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+          ]
+          field SFVec3f           step_translation 0 0 0
+          field SFInt32           step 0
+        }
+        DEF BOX1_HIDE_SCRIPT Script {
+          eventIn SFBool isover_in
+          eventOut SFVec3f hide_out
+          url [
+            "javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+            "c++:
+   X3dScript_BOX1_HIDE_SCRIPT *self = (X3dScript_BOX1_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+          ]
+        }
+        DEF STEER Script {
+          eventIn SFVec3f wall_xy_in
+          eventOut SFFloat xvalue
+          eventOut SFFloat yvalue
+          url [
+            "javascript:
+   function initialize()
+      {
+      }
+/*
+   function steer()
+      {
+      xvalue=wall_xy[0];
+      yvalue=wall_xy[1];
+      }
+*/
+   function wall_xy_in(val)
+      {
+      xvalue=val[0]/1.5;
+      yvalue=val[1]/1.5;
+      }
+   "
+            "c++:
+   X3dScript_STEER *self = (X3dScript_STEER *)node;
+   self->xvalue = self->wall_xy_in[0] / 1.5;
+   self->yvalue = self->wall_xy_in[1] / 1.5;
+"
+          ]
+        }
+        DEF WALL_SENSOR PlaneSensor {
+          maxPosition 1e4 1e4
+          minPosition -1e4 -1e4
+        }
+        DEF WALL_SENSOR2 TouchSensor {
+        }
+        DEF ROT_TRANS1 Script {
+          eventIn SFVec3f translation_in
+          eventIn SFRotation rotation_in
+          eventOut MFString debug
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+   function initialize()
+      {
+      translation_out[0]=0;
+      translation_out[1]=0;
+      translation_out[2]=0;
+      }
+// account vektorproduct c = a x b
+   function vectorproduct(c,a,b)
+      {
+      c[0]=a[1]*b[2]-a[2]*b[1];
+      c[1]=a[2]*b[0]-a[0]*b[2];
+      c[2]=a[0]*b[1]-a[1]*b[0];
+      }
+// account scalarproduct a * b
+   function scalarproduct(a,b)
+      {
+      return(a[0]*b[0]+a[1]*b[1]+a[2]*b[2]);
+      }
+// account quaternion multiplication a b
+   function quaternionmult(c,a,b)
+      {
+      vectorproduct(c,a,b);
+      c[0]=c[0]+a[3]*b[0]+b[3]*a[0];
+      c[1]=c[1]+a[3]*b[1]+b[3]*a[1];
+      c[2]=c[2]+a[3]*b[2]+b[3]*a[2];
+      c[3]=a[3]*b[3]-scalarproduct(a,b);
+      }             
+// make rotation to quaternion with norm 1 
+   function norm_quaternion_from_rotation(quad,rot)  
+      {
+      quad[3]=Math.cos(rot[3]/2.0);
+      winkelkorrektur=Math.sin(rot[3]/2.0);
+      quad[0]=rot[0]*winkelkorrektur;
+      quad[1]=rot[1]*winkelkorrektur;
+      quad[2]=rot[2]*winkelkorrektur;
+      leng=Math.sqrt(quad[0]*quad[0]+quad[1]*quad[1]+quad[2]*quad[2]+
+                     quad[3]*quad[3]);
+      if (leng!=0)
+         {
+         quad[0]=quad[0]/leng;
+         quad[1]=quad[1]/leng;
+         quad[2]=quad[2]/leng;
+         quad[3]=quad[3]/leng;
+         }
+      else
+         {
+         quad[0]=0;
+         quad[1]=0;
+         quad[2]=0;
+         quad[3]=0;
+         }
+      }
+   function rotation_in(val)  
+      {
+      rotation[0]=val[0];
+      rotation[1]=val[1];
+      rotation[2]=val[2];
+      rotation[3]=val[3];
+//            debug = new MFString(rotation);
+      }
+   function translation_in(val)  
+      {
+      norm_quaternion_from_rotation(quaternion1,rotation);
+      quaternion2[0]=val[0];
+      quaternion2[1]=val[1];
+      quaternion2[2]=val[2];
+      quaternion2[3]=0;
+      quaternionmult(quaternion3,quaternion1,quaternion2);
+      quaternion4[0]=-quaternion1[0];
+      quaternion4[1]=-quaternion1[1];
+      quaternion4[2]=-quaternion1[2];
+      quaternion4[3]= quaternion1[3];
+      quaternionmult(quaternion2,quaternion3,quaternion4);
+      translation_out[0]=quaternion2[0];
+      translation_out[1]=quaternion2[1];
+      translation_out[2]=quaternion2[2];
+      }
+   "
+            "c++:
+   X3dScript_ROT_TRANS1 *self = (X3dScript_ROT_TRANS1 *)node;
+   static bool ROT_TRANS1_init = false;
+   if (!ROT_TRANS1_init) {
+       self->translation_out[0] = 0;
+       self->translation_out[1] = 0;
+       self->translation_out[2] = 0;
+       ROT_TRANS1_init = true;
+   }         
+
+// account quaternion multiplication a b
+   extern void quaternionMult(float *c, float *a, float *b);
+// make rotation to quaternion with norm 1 
+   extern void norm_quaternion_from_rotation(float *quad, float *rot); 
+
+   self->rotation[0] = self->rotation_in[0];
+   self->rotation[1] = self->rotation_in[1];
+   self->rotation[2] = self->rotation_in[2];
+   self->rotation[3] = self->rotation_in[3];
+   norm_quaternion_from_rotation(self->quaternion1, self->rotation);
+   self->quaternion2[0] = self->translation_in[0];
+   self->quaternion2[1] = self->translation_in[1];
+   self->quaternion2[2] = self->translation_in[2];
+   self->quaternion2[3] = 0;
+   quaternionMult(self->quaternion3, self->quaternion2, self->quaternion1);
+   self->quaternion4[0] = -self->quaternion1[0];
+   self->quaternion4[1] = -self->quaternion1[1];
+   self->quaternion4[2] = -self->quaternion1[2];
+   self->quaternion4[3] = self->quaternion1[3];
+   quaternionMult(self->quaternion2, self->quaternion4, self->quaternion3);
+   self->translation_out[0] = self->quaternion2[0];
+   self->translation_out[1] = self->quaternion2[1];
+   self->translation_out[2] = self->quaternion2[2];
+"
+          ]
+          field MFFloat           rotation [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion1 [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion2 [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion3 [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion4 [
+            0
+            0
+            0
+            0
+          ]
+          field SFFloat           leng 1
+          field SFFloat           winkelkorrektur 0
+        }
+        DEF ROT_TRANS2 Script {
+          eventIn SFVec3f translation_in
+          eventIn SFRotation rotation_in
+          eventOut MFString debug
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+   function initialize()
+      {
+      translation_out[0]=0;
+      translation_out[1]=0;
+      translation_out[2]=0;
+      }
+// account vektorproduct c = a x b
+   function vectorproduct(c,a,b)
+      {
+      c[0]=a[1]*b[2]-a[2]*b[1];
+      c[1]=a[2]*b[0]-a[0]*b[2];
+      c[2]=a[0]*b[1]-a[1]*b[0];
+      }
+// account scalarproduct a * b
+   function scalarproduct(a,b)
+      {
+      return(a[0]*b[0]+a[1]*b[1]+a[2]*b[2]);
+      }
+// account quaternion multiplication a b
+   function quaternionmult(c,a,b)
+      {
+      vectorproduct(c,a,b);
+      c[0]=c[0]+a[3]*b[0]+b[3]*a[0];
+      c[1]=c[1]+a[3]*b[1]+b[3]*a[1];
+      c[2]=c[2]+a[3]*b[2]+b[3]*a[2];
+      c[3]=a[3]*b[3]-scalarproduct(a,b);
+      }             
+// make rotation to quaternion with norm 1 
+   function norm_quaternion_from_rotation(quad,rot)  
+      {
+      quad[3]=Math.cos(rot[3]/2.0);
+      winkelkorrektur=Math.sin(rot[3]/2.0);
+      quad[0]=rot[0]*winkelkorrektur;
+      quad[1]=rot[1]*winkelkorrektur;
+      quad[2]=rot[2]*winkelkorrektur;
+      leng=Math.sqrt(quad[0]*quad[0]+quad[1]*quad[1]+quad[2]*quad[2]+
+                     quad[3]*quad[3]);
+      if (leng!=0)
+         {
+         quad[0]=quad[0]/leng;
+         quad[1]=quad[1]/leng;
+         quad[2]=quad[2]/leng;
+         quad[3]=quad[3]/leng;
+         }
+      else
+         {
+         quad[0]=0;
+         quad[1]=0;
+         quad[2]=0;
+         quad[3]=0;
+         }
+      }
+   function rotation_in(val)  
+      {
+      rotation[0]=val[0];
+      rotation[1]=val[1];
+      rotation[2]=val[2];
+      rotation[3]=val[3];
+//            debug = new MFString(rotation);
+      }
+   function translation_in(val)  
+      {
+      norm_quaternion_from_rotation(quaternion1,rotation);
+      quaternion2[0]=val[0];
+      quaternion2[1]=val[1];
+      quaternion2[2]=val[2];
+      quaternion2[3]=0;
+      quaternionmult(quaternion3,quaternion1,quaternion2);
+      quaternion4[0]=-quaternion1[0];
+      quaternion4[1]=-quaternion1[1];
+      quaternion4[2]=-quaternion1[2];
+      quaternion4[3]= quaternion1[3];
+      quaternionmult(quaternion2,quaternion3,quaternion4);
+      translation_out[0]=quaternion2[0];
+      translation_out[1]=quaternion2[1];
+      translation_out[2]=quaternion2[2];
+      }
+   "
+            "c++:
+   X3dScript_ROT_TRANS1 *self = (X3dScript_ROT_TRANS1 *)node;
+   static bool ROT_TRANS1_init = false;
+   if (!ROT_TRANS1_init) {
+       self->translation_out[0] = 0;
+       self->translation_out[1] = 0;
+       self->translation_out[2] = 0;
+       ROT_TRANS1_init = true;
+   }         
+
+// account quaternion multiplication a b
+   extern void quaternionMult(float *c, float *a, float *b);
+// make rotation to quaternion with norm 1 
+   extern void norm_quaternion_from_rotation(float *quad, float *rot); 
+
+   self->rotation[0] = self->rotation_in[0];
+   self->rotation[1] = self->rotation_in[1];
+   self->rotation[2] = self->rotation_in[2];
+   self->rotation[3] = self->rotation_in[3];
+   norm_quaternion_from_rotation(self->quaternion1, self->rotation);
+   self->quaternion2[0] = self->translation_in[0];
+   self->quaternion2[1] = self->translation_in[1];
+   self->quaternion2[2] = self->translation_in[2];
+   self->quaternion2[3] = 0;
+   quaternionMult(self->quaternion3, self->quaternion2, self->quaternion1);
+   self->quaternion4[0] = -self->quaternion1[0];
+   self->quaternion4[1] = -self->quaternion1[1];
+   self->quaternion4[2] = -self->quaternion1[2];
+   self->quaternion4[3] = self->quaternion1[3];
+   quaternionMult(self->quaternion2, self->quaternion4, self->quaternion3);
+   self->translation_out[0] = self->quaternion2[0];
+   self->translation_out[1] = self->quaternion2[1];
+   self->translation_out[2] = self->quaternion2[2];
+"
+          ]
+          field MFFloat           rotation [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion1 [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion2 [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion3 [
+            0
+            0
+            0
+            0
+          ]
+          field MFFloat           quaternion4 [
+            0
+            0
+            0
+            0
+          ]
+          field SFFloat           leng 1
+          field SFFloat           winkelkorrektur 0
+        }
+        Background {
+          groundColor 0 0 1
+          skyColor 0 0 1
+        }
+        DEF WALL_FIRE Script {
+          eventIn SFBool isactive_in
+          eventOut SFBool fire
+          url [
+            "javascript:
+
+ // field SFBool old_isactive //
+
+ // eventOut SFBool fire //
+
+      function initialize()            
+         {            
+         fire=FALSE;
+         }            
+// release button == fire     
+      function isactive_in(val)            
+         {            
+         if ((!val) && old_isactive) 
+            fire=TRUE;
+         else 
+            fire=FALSE;           
+         old_isactive=val;           
+         }            
+      "
+            "c++:
+      X3dScript_WALL_FIRE *self = (X3dScript_WALL_FIRE *)node;
+      static bool WALL_FIRE_init = false;
+      if (!WALL_FIRE_init) {
+           self->fire = false; 
+           WALL_FIRE_init = true;
+      }         
+      if ((!self->isactive_in) && self->old_isactive)
+          self->fire = true;
+      else
+          self->fire = false;
+      self->old_isactive = self->isactive_in;           
+"
+          ]
+          field SFBool           old_isactive FALSE
+        }
+        DEF THING Transform {
+          children 
+            DEF ROLL_AXIS Transform {
+              children 
+                DEF UP_DOWN_AXIS Transform {
+                  children [
+                    DEF THING_SENSOR TouchSensor {
+                    }
+                    DEF HIDE_THING Transform {
+                      children [
+                        Inline {
+                          url "thing.wrl"
+                        }
+                        DEF PLANE_SWITCH Switch {
+                          choice 
+                            Inline {
+                              url "plane.wrl"
+                            }
+                        }
+                        Transform {
+                          translation 0 0 -1.150000
+                        }
+                      ]
+                    }
+                  ]
+                }
+            }
+        }
+        DEF BULLET_SWITCH Switch {
+          choice 
+            DEF BULLET_MOVE Transform {
+              children [
+                DEF DUMMY_BULLET TouchSensor {
+                }
+                Inline {
+                  url "bullet.wrl"
+                }
+              ]
+            }
+        }
+        DEF TIMER TimeSensor {
+          loop TRUE
+        }
+        DEF SOUND Sound {
+          maxBack 500
+          maxFront 500
+          minBack 500
+          minFront 500
+          source DEF SOUNDCLIP AudioClip {
+            description "away"
+            url "multimedia/bubble.wav"
+          }
+        }
+        NavigationInfo {
+          type "NONE"
+        }
+        DEF ROLL_TURN Script {
+          eventIn SFFloat xvalue_in
+          eventIn SFInt32 rock_and_roll_flag_in
+          eventOut SFRotation rotation_out
+          url [
+            "javascript:
+   function initialize()            
+      {            
+      rotation_out[0]=1;            
+      rotation_out[1]=0;            
+      rotation_out[2]=0;            
+      rotation_out[3]=0;            
+      }            
+   function rock_and_roll_flag_in(val)
+      {
+      rock_and_roll_flag=val;
+      }
+   function xvalue_in(val)  
+      {
+      rotation_out[0]=0;
+      if (rock_and_roll_flag==1)
+         {
+         rotation_out[1]=0;
+         rotation_out[2]=1;
+         }
+      else
+         {
+         rotation_out[1]=1;
+         rotation_out[2]=0;
+         }
+      rotation_out[3]=-val/1.0;
+      }
+   "
+            "c++:
+   X3dScript_ROLL_TURN *self = (X3dScript_ROLL_TURN *)node;
+   static bool ROLL_TURN_init = false;
+   if (!ROLL_TURN_init) {
+       self->rotation_out[0]=1;
+       self->rotation_out[1]=0;
+       self->rotation_out[2]=0;
+       self->rotation_out[3]=0;
+       ROLL_TURN_init = true;
+   }         
+   self->rock_and_roll_flag = self->rock_and_roll_flag_in;
+   if (self->rock_and_roll_flag==1) {
+       self->rotation_out[1]=0;
+       self->rotation_out[2]=1;
+   } else {
+       self->rotation_out[1]=1;
+       self->rotation_out[2]=0;
+   }
+   self->rotation_out[0]=0;
+   self->rotation_out[3]=self->xvalue_in * 2.0;
+"
+          ]
+          field SFInt32           rock_and_roll_flag 0
+        }
+        DEF UP_DOWN_TURN Script {
+          eventIn SFFloat yvalue_in
+          eventOut SFRotation rotation_out
+          url [
+            "javascript:
+   function initialize()            
+      {            
+      rotation_out[0]=0;            
+      rotation_out[1]=0;            
+      rotation_out[2]=0;            
+      rotation_out[3]=0;            
+      }            
+   function yvalue_in(val)  
+      {
+      rotation_out[0]=1;
+      rotation_out[1]=0;
+      rotation_out[2]=0;
+      rotation_out[3]=-val/1.0;
+      }
+   "
+            "c++:
+   X3dScript_UP_DOWN_TURN *self = (X3dScript_UP_DOWN_TURN *)node;
+   static bool UP_DOWN_TURN_init = false;
+   if (!UP_DOWN_TURN_init) {
+       self->rotation_out[0]=0;
+       self->rotation_out[1]=0;
+       self->rotation_out[2]=0;
+       self->rotation_out[3]=0;
+       UP_DOWN_TURN_init = true;
+   }         
+   self->rotation_out[0]=1;
+   self->rotation_out[1]=0;
+   self->rotation_out[2]=0;
+   self->rotation_out[3]=self->yvalue_in * 2.0;
+"
+          ]
+        }
+        DEF FLY_FORWARD Script {
+          eventIn SFTime time_in
+          eventOut SFVec3f translation_out
+          eventOut SFTime time_out
+          url [
+            "javascript:
+   function initialize()
+      {
+      translation_out[0]=0;
+      translation_out[1]=0;
+      translation_out[2]=0;
+      }
+   function time_in(val)  
+      {
+      translation_out[0]=0;
+      translation_out[1]=0;
+      translation_out[2]=0.15;
+      time_out=val;
+      }
+   "
+            "c++:
+   X3dScript_FLY_FORWARD *self = (X3dScript_FLY_FORWARD *)node;
+   static bool FLY_FORWARD_init = false;
+   if (!FLY_FORWARD_init) {
+       self->translation_out[0]=0;
+       self->translation_out[1]=0;
+       self->translation_out[2]=0;
+       FLY_FORWARD_init = true;
+   }         
+   self->translation_out[0]=0;
+   self->translation_out[1]=0;
+   self->translation_out[2]=0.15;
+   self->time_out = self->time_in;
+"
+          ]
+        }
+        DEF FLY_ON Script {
+          eventIn SFVec3f translation_in
+          eventIn SFTime time_in
+          eventIn SFTime enter_time
+          eventIn SFTime exit_time
+          eventIn SFBool fire_in
+          eventOut SFVec3f translation_out
+          eventOut SFVec3f top_translation_out
+          eventOut SFInt32 bullet_choice_out
+          eventOut SFVec3f bullet_translation_out
+          url [
+            "javascript:
+
+ // field SFNode metadata //
+
+ // field SFVec3f top_translation //
+
+ // field SFVec3f translation_old //
+
+ // field SFBool brake //
+
+ // field SFVec3f bullet_translation_start //
+
+ // field SFVec3f bullet_direction //
+
+ // field SFFloat bulletway_length //
+
+ // field SFTime old_time //
+
+ // field SFFloat factor //
+
+ // eventOut SFVec3f translation_out //
+
+ // eventOut SFVec3f top_translation_out //
+
+ // eventOut SFInt32 bullet_choice_out //
+
+ // eventOut SFVec3f bullet_translation_out //
+
+   function initialize()
+      {
+      bullet_choice_out=-1;
+      }
+   // stop movement 
+   function exit_time(val)
+      {
+      brake=TRUE;
+      }
+   // restart movement
+   function enter_time(val)
+      {
+      brake=FALSE;
+      }
+   function time_in(val)
+      {
+      factor=5.0/Browser.getCurrentFrameRate();
+      old_time=val;
+      }
+   function fire_in(val)
+      {
+      if (val)
+         {
+         bullet_translation_start=top_translation_out;
+         // switch on bullet
+         bullet_choice_out=0;
+         bulletway_length=0;
+         }
+      }
+   function drive_bullet(val)
+      {
+      if (bulletway_length==0)
+         {
+         bullet_direction=val;
+         }
+      if ((bullet_translation_out[2]>10) ||
+          (bullet_translation_out[2]<-35))
+         {
+         bulletway_length=0;
+         bullet_choice_out=-1;
+         bullet_translation_out[2]=val[2];
+         }
+      else if (bulletway_length<45)
+         {
+         bullet_translation_out[0]=bullet_translation_start[0]-
+                                   bulletway_length*bullet_direction[0];
+         bullet_translation_out[1]=bullet_translation_start[1]-
+                                   bulletway_length*bullet_direction[1];
+         bullet_translation_out[2]=bullet_translation_start[2]-
+                                   bulletway_length*bullet_direction[2];
+         bulletway_length+=10.0*factor;
+         }
+      else
+         {
+         bulletway_length=0;
+         bullet_choice_out=-1;
+         bullet_translation_out[2]=val[2];
+         }
+      }
+   //
+   function translation_in(val)  
+      {
+      top_translation[0]=translation_old[0]-val[0]*factor;
+      top_translation[1]=translation_old[1]-val[1]*factor;
+      top_translation[2]=translation_old[2]-val[2]*factor;
+      if (top_translation[2]<-35)
+          top_translation[2] = 7;
+      if (top_translation[2]>7)
+          top_translation[2] = -35;
+      if (top_translation[0]<-7)
+          top_translation[0] = 7;
+      if (top_translation[0]>7)
+          top_translation[0] = -7;
+      if (top_translation[1]<-7)
+          top_translation[1] = 7;
+      if (top_translation[1]>7)
+          top_translation[1] = -7;
+      translation_old = top_translation;
+      translation_out[0]=translation_old[0]-val[0]*factor;
+      translation_out[1]=translation_old[1]-val[1]*factor;
+      translation_out[2]=translation_old[2]-val[2]*factor;
+      translation_old=translation_out;
+      if (bullet_choice_out==0)
+         drive_bullet(val);
+      top_translation_out=top_translation;
+      }
+   "
+            "c++:
+      X3dScript_FLY_ON *self = (X3dScript_FLY_ON *)node;
+      static bool FLY_ON_init = false;
+      if (!FLY_ON_init) {
+           self->bullet_choice_out = -1; 
+           FLY_ON_init = true;
+      }         
+/*
+   function exit_time(val)
+      {
+      brake=TRUE;
+      }
+   // restart movement
+   function enter_time(val)
+      {
+      brake=FALSE;
+      }
+*/
+      self->factor = 0.06;
+      self->old_time = self->time_in;
+      if (self->fire_in)
+         {
+         self->bullet_translation_start = self->top_translation_out;
+         // switch on bullet
+         self->bullet_choice_out = 0;
+         self->bulletway_length = 0;
+         }
+      self->top_translation[0] = self->translation_old[0] -
+                                 self->translation_in[0] * self->factor;
+      self->top_translation[1] = self->translation_old[1] -
+                                 self->translation_in[1] * self->factor;
+      self->top_translation[2] = self->translation_old[2] -
+                                 self->translation_in[2] * self->factor;
+      if (self->top_translation[2] < -35)
+          self->top_translation[2] = 7;
+      if (self->top_translation[2] > 7)
+          self->top_translation[2] = -35;
+      if (self->top_translation[0] < -7)
+          self->top_translation[0] = 7;
+      if (self->top_translation[0] > 7)
+          self->top_translation[0] = -7;
+      if (self->top_translation[1] < -7)
+          self->top_translation[1] = 7;
+      if (self->top_translation[1] > 7)
+          self->top_translation[1] = -7;
+      self->translation_old = self->top_translation;
+      self->translation_out[0] = self->translation_old[0] -
+                                 self->translation_in[0] * self->factor;
+      self->translation_out[1] = self->translation_old[1] -
+                                 self->translation_in[1] * self->factor;
+      self->translation_out[2] = self->translation_old[2] - 
+                                 self->translation_in[2] * self->factor;
+      self->translation_old[0] = self->translation_out[0];
+      self->translation_old[1] = self->translation_out[1];
+      self->translation_old[2] = self->translation_out[2];
+      if (self->bullet_choice_out == 0) 
+         {
+         if (self->bulletway_length == 0)
+            {
+            self->bullet_direction = self->translation_in;
+            }
+         if ((self->bullet_translation_out[2] > 10) ||
+             (self->bullet_translation_out[2] < -35))
+            {
+            self->bulletway_length = 0;
+            self->bullet_choice_out = -1;
+            self->bullet_translation_out[2] = self->translation_in[2];
+            }
+         else if (self->bulletway_length < 45)
+            {
+            self->bullet_translation_out[0] = self->bullet_translation_start[0] -
+                                              self->bulletway_length *
+                                              self->bullet_direction[0];
+            self->bullet_translation_out[1] = self->bullet_translation_start[1] -
+                                              self->bulletway_length *
+                                              self->bullet_direction[1];
+            self->bullet_translation_out[2] = self->bullet_translation_start[2] -
+                                              self->bulletway_length *
+                                              self->bullet_direction[2];
+            self->bulletway_length += 10.0 * self->factor;
+            }
+         else
+            {
+            self->bulletway_length = 0;
+            self->bullet_choice_out = -1;
+            self->bullet_translation_out[2] = self->translation_in[2];
+            }
+         }
+      self->top_translation_out = self->top_translation;   
+"
+          ]
+          field SFVec3f           top_translation 0 0 0
+          field SFVec3f           translation_old 0 0 0
+          field SFVec3f           bullet_translation_start 0 0 0
+          field SFVec3f           bullet_direction 0 0 0
+          field SFFloat           bulletway_length 0
+          field SFTime           old_time 0
+          field SFFloat           factor 10
+        }
+        DEF THING_SCRIPT Script {
+          eventIn SFBool isover_in
+          eventIn SFBool fire_in
+          eventOut SFVec3f hide_out
+          url [
+            "javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0.1;
+         hide_out[1]=0.1;
+         hide_out[2]=0.1;
+         }
+      else
+         {
+         hide_out[0]=1.0;
+         hide_out[1]=1.0;
+         hide_out[2]=1.0;
+         }
+      }    
+   function fire_in(val)            
+      {
+      if (val)
+         {
+         hide_out[0]=1;
+         hide_out[1]=1;
+         hide_out[2]=1;
+         }                  
+      }
+   "
+            "c++:
+      X3dScript_THING_SCRIPT *self = (X3dScript_THING_SCRIPT *)node;
+      if (self->isover_in)
+         {
+         self->hide_out[0]=0.1;
+         self->hide_out[1]=0.1;
+         self->hide_out[2]=0.1;
+         }
+      else
+         {
+         self->hide_out[0]=1.0;
+         self->hide_out[1]=1.0;
+         self->hide_out[2]=1.0;
+         }
+      if (self->fire_in)
+         {
+         self->hide_out[0]=1;
+         self->hide_out[1]=1;
+         self->hide_out[2]=1;
+         }                  
+"
+          ]
+        }
+        Viewpoint {
+          orientation 0.216404 6.832183e-2 -0.973910 0
+          position 1.070576e-4 -3.391865e-4 10
+        }
+        Viewpoint {
+        }
+        WorldInfo {
+          info [
+            "(C) Copyright 1999 ICA University Stuttgart (modified by mufti@@csv.ica.uni-stuttgart.de)"
+            "This program is free software; you can redistribute it and/or modify"
+            "it under the terms of the GNU General Public License as published by"
+            "the Free Software Foundation; version 2 of the License              "
+            "This program is distributed in the hope that it will be useful,     "
+            "but WITHOUT ANY WARRANTY; without even the implied warranty of      "
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       "
+            "GNU General Public License for more details.                        "
+            "You should have received a copy of the GNU General Public License   "
+            "along with this program; if not, write to the Free Software         "
+            "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"
+          ]
+          title "Tux warbird"
+        }
+        Transform {
+          translation -5.552411 -2.600564 0
+          children 
+            Shape {
+              appearance Appearance {
+                material Material {
+                }
+              }
+              geometry DEF Text1 Text {
+                string ""
+              }
+            }
+        }
+        Group {
+          children 
+            DEF Switch1 Switch {
+              choice 
+                Transform {
+                  translation -10.787153 0 -18.900000
+                  children [
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                        }
+                      }
+                      geometry DEF Text1_5 Text {
+                        string [
+                          "Resistance is futile. You will be assimilat..."
+                          "General Protection Fault in MSBILL32.DLL"
+                        ]
+                      }
+                    }
+                    DEF DUMMY_TEXT TouchSensor {
+                    }
+                  ]
+                }
+            }
+        }
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 0 0 1
+            }
+          }
+          geometry IndexedFaceSet {
+            coord DEF COORD Coordinate {
+              point [
+                -600 -600 -35
+                600 -600 -35
+                -600 600 -35
+                600 600 -35
+              ]
+            }
+            normal Normal {
+              vector [
+                0 0 1
+                0 0 1
+                0 0 1
+                0 0 1
+              ]
+            }
+            coordIndex [
+              0 1 3 2 -1 
+            ]
+            normalIndex [
+              0 1 2 3 -1 
+            ]
+            texCoordIndex [
+              0 1 3 2 -1 
+            ]
+          }
+        }
+        DEF BOX2_HIDE Transform {
+          children 
+            DEF BOX2_SWITCH Switch {
+              choice 
+                DEF BOX2_MOVE Transform {
+                  scale 1.500000 1.500000 1.500000
+                  children [
+                    DEF BOX2_SENSOR TouchSensor {
+                    }
+                    Inline {
+                      url "bill.wrl"
+                    }
+                  ]
+                }
+            }
+        }
+        DEF BOX2_HIT_CHECK Script {
+          eventIn SFVec3f translation_in
+          eventIn SFVec3f box_position
+          eventOut SFInt32 deleted_out
+          eventOut SFInt32 choice_out
+          url [
+            "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+            "c++:
+   X3dScript_BOX2_HIT_CHECK *self = (X3dScript_BOX2_HIT_CHECK *)node;
+   static bool BOX2_HIT_CHECK_init = false;
+   if (!BOX2_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX2_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+          ]
+          field SFInt32           deleted 0
+          field SFVec3f           box 1e4 1e4 1e4
+          field SFFloat           boxsize 1.500000
+        }
+        DEF BOX2_MOVE_ON Script {
+          eventIn SFVec3f translation_in
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+            "c++:
+   X3dScript_BOX2_MOVE_ON *self = (X3dScript_BOX2_MOVE_ON *)node;
+   static bool BOX2_MOVE_ON_init = false;
+   if (!BOX2_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX2_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+          ]
+          field SFVec3f           step_translation 0 0 0
+          field SFInt32           step 0
+        }
+        DEF BOX2_HIDE_SCRIPT Script {
+          eventIn SFBool isover_in
+          eventOut SFVec3f hide_out
+          url [
+            "javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+            "c++:
+   X3dScript_BOX2_HIDE_SCRIPT *self = (X3dScript_BOX2_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+          ]
+        }
+        DEF BOX3_HIDE Transform {
+          children 
+            DEF BOX3_SWITCH Switch {
+              choice 
+                DEF BOX3_MOVE Transform {
+                  scale 1.500000 1.500000 1.500000
+                  children [
+                    DEF BOX3_SENSOR TouchSensor {
+                    }
+                    Inline {
+                      url "bill.wrl"
+                    }
+                  ]
+                }
+            }
+        }
+        DEF BOX3_HIT_CHECK Script {
+          eventIn SFVec3f translation_in
+          eventIn SFVec3f box_position
+          eventOut SFInt32 deleted_out
+          eventOut SFInt32 choice_out
+          url [
+            "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+            "c++:
+   X3dScript_BOX3_HIT_CHECK *self = (X3dScript_BOX3_HIT_CHECK *)node;
+   static bool BOX3_HIT_CHECK_init = false;
+   if (!BOX3_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX3_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+          ]
+          field SFInt32           deleted 0
+          field SFVec3f           box 1e4 1e4 1e4
+          field SFFloat           boxsize 1.500000
+        }
+        DEF BOX3_MOVE_ON Script {
+          eventIn SFVec3f translation_in
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+            "c++:
+   X3dScript_BOX3_MOVE_ON *self = (X3dScript_BOX3_MOVE_ON *)node;
+   static bool BOX3_MOVE_ON_init = false;
+   if (!BOX3_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX3_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+          ]
+          field SFVec3f           step_translation 0 0 0
+          field SFInt32           step 0
+        }
+        DEF BOX3_HIDE_SCRIPT Script {
+          eventIn SFBool isover_in
+          eventOut SFVec3f hide_out
+          url [
+            "javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+            "c++:
+   X3dScript_BOX3_HIDE_SCRIPT *self = (X3dScript_BOX3_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+          ]
+        }
+        DEF BOX4_HIDE Transform {
+          children 
+            DEF BOX4_SWITCH Switch {
+              choice 
+                DEF BOX4_MOVE Transform {
+                  scale 1.500000 1.500000 1.500000
+                  children [
+                    DEF BOX4_SENSOR TouchSensor {
+                    }
+                    Inline {
+                      url "bill.wrl"
+                    }
+                  ]
+                }
+            }
+        }
+        DEF BOX4_HIT_CHECK Script {
+          eventIn SFVec3f translation_in
+          eventIn SFVec3f box_position
+          eventOut SFInt32 deleted_out
+          eventOut SFInt32 choice_out
+          url [
+            "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+            "c++:
+   X3dScript_BOX4_HIT_CHECK *self = (X3dScript_BOX4_HIT_CHECK *)node;
+   static bool BOX4_HIT_CHECK_init = false;
+   if (!BOX4_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX4_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+          ]
+          field SFInt32           deleted 0
+          field SFVec3f           box 1e4 1e4 1e4
+          field SFFloat           boxsize 1.500000
+        }
+        DEF BOX4_MOVE_ON Script {
+          eventIn SFVec3f translation_in
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+            "c++:
+   X3dScript_BOX4_MOVE_ON *self = (X3dScript_BOX4_MOVE_ON *)node;
+   static bool BOX4_MOVE_ON_init = false;
+   if (!BOX4_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX4_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+          ]
+          field SFVec3f           step_translation 0 0 0
+          field SFInt32           step 0
+        }
+        DEF BOX4_HIDE_SCRIPT Script {
+          eventIn SFBool isover_in
+          eventOut SFVec3f hide_out
+          url [
+            "javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+            "c++:
+   X3dScript_BOX4_HIDE_SCRIPT *self = (X3dScript_BOX4_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+          ]
+        }
+        DEF BOX5_HIDE Transform {
+          children 
+            DEF BOX5_SWITCH Switch {
+              choice 
+                DEF BOX5_MOVE Transform {
+                  scale 1.500000 1.500000 1.500000
+                  children [
+                    DEF BOX5_SENSOR TouchSensor {
+                    }
+                    Inline {
+                      url "bill.wrl"
+                    }
+                  ]
+                }
+            }
+        }
+        DEF BOX5_HIT_CHECK Script {
+          eventIn SFVec3f translation_in
+          eventIn SFVec3f box_position
+          eventOut SFInt32 deleted_out
+          eventOut SFInt32 choice_out
+          url [
+            "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+            "c++:
+   X3dScript_BOX5_HIT_CHECK *self = (X3dScript_BOX5_HIT_CHECK *)node;
+   static bool BOX5_HIT_CHECK_init = false;
+   if (!BOX5_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX5_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+          ]
+          field SFInt32           deleted 0
+          field SFVec3f           box 1e4 1e4 1e4
+          field SFFloat           boxsize 1.500000
+        }
+        DEF BOX5_MOVE_ON Script {
+          eventIn SFVec3f translation_in
+          eventOut SFVec3f translation_out
+          url [
+            "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+            "c++:
+   X3dScript_BOX5_MOVE_ON *self = (X3dScript_BOX5_MOVE_ON *)node;
+   static bool BOX5_MOVE_ON_init = false;
+   if (!BOX5_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX5_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+          ]
+          field SFVec3f           step_translation 0 0 0
+          field SFInt32           step 0
+        }
+        DEF BOX5_HIDE_SCRIPT Script {
+          eventIn SFBool isover_in
+          eventOut SFVec3f hide_out
+          url [
+            "javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+            "c++:
+   X3dScript_BOX5_HIDE_SCRIPT *self = (X3dScript_BOX5_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+          ]
+        }
+      ]
+    }
+    Transform {
+      translation 0 0 -10
+      children 
+        Inline {
+          url "game_over.wrl"
+        }
+    }
+  ]
+  whichChoice 0
+}
+
+ROUTE BOX1_HIT_CHECK.choice_out TO BOX1_SWITCH.set_whichChoice
+ROUTE BOX1_MOVE_ON.translation_out TO BOX1_HIT_CHECK.box_position
+ROUTE BOX1_MOVE_ON.translation_out TO BOX1_MOVE.set_translation
+ROUTE BOX1_SENSOR.isOver TO BOX1_HIDE_SCRIPT.isover_in
+ROUTE BOX1_HIDE_SCRIPT.hide_out TO BOX1_HIDE.set_translation
+ROUTE WALL_SENSOR.translation_changed TO STEER.wall_xy_in
+ROUTE ROT_TRANS1.translation_out TO ROT_TRANS2.translation_in
+ROUTE WALL_SENSOR2.isActive TO WALL_FIRE.isactive_in
+ROUTE STEER.xvalue TO ROLL_TURN.xvalue_in
+ROUTE ROLL_TURN.rotation_out TO ROLL_AXIS.set_rotation
+ROUTE ROLL_TURN.rotation_out TO ROT_TRANS2.rotation_in
+ROUTE STEER.yvalue TO UP_DOWN_TURN.yvalue_in
+ROUTE UP_DOWN_TURN.rotation_out TO UP_DOWN_AXIS.set_rotation
+ROUTE UP_DOWN_TURN.rotation_out TO ROT_TRANS1.rotation_in
+ROUTE TIMER.time TO FLY_FORWARD.time_in
+ROUTE FLY_FORWARD.translation_out TO ROT_TRANS1.translation_in
+ROUTE ROT_TRANS2.translation_out TO FLY_ON.translation_in
+ROUTE FLY_FORWARD.time_out TO FLY_ON.time_in
+ROUTE WALL_FIRE.fire TO FLY_ON.fire_in
+ROUTE FLY_ON.translation_out TO THING.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX1_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX1_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_choice_out TO BULLET_SWITCH.set_whichChoice
+ROUTE FLY_ON.bullet_translation_out TO BOX1_HIT_CHECK.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BULLET_MOVE.set_translation
+ROUTE THING_SENSOR.isOver TO THING_SCRIPT.isover_in
+ROUTE WALL_FIRE.fire TO THING_SCRIPT.fire_in
+ROUTE THING_SCRIPT.hide_out TO HIDE_THING.set_scale
+ROUTE FLY_ON.top_translation_out TO BOX2_HIT_CHECK.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX2_HIT_CHECK.translation_in
+ROUTE BOX2_HIT_CHECK.choice_out TO BOX2_SWITCH.set_whichChoice
+ROUTE FLY_ON.top_translation_out TO BOX2_MOVE_ON.translation_in
+ROUTE BOX2_MOVE_ON.translation_out TO BOX2_HIT_CHECK.box_position
+ROUTE BOX2_MOVE_ON.translation_out TO BOX2_MOVE.set_translation
+ROUTE BOX2_SENSOR.isOver TO BOX2_HIDE_SCRIPT.isover_in
+ROUTE BOX2_HIDE_SCRIPT.hide_out TO BOX2_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX3_HIT_CHECK.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX3_HIT_CHECK.translation_in
+ROUTE BOX3_HIT_CHECK.choice_out TO BOX3_SWITCH.set_whichChoice
+ROUTE FLY_ON.top_translation_out TO BOX3_MOVE_ON.translation_in
+ROUTE BOX3_MOVE_ON.translation_out TO BOX3_HIT_CHECK.box_position
+ROUTE BOX3_MOVE_ON.translation_out TO BOX3_MOVE.set_translation
+ROUTE BOX3_SENSOR.isOver TO BOX3_HIDE_SCRIPT.isover_in
+ROUTE BOX3_HIDE_SCRIPT.hide_out TO BOX3_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX4_HIT_CHECK.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX4_HIT_CHECK.translation_in
+ROUTE BOX4_HIT_CHECK.choice_out TO BOX4_SWITCH.set_whichChoice
+ROUTE FLY_ON.top_translation_out TO BOX4_MOVE_ON.translation_in
+ROUTE BOX4_MOVE_ON.translation_out TO BOX4_HIT_CHECK.box_position
+ROUTE BOX4_MOVE_ON.translation_out TO BOX4_MOVE.set_translation
+ROUTE BOX4_SENSOR.isOver TO BOX4_HIDE_SCRIPT.isover_in
+ROUTE BOX4_HIDE_SCRIPT.hide_out TO BOX4_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX5_HIT_CHECK.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX5_HIT_CHECK.translation_in
+ROUTE BOX5_HIT_CHECK.choice_out TO BOX5_SWITCH.set_whichChoice
+ROUTE FLY_ON.top_translation_out TO BOX5_MOVE_ON.translation_in
+ROUTE BOX5_MOVE_ON.translation_out TO BOX5_HIT_CHECK.box_position
+ROUTE BOX5_MOVE_ON.translation_out TO BOX5_MOVE.set_translation
+ROUTE BOX5_SENSOR.isOver TO BOX5_HIDE_SCRIPT.isover_in
+ROUTE BOX5_HIDE_SCRIPT.hide_out TO BOX5_HIDE.set_translation
+
+DEF LOAD_NEW_WORLD Script {
+  eventIn SFTime starttime_in
+  eventIn SFInt32 box1_in
+  eventIn SFInt32 box2_in
+  eventIn SFInt32 box3_in
+  eventIn SFInt32 box4_in
+  eventIn SFInt32 box5_in
+  eventOut SFTime starttime_out
+  eventOut MFString string_out
+  eventOut SFInt32 plane_choice
+  eventOut SFInt32 choice_out
+  eventOut SFInt32 victory_out
+  url [
+    "javascript:
+
+ // field MFInt32 box_in //
+
+ // field MFString your_url //
+
+ // field MFString param //
+
+ // field SFInt32 deleted //
+
+ // field SFInt32 waitticks //
+
+ // field SFBool victory //
+
+ // eventOut SFTime starttime_out //
+
+ // eventOut MFString string_out //
+
+ // eventOut SFInt32 plane_choice //
+
+ // eventOut SFInt32 choice_out //
+
+ // eventOut SFInt32 victory_out //
+
+   function initialize()
+      {
+      // insert your url at game end here 
+      box_in[1]=1;
+      box_in[2]=1;
+      box_in[3]=1;
+      box_in[4]=1;
+      box_in[5]=1;
+      starttime_out=0;
+      string_out=new MFString('game over');
+      plane_choice=0;
+      deleted=waitticks;
+      }
+   function starttime_in(val)
+      {
+      if (!victory)      
+         if (deleted>0)
+            {
+            if (deleted==waitticks)
+               {
+               starttime_out=val;
+               string_out=new MFString(
+                          'Resistance is futile. You will be assimilat...',
+                          'General Protection Fault in MSBILL32.DLL');
+               choice_out=0;
+               }
+            deleted--;
+            }         
+         else {
+            choice_out=-1;
+            string_out=new MFString('');
+        }
+      }
+   function test_end()
+      {
+      deleted=waitticks;
+      if ((box_in[1]+box_in[2]+box_in[3]+box_in[4]+box_in[5])==0)
+         {
+         victory=TRUE;
+         victory_out=1; 
+         }
+      }
+   function test_plane(val)
+      {
+      if (plane_choice==0)
+         plane_choice=1;
+      else
+         plane_choice=0;
+      }
+   function box1_in(val)
+      {
+      test_plane(val);
+      box_in[1]=val;
+      test_end();
+      }
+   function box2_in(val)
+      {
+      test_plane(val);
+      box_in[2]=val;
+      test_end();
+      }
+   function box3_in(val)
+      {
+      test_plane(val);
+      box_in[3]=val;
+      test_end();
+      }
+   function box4_in(val)
+      {
+      test_plane(val);
+      box_in[4]=val;
+      test_end();
+      }
+   function box5_in(val)
+      {
+      test_plane(val);
+      box_in[5]=val;
+      test_end();
+      }   
+"
+    "c++:
+      X3dScript_LOAD_NEW_WORLD *self = (X3dScript_LOAD_NEW_WORLD *)node;
+      static bool LOAD_NEW_WORLD_init = false;
+      if (!LOAD_NEW_WORLD_init) {
+          self->box_in[0] = 1;
+          self->box_in[1] = 1;
+          self->box_in[2] = 1;
+          self->box_in[3] = 1;
+          self->box_in[4] = 1;
+          self->starttime_out=0;
+          //string_out=new MFString('game over');
+          self->plane_choice = 0;
+          self->deleted = self->waitticks;
+          LOAD_NEW_WORLD_init = true;
+      }         
+      if (!self->victory)      
+         if (self->deleted > 0)
+            {
+            if (self->deleted == self->waitticks)
+               {
+//               starttime_out=val;
+               self->choice_out = 0;
+               }
+            self->deleted--;
+            }         
+         else
+            self->choice_out = -1;
+
+      if ((self->box1_in == 0) && (self->box_in[0] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[0] = self->box1_in;
+          }
+      if ((self->box2_in == 0) && (self->box_in[1] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[1] = self->box2_in;
+          }
+      if ((self->box3_in == 0) && (self->box_in[2] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[2] = self->box3_in;
+          }
+      if ((self->box4_in == 0) && (self->box_in[3] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[3] = self->box4_in;
+          }
+      if ((self->box5_in == 0) && (self->box_in[4] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[4] = self->box5_in;
+          }
+"
+  ]
+  field MFInt32   box_in [
+    1 
+    1 
+    1 
+    1 
+    1 
+  ]
+  field MFString   your_url ""
+  field MFString   param ""
+  field SFInt32   deleted 0
+  field SFInt32   waitticks 300
+  field SFBool   victory FALSE
+}
+
+ROUTE TIMER.time TO LOAD_NEW_WORLD.starttime_in
+ROUTE BOX1_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box1_in
+ROUTE BOX2_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box2_in
+ROUTE BOX3_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box3_in
+ROUTE BOX4_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box4_in
+ROUTE BOX5_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box5_in
+ROUTE LOAD_NEW_WORLD.starttime_out TO SOUNDCLIP.set_startTime
+ROUTE LOAD_NEW_WORLD.plane_choice TO ROLL_TURN.rock_and_roll_flag_in
+ROUTE LOAD_NEW_WORLD.plane_choice TO PLANE_SWITCH.set_whichChoice
+ROUTE LOAD_NEW_WORLD.choice_out TO Switch1.set_whichChoice
+ROUTE LOAD_NEW_WORLD.victory_out TO Switch2.set_whichChoice
+
+@
+
+
+1.15
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.14
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.13
+log
+@*** empty log message ***
+@
+text
+@d1043 1
+a1043 1
+          orientation 0.216404 6.832180e-2 -0.973910 0
+@
+
+
+1.12
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.11
+log
+@*** empty log message ***
+@
+text
+@d1043 1
+a1043 1
+          orientation 0.216404 6.832177e-2 -0.973910 0
+d1878 6
+a1883 2
+    Inline {
+      url "game_over.wrl"
+@
+
+
+1.10
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.9
+log
+@*** empty log message ***
+@
+text
+@d3 18
+a20 11
+DEF BOX1_HIDE Transform {
+  children 
+    DEF BOX1_SWITCH Switch {
+      choice 
+        DEF BOX1_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX1_SENSOR TouchSensor {
+            }
+            Inline {
+              url "bill.wrl"
+a21 1
+          ]
+d23 7
+a29 10
+    }
+}
+
+DEF BOX1_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+d60 1
+a60 1
+    "c++:
+d91 10
+a100 13
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+ROUTE BOX1_HIT_CHECK.choice_out TO BOX1_SWITCH.set_whichChoice
+
+DEF BOX1_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d131 1
+a131 1
+    "c++:
+d153 9
+a161 14
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+ROUTE BOX1_MOVE_ON.translation_out TO BOX1_HIT_CHECK.box_position
+ROUTE BOX1_MOVE_ON.translation_out TO BOX1_MOVE.set_translation
+
+DEF BOX1_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+d178 1
+a178 1
+    "c++:
+d190 8
+a197 13
+   ]
+   }
+
+   ROUTE BOX1_SENSOR.isOver         TO BOX1_HIDE_SCRIPT.isover_in
+   ROUTE BOX1_HIDE_SCRIPT.hide_out  TO BOX1_HIDE.set_translation
+
+
+DEF STEER Script {
+  eventIn SFVec3f wall_xy_in
+  eventOut SFFloat xvalue
+  eventOut SFFloat yvalue
+  url [
+    "javascript:
+d214 1
+a214 1
+    "c++:
+d219 15
+a233 20
+  ]
+}
+
+DEF WALL_SENSOR PlaneSensor {
+  maxPosition 1e4 1e4
+  minPosition -1e4 -1e4
+}
+
+DEF WALL_SENSOR2 TouchSensor {
+}
+
+ROUTE WALL_SENSOR.translation_changed TO STEER.wall_xy_in
+
+DEF ROT_TRANS1 Script {
+  eventIn SFVec3f translation_in
+  eventIn SFRotation rotation_in
+  eventOut MFString debug
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d312 1
+a312 1
+    "c++:
+d346 41
+a386 42
+  ]
+  field MFFloat   rotation [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion1 [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion2 [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion3 [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion4 [
+    0
+    0
+    0
+    0
+  ]
+  field SFFloat   leng 1
+  field SFFloat   winkelkorrektur 0
+}
+
+DEF ROT_TRANS2 Script {
+  eventIn SFVec3f translation_in
+  eventIn SFRotation rotation_in
+  eventOut MFString debug
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d465 1
+a465 1
+    "c++:
+d499 43
+a541 47
+  ]
+  field MFFloat   rotation [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion1 [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion2 [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion3 [
+    0
+    0
+    0
+    0
+  ]
+  field MFFloat   quaternion4 [
+    0
+    0
+    0
+    0
+  ]
+  field SFFloat   leng 1
+  field SFFloat   winkelkorrektur 0
+}
+
+ROUTE ROT_TRANS1.translation_out TO ROT_TRANS2.translation_in
+
+Background {
+  groundColor 0 0 1
+  skyColor 0 0 1
+}
+
+DEF WALL_FIRE Script {
+  eventIn SFBool isactive_in
+  eventOut SFBool fire
+  url [
+    "javascript:
+d561 1
+a561 1
+    "c++:
+d574 29
+a602 13
+  ]
+  field SFBool   old_isactive FALSE
+}
+
+ROUTE WALL_SENSOR2.isActive TO WALL_FIRE.isactive_in
+
+DEF THING Transform {
+  children 
+    DEF ROLL_AXIS Transform {
+      children 
+        DEF UP_DOWN_AXIS Transform {
+          children [
+            DEF THING_SENSOR TouchSensor {
+d604 4
+a607 1
+            DEF HIDE_THING Transform {
+d609 2
+d612 1
+a612 10
+                  url "thing.wrl"
+                }
+                DEF PLANE_SWITCH Switch {
+                  choice 
+                    Inline {
+                      url "plane.wrl"
+                    }
+                }
+                Transform {
+                  translation 0 0 -1.150000
+a615 1
+          ]
+d617 12
+a628 8
+    }
+}
+
+DEF BULLET_SWITCH Switch {
+  choice 
+    DEF BULLET_MOVE Transform {
+      children [
+        DEF DUMMY_BULLET TouchSensor {
+d630 2
+a631 2
+        Inline {
+          url "bullet.wrl"
+d633 6
+a638 29
+      ]
+    }
+}
+
+DEF TIMER TimeSensor {
+  loop TRUE
+}
+
+DEF SOUND Sound {
+  maxBack 500
+  maxFront 500
+  minBack 500
+  minFront 500
+  source DEF SOUNDCLIP AudioClip {
+    description "away"
+    url "multimedia/bubble.wav"
+  }
+}
+
+NavigationInfo {
+  type "NONE"
+}
+
+DEF ROLL_TURN Script {
+  eventIn SFFloat xvalue_in
+  eventIn SFInt32 rock_and_roll_flag_in
+  eventOut SFRotation rotation_out
+  url [
+    "javascript:
+d666 1
+a666 1
+    "c++:
+d687 8
+a694 13
+  ]
+  field SFInt32   rock_and_roll_flag 0
+}
+
+ROUTE STEER.xvalue TO ROLL_TURN.xvalue_in
+ROUTE ROLL_TURN.rotation_out TO ROLL_AXIS.set_rotation
+ROUTE ROLL_TURN.rotation_out TO ROT_TRANS2.rotation_in
+
+DEF UP_DOWN_TURN Script {
+  eventIn SFFloat yvalue_in
+  eventOut SFRotation rotation_out
+  url [
+    "javascript:
+d710 1
+a710 1
+    "c++:
+d725 8
+a732 13
+  ]
+}
+
+ROUTE STEER.yvalue TO UP_DOWN_TURN.yvalue_in
+ROUTE UP_DOWN_TURN.rotation_out TO UP_DOWN_AXIS.set_rotation
+ROUTE UP_DOWN_TURN.rotation_out TO ROT_TRANS1.rotation_in
+
+DEF FLY_FORWARD Script {
+  eventIn SFTime time_in
+  eventOut SFVec3f translation_out
+  eventOut SFTime time_out
+  url [
+    "javascript:
+d747 1
+a747 1
+    "c++:
+d761 14
+a774 18
+  ]
+}
+
+ROUTE TIMER.time TO FLY_FORWARD.time_in
+ROUTE FLY_FORWARD.translation_out TO ROT_TRANS1.translation_in
+
+DEF FLY_ON Script {
+  eventIn SFVec3f translation_in
+  eventIn SFTime time_in
+  eventIn SFTime enter_time
+  eventIn SFTime exit_time
+  eventIn SFBool fire_in
+  eventOut SFVec3f translation_out
+  eventOut SFVec3f top_translation_out
+  eventOut SFInt32 bullet_choice_out
+  eventOut SFVec3f bullet_translation_out
+  url [
+    "javascript:
+d889 1
+a889 1
+    "c++:
+d979 15
+a993 26
+  ]
+  field SFVec3f   top_translation 0 0 0
+  field SFVec3f   translation_old 0 0 0
+  field SFVec3f   bullet_translation_start 0 0 0
+  field SFVec3f   bullet_direction 0 0 0
+  field SFFloat   bulletway_length 0
+  field SFTime   old_time 0
+  field SFFloat   factor 10
+}
+
+ROUTE ROT_TRANS2.translation_out TO FLY_ON.translation_in
+ROUTE FLY_FORWARD.time_out TO FLY_ON.time_in
+ROUTE WALL_FIRE.fire TO FLY_ON.fire_in
+ROUTE FLY_ON.translation_out TO THING.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX1_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX1_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_choice_out TO BULLET_SWITCH.set_whichChoice
+ROUTE FLY_ON.bullet_translation_out TO BOX1_HIT_CHECK.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BULLET_MOVE.set_translation
+
+DEF THING_SCRIPT Script {
+  eventIn SFBool isover_in
+  eventIn SFBool fire_in
+  eventOut SFVec3f hide_out
+  url [
+    "javascript:
+d1019 1
+a1019 1
+    "c++:
+d1040 7
+a1046 55
+  ]
+}
+
+ROUTE THING_SENSOR.isOver TO THING_SCRIPT.isover_in
+ROUTE WALL_FIRE.fire TO THING_SCRIPT.fire_in
+ROUTE THING_SCRIPT.hide_out TO HIDE_THING.set_scale
+
+DEF LOAD_NEW_WORLD Script {
+  eventIn SFTime starttime_in
+  eventIn SFInt32 box1_in
+  eventIn SFInt32 box2_in
+  eventIn SFInt32 box3_in
+  eventIn SFInt32 box4_in
+  eventIn SFInt32 box5_in
+  eventOut SFTime starttime_out
+  eventOut MFString string_out
+  eventOut SFInt32 plane_choice
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+   function initialize()
+      {
+      // insert your url at game end here 
+      your_url[0]='game_over.wrl';
+      your_url[1]='';
+      param[0]='';
+      param[1]='';
+      box_in[1]=1;
+      box_in[2]=1;
+      box_in[3]=1;
+      box_in[4]=1;
+      box_in[5]=1;
+      starttime_out=0;
+      string_out=new MFString('game over');
+      plane_choice=0;
+      deleted=waitticks;
+      }
+   function starttime_in(val)
+      {
+      if (!victory)      
+         if (deleted>0)
+            {
+            if (deleted==waitticks)
+               {
+               starttime_out=val;
+               string_out=new MFString(
+                          'Resistance is futile. You will be assimilat...',
+                          'General Protection Fault in MSBILL32.DLL');
+               choice_out=0;
+               }
+            deleted--;
+            }         
+         else {
+            choice_out=-1;
+            string_out=new MFString('');
+d1048 15
+a1062 153
+      }
+   function test_end()
+      {
+      deleted=waitticks;
+      if ((box_in[1]+box_in[2]+box_in[3]+box_in[4]+box_in[5])==0)
+         {
+         victory=TRUE;
+         Browser.loadURL(your_url,param); 
+         string_out=new MFString('victory','game over');
+         }
+      }
+   function test_plane(val)
+      {
+      if (plane_choice==0)
+         plane_choice=1;
+      else
+         plane_choice=0;
+      }
+   function box1_in(val)
+      {
+      test_plane(val);
+      box_in[1]=val;
+      test_end();
+      }
+   function box2_in(val)
+      {
+      test_plane(val);
+      box_in[2]=val;
+      test_end();
+      }
+   function box3_in(val)
+      {
+      test_plane(val);
+      box_in[3]=val;
+      test_end();
+      }
+   function box4_in(val)
+      {
+      test_plane(val);
+      box_in[4]=val;
+      test_end();
+      }
+   function box5_in(val)
+      {
+      test_plane(val);
+      box_in[5]=val;
+      test_end();
+      }   
+"
+    "c++:
+      X3dScript_LOAD_NEW_WORLD *self = (X3dScript_LOAD_NEW_WORLD *)node;
+      static bool LOAD_NEW_WORLD_init = false;
+      if (!LOAD_NEW_WORLD_init) {
+          self->box_in[0] = 1;
+          self->box_in[1] = 1;
+          self->box_in[2] = 1;
+          self->box_in[3] = 1;
+          self->box_in[4] = 1;
+          self->starttime_out=0;
+          //string_out=new MFString('game over');
+          self->plane_choice = 0;
+          self->deleted = self->waitticks;
+          LOAD_NEW_WORLD_init = true;
+      }         
+      if (!self->victory)      
+         if (self->deleted > 0)
+            {
+            if (self->deleted == self->waitticks)
+               {
+//               starttime_out=val;
+               self->choice_out = 0;
+               }
+            self->deleted--;
+            }         
+         else
+            self->choice_out = -1;
+
+      if ((self->box1_in == 0) && (self->box_in[0] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[0] = self->box1_in;
+          }
+      if ((self->box2_in == 0) && (self->box_in[1] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[1] = self->box2_in;
+          }
+      if ((self->box3_in == 0) && (self->box_in[2] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[2] = self->box3_in;
+          }
+      if ((self->box4_in == 0) && (self->box_in[3] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[3] = self->box4_in;
+          }
+      if ((self->box5_in == 0) && (self->box_in[4] == 1))
+          {
+          self->deleted = self->waitticks;          
+          self->box_in[4] = self->box5_in;
+          }
+"
+  ]
+  field MFInt32   box_in [
+    1 
+    1 
+    1 
+    1 
+    1 
+  ]
+  field MFString   your_url ""
+  field MFString   param ""
+  field SFInt32   deleted 0
+  field SFInt32   waitticks 300
+  field SFBool   victory FALSE
+}
+
+ROUTE TIMER.time TO LOAD_NEW_WORLD.starttime_in
+ROUTE BOX1_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box1_in
+ROUTE LOAD_NEW_WORLD.starttime_out TO SOUNDCLIP.set_startTime
+ROUTE LOAD_NEW_WORLD.plane_choice TO ROLL_TURN.rock_and_roll_flag_in
+ROUTE LOAD_NEW_WORLD.plane_choice TO PLANE_SWITCH.set_whichChoice
+
+Viewpoint {
+}
+
+Viewpoint {
+}
+
+WorldInfo {
+  info [
+    "(C) Copyright 1999 ICA University Stuttgart (modified by mufti@@csv.ica.uni-stuttgart.de)"
+    "This program is free software; you can redistribute it and/or modify"
+    "it under the terms of the GNU General Public License as published by"
+    "the Free Software Foundation; version 2 of the License              "
+    "This program is distributed in the hope that it will be useful,     "
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of      "
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       "
+    "GNU General Public License for more details.                        "
+    "You should have received a copy of the GNU General Public License   "
+    "along with this program; if not, write to the Free Software         "
+    "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"
+  ]
+  title "Tux warbird"
+}
+
+Transform {
+  translation -5.552411 -2.600564 0
+  children 
+    Shape {
+      appearance Appearance {
+        material Material {
+a1063 11
+      }
+      geometry DEF Text1 Text {
+        string ""
+      }
+    }
+}
+
+Group {
+  children 
+    DEF Switch1 Switch {
+      choice 
+d1065 2
+a1066 2
+          translation -10.787153 0 -18.900000
+          children [
+d1072 2
+a1073 5
+              geometry DEF Text1_5 Text {
+                string [
+                  "Resistance is futile. You will be assimilat..."
+                  "General Protection Fault in MSBILL32.DLL"
+                ]
+d1076 24
+a1099 1
+            DEF DUMMY_TEXT TouchSensor {
+a1100 1
+          ]
+d1102 22
+a1123 48
+    }
+}
+
+ROUTE LOAD_NEW_WORLD.choice_out TO Switch1.set_whichChoice
+
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 0 0 1
+    }
+  }
+  geometry IndexedFaceSet {
+    coord DEF COORD Coordinate {
+      point [
+        -600 -600 -35
+        600 -600 -35
+        -600 600 -35
+        600 600 -35
+      ]
+    }
+    normal Normal {
+      vector [
+        0 0 1
+        0 0 1
+        0 0 1
+        0 0 1
+      ]
+    }
+    coordIndex [
+      0 1 3 2 -1 
+    ]
+    normalIndex [
+      0 1 2 3 -1 
+    ]
+    texCoordIndex [
+      0 1 3 2 -1 
+    ]
+  }
+}
+
+DEF BOX2_HIDE Transform {
+  children 
+    DEF BOX2_SWITCH Switch {
+      choice 
+        DEF BOX2_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX2_SENSOR TouchSensor {
+d1125 25
+a1149 2
+            Inline {
+              url "bill.wrl"
+a1150 1
+          ]
+d1152 7
+a1158 10
+    }
+}
+
+DEF BOX2_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+d1189 1
+a1189 1
+    "c++:
+d1220 10
+a1229 11
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX2_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d1260 1
+a1260 1
+    "c++:
+d1282 9
+a1290 11
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX2_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+d1307 1
+a1307 1
+    "c++:
+d1319 16
+a1334 21
+   ]
+   }
+
+ROUTE BOX2_HIT_CHECK.choice_out TO BOX2_SWITCH.set_whichChoice
+ROUTE BOX2_MOVE_ON.translation_out TO BOX2_HIT_CHECK.box_position
+ROUTE BOX2_MOVE_ON.translation_out TO BOX2_MOVE.set_translation
+   ROUTE BOX2_SENSOR.isOver         TO BOX2_HIDE_SCRIPT.isover_in
+   ROUTE BOX2_HIDE_SCRIPT.hide_out  TO BOX2_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX2_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX2_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX2_HIT_CHECK.translation_in
+ROUTE BOX2_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box2_in
+
+DEF BOX3_HIDE Transform {
+  children 
+    DEF BOX3_SWITCH Switch {
+      choice 
+        DEF BOX3_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX3_SENSOR TouchSensor {
+a1335 4
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+d1337 7
+a1343 10
+    }
+}
+
+DEF BOX3_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+d1374 1
+a1374 1
+    "c++:
+d1405 10
+a1414 11
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX3_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d1445 1
+a1445 1
+    "c++:
+d1467 9
+a1475 11
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX3_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+d1492 1
+a1492 1
+    "c++:
+d1504 16
+a1519 21
+   ]
+   }
+
+ROUTE BOX3_HIT_CHECK.choice_out TO BOX3_SWITCH.set_whichChoice
+ROUTE BOX3_MOVE_ON.translation_out TO BOX3_HIT_CHECK.box_position
+ROUTE BOX3_MOVE_ON.translation_out TO BOX3_MOVE.set_translation
+   ROUTE BOX3_SENSOR.isOver         TO BOX3_HIDE_SCRIPT.isover_in
+   ROUTE BOX3_HIDE_SCRIPT.hide_out  TO BOX3_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX3_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX3_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX3_HIT_CHECK.translation_in
+ROUTE BOX3_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box3_in
+
+DEF BOX4_HIDE Transform {
+  children 
+    DEF BOX4_SWITCH Switch {
+      choice 
+        DEF BOX4_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX4_SENSOR TouchSensor {
+a1520 4
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+d1522 7
+a1528 10
+    }
+}
+
+DEF BOX4_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+d1559 1
+a1559 1
+    "c++:
+d1590 10
+a1599 11
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX4_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d1630 1
+a1630 1
+    "c++:
+d1652 9
+a1660 11
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX4_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+d1677 1
+a1677 1
+    "c++:
+d1689 16
+a1704 22
+   ]
+   }
+
+ROUTE BOX4_HIT_CHECK.choice_out TO BOX4_SWITCH.set_whichChoice
+ROUTE BOX4_MOVE_ON.translation_out TO BOX4_HIT_CHECK.box_position
+ROUTE BOX4_MOVE_ON.translation_out TO BOX4_MOVE.set_translation
+   ROUTE BOX4_SENSOR.isOver         TO BOX4_HIDE_SCRIPT.isover_in
+   ROUTE BOX4_HIDE_SCRIPT.hide_out  TO BOX4_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX4_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX4_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX4_HIT_CHECK.translation_in
+ROUTE BOX4_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box4_in
+
+
+DEF BOX5_HIDE Transform {
+  children 
+    DEF BOX5_SWITCH Switch {
+      choice 
+        DEF BOX5_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX5_SENSOR TouchSensor {
+a1705 4
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+d1707 7
+a1713 10
+    }
+}
+
+DEF BOX5_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+d1744 1
+a1744 1
+    "c++:
+d1775 10
+a1784 11
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX5_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+d1815 1
+a1815 1
+    "c++:
+d1837 9
+a1845 11
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX5_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+d1862 1
+a1862 1
+    "c++:
+d1874 10
+a1883 2
+   ]
+   }
+d1885 54
+d1940 1
+d1943 147
+a2089 6
+   ROUTE BOX5_SENSOR.isOver         TO BOX5_HIDE_SCRIPT.isover_in
+   ROUTE BOX5_HIDE_SCRIPT.hide_out  TO BOX5_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX5_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX5_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX5_HIT_CHECK.translation_in
+ROUTE BOX5_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.box5_in
+d2091 40
+d2132 11
+@
+
+
+1.8
+log
+@*** empty log message ***
+@
+text
+@d3 1
+a3 1
+DEF HIDE_BOX1 Transform {
+d161 41
+d237 3
+a566 1
+            
+d588 1
+a588 1
+      if ((!self->isactive_in)/* && self->old_isactive*/)
+d598 1
+a598 1
+ROUTE WALL_SENSOR.isActive TO WALL_FIRE.isactive_in
+d1372 803
+@
+
+
+1.7
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.6
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.5
+log
+@*** empty log message ***
+@
+text
+@a596 1
+  whichChoice 0
+@
+
+
+1.4
+log
+@*** empty log message ***
+@
+text
+@d545 1
+a545 1
+      if ((!self->isactive_in) && self->old_isactive)
+d549 1
+a549 1
+      self->old_isactive = self->old_isactive;           
+@
+
+
+1.3
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d3 16
+a18 25
+#EXTERNPROTO moving_box [
+#  eventIn SFVec3f translation_in
+#  eventOut SFInt32 deleted_out
+#]
+#"moving_bill.wrl"
+
+   DEF HIDE_BOX1 Transform
+      {
+      children DEF BOX1_SWITCH Switch
+         {
+         choice
+            [
+            DEF BOX1_MOVE Transform
+               {
+               scale 1.5 1.5 1.5
+               children
+                  [
+                  # dummy touchsensor to switch out navigation in lookat
+                  DEF BOX1_SENSOR TouchSensor {}
+                  Inline { url "bill.wrl" }
+                  ]
+               }
+            ]
+         }
+      }
+d20 7
+a26 11
+   DEF BOX1_HIT_CHECK Script 
+      {
+      eventIn SFVec3f   translation_in 
+      eventIn SFVec3f   box_position
+      eventOut SFInt32  deleted_out 
+      eventOut SFInt32  choice_out
+      field SFInt32 deleted 0
+      field SFVec3f box 10000 10000 10000
+      field SFFloat boxsize 1.5
+      url [
+"javascript:
+d57 1
+a57 1
+"c++:
+d88 7
+a94 2
+      ]
+      }
+d96 5
+a100 8
+   DEF BOX1_MOVE_ON Script 
+      {
+      eventIn SFVec3f   translation_in 
+      eventOut SFVec3f  translation_out            
+      field SFVec3f     step_translation 0 0 0
+      field SFInt32 step 0
+      url [
+"javascript:
+d131 1
+a131 1
+"c++:
+d153 4
+a156 2
+      ]
+      }
+d158 2
+a159 3
+   ROUTE BOX1_MOVE_ON.translation_out   TO BOX1_HIT_CHECK.box_position
+   ROUTE BOX1_MOVE_ON.translation_out   TO BOX1_MOVE.set_translation
+   ROUTE BOX1_HIT_CHECK.choice_out      TO BOX1_SWITCH.whichChoice
+a556 15
+#DEF BOX1 moving_box {
+#}
+
+#DEF BOX2 moving_box {
+#}
+
+#DEF BOX3 moving_box {
+#}
+
+#DEF BOX4 moving_box {
+#}
+
+#DEF BOX5 moving_box {
+#}
+
+d597 1
+d995 1
+a996 5
+#ROUTE FLY_ON.top_translation_out TO BOX2.translation_in
+#ROUTE FLY_ON.top_translation_out TO BOX3.translation_in
+#ROUTE FLY_ON.top_translation_out TO BOX4.translation_in
+#ROUTE FLY_ON.top_translation_out TO BOX5.translation_in
+ROUTE FLY_ON.bullet_choice_out TO BULLET_SWITCH.set_whichChoice
+a997 4
+#ROUTE FLY_ON.bullet_translation_out TO BOX2.translation_in
+#ROUTE FLY_ON.bullet_translation_out TO BOX3.translation_in
+#ROUTE FLY_ON.bullet_translation_out TO BOX4.translation_in
+#ROUTE FLY_ON.bullet_translation_out TO BOX5.translation_in
+a1226 4
+#ROUTE BOX2.deleted_out TO LOAD_NEW_WORLD.box2_in
+#ROUTE BOX3.deleted_out TO LOAD_NEW_WORLD.box3_in
+#ROUTE BOX4.deleted_out TO LOAD_NEW_WORLD.box4_in
+#ROUTE BOX5.deleted_out TO LOAD_NEW_WORLD.box5_in
+@
