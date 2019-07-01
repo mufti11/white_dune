@@ -46,6 +46,7 @@
 #include <windows.h>
 #endif
 #include <cstdio>
+extern void reInitSensor(void *);
 #include "C++Export.cc"
 #include "libC++RWD.h"
 #include <math.h>
@@ -58,7 +59,7 @@ float dist = -10.0f;
 
 void display()
 {
-    CPPRWD::draw();
+    CPPRWD::draw(true);
     glutSwapBuffers();
 }
 
@@ -70,7 +71,7 @@ void processEvents()
     glRotatef(rotx, 1.0f, 0.0f, 0.0f);
     glRotatef(roty, 0.0f, 1.0f, 0.0f);
     glRotatef(rotz, 0.0f, 0.0f, 1.0f);
-    display();
+    CPPRWD::draw(false);
     CPPRWD::processEvents();
     display();
     usleep(10);
@@ -131,14 +132,20 @@ void onMouseMove(int x, int y)
         }
         clicked_x = x;
         clicked_y = y;
-    }
-    if (middle_button || right_button )
+    } 
+    else if (middle_button || right_button )
     {
         dist += (clicked_y - y) / 5.0;
         CPPRWD::setView(dist, rotx, roty, rotz); 
         clicked_x = x;
         clicked_y = y;
-    }
+    } else
+        CPPRWD::setMousePosition(x, y);
+}
+
+void onMouseMovePassive(int x, int y)
+{
+    CPPRWD::setMousePosition(x, y);
 }
 
 void onSpecialKeyClick(int key, int x, int y)
@@ -177,6 +184,7 @@ int main(int argc, char **argv)
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
+    glutPassiveMotionFunc(onMouseMovePassive);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(processEvents);
     glutDisplayFunc(display);

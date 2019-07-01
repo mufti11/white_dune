@@ -239,6 +239,10 @@ NodeScript::buildInterfaceData(void)
 int             
 NodeScript::writeCDynamicNodeCallback(int f, int languageFlag)
 {
+    const char *name = m_proto->getCName(true);
+    if (m_scene->dynamicNodeCallbackWritten(name))
+        return 0;
+    m_scene->dynamicNodeCallbackAppend(name);
     const char *source = NULL;
     if (languageFlag & C_SOURCE) {
         source = getUrlWithoutHeader(TheApp->getScriptHeaderC());

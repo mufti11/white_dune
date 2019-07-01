@@ -17,7 +17,7 @@ LIBS=-Djava.library.path=/usr/lib/jogl/:/usr/lib/jni/:/usr/lib64/jogl2/:/usr/lib
 
 MEM="-J-Xmx2000m"
 
-run: classes/X3dSceneGraph.class classes/x3d.class 
+run: classes/X3dSceneGraph.class classes/x3d.class
 	java $(LIBS) -cp .:classes:$(JARS) x3d
 
 robot.java: robot.x3dv
@@ -27,14 +27,14 @@ robot.java: robot.x3dv
 classes/X3dSceneGraph.class: robot.java
 	@if test "X_$$JOGL_HOME" = "X_" ; then echo environment variable '$$JOGL_HOME' should be set to the directory of jogl2.jar and native libraries 1>&2 ; fi
 	@if test "X_$$GLUEGEN_HOME" = "X_" ; then echo environment variable '$$GLUEGEN_HOME' should be set to the directory of gluegen2-rt.jar 1>&2 ; fi
-	javac $(JFLAGS) -d classes -cp $(JARS) $(MEM) robot.java
+	javac $(JFLAGS) -d classes -cp $(JARS):classes $(MEM) robot.java Extra.java
 
 classes/x3d.class: x3d.java
 	@if test "X_$$JOGL_HOME" = "X_" ; then echo environment variable '$$JOGL_HOME' should be set to the directory of jogl2.jar and native libraries 1>&2 ; fi
 	@if test "X_$$GLUEGEN_HOME" = "X_" ; then echo environment variable '$$GLUEGEN_HOME' should be set to the directory of gluegen2-rt.jar 1>&2 ; fi
 	javac $(JFLAGS) -d classes -cp $(JARS):classes:. $(MEM) x3d.java
 
-debug: classes/X3dSceneGraph.class classes/x3d.class 
+debug: classes/Extra.class classes/X3dSceneGraph.class classes/x3d.class 
 	jdb -Xmx812m $(LIBS) -classpath $(JARS):classes:. x3d
 
 clean:

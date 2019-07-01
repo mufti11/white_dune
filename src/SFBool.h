@@ -29,7 +29,7 @@
 class SFBool : public FieldValue {
 public:
                         SFBool(bool value);
-                        SFBool(void) { m_value = true; } // silly default
+                        SFBool(void) { m_value = false; } // silly default
 
     virtual int         getType() const { return SFBOOL; }
     virtual const char *getTypeName() const { return "SFBool"; }

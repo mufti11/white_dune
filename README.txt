@@ -439,6 +439,9 @@ Harishankar Narayanan     (https://github.com/codetiger/Font23D)
 FTGL                      (https://sourceforge.net/projects/ftgl/)
 Poly2Tri                  (http://code.google.com/p/poly2tri/)
 Chris Rorden              (https://github.com/neurolabusc/vx)
+Brian Wellington          bill.jpg for Tux warbird from xbill
+Matias Duarte             bill.jpg for Tux warbird from xbill
+
 ==========================================================================
 
 Changed in white_dune Version 0.16:
@@ -5142,6 +5145,14 @@ Added interactive TouchSensor.isActive support on C++/C/java export
 
 Fixed switch.choice -1 crash in java export
 
-contact: MUFTI <mufti@users.ourproject.org>
+Fixed export bug, when 2 or more ScriptNodes are used
+
+Added interactive TouchSensor.isOver support on C++/C/java export
+
+Fixed endless loop in C write of ROUTE loop
+
+Added Tux warbird WRL game and added C++ scripting
+
+Coontact: MUFTI <mufti@users.ourproject.org>
 
 

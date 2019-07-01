@@ -1,0 +1,198 @@
+#VRML V2.0 utf8
+ 
+PROTO moving_box
+   [
+   eventIn SFVec3f translation_in
+   eventOut SFInt32 deleted_out
+   ] 
+   {
+   DEF HIDE_BOX Transform
+      {
+      children DEF BOX_SWITCH Switch
+         {
+         choice
+            [
+            DEF BOX_MOVE Transform
+               {
+               scale 1.5 1.5 1.5
+               children
+                  [
+                  # dummy touchsensor to switch out navigation in lookat
+                  DEF BOX_SENSOR TouchSensor {}
+                  Inline { url "bill.wrl" }
+                  ]
+               }
+            ]
+         }
+      }
+
+   DEF HIT_CHECK Script 
+      {
+      eventIn SFVec3f   translation_in IS translation_in
+      eventIn SFVec3f   box_position
+      eventOut SFInt32  deleted_out IS deleted_out
+      eventOut SFInt32  choice_out
+      field SFInt32 deleted 0
+      field SFVec3f box 10000 10000 10000
+      field SFFloat boxsize 1.5
+      url [
+"javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+"c++:
+   X3dScript_HIT_CHECK *self = (X3dScript_HIT_CHECK *)node;
+   static bool HIT_CHECK_init = false;
+   if (!HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       HIT_CHECK_init = true;
+   }         
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+"
+      ]
+      }
+   
+   DEF MOVE_ON Script 
+      {
+      eventIn SFVec3f   translation_in IS translation_in
+      eventOut SFVec3f  translation_out            
+      field SFVec3f     step_translation 0 0 0
+      field SFInt32 step 0
+      url "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+      }
+
+DEF HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url "javascript:
+   function isover_in(val)            
+      {            
+//print(val);
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+   }
+
+   ROUTE MOVE_ON.translation_out   TO HIT_CHECK.box_position
+   ROUTE MOVE_ON.translation_out   TO BOX_MOVE.set_translation
+   ROUTE HIT_CHECK.choice_out      TO BOX_SWITCH.whichChoice
+
+   ROUTE BOX_SENSOR.isOver         TO HIDE_SCRIPT.isover_in
+   ROUTE HIDE_SCRIPT.hide_out       TO HIDE_BOX.set_translation
+   }
+
+# Copyright statement
+
+WorldInfo 
+   {
+   title "Tux warbird"
+   info 
+      [
+      "(C) Copyright 1999 ICA University Stuttgart (modified by mufti@csv.ica.uni-stuttgart.de)"
+
+      "This program is free software; you can redistribute it and/or modify"
+      "it under the terms of the GNU General Public License as published by"
+      "the Free Software Foundation; version 2 of the License              "
+
+      "This program is distributed in the hope that it will be useful,     "
+      "but WITHOUT ANY WARRANTY; without even the implied warranty of      "
+      "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       "
+      "GNU General Public License for more details.                        "
+
+      "You should have received a copy of the GNU General Public License   "
+      "along with this program; if not, write to the Free Software         "
+      "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"
+      ]
+   }
+

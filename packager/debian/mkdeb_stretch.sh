@@ -55,7 +55,7 @@ cat Makefile.in.debian_extension >> /tmp/$VERSION_DEBIAN/src/Makefile.in
    export CFLAGS="-g -O2"
    export LDFLAGS="-g"
    export DEB_BUILD_OPTIONS="nostrip noopt debug"
-   cp wune.install /tmp/$VERSION_DEBIAN/debian/
+   cp wdune.install /tmp/$VERSION_DEBIAN/debian/
    mkdir -p /tmp/$VERSION_DEBIAN/share/applications/
    cp desktop/kde/dune.png /tmp/$VERSION_DEBIAN/share/applications/
    cp desktop/kde/dune.desktop /tmp/$VERSION_DEBIAN/share/applications/

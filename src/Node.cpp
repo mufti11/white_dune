@@ -2615,7 +2615,9 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
 
     SocketList::Iterator *j;
     for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
+        int numOutput = 0;
         for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
+            numOutput++;
             RouteSocket s = j->item();
 
             Node *sNode = s.getNode();
@@ -2623,6 +2625,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             bool isCurveAnimation = (sNode->getType() == DUNE_CURVE_ANIMATION);
 
             EventIn *target = sNode->getProto()->getEventIn(s.getField());
+            if (isInAlreadyWrittenEventOuts(i, numOutput))
+                continue;
             EventOut *source = proto->getEventOut(i);
 
             RET_ONERROR( indentf(f, indent + 8) )
@@ -2640,6 +2644,11 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                     swDebugf("internal Error: sNode == NULL\n");
                     return -1;
                 }
+            }
+
+            if ((getNodeClass() & SENSOR_NODE) && 
+                hasOutputsOrIs()) {
+                m_scene->addToSensorNodes(this);
             }
 
             bool replaceEventOut = false;
@@ -2716,15 +2725,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             const char *targetVariableName = target->getName(true);
             if (target->getExposedField() != NULL)
                 targetVariableName = target->getExposedField()->getName(true);
-
-            if ((sNode->getNodeClass() & SENSOR_NODE) && 
-                sNode->hasOutputsOrIs()) {
-                if (writeSensorNodes && 
-                    (sNode->getType() != VRML_TIME_SENSOR)) {
-                    continue;
-                } else
-                   m_scene->addToSensorNodes(sNode);
-            }
+            if (!isInAlreadyWrittenEventOuts(i, numOutput))
+                appendToAlreadyWrittenEventOuts(i, numOutput); 
 
             RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 12,
                              languageFlag, writeSensorNodes, 

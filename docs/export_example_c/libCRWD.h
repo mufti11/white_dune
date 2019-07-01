@@ -115,6 +115,12 @@ void setMouseMove(int x, int x_old, int y, int y_old)
     moved = 1;
 }
 
+void setMousePosition(int x, int y)
+{
+     mouseX = x;
+     mouseY = y;
+}
+
 static int width;
 static int height;
 
@@ -2539,10 +2545,11 @@ struct CylinderSensorExtraDataStruct {
 
 void handleSibling(X3dNode *sibling) 
 {
-    if (clicked &&
-        ((struct X3dTouchSensor *)sibling)->m_type == X3dTouchSensorType) {
+    if (((struct X3dTouchSensor *)sibling)->m_type == X3dTouchSensorType) {
         struct X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)sibling;
-        touchSensor->touchTime = getTimerTime();
+        if (clicked)
+            touchSensor->touchTime = getTimerTime();
+        touchSensor->isOver = 1;
         isHit = -1;
     }
     if (moved && 
@@ -2688,8 +2695,7 @@ void processHits(GLint hits, GLuint *pickBuffer)
                      for (i = 0; i < group->children_length; i++)
                          if (group->children[i] && 
                              group->children[i] != node) {
-                             if (clicked && 
-                                 ((struct X3dGroup *)group->children[i])->m_type == 
+                             if (((struct X3dGroup *)group->children[i])->m_type == 
                                  X3dTouchSensorType) {
                                  sibling = group->children[i];
                                  handleSibling(sibling);
@@ -2708,7 +2714,7 @@ void processHits(GLint hits, GLuint *pickBuffer)
                      for (i = 0; i < transform->children_length; i++)
                          if (transform->children[i] && 
                              transform->children[i] != node) {
-                             if (clicked && ((struct X3dTransform *)
+                             if (((struct X3dTransform *)
                                   transform->children[i])->m_type == 
                                  X3dTouchSensorType) {
                                  sibling = transform->children[i];
@@ -2731,42 +2737,43 @@ void processHits(GLint hits, GLuint *pickBuffer)
 X3dNode *rootNode = &scenegraph.root;
 /*X3dNode *rootNode = &scenegraph.DEFNAME;*/
 
-void CRWDdraw()
+void CRWDdraw(int render)
 {
     float rot[4];
 
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (render) {
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
     
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0, 0, view_dist);
-    SFRotationFromEuler(rot, view_rotx, view_roty, view_rotz);
-    glRotatef(rot[3] * 360.0 / ( 2 * M_PI), rot[0], rot[1], rot[2]);
-    glGetFloatv(GL_MODELVIEW_MATRIX, navigationMatrix);
-
-    viewpointRendered = 0;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(0, 0, view_dist);
+        SFRotationFromEuler(rot, view_rotx, view_roty, view_rotz);
+        glRotatef(rot[3] * 360.0 / ( 2 * M_PI), rot[0], rot[1], rot[2]);
+        glGetFloatv(GL_MODELVIEW_MATRIX, navigationMatrix);
     
-    preRender = -1;
-    X3dTreeRenderCallback(rootNode, NULL);
+        viewpointRendered = 0;
+        
+        preRender = -1;
+        X3dTreeRenderCallback(rootNode, NULL);
+    
+        if(!lightExists)
+        {
+            static int light;
+            if (numLights == 0)
+                light = allocLight();
+            glEnable(light);
+        } 
+    
+        preRender = 0;
+        glRenderMode(GL_RENDER);
+        X3dTreeRenderCallback(rootNode, NULL);
 
-    if(!lightExists)
-    {
-        static int light;
-        if (numLights == 0)
-            light = allocLight();
-        glEnable(light);
-    } 
-
-    preRender = 0;
-    glRenderMode(GL_RENDER);
-    X3dTreeRenderCallback(rootNode, NULL);
-
-    if (clicked || moved) {
+    } else {
         GLint v[4];
         GLint hits;
         /* render to pickbuffer */
@@ -2777,10 +2784,10 @@ void CRWDdraw()
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glGetIntegerv(GL_VIEWPORT, v);
-        if (clicked)
-            gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
         if (moved)
             gluPickMatrix((GLdouble)mouseXMove, (GLdouble)(height - mouseYMove), 1, 1, v);
+        else
+            gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
 
         glMatrixMode(GL_PROJECTION);
         gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
@@ -2905,5 +2912,13 @@ void CRWDinit()
 
 void CRWDfinalize()
 {
+}
+
+void reInitSensor(void *node) 
+{
+    if (((struct X3dTouchSensor *)node)->m_type == X3dTouchSensorType) {
+        struct X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)node;
+        touchSensor->isOver = 0;
+    }
 }
 

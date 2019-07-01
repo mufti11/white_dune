@@ -108,7 +108,7 @@ namespace CPPRWD
     bool PositionInterpolator2DSendEvents(X3dNode *data, const char *event,
                                           void* extraData);
 
-    void draw();
+    void draw(bool render);
 
     void processEvents();
 
@@ -117,6 +117,8 @@ namespace CPPRWD
     void setMouseClick(int x, int y);
 
     void setMouseRelease(int x, int y);
+
+    void setMousePosition(int x, int y);
 
     void setMouseMove(int x, int old_x, int y, int old_y);
 
@@ -172,6 +174,12 @@ void CPPRWD::setMouseRelease(int x, int y)
      mouseX = x;
      mouseY = y;
      released = true;
+}
+
+void CPPRWD::setMousePosition(int x, int y)
+{
+     mouseX = x;
+     mouseY = y;
 }
 
 static int mouseXMove = -1;
@@ -294,7 +302,12 @@ static void quaternion2SFRotation(float* ret, float *q)
     ret[3] = 2 * (float) acos(mod1(q[3]));
 }
 
-static void quaternionMult(float *ret, float *q1, float *q2)
+void norm_quaternion_from_rotation(float *ret, float *rot)
+{
+    SFRotation2quaternion(ret, rot);
+}
+
+void quaternionMult(float *ret, float *q1, float *q2)
 {
     ret[0] = q2[3] * q1[0] + q2[0] * q1[3] + q2[1] * q1[2] - q2[2] * q1[1];
     ret[1] = q2[3] * q1[1] + q2[1] * q1[3] + q2[2] * q1[0] - q2[0] * q1[2];
@@ -950,10 +963,7 @@ void CPPRWD::ImageTextureRender(X3dNode *data, void *)
 
     struct X3dImageTexture *imageTexture = (struct X3dImageTexture*) data;
     extraVar = (struct ImageTextureExtraDataStruct *)imageTexture->extra_data;
-    if(preRender)
-    {
-    }
-    else if(initRender)
+    if(initRender || (extraVar == NULL))
     {
         int i;
         const char *filename;
@@ -1049,10 +1059,11 @@ void CPPRWD::ImageTextureRender(X3dNode *data, void *)
         if (textureTransform)
             textureTransformBind(textureTransform);
         glMatrixMode(GL_TEXTURE);
-        renderByteTexture(extraVar->textureName,
-                          extraVar->width, extraVar->height, 
-                          extraVar->colorMode, (GLbyte *)(extraVar->pixels), 
-                          imageTexture->repeatS, imageTexture->repeatT); 
+        if (extraVar)
+            renderByteTexture(extraVar->textureName,
+                              extraVar->width, extraVar->height, 
+                              extraVar->colorMode, (GLbyte *)(extraVar->pixels),
+                              imageTexture->repeatS, imageTexture->repeatT); 
         glMatrixMode(GL_MODELVIEW);
         if (textureTransform)
             textureTransformUnBind();
@@ -1367,7 +1378,7 @@ void CPPRWD::SwitchTreeRender(X3dNode *data, void *dataptr)
 {
     struct X3dSwitch *nodeSwitch = (struct X3dSwitch *)data;
     glPushMatrix();
-    if (nodeSwitch->children)
+    if ((nodeSwitch->children) && (nodeSwitch->whichChoice > -1))
        if (nodeSwitch->whichChoice < nodeSwitch->children_length)
            if (nodeSwitch->children[nodeSwitch->whichChoice])
            {
@@ -2079,7 +2090,9 @@ bool CPPRWD::TouchSensorSendEvents(X3dNode *data, const char *event,
                                    void *extraData)
 {
     X3dTouchSensor *touchSensor = (struct X3dTouchSensor *)data;
-    touchSensor->isActive = !released;            
+    touchSensor->isActive = !released;
+    if (!touchSensor->isActive && !touchSensor->isOver)
+        return false;           
     return touchSensor->enabled;
 }
 
@@ -2453,43 +2466,44 @@ void CPPRWD::processEvents() {
     X3dProcessEvents(&scenegraph, NULL);
 }
 
-void CPPRWD::draw()
+void CPPRWD::draw(bool render)
 {
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (render) {
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0, 0, view_dist);
-    float rot[4];
-    SFRotationFromEuler(rot, view_rotx, view_roty, view_rotz);
-    glRotatef(rot[3] * 360.0 / ( 2 * M_PI), rot[0], rot[1], rot[2]);
-    glGetFloatv(GL_MODELVIEW_MATRIX, navigationMatrix);
-    viewpointRendered = false;
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(0, 0, view_dist);
+        float rot[4];
+        SFRotationFromEuler(rot, view_rotx, view_roty, view_rotz);
+        glRotatef(rot[3] * 360.0 / ( 2 * M_PI), rot[0], rot[1], rot[2]);
+        glGetFloatv(GL_MODELVIEW_MATRIX, navigationMatrix);
+        viewpointRendered = false;
     
-    glMatrixMode(GL_MODELVIEW);
+        glMatrixMode(GL_MODELVIEW);
 
-    preRender = true;
-    rootNode->treeRender(NULL);
+        preRender = true;
+        rootNode->treeRender(NULL);
 
-    if(!lightExists)
-    {
-        static int light = -1;
-        if (light == -1)
-            light = allocLight();
-        glEnable(light);
-    }
+        if(!lightExists)
+        {
+            static int light = -1;
+            if (light == -1)
+                light = allocLight();
+            glEnable(light);
+        }
 
-    glMatrixMode(GL_MODELVIEW);
-    preRender = false;
-    glRenderMode(GL_RENDER);
-    rootNode->treeRender(NULL);
+        glMatrixMode(GL_MODELVIEW);
+        preRender = false;
+        glRenderMode(GL_RENDER);
+        rootNode->treeRender(NULL);
 
-    if (clicked || moved) {
+    } else {
         // render to pickbuffer
         GLuint pickBuffer[PICK_BUFFER_SIZE];
         glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
@@ -2499,10 +2513,10 @@ void CPPRWD::draw()
         glLoadIdentity();
         GLint v[4];
         glGetIntegerv(GL_VIEWPORT, v);
-        if (clicked)
-            gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
         if (moved)
             gluPickMatrix((GLdouble)mouseXMove, (GLdouble)(height - mouseYMove), 1, 1, v);
+        else
+            gluPickMatrix((GLdouble)mouseX, (GLdouble)(height - mouseY), 1, 1, v);
 
         glMatrixMode(GL_PROJECTION);
         gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
@@ -2544,9 +2558,11 @@ struct CylinderSensorExtraDataStruct {
 
 static void handleSibling(X3dNode *sibling) 
 {
-    if (clicked && sibling->getType() == X3dTouchSensorType) {
+    if (sibling->getType() == X3dTouchSensorType) {
         X3dTouchSensor *touchSensor = (X3dTouchSensor *)sibling;
-        touchSensor->touchTime = getTimerTime();
+        if (clicked)
+            touchSensor->touchTime = getTimerTime();
+        touchSensor->isOver = true;
         isHit = true;
     }
     if (moved && sibling->getType() == X3dPlaneSensorType) {
@@ -2663,7 +2679,7 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
                      for (int i = 0; i < group->children_length; i++)
                          if (group->children[i] && 
                              group->children[i] != node) {
-                             if (clicked && group->children[i]->getType() == 
+                             if (group->children[i]->getType() == 
                                  X3dTouchSensorType) {
                                  handleSibling(group->children[i]);
                              }
@@ -2682,8 +2698,7 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
                      for (int i = 0; i < transform->children_length; i++)
                          if (transform->children[i] && 
                              transform->children[i] != node) {
-                             if (clicked && 
-                                 transform->children[i]->getType() == 
+                             if (transform->children[i]->getType() == 
                                      X3dTouchSensorType) {
                                  handleSibling(transform->children[i]);
                              }
@@ -2796,4 +2811,12 @@ void CPPRWD::init()
 
 void CPPRWD::finalize()
 {
+}
+
+void reInitSensor(void *node) 
+{
+    if (((X3dNode *)node)->getType() == X3dTouchSensorType) {
+        X3dTouchSensor *touchSensor = (X3dTouchSensor *)node;
+        touchSensor->isOver = false;
+    }
 }

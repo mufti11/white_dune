@@ -5157,7 +5157,7 @@ Transform {
                           ]
                         }
                         Transform {
-                          rotation 0.985911 0.166917 1.083391e-2 0.754261
+                          rotation 0.985911 0.166917 1.083400e-2 0.754261
                           translation -3.955506 0.940085 -0.847734
                           center 2.553767 -0.354530 -0.174232
                           children 
@@ -32669,7 +32669,7 @@ Group {
                       ]
                     }
                     DEF hanim_r_hip HAnimJoint {
-                      rotation 0.889474 -9.133025e-2 0.447767 0.334392
+                      rotation 0.889474 -9.133007e-2 0.447767 0.334392
                       center -9e-2 0.780000 -3.000000e-2
                       children 
                         DEF hanim_r_knee HAnimJoint {
@@ -63207,4 +63207,71 @@ DEF Script1 Script {
 
 ROUTE TouchSensor1.isActive TO Script1.bool_in
 ROUTE Script1.int_out TO Switch1.set_whichChoice
+
+DEF Switch2 Switch {
+  children 
+    Group {
+      children [
+        Transform {
+          translation -3.316622 -0.273746 0
+          scale 0.416361 0.416361 0.416361
+          children 
+            Shape {
+              appearance Appearance {
+                material Material {
+                }
+              }
+              geometry Box {
+              }
+            }
+        }
+        DEF TouchSensor2 TouchSensor {
+        }
+      ]
+    }
+  whichChoice 0
+}
+
+DEF Script2 Script {
+  inputOnly SFBool bool_in
+  outputOnly SFInt32 int_out
+  url [
+    "ecmascript:
+
+ // eventOut SFInt32 int_out //
+
+// insert program code only into functions
+
+ function bool_in(value)
+    {
+    // value  SFBool
+    int_out = value;    
+    }
+"
+    "c:
+    struct X3dScript_Script2 *self = (struct X3dScript_Script2 *)node;
+    if (self->bool_in)
+        self->int_out = -1;
+    else
+        self->int_out = 0;
+"
+    "c++:
+    X3dScript_Script2 *self = (X3dScript_Script2 *)node;
+    if (self->bool_in)
+        self->int_out = -1;
+    else
+        self->int_out = 0;
+"
+    "java:
+    X3dScript_Script2 self = (X3dScript_Script2)node;
+    if (self.bool_in)
+        self.int_out = -1;
+    else
+        self.int_out = 0;
+"
+  ]
+}
+
+ROUTE TouchSensor2.isOver TO Script2.bool_in
+ROUTE Script2.int_out TO Switch2.set_whichChoice
 

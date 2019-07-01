@@ -1733,12 +1733,20 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, getProcessEventCallbackClass()) )
         RET_ONERROR( mywritestr(f, " = NULL;\n\n") )
 
-        // type
-        RET_ONERROR( mywritestr(f, "int ") )
-        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-        RET_ONERROR( mywritestr(f, getName(true)) )
-        RET_ONERROR( mywritestr(f, "Type") )
-        RET_ONERROR( mywritef(f, " = %d;\n\n", getType()) )
+        bool writeOut = true;
+        if (getType() == VRML_SCRIPT) {
+            if (m_scene->getScriptTypeWritten())
+                writeOut = false;
+            m_scene->setScriptTypeWritten();
+        }
+        if (writeOut) {
+            // type
+            RET_ONERROR( mywritestr(f, "int ") )
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, getName(true)) )
+            RET_ONERROR( mywritestr(f, "Type") )
+            RET_ONERROR( mywritef(f, " = %d;\n\n", getType()) )
+        }
 
         // functions
         RET_ONERROR( mywritestr(f, "void ") )
@@ -1970,12 +1978,20 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "processEventCallback") )
         RET_ONERROR( mywritestr(f, " = NULL;\n\n") )
 
-        // type
-        RET_ONERROR( mywritestr(f, "int ") )
-        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-        RET_ONERROR( mywritestr(f, getName(true)) )
-        RET_ONERROR( mywritestr(f, "Type") )
-        RET_ONERROR( mywritef(f, " = %d;\n\n", getType()) )
+        bool writeOut = true;
+        if (getType() == VRML_SCRIPT) {
+            if (m_scene->getScriptTypeWritten())
+                writeOut = false;
+            m_scene->setScriptTypeWritten();
+        }
+        if (writeOut) {
+            // type
+            RET_ONERROR( mywritestr(f, "int ") )
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, getName(true)) )
+            RET_ONERROR( mywritestr(f, "Type") )
+            RET_ONERROR( mywritef(f, " = %d;\n\n", getType()) )
+        }
     }
     if (languageFlag & JAVA_SOURCE) {
         // memberfunctions
@@ -2119,14 +2135,21 @@ Proto::writeCDeclaration(int f, int languageFlag)
 
          RET_ONERROR( mywritestr(f, "\n") )
  
-         // type 
-         RET_ONERROR( mywritestr(f, "class ") )
-         RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-         RET_ONERROR( mywritestr(f, getName(true)) )
-         RET_ONERROR( mywritestr(f, "Type") )
-         RET_ONERROR( mywritef(f, " {\n    static final int type = %d;\n}\n\n",
-                                 getType()) )
-
+        bool writeOut = true;
+        if (getType() == VRML_SCRIPT) {
+            if (m_scene->getScriptTypeWritten())
+                writeOut = false;
+            m_scene->setScriptTypeWritten();
+        }
+        if (writeOut) {
+             // type 
+             RET_ONERROR( mywritestr(f, "class ") )
+             RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+             RET_ONERROR( mywritestr(f, getName(true)) )
+             RET_ONERROR( mywritestr(f, "Type") )
+             RET_ONERROR( mywritef(f, " {\n    static final int type = %d;\n}\n\n",
+                                   getType()) )
+        }
     }
     return 0;
 }

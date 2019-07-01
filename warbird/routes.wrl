@@ -1,0 +1,802 @@
+DEF BOX2_HIDE Transform {
+  children 
+    DEF BOX2_SWITCH Switch {
+      choice 
+        DEF BOX2_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX2_SENSOR TouchSensor {
+            }
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+        }
+    }
+}
+
+DEF BOX2_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+    "c++:
+   X3dScript_BOX2_HIT_CHECK *self = (X3dScript_BOX2_HIT_CHECK *)node;
+   static bool BOX2_HIT_CHECK_init = false;
+   if (!BOX2_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX2_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX2_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+    "c++:
+   X3dScript_BOX2_MOVE_ON *self = (X3dScript_BOX2_MOVE_ON *)node;
+   static bool BOX2_MOVE_ON_init = false;
+   if (!BOX2_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX2_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX2_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+    "c++:
+   X3dScript_BOX2_HIDE_SCRIPT *self = (X3dScript_BOX2_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+   ]
+   }
+
+ROUTE BOX2_HIT_CHECK.choice_out TO BOX2_SWITCH.set_whichChoice
+ROUTE BOX2_MOVE_ON.translation_out TO BOX2_HIT_CHECK.box_position
+ROUTE BOX2_MOVE_ON.translation_out TO BOX2_MOVE.set_translation
+   ROUTE BOX2_SENSOR.isOver         TO BOX2_HIDE_SCRIPT.isover_in
+   ROUTE BOX2_HIDE_SCRIPT.hide_out  TO BOX2_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX2_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX2_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX2_HIT_CHECK.translation_in
+ROUTE BOX2_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.BOX2_in
+
+DEF BOX3_HIDE Transform {
+  children 
+    DEF BOX3_SWITCH Switch {
+      choice 
+        DEF BOX3_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX3_SENSOR TouchSensor {
+            }
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+        }
+    }
+}
+
+DEF BOX3_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+    "c++:
+   X3dScript_BOX3_HIT_CHECK *self = (X3dScript_BOX3_HIT_CHECK *)node;
+   static bool BOX3_HIT_CHECK_init = false;
+   if (!BOX3_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX3_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX3_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+    "c++:
+   X3dScript_BOX3_MOVE_ON *self = (X3dScript_BOX3_MOVE_ON *)node;
+   static bool BOX3_MOVE_ON_init = false;
+   if (!BOX3_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX3_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX3_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+    "c++:
+   X3dScript_BOX3_HIDE_SCRIPT *self = (X3dScript_BOX3_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+   ]
+   }
+
+ROUTE BOX3_HIT_CHECK.choice_out TO BOX3_SWITCH.set_whichChoice
+ROUTE BOX3_MOVE_ON.translation_out TO BOX3_HIT_CHECK.box_position
+ROUTE BOX3_MOVE_ON.translation_out TO BOX3_MOVE.set_translation
+   ROUTE BOX3_SENSOR.isOver         TO BOX3_HIDE_SCRIPT.isover_in
+   ROUTE BOX3_HIDE_SCRIPT.hide_out  TO BOX3_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX3_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX3_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX3_HIT_CHECK.translation_in
+ROUTE BOX3_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.BOX3_in
+
+DEF BOX4_HIDE Transform {
+  children 
+    DEF BOX4_SWITCH Switch {
+      choice 
+        DEF BOX4_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX4_SENSOR TouchSensor {
+            }
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+        }
+    }
+}
+
+DEF BOX4_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+    "c++:
+   X3dScript_BOX4_HIT_CHECK *self = (X3dScript_BOX4_HIT_CHECK *)node;
+   static bool BOX4_HIT_CHECK_init = false;
+   if (!BOX4_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX4_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX4_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+    "c++:
+   X3dScript_BOX4_MOVE_ON *self = (X3dScript_BOX4_MOVE_ON *)node;
+   static bool BOX4_MOVE_ON_init = false;
+   if (!BOX4_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX4_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX4_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+    "c++:
+   X3dScript_BOX4_HIDE_SCRIPT *self = (X3dScript_BOX4_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+   ]
+   }
+
+ROUTE BOX4_HIT_CHECK.choice_out TO BOX4_SWITCH.set_whichChoice
+ROUTE BOX4_MOVE_ON.translation_out TO BOX4_HIT_CHECK.box_position
+ROUTE BOX4_MOVE_ON.translation_out TO BOX4_MOVE.set_translation
+   ROUTE BOX4_SENSOR.isOver         TO BOX4_HIDE_SCRIPT.isover_in
+   ROUTE BOX4_HIDE_SCRIPT.hide_out  TO BOX4_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX4_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX4_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX4_HIT_CHECK.translation_in
+ROUTE BOX4_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.BOX4_in
+
+
+DEF BOX5_HIDE Transform {
+  children 
+    DEF BOX5_SWITCH Switch {
+      choice 
+        DEF BOX5_MOVE Transform {
+          scale 1.500000 1.500000 1.500000
+          children [
+            DEF BOX5_SENSOR TouchSensor {
+            }
+            Inline {
+              url "bill.wrl"
+            }
+          ]
+        }
+    }
+}
+
+DEF BOX5_HIT_CHECK Script {
+  eventIn SFVec3f translation_in
+  eventIn SFVec3f box_position
+  eventOut SFInt32 deleted_out
+  eventOut SFInt32 choice_out
+  url [
+    "javascript:
+      function initialize()
+         {
+         choice_out=0;
+         deleted_out=1;
+         }
+      function translation_in(val)  
+         {
+         if (!deleted)
+            if (   (val[0]>=box[0]-boxsize/2) && (val[0]<=box[0]+boxsize/2)
+                && (val[1]>=box[1]-boxsize/2) && (val[1]<=box[1]+boxsize/2)
+                && (val[2]>=box[2]-boxsize/2) && (val[2]<=box[2]+boxsize/2)
+               )
+               {
+               choice_out=1;
+               deleted_out=0;
+               deleted=1;
+               }
+            else
+               choice_out=0;
+         else
+            choice_out=1;
+         }
+         
+      function box_position(val)
+         {
+         box[0]=val[0];
+         box[1]=val[1];
+         box[2]=val[2];
+         }  
+      "
+    "c++:
+   X3dScript_BOX5_HIT_CHECK *self = (X3dScript_BOX5_HIT_CHECK *)node;
+   static bool BOX5_HIT_CHECK_init = false;
+   if (!BOX5_HIT_CHECK_init) {
+       self->choice_out = 0;
+       self->deleted_out = 1;
+       BOX5_HIT_CHECK_init = true;
+   } else if (!self->deleted) 
+      {
+      self->box[0] = self->box_position[0];
+      self->box[1] = self->box_position[1];
+      self->box[2] = self->box_position[2];
+      if (
+          (self->translation_in[0] >= self->box[0] - self->boxsize / 2) && 
+          (self->translation_in[0] <= self->box[0] + self->boxsize / 2) && 
+          (self->translation_in[1] >= self->box[1] - self->boxsize / 2) && 
+          (self->translation_in[1] <= self->box[1] + self->boxsize / 2) && 
+          (self->translation_in[2] >= self->box[2] - self->boxsize / 2) && 
+          (self->translation_in[2] <= self->box[2] + self->boxsize / 2)
+         )
+         {
+         self->choice_out = 1;
+         self->deleted_out = 0;
+         self->deleted = 1;
+         }
+      else
+         self->choice_out = 0;
+   }
+   else
+      self->choice_out = 1;
+"
+  ]
+  field SFInt32   deleted 0
+  field SFVec3f   box 1e4 1e4 1e4
+  field SFFloat   boxsize 1.500000
+}
+
+DEF BOX5_MOVE_ON Script {
+  eventIn SFVec3f translation_in
+  eventOut SFVec3f translation_out
+  url [
+    "javascript:
+      function nextsteps()
+         {
+         step_translation[0]=(Math.random()-0.5)*0.04;
+         step_translation[1]=(Math.random()-0.5)*0.04;
+         step_translation[2]=(Math.random()-0.5)*0.04;
+         step=Math.random()*200+1;
+         }
+      function initialize()
+         {
+         translation_out[0]=Math.random()*8-4;
+         translation_out[1]=Math.random()*6-3;
+         translation_out[2]=Math.random()*-30-1;
+         nextsteps();
+         }
+      function translation_in(val)  
+         {
+         step--;
+         if (step<=0)
+            nextsteps();
+         if (   (translation_out[0]+step_translation[0]<4) 
+             && (translation_out[0]+step_translation[0]>-4)) 
+            translation_out[0]+=step_translation[0];
+         if (   (translation_out[1]+step_translation[1]<3) 
+             && (translation_out[1]+step_translation[1]>-3)) 
+             translation_out[1]+=step_translation[1];
+         if (   (translation_out[2]+step_translation[2]<-1) 
+             && (translation_out[2]+step_translation[2]>-30)) 
+            translation_out[2]+=step_translation[2];
+         }
+      "
+    "c++:
+   X3dScript_BOX5_MOVE_ON *self = (X3dScript_BOX5_MOVE_ON *)node;
+   static bool BOX5_MOVE_ON_init = false;
+   if (!BOX5_MOVE_ON_init) {
+       self->translation_out[0] = ((float)rand()) / RAND_MAX * 8 - 4;
+       self->translation_out[1] = ((float)rand()) / RAND_MAX * 6 - 3;
+       self->translation_out[2] = ((float)rand()) / RAND_MAX * -30 - 1;
+       BOX5_MOVE_ON_init = true;
+   }         
+   self->step_translation[0] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[1] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   self->step_translation[2] = (((float)rand()) / RAND_MAX - 0.5) * 0.04;
+   if ((self->translation_out[0] + self->step_translation[0] < 4) && 
+       (self->translation_out[0] + self->step_translation[0] > -4)) 
+       self->translation_out[0] += self->step_translation[0];
+   if ((self->translation_out[1] + self->step_translation[1] < 3) &&
+       (self->translation_out[1] + self->step_translation[1] > -3)) 
+       self->translation_out[1] += self->step_translation[1];
+   if ((self->translation_out[2] + self->step_translation[2] < -1) && 
+       (self->translation_out[2] + self->step_translation[2] > -30)) 
+       self->translation_out[2] += self->step_translation[2];
+"
+  ]
+  field SFVec3f   step_translation 0 0 0
+  field SFInt32   step 0
+}
+
+DEF BOX5_HIDE_SCRIPT Script 
+   {
+   eventIn SFBool isover_in
+   eventOut SFVec3f hide_out
+   url [
+"javascript:
+   function isover_in(val)            
+      {            
+      if (val)
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=100;
+         }
+      else
+         {
+         hide_out[0]=0;
+         hide_out[1]=0;
+         hide_out[2]=0;
+         }
+      }    
+   "
+    "c++:
+   X3dScript_BOX5_HIDE_SCRIPT *self = (X3dScript_BOX5_HIDE_SCRIPT *)node;
+   if (self->isover_in) {             
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 100;
+   } else {
+       self->hide_out[0] = 0;
+       self->hide_out[1] = 0;
+       self->hide_out[2] = 0;
+   }
+"
+   ]
+   }
+
+ROUTE BOX5_HIT_CHECK.choice_out TO BOX5_SWITCH.set_whichChoice
+ROUTE BOX5_MOVE_ON.translation_out TO BOX5_HIT_CHECK.box_position
+ROUTE BOX5_MOVE_ON.translation_out TO BOX5_MOVE.set_translation
+   ROUTE BOX5_SENSOR.isOver         TO BOX5_HIDE_SCRIPT.isover_in
+   ROUTE BOX5_HIDE_SCRIPT.hide_out  TO BOX5_HIDE.set_translation
+ROUTE FLY_ON.top_translation_out TO BOX5_HIT_CHECK.translation_in
+ROUTE FLY_ON.top_translation_out TO BOX5_MOVE_ON.translation_in
+ROUTE FLY_ON.bullet_translation_out TO BOX5_HIT_CHECK.translation_in
+ROUTE BOX5_HIT_CHECK.deleted_out TO LOAD_NEW_WORLD.BOX5_in
+
+

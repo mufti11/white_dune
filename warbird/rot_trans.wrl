@@ -1,0 +1,19 @@
+#VRML V2.0 utf8
+
+   PROTO ROTATE_TRANSLATION
+      [
+      eventIn SFVec3f translation_in
+      eventIn SFRotation rotation_in
+      eventOut SFVec3f translation_out
+      eventOut MFString debug
+      ] 
+      {
+      }
+
+WorldInfo 
+   {
+   title "Flugsimalatorartiges VRML-Demo"
+   info ["(C) Copyright 1999 ICA Universitaet Stuttgart"
+         "mufti@csv.ica.uni-stuttgart.de"]
+   }
+

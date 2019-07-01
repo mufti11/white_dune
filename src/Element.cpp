@@ -126,6 +126,8 @@ int Element::writeElementPart(int f, int indent, int flags) const
     return(0);
 }
 
+#define MAX_INDENT 800
+
 int indentf(int f, int indent)
 {
 /*
@@ -147,7 +149,7 @@ int indentf(int f, int indent)
     return(ret);
 */
 
-    for (int i = 0; i < indent; i++)
+    for (int i = 0; i < indent && i < MAX_INDENT; i++)
         if (mywritestr(f , " ") != 0)
             return -1;
     return 0;

@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+Transform {
+   translation 0 -0.37 0
+   rotation 0 1 0 3.141
+children [
+Shape {
+appearance Appearance { 
+ material Material {  }
+ }
+geometry IndexedFaceSet {
+solid FALSE
+creaseAngle 0.5
+coord Coordinate { 
+point [
+4.03342e-08 2.14549 -2.31563,
+4.03342e-08 0.876689 -1.76581,
+4.03342e-08 1.55338 -0.553399,
+4.03342e-08 2.20188 -1.42746]
+}
+
+    coordIndex [ 0, 1, 2, 3, -1]
+    color Color { 
+    color [ 1 0 0]
+}
+colorPerVertex FALSE
+}
+}
+]
+}

@@ -1,0 +1,106 @@
+#VRML V2.0 utf8
+
+Background 
+   {
+   skyColor 0 0 1
+   }
+
+Anchor 
+   {
+   children 
+      [
+      Billboard 
+         {
+         children 
+            [
+            Shape 
+               {
+               appearance Appearance 
+                  {
+                  material Material 
+                     {
+                     diffuseColor 0 0 1
+                     transparency 0
+                     }
+                  }
+               geometry IndexedFaceSet 
+                  {
+                  solid TRUE
+                  coord DEF COORD Coordinate 
+                     {
+                     point 
+                        [ 
+                        -600  -600 -35,
+                         600  -600 -35, 
+                        -600   600 -35,
+                         600   600 -35, 
+                        ]
+                     }
+                  coordIndex 
+                     [
+                     0 1 3 2  -1
+                     ]
+                  texCoordIndex
+                     [
+                     0 1 3 2  -1
+                     ]
+                  }
+               }
+            ]
+         }
+      ]
+   description "restart game"
+   url "warbird.wrl"
+   }
+
+Anchor 
+   {
+   children 
+      [
+      DEF SCHRIFT  Transform
+         {
+         children
+            [
+            Transform
+               {
+               rotation 0 1 0 3.14
+               children Inline { url "thing.wrl" }
+               }
+            Transform
+               {
+               translation 0 0 3
+               children 
+               Shape 
+                  {
+                  geometry Text 
+                     {
+                     string ["game over"]
+                     }
+                  }
+               }
+            ]
+         }
+      ]
+   description "restart game"
+   url "warbird.wrl"
+   }
+   
+DEF ROTATOR OrientationInterpolator 
+   {
+   key [0, 0.5, 1]
+   keyValue 
+      [
+      0 1 0 0, 
+      0 1 0 3.14, 
+      0 1 0 6.28 
+      ]
+   }
+
+DEF TIMER TimeSensor 
+   {
+   cycleInterval 10
+   loop TRUE
+   }
+
+ROUTE TIMER.fraction_changed TO ROTATOR.set_fraction
+ROUTE ROTATOR.value_changed TO SCHRIFT.set_rotation

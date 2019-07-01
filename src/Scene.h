@@ -836,6 +836,21 @@ public:
     int                 getGlName(void) { return m_glName; }   
     void                increaseGlName(void) { m_glName++; }   
 
+    bool                getScriptTypeWritten(void)
+                            { return m_scriptTypeWritten; }
+    void                setScriptTypeWritten(void)
+                            { m_scriptTypeWritten = true; }
+
+    bool                dynamicNodeCallbackWritten(const char *name)
+                            { 
+                            return m_writeCDynamicNodeCallback.find(name) > -1;
+                            }
+    void                dynamicNodeCallbackAppend(const char *name)
+                            { m_writeCDynamicNodeCallback.append(name); }
+    void                dynamicNodeCallbackRemove(void)
+                            { m_writeCDynamicNodeCallback.resize(0); }
+
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -1059,6 +1074,10 @@ protected:
     bool                m_infoHandles;
 
     int                 m_glName;               
+   
+    bool                m_scriptTypeWritten;
+
+    MyArray<const char *> m_writeCDynamicNodeCallback;
 
 public:
     MyArray<CGlNameData> m_glNameData;               

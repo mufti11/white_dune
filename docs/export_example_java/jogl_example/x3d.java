@@ -127,6 +127,10 @@ public class x3d implements GLEventListener
         animator.start();
     }
 
+    public static void reInitSensor(X3dNode node)
+    {
+    }
+
     public static void error(String errormsg)
     {
         System.err.println(errormsg);
@@ -313,6 +317,14 @@ public class x3d implements GLEventListener
 
             prevMouseX = x;
             prevMouseY = y;    
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            final int x = e.getX();
+            final int y = e.getY();
+
+            x3d2.setMousePosition(x, y); 
         }
     }
 
@@ -599,6 +611,12 @@ class x3d2
         moved = true;
     }
 
+    public static void setMousePosition(int x, int y) 
+    {
+        mouseX = x;
+        mouseY = y;
+    }
+
     public static int width = 600;
     public static int height = 600;
 
@@ -768,7 +786,7 @@ class x3d2
         if (rootNode != null)
             rootNode.treeRender(null, null);
 
-        if (clicked || moved) {
+        if (true) {
             // render to pickbuffer
             IntBuffer pickBuffer = Buffers.newDirectIntBuffer(PICK_BUFFER_SIZE); 
             x3d.gl.glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
@@ -779,10 +797,10 @@ class x3d2
             x3d.gl.glLoadIdentity();
             int v[] = new int[4];
             x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, v, 0);
-            if (clicked)
-                x3d.glu.gluPickMatrix(mouseX, (height - mouseY), 1, 1, v, 0);
             if (moved)
                 x3d.glu.gluPickMatrix(mouseXMove, (height - mouseYMove), 1, 1, v, 0);
+            else
+                x3d.glu.gluPickMatrix(mouseX, (height - mouseY), 1, 1, v, 0);
 
             x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
     
@@ -843,7 +861,9 @@ class x3d2
     {
         if (sibling.getType() == X3dTouchSensorType.type) {
             X3dTouchSensor touchSensor = (X3dTouchSensor )sibling;
-            touchSensor.touchTime = x3d.getTimerTime();
+            if (clicked)
+                touchSensor.touchTime = x3d.getTimerTime();
+            touchSensor.isOver = true;
             isHit = true;
         }
         if (moved && sibling.getType() == X3dPlaneSensorType.type) {
@@ -961,7 +981,7 @@ class x3d2
                          for (int i = 0; i < group.children.length; i++) {
                              if (group.children[i] != null && 
                                  group.children[i] != node) {
-                                 if (clicked && group.children[i].getType() == 
+                                 if (group.children[i].getType() == 
                                      X3dTouchSensorType.type) {
                                      sibling = group.children[i];
                                      handleSibling(sibling);
@@ -982,8 +1002,7 @@ class x3d2
                          for (int i = 0; i < transform.children.length; i++) {
                              if (transform.children[i] != null && 
                                  transform.children[i] != node) {
-                                 if (clicked &&
-                                     transform.children[i].getType() == 
+                                 if (transform.children[i].getType() == 
                                      X3dTouchSensorType.type) {
                                      sibling = transform.children[i];
                                      handleSibling(sibling);
@@ -1903,7 +1922,6 @@ class MyHAnimHumanoidRenderCallback extends X3dHAnimHumanoidRenderCallback
                         coord.point[i] = 0;
             }
             x3d.gl.glPushMatrix();
-//            x3d.gl.glMultMatrixf(extraVar.thisMatrix, 0);
             if (humanoid.skeleton != null)
                 for (i = 0; i < humanoid.skeleton.length; i++)
                     if (humanoid.skeleton[i] != null)

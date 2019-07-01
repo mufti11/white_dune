@@ -1,5 +1,4 @@
 /* Copyright (c) Mark J. Kilgard, 1997. */
-
 /*
  * (c) Copyright 1993, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
@@ -37,40 +36,43 @@
  * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
  */
 
-
-/* This is an example for the libCRWD library*/
-
-/* libCRWD Library based on*/
-/* libC++RWD Library for C++ Rendering of White_dune Data*/
+/* libC++RWD Library for C++ Rendering of White_dune Data (in Development)*/
+/* This is an example for the libC++RWD library*/
 /* Copyright (c) Stefan Wolf, 2010. */
-/* Copyright (c) J. "MUFTI" Scheurich, 2010. */
+/* Changed to add CPPRWD::draw(); and CPPRWD::init();*/
 
 #include <GL/glut.h>
 #ifdef WIN32
 #include <windows.h>
 #endif
-#include <stdio.h>
+#include <cstdio>
 extern void reInitSensor(void *);
-#include "CExport.c"
-#include "libCRWD.h"
+#include "C++Export.cc"
+#include "libC++RWD.h"
 #include <math.h>
+#include <unistd.h>
+
 float rotx = 0.0f; 
 float roty = 0.0f;
 float rotz = 0.0f;
 float dist = -10.0f;
 
-GLUnurbsObj *theNurb;
-
 void display()
 {
-    CRWDdraw(1);
+    CPPRWD::draw(true);
     glutSwapBuffers();
 }
 
-void animation()
+void processEvents()
 {
-    CRWDdraw(0);
-    CRWDprocessEvents();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0, 0, dist);
+    glRotatef(rotx, 1.0f, 0.0f, 0.0f);
+    glRotatef(roty, 0.0f, 1.0f, 0.0f);
+    glRotatef(rotz, 0.0f, 0.0f, 1.0f);
+    CPPRWD::draw(false);
+    CPPRWD::processEvents();
     display();
     usleep(10);
 }
@@ -93,11 +95,11 @@ void onMouseClick(int button, int state, int x, int y)
         left_button = 1;
         clicked_x = x;
         clicked_y = y;        
-        setMouseClick(x, y);
+        CPPRWD::setMouseClick(x, y);
     }	
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
     { 
-        setMouseRelease(x, y);
+        CPPRWD::setMouseRelease(x, y);
     }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
@@ -117,34 +119,36 @@ void onMouseMove(int x, int y)
 {
     if (left_button)
     {
-        static int init = 1;
+        static bool init = true;
         if (init) {
-            setMouseMove(x, x, y, y);
-            init = 0;
+            CPPRWD::setMouseMove(x, x, y, y);
+            init = false;
         } else
-            setMouseMove(x, clicked_x, y, clicked_y);
-        if (!hasHit()) {
+            CPPRWD::setMouseMove(x, clicked_x, y, clicked_y);
+/*
+        if (!CPPRWD::hasHit()) {
             roty -= (clicked_x - x) / 5.0;
             rotx -= (clicked_y - y) / 5.0;
-            setView(dist, rotx, roty, rotz); 
+            CPPRWD::setView(dist, rotx, roty, rotz); 
         }
+*/
         clicked_x = x;
         clicked_y = y;
-    }
-    if (middle_button || right_button )
+    } 
+    else if (middle_button || right_button )
     {
-        view_dist += (clicked_y - y) / 5.0;
-        setView(view_dist, view_rotx, view_roty, view_rotz); 
+//        dist += (clicked_y - y) / 5.0;
+//        CPPRWD::setView(dist, rotx, roty, rotz); 
         clicked_x = x;
         clicked_y = y;
-    }
+    } else
+        CPPRWD::setMousePosition(x, y);
 }
 
 void onMouseMovePassive(int x, int y)
 {
-     setMousePosition(x, y);
+    CPPRWD::setMousePosition(x, y);
 }
-
 
 void onSpecialKeyClick(int key, int x, int y)
 {
@@ -166,29 +170,27 @@ void onSpecialKeyClick(int key, int x, int y)
 
 void onReshape(int width, int height)
 {
-    setWidthHeight(width, height);
+    glViewport(0, 0, width, height);
+    CPPRWD::setWidthHeight(width, height);
 }
 
 int main(int argc, char **argv)
 {
-    glutInitWindowSize(600, 600);
-    setWidthHeight(600, 600);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutCreateWindow("white_dune C viewer");
-    CRWDinit();
+    glutInitWindowSize(600, 600);
+    glViewport(0, 0, 600, 600);
+    CPPRWD::setWidthHeight(600, 600);
+    CPPRWD::setView(dist, rotx, roty, rotz); 
+    glutCreateWindow("Tux warbird");
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
     glutPassiveMotionFunc(onMouseMovePassive);
     glutSpecialFunc(onSpecialKeyClick);
-    glutIdleFunc(animation);
+    glutIdleFunc(processEvents);
     glutDisplayFunc(display);
-    theNurb = gluNewNurbsRenderer(); 
-    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 50.0); 
-    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL); 
-
-    setView(view_dist, view_rotx, view_roty, view_rotz); 
+    CPPRWD::init();
     glutMainLoop();
     return 0;
 }

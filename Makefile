@@ -37,6 +37,7 @@ realclean: clean
 	cd src && $(MAKE) realclean
 	cd docs/developer_docs && make realclean 
 	cd test && $(MAKE) realclean
+	cd warbird && $(MAKE) clean
 	find . -name '_xlk' -print | xargs rm -rf
 	find . -name 'Makefile.bak' -print | xargs rm -f
 	find . -name '.dune_preview_*' -print | xargs rm -f
