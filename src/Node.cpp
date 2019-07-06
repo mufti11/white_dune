@@ -2646,7 +2646,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 }
             }
 
-            if ((getNodeClass() & SENSOR_NODE) && 
+            if (((getNodeClass() & SENSOR_NODE) || 
+                 (getType() == VRML_COLLISION)) &&
                 hasOutputsOrIs()) {
                 m_scene->addToSensorNodes(this);
             }

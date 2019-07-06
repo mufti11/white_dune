@@ -150,6 +150,9 @@ Documentation for white_dune
 pushd docs/export_example_c++/opengl_example
 make render_with_picture_path
 popd
+pushd warbird
+make warbird_with_picture_path
+popd
 
 %install
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
@@ -169,6 +172,11 @@ install -m 644 -p man/dune.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune.1
 install -m 644 -p man/dune4kids.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune4kids.1
 install -m 644 -p man/illegal2vrml.1 $RPM_BUILD_ROOT/%{_mandir}/man1/illegal2vrml.1
 install -m 755 -p docs/export_example_c++/opengl_example/render_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/white_dune_opengl_example
+install -m 755 -p warbird/warbird_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/warbird
+install -m 644 -p warbird/warbird.desktop $RPM_BUILD_ROOT/%{_datadir}/applications/warbird.desktop
+install -m 644 -p warbird/warbird.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/warbird.png
+install -m 644 -p warbird/cake.png $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example/cake.png
+install -m 644 -p warbird/bill.jpg $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example/bill.jpg
 # remove binary from noarch package
 rm docs/export_example_c++/opengl_example/render_with_picture_path 
 # remove big C++ file from opengl-examples package (can be restored using white_dune)
@@ -209,6 +217,11 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %{_datadir}/white_dune/opengl_example/README_fedora.txt
 %{_datadir}/white_dune/opengl_example/main.cpp
 %{_datadir}/white_dune/opengl_example/robot.x3dv
+%{_bindir}/warbird
+%{_datadir}/applications/warbird.desktop
+%{_datadir}/pixmaps/warbird.png
+%{_datadir}/white_dune/opengl_example/cake.png
+%{_datadir}/white_dune/opengl_example/bill.jpg
 %files docs
 %license COPYING
 %doc README.txt docs

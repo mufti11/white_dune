@@ -137,6 +137,18 @@ ProtoNavigationInfo::create(Scene *scene)
     return new NodeNavigationInfo(scene, this); 
 }
 
+int 
+ProtoNavigationInfo::translateField(int field) const
+{
+    bool x3d = m_scene->isX3d();
+    if (x3d && (field == type))
+        return typeX3D;
+    else if (!x3d && (field == typeX3D))
+        return type;
+    return field;
+}
+
+
 NodeNavigationInfo::NodeNavigationInfo(Scene *scene, Proto *def)
   : Node(scene, def)
 {

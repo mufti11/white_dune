@@ -80,6 +80,8 @@ namespace CPPRWD
     bool ProximitySensorSendEvents(X3dNode *data, const char *event, 
                                    void *extraData);
                                           
+    bool CollisionSendEvents(X3dNode *data, const char *event, void *extraData);
+                                          
     float interpolate(float t, float key, float oldKey,
                                float value, float oldValue);
 
@@ -206,6 +208,19 @@ void CPPRWD::setWidthHeight(int w, int h)
     height = h;
 }
 
+
+static bool stop = false;
+
+static void startNavigation(void)
+{
+    stop = false;
+}
+
+static void stopNavigation(void)
+{
+    stop = true;
+}
+
 static float view_dist = -10;
 static float view_rotx;
 static float view_roty;
@@ -214,10 +229,18 @@ static float navigationMatrix[16];
 
 void CPPRWD::setView(float dist, float rotx, float roty, float rotz)
 {
-    view_dist = dist;
-    view_rotx = rotx;
-    view_roty = roty;
-    view_rotz = rotz;
+    if (!stop) {
+        view_rotx = rotx;
+        view_roty = roty;
+        view_rotz = rotz;
+    }
+    if (stop) {
+       if (dist < view_dist) {
+           view_dist = dist;
+           stop = false;
+       }
+    } else
+       view_dist = dist;
 }
 
 bool isHit = false;
@@ -1309,11 +1332,6 @@ void CPPRWD::GroupTreeRender(X3dNode *data, void *dataptr)
     glPopMatrix();
 }
 
-static void transform4HandleData(X3dTransform *transform)
-{
-        glTranslatef(transform->translation[0], transform->translation[1], transform->translation[2]);
-}
-
 static void transformData(X3dTransform *transform)
 {
         glTranslatef(transform->translation[0], transform->translation[1], transform->translation[2]);
@@ -2190,6 +2208,14 @@ bool CPPRWD::ProximitySensorSendEvents(X3dNode *data, const char *event,
     return enabled;
 }
 
+bool CPPRWD::CollisionSendEvents(X3dNode *data, const char *event,
+                                       void *extraData)
+{
+    X3dCollision *collision = (struct X3dCollision *)data;
+    bool enabled = collision->enabled;
+    return enabled;
+}
+
 float CPPRWD::interpolate(float t, float key, float oldKey, 
                                   float value, float oldValue)
 {
@@ -2525,8 +2551,10 @@ void CPPRWD::draw(bool render)
         preRender = true;
         rootNode->treeRender(NULL);
 
-        glInitNames();
         glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixf(navigationMatrix);
+
+        glInitNames();
         preRender = false;
         rootNode->treeRender(NULL);
 
@@ -2535,6 +2563,15 @@ void CPPRWD::draw(bool render)
             hits = - hits;
         processHits(hits, pickBuffer);
     }
+}
+
+static X3dNode *getCollision(X3dNode *node)
+{
+    for (X3dNode *parent = node->m_parent; parent != NULL; 
+         parent = parent->m_parent)
+        if (parent->getType() == X3dCollisionType) 
+            return parent;
+    return NULL;
 }
 
 static void transform(X3dNode *node)
@@ -2548,21 +2585,66 @@ static void transform(X3dNode *node)
                 if (transform->route_sources[i] == node)
                     hasTransform = true;
             if (!hasTransform)
-                transform4HandleData(transform);            
+                transformData(transform);            
         }
+}
+
+static void handleCollision(X3dNode *node, float depth)
+{
+    X3dNode *maybeCollision = getCollision(node);
+    if (maybeCollision != NULL) {
+        X3dCollision *collision = (X3dCollision *)maybeCollision;
+        if (collision->enabled) {
+            int x = mouseXMove;
+            int y = mouseYMove;
+            GLdouble model[16];
+            GLdouble proj[16];
+            GLint view[4];
+            GLdouble pan_x, pan_y, pan_z;
+            glGetDoublev(GL_MODELVIEW_MATRIX, model);
+            glGetDoublev(GL_PROJECTION_MATRIX, proj);
+            glGetIntegerv(GL_VIEWPORT, view);
+            gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble) depth / UINT_MAX, 
+                         model, proj, view, &pan_x, &pan_y, &pan_z);
+
+            float pos[3] = { 0, 0, -view_dist };
+            float vec[3];
+            multMatrix4Vec(vec, navigationMatrix, pos);
+
+            if (fabs(pan_z - vec[2]) < 2) {
+                stopNavigation();
+                collision->isActive = true;
+                collision->collideTime = getTimerTime();            
+            }
+        }
+    }
 }
 
 struct CylinderSensorExtraDataStruct {
     float x_sum;
 };
 
-static void handleSibling(X3dNode *sibling) 
+static void handleSibling(X3dNode *sibling, float depth) 
 {
     if (sibling->getType() == X3dTouchSensorType) {
         X3dTouchSensor *touchSensor = (X3dTouchSensor *)sibling;
         if (clicked)
             touchSensor->touchTime = getTimerTime();
         touchSensor->isOver = true;
+        int x = mouseXMove;
+        int y = mouseYMove;
+        GLdouble model[16];
+        GLdouble proj[16];
+        GLint view[4];
+        GLdouble pan_x, pan_y, pan_z;
+        glGetDoublev(GL_MODELVIEW_MATRIX, model);
+        glGetDoublev(GL_PROJECTION_MATRIX, proj);
+        glGetIntegerv(GL_VIEWPORT, view);
+        gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble) depth / UINT_MAX, 
+                     model, proj, view, &pan_x, &pan_y, &pan_z);
+        touchSensor->hitPoint_changed[0] = (float)pan_x;
+        touchSensor->hitPoint_changed[1] = (float)pan_y;
+        touchSensor->hitPoint_changed[2] = (float)pan_z;
         isHit = true;
     }
     if (moved && sibling->getType() == X3dPlaneSensorType) {
@@ -2593,7 +2675,16 @@ static void handleSibling(X3dNode *sibling)
         planeSensor->translation_changed[0] = (float)pan_x;
         planeSensor->translation_changed[1] = (float)pan_y;
         planeSensor->translation_changed[2] = 0;
+        gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble) depth / UINT_MAX, 
+                     model, proj, view, &pan_x, &pan_y, &pan_z);
+        planeSensor->trackPoint_changed[0] = (float)pan_x;
+        planeSensor->trackPoint_changed[1] = (float)pan_y;
+        planeSensor->trackPoint_changed[2] = (float)pan_z;
         isHit = true;
+    }
+    if (sibling->getType() == X3dPlaneSensorType) {
+        X3dPlaneSensor *planeSensor = (X3dPlaneSensor *)sibling;
+        planeSensor->isOver = true;
     }
     if (moved && sibling->getType() == X3dCylinderSensorType) {
         X3dCylinderSensor *cylinderSensor = (X3dCylinderSensor *)sibling;
@@ -2614,7 +2705,25 @@ static void handleSibling(X3dNode *sibling)
         SFRotation2quaternion(quat, rot1);
         quaternion2SFRotation(cylinderSensor->rotation_changed, quat);
         extraVar->x_sum += mouseXMove - mouseXOld; 
+        int x = mouseXMove;
+        int y = mouseYMove;
+        GLdouble model[16];
+        GLdouble proj[16];
+        GLint view[4];
+        GLdouble pan_x, pan_y, pan_z;
+        glGetDoublev(GL_MODELVIEW_MATRIX, model);
+        glGetDoublev(GL_PROJECTION_MATRIX, proj);
+        glGetIntegerv(GL_VIEWPORT, view);
+        gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble) depth / UINT_MAX, 
+                     model, proj, view, &pan_x, &pan_y, &pan_z);
+        cylinderSensor->trackPoint_changed[0] = (float)pan_x;
+        cylinderSensor->trackPoint_changed[1] = (float)pan_y;
+        cylinderSensor->trackPoint_changed[2] = (float)pan_z;
         isHit = true;
+    }
+    if (sibling->getType() == X3dCylinderSensorType) {
+        X3dCylinderSensor *cylinderSensor = (X3dCylinderSensor *)sibling;
+        cylinderSensor->isOver = true;
     }
     if (moved && sibling->getType() == X3dSphereSensorType) {
         X3dSphereSensor *sphereSensor = (X3dSphereSensor *)sibling;
@@ -2648,7 +2757,25 @@ static void handleSibling(X3dNode *sibling)
         quaternionMult(quat4, quat3, qSphere2); 
         quaternion2SFRotation(sphereSensor->rotation_changed, quat4);
         normalizeAxis(sphereSensor->rotation_changed);
+        int x = mouseXMove;
+        int y = mouseYMove;
+        GLdouble model[16];
+        GLdouble proj[16];
+        GLint view[4];
+        GLdouble pan_x, pan_y, pan_z;
+        glGetDoublev(GL_MODELVIEW_MATRIX, model);
+        glGetDoublev(GL_PROJECTION_MATRIX, proj);
+        glGetIntegerv(GL_VIEWPORT, view);
+        gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble) depth / UINT_MAX, 
+                     model, proj, view, &pan_x, &pan_y, &pan_z);
+        sphereSensor->trackPoint_changed[0] = (float)pan_x;
+        sphereSensor->trackPoint_changed[1] = (float)pan_y;
+        sphereSensor->trackPoint_changed[2] = (float)pan_z;
         isHit = true;
+    }
+    if (sibling->getType() == X3dSphereSensorType) {
+        X3dSphereSensor *sphereSensor = (X3dSphereSensor *)sibling;
+        sphereSensor->isOver = true;
     }
 }
 
@@ -2671,7 +2798,8 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
     isHit = false;
     if (hit > -1) {
         X3dNode *node = scenegraph.getNodeFromGlName(hit);
-        if (node)
+        if (node) {
+             handleCollision(node, depth);
              for (X3dNode *parent = node->m_parent; parent != NULL; 
                  parent = parent->m_parent) {
                  if (parent->getType() == X3dGroupType) {
@@ -2681,7 +2809,7 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
                              group->children[i] != node) {
                              if (group->children[i]->getType() == 
                                  X3dTouchSensorType) {
-                                 handleSibling(group->children[i]);
+                                 handleSibling(group->children[i], depth);
                              }
                              if ((moved && group->children[i]->getType() == 
                                   X3dPlaneSensorType) ||
@@ -2689,7 +2817,7 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
                                   X3dCylinderSensorType) ||
                                  (moved && group->children[i]->getType() == 
                                   X3dSphereSensorType)) {
-                                 handleSibling(group->children[i]);
+                                 handleSibling(group->children[i], depth);
                              }
                          }
                  }
@@ -2700,7 +2828,7 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
                              transform->children[i] != node) {
                              if (transform->children[i]->getType() == 
                                      X3dTouchSensorType) {
-                                 handleSibling(transform->children[i]);
+                                 handleSibling(transform->children[i], depth);
                              }
                              if ((moved && transform->children[i]->getType() == 
                                   X3dPlaneSensorType) ||
@@ -2708,11 +2836,12 @@ void CPPRWD::processHits(GLint hits, GLuint *pickBuffer)
                                   X3dCylinderSensorType) ||
                                  (moved && transform->children[i]->getType() == 
                                   X3dSphereSensorType)) {
-                                 handleSibling(transform->children[i]);
+                                 handleSibling(transform->children[i], depth);
                              }
                          }
                  }
-             }     
+             }
+        }     
     }
     clicked = false;
     moved = false;
@@ -2741,6 +2870,7 @@ void CPPRWD::init()
     X3dCylinderSensor::processEventCallback = CylinderSensorSendEvents;
     X3dSphereSensor::processEventCallback = SphereSensorSendEvents;
     X3dProximitySensor::processEventCallback = ProximitySensorSendEvents;
+    X3dCollision::processEventCallback = CollisionSendEvents;
     X3dPositionInterpolator::processEventCallback = PositionInterpolatorSendEvents;
     X3dOrientationInterpolator::processEventCallback = OrientationInterpolatorSendEvents;
     X3dColorInterpolator::processEventCallback = ColorInterpolatorSendEvents;
@@ -2818,5 +2948,21 @@ void reInitSensor(void *node)
     if (((X3dNode *)node)->getType() == X3dTouchSensorType) {
         X3dTouchSensor *touchSensor = (X3dTouchSensor *)node;
         touchSensor->isOver = false;
+    }
+    if (((X3dNode *)node)->getType() == X3dPlaneSensorType) {
+        X3dPlaneSensor *planeSensor = (X3dPlaneSensor *)node;
+        planeSensor->isOver = false;
+    }
+    if (((X3dNode *)node)->getType() == X3dCylinderSensorType) {
+        X3dCylinderSensor *cylinderSensor = (X3dCylinderSensor *)node;
+        cylinderSensor->isOver = false;
+    }
+    if (((X3dNode *)node)->getType() == X3dSphereSensorType) {
+        X3dSphereSensor *sphereSensor = (X3dSphereSensor *)node;
+        sphereSensor->isOver = false;
+    }
+    if (((X3dNode *)node)->getType() == X3dCollisionType) {
+        X3dCollision *collision = (X3dCollision *)node;
+        collision->isActive = false;
     }
 }

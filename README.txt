@@ -5153,6 +5153,16 @@ Fixed endless loop in C write of ROUTE loop
 
 Added Tux warbird WRL game and added C++ scripting
 
+Added interactive TouchSensor.hitPoint_changed support on C/C++/java export
+
+Added interactive *Sensor.trackPoint_changed support on C/C++/java export
+
+Added interactive *Sensor.isOver support on C/C++/java export
+
+Fixed missing translateField() problem of NavigationInfo node
+
+Added interactive Collision support on C/C++/java export
+
 Coontact: MUFTI <mufti@users.ourproject.org>
 
 

@@ -24,7 +24,7 @@ robot.java: robot.x3dv
 	(../../../bin/dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java) || \
 	dune -prefix X3d -java $(MANY_CLASSES) robot.x3dv > robot.java
 
-classes/X3dSceneGraph.class: robot.java
+classes/X3dSceneGraph.class: robot.java Extra.java
 	@if test "X_$$JOGL_HOME" = "X_" ; then echo environment variable '$$JOGL_HOME' should be set to the directory of jogl2.jar and native libraries 1>&2 ; fi
 	@if test "X_$$GLUEGEN_HOME" = "X_" ; then echo environment variable '$$GLUEGEN_HOME' should be set to the directory of gluegen2-rt.jar 1>&2 ; fi
 	javac $(JFLAGS) -d classes -cp $(JARS):classes $(MEM) robot.java Extra.java

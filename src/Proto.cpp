@@ -2444,8 +2444,9 @@ Proto::writeCExtraFields(int f, int languageFlag)
     } else if ((languageFlag & JAVA_SOURCE)) {
             RET_ONERROR( mywritestr(f, "    Object extra_data;\n") )
     }
-    if (getType() == VRML_INDEXED_FACE_SET)
+    if (getType() == VRML_INDEXED_FACE_SET) {
         RET_ONERROR( mywritestr(f, "    int glName_number;\n") )
+    }
     if (getType() == VRML_TRANSFORM) {
         RET_ONERROR( mywritestr(f, "    int num_route_source;\n") )
         if ((languageFlag & C_SOURCE) | (languageFlag & CC_SOURCE)) {

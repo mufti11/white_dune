@@ -42,6 +42,9 @@ public:
     virtual int     getType() const { return VRML_COLLISION; }
     virtual int     getNodeClass() const { return GROUPING_NODE | CHILD_NODE; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
+    virtual bool    isCRouteSource(void) { return true; }       
 
     FieldIndex children;
     FieldIndex collide;    // x3dname: enabled

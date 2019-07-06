@@ -133,8 +133,8 @@ void onMouseMove(int x, int y)
     }
     if (middle_button || right_button )
     {
-        view_dist += (clicked_y - y) / 5.0;
-        setView(view_dist, view_rotx, view_roty, view_rotz); 
+        dist += (clicked_y - y) / 5.0;
+        setView(dist, view_rotx, view_roty, view_rotz); 
         clicked_x = x;
         clicked_y = y;
     }

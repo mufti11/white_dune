@@ -58,6 +58,8 @@ public:
     FieldIndex explorationMode;
     FieldIndex isActive;
     FieldIndex typeParams;
+
+    virtual int     translateField(int field) const;
 };
 
 class NodeNavigationInfo : public Node {

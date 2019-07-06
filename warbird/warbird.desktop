@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=Game;Shooter
+Encoding=UTF-8
+Name=Tux warbird
+Comment=VRML97 based C++ OpenGL game
+GenericName=Tux warbird
+Icon=warbird.png
+Exec=warbird

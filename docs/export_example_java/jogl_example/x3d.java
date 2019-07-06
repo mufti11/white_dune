@@ -31,7 +31,6 @@
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
@@ -101,8 +100,9 @@ public class x3d implements GLEventListener
 
     public static float navigation_matrix[] = new float[16];
 
-    public static GLUT glut = new GLUT();
     public static GLU glu = new GLU();
+
+    public static Integer UINT_MAX = Integer.parseUnsignedInt("4294967295");
 
     public static void main(String[] args) 
     {
@@ -214,6 +214,17 @@ public class x3d implements GLEventListener
         x3d.x3dSceneGraph.X3dProcessEvents();
     }
 
+
+    private static boolean stopNavi = false;
+
+    public static void startNavigation() {
+        stopNavi = false;
+    }
+
+    public static void stopNavigation() {
+        stopNavi = true;
+    }
+
     static GL2 gl;
 
     public static void render(GLAutoDrawable drawable) 
@@ -272,7 +283,7 @@ public class x3d implements GLEventListener
     	public void mouseReleased(MouseEvent e) {
             x3d2.setMouseRelease(e.getX(), e.getY()); 
         }
-    
+
         private boolean init = false;
 
         @Override
@@ -306,11 +317,19 @@ public class x3d implements GLEventListener
     
             if (mouseBotton == MouseEvent.BUTTON1) {
                 if (!x3d2.hasHit()) {
-                    view_rotx += thetaX;
-                    view_roty += thetaY;
+                    if (!stopNavi) {
+                        view_rotx += thetaX;
+                        view_roty += thetaY;
+                    }
                 }
             } else {
-                view_dist += ( (float)(prevMouseY-y)/(float)height * 10.0f);
+                if (stopNavi) {
+                    if (y > prevMouseY) {
+                        startNavigation();
+                    }    
+                } 
+                if (!stopNavi)
+                    view_dist += ( (float)(prevMouseY-y)/(float)height * 10.0f);
             }
 
             x3d2.setMouseMove(x, y, prevMouseX, prevMouseY); 
@@ -389,6 +408,9 @@ public class x3d implements GLEventListener
 
         MyProximitySensorProcessEventCallback myProximitySensorProcessEventCallback = new MyProximitySensorProcessEventCallback();
         X3dProximitySensor.setX3dProximitySensorProcessEventCallback(myProximitySensorProcessEventCallback);
+
+        MyCollisionProcessEventCallback myCollisionProcessEventCallback = new MyCollisionProcessEventCallback();
+        X3dCollision.setX3dCollisionProcessEventCallback(myCollisionProcessEventCallback);
 
         MyPositionInterpolatorProcessEventCallback myPositionInterpolatorProcessEventCallback = new MyPositionInterpolatorProcessEventCallback();
         X3dPositionInterpolator.setX3dPositionInterpolatorProcessEventCallback(myPositionInterpolatorProcessEventCallback);
@@ -827,11 +849,6 @@ class x3d2
         }
     }
 
-    private static void transform4HandleData(X3dTransform transform)
-    {
-        x3d.gl.glTranslatef(transform.translation[0], transform.translation[1], transform.translation[2]);
-    }
-
     private static void transform(X3dNode node)
     {
         for (X3dNode parent = node.m_parent; parent != null; 
@@ -843,7 +860,7 @@ class x3d2
                     if (transform.route_sources[i] == node)
                         hasTransform = true;
                 if (!hasTransform)
-                    transform4HandleData(transform);            
+                    MyTransformRenderCallback.transformData(transform);
             }
      }
 
@@ -857,13 +874,70 @@ class x3d2
         return isHit;
     }
 
-    public static void handleSibling(X3dNode sibling) 
+    private static X3dNode getCollision(X3dNode node) {
+        for (X3dNode parent = node.m_parent; parent != null; 
+             parent = parent.m_parent)
+            if (parent.getType() == X3dCollisionType.type) 
+                return parent;
+        return null;
+    }
+
+
+    public static void handleCollision(X3dNode node, Integer int_depth) {
+        X3dNode maybeCollision = getCollision(node);
+        if (maybeCollision != null) {
+            X3dCollision collision = (X3dCollision)maybeCollision;
+            if (collision.enabled) {
+                long depth = Integer.toUnsignedLong(int_depth);
+                double x = mouseXMove;
+                double y = mouseYMove;
+                double model[] = new double[16];
+                double proj[] = new double[16];
+                int view[] = new int[4];
+                double pan[] = new double[3];
+                x3d.gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, model, 0);
+                x3d.gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, proj, 0);
+                x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, view, 0);
+                double UINT_MAX = 4294967295D;
+                x3d.glu.gluUnProject(x, y, depth / UINT_MAX, model, 0, proj, 0,
+                                     view, 0, pan, 0);
+    
+                float pos[] = { 0, 0, -x3d.view_dist };
+                float vec[] = new float[3];
+                multMatrix4Vec(vec, x3d.navigation_matrix, pos);
+
+                if (Math.abs(pan[2] - vec[2]) < 2) {
+                    x3d.stopNavigation();
+                    collision.isActive = true;
+                    collision.collideTime = x3d.getTimerTime();            
+                }
+            }
+        }
+    }
+
+    public static void handleSibling(X3dNode sibling, Integer int_depth) 
     {
+        long depth = Integer.toUnsignedLong(int_depth);
         if (sibling.getType() == X3dTouchSensorType.type) {
             X3dTouchSensor touchSensor = (X3dTouchSensor )sibling;
             if (clicked)
                 touchSensor.touchTime = x3d.getTimerTime();
             touchSensor.isOver = true;
+            int x = mouseXMove;
+            int y = mouseYMove;
+            float model[] = new float[16];
+            float proj[] = new float[16];
+            int view[] = new int[4];
+            float pan[] = new float[3];
+            x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, model, 0);
+            x3d.gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, proj, 0);
+            x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, view, 0);
+            double UINT_MAX = 4294967295D;
+            x3d.glu.gluUnProject(x, y, (float)(depth / UINT_MAX), 
+                                 model, 0, proj, 0, view, 0, pan, 0);
+            touchSensor.hitPoint_changed[0] = (float)pan[0];
+            touchSensor.hitPoint_changed[1] = (float)pan[1];
+            touchSensor.hitPoint_changed[2] = (float)pan[2];
             isHit = true;
         }
         if (moved && sibling.getType() == X3dPlaneSensorType.type) {
@@ -893,7 +967,20 @@ class x3d2
             planeSensor.translation_changed[0] = pan[0];
             planeSensor.translation_changed[1] = pan[1];
             planeSensor.translation_changed[2] = 0;
+            x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, model, 0);
+            x3d.gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, proj, 0);
+            x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, view, 0);
+            double UINT_MAX = 4294967295D;
+            x3d.glu.gluUnProject(x, y, (float)(depth / UINT_MAX), 
+                                 model, 0, proj, 0, view, 0, pan, 0);
+            planeSensor.trackPoint_changed[0] = (float)pan[0];
+            planeSensor.trackPoint_changed[1] = (float)pan[1];
+            planeSensor.trackPoint_changed[2] = (float)pan[2];
             isHit = true;
+        }
+        if (sibling.getType() == X3dPlaneSensorType.type) {
+            X3dPlaneSensor planeSensor = (X3dPlaneSensor)sibling;
+            planeSensor.isOver = true;
         }
         if (moved && sibling.getType() == X3dCylinderSensorType.type) {
             X3dCylinderSensor cylinderSensor = (X3dCylinderSensor)sibling;
@@ -914,6 +1001,25 @@ class x3d2
             quaternion2SFRotation(cylinderSensor.rotation_changed, quat);
             extraVar.x_sum += mouseXMove - mouseXOld; 
             isHit = true;
+            int x = mouseXMove;
+            int y = mouseYMove;
+            float model[] = new float[16];
+            float proj[] = new float[16];
+            int view[] = new int[4];
+            float pan[] = new float[3];
+            x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, model, 0);
+            x3d.gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, proj, 0);
+            x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, view, 0);
+            double UINT_MAX = 4294967295D;
+            x3d.glu.gluUnProject(x, y, (float)(depth / UINT_MAX), 
+                                 model, 0, proj, 0, view, 0, pan, 0);
+            cylinderSensor.trackPoint_changed[0] = (float)pan[0];
+            cylinderSensor.trackPoint_changed[1] = (float)pan[1];
+            cylinderSensor.trackPoint_changed[2] = (float)pan[2];
+        }
+        if (sibling.getType() == X3dCylinderSensorType.type) {
+            X3dCylinderSensor cylinderSensor = (X3dCylinderSensor)sibling;
+            cylinderSensor.isOver = true;
         }
         if (moved && sibling.getType() == X3dSphereSensorType.type) {
             X3dSphereSensor sphereSensor = (X3dSphereSensor)sibling;
@@ -947,22 +1053,41 @@ class x3d2
             quaternionMult(quat4, quat3, qSphere2); 
             quaternion2SFRotation(sphereSensor.rotation_changed, quat4);
             normalizeAxis(sphereSensor.rotation_changed);
+            int x = mouseXMove;
+            int y = mouseYMove;
+            float model[] = new float[16];
+            float proj[] = new float[16];
+            int view[] = new int[4];
+            float pan[] = new float[3];
+            x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, model, 0);
+            x3d.gl.glGetFloatv(GL2.GL_PROJECTION_MATRIX, proj, 0);
+            x3d.gl.glGetIntegerv(GL2.GL_VIEWPORT, view, 0);
+            double UINT_MAX = 4294967295D;
+            x3d.glu.gluUnProject(x, y, (float)(depth / UINT_MAX), 
+                                 model, 0, proj, 0, view, 0, pan, 0);
+            sphereSensor.trackPoint_changed[0] = (float)pan[0];
+            sphereSensor.trackPoint_changed[1] = (float)pan[1];
+            sphereSensor.trackPoint_changed[2] = (float)pan[2];
             isHit = true;
+        }
+        if (sibling.getType() == X3dSphereSensorType.type) {
+            X3dSphereSensor sphereSensor = (X3dSphereSensor)sibling;
+            sphereSensor.isOver = true;
         }
     }
 
     public static void processHits(int hits, IntBuffer pickBuffer)
     {
-        int depth = Integer.MAX_VALUE;
+        Integer depth = x3d.UINT_MAX;
         int hit = -1;
         int bufferPtr = 0;
         for (int j = 0; j < hits; j++) {
             int numNames = pickBuffer.get(bufferPtr++);
-            int minDepth = pickBuffer.get(bufferPtr++);
-            int maxDepth = pickBuffer.get(bufferPtr++);
+            Integer minDepth = pickBuffer.get(bufferPtr++);
+            Integer maxDepth = pickBuffer.get(bufferPtr++);
             for (int i = 0; i < numNames; i++) {
                 int buffer = pickBuffer.get(bufferPtr++);
-                if (maxDepth < depth) {
+                if (Integer.compareUnsigned(maxDepth, depth) < 0) {
                     depth = maxDepth; 
                     hit = buffer;
                 }
@@ -972,53 +1097,55 @@ class x3d2
         if (hit > -1) {
             X3dNode node = x3d.x3dSceneGraph.getNodeFromGlName(hit);
             if (node != null)
-                 for (X3dNode parent = node.m_parent; 
-                      parent != null; 
-                      parent = parent.m_parent) {
-                     X3dNode sibling = null;
-                     if (parent.getType() == X3dGroupType.type) {
-                         X3dGroup group = (X3dGroup)parent;
-                         for (int i = 0; i < group.children.length; i++) {
-                             if (group.children[i] != null && 
-                                 group.children[i] != node) {
-                                 if (group.children[i].getType() == 
-                                     X3dTouchSensorType.type) {
-                                     sibling = group.children[i];
-                                     handleSibling(sibling);
-                                 }
-                                 if ((moved && group.children[i].getType() == 
-                                      X3dPlaneSensorType.type) ||
-                                      (moved && group.children[i].getType() == 
-                                      X3dCylinderSensorType.type) ||
-                                      (moved && group.children[i].getType() == 
-                                      X3dSphereSensorType.type)) {
-                                     handleSibling(group.children[i]);
-                                 }
-                            }
-                         }
-                     }
-                     if (parent.getType() == X3dTransformType.type) {
-                         X3dTransform transform = (X3dTransform)parent;
-                         for (int i = 0; i < transform.children.length; i++) {
-                             if (transform.children[i] != null && 
-                                 transform.children[i] != node) {
-                                 if (transform.children[i].getType() == 
-                                     X3dTouchSensorType.type) {
-                                     sibling = transform.children[i];
-                                     handleSibling(sibling);
-                                 }
-                                 if ((moved && transform.children[i].getType() == 
+                handleCollision(node, depth);
+                for (X3dNode parent = node.m_parent; 
+                     parent != null; 
+                     parent = parent.m_parent) {
+                    X3dNode sibling = null;
+                    if (parent.getType() == X3dGroupType.type) {
+                        X3dGroup group = (X3dGroup)parent;
+                        for (int i = 0; i < group.children.length; i++) {
+                            if (group.children[i] != null && 
+                                group.children[i] != node) {
+                                if (group.children[i].getType() == 
+                                    X3dTouchSensorType.type) {
+                                    sibling = group.children[i];
+                                    handleSibling(sibling, depth);
+                                }
+                                if (moved && (group.children[i].getType() == 
                                      X3dPlaneSensorType.type) ||
-                                     (moved && transform.children[i].getType() == 
+                                     (moved && group.children[i].getType() == 
                                      X3dCylinderSensorType.type) ||
-                                     (moved && transform.children[i].getType() == 
+                                     (moved && group.children[i].getType() == 
                                      X3dSphereSensorType.type)) {
-                                     handleSibling(transform.children[i]);
-                                 }
-                             }
-                         }
-                     }
-                 }     
+                                    handleSibling(group.children[i], depth);
+                                }
+                           }
+                        }
+                    }
+                    if (parent.getType() == X3dTransformType.type) {
+                        X3dTransform transform = (X3dTransform)parent;
+                        for (int i = 0; i < transform.children.length; i++) {
+                            if (transform.children[i] != null && 
+                                transform.children[i] != node) {
+                                if (transform.children[i].getType() == 
+                                    X3dTouchSensorType.type) {
+                                    sibling = transform.children[i];
+                                    handleSibling(sibling, depth);
+                                }
+                                if (moved && (transform.children[i].getType() == 
+                                    X3dPlaneSensorType.type) ||
+                                    (moved && transform.children[i].getType() == 
+                                    X3dCylinderSensorType.type) ||
+                                    (moved && transform.children[i].getType() == 
+                                    X3dSphereSensorType.type)) {
+                                    handleSibling(transform.children[i], 
+                                                  depth);
+                                }
+                            }
+                        }
+                    }
+                }     
         }
         clicked = false;
         moved = false;
@@ -1633,6 +1760,18 @@ class MySpotLightRenderCallback extends X3dSpotLightRenderCallback
     
 class MyTransformRenderCallback extends X3dTransformRenderCallback
 {
+
+    public static void transformData(X3dTransform transform)
+    {
+        x3d.gl.glTranslatef(transform.translation[0], transform.translation[1], transform.translation[2]);
+        x3d.gl.glTranslatef(transform.center[0], transform.center[1], transform.center[2]);
+        x3d.gl.glRotatef( ((transform.rotation[3] / (float)Math.PI) * 180.0f), transform.rotation[0], transform.rotation[1], transform.rotation[2]);
+        x3d.gl.glRotatef( ((transform.scaleOrientation[3] / (float)Math.PI) * 180.0f), transform.scaleOrientation[0], transform.scaleOrientation[1], transform.scaleOrientation[2]);
+        x3d.gl.glScalef(transform.scale[0], transform.scale[1], transform.scale[2]);
+        x3d.gl.glRotatef( ((transform.scaleOrientation[3] / (float)Math.PI) * 180.0f) * -1.0f, transform.scaleOrientation[0], transform.scaleOrientation[1], transform.scaleOrientation[2]);
+        x3d.gl.glTranslatef(transform.center[0] * -1.0f, transform.center[1] * -1.0f, transform.center[2] * -1.0f);
+    }
+
     public void render(X3dNode data, Object object)
     {
         X3dTransform transform = (X3dTransform)data;
@@ -1646,13 +1785,7 @@ class MyTransformRenderCallback extends X3dTransformRenderCallback
         else
         {
             x3d.gl.glPushMatrix();
-            x3d.gl.glTranslatef(transform.translation[0], transform.translation[1], transform.translation[2]);
-            x3d.gl.glTranslatef(transform.center[0], transform.center[1], transform.center[2]);
-            x3d.gl.glRotatef( ((transform.rotation[3] / (float)Math.PI) * 180.0f), transform.rotation[0], transform.rotation[1], transform.rotation[2]);
-            x3d.gl.glRotatef( ((transform.scaleOrientation[3] / (float)Math.PI) * 180.0f), transform.scaleOrientation[0], transform.scaleOrientation[1], transform.scaleOrientation[2]);
-            x3d.gl.glScalef(transform.scale[0], transform.scale[1], transform.scale[2]);
-            x3d.gl.glRotatef( ((transform.scaleOrientation[3] / (float)Math.PI) * 180.0f) * -1.0f, transform.scaleOrientation[0], transform.scaleOrientation[1], transform.scaleOrientation[2]);
-            x3d.gl.glTranslatef(transform.center[0] * -1.0f, transform.center[1] * -1.0f, transform.center[2] * -1.0f);
+            transformData(transform);
             if (transform.children != null)
                 for (int i = 0; i < transform.children.length; i++)
                     if (transform.children[i] != null) 
@@ -2719,6 +2852,15 @@ class MyProximitySensorProcessEventCallback extends X3dProximitySensorProcessEve
            } else
                enabled = false;
         }
+        return enabled;
+    }
+}
+
+class MyCollisionProcessEventCallback extends X3dCollisionProcessEventCallback 
+{
+    public boolean processEvent(X3dNode node, String event) {
+        X3dCollision collision = (X3dCollision)node;
+        boolean enabled = collision.enabled;
         return enabled;
     }
 }
