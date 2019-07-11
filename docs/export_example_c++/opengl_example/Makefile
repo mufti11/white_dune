@@ -1,15 +1,15 @@
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-render: ../libC++RWD.h C++Export.cc main.cpp 
-	g++ -g -o $@ -I. -I.. -Wno-narrowing main.cpp \
+render: ../../../include/libC++RWD.h C++Export.cc main.cpp 
+	g++ -g -o $@ -I. -I../../../include -Wno-narrowing main.cpp \
             -lglut -lGLU -lGL -lXmu -lX11 -ljpeg -lpng
 
 # set special picture path for Fedora OpenGL example binary
-render_with_picture_path: ../libC++RWD.h C++Export.cc main.cpp
+render_with_picture_path: ../../../include/libC++RWD.h C++Export.cc main.cpp
 	g++ -g $(CXXFLAGS) -Wno-unused-variable -Wno-dangling-else \
             -Wno-sign-compare -Wno-narrowing -Wno-unused-but-set-variable \
-            $(LDFLAGS) -o $@ -I. -I.. main.cpp \
+            $(LDFLAGS) -o $@ -I. -I../../../include main.cpp \
             -DPICTURE_PATH=\"/usr/share/white_dune/opengl_example/\" \
             -lglut -lGLU -lGL -lXmu -lX11 -ljpeg -lpng
 

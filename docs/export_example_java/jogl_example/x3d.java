@@ -52,6 +52,9 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.event.awt.AWTKeyAdapter;
 import com.jogamp.newt.event.awt.AWTMouseAdapter;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import java.io.IOException;
 
 import java.nio.FloatBuffer;
@@ -71,12 +74,34 @@ public class x3d implements GLEventListener
     public static final float Z_FAR = 7000.0f;
    
     public static final float EPSILON = 1E-9f;
-   
+
+    public static final int NAV_EXAMINE = 1;
+    public static final int NAV_WALK = 2;
+    public static final int NAV_FLY = 3;
+    public static final int NAV_NONE = 4;
+    public static final int NAV_ANY = 5;
+
+    public static int navigation = NAV_EXAMINE;
+
+    public static int getNavigation()
+    {
+        return navigation;
+    }
+
+    public static float speed = 1;
+
+    public static float getNavigationSpeed()
+    {
+        return speed;
+    }
+
+    public static boolean stop = false;
+
     public static boolean viewpointRendered = false;
     public static boolean viewPointExists = false;
     public static float viewpoint1Position[] = { 0, 0, 10 };
 
-    public static X3dNode viewpoint1 = null;
+    public static X3dViewpoint viewpoint1 = null;
 
     public static boolean lightExists = false;
    
@@ -91,8 +116,6 @@ public class x3d implements GLEventListener
 
     private static int numLights = 0;
 
-    public static float view_rotx = 0.0f, view_roty = 0.0f;
-    public static final float view_rotz = 0.0f;
     public static float view_dist = -10.0f;
 
     private static int prevMouseX, prevMouseY;
@@ -111,6 +134,12 @@ public class x3d implements GLEventListener
         java.awt.Frame frame = new java.awt.Frame("white_dune java viewer");
         frame.setSize(500, 500);
         frame.setLayout(new java.awt.BorderLayout());
+
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
 
         GLCanvas canvas = new GLCanvas();
         // GLCapabilities caps = new GLCapabilities(GLProfile.getDefault());
@@ -225,10 +254,17 @@ public class x3d implements GLEventListener
         stopNavi = true;
     }
 
+    static boolean distInit = false;
+
     static GL2 gl;
 
     public static void render(GLAutoDrawable drawable) 
     {
+         if (distInitialised())
+             if (!distInit) {
+                 distInit = true;
+                 view_dist = getInitDist();
+             }
 
         // Get the GL corresponding to the drawable we are animating
         x3d.gl = drawable.getGL().getGL2();
@@ -241,10 +277,10 @@ public class x3d implements GLEventListener
         // dragged the mouse around
         x3d.gl.glMatrixMode(GL2.GL_MODELVIEW_MATRIX);
         x3d.gl.glLoadIdentity();
-        x3d.gl.glTranslatef(0.0f, 0.0f, x3d.view_dist);
-        x3d.gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
-        x3d.gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-        x3d.gl.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
+        if (x3d.viewpoint1 != null) {
+            x3d.gl.glRotatef(( -(x3d.viewpoint1.orientation[3] / (2.0f * (float)Math.PI) ) * 360.0f), x3d.viewpoint1.orientation[0], x3d.viewpoint1.orientation[1], x3d.viewpoint1.orientation[2]);
+            x3d.gl.glTranslatef(-x3d.viewpoint1.position[0], -x3d.viewpoint1.position[1], -x3d.viewpoint1.position[2]);
+        }
         x3d.gl.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, navigation_matrix, 0);
         x3d.gl.glLoadIdentity();
 
@@ -257,6 +293,7 @@ public class x3d implements GLEventListener
         @Override
     	public void keyPressed(KeyEvent e) {
             int kc = e.getKeyCode();
+/*
             if(KeyEvent.VK_LEFT == kc) {
                 view_roty -= 1;
             } else if(KeyEvent.VK_RIGHT == kc) {
@@ -266,6 +303,7 @@ public class x3d implements GLEventListener
             } else if(KeyEvent.VK_DOWN == kc) {
                 view_rotx += 1;
             }
+*/
         }
     }
     
@@ -318,8 +356,7 @@ public class x3d implements GLEventListener
             if (mouseBotton == MouseEvent.BUTTON1) {
                 if (!x3d2.hasHit()) {
                     if (!stopNavi) {
-                        view_rotx += thetaX;
-                        view_roty += thetaY;
+                        view_dist = navigate(prevMouseX-x, y-prevMouseY, view_dist);
                     }
                 }
             } else {
@@ -329,7 +366,8 @@ public class x3d implements GLEventListener
                     }    
                 } 
                 if (!stopNavi)
-                    view_dist += ( (float)(prevMouseY-y)/(float)height * 10.0f);
+                    view_dist += ( (float)(y-prevMouseY)/(float)height * 10.0f);
+                    view_dist = navigate(0, 0, view_dist);
             }
 
             x3d2.setMouseMove(x, y, prevMouseX, prevMouseY); 
@@ -347,6 +385,71 @@ public class x3d implements GLEventListener
         }
     }
 
+    private static boolean naviInit = true;
+    private static float xOld;
+    private static float yOld;
+    private static float zOld;
+
+    public static float navigate(int x, int y, float z)
+    {
+        if (naviInit) {
+            xOld = x;
+            yOld = y;
+            zOld = z;
+            naviInit = false;
+        }
+        float walk[] = new float[3];
+
+        switch(getNavigation()) {
+          case x3d.NAV_ANY:
+          case x3d.NAV_WALK:
+            x3d2.startWalking();
+            walk[0] = x / 5.0f;
+            walk[1] = 0;
+            if ((!stop) || (y >= 0)) { 
+                walk[2] = y / 5.0f;
+                stop = false;
+            } else
+                walk[2] = 0;
+            x3d2.walkCamera(walk);
+            break;
+          case x3d.NAV_EXAMINE:
+            if ((!stop) || (z - zOld > 0)) {
+                x3d2.orbitCamera(x / 5.0f, y / 5.0f, z);
+                stop = false;
+            } else {
+                x3d2.orbitCamera(xOld / 5.0f, yOld / 5.0f, zOld);
+                return zOld;
+            }
+            break;
+          case x3d.NAV_FLY:
+            if ((!stop) || (z - zOld > 0)) { 
+                x3d2.orbitCamera(x / 5.0f, y / 5.0f, z - zOld);
+                stop = false;
+            } else
+                x3d2.orbitCamera(xOld / 5.0f, yOld / 5.0f, 0);
+            break;
+        }
+        if (!stop) {
+            xOld = x;
+            yOld = y;
+            zOld = z;
+        }
+        return z;
+    }
+
+    public static float getInitDist()
+    {
+        if (viewpoint1 != null)
+            return viewpoint1.position[2];
+        return -10.0f;
+    }
+    
+    public static boolean distInitialised()
+    {
+        return (viewpoint1 != null);
+    }
+    
     static void initX3d()
     {    
         MyGroupRenderCallback myGroupRenderCallback = new MyGroupRenderCallback();
@@ -390,6 +493,9 @@ public class x3d implements GLEventListener
 
         MyParticleSystemRenderCallback myParticleSystemRenderCallback = new MyParticleSystemRenderCallback();
         X3dParticleSystem.setX3dParticleSystemRenderCallback(myParticleSystemRenderCallback);
+
+        MyNavigationInfoRenderCallback myNavigationInfoRenderCallback = new MyNavigationInfoRenderCallback();
+        X3dNavigationInfo.setX3dNavigationInfoRenderCallback(myNavigationInfoRenderCallback);
 
         MyTimeSensorProcessEventCallback myTimeSensorProcessEventCallback = new MyTimeSensorProcessEventCallback();
         X3dTimeSensor.setX3dTimeSensorProcessEventCallback(myTimeSensorProcessEventCallback);
@@ -733,14 +839,12 @@ class x3d2
         quat2[3] = 0;
         float quat3[] = new float[4];;
         quaternionMult(quat3, quat, quat2);
-        normalizeQuaternion(quat3);
         quat[0] = q[0];
         quat[1] = q[1];
         quat[2] = q[2];
         quat[3] = q[3];
         float quat4[] = new float[4];
         quaternionMult(quat4, quat3, quat);
-        normalizeQuaternion(quat4);
         ret[0] = quat4[0];
         ret[1] = quat4[1];
         ret[2] = quat4[2]; 
@@ -778,7 +882,115 @@ class x3d2
         ret[1] = mat[4] * vec[0] + mat[5] * vec[1] + mat[6] * vec[2];
         ret[2] = mat[8] * vec[0] + mat[9] * vec[1] + mat[10] * vec[2];
     }
+
+    private static double oldWalkTime = 0;
+
+    public static void startWalking()
+    {
+        oldWalkTime = x3d.getTimerTime();
+    }
+
+    public static void walkCamera(float walk[])
+    {
+        float pos[] = new float[3];
+        pos[0] = x3d.viewpoint1.position[0];
+        pos[1] = x3d.viewpoint1.position[1];
+        pos[2] = x3d.viewpoint1.position[2];
+        float sfrot[] = new float[4];
+        sfrot[0] = x3d.viewpoint1.orientation[0];
+        sfrot[1] = x3d.viewpoint1.orientation[1];
+        sfrot[2] = x3d.viewpoint1.orientation[2];
+        sfrot[3] = x3d.viewpoint1.orientation[3];
+        float rot[] = new float[4];
+        SFRotation2quaternion(rot, sfrot);
+        float fspeed = x3d.getNavigationSpeed();
+
+        float sfaround[] = new float[4];
+        sfaround[0] = 0;
+        sfaround[1] = 1;
+        sfaround[2] = 0;
+        sfaround[3] = (walk[0] * 2.0f) * 2.0f * (float)Math.PI / 360.0f;
+        float around[] = new float[4];
+        SFRotation2quaternion(around, sfaround);
+        float newRot[] = new float [4];
+        quaternionMult(newRot, around, rot);
+        normalizeQuaternion(newRot);
+        normalizeQuaternion(rot);
+        float sfnewRot[] = new float[4];
+        quaternion2SFRotation(sfnewRot, newRot);
+        x3d.viewpoint1.orientation[0] = sfnewRot[0];
+        x3d.viewpoint1.orientation[1] = sfnewRot[1];
+        x3d.viewpoint1.orientation[2] = sfnewRot[2];
+        x3d.viewpoint1.orientation[3] = sfnewRot[3];
+        float z = -walk[2] * 2.0f * fspeed;
+        float vec[] = new float[3];
+        vec[0] = 0;
+        vec[1] = 0;
+        vec[2] = -z;
+        float pos2[] = new float [3];
+        quaternionMultVec(pos2, rot, vec);
+        x3d.viewpoint1.position[0] = pos[0] + pos2[0];        
+        x3d.viewpoint1.position[1] = pos[1] + pos2[1];        
+        x3d.viewpoint1.position[2] = pos[2] + pos2[2];        
+    }
     
+    public static void orbitCamera(float dtheta, float dphi, float z)
+    {    
+        float pos[] = new float[3];
+        pos[0] = x3d.viewpoint1.position[0];
+        pos[1] = x3d.viewpoint1.position[1];
+        pos[2] = x3d.viewpoint1.position[2];
+        float sfrot[] = new float[4];
+        sfrot[0] = x3d.viewpoint1.orientation[0];
+        sfrot[1] = x3d.viewpoint1.orientation[1];
+        sfrot[2] = x3d.viewpoint1.orientation[2];
+        sfrot[3] = x3d.viewpoint1.orientation[3];
+        float rot[] = new float[4];
+        SFRotation2quaternion(rot, sfrot);
+        float fspeed = x3d.getNavigationSpeed();
+        float sfup[] = new float[4];
+        sfup[0] = 0;
+        sfup[1] = 1;
+        sfup[2] = 0;
+        sfup[3] = dtheta * 2.0f * (float)Math.PI / 360.0f;
+        float up[] = new float[4];
+        SFRotation2quaternion(up, sfup);
+        float sfaround[] = new float[4];
+        sfaround[0] = 1;
+        sfaround[1] = 0;
+        sfaround[2] = 0;
+        sfaround[3] = -dphi * 2.0f * (float)Math.PI / 360.0f;
+        float around[] = new float[4];
+        SFRotation2quaternion(around, sfaround);
+        float q[] = new float[4];
+        quaternionMult(q, around, rot);
+        float newRot[] = new float[4];
+        quaternionMult(newRot, up, q);
+        float sfnewRot[] = new float[4];
+        quaternion2SFRotation(sfnewRot, newRot);
+        
+        float zAxis[] = new float[3];
+        zAxis[0] = 0;
+        zAxis[1] = 0;
+        zAxis[2] = z;
+        float dist[] = new float[3];
+        quaternionMultVec(dist, rot, zAxis);
+        float newPos[] = dist;
+        if (x3d.navigation == x3d.NAV_EXAMINE) {
+            x3d.viewpoint1.position[0] = newPos[0];        
+            x3d.viewpoint1.position[1] = newPos[1];        
+            x3d.viewpoint1.position[2] = newPos[2];        
+        } else {
+            x3d.viewpoint1.position[0] += newPos[0];        
+            x3d.viewpoint1.position[1] += newPos[1];        
+            x3d.viewpoint1.position[2] += newPos[2];        
+         }
+         x3d.viewpoint1.orientation[0] = sfnewRot[0];
+         x3d.viewpoint1.orientation[1] = sfnewRot[1];
+         x3d.viewpoint1.orientation[2] = sfnewRot[2];
+         x3d.viewpoint1.orientation[3] = sfnewRot[3];
+    }
+      
     static void drawX3d(float matrix[])
     {
         x3d.gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -786,7 +998,6 @@ class x3d2
         x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
 
         x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
-
         x3d.gl.glLoadMatrixf(matrix, 0);    
 
         x3d.viewpointRendered = false;
@@ -826,8 +1037,7 @@ class x3d2
 
             x3d.glu.gluPerspective(fieldOfViewdegree, 1.0, x3d.Z_NEAR, x3d.Z_FAR);  /* fieldOfView in degree, aspect radio, Z nearest, Z farest */
     
-            x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);
-    
+            x3d.gl.glMatrixMode(GL2.GL_MODELVIEW);    
             x3d.gl.glLoadMatrixf(matrix, 0);    
     
             x3d.viewpointRendered = false;
@@ -1812,15 +2022,8 @@ class MyViewpointRenderCallback extends X3dViewpointRenderCallback
             {
                 x3d.viewpointRendered = true;
                 x3d.viewpoint1 = viewpoint;
-
-                for (int i = 0; i < 3; i++)
-                    x3d.viewpoint1Position[i] = viewpoint.position[i];
     
                 x3d2.fieldOfViewdegree = ((viewpoint.fieldOfView / (float)Math.PI) * 180.0f);
-
-                x3d.gl.glRotatef( ( -(viewpoint.orientation[3] / (2*(float)Math.PI) ) * 360), viewpoint.orientation[0], viewpoint.orientation[1], viewpoint.orientation[2]);
-                x3d.gl.glTranslatef(-viewpoint.position[0], -viewpoint.position[1], -viewpoint.position[2]);
-                x3d.gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
             }
         }
         else
@@ -2476,6 +2679,28 @@ class MyParticleSystemRenderCallback extends X3dParticleSystemRenderCallback
     }
 }
 
+class MyNavigationInfoRenderCallback extends X3dNavigationInfoRenderCallback
+{
+    public void render(X3dNode data, Object object)
+    {
+        X3dNavigationInfo navi = (X3dNavigationInfo)data;
+
+        if (x3d.initRender) {
+            if (navi.type.length > 0)  {
+                if (navi.type[0].equals("EXAMINE"))
+                    x3d.navigation = x3d.NAV_EXAMINE;
+                else if (navi.type[0].equals("WALK"))
+                    x3d.navigation = x3d.NAV_WALK;
+                else if (navi.type[0].equals("FLY"))
+                    x3d.navigation = x3d.NAV_FLY;
+                else if (navi.type[0].equals("NONE"))
+                    x3d.navigation = x3d.NAV_NONE;
+                else if (navi.type[0].equals("ANY"))
+                    x3d.navigation = x3d.NAV_ANY;
+            }           
+        }           
+    }
+}
 
 class MyPositionInterpolatorProcessEventCallback extends X3dPositionInterpolatorProcessEventCallback 
 {
@@ -2823,24 +3048,6 @@ class MyProximitySensorProcessEventCallback extends X3dProximitySensorProcessEve
                 (viewpoint.position[1] > ymin) &&
                 (viewpoint.position[2] < zmax) &&
                 (viewpoint.position[2] > zmin)) {
-               float rot[] = new float[4];
-               x3d2.SFRotationFromEuler(rot, x3d.view_rotx, x3d.view_roty, x3d.view_rotz);
-               proximitySensor.orientation_changed[0] = rot[0];
-               proximitySensor.orientation_changed[1] = rot[1];
-               proximitySensor.orientation_changed[2] = rot[2];
-               proximitySensor.orientation_changed[3] = -rot[3];
-    
-               proximitySensor.position_changed[0] = 0;
-               proximitySensor.position_changed[1] = 0;
-               proximitySensor.position_changed[2] = -x3d.view_dist;
-    
-               float vec[]= new float[3];
-               x3d2.multMatrix4Vec(vec, x3d.navigation_matrix, 
-                                   proximitySensor.position_changed);
-               proximitySensor.position_changed[0] = vec[0];
-               proximitySensor.position_changed[1] = vec[1];
-               proximitySensor.position_changed[2] = vec[2];
-    /*
                proximitySensor.position_changed[0] = viewpoint.position[0];
                proximitySensor.position_changed[1] = viewpoint.position[1];
                proximitySensor.position_changed[2] = viewpoint.position[2];
@@ -2848,7 +3055,6 @@ class MyProximitySensorProcessEventCallback extends X3dProximitySensorProcessEve
                proximitySensor.orientation_changed[1] = viewpoint.orientation[1];
                proximitySensor.orientation_changed[2] = viewpoint.orientation[2];
                proximitySensor.orientation_changed[3] = viewpoint.orientation[3];
-    */
            } else
                enabled = false;
         }

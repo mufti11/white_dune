@@ -1253,13 +1253,10 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     if (writeFlags & (TRIANGULATE | (C_SOURCE | CC_SOURCE | JAVA_SOURCE))) {
         m_root->doWithBranch(generateConvertedNodes, &writeFlags);
     }
+    if (writeFlags & (C_SOURCE | CC_SOURCE | JAVA_SOURCE))
+        if (isX3d())
+            x3dv = true;
     writeFlags = writeFlags & (~(TRIANGULATE));
-    if (writeFlags & C_SOURCE)
-        x3dv = true;
-    if (writeFlags & CC_SOURCE)
-        x3dv = true;
-    if (writeFlags & JAVA_SOURCE)
-        x3dv = true;
     bool oldXml = isX3dXml();
     if (x3dv)
         setX3dv();

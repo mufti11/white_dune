@@ -51,7 +51,7 @@ EXTERNPROTO SuperShape[
  ]
 [
   "SuperShapePROTO.wrl"
-  ".//docs/scripted_Nodes/SuperShapePROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperShapePROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/SuperShapePROTO.wrl"
 ]
 
@@ -72,7 +72,7 @@ EXTERNPROTO CurveAnimation[
  ]
 [
   "CurveAnimationPROTO.wrl"
-  ".//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/CurveAnimationPROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
 ]
 
@@ -3763,7 +3763,7 @@ Transform {
                             }
                         }
                         DEF Transform4 Transform {
-                          rotation 0.992504 -8.934348e-2 -8.339183e-2 2.793340
+                          rotation 0.992504 -8.934341e-2 -8.339176e-2 2.793340
                           translation -5.917241 2.859427 1.169944
                           center 2.414691 -0.298006 -0.163896
                           children [
@@ -13159,14 +13159,6 @@ Transform {
                   ]
                   title "made with makehuman, nancy and white_dune"
                 }
-                NavigationInfo {
-                  avatarSize [
-                    0.250000
-                    1.750000
-                    0.750000
-                    1.643427
-                  ]
-                }
                 DEF WO_World Background {
                   groundColor 0.051000 0.051000 0.051000
                   skyColor 0.051000 0.051000 0.051000
@@ -13180,7 +13172,7 @@ Transform {
                       center 0 0.812784 0
                       children [
                         DEF hanim_vk5 HAnimJoint {
-                          rotation -2.167797e-3 0.996107 8.813021e-2 7.048549e-2
+                          rotation -2.167794e-3 0.996107 8.813012e-2 7.048549e-2
                           center 0 0.820000 0
                           children [
                             DEF hanim_skulbase HAnimJoint {
@@ -28898,7 +28890,7 @@ Transform {
                                   center 0.200000 1.030000 -5.500000e-2
                                   children 
                                     DEF hanim_l_wrist HAnimJoint {
-                                      rotation -2.003544e-2 -0.999743 1.065002e-2 0.463293
+                                      rotation -2.003541e-2 -0.999743 1.065002e-2 0.463293
                                       center 0.245291 0.824404 -3.550172e-3
                                       skinCoordIndex [
                                         9134 
@@ -32611,7 +32603,7 @@ Transform {
                           ]
                         }
                         DEF hanim_r_hip HAnimJoint {
-                          rotation -0.653067 7.828693e-2 0.753243 0.245316
+                          rotation -0.653067 7.828687e-2 0.753243 0.245316
                           center -9e-2 0.780000 -3.000000e-2
                           children 
                             DEF hanim_r_knee HAnimJoint {
@@ -63293,4 +63285,20 @@ DEF Script3 Script {
 
 ROUTE SphereSensor1.isOver TO Script3.bool_in
 ROUTE Script3.int_out TO Switch3.set_whichChoice
+
+NavigationInfo {
+  avatarSize [
+    0.250000
+    1.750000
+    0.750000
+    1.643427
+  ]
+  type [
+    "EXAMINE"
+    "ANY"
+  ]
+}
+
+Viewpoint {
+}
 

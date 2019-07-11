@@ -5163,6 +5163,10 @@ Fixed missing translateField() problem of NavigationInfo node
 
 Added interactive Collision support on C/C++/java export
 
-Coontact: MUFTI <mufti@users.ourproject.org>
+Added limited NavigationInfo support on C/C++/java export
+
+Fixed "close icon" problem on java export
+
+Contact: MUFTI <mufti11@web.de>
 
 

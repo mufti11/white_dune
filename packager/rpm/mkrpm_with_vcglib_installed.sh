@@ -172,6 +172,7 @@ install -m 644 -p man/dune.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune.1
 install -m 644 -p man/dune4kids.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune4kids.1
 install -m 644 -p man/illegal2vrml.1 $RPM_BUILD_ROOT/%{_mandir}/man1/illegal2vrml.1
 install -m 755 -p docs/export_example_c++/opengl_example/render_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/white_dune_opengl_example
+install -m 644 -p include/libC++RWD.h $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example/libC++RWD.h
 install -m 755 -p warbird/warbird_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/warbird
 install -m 644 -p warbird/warbird.desktop $RPM_BUILD_ROOT/%{_datadir}/applications/warbird.desktop
 install -m 644 -p warbird/warbird.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/warbird.png
@@ -217,6 +218,7 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %{_datadir}/white_dune/opengl_example/README_fedora.txt
 %{_datadir}/white_dune/opengl_example/main.cpp
 %{_datadir}/white_dune/opengl_example/robot.x3dv
+%{_datadir}/white_dune/opengl_example/libC++RWD.h
 %{_bindir}/warbird
 %{_datadir}/applications/warbird.desktop
 %{_datadir}/pixmaps/warbird.png

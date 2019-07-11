@@ -51,7 +51,7 @@ EXTERNPROTO SuperShape[
  ]
 [
   "SuperShapePROTO.wrl"
-  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperShapePROTO.wrl"
+  ".//docs/scripted_Nodes/SuperShapePROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/SuperShapePROTO.wrl"
 ]
 
@@ -72,10 +72,14 @@ EXTERNPROTO CurveAnimation[
  ]
 [
   "CurveAnimationPROTO.wrl"
-  "/usr/share/doc/whitedune/docs/scripted_Nodes/CurveAnimationPROTO.wrl"
+  ".//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
   "http://wdune.ourproject.org//docs/scripted_Nodes/CurveAnimationPROTO.wrl"
 ]
 
+
+DEF Viewpoint1_2 Viewpoint {
+  position -2.720000 -2 19.490290
+}
 
 WorldInfo {
   info [
@@ -4027,7 +4031,7 @@ Transform {
                         }
                     }
                     DEF Transform4 Transform {
-                      rotation 0.959729 -9.136464e-2 -0.265654 2.531110
+                      rotation 0.959729 -9.136485e-2 -0.265654 2.531110
                       translation -5.917241 2.859427 1.169944
                       center 2.414691 -0.298006 -0.163896
                       children [
@@ -4370,7 +4374,7 @@ Transform {
                           }
                         }
                         DEF Transform3 Transform {
-                          rotation 0.961693 -0.256143 9.766076e-2 1.574796
+                          rotation 0.961693 -0.256143 9.766065e-2 1.574796
                           translation -3.649116 0.939808 -0.736953
                           center 2.553767 -0.354530 -0.174232
                           children [
@@ -5159,7 +5163,7 @@ Transform {
                               ]
                             }
                             Transform {
-                              rotation 0.985911 0.166917 1.083413e-2 0.754261
+                              rotation 0.985911 0.166917 1.083420e-2 0.754261
                               translation -3.955506 0.940085 -0.847734
                               center 2.553767 -0.354530 -0.174232
                               children 
@@ -12510,10 +12514,7 @@ Group {
 }
 
 Group {
-  children [
-    DEF Viewpoint1_2 Viewpoint {
-      position -4.835352 -0.374279 19.490290
-    }
+  children 
     Transform {
       translation 0 0 -9.060000
       children 
@@ -13130,7 +13131,6 @@ Group {
             }
         }
     }
-  ]
 }
 
 DEF Transform9 Transform {
@@ -13217,14 +13217,6 @@ Group {
                 "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
               ]
               title "made with makehuman, nancy and white_dune"
-            }
-            NavigationInfo {
-              avatarSize [
-                0.250000
-                1.750000
-                0.750000
-                1.643427
-              ]
             }
             DEF WO_World Background {
               groundColor 0.051000 0.051000 0.051000
@@ -32674,7 +32666,7 @@ Group {
                       ]
                     }
                     DEF hanim_r_hip HAnimJoint {
-                      rotation -0.961715 5.822439e-2 0.267796 0.526806
+                      rotation -0.961715 5.822429e-2 0.267796 0.526806
                       center -9e-2 0.780000 -3.000000e-2
                       children 
                         DEF hanim_r_knee HAnimJoint {
@@ -63399,8 +63391,6 @@ Transform {
             0.931677
           ]
         }
-        DEF PlaneSensor1 PlaneSensor {
-        }
         Shape {
           appearance Appearance {
             material DEF Material3 Material {
@@ -63426,5 +63416,17 @@ ROUTE TimeSensor4.fraction_changed TO ScalarInterpolator2.set_fraction
 ROUTE ColorInterpolator1.value_changed TO Material3.set_diffuseColor
 ROUTE ScalarInterpolator2.value_changed TO Material3.set_shininess
 ROUTE ScalarInterpolator1.value_changed TO Material3.set_transparency
+
+NavigationInfo {
+  type [
+    "WALK"
+    "EXAMINE"
+    "ANY"
+  ]
+}
+
+DEF PlaneSensor1 PlaneSensor {
+}
+
 ROUTE PlaneSensor1.translation_changed TO Transform2.set_translation
 

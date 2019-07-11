@@ -16,6 +16,10 @@ class Extra {
             X3dSphereSensor sphereSensor = (X3dSphereSensor)node;
             sphereSensor.isOver = false;
         }
+        if (node.getType() == X3dCollisionType.type) {
+            X3dCollision collision = (X3dCollision)node;
+            collision.isActive = false;
+        }
     }
 }
     

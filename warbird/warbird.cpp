@@ -125,20 +125,31 @@ void onMouseMove(int x, int y)
             init = false;
         } else
             CPPRWD::setMouseMove(x, clicked_x, y, clicked_y);
-/*
         if (!CPPRWD::hasHit()) {
-            roty -= (clicked_x - x) / 5.0;
-            rotx -= (clicked_y - y) / 5.0;
-            CPPRWD::setView(dist, rotx, roty, rotz); 
+            switch (CPPRWD::getNavigation()) {
+              case NAV_ANY:
+              case NAV_EXAMINE:
+                roty -= (clicked_x - x) / 5.0;
+                rotx -= (clicked_y - y) / 5.0;
+                CPPRWD::setView(dist * CPPRWD::getNavigationSpeed(), 
+                                rotx, roty, rotz); 
+                break;
+             case NAV_WALK:          
+                roty -= (clicked_x - x) / 5.0;
+                dist += (clicked_y - y) / 5.0;
+                CPPRWD::setView(dist * CPPRWD::getNavigationSpeed(), 
+                                rotx, roty, rotz); 
+            }
         }
-*/
         clicked_x = x;
         clicked_y = y;
     } 
     else if (middle_button || right_button )
     {
-//        dist += (clicked_y - y) / 5.0;
-//        CPPRWD::setView(dist, rotx, roty, rotz); 
+        dist += (clicked_y - y) / 5.0;
+        if (CPPRWD::getNavigation() == NAV_EXAMINE)
+            CPPRWD::setView(dist * CPPRWD::getNavigationSpeed(), 
+                            rotx, roty, rotz); 
         clicked_x = x;
         clicked_y = y;
     } else

@@ -42,6 +42,8 @@ public:
     virtual int     getType() const { return VRML_SHAPE; }
     virtual int     getNodeClass() const { return SHAPE_NODE | CHILD_NODE; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
     FieldIndex appearance;
     FieldIndex geometry;
     FieldIndex effect;

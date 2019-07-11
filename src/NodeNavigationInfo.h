@@ -44,6 +44,8 @@ public:
 
     virtual int     getType() const { return VRML_NAVIGATION_INFO; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
     FieldIndex avatarSize;
     FieldIndex headlight;
     FieldIndex speed;

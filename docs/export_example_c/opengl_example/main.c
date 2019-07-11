@@ -54,15 +54,17 @@ extern void reInitSensor(void *);
 #include "CExport.c"
 #include "libCRWD.h"
 #include <math.h>
-float rotx = 0.0f; 
-float roty = 0.0f;
-float rotz = 0.0f;
-float dist = -10.0f;
 
-GLUnurbsObj *theNurb;
+float dist = 10.0f;
+static int distInit = 0;
 
 void display()
 {
+    if (distInitialised())
+        if (!distInit) {
+            distInit = -1;
+            dist = getInitialDist();
+        }
     CRWDdraw(1);
     glutSwapBuffers();
 }
@@ -79,8 +81,10 @@ int left_button = 0;
 int middle_button = 0;
 int right_button = 0;
 
-int clicked_x = 0;
-int clicked_y = 0;
+int moved_x = 0;
+int moved_y = 0;
+
+int dist_y = 0;
 
 void onMouseClick(int button, int state, int x, int y)
 {
@@ -91,8 +95,8 @@ void onMouseClick(int button, int state, int x, int y)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) 
     { 
         left_button = 1;
-        clicked_x = x;
-        clicked_y = y;        
+        moved_x = x;
+        moved_y = y;        
         setMouseClick(x, y);
     }	
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
@@ -102,14 +106,14 @@ void onMouseClick(int button, int state, int x, int y)
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
         middle_button = 1;
-        clicked_x = x;
-        clicked_y = y;
+        moved_x = x;
+        moved_y = y;
     }	
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) 
     { 
         right_button = 1;
-        clicked_x = x;
-        clicked_y = y;
+        moved_x = x;
+        moved_y = y;
     }	
 }
 
@@ -117,51 +121,38 @@ void onMouseMove(int x, int y)
 {
     if (left_button)
     {
-        static int init = 1;
+        static int init = -1;
         if (init) {
             setMouseMove(x, x, y, y);
             init = 0;
         } else
-            setMouseMove(x, clicked_x, y, clicked_y);
+            setMouseMove(x, moved_x, y, moved_y);
         if (!hasHit()) {
-            roty -= (clicked_x - x) / 5.0;
-            rotx -= (clicked_y - y) / 5.0;
-            setView(dist, rotx, roty, rotz); 
+            navigate(moved_x - x, moved_y - y, dist);
         }
-        clicked_x = x;
-        clicked_y = y;
-    }
-    if (middle_button || right_button )
+        moved_x = x;
+        moved_y = y;
+    } 
+    else if (middle_button || right_button )
     {
-        dist += (clicked_y - y) / 5.0;
-        setView(dist, view_rotx, view_roty, view_rotz); 
-        clicked_x = x;
-        clicked_y = y;
-    }
+        dist += (y - dist_y) / 5.0;
+        dist_y = y;
+        dist = navigate(0, 0, dist);
+    } else
+        setMousePosition(x, y);
 }
 
 void onMouseMovePassive(int x, int y)
 {
-     setMousePosition(x, y);
+    setMousePosition(x, y);
+    moved_x = x;
+    moved_y = y;
+    dist_y = y;
 }
 
 
 void onSpecialKeyClick(int key, int x, int y)
 {
-    switch (key) {
-      case GLUT_KEY_UP:
-        view_rotx -= 1;
-        break;
-      case GLUT_KEY_DOWN:
-        view_rotx += 1;
-        break;
-      case GLUT_KEY_LEFT:
-        view_roty -= 1;
-        break;
-      case GLUT_KEY_RIGHT:
-        view_roty += 1;
-        break;
-    }
 }
 
 void onReshape(int width, int height)
@@ -184,11 +175,6 @@ int main(int argc, char **argv)
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(animation);
     glutDisplayFunc(display);
-    theNurb = gluNewNurbsRenderer(); 
-    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 50.0); 
-    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL); 
-
-    setView(view_dist, view_rotx, view_roty, view_rotz); 
     glutMainLoop();
     return 0;
 }

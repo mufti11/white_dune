@@ -1,7 +1,7 @@
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-INCLUDE_DIR=../docs/export_example_c++/
+INCLUDE_DIR=../include
 
 warbird: $(INCLUDE_DIR)/libC++RWD.h C++Export.cc warbird.cpp 
 	g++ -g -o $@ -I. -I$(INCLUDE_DIR) -Wno-narrowing warbird.cpp \
