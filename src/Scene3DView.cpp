@@ -873,7 +873,8 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                     if (m_scene->getXSymetricMode()) {
                         float eps = TheApp->GetHandleEpsilon();
                         bool alreadyHandled = false;
-                        for (int i; i < alreadyHandledVertices.size(); i++) {
+                        for (int i = 0; i < alreadyHandledVertices.size(); 
+                             i++) {
                             Vec3f vec = alreadyHandledVertices[i];
                             if ((fabs(oldv.x - vec.x) < eps) &&
                                 (oldv.y == vec.y) && 

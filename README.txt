@@ -5167,6 +5167,8 @@ Added limited NavigationInfo support on C/C++/java export
 
 Fixed "close icon" problem on java export
 
+Fixed crash when moving handles
+
 Contact: MUFTI <mufti11@web.de>
 
 
