@@ -319,13 +319,13 @@
 #define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
-#define HAVE_ANT "/usr/bin/ant"
+/* #undef HAVE_ANT */
 
 /* (path to) graphical commandline terminal (e.g. xterm) */
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gimp"
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
 
 /* object editor for sound (.wav/.midi) files */
 #define HAVE_SOUND_EDITOR "/usr/bin/audacity"
@@ -543,7 +543,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.212"
+#define HAVE_DUNE_VERSION "white_dune 1.221"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

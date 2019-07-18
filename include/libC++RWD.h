@@ -28,130 +28,7 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 # define random(x) rand(x)
 #endif
 
-namespace CPPRWD
-{
-    void error(const char *errormsg);
-
-    void IndexedFaceSetRender(X3dNode *data, void*);
-
-    void IndexedFaceSetCreateNormals(X3dNode *data, void*);
-
-    void ImageTextureRender(X3dNode *data, void*);
-
-    void PixelTextureRender(X3dNode *data, void*);
-
-    void PointLightRender(X3dNode *data, void*);
-
-    void DirectionalLightRender(X3dNode *data, void*);
-
-    void SpotLightRender(X3dNode *data, void*);
-
-    void MaterialRender(X3dNode *data, void*);
-
-    void TransformTreeRender(X3dNode *data, void *dataptr);
-
-    void GroupTreeRender(X3dNode *data, void *dataptr);
-
-    void ViewpointRender(X3dNode *data, void*);
-
-    void SwitchTreeRender(X3dNode *data, void *dataptr);
-
-    void HAnimHumanoidTreeRender(X3dNode *data, void *dataptr);
-
-    void HAnimJointTreeRender(X3dNode *data, void *dataptr);
-
-    void ParticleSystemTreeRender(X3dNode *data, void *dataptr);
-
-    void NavigationInfoTreeRender(X3dNode *data, void *dataptr);
-
-    bool TimeSensorSendEvents(X3dNode *data, const char *event, 
-                              void* extraData);
-
-    bool TouchSensorSendEvents(X3dNode *data, const char *event, 
-                               void *extraData);
-
-    bool PlaneSensorSendEvents(X3dNode *data, const char *event,
-                               void *extraData);
-
-    bool CylinderSensorSendEvents(X3dNode *data, const char *event, 
-                                  void *extraData);
-                                          
-    bool SphereSensorSendEvents(X3dNode *data, const char *event, 
-                                void *extraData);
-                                          
-    bool ProximitySensorSendEvents(X3dNode *data, const char *event, 
-                                   void *extraData);
-                                          
-    bool CollisionSendEvents(X3dNode *data, const char *event, void *extraData);
-                                          
-    float interpolate(float t, float key, float oldKey,
-                               float value, float oldValue);
-
-    void accountInterpolator(float *target, float fraction,
-                             float *keys, float *keyValues, int numKeys,
-                             int stride, int rotation);
-
-    bool PositionInterpolatorSendEvents(X3dNode *data, const char *event,
-                                        void* extraData);
-
-    bool OrientationInterpolatorSendEvents(X3dNode *data, const char *event,
-                                           void* extraData);
-
-    bool ColorInterpolatorSendEvents(X3dNode *data, const char *event,
-                                     void* extraData);
-
-    bool ScalarInterpolatorSendEvents(X3dNode *data, const char *event,
-                                      void* extraData);
-
-    bool CoordinateInterpolatorSendEvents(X3dNode *data, const char *event,
-                                          void* extraData);
-
-    bool NormalInterpolatorSendEvents(X3dNode *data, const char *event,
-                                      void* extraData);
-
-    bool PositionInterpolator2DSendEvents(X3dNode *data, const char *event,
-                                          void* extraData);
-
-    void draw(bool render);
-
-    void processEvents();
-
-    void processHits(GLint hits, GLuint *pickBuffer);
-
-    void setMouseClick(int x, int y);
-
-    void setMouseRelease(int x, int y);
-
-    void setMousePosition(int x, int y);
-
-    void setMouseMove(int x, int old_x, int y, int old_y);
-
-    bool hasHit(void);
-
-    int getNavigation(void);
-
-    float getNavigationSpeed(void);
-
-    void setWidthHeight(int width, int height);
-
-    void init();
-
-    void finalize();
-
-    int allocLight();
-
-    float navigate(int x, int y, float z);
-
-    float getInitialDist(void);
-
-    bool distInitialised(void);
-
-    void startWalking(void);
- 
-    void walkCamera(float *walk);
-
-    void orbitCamera(float dtheta, float dphi, float z);
-};
+#include "libC++RWD_namespace.h"
 
 #define Z_NEAR 0.05
 #define Z_FAR 7000.0
@@ -186,7 +63,6 @@ static X3dViewpoint *viewpoint1 = NULL;
 static short lightExists = 0;
 static int numLights = 0;
 
-static double projectionMatrix[16];
 static double fieldOfViewdegree = 45;
 
 static bool preRender = false;
@@ -257,14 +133,29 @@ static void stopNavigation(void)
     stop = true;
 }
 
+static bool navigateWalkOn = false;
+
+void CPPRWD::setWalkOn(void)
+{
+    navigateWalkOn = true;
+}
+
 static float navigationMatrix[16];
+
+static float xOld = 0;
+static float yOld = 0;
+static float zOld = 0;
+static bool navInit = false;
 
 float CPPRWD::navigate(int x, int y, float z)
 {
     float walk[3];
-    static float xOld = x;
-    static float yOld = y;
-    static float zOld = z;
+    if (!navInit) {  
+        xOld = x;
+        yOld = y;
+        zOld = z;
+        navInit = true;
+    }
 
     switch(getNavigation()) {
       case NAV_ANY:
@@ -277,7 +168,7 @@ float CPPRWD::navigate(int x, int y, float z)
             stop = false;
         } else
             walk[2] = 0;
-        walkCamera(walk);
+        walkCamera(walk, navigateWalkOn);
         break;
       case NAV_EXAMINE:
         if ((!stop) || (z - zOld > 0)) {
@@ -302,6 +193,22 @@ float CPPRWD::navigate(int x, int y, float z)
         zOld = z;
     }
     return z;
+}
+
+void CPPRWD::walkOn(void)
+{
+    float walk[3];
+    if (getNavigation() == NAV_WALK) {
+        startWalking();
+        walk[0] = 0;
+        walk[1] = 0;
+        if ((!stop) || (yOld >= 0)) { 
+            walk[2] = yOld / 5.0;
+            stop = false;
+        } else
+            walk[2] = 0;
+        walkCamera(walk, navigateWalkOn);
+    }
 }
 
 float CPPRWD::getInitialDist(void)
@@ -478,7 +385,7 @@ void CPPRWD::startWalking(void)
     oldWalkTime = getTimerTime();
 }
 
-void CPPRWD::walkCamera(float *walk)
+void CPPRWD::walkCamera(float *walk, bool walkOn)
 {
     float pos[3];
     pos[0] = viewpoint1->position[0];
@@ -499,7 +406,7 @@ void CPPRWD::walkCamera(float *walk)
         sfaround[0] = 0;
         sfaround[1] = 1;
         sfaround[2] = 0;
-        sfaround[3] = -(walk[0] * 2.0f) * 2.0f * M_PI / 360.0f;
+        sfaround[3] = -(walk[0] * 2.0f) * 2.0f * M_PI / 360.0f; 
         float around[4];
         SFRotation2quaternion(around, sfaround);
         float newRot[4];
@@ -512,7 +419,7 @@ void CPPRWD::walkCamera(float *walk)
         viewpoint1->orientation[1] = sfnewRot[1];
         viewpoint1->orientation[2] = sfnewRot[2];
         viewpoint1->orientation[3] = sfnewRot[3];
-        float z = walk[2] * 2.0f * fspeed;
+        float z = walk[2] * 2.0f * fspeed * (walkOn ? dt * 100000.0: 1);
         float vec[3];
         vec[0] = 0;
         vec[1] = 0;
@@ -1552,7 +1459,7 @@ void CPPRWD::TransformTreeRender(X3dNode *data, void *dataptr)
 void CPPRWD::ViewpointRender(X3dNode *data, void*)
 {
     X3dViewpoint *viewpoint = (X3dViewpoint*)data;
-    if(preRender)
+    if(preRender || initRender)
     {
         viewPointExists = true;
         
@@ -1874,8 +1781,8 @@ void startParticle(struct X3dParticleSystem *system, int i,
     if (system->emitter)
         if (system->emitter->getType() == X3dConeEmitterType)
         {
-            X3dConeEmitter *emit = (X3dConeEmitter *) system->emitter;
-            maxAngle = emit->angle;
+            X3dConeEmitter *emitt = (X3dConeEmitter *) system->emitter;
+            maxAngle = emitt->angle;
         }
     float angle = (random() / (float)RAND_MAX) * maxAngle; 
 
@@ -1890,52 +1797,52 @@ void startParticle(struct X3dParticleSystem *system, int i,
     if (system->emitter)
         if (system->emitter->getType() == X3dConeEmitterType) 
         {
-            X3dConeEmitter *emit = (X3dConeEmitter *)system->emitter;
-            extraVar->m_mass = emit->mass;
-            extraVar->m_internPosition[3 * i] = emit->position[0];
-            extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
-            extraVar->m_internPosition[3 * i + 2] = emit->position[2];
+            X3dConeEmitter *emitt = (X3dConeEmitter *)system->emitter;
+            extraVar->m_mass = emitt->mass;
+            extraVar->m_internPosition[3 * i] = emitt->position[0];
+            extraVar->m_internPosition[3 * i + 1] = emitt->position[1]; 
+            extraVar->m_internPosition[3 * i + 2] = emitt->position[2];
             speed = (random() / (float)RAND_MAX) * 
-                    (emit->variation / 2.0f + 1) * emit->speed;
+                    (emitt->variation / 2.0f + 1) * emitt->speed;
         } 
         else if (system->emitter->getType() == X3dPointEmitterType) 
         {
-            X3dPointEmitter *emit = (X3dPointEmitter *)system->emitter;
-            extraVar->m_mass = emit->mass;
-            extraVar->m_internPosition[i * 3] = emit->position[0];
-            extraVar->m_internPosition[i * 3 + 1] = emit->position[1]; 
-            extraVar->m_internPosition[i * 3 + 2] = emit->position[2];
+            X3dPointEmitter *emitt = (X3dPointEmitter *)system->emitter;
+            extraVar->m_mass = emitt->mass;
+            extraVar->m_internPosition[i * 3] = emitt->position[0];
+            extraVar->m_internPosition[i * 3 + 1] = emitt->position[1]; 
+            extraVar->m_internPosition[i * 3 + 2] = emitt->position[2];
             speed = (random() / (float)RAND_MAX) * 
-                    (emit->variation / 2.0f + 1) * emit->speed;
-            if ((emit->direction[0] != 0) &&
-                (emit->direction[1] != 0) &&
-                (emit->direction[0] != 0)) {
+                    (emitt->variation / 2.0f + 1) * emitt->speed;
+            if ((emitt->direction[0] != 0) &&
+                (emitt->direction[1] != 0) &&
+                (emitt->direction[0] != 0)) {
                 setInternVector = true;
                 extraVar->m_internVector[i * 3] = speed * 
-                                                  emit->direction[0];
+                                                  emitt->direction[0];
                 extraVar->m_internVector[i * 3 + 1] = speed * 
-                                                      emit->direction[1];
+                                                      emitt->direction[1];
                 extraVar->m_internVector[i * 3 + 2] = speed * 
-                                                      emit->direction[2];
+                                                      emitt->direction[2];
             }
         }
         else if (system->emitter->getType() == X3dExplosionEmitterType) 
         {
-            X3dExplosionEmitter *emit = (X3dExplosionEmitter *)system->emitter;
-            extraVar->m_mass = emit->mass;
-            extraVar->m_internPosition[3 * i] = emit->position[0];
-            extraVar->m_internPosition[3 * i + 1] = emit->position[1]; 
-            extraVar->m_internPosition[3 * i + 2] = emit->position[2];
+            X3dExplosionEmitter *emitt = (X3dExplosionEmitter *)system->emitter;
+            extraVar->m_mass = emitt->mass;
+            extraVar->m_internPosition[3 * i] = emitt->position[0];
+            extraVar->m_internPosition[3 * i + 1] = emitt->position[1]; 
+            extraVar->m_internPosition[3 * i + 2] = emitt->position[2];
             speed = (random() / (float)RAND_MAX) * 
-                    (emit->variation / 2.0f + 1) * emit->speed;
+                    (emitt->variation / 2.0f + 1) * emitt->speed;
         }
         else if (system->emitter->getType() == X3dPolylineEmitterType) 
         {
-            X3dPolylineEmitter *emit = (X3dPolylineEmitter *)system->emitter;
-            extraVar->m_mass = emit->mass;
-            X3dCoordinate *ncoord = (X3dCoordinate *)emit->coord;
+            X3dPolylineEmitter *emitt = (X3dPolylineEmitter *)system->emitter;
+            extraVar->m_mass = emitt->mass;
+            X3dCoordinate *ncoord = (X3dCoordinate *)emitt->coord;
             speed = (random() / (float)RAND_MAX) * 
-                    (emit->variation / 2.0f + 1) * emit->speed;
+                    (emitt->variation / 2.0f + 1) * emitt->speed;
             int numLines = 0;
             float *coords = NULL;
             int *lineIndicesCoord1 = (int *)malloc(sizeof(int));
@@ -1945,14 +1852,14 @@ void startParticle(struct X3dParticleSystem *system, int i,
                 coords = ncoord->point;
                 bool startLine = true;
                 bool validLine = false;
-                for (int i = 0; i < emit->coordIndex_length; i++) {
-                    if (emit->coordIndex[i] < 0) 
+                for (int i = 0; i < emitt->coordIndex_length; i++) {
+                    if (emitt->coordIndex[i] < 0) 
                     {
                         startLine = true;
                         validLine = false;
                     } else if (!validLine)
                         validLine = true;  
-                    else if (emit->coordIndex[i] != emit->coordIndex[i - 1]) 
+                    else if (emitt->coordIndex[i] != emitt->coordIndex[i - 1]) 
                     {
                          numLines++;
                          lineIndicesCoord1 = (int *)realloc(lineIndicesCoord1,
@@ -1961,8 +1868,8 @@ void startParticle(struct X3dParticleSystem *system, int i,
                          lineIndicesCoord2 = (int *)realloc(lineIndicesCoord2,
                                                             numLines *
                                                             sizeof(int));
-                         lineIndicesCoord1[numLines - 1] = emit->coordIndex[i];
-                         lineIndicesCoord2[numLines - 1] = emit->coordIndex[i - 
+                         lineIndicesCoord1[numLines - 1] = emitt->coordIndex[i];
+                         lineIndicesCoord2[numLines - 1] = emitt->coordIndex[i - 
                                                                             1];
                     }
                 }
@@ -2009,34 +1916,34 @@ void startParticle(struct X3dParticleSystem *system, int i,
             }
             free(lineIndicesCoord1);
             free(lineIndicesCoord2);
-            if ((emit->direction[0] != 0) &&
-                (emit->direction[1] != 0) &&
-                (emit->direction[0] != 0))
+            if ((emitt->direction[0] != 0) &&
+                (emitt->direction[1] != 0) &&
+                (emitt->direction[0] != 0))
             {
                 setInternVector = true;
                 extraVar->m_internVector[3 * i] = speed * 
-                                                  emit->direction[0];
+                                                  emitt->direction[0];
                 extraVar->m_internVector[3 * i + 1] = speed * 
-                                                      emit->direction[1];
+                                                      emitt->direction[1];
                 extraVar->m_internVector[3 * i + 1] = speed * 
-                                                      emit->direction[2];
+                                                      emitt->direction[2];
             }
         }
         else if (system->emitter->getType() == X3dVolumeEmitterType) 
         {
-            X3dVolumeEmitter *emit = (X3dVolumeEmitter *)system->emitter;
-            extraVar->m_mass = emit->mass;
-            X3dCoordinate *ncoord = (X3dCoordinate *)emit->coord;
+            X3dVolumeEmitter *emitt = (X3dVolumeEmitter *)system->emitter;
+            extraVar->m_mass = emitt->mass;
+            X3dCoordinate *ncoord = (X3dCoordinate *)emitt->coord;
             speed = (random() / (float)RAND_MAX) * 
-                    (emit->variation / 2.0f + 1) * emit->speed;
+                    (emitt->variation / 2.0f + 1) * emitt->speed;
             int numPoints = 0;
             float *coords = NULL;
             float *coordArray = (float *)malloc(sizeof(float));
             if (ncoord) {
                 coords = ncoord->point;
-                for (int i = 0; i < emit->coordIndex_length; i++)
+                for (int i = 0; i < emitt->coordIndex_length; i++)
                 {
-                    int index = emit->coordIndex[i];
+                    int index = emitt->coordIndex[i];
                     if (index > -1)
                     {
                         numPoints++;
@@ -2065,10 +1972,10 @@ void startParticle(struct X3dParticleSystem *system, int i,
         }
         else if (system->emitter->getType() == X3dSurfaceEmitterType) 
         {
-            X3dSurfaceEmitter *emit = (X3dSurfaceEmitter *)system->emitter;
-            extraVar->m_mass = emit->mass;
+            X3dSurfaceEmitter *emitt = (X3dSurfaceEmitter *)system->emitter;
+            extraVar->m_mass = emitt->mass;
             speed = (random() / (float)RAND_MAX) * 
-                    (emit->variation / 2.0f + 1) * emit->speed;
+                    (emitt->variation / 2.0f + 1) * emitt->speed;
             static bool once = false;
             if (!once) 
             {
@@ -3040,12 +2947,6 @@ void CPPRWD::init()
 
     glViewport(0 ,0, width, height);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fieldOfViewdegree, 1.0, Z_NEAR, Z_FAR); 
-    glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);
-    glMatrixMode(GL_MODELVIEW);
-
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
@@ -3079,7 +2980,7 @@ void CPPRWD::init()
 
     if(!viewPointExists)
     {
-        X3dViewpoint viewpoint;
+        static X3dViewpoint viewpoint;
         viewpoint.fieldOfView = 0.785398;
         viewpoint.position = (float *)malloc(3 * sizeof(float));
         viewpoint.position[0] = 0;
@@ -3091,10 +2992,6 @@ void CPPRWD::init()
         viewpoint.orientation[2] = 1;
         viewpoint.orientation[3] = 0;
         ViewpointRender(&viewpoint, NULL);
-        free(viewpoint.position);
-        viewpoint.position = NULL;
-        free(viewpoint.orientation);
-        viewpoint.orientation = NULL;
     }
     initRender = false;
 

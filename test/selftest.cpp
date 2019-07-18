@@ -151,6 +151,8 @@ int main(int argc, char *argv[])
                continue;
            if (strcmp(str, "NurbsOrientationInterpolator") == 0)
                continue;
+           if (strcmp(str, "NurbsTextureSurface") == 0)
+               continue;
            if (strncmp(str, "Geo", 3) == 0)
                continue;
 

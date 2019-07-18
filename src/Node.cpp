@@ -1716,7 +1716,8 @@ Node::writeC(int f, int languageFlag)
     if (isMeshBasedNode()) {
         RET_ONERROR( mywritef(f, "    ") )
         if (languageFlag & C_SOURCE)
-            RET_ONERROR( mywritef(f, "setGlName(&self->%s, %d);\n", getVariableName(),
+            RET_ONERROR( mywritef(f, "%sSetGlName(&self->%s, %d);\n", 
+                                  TheApp->getCPrefix(), getVariableName(),
                                   m_scene->getGlName()) )
         else {
             if (languageFlag & JAVA_SOURCE) {
@@ -2311,55 +2312,67 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
         return 0; 
     } 
 
-    RET_ONERROR( indentf(f, indent) )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, "    ") )
-    RET_ONERROR( mywritestr(f, "if (") )
-    RET_ONERROR( writeCProcessEventCallback(f, languageFlag) )
-    RET_ONERROR( mywritestr(f, " != ") )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, "null") )
-    else
-        RET_ONERROR( mywritestr(f, "NULL") )
-    RET_ONERROR( mywritestr(f, ") {\n") )
-
-    if (languageFlag & JAVA_SOURCE) {
-        RET_ONERROR( indentf(f, indent + 8) )
-        RET_ONERROR( mywritestr(f, "try {\n") )
-        RET_ONERROR( mywritestr(f, "    ") )
-    }  
-
-    RET_ONERROR( indentf(f, indent + 4) )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, "   ") )
-    RET_ONERROR( mywritestr(f, "nextEvent = ") )
-    RET_ONERROR( writeCProcessEventCallback(f, languageFlag) )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, ".processEvent") )
-    RET_ONERROR( mywritestr(f, "(") )
-    if (languageFlag & (C_SOURCE | CC_SOURCE))
-        RET_ONERROR( mywritestr(f, "&self->") )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( writeCVariable(f, languageFlag) )
-    else
-        RET_ONERROR( mywritestr(f, getVariableName()) )
-    RET_ONERROR( mywritestr(f, ", \"") )
-    RET_ONERROR( mywritestr(f, eventName) )    
-    RET_ONERROR( mywritestr(f, "\"") )
-    if (languageFlag & (C_SOURCE | CC_SOURCE))
-        RET_ONERROR( mywritestr(f, ", data") )
-    RET_ONERROR( mywritestr(f, ");\n") )
-
-    if (languageFlag & JAVA_SOURCE) {
-        RET_ONERROR( indentf(f, indent + 8) )
-        RET_ONERROR( mywritestr(f, "} catch (Exception e) {\n") )
-        RET_ONERROR( indentf(f, indent + 12) )
-        RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-        RET_ONERROR( mywritestr(f, "ShowError(e);\n") )
-        RET_ONERROR( indentf(f, indent + 8) )
-        RET_ONERROR( mywritestr(f, "}\n") )
+    if ((getType() == VRML_NURBS_SURFACE) && (!m_scene->isX3d()) &&
+        (strcmp(eventName, "controlPoint") == 0)) {
+        RET_ONERROR( indentf(f, indent) )
+        RET_ONERROR( mywritestr(f, "nextEvent = ") )
+        if (languageFlag & C_SOURCE)
+            RET_ONERROR( mywritestr(f, "0;\n") )
+        else
+            RET_ONERROR( mywritestr(f, "false;\n") )
+        RET_ONERROR( indentf(f, indent) )
+        RET_ONERROR( mywritestr(f, "{\n") )        
+    } else {
+        RET_ONERROR( indentf(f, indent) )
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(f, "    ") )
+        RET_ONERROR( mywritestr(f, "if (") )
+        RET_ONERROR( writeCProcessEventCallback(f, languageFlag) )
+        RET_ONERROR( mywritestr(f, " != ") )
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(f, "null") )
+        else
+            RET_ONERROR( mywritestr(f, "NULL") )
+        RET_ONERROR( mywritestr(f, ") {\n") )
+    
+        if (languageFlag & JAVA_SOURCE) {
+            RET_ONERROR( indentf(f, indent + 8) )
+            RET_ONERROR( mywritestr(f, "try {\n") )
+            RET_ONERROR( mywritestr(f, "    ") )
+        }  
+    
+        RET_ONERROR( indentf(f, indent + 4) )
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(f, "   ") )
+        RET_ONERROR( mywritestr(f, "nextEvent = ") )
+        RET_ONERROR( writeCProcessEventCallback(f, languageFlag) )
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( mywritestr(f, ".processEvent") )
+        RET_ONERROR( mywritestr(f, "(") )
+        if (languageFlag & (C_SOURCE | CC_SOURCE))
+            RET_ONERROR( mywritestr(f, "&self->") )
+        if (languageFlag & JAVA_SOURCE)
+            RET_ONERROR( writeCVariable(f, languageFlag) )
+        else
+            RET_ONERROR( mywritestr(f, getVariableName()) )
+        RET_ONERROR( mywritestr(f, ", \"") )
+        RET_ONERROR( mywritestr(f, eventName) )    
+        RET_ONERROR( mywritestr(f, "\"") )
+        if (languageFlag & (C_SOURCE | CC_SOURCE))
+            RET_ONERROR( mywritestr(f, ", data") )
+        RET_ONERROR( mywritestr(f, ");\n") )
+    
+        if (languageFlag & JAVA_SOURCE) {
+            RET_ONERROR( indentf(f, indent + 8) )
+            RET_ONERROR( mywritestr(f, "} catch (Exception e) {\n") )
+            RET_ONERROR( indentf(f, indent + 12) )
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, "ShowError(e);\n") )
+            RET_ONERROR( indentf(f, indent + 8) )
+            RET_ONERROR( mywritestr(f, "}\n") )
+        }
+    
     }
-
     RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
@@ -2481,6 +2494,17 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
     RET_ONERROR( mywritestr(f, "SendEvent(") )
     if ((languageFlag & (C_SOURCE | CC_SOURCE)) ||
         ((languageFlag & JAVA_SOURCE) && isArray)) {
+        bool nurbsSurfaceCorrection = false;
+        if ((sNode->getType() == VRML_NURBS_SURFACE) && (!m_scene->isX3d()) &&
+            strcmp(targetVariableName, "controlPoint") == 0)
+            nurbsSurfaceCorrection = true;
+        if (nurbsSurfaceCorrection) {
+            RET_ONERROR( mywritestr(f, "((") )
+            if (languageFlag & C_SOURCE)
+                RET_ONERROR( mywritestr(f, "struct ") )
+            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
+            RET_ONERROR( mywritestr(f, "Coordinate *)") )
+        }
         if (languageFlag & (C_SOURCE | CC_SOURCE)) {
             if (!isArrayInC(type))
                 RET_ONERROR( mywritestr(f, "&(") )
@@ -2491,7 +2515,10 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
         else
             RET_ONERROR( mywritestr(f, sNode->getVariableName()) )
         RET_ONERROR( mywritestr(f, ".") )
-        RET_ONERROR( mywritestr(f, targetVariableName) )
+        if (nurbsSurfaceCorrection)
+            RET_ONERROR( mywritestr(f, "coord)->point") )
+        else
+            RET_ONERROR( mywritestr(f, targetVariableName) )
         if (languageFlag & (C_SOURCE | CC_SOURCE))
             if (!isArray)
                 RET_ONERROR( mywritestr(f, ")") )

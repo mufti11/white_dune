@@ -1,0 +1,315 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO NurbsSurface[
+ field SFInt32 uDimension
+ field SFInt32 vDimension
+ field MFFloat uKnot
+ field MFFloat vKnot
+ field SFInt32 uOrder
+ field SFInt32 vOrder
+ field SFBool solid
+ field SFBool ccw
+ exposedField MFVec3f controlPoint
+ exposedField MFFloat weight
+ exposedField SFInt32 uTessellation
+ exposedField SFInt32 vTessellation
+ exposedField SFNode texCoord
+ ]
+[
+ "urn:web3d:vrml97:node:NurbsSurface",
+ "urn:inet:blaxxun.com:node:NurbsSurface",
+ "urn:ParaGraph:NurbsSurface",
+ ".//docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
+]
+
+
+DEF Transform1 Transform {
+  children [
+    Shape {
+      appearance Appearance {
+        material DEF Material1 Material {
+          diffuseColor 0.137255 0.113725 1
+        }
+      }
+      geometry DEF NurbsSurface1 NurbsSurface {
+        uDimension 9
+        vDimension 5
+        uKnot [
+          0
+          0
+          0
+          0.250000
+          0.250000
+          0.500000
+          0.500000
+          0.750000
+          0.750000
+          1
+          1
+          1
+        ]
+        vKnot [
+          0
+          0
+          0
+          0.500000
+          0.500000
+          1
+          1
+          1
+        ]
+        controlPoint [
+          0 -1 0
+          0 -0.707107 0
+          0 -1 0
+          0 -0.707107 0
+          0 -1 0
+          0 -0.707107 0
+          0 -1 0
+          0 -0.707107 0
+          0 -1 0
+          0 -0.707107 -0.707107
+          -0.500000 -0.500000 -0.500000
+          -0.707107 -0.707107 0
+          -0.500000 -0.500000 0.500000
+          0 -0.707107 0.707107
+          0.500000 -0.500000 0.500000
+          0.707107 -0.707107 0
+          0.500000 -0.500000 -0.500000
+          0 -0.707107 -0.707107
+          0 0 -1
+          -0.707107 0 -0.707107
+          -1 0 0
+          -0.707107 0 0.707107
+          0 0 1
+          0.707107 0 0.707107
+          1 0 0
+          0.707107 0 -0.707107
+          0 0 -1
+          0 0.707107 -0.707107
+          -0.500000 0.500000 -0.500000
+          -0.707107 0.707107 0
+          -0.493697 0.500000 0.500000
+          0 0.707107 0.707107
+          0.500000 0.500000 0.500000
+          0.707107 0.707107 0
+          0.500000 0.447772 -0.500000
+          0 0.707107 -0.707107
+          0 1 0
+          0 0.707107 0
+          0 1 0
+          0 0.707107 0
+          0 1 0
+          0 0.707107 0
+          0 1 0
+          0 0.707107 0
+          0 1 0
+        ]
+        weight [
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          0.500000
+          0.707107
+          0.500000
+          0.707107
+          0.500000
+          0.707107
+          0.500000
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          0.500000
+          0.707107
+          0.500000
+          0.707107
+          0.500000
+          0.707107
+          0.500000
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+          0.707107
+          1
+        ]
+      }
+    }
+    DEF TimeSensor1 TimeSensor {
+      cycleInterval 4
+    }
+    DEF CoordinateInterpolator1 CoordinateInterpolator {
+      key [
+        0
+        1
+      ]
+      keyValue [
+        0 -1 0
+        0 -0.707107 0
+        0 -1 0
+        0 -0.707107 0
+        0 -1 0
+        0 -0.707107 0
+        0 -1 0
+        0 -0.707107 0
+        0 -1 0
+        0 -0.707107 -0.707107
+        -0.500000 -0.500000 -0.500000
+        -0.707107 -0.707107 0
+        -0.500000 -0.500000 0.500000
+        0 -0.707107 0.707107
+        0.500000 -0.500000 0.500000
+        0.707107 -0.707107 0
+        0.500000 -0.500000 -0.500000
+        0 -0.707107 -0.707107
+        0 0 -1
+        -0.707107 0 -0.707107
+        -1 0 0
+        -0.707107 0 0.707107
+        0 0 1
+        0.707107 0 0.707107
+        1 0 0
+        0.707107 0 -0.707107
+        0 0 -1
+        0 0.707107 -0.707107
+        -0.500000 0.500000 -0.500000
+        -0.707107 0.707107 0
+        -0.493697 0.500000 0.500000
+        0 0.707107 0.707107
+        0.500000 0.500000 0.500000
+        0.707107 0.707107 0
+        0.500000 0.447772 -0.500000
+        0 0.707107 -0.707107
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 -1.641960 -0.106933
+        0 -1.161041 -0.075613
+        0 -1.641960 -0.106933
+        0 -1.161041 -0.075613
+        0 -1.641960 -0.106933
+        0 -1.161041 -0.075613
+        0 -1.641960 -0.106933
+        0 -1.161041 -0.075613
+        0 -1.641960 -0.106933
+        0 -1.306497 -0.738463
+        -0.263081 -0.410032 -0.503937
+        -0.372053 -0.579872 -0.005568
+        -0.263081 -0.410032 0.496063
+        0 -0.823694 0.680927
+        0.263081 -0.410032 0.496063
+        0.372053 -0.579872 -0.005568
+        0.263081 -0.410032 -0.503937
+        0 -1.306497 -0.738463
+        0 0 -1
+        -0.707107 0 -0.707107
+        -1 0 0
+        -0.707107 0 0.707107
+        0 0 1
+        0.707107 0 0.707107
+        1 0 0
+        0.707107 0 -0.707107
+        0 0 -1
+        0 0.707107 -0.707107
+        -1.307082 1.195424 -0.500000
+        -1.848494 1.690584 0
+        -1.307082 1.195424 0.500000
+        0 0.707107 0.707107
+        1.307082 1.195424 0.500000
+        1.848494 1.690584 0
+        1.307082 1.195424 -0.500000
+        0 0.707107 -0.707107
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 0.707107 0
+        0 1 0
+        0 0.707107 0
+        0 1 0
+      ]
+    }
+    DEF ColorInterpolator1 ColorInterpolator {
+      key [
+        0
+        1
+      ]
+      keyValue [
+        0.137255 0.113725 1
+        1 0.086275 0.168627
+      ]
+    }
+  ]
+}
+
+ROUTE TimeSensor1.fraction_changed TO CoordinateInterpolator1.set_fraction
+ROUTE CoordinateInterpolator1.value_changed TO NurbsSurface1.set_controlPoint
+ROUTE TimeSensor1.fraction_changed TO ColorInterpolator1.set_fraction
+ROUTE ColorInterpolator1.value_changed TO Material1.set_diffuseColor
+
+DEF PositionInterpolator1 PositionInterpolator {
+  key [
+    0
+    1
+  ]
+  keyValue [
+    0 0 0
+    1.971103 0.453484 -0.071192
+  ]
+}
+
+ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
+ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
+
+Transform {
+  translation -2.787300 -2.165901 0
+  scale 0.566765 0.566765 0.566765
+  children 
+    Shape {
+      appearance Appearance {
+        material Material {
+        }
+      }
+      geometry Text {
+        fontStyle FontStyle {
+          spacing 1.200000
+        }
+        string [
+          "white_dune"
+          "compiled OpenGL"
+          "in a Qt program"
+        ]
+      }
+    }
+}
+
+NavigationInfo {
+}
+

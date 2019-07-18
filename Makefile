@@ -47,34 +47,34 @@ realclean: clean
 	find . -name '.dune_upload_*' -print | xargs rm -f
 	find . -name '.gdb_history' -print | xargs rm -f
 	find . -name '.xvpics' -print | xargs rm -rf
-	find . -name 'Untitled*.wrl' -print | xargs rm -rf
-	find . -name 'Untitled*.wrl,v' -print | xargs rm -rf
-	find . -name 'Untitled*.x3d' -print | xargs rm -rf
-	find . -name 'Untitled*.x3d,v' -print | xargs rm -rf
-	find . -name 'Untitled*.x3dv' -print | xargs rm -rf
-	find . -name 'Untitled*.x3dv,v' -print | xargs rm -rf
-	find . -name 'Untitled*.html' -print | xargs rm -rf
-	find . -name 'PureVrmlExport*.wrl' -print | xargs rm -rf
-	find . -name 'PureVrmlExport*.wrl,v' -print | xargs rm -rf
-	find . -name 'X3domExport*.html' -print | xargs rm -rf
-	find . -name 'X3domExport*.html,v' -print | xargs rm -rf
-	find . -name 'Ac3dExport*.ac' -print | xargs rm -rf
-	find . -name 'RibExport*.rib' -print | xargs rm -rf
-	find . -name 'ri.pic' -print | xargs rm -rf
-	find . -name 'export*.tif' -print | xargs rm -rf
-	find . -name 'C++Export*.cc' -print | xargs rm -rf
-	find . -name 'LdrawExport*.dat' -print | xargs rm -rf
-	find . -name 'KanimExport*.wrl' -print | xargs rm -rf
-	find . -name 'KanimExport*.wrl,v' -print | xargs rm -rf
-	find . -name 'KanimExport*.kanim' -print | xargs rm -rf
-	find . -name 'Untitled*.x3dv' -print | xargs rm -rf
-	find . -name 'Untitled*.x3dv,v' -print | xargs rm -rf
-	find . -name 'Untitled*.x3d' -print | xargs rm -rf
-	find . -name 'Untitled*.x3d,v' -print | xargs rm -rf
-	find . -name 'Untitled*.html' -print | xargs rm -rf
+	find . -name 'Untitled*.wrl' -print | grep -v "export" | xargs rm -f
+	find . -name 'Untitled*.wrl,v' -print | xargs rm -f
+	find . -name 'Untitled*.x3d' -print | xargs rm -f
+	find . -name 'Untitled*.x3d,v' -print | xargs rm -f
+	find . -name 'Untitled*.x3dv' -print | xargs rm -f
+	find . -name 'Untitled*.x3dv,v' -print | xargs rm -f
+	find . -name 'Untitled*.html' -print | xargs rm -f
+	find . -name 'PureVrmlExport*.wrl' -print | xargs rm -f
+	find . -name 'PureVrmlExport*.wrl,v' -print | xargs rm -f
+	find . -name 'X3domExport*.html' -print | xargs rm -f
+	find . -name 'X3domExport*.html,v' -print | xargs rm -f
+	find . -name 'Ac3dExport*.ac' -print | xargs rm -f
+	find . -name 'RibExport*.rib' -print | xargs rm -f
+	find . -name 'ri.pic' -print | xargs rm -f
+	find . -name 'export*.tif' -print | xargs rm -f
+	find . -name 'C++Export*.cc' -print | xargs rm -f
+	find . -name 'LdrawExport*.dat' -print | xargs rm -f
+	find . -name 'KanimExport*.wrl' -print | xargs rm -f
+	find . -name 'KanimExport*.wrl,v' -print | xargs rm -f
+	find . -name 'KanimExport*.kanim' -print | xargs rm -f
+	find . -name 'Untitled*.x3dv' -print | xargs rm -f
+	find . -name 'Untitled*.x3dv,v' -print | xargs rm -f
+	find . -name 'Untitled*.x3d' -print | xargs rm -f
+	find . -name 'Untitled*.x3d,v' -print | xargs rm -f
+	find . -name 'Untitled*.html' -print | xargs rm -f
 	find . -name 'gmon.out' -print | xargs rm -rf
-	find . -name '*.gcno' -print | xargs rm -rf
-	find . -name '*.gcda' -print | xargs rm -rf
+	find . -name '*.gcno' -print | xargs rm -f
+	find . -name '*.gcda' -print | xargs rm -f
 
 tar.bz2:
 	sh batch/mktarbz2.sh

@@ -11599,7 +11599,7 @@ MainWindow::setHAnimJointWeight()
                 continue;
             handles.append(handle);
         }
-        Node *node = m_scene->getLastSelectedHAnimJoint();
+        Node *node = m_scene->getLastSelectedHAnimJointOrHumanoid();
         if (node == NULL) {
             char str[256], title[256];
             swLoadString(IDS_DUNE, title, 256);
@@ -11627,14 +11627,25 @@ MainWindow::setHAnimJointWeight()
             dlg.DoModal();
             m_scene->UpdateViews(NULL, UPDATE_SELECTION_NAME);
         }
-        NodeHAnimJoint *oldJoint = (NodeHAnimJoint *)node;
+        NodeHAnimJoint *oldJoint = NULL;
+        if (node->getType() == X3D_HANIM_HUMANOID)
+            oldJoint = joint;
+        else
+            oldJoint = (NodeHAnimJoint *)node;
         MFFloat *oldWeights = (MFFloat *)oldJoint->skinCoordWeight()->copy();
         MFInt32 *oldIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
-        MFFloat *newWeights = (MFFloat *)oldJoint->skinCoordWeight()->copy();
-        MFInt32 *newIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
         MFFloat *weights =  new MFFloat();
         MFInt32 *indices = new MFInt32();
+        if ((!newJoint) && node->getType() == X3D_HANIM_HUMANOID) {
+            for (int i = 0; i < oldIndices->getSize(); i++)
+                indices->appendSFValue(oldIndices->getValue(i));
+            for (int i = 0; i < oldWeights->getSize(); i++)
+                weights->appendSFValue(oldWeights->getValue(i));
+            
+        }
         if (newJoint) {
+            MFFloat *newWeights = (MFFloat *)oldJoint->skinCoordWeight()->copy();
+            MFInt32 *newIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
             for (int i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
                 int index = newIndices->find(handle);

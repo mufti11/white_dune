@@ -2989,7 +2989,7 @@ void processHits(GLint hits, GLuint *pickBuffer)
     if (hit > -1) {
         int type;
         X3dNode *parent;
-        X3dNode *node = getNodeFromGlName(&scenegraph, hit);
+        X3dNode *node = X3dGetNodeFromGlName(&scenegraph, hit);
         if (node) {
              handleCollision(node, depth);
              for (parent = ((struct X3dGroup *)node)->m_parent; parent != NULL; 
@@ -3202,7 +3202,7 @@ void CRWDinit()
 
     if(!viewPointExists)
     {
-        struct X3dViewpoint viewpoint;
+        static struct X3dViewpoint viewpoint;
         viewpoint.fieldOfView = 0.785398;
         viewpoint.position = malloc(3 * sizeof(float));
         viewpoint.position[0] = 0;
@@ -3214,10 +3214,6 @@ void CRWDinit()
         viewpoint.orientation[2] = 1;
         viewpoint.orientation[3] = 0;
         X3dViewpointRenderCallback(&viewpoint, NULL);
-        free(viewpoint.position);
-        viewpoint.position = NULL;
-        free(viewpoint.orientation);
-        viewpoint.orientation = NULL;
     }
 
     initRender = 0;

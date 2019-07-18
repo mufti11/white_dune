@@ -4292,7 +4292,7 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
-    IDS_IT_SELECT_HANIM_JOINT_FIRST "select HAnimJoint first before you select Coordinate"
+    IDS_IT_SELECT_HANIM_JOINT_FIRST "select HAnimJoint or HAnimHumanid first before you select Coordinate"
     IDS_IT_WEIGHT_0_1            "weight should be > 0 <= 1"
     IDS_IT_NOT_1_REQUIRES_PARENT "if weight < 1 parent is required"
 END

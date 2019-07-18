@@ -120,6 +120,7 @@ NodeHAnimHumanoid::getComponentName(void) const
 void
 NodeHAnimHumanoid::drawHandles(void)
 {
+    m_scene->setLastSelectedHAnimJointOrHumanoid(this);
     float fscale = TheApp->getHumanoidScale();
 
     m_handleScale = TheApp->GetHandleScale() *

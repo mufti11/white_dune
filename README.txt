@@ -5169,6 +5169,12 @@ Fixed "close icon" problem on java export
 
 Fixed crash when moving handles
 
+Fixed "Actions -> set HAnimJoint weight" to add handles to existing node
+
+Fixed bugs in test directory
+
+Fixed crash in C/C++ export
+
 Contact: MUFTI <mufti11@web.de>
 
 

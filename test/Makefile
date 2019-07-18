@@ -54,6 +54,7 @@ fasttests: dune
 	cd ../src/swt && $(MAKE) $$DUNEMAKEFLAGS test
 	cd ../src/swt && $(MAKE) $$DUNEMAKEFLAGS testclean
 	$(MAKE) export_source_test
+	echo all tests passed
 
 export_source_test: dune
 	cd .. && $(MAKE)

@@ -1654,8 +1654,11 @@ Proto::writeCDeclaration(int f, int languageFlag)
 
     if (languageFlag & C_SOURCE)
         if (getType() == VRML_INDEXED_FACE_SET) {
-            RET_ONERROR( mywritestr(f, "    void setGlName(") )
-            RET_ONERROR( mywritestr(f, "struct X3dIndexedFaceSet* self, int number)\n") )
+            RET_ONERROR( mywritef(f, "    void %sSetGlName(",
+                                  TheApp->getCPrefix()) )
+            RET_ONERROR( mywritef(f, "struct %sIndexedFaceSet* self, ",
+                                  TheApp->getCPrefix()) ) 
+            RET_ONERROR( mywritestr(f, "int number)\n") );
             RET_ONERROR( mywritestr(f, "{\n") ) 
             RET_ONERROR( mywritestr(f, "    self->glName_number = number;\n") )
             RET_ONERROR( mywritestr(f, "}\n") ) 

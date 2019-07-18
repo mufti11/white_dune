@@ -10,7 +10,7 @@ LIBS = -lfl
 LIBDIRS =
 INCDIRS = -I../include
 # WARNINGS = -Wall -Wwrite-strings
-CFLAGS = -g $(WARNINGS) $(INCDIRS) -g -O2 -D__CORRECT_ISO_CPP_MATH_H_PROTO=1 -fopenmp
+CFLAGS = -g $(WARNINGS) $(INCDIRS)  -fopenmp
 MAKEDEPEND=gcc -MM
 YFLAGS = -d
 

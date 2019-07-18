@@ -785,6 +785,10 @@ public:
                            { m_lastSelectedHAnimJoint = n; }
     Node               *getLastSelectedHAnimJoint(void) 
                            { return m_lastSelectedHAnimJoint; }
+    void                setLastSelectedHAnimJointOrHumanoid(Node *n) 
+                           { m_lastSelectedHAnimJointOrHumanoid = n; }
+    Node               *getLastSelectedHAnimJointOrHumanoid(void) 
+                           { return m_lastSelectedHAnimJointOrHumanoid; }
     double              getCurrentTime(void) { return m_currentTime; }
 
     MyString            getRibTexureFile(MyString file)
@@ -1050,6 +1054,7 @@ protected:
     IntArray            m_hiddenVertices;
 
     Node               *m_lastSelectedHAnimJoint;
+    Node               *m_lastSelectedHAnimJointOrHumanoid;
 
     bool                m_downloaded;
 

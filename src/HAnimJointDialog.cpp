@@ -129,6 +129,8 @@ HAnimJointDialog::LoadData()
 
     if (m_node != NULL)
         m_joints.append(m_node->getName());
+    else
+        m_joints.append("NULL");
     if (m_newJoint) 
         m_joints.append("new HAimJoint"); 
     else

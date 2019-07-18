@@ -2780,7 +2780,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "\n") ) 
 
         RET_ONERROR( mywritef(f, "%s%s *", TheApp->getCPrefix(), "Node") )
-        RET_ONERROR( mywritef(f, "getNodeFromGlName(") )
+        RET_ONERROR( mywritef(f, "%sGetNodeFromGlName(", TheApp->getCPrefix()) )
         RET_ONERROR( mywritef(f, "struct %sSceneGraph *self, int glName) {\n",
                               TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 

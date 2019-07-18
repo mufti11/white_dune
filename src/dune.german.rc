@@ -4283,7 +4283,7 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
-    IDS_DE_SELECT_HANIM_JOINT_FIRST "waehlen Sie erst HAnimJoint an, bevor Sie Coordinate anwaehlen"
+    IDS_DE_SELECT_HANIM_JOINT_FIRST "waehlen Sie erst HAnimJoint oder HAnimHumanoid an, bevor Sie Coordinate anwaehlen"
     IDS_DE_WEIGHT_0_1            "weight sollte > 0 <= 1 sein"
     IDS_DE_NOT_1_REQUIRES_PARENT "wenn weight < 1 parent ist noetig"
 END

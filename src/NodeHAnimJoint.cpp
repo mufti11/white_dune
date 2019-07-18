@@ -122,6 +122,7 @@ NodeHAnimJoint::drawHandles(void)
             NodeHAnimHumanoid *human = this->getHumanoid();
             if (human) {
                 m_scene->setLastSelectedHAnimJoint(this);
+                m_scene->setLastSelectedHAnimJointOrHumanoid(this);
                 human->doWithBranch(searchCoord, &m_coord, false, false);
                 human->drawJointHandle(TheApp->GetHandleScale(), this);
             }
