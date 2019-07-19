@@ -5175,6 +5175,10 @@ Fixed bugs in test directory
 
 Fixed crash in C/C++ export
 
+Added QT C++ export example
+
+Fixed bug in dragging multiple "x == 0" handles in Xsymetric mode
+
 Contact: MUFTI <mufti11@web.de>
 
 

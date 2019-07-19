@@ -877,15 +877,18 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                              i++) {
                             Vec3f vec = alreadyHandledVertices[i];
                             if ((fabs(oldv.x - vec.x) < eps) &&
-                                (oldv.y == vec.y) && 
-                                (oldv.z == vec.z)) {
+                                (fabs(oldv.y - vec.y) < eps) &&
+                                (fabs(oldv.z - vec.z) < eps)) {
                                 alreadyHandled = true;
                                 break;
                             }
                         }                    
                         if (!alreadyHandled) {
                             node->setHandle(handle, oldv + diff);
-                            alreadyHandledVertices.append(oldv);                
+                            Vec3f diffCorrectX = diff;
+                            if (diffCorrectX.x < TheApp->GetHandleEpsilon())
+                                diffCorrectX.x = 0;
+                            alreadyHandledVertices.append(oldv + diffCorrectX);
                         }
                     } else 
                         node->setHandle(handle, oldv + diff);

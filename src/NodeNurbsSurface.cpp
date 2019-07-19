@@ -779,30 +779,7 @@ NodeNurbsSurface::setHandle(MFVec3f *value, int handle, float newWeight,
     
     if (changed) {
         m_meshDirty = true;
-
-        if (controlPointX3D() && controlPointX3D()->getValue() &&
-            controlPointX3D()->getValue()->getType() == X3D_COORDINATE_DOUBLE) {
-            NodeCoordinateDouble *pointNode = (NodeCoordinateDouble *)
-                                              controlPointX3D()->getValue();
-            if (pointNode == NULL) {
-                createControlPoints(newValue);
-                return;
-            }
-            MFVec3d *doubleValue = newValue->getMFVec3d();
-            m_scene->setField(pointNode, pointNode->point_Field(), 
-                              doubleValue->copy());
-            m_scene->setField(this, controlPoint_Field(), newValue);
-        } else if (controlPointX3D() && controlPointX3D()->getValue()) {
-            NodeCoordinate *pointNode = (NodeCoordinate *)
-                                         controlPointX3D()->getValue();
-            if (pointNode == NULL) {
-                createControlPoints(newValue);
-                return;
-            }
-            m_scene->setField(pointNode, pointNode->point_Field(),
-                              newValue->copy());
-            m_scene->setField(this, controlPoint_Field(), newValue);
-        }
+        setControlPoints(newValue);
     }
 }
 
