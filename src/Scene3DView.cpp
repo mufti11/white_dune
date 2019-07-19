@@ -886,7 +886,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                         if (!alreadyHandled) {
                             node->setHandle(handle, oldv + diff);
                             Vec3f diffCorrectX = diff;
-                            if (diffCorrectX.x < TheApp->GetHandleEpsilon())
+                            if (oldv.x < TheApp->GetHandleEpsilon())
                                 diffCorrectX.x = 0;
                             alreadyHandledVertices.append(oldv + diffCorrectX);
                         }

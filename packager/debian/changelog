@@ -1,3 +1,10 @@
+whitedune (1.222-1) experimental; urgency=low
+
+  * Version 1.222 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Fri, 19 Jul 2019 20:13:45 +0200
+
 wdune (1.221-1) experimental; urgency=low
 
   * Version 1.221 debian package

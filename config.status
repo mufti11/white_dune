@@ -433,7 +433,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/mufti/wdune-1.077'
+ac_pwd='/home/home/mufti/wdune-1.222'
 srcdir='.'
 AWK='gawk'
 test -n "$AWK" || AWK=awk
@@ -843,7 +843,7 @@ D["HAVE_LIBUSB"]=" 1"
 D["HAVE_SIGNAL_INT"]=" 1"
 D["HAVE_TYPENAME"]=" 1"
 D["HAVE_FPCLASSIFY"]=" 1"
-D["HAVE_DUNE_VERSION"]=" \"white_dune 1.077\""
+D["HAVE_DUNE_VERSION"]=" \"white_dune 1.222\""
 D["HAVE_NEW_NEW_HANDLER"]=" 1"
   for (key in D) D_is_set[key] = 1
   FS = ""
