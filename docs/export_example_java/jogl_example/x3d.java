@@ -66,6 +66,10 @@ import java.io.File;
 
 import java.util.Random;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 // draws a X3DV file with shapes (converted to) IndexedFaceSet nodes
 
 public class x3d implements GLEventListener 
@@ -205,6 +209,9 @@ public class x3d implements GLEventListener
             new AWTKeyAdapter(x3dKeys, drawable).addTo(comp);
         }
         initX3d();
+
+        x3d2.startTimer();
+        setWalkOn();
     }
 
     @Override
@@ -260,6 +267,8 @@ public class x3d implements GLEventListener
 
     public static void render(GLAutoDrawable drawable) 
     {
+         x3d2.startWalking();
+
          if (distInitialised())
              if (!distInit) {
                  distInit = true;
@@ -320,6 +329,7 @@ public class x3d implements GLEventListener
         @Override
     	public void mouseReleased(MouseEvent e) {
             x3d2.setMouseRelease(e.getX(), e.getY()); 
+            navigate(0, 0, view_dist);
         }
 
         private boolean init = false;
@@ -350,13 +360,11 @@ public class x3d implements GLEventListener
             } else {
                 throw new RuntimeException("Event source neither Window nor Component: "+source);
             }
-            float thetaY = 360.0f * ( (float)(x-prevMouseX)/(float)width);
-            float thetaX = 360.0f * ( (float)(y-prevMouseY)/(float)height);
     
             if (mouseBotton == MouseEvent.BUTTON1) {
                 if (!x3d2.hasHit()) {
                     if (!stopNavi) {
-                        view_dist = navigate(prevMouseX-x, y-prevMouseY, view_dist);
+                        view_dist = navigate(x-prevMouseX, y-prevMouseY, view_dist);
                     }
                 }
             } else {
@@ -385,6 +393,8 @@ public class x3d implements GLEventListener
         }
     }
 
+    public static boolean navigateWalkOn = false;
+
     private static boolean naviInit = true;
     private static float xOld;
     private static float yOld;
@@ -403,7 +413,6 @@ public class x3d implements GLEventListener
         switch(getNavigation()) {
           case x3d.NAV_ANY:
           case x3d.NAV_WALK:
-            x3d2.startWalking();
             walk[0] = x / 5.0f;
             walk[1] = 0;
             if ((!stop) || (y >= 0)) { 
@@ -411,7 +420,7 @@ public class x3d implements GLEventListener
                 stop = false;
             } else
                 walk[2] = 0;
-            x3d2.walkCamera(walk);
+            x3d2.walkCamera(walk, navigateWalkOn);
             break;
           case x3d.NAV_EXAMINE:
             if ((!stop) || (z - zOld > 0)) {
@@ -436,6 +445,26 @@ public class x3d implements GLEventListener
             zOld = z;
         }
         return z;
+    }
+
+    public static void setWalkOn()
+    {
+       navigateWalkOn = true;
+    }
+
+    public static void walkOn()
+    {
+        float walk[] = new float[3];
+        if (getNavigation() == NAV_WALK) {
+            walk[0] = -xOld / 5.0f;
+            walk[1] = 0;
+            if ((!stop) || (yOld >= 0)) { 
+                walk[2] = yOld / 5.0f;
+                stop = false;
+            } else
+                walk[2] = 0;
+            x3d2.walkCamera(walk, navigateWalkOn);
+        }
     }
 
     public static float getInitDist()
@@ -463,6 +492,15 @@ public class x3d implements GLEventListener
 
         MyIndexedFaceSetCreateNormalsCallback myIndexedFaceSetCreateNormalsCallback = new MyIndexedFaceSetCreateNormalsCallback();
         X3dIndexedFaceSet.setX3dIndexedFaceSetCreateNormalsCallback(myIndexedFaceSetCreateNormalsCallback);
+
+        MyIndexedLineSetRenderCallback myIndexedLineSetRenderCallback = new MyIndexedLineSetRenderCallback();
+        X3dIndexedLineSet.setX3dIndexedLineSetRenderCallback(myIndexedLineSetRenderCallback);
+
+        MyLineSetRenderCallback myLineSetRenderCallback = new MyLineSetRenderCallback();
+        X3dLineSet.setX3dLineSetRenderCallback(myLineSetRenderCallback);
+
+        MyPointSetRenderCallback myPointSetRenderCallback = new MyPointSetRenderCallback();
+        X3dPointSet.setX3dPointSetRenderCallback(myPointSetRenderCallback);
 
         MyMaterialRenderCallback myMaterialRenderCallback = new MyMaterialRenderCallback();
         X3dMaterial.setX3dMaterialRenderCallback(myMaterialRenderCallback);
@@ -715,6 +753,21 @@ class x3d2
     public static boolean moved = false;
     public static boolean released = false;
 
+    public static void startTimer() 
+    {
+        TimerTask repeatedTask = new TimerTask() {
+            public void run() {
+                x3d.walkOn();
+            }
+        };
+
+        Timer timer = new Timer("Timer");
+     
+        long delay  = 100L;
+        long period = 40L;
+        timer.scheduleAtFixedRate(repeatedTask, delay, period);
+    }
+
     public static void setMouseClick(int x, int y) 
     {
         mouseX = x;
@@ -890,7 +943,7 @@ class x3d2
         oldWalkTime = x3d.getTimerTime();
     }
 
-    public static void walkCamera(float walk[])
+    public static void walkCamera(float walk[], boolean walkOn)
     {
         float pos[] = new float[3];
         pos[0] = x3d.viewpoint1.position[0];
@@ -904,12 +957,15 @@ class x3d2
         float rot[] = new float[4];
         SFRotation2quaternion(rot, sfrot);
         float fspeed = x3d.getNavigationSpeed();
+        double dt = x3d.getTimerTime() - oldWalkTime;
 
         float sfaround[] = new float[4];
         sfaround[0] = 0;
         sfaround[1] = 1;
         sfaround[2] = 0;
-        sfaround[3] = (walk[0] * 2.0f) * 2.0f * (float)Math.PI / 360.0f;
+        sfaround[3] = (walk[0] * 2.0f) * 2.0f * (float)Math.PI / 360.0f *
+                      (walkOn ? (float)dt * 0.5f : 1);
+
         float around[] = new float[4];
         SFRotation2quaternion(around, sfaround);
         float newRot[] = new float [4];
@@ -922,7 +978,7 @@ class x3d2
         x3d.viewpoint1.orientation[1] = sfnewRot[1];
         x3d.viewpoint1.orientation[2] = sfnewRot[2];
         x3d.viewpoint1.orientation[3] = sfnewRot[3];
-        float z = -walk[2] * 2.0f * fspeed;
+        float z = -walk[2] * 2.0f * fspeed * (walkOn ? (float)dt * 1.0f : 1);
         float vec[] = new float[3];
         vec[0] = 0;
         vec[1] = 0;
@@ -1639,6 +1695,240 @@ class MyIndexedFaceSetCreateNormalsCallback extends X3dIndexedFaceSetCreateNorma
     }
 }
     
+class MyIndexedLineSetRenderCallback extends X3dIndexedLineSetRenderCallback
+{
+    public void render(X3dNode data, Object object)
+    {
+        if(x3d.preRender)
+        {
+        }
+        else if(x3d.initRender)
+        {
+        }
+        else
+        {
+            X3dIndexedLineSet Xindexedlineset = (X3dIndexedLineSet)data;
+            X3dCoordinate Xcoordinate = (X3dCoordinate)Xindexedlineset.coord;
+            boolean colorRGBA = false;
+            X3dNode Xcolor = null;
+            if (Xcoordinate == null)
+                return;
+            if (Xindexedlineset.color != null) 
+                if (Xindexedlineset.color.getType() == X3dColorRGBAType.type) {
+                    Xcolor = (X3dColorRGBA)Xindexedlineset.color;
+                    colorRGBA = true;
+                } else
+                    Xcolor = (X3dColor)Xindexedlineset.color;;
+            int lines[] = null;
+            float vertex[] = null;
+            float colors[] = null;
+            int colorindex[] = null;
+            int lines_len, vertex_len, color_len = 0, colorindex_len;
+            boolean colorpervertex = true;
+            if(Xcolor != null)
+            {
+                x3d.gl.glEnable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
+                x3d.gl.glColorMaterial(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE);
+                if (colorRGBA) {
+                    colors = ((X3dColorRGBA)Xcolor).color;
+                    color_len = ((X3dColorRGBA)Xcolor).color.length;
+                } else {
+                    colors = ((X3dColor)Xcolor).color;
+                    color_len = ((X3dColor)Xcolor).color.length;
+                }
+                colorpervertex = Xindexedlineset.colorPerVertex;
+            }
+            if(Xindexedlineset.colorIndex != null)
+            {
+                colorindex = Xindexedlineset.colorIndex;
+                colorindex_len = Xindexedlineset.colorIndex.length;
+            }
+            vertex = Xcoordinate.point;
+            vertex_len = Xcoordinate.point.length;
+            lines = Xindexedlineset.coordIndex;
+            lines_len = Xindexedlineset.coordIndex.length;
+            int buffer = 0;
+            int linecounter = 0;
+            x3d.gl.glPushName(Xindexedlineset.glName_number);
+            x3d.gl.glBegin(GL2.GL_LINE_STRIP);
+            if(colors != null && !colorpervertex)
+                if (colorRGBA)
+                    x3d.gl.glColor4f(colors[4 * linecounter], colors[4 * linecounter + 1], colors[4 * linecounter + 2], colors[4 * linecounter + 3]);
+                else 
+                    x3d.gl.glColor3f(colors[3 * linecounter], colors[3 * linecounter + 1], colors[3 * linecounter + 2]);
+    
+            for(int i = 0; i != lines_len; i++)
+            {
+                buffer = lines[i];
+                if (buffer < 0) {
+                    x3d.gl.glEnd();
+                    if (i != lines_len - 1)
+                        x3d.gl.glBegin(GL2.GL_LINE_STRIP);
+                }
+                if(buffer == -1)
+                {
+                    linecounter++;
+                    x3d.gl.glEnd();
+                    x3d.gl.glBegin(GL2.GL_LINE_STRIP);
+                    if(colors != null && !colorpervertex)
+                        if (colorRGBA)
+                            x3d.gl.glColor4f(colors[4 * linecounter], colors[4 * linecounter + 1], colors[4 * linecounter + 2], colors[4 * linecounter + 3]);
+                        else
+                            x3d.gl.glColor3f(colors[3 * linecounter], colors[3 * linecounter + 1], colors[3 * linecounter + 2]);
+                }
+                else
+                {
+                    if(colors != null && color_len > 0 && colorpervertex)
+                        if (colorRGBA)
+                            x3d.gl.glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                        else
+                            x3d.gl.glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                    x3d.gl.glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+                }
+            }
+            x3d.gl.glEnd();
+            x3d.gl.glPopName();
+        }
+        x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL);
+    }
+}
+
+class MyLineSetRenderCallback extends X3dLineSetRenderCallback
+{
+    public void render(X3dNode data, Object object)
+    {
+        if(x3d.preRender)
+        {
+        }
+        else if(x3d.initRender)
+        {
+        }
+        else
+        {
+            X3dLineSet Xlineset = (X3dLineSet)data;
+            X3dCoordinate Xcoordinate = (X3dCoordinate)Xlineset.coord;
+            if (Xcoordinate == null)
+                return;
+            boolean colorRGBA = false;
+            X3dNode Xcolor = null;
+            if (Xlineset.color != null) 
+                if (Xlineset.color.getType() == X3dColorRGBAType.type) {
+                    Xcolor = (X3dColorRGBA)Xlineset.color;
+                    colorRGBA = true;
+                } else
+                    Xcolor = (X3dColor)Xlineset.color;;
+            int lines[] = null;
+            float vertex[] = null;
+            float colors[] = null;
+            int lines_len, vertex_len, color_len = 0, colorindex_len;
+            if(Xcolor != null)
+            {
+                x3d.gl.glEnable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
+                x3d.gl.glColorMaterial(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE);
+                if (colorRGBA) {
+                    colors = ((X3dColorRGBA)Xcolor).color;
+                    color_len = ((X3dColorRGBA)Xcolor).color.length;
+                } else {
+                    colors = ((X3dColor)Xcolor).color;
+                    color_len = ((X3dColor)Xcolor).color.length;
+                }
+            }
+            vertex = Xcoordinate.point;
+            lines = Xlineset.vertexCount;
+            vertex_len = Xcoordinate.point.length;
+            lines_len = Xlineset.vertexCount.length;
+            int linecounter = 0;
+            x3d.gl.glPushName(Xlineset.glName_number);
+            for(int i = 0; i != lines_len; i++)
+            {
+                x3d.gl.glBegin(GL2.GL_LINE_STRIP);
+                for (int j = 0; j < lines[i]; j++) {
+                    int buffer = linecounter++;
+                    if(colors != null && color_len > 0)
+                        if (colorRGBA)
+                            x3d.gl.glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                        else
+                            x3d.gl.glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                    x3d.gl.glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+                }
+                x3d.gl.glEnd();
+            }
+            x3d.gl.glPopName();
+        }
+        x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL);
+    }
+}
+
+class MyPointSetRenderCallback extends X3dPointSetRenderCallback
+{
+    public void render(X3dNode data, Object object)
+    {
+        if(x3d.preRender)
+        {
+        }
+        else if(x3d.initRender)
+        {
+        }
+        else
+        {
+            X3dPointSet Xpointset = (X3dPointSet)data;
+            X3dCoordinate Xcoordinate = (X3dCoordinate)Xpointset.coord;
+            if (Xcoordinate == null)
+                return;
+            boolean colorRGBA = false;
+            X3dNode Xcolor = null;
+            if (Xpointset.color != null) 
+                if (Xpointset.color.getType() == X3dColorRGBAType.type) {
+                    Xcolor = Xpointset.color;
+                    colorRGBA = true;
+                } else
+                    Xcolor = Xpointset.color;;
+            float vertex[] = null;
+            float colors[] = null;
+            int vertex_len, color_len = 0;
+            if(Xcolor != null)
+            {
+                x3d.gl.glEnable(GL2.GL_COLOR_MATERIAL); //Maybe needfull
+                x3d.gl.glColorMaterial(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE);
+                if (colorRGBA) {
+                    colors = ((X3dColorRGBA)Xcolor).color;
+                    color_len = ((X3dColorRGBA)Xcolor).color.length;
+                } else {
+                    colors = ((X3dColor)Xcolor).color;
+                    color_len = ((X3dColor)Xcolor).color.length;
+                }
+            }
+            vertex = Xcoordinate.point;
+            vertex_len = Xcoordinate.point.length;
+            int buffer = 0;
+            int pointcounter = 0;
+            x3d.gl.glPushName(Xpointset.glName_number);
+            x3d.gl.glBegin(GL2.GL_POINTS);
+            if(colors != null)
+                if (colorRGBA)
+                    x3d.gl.glColor4f(colors[4 * pointcounter], colors[4 * pointcounter + 1], colors[4 * pointcounter + 2], colors[4 * pointcounter + 3]);
+                else 
+                    x3d.gl.glColor3f(colors[3 * pointcounter], colors[3 * pointcounter + 1], colors[3 * pointcounter + 2]);
+    
+            for(int i = 0; i < vertex_len / 3; i++)
+            {
+                buffer = i;
+                {
+                    if(colors != null && color_len > 0)
+                        if (colorRGBA)
+                            x3d.gl.glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                        else
+                            x3d.gl.glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                    x3d.gl.glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+                }
+            }
+            x3d.gl.glEnd();
+            x3d.gl.glPopName();
+        }
+        x3d.gl.glDisable(GL2.GL_COLOR_MATERIAL);
+    }
+}
+
 class MyMaterialRenderCallback extends X3dMaterialRenderCallback
 {
     public void render(X3dNode data, Object object)
@@ -2045,8 +2335,10 @@ class MyShapeRenderCallback extends X3dShapeRenderCallback
             appear.treeRender(appear, object);
         }
         if (shapeNode.geometry != null) {
-            X3dIndexedFaceSet faceset = (X3dIndexedFaceSet)shapeNode.geometry;
-            faceset.treeRender(faceset, object);
+            if (shapeNode.geometry.getType() == X3dIndexedFaceSetType.type) {
+                X3dIndexedFaceSet faceset = (X3dIndexedFaceSet)shapeNode.geometry;
+                faceset.treeRender(faceset, object);
+            }
         }
         x3d.gl.glPopMatrix();
     }

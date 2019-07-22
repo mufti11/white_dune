@@ -160,7 +160,6 @@ float CPPRWD::navigate(int x, int y, float z)
     switch(getNavigation()) {
       case NAV_ANY:
       case NAV_WALK:
-        startWalking();
         walk[0] = -x / 5.0;
         walk[1] = 0;
         if ((!stop) || (y >= 0)) { 
@@ -199,8 +198,7 @@ void CPPRWD::walkOn(void)
 {
     float walk[3];
     if (getNavigation() == NAV_WALK) {
-        startWalking();
-        walk[0] = 0;
+        walk[0] = -xOld / 5.0;
         walk[1] = 0;
         if ((!stop) || (yOld >= 0)) { 
             walk[2] = yOld / 5.0;
@@ -406,7 +404,8 @@ void CPPRWD::walkCamera(float *walk, bool walkOn)
         sfaround[0] = 0;
         sfaround[1] = 1;
         sfaround[2] = 0;
-        sfaround[3] = -(walk[0] * 2.0f) * 2.0f * M_PI / 360.0f; 
+        sfaround[3] = -(walk[0] * 2.0f) * 2.0f * M_PI / 360.0f * 
+                      (walkOn ? dt * 100.0 : 1);
         float around[4];
         SFRotation2quaternion(around, sfaround);
         float newRot[4];
@@ -419,7 +418,7 @@ void CPPRWD::walkCamera(float *walk, bool walkOn)
         viewpoint1->orientation[1] = sfnewRot[1];
         viewpoint1->orientation[2] = sfnewRot[2];
         viewpoint1->orientation[3] = sfnewRot[3];
-        float z = walk[2] * 2.0f * fspeed * (walkOn ? dt * 100000.0: 1);
+        float z = walk[2] * 2.0f * fspeed * (walkOn ? dt * 50.0 : 1);
         float vec[3];
         vec[0] = 0;
         vec[1] = 0;
@@ -524,6 +523,8 @@ void CPPRWD::IndexedFaceSetRender(X3dNode *data, void* extraData)
     {
         X3dIndexedFaceSet *Xindexedfaceset = (X3dIndexedFaceSet*)data;
         X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xindexedfaceset->coord;
+        if (Xcoordinate == NULL)
+            return;
         X3dNormal *Xnormal = (X3dNormal*)Xindexedfaceset->normal;
         bool colorRGBA = false;
         X3dNode *Xcolor = NULL;
@@ -752,6 +753,233 @@ void CPPRWD::IndexedFaceSetCreateNormals(X3dNode *data, void* extraData)
             }    
         }
     }
+}
+
+void CPPRWD::IndexedLineSetRender(X3dNode *data, void* extraData)
+{
+    if(preRender)
+    {
+    }
+    else if(initRender)
+    {
+    }
+    else
+    {
+        X3dIndexedLineSet *Xindexedlineset = (X3dIndexedLineSet*)data;
+        X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xindexedlineset->coord;
+        if (Xcoordinate == NULL)
+            return;
+        bool colorRGBA = false;
+        X3dNode *Xcolor = NULL;
+        if (Xindexedlineset->color) 
+            if (Xindexedlineset->color->getType() == X3dColorRGBAType) {
+                Xcolor = (X3dColorRGBA*)Xindexedlineset->color;
+                colorRGBA = true;
+            } else
+                Xcolor = (X3dColor*)Xindexedlineset->color;;
+        GLint *lines = NULL;
+        GLfloat *vertex = NULL;
+        GLfloat *colors = NULL;
+        GLint *colorindex = NULL;
+        int lines_len, vertex_len, color_len, colorindex_len;
+        bool colorpervertex;
+        if(Xcolor != NULL)
+        {
+            glEnable(GL_COLOR_MATERIAL); //Maybe needfull
+            glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+            if (colorRGBA) {
+                colors = ((X3dColorRGBA *)Xcolor)->color;
+                color_len = ((X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((X3dColor *)Xcolor)->color;
+                color_len = ((X3dColor *)Xcolor)->color_length;
+            }
+            colorpervertex = Xindexedlineset->colorPerVertex;
+        }
+        if(Xindexedlineset->colorIndex != NULL)
+        {
+            colorindex = Xindexedlineset->colorIndex;
+            colorindex_len = Xindexedlineset->colorIndex_length;
+        }
+        vertex = Xcoordinate->point;
+        lines = Xindexedlineset->coordIndex;
+        vertex_len = Xcoordinate->point_length;
+        lines_len = Xindexedlineset->coordIndex_length;
+        int buffer = 0;
+        int linecounter = 0;
+        glPushName(Xindexedlineset->glName_number);
+        glBegin(GL_LINE_STRIP);
+        if(colors && !colorpervertex)
+            if (colorRGBA)
+                glColor4f(colors[4 * linecounter], colors[4 * linecounter + 1], colors[4 * linecounter + 2], colors[4 * linecounter + 3]);
+            else 
+                glColor3f(colors[3 * linecounter], colors[3 * linecounter + 1], colors[3 * linecounter + 2]);
+
+        for(int i = 0; i != lines_len; i++)
+        {
+            buffer = lines[i];
+            if (buffer < 0) {
+                glEnd();
+                if (i != lines_len - 1)
+                    glBegin(GL_LINE_STRIP);
+            }
+            if(buffer == -1)
+            {
+                linecounter++;
+                glEnd();
+                glBegin(GL_LINE_STRIP);
+                if(colors && !colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[4 * linecounter], colors[4 * linecounter + 1], colors[4 * linecounter + 2], colors[4 * linecounter + 3]);
+                    else
+                        glColor3f(colors[3 * linecounter], colors[3 * linecounter + 1], colors[3 * linecounter + 2]);
+            }
+            else
+            {
+                if(colors && color_len > 0 && colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+            }
+        }
+        glEnd();
+        glPopName();
+    }
+    glDisable(GL_COLOR_MATERIAL);
+}
+
+
+void CPPRWD::LineSetRender(X3dNode *data, void* extraData)
+{
+    if(preRender)
+    {
+    }
+    else if(initRender)
+    {
+    }
+    else
+    {
+        X3dLineSet *Xlineset = (X3dLineSet*)data;
+        X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xlineset->coord;
+        if (Xcoordinate == NULL)
+            return;
+        bool colorRGBA = false;
+        X3dNode *Xcolor = NULL;
+        if (Xlineset->color) 
+            if (Xlineset->color->getType() == X3dColorRGBAType) {
+                Xcolor = (X3dColorRGBA*)Xlineset->color;
+                colorRGBA = true;
+            } else
+                Xcolor = (X3dColor*)Xlineset->color;;
+        GLint *lines = NULL;
+        GLfloat *vertex = NULL;
+        GLfloat *colors = NULL;
+        int lines_len, vertex_len, color_len, colorindex_len;
+        if(Xcolor != NULL)
+        {
+            glEnable(GL_COLOR_MATERIAL); //Maybe needfull
+            glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+            if (colorRGBA) {
+                colors = ((X3dColorRGBA *)Xcolor)->color;
+                color_len = ((X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((X3dColor *)Xcolor)->color;
+                color_len = ((X3dColor *)Xcolor)->color_length;
+            }
+        }
+        vertex = Xcoordinate->point;
+        lines = Xlineset->vertexCount;
+        vertex_len = Xcoordinate->point_length;
+        lines_len = Xlineset->vertexCount_length;
+        int buffer = 0;
+        int linecounter = 0;
+        glPushName(Xlineset->glName_number);
+        for(int i = 0; i != lines_len; i++)
+        {
+            glBegin(GL_LINE_STRIP);
+            for (int j = 0; j < lines[i]; j++) {
+                int buffer = linecounter++;
+                if(colors && color_len > 0)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+            }
+            glEnd();
+        }
+        glPopName();
+    }
+    glDisable(GL_COLOR_MATERIAL);
+}
+
+void CPPRWD::PointSetRender(X3dNode *data, void* extraData)
+{
+    if(preRender)
+    {
+    }
+    else if(initRender)
+    {
+    }
+    else
+    {
+        X3dPointSet *Xpointset = (X3dPointSet*)data;
+        X3dCoordinate *Xcoordinate = (X3dCoordinate*)Xpointset->coord;
+        if (Xcoordinate == NULL)
+            return;
+        bool colorRGBA = false;
+        X3dNode *Xcolor = NULL;
+        if (Xpointset->color) 
+            if (Xpointset->color->getType() == X3dColorRGBAType) {
+                Xcolor = (X3dColorRGBA*)Xpointset->color;
+                colorRGBA = true;
+            } else
+                Xcolor = (X3dColor*)Xpointset->color;;
+        GLfloat *vertex = NULL;
+        GLfloat *colors = NULL;
+        int vertex_len, color_len;
+        if(Xcolor != NULL)
+        {
+            glEnable(GL_COLOR_MATERIAL); //Maybe needfull
+            glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+            if (colorRGBA) {
+                colors = ((X3dColorRGBA *)Xcolor)->color;
+                color_len = ((X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((X3dColor *)Xcolor)->color;
+                color_len = ((X3dColor *)Xcolor)->color_length;
+            }
+        }
+        vertex = Xcoordinate->point;
+        vertex_len = Xcoordinate->point_length;
+        int buffer = 0;
+        int pointcounter = 0;
+        glPushName(Xpointset->glName_number);
+        glBegin(GL_POINTS);
+        if(colors)
+            if (colorRGBA)
+                glColor4f(colors[4 * pointcounter], colors[4 * pointcounter + 1], colors[4 * pointcounter + 2], colors[4 * pointcounter + 3]);
+            else 
+                glColor3f(colors[3 * pointcounter], colors[3 * pointcounter + 1], colors[3 * pointcounter + 2]);
+
+        for(int i = 0; i != vertex_len; i++)
+        {
+            buffer = i;
+            {
+                if(colors && color_len > 0)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+            }
+        }
+        glEnd();
+        glPopName();
+    }
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 static bool not2PowN(int number)
@@ -2578,6 +2806,8 @@ void CPPRWD::processEvents() {
 void CPPRWD::draw(bool render)
 {
     if (render) {
+        startWalking();
+
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -2920,6 +3150,9 @@ void CPPRWD::init()
     X3dGroup::treeRenderCallback = GroupTreeRender;
     X3dIndexedFaceSet::renderCallback = IndexedFaceSetRender;
     X3dIndexedFaceSet::createNormalsCallback = IndexedFaceSetCreateNormals;
+    X3dIndexedLineSet::renderCallback = IndexedLineSetRender;
+    X3dLineSet::renderCallback = LineSetRender;
+    X3dPointSet::renderCallback = PointSetRender;
     X3dPointLight::renderCallback = PointLightRender;
     X3dDirectionalLight::renderCallback = DirectionalLightRender;
     X3dSpotLight::renderCallback = SpotLightRender;

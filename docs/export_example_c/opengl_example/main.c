@@ -102,6 +102,7 @@ void onMouseClick(int button, int state, int x, int y)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
     { 
         setMouseRelease(x, y);
+        dist = navigate(0, 0, dist);
     }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
@@ -160,6 +161,12 @@ void onReshape(int width, int height)
     setWidthHeight(width, height);
 }
 
+void onWalkOn(int time)
+{
+    CRWDwalkOn();    
+    glutTimerFunc(40, onWalkOn, 0);
+}
+
 int main(int argc, char **argv)
 {
     glutInitWindowSize(600, 600);
@@ -168,12 +175,14 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("white_dune C viewer");
     CRWDinit();
+    CRWDsetWalkOn();
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
     glutPassiveMotionFunc(onMouseMovePassive);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(animation);
+    glutTimerFunc(40, onWalkOn, 0);
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;

@@ -42,6 +42,8 @@ public:
                     ProtoPointSet(Scene *scene);
     virtual Node   *create(Scene *scene);
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
     virtual int     getType() const { return VRML_POINT_SET; }
 
     FieldIndex attrib;

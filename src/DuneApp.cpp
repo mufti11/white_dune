@@ -440,7 +440,7 @@ DuneApp::SaveTempFile(Scene *scene, const char *name, int writeFlags,
     static char path[1024];
 
     mystrncpy_secure(path,scene->getPath(),1024);
-    int i=0;
+    int i = 0;
     // produce a absolute path (remote netscape commands need one)
 #ifdef _WIN32
     const char *dirsign="\\";
@@ -456,7 +456,7 @@ DuneApp::SaveTempFile(Scene *scene, const char *name, int writeFlags,
                            1024-strlen(path));
        }
     // strip filename
-    for (i=strlen(path);(i>=0) && (path[i]!=dirsign[0]);i--);
+    for (i = strlen(path);( i >= 0) && (path[i] != dirsign[0]); i--);
     i++;
     bool writeError = false;
     if (writeFlags & X3DOM)
@@ -974,7 +974,7 @@ void DuneApp::OnFileClose(MainWindow *window)
     delete window;
 #endif
     if (m_windows.size() == 0) {
-        for (int j=0;j<m_filesToDelete.size();j++)
+        for (int j = 0; j < m_filesToDelete.size(); j++)
             swRemoveFile(*m_filesToDelete[j]);
         swUploadCleanupPasswd(m_upload);
         Exit();
@@ -992,7 +992,7 @@ void DuneApp::OnFileExit()
     for (i = m_windows.first(); i; i = i->next()) {
         delete i->item();
     }
-    for (int j=0;j<m_filesToDelete.size();j++)
+    for (int j = 0; j < m_filesToDelete.size(); j++)
         swRemoveFile(*m_filesToDelete[j]);
     swUploadCleanupPasswd(m_upload);
     Exit();
@@ -1048,7 +1048,7 @@ void
 DuneApp::AddToFilesToDelete(char* string)
 {
     // test if string is already in list
-    for (int i=0;i<m_filesToDelete.size();i++)
+    for (int i = 0; i < m_filesToDelete.size(); i++)
        if (strcmp(string,(char*) m_filesToDelete[i])==0)
           return;
     m_filesToDelete.append(new MyString(string));

@@ -1040,3 +1040,14 @@ NodeNurbsCurve::extrudePoints(int from, int to, int points, bool xSymetric)
         }
     }
 }
+
+void      
+NodeNurbsCurve::addToConvertedNodes(int writeFlags)
+{
+    Node *node = toIndexedLineSet();
+    if (node != NULL) {
+        node->setVariableName(strdup(getVariableName()));
+        node->addParent(getParent(), getParentField());
+        m_convertedNodes.append(node);
+    }
+}

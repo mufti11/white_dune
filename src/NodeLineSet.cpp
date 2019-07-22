@@ -163,9 +163,9 @@ NodeLineSet::lineDraw()
             }
             if (numVertices < coordSize) {
                 if (coords)
-                    glVertex3fv(coords->getValue(j));
+                    glVertex3fv(coords->getValue(numVertices));
                 else
-                    glVertex3dv(coordsDouble->getValue(j));
+                    glVertex3dv(coordsDouble->getValue(numVertices));
 #ifdef HAVE_GLFOGCOORDF
                 if (fogDepth) {
                     int fogIndex = fogDepth->getSize() - 1;

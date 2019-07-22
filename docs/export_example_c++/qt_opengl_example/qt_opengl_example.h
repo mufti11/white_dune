@@ -35,6 +35,8 @@ private slots:
 
     void mousePressEvent(QMouseEvent *event);
 
+    void mouseReleaseEvent(QMouseEvent *event);
+
     void mouseMoveEvent(QMouseEvent *event);
 
     void on_actionstart_animation_triggered();

@@ -79,7 +79,7 @@ ChainBasedNode::draw()
     Util::myGlColor4fv(c);
 
     glBegin(GL_LINE_STRIP);
-    for (int i=0; i<m_chain.size(); i++)
+    for (int i = 0; i < m_chain.size(); i++)
         glVertex3f(m_chain[i].x, m_chain[i].y, m_chain[i].z);
     glEnd();
     glEnable(GL_LIGHTING);

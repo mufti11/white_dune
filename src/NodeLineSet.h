@@ -46,6 +46,8 @@ public:
     virtual int     getNodeClass() const 
                        { return LINE_SET_NODE | GEOMETRY_NODE; }
 
+    virtual bool    isDeclaredInRwd_h() { return true; }      
+
     virtual bool    isX3dInternalProto(void) { return true; }
 
     FieldIndex attrib;

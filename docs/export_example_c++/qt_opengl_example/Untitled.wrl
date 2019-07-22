@@ -19,17 +19,19 @@ EXTERNPROTO NurbsSurface[
  "urn:web3d:vrml97:node:NurbsSurface",
  "urn:inet:blaxxun.com:node:NurbsSurface",
  "urn:ParaGraph:NurbsSurface",
- ".//docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
+ "/usr/share/doc/whitedune/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
  "http://wdune.ourproject.org/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
 ]
 
 
 DEF Transform1 Transform {
+  translation 0 -1.044069 1.307000e-3
   children [
     Shape {
       appearance Appearance {
         material DEF Material1 Material {
           diffuseColor 0.137255 0.113725 1
+          specularColor 0.968627 0.976471 1
         }
       }
       geometry DEF NurbsSurface1 NurbsSurface {
@@ -95,7 +97,7 @@ DEF Transform1 Transform {
           0.500000 0.500000 0.500000
           0.707107 0.707107 0
           0.500000 0.447772 -0.500000
-          0 0.707107 -0.707107
+          0.039806 0.850921 -0.707107
           0 1 0
           0 0.707107 0
           0 1 0
@@ -280,8 +282,8 @@ DEF PositionInterpolator1 PositionInterpolator {
     1
   ]
   keyValue [
-    0 0 0
-    1.971103 0.453484 -0.071192
+    0 -1.044069 0.001307
+    1.971103 -0.193154 -0.071192
   ]
 }
 
@@ -289,7 +291,7 @@ ROUTE TimeSensor1.fraction_changed TO PositionInterpolator1.set_fraction
 ROUTE PositionInterpolator1.value_changed TO Transform1.set_translation
 
 Transform {
-  translation -2.787300 -2.165901 0
+  translation -2.787300 3.118130 0
   scale 0.566765 0.566765 0.566765
   children 
     Shape {
@@ -311,5 +313,9 @@ Transform {
 }
 
 NavigationInfo {
+  type [
+    "EXAMINE"
+    "ANY"
+  ]
 }
 

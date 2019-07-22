@@ -13,18 +13,28 @@
   <property name="windowTitle">
    <string>Qt white_dune C++ export OpenGL example</string>
   </property>
-  <widget class="GLWidget" name="glWidgetOpenGL">
+  <widget class="QWidget" name="glWidgetOpenGL">
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
+      <y>0</y>
       <width>171</width>
       <height>33</height>
      </rect>
     </property>
     <property name="text">
      <string>start animation</string>
+    </property>
+   </widget>
+   <widget class="GLWidget" name="openGLWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>600</width>
+      <height>600</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -69,10 +79,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>GLWidget</class>
-   <extends>QWidget</extends>
+   <class>GLWidgeth</class>
+   <extends>QOpenGLWidget</extends>
    <header>glwidget.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

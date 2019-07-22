@@ -341,7 +341,7 @@ static void startWalking(void)
     oldWalkTime = getTimerTime();
 }
 
-static void walkCamera(float *walk)
+static void walkCamera(float *walk, int walkOn)
 {
     float pos[3];
     float sfrot[4];
@@ -363,14 +363,15 @@ static void walkCamera(float *walk)
         float around[4];
         float newRot[4];
         float sfnewRot[4];
-        float z = walk[2] * 2.0f * fspeed;
+        float z = walk[2] * 2.0f * fspeed  * (walkOn ? dt * 50.0: 1);
         float vec[3];
         float pos2[3];
 
         sfaround[0] = 0;
         sfaround[1] = 1;
         sfaround[2] = 0;
-        sfaround[3] = -(walk[0] * 2.0f) * 2.0f * M_PI / 360.0f;
+        sfaround[3] = -(walk[0] * 2.0f) * 2.0f * M_PI / 360.0f *
+                      (walkOn ? dt * 20.0: 1);
         SFRotation2quaternion(around, sfaround);
         quaternionMult(newRot, around, rot);
         normalizeQuaternion(newRot);
@@ -449,13 +450,21 @@ static void orbitCamera(float dtheta, float dphi, float z)
      viewpoint1->orientation[3] = sfnewRot[3];
 }
 
+static int navigateWalkOn = 0;
+
+void CRWDsetWalkOn(void)
+{
+    navigateWalkOn = 1;
+}
+
+static float xOld = 0;
+static float yOld = 0;
+static float zOld = 0;
+
 float navigate(int x, int y, float z)
 {
     float walk[3];
 
-    static float xOld = 0;
-    static float yOld = 0;
-    static float zOld = 0;
     static int xinit = -1;
     static int yinit = -1;
     static int zinit = -1;
@@ -476,7 +485,6 @@ float navigate(int x, int y, float z)
     switch(getNavigation()) {
       case NAV_ANY:
       case NAV_WALK:
-        startWalking();
         walk[0] = -x / 5.0;
         walk[1] = 0;
         if ((!stop) || (y >= 0)) { 
@@ -484,7 +492,7 @@ float navigate(int x, int y, float z)
             stop = 0;
         } else
             walk[2] = 0;
-        walkCamera(walk);
+        walkCamera(walk, navigateWalkOn);
         break;
       case NAV_EXAMINE:
         if ((!stop) || (z - zOld > 0)) {
@@ -509,6 +517,21 @@ float navigate(int x, int y, float z)
         zOld = z;
     }
     return z;
+}
+
+void CRWDwalkOn(void)
+{
+    float walk[3];
+    if (getNavigation() == NAV_WALK) {
+        walk[0] = -xOld / 5.0;
+        walk[1] = 0;
+        if ((!stop) || (yOld >= 0)) { 
+            walk[2] = yOld / 5.0;
+            stop = 0;
+        } else
+            walk[2] = 0;
+        walkCamera(walk, navigateWalkOn);
+    }
 }
 
 void CRWDIndexedFaceSetRender(X3dNode *data, void *extraData)
@@ -796,6 +819,239 @@ void CRWDIndexedFaceSetCreateNormals(X3dNode *data, void* extraData)
             }    
         }
     }
+}
+
+void CRWDIndexedLineSetRender(X3dNode *data, void *extraData)
+{
+    if(preRender)
+    {
+    }
+    else if(initRender)
+    {
+    }
+    else
+    {
+        struct X3dIndexedLineSet *Xindexedlineset = (struct X3dIndexedLineSet*)data;
+        struct X3dCoordinate *Xcoordinate = (struct X3dCoordinate*)Xindexedlineset->coord;
+        int colorRGBA = 0;
+        GLint *lines = NULL;
+        GLfloat *vertex = NULL;
+        GLfloat *colors = NULL;
+        GLint *colorindex = NULL;
+        int lines_len, vertex_len, color_len, colorindex_len;
+        int colorpervertex;
+        X3dNode *Xcolor = NULL;
+        int buffer = 0;
+        int linecounter = 0;
+        int i;
+
+        if (Xcoordinate == NULL)
+            return;
+        if (Xindexedlineset->color) 
+            if (((struct X3dColorRGBA *)Xindexedlineset->color)->m_type == 
+                X3dColorRGBAType) {
+                Xcolor = (struct X3dColorRGBA*)Xindexedlineset->color;
+                colorRGBA = 1;
+            } else
+                Xcolor = (struct X3dColor*)Xindexedlineset->color;;
+        if(Xcolor != NULL)
+        {
+            glEnable(GL_COLOR_MATERIAL); 
+            glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+            if (colorRGBA) {
+                colors = ((struct X3dColorRGBA *)Xcolor)->color;
+                color_len = ((struct X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((struct X3dColor *)Xcolor)->color;
+                color_len = ((struct X3dColor *)Xcolor)->color_length;
+            }
+            colorpervertex = Xindexedlineset->colorPerVertex;
+        }
+        if(Xindexedlineset->colorIndex != NULL)
+        {
+            colorindex = Xindexedlineset->colorIndex;
+            colorindex_len = Xindexedlineset->colorIndex_length;
+        }
+        vertex = Xcoordinate->point;
+        lines = Xindexedlineset->coordIndex;
+        vertex_len = Xcoordinate->point_length;
+        lines_len = Xindexedlineset->coordIndex_length;
+        glPushName(Xindexedlineset->glName_number);
+        glBegin(GL_LINE_STRIP);
+        if(colors && !colorpervertex)
+            if (colorRGBA)
+                glColor4f(colors[4 * linecounter], colors[4 * linecounter + 1], colors[4 * linecounter + 2], colors[4 * linecounter + 3]);
+            else 
+                glColor3f(colors[3 * linecounter], colors[3 * linecounter + 1], colors[3 * linecounter + 2]);
+
+        for(i = 0; i != lines_len; i++)
+        {
+            buffer = lines[i];
+            if (buffer < 0) {
+                glEnd();
+                if (i != lines_len - 1)
+                    glBegin(GL_LINE_STRIP);
+            }
+            if(buffer == -1)
+            {
+                linecounter++;
+                glEnd();
+                glBegin(GL_LINES);
+                if(colors && !colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[4 * linecounter], colors[4 * linecounter + 1], colors[4 * linecounter + 2], colors[4 * linecounter + 3]);
+                    else
+                        glColor3f(colors[3 * linecounter], colors[3 * linecounter + 1], colors[3 * linecounter + 2]);
+            }
+            else
+            {
+                if(colors && color_len > 0 && colorpervertex)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+            }
+        }
+        glEnd();
+        glPopName();
+    }
+    glDisable(GL_COLOR_MATERIAL);
+}
+
+
+void CRWDLineSetRender(X3dNode *data, void* extraData)
+{
+    if(preRender)
+    {
+    }
+    else if(initRender)
+    {
+    }
+    else
+    {
+        struct X3dLineSet *Xlineset = (struct X3dLineSet*)data;
+        struct X3dCoordinate *Xcoordinate = (struct X3dCoordinate*)Xlineset->coord;
+        int colorRGBA = 0;
+        X3dNode *Xcolor = NULL;
+        GLint *lines = NULL;
+        GLfloat *vertex = NULL;
+        GLfloat *colors = NULL;
+        int lines_len, vertex_len, color_len, colorindex_len;
+        int buffer = 0;
+        int linecounter = 0;
+        int i,j;
+
+        if (Xcoordinate == NULL)
+            return;
+        if (Xlineset->color) 
+            if (((struct X3dColorRGBA*)Xlineset->color)->m_type == X3dColorRGBAType) {
+                Xcolor = (struct X3dColorRGBA*)Xlineset->color;
+                colorRGBA = 1;
+            } else
+                Xcolor = (struct X3dColor*)Xlineset->color;;
+        if(Xcolor != NULL)
+        {
+            glEnable(GL_COLOR_MATERIAL);
+            glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+            if (colorRGBA) {
+                colors = ((struct X3dColorRGBA *)Xcolor)->color;
+                color_len = ((struct X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((struct X3dColor *)Xcolor)->color;
+                color_len = ((struct X3dColor *)Xcolor)->color_length;
+            }
+        }
+        vertex = Xcoordinate->point;
+        lines = Xlineset->vertexCount;
+        vertex_len = Xcoordinate->point_length;
+        lines_len = Xlineset->vertexCount_length;
+        glPushName(Xlineset->glName_number);
+        for(i = 0; i != lines_len; i++)
+        {
+            glBegin(GL_LINE_STRIP);
+            for(j = 0; j < lines[i]; j++) {
+                int buffer = linecounter++;
+                if(colors && color_len > 0)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+            }
+            glEnd();
+        }
+        glPopName();
+    }
+    glDisable(GL_COLOR_MATERIAL);
+}
+
+void CRWDPointSetRender(X3dNode *data, void *extraData)
+{
+    if(preRender)
+    {
+    }
+    else if(initRender)
+    {
+    }
+    else
+    {
+        struct X3dPointSet *Xpointset = (struct X3dPointSet*)data;
+        struct X3dCoordinate *Xcoordinate = (struct X3dCoordinate*)Xpointset->coord;
+        int colorRGBA = 0;
+        X3dNode *Xcolor = NULL;
+        GLfloat *vertex = NULL;
+        GLfloat *colors = NULL;
+        int vertex_len, color_len;
+        int buffer = 0;
+        int pointcounter = 0;
+        int i;
+        if (Xcoordinate == NULL)
+            return;
+        if (Xpointset->color) 
+            if (((struct X3dColorRGBA*)Xpointset->color)->m_type == X3dColorRGBAType) {
+                Xcolor = (struct X3dColorRGBA*)Xpointset->color;
+                colorRGBA = 1;
+            } else
+                Xcolor = (struct X3dColor*)Xpointset->color;;
+        if(Xcolor != NULL)
+        {
+            glEnable(GL_COLOR_MATERIAL);
+            glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+            if (colorRGBA) {
+                colors = ((struct X3dColorRGBA *)Xcolor)->color;
+                color_len = ((struct X3dColorRGBA *)Xcolor)->color_length;
+            } else {
+                colors = ((struct X3dColor *)Xcolor)->color;
+                color_len = ((struct X3dColor *)Xcolor)->color_length;
+            }
+        }
+        vertex = Xcoordinate->point;
+        vertex_len = Xcoordinate->point_length;
+        glPushName(Xpointset->glName_number);
+        glBegin(GL_POINTS);
+        if(colors)
+            if (colorRGBA)
+                glColor4f(colors[4 * pointcounter], colors[4 * pointcounter + 1], colors[4 * pointcounter + 2], colors[4 * pointcounter + 3]);
+            else 
+                glColor3f(colors[3 * pointcounter], colors[3 * pointcounter + 1], colors[3 * pointcounter + 2]);
+
+        for(i = 0; i != vertex_len; i++)
+        {
+            buffer = i;
+            {
+                if(colors && color_len > 0)
+                    if (colorRGBA)
+                        glColor4f(colors[buffer*4], colors[buffer*4+1], colors[buffer*4+2], colors[buffer*4+3]);
+                    else
+                        glColor3f(colors[buffer*3], colors[buffer*3+1], colors[buffer*3+2]);
+                glVertex3f(vertex[buffer*3], vertex[buffer*3+1], vertex[buffer*3+2]);
+            }
+        }
+        glEnd();
+        glPopName();
+    }
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 /*
@@ -3049,6 +3305,8 @@ void CRWDdraw(int render)
     float rot[4];
 
     if (render) {
+        startWalking();
+
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -3130,6 +3388,9 @@ void CRWDinit()
 
     X3dIndexedFaceSetRenderCallback = CRWDIndexedFaceSetRender;
     X3dIndexedFaceSetCreateNormalsCallback = CRWDIndexedFaceSetCreateNormals;
+    X3dIndexedLineSetRenderCallback = CRWDIndexedLineSetRender;
+    X3dLineSetRenderCallback = CRWDLineSetRender;
+    X3dPointSetRenderCallback = CRWDPointSetRender;
     X3dPointLightRenderCallback = CRWDPointLightRender;
     X3dDirectionalLightRenderCallback = CRWDDirectionalLightRender;
     X3dSpotLightRenderCallback = CRWDSpotLightRender;

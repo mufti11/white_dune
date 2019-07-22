@@ -1496,7 +1496,10 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "{ return %d; }\n", getType()) )
         RET_ONERROR( mywritestr(f, "\n") )
 
-        if (getType() == VRML_INDEXED_FACE_SET) {
+        if ((getType() == VRML_INDEXED_FACE_SET) || 
+            (getType() == VRML_INDEXED_LINE_SET) || 
+            (getType() == X3D_LINE_SET) || 
+            (getType() == VRML_POINT_SET)) {
             RET_ONERROR( mywritestr(f, "    void setGlName(int number)") )
             RET_ONERROR( mywritestr(f, "{ glName_number = number; }\n") )
             RET_ONERROR( mywritestr(f, "\n") )
@@ -1590,7 +1593,11 @@ Proto::writeCDeclaration(int f, int languageFlag)
                 RET_ONERROR( mywritestr(f, getCreateNormalsCallbackName()) )
                 RET_ONERROR( mywritestr(f, " = node;\n") ) 
                 RET_ONERROR( mywritestr(f, "    }\n\n") ) 
-
+            }
+            if ((getType() == VRML_INDEXED_FACE_SET) || 
+                (getType() == VRML_INDEXED_LINE_SET) || 
+                (getType() == X3D_LINE_SET) || 
+                (getType() == VRML_POINT_SET)) {
                 RET_ONERROR( mywritestr(f, "    void setGlName(int number)") )
                 RET_ONERROR( mywritestr(f, "{ glName_number = number; }\n") )
                 RET_ONERROR( mywritestr(f, "\n") )
@@ -1652,7 +1659,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "\n\n") )
     }
 
-    if (languageFlag & C_SOURCE)
+    if (languageFlag & C_SOURCE) {
         if (getType() == VRML_INDEXED_FACE_SET) {
             RET_ONERROR( mywritef(f, "    void %sSetGlName(",
                                   TheApp->getCPrefix()) )
@@ -1664,6 +1671,40 @@ Proto::writeCDeclaration(int f, int languageFlag)
             RET_ONERROR( mywritestr(f, "}\n") ) 
             RET_ONERROR( mywritestr(f, "\n") )
         }
+        if (getType() == VRML_INDEXED_LINE_SET) {
+            RET_ONERROR( mywritef(f, "    void %sSetGlNameIndexedLineSet(",
+                                  TheApp->getCPrefix()) )
+            RET_ONERROR( mywritef(f, "struct %sIndexedFaceSet* self, ",
+                                  TheApp->getCPrefix()) ) 
+            RET_ONERROR( mywritestr(f, "int number)\n") );
+            RET_ONERROR( mywritestr(f, "{\n") ) 
+            RET_ONERROR( mywritestr(f, "    self->glName_number = number;\n") )
+            RET_ONERROR( mywritestr(f, "}\n") ) 
+            RET_ONERROR( mywritestr(f, "\n") )
+        }
+        if (getType() == X3D_LINE_SET) {
+            RET_ONERROR( mywritef(f, "    void %sSetGlNameLineSet(",
+                                  TheApp->getCPrefix()) )
+            RET_ONERROR( mywritef(f, "struct %sIndexedFaceSet* self, ",
+                                  TheApp->getCPrefix()) ) 
+            RET_ONERROR( mywritestr(f, "int number)\n") );
+            RET_ONERROR( mywritestr(f, "{\n") ) 
+            RET_ONERROR( mywritestr(f, "    self->glName_number = number;\n") )
+            RET_ONERROR( mywritestr(f, "}\n") ) 
+            RET_ONERROR( mywritestr(f, "\n") )
+        }
+        if (getType() == VRML_POINT_SET) {
+            RET_ONERROR( mywritef(f, "    void %sSetGlNamePointSet(",
+                                  TheApp->getCPrefix()) )
+            RET_ONERROR( mywritef(f, "struct %sIndexedFaceSet* self, ",
+                                  TheApp->getCPrefix()) ) 
+            RET_ONERROR( mywritestr(f, "int number)\n") );
+            RET_ONERROR( mywritestr(f, "{\n") ) 
+            RET_ONERROR( mywritestr(f, "    self->glName_number = number;\n") )
+            RET_ONERROR( mywritestr(f, "}\n") ) 
+            RET_ONERROR( mywritestr(f, "\n") )
+        }
+    }
 
     if (languageFlag & (CC_SOURCE | JAVA_SOURCE))
         RET_ONERROR( mywritestr(f, "    ") )
@@ -2447,7 +2488,10 @@ Proto::writeCExtraFields(int f, int languageFlag)
     } else if ((languageFlag & JAVA_SOURCE)) {
             RET_ONERROR( mywritestr(f, "    Object extra_data;\n") )
     }
-    if (getType() == VRML_INDEXED_FACE_SET) {
+    if ((getType() == VRML_INDEXED_FACE_SET) || 
+        (getType() == VRML_INDEXED_LINE_SET) || 
+        (getType() == X3D_LINE_SET) || 
+        (getType() == VRML_POINT_SET)) {
         RET_ONERROR( mywritestr(f, "    int glName_number;\n") )
     }
     if (getType() == VRML_TRANSFORM) {

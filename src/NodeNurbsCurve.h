@@ -83,6 +83,8 @@ public:
     Node           *convert2X3d(void);
     Node           *convert2Vrml(void);
 
+    virtual void    addToConvertedNodes(int writeFlags);
+
     virtual void    update();
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }

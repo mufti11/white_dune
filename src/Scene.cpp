@@ -2932,7 +2932,6 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "void doWithData() ") )
         RET_ONERROR( mywritestr(f, "{ root.treeDoWithData(null); }\n") ) 
 
-
         RET_ONERROR( mywritef(f, "    static %s%s ", 
                                  TheApp->getCPrefix(), "Node") )
         RET_ONERROR( mywritef(f, "getNodeFromGlName(") )

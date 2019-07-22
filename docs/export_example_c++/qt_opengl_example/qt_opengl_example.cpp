@@ -93,6 +93,15 @@ void Qt_opengl_example::mousePressEvent(QMouseEvent *event)
     }
 }
 
+void Qt_opengl_example::mouseReleaseEvent(QMouseEvent *event)
+{
+    int x = event->x(); 
+    int y = event->y(); 
+    CPPRWD::setMouseRelease(x, y);
+
+    dist = CPPRWD::navigate(0, 0, dist);
+}
+
 void Qt_opengl_example::mouseMoveEvent(QMouseEvent *event)
 {
     if (CPPRWD::distInitialised())

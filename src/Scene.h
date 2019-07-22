@@ -364,9 +364,8 @@ public:
                            }
     bool                addSelectedHandle(int handle)
                            { 
-                           for (int i = 0; i < m_selectedHandles.size(); i++)
-                               if (handle == m_selectedHandles[i])
-                                   return false;
+                           if (m_selectedHandles.find(handle) != -1)
+                               return false;
                            m_selectedHandles.append(handle); 
                            return true;
                            }
@@ -376,11 +375,9 @@ public:
                                return; 
                            if (m_lastSelectedHandle == handle)
                                m_lastSelectedHandle = -1;
-                           for (int i = 0; i < m_selectedHandles.size(); i++)
-                               if (handle == m_selectedHandles[i]) {
-                                   m_selectedHandles.remove(i);
-                                   return;
-                               }
+                           int index = m_selectedHandles.find(handle);
+                           if (index > -1)
+                               m_selectedHandles.remove(index);
                            }
     void                removeSelectedHandles(void)
                            {

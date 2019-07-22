@@ -100,6 +100,7 @@ void onMouseClick(int button, int state, int x, int y)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
     { 
         CPPRWD::setMouseRelease(x, y);
+        dist = CPPRWD::navigate(0, 0, dist);
     }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
@@ -159,6 +160,12 @@ void onReshape(int width, int height)
     CPPRWD::setWidthHeight(width, height);
 }
 
+void walkOn(int time)
+{
+    CPPRWD::walkOn();    
+    glutTimerFunc(40, walkOn, 0);
+}
+
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
@@ -166,6 +173,7 @@ int main(int argc, char **argv)
     glutInitWindowSize(600, 600);
     glViewport(0, 0, 600, 600);
     CPPRWD::setWidthHeight(600, 600);
+    CPPRWD::setWalkOn();
     glutCreateWindow("white_dune C++ viewer");
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
@@ -173,6 +181,7 @@ int main(int argc, char **argv)
     glutPassiveMotionFunc(onMouseMovePassive);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(processEvents);
+    glutTimerFunc(40, walkOn, 0);
     glutDisplayFunc(display);
     CPPRWD::init();
     glutMainLoop();

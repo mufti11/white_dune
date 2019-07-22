@@ -5179,6 +5179,14 @@ Added QT C++ export example
 
 Fixed bug in dragging multiple "x == 0" handles in Xsymetric mode
 
+Optimized handle selection
+
+Added timer based WALK navigation on C/C++/java export
+
+Added (Indexed)LineSet rendering and PointSet rendering on C/C++/java export
+
+Fixed bug in LineSet rendering
+
 Contact: MUFTI <mufti11@web.de>
 
 

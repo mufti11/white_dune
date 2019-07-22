@@ -27,6 +27,12 @@ namespace CPPRWD
 
     void IndexedFaceSetCreateNormals(X3dNode *data, void*);
 
+    void IndexedLineSetRender(X3dNode *data, void*);
+
+    void LineSetRender(X3dNode *data, void*);
+
+    void PointSetRender(X3dNode *data, void*);
+
     void ImageTextureRender(X3dNode *data, void*);
 
     void PixelTextureRender(X3dNode *data, void*);

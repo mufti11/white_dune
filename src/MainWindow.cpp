@@ -1634,7 +1634,7 @@ static bool removeTextureCoordinates(Node *node, void *data)
     if (node->getType() == VRML_INDEXED_FACE_SET) {
         NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *) node;
         removeTexCoordTemplate(faceSet);
-        if (faceSet->texCoordIndex()->getSize()>0)
+        if (faceSet->texCoordIndex()->getSize() > 0)
            faceSet->texCoordIndex(new MFInt32());
     } else if (node->getType() == VRML_ELEVATION_GRID)
         removeTexCoordTemplate((NodeElevationGrid *) node);
@@ -1662,12 +1662,12 @@ static bool removeColors(Node *node, void *data)
     if (node->getType() == VRML_INDEXED_FACE_SET) {
         NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *) node;
         removeColorTemplate(faceSet);
-        if (faceSet->colorIndex()->getSize()>0)
+        if (faceSet->colorIndex()->getSize() > 0)
            faceSet->colorIndex(new MFInt32());
     } else if (node->getType() == VRML_INDEXED_LINE_SET) {
         NodeIndexedLineSet *lineSet = (NodeIndexedLineSet *) node;
         removeColorTemplate(lineSet);
-        if (lineSet->colorIndex()->getSize()>0)
+        if (lineSet->colorIndex()->getSize() > 0)
            lineSet->colorIndex(new MFInt32());
     } else if (node->getType() == VRML_POINT_SET) {
         removeColorTemplate((NodePointSet *) node);
