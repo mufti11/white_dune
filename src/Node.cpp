@@ -95,6 +95,7 @@ NodeData::NodeData(Scene *scene, Proto *proto)
 
 NodeData::NodeData(const Node &node) {
     copyData(node);
+    m_written = false;
     m_identifierCopy = node.m_identifier;
 }    
     
@@ -1607,6 +1608,7 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
                                                                  languageFlag,
                                                                  forward,
                                                                  cont) )
+        setWritten(true);
         return 0;
     }
 

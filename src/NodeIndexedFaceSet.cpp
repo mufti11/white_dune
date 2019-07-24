@@ -175,9 +175,7 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
             m_meshDirty = true;
             return;
         }
-    } else
-        return;
-        
+    } 
     NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)this->copy();
     node->setVariableName(strdup(this->getVariableName()));
     m_scene->copyRoutes(node, this);

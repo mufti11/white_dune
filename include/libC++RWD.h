@@ -850,7 +850,6 @@ void CPPRWD::IndexedLineSetRender(X3dNode *data, void* extraData)
     glDisable(GL_COLOR_MATERIAL);
 }
 
-
 void CPPRWD::LineSetRender(X3dNode *data, void* extraData)
 {
     if(preRender)
@@ -2364,6 +2363,7 @@ void CPPRWD::NavigationInfoTreeRender(X3dNode *data, void *dataptr)
                navigation = NAV_ANY;
        }           
     }
+    speed = navi->speed;
 }
 
 class CPPRWDTimeSensorData {

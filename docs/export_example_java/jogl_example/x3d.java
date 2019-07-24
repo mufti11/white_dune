@@ -2991,6 +2991,8 @@ class MyNavigationInfoRenderCallback extends X3dNavigationInfoRenderCallback
                     x3d.navigation = x3d.NAV_ANY;
             }           
         }           
+        if (navi != null)
+            x3d.speed = navi.speed;
     }
 }
 

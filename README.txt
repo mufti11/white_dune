@@ -5187,6 +5187,8 @@ Added (Indexed)LineSet rendering and PointSet rendering on C/C++/java export
 
 Fixed bug in LineSet rendering
 
+Fixed Normal creation on IndexedFaceSet export to C/C++/java
+
 Contact: MUFTI <mufti11@web.de>
 
 

@@ -1,4 +1,5 @@
 /* Copyright (c) Mark J. Kilgard, 1997. */
+
 /*
  * (c) Copyright 1993, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
@@ -49,42 +50,41 @@
 #include <windows.h>
 #endif
 #include <stdio.h>
+extern void reInitSensor(void *);
 #include "CExport.c"
 #include "libCRWD.h"
 #include <math.h>
 
-float view_rotx = 0.0f; 
-float view_roty = 0.0f;
-float view_rotz = 0.0f;
-float view_dist = 0.0f;
-float navigation_matrix[16];
+float dist = 10.0f;
+static int distInit = 0;
 
 void display()
 {
-    CRWDdraw(navigation_matrix);
+    if (distInitialised())
+        if (!distInit) {
+            distInit = -1;
+            dist = getInitialDist();
+        }
+    CRWDdraw(1);
     glutSwapBuffers();
 }
 
 void animation()
 {
-    usleep(100);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0, 0, view_dist);
-    glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
-    glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-    glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
-    glGetFloatv(GL_MODELVIEW_MATRIX, navigation_matrix);
+    CRWDdraw(0);
     CRWDprocessEvents();
     display();
+    usleep(10);
 }
 
 int left_button = 0;
 int middle_button = 0;
 int right_button = 0;
 
-int clicked_x = 0;
-int clicked_y = 0;
+int moved_x = 0;
+int moved_y = 0;
+
+int dist_y = 0;
 
 void onMouseClick(int button, int state, int x, int y)
 {
@@ -95,20 +95,26 @@ void onMouseClick(int button, int state, int x, int y)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) 
     { 
         left_button = 1;
-        clicked_x = x;
-        clicked_y = y;        
+        moved_x = x;
+        moved_y = y;        
+        setMouseClick(x, y);
+    }	
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) 
+    { 
+        setMouseRelease(x, y);
+        dist = navigate(0, 0, dist);
     }	
     if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) 
     { 
         middle_button = 1;
-        clicked_x = x;
-        clicked_y = y;
+        moved_x = x;
+        moved_y = y;
     }	
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) 
     { 
         right_button = 1;
-        clicked_x = x;
-        clicked_y = y;
+        moved_x = x;
+        moved_y = y;
     }	
 }
 
@@ -116,49 +122,67 @@ void onMouseMove(int x, int y)
 {
     if (left_button)
     {
-        view_roty -= (clicked_x - x) / 5.0;
-        view_rotx -= (clicked_y - y) / 5.0;
-        clicked_x = x;
-        clicked_y = y;
-    }
-    if (middle_button || right_button )
+        static int init = -1;
+        if (init) {
+            setMouseMove(x, x, y, y);
+            init = 0;
+        } else
+            setMouseMove(x, moved_x, y, moved_y);
+        if (!hasHit()) {
+            navigate(moved_x - x, moved_y - y, dist);
+        }
+        moved_x = x;
+        moved_y = y;
+    } 
+    else if (middle_button || right_button )
     {
-        view_dist += (clicked_y - y) / 5.0;
-        clicked_x = x;
-        clicked_y = y;
-    }
+        dist += (y - dist_y) / 5.0;
+        dist_y = y;
+        dist = navigate(0, 0, dist);
+    } else
+        setMousePosition(x, y);
 }
+
+void onMouseMovePassive(int x, int y)
+{
+    setMousePosition(x, y);
+    moved_x = x;
+    moved_y = y;
+    dist_y = y;
+}
+
 
 void onSpecialKeyClick(int key, int x, int y)
 {
-    switch (key) {
-      case GLUT_KEY_UP:
-        view_rotx -= 1;
-        break;
-      case GLUT_KEY_DOWN:
-        view_rotx += 1;
-        break;
-      case GLUT_KEY_LEFT:
-        view_roty -= 1;
-        break;
-      case GLUT_KEY_RIGHT:
-        view_roty += 1;
-        break;
-    }
 }
 
+void onReshape(int width, int height)
+{
+    setWidthHeight(width, height);
+}
+
+void onWalkOn(int time)
+{
+    CRWDwalkOn();    
+    glutTimerFunc(40, onWalkOn, 0);
+}
 
 int main(int argc, char **argv)
 {
     glutInitWindowSize(600, 600);
+    setWidthHeight(600, 600);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("white_dune C viewer");
     CRWDinit();
+    CRWDsetWalkOn();
+    glutReshapeFunc(onReshape);
     glutMouseFunc(onMouseClick); 
     glutMotionFunc(onMouseMove);
+    glutPassiveMotionFunc(onMouseMovePassive);
     glutSpecialFunc(onSpecialKeyClick);
     glutIdleFunc(animation);
+    glutTimerFunc(40, onWalkOn, 0);
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;

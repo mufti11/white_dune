@@ -2560,6 +2560,7 @@ void CRWDNavigationInfoTreeRender(X3dNode *data, void *dataptr)
                navigation = NAV_ANY;
        }           
     }
+    speed = navi->speed;
 }
 
 struct CRWDTimeSensorData {
