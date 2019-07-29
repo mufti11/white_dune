@@ -176,6 +176,8 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
             return;
         }
     } 
+    if (getHumanoid() != NULL)
+        return;
     NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)this->copy();
     node->setVariableName(strdup(this->getVariableName()));
     m_scene->copyRoutes(node, this);

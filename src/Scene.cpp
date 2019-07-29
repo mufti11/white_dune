@@ -5690,6 +5690,26 @@ SceneView* Scene::getViewOfLastSelection(void)
    return m_viewOfLastSelection; 
 }
 
+void Scene::copyLastSelection(void)
+{
+   if (!m_selection_is_in_scene) {
+      // do copy in View
+      SceneView* view = getViewOfLastSelection();
+      if (view != NULL)
+          view->CopyLastSelection();
+   }
+}
+
+void Scene::pasteLastSelection(void)
+{
+   if (!m_selection_is_in_scene) {
+      // do paste in View
+      SceneView* view = getViewOfLastSelection();
+      if (view != NULL)
+          view->PasteLastSelection();
+   }
+}
+
 void Scene::deleteLastSelection(void)
 {
    if (m_selection_is_in_scene) {

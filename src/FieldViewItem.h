@@ -66,6 +66,7 @@ public:
     int                         GetState(void) const { return m_state; }
 
     void                        SetField(const Field *field) { m_field = field; }
+    const Field                *GetField(void) { return m_field; }
 
     virtual void                MoveControl(int x, int y) {}
 

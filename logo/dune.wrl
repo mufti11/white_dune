@@ -1,44 +1,64 @@
 #VRML V2.0 utf8
 
 EXTERNPROTO NurbsSurface[
-#
-# Developed from NodeNurbsSurface.cpp of the vrml97 editor dune 
-# Copyright (C) 1999 Stephen F. White
-#
-# PROTO interface and javascript port
-# Copyright (C) 2003 J. "MUFTI" Scheurich
-#
-# urn collection 
-# Copyright (C) 2003 Braden McDaniel, Paul Aslin
-# 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
  field SFInt32 uDimension
  field SFInt32 vDimension
  field MFFloat uKnot
  field MFFloat vKnot
  field SFInt32 uOrder
  field SFInt32 vOrder
+ field SFBool solid
+ field SFBool ccw
  exposedField MFVec3f controlPoint
  exposedField MFFloat weight
  exposedField SFInt32 uTessellation
  exposedField SFInt32 vTessellation
  exposedField SFNode texCoord
- field SFBool ccw
- field SFBool solid
  ]
 [
  "urn:web3d:vrml97:node:NurbsSurface",
  "urn:inet:blaxxun.com:node:NurbsSurface",
  "urn:ParaGraph:NurbsSurface",
- "NurbsSurfacePROTO.wrl"
- "http://wdune.ourproject.org/docs/vrml200x_nurbssurface/NurbsSurfacePROTO.wrl",
+ "/usr/share/doc/whitedune/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
+ "http://wdune.ourproject.org/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
 ]
 
+
+EXTERNPROTO SuperExtrusion[
+ field MFFloat knot
+ field SFInt32 order
+ field SFFloat creaseAngle
+ field SFBool beginCap
+ field SFBool endCap
+ field SFBool solid
+ field MFVec2f scale
+ exposedField SFFloat a
+ exposedField SFFloat b
+ exposedField SFFloat m
+ exposedField SFFloat n1
+ exposedField SFFloat n2
+ exposedField SFFloat n3
+ exposedField SFFloat border
+ exposedField SFFloat bottomBorder
+ exposedField SFInt32 superTessellation
+ exposedField SFInt32 spineTessellation
+ exposedField MFVec3f controlPoint
+ exposedField MFFloat weight
+ ]
+[
+  "SuperExtrusionPROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperExtrusionPROTO.wrl"
+  "http://wdune.ourproject.org//docs/scripted_Nodes/SuperExtrusionPROTO.wrl"
+]
+
+
 EXTERNPROTO SuperShape[
+ field SFBool bottom
+ field SFBool ccw
+ field SFFloat creaseAngle
+ field SFBool solid
+ field SFNode texCoord
+ field SFBool top
  exposedField SFFloat ua
  exposedField SFFloat ub
  exposedField SFFloat um
@@ -51,2141 +71,1877 @@ EXTERNPROTO SuperShape[
  exposedField SFFloat vn1
  exposedField SFFloat vn2
  exposedField SFFloat vn3
+ exposedField SFFloat bottomBorder
  exposedField SFFloat border
- field SFFloat creaseAngle
- field SFNode texCoord
+ exposedField SFVec3f size
  exposedField SFInt32 uTessellation
  exposedField SFInt32 vTessellation
  ]
 [
- "SuperShapePROTO.wrl"
- "http://wdune.ourproject.org/docs/scriptedNodes/SuperShapePROTO.wrl"
+  "SuperShapePROTO.wrl"
+  "/usr/share/doc/whitedune/docs/scripted_Nodes/SuperShapePROTO.wrl"
+  "http://wdune.ourproject.org//docs/scripted_Nodes/SuperShapePROTO.wrl"
 ]
 
-EXTERNPROTO SuperExtrusion[
- exposedField SFFloat a
- exposedField SFFloat b
- exposedField SFFloat m
- exposedField SFFloat n1
- exposedField SFFloat n2
- exposedField SFFloat n3
- exposedField SFFloat border
- field SFFloat creaseAngle
- exposedField SFInt32 superTessellation
- exposedField SFInt32 spineTessellation
- exposedField MFVec3f controlPoint
- exposedField MFFloat weight
- field MFFloat knot
- field SFInt32 order
- field SFBool  beginCap
- field SFBool  endCap
- exposedField  MFVec2f scale
- ]
-[
- "SuperExtrusionPROTO.wrl"
- "http://wdune.ourproject.org/docs/scriptedNodes/SuperExtrusionPROTO.wrl"
-]
 
-Transform 
-  {
-  children 
-    [
-    WorldInfo 
-      {
-      info 
-	[
-	"Dune logo. Tux 3D Modell from the AC3D example from Tux_AQFH by Steve Baker"
-        "This is free software, you can redistribute it and/or modify it under the Terms of the GNU Public License"
-	"as published by the Free Software Foundation, either version 2 of the license "
-	"or (at your option) any later version."
-	]
-      }
-    Transform 
-      {
-      children 
-	[
-	Transform 
-	  {
-	  children 
-	    [
-	    Group 
-	      {
-	      children 
-		[
-		Transform 
-		  {
-		  children 
-		    [
-		    Transform 
-		      {
-		      children 
-			[
-			Transform 
-			  {
-			  children 
-			    [
-			    Shape 
-			      {
-			      appearance 			      Appearance 
-				{
-				material 				Material 
-				  {
-				  emissiveColor 0.400000 0.400000 0.400000
-				  specularColor 0.200000 0.200000 0.200000
-				  }
-				texture 				ImageTexture 
-				  {
-				  url 
-				    [
-				    "whitesand.jpg"
-				    ]
-				  }
-				textureTransform 				TextureTransform 
-				  {
-				  scale 20 20
-				  }
-				}
-			      geometry 			      NurbsSurface 
-				{
-				uDimension 10
-				vDimension 10
-				uKnot 
-				  [
-				  0 
-				  0 
-				  0 
-				  0 
-				  0 
-				  1 
-				  2 
-				  3 
-				  4 
-				  5 
-				  6 
-				  6 
-				  6 
-				  6 
-				  6 
-				  ]
-				vKnot 
-				  [
-				  0 
-				  0 
-				  0 
-				  1 
-				  2 
-				  3 
-				  4 
-				  5 
-				  6 
-				  7 
-				  8 
-				  8 
-				  8 
-				  ]
-				uOrder 5
-				controlPoint 
-				  [
-				  0 0 9 
-				  1 0 9 
-				  2 0 9 
-				  3 0 9 
-				  4 0 9 
-				  5 0 9 
-				  6 0 9 
-				  7 0 9 
-				  8 0 9 
-				  9 0 9 
-				  0 0 8 
-				  1.326959 0.503242 7.869318 
-				  1.303369 -0.171461 8.293600 
-				  3.206557 0.461506 7.817810 
-				  3.431090 -0.263000 7.804028 
-				  4.631380 -0.107000 7.842525 
-				  5.813745 0.126368 8.070734 
-				  6.742730 -0.251206 7.975018 
-				  8 0 8 
-				  9 0 8 
-				  0 0 7 
-				  1.309970 0.647167 6.990670 
-				  1.612149 -9.838300e-2 7.161406 
-				  3.059930 0.923771 6.425650 
-				  3.728018 -8.731359e-2 6.887825 
-				  4.560719 -0.158087 7.150090 
-				  5.555990 -3.911260e-2 6.767127 
-				  6.948287 0.206808 6.871190 
-				  7.985660 0.307700 7.137440 
-				  9 0 7 
-				  0 0 6 
-				  1.405750 0.898441 6.152060 
-				  1.683750 0.247675 6.361588 
-				  2.645260 0.240645 6.139160 
-				  3.231450 -0.106769 6.132246 
-				  5.056980 0.188115 6.077970 
-				  6.079257 0.123603 6.047369 
-				  7.007699 0.129096 6.056396 
-				  8.388850 0.645129 5.836420 
-				  9 0 6 
-				  0 0 5 
-				  1.264250 0.674467 5.096730 
-				  1.517760 -0.187775 5.154788 
-				  3 0 5 
-				  3.339440 -0.386285 5.121500 
-				  5 0 5 
-				  6 0 5 
-				  6.305788 -0.230314 5.219880 
-				  7.940505 0.303326 5.139667 
-				  9 0 5 
-				  -0.150003 -0.389622 4.148838 
-				  1.339740 0.774694 4.058938 
-				  1.692149 -0.131334 4.090775 
-				  2.927500 0.481795 4.380980 
-				  4.007586 5.019339e-2 4.012780 
-				  5 0 4 
-				  6 0 4 
-				  6.689486 -0.248769 4.009990 
-				  8.379770 0.529504 4.206500 
-				  9 0 4 
-				  -0.129546 -0.182521 3.171977 
-				  1.363420 0.741729 3.136310 
-				  2 0 3 
-				  3.087028 0.581366 3.279438 
-				  3.540940 -0.106430 2.995239 
-				  5.031239 0.228486 3.061908 
-				  5.352128 -0.309175 3.168040 
-				  6.541810 -0.321253 3.046890 
-				  8.092981 1.375524 2.982599 
-				  9 0 3 
-				  -9.512609e-2 -0.104440 2.134618 
-				  1.277199 0.518746 2.109110 
-				  2 0 2 
-				  3 0 2 
-				  3.617500 -0.204319 2.055880 
-				  4.568336 0.114606 2.124387 
-				  4.928030 -0.314345 2.184240 
-				  6.424330 -0.339453 2.103909 
-				  8 0 2 
-				  9 0 2 
-				  0 0 1 
-				  0.990706 0.256814 1.036239 
-				  2 0 1 
-				  3.020349 0.184358 1.055459 
-				  3.419600 -0.178818 1.219390 
-				  5.030330 0.171029 1.038460 
-				  5.343575 -0.205302 1.067540 
-				  7.177544 0.845282 1.425336 
-				  8.013070 0.242136 1.105908 
-				  9 0 1 
-				  0 0 0 
-				  1 0 0 
-				  2 0 0 
-				  3 0 0 
-				  4 0 0 
-				  5 0 0 
-				  6 0 0 
-				  7 0 0 
-				  8 0 0 
-				  9 0 0 
-				  ]
-				weight 
-				  [
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  1 
-				  ]
-				}
-			      }
-			    ]
-			  translation 2.484498 0.178837 2.939388
-			  }
-			]
-		      rotation 0.284259 0.689670 0.665996 2.550820
-		      translation -0.381778 -6.807199 4.213650e-2
-		      }
-		    Transform 
-		      {
-		      children 
-			[
-			Shape 
-			  {
-			  appearance 			  Appearance 
-			    {
-			    material 			    Material 
-			      {
-			      }
-			    texture 			    ImageTexture 
-			      {
-			      url 
-				[
-				"flow2.jpg"
-				]
-			      }
-			    }
-			  geometry 			  NurbsSurface 
-			    {
-			    uDimension 9
-			    vDimension 4
-			    uKnot 
-			      [
-			      0 
-			      0 
-			      0 
-			      0.250000 
-			      0.250000 
-			      0.500000 
-			      0.500000 
-			      0.750000 
-			      0.750000 
-			      1 
-			      1 
-			      1 
-			      ]
-			    vKnot 
-			      [
-			      0 
-			      0 
-			      0 
-			      1 
-			      2 
-			      2 
-			      2 
-			      ]
-			    controlPoint 
-			      [
-			      0 0.639998 0 
-			      0 0.452547 0 
-			      0 0.639998 0 
-			      0 0.452547 0 
-			      0 0.639998 0 
-			      0 0.452547 0 
-			      0 0.639998 0 
-			      0 0.452547 0 
-			      0 0.639998 0 
-			      0 -0.639998 -1.419999 
-			      1.004091 -0.452547 -1.004091 
-			      1.419999 -0.639998 0 
-			      1.004091 -0.452547 1.004091 
-			      -1.192086e-7 -0.639998 1.419999 
-			      -1.004091 -0.452547 1.004091 
-			      -1.419999 -0.639998 0 
-			      -1.004091 -0.452547 -1.004091 
-			      1.192086e-7 -0.639998 -1.419999 
-			      0 -0.639998 -1.419999 
-			      1.004091 -0.452547 -1.004091 
-			      1.419999 -0.639998 0 
-			      1.004091 -0.452547 1.004091 
-			      -1.192086e-7 -0.639998 1.419999 
-			      -1.004091 -0.452547 1.004091 
-			      -1.419999 -0.639998 0 
-			      -1.004091 -0.452547 -1.004091 
-			      1.192086e-7 -0.639998 -1.419999 
-			      0 -0.639998 0 
-			      0 -0.452547 0 
-			      0 -0.639998 0 
-			      0 -0.452547 0 
-			      0 -0.639998 0 
-			      0 -0.452547 0 
-			      0 -0.639998 0 
-			      0 -0.452547 0 
-			      0 -0.639998 0 
-			      ]
-			    weight 
-			      [
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      0.707104 
-			      1 
-			      ]
-			    uTessellation 4
-			    vTessellation 4
-			    }
-			  }
-			]
-		      rotation 0.862823 -0.357393 -0.357499 1.717514
-		      translation 0 1.894593e-4 0.639137
-		      }
-		    ]
-		  translation -0.852823 0.188896 -0.393875
-		  }
-		]
-	      }
-	    ]
-	  rotation 0.584526 0.265240 -0.766795 1.453050
-	  translation -0.296855 -0.300698 -0.382721
-	  }
-	]
-      rotation -0.425948 0.305816 0.851495 1.017709
-      }
-    ]
-  rotation -0.930936 -0.148775 0.333500 1.595010
+Transform {
+  rotation -0.930937 -0.148775 0.333500 1.595010
   translation -0.413691 -8.430690e-2 6.788310
-  }
-
-Transform 
-  {
-  children 
-    [
-    DEF TUX Transform 
-      {
-      center 4.746577e-5 -4.563331e-4 8.647902e-4
+  children [
+    WorldInfo {
+      info [
+        "Dune logo. Tux 3D Modell from the AC3D example from Tux_AQFH by Steve Baker"
+        "This is free software, you can redistribute it and/or modify it under the Terms of the GNU Public License"
+        "as published by the Free Software Foundation, either version 2 of the license "
+        "or (at your option) any later version."
+      ]
+    }
+    Transform {
+      rotation -0.425948 0.305816 0.851496 1.017709
       children 
-	[
-	Transform 
-	  {
-	  children 
-	    [
-	    DEF rightwing Transform 
-	      {
-	      children 
-		[
-		Group 
-		  {
-		  children 
-		    [
-		    DEF Shape5 Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			DEF Material1 Material 
-			  {
-			  ambientIntensity 0
-			  diffuseColor 0 0 0
-			  shininess 5.612238e-2
-			  specularColor 0.448980 0.445187 0.432722
-			  }
-			}
-		      geometry 		      DEF NurbsSurface3 NurbsSurface 
-			{
-			uDimension 3
-			vDimension 5
-			uKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  1 
-			  1 
-			  ]
-			vKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  0 
-			  1 
-			  2 
-			  2 
-			  2 
-			  2 
-			  ]
-			vOrder 4
-			controlPoint 
-			  [
-			  0 0.132087 2.303054 
-			  0 0.132087 2.303054 
-			  0 0.132087 2.303054 
-			  -0.857569 9.800025e-2 1.680608 
-			  0 4.566716e-2 1.496212 
-			  0.857569 9.800025e-2 1.680608 
-			  -1.225100 3.937083e-2 1.275727 
-			  0 0.179480 2.034123 
-			  1.225100 3.937083e-2 1.275727 
-			  -1.516726 3.548900e-4 0.608487 
-			  0 0.112792 0.709141 
-			  1.516726 3.548900e-4 0.608487 
-			  -1.271638 0 3.128106e-2 
-			  0 6.234721e-2 7.010202e-2 
-			  1.271638 0 3.128106e-2 
-			  ]
-			weight 
-			  [
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  ]
-			uTessellation 8
-			vTessellation 8
-			}
-		      }
-		    DEF Shape3 Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			Material 
-			  {
-			  }
-			}
-		      geometry 		      DEF NurbsSurface4 NurbsSurface 
-			{
-			uDimension 3
-			vDimension 5
-			uKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  1 
-			  1 
-			  ]
-			vKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  0 
-			  1 
-			  2 
-			  2 
-			  2 
-			  2 
-			  ]
-			vOrder 4
-			controlPoint 
-			  [
-			  0 0.131688 2.303298 
-			  0 0.131688 2.303298 
-			  0 0.131688 2.303298 
-			  -0.857492 9.774252e-2 1.680816 
-			  0 4.552545e-2 1.496719 
-			  0.857492 9.774252e-2 1.680816 
-			  -1.225134 3.922640e-2 1.275954 
-			  0 0.179332 2.033899 
-			  1.225134 3.922640e-2 1.275954 
-			  -1.516669 3.119735e-4 0.608660 
-			  0 0.112792 0.709141 
-			  1.516669 3.119735e-4 0.608660 
-			  -1.271638 0 3.128106e-2 
-			  0 6.234721e-2 7.010202e-2 
-			  1.271638 0 3.128106e-2 
-			  ]
-			weight 
-			  [
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  ]
-			uTessellation 8
-			vTessellation 8
-			ccw FALSE
-			}
-		      }
-		    ]
-		  }
-		]
-	      rotation 0 -1 0 1.500982
-	      scale 0.100000 1 0.159997
-	      translation -0.266508 0.667243 2.635250e-2
-	      }
-	    DEF body Transform 
-	      {
-	      children 
-		[
-		Group 
-		  {
-		  children 
-		    [
-		    DEF Shape1 Shape 
-		      {
-		      appearance 		      DEF Appearance1 Appearance 
-			{
-			material 			USE Material1
-			}
-		      geometry 		      NurbsSurface 
-			{
-			uDimension 11
-			vDimension 10
-			uKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  0.200000 
-			  0.200000 
-			  0.400000 
-			  0.400000 
-			  0.600000 
-			  0.600000 
-			  0.800000 
-			  0.800000 
-			  1 
-			  1 
-			  1 
-			  ]
-			vKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  2 
-			  3 
-			  4 
-			  5 
-			  6 
-			  7 
-			  8 
-			  8 
-			  8 
-			  ]
-			controlPoint 
-			  [
-			  0 0.468075 -7.604963e-4 
-			  0 0.396950 -6.449372e-4 
-			  0 0.468075 -7.604963e-4 
-			  0 0.396950 -6.449372e-4 
-			  0 0.468075 -7.604963e-4 
-			  0 0.396950 -6.449372e-4 
-			  0 0.468075 -7.604963e-4 
-			  0 0.396950 -6.449372e-4 
-			  0 0.468075 -7.604963e-4 
-			  0 0.396950 -6.449372e-4 
-			  0 0.468075 -7.604963e-4 
-			  -7.028838e-2 0.533896 -0.193112 
-			  -0.167711 0.534439 -0.152721 
-			  -0.204383 0.533896 -2.148159e-2 
-			  -0.184707 0.452769 9.008946e-2 
-			  -0.103463 0.728797 0.175674 
-			  0 0.672227 0.210763 
-			  0.103463 0.728797 0.175674 
-			  0.184707 0.452769 9.008941e-2 
-			  0.204383 0.533896 -2.148167e-2 
-			  0.167711 0.534439 -0.152721 
-			  7.028827e-2 0.533896 -0.193112 
-			  0 0.468075 -7.604963e-4 
-			  -0.277895 0.990495 -0.217617 
-			  -0.350369 1.097651 -3.682537e-2 
-			  -0.316644 0.930859 0.154438 
-			  -0.186690 1.097651 0.298767 
-			  0 -0.559050 0.707638 
-			  0.186690 1.097651 0.298767 
-			  0.316644 0.930859 0.154438 
-			  0.350369 1.097651 -3.682548e-2 
-			  0.277895 0.990495 -0.217617 
-			  0 0.468075 -7.604963e-4 
-			  -0.237883 1.575366 -0.351393 
-			  -0.315328 2.020859 -0.213872 
-			  -0.405725 2.257333 -3.575173e-2 
-			  -0.349418 1.977676 0.178155 
-			  -0.212916 2.266237 0.347797 
-			  0 1.182077 0.344828 
-			  0.212916 2.266237 0.347797 
-			  0.349418 1.977676 0.178155 
-			  0.405725 2.257333 -3.575173e-2 
-			  0.315328 2.020859 -0.213872 
-			  0.237883 1.575366 -0.351393 
-			  -0.160941 4.570895 -0.287292 
-			  -0.136482 3.876332 -0.243634 
-			  -0.390650 3.422029 -3.466432e-2 
-			  -0.334870 2.993308 0.177568 
-			  -0.210087 3.484889 0.313717 
-			  0 2.888823 0.351327 
-			  0.210087 3.484889 0.313717 
-			  0.334870 2.993308 0.177568 
-			  0.390650 3.422029 -3.466432e-2 
-			  0.136482 3.876332 -0.243634 
-			  0.160941 4.570895 -0.287292 
-			  -0.160941 4.570895 -0.287292 
-			  -0.284615 4.067245 -0.222365 
-			  -0.316866 4.817502 -3.727842e-2 
-			  -0.268712 4.112051 0.155065 
-			  -0.198385 4.747663 0.267598 
-			  0 4.114058 0.284061 
-			  0.198385 4.747663 0.267598 
-			  0.268712 4.112051 0.155065 
-			  0.316866 4.817502 -3.727842e-2 
-			  0.284615 4.067245 -0.222365 
-			  0.160941 4.570895 -0.287292 
-			  0 6.651597 -0.146540 
-			  -0.157718 4.922122 -0.142498 
-			  -0.193636 5.740958 -2.035238e-2 
-			  -0.174998 4.868607 8.535382e-2 
-			  -0.103178 5.740958 0.165120 
-			  4.470348e-8 4.868607 0.194701 
-			  0.103178 5.740958 0.165120 
-			  0.174998 4.868607 8.535373e-2 
-			  0.193636 5.740958 -2.035246e-2 
-			  0.157718 4.922122 -0.142498 
-			  0 6.651597 -0.146540 
-			  0 7.981521 -0.164085 
-			  -0.168118 6.681365 -0.131347 
-			  -0.212180 7.878526 -2.230107e-2 
-			  -0.173684 6.561666 0.107253 
-			  -0.102866 7.517033 0.219530 
-			  0 6.431962 0.209056 
-			  0.102866 7.517033 0.219530 
-			  0.173684 6.561666 0.107253 
-			  0.212180 7.878526 -2.230115e-2 
-			  0.168118 6.681365 -0.131347 
-			  0 7.981521 -0.164085 
-			  0 9.192523 -0.100846 
-			  -0.104708 7.918899 -7.257959e-2 
-			  -0.136552 9.263669 -2.685741e-3 
-			  -0.119369 7.924990 7.202862e-2 
-			  -8.171868e-2 9.243490 0.128195 
-			  0 7.792140 0.145667 
-			  8.171868e-2 9.243490 0.128195 
-			  0.119369 7.924990 7.202862e-2 
-			  0.136552 9.263669 -2.685741e-3 
-			  0.104708 7.918899 -7.257959e-2 
-			  0 9.192523 -0.100846 
-			  0 9.230560 8.764074e-3 
-			  0 7.827949 7.432347e-3 
-			  0 9.230560 8.764074e-3 
-			  0 7.827949 7.432347e-3 
-			  0 9.230560 8.764074e-3 
-			  0 7.827949 7.432347e-3 
-			  0 9.230560 8.764074e-3 
-			  0 7.827949 7.432347e-3 
-			  0 9.230560 8.764074e-3 
-			  0 7.827949 7.432347e-3 
-			  0 9.230560 8.764074e-3 
-			  ]
-			weight 
-			  [
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  0.848047 
-			  1 
-			  ]
-			uTessellation 12
-			vTessellation 12
-			}
-		      }
-		    DEF Shape2 Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			Material 
-			  {
-			  }
-			}
-		      geometry 		      NurbsSurface 
-			{
-			uDimension 3
-			vDimension 6
-			uKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  1 
-			  1 
-			  ]
-			vKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  2 
-			  3 
-			  4 
-			  4 
-			  4 
-			  ]
-			controlPoint 
-			  [
-			  0 6.651597 -0.146540 
-			  0 6.651597 -0.146540 
-			  0 6.651597 -0.146540 
-			  -0.160941 4.570895 -0.287292 
-			  0 4.844182 -0.379388 
-			  0.160941 4.570895 -0.287292 
-			  -0.160941 4.570895 -0.287292 
-			  0 2.969712 -0.429136 
-			  0.160941 4.570895 -0.287292 
-			  -0.237883 1.575366 -0.351393 
-			  0 2.612620 -0.444018 
-			  0.237883 1.575366 -0.351393 
-			  0 0.468075 -7.604963e-4 
-			  0 1.866575 -0.480329 
-			  0 0.468075 -7.604963e-4 
-			  0 0.468075 -7.604963e-4 
-			  0 0.468075 -7.604963e-4 
-			  0 0.468075 -7.604963e-4 
-			  ]
-			weight 
-			  [
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  ]
-			uTessellation 12
-			vTessellation 12
-			}
-		      }
-		    ]
-		  }
-		]
-	      rotation 0 -1 0 3.141000
-	      scale 1 0.140000 1
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		Shape 
-		  {
-		  appearance 		  DEF Appearance2 Appearance 
-		    {
-		    material 		    Material 
-		      {
-		      diffuseColor 1 0.823529 0.388235
-		      }
-		    }
-		  geometry 		  NurbsSurface 
-		    {
-		    uDimension 4
-		    vDimension 6
-		    uKnot 
-		      [
-		      0 
-		      0 
-		      0 
-		      0 
-		      1 
-		      1 
-		      1 
-		      1 
-		      ]
-		    vKnot 
-		      [
-		      0 
-		      0 
-		      0 
-		      0 
-		      1 
-		      2 
-		      3 
-		      3 
-		      3 
-		      3 
-		      ]
-		    uOrder 4
-		    vOrder 4
-		    controlPoint 
-		      [
-		      -1.173645 9.425014e-2 -0.283881 
-		      -0.758916 8.539897e-2 -3.425848 
-		      0.758916 8.539897e-2 -3.425848 
-		      1.173645 9.425014e-2 -0.283881 
-		      -0.758916 8.539897e-2 -3.425848 
-		      -0.288345 3.409285e-2 4.245510 
-		      0.288345 3.409285e-2 4.245510 
-		      0.758916 8.539897e-2 -3.425848 
-		      -1.843888 0.146283 -1.804707 
-		      0 0.148046 4.234096 
-		      0 0.148046 4.234096 
-		      1.843888 0.146283 -1.804707 
-		      -1.110370 0.181233 -3.404670 
-		      -2.823405 9.165854e-2 -2.378806 
-		      2.823405 9.165854e-2 -2.378806 
-		      1.110370 0.181233 -3.404670 
-		      -2.110378 0.227164 -2.724406 
-		      0 4.247424e-2 7.762897 
-		      0 4.247424e-2 7.762897 
-		      2.110378 0.227164 -2.724406 
-		      -1.170325 0.193770 -2.232114 
-		      -0.703839 0.257034 -1.041483 
-		      0.703839 0.257034 -1.041483 
-		      1.170325 0.193770 -2.232114 
-		      ]
-		    weight 
-		      [
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      ]
-		    uTessellation 12
-		    vTessellation 12
-		    }
-		  }
-		]
-	      rotation 1 0 0 5.235927e-2
-	      scale 9.104008e-2 1 5.410289e-2
-	      translation 2.799005e-4 0.785960 0.203933
-	      }
-	    DEF eyeleft Transform 
-	      {
-	      children 
-		[
-		Shape 
-		  {
-		  appearance 		  Appearance 
-		    {
-		    material 		    Material 
-		      {
-		      }
-		    }
-		  geometry 		  Sphere 
-		    {
-		    radius 5.999999e-2
-		    }
-		  }
-		Transform 
-		  {
-		  children 
-		    [
-		    Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			Material 
-			  {
-			  diffuseColor 3.921568e-2 3.529411e-2 3.529411e-2
-			  specularColor 0.847055 0.968626 1
-			  }
-			}
-		      geometry 		      Sphere 
-			{
-			radius 3.500000e-2
-			}
-		      }
-		    ]
-		  scale 1 0.770385 1
-		  translation 2.435056e-3 -2.784993e-3 3.999999e-2
-		  }
-		]
-	      scale 1.092599 1.507132 0.787926
-	      translation 6.199438e-2 1.044000 0.150820
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		Shape 
-		  {
-		  appearance 		  Appearance 
-		    {
-		    material 		    Material 
-		      {
-		      }
-		    }
-		  geometry 		  Sphere 
-		    {
-		    radius 5.999999e-2
-		    }
-		  }
-		Transform 
-		  {
-		  children 
-		    [
-		    Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			Material 
-			  {
-			  diffuseColor 3.921568e-2 3.529411e-2 3.529411e-2
-			  specularColor 0.847055 0.968626 1
-			  }
-			}
-		      geometry 		      Sphere 
-			{
-			radius 3.500000e-2
-			}
-		      }
-		    ]
-		  scale 1 0.770385 1
-		  translation 2.435056e-3 -2.784993e-3 3.999999e-2
-		  }
-		]
-	      scale 1.092599 1.507132 0.787926
-	      translation -6.199999e-2 1.044000 0.149440
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		DEF Shape7 Shape 
-		  {
-		  appearance 		  USE Appearance2
-		  geometry 		  NurbsSurface 
-		    {
-		    uDimension 9
-		    vDimension 6
-		    uKnot 
-		      [
-		      0 
-		      0 
-		      0 
-		      0.250000 
-		      0.250000 
-		      0.500000 
-		      0.500000 
-		      0.750000 
-		      0.750000 
-		      1 
-		      1 
-		      1 
-		      ]
-		    vKnot 
-		      [
-		      0 
-		      0 
-		      0 
-		      1 
-		      2 
-		      3 
-		      4 
-		      4 
-		      4 
-		      ]
-		    controlPoint 
-		      [
-		      0 -1.801384e-2 0.186480 
-		      0 -1.273765e-2 0.131861 
-		      0 -1.801384e-2 0.186480 
-		      0 -1.273765e-2 0.131861 
-		      0 -1.801384e-2 0.186480 
-		      0 -1.273765e-2 0.131861 
-		      0 -1.801384e-2 0.186480 
-		      0 -1.273765e-2 0.131861 
-		      0 -1.801384e-2 0.186480 
-		      0 -9.746462e-2 -0.101112 
-		      5.986702e-2 -3.185613e-2 6.601309e-2 
-		      0.117995 -0.150812 3.490521e-2 
-		      4.821182e-2 -8.525495e-2 0.122165 
-		      -7.450580e-9 -0.140000 0.139999 
-		      -4.821182e-2 -8.525495e-2 0.122165 
-		      -0.117995 -0.150812 3.490521e-2 
-		      -5.986702e-2 -3.185613e-2 6.601309e-2 
-		      0 -9.746462e-2 -0.101112 
-		      0 -9.746462e-2 -0.101112 
-		      5.986702e-2 -3.185613e-2 6.601309e-2 
-		      0.117995 -0.150812 3.490521e-2 
-		      4.821182e-2 -8.525495e-2 0.122165 
-		      -7.450580e-9 -0.140000 0.139999 
-		      -4.821182e-2 -8.525495e-2 0.122165 
-		      -0.117995 -0.150812 3.490521e-2 
-		      -5.986702e-2 -3.185613e-2 6.601309e-2 
-		      0 -9.746462e-2 -0.101112 
-		      0 -0.194600 -0.247748 
-		      6.599663e-2 -9.899494e-2 -6.599663e-2 
-		      0.146724 -0.180239 -0.240378 
-		      6.599660e-2 -9.899494e-2 6.599663e-2 
-		      -1.117587e-8 -0.140000 9.333331e-2 
-		      -6.599663e-2 -9.899494e-2 6.599660e-2 
-		      -0.146724 -0.180239 -0.240378 
-		      -6.599663e-2 -9.899494e-2 -6.599663e-2 
-		      0 -0.194600 -0.247748 
-		      0 -0.162447 -4.698060e-2 
-		      3.299830e-2 -9.899494e-2 -3.299830e-2 
-		      4.666664e-2 -0.140000 0 
-		      3.299830e-2 -9.899494e-2 3.299830e-2 
-		      -5.587935e-9 -0.140000 4.666664e-2 
-		      -3.299830e-2 -9.899494e-2 3.299830e-2 
-		      -4.666664e-2 -0.140000 0 
-		      -3.299830e-2 -9.899494e-2 -3.299830e-2 
-		      0 -0.162447 -4.698060e-2 
-		      0 -0.153999 1.017874e-2 
-		      0 -0.108892 7.197428e-3 
-		      0 -0.153999 1.017874e-2 
-		      0 -0.108892 7.197428e-3 
-		      0 -0.153999 1.017874e-2 
-		      0 -0.108892 7.197428e-3 
-		      0 -0.153999 1.017874e-2 
-		      0 -0.108892 7.197428e-3 
-		      0 -0.153999 1.017874e-2 
-		      ]
-		    weight 
-		      [
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      0.707104 
-		      1 
-		      ]
-		    uTessellation 8
-		    vTessellation 5
-		    }
-		  }
-		]
-	      rotation -1 0 0 1.588248
-	      scale 0.973855 2.113487 0.200102
-	      translation 0.128610 5.466600e-2 -3.163174e-2
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		USE Shape7
-		]
-	      rotation -1 0 0 1.588248
-	      scale 0.973855 2.113487 0.200102
-	      translation -0.128610 5.466600e-2 -3.163174e-2
-	      }
-	    WorldInfo 
-	      {
-	      info 
-		[
-		"Somewhat based on Steve Bakers TUX 3D modell, remodelled with NURBS in white_dune by J. \"MUFTI\" Scheurich"
-		"This is free software, you can redistribute it and/or modify it under the Terms of the GNU Public License"
-		"as published by the Free Software Foundation, either version 2 of the license "
-		"or (at your option) any later version."
-		]
-	      }
-	    DEF leftwing Transform 
-	      {
-	      children 
-		[
-		Group 
-		  {
-		  children 
-		    [
-		    DEF Shape4 Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			Material 
-			  {
-			  ambientIntensity 0
-			  diffuseColor 0 0 0
-			  shininess 5.612238e-2
-			  specularColor 0.448980 0.445187 0.432722
-			  }
-			}
-		      geometry 		      DEF NurbsSurface1 NurbsSurface 
-			{
-			uDimension 3
-			vDimension 5
-			uKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  1 
-			  1 
-			  ]
-			vKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  0 
-			  1 
-			  2 
-			  2 
-			  2 
-			  2 
-			  ]
-			vOrder 4
-			controlPoint 
-			  [
-			  0 -1.444577e-2 2.620973 
-			  0 -1.444577e-2 2.620973 
-			  0 -1.444577e-2 2.620973 
-			  0.758973 -4.225150e-2 1.920802 
-			  0 -7.124552e-3 1.559839 
-			  -0.758973 -4.225150e-2 1.920802 
-			  1.307307 -4.133186e-2 1.518021 
-			  0 1.853254e-2 1.790729 
-			  -1.307307 -4.133186e-2 1.518021 
-			  1.309038 -2.620662e-2 0.771000 
-			  0 0.123778 0.702618 
-			  -1.309038 -2.620662e-2 0.771000 
-			  1.271638 0 3.128106e-2 
-			  0 6.234721e-2 7.010202e-2 
-			  -1.271638 0 3.128106e-2 
-			  ]
-			weight 
-			  [
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  ]
-			uTessellation 8
-			vTessellation 8
-			ccw FALSE
-			}
-		      }
-		    DEF Shape6 Shape 
-		      {
-		      appearance 		      Appearance 
-			{
-			material 			Material 
-			  {
-			  }
-			}
-		      geometry 		      DEF NurbsSurface2 NurbsSurface 
-			{
-			uDimension 3
-			vDimension 5
-			uKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  1 
-			  1 
-			  1 
-			  ]
-			vKnot 
-			  [
-			  0 
-			  0 
-			  0 
-			  0 
-			  1 
-			  2 
-			  2 
-			  2 
-			  2 
-			  ]
-			vOrder 4
-			controlPoint 
-			  [
-			  0 -1.521958e-2 2.620831 
-			  0 -1.521958e-2 2.620831 
-			  0 -1.521958e-2 2.620831 
-			  0.759010 -4.262961e-2 1.920758 
-			  0 -7.398968e-3 1.561159 
-			  -0.759010 -4.262961e-2 1.920758 
-			  1.307188 -4.153801e-2 1.518030 
-			  0 1.853254e-2 1.790729 
-			  -1.307188 -4.153801e-2 1.518030 
-			  1.309442 -2.626083e-2 0.771070 
-			  0 0.123749 0.702636 
-			  -1.309442 -2.626083e-2 0.771070 
-			  1.271638 0 3.128106e-2 
-			  0 6.234721e-2 7.010202e-2 
-			  -1.271638 0 3.128106e-2 
-			  ]
-			weight 
-			  [
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  1 
-			  ]
-			uTessellation 8
-			vTessellation 8
-			}
-		      }
-		    ]
-		  }
-		]
-	      rotation 0 -1 0 -1.500982
-	      scale 0.100000 1 0.159997
-	      translation 0.266508 0.667243 2.635250e-2
-	      }
-	    ]
-	  translation -0.199970 -1.888721e-6 -0.499983
-	  }
-	Transform 
-	  {
-	  children 
-	    [
-	    Shape 
-	      {
-	      appearance 	      Appearance 
-		{
-		material 		DEF Material1_0 Material 
-		  {
-		  diffuseColor 1 8.627451e-2 0.231371
-		  emissiveColor 7.843133e-3 0 0
-		  }
-		}
-	      geometry 	      SuperShape 
-		{
-		ub -5.099997
-		um 11.720000
-		un2 0
-		va 0.819998
-		border 0.110794
-		}
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		Shape 
-		  {
-		  appearance 		  Appearance 
-		    {
-		    material 		    Material 
-		      {
-		      diffuseColor 0 0.674507 0.145098
-		      }
-		    }
-		  geometry 		  SuperExtrusion 
-		    {
-		    a 0.519999
-		    controlPoint 
-		      [
-		      1.248528 -2.536601 4.716722 
-		      1.704725 -1.443333 4.349709 
-		      -0.318515 0.213136 -0.362044 
-		      0.494955 2.233575 0.345463 
-		      -0.522274 3.189404 0.987625 
-		      ]
-		    weight 
-		      [
-		      1 
-		      1 
-		      1 
-		      1 
-		      1 
-		      ]
-		    knot 
-		      [
-		      0 
-		      0 
-		      0 
-		      1 
-		      2 
-		      3 
-		      3 
-		      3 
-		      ]
-		    scale 
-		      [
-		      1 1 
-		      0.459998 0.459998 
-		      ]
-		    }
-		  }
-		]
-	      scale 0.419999 1.019999 0.439999
-	      translation 0 -3.666399 0
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		Shape 
-		  {
-		  appearance 		  Appearance 
-		    {
-		    material 		    Material 
-		      {
-		      diffuseColor 0.839214 0.647058 0.223526
-		      }
-		    }
-		  geometry 		  SuperShape 
-		    {
-		    ua -0.819998
-		    um -8.260000
-		    vm -7.319999
-		    }
-		  }
-		]
-	      scale 0.300000 0.555781 0.300000
-	      translation 0 -0.585114 0
-	      }
-	    Transform 
-	      {
-	      children 
-		[
-		Shape 
-		  {
-		  appearance 		  Appearance 
-		    {
-		    material 		    USE Material1_0
-		    }
-		  geometry 		  SuperShape 
-		    {
-		    um 5
-		    un1 1.519999
-		    un2 6.759994
-		    un3 5.819999
-		    vb 1.819998
-		    vm 2.700000
-		    border -6.920357e-2
-		    }
-		  }
-		]
-	      }
-	    ]
-	  rotation 0.257223 -0.266362 -0.928917 1.679232
-	  scale 7.999999e-2 7.999999e-2 7.999999e-2
-	  translation 3.646529e-2 0.895219 -9.999997e-2
-	  }
-	]
-      scale 0.200000 0.200000 0.170000
-      translation 3.076623e-2 0.350053 5.371000e-4
-      }
-    ]
-  translation -0.595335 -0.775964 8.076251
-  }
+        Transform {
+          rotation 0.584527 0.265240 -0.766796 1.453050
+          translation -0.296855 -0.300698 -0.382721
+          children 
+            Group {
+              children 
+                Transform {
+                  translation -0.852823 0.188896 -0.393875
+                  children [
+                    Transform {
+                      rotation 0.284259 0.689671 0.665996 2.550820
+                      translation -0.381778 -6.807199 4.213650e-2
+                      children 
+                        Transform {
+                          translation 2.484498 0.178837 2.939388
+                          children 
+                            Shape {
+                              appearance Appearance {
+                                material Material {
+                                  emissiveColor 0.400000 0.400000 0.400000
+                                  specularColor 0.200000 0.200000 0.200000
+                                }
+                                texture ImageTexture {
+                                  url "whitesand.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                  scale 20 20
+                                }
+                              }
+                              geometry NurbsSurface {
+                                uDimension 10
+                                vDimension 10
+                                uKnot [
+                                  0
+                                  0
+                                  0
+                                  0
+                                  1
+                                  2
+                                  3
+                                  4
+                                  5
+                                  6
+                                  7
+                                  7
+                                  7
+                                  7
+                                ]
+                                vKnot [
+                                  0
+                                  0
+                                  0
+                                  0
+                                  1
+                                  2
+                                  3
+                                  4
+                                  5
+                                  6
+                                  7
+                                  7
+                                  7
+                                  7
+                                ]
+                                uOrder 4
+                                vOrder 4
+                                solid FALSE
+                                ccw FALSE
+                                controlPoint [
+                                  0 0 9
+                                  1 0 9
+                                  2 0 9
+                                  3 0 9
+                                  4 0 9
+                                  5 0 9
+                                  6 0 9
+                                  7 0 9
+                                  8 0 9
+                                  9 0 9
+                                  0 0 8
+                                  1.326959 0.503242 7.869318
+                                  1.303369 -0.171461 8.293600
+                                  3.206557 0.461506 7.817810
+                                  3.431090 -0.263000 7.804028
+                                  4.631380 -0.107000 7.842525
+                                  5.813745 0.126368 8.070734
+                                  6.742730 -0.251206 7.975018
+                                  8 0 8
+                                  9 0 8
+                                  0 0 7
+                                  1.309970 0.647167 6.990670
+                                  1.612149 -0.098383 7.161406
+                                  3.059930 0.923771 6.425650
+                                  3.728018 -0.087314 6.887825
+                                  4.560719 -0.158087 7.150090
+                                  5.555990 -0.039113 6.767127
+                                  6.948287 0.206808 6.871190
+                                  7.985660 0.307700 7.137440
+                                  9 0 7
+                                  0 0 6
+                                  1.405750 0.898441 6.152060
+                                  1.683750 0.247675 6.361588
+                                  2.645260 0.240645 6.139160
+                                  3.231450 -0.106769 6.132246
+                                  5.056980 0.188115 6.077970
+                                  6.079257 0.123603 6.047369
+                                  7.007699 0.129096 6.056396
+                                  8.388850 0.645129 5.836420
+                                  9 0 6
+                                  0 0 5
+                                  1.264250 0.674467 5.096730
+                                  1.517760 -0.187775 5.154788
+                                  3 0 5
+                                  3.339440 -0.386285 5.121500
+                                  5 0 5
+                                  6 0 5
+                                  6.305788 -0.230314 5.219880
+                                  7.940505 0.303326 5.139667
+                                  9 0 5
+                                  -0.150003 -0.389622 4.148838
+                                  1.339740 0.774694 4.058938
+                                  1.692149 -0.131334 4.090775
+                                  2.927500 0.481795 4.380980
+                                  4.007586 0.050193 4.012780
+                                  5 0 4
+                                  6 0 4
+                                  6.689486 -0.248769 4.009990
+                                  8.379770 0.529504 4.206500
+                                  9 0 4
+                                  -0.129546 -0.182521 3.171977
+                                  1.363420 0.741729 3.136310
+                                  2 0 3
+                                  3.087028 0.581366 3.279438
+                                  3.540940 -0.106430 2.995239
+                                  5.031239 0.228486 3.061908
+                                  5.352128 -0.309175 3.168040
+                                  6.541810 -0.321253 3.046890
+                                  8.092981 1.375524 2.982599
+                                  9 0 3
+                                  -0.095126 -0.104440 2.134618
+                                  1.277199 0.518746 2.109110
+                                  2 0 2
+                                  3 0 2
+                                  3.617500 -0.204319 2.055880
+                                  4.568336 0.114606 2.124387
+                                  4.928030 -0.314345 2.184240
+                                  6.424330 -0.339453 2.103909
+                                  8 0 2
+                                  9 0 2
+                                  0 0 1
+                                  0.990706 0.256814 1.036239
+                                  2 0 1
+                                  3.020349 0.184358 1.055459
+                                  3.419600 -0.178818 1.219390
+                                  5.030330 0.171029 1.038460
+                                  5.343575 -0.205302 1.067540
+                                  7.177544 0.845282 1.425336
+                                  8.013070 0.242136 1.105908
+                                  9 0 1
+                                  0 0 0
+                                  1 0 0
+                                  2 0 0
+                                  3 0 0
+                                  4 0 0
+                                  5 0 0
+                                  6 0 0
+                                  7 0 0
+                                  8 0 0
+                                  9 0 0
+                                ]
+                                weight [
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                  1
+                                ]
+                              }
+                            }
+                        }
+                    }
+                    Transform {
+                      rotation 0.862824 -0.357393 -0.357499 1.717514
+                      translation 0 1.894593e-4 0.639137
+                      children 
+                        Shape {
+                          appearance Appearance {
+                            material Material {
+                            }
+                            texture ImageTexture {
+                              url "flow2.jpg"
+                            }
+                          }
+                          geometry NurbsSurface {
+                            uDimension 9
+                            vDimension 4
+                            uKnot [
+                              0
+                              0
+                              0
+                              0.250000
+                              0.250000
+                              0.500000
+                              0.500000
+                              0.750000
+                              0.750000
+                              1
+                              1
+                              1
+                            ]
+                            vKnot [
+                              0
+                              0
+                              0
+                              1
+                              2
+                              2
+                              2
+                            ]
+                            controlPoint [
+                              0 0.639998 0
+                              0 0.452547 0
+                              0 0.639998 0
+                              0 0.452547 0
+                              0 0.639998 0
+                              0 0.452547 0
+                              0 0.639998 0
+                              0 0.452547 0
+                              0 0.639998 0
+                              0 -0.639998 -1.419999
+                              1.004091 -0.452547 -1.004091
+                              1.419999 -0.639998 0
+                              1.004091 -0.452547 1.004091
+                              0 -0.639998 1.419999
+                              -1.004091 -0.452547 1.004091
+                              -1.419999 -0.639998 0
+                              -1.004091 -0.452547 -1.004091
+                              0 -0.639998 -1.419999
+                              0 -0.639998 -1.419999
+                              1.004091 -0.452547 -1.004091
+                              1.419999 -0.639998 0
+                              1.004091 -0.452547 1.004091
+                              0 -0.639998 1.419999
+                              -1.004091 -0.452547 1.004091
+                              -1.419999 -0.639998 0
+                              -1.004091 -0.452547 -1.004091
+                              0 -0.639998 -1.419999
+                              0 -0.639998 0
+                              0 -0.452547 0
+                              0 -0.639998 0
+                              0 -0.452547 0
+                              0 -0.639998 0
+                              0 -0.452547 0
+                              0 -0.639998 0
+                              0 -0.452547 0
+                              0 -0.639998 0
+                            ]
+                            weight [
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                              0.707104
+                              1
+                            ]
+                            uTessellation 4
+                            vTessellation 4
+                          }
+                        }
+                    }
+                  ]
+                }
+            }
+        }
+    }
+  ]
+}
 
-Transform 
-  {
+Transform {
+  translation -0.595335 -0.775964 8.076251
   children 
-    [
-    USE TUX
-    ]
+    DEF TUX Transform {
+      translation 3.076623e-2 0.350053 5.371000e-4
+      center 4.746577e-5 -4.563331e-4 8.647902e-4
+      scale 0.200000 0.200000 0.170000
+      children [
+        Transform {
+          translation -0.199970 -1.888721e-6 -0.499983
+          children [
+            DEF rightwing Transform {
+              rotation 0 -1 0 1.500982
+              translation -0.266508 0.667243 2.635250e-2
+              scale 0.100000 1 0.159997
+              children 
+                Group {
+                  children [
+                    DEF Shape5 Shape {
+                      appearance Appearance {
+                        material DEF Material1 Material {
+                          ambientIntensity 0
+                          diffuseColor 0 0 0
+                          shininess 5.612238e-2
+                          specularColor 0.448980 0.445187 0.432722
+                        }
+                      }
+                      geometry DEF NurbsSurface3 NurbsSurface {
+                        uDimension 3
+                        vDimension 5
+                        uKnot [
+                          0
+                          0
+                          0
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          0
+                          1
+                          2
+                          2
+                          2
+                          2
+                        ]
+                        vOrder 4
+                        controlPoint [
+                          0 0.132087 2.303054
+                          0 0.132087 2.303054
+                          0 0.132087 2.303054
+                          -0.857569 0.098000 1.680608
+                          0 0.045667 1.496212
+                          0.857569 0.098000 1.680608
+                          -1.225100 0.039371 1.275727
+                          0 0.179480 2.034123
+                          1.225100 0.039371 1.275727
+                          -1.516726 0.000355 0.608487
+                          0 0.112792 0.709141
+                          1.516726 0.000355 0.608487
+                          -1.271638 0 0.031281
+                          0 0.062347 0.070102
+                          1.271638 0 0.031281
+                        ]
+                        weight [
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                        ]
+                        uTessellation 8
+                        vTessellation 8
+                      }
+                    }
+                    DEF Shape3 Shape {
+                      appearance Appearance {
+                        material Material {
+                        }
+                      }
+                      geometry DEF NurbsSurface4 NurbsSurface {
+                        uDimension 3
+                        vDimension 5
+                        uKnot [
+                          0
+                          0
+                          0
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          0
+                          1
+                          2
+                          2
+                          2
+                          2
+                        ]
+                        vOrder 4
+                        ccw FALSE
+                        controlPoint [
+                          0 0.131688 2.303298
+                          0 0.131688 2.303298
+                          0 0.131688 2.303298
+                          -0.857492 0.097743 1.680816
+                          0 0.045525 1.496719
+                          0.857492 0.097743 1.680816
+                          -1.225134 0.039226 1.275954
+                          0 0.179332 2.033899
+                          1.225134 0.039226 1.275954
+                          -1.516669 0.000312 0.608660
+                          0 0.112792 0.709141
+                          1.516669 0.000312 0.608660
+                          -1.271638 0 0.031281
+                          0 0.062347 0.070102
+                          1.271638 0 0.031281
+                        ]
+                        weight [
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                        ]
+                        uTessellation 8
+                        vTessellation 8
+                      }
+                    }
+                  ]
+                }
+            }
+            DEF body Transform {
+              rotation 0 -1 0 3.141000
+              scale 1 0.140000 1
+              children 
+                Group {
+                  children [
+                    DEF Shape1 Shape {
+                      appearance DEF Appearance1 Appearance {
+                        material USE Material1
+                      }
+                      geometry NurbsSurface {
+                        uDimension 11
+                        vDimension 10
+                        uKnot [
+                          0
+                          0
+                          0
+                          0.200000
+                          0.200000
+                          0.400000
+                          0.400000
+                          0.600000
+                          0.600000
+                          0.800000
+                          0.800000
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          1
+                          2
+                          3
+                          4
+                          5
+                          6
+                          7
+                          8
+                          8
+                          8
+                        ]
+                        controlPoint [
+                          0 0.468075 -0.000760
+                          0 0.396950 -0.000645
+                          0 0.468075 -0.000760
+                          0 0.396950 -0.000645
+                          0 0.468075 -0.000760
+                          0 0.396950 -0.000645
+                          0 0.468075 -0.000760
+                          0 0.396950 -0.000645
+                          0 0.468075 -0.000760
+                          0 0.396950 -0.000645
+                          0 0.468075 -0.000760
+                          -0.070288 0.533896 -0.193112
+                          -0.167711 0.534439 -0.152721
+                          -0.204383 0.533896 -0.021482
+                          -0.184707 0.452769 0.090089
+                          -0.103463 0.728797 0.175674
+                          0 0.672227 0.210763
+                          0.103463 0.728797 0.175674
+                          0.184707 0.452769 0.090089
+                          0.204383 0.533896 -0.021482
+                          0.167711 0.534439 -0.152721
+                          0.070288 0.533896 -0.193112
+                          0 0.468075 -0.000760
+                          -0.277895 0.990495 -0.217617
+                          -0.350369 1.097651 -0.036825
+                          -0.316644 0.930859 0.154438
+                          -0.186690 1.097651 0.298767
+                          0 -0.559050 0.707638
+                          0.186690 1.097651 0.298767
+                          0.316644 0.930859 0.154438
+                          0.350369 1.097651 -0.036825
+                          0.277895 0.990495 -0.217617
+                          0 0.468075 -0.000760
+                          -0.237883 1.575366 -0.351393
+                          -0.315328 2.020859 -0.213872
+                          -0.405725 2.257333 -0.035752
+                          -0.349418 1.977676 0.178155
+                          -0.212916 2.266237 0.347797
+                          0 1.182077 0.344828
+                          0.212916 2.266237 0.347797
+                          0.349418 1.977676 0.178155
+                          0.405725 2.257333 -0.035752
+                          0.315328 2.020859 -0.213872
+                          0.237883 1.575366 -0.351393
+                          -0.160941 4.570895 -0.287292
+                          -0.136482 3.876332 -0.243634
+                          -0.390650 3.422029 -0.034664
+                          -0.334870 2.993308 0.177568
+                          -0.210087 3.484889 0.313717
+                          0 2.888823 0.351327
+                          0.210087 3.484889 0.313717
+                          0.334870 2.993308 0.177568
+                          0.390650 3.422029 -0.034664
+                          0.136482 3.876332 -0.243634
+                          0.160941 4.570895 -0.287292
+                          -0.160941 4.570895 -0.287292
+                          -0.284615 4.067245 -0.222365
+                          -0.316866 4.817502 -0.037278
+                          -0.268712 4.112051 0.155065
+                          -0.198385 4.747663 0.267598
+                          0 4.114058 0.284061
+                          0.198385 4.747663 0.267598
+                          0.268712 4.112051 0.155065
+                          0.316866 4.817502 -0.037278
+                          0.284615 4.067245 -0.222365
+                          0.160941 4.570895 -0.287292
+                          0 6.651597 -0.146540
+                          -0.157718 4.922122 -0.142498
+                          -0.193636 5.740958 -0.020352
+                          -0.174998 4.868607 0.085354
+                          -0.103178 5.740958 0.165120
+                          0 4.868607 0.194701
+                          0.103178 5.740958 0.165120
+                          0.174998 4.868607 0.085354
+                          0.193636 5.740958 -0.020352
+                          0.157718 4.922122 -0.142498
+                          0 6.651597 -0.146540
+                          0 7.981521 -0.164085
+                          -0.168118 6.681365 -0.131347
+                          -0.212180 7.878526 -0.022301
+                          -0.173684 6.561666 0.107253
+                          -0.102866 7.517033 0.219530
+                          0 6.431962 0.209056
+                          0.102866 7.517033 0.219530
+                          0.173684 6.561666 0.107253
+                          0.212180 7.878526 -0.022301
+                          0.168118 6.681365 -0.131347
+                          0 7.981521 -0.164085
+                          0 9.192523 -0.100846
+                          -0.104708 7.918899 -0.072580
+                          -0.136552 9.263669 -0.002686
+                          -0.119369 7.924990 0.072029
+                          -0.081719 9.243490 0.128195
+                          0 7.792140 0.145667
+                          0.081719 9.243490 0.128195
+                          0.119369 7.924990 0.072029
+                          0.136552 9.263669 -0.002686
+                          0.104708 7.918899 -0.072580
+                          0 9.192523 -0.100846
+                          0 9.230560 0.008764
+                          0 7.827949 0.007432
+                          0 9.230560 0.008764
+                          0 7.827949 0.007432
+                          0 9.230560 0.008764
+                          0 7.827949 0.007432
+                          0 9.230560 0.008764
+                          0 7.827949 0.007432
+                          0 9.230560 0.008764
+                          0 7.827949 0.007432
+                          0 9.230560 0.008764
+                        ]
+                        weight [
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                          0.848047
+                          1
+                        ]
+                        uTessellation 12
+                        vTessellation 12
+                      }
+                    }
+                    DEF Shape2 Shape {
+                      appearance Appearance {
+                        material Material {
+                        }
+                      }
+                      geometry NurbsSurface {
+                        uDimension 3
+                        vDimension 6
+                        uKnot [
+                          0
+                          0
+                          0
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          1
+                          2
+                          3
+                          4
+                          4
+                          4
+                        ]
+                        controlPoint [
+                          0 6.651597 -0.146540
+                          0 6.651597 -0.146540
+                          0 6.651597 -0.146540
+                          -0.160941 4.570895 -0.287292
+                          0 4.844182 -0.379388
+                          0.160941 4.570895 -0.287292
+                          -0.160941 4.570895 -0.287292
+                          0 2.969712 -0.429136
+                          0.160941 4.570895 -0.287292
+                          -0.237883 1.575366 -0.351393
+                          0 2.612620 -0.444018
+                          0.237883 1.575366 -0.351393
+                          0 0.468075 -0.000760
+                          0 1.866575 -0.480329
+                          0 0.468075 -0.000760
+                          0 0.468075 -0.000760
+                          0 0.468075 -0.000760
+                          0 0.468075 -0.000760
+                        ]
+                        weight [
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                        ]
+                        uTessellation 12
+                        vTessellation 12
+                      }
+                    }
+                  ]
+                }
+            }
+            Transform {
+              rotation 1 0 0 5.235927e-2
+              translation 2.799005e-4 0.785960 0.203933
+              scale 9.104008e-2 1 5.410289e-2
+              children 
+                Shape {
+                  appearance DEF Appearance2 Appearance {
+                    material Material {
+                      diffuseColor 1 0.823529 0.388235
+                    }
+                  }
+                  geometry NurbsSurface {
+                    uDimension 4
+                    vDimension 6
+                    uKnot [
+                      0
+                      0
+                      0
+                      0
+                      1
+                      1
+                      1
+                      1
+                    ]
+                    vKnot [
+                      0
+                      0
+                      0
+                      0
+                      1
+                      2
+                      3
+                      3
+                      3
+                      3
+                    ]
+                    uOrder 4
+                    vOrder 4
+                    controlPoint [
+                      -1.173645 0.094250 -0.283881
+                      -0.758916 0.085399 -3.425848
+                      0.758916 0.085399 -3.425848
+                      1.173645 0.094250 -0.283881
+                      -0.758916 0.085399 -3.425848
+                      -0.288345 0.034093 4.245510
+                      0.288345 0.034093 4.245510
+                      0.758916 0.085399 -3.425848
+                      -1.843888 0.146283 -1.804707
+                      0 0.148046 4.234096
+                      0 0.148046 4.234096
+                      1.843888 0.146283 -1.804707
+                      -1.110370 0.181233 -3.404670
+                      -2.823405 0.091659 -2.378806
+                      2.823405 0.091659 -2.378806
+                      1.110370 0.181233 -3.404670
+                      -2.110378 0.227164 -2.724406
+                      0 0.042474 7.762897
+                      0 0.042474 7.762897
+                      2.110378 0.227164 -2.724406
+                      -1.170325 0.193770 -2.232114
+                      -0.703839 0.257034 -1.041483
+                      0.703839 0.257034 -1.041483
+                      1.170325 0.193770 -2.232114
+                    ]
+                    weight [
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                      1
+                    ]
+                    uTessellation 12
+                    vTessellation 12
+                  }
+                }
+            }
+            DEF eyeleft Transform {
+              translation 6.199438e-2 1.044000 0.150820
+              scale 1.092599 1.507132 0.787926
+              children [
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                  }
+                  geometry Sphere {
+                    radius 5.999999e-2
+                  }
+                }
+                Transform {
+                  translation 2.435056e-3 -2.784993e-3 3.999999e-2
+                  scale 1 0.770385 1
+                  children 
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 3.921568e-2 3.529411e-2 3.529411e-2
+                          specularColor 0.847055 0.968626 1
+                        }
+                      }
+                      geometry Sphere {
+                        radius 3.500000e-2
+                      }
+                    }
+                }
+              ]
+            }
+            Transform {
+              translation -6.199999e-2 1.044000 0.149440
+              scale 1.092599 1.507132 0.787926
+              children [
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                    }
+                  }
+                  geometry Sphere {
+                    radius 5.999999e-2
+                  }
+                }
+                Transform {
+                  translation 2.435056e-3 -2.784993e-3 3.999999e-2
+                  scale 1 0.770385 1
+                  children 
+                    Shape {
+                      appearance Appearance {
+                        material Material {
+                          diffuseColor 3.921568e-2 3.529411e-2 3.529411e-2
+                          specularColor 0.847055 0.968626 1
+                        }
+                      }
+                      geometry Sphere {
+                        radius 3.500000e-2
+                      }
+                    }
+                }
+              ]
+            }
+            Transform {
+              rotation -1 0 0 1.588248
+              translation 0.128610 5.466600e-2 -3.163174e-2
+              scale 0.973855 2.113487 0.200102
+              children 
+                DEF Shape7 Shape {
+                  appearance USE Appearance2
+                  geometry NurbsSurface {
+                    uDimension 9
+                    vDimension 6
+                    uKnot [
+                      0
+                      0
+                      0
+                      0.250000
+                      0.250000
+                      0.500000
+                      0.500000
+                      0.750000
+                      0.750000
+                      1
+                      1
+                      1
+                    ]
+                    vKnot [
+                      0
+                      0
+                      0
+                      1
+                      2
+                      3
+                      4
+                      4
+                      4
+                    ]
+                    controlPoint [
+                      0 -0.018014 0.186480
+                      0 -0.012738 0.131861
+                      0 -0.018014 0.186480
+                      0 -0.012738 0.131861
+                      0 -0.018014 0.186480
+                      0 -0.012738 0.131861
+                      0 -0.018014 0.186480
+                      0 -0.012738 0.131861
+                      0 -0.018014 0.186480
+                      0 -0.097465 -0.101112
+                      0.059867 -0.031856 0.066013
+                      0.117995 -0.150812 0.034905
+                      0.048212 -0.085255 0.122165
+                      0 -0.140000 0.139999
+                      -0.048212 -0.085255 0.122165
+                      -0.117995 -0.150812 0.034905
+                      -0.059867 -0.031856 0.066013
+                      0 -0.097465 -0.101112
+                      0 -0.097465 -0.101112
+                      0.059867 -0.031856 0.066013
+                      0.117995 -0.150812 0.034905
+                      0.048212 -0.085255 0.122165
+                      0 -0.140000 0.139999
+                      -0.048212 -0.085255 0.122165
+                      -0.117995 -0.150812 0.034905
+                      -0.059867 -0.031856 0.066013
+                      0 -0.097465 -0.101112
+                      0 -0.194600 -0.247748
+                      0.065997 -0.098995 -0.065997
+                      0.146724 -0.180239 -0.240378
+                      0.065997 -0.098995 0.065997
+                      0 -0.140000 0.093333
+                      -0.065997 -0.098995 0.065997
+                      -0.146724 -0.180239 -0.240378
+                      -0.065997 -0.098995 -0.065997
+                      0 -0.194600 -0.247748
+                      0 -0.162447 -0.046981
+                      0.032998 -0.098995 -0.032998
+                      0.046667 -0.140000 0
+                      0.032998 -0.098995 0.032998
+                      0 -0.140000 0.046667
+                      -0.032998 -0.098995 0.032998
+                      -0.046667 -0.140000 0
+                      -0.032998 -0.098995 -0.032998
+                      0 -0.162447 -0.046981
+                      0 -0.153999 0.010179
+                      0 -0.108892 0.007197
+                      0 -0.153999 0.010179
+                      0 -0.108892 0.007197
+                      0 -0.153999 0.010179
+                      0 -0.108892 0.007197
+                      0 -0.153999 0.010179
+                      0 -0.108892 0.007197
+                      0 -0.153999 0.010179
+                    ]
+                    weight [
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                      0.707104
+                      1
+                    ]
+                    uTessellation 8
+                    vTessellation 5
+                  }
+                }
+            }
+            Transform {
+              rotation -1 0 0 1.588248
+              translation -0.128610 5.466600e-2 -3.163174e-2
+              scale 0.973855 2.113487 0.200102
+              children 
+                USE Shape7
+            }
+            WorldInfo {
+              info [
+                "Somewhat based on Steve Bakers TUX 3D modell, remodelled with NURBS in white_dune by J. \"MUFTI\" Scheurich"
+                "This is free software, you can redistribute it and/or modify it under the Terms of the GNU Public License"
+                "as published by the Free Software Foundation, either version 2 of the license "
+                "or (at your option) any later version."
+              ]
+            }
+            DEF leftwing Transform {
+              rotation 0 -1 0 -1.500982
+              translation 0.266508 0.667243 2.635250e-2
+              scale 0.100000 1 0.159997
+              children 
+                Group {
+                  children [
+                    DEF Shape4 Shape {
+                      appearance Appearance {
+                        material Material {
+                          ambientIntensity 0
+                          diffuseColor 0 0 0
+                          shininess 5.612238e-2
+                          specularColor 0.448980 0.445187 0.432722
+                        }
+                      }
+                      geometry DEF NurbsSurface1 NurbsSurface {
+                        uDimension 3
+                        vDimension 5
+                        uKnot [
+                          0
+                          0
+                          0
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          0
+                          1
+                          2
+                          2
+                          2
+                          2
+                        ]
+                        vOrder 4
+                        ccw FALSE
+                        controlPoint [
+                          0 -0.014446 2.620973
+                          0 -0.014446 2.620973
+                          0 -0.014446 2.620973
+                          0.758973 -0.042252 1.920802
+                          0 -0.007125 1.559839
+                          -0.758973 -0.042252 1.920802
+                          1.307307 -0.041332 1.518021
+                          0 0.018533 1.790729
+                          -1.307307 -0.041332 1.518021
+                          1.309038 -0.026207 0.771000
+                          0 0.123778 0.702618
+                          -1.309038 -0.026207 0.771000
+                          1.271638 0 0.031281
+                          0 0.062347 0.070102
+                          -1.271638 0 0.031281
+                        ]
+                        weight [
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                        ]
+                        uTessellation 8
+                        vTessellation 8
+                      }
+                    }
+                    DEF Shape6 Shape {
+                      appearance Appearance {
+                        material Material {
+                        }
+                      }
+                      geometry DEF NurbsSurface2 NurbsSurface {
+                        uDimension 3
+                        vDimension 5
+                        uKnot [
+                          0
+                          0
+                          0
+                          1
+                          1
+                          1
+                        ]
+                        vKnot [
+                          0
+                          0
+                          0
+                          0
+                          1
+                          2
+                          2
+                          2
+                          2
+                        ]
+                        vOrder 4
+                        controlPoint [
+                          0 -0.015220 2.620831
+                          0 -0.015220 2.620831
+                          0 -0.015220 2.620831
+                          0.759010 -0.042630 1.920758
+                          0 -0.007399 1.561159
+                          -0.759010 -0.042630 1.920758
+                          1.307188 -0.041538 1.518030
+                          0 0.018533 1.790729
+                          -1.307188 -0.041538 1.518030
+                          1.309442 -0.026261 0.771070
+                          0 0.123749 0.702636
+                          -1.309442 -0.026261 0.771070
+                          1.271638 0 0.031281
+                          0 0.062347 0.070102
+                          -1.271638 0 0.031281
+                        ]
+                        weight [
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                          1
+                        ]
+                        uTessellation 8
+                        vTessellation 8
+                      }
+                    }
+                  ]
+                }
+            }
+          ]
+        }
+        Transform {
+          rotation 0.257223 -0.266362 -0.928917 1.679232
+          translation 3.646529e-2 0.895219 -9.999997e-2
+          scale 7.999999e-2 7.999999e-2 7.999999e-2
+          children [
+            Shape {
+              appearance Appearance {
+                material DEF Material1_0 Material {
+                  diffuseColor 1 8.627451e-2 0.231371
+                  emissiveColor 7.843133e-3 0 0
+                }
+              }
+              geometry SuperShape {
+                ub -5.099997
+                um 11.720000
+                un2 0
+                va 0.819998
+                border 0.110794
+              }
+            }
+            Transform {
+              translation 0 -3.666399 0
+              scale 0.419999 1.019999 0.439999
+              children 
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0 0.674507 0.145098
+                    }
+                  }
+                  geometry SuperExtrusion {
+                    a 0.519999
+                    controlPoint [
+                      1.248528 -2.536601 4.716722
+                      1.704725 -1.443333 4.349709
+                      -0.318515 0.213136 -0.362044
+                      0.494955 2.233575 0.345463
+                      -0.522274 3.189404 0.987625
+                    ]
+                    weight [
+                      1
+                      1
+                      1
+                      1
+                      1
+                    ]
+                    knot [
+                      0
+                      0
+                      0
+                      1
+                      2
+                      3
+                      3
+                      3
+                    ]
+                    scale [
+                      1 1
+                      0.459998 0.459998
+                    ]
+                  }
+                }
+            }
+            Transform {
+              translation 0 -0.585114 0
+              scale 0.300000 0.555781 0.300000
+              children 
+                Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.839214 0.647058 0.223526
+                    }
+                  }
+                  geometry SuperShape {
+                    ua -0.819998
+                    um -8.260000
+                    vm -7.319999
+                  }
+                }
+            }
+            Transform {
+              children 
+                Shape {
+                  appearance Appearance {
+                    material USE Material1_0
+                  }
+                  geometry SuperShape {
+                    um 5
+                    un1 1.519999
+                    un2 6.759994
+                    un3 5.819999
+                    vb 1.819998
+                    vm 2.700000
+                    border -6.920357e-2
+                  }
+                }
+            }
+          ]
+        }
+      ]
+    }
+}
+
+Transform {
   rotation 0 1 0 5.236838e-2
   translation 0.448605 -0.902387 7.819355
-  }
-
-Transform 
-  {
   children 
-    [
     USE TUX
-    ]
+}
+
+Transform {
   translation 1.823092e-2 -1.015598 8.261610
-  }
+  children 
+    USE TUX
+}
 
-DEF TimeSensor1 TimeSensor 
-  {
+DEF TimeSensor1 TimeSensor {
   loop TRUE
-  }
+}
 
-DEF PositionInterpolator2 PositionInterpolator 
-  {
-  key 
-    [
-    0 
-    0.163148 
-    0.280799 
-    0.312985 
-    0.365148 
-    0.401775 
-    0.422863 
-    0.441731 
-    0.466147 
-    0.488346 
-    0.531629 
-    0.531629 
-    0.556047 
-    0.629297 
-    0.996832 
-    ]
-  keyValue 
-    [
-    3.583594 3.573373 3.593812 
-    2.437926 2.508527 2.422877 
-    2.717420 2.690762 2.589538 
-    3.028937 3.028937 3.028937 
-    4.946516 4.911180 4.981849 
-    7.702353 4.836715 3.141119 
-    6.343677 4.597270 3.814217 
-    7.710011 4.597270 2.355839 
-    6.417026 4.597270 3.645941 
-    7.710011 4.788825 3.197211 
-    5.104321 5.017179 4.946516 
-    4.911787 5.017179 4.946516 
-    4.206857 4.094675 4.094675 
-    3.309391 3.421576 3.365483 
-    0.913043 0.925463 0.925463 
-    ]
-  }
+DEF PositionInterpolator2 PositionInterpolator {
+  key [
+    0
+    0.163148
+    0.280799
+    0.312985
+    0.365148
+    0.401775
+    0.422863
+    0.441731
+    0.466147
+    0.488346
+    0.531629
+    0.531629
+    0.556047
+    0.629297
+    0.996832
+  ]
+  keyValue [
+    3.583594 3.573373 3.593812
+    2.437926 2.508527 2.422877
+    2.717420 2.690762 2.589538
+    3.028937 3.028937 3.028937
+    4.946516 4.911180 4.981849
+    7.702353 4.836715 3.141119
+    6.343677 4.597270 3.814217
+    7.710011 4.597270 2.355839
+    6.417026 4.597270 3.645941
+    7.710011 4.788825 3.197211
+    5.104321 5.017179 4.946516
+    4.911787 5.017179 4.946516
+    4.206857 4.094675 4.094675
+    3.309391 3.421576 3.365483
+    0.913043 0.925463 0.925463
+  ]
+}
 
-Viewpoint 
-  {
+Viewpoint {
   orientation 0 1 0 0.126415
   position 0.216058 -4.370081e-2 10.257530
-  }
+}
 
-Transform 
-  {
-  children 
-    [
-    Shape 
-      {
-      appearance       Appearance 
-	{
-	material 	Material 
-	  {
-	  diffuseColor 0 0 0
-	  }
-	texture 	ImageTexture 
-	  {
-	  url 
-	    [
-	    "white_dune_text.png"
-	    ]
-	  }
-	}
-      geometry       NurbsSurface 
-	{
-	uDimension 2
-	vDimension 2
-	uKnot 
-	  [
-	  0 
-	  0 
-	  1 
-	  1 
-	  ]
-	vKnot 
-	  [
-	  0 
-	  0 
-	  1 
-	  1 
-	  ]
-	uOrder 2
-	vOrder 2
-	controlPoint 
-	  [
-	  -0.500000 0 1 
-	  0.500000 0 1 
-	  -0.500000 0 0 
-	  0.500000 0 0 
-	  ]
-	weight 
-	  [
-	  1 
-	  1 
-	  1 
-	  1 
-	  ]
-	uTessellation 1
-	vTessellation 1
-	}
-      }
-    ]
+Transform {
   rotation 1 0 0 1.413715
   translation 0.220017 1.178074 8.683955
-  }
-
-Transform 
-  {
-  scale 10 10 10
-  }
-
-Transform 
-  {
   children 
-    [
-    DEF Transform1 Transform 
-      {
-      center 0 0.349999 -7.999999e-2
-      children 
-	[
-	USE TUX
-	]
-      scale 2.964128 3.061939 3.013928
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 0 0
+        }
+        texture ImageTexture {
+          url "white_dune_text.png"
+        }
       }
-    ]
+      geometry NurbsSurface {
+        uDimension 2
+        vDimension 2
+        uKnot [
+          0
+          0
+          1
+          1
+        ]
+        vKnot [
+          0
+          0
+          1
+          1
+        ]
+        uOrder 2
+        vOrder 2
+        controlPoint [
+          -0.500000 0 1
+          0.500000 0 1
+          -0.500000 0 0
+          0.500000 0 0
+        ]
+        weight [
+          1
+          1
+          1
+          1
+        ]
+        uTessellation 1
+        vTessellation 1
+      }
+    }
+}
+
+Transform {
+  scale 10 10 10
+}
+
+Transform {
   translation -0.273400 -0.848299 8.189000
-  }
+  children 
+    DEF Transform1 Transform {
+      center 0 0.349999 -7.999999e-2
+      scale 2.964128 3.061939 3.013928
+      children 
+        USE TUX
+    }
+}
 
 ROUTE PositionInterpolator2.value_changed TO Transform1.set_scale
 
-DEF CoordinateInterpolator1 CoordinateInterpolator 
-  {
-  key 
-    [
-    0 
-    0.520900 
-    0.994189 
-    ]
-  keyValue 
-    [
-    0 -0.121486 2.522943 
-    0 -0.121486 2.522943 
-    0 -0.121486 2.522943 
-    0.868888 -8.292531e-2 1.933668 
-    0 -0.107514 2.043111 
-    -0.868888 -8.292531e-2 1.933668 
-    1.281715 -9.333179e-2 1.531262 
-    0 1.853254e-2 1.790729 
-    -1.281715 -9.333179e-2 1.531262 
-    1.416216 -2.880468e-2 0.784905 
-    0 0.112792 0.709141 
-    -1.416216 -2.880468e-2 0.784905 
-    1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    -1.271638 0 3.128106e-2 
-    0 0.131980 2.647860 
-    0 0.131980 2.647860 
-    0 0.131980 2.647860 
-    0.751670 2.930065e-2 1.929196 
-    0 4.480202e-2 1.309867 
-    -0.751670 2.930065e-2 1.929196 
-    1.329892 -2.321206e-3 1.516551 
-    0 1.853254e-2 1.790729 
-    -1.329892 -2.321206e-3 1.516551 
-    1.232632 -1.594977e-2 0.757937 
-    0 0.129462 0.699244 
-    -1.232632 -1.594977e-2 0.757937 
-    1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    -1.271638 0 3.128106e-2 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    0.773091 -0.180583 1.904577 
-    0 -0.107514 2.043111 
-    -0.773091 -0.180583 1.904577 
-    1.263645 -0.116751 1.520866 
-    0 1.853254e-2 1.790729 
-    -1.263645 -0.116751 1.520866 
-    1.456753 -4.603619e-2 0.796257 
-    0 0.112792 0.709141 
-    -1.456753 -4.603619e-2 0.796257 
-    1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    -1.271638 0 3.128106e-2 
-    ]
-  }
+DEF CoordinateInterpolator1 CoordinateInterpolator {
+  key [
+    0
+    0.520900
+    0.994189
+  ]
+  keyValue [
+    0 -0.121486 2.522943
+    0 -0.121486 2.522943
+    0 -0.121486 2.522943
+    0.868888 -0.082925 1.933668
+    0 -0.107514 2.043111
+    -0.868888 -0.082925 1.933668
+    1.281715 -0.093332 1.531262
+    0 0.018533 1.790729
+    -1.281715 -0.093332 1.531262
+    1.416216 -0.028805 0.784905
+    0 0.112792 0.709141
+    -1.416216 -0.028805 0.784905
+    1.271638 0 0.031281
+    0 0.062347 0.070102
+    -1.271638 0 0.031281
+    0 0.131980 2.647860
+    0 0.131980 2.647860
+    0 0.131980 2.647860
+    0.751670 0.029301 1.929196
+    0 0.044802 1.309867
+    -0.751670 0.029301 1.929196
+    1.329892 -0.002321 1.516551
+    0 0.018533 1.790729
+    -1.329892 -0.002321 1.516551
+    1.232632 -0.015950 0.757937
+    0 0.129462 0.699244
+    -1.232632 -0.015950 0.757937
+    1.271638 0 0.031281
+    0 0.062347 0.070102
+    -1.271638 0 0.031281
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    0.773091 -0.180583 1.904577
+    0 -0.107514 2.043111
+    -0.773091 -0.180583 1.904577
+    1.263645 -0.116751 1.520866
+    0 0.018533 1.790729
+    -1.263645 -0.116751 1.520866
+    1.456753 -0.046036 0.796257
+    0 0.112792 0.709141
+    -1.456753 -0.046036 0.796257
+    1.271638 0 0.031281
+    0 0.062347 0.070102
+    -1.271638 0 0.031281
+  ]
+}
 
 ROUTE TimeSensor1.fraction_changed TO CoordinateInterpolator1.set_fraction
 ROUTE CoordinateInterpolator1.value_changed TO NurbsSurface1.set_controlPoint
 
-DEF CoordinateInterpolator2 CoordinateInterpolator 
-  {
-  key 
-    [
-    0 
-    0.520900 
-    0.991701 
-    ]
-  keyValue 
-    [
-    0 -0.121486 2.522943 
-    0 -0.121486 2.522943 
-    0 -0.121486 2.522943 
-    0.868888 -8.292531e-2 1.933668 
-    0 -0.107514 2.043111 
-    -0.868888 -8.292531e-2 1.933668 
-    1.281715 -9.333179e-2 1.531262 
-    0 1.853254e-2 1.790729 
-    -1.281715 -9.333179e-2 1.531262 
-    1.416216 -2.880468e-2 0.784905 
-    0 0.112792 0.709141 
-    -1.416216 -2.880468e-2 0.784905 
-    1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    -1.271638 0 3.128106e-2 
-    0 0.131980 2.647860 
-    0 0.131980 2.647860 
-    0 0.131980 2.647860 
-    0.751670 2.930065e-2 1.929196 
-    0 4.480202e-2 1.309867 
-    -0.751670 2.930065e-2 1.929196 
-    1.329892 -2.321206e-3 1.516551 
-    0 1.853254e-2 1.790729 
-    -1.329892 -2.321206e-3 1.516551 
-    1.232632 -1.594977e-2 0.757937 
-    0 0.129462 0.699244 
-    -1.232632 -1.594977e-2 0.757937 
-    1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    -1.271638 0 3.128106e-2 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    0.773091 -0.180583 1.904577 
-    0 -0.107514 2.043111 
-    -0.773091 -0.180583 1.904577 
-    1.263645 -0.116751 1.520866 
-    0 1.853254e-2 1.790729 
-    -1.263645 -0.116751 1.520866 
-    1.456753 -4.603619e-2 0.796257 
-    0 0.112792 0.709141 
-    -1.456753 -4.603619e-2 0.796257 
-    1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    -1.271638 0 3.128106e-2 
-    ]
-  }
+DEF CoordinateInterpolator2 CoordinateInterpolator {
+  key [
+    0
+    0.520900
+    0.991701
+  ]
+  keyValue [
+    0 -0.121486 2.522943
+    0 -0.121486 2.522943
+    0 -0.121486 2.522943
+    0.868888 -0.082925 1.933668
+    0 -0.107514 2.043111
+    -0.868888 -0.082925 1.933668
+    1.281715 -0.093332 1.531262
+    0 0.018533 1.790729
+    -1.281715 -0.093332 1.531262
+    1.416216 -0.028805 0.784905
+    0 0.112792 0.709141
+    -1.416216 -0.028805 0.784905
+    1.271638 0 0.031281
+    0 0.062347 0.070102
+    -1.271638 0 0.031281
+    0 0.131980 2.647860
+    0 0.131980 2.647860
+    0 0.131980 2.647860
+    0.751670 0.029301 1.929196
+    0 0.044802 1.309867
+    -0.751670 0.029301 1.929196
+    1.329892 -0.002321 1.516551
+    0 0.018533 1.790729
+    -1.329892 -0.002321 1.516551
+    1.232632 -0.015950 0.757937
+    0 0.129462 0.699244
+    -1.232632 -0.015950 0.757937
+    1.271638 0 0.031281
+    0 0.062347 0.070102
+    -1.271638 0 0.031281
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    0.773091 -0.180583 1.904577
+    0 -0.107514 2.043111
+    -0.773091 -0.180583 1.904577
+    1.263645 -0.116751 1.520866
+    0 0.018533 1.790729
+    -1.263645 -0.116751 1.520866
+    1.456753 -0.046036 0.796257
+    0 0.112792 0.709141
+    -1.456753 -0.046036 0.796257
+    1.271638 0 0.031281
+    0 0.062347 0.070102
+    -1.271638 0 0.031281
+  ]
+}
 
 ROUTE TimeSensor1.fraction_changed TO CoordinateInterpolator2.set_fraction
 ROUTE CoordinateInterpolator2.value_changed TO NurbsSurface2.set_controlPoint
 
-DEF CoordinateInterpolator3 CoordinateInterpolator 
-  {
-  key 
-    [
-    0 
-    0.523042 
-    0.989211 
-    ]
-  keyValue 
-    [
-    0 -0.101690 2.696064 
-    0 -0.101690 2.696064 
-    0 -0.101690 2.696064 
-    -0.773091 -0.180583 1.904577 
-    0 -6.084375e-2 2.050837 
-    0.773091 -0.180583 1.904577 
-    -1.184267 -5.254029e-2 1.515977 
-    0 1.853254e-2 1.790729 
-    1.184267 -5.254029e-2 1.515977 
-    -1.456753 -4.603619e-2 0.796257 
-    0 0.112792 0.709141 
-    1.456753 -4.603619e-2 0.796257 
-    -1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    1.271638 0 3.128106e-2 
-    0 0.354910 2.165122 
-    0 0.354910 2.165122 
-    0 0.354910 2.165122 
-    -0.901386 0.242488 1.564445 
-    0 0.125115 1.212561 
-    0.901386 0.242488 1.564445 
-    -1.205108 0.120343 1.148584 
-    0 0.262957 2.160362 
-    1.205108 0.120343 1.148584 
-    -1.547832 2.441591e-2 0.511098 
-    0 0.112792 0.709141 
-    1.547832 2.441591e-2 0.511098 
-    -1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    1.271638 0 3.128106e-2 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    -0.773091 -0.180583 1.904577 
-    0 -0.107514 2.043111 
-    0.773091 -0.180583 1.904577 
-    -1.263645 -0.116751 1.520866 
-    0 1.853254e-2 1.790729 
-    1.263645 -0.116751 1.520866 
-    -1.456753 -4.603619e-2 0.796257 
-    0 0.112792 0.709141 
-    1.456753 -4.603619e-2 0.796257 
-    -1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    1.271638 0 3.128106e-2 
-    ]
-  }
+DEF CoordinateInterpolator3 CoordinateInterpolator {
+  key [
+    0
+    0.523042
+    0.989211
+  ]
+  keyValue [
+    0 -0.101690 2.696064
+    0 -0.101690 2.696064
+    0 -0.101690 2.696064
+    -0.773091 -0.180583 1.904577
+    0 -0.060844 2.050837
+    0.773091 -0.180583 1.904577
+    -1.184267 -0.052540 1.515977
+    0 0.018533 1.790729
+    1.184267 -0.052540 1.515977
+    -1.456753 -0.046036 0.796257
+    0 0.112792 0.709141
+    1.456753 -0.046036 0.796257
+    -1.271638 0 0.031281
+    0 0.062347 0.070102
+    1.271638 0 0.031281
+    0 0.354910 2.165122
+    0 0.354910 2.165122
+    0 0.354910 2.165122
+    -0.901386 0.242488 1.564445
+    0 0.125115 1.212561
+    0.901386 0.242488 1.564445
+    -1.205108 0.120343 1.148584
+    0 0.262957 2.160362
+    1.205108 0.120343 1.148584
+    -1.547832 0.024416 0.511098
+    0 0.112792 0.709141
+    1.547832 0.024416 0.511098
+    -1.271638 0 0.031281
+    0 0.062347 0.070102
+    1.271638 0 0.031281
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    -0.773091 -0.180583 1.904577
+    0 -0.107514 2.043111
+    0.773091 -0.180583 1.904577
+    -1.263645 -0.116751 1.520866
+    0 0.018533 1.790729
+    1.263645 -0.116751 1.520866
+    -1.456753 -0.046036 0.796257
+    0 0.112792 0.709141
+    1.456753 -0.046036 0.796257
+    -1.271638 0 0.031281
+    0 0.062347 0.070102
+    1.271638 0 0.031281
+  ]
+}
 
 ROUTE TimeSensor1.fraction_changed TO CoordinateInterpolator3.set_fraction
 ROUTE CoordinateInterpolator3.value_changed TO NurbsSurface3.set_controlPoint
 
-DEF CoordinateInterpolator4 CoordinateInterpolator 
-  {
-  key 
-    [
-    0 
-    0.523042 
-    0.988381 
-    ]
-  keyValue 
-    [
-    0 -0.101690 2.696064 
-    0 -0.101690 2.696064 
-    0 -0.101690 2.696064 
-    -0.773091 -0.180583 1.904577 
-    0 -6.084375e-2 2.050837 
-    0.773091 -0.180583 1.904577 
-    -1.184267 -5.254029e-2 1.515977 
-    0 1.853254e-2 1.790729 
-    1.184267 -5.254029e-2 1.515977 
-    -1.456753 -4.603619e-2 0.796257 
-    0 0.112792 0.709141 
-    1.456753 -4.603619e-2 0.796257 
-    -1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    1.271638 0 3.128106e-2 
-    0 0.354910 2.165122 
-    0 0.354910 2.165122 
-    0 0.354910 2.165122 
-    -0.901386 0.242488 1.564445 
-    0 0.125115 1.212561 
-    0.901386 0.242488 1.564445 
-    -1.205108 0.120343 1.148584 
-    0 0.262957 2.160362 
-    1.205108 0.120343 1.148584 
-    -1.547832 2.441591e-2 0.511098 
-    0 0.112792 0.709141 
-    1.547832 2.441591e-2 0.511098 
-    -1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    1.271638 0 3.128106e-2 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    0 -0.297531 2.568994 
-    -0.773091 -0.180583 1.904577 
-    0 -0.107514 2.043111 
-    0.773091 -0.180583 1.904577 
-    -1.263645 -0.116751 1.520866 
-    0 1.853254e-2 1.790729 
-    1.263645 -0.116751 1.520866 
-    -1.456753 -4.603619e-2 0.796257 
-    0 0.112792 0.709141 
-    1.456753 -4.603619e-2 0.796257 
-    -1.271638 0 3.128106e-2 
-    0 6.234721e-2 7.010202e-2 
-    1.271638 0 3.128106e-2 
-    ]
-  }
+DEF CoordinateInterpolator4 CoordinateInterpolator {
+  key [
+    0
+    0.523042
+    0.988381
+  ]
+  keyValue [
+    0 -0.101690 2.696064
+    0 -0.101690 2.696064
+    0 -0.101690 2.696064
+    -0.773091 -0.180583 1.904577
+    0 -0.060844 2.050837
+    0.773091 -0.180583 1.904577
+    -1.184267 -0.052540 1.515977
+    0 0.018533 1.790729
+    1.184267 -0.052540 1.515977
+    -1.456753 -0.046036 0.796257
+    0 0.112792 0.709141
+    1.456753 -0.046036 0.796257
+    -1.271638 0 0.031281
+    0 0.062347 0.070102
+    1.271638 0 0.031281
+    0 0.354910 2.165122
+    0 0.354910 2.165122
+    0 0.354910 2.165122
+    -0.901386 0.242488 1.564445
+    0 0.125115 1.212561
+    0.901386 0.242488 1.564445
+    -1.205108 0.120343 1.148584
+    0 0.262957 2.160362
+    1.205108 0.120343 1.148584
+    -1.547832 0.024416 0.511098
+    0 0.112792 0.709141
+    1.547832 0.024416 0.511098
+    -1.271638 0 0.031281
+    0 0.062347 0.070102
+    1.271638 0 0.031281
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    0 -0.297531 2.568994
+    -0.773091 -0.180583 1.904577
+    0 -0.107514 2.043111
+    0.773091 -0.180583 1.904577
+    -1.263645 -0.116751 1.520866
+    0 0.018533 1.790729
+    1.263645 -0.116751 1.520866
+    -1.456753 -0.046036 0.796257
+    0 0.112792 0.709141
+    1.456753 -0.046036 0.796257
+    -1.271638 0 0.031281
+    0 0.062347 0.070102
+    1.271638 0 0.031281
+  ]
+}
 
 ROUTE TimeSensor1.fraction_changed TO CoordinateInterpolator4.set_fraction
 ROUTE CoordinateInterpolator4.value_changed TO NurbsSurface4.set_controlPoint
 
-DEF TimeSensor2 TimeSensor 
-  {
+DEF TimeSensor2 TimeSensor {
   cycleInterval 10
   loop TRUE
-  }
+}
 
 ROUTE TimeSensor2.fraction_changed TO PositionInterpolator2.set_fraction
 

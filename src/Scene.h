@@ -656,6 +656,9 @@ public:
 
     void                setViewOfLastSelection(SceneView* view);
     SceneView          *getViewOfLastSelection(void);
+
+    void                copyLastSelection(void);
+    void                pasteLastSelection(void);
     void                deleteLastSelection(void);
 
     void                makeSimilarName(Node *node, const char *name);

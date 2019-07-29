@@ -221,23 +221,23 @@ NodeNurbsSurface::setControlPoints(MFVec3f *points)
             return;
         }
         MFVec3d *pointsDouble = points->getMFVec3d();
-        Node::setField(controlPoint_Field(), points);
-        ((Node *)coord)->Node::setField(coord->point_Field(), pointsDouble);
+        m_scene->setField(this, controlPoint_Field(), points);
+        m_scene->setField(coord, coord->point_Field(), pointsDouble);
     } else if (control && control->getType() == VRML_COORDINATE) {
         NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
         if (coord == NULL) {
             createControlPoints(points);
             return;
         }
-        Node::setField(controlPoint_Field(), points);
-        ((Node *)coord)->Node::setField(coord->point_Field(), points);
+        m_scene->setField(this, controlPoint_Field(), points);
+        m_scene->setField(coord, coord->point_Field(), points);
     } else {
         NodeCoordinate *coord = (NodeCoordinate *)controlPointX3D()->getValue();
         if (coord == NULL) {
             createControlPoints(points);
             return;
         }
-        Node::setField(controlPoint_Field(), points);
+        m_scene->setField(this, controlPoint_Field(), points);
     }
     m_meshDirty = true;
 }

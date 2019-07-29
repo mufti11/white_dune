@@ -151,6 +151,8 @@ FieldView::FieldView(Scene *scene, SWND parent)
     m_cursorArrow = swLoadCursor(SW_CURSOR_ARROW);
     m_cursorHMove = swLoadCursor(SW_CURSOR_DBL_ARROW_HORZ);
     m_cursorIsArrow = true;
+
+    m_copiedFieldValue = NULL;
 }
 
 FieldView::~FieldView()
@@ -1099,6 +1101,50 @@ void FieldView::DeleteLastSelection(void)
             MoveControls(GetColumnWidth(0));
             swInvalidateWindow(m_window);
             m_scene->UpdateViews(this, UPDATE_SELECTION);
+        } else if (isMFType(item->GetValue()->getType())) {
+            Node *node = m_scene->getSelection()->getNode();
+            int field = node->getProto()->lookupField(
+                            item->GetField()->getName(m_scene->isX3d()),
+                             m_scene->isX3d());
+            node->setField(field, 
+                           typeDefaultValue(item->GetValue()->getType()));
+            RefreshItemList();
+            if (node != NULL)
+                node->update();
+            m_scene->UpdateViews(this, UPDATE_SELECTION);
+            swInvalidateWindow(m_window);
         }
     }
 }
+
+void            
+FieldView::CopyLastSelection(void)
+{
+    if ((m_state == NORMAL) && (m_selectedItem > -1)) {
+        FieldViewItem *item = m_items[m_selectedItem];
+        m_copiedFieldValue = item->GetValue();
+    }
+}
+
+void           
+FieldView::PasteLastSelection(void)
+{
+    if ((m_state == NORMAL) && (m_selectedItem > -1)) {
+        FieldViewItem *item = m_items[m_selectedItem];
+        Node *node = m_scene->getSelection()->getNode();
+        int field = node->getProto()->lookupField(
+                        item->GetField()->getName(m_scene->isX3d()),
+                        m_scene->isX3d());
+        if (m_copiedFieldValue)
+            if (item->GetValue()->getType() == 
+                m_copiedFieldValue->getType()) {
+                node->setField(field, m_copiedFieldValue);
+                m_copiedFieldValue = NULL;
+                if (node != NULL)
+                    node->update();
+                UpdateAll();
+                swInvalidateWindow(m_window);
+        }
+    }
+}
+

@@ -2922,7 +2922,7 @@ static void handleCollision(X3dNode *node, float depth)
             float viewz = 0;
             if (viewpoint1)
                 viewz = viewpoint1->position[2];
-            if (fabs(pan_z - viewz) < 2) {
+            if (fabs(pan_z - viewz) < 2 * speed) {
                 stopNavigation();
                 collision->isActive = true;
                 collision->collideTime = getTimerTime();            

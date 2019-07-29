@@ -5189,6 +5189,18 @@ Fixed bug in LineSet rendering
 
 Fixed Normal creation on IndexedFaceSet export to C/C++/java
 
+Fixed HAnimHumanoid animation rendering on export to C/C++/java
+
+Added delete of whole MF-field
+
+Added edit->copy/paste in FieldView and ChannelView
+
+Fixed missing recording keys when changing NurbsPatchSurface handles
+
+Fixed rendering error of NurbsTrimmedSurface
+
+Fixed error when animating NurbsTrimmedSurface
+
 Contact: MUFTI <mufti11@web.de>
 
 

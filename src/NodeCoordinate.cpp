@@ -84,17 +84,7 @@ NodeCoordinate::setField(int index, FieldValue *value, int cf)
     if (hasParent()) {
         for (int i = 0; i < getNumParents(); i++) {
             Node *parent = getParent(i);
-            if (parent->getType() == VRML_NURBS_SURFACE) {
-                MFVec3f *newValue = new MFVec3f((MFVec3f *)value);
-                newValue->ref();
-                ((NodeNurbsSurface *)parent)->setControlPoints(newValue);
-                setNurbsField = true;
-            } else if (parent->getType() == X3D_NURBS_TRIMMED_SURFACE) {
-                MFVec3f *newValue = new MFVec3f((MFVec3f *)value);
-                newValue->ref();
-                ((NodeNurbsTrimmedSurface *)parent)->setControlPoints(newValue);
-                setNurbsField = true;
-            } else if (parent->getType() == VRML_NURBS_CURVE) {
+            if (parent->getType() == VRML_NURBS_CURVE) {
                 MFVec3f *newValue = new MFVec3f((MFVec3f *)value);
                 newValue->ref();
                 ((NodeNurbsCurve *)parent)->setControlPoints(newValue);

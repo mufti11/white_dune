@@ -5864,6 +5864,9 @@ MainWindow::UpdateToolbarSelection(void)
             disablePaste = 0;
         }
     }
+    if (m_scene->getViewOfLastSelection() && 
+        m_scene->getViewOfLastSelection()->canPaste())
+        disablePaste = 0;
 
     swToolbarSetButtonFlags(m_standardToolbar, m_editPasteIconPos, SW_TB_DISABLED,
                             disablePaste ? SW_TB_DISABLED : 0);
@@ -5894,8 +5897,9 @@ MainWindow::UpdateToolbarSelection(void)
         swToolbarSetButtonFlags(m_standardToolbar, m_editCutIconPos, SW_TB_DISABLED,
                                 isRoot ? SW_TB_DISABLED : 0);
 #endif
-         swMenuSetFlags(m_menu, ID_DUNE_EDIT_COPY, SW_MENU_DISABLED, 
-                        isRoot ? SW_MENU_DISABLED : 0);
+        swMenuSetFlags(m_menu, ID_DUNE_EDIT_COPY, SW_MENU_DISABLED, 
+                       isRoot ? SW_MENU_DISABLED : 0);
+
          swToolbarSetButtonFlags(m_standardToolbar, m_editCopyIconPos, SW_TB_DISABLED,
                                  isRoot ? SW_TB_DISABLED : 0);
          swMenuSetFlags(m_menu, ID_DUNE_EDIT_COPY_BRANCH_TO_ROOT, SW_MENU_DISABLED, 
@@ -6609,6 +6613,13 @@ MainWindow::createAnimation(void)
         return;
     if (m_scene->isX3d() && (node->getType() == VRML_NURBS_SURFACE)) {
         NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+        if (nurbs->controlPointX3D()->getValue())
+            node = nurbs->controlPointX3D()->getValue();
+        else
+            return;
+    }
+    if (m_scene->isX3d() && (node->getType() == X3D_NURBS_TRIMMED_SURFACE)) {
+        NodeNurbsTrimmedSurface *nurbs = (NodeNurbsTrimmedSurface *)node;
         if (nurbs->controlPointX3D()->getValue())
             node = nurbs->controlPointX3D()->getValue();
         else
@@ -13022,6 +13033,8 @@ void MainWindow::OnEditCopy()
         TheApp->setClipboardNode(node->copy());
         TheApp->getClipboardNode()->ref();
         UpdateToolbarSelection();
+        m_scene->copyLastSelection();
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 
@@ -13068,6 +13081,12 @@ void MainWindow::OnEditCopyBranchToRoot()
 
 void MainWindow::OnEditPaste()
 {
+    if (m_scene->getViewOfLastSelection() &&
+        m_scene->getViewOfLastSelection()->canPaste()) {
+        m_scene->pasteLastSelection();
+        return;
+    }
+
     Node *destNode = m_scene->getSelection()->getNode();
     int destField = m_scene->getSelection()->getField();
     

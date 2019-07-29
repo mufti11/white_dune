@@ -73,6 +73,11 @@ public:
     virtual void        GoToNextKey(void);
     virtual void        GoToLastKey(void);
 
+    void                CopyLastSelection(void);
+    void                PasteLastSelection(void);
+
+    bool                canPaste() { return m_copiedChannels != -1; }
+
 #ifdef BLINKTIMER
     int                 OnBlinkTimer();
 #endif
@@ -115,5 +120,7 @@ private:
     bool                m_autoScrolling;
     int                 m_autoScrollPX, m_autoScrollPY;
     MyArray<bool>       m_multipleValuesInChannel;
+    MyArray<float>      m_copiedValues;
+    int                 m_copiedChannels;
 };
 #endif

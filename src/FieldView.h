@@ -101,7 +101,12 @@ public:
         void            RefreshItemList();
         void            ChangeValue(FieldViewItem *item, FieldValue *newValue);
         void            UpdateBars();
+
         void            DeleteLastSelection(void);
+        void            CopyLastSelection(void);
+        void            PasteLastSelection(void);
+
+        bool            canPaste() { return m_copiedFieldValue != NULL; }
 
         virtual bool    isFieldView(void) { return true; }
 
@@ -165,6 +170,7 @@ protected:
         SCURSOR         m_cursorHMove;
  
         bool            m_cursorIsArrow;
+        FieldValue     *m_copiedFieldValue;
 };
 
 #endif // !_FIELD_VIEW_H

@@ -66,7 +66,11 @@ public:
     virtual void        OnDragLeave() {}
     virtual int         OnDrop(int x, int y, int modifiers) { return 0; }
     virtual void        OnUpdate(SceneView *sender, int type, Hint *hint) {}
+
+    virtual void        CopyLastSelection(void) {}
+    virtual void        PasteLastSelection(void) {}
     virtual void        DeleteLastSelection(void) {}
+    virtual bool        canPaste(void) { return false; }
 
     Scene              *GetScene() const { return m_scene; }
     void                SetScene(Scene *scene) { m_scene = scene; }

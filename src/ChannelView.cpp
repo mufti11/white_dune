@@ -93,6 +93,7 @@ ChannelView::ChannelView(Scene *scene, SWND wnd)
 
     m_rect.left = Y_RULER_WIDTH;
     m_rect.top = X_RULER_WIDTH;
+    m_copiedChannels = -1;
 }
 
 ChannelView::~ChannelView()
@@ -657,3 +658,49 @@ void ChannelView::GoToNextKey(void)
         m_interpolator->sendInterpolatedValue(0.0, key);
     }
 }
+
+void            
+ChannelView::CopyLastSelection(void)
+{
+    m_copiedValues.resize(0);
+    if (m_interpolator) {
+        m_copiedChannels = m_interpolator->getNumChannels();
+        float keyStart = m_selMin / (float) (m_rect.Width() - 1);
+        int min = m_interpolator->findKeyInclusive(m_selMin / (float) (m_rect.Width() - 1));
+        int max = m_interpolator->findKey(m_selMax / (float) (m_rect.Width() - 1));
+        if (max == m_interpolator->key()->getSize())
+            max--;
+        for (int i = min; i < max; i++) {
+            m_copiedValues.append(m_interpolator->key()->getValue(i) - keyStart);
+            for (int j = 0; j < m_interpolator->getNumChannels(); j++)
+                m_copiedValues.append(m_interpolator->getKeyValue(j, i));
+        }
+    }
+}
+
+void            
+ChannelView::PasteLastSelection(void)
+{
+    if (m_interpolator) {
+        if (m_copiedChannels != m_interpolator->getNumChannels())
+            return;
+        float keyStart = m_selMin / (float) (m_rect.Width() - 1);
+        int keys = 0;
+        int i = 0;
+        while (i < m_copiedValues.size()) {
+            float key = keyStart + m_copiedValues[keys++ * 
+                                                  (m_copiedChannels + 1)];
+            if (key > 1.0f) {
+                m_copiedChannels = -1;
+                return;
+            }
+            int foundKey = m_interpolator->findKeyInclusive(key);
+            i++;
+            m_interpolator->insertKey(foundKey, key, &m_copiedValues[i]);
+            i += m_interpolator->getNumChannels();
+        }
+        m_copiedChannels = -1;
+    }    
+}
+
+
