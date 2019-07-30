@@ -47,6 +47,7 @@ public:
     virtual int         getX3dVersion(void) const { return 0; }
     virtual Node       *copy() const { return new NodeColorInterpolator(*this);}
 
+    virtual int         getStride() const { return 3; }
     virtual int         getNumChannels() const { return 3; }
     virtual FieldValue *createKey(void *values) const;
     virtual FieldValue *createKeys(void *values, int numKeys) const;

@@ -42,6 +42,7 @@ public:
 
     virtual int         getType() const { return SFVEC2F; }
     virtual const char *getTypeName() const { return "SFVec2f"; }
+    virtual int         getStride() const { return 2; }
     virtual MyString    getString(int index, int stride) const;
 
     virtual int         writeData(int filedes, int i) const; 

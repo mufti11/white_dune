@@ -35,6 +35,7 @@ public:
 
     virtual int         getType() const { return SFCOLORRGBA; }
     virtual const char *getTypeName() const { return "SFColorRGBA"; }
+    virtual int         getStride() const { return 3; }
     virtual MyString    getString(int index, int stride) const;
 
     virtual int         writeData(int filedes, int i) const; 

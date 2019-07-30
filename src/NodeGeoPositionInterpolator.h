@@ -61,6 +61,7 @@ public:
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual Node   *copy() const { return new NodeGeoPositionInterpolator(*this); }
 
+    virtual int     getStride() const { return 3; }
     virtual int     getNumChannels() const { return 3; }
 
     virtual const char* getComponentName(void) const { return "Geospatial"; }

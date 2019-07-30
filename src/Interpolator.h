@@ -79,6 +79,8 @@ public:
     virtual FieldValue *createKey(void *value) const = 0;
     virtual FieldValue *createKeys(void *value, int numKeys) const = 0;
 
+    virtual int         getStride() const { return 1; }
+
     int                 findKey(float value) const;
     int                 findKeyInclusive(float value) const;
     int                 findKeyExclusive(float value) const;

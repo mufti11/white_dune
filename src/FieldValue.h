@@ -53,6 +53,8 @@ public:
                         FieldValue();
     virtual            ~FieldValue() {}
     
+    virtual int         getStride() const { return 1; }
+
     // int i argument is used for MFieldValue, otherwise it is a dummy argument
     virtual int         writeData(int filedes, int i) const = 0;
     // write data without quotes to file
@@ -117,6 +119,8 @@ public:
 
     virtual void        clamp(const FieldValue *min, const FieldValue *max) {}
 
+    virtual void        flip(int index) {}
+
     void                ref() { if (this != NULL) m_refs++; }
     void                unref() 
                            { 
@@ -162,7 +166,6 @@ public:
     virtual int         getSFSize() const = 0;
     virtual FieldValue *getSFValue(int index) const = 0;
     virtual void        setSFValue(int index, FieldValue *value) = 0;
-    virtual int         getStride() const { return 1; }
     virtual bool        isMFNode(void) const { return false; }
     virtual bool        isMFieldValue(void) const { return true; }
     virtual bool        writeBrackets(void) const { return(getSFSize() != 1); }

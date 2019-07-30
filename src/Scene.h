@@ -659,6 +659,7 @@ public:
 
     void                copyLastSelection(void);
     void                pasteLastSelection(void);
+    void                pasteSymetricLastSelection(int direction);
     void                deleteLastSelection(void);
 
     void                makeSimilarName(Node *node, const char *name);

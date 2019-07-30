@@ -57,6 +57,7 @@ public:
 
     virtual int         getType() const { return SFVEC4F; }
     virtual const char *getTypeName() const { return "SFVec4f"; }
+    virtual int         getStride() const { return 4; }
     virtual MyString    getString(int index, int stride) const;
     virtual FieldValue *copy() { return new SFVec4f(*this); }
     virtual bool        equals(const FieldValue *value) const;

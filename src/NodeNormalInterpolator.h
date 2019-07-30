@@ -49,6 +49,7 @@ public:
     virtual Node       *copy() const 
                            { return new NodeNormalInterpolator(*this); }
 
+    virtual int         getStride() const { return 3; }
     virtual int         getNumChannels() const;
     virtual FieldValue *createKey(void *value) const;
     virtual FieldValue *createKeys(void *value, int numKeys) const;

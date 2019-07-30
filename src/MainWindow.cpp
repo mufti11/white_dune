@@ -5882,6 +5882,10 @@ MainWindow::UpdateToolbarSelection(void)
         if (field != -1)
             disablePasteSymetric = 0;
     }
+    if (m_scene->getViewOfLastSelection() && 
+        m_scene->getViewOfLastSelection()->canPaste())
+        disablePasteSymetric = 0;
+
 
     swMenuSetFlags(m_menu, ID_DUNE_EDIT_PASTE_SYMMETRIC_X, SW_MENU_DISABLED, 
                    disablePasteSymetric ? SW_MENU_DISABLED : 0);
@@ -13109,6 +13113,12 @@ void MainWindow::OnEditPaste()
 
 void MainWindow::OnEditPasteSymetric(int direction)
 {
+    if (m_scene->getViewOfLastSelection() &&
+        m_scene->getViewOfLastSelection()->canPaste()) {
+        m_scene->pasteSymetricLastSelection(direction);
+        return;
+    }
+
     Node *destNode = m_scene->getSelection()->getNode();
     if (destNode->hasParent())
         destNode = destNode->getParent();

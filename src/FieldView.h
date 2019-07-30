@@ -105,6 +105,7 @@ public:
         void            DeleteLastSelection(void);
         void            CopyLastSelection(void);
         void            PasteLastSelection(void);
+        void            PasteSymetricLastSelection(int direction);
 
         bool            canPaste() { return m_copiedFieldValue != NULL; }
 

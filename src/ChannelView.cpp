@@ -703,4 +703,32 @@ ChannelView::PasteLastSelection(void)
     }    
 }
 
+void            
+ChannelView::PasteSymetricLastSelection(int direction)
+{
+    if (m_interpolator) {
+        if (m_copiedChannels != m_interpolator->getNumChannels())
+            return;
+        float keyStart = m_selMin / (float) (m_rect.Width() - 1);
+        int stride = m_interpolator->getStride();
+        int keys = 0;
+        int i = 0;
+        while (i < m_copiedValues.size()) {
+            float key = keyStart + m_copiedValues[keys++ * 
+                                                  (m_copiedChannels + 1)];
+            if (key > 1.0f) {
+                m_copiedChannels = -1;
+                return;
+            }
+            int foundKey = m_interpolator->findKeyInclusive(key);
+            i++;
+            for (int j = 0; j <  m_interpolator->getNumChannels(); j++)
+                if ((j % stride) == direction)
+                    m_copiedValues[i + j] *= -1;
+            m_interpolator->insertKey(foundKey, key, &m_copiedValues[i]);
+            i += m_interpolator->getNumChannels();
+        }
+        m_copiedChannels = -1;
+    }    
+}
 

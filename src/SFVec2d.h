@@ -33,6 +33,7 @@ public:
                         SFVec2d(void); // silly default
 
     virtual int         getType() const { return SFVEC2D; }
+    virtual int         getStride() const { return 2; }
     virtual const char *getTypeName() const { return "SFVec2d"; }
     virtual MyString    getString(int index, int stride) const;
 

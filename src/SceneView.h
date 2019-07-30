@@ -69,6 +69,7 @@ public:
 
     virtual void        CopyLastSelection(void) {}
     virtual void        PasteLastSelection(void) {}
+    virtual void        PasteSymetricLastSelection(int direction) {}
     virtual void        DeleteLastSelection(void) {}
     virtual bool        canPaste(void) { return false; }
 

@@ -49,6 +49,7 @@ public:
                            { return new NodeCoordinateInterpolator(*this); }
     virtual int         getX3dVersion(void) const { return 0; }
 
+    virtual int         getStride() const { return 3; }
     virtual int         getNumChannels() const;
     virtual FieldValue *createKey(void *value) const;
     virtual FieldValue *createKeys(void *values, int numKeys) const;

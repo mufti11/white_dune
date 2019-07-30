@@ -78,6 +78,7 @@ public:
                            }
     virtual int         getType() const { return SFMATRIX4F; }
     virtual const char *getTypeName() const { return "SFMatrix4f"; }
+    virtual int         getStride() const { return 16; }
     virtual MyString    getString(int index, int stride) const;
     virtual FieldValue *copy() { return new SFMatrix4f(*this); }
     virtual bool        equals(const FieldValue *value) const;

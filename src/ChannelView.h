@@ -75,6 +75,7 @@ public:
 
     void                CopyLastSelection(void);
     void                PasteLastSelection(void);
+    void                PasteSymetricLastSelection(int direction);
 
     bool                canPaste() { return m_copiedChannels != -1; }
 

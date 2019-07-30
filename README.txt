@@ -5201,6 +5201,8 @@ Fixed rendering error of NurbsTrimmedSurface
 
 Fixed error when animating NurbsTrimmedSurface
 
+Added edit->symetric paste in FieldView and ChannelView
+
 Contact: MUFTI <mufti11@web.de>
 
 

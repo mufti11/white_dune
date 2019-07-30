@@ -53,6 +53,7 @@ public:
     virtual Node       *copy() const 
                            { return new NodePositionInterpolator2D(*this); }
 
+    virtual int         getStride() const { return 2; } 
     virtual int         getNumChannels() const { return 2; }
     virtual FieldValue *createKey(void *value) const;
     virtual FieldValue *createKeys(void *values, int numKeys) const;

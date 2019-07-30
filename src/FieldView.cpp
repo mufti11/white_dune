@@ -1148,3 +1148,27 @@ FieldView::PasteLastSelection(void)
     }
 }
 
+void           
+FieldView::PasteSymetricLastSelection(int direction)
+{
+    if ((m_state == NORMAL) && (m_selectedItem > -1)) {
+        FieldViewItem *item = m_items[m_selectedItem];
+        Node *node = m_scene->getSelection()->getNode();
+        int field = node->getProto()->lookupField(
+                        item->GetField()->getName(m_scene->isX3d()),
+                        m_scene->isX3d());
+        if (m_copiedFieldValue)
+            if (item->GetValue()->getType() == 
+                m_copiedFieldValue->getType()) {
+                FieldValue *copiedFieldValue = m_copiedFieldValue->copy();
+                copiedFieldValue->flip(direction);
+                node->setField(field, copiedFieldValue);
+                m_copiedFieldValue = NULL;
+                if (node != NULL)
+                    node->update();
+                UpdateAll();
+                swInvalidateWindow(m_window);
+        }
+    }
+}
+

@@ -47,6 +47,7 @@ public:
     virtual Node       *copy() const 
                            { return new NodePositionInterpolator(*this); }
 
+    virtual int         getStride() const { return 3; } 
     virtual int         getNumChannels() const { return 3; }
     virtual FieldValue *createKey(void *value) const;
     virtual FieldValue *createKeys(void *values, int numKeys) const;

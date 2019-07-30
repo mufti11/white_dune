@@ -5710,6 +5710,16 @@ void Scene::pasteLastSelection(void)
    }
 }
 
+void Scene::pasteSymetricLastSelection(int direction)
+{
+   if (!m_selection_is_in_scene) {
+      // do paste in View
+      SceneView* view = getViewOfLastSelection();
+      if (view != NULL)
+          view->PasteSymetricLastSelection(direction);
+   }
+}
+
 void Scene::deleteLastSelection(void)
 {
    if (m_selection_is_in_scene) {
