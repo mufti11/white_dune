@@ -1231,25 +1231,41 @@ EOF
     fi
   fi 
 fi
-if test "X_$CGALHEADERS" = "X_yes" ; then
-AC_CHECK_HEADER(CGAL/compiler_config.h,,CGAL_ERROR=1)
- if test "X_$CGAL_ERROR" = "X_1" ; then
- [ 
- cat 1>&2 << EOF
 
- *** couldn't find a working CGAL development system ***
+AC_LANG_PUSH(C++)
+AC_CHECK_HEADER(opensubdiv/far/topologyRefiner.h,,OPENSUBDIV_ERROR=1)
+AC_LANG_POP()
+if test "X_OPENSUBDIV_ERROR" = "X_1" ; then
+[ 
+cat 1>&2 << EOF
 
- if CGAL is not available, the convex hull and CSG functions are not available 
+ *** couldn't find a working OpenSubdiv development system ***
+
+ if OpenSubdiv is not available, the subdivide function is limited
 
 EOF
- ]
- else
-  AC_DEFINE(HAVE_LIBCGAL)
-  if test "X_$GMP_ERROR" = "X_1" ; then
-   echo CGAL requires libgmp 1>&2
-  fi
-  AC_CHECK_LIB(gmp, __gmpn_sub_1, , GMP_ERROR=1)
- fi
+]
+fi
+
+AC_MSG_CHECKING(for OpenSubdiv CPU library)
+AC_LANG_PUSH(C++)
+SAVE_LIBS="$LIBS"
+LIBS="$LIBS -losdCPU"
+AC_TRY_LINK([], [;], ,OPENSUBDIV_ERROR=1)
+AC_LANG_POP(C++)
+if test "X_$OPENSUBDIV_ERROR" = "X_1" ; then
+  echo no
+  LIBS="$SAVE_LIBS"
+  cat 1>&2 << EOF
+
+ *** couldn't find a working OpenSubdiv development system ***
+
+ if OpenSubdiv is not available, the subdivide functions are limited
+
+EOF
+else
+ AC_DEFINE(HAVE_LIBOSDCPU)
+ echo yes
 fi
 
 AC_LANG_PUSH(C++)

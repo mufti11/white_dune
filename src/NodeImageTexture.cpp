@@ -241,6 +241,10 @@ NodeImageTexture::load()
         m_baseURL = "";
         m_baseURL += TheApp->getImportURL();
     }
+#ifdef HAVE_LIBDEVIL
+        int errorflag = false;
+        char *lastCheckedPath = NULL;
+#endif
     for (int i = 0; i < urls->getSize(); i++) {
         MyString path;
         URL urlI(m_baseURL, urls->getValue(i));
@@ -259,9 +263,6 @@ NodeImageTexture::load()
         if (swHasVisual() == 0)
             return;
 #ifdef HAVE_LIBDEVIL
-        int errorflag = false;
-        char *lastCheckedPath = NULL;
-
         if (ilLoadImage((char *)(const char *)m_path)) {
             width = ilGetInteger(IL_IMAGE_WIDTH);
             height = ilGetInteger(IL_IMAGE_HEIGHT);

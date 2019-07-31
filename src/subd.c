@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
+#ifndef HAVE_LIBOSDCPU
+
 #include <assert.h>
 #include <stdlib.h>
 #include "buf.h"
@@ -377,3 +380,4 @@ struct mesh *subdivide(const struct mesh *mesh, int iterations)
     return ret;
 }
 
+#endif

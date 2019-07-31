@@ -56,8 +56,7 @@ Summary: A graphical X3D/VRML97 editor, simple 3D modeler and animation tool
 Name: wdune
 Version: $VERSION
 Release: 2%{?dist}
-#Copyright: GPL
-License: GPLv2+ and GPLv3+ and LGPLv3+ and BSD and Public Domain
+License: GPLv2+ and GPLv3+ and LGPLv3+ and BSD and Public Domain and ASL 2.0
 URL: http://wdune.ourproject.org/
 Source: ftp://ftp.ourproject.org/pub/wdune/wdune-%{version}.tar.bz2
 BuildRequires: gcc-c++

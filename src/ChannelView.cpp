@@ -668,8 +668,6 @@ ChannelView::CopyLastSelection(void)
         float keyStart = m_selMin / (float) (m_rect.Width() - 1);
         int min = m_interpolator->findKeyInclusive(m_selMin / (float) (m_rect.Width() - 1));
         int max = m_interpolator->findKey(m_selMax / (float) (m_rect.Width() - 1));
-        if (max == m_interpolator->key()->getSize())
-            max--;
         for (int i = min; i < max; i++) {
             m_copiedValues.append(m_interpolator->key()->getValue(i) - keyStart);
             for (int j = 0; j < m_interpolator->getNumChannels(); j++)

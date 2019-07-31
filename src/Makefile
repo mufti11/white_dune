@@ -40,7 +40,7 @@ CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -std=c++11 -Wno-nonnull-compare -fope
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -std=c++11 -Wno-nonnull-compare -fopenmp
 CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -std=c++11 -Wno-nonnull-compare -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system 
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -lpng -ljpeg -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 

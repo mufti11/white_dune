@@ -156,7 +156,7 @@
       <AdditionalOptions> /Gz /bigobj
  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\freetype2-master\include;..\..\glu\include;..\..\curl-7.60.0\include;..\..\boost_1_67_0;..\..\mpfr-4.0.1\src;..\..\gmp-6.1.2;..\..\CGAL-4.12\include;..\..\expat-2.2.5\lib;swt\include;..\..\zlib-1.2.11;..\..\jpeg-9b;..\..\libpng-1.6.34;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include\mfc;C:\Programme\Microsoft SDK\Samples\netds\adsi\samples\General\DsBrowse\bitmaps;..\..\vcglib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\OpenSubdiv\;..\..\freetype2-master\include;..\..\glu\include;..\..\curl-7.60.0\include;..\..\boost_1_67_0;..\..\mpfr-4.0.1\src;..\..\gmp-6.1.2;..\..\CGAL-4.12\include;..\..\expat-2.2.5\lib;swt\include;..\..\zlib-1.2.11;..\..\jpeg-9b;..\..\libpng-1.6.37;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include;C:\Programme\Microsoft Platform SDK for Windows Server 2003 R2\Include\mfc;C:\Programme\Microsoft SDK\Samples\netds\adsi\samples\General\DsBrowse\bitmaps;..\..\vcglib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -185,7 +185,7 @@
     </ProjectReference>
     <Link>
       <AdditionalOptions>/force:multiple  %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opengl32.lib;..\..\freetype2-master\objs\freetype.lib;..\..\glu\glu\x64\Debug\glu.lib;Winmm.lib;..\..\expat-2.2.5\expat\x64\Debug\expat.lib;..\..\jpeg-9b\jpeg\x64\Debug\jpeg.lib;..\..\libpng-1.6.34\png\x64\Debug\png.lib;..\..\zlib-1.2.11\zlib\x64\Debug\zlib.lib;..\..\curl-7.60.0\build\Win64\VC15\LIB Debug\libcurld.lib;..\..\CGAL-4.12\lib\libCGAL-vc140-mt-gd-4.12.lib;..\..\mpfr-4.0.1\mpfr\x64\Debug\mpfr.lib;..\..\gmp-6.1.2\gmp\x64\Debug\gmp.lib;ole32.lib;Advapi32.lib;user32.lib;Gdi32.lib;Ws2_32.lib;wldap32.lib;comDlg32.lib;odbc32.lib;odbccp32.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;..\..\freetype2-master\objs\freetype.lib;..\..\glu\glu\x64\Debug\glu.lib;Winmm.lib;..\..\expat-2.2.5\expat\x64\Debug\expat.lib;..\..\jpeg-9b\jpeg\x64\Debug\jpeg.lib;..\..\libpng-1.6.37\png\x64\Debug\png.lib;..\..\zlib-1.2.11\zlib\x64\Debug\zlib.lib;..\..\curl-7.60.0\build\Win64\VC15\LIB Debug\libcurld.lib;..\..\CGAL-4.12\lib\libCGAL-vc140-mt-gd-4.12.lib;..\..\mpfr-4.0.1\mpfr\x64\Debug\mpfr.lib;..\..\gmp-6.1.2\gmp\x64\Debug\gmp.lib;ole32.lib;Advapi32.lib;user32.lib;Gdi32.lib;Ws2_32.lib;wldap32.lib;comDlg32.lib;odbc32.lib;odbccp32.lib;comctl32.lib;..\..\OpenSubdiv\subdiv\x64\debug\subdiv.lib</AdditionalDependencies>
       <ShowProgress>LinkVerboseLib</ShowProgress>
       <OutputFile>.\x64\Debug\dune.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>

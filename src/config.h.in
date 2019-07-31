@@ -153,6 +153,12 @@
 # endif
 #endif
 
+/* define if you have the freetype2 headers/library */
+#undef HAVE_LIBFREETYPE
+
+/* define if you have the OpenSubdiv headers/library */
+#undef HAVE_LIBOSDCPU
+
 /* Define if you have stdarg.h */ 
 #undef HAVE_STDARG_H
 
@@ -419,9 +425,6 @@
    If not set, a default value is used
 */
 #undef HAVE_X3DOM_PATH
-
-/* define if you have the freetype2 headers/library */
-#undef HAVE_LIBFREETYPE
 
 /* define if you have a tty file for UNIX/Linux fontrendering */
 #undef HAVE_DEFAULT_TTF_FILE

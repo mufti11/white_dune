@@ -50,6 +50,8 @@
 /* Define if you have OpenMP */
 #define HAVE_OMP 1
 
+#define HAVE_LIBOSDCPU 1
+
 /* Define if you have the Xdriver Library */
 #define HAVE_XDRIVER
 

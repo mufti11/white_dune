@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
+#ifndef HAVE_LIBOSDCPU
+
 #include <stdlib.h>
 #include <string.h>
 #include "buf.h"
@@ -188,3 +191,4 @@ void mesh_compute_normals(struct mesh *mesh)
         vec_normalize(n, n);
     }
 }
+#endif

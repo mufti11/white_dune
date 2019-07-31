@@ -22,9 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
 #ifndef SUBD_MESH_H
 #define SUBD_MESH_H
 
+#ifndef HAVE_LIBOSDCPU
 /*
  * Mesh construction
  */
@@ -55,4 +57,5 @@ void mesh_face_vertex_index(const struct mesh *mesh, int face, int vert,
 float *mesh_get_vertex(const struct mesh *mesh, int face, int vert);
 float *mesh_get_normal(const struct mesh *mesh, int face, int vert);
 
+#endif
 #endif

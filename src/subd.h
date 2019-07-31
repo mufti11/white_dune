@@ -25,6 +25,10 @@ THE SOFTWARE.
 #ifndef SUBD_H
 #define SUBD_H
 
+#ifndef HAVE_LIBOSDCPU
+
 struct mesh *subdivide(const struct mesh *mesh, int iterations);
+
+#endif
 
 #endif

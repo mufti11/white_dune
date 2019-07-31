@@ -154,6 +154,12 @@
 # endif
 #endif
 
+/* define if you have the freetype2 headers/library */
+#define HAVE_LIBFREETYPE 1
+
+/* define if you have the OpenSubdiv headers/library */
+#define HAVE_LIBOSDCPU 1
+
 /* Define if you have stdarg.h */ 
 #define HAVE_STDARG_H 1
 
@@ -421,9 +427,6 @@
 */
 /* #undef HAVE_X3DOM_PATH */
 
-/* define if you have the freetype2 headers/library */
-#define HAVE_LIBFREETYPE 1
-
 /* define if you have a tty file for UNIX/Linux fontrendering */
 #define HAVE_DEFAULT_TTF_FILE "/usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf"
 
@@ -543,7 +546,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.250"
+#define HAVE_DUNE_VERSION "white_dune 1.254"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

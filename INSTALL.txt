@@ -163,12 +163,17 @@ rendering.
 
 Needed libraries are the ffmpeg libraries, they are used for MovieTexture
 rendering. Unfortunatly, the ffmpeg libraries are not available under
-Fedora Linux and MacOSX, so there is no MovieTexture rendering. 
+Fedora Linux, M$Windows and MacOSX, so there is no MovieTexture rendering. 
 
 A not real needed library is the Devil library. It is usefull, if your
 VRML browser supports image formats like TGA (like the covise VRML
 browser), but this makes the image selection dialog more complicated.
 So it is a good idea to use "./configure --without-devil". 
+
+A useful library is the OpenSubdiv CPU library. It is used for mesh 
+subdivision. If this library is not available, a older subdivision
+routine is used, but the OpenSubdiv routine has better results if the
+mesh has holes.
 
 If you have a spaceball device connected to the serial port, it is 
 recommended to have the development version of libsball installed.
@@ -1044,7 +1049,7 @@ Micro$oft Visual C++ 6.0, with the following differences:
 
 When building excutables for Windows XP and above, it is needed to
 run batch/jpg_png_zlib.bat to write src/config.h. You also need to extract
-ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win64static14.zip
+ftp://ftp.ourproject.org/pub/wdune/expat_jpeg_png_zlib_win64static15.zip
 to add needed libraries. Then open dune.vcxproj
  
 

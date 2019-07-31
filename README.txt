@@ -439,8 +439,9 @@ Harishankar Narayanan     (https://github.com/codetiger/Font23D)
 FTGL                      (https://sourceforge.net/projects/ftgl/)
 Poly2Tri                  (http://code.google.com/p/poly2tri/)
 Chris Rorden              (https://github.com/neurolabusc/vx)
-Brian Wellington          bill.jpg for Tux warbird from xbill
-Matias Duarte             bill.jpg for Tux warbird from xbill
+Brian Wellington          (bill.jpg for Tux warbird from xbill)
+Matias Duarte             (bill.jpg for Tux warbird from xbill)
+Pixar                     (code from OpenSubdiv tutorial)
 
 ==========================================================================
 
@@ -5202,6 +5203,10 @@ Fixed rendering error of NurbsTrimmedSurface
 Fixed error when animating NurbsTrimmedSurface
 
 Added edit->symetric paste in FieldView and ChannelView
+
+Fixed by one error of paste in ChannelView
+
+Addeded OpenSubdiv call for better subdivision
 
 Contact: MUFTI <mufti11@web.de>
 
