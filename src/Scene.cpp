@@ -571,10 +571,12 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
                                                      targetNode, targetField,
                                                      NULL, -1);
         removeCommand->execute();
-        Node *lastNode = nodes->get(nodes->size() - 1);
-        MoveCommand *addCommand = new MoveCommand(lastNode, NULL, -1,
-                                                  targetNode, targetField);
-        addCommand->execute();
+        if (nodes->size() > 0) {
+            Node *lastNode = nodes->get(nodes->size() - 1);
+            MoveCommand *addCommand = new MoveCommand(lastNode, NULL, -1,
+                                                      targetNode, targetField);
+           addCommand->execute();
+       }
     } else {
         // wrong targetField
         assert(0);

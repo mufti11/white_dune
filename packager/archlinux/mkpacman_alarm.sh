@@ -43,6 +43,7 @@ makedepends=(gcc
              zlib
              expat
              ffmpeg
+             opensubdiv
              gcc
              flex
              bison

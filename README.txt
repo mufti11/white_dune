@@ -5208,6 +5208,14 @@ Fixed by one error of paste in ChannelView
 
 Addeded OpenSubdiv call for better subdivision
 
+Added slider to "inset" dialog
+
+Fixed missing normal/texCoord delete on inset  
+
+Added better selection change after undo/redo and field pipe
+
+Fixed crash if field pipe remove node
+
 Contact: MUFTI <mufti11@web.de>
 
 

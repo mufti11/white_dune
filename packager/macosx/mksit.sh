@@ -3,7 +3,6 @@
 
 OS=`sw_vers | awk '/ProductVersion:/ {split($2,a,".");print a[1] "." a[2]}'`
 
-OS_ARCHIVE=
 if test "$OS" = "10.7" ; then
    OS="Lion"-fat-binary
 fi
@@ -18,7 +17,6 @@ fi
 
 if test "$OS" = "10.4" ; then
    OS="Tiger"-fat-binary
-   OS_ARCHIVE=_tiger
 fi
 
 if test "$OS" = "10.3" ; then
@@ -38,7 +36,7 @@ rm -rf /tmp/white_dune-$VERSION
 cd /tmp/wdune-$VERSION && 
 sh batch/fix_not_translated_rcfiles.sh &&
 make realclean && \
-(cd desktop/macosx && tar -xf white_dune$OS_ARCHIVE.app.tar) &&
+(cd desktop/macosx && tar -xf white_dune_tiger.app.tar) &&
 ./configure --with-uninstallcomment="find and remove directory/application white_dune.app" --with-optimization --without-devil --with-helpurl="http://wdune.ourproject.org/docs" && make &&
 rm -f desktop/macosx/white_dune.app/Contents/MacOS/dune &&
 cp bin/dune desktop/macosx/white_dune.app/Contents/MacOS &&

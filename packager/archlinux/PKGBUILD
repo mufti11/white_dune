@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.250
+pkgver=1.254
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -25,6 +25,7 @@ makedepends=(gcc
              zlib
              expat
              ffmpeg
+             opensubdiv
              gcc
              flex
              bison
@@ -59,7 +60,7 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('d66a3d7b33c39f34912a9c41ad3929c3')
+md5sums=('4577111f0b78613f41b9b1a25af83e6f')
 validpgpkeys=()
 
 prepare() {

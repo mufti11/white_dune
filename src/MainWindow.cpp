@@ -201,6 +201,7 @@
 #include "OneBoolDialog.h"
 #include "OneIntDialog.h"
 #include "OneFloatDialog.h"
+#include "SliderFloatDialog.h"
 #include "OneTextDialog.h"
 #include "TwoRadioButtonsDialog.h"
 #include "WonderlandModuleExportDialog.h"
@@ -1788,6 +1789,7 @@ MainWindow::OnCommand(void *vid)
     m_scene->addNextCommand();
     bool exitFlag = false;
     m_statusText[0] = 0;
+    Node *selectionNode = NULL;
     switch (id) {
       case ID_DUNE_FILE_OPEN:
         OnFileOpen();
@@ -1955,14 +1957,22 @@ MainWindow::OnCommand(void *vid)
         OnEditDelete();
         break;
       case ID_DUNE_EDIT_UNDO:
+        selectionNode = m_scene->getSelection()->getNode();
         if (m_scene->canUndo()) m_scene->undo();
-        m_scene->setSelection(m_scene->getRoot());
         m_scene->UpdateViews(NULL, UPDATE_ALL);
+        if (selectionNode->isInScene(m_scene))
+            m_scene->setSelection(selectionNode);
+        else
+            m_scene->setSelection(m_scene->getRoot());
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         break;
       case ID_DUNE_EDIT_REDO:
+        selectionNode = m_scene->getSelection()->getNode();
         if (m_scene->canRedo()) m_scene->redo();
-        m_scene->setSelection(m_scene->getRoot());
+        if (selectionNode->isInScene(m_scene))
+            m_scene->setSelection(selectionNode);
+        else
+            m_scene->setSelection(m_scene->getRoot());
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         break;
       case ID_DUNE_EDIT_DEF:
@@ -9094,17 +9104,25 @@ MainWindow::splitFaces(void) {
 void
 MainWindow::insetFace() {
     Node *node = m_scene->getSelection()->getNode(); 
+    bool updateCoord = false;
     if (node->getType() == VRML_COORDINATE) {
         node = node->getParent();
+        updateCoord = true;
     }
     if ((node->getType() == VRML_INDEXED_FACE_SET) && 
         (m_scene->getSelectionMode() == SELECTION_MODE_FACES)){
-        OneFloatDialog dlg(m_wnd, IDD_INSET, 0.5, 0, FLT_MAX);
+        SliderFloatDialog dlg(m_wnd, IDD_INSET, 0.5, 0, FLT_MAX);
         if (dlg.DoModal() == IDCANCEL)
             return;
-        ((NodeIndexedFaceSet *)node)->insetFace(dlg.GetValue());
+        NodeIndexedFaceSet *faceset  = (NodeIndexedFaceSet *)node;
+        faceset->insetFace(dlg.GetValue());
+        m_scene->UpdateViews(NULL, UPDATE_ALL);        
+        if (updateCoord)
+            m_scene->setSelection(faceset->coord()->getValue()->getPath());
+        else
+            m_scene->setSelection(node->getPath());
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
-//    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
 
 void
@@ -10931,6 +10949,8 @@ MainWindow::toIndexedFaceSetFromMesh()
         command = new MoveCommand(newNode, NULL, -1, parent, parentField);
         command->execute();            
         m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+        m_scene->setSelection(newNode->getPath());
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }
 
@@ -13663,10 +13683,16 @@ MainWindow::fieldPipe(Node *node, int field, const char *pipeCommand,
         TheApp->setImportFile(path_in);
         FILE* f_in = fopen(path_in, "rb");
         if ((value->getType() == MFNODE) || (value->getType() == SFNODE)) {
+            Node *selectionNode = m_scene->getSelection()->getNode();
             m_scene->backupField(node, field);
             m_scene->parse(f_in, node, field, SCAN_FOR_BOTH);
             node->update();
             m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+            if (selectionNode->isInScene(m_scene))
+                m_scene->setSelection(selectionNode);
+            else
+                m_scene->setSelection(m_scene->getRoot());
+            m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         } else {
             if (f_in == NULL)
                 TheApp->MessageBoxPerror(path_out);
@@ -13701,6 +13727,7 @@ MainWindow::fieldPipe(Node *node, int field, const char *pipeCommand,
                 }
                 fclose(f_in);
                 if (!error) {
+                    Node *selectionNode = m_scene->getSelection()->getNode();
                     m_scene->backupField(node, field);
                     if (handles == NULL)
                         m_scene->setField(node, field, newValue);
@@ -13716,6 +13743,11 @@ MainWindow::fieldPipe(Node *node, int field, const char *pipeCommand,
                     }
                     node->update();
                     m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+                    if (selectionNode->isInScene(m_scene))
+                        m_scene->setSelection(selectionNode);
+                    else
+                        m_scene->setSelection(m_scene->getRoot());
+                    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
                 }
             }
         }

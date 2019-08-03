@@ -484,7 +484,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
          index = translateField(index);
     assert(index >= 0 && index < m_numFields);
     Field *field = m_proto->getField(index);
-    if ((field != NULL) && (value->getRefs() != 0))
+    if ((field != NULL) && value && (value->getRefs() != 0))
         assert(field->getType() == value->getType());
 
     // if field is an SFNode or MFNode type, remove old values from 
@@ -506,24 +506,25 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
         }
     }
 
-    if (value->getRefs() > -1)
+    if (value && value->getRefs() > -1)
         value->clamp(field->getMin(), field->getMax());
 
     if (m_fields[index] != NULL)
         m_fields[index]->unref();
     m_fields[index] = value;
-    m_fields[index]->ref();
-    if (isNode) {
+    if (value)
+        m_fields[index]->ref();
+    if (value && isNode) {
         if (containerField == -1)
             m_fields[index]->setContainerField(index);
         else
             m_fields[index]->setContainerField(containerField);
     }
 
-    if (value->getType() == SFNODE) {
+    if (value && value->getType() == SFNODE) {
         Node *child = ((SFNode *) value)->getValue();
         if (child) child->addParent((Node*)this, index);
-    } else if (value->getType() == MFNODE) {
+    } else if (value && value->getType() == MFNODE) {
         NodeList *childList = ((MFNode *) value)->getValues();
         if (childList) {
             for (int i = 0; i < childList->size(); i++) {

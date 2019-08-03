@@ -1654,11 +1654,20 @@ NodeIndexedFaceSet::insetFace(float factor)
 
     m_scene->backupFieldsStart();
     m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+    m_scene->backupFieldsAppend(this, color_Field());    
+    m_scene->backupFieldsAppend(this, normal_Field());    
+    m_scene->backupFieldsAppend(this, texCoord_Field());    
     m_scene->backupFieldsAppend(this, coordIndex_Field());
+    m_scene->backupFieldsAppend(this, colorIndex_Field());
+    m_scene->backupFieldsAppend(this, normalIndex_Field());
+    m_scene->backupFieldsAppend(this, texCoordIndex_Field());
     m_scene->backupFieldsDone();
 
     ncoord->point(new MFVec3f(*vertices));
     coordIndex(new MFInt32(*ci));
+    color(new SFNode(NULL));
+    normal(new SFNode(NULL));
+    texCoord(new SFNode(NULL));
 
     m_meshDirty = true;
 }

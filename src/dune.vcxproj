@@ -306,6 +306,7 @@
     <ClCompile Include="PointFtgl.cpp" />
     <ClCompile Include="quadric_simp.cpp" />
     <ClCompile Include="shapes.cpp" />
+    <ClCompile Include="SliderFloatDialog.cpp" />
     <ClCompile Include="StaticGroupNode.cpp" />
     <ClCompile Include="sweep.cpp" />
     <ClCompile Include="sweep_context.cpp" />
