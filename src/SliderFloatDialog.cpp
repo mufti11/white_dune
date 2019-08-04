@@ -87,6 +87,7 @@ SliderFloatDialog::LoadData()
     mysnprintf(buf, 128, "%f", m_value);
     swSetText(swGetDialogItem(m_dlg, IDC_VALUE), buf);
 
+#ifndef _WIN32
     int ScrollBarWidth = 200;
     int ScrollBarHeight = 15;
     int TextEditWidth = 30;
@@ -103,4 +104,5 @@ SliderFloatDialog::LoadData()
     swSetClientData(m_scrollBar, this);
     swSetScrollBarCallback(m_scrollBar, scrollCB);
     swScrollBarSetValue(m_scrollBar, (int) (m_value * 100));
+#endif
 }
