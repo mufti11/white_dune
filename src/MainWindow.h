@@ -212,9 +212,11 @@ public:
 protected:
     Node               *createNode(Node *node);
     Node               *createGeometryNode(const char *type,
-                                           bool emissiveDefaultColor = false);
+                                           bool emissiveDefaultColor = false,
+                                           bool alignToCamera = true);
     Node               *createGeometryNode(Node *node,
-                                           bool emissiveDefaultColor = false);
+                                           bool emissiveDefaultColor = false,
+                                           bool alignToCamera = true);
     void                createScript();
     void                createElevationGrid();
     void                createGeoElevationGrid();

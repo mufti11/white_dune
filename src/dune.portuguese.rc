@@ -102,6 +102,11 @@ BEGIN
         MENUITEM "Show only selected Vertices",         ID_DUNE_SHOW_ONLY_SELECTED_VERTICES
         MENUITEM "H&ide Vertices",                      ID_DUNE_HIDE_VERTICES
         MENUITEM "&Unhide Vertices",                    ID_DUNE_UNHIDE_VERTICES
+#ifdef HAVE_LIBCGAL
+        MENUITEM SEPARATOR
+        MENUITEM "&Collect Vertices for convex hull",   ID_DUNE_SELECTION_STORE4CONVEX_HULL
+        MENUITEM "&Remove  Vertices for convex hull",   ID_DUNE_DELETE_STORE4CONVEX_HULL
+#endif
     END
     POPUP "&Novo"
     BEGIN
@@ -668,6 +673,11 @@ BEGIN
         MENUITEM "Show only selected Vertices",         ID_DUNE_SHOW_ONLY_SELECTED_VERTICES
         MENUITEM "H&ide Vertices",                      ID_DUNE_HIDE_VERTICES
         MENUITEM "&Unhide Vertices",                    ID_DUNE_UNHIDE_VERTICES
+#ifdef HAVE_LIBCGAL
+        MENUITEM SEPARATOR
+        MENUITEM "&Collect Vertices for convex hull",   ID_DUNE_SELECTION_STORE4CONVEX_HULL
+        MENUITEM "&Remove  Vertices for convex hull",   ID_DUNE_DELETE_STORE4CONVEX_HULL
+#endif
     END
     POPUP "&View"
     BEGIN

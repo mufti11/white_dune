@@ -6051,11 +6051,11 @@ Scene::constrainVec(Vec3f vec)
 {
     Vec3f v(vec);    
     if ((!m_xOnly) && (m_yOnly || m_zOnly))
-        v[0] = 0;
+        v.x = 0;
     if ((!m_yOnly) && (m_xOnly || m_zOnly))
-        v[1]=0;
+        v.y=0;
     if ((!m_zOnly) && (m_xOnly || m_yOnly))
-        v[2]=0;
+        v.z=0;
     return v;
 }
 
@@ -6809,6 +6809,33 @@ Scene::warning(int id, const char *string)
     mysnprintf(text, 255, idText, string);
     warning(text);
 }
+
+void                
+Scene::addToStore4Convex_hull(void) 
+{
+    if (getSelectionMode() != SELECTION_MODE_VERTICES)
+        return;
+    Node *node = getSelection()->getNode();
+    if (!node->getValidVertex())
+        return;
+    static Matrix transformMatrix;
+    Path *trans = searchTransform();
+    Node *transform = NULL;
+    if (trans) 
+        transform = trans->getNode();
+    if (transform) {
+        transform->transform();
+        transform->getMatrix(transformMatrix);
+    }
+    for (int i = 0; i < getSelectedHandlesSize(); i++) {
+         int handle = getSelectedHandle(i);
+         if (handle >= NO_HANDLE)
+             continue;  
+         Vec3f vertex = node->getVertex(handle);
+         m_store4convex_hull.append(transformMatrix * vertex);
+    }
+}
+
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
 {

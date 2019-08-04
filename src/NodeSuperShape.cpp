@@ -568,7 +568,8 @@ NodeSuperShape::drawHandles()
     for (int i = 0; i < 6; i++) {
         state.setHandleColor(m_scene, i);
         glLoadName(i);
-        state.drawHandle(spereCorners[i]);
+        Vec3f vec(spereCorners[i][0], spereCorners[i][1], spereCorners[i][2]);
+        state.drawHandle(vec);
     }
     state.endDrawHandles();
     glPopName();

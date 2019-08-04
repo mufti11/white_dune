@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- last update: white_dune-0.99pl1262
+ last update: white_dune-1.256
 -->
 <head>
  <title>"white_dune" Dokumentation</title> 
@@ -207,7 +207,7 @@
      <h4><a href="#coordinate">&Auml;ndern von Coordinate basierten Knoten</a> (neu in Version 0.29beta)</h4>
     </li>
     <li>
-     <h4><a href="#convexhull">Konvexe H&uuml;lle</a> (neu in Version 0.99pl812)</h4>
+     <h4><a href="#convexhull">Konvexe H&uuml;lle</a> (neu in Version 1.255)</h4>
     </li>
     <li>
      <h4><a href="#meshreducer">Fl&auml;chen Reduzierer</a> (neu in Version 0.99pl850)</h4>
@@ -3272,7 +3272,7 @@ Es gibt einige n&uuml;tzliche modelling Aktionen im <em>Aktion</em> Men&uuml;:
  </li>
 </ul>
 </p>
-<h4><a name="convexhull">Konvexe H&uuml;lle</a><small>(neu in Version 0.99pl812)</small></h4>
+<h4><a name="convexhull">Konvexe H&uuml;lle</a><small>(neu in Version 1,256)</small></h4>
 <p>
 <em>Aktion -&gt; Konvexe Huelle</em> erzeugt ein bauchiges IndexedFaceSet
 aus Objekten in einem Szenegraph Zweig (es kann auch f&uuml;r einen ganzen
@@ -3291,6 +3291,28 @@ Die Benutzung von <em>Actions -&gt; Convex hull</em> resultiert in<br>
 <img src="convex_hull_after2.png"><br>
 Vergessen Sie nicht, IndexedFaceSet.creaseAngle anzupassen:<br>
 <img src="convex_hull_after3.png"><br>
+</p>
+<p>
+Ein anderes Einsatzgebiet f&uuml;r konvexe H&uuml;lle ist das Verbinden
+von Objekten.<br>
+Dazu muss ein Objekt angew&auml;hlt werden.<br>
+<img src="convex1.png"><br>
+Danach werden mit der rechten Maustaste mehrere Eckpunkte des ersten Objekts 
+ausgew&auml;hlt.<br>
+<img src="convex2.png"><br>
+Nach dem Loslassen der Maustaste:<br>
+<img src="convex3.png"><br>
+Danach benutzt man <em> Auswahl -&gt; Sammle Eckpunkte f&uuml;r konvexe 
+Huelle</em>.
+Dann m&uuml;ssen Eckpunkte des zweiten Objekts angew&auml;hlt weden.<br>
+<img src="convex4.png"><br>
+Danach benutzt man <em> Auswahl -&gt; Sammle Eckpunkte f&uuml;r konvexe 
+Huelle</em>.
+Danach benutzt man <em>Aktion -&gt; Konvexe Huelle</em><br>
+<img src="convex5.png"><br>
+Eine Verbindung zwischen den Objekten ist entstanden.<br>
+Der Szenengraph kann z.B. mit <a href="#boolean">boolscher Modellierung</a> 
+(zusammenbauen) vereinfacht werden.
 </p>
 <h4><a name="meshreducer">Fl&auml;chen Reduzierer</a> (neu in Version 0.99pl850)</h4>
 <p>

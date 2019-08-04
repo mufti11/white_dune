@@ -5216,6 +5216,14 @@ Added better selection change after undo/redo and field pipe
 
 Fixed crash if field pipe remove node
 
+Added exit of whitedune starter on MacOSX
+
+Fixed bugs in man page
+
+Disabled camera orientation of new node on convex hull and CSG operations.
+
+Added collection of vertices to convex hull creation
+
 Contact: MUFTI <mufti11@web.de>
 
 

@@ -101,6 +101,11 @@ BEGIN
         MENUITEM "&Zeige nur ausgewaehlte Eckpunkte",   ID_DUNE_SHOW_ONLY_SELECTED_VERTICES
         MENUITEM "&Verstecke Eckpunkte",                ID_DUNE_HIDE_VERTICES
         MENUITEM "&Zeige wieder Eckpunkte",             ID_DUNE_UNHIDE_VERTICES
+#ifdef HAVE_LIBCGAL
+        MENUITEM SEPARATOR
+        MENUITEM "&Sammle Eckpunkte fuer bauchige Huelle",  ID_DUNE_SELECTION_STORE4CONVEX_HULL
+        MENUITEM "&Loesche Eckpunkte fuer bauchige Huelle", ID_DUNE_DELETE_STORE4CONVEX_HULL
+#endif
     END
     POPUP "Neu"
     BEGIN
@@ -667,6 +672,11 @@ BEGIN
         MENUITEM "&Zeige nur ausgewaehlte Eckpunkte",   ID_DUNE_SHOW_ONLY_SELECTED_VERTICES
         MENUITEM "&Verstecke Eckpunkte",                ID_DUNE_HIDE_VERTICES    
         MENUITEM "&Zeige wieder Eckpunkte",             ID_DUNE_UNHIDE_VERTICES  
+#ifdef HAVE_LIBCGAL
+        MENUITEM SEPARATOR
+        MENUITEM "&Sammle Eckpunkte fuer konvexe Huelle", ID_DUNE_SELECTION_STORE4CONVEX_HULL
+        MENUITEM "&Loesche Eckpunkte fuer konvexe Huelle", ID_DUNE_DELETE_STORE4CONVEX_HULL
+#endif
     END
     POPUP "&Fenster"
     BEGIN

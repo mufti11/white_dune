@@ -112,7 +112,10 @@ void NodeCylinder::drawHandles(void)
     for (int i = 0; i < 6; i++) {
         state.setHandleColor(m_scene, i);
         glLoadName(i);
-        state.drawHandle(CylinderCorners[i]);
+        Vec3f vec(CylinderCorners[i][0], 
+                  CylinderCorners[i][1], 
+                  CylinderCorners[i][2]);
+        state.drawHandle(vec);
     }
     state.endDrawHandles();
     glPopName();

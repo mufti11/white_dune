@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */  
   
- last update: white_dune-0.99pl1262
+ last update: white_dune-1.256
 -->   
 <head>
  <title>"White_dune" documentation</title> 
@@ -208,7 +208,7 @@
      <h4><a href="#coordinate">Changing coordinate based nodes</a> (new in Version 0.29beta)</h4>
     </li>
     <li>
-     <h4><a href="#convexhull">Convex hull</a> (new in Version 0.99pl812)</h4>
+     <h4><a href="#convexhull">Convex hull</a> (new in Version 1.256)</h4>
     </li>
     <li>
      <h4><a href="#meshreducer">Mesh reducer</a> (new in Version 0.99pl850)</h4>
@@ -2973,7 +2973,7 @@ There are a few handy modelling actions in the <em>Action</em> menu:
  </li>
 </ul>
 </p>
-<h4><a name="convexhull">Convex hull</a><small>(new in Version 0.99pl812)</small></h4>
+<h4><a name="convexhull">Convex hull</a><small>(new in Version 1.256)</small></h4>
 <p>
 <em>Actions -&gt; Convex hull</em> creates a convex IndexedFaceSet from
 objects in a Scenegraph branch (it can also be used for a whole scenegraph,
@@ -2990,6 +2990,24 @@ Usage of <em>Actions -&gt; Convex hull</em> results in<br>
 <img src="convex_hull_after2.png"><br>
 Do not forget to fit IndexedFaceSet.creaseAngle:<br>
 <img src="convex_hull_after3.png"><br>
+<p>
+Another application of convex hull is the connection of objects.<br>
+To do this, a object has to be selected.<br>
+<img src="convex1.png"><br>
+Select with the right mouse button several vertices of the first object.<br>
+<img src="convex2.png"><br>
+After the release of the mouse button:<br>
+<img src="convex3.png"><br>
+Then use <em> Selection -&gt; Collect Vertices for convex hull</em>.<br>
+Select Vertices of the second object.<br>
+<img src="convex4.png"><br>
+Then use <em> Selection -&gt; Collect Vertices for convex hull</em>.<br>
+Then use <em> Actions -&gt; Convex hull</em>.<br>
+<img src="convex5.png"><br>
+A connection between the objects have been created.<br>
+The scnengraph can be simplified e.g. with <a href="#boolean">
+boolean modelling</a> (union).
+</p>
 </p>
 <h4><a name="meshreducer">Mesh reducer</a> (new in Version 0.99pl850)</h4>
 <p>

@@ -354,6 +354,8 @@ public:
     int                getNumExportFiles(void) { return m_numExportFiles; }
     void               setNumExportFiles(int i) { m_numExportFiles = i; }
 
+    void               setExitPid(int pid) { m_exitPid = pid; }
+
 protected:
     void                Exit(void);
 
@@ -424,6 +426,8 @@ protected:
     MyString            m_writeUrl;
 
     int                 m_numExportFiles;
+
+    int                 m_exitPid;
 };
 
 extern DuneApp *TheApp;

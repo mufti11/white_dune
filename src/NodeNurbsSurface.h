@@ -152,6 +152,7 @@ public:
                         return getControlPoints()->getVec(i) / 
                                weight()->getValue(i); 
                         }
+    virtual bool    getValidVertex(void) { return true; }   
 
     fieldMacros(SFInt32, uDimension,      ProtoNurbsSurface)
     fieldMacros(SFInt32, vDimension,      ProtoNurbsSurface)

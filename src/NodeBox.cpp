@@ -100,7 +100,8 @@ NodeBox::drawHandles(void)
     for (int i = 0; i < 8; i++) {
         state.setHandleColor(m_scene, i);
         glLoadName(i);
-        state.drawHandle(boxCorners[i]);
+        Vec3f vec(boxCorners[i][0], boxCorners[i][1], boxCorners[i][2]);
+        state.drawHandle(vec);
     }
     state.endDrawHandles();
     glPopName();

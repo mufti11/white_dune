@@ -855,6 +855,11 @@ public:
     void                dynamicNodeCallbackRemove(void)
                             { m_writeCDynamicNodeCallback.resize(0); }
 
+    void                addToStore4Convex_hull(void);
+    MyArray<Vec3f>     *getStore4Convex_hull(void)
+                            { return &m_store4convex_hull; }
+    void                removeStore4Convex_hull(void) 
+                            { m_store4convex_hull.resize(0); }
 
 protected:
     int                 writeExtensionProtos(int f, int flag);
@@ -1085,6 +1090,7 @@ protected:
 
     MyArray<const char *> m_writeCDynamicNodeCallback;
 
+    MyArray<Vec3f>      m_store4convex_hull;
 public:
     MyArray<CGlNameData> m_glNameData;               
 };

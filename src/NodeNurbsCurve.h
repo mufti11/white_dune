@@ -134,6 +134,13 @@ public:
                               bool already_changed = false);
     virtual void    setHandle(float newWeight, 
                               const Vec3f &newV, const Vec3f &oldV);
+    virtual Vec3f   getVertex(int i)
+                        { 
+                        return getControlPoints()->getVec(i) / 
+                               weight()->getValue(i); 
+                        }
+    virtual bool    getValidVertex(void) { return true; }   
+
 private:
     bool            m_inRepair;
     bool            m_isInternal;

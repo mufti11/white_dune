@@ -2065,7 +2065,12 @@ MainWindow::OnCommand(void *vid)
         m_scene->unHideVertices();
         m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);        
         break;
-
+      case ID_DUNE_SELECTION_STORE4CONVEX_HULL:
+        m_scene->addToStore4Convex_hull();
+        break;
+      case ID_DUNE_DELETE_STORE4CONVEX_HULL:
+        m_scene->removeStore4Convex_hull();
+        break;
 
       case ID_ANIMATION:
         createAnimation();
@@ -5765,6 +5770,15 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_DUNE_SELECTION_NEIGHBOUR_V, SW_MENU_DISABLED, 
                    (node->getType() == VRML_NURBS_SURFACE) ?
                    0 : SW_MENU_DISABLED);
+/*
+    swMenuSetFlags(m_menu, ID_DUNE_SELECTION_STORE4CONVEX_HULL,
+                   SW_MENU_DISABLED, m_scene->getSelectedHandlesSize() > 0 ?
+                   0 : SW_MENU_DISABLED);
+*/
+    swMenuSetFlags(m_menu, ID_DUNE_DELETE_STORE4CONVEX_HULL,
+                   SW_MENU_DISABLED, 
+                   m_scene->getStore4Convex_hull()->size() > 0 ?
+                   0 : SW_MENU_DISABLED);
 
     swMenuSetFlags(m_menu, ID_INTERACTION, SW_MENU_DISABLED,
                    node->supportInteraction() ? 0 : SW_MENU_DISABLED);
@@ -6465,7 +6479,8 @@ MainWindow::createNode(const char *type)
 }
 
 Node *
-MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
+MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor, 
+                               bool alignToCamera)
 {
     const Path *sel = m_scene->getSelection();
     Node *selection = sel->getNode();
@@ -6542,7 +6557,7 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
         if (transformNode->getParent() == m_scene->getRoot())
             parentIsRoot = true;
     if (parentIsRoot) 
-        if (camera) {
+        if (camera && alignToCamera) {
             SFRotation *sfRotation = new SFRotation(camera->getOrientation());
             Quaternion quad = sfRotation->getQuat();
             Vec3d vec = camera->getPosition();
@@ -6575,10 +6590,11 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor)
 }
 
 Node * 
-MainWindow::createGeometryNode(const char *type, bool emissiveDefaultColor)
+MainWindow::createGeometryNode(const char *type, bool emissiveDefaultColor, 
+                               bool alignToCamera)
 {
     Node *node = m_scene->createNode(type);
-    createGeometryNode(node, emissiveDefaultColor);
+    createGeometryNode(node, emissiveDefaultColor, alignToCamera);
     return node;
 }
 
@@ -8133,18 +8149,26 @@ void MainWindow::convexHull(void)
         node = node->getParent();
         isCoordinate = true;
     }
-    node->doWithBranch(searchMeshDataOrTransform, NULL);
+    MyArray<Vec3f> *collectedPoints = m_scene->getStore4Convex_hull();
+    bool removeNode = false;
+    if (collectedPoints->size() == 0) {
+        removeNode = true;
+        node->doWithBranch(searchMeshDataOrTransform, NULL);
+    } else
+        for (int i = 0; i < collectedPoints->size(); i++)
+            points.append((*collectedPoints)[i]);
     if (node && points.size() > 3) {
         if ((numNodes == 1) || (isCoordinate && (numNodes == 2))) {
             m_scene->setSelection(node->getParent());
-        } 
-        if (isSelectionRoot)
-            m_scene->deleteAll();
-        else
-            m_scene->deleteLastSelection();
+        }
+        if (removeNode) 
+            if (isSelectionRoot)
+                m_scene->deleteAll();
+            else
+                m_scene->deleteLastSelection();
         NodeIndexedFaceSet *faceSet = Util::convexHull(m_scene, points);
         faceSet->optimize();
-        createGeometryNode(faceSet);
+        createGeometryNode(faceSet, false, false);
     }
     points.resize(0);
 }
@@ -9278,7 +9302,7 @@ MainWindow::csg(int operation)
                 face->solid(new SFBool(false));
 
                 m_scene->setSelection(parent);
-                Node *newNode = createGeometryNode(face);
+                Node *newNode = createGeometryNode(face, false, false);
 
                 MoveCommand *command = new MoveCommand(node, 
                                                        parent, parentField,
@@ -9332,7 +9356,7 @@ MainWindow::simpleJoin()
         face->solid(new SFBool(false));
 
         m_scene->setSelection(parent);
-        Node *newNode = createGeometryNode(face);
+        Node *newNode = createGeometryNode(face, false, false);
 
         MoveCommand *command = new MoveCommand(node, parent, parentField,
                                                      NULL, -1);

@@ -306,6 +306,12 @@ bool parseCommandlineArgument(int & i,int argc, char** argv)
        // parse special MacOSX commandline parameters
     } else if (stringncmp(argv[i],"-psn_")==0) {
        // parse special MacOSX commandline parameters
+    } else if (strcmp(argv[i],"-exitPid")==0) {
+       int pid;
+       if (++i >= argc) return found;
+       pid = atoi(argv[i]);
+       if (pid > 0)
+           TheApp->setExitPid(pid);
 #endif
     } else if (strcmp(argv[i],"-checkSimpleCyclicSceneGraph")==0) {
        TheApp->setCheckSimpleCyclicSceneGraph();

@@ -117,7 +117,8 @@ void NodeCone::drawHandles(void)
     for (int i = 0; i < 5; i++) {
         state.setHandleColor(m_scene, i);
         glLoadName(i);
-        state.drawHandle(ConeCorners[i]);
+        Vec3f vec(ConeCorners[i][0], ConeCorners[i][1], ConeCorners[i][2]);
+        state.drawHandle(vec);
     }
     state.endDrawHandles();
     glPopName();

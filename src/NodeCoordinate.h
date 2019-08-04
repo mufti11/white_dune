@@ -75,6 +75,7 @@ public:
                         { return point()->getSFSize(); }  
     virtual Vec3f   getVertex(int i)
                         { return point()->getVec(i); }
+    virtual bool    getValidVertex(void) { return true; }   
 
     virtual bool    validHandle(int handle);
     virtual bool    checkHandle(int handle);

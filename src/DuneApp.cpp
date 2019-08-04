@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #ifndef _WIN32
 # include <unistd.h>
+# include <signal.h>
 #endif
 
 #include <ctype.h>
@@ -140,6 +141,7 @@ DuneApp::DuneApp() : PreferencesApp(), EcmaScriptApp(), StereoViewApp(),
     m_verbose = false;
     m_disableGlList = false;
     m_numExportFiles = 1;
+    m_exitPid = 0;
 }
 
 void DuneApp::initPreferences(void)
@@ -1007,6 +1009,12 @@ void DuneApp::Exit()
 // do not delete m_prefs, cause there may be a crash in swExit 8-(
 //    swDeletePreferences(m_prefs);
     setNormalExit();
+#ifdef MACOSX
+    // needed to kill whitedune starter on MacOSX exit
+    if (m_exitPid > 0) {
+        kill(m_exitPid, 15);
+    }
+#endif
     swExit();
 }
 

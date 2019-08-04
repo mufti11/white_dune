@@ -717,7 +717,7 @@ NodeIndexedFaceSet.o: NodeIndexedFaceSet.cpp
 	$(CXX) main.o $(OBJS) $(LIBS) -o $@
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
-	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
+	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
 ../bin/efencedune:  main.o $(OBJS) 
 	(cd swt ; $(MAKE) efence)
