@@ -6827,11 +6827,27 @@ Scene::addToStore4Convex_hull(void)
         transform->transform();
         transform->getMatrix(transformMatrix);
     }
+    float eps = TheApp->GetHandleEpsilon(); 
     for (int i = 0; i < getSelectedHandlesSize(); i++) {
          int handle = getSelectedHandle(i);
          if (handle >= NO_HANDLE)
-             continue;  
+             continue;
          Vec3f vertex = node->getVertex(handle);
+         // also collect symetric handles
+         if (getXSymetricMode()) 
+             for (int j = 0; j < node->getNumVertex(); j++) {
+                 if (j == handle)
+                     continue;
+                 Vec3f vec = node->getVertex(j);
+                 if (vec.x != 0) {
+                     if ((fabs(vertex.x + vec.x) < eps) &&
+                         (fabs(vertex.y - vec.y) < eps) &&
+                         (fabs(vertex.x - vec.z) < eps)) {
+                         m_store4convex_hull.append(transformMatrix * vec);
+                         break;
+                     }   
+                 }
+             } 
          m_store4convex_hull.append(transformMatrix * vertex);
     }
 }

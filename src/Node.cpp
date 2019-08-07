@@ -3457,7 +3457,7 @@ Node::isInvalidChild(void)
 {
     if (this == m_scene->getRoot())
         return true;
-    if (isInvalidChildNode() &&
+    if (isInvalidChildNode() && hasParent() &&
         (getParent()->getProto()->getField(getParentField())->getType() 
          == MFNODE)
        )

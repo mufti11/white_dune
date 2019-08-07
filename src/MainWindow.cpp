@@ -2327,6 +2327,9 @@ MainWindow::OnCommand(void *vid)
       case ID_BRANCH_OPTIMIZE:
         branchOptimize();
         break;
+      case ID_BRANCH_CSG_UNION:
+        branchCSGUnion();
+        break;
 
       case ID_CENTER_TO_MID:
         centerToMid();
@@ -9193,123 +9196,194 @@ MainWindow::snapTogether()
     if (node->getType() == VRML_INDEXED_FACE_SET) {
         NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)node;
         face->snapTogether();
-//        optimizeSet();
     }
 }
 
 #ifdef HAVE_LIBCGAL
+
+static Node *docsg(int operation, Node *node_1, Node*node_2, Scene *scene,
+                   Matrix *searchMeshData1 = NULL,
+                   Matrix *searchMeshData2 = NULL)
+{
+    searchIdxNode = NULL;
+    searchMeshData = Matrix::identity();
+    node_1->doWithBranch(searchNodes, NULL, false);
+    if (searchMeshData1)
+        searchMeshData = *searchMeshData1;
+    Matrix matrix1 = searchMeshData;
+    Node *node1 = searchIdxNode;  
+
+    searchIdxNode = NULL;
+    searchMeshData = Matrix::identity();
+    node_2->doWithBranch(searchNodes, NULL, false);
+    if (searchMeshData2)
+        searchMeshData = *searchMeshData2;
+    Matrix matrix2 = searchMeshData;
+    Node *node2 = searchIdxNode;  
+
+    if (node1 && node1->isMeshBasedNode() &&
+        node2 && node2->isMeshBasedNode()) {
+
+        scene->backupFieldsStart();
+        NodeIndexedFaceSet *face1 = (NodeIndexedFaceSet *)
+                                    node1->toIndexedFaceSet();
+        MyMesh *mesh = face1->triangulateMesh();
+        MFInt32 *mfcoordIndex = mesh->getCoordIndex();
+        if (mfcoordIndex) {
+            mfcoordIndex = (MFInt32 *) mfcoordIndex->copy();
+            scene->backupFieldsAppend(face1, face1->coordIndex_Field());
+            scene->setField(face1, face1->coordIndex_Field(),
+                            new MFInt32(*mfcoordIndex));
+        }
+        NodeCoordinate *coord = (NodeCoordinate *)face1->coord()->getValue();
+        MFVec3f *mfcoord = mesh->getVertices();
+        if (coord && mfcoord) {
+            mfcoord = (MFVec3f *) mfcoord;
+            scene->backupFieldsAppend(coord, coord->point_Field());
+            scene->setField(coord, coord->point_Field(), new MFVec3f(*mfcoord));
+        }
+        MFVec3f *mfVertices = NULL;
+        MFInt32 *mfCoordIndex = NULL;
+        face1->optimizeMesh(&mfVertices, &mfCoordIndex);
+        NodeCoordinate *coord1 = (NodeCoordinate *) 
+                                 scene->createNode("Coordinate");
+        if (coord1 && mfVertices && mfCoordIndex) {
+            scene->backupFieldsAppend(coord1, coord1->point_Field());
+            coord1->point(new MFVec3f(*mfVertices));
+            face1->coord(new SFNode(coord1));
+            scene->backupFieldsAppend(face1, 
+                                        face1->coordIndex_Field());
+            face1->coordIndex(new MFInt32(*mfCoordIndex));
+        }
+
+        NodeIndexedFaceSet *face2 = (NodeIndexedFaceSet *)
+                                    node2->toIndexedFaceSet();
+        mesh = face2->triangulateMesh();
+        mfcoordIndex = mesh->getCoordIndex();
+        if (mfcoordIndex) {
+            mfcoordIndex = (MFInt32 *) mfcoordIndex->copy();
+            scene->backupFieldsAppend(face2, face2->coordIndex_Field());
+            scene->setField(face2, face2->coordIndex_Field(),
+                            new MFInt32(*mfcoordIndex));
+        }
+        coord = (NodeCoordinate *)face2->coord()->getValue();
+        mfcoord = mesh->getVertices();
+        if (coord && mfcoord) {
+            mfcoord = (MFVec3f *) mfcoord;
+            scene->backupFieldsAppend(coord, coord->point_Field());
+            scene->setField(coord, coord->point_Field(), 
+                            new MFVec3f(*mfcoord));
+        }
+        mfVertices = NULL;
+        mfCoordIndex = NULL;
+        face2->optimizeMesh(&mfVertices, &mfCoordIndex);
+        NodeCoordinate *coord2 = (NodeCoordinate *) 
+                                 scene->createNode("Coordinate");
+        if (coord2 && mfVertices && mfCoordIndex) {
+            scene->backupFieldsAppend(coord2, coord2->point_Field());
+            coord2->point(new MFVec3f(*mfVertices));
+            face2->coord(new SFNode(coord2));
+            scene->backupFieldsAppend(face2, face2->coordIndex_Field());
+            face2->coordIndex(new MFInt32(*mfCoordIndex));
+        }
+
+        scene->backupFieldsDone();
+
+        NodeIndexedFaceSet *face = face1->csg(face2, operation, 
+                                              matrix1, matrix2);
+        if (face == NULL)
+            return NULL;          
+        face->solid(new SFBool(false));
+        return face;
+     }
+     return NULL;
+}
+
+Node *unionGeometry = NULL;
+Matrix unionMeshData1;
+Matrix unionMeshData2;
+static bool csgUnion(Node *node, void *data)
+{
+    Scene *scene = (Scene *)data;
+    if (node->getType() == VRML_TRANSFORM) {
+        NodeTransform *transform = (NodeTransform *)node;
+        Matrix transformMatrix;
+        transform->transform();
+        transform->getMatrix(transformMatrix);
+        if (unionGeometry == NULL)
+            unionMeshData1 = transformMatrix;
+        else
+            unionMeshData2 = transformMatrix;
+    } 
+    if (node->isMeshBasedNode()) {
+        bool success = true;
+        if (unionGeometry == NULL)
+            unionGeometry = node;
+        else {
+            Node *face = docsg(UNION, unionGeometry->copy(), node, scene, 
+                               &unionMeshData1, &unionMeshData2);
+            unionMeshData1 = Matrix::identity();
+            unionMeshData2 = Matrix::identity();
+            if (face)
+                unionGeometry = face;
+            else
+                success = false;  
+        }
+        if (success) {
+            if (node->hasParent()) {
+                Node *parent = node->getParent();
+                if (parent->getType() == VRML_SHAPE) {
+                    MoveCommand *command = new MoveCommand(parent, 
+                                               parent->getParent(),
+                                               parent->getParentField(), 
+                                               NULL, -1);
+                    command->execute();
+                } 
+            }
+        }
+    }
+    return true;     
+}
+
+void                
+MainWindow::branchCSGUnion(void)
+{
+    Node *node = m_scene->getSelection()->getNode();
+    unionGeometry = NULL;
+    unionMeshData1 = Matrix::identity();
+    unionMeshData2 = Matrix::identity();
+
+    node->doWithBranch(csgUnion, m_scene);
+    if (unionGeometry != NULL) {
+        Node *newNode = createGeometryNode(unionGeometry, false, false);
+        m_scene->UpdateViews(NULL, UPDATE_ALL);
+        m_scene->setSelection(newNode);
+        m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+    }
+}
+
 void
 MainWindow::csg(int operation)
 {
-    Node *node = m_scene->getSelection()->getNode();
-    Node *parent = node->getParent();
-    if (parent && node->getType() == VRML_GROUP) {
-        int parentField = node->getParentField();
-        NodeGroup *group = (NodeGroup *)node;
-        if (group->children()->getSize() == 2) {        
-            searchIdxNode = NULL;
-            searchMeshData = Matrix::identity();
-            group->children()->getValue(0)->doWithBranch(searchNodes, NULL, 
-                                                         false);
-            Matrix matrix1 = searchMeshData;
-            Node *node1 = searchIdxNode;  
-
-            searchIdxNode = NULL;
-            searchMeshData = Matrix::identity();
-            group->children()->getValue(1)->doWithBranch(searchNodes, NULL, 
-                                                         false);
-            Matrix matrix2 = searchMeshData;
-            Node *node2 = searchIdxNode;  
-
-            if (node1 && node1->isMeshBasedNode() &&
-                node2 && node2->isMeshBasedNode()) {
-
-
-                m_scene->backupFieldsStart();
-                NodeIndexedFaceSet *face1 = (NodeIndexedFaceSet *)
-                                            node1->toIndexedFaceSet();
-                MyMesh *mesh = face1->triangulateMesh();
-                MFInt32 *mfcoordIndex = mesh->getCoordIndex();
-                if (mfcoordIndex) {
-                    mfcoordIndex = (MFInt32 *) mfcoordIndex->copy();
-                    m_scene->backupFieldsAppend(face1, 
-                                                face1->coordIndex_Field());
-                    m_scene->setField(face1, face1->coordIndex_Field(),
-                                      new MFInt32(*mfcoordIndex));
-                }
-                NodeCoordinate *coord = (NodeCoordinate *)
-                                        face1->coord()->getValue();
-                MFVec3f *mfcoord = mesh->getVertices();
-                if (coord && mfcoord) {
-                    mfcoord = (MFVec3f *) mfcoord;
-                    m_scene->backupFieldsAppend(coord, coord->point_Field());
-                    m_scene->setField(coord, coord->point_Field(), 
-                                      new MFVec3f(*mfcoord));
-                }
-                MFVec3f *mfVertices = NULL;
-                MFInt32 *mfCoordIndex = NULL;
-                face1->optimizeMesh(&mfVertices, &mfCoordIndex);
-                NodeCoordinate *coord1 = (NodeCoordinate *) 
-                                        m_scene->createNode("Coordinate");
-                if (coord1 && mfVertices && mfCoordIndex) {
-                    m_scene->backupFieldsAppend(coord1, coord1->point_Field());
-                    coord1->point(new MFVec3f(*mfVertices));
-                    face1->coord(new SFNode(coord1));
-                    m_scene->backupFieldsAppend(face1, 
-                                                face1->coordIndex_Field());
-                    face1->coordIndex(new MFInt32(*mfCoordIndex));
-                }
-
-                NodeIndexedFaceSet *face2 = (NodeIndexedFaceSet *)
-                                            node2->toIndexedFaceSet();
-                mesh = face2->triangulateMesh();
-                mfcoordIndex = mesh->getCoordIndex();
-                if (mfcoordIndex) {
-                    mfcoordIndex = (MFInt32 *) mfcoordIndex->copy();
-                    m_scene->backupFieldsAppend(face2, 
-                                                face2->coordIndex_Field());
-                    m_scene->setField(face2, face2->coordIndex_Field(),
-                                      new MFInt32(*mfcoordIndex));
-                }
-                coord = (NodeCoordinate *)face2->coord()->getValue();
-                mfcoord = mesh->getVertices();
-                if (coord && mfcoord) {
-                    mfcoord = (MFVec3f *) mfcoord;
-                    m_scene->backupFieldsAppend(coord, coord->point_Field());
-                    m_scene->setField(coord, coord->point_Field(), 
-                                      new MFVec3f(*mfcoord));
-                }
-                mfVertices = NULL;
-                mfCoordIndex = NULL;
-                face2->optimizeMesh(&mfVertices, &mfCoordIndex);
-                NodeCoordinate *coord2 = (NodeCoordinate *) 
-                                         m_scene->createNode("Coordinate");
-                if (coord2 && mfVertices && mfCoordIndex) {
-                    m_scene->backupFieldsAppend(coord2, coord2->point_Field());
-                    coord2->point(new MFVec3f(*mfVertices));
-                    face2->coord(new SFNode(coord2));
-                    m_scene->backupFieldsAppend(face2, 
-                                                face2->coordIndex_Field());
-                    face2->coordIndex(new MFInt32(*mfCoordIndex));
-                }
-
-                m_scene->backupFieldsDone();
-
-                NodeIndexedFaceSet *face = face1->csg(face2, operation, 
-                                                      matrix1, matrix2);
-                if (face == NULL)
-                    return;          
-                face->solid(new SFBool(false));
-
-                m_scene->setSelection(parent);
-                Node *newNode = createGeometryNode(face, false, false);
-
-                MoveCommand *command = new MoveCommand(node, 
-                                                       parent, parentField,
-                                                       NULL, -1);
-                command->execute();
-                m_scene->setSelection(newNode);
-                m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+     Node *node = m_scene->getSelection()->getNode();
+     Node *parent = node->getParent();
+     if (parent && node->getType() == VRML_GROUP) {
+         int parentField = node->getParentField();
+         NodeGroup *group = (NodeGroup *)node;
+         if (group->children()->getSize() == 2) {        
+             Node *face = docsg(operation,  group->children()->getValue(0),  
+                                            group->children()->getValue(1),
+                                            m_scene);
+             if (face) {
+                 m_scene->setSelection(parent);
+                 Node *newNode = createGeometryNode(face, false, false);
+ 
+                 MoveCommand *command = new MoveCommand(node, 
+                                                        parent, parentField,
+                                                        NULL, -1);
+                 command->execute();
+                 m_scene->setSelection(newNode);
+                 m_scene->UpdateViews(NULL, UPDATE_SELECTION);
             }
         }
     }

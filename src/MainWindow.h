@@ -354,6 +354,7 @@ protected:
     void                branchFieldPipe(void);
     void                branchBuildRigidBodyCollection();
     void                branchOptimize();
+    void                branchCSGUnion(void);
     void                removeIllegalNodes();
     Node               *getTransformForCenter();
     void                centerToMid();

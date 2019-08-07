@@ -283,6 +283,7 @@ BEGIN
             MENUITEM "Mover o restante do ramo atual em novo Transform", ID_BRANCH_TO_TRANSFORM
             MENUITEM "Mover o restante do ramo atual &1 nivel acima", ID_BRANCH_TO_PARENT
             MENUITEM "Inverta o rosto ou restante",     ID_BRANCH_SET_FLIP_SIDE
+            MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
         END
         MENUITEM SEPARATOR
         MENUITEM "Rebuild controlpoints",               ID_REBUILD_NURBS_CONTROL_POINTS
@@ -487,6 +488,7 @@ BEGIN
         MENUITEM "Remove Material node in rest of branch", ID_BRANCH_REMOVE_MATERIAL
         MENUITEM "Create Material node in rest of branch", ID_BRANCH_CREATE_MATERIAL
         MENUITEM "Show number of Polygons in Status Bar for rest of branch", ID_BRANCH_COUNT_POLYGONS_4_CATT
+        MENUITEM "Boolean Operation union",             ID_BRANCH_CSG_UNION
     END
     POPUP "&Movement"
     BEGIN
@@ -1350,6 +1352,7 @@ BEGIN
             BEGIN
                 MENUITEM "Use field pipes",              ID_BRANCH_FIELD_PIPE
                 MENUITEM "Optimize IndexedFaceSets",     ID_BRANCH_OPTIMIZE
+                MENUITEM "Boolean Operation union",      ID_BRANCH_CSG_UNION
                 MENUITEM "Show Polygons/Primitives in Status Bar", ID_BRANCH_COUNT_POLYGONS
                 MENUITEM "Build RigidBodyCollection/CollisionSensor", ID_BRANCH_BUILD_RIGID_BODY_COLLECTION
             END

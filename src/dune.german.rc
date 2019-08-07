@@ -282,6 +282,7 @@ BEGIN
             MENUITEM "Verschiebe den Rest des aktuellen Zweigs in einen neuen Transform", ID_BRANCH_TO_TRANSFORM
             MENUITEM "Verschiebe den Rest des aktuellen Zweigs 1 Ebene nach oben", ID_BRANCH_TO_PARENT
             MENUITEM "Vertausche Seiten im Rest des Zweigs",  ID_BRANCH_SET_FLIP_SIDE
+            MENUITEM "Boolean Operation Zusammenbauen", ID_BRANCH_CSG_UNION
         END
         MENUITEM SEPARATOR
         MENUITEM "Neue Kontrollpunkte",                 ID_REBUILD_NURBS_CONTROL_POINTS
@@ -486,6 +487,7 @@ BEGIN
         MENUITEM "Loesche Material Knoten im Rest des Zweigs", ID_BRANCH_REMOVE_MATERIAL
         MENUITEM "Erzeuge Material Knoten im Rest des Zweigs", ID_BRANCH_CREATE_MATERIAL
         MENUITEM "Zeige Zahl der Polygone fuer den Rest des Zweigs", ID_BRANCH_COUNT_POLYGONS_4_CATT
+        MENUITEM "Boolean Operation zusammenbauen",     ID_BRANCH_CSG_UNION
     END
     POPUP "&Modus"
     BEGIN
@@ -1347,6 +1349,7 @@ BEGIN
             BEGIN
                 MENUITEM "Benutze field pipe",           ID_BRANCH_FIELD_PIPE
                 MENUITEM "Optimiere IndexedFaceSets",    ID_BRANCH_OPTIMIZE
+                MENUITEM "Boolean Operation union",      ID_BRANCH_CSG_UNION
                 MENUITEM "Zeige Polygon-/Primitiv-Zahl in der Anzeigeleiste", ID_BRANCH_COUNT_POLYGONS
                 MENUITEM "Erstelle RigidBodyCollection/CollisionSensor", ID_BRANCH_BUILD_RIGID_BODY_COLLECTION
             END

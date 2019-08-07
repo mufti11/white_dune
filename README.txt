@@ -5224,6 +5224,14 @@ Disabled camera orientation of new node on convex hull and CSG operations.
 
 Added collection of vertices to convex hull creation
 
+Added x-symetric collection of vertices to convex hull creation
+
+Added branch csg union 
+
+Fixed crash in remove invalid child nodes
+
+Added workaround for crash in Path.cpp
+
 Contact: MUFTI <mufti11@web.de>
 
 

@@ -127,7 +127,7 @@ Path::getNextNode(Node *n, int f, int i) const
     }
 
     FieldValue *value = NULL;
-    if (field < 0)
+    if ((field < 0) || (field >= node->getProto()->getNumFields()))
         return NULL;
     if (node->getScene() && (node != node->getScene()->getRoot()))
         if (node->getNumParents() == 0)
