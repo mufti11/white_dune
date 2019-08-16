@@ -157,6 +157,7 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                                         texCoord()->getValue());
 }
 
+/*
 void
 NodeIndexedTriangleSet::setNormalFromMesh(Node *nnormal)
 {
@@ -184,7 +185,7 @@ NodeIndexedTriangleSet::setNormalFromMesh(Node *nnormal)
                  Vec3f v1 = normals->getVec(niIndex);
                  int nextVertexIndex = index()->getValue(nextVertex);
                  Vec3f v2 = newNormals->getVec(nextVertexIndex);
-                 Vec3f v = v1 + v2;
+                 Vec3f v = v1; // + v2;
                  newNormals->setSFValue(nextVertexIndex, v.x, v.y, v.z);
                  nextVertex++;
              }
@@ -211,5 +212,5 @@ NodeIndexedTriangleSet::setTexCoordFromMesh(Node *ntexCoord)
         ((NodeTextureCoordinate *)ntexCoord)->point(v);
     }
 }
-
+*/
 

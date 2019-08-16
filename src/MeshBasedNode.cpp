@@ -367,7 +367,7 @@ MeshBasedNode::toIndexedTriangleSet(int meshFlags)
 {
     bool targetHasCcw = (meshFlags & MESH_TARGET_HAS_CCW);
     bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
-    bool wantTexCoord = (meshFlags & MESH_WANT_TEX_COORD);
+    bool wantTexCoord = false; // (meshFlags & MESH_WANT_TEX_COORD);
 
     updateMesh(); 
 

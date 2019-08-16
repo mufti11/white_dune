@@ -74,6 +74,7 @@ protected:
     int                 m_editDeleteIconPos;
     int                 m_fullScreenIconPos;
     int                 m_colorCircleIconPos;
+    int                 m_vertexModifierIconPos;
     int                 m_objectEditIconPos;
     int                 m_urlEditIconPos;
     int                 m_animationIconPos;
@@ -281,6 +282,8 @@ protected:
     void                setT2axes(T2axes axes);
 
     void                setColorCircleIcon();
+    void                setVertexModifierIcon();
+
     int                 getMouseMode() {return(m_mouseMode);}
     bool                getMouseNavigationMode() 
                            {return(m_navigation_mouse_active);}
@@ -306,6 +309,7 @@ protected:
     void                RefreshHelpSelection();
     void                UpdateTitle();
     void                updateColorCircle(void);
+    void                updateVertexModifier(void);
     void                OnHelpOverview();
     void                OnHelpOverviewCatt();
     void                OnHelpSelection();
@@ -442,6 +446,7 @@ protected:
     void                showDiffuseColorCircle(void);
     void                showEmissiveColorCircle(void);
     void                showSpecularColorCircle(void);
+    void                showVertexModifier(void);
     void                searchInterpolator(void);
     void                searchTimeSensor(void);
     void                changeEnableAnimation(void);
@@ -471,6 +476,7 @@ protected:
 #endif
 
 protected:
+    bool                m_destroyed;
     SWND                m_parentWindow;
     SMENU               m_menu;
     StatusBar          *m_statusBar;
@@ -516,6 +522,11 @@ protected:
     FieldUpdate        *m_colorCircleHint;
     bool                m_colorCircle_active;
     bool                m_colorCircle_enabled;
+    SceneView          *m_vertexModifier;    
+    FieldUpdate        *m_vertexModifierHint;
+    bool                m_vertexModifier_active;
+    bool                m_vertexModifier_enabled;
+    bool                m_vertexModifier_overwrite;
     bool                m_objectEdit_enabled;
     bool                m_urlEdit_enabled;
     bool                m_navigation_mouse_active;

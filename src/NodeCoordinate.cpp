@@ -100,6 +100,9 @@ NodeCoordinate::setField(int index, FieldValue *value, int cf)
 void
 NodeCoordinate::drawHandles(void)
 {
+    if (m_scene->getVertexModifier())
+        return;
+
     RenderState state;
 
     glPushAttrib(GL_LIGHTING);

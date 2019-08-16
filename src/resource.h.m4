@@ -25,15 +25,15 @@ define(`M4_ABOUT_NUM', M4_IDD_NUM)
 `#define' IDB_HALFTONE                        135
 `#define' IDB_EMPTY_SOCKET                    136
 `#define' IDB_FULL_SOCKET                     137
-`#define' IDB_VCR_TOOLBAR                     138
-`#define' IDB_VCR_TOOLBAR_BW                  139
-`#define' IDB_STANDARD_TOOLBAR                140
-`#define' IDB_STANDARD_TOOLBAR_BW             141
-`#define' IDB_RECOMMENDED_SOCKET              142
-`#define' IDB_RECOMMENDED_WONDERLAND_SOCKET   143
-`#define' IDB_WONDERLAND_SOCKET               144
-`#define' IDI_DUNE_ICON                       145
-`#define' IDP_AFXOLEINIT_FAILED               146
+`#define' IDB_VCR_TOOLBAR                     141
+`#define' IDB_VCR_TOOLBAR_BW                  142
+`#define' IDB_STANDARD_TOOLBAR                143
+`#define' IDB_STANDARD_TOOLBAR_BW             144
+`#define' IDB_RECOMMENDED_SOCKET              145
+`#define' IDB_RECOMMENDED_WONDERLAND_SOCKET   146
+`#define' IDB_WONDERLAND_SOCKET               147
+`#define' IDI_DUNE_ICON                       148
+`#define' IDP_AFXOLEINIT_FAILED               149
 define(`M4_IDD_NUM', 150)
 M4_IDR(MAINFRAME)
 M4_IDR(DUNE_4CATT_TYPE)
@@ -666,6 +666,11 @@ M4_IDS(URL_SHOULD_BEGIN_WITH)
 M4_IDS(SELECT_FIRST_VERTEX)
 M4_IDS(SELECT_NEXT_VERTEX)
 
+M4_IDS(QUAD)
+M4_IDS(JUMP)
+M4_IDS(PEAK)
+M4_IDS(AMOUNT)
+
 M4_ID_DUNE(INDICATOR_EXT)
 M4_ID_DUNE(INDICATOR_CAPS)
 M4_ID_DUNE(INDICATOR_NUM)
@@ -942,6 +947,7 @@ M4_ID(CENTER_TO_MAXZ)
 M4_ID(CENTER_TO_MINX)
 M4_ID(CENTER_TO_MINY)
 M4_ID(CENTER_TO_MINZ)
+M4_ID(VERTEX_MODIFIER)
 M4_ID(REMOVE_ILLEGAL_NODES)
 M4_ID(INPUTDEVICE_GREATER)
 M4_ID(INPUTDEVICE_LESSER)

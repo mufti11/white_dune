@@ -167,12 +167,10 @@ public:
                 
     MyMeshX            *copy(void);
 
-//    void                draw() { draw(-1); }
     void                draw(int pass, void (drawVert)(X *));
     void                drawNormals(void);
     void                sort();
 
-//    virtual void        drawVertex(const X *v) {}
     bool                validMesh(void) { return m_vertices != NULL; }  
 
     MFX                *getVertices(void)      { return m_vertices; }
@@ -268,7 +266,6 @@ protected:
     MyMeshX            *buildNewTriangulatedMesh(MeshBasedNode *that); 
 #endif 
 
-private:
     MeshBasedNode      *m_node;
 
     MFX                *m_vertices;
@@ -808,7 +805,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
                     if (m_normalIndex && (m_normalIndex->getSize() > 0)) {
                         if (i < m_normalIndex->getSize())
                             index = m_normalIndex->getValue(i) * 3;
-                     } else
+                    } else
                         index = i * 3;
                 } 
                 if ((index >= 0) && (index < m_normals->getSize()))

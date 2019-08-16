@@ -260,6 +260,7 @@ BEGIN
             MENUITEM "&y (verde) e z (azul)",           ID_SWAP_YZ
             MENUITEM "&z (azul)   e x (vermelho)",      ID_SWAP_XZ
         END
+        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
 #endif
@@ -1405,6 +1406,7 @@ BEGIN
             END
         END 
         MENUITEM "Set default values (keep scenegraph)", ID_SET_DEFAULT
+        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
 #endif
@@ -3336,6 +3338,14 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
+    IDS_PT_QUAD "quad"
+    IDS_PT_JUMP  "jump"
+    IDS_PT_PEAK  "peak"
+    IDS_PT_AMOUNT "amount"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
     IDS_PT_LOADING_FILE        "Loading file.. (%d%%)"
     IDS_PT_SAVE_CHANGES        "Save changes to %s ?"
     IDS_PT_VERTEX_SELECTED     "selected: %s[%d] %f %f %f"
@@ -3958,6 +3968,7 @@ BEGIN
     ID_PT_SCALE_BY_X           "move by multply with factor in x direction\nmove factor x"
     ID_PT_SCALE_BY_Y           "move by multply with factor in y direction\nmove factor y"
     ID_PT_SCALE_BY_Z           "move by multply with factor in z direction\nmove factor z"
+    ID_PT_VERTEX_MODIFIER      "change Vertices\nvertex modifier"
     ID_PT_CENTER_TO_MID        "set center (rotation point) to mid of boundingbox\nset center to mid"
     ID_PT_CENTER_TO_MAXX       "set center (rotation point) to maximum x of boundingbox\nset center to maximum x"
     ID_PT_CENTER_TO_MAXY       "set center (rotation point) to maximum y of boundingbox\nset center to maximum y"

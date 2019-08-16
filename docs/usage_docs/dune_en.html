@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */  
   
- last update: white_dune-1.256
+ last update: white_dune-1.306
 -->   
 <head>
  <title>"White_dune" documentation</title> 
@@ -43,7 +43,7 @@
   <h3><a href="#vrml">What is scenegraph, fieldvalues, routes etc. about ?</a></h3> 
  </li>
  <li>
-  <h3><a href="#wonderland">X3D-compiler and Open Wonderland support</a>(new in Version 0.31beta)</h3> 
+  <h3><a href="#wonderland">X3D-compiler and Open Wonderland support</h3> 
  </li>
  <li>
   <h3><a href="#waskann">What "white_dune" can not do/can do</a></h3>
@@ -61,10 +61,10 @@
   <h3><a href="#scenegraph">Changing the scenegraph</a></h3>
   <ul>
    <li>
-    <h4><a href="#use">Using USE</a> (new in version 0.29beta)</h4>
+    <h4><a href="#use">Using USE</a></h4>
    </li>
    <li>
-    <h4><a href="#scenegraphoperations">Scenegraph Operations</a> (new in version 0.27beta)</h4>
+    <h4><a href="#scenegraphoperations">Scenegraph Operations</a> </small></h4>
    </li>
   </ul>
  </li>
@@ -81,100 +81,91 @@
     <h4><a href="#mouse">Mouse Input</a></h4>
    </li>
    <li>
-    <h4><a href="#MF">Changing "MF"-FieldValues</a> (new in version 0.27beta)</h4>
+    <h4><a href="#MF">Changing "MF"-FieldValues</a></h4>
    </li>
    <li>
     <h4><a href="#3DWindow">Changing FieldValues in the 3D Preview window</a></h4>
    </li>
    <li>
-    <h4><a href="#6D">6D Input</a> (new in Version 0.19beta)</h4>
+    <h4><a href="#6D">6D Input</a></h4>
    </li>
    <li>
-    <h4><a href="#6Dlocal">6D Local Mode Input</a> (new in Version 0.19beta)</h4>
+    <h4><a href="#6Dlocal">6D Local Mode Input</a></h4>
    </li>
    <li>
-    <h4><a href="#nxtdials">Mindstorms NXT dials Input</a> (new in Version 0.29beta)</h4>
+    <h4><a href="#nxtdials">Mindstorms NXT dials Input</a></h4>
    </li>
    <li>
-    <h4><a href="#joystick">Linux Joystick Input</a> (new in Version 0.20beta)</h4>
+    <h4><a href="#joystick">Linux Joystick Input</a></h4>
    </li>
    <li>
-    <h4><a href="#joystick_windows">M$Windows Joystick Input</a> (new in Version 0.22beta)</h4>
+    <h4><a href="#joystick_windows">M$Windows Joystick Input</a></h4>
    </li>
    <li>
-    <h4><a href="#joystick_macosx">MacOSX Joystick Input</a> (neu in Version 0.22beta)</h4>
+    <h4><a href="#joystick_macosx">MacOSX Joystick Input</a></h4>
    </li>
    <li>
     <h4><a href="#channelview">Changing FieldValues in the ChannelView Window</a></h4>
    </li>
    <li>
-    <h4><a href="#colorcircle">Color Circle</a> (new in Version 0.19beta)</h4>
+    <h4><a href="#colorcircle">Color Circle</a></h4>
    </li>
    <li>
-    <h4><a href="#scriptedit">Script Editor</a> (new in Version 0.22beta)</h4>
+    <h4><a href="#scriptedit">Script Editor</a></h4>
    </li>
    <li>
-    <h4><a href="#urledit">URL Editor</a> (new in Version 0.22beta)</h4>
+    <h4><a href="#urledit">URL Editor</a></h4>
    </li>
    <li>
-     <h4><a href="#fieldpipe">Field pipe</a> (new in version 0.29beta)</h4>
+     <h4><a href="#fieldpipe">Field pipe</a></h4>
    </li>
   </ul>
  </li>
  <li>
-  <h3><a href="#simplescript">Simplified Scriptbuilding</a> (new in Version 0.22beta)</h3>
+  <h3><a href="#simplescript">Simplified Scriptbuilding</a></h3>
  </li>
  <li>
-  <h3><a href="#x3domscript">X3DOM scripting</a> (new in Version 0.99pl1084)</h3>
+  <h3><a href="#x3domscript">X3DOM scripting</a></h3>
  </li>
  <li>
-  <h3><a href="#nurbs">NURBS Modelling</a> 
-                                          (partitially new in Version 0.25beta)</h3>
+  <h3><a href="#nurbs">NURBS Modelling</a></h3>
    <ul>
     <li>
      <h4><a href="#nurbsbasics">NURBS basics</a></h4>
     </li>
     <li>
-     <h4><a href="#nurbssymetric">X symetric modelling</a>
-                                          (new in Version 0.25beta)</h4>
+     <h4><a href="#nurbssymetric">X symetric modelling</a></h4>
     </li>
     <li>
-     <h4><a href="#nurbsconversion">NURBS conversion</a>
-                                          (new in Version 0.25beta)</h4>
+     <h4><a href="#nurbsconversion">NURBS conversion</a></h4>
     </li>
     <li>
-     <h4><a href="#elevatedegree">Degree elevate</a>
-                                         (new in Version 0.27beta)</h4>
+     <h4><a href="#elevatedegree">Degree elevate</a></h4>
     </li>
     <li>
-    <h4><a href="#nurbsrebuild">NURBS rebuild</a>
-                                         (new in Version 0.99pl1090)</h4>
+    <h4><a href="#nurbsrebuild">NURBS rebuild</a></h4>
     </li>
    <li>
     <h4><a href="#nurbssymetric">make NURBS symetric</a>
-                                         (neu in Version 1.068)</h4>
+                                     <small>(new in Version 1.068)</small></h4>
    </li>
    <li>
     <h4><a href="#nurbsextrusion">NURBS extrusion</a>
-                                         (neu in Version1.072)</h4>
+                                      <small>(new in Version 1.072)</small></h4>
    </li>
     <li>
-     <h4><a href="#nurbsindexedfaceset">Building IndexedFaceSet</a>
-                                          (new in Version 0.25beta)</h4>
+     <h4><a href="#nurbsindexedfaceset">Building IndexedFaceSet</a></h4>
     </li>
     <li>
-     <h4><a href="#nurbsanimation">Animation with the help of NURBS</a>
-                                          (new in Version 0.99)</h4>
+     <h4><a href="#nurbsanimation">Animation with the help of NURBS</a></h4>
     </li>
     <li>
-     <h4><a href="#nurbstrimmed">NURBS Trimming</a>
-                                          (new in Version 0.99pl1050)</h4>
+     <h4><a href="#nurbstrimmed">NURBS Trimming</a></h4>
     </li>
    </ul>
   </li>
   <li>
-   <h3><a href="#super">Superformula Modelling</a> 
-                                          (new in Version 0.27beta)</h3>
+   <h3><a href="#super">Superformula Modelling</a></h3>
     <ul>
     <li>
      <h4><a href="#superformula">Superformula basics</a></h4>
@@ -194,24 +185,23 @@
    </ul>
   </li>
   <li>
-   <h3><a href="#subdivide">Subdivide Modelling</a> 
-                                          (new in Version 0.99pl624)</h3>
+   <h3><a href="#subdivide">Subdivide Modelling</a></h3>
   </li>
   <li>
-   <h3><a href="#extrusion">IndexedFaceSet Extrusion</a> 
-                                          (new in Version 0.99pl654)</h3>
+   <h3><a href="#extrusion">IndexedFaceSet Extrusion</a></h3>
   </li>
   <li>
    <h3>other 3D-Modellierung related commands</a></h3>
    <ul>
     <li>
-     <h4><a href="#coordinate">Changing coordinate based nodes</a> (new in Version 0.29beta)</h4>
+     <h4><a href="#coordinate">Changing coordinate based nodes</a></h4>
     </li>
     <li>
-     <h4><a href="#convexhull">Convex hull</a> (new in Version 1.256)</h4>
+     <h4><a href="#convexhull">Convex hull</a> 
+                                     <small>(new in Version 1.256)</small></h4>
     </li>
     <li>
-     <h4><a href="#meshreducer">Mesh reducer</a> (new in Version 0.99pl850)</h4>
+     <h4><a href="#meshreducer">Mesh reducer</a></h4>
     </li>
     <li>
      <h4><a href="#symetric">Symetric Modelling</a></h4>
@@ -223,42 +213,46 @@
      <h4><a href="#boolean">Boolean modelling</a></h4>
     </li>
     <li>
-     <h4><a href="#array">Array tool</a> (new in Version 0.27beta)</h4>
+     <h4><a href="#modifier">Vertex Modifier</a>
+                                     <small>(new in Version 1.300)</small></h4>
+    </li>
+    <li>
+     <h4><a href="#array">Array tool</a></h4>
     </li>
    </ul>
    <h3>Repair commands in the "Actions" menue</a></h3>
    <ul>
     <li>
-     <h4><a href="#remove_invalid">Remove invalid children nodes</a> (new in Version 0.27beta)</h4>
+     <h4><a href="#remove_invalid">Remove invalid children nodes</a></h4>
     </li>
     <li>
-     <h4><a href="#triangulate">Triangulate IndexedFaceSet</a> (new in Version 0.29beta)</h4>
+     <h4><a href="#triangulate">Triangulate IndexedFaceSet</a></h4>
     </li>
     <li>
-     <h4><a href="#set_path">Set path of all URLs to</a> (new in Version 0.27beta)</h4>
+     <h4><a href="#set_path">Set path of all URLs to</a></h4>
     </li>
    </ul>
    <h3>Other commands in the "Actions" menue</a></h3>
    <ul>
     <li>
-     <h4><a href="#object_url_edit">Edit object/URL</a> (new in Version 0.29beta)</h4>
+     <h4><a href="#object_url_edit">Edit object/URL</a></h4>
     </li>
     <li>
-     <h4><a href="#set_default">Set default values (keep scenegraph)</a> (new in Version 0.27beta)</h4>
+     <h4><a href="#set_default">Set default values (keep scenegraph)</a></h4>
     </li>
     <li>
-     <h4><a href="#xray">xray rendering</a> (new in Version 0.27beta)</h4>
+     <h4><a href="#xray">xray rendering</a></h4>
     </li>
    </ul>
   </li>
   <li>
-   <h3><a href="#proto">PROTO creation/editing</a> (new in Version 0.99pl444)</h3>
+   <h3><a href="#proto">PROTO creation/editing</a></h3>
   </li>
   <li>
-   <h3><a href="#vrmlcut">VrmlCut scripted Proto</a> (new in Version 0.29beta)</h3>
+   <h3><a href="#vrmlcut">VrmlCut scripted Proto</a></h3>
   </li>
   <li>
-   <h3><a href="#upload"><em>File -&gt; upload</em></a> (new in Version 0.27beta)</h3>
+   <h3><a href="#upload"><em>File -&gt; upload</em></a></h3>
   </li>
  
 </ul>
@@ -871,7 +865,7 @@ match your current work status.
   <img src=rot.png> <img src=6d.png> 
   <img src=rocket.png> <img src=hover.png>
   in the VRML file.<br>
-  The Scene icon is selected, wenn you klickt into the void of the 3D preview
+  The Scene icon is selected, wenn you clicked into the void of the 3D preview
   window.<br>
   Additionally, there is each a Icon that forces navigation with the mouse
   <img src="mouse_navigation.png"> or the inputdevice
@@ -923,7 +917,7 @@ Therefor the click on the icons and the usage of the
 <em> Create -&gt; Shape -&gt; </em> menuitems build a complete Shape-structure
 (including default Appearance/Material nodes and a surrounding Transform node).
 <br>
-(New in Version 0.29beta) If the selection in case of a creation of such
+If the selection in case of a creation of such
 a node is not a node a Shape node can be part of, the surrounding Transform
 node is filled in a way, that the new node is shown directly in front of the
 actual viewpoint.
@@ -1172,7 +1166,7 @@ the behaviour, if the keyboard is used when the mouse is still dragged:<br>
 </ul>
 </p>
 <p>
-<b><h4><a name="use">Using USE</a></h4></b><small>(new in Version 0.29beta)</small><br>
+<b><h4><a name="use">Using USE</a></h4></b><br>
  Beside the drag and drop method above, there is a additional way to use the 
  USE construct. The node to be USEd need a DEF name
  which can be applied with <em>Edit -&gt; DEF</em>. The usage of 
@@ -1190,7 +1184,7 @@ the behaviour, if the keyboard is used when the mouse is still dragged:<br>
  array tool</a> and some of the "create" scenegraph operations following. 
 </p>
 <p>
- <b><h4><a name="scenegraphoperations">Scenegraph Operations</a></b></h4><small>(new in Version 0.27beta)</small><br>
+ <b><h4><a name="scenegraphoperations">Scenegraph Operations</a></b></h4><br>
  There is no way to move multiple nodes in the scenegraph (yet).
  As a workaround there are operations to rearrange the current scenegraph 
  branch (<em>Actions -&gt; Move Sibling -&gt; up/down/to first/last 
@@ -1506,7 +1500,7 @@ There are two commands to automatically generate new ROUTEs.
   pair with key=0.0 and keyValue=value_target_field will be set.
  </li>
  <li>
-  <em> Action -&gt; add Interaction</em><small>(new in Version 0.29beta)</small><br>
+  <em> Action -&gt; add Interaction</em><br>
   In this case, the ROUTE<br>
   Sensor -&gt; selected node<br>
   will be generated.<br>
@@ -1540,7 +1534,7 @@ There is more than one way to change fieldvalues:<br>
    <img src=fieldchange.jpg><br>
  </li>
  <li>
-  <b><a name="MF">Changing "MF"-FieldValues</a></b><small>(new in version 0.27beta)</small><br>
+  <b><a name="MF">Changing "MF"-FieldValues</a></b><br>
   In the fieldview Window, a "+"-sign at the left side mark a "MF"-field 
   like MFFloat, MFInt32, MFVec3f, MFRotation, MFString etc.
   "MF"-Fields are arrays of data, you can count their content: first,
@@ -1567,10 +1561,8 @@ There is more than one way to change fieldvalues:<br>
     <li> translation <img src=schieb.png> </li>
     <li> rotation <img src=rot.png> </li>
     <li> scale <img src=scale.jpg> </li>
-    <li> uniform scale <img src=uniform_scale.png> 
-         <small>(new in version 0.29beta)</small> </li>
-    <li> changing center <img src=center.jpg>
-         <small>(new in version 0.19beta)</small> </li>
+    <li> uniform scale <img src=uniform_scale.png></li>
+    <li> changing center <img src=center.jpg></li>
    </ul>
    <br>
    <strong>Please note, you can not use this tools, when there
@@ -1588,7 +1580,7 @@ There is more than one way to change fieldvalues:<br>
    from NURBS curves (z.B. SuperExtrusion, SuperRevolver)
  </li>
  <li>
-  <b><a name="6D">6D Input</a></b> <small>(new in version 0.19beta)</small><br>
+  <b><a name="6D">6D Input</a></b><br>
   Since version 0.19beta white_dune supports 6D inputdevices
   (6D is about the 6 degrees of freedom) under Unix/Linux.<br>
   is pressed, you can move a Transform node (and the containing objects)
@@ -1661,9 +1653,8 @@ There is more than one way to change fieldvalues:<br>
 </pre>
  </li>
  <li>
-  <b><a name="6Dlocal">6D Local Mode Input:</a></b><small> 
-  Do you know RC planes ? 
-  (new in version 0.19beta)</small><br>
+  <b><a name="6Dlocal">6D Local Mode Input:</a></b> 
+  Do you know RC planes ?<br>
   When the 6Dlocal icon <img src=6dloc.png> is pressed, you can steer via
   the local axes of a transform node.<br>
   For example, if you move a spaceball into z-direction ("into the screen")
@@ -1993,7 +1984,7 @@ There is more than one way to change fieldvalues:<br>
   then delete the element of the MF-Field.
  </li>
  <li>
-  <b><a name="colorcircle">ColorCircle</a></b> <small>(new in Version 0.19beta)</small><br>
+  <b><a name="colorcircle">ColorCircle</a></b><br>
   There is a special inputwindow for colors, it takes place of the
   fieldView Window. To get it, a colorfield must be selected in the
   fieldView Window and the Colorcircle Icon must be pressed.<br>
@@ -2007,7 +1998,7 @@ There is more than one way to change fieldvalues:<br>
   When the "OK" button is pressed, the normal fieldView window returns.
  </li>
  <li>
-  <b><a name="scriptedit">Script Editor</a></b> <small>(new in Version 0.22beta)</small><br>
+  <b><a name="scriptedit">Script Editor</a></b><br>
   There are two ways to start the scripteditor:<br>
   <img src=scriptedit_icon1.jpg><br>
   <ul>
@@ -2030,7 +2021,7 @@ There is more than one way to change fieldvalues:<br>
   Press "OK" to finish the work on the script node.
  </li>
  <li>
-  <b><a name="urledit">URL Editor</a></b> <small>(new in Version 0.22beta)</small><br>
+  <b><a name="urledit">URL Editor</a></b><br>
   The "url"-field (it can contain the ECMAscript (javascript) code 
   of a scriptnode) can be changed in a texteditor.<br>
   Via the menuitem <em>options -&gt; Texteditor Settings</em>
@@ -2050,7 +2041,7 @@ There is more than one way to change fieldvalues:<br>
   <em>Options -&gt; Text/Object Editor settings...</em>.
  </li>
  <li>
-  <b><a name="fieldpipe">Field pipe</a></b><small>(new in version 0.29beta)</small><br>
+  <b><a name="fieldpipe">Field pipe</a></b><br>
   One of the most powerfull ways to change field values is the field pipe.
   It allows you to change field values by any external program.<br>
   Usually there is no matching external program yet, so the field pipe is 
@@ -2193,7 +2184,7 @@ int main(int argc, char** argv)
  </li>
 </ul>
 </p> 
-<h3><a name="simplescript">Simplified scriptbuilding</a> <small>(new in Version 0.22beta)</small></h3>
+<h3><a name="simplescript">Simplified scriptbuilding</a></h3>
 <p>
 Before you can use the scripteditor dialog, you need plan what 
 are the datatypes and eventIn/eventOut informations of the nodes 
@@ -2258,8 +2249,7 @@ User with experience tend to uncheck anything in the
 <em>Options -&gt; ECMAscript settings</em> window, so only the hardwired
 comments about the used datatypes remain.
 </p> 
-<h3><a name="x3domscript">X3DOM scripting</a> <small>
-                                    (new in Version 0.99pl1084)</small></h3>
+<h3><a name="x3domscript">X3DOM scripting</a></h3>
 <p>
 <a href='https://www.x3dom.org/'>X3DOM</a>, a X3D browser inside of the 
 webbrowser, supports no X3D Script-nodes, but only
@@ -2278,8 +2268,7 @@ target-fieldname must be used instead of the eventOut-variable.<br>
 At the preview/export to X3DOM all necessary entries in the X3D-file
 will be adjusted.
 </p>
-<h3><a name="nurbs">NURBS Modelling</a> <small>
-                          (partitially new in Version 0.25beta)</small></h3>
+<h3><a name="nurbs">NURBS Modelling</a></h3>
 <ul>
 <li> <h4><a name="nurbsbasics">NURBS basics</a></h4>
 <p>
@@ -2370,8 +2359,7 @@ Only with a high value of "tessellation" you see the "real" shape of the object.
 <br><br><img src=tess181.jpg><br><br>
 </p> 
 </li>
-<li> <h4><a name="nurbssymetric">X symetric modelling</a>
-<small>(new in Version 0.25beta)</small></h4>
+<li> <h4><a name="nurbssymetric">X symetric modelling</a></h4>
 <p>
 White_dune let you create a Nurbs(Patch)Surface (e.g. with 
 <em> Create -&gt; VRML97 Amendment 1 -&gt; NurbsSurface -&gt; plain/OK</em>). 
@@ -2525,8 +2513,7 @@ the object.
 <br><br><img src=nurbsgroup6.jpg><br><br>
 </p> 
 </li>
-<li> <h4><a name="nurbsconversion">NURBS conversion</a>
-<small>(new in Version 0.25beta)</small></h4>
+<li> <h4><a name="nurbsconversion">NURBS conversion</a></h4>
 <p>
 When building closed Nurbs(Patch)Surfaces, it can be usefull to start with 
 a already close shape. White_dune do not allow to convert a mesh 
@@ -2598,8 +2585,7 @@ scripted PROTO, it is only a indirect part of the Standard.
 </li>
 </ul>
 </p>
-<li> <h4><a name="elevatedegree">Degree elevate</a>
-<small>(new in Version 0.27beta)</small></h4>
+<li> <h4><a name="elevatedegree">Degree elevate</a></h4>
 <p>
 During modelling with NURBS nodes you may wish to insert new
 controlpoints in one direction.
@@ -2612,8 +2598,7 @@ With the new controlpoints you can make a new notch.
 <br><br><img src=elevate_target.jpg><br><br>
 </p>
 </li>
-<h4><a name="nurbsrebuild">NURBS rebuild</a>
-                                <small>(new in Version 0.99pl1090)</small></h4>
+<h4><a name="nurbsrebuild">NURBS rebuild</a></h4>
 <li>
 Unfortunatly the Degree elevate is not sufficent, to build
 complex NURBS shapes. It can happen, that you need a lot of new
@@ -2636,7 +2621,7 @@ drawn out.
 </li>
 <li>
     <h4><a name="nurbssymetric">make NURBS symetric</a>
-                                 <small>(neu in Version 1.068)</small></h4>
+                                 <small>(new in Version 1.068)</small></h4>
 <p>
 To make a NURBS surface X or Y symetric zu, a has to be selected and 
 <em>Action -&gt; NURBS operations -&gt; Make symetric -&gt; x/y</em> 
@@ -2650,7 +2635,7 @@ The infomation which side is mirrored has to be set.<br>
 </li>
 <li>
     <h4><a name="nurbsextrusion">NURBS extrusion</a>
-                                  <small>(neu in Version1.072)</small></h4>
+                                  <small>(new in Version 1.072)</small></h4>
 <p>
 When a controlpoint is pulled out of a NURBS surface, a situation occures
 that the next contolpoint will change the structure of the object (e.g.
@@ -2668,8 +2653,7 @@ If a sphere with 6 u and 8 v control points is used and
 <img src=nurbsextrude3.png><br>
 </p>
 </li>
-<li> <h4><a name="nurbsindexedfaceset">Building IndexedFaceSet</a>
-<small>(new in Version 0.25beta)</small></h4>
+<li> <h4><a name="nurbsindexedfaceset">Building IndexedFaceSet</a></h4>
 <p>
 NURBS surfaces are often seen as rounded faces. But beside multiple
 controlpoints and knotvector values, the setting of 
@@ -2762,8 +2746,7 @@ the roation axis or turns additionally in the direction of the NURBS curve
 </li>
 </ul>
 </p>
-<h3><a name="nurbstrimmed">NURBS Trimming</a> 
-                                  <small>(new in Version 0.99pl1050)</small></h3>
+<h3><a name="nurbstrimmed">NURBS Trimming</a></h3>
 <p>
 In version 0.99pl1050 the NurbsTrimmedSurface Knoten node is really useable.
 <br>
@@ -2778,8 +2761,7 @@ By the way: this curve musst be always closed, otherwise a crash in the
 grphic library "libGLU" can occure 8-(.
 When the curve is changed via handles in white_dune, the curve keeps closed.
 </p>
-<h3><a name="super">Superformula Modelling</a> 
-                                  <small>(new in Version 0.27beta)</small></h3>
+<h3><a name="super">Superformula Modelling</a></h3>
 
 <h4><a name="superformula">Superformula basics</a></h4>
 <p>
@@ -2865,7 +2847,7 @@ point for further NURBS-modelling.
   </li>
  </ul>
 </p>
-<h3><a name="subdivide">Subdivide Modelling</a> <small>(new in Version 0.99pl624)</small></h3>
+<h3><a name="subdivide">Subdivide Modelling</a></h3>
 <p>
 Subdivide Modelling is available via the 
 <em>(IndexedFace)Set -&gt; subdivide</em>
@@ -2899,7 +2881,7 @@ In the same way as faces, lines can be selected with <em>selection -&gt; lines
 Selected lines can be moved with the mouse.
 <br><br><img src="extrusion10.png"><br><br>
 </p>
-<h3><a name="extrusion">IndexedFaceSet Extrusion</a> <small>(new in Version 0.99pl654)</small></h3>
+<h3><a name="extrusion">IndexedFaceSet Extrusion</a></h3>
 <p>
 When the selected X3D-Command is a IndexedFaceSet (or has been converted
 to a IndexedFaceSet) a special way of extrusion is available.
@@ -2925,7 +2907,7 @@ This makes sense with
 The same with matching IndexedFaceSet.creaseAngle 
 <br><br><img src="extrusion8.png"><br><br>
 </p>
-<h3><a name="coordinate">Changing coordinate based nodes</a><small> (new in Version 0.29beta)</small></h3>
+<h3><a name="coordinate">Changing coordinate based nodes</a></h3>
 <p>
 Since version 0.29beta also Coordinate based nodes 
 (like IndexedFaceSet ("Mesh"), IndexedLineSet or PointSet)
@@ -3009,7 +2991,7 @@ The scnengraph can be simplified e.g. with <a href="#boolean">
 boolean modelling</a> (union).
 </p>
 </p>
-<h4><a name="meshreducer">Mesh reducer</a> (new in Version 0.99pl850)</h4>
+<h4><a name="meshreducer">Mesh reducer</a></h4>
 <p>
 If you work with <a href="#subdivide">Subdivide Modelling</a> (or
 a 3D-Scanner), the number of resulting faces can explode.
@@ -3035,7 +3017,7 @@ The only way out is symetric modelling.
 With <em>(IndexedFace)Set -&gt; make symetric</em> you can mirror the
 one (plus) or orther (plus deselected) side of a IndexedFaceSet.
 </p>
-<h4><a name="skinbones">Skin and bones modelling</a>(new in Version 0.99pl972)</small></h4>
+<h4><a name="skinbones">Skin and bones modelling</a></h4>
 <p>
 "Skin and bones" means that you have a surface as skin and joints/bones to
 manipulate the surface. Skin and bones technics in X3D are connected
@@ -3140,7 +3122,7 @@ Select HAnimHumanoid.skinCoord and use <em>edit -&gt; USE</em>.
 <br>
 <img src="flower19.png"><br>
 </p>
-<h4><a name="boolean">Boolean modelling</a><small>(new in Version 0.99pl999)</small></h4>
+<h4><a name="boolean">Boolean modelling</a></h4>
 <p>
 White_dune allows the boolean modelling of IndexedFaceSets.<br>
 To do this, a Group of 2 meshes (graphic object except Text (and other faces))
@@ -3184,7 +3166,38 @@ Next <em>(IndexedFace)Set -&gt; Boolean operations -&gt; Intersection</em>
 is used. A IndexedFaceSet is created.<br>
 <img src="bool13.png"><br>
 </p>
-<h4><a name="array">Array tool</a><small>(new in Version 0.27beta)</small></h4>
+<h4><a name="modifier">Vertex Modifier</a><small>(new in Version 1.300)</small></h4>
+<p>
+The Vertex Modifier can be used to modify vertices.<br>
+NurbsSurface or Coordinate has to be selected.<br>
+A example starting with the SuperEllipsoid node:
+<br><img src="modifier1.png"><br>
+This node must be converted into a NurbsSurface with 
+<em>Convert -&gt; Convert to Nurbs(Patch)Surface</em>
+<br><img src="modifier2.png"><br>
+A higher number of vertices has to be inserted, with less vertices the
+vertex modifier ist useless.
+<br><img src="modifier3.png"><br>
+After that, the Nurbs(Patch)Surface node is selected.<br>
+The Vertex Modifier icon (<img src="modifier4.png">) must be clicked.<br>
+<a href="#nurbssymetric">X symetric Modelling</a> has to be enabled.
+<br><img src="modifier5.png"><br>
+After this "jump" has to be clicked, "radius" and "amount" should be 5
+and the object has to be clicked at the position of the arrow.<br>
+The exact orientation of the object is important here.
+<br><img src="modifier6.png"><br>
+A few vertices near the border of the object has been modified.<br>
+Now click to normal.
+<br><img src="modifier7.png"><br>
+3 sliders are displayed, which show the direction of the modification.<br>
+The default is (0, -1, 0), this is "down".
+After that, nearly the same Position has to be clicked.<br>
+<br><img src="modifier8.png"><br>
+After that, you click "OK". The vertices are selected again and
+the object can be handled as usual.
+<br><img src="modifier9.png"><br>
+</p>
+<h4><a name="array">Array tool</a></h4>
 <p>
 White_dune allows to multiply objects. In difference to similar functions
 in some 3D-Modellers (like the "Art of Illusion" program) it do not create
@@ -3213,7 +3226,7 @@ made by other tools. The commands are made to correct some minor errors
 and problems.
 <ul>
  <li>
-  <h4><a name="remove_invalid">Remove invalid children nodes</a> (new in Version 0.27beta)</h4>
+  <h4><a name="remove_invalid">Remove invalid children nodes</a></h4>
   <br>
   In some cases tools export files with invalid children nodes.<br>
   You have to differ between two cases when useing the remove command
@@ -3233,7 +3246,7 @@ and problems.
   </ul>
  </li>
  <li>
-  <h4><a name="triangulate">Triangulate IndexedFaceSet</a> (new in Version 0.29beta)</h4>
+  <h4><a name="triangulate">Triangulate IndexedFaceSet</a></h4>
   <br>
   A IndexedFaceSet is a shape made of polygons. In general, this means
   there may be faces with 3, 4, 5, 6, 7 etc. edges. Unfortunatly, the
@@ -3288,7 +3301,7 @@ and problems.
   morphing animation is usually not a good idea.
  </li>
  <li>
-  <h4><a name="set_path">Set path of all URLs to</a> (new in Version 0.27beta)</h4>
+  <h4><a name="set_path">Set path of all URLs to</a></h4>
   <br>
   Some tools, which write VRML/X3D Files produce paths in the "url" field
   (e.g. when using images/bitmaps for the ImageTexture node), which are
@@ -3307,7 +3320,7 @@ and problems.
 <p>
 <ul>
  <li>
-  <h4><a name="object_url_edit">Edit object/URL</a> (new in Version 0.29beta)</h4>
+  <h4><a name="object_url_edit">Edit object/URL</a></h4>
   <br>
   The usage of the "Edit Object"/"Edit URL" action has been already 
   described in the chapter about <a href="#simplescript">script editing</a>.
@@ -3350,7 +3363,7 @@ and problems.
   programs like gimp.
  </li>
  <li>
-  <h4><a name="set_default">Set default values (keep scenegraph)</a> (new in Version 0.27beta)</h4>
+  <h4><a name="set_default">Set default values (keep scenegraph)</a></h4>
   <br>
   Sometimes it is usefull, to reset all changed values of a node
   back to the default values. But the nodes in the VRML/X3D scenegraph tree 
@@ -3360,7 +3373,7 @@ and problems.
   when setting default values.
  </li>
  <li>
-  <h4><a name="xray">xray rendering</a> (new in Version 0.27beta)</h4>
+  <h4><a name="xray">xray rendering</a></h4>
   <br>
   Xray rendering is a experimental functions, which let you look through
   all solid surfaces of a scene. In general this can be very confusing, 
@@ -3368,7 +3381,7 @@ and problems.
  </li>
 </ul>
 </p>
-<h4><a name="proto"><em>PROTO creation/editing</em></a></h4> <small> (new in Version 0.99pl444)</small>
+<h4><a name="proto"><em>PROTO creation/editing</em></a></h4>
 <p>
 To create a PROTO, a scenegraph branch has to be created first. The nodes of 
 the scenegraph branch are the major part of the PROTO.<br>
@@ -3412,7 +3425,7 @@ After that you can change "color" in the DOME node and insert another
 Transform and DOME pair.
 <br><br><img src=proto_creation12.png><br><br>
 </p>
-<h4><a name="vrmlcut"><em>VrmlCut scripted Proto</em></a></h4> <small> (new in Version 0.29beta)</small>
+<h4><a name="vrmlcut"><em>VrmlCut scripted Proto</em></a></h4>
 <p>
 In VRML/X3D it is amaizingly different to build sequences of animations, 
 usually called "movie". According to the realtime 3D nature of VRML/X3D
@@ -3479,7 +3492,7 @@ With the sceneNumber, numberPreviousScenes and numberNextScenes fields of
 VrmlCut can be used play a reduced range of scenes. This is usefull to optimize
 the lengths of the scenes in the sceneLengths field of VrmlCut.
 </p>
-<h4><a name="upload"><em>File -&gt; upload</em></a> </h4> <small>(new in Version 0.27beta)</small>
+<h4><a name="upload"><em>File -&gt; upload</em></a> </h4>
 <p>
 White_dune has a command (menuitem <em>File -&gt; Upload</em>) to upload a VRML 
 file to a internet server.<br>

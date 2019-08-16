@@ -259,6 +259,7 @@ BEGIN
             MENUITEM "&y (gruen) und z (blau)",         ID_SWAP_YZ
             MENUITEM "&z (blau)  und x (rot)",          ID_SWAP_XZ
         END
+        MENUITEM "Aendere Eckpunkte",                   ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Bauchige Huelle",                     ID_CONVEX_HULL
 #endif
@@ -1402,6 +1403,7 @@ BEGIN
             END
         END
         MENUITEM "Setze default Werte (behalte Szenengraph)",  ID_SET_DEFAULT
+        MENUITEM "Aendere Eckpunkte",                   ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Konvexe Huelle",                      ID_CONVEX_HULL
 #endif
@@ -3335,6 +3337,14 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
+    IDS_DE_QUAD "QUAD"
+    IDS_DE_JUMP "Sprung"
+    IDS_DE_PEAK "Spitze"
+    IDS_DE_AMOUNT "Betrag"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
     IDS_DE_LOADING_FILE     "Lade Datei... (%d%%)"
     IDS_DE_SAVE_CHANGES     "Speichere Aenderungen nach %s?"
     IDS_DE_VERTEX_SELECTED  "ausgewaehlt: %s[%d] %f %f %f"
@@ -3948,6 +3958,7 @@ BEGIN
     ID_DE_SCALE_BY_X           "Verschiebe Punkte in x Richtung um Faktor\nverschiebe um Faktor x"
     ID_DE_SCALE_BY_Y           "Verschiebe Punkte in y Richtung um Faktor\nverschiebe um Faktor y"
     ID_DE_SCALE_BY_Z           "Verschiebe Punkte in z Richtung um Faktor\nverschiebe um Faktor z"
+    ID_DE_VERTEX_MODIFIER      "Aendere Eckpunkte\nAendere Eckpunkte"
     ID_DE_CENTER_TO_MID        "Setze Zentrum (Drehpunkt) auf die Mitte des umrandenen Kaestchens\nSetze Zentrum (Drehpunkt) auf die Mitte"
     ID_DE_CENTER_TO_MAXX       "Setze Zentrum (Drehpunkt) auf groesstes x des umrandenen Kaestchens\nSetze Zentrum (Drehpunkt) auf groesstes x"
     ID_DE_CENTER_TO_MAXY       "Setze Zentrum (Drehpunkt) auf groesstes y des umrandenen Kaestchens\nSetze Zentrum (Drehpunkt) auf groesstes y"

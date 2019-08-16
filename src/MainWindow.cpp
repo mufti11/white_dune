@@ -212,6 +212,7 @@
 #include "FaceData.h"
 
 #include "ColorCircle.h"
+#include "VertexModifier.h"
 #include "ScriptEdit.h"
 
 #include "RenderState.h"
@@ -254,6 +255,7 @@ static int standardButtons[] = {
     BS, 0,
     28, ID_X_SYMETRIC,
     22, ID_COLOR_CIRCLE,
+    46, ID_VERTEX_MODIFIER,
     23, ID_OBJECT_EDIT,
     25, ID_URL_EDIT,
     BS, 0,
@@ -815,6 +817,7 @@ static int standardButtons4Kids[] = {
     2,  ID_DUNE_FILE_SAVE,
     BS, 0,
     43, ID_TO_NURBS_4KIDS,
+    46, ID_VERTEX_MODIFIER,
     29, ID_ANIMATION_OR_CURVE_ANIMATION,
     BS, 0,
     38, ID_X_ONLY,
@@ -917,6 +920,7 @@ IconPos::IconPos(void)
     m_fullScreenIconPos = GetIconPos(buttons, size, ID_DUNE_VIEW_FULL_SCREEN);
 
     m_colorCircleIconPos = GetIconPos(buttons, size, ID_COLOR_CIRCLE);
+    m_vertexModifierIconPos = GetIconPos(buttons, size, ID_VERTEX_MODIFIER);
 
     m_objectEditIconPos = GetIconPos(buttons, size, ID_OBJECT_EDIT);
     m_urlEditIconPos    = GetIconPos(buttons, size, ID_URL_EDIT);
@@ -1333,6 +1337,11 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     m_colorCircle_active = false;
     m_colorCircleHint = NULL;
     setColorCircleIcon();
+    m_vertexModifier_enabled = false;
+    m_vertexModifier_active = false;
+    m_vertexModifierHint = NULL;
+    m_vertexModifier_overwrite = false;
+    setVertexModifierIcon();
     m_objectEdit_enabled = false;
     m_urlEdit_enabled = false;
     setXSymetricNurbsIcon();
@@ -1435,6 +1444,7 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     m_selectedField = -1;
     m_statusText[0] = 0;
     m_searchText = "";
+    m_destroyed = false;
 
     scene->UpdateViews(this, UPDATE_ALL, NULL);
 
@@ -1483,7 +1493,10 @@ MainWindow::destroyMainWindow(void) // but keep scene
         // something strange happend 8-(
         return;
     }
-       
+    m_destroyed = true;
+    if (!TheApp->is4Kids())
+        if (m_vertexModifier_enabled)
+            TheApp->SetBoolPreference("ShowFieldView", true);
     Stop();
     TheApp->SetBoolPreference("MaximizeWindows", swIsMaximized(m_wnd) != 0);
 #ifndef _WIN32 
@@ -1511,6 +1524,8 @@ MainWindow::destroyMainWindow(void) // but keep scene
     m_statusBar = NULL;
     delete m_colorCircleHint;
     m_colorCircleHint = NULL;
+    delete m_vertexModifierHint;
+    m_vertexModifierHint = NULL;
     swDestroyToolbar(m_standardToolbar);
     m_standardToolbar = NULL;
     swDestroyToolbar(m_nodeToolbar1);
@@ -1790,6 +1805,9 @@ MainWindow::OnCommand(void *vid)
     bool exitFlag = false;
     m_statusText[0] = 0;
     Node *selectionNode = NULL;
+    bool vertexModifier_active;
+    float vertexModifier_radius;
+    float vertexModifier_amount;
     switch (id) {
       case ID_DUNE_FILE_OPEN:
         OnFileOpen();
@@ -1958,22 +1976,48 @@ MainWindow::OnCommand(void *vid)
         break;
       case ID_DUNE_EDIT_UNDO:
         selectionNode = m_scene->getSelection()->getNode();
+        vertexModifier_active = m_vertexModifier_active;
+        if (m_scene->getVertexModifier()) {
+            vertexModifier_radius = m_scene->getVertexModifier()->getRadius();
+            vertexModifier_amount = m_scene->getVertexModifier()->getAmount();
+        }
         if (m_scene->canUndo()) m_scene->undo();
         m_scene->UpdateViews(NULL, UPDATE_ALL);
-        if (selectionNode->isInScene(m_scene))
+        if (selectionNode->isInScene(m_scene)) {
             m_scene->setSelection(selectionNode);
-        else
+            m_vertexModifier_active = !vertexModifier_active;
+            updateVertexModifier();
+        } else
             m_scene->setSelection(m_scene->getRoot());
+        m_vertexModifier_overwrite = true;
+        if (m_scene->getVertexModifier()) {
+            m_scene->getVertexModifier()->setRadius(vertexModifier_radius);
+            m_scene->getVertexModifier()->setAmount(vertexModifier_amount);
+        }
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+        m_vertexModifier_overwrite = false;
         break;
       case ID_DUNE_EDIT_REDO:
         selectionNode = m_scene->getSelection()->getNode();
+        vertexModifier_active = m_vertexModifier_active;
+        if (m_scene->getVertexModifier()) {
+            vertexModifier_radius = m_scene->getVertexModifier()->getRadius();
+            vertexModifier_amount = m_scene->getVertexModifier()->getAmount();
+        }
         if (m_scene->canRedo()) m_scene->redo();
-        if (selectionNode->isInScene(m_scene))
+        if (selectionNode->isInScene(m_scene)) {
             m_scene->setSelection(selectionNode);
-        else
+            m_vertexModifier_active = !vertexModifier_active;
+            updateVertexModifier();
+        } else
             m_scene->setSelection(m_scene->getRoot());
+        m_vertexModifier_overwrite = true;
+        if (m_scene->getVertexModifier()) {
+            m_scene->getVertexModifier()->setRadius(vertexModifier_radius);
+            m_scene->getVertexModifier()->setAmount(vertexModifier_amount);
+        }
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+        m_vertexModifier_overwrite = false;
         break;
       case ID_DUNE_EDIT_DEF:
           {
@@ -2330,7 +2374,9 @@ MainWindow::OnCommand(void *vid)
       case ID_BRANCH_CSG_UNION:
         branchCSGUnion();
         break;
-
+      case ID_VERTEX_MODIFIER:
+        showVertexModifier();
+        break;
       case ID_CENTER_TO_MID:
         centerToMid();
         break;
@@ -4315,6 +4361,80 @@ void MainWindow::updateColorCircle(void)
     setColorCircleIcon();
 }
 
+void MainWindow::updateVertexModifier(void)
+{
+    if (m_vertexModifier_enabled) {
+       m_fieldView->setEnabled(false);
+       m_scene->RemoveView(m_fieldView);
+       if (m_fieldView != NULL) {
+          m_fieldView->DeleteView();
+// memory leak 8-( delete m_fieldView;
+       }
+       if (m_vertexModifier_active) {
+          m_fieldView = new FieldView(m_scene, m_fieldCanvas);
+          m_vertexModifier_active = false;
+          m_scene->AddView(m_fieldView); 
+          m_innerPane->SetPane(m_fieldView, PW_RIGHT);
+          m_fieldView->setEnabled(true);
+          m_scene->setVertexModifier(NULL);
+          Layout();
+          // avoid recurive call of scene->UpdateViews(NULL, UPDATE_SELECTION);
+          ((FieldView *)m_fieldView)->OnUpdate(NULL, UPDATE_SELECTION, NULL);
+       } else {
+          Node *node = m_scene->getSelection()->getNode();
+          if ((node->getType() != VRML_COORDINATE) && 
+              (node->getType() != VRML_NURBS_SURFACE))
+              return;
+    
+          if (node && node->getType() == VRML_COORDINATE) {
+              NodeCoordinate *coord = (NodeCoordinate *)node;
+              m_vertexModifierHint = new FieldUpdate(node, coord->point_Field(),
+                                                     -1);
+          }
+          if (node && node->getType() == VRML_NURBS_SURFACE) {
+              NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+              m_vertexModifierHint = new FieldUpdate(node, 
+                                             nurbs->controlPoint_Field(), -1);
+          }   
+
+          m_fieldView = new VertexModifier(m_scene, m_fieldCanvas, 
+                                           m_vertexModifierHint);
+          m_vertexModifier_active = true;
+          m_scene->AddView(m_fieldView); 
+          m_innerPane->SetPane(m_fieldView, PW_RIGHT);
+          m_fieldView->setEnabled(false);
+          m_scene->setVertexModifier((VertexModifier *)m_fieldView);
+          Layout();
+       }
+    } else {
+       m_vertexModifier_active = false;
+       m_scene->setVertexModifier(NULL);
+    }
+    setVertexModifierIcon();
+}
+
+void
+MainWindow::showVertexModifier(void)
+{
+    Node *node = m_scene->getSelection()->getNode();
+    if ((node->getType() != VRML_COORDINATE) && 
+        (node->getType() != VRML_NURBS_SURFACE))
+        return;
+    
+    if (node && node->getType() == VRML_COORDINATE) {
+        NodeCoordinate *coord = (NodeCoordinate *)node;
+        m_vertexModifierHint = new FieldUpdate(node, coord->point_Field(), -1);
+    }
+    if (node && node->getType() == VRML_NURBS_SURFACE) {
+        NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+        m_vertexModifierHint = new FieldUpdate(node, 
+                                               nurbs->controlPoint_Field(), -1);
+    }
+    m_vertexModifier_enabled = true;
+    ShowView(PW_RIGHT, m_fieldView, ID_DUNE_VIEW_FIELD_VIEW, "ShowFieldView");
+    updateVertexModifier();
+}
+
 void
 MainWindow::showColorPerVertexColorCircle(void)
 {
@@ -4712,6 +4832,9 @@ MainWindow::UpdateNumbers4Kids(void)
 void
 MainWindow::OnUpdate(SceneView *sender, int type, Hint *hint)
 {
+    if (m_destroyed)
+        return;
+
     Node *node = NULL;
     switch (type) {
       CASE_UPDATE(UPDATE_SELECTION)
@@ -4724,11 +4847,20 @@ MainWindow::OnUpdate(SceneView *sender, int type, Hint *hint)
                 if (swIsVisible(m_fieldView->GetWindow()))
                     toggleView(PW_RIGHT, m_fieldView, ID_DUNE_VIEW_FIELD_VIEW, 
                                "ShowFieldView");
-
+         } else if ((!m_vertexModifier_overwrite) &&
+                    m_vertexModifier_active == true) {
+            updateVertexModifier();
+            m_vertexModifier_enabled = false;
+            setVertexModifierIcon();
+            if (TheApp->is4Kids())
+                if (swIsVisible(m_fieldView->GetWindow()))
+                    toggleView(PW_RIGHT, m_fieldView, ID_DUNE_VIEW_FIELD_VIEW, 
+                               "ShowFieldView");
         } else if (TheApp->is4Kids()) 
             UpdateNumbers4Kids();
         else
             m_colorCircle_enabled = false;            
+        setVertexModifierIcon();
         UpdateToolbarSelection();
         RefreshProtoMenu();
         m_selectedField = -1;
@@ -4755,7 +4887,7 @@ MainWindow::OnUpdate(SceneView *sender, int type, Hint *hint)
         if (m_colorCircleHint)
             delete m_colorCircleHint;
         m_colorCircleHint = new FieldUpdate(fieldUpdate->node,fieldUpdate->field,
-                                           fieldUpdate->index);
+                                            fieldUpdate->index);
         }
         setColorCircleIcon();
         break;
@@ -4766,6 +4898,14 @@ MainWindow::OnUpdate(SceneView *sender, int type, Hint *hint)
       CASE_UPDATE(UPDATE_CLOSE_COLOR_CIRCLE)
         updateColorCircle();
         setColorCircleIcon();
+        if (TheApp->is4Kids())
+            if (swIsVisible(m_fieldView->GetWindow()))
+                toggleView(PW_RIGHT, m_fieldView, ID_DUNE_VIEW_FIELD_VIEW, 
+                           "ShowFieldView");
+        break;
+      CASE_UPDATE(UPDATE_CLOSE_VERTEX_MODIFIER)
+        updateVertexModifier();
+        setVertexModifierIcon();
         if (TheApp->is4Kids())
             if (swIsVisible(m_fieldView->GetWindow()))
                 toggleView(PW_RIGHT, m_fieldView, ID_DUNE_VIEW_FIELD_VIEW, 
@@ -4789,6 +4929,10 @@ MainWindow::OnUpdate(SceneView *sender, int type, Hint *hint)
       CASE_UPDATE(UPDATE_REMOVE_NODE)
         if (((NodeUpdate *) hint)->node->getType() == DUNE_VRML_CUT)
             m_vrmlCutNode = NULL;
+      CASE_UPDATE(UPDATE_TOOLBAR)
+        setColorCircleIcon();
+        UpdateToolbarSelection();
+        UpdateMenuVisible();
         break;
     }
 }
@@ -12287,6 +12431,7 @@ void MainWindow::setColorCircleIcon()
     if (current && (current->getType() == X3D_COLOR_RGBA) && 
         (m_scene->getSelectedHandlesSize() > 0)) {
         m_colorCircle_enabled = true;
+        m_colorCircle_active = true;
         NodeColorRGBA *color = (NodeColorRGBA *)current;
         if (m_colorCircleHint)
             delete m_colorCircleHint;
@@ -12307,6 +12452,43 @@ void MainWindow::setColorCircleIcon()
     else
        {
        swToolbarSetButtonFlags(m_standardToolbar, m_colorCircleIconPos, 
+                               SW_TB_DISABLED, SW_TB_DISABLED);
+       }
+}
+ 
+void MainWindow::setVertexModifierIcon()
+{
+    Node *current = m_scene->getSelection()->getNode();
+    if (current && (current->getType() == VRML_COORDINATE)) {
+        m_vertexModifier_enabled = true;
+        NodeCoordinate *coord = (NodeCoordinate *)current;
+        if (m_vertexModifierHint)
+            delete m_vertexModifierHint;
+        m_vertexModifierHint = new FieldUpdate(coord, coord->point_Field(), -1);
+    }
+    if (current && (current->getType() == VRML_NURBS_SURFACE)) {
+        m_vertexModifier_enabled = true;
+        NodeNurbsSurface *nurbs = (NodeNurbsSurface *)current;
+        if (m_vertexModifierHint)
+            delete m_vertexModifierHint;
+        m_vertexModifierHint = new FieldUpdate(nurbs, 
+                                               nurbs->controlPoint_Field(), -1);
+    }
+    swMenuSetFlags(m_menu, ID_VERTEX_MODIFIER, SW_MENU_CHECKED, 
+                          m_vertexModifier_active ? SW_MENU_CHECKED : 0);
+    swMenuSetFlags(m_menu, ID_VERTEX_MODIFIER, SW_MENU_DISABLED, 
+                          m_vertexModifier_enabled ? 0 : SW_MENU_DISABLED);
+    if (m_vertexModifier_enabled)
+       {
+       swToolbarSetButtonFlags(m_standardToolbar, m_vertexModifierIconPos, 
+                               SW_TB_DISABLED, 0);
+       swToolbarSetButtonFlags(m_standardToolbar, m_vertexModifierIconPos, 
+                               SW_TB_CHECKED, 
+                               m_vertexModifier_active ? SW_TB_CHECKED : 0);
+       }
+    else
+       {
+       swToolbarSetButtonFlags(m_standardToolbar, m_vertexModifierIconPos, 
                                SW_TB_DISABLED, SW_TB_DISABLED);
        }
 }
@@ -13637,9 +13819,9 @@ MainWindow::countPolygons()
         }
     }
     char numberPolygons[256];
-    swLoadString(IDS_NUMBER_POLYGONS + swGetLang(), numberPolygons, 255);
+    swLoadString(IDS_NUMBER_POLYGONS, numberPolygons, 255);
     char numberPrimitives[256];
-    swLoadString(IDS_NUMBER_PRIMITIVES + swGetLang(), numberPrimitives, 255);
+    swLoadString(IDS_NUMBER_PRIMITIVES, numberPrimitives, 255);
     mysnprintf(m_statusText, 255, "%s: %d  %s: %d",
                numberPolygons, polygons,  
                numberPrimitives, primitives);
@@ -13695,13 +13877,13 @@ MainWindow::countPolygons4catt()
     }
 
     char numberSingleSidedPolygons[256];
-    swLoadString(IDS_NUMBER_SINGLE_SIDED_POLYGONS + swGetLang(), 
+    swLoadString(IDS_NUMBER_SINGLE_SIDED_POLYGONS, 
                  numberSingleSidedPolygons, 255);
     char numberDoubleSidedPolygons[256];
-    swLoadString(IDS_NUMBER_DOUBLE_SIDED_POLYGONS + swGetLang(), 
+    swLoadString(IDS_NUMBER_DOUBLE_SIDED_POLYGONS, 
                  numberDoubleSidedPolygons, 255);
     char numberPolygons[256];
-    swLoadString(IDS_NUMBER_POLYGONS_4_CATT + swGetLang(), numberPolygons, 255);
+    swLoadString(IDS_NUMBER_POLYGONS_4_CATT, numberPolygons, 255);
 
     mysnprintf(m_statusText, 255, "%s: %d  %s: %d   %s: %d",
                numberDoubleSidedPolygons, doubleSided / 2,

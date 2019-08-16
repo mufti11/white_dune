@@ -612,6 +612,7 @@ DUNECLASSES = \
         NurbsCurve.o \
         Vec3x.o \
         quadric_simp.o \
+        VertexModifier.o \
         illegal2vrml.o $(NEBULA)
 
 BIGDUNECLASSES = \

@@ -34,6 +34,8 @@
 #include "EulerAngles.h"
 #include "InputDeviceTime.h"
 #include "Util.h"
+#include "VertexModifier.h"
+#include "MyMesh.h"
 #include "NodeViewpoint.h"
 #include "NodeTransform.h"
 #include "NodeNurbsSurface.h"
@@ -368,6 +370,61 @@ void Scene3DView::OnKeyUp(int key, int x, int y, int modifiers)
     m_trackMouse = false;
 }
 
+#define PICK_BUFFER_SIZE 65536
+#define PICK_REGION_SIZE 0.1
+
+Vec3f 
+Scene3DView::getHit(int x, int y)
+{
+    Vec3f ret;
+    int width, height;
+
+    swGetSize(m_wnd, &width, &height);
+
+    float xwidth = PICK_REGION_SIZE * TheApp->GetHandleSize();
+    if (width != 0)
+        xwidth = width;
+    float yheight = PICK_REGION_SIZE * TheApp->GetHandleSize();
+    if (height != 0)
+        yheight = height;
+    GLuint pBuffer[PICK_BUFFER_SIZE];
+    GLuint *pickBuffer = pBuffer;
+    glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
+    glRenderMode(GL_SELECT);
+    glInitNames();
+
+    TheApp->setEyeMode(EM_NONE);
+    m_scene->drawScene(true, x, y, xwidth, yheight);
+
+    GLint hits = glRenderMode(GL_RENDER);
+    Path *path = NULL;
+    if (hits < 0) // overflow flag has been set, ignore
+        hits = - hits;
+    if (hits) {
+        unsigned depth = 0;
+        int hit = -1;
+        for (int i = 0; i < hits; i++) {
+            unsigned numNames = *pickBuffer++;
+            unsigned minDepth = *pickBuffer++;
+            unsigned maxDepth = *pickBuffer++;
+            for (int i = 0; i < numNames; i++) {
+               int buffer = *pickBuffer++;
+               if (maxDepth > depth) {
+                   depth = maxDepth; 
+                   hit = buffer;
+               }
+            } 
+        }    
+        if (hit > -1) {
+            m_scene->unProjectPoint(x, y, 
+                                    (float)depth / (float)UINT_MAX, 
+                                    &ret.x, &ret.y, &ret.z);
+        }
+    }
+    return ret;
+}
+
+
 void Scene3DView::OnLButtonDown(int x, int y, int modifiers) 
 {
     Path *path;
@@ -482,6 +539,140 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 swSetCursor(m_wnd, m_cursorRotate);
         }
     }
+    if (m_scene->getVertexModifier()) {
+        Node *node = m_scene->getVertexModifier()->getNode();
+        int field = m_scene->getVertexModifier()->getField();
+        MFVec3f *vertices = NULL;
+        if (node != m_scene->getSelection()->getNode())
+            node = m_scene->getSelection()->getNode();
+        if (node->getType() == VRML_COORDINATE) {
+            NodeCoordinate *coord = (NodeCoordinate *)node;
+            vertices = (MFVec3f *)coord->point()->copy();
+            field = coord->point_Field();
+        } else if (node->getType() == VRML_NURBS_SURFACE) {
+            NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+            vertices = (MFVec3f *)nurbs->getControlPoints()->copy();
+            field = nurbs->controlPoint_Field();
+        }
+        if (vertices) {
+            glMatrixMode(GL_MODELVIEW);
+            glPushMatrix();
+            glLoadIdentity();
+            Matrix transformMatrix;
+            transformMatrix = Matrix::identity();
+            Node *trans = m_scene->searchTransform()->getNode();
+            trans->getMatrix(transformMatrix);
+            glPopMatrix();
+
+            Vec3f v;
+            Vec3f o;
+            float px, py, pz;
+
+            glPushMatrix();
+            glLoadIdentity();
+            m_scene->transform(m_scene->getSelection());
+            m_scene->projectPoint(v.x, v.y, v.z, &px, &py, &pz);
+            m_scene->unProjectPoint((float) x, (float) height - (float) y, 
+                                     pz, &o.x, &o.y, &o.z);
+            glPopMatrix();
+            Vec3f compareVec = o * transformMatrix;
+            float eps = TheApp->GetHandleEpsilon();
+            float amount = m_scene->getVertexModifier()->getAmount();
+            float radius = m_scene->getVertexModifier()->getRadius();
+            int mode = m_scene->getVertexModifier()->getMode();
+            bool plus = m_scene->getVertexModifier()->getPlus();
+            Vec3f direction;
+            bool hasDirection = !(m_scene->getVertexModifier()->getNormal());
+            if (hasDirection) {
+                direction.x = m_scene->getVertexModifier()->getX();
+                direction.y = m_scene->getVertexModifier()->getY();
+                direction.z = m_scene->getVertexModifier()->getZ();
+            }
+
+            // get x-y-neareast vertex as compareVec
+            float compareLen = FLT_MAX;
+            int compareIndex = -1;
+            Quaternion viewQuat = m_scene->getCamera()->getOrientation();
+            for (int i = 0; i < vertices->getSFSize(); i++) {
+                Vec3f vec = vertices->getVec(i);
+                vec = vec * viewQuat.conj();
+                vec.z = 0;
+                if ((vec - compareVec * viewQuat.conj()).length() < radius) {
+                    float len = (vec - compareVec * viewQuat.conj()).length();
+                    if (len <= compareLen) {
+                        compareLen = len;
+                        compareIndex = i;
+                    }
+                }
+            }
+            if (compareIndex != -1)
+                compareVec = vertices->getVec(compareIndex);
+
+            for (int i = 0; i < vertices->getSFSize(); i++) {
+                Vec3f vec = vertices->getVec(i);
+                Vec3f oldVec = vec;
+                if ((vec - compareVec).length() < radius) {
+                    Vec3f normal = vec;
+                    if (hasDirection)
+                        normal = direction;
+                    normal.normalize();
+                    if (mode == VERTEX_MODIFIER_MODE_JUMP)
+                        if (plus)
+                            vec = vec + normal * amount;
+                         else
+                            vec = vec - normal * amount;
+                    else if (mode == VERTEX_MODIFIER_MODE_PEAK) {
+                        float mult = (vec - compareVec).length() / radius;
+                        float add = amount * (1 - mult);
+                        if (plus)
+                            vec = vec + normal * add;
+                         else
+                            vec = vec - normal * add;
+                    }
+                    else if (mode == VERTEX_MODIFIER_MODE_QUAD) {
+                        float mult = (vec - compareVec).length() / radius;
+                        float add = amount * (1 - mult * mult * mult * mult);
+                        if (plus)
+                            vec = vec + normal * add;
+                        else
+                            vec = vec - normal * add;
+                    }
+                    vertices->setVec(i, vec);
+                    if (m_scene->getXSymetricMode())
+                        for (int j = 0; j < vertices->getSFSize(); j++) {
+                            if (i == j)
+                                continue;
+                            Vec3f symVec = vertices->getVec(j);
+                            if ((fabs(symVec.x + oldVec.x) < eps) &&
+                                (fabs(symVec.y - oldVec.y) < eps) &&
+                                (fabs(symVec.z - oldVec.z) < eps)) {
+                                vec.x *= -1.0f;
+                                vertices->setVec(j, vec);
+                            }
+                        }
+                }
+            }
+            if (node->getType() == VRML_NURBS_SURFACE) {
+                m_scene->addNextCommand();
+                NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+                if ((m_scene->isX3d()) && nurbs->controlPointX3D()) {
+                    NodeCoordinate *coord = (NodeCoordinate *)
+                       nurbs->controlPointX3D()->getValue();
+                    if (coord)
+                        m_scene->backupField(coord, coord->point_Field());
+                } else
+                    m_scene->backupField(nurbs, nurbs->controlPoint_Field());
+                nurbs->setControlPoints(vertices);
+                m_scene->deleteLastNextCommand();
+            } else {
+                m_scene->addNextCommand();
+                m_scene->backupField(node, field);
+                m_scene->setField(node, field, vertices);
+                m_scene->deleteLastNextCommand();
+            }
+            m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
+        }
+    }
     m_trackMouse = true;
     swSetCapture(m_wnd);
     m_trackX = x;
@@ -516,7 +707,8 @@ void Scene3DView::OnLButtonUp(int x, int y, int modifiers)
        m_trackX = x;
        m_trackY = y;
     }
-
+    if (m_scene->getSelectedHandlesSize() > 0)
+        m_scene->UpdateViews(this, UPDATE_TOOLBAR);
 }
 
 void Scene3DView::OnMButtonDown(int x, int y, int modifiers) 
@@ -640,6 +832,8 @@ void Scene3DView::OnRButtonUp(int x, int y, int modifiers)
         }
         swInvalidateWindow(m_wnd);
     }
+    if (m_scene->getSelectedHandlesSize() > 0)
+        m_scene->UpdateViews(this, UPDATE_TOOLBAR);
 }
 
 void Scene3DView::OnMouseEnter()

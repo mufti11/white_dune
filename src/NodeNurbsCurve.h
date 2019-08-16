@@ -24,6 +24,9 @@
 
 #include "NurbsCurve.h"
 
+class Interpolator;
+class InterpolatorInfo;
+
 typedef enum {
     NURBS_ROT_X_AXIS,
     NURBS_ROT_Y_AXIS,
@@ -52,6 +55,12 @@ public:
     FieldIndex closed;
     FieldIndex knot;
     FieldIndex order;
+};
+
+class NurbsCurveData
+{
+public:
+    MFVec3f *controlPoint;
 };
 
 class NodeNurbsCurve : public ChainBasedGeometryNode, NurbsCurve {
@@ -83,7 +92,15 @@ public:
     Node           *convert2X3d(void);
     Node           *convert2Vrml(void);
 
+    virtual void    createChain(void *nurbsCurveData);
     virtual void    addToConvertedNodes(int writeFlags);
+    bool            addCoordinateInterpolator(Node *node, bool appendToScene);
+    void            findInterpolators(InterpolatorInfo& info);
+    void           *initializeData(void);
+    void            finalizeData(void* data);
+    void            loadDataFromInterpolators(void *nurbsCurveData, 
+                                              Interpolator *inter,
+                                              int field, float key);
 
     virtual void    update();
 

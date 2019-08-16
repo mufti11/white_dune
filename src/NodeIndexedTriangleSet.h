@@ -80,8 +80,8 @@ public:
     virtual int     getNormalField() { return normal_Field(); }
     virtual int     getTexCoordField() { return texCoord_Field(); }
 
-    virtual void    setNormalFromMesh(Node *nnormal);
-    virtual void    setTexCoordFromMesh(Node *ntexCoord);
+//    virtual void    setNormalFromMesh(Node *nnormal);
+//    virtual void    setTexCoordFromMesh(Node *ntexCoord);
 
     virtual bool    shouldConvertToTriangleSet(void) { return false; }
     virtual bool    shouldConvertToIndexedTriangleSet(void) { return false; }

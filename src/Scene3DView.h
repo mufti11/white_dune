@@ -55,6 +55,8 @@ public:
     virtual void        OnUpdate(SceneView *sender, int type, Hint *hint);
     virtual void        OnSize(int width, int height);
 
+    Vec3f               getHit(int x, int y);
+
     const char         *getName(void) const { return "Scene3DView"; }
 
     void                startWalking(bool walkForward);

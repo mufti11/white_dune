@@ -641,6 +641,7 @@ void ChannelView::GoToLastKey(void)
         float key = m_interpolator->getKey(m_selectedKey);
         SetSelection(key * (m_rect.Width() - 1));
         m_interpolator->sendInterpolatedValue(0.0, key);
+        m_scene->UpdateViews(NULL, UPDATE_REDRAW);
     }
 }
 
@@ -656,6 +657,7 @@ void ChannelView::GoToNextKey(void)
         float key = m_interpolator->getKey(m_selectedKey);
         SetSelection(key * (m_rect.Width() - 1));
         m_interpolator->sendInterpolatedValue(0.0, key);
+        m_scene->UpdateViews(NULL, UPDATE_REDRAW);
     }
 }
 

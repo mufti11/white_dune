@@ -91,6 +91,7 @@ class SceneView;
 class Hint;
 class NodeInline;
 class Element;
+class VertexModifier;
 
 class DownloadPathData;
 
@@ -861,6 +862,10 @@ public:
     void                removeStore4Convex_hull(void) 
                             { m_store4convex_hull.resize(0); }
 
+    VertexModifier     *getVertexModifier(void) { return m_vertexModifier; }
+    void                setVertexModifier(VertexModifier *mod) 
+                            { m_vertexModifier = mod; }
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -1091,6 +1096,8 @@ protected:
     MyArray<const char *> m_writeCDynamicNodeCallback;
 
     MyArray<Vec3f>      m_store4convex_hull;
+
+    VertexModifier     *m_vertexModifier;
 public:
     MyArray<CGlNameData> m_glNameData;               
 };
@@ -1114,6 +1121,7 @@ enum {
     UPDATE_ENABLE_COLOR_CIRCLE,
     UPDATE_DISABLE_COLOR_CIRCLE,
     UPDATE_CLOSE_COLOR_CIRCLE,
+    UPDATE_CLOSE_VERTEX_MODIFIER,
     UPDATE_SELECTED_FIELD,
     UPDATE_SELECTION_NAME,
     UPDATE_NODE_NAME,
@@ -1122,6 +1130,7 @@ enum {
     UPDATE_REDRAW_3D,
     UPDATE_PREVIEW,
     UPDATE_SOLID_CHANGED,
+    UPDATE_TOOLBAR,
     UPDATE_SELF
 };
 

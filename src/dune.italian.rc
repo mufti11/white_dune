@@ -259,6 +259,7 @@ BEGIN
             MENUITEM "&y (verde) e z (blu)",            ID_SWAP_YZ
             MENUITEM "&z (blu)   e x (rosso)",          ID_SWAP_XZ
         END
+        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
 #endif
@@ -1405,6 +1406,7 @@ BEGIN
             END
         END
         MENUITEM "Imposta valori di default (sullo scenegrafo)", ID_SET_DEFAULT
+        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
 #endif
@@ -3334,6 +3336,14 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
+    IDS_IT_QUAD "quad"
+    IDS_IT_JUMP "salto"
+    IDS_IT_PEAK "monte"
+    IDS_IT_AMOUNT "somma"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
     IDS_IT_LOADING_FILE        "Caricamento file.. (%d%%)"
     IDS_IT_SAVE_CHANGES        "Salvare le modifiche a %s?"
     IDS_IT_VERTEX_SELECTED     "selected: %s[%d] %f %f %f"
@@ -3954,9 +3964,10 @@ BEGIN
     ID_IT_MOVE_TO_X            "move to in x direction\nmove x"
     ID_IT_MOVE_TO_Y            "move to in y direction\nmove y"
     ID_IT_MOVE_TO_Z            "move to in z direction\nmove z"
-    ID_IT_SCALE_BY_X     "move by multply with factor in x direction\nmove factor x"
-    ID_IT_SCALE_BY_Y     "move by multply with factor in y direction\nmove factor y"
-    ID_IT_SCALE_BY_Z     "move by multply with factor in z direction\nmove factor z"
+    ID_IT_SCALE_BY_X           "move by multply with factor in x direction\nmove factor x"
+    ID_IT_SCALE_BY_Y           "move by multply with factor in y direction\nmove factor y"
+    ID_IT_SCALE_BY_Z           "move by multply with factor in z direction\nmove factor z"
+    ID_IT_VERTEX_MODIFIER      "change Vertices\nvertex modifier"
     ID_IT_CENTER_TO_MID        "set center (rotation point) to mid of boundingbox\nset center to mid"
     ID_IT_CENTER_TO_MAXX       "set center (rotation point) to maximum x of boundingbox\nset center to maximum x"
     ID_IT_CENTER_TO_MAXY       "set center (rotation point) to maximum y of boundingbox\nset center to maximum y"

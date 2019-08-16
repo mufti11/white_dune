@@ -262,6 +262,9 @@ TransformNode::draw(int pass)
 void
 TransformNode::drawHandles(void)
 {
+    if (m_scene->getVertexModifier())
+        return;
+
     m_handleScale = TheApp->GetHandleScale();
 
     RenderState state;

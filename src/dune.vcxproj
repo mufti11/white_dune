@@ -311,6 +311,7 @@
     <ClCompile Include="sweep.cpp" />
     <ClCompile Include="sweep_context.cpp" />
     <ClCompile Include="Vectoriser.cpp" />
+    <ClCompile Include="VertexModifier.cpp" />
     <ClCompile Include="ViewpointDialog.cpp" />
     <ClCompile Include="AnchoredJointNode.cpp" />
     <ClCompile Include="AnimationDialog.cpp" />

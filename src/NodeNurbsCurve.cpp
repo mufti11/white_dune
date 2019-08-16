@@ -60,6 +60,9 @@
 #include "NodeNurbsPositionInterpolator.h"
 #include "NodeNurbsOrientationInterpolator.h"
 #include "NodeCoordinateDouble.h"
+#include "NodeCoordinateInterpolator.h"
+#include "EventIn.h"
+#include "EventOut.h"
 #include "resource.h"
 
 
@@ -275,6 +278,13 @@ NodeNurbsCurve::convert2Vrml(void)
 void
 NodeNurbsCurve::createChain()
 {
+    createChain((Vec3f *) getControlPoints()->getValues());
+}  
+
+void
+NodeNurbsCurve::createChain(void *data)
+{
+    Vec3f* cpoints = (Vec3f *)data;
     if (getControlPoints() == NULL)
         return;
     int iTess = tessellation()->getValue();
@@ -309,16 +319,15 @@ NodeNurbsCurve::createChain()
     float u;
     
     for (i = 0, u = knots[0]; i <= iTess; i++, u = u + inc) {
-        tess[i] = curvePoint(iDimension, order()->getValue(), knots, 
-                             (const Vec3f *) getControlPoints()->getValues(),
+        tess[i] = curvePoint(iDimension, order()->getValue(), knots, cpoints,
                              w, u);
     }
 
     m_chain.resize(size);  
     for (int i=0; i<size; i++)
         m_chain[i] = tess[i];
-}  
-  
+    m_chainDirty = false;
+}
 
 void
 NodeNurbsCurve::drawAsHandle(int handle)
@@ -540,7 +549,8 @@ int
 NodeNurbsCurve::write(int filedes, int indent)
 {
     if (m_scene->isPureVRML()) {
-        Node * node = toIndexedLineSet();
+        Node *node = toIndexedLineSet();
+        addCoordinateInterpolator(node, true);
         RET_ONERROR( node->write(filedes, indent) )
         node->unref();
     } else
@@ -1049,5 +1059,177 @@ NodeNurbsCurve::addToConvertedNodes(int writeFlags)
         node->setVariableName(strdup(getVariableName()));
         node->addParent(getParent(), getParentField());
         m_convertedNodes.append(node);
+        addCoordinateInterpolator(node, false);
     }
+}
+
+bool
+NodeNurbsCurve::addCoordinateInterpolator(Node *node, bool appendToScene)
+{
+    // find interpolators which have routes to the morphing node
+    InterpolatorInfo info;
+
+    findInterpolators(info);
+
+    if (info.interpolator.size() == 0) {
+        // nothing to do
+        return true;
+    }
+
+    // get name of output of used input of interpolators
+    // only the first found input is used
+    MyString interOutputName;
+    MyString interOutputEventName;
+    Node *interOutput = NULL;
+    int interOutputEvent = -1;
+    bool foundInterOutput = false;
+    for (int k = 0; k < info.interpolator.size(); k++) {
+        Node *node = info.interpolator[k];
+        int eventIn = node->lookupEventIn("set_fraction", false);
+        if (eventIn == INVALID_INDEX)
+            continue;
+
+        // use first eventIn found to drive Interpolator
+        SocketList::Iterator *iter= node->getInput(eventIn).first();
+        if (iter && iter->item().getNode()) {
+            interOutput = iter->item().getNode();
+            interOutputName = interOutput->getNameOrNewName();
+            interOutputEvent = iter->item().getField();
+            interOutputEventName = interOutput->getProto()->
+                                       getEventOut(interOutputEvent)->
+                                       getName(interOutput->getScene()->isX3d());
+            foundInterOutput = true;
+            break;
+        }
+    }
+        
+    // sort list of keys
+    MyArray<float> keys;
+    MyArray<float> coordKeyValues;
+    MyArray<float> normalKeyValues;
+    bool foundMinKey = false;
+    float currentKey = -1;
+    do {
+       foundMinKey = false;
+       float minKey = 0;
+       for (int i = 0; i < info.interpolator.size(); i++)
+           for (int j = 0; j < info.interpolator[i]->getNumKeys(); j++)
+               if (info.interpolator[i]->getKey(j) > currentKey) {
+                   if (foundMinKey == false) {
+                       minKey = info.interpolator[i]->getKey(j);
+                       foundMinKey = true;
+                   } else if (info.interpolator[i]->getKey(j) < minKey)
+                       minKey = info.interpolator[i]->getKey(j);
+               }
+       if (foundMinKey) {
+           keys.append(minKey);
+           currentKey = minKey;
+       }
+       if (!foundMinKey)
+           break;
+    } while (foundMinKey);
+
+    // get data from Interpolators and generate chain
+
+    void *data = initializeData();
+    for (int i = 0; i < keys.size(); i++) {
+        for (int j = 0; j < info.interpolator.size(); j++) {
+            Interpolator *inter = info.interpolator[j];
+            int field = info.field[j];
+            if (inter != NULL)
+                loadDataFromInterpolators(data, inter, field, keys[i]);
+        }
+
+        m_chainDirty = true;
+        createChain(data);
+        m_chainDirty = true;
+
+        MFVec3f *vertices = new MFVec3f();
+        for (int n = 0; n < m_chain.size(); n++)
+             vertices->appendVec(m_chain[n]);
+        for (int k = 0; k < vertices->getSize(); k++)
+            coordKeyValues.append(vertices->getValues()[k]);
+    }
+    finalizeData(data);
+    data = NULL;    
+
+    NodeCoordinateInterpolator *coordInter = (NodeCoordinateInterpolator *) 
+          m_scene->createNode("CoordinateInterpolator");
+
+    // write CoordinateInterpolator
+    MFFloat *mfkeys = new MFFloat((float *)keys.getData(), keys.size());      
+    coordInter->key((MFFloat *)mfkeys->copy());
+
+    MFVec3f *mfCoordKeyValues = new MFVec3f((float *)coordKeyValues.getData(),
+                                             coordKeyValues.size());
+    coordInter->keyValue((MFVec3f *)mfCoordKeyValues->copy());
+    if (appendToScene)
+        m_scene->addDelayedWriteNode(coordInter); 
+    else {
+        m_convertedNodes.append(coordInter);
+        coordInter->setVariableName(strdup(coordInter->getName()));
+        coordInter->addParent(getParent(), getParentField()); 
+    }
+
+    // write route
+    Node *ncoord = ((NodeIndexedLineSet *)node)->coord()->getValue();
+    ncoord->setVariableName(strdup(ncoord->getVariableName()));
+    if (appendToScene)
+        m_scene->addRouteString(m_scene->createRouteString(
+               coordInter->getNameOrNewName(), "value_changed",
+               ncoord->getNameOrNewName(), "set_point"));
+    else
+        m_scene->addRoute(coordInter, coordInter->value_changed_Field(), 
+                          ncoord, ((NodeCoordinate *)ncoord)->point_Field());
+    if (foundInterOutput) {
+        if (appendToScene)
+            m_scene->addEndRouteString(m_scene->createRouteString(
+                   interOutputName, interOutputEventName,
+                   coordInter->getNameOrNewName(), "set_fraction"));
+        else
+            m_scene->addRoute(interOutput, interOutputEvent,
+                             coordInter, coordInter->set_fraction_Field());
+    }
+    return true;
+} 
+
+void *
+NodeNurbsCurve::initializeData() 
+{
+    int size = getControlPoints()->getSFSize();
+    return new Vec3f[size];
+}
+
+void    
+NodeNurbsCurve::finalizeData(void* data)
+{
+    delete [] (Vec3f *)data;
+}
+
+void 
+NodeNurbsCurve::findInterpolators(InterpolatorInfo& info)
+{
+    Node *node = this;
+    int field = controlPoint_Field();
+    if (m_scene->isX3d()) {
+        NodeCoordinate *coordinate = (NodeCoordinate *) 
+                                     controlPointX3D()->getValue();
+        int field = coordinate->point_Field();
+    }
+
+    Interpolator *inter = m_scene->findUpstreamInterpolator(node, field); 
+    if (inter != NULL) {
+        info.interpolator.append(inter);
+        info.field.append(field);
+    }
+}
+
+void
+NodeNurbsCurve::loadDataFromInterpolators(void *nurbsCurveData, 
+                                          Interpolator *inter,
+                                          int field, float key)
+{
+    NurbsCurveData *data = (NurbsCurveData *)nurbsCurveData;
+    if (field == controlPoint_Field())
+        inter->interpolate(key, (float *)data);
 }

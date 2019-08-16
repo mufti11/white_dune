@@ -25,6 +25,9 @@
 #endif
 
 #include "MyMesh.h"
+#ifndef FLT_MAX
+# include <float.h>
+#endif
 
 void MyMesh::drawVertex(float *v)
 {

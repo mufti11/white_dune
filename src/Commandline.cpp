@@ -1362,6 +1362,11 @@ void parseCommandlineUsage(
             printf(" This file is compiled with libvcg: libvcg is licenced under\n");
             printf(" GNU General Public License 3\n");
 #endif
+#ifdef HAVE_LIBOSDCPU
+            printf("\n");
+            printf(" This file is compiled with OpenSubdiv: OpenSubdiv is licenced under\n");
+            printf(" Apache License, Version 2.0\n");
+#endif
             printf("\n");
             printf("This file uses code from vx\n");
             printf("https://github.com/neurolabusc/vx/blob/master/src/tex3d.inc\n");

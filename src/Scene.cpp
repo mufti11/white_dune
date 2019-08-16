@@ -115,6 +115,7 @@ extern "C" {
 #include "NodeIndexedTriangleSet.h"
 #include "NodeTriangleSet.h"
 #include "NodeNurbsCurve.h"
+#include "NodeNurbsSurface.h"
 #include "NodeCattExportRec.h"
 #include "NodeLdrawDatExport.h"
 #include "NodeViewport.h"
@@ -372,6 +373,7 @@ Scene::Scene()
     m_hasMovieTexture = false;
     m_infoHandles = false;
     m_glName = 0;
+    m_vertexModifier = NULL;
 }
 
 void
@@ -3694,8 +3696,8 @@ Scene::findUpstreamInterpolator(const Node *node, int field) const
                 return ((Interpolator *) i->item().getNode());
         }
     }
-
     return NULL;
+
 }
 
 void
@@ -6097,6 +6099,7 @@ Scene::setVrml(void)
     if (::isX3d(m_writeFlags) && (m_root != NULL)) {
         getNodes()->clearFlag(NODE_FLAG_CONVERTED);
         m_writeFlags |= CONVERT2VRML;
+        m_writeFlags = m_writeFlags & ~(X3DV | X3D_XML);
         for (int i = 0; i < getNumProtos(); i++)
             for (int j = 0; j < getProto(i)->getNumNodes(); j++)
                 getProto(i)->getNode(j)->convert2Vrml();
@@ -6859,3 +6862,4 @@ FieldUpdate::FieldUpdate(Node *n, int f, int i)
     field = f;
     index = i;
 }
+

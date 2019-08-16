@@ -79,7 +79,7 @@ class Scene;
 class MainWindow;
 class PathInt;
 
-#define DEFAULT_TESSELLATION 32
+#define DEFAULT_TESSELLATION 31
 
 class FileBackup { 
 public:

@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- last update: white_dune-1.256
+ last update: white_dune-1.306
 -->
 <head>
  <title>"white_dune" Dokumentation</title> 
@@ -43,7 +43,7 @@
   <h3><a href="#vrml">Was bedeuten Szenengraph, Fieldwerte, Routes usw. ?</a></h3> 
  </li>
  <li>
-  <h3><a href="#wonderland">X3D-compiler und Open Wonderland Unterst&uuml;tzung</a>(neu in Version 0.31beta)</h3> 
+  <h3><a href="#wonderland">X3D-compiler und Open Wonderland Unterst&uuml;tzung</a></h3> 
  </li>
  <li>
   <h3><a href="#waskann">Was "white_dune" nicht kann und was es kann</a></h3>
@@ -61,10 +61,10 @@
   <h3><a href="#scenegraph">Ver&auml;ndern des Szenengraph</a></h3>
   <ul>
    <li>
-    <h4><a href="#use">Die Benutzung von USE</a>(neu in Version 0.29beta)</h4>
+    <h4><a href="#use">Die Benutzung von USE</a></h4>
    </li>
    <li>
-    <h4><a href="#scenegraphoperations">Szenengraph Operationen</a>(neu in Version 0.27beta)</h4>
+    <h4><a href="#scenegraphoperations">Szenengraph Operationen</a></h4>
    </li>
   </ul>
  </li>
@@ -78,7 +78,7 @@
     <h4><a href="#keyboard">Tastatureingabe</a></h4>
    </li>
    <li>
-    <h4><a href="#MF">"MF"-Fieldwerte &auml;ndern</a>(neu in version 0.27beta)</h4>
+    <h4><a href="#MF">"MF"-Fieldwerte &auml;ndern</a></h4>
    </li>
    <li>
     <h4><a href="#mouse">Mauseingabe</a></h4>
@@ -87,93 +87,84 @@
     <h4><a href="#3DWindow">Fieldwerte ver&auml;ndern im 3D Preview Fenster</a></h4>
    </li>
    <li>
-    <h4><a href="#6D">6D Input</a> (neu in Version 0.19beta)</h4>
+    <h4><a href="#6D">6D Input</a></h4>
    </li>
    <li>
-    <h4><a href="#6Dlocal">6D Local Mode Input</a> (neu in Version 0.19beta)</h4>
+    <h4><a href="#6Dlocal">6D Local Mode Input</a></h4>
    </li>
    <li>
-    <h4><a href="#nxtdials">Mindstorms NXT dials Input</a> (neu in Version 0.29beta)</h4>
+    <h4><a href="#nxtdials">Mindstorms NXT dials Input</a></h4>
    </li>
    <li>
-    <h4><a href="#joystick">Linux Joystick Input</a> (neu in Version 0.20beta)</h4>
+    <h4><a href="#joystick">Linux Joystick Input</a></h4>
    </li>
    <li>
-    <h4><a href="#joystick_windows">M$Windows Joystick Input</a> (neu in Version 0.22beta)</h4>
+    <h4><a href="#joystick_windows">M$Windows Joystick Input</a></h4>
    </li>
    <li>
-    <h4><a href="#joystick_macosx">MacOSX Joystick Input</a> (neu in Version 0.22beta)</h4>
+    <h4><a href="#joystick_macosx">MacOSX Joystick Input</a></h4>
    </li>
    <li>
     <h4><a href="#channelview">Fieldwerte ver&auml;ndern im ChannelView Window</a></h4>
    </li>
    <li>
-    <h4><a href="#colorcircle">Farbkreis</a> (neu in Version 0.19beta)</h4>
+    <h4><a href="#colorcircle">Farbkreis</a></h4>
    </li>
    <li>
-    <h4><a href="#scriptedit">Script Editor</a> (neu in Version 0.22beta)</h4>
+    <h4><a href="#scriptedit">Script Editor</a></h4>
    </li>
    <li>
-    <h4><a href="#urledit">URL Editor</a> (neu in Version 0.22beta)</h4>
+    <h4><a href="#urledit">URL Editor</a></h4>
    </li>
    <li>
-    <h4><a href="#fieldpipe">Field pipe</a> (neu in version 0.29beta)</h4>
+    <h4><a href="#fieldpipe">Field pipe</a></h4>
    </li>
   </ul>
  </li>
  <li>
-  <h3><a href="#simplescript">Vereinfachtes Skriptbau-Verfahren</a> 
-                                               (neu in Version 0.22beta)</h3>
+  <h3><a href="#simplescript">Vereinfachtes Skriptbau-Verfahren</a></h3>
  </li>
  <li>
-  <h3><a href="#x3domscript">X3DOM scripting</a> (neu in Version 0.99pl1084)</h3>
+  <h3><a href="#x3domscript">X3DOM scripting</a></h3>
  </li>
  <li>
-  <h3><a href="#nurbs">NURBS Modellierung</a> 
-                                         (zum Teil neu in Version 0.25beta)</h3>
+  <h3><a href="#nurbs">NURBS Modellierung</a></h3>
    <ul>
    <li>
     <h4><a href="#nurbsbasics">NURBS Grundlagen</a></h4>
    </li>
    <li>
-    <h4><a href="#nurbssymetric">X symetrisches Modellieren</a>
-                                         (neu in Version 0.25beta)</h4>
+    <h4><a href="#nurbssymetric">X symetrisches Modellieren</a></h4>
    </li>
    <li>
-    <h4><a href="#nurbsconversion">NURBS Konversion</a>
-                                         (neu in Version 0.25beta)</h4>
+    <h4><a href="#nurbsconversion">NURBS Konversion</a></h4>
    </li>
    <li>
-    <h4><a href="#elevatedegree">Grad Erh&ouml;hung</a>
-                                         (neu in Version 0.27beta)</h4>
+    <h4><a href="#elevatedegree">Grad Erh&ouml;hung</a></h4>
    </li>
    <li>
     <h4><a href="#nurbsrebuild">NURBS Neubau</a>
-                                         (neu in Version 0.99pl1090)</h4>
+                                <small>(neu in Version 0.99pl1090)</small></h4>
    </li>
    <li>
     <h4><a href="#nurbssymetric">NURBS symetrisch machen</a>
-                                         (neu in Version 1.068)</h4>
+                                     <small>(neu in Version 1.068)</small></h4>
    </li>
    <li>
     <h4><a href="#nurbsextrusion">NURBS Extrusion</a>
-                                         (neu in Version1.072)</h4>
+                                      <small>(neu in Version 1.072)</small></h4>
    </li>
    <li>
-    <h4><a href="#nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a>
-                                         (neu in Version 0.25beta)</h4>
+    <h4><a href="#nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a></h4>
    </li>
    <li>
-     <h4><a href="#nurbsanimation">Animation mit Hilfe von NURBS</a>
-                                          (neu in Version 0.99)</h4>
+     <h4><a href="#nurbsanimation">Animation mit Hilfe von NURBS</a></h4>
    </li>
    <li>
-     <h4><a href="#nurbstrimmed">NURBS Trimming</a>
-                                          (neu in Version 0.99pl1050)</h4>
+     <h4><a href="#nurbstrimmed">NURBS Trimming</a></h4>
    </li>
   </ul>
-   <h3><a href="#super">Superformula Modellierung</a> 
-                                          (neu in Version 0.27beta)</h3>
+   <h3><a href="#super">Superformula Modellierung</a></h3>
    <ul>
     <li>
      <h4><a href="#superformula">Superformula Grundlagen</a></h4>
@@ -193,27 +184,26 @@
    </ul>
   </li>
   <li>
-   <h3><a href="#subdivide">Subdivide Modellierung</a> 
-                                          (neu in Version 0.99pl624)</h3>
+   <h3><a href="#subdivide">Subdivide Modellierung</a></h3>
   </li>
   <li>
-   <h3><a href="#extrusion">IndexedFaceSet Extrusion</a> 
-                                          (neu in Version 0.99pl654)</h3>
+   <h3><a href="#extrusion">IndexedFaceSet Extrusion</a></h3>
   </li>
   <li>
    <h3>Weitere Kommandos zur 3D-Modellierung</a></h3>
    <ul>
     <li>
-     <h4><a href="#coordinate">&Auml;ndern von Coordinate basierten Knoten</a> (neu in Version 0.29beta)</h4>
+     <h4><a href="#coordinate">&Auml;ndern von Coordinate basierten Knoten</a></h4>
     </li>
     <li>
-     <h4><a href="#convexhull">Konvexe H&uuml;lle</a> (neu in Version 1.255)</h4>
+     <h4><a href="#convexhull">Konvexe H&uuml;lle</a> 
+                                    <small>(neu in Version 1.255)</small></h4>
     </li>
     <li>
-     <h4><a href="#meshreducer">Fl&auml;chen Reduzierer</a> (neu in Version 0.99pl850)</h4>
+     <h4><a href="#meshreducer">Fl&auml;chen Reduzierer</a></h4>
     </li>
     <li>
-     <h4><a href="#symetric">Symetrische Modellierung</a> (neu in Version 0.99pl987)</h4>
+     <h4><a href="#symetric">Symetrische Modellierung</a></h4>
     </li>
     <li>
      <h4><a href="#skinbones">Skin and bones Modellierung</a></h4>
@@ -222,42 +212,46 @@
      <h4><a href="#boolean">Boolsche Modellierung</a></h4>
     </li>
     <li>
-     <h4><a href="#array">Array Werkzeug</a> (neu in Version 0.27beta)</h4>
+     <h4><a href="#modifier">Vertex Modifier</a>
+                                      <small>(neu in Version 1.300)</small></h4>
+    </li>
+    <li>
+     <h4><a href="#array">Array Werkzeug</a></h4>
     </li>
    </ul>
    <h3>Reparatur-Kommandos im "Aktion" Men&uuml;</a></h3>
    <ul>
     <li>
-     <h4><a href="#remove_invalid">Ung&uuml;ltige children nodes l&ouml;schen</a> (neu in Version 0.27beta)</h4>
+     <h4><a href="#remove_invalid">Ung&uuml;ltige children nodes l&ouml;schen</a></h4>
     </li>
     <li>
-     <h4><a href="#triangulate">Trianguliere IndexedFaceSet</a> (neu in Version 0.29beta)</h4>
+     <h4><a href="#triangulate">Trianguliere IndexedFaceSet</a></h4>
     </li>
     <li>
-     <h4><a href="#set_path">Set path of all URLs to</a> (neu in Version 0.27beta)</h4>
+     <h4><a href="#set_path">Set path of all URLs to</a></h4>
     </li>
    </ul>
    <h3>Weitere Kommandos im "Aktion" Men&uuml;</a></h3>
    <ul>
     <li>
-     <h4><a href="#object_url_edit">Objekt/URL editieren</a> (neu in Version 0.29beta)</h4>
+     <h4><a href="#object_url_edit">Objekt/URL editieren</a></h4>
     </li>
     <li>
-     <h4><a href="#set_default">Setze default Werte (behalte Szenengraph)</a> (neu in Version 0.27beta)</h4>
+     <h4><a href="#set_default">Setze default Werte (behalte Szenengraph)</a></h4>
     </li>
     <li>
-     <h4><a href="#xray">R&ouml;ntgenblick</a> (neu in Version 0.27beta)</h4>
+     <h4><a href="#xray">R&ouml;ntgenblick</a></h4>
     </li>
    </ul>
   </li>
   <li>
-   <h3><a href="#proto">PROTO Erstellung/Ver&auml;nderung</a> (neu in Version 0.99pl444)</h3>
+   <h3><a href="#proto">PROTO Erstellung/Ver&auml;nderung</a></h3>
   </li>
   <li>
-   <h3><a href="#vrmlcut">VrmlCut scripted Proto</a> (neu in Version 0.29beta)</h3>
+   <h3><a href="#vrmlcut">VrmlCut scripted Proto</a></h3>
   </li>
   <li>
-   <h3><a href="#upload"><em>Datei -&gt; upload</em></a> (neu in Version 0.27beta)</h3>
+   <h3><a href="#upload"><em>Datei -&gt; upload</em></a></h3>
   </li>
  </li>
  </ul>
@@ -1009,7 +1003,7 @@ bei der Benutzung der <em>Erzeugen -&gt; Koerper -&gt; </em> Men&uuml;punkte
 eine vollst&auml;ndige Shape-Struktur (einschliesslich default 
 Appearance/Material Knoten und einem umschliessenden Transform Knoten) 
 aufgebaut.<br>
-(Neu in Version 0.29beta) Ist bei der Erzeugung so eines Shape-Knotens
+Ist bei der Erzeugung so eines Shape-Knotens
 kein Knoten angew&auml;hlt in den der Shape-Knoten passt, so wird der
 umschliessende Transform Knoten so aufgebaut, dass der neue Knoten direkt
 vor dem aktuellen Kamerapunkt erscheint).
@@ -1274,7 +1268,7 @@ den VRML Knoten herumzuschieben:<br>
  </li>
 </ul>
 </p>
-<b><h4><a name="use">Die Benutzung von USE</a></h4></b><small>(neu in Version 0.29beta)</small><br>
+<h4><a name="use">Die Benutzung von USE</a></h4><br>
  Neben der oben gezeigten drag and drop Methode gibt es einen weiteren
  Weg um das USE Konstrukt zu benutzen.
  Der Knoten, der ge-USE-t werden soll braucht einen DEF Namen, der mit
@@ -1297,7 +1291,7 @@ den VRML Knoten herumzuschieben:<br>
  array Werkzeug</a> und manche der folgenden "create" Szenegraph Operationen.
 </p>
 <p>
- <b><h4><a name="scenegraphoperations">Szenengraph Operationen</a></b></h4><small>(neu in Version 0.27beta)</small><br>
+ <b><h4><a name="scenegraphoperations">Szenengraph Operationen</a></b></h4><br>
  Es gibt (noch) keinen Weg, um mehrere Knoten im Szenengraph zu verschieben.
  Als Workaround gibt es Operationen um den aktuellen Szenegraphzweig
  umzusortieren 
@@ -1653,7 +1647,7 @@ Es gibt zwei Befehle, die automatisch neue ROUTEs erzeugen.
   Eintrag in den Interpolator mit key=0.0 und keyValue=wert_zielfeld erzeugt.
  </li>
  <li>
-  <em> Aktion -&gt; Interaktion erstellen </em><small>(neu in Version 0.29beta)<br></small>
+  <em> Aktion -&gt; Interaktion erstellen </em>
   Hierbei werden die ROUTE <br>
   Sensor -&gt; angew&auml;lter Knoten<br>
   erzeugt.<br>
@@ -1691,7 +1685,7 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
    <img src=fieldchange.jpg><br>
  </li>
  <li>
-  <b><a name="MF">"MF"-Fieldwerte &auml;ndern</a></b><small>(neu in version 0.27beta)</small><br>
+  <b><a name="MF">"MF"-Fieldwerte &auml;ndern</a></b><br>
   Im Fieldview Window, markiert ein "+"-Zeichen auf der linken Seite
   ein "MF"-field 
   wie MFFloat, MFInt32, MFVec3f, MFRotation, MFString usw.
@@ -1725,10 +1719,8 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
    <li> Verschiebung <img src=schieb.png> </li>
    <li> Drehung <img src=rot.png> </li>
    <li> Skalierung <img src=scale.jpg> </li>
-   <li> Gleichm&auml;&szlig;e Skalierung <img src=uniform_scale.png>
-        <small>(neu in Version 0.29beta)</small> </li>
-   <li> Mittelpunktsverschiebung <img src=center.jpg>
-        <small>(neu in Version 0.19beta)</small> </li>
+   <li> Gleichm&auml;&szlig;e Skalierung <img src=uniform_scale.png></li>
+   <li> Mittelpunktsverschiebung <img src=center.jpg></li>
    </ul>
    aktiviert wird. <br>
    <strong>Beachten Sie, dass Sie diese Werkzeuge nicht benutzen
@@ -1748,7 +1740,7 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
    erzeugt werden (z.B. SuperExtrusion, SuperRevolver).
  </li>
  <li>
-  <b><a name="6D">6D Input</a></b> <small>(neu in Version 0.19beta)</small><br>
+  <b><a name="6D">6D Input</a></b><br>
   Seit Version 0.19beta unterst&uuml;tzt White_dune 6D Eingabeger&auml;te
   (6D bezieht sich auf die 6 Freiheitsgrade) unter Unix/Linux.<br> 
   Ist ein 6D Eingabeger&auml;t konfiguriert und das Icon <img src=6d.png> 
@@ -1832,8 +1824,8 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
 </pre>
   </li>
  <li>
-  <b><a name="6Dlocal">6D Local Mode Input:</a></b><small> 
-  Kennen Sie Funkfernsteuerungen? (neu in Version 0.19beta)</small><br>
+  <b><a name="6Dlocal">6D Local Mode Input:</a></b> 
+  Kennen Sie Funkfernsteuerungen?</small><br>
   Ist das 6D Local Icon <img src=6dloc.png> gedr&uuml;ckt, so kann man damit
   die lokalen Achsen eines Transformknoten steuern. <br>
   Bewegt man zum
@@ -2187,7 +2179,7 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
   <em>Bearbeiten -&gt; Loeschen</em> Befehl das Element des MF-Feldes.
  </li>
  <li>
-  <b><a name="colorcircle">Farbkreis</a></b> <small>(neu in Version 0.19beta)</small><br>
+  <b><a name="colorcircle">Farbkreis</a></b><br>
   F&uuml;r Farbwerte gibt es einen spezielles Eingabefenster, das an die
   Stelle des FieldView Fensters tritt, wenn darin ein Farbwert 
   ausgew&auml;hlt ist und das Colorcircle Icon gedr&uuml;ckt wird.<br>
@@ -2203,7 +2195,7 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
   zur&uuml;ck.
  </li>
  <li>
-  <b><a name="scriptedit">Script Editor</a></b> <small>(neu in Version 0.22beta)</small><br>
+  <b><a name="scriptedit">Script Editor</a></b><br>
   Es gibt zwei M&ouml;glichkeiten, den Scripteditor zu starten:<br>
   <img src=scriptedit_icon1.jpg><br>
   <ul>
@@ -2228,7 +2220,7 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
   Dr&uuml;cken Sie "OK" um die Arbeit am Scriptknoten zu beenden.
  </li>
  <li>
-  <b><a name="urledit">URL Editor</a></b> <small>(neu in Version 0.22beta)</small><br>
+  <b><a name="urledit">URL Editor</a></b><br>
   Das "url"-Feld (das den ECMAscript (javascript) Code eines Scriptknotens
   enthalten kann) kann in einem Texteditor ver&auml;ndert werden (edit).
   &Uuml;ber den Men&uuml;punkt 
@@ -2252,7 +2244,7 @@ Es gibt mehrere M&ouml;glichkeiten, Fieldwerte zu ver&auml;ndern:<br>
   werden.
  </li>
  <li>
-  <b><a name="fieldpipe">Field pipe</a></b><small>(neu in version 0.29beta)</small><br>
+  <b><a name="fieldpipe">Field pipe</a></b><br>
   Einer der m&auml;chtigsten M&ouml;glichkeiten um Feldwerte zu &auml;ndern
   ist die Field pipe. Damit ist es m&ouml;glich, Feldwerte mit einem 
   beliebigen externen Programm zu ver&auml;ndern.<br>
@@ -2403,8 +2395,7 @@ int main(int argc, char** argv)
  </li>
 </ul>
 </p> 
-<h3><a name="simplescript">Vereinfachtes Skriptbau-Verfahren</a> <small>
-                                        (neu in Version 0.22beta)</small></h3>
+<h3><a name="simplescript">Vereinfachtes Skriptbau-Verfahren</a></h3>
 <p>
 Bevor man den Scripteditor Dialog benutzen kann, muss man planen,
 welche Datentypen und eventIn/eventOut Informationen die Knoten 
@@ -2474,8 +2465,7 @@ in <em>Options -&gt; ECMAscript settings</em> so zu setzen, dass nur der
 fest verdrahte Kommentar &uuml;ber den jeweils benutzen Datentyp &uuml;brig 
 bleibt.
 </p> 
-<h3><a name="x3domscript">X3DOM scripting</a> <small>
-                                     (neu in Version 0.99pl1084)</small></h3>
+<h3><a name="x3domscript">X3DOM scripting</a></h3>
 <p>
 <a href='https://www.x3dom.org/'>X3DOM</a>, ein X3D browser im 
 Webbrowser, unterst&uuml;tzt keine X3D Script-Knoten, sondern nur
@@ -2494,8 +2484,7 @@ dabei statt der eventOut-Variablen ein Zugriff &uuml;ber den "DEF" name
 Beim Preview/Export nach X3DOM werden dann alle n&ouml;tigen Eintr&auml;ge
 f&uuml;r X3DOM in der X3D-Datei angepasst.
 </p>
-<h3><a name="nurbs">NURBS Modellierung</a> <small>
-                          (zum Teil neu in Version 0.25beta)</small></h3>
+<h3><a name="nurbs">NURBS Modellierung</a></h3>
 <ul>
 <li> <h4><a name="nurbsbasics">NURBS Grundlagen</a></h4>
 <p>
@@ -2596,8 +2585,7 @@ Nur mit einem hohen Wert f&uuml;r "tessellation" zeigt sich die
 <br><br><img src=tess181.jpg><br><br>
 </p> 
 </li>
-<li> <h4><a name="nurbssymetric">X symetrisches Modellieren</a>
-<small>(neu in Version 0.25beta)</small></h4>
+<li> <h4><a name="nurbssymetric">X symetrisches Modellieren</a></h4>
 <p>
 Mit White_dune kann man Nurbs(Patch)Surface Knoten erstellen 
 (z.B. mit <em>Erzeugen -&gt; VRML97 Amendment 1 -&gt; NurbsSurface -&gt; plain/OK</em>). 
@@ -2772,8 +2760,7 @@ verschoben/rotiert/skaliert usw. werden.
 <br><br><img src=nurbsgroup6.jpg><br><br>
 </p> 
 </li>
-<li> <h4><a name="nurbsconversion">NURBS Konversion</a>
-<small>(neu in Version 0.25beta)</small></h4>
+<li> <h4><a name="nurbsconversion">NURBS Konversion</a></h4>
 <p>
 Wenn geschlossene Nurbs(Patch)Surface 
 Knoten das Ziel sind, kann es n&uuml;tzlich
@@ -2858,8 +2845,7 @@ scripted PROTO ist es nur indirekt Teil des Standards.
 </li>
 </ul>
 </p>
-<li> <h4><a name="elevatedegree">Grad Erh&ouml;hung</a>
-<small>(neu in Version 0.27beta)</small></h4>
+<li> <h4><a name="elevatedegree">Grad Erh&ouml;hung</a></h4>
 <p>
 Bei Modellieren mit NURBS Knoten kommt oft der Wunsch auf, neue 
 Kontrollpunkte in einer Richtung einzuf&uuml;gen.
@@ -2872,8 +2858,7 @@ Mit den neuen Kontrollpunkten lassen sich neue Ausbuchtungen verwirklichen.
 <br><br><img src=elevate_target.jpg><br><br>
 </p>
 </li>
-<h4><a name="nurbsrebuild">NURBS Neubau</a>
-                                <small>(neu in Version 0.99pl1090)</small></h4>
+<h4><a name="nurbsrebuild">NURBS Neubau</a></small></h4>
 <li>
 Leider reicht die Graderh&ouml:hung nicht aus, um komplexe NURBS
 K&ouml;rper zu modellieren. Es kann vorkommen, dass man viele neue
@@ -2912,7 +2897,7 @@ Dabei muss angegeben werden, welche Seite gespiegelt werden soll.<br>
 </li>
 <li>
     <h4><a name="nurbsextrusion">NURBS Extrusion</a>
-                                  <small>(neu in Version1.072)</small></h4>
+                                  <small>(neu in Version 1.072)</small></h4>
 <p>
 Wird aus einer NURBS Fl&auml;che ein Kontrollpunkt herausgezogen, 
 entsteht eine Situation, bei der der n&auml;chste Kontollpunkt
@@ -2932,8 +2917,7 @@ Dabei enstehen 4 Punkte, die im folgenden herausgezogen werden:<br>
 <img src=nurbsextrude3.png><br>
 </p>
 </li>
-<li> <h4><a name="nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a>
-<small>(neu in Version 0.25beta)</small></h4>
+<li> <h4><a name="nurbsindexedfaceset">IndexedFaceSet Knoten erzeugen</a></h4>
 <p>
 NURBS Fl&auml;chen werden oft als abgerundete Fl&auml;chen angesehen.
 Aber neben mehrfachen Kontrollpunkten und Knotvektor Werten,
@@ -3034,8 +3018,7 @@ flachen NurbsCurve in Richtung der Steigung der NurbsCurve).
 </li>
 </ul>
 </p>
-<h3><a name="nurbstrimmed">NURBS Trimming</a> 
-                                  <small>(neu in Version 0.99pl1050)</small></h3>
+<h3><a name="nurbstrimmed">NURBS Trimming</a></small></h3>
 <p>
 In Version 0.99pl1050 wird der NurbsTrimmedSurface Knoten wirklich einsetzbar.
 <br>
@@ -3052,8 +3035,7 @@ einem Absturz in der Graphikbibleothel "libGLU" kommen 8-(<br>
 Wird die Kurve ueber Griffe in white_dune ver&auml;ndert, bleibt sie
 geschlossen.
 </p>
-<h3><a name="super">Superformula Modellierung</a> 
-                                  <small>(neu in Version 0.27beta)</small></h3>
+<h3><a name="super">Superformula Modellierung</a></h3>
 <h4><a name="superformula">Superformula Grundlagen</a></h4>
 <p>
  White_dune unterst&uuml;tzt 3D-modelling, die auf der sogenannten
@@ -3148,7 +3130,7 @@ geschlossen.
   </li>
  </ul>
 </p>
-<h3><a name="subdivide">Subdivide Modellierung</a> <small>(neu in Version 0.99pl624)</small></h3>
+<h3><a name="subdivide">Subdivide Modellierung</a></h3>
 <p>
 Subdivide Modellierung ist verf&uuml;gbar via 
 <em>(IndexedFace)Set -&gt; subdivide</em>
@@ -3187,7 +3169,7 @@ Analog zu Fl&auml;chen, Linien k&ouml;nnen ausgew&auml;hlt werden mit
 Ausgew&auml;hlte Linien lines k&ouml;nnen mit der Maus verschoben werden.
 <br><br><img src="extrusion10.png"><br><br>
 </p>
-<h3><a name="extrusion">IndexedFaceSet Extrusion</a> <small>(neu in Version 0.99pl654)</small></h3>
+<h3><a name="extrusion">IndexedFaceSet Extrusion</a></h3>
 <p>
 Wenn der angew&auml;lte X3D-Befehl ein IndexedFaceSet ist (oder zum 
 IndexedFacedSet konvertiert wurde),steht ein spezielle Form der Extrusion
@@ -3218,7 +3200,7 @@ Das macht Sinn im Zusammenhang mit
 Das Ganze mit angepasstem IndexedFaceSet.creaseAngle 
 <br><br><img src="extrusion8.png"><br><br>
 </p>
-<h3><a name="coordinate">&Auml;ndern von Coordinate basierten Knoten</a><small> (neu in Version 0.29beta)</small></h3>
+<h3><a name="coordinate">&Auml;ndern von Coordinate basierten Knoten</a></h3>
 <p>
 Seit Version 0.29beta k&ouml;nnen auch Coordinate basierte Knoten 
 (wie IndexedFaceSet ("Mesh"), IndexedLineSet oder PointSet)
@@ -3272,7 +3254,7 @@ Es gibt einige n&uuml;tzliche modelling Aktionen im <em>Aktion</em> Men&uuml;:
  </li>
 </ul>
 </p>
-<h4><a name="convexhull">Konvexe H&uuml;lle</a><small>(neu in Version 1,256)</small></h4>
+<h4><a name="convexhull">Konvexe H&uuml;lle</a><small>(neu in Version 1.256)</small></h4>
 <p>
 <em>Aktion -&gt; Konvexe Huelle</em> erzeugt ein bauchiges IndexedFaceSet
 aus Objekten in einem Szenegraph Zweig (es kann auch f&uuml;r einen ganzen
@@ -3314,7 +3296,7 @@ Eine Verbindung zwischen den Objekten ist entstanden.<br>
 Der Szenengraph kann z.B. mit <a href="#boolean">boolscher Modellierung</a> 
 (zusammenbauen) vereinfacht werden.
 </p>
-<h4><a name="meshreducer">Fl&auml;chen Reduzierer</a> (neu in Version 0.99pl850)</h4>
+<h4><a name="meshreducer">Fl&auml;chen Reduzierer</a></h4>
 <p>
 Arbeitet man mit <a href="#subdivide">Subdivide Modellierung</a> (oder
 einem 3D-Scanner), kann die Zahl der entstehenden Fl&auml;chen explodieren.
@@ -3340,7 +3322,7 @@ Als einziger Ausweg hilft die symetrische Modellierung.
 Mit <em>(IndexedFace)Set -&gt; mache symetrisch</em> kann man die eine
 (plus) oder andere (plus abgew&auml;hlt) Seite eines IndexedFaceSet spiegeln.
 </p>
-<h4><a name="skinbones">Skin and bones Modellierung</a><small>(neu in Version 0.99pl972)</small></h4>
+<h4><a name="skinbones">Skin and bones Modellierung</a></h4>
 <p>
 "Skin and bones" bedeutet dass Sie eine Oberfl&auml;che als Haut (skin)
 und Gelenke/Knochen (bones) haben, um die Oberfl&auml;che zu manipulieren.
@@ -3455,7 +3437,7 @@ W&auml;hlen Sie HAnimHumanoid.skinCoord an und benutzen Sie
 <br>
 <img src="flower19.png"><br>
 </p>
-<h4><a name="boolean">Boolsche Modellierung</a><small>(neu in Version 0.99pl999)</small></h4>
+<h4><a name="boolean">Boolsche Modellierung</a></h4>
 <p>
 White_dune erlaubt die boolsche Modellierung von IndexedFaceSets.<br>
 Dabei werden eine Gruppe (Knoten Group) von 2 Meshes (graphische
@@ -3500,7 +3482,40 @@ Danach wird <em>(IndexedFace)Set -&gt; Boolsche Operationen -&gt; Abziehen
 </em> angewendet. Dabei einsteht ein IndexedFaceSet.<br>
 <img src="bool13.png"><br>
 </p>
-<h4><a name="array">Array Werkzeug</a><small>(neu in Version 0.27beta)</small></h4>
+<h4><a name="modifier">Vertex Modifier</a><small>(neu in Version 1.300)</small></h4>
+<p>
+Der Vertex Modifier kann eingesetzt werden, um Eckpunkte zu ver&auml;ndern.<br>
+Dazu muss NurbsSurface oder Coordinate angew&auml;hlt werden.<br>
+Ein Beispiel ausgehend vom SuperEllipsoid Knoten:
+<br><img src="modifier1.png"><br>
+Dieser Knoten muss in eine NurbsSurface umgewandelt werden mit 
+<em>Umwandeln -&gt; In Nurbs(Patch)Surface umwandeln</em>
+<br><img src="modifier2.png"><br>
+Im Dialog muss eine hohe Zahl an Eckpunkten eingegeben werden, mit wenigen
+Eckpunkten ist der Vertex Modifier witzlos.
+<br><img src="modifier3.png"><br>
+Danach ist der Nurbs(Patch)Surface Knoten angew&auml;hlt.<br>
+Es muss das Vertex Modifier Icon (<img src="modifier4.png">) angeklickt werden.
+<br>
+Dabei muss <a href="#nurbssymetric">X symetrisches Modellieren</a> 
+eingeschaltet sein.
+<br><img src="modifier5.png"><br>
+Danach muss "jump" angeklickt werden, radius und amount auf 0.5 gestellt
+werden und das Objekt an der Position des Pfeils angeklickt werden.<br>
+Die genaue Drehung des Objekts ist hier wichtig.
+<br><img src="modifier6.png"><br>
+Danach haben sich einige Eckpunkte am Rand des Objekts verschoben.<br>
+Jetzt klickt man auf "normal".
+<br><img src="modifier7.png"><br>
+3 Slider werden angezeigt, die die Richtung des Verschiebens angeben.<br>
+Die Ausgangseinstellung bedeutet (0, -1, 0) also nach unten.
+Danach muss ungef&auml;hr die gleiche Stelle angeklickt werden.<br>
+<br><img src="modifier8.png"><br>
+Danach klickt man "OK", die Eckpunkte werden wieder selektiert und
+das Objekt kann weiter bearbeitet werden.
+<br><img src="modifier9.png"><br>
+</p>
+<h4><a name="array">Array Werkzeug</a></h4>
 <p>
 White_dune erlaubt es Objekte zu vervielf&auml;ltigen. 
 Im Unterschied zu &auml;hnlichen Funktionen in einigen 3D-Modellers 
@@ -3535,7 +3550,7 @@ arbeitet, die aus anderen Werkzeugen stammen. Sie dienen zur Korrektur
 von einigen kleineren Fehlern oder Problemen.
 <ul>
  <li>
-  <h4><a name="remove_invalid">Ung&uuml;ltige children nodes loeschen</a> (new in Version 0.27beta)</h4>
+  <h4><a name="remove_invalid">Ung&uuml;ltige children nodes loeschen</a></h4>
   <br>
   In einigen F&auml;llen exportieren bereits benutzte Werkzeuge Dateien mit 
   ung&uuml;ltigen Kindknoten ("invalid children nodes").<br>
@@ -3559,7 +3574,7 @@ von einigen kleineren Fehlern oder Problemen.
   </ul>
  </li>
  <li>
-  <h4><a name="triangulate">Trianguliere IndexedFaceSet</a> (new in Version 0.29beta)</h4>
+  <h4><a name="triangulate">Trianguliere IndexedFaceSet</a></h4>
   <br>
   Ein IndexedFaceSet besteht aus Polygonen. Im Allgemeinen bedeutet das,
   das es Fl&auml;chen mit 3, 4, 5, 6, 7 usw. Ecken gibt. Leider ist die
@@ -3623,11 +3638,11 @@ von einigen kleineren Fehlern oder Problemen.
   "Triangulation".<br>
   Im allgemeinen erfordert die Triangulation die Erzeugung von neuen
   Eckpunkten, deswegen ist es keine gute Idee, Triangulation bei
-  einem IndexedFaceSet zu benutzen, das f&uuml;r eine Morphing Animation 
-  benutzt wird.
+  einem IndexedFaceSet zu benutzen, das gerade f&uuml;r eine Morphing 
+  Animation benutzt wird.
  </li>
  <li>
-  <h4><a name="set_path">Set path of all URLs to</a> (new in Version 0.27beta)</h4>
+  <h4><a name="set_path">Set path of all URLs to</a></h4>
   <br>
   Einige Werkzeuge, die VRML/X3D Dateien schreiben, erzeugen bei der Benutzung
   von Dateien (zum Beispiel bei der Benutzung von Bildern/Bitmaps beim
@@ -3648,7 +3663,7 @@ von einigen kleineren Fehlern oder Problemen.
 <p>
 <ul>
  <li>
-  <h4><a name="object_url_edit">Objekt/URL editieren</a> (new in Version 0.29beta)</h4>
+  <h4><a name="object_url_edit">Objekt/URL editieren</a></h4>
   <br>
   Die Benutzung der "Edit Object"/"Edit URL" Aktion wurde schon im
   Kapitel &uuml;ber <a href="#simplescript">script editing</a> beschrieben.
@@ -3694,7 +3709,7 @@ von einigen kleineren Fehlern oder Problemen.
   UNIX/X11 Programm wie gimp benutzen.
  </li>
  <li>
-  <h4><a name="set_default">Setze default Werte (behalte Szenengraph)</a> (new in Version 0.27beta)</h4>
+  <h4><a name="set_default">Setze default Werte (behalte Szenengraph)</a></h4>
   <br>
   Manchmal ist es sinnvoll, alle vera&uuml;nderten Werte eines Knotens
   wieder auf die Anfangswerte zur&uuml;kzusetzen. Allerdings sind beim
@@ -3705,7 +3720,7 @@ von einigen kleineren Fehlern oder Problemen.
   SFNode bzw. MFNode unver&auml;ndert gelassen.
  </li>
  <li>
-  <h4><a name="xray">R&ouml;ntgenblick</a> (new in Version 0.27beta)</h4>
+  <h4><a name="xray">R&ouml;ntgenblick</a></h4>
   <br>
   Die experimentelle R&ouml;ntgenblick Funktion l&auml;sst einen
   durch alle undurchsichtigen Oberfl&auml;che einer Szene schauen.
@@ -3713,7 +3728,7 @@ von einigen kleineren Fehlern oder Problemen.
  </li>
 </ul>
 </p>
-<h4><a name="proto"><em>PROTO Erstellung/Ver&auml;nderung</em></a></h4> <small> (new in Version 0.99pl444)</small>
+<h4><a name="proto"><em>PROTO Erstellung/Ver&auml;nderung</em></a></h4>
 <p>
 Um ein PROTO zu erstellen, muss zuerst ein Szenengraphzweig erstellt werden,
 deren Knoten den Grossteil des PROTOs ausmachen.<br>
@@ -3759,7 +3774,7 @@ Danach l&auml;sst sich "color" im DOME-Knoten ver&auml;ndern und
 ein weiteres Transform und DOME Paar einf&uuml;gen.
 <br><br><img src=proto_creation12.png><br><br>
 </p>
-<h4><a name="vrmlcut"><em>VrmlCut scripted Proto</em></a></h4> <small> (new in Version 0.29beta)</small>
+<h4><a name="vrmlcut"><em>VrmlCut scripted Proto</em></a></h4>
 <p>
 In VRML/X3D ist es erstaunlich schwierig eine Folge von Animationen zu
 erzeugen, die man &uuml;blicherweise "Film" nennt.
@@ -3834,7 +3849,7 @@ des VrmlCut Knotens kann ein reduzierter Bereich der Animationen angeschaut
 werden. Das ist sinnvoll, um die L&auml;ngen der Scenen im  sceneLengths field 
 des VrmlCut Knoten zu optimieren.
 </p>
-<h4><a name="upload"><em>Datei -&gt; Upload</em></a> </h4> <small>(new in Version 0.27beta)</small>
+<h4><a name="upload"><em>Datei -&gt; Upload</em></a> </h4>
 <p>
 White_dune hat einen Befehl (Men&uuml;punkt <em>Datei -&gt; Upload</em>) 
 um eine VRML Datei auf einen Internet Server heraufzuladen.<br>
@@ -3909,5 +3924,3 @@ die
 Kurve ist, so kann man, wie im Bild zu sehen, eine Ecke in der Kurve erzeugen.
 </small>
 </body>
-
-

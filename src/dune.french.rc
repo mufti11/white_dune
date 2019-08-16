@@ -259,6 +259,7 @@ BEGIN
             MENUITEM "&y (vert)  et z (bleu)",         ID_SWAP_YZ
             MENUITEM "&z (bleu)  et x (rouge)",        ID_SWAP_XZ
         END
+        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
 #endif
@@ -1402,8 +1403,9 @@ BEGIN
             END
         END
         MENUITEM "Valeur par default(garder le graphique de scène)",  ID_SET_DEFAULT
+        MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
-        MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "Convex hull",                        ID_CONVEX_HULL
 #endif
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
         BEGIN
@@ -3328,6 +3330,14 @@ END
 
 STRINGTABLE DISCARDABLE
 BEGIN
+    IDS_FR_QUAD "quad"
+    IDS_FR_JUMP "saut"
+    IDS_FR_PEAK "mont"
+    IDS_FR_AMOUNT "amplitude"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
     IDS_FR_LOADING_FILE        "Charger fichier.. (%d%%)"
     IDS_FR_SAVE_CHANGES        "Sauvegarder changement dans %s ?"
     IDS_FR_VERTEX_SELECTED     "selectionne: %s[%d] %f %f %f"
@@ -3950,6 +3960,7 @@ BEGIN
     ID_FR_SCALE_BY_X           "scale by factor in x direction\nscale factor x"
     ID_FR_SCALE_BY_Y           "scale by factor in y direction\nscale factor y"
     ID_FR_SCALE_BY_Z           "scale by factor in z direction\nscale factor z"
+    ID_FR_VERTEX_MODIFIER      "change Vertices\nvertex modifier"
     ID_FR_CENTER_TO_MID        "set center (rotation point) to mid of boundingbox\nset center to mid"
     ID_FR_CENTER_TO_MAXX       "set center (rotation point) to maximum x of boundingbox\nset center to maximum x"
     ID_FR_CENTER_TO_MAXY       "set center (rotation point) to maximum y of boundingbox\nset center to maximum y"

@@ -617,6 +617,9 @@ NodeNurbsSurface::createMesh(bool cleanVertices, bool triangulate)
 void
 NodeNurbsSurface::drawHandles()
 {
+    if (m_scene->getVertexModifier())
+        return;
+
     int iuDimension = uDimension()->getValue();
     int ivDimension = vDimension()->getValue();
     RenderState state;

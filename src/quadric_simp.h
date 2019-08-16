@@ -19,6 +19,11 @@
  * for more details.                                                         *
  *                                                                           *
  ****************************************************************************/
+
+#include "config.h"
+
+#ifdef HAVE_LIBVCG
+
 #include <math.h>
 #include <stdlib.h>
 #include <limits>
@@ -75,3 +80,4 @@ void QuadricSimplification(CMeshO &m,int targetFaceNum, bool Selected,
                            vcg::tri::TriEdgeCollapseQuadricParameter &pp, 
                            vcg::CallBackPos *cb);
 
+#endif

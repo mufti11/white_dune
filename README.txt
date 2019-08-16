@@ -5232,6 +5232,28 @@ Fixed crash in remove invalid child nodes
 
 Added workaround for crash in Path.cpp
 
+Added fix for missing NurbsSurface animation in pure VRML97 export
+
+Added missing NurbsCurve animation in pure VRML97 export
+
+Fixed missing update of colorcircle icon after color selection
+
+Changed default tesselation
+
+Added vertex modifier
+
+Added normal/direction choice to vertex modifier 
+
+Added documentation for vertex modifier
+
+Fixed unnecessary getLang() calls
+
+Fixed undo/redo for VertexModifier changes
+
+Added workaround for crash in undo/redo and following VertexModifier change
+
+Added workaround for normal/texCoord creation on IndexedTriangleSet conversion
+
 Contact: MUFTI <mufti11@web.de>
 
 

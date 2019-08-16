@@ -411,7 +411,7 @@ NodeImageTexture::reportLoadError(char* filename, const char *error_msg)
     if (mbReturn == IDCANCEL) return;
 
     char errorstring[256];
-    swLoadString(IDS_IMAGE_TEXTURE_ERROR + swGetLang(), errorstring, 255);
+    swLoadString(IDS_IMAGE_TEXTURE_ERROR, errorstring, 255);
     char buf[4096];
     if (error_msg) {                
          if (filename)
