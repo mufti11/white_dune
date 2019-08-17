@@ -283,7 +283,9 @@ BEGIN
             MENUITEM "Déplacer le reste de la branche du graphique de scène dans un nouveau Transform", ID_BRANCH_TO_TRANSFORM
             MENUITEM "Déplacer le reste de la branche du graphique de scène dans le &Transform désigné", ID_BRANCH_TO_PARENT
             MENUITEM "Flip side in reste de la branche du graphique de scène", ID_BRANCH_SET_FLIP_SIDE
+#ifdef HAVE_LIBCGAL
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
+#endif
         END
         MENUITEM SEPARATOR
         MENUITEM "Rebuild de controlpoints",            ID_REBUILD_NURBS_CONTROL_POINTS
@@ -488,7 +490,9 @@ BEGIN
         MENUITEM "Remove Material node in rest of branch", ID_BRANCH_REMOVE_MATERIAL
         MENUITEM "Create Material node in rest of branch", ID_BRANCH_CREATE_MATERIAL
         MENUITEM "Show number of Polygons in Status Bar for rest of branch", ID_BRANCH_COUNT_POLYGONS_4_CATT
+#ifdef HAVE_LIBCGAL
         MENUITEM "Boolean Operation union",             ID_BRANCH_CSG_UNION
+#endif
     END
     POPUP "&Movement"
     BEGIN
@@ -1350,7 +1354,9 @@ BEGIN
             BEGIN
                 MENUITEM "Utiliser field pipe",            ID_BRANCH_FIELD_PIPE
                 MENUITEM "Optimiser IndexedFaceSets",      ID_BRANCH_OPTIMIZE
+#ifdef HAVE_LIBCGAL
                 MENUITEM "Boolean Operation union",        ID_BRANCH_CSG_UNION
+#endif
                 MENUITEM "Montrer le nombre de polygones dans la barre d' affichage", ID_BRANCH_COUNT_POLYGONS
                 MENUITEM "Créer RigidBodyCollection/CollisionSensor", ID_BRANCH_BUILD_RIGID_BODY_COLLECTION
             END

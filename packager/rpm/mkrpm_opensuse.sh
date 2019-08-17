@@ -49,7 +49,7 @@ URL: http://wdune.ourproject.org/
 Source: ftp://ftp.ourproject.org/pub/wdune/$VERSION3.tar.bz2
 BuildRoot: /var/tmp/%{name}buildroot
 BuildRequires: gcc-c++, gawk, make, bash, fileutils, motif-devel, libXi-devel, libXmu-devel, libpng-devel, libjpeg-devel, glu-devel, libexpat-devel, flex, bison, libusb-devel, update-desktop-files, fdupes, libcgal-devel, libcurl-devel, ImageMagick, freetype2-devel, bitstream-vera-fonts, libavcodec-devel libavutil-devel libavformat-devel libavresample-devel libswscale-devel libswresample-devel
-Requires: rcs, firefox, pinta, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts
+Requires: rcs, firefox, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts
 
 %description
 white_dune is a graphical X3D/VRML97 editor, 3D modeler and animation tool.
@@ -90,7 +90,7 @@ Partitial translations of menus exist for French, Italian and Portuguese.
 
 
 %build
-./configure $OPTIMIZE --without-devil --with-vrmlbrowser=firefox --with-helpurl="/usr/share/doc/packages/white_dune/docs/"  --with-protobaseurl="/usr/share/doc/packages/white_dune/docs" --with-checkincommand="ci"  --with-imageeditor="pinta" --with-imageeditor4kids="kolourpaint" --with-soundeditor=audacity
+./configure $OPTIMIZE --without-devil --with-vrmlbrowser=firefox --with-helpurl="/usr/share/doc/packages/white_dune/docs/"  --with-protobaseurl="/usr/share/doc/packages/white_dune/docs" --with-checkincommand="ci"  --with-imageeditor="kolourpaint" --with-imageeditor4kids="kolourpaint" --with-soundeditor=audacity
 make -j1 RPM_OPT_FLAGS="$RPM_OPT_FLAGS" 
 
 %if 0%{?suse_version} < 1330

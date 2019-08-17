@@ -166,11 +166,8 @@ public:
 
     Node           *toIndexedLineSet(void);
 
-    virtual bool    showFields() 
-                        { 
-                        return TheApp->getCoverMode() || 
-                               TheApp->getKambiMode(); 
-                        }
+    virtual bool    showFields() { return true; }
+
     NodeIndexedFaceSet *splitSelectedFaces(void);
     void            extrudeFaces(float dist);
     void            insetFace(float factor);

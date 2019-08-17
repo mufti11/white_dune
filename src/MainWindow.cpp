@@ -1001,6 +1001,14 @@ static bool searchVrmlCut(Node *node, void *data)
 MainWindow::MainWindow(Scene *scene, SWND wnd)
   : PanedWindow(scene, wnd, false)
 {
+    m_destroyed = false;
+    m_colorCircle_enabled = false;
+    m_colorCircle_active = false;
+    m_colorCircleHint = NULL;
+    m_vertexModifier_enabled = false;
+    m_vertexModifier_active = false;
+    m_vertexModifierHint = NULL;
+    m_vertexModifier_overwrite = false;
     TheApp->accoutMaxNumberAxesInputDevices();
     m_vrmlCutNode = NULL;
     m_parentWindow = wnd;
@@ -1009,7 +1017,7 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     m_fieldPipeCommand = "";
     m_fieldPipeFilterNode = "";
     m_fieldPipeFilterField = "";
-   m_showNumbers4Kids = false;
+    m_showNumbers4Kids = false;
 
     if (TheApp->is4Kids())
         m_menu = swLoadMenuBar(wnd, IDR_DUNE_4KIDS_TYPE + swGetLang());
@@ -1333,14 +1341,7 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
 
     scene->setSelection(scene->getRoot());
 
-    m_colorCircle_enabled = false;
-    m_colorCircle_active = false;
-    m_colorCircleHint = NULL;
     setColorCircleIcon();
-    m_vertexModifier_enabled = false;
-    m_vertexModifier_active = false;
-    m_vertexModifierHint = NULL;
-    m_vertexModifier_overwrite = false;
     setVertexModifierIcon();
     m_objectEdit_enabled = false;
     m_urlEdit_enabled = false;
@@ -1444,7 +1445,6 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     m_selectedField = -1;
     m_statusText[0] = 0;
     m_searchText = "";
-    m_destroyed = false;
 
     scene->UpdateViews(this, UPDATE_ALL, NULL);
 
@@ -1495,7 +1495,7 @@ MainWindow::destroyMainWindow(void) // but keep scene
     }
     m_destroyed = true;
     if (!TheApp->is4Kids())
-        if (m_vertexModifier_enabled)
+        if (m_vertexModifier_active)
             TheApp->SetBoolPreference("ShowFieldView", true);
     Stop();
     TheApp->SetBoolPreference("MaximizeWindows", swIsMaximized(m_wnd) != 0);
@@ -2371,9 +2371,11 @@ MainWindow::OnCommand(void *vid)
       case ID_BRANCH_OPTIMIZE:
         branchOptimize();
         break;
+#ifdef HAVE_LIBCGAL
       case ID_BRANCH_CSG_UNION:
         branchCSGUnion();
         break;
+#endif
       case ID_VERTEX_MODIFIER:
         showVertexModifier();
         break;
@@ -4388,15 +4390,18 @@ void MainWindow::updateVertexModifier(void)
     
           if (node && node->getType() == VRML_COORDINATE) {
               NodeCoordinate *coord = (NodeCoordinate *)node;
+              if (m_vertexModifierHint)
+                  delete m_vertexModifierHint;
               m_vertexModifierHint = new FieldUpdate(node, coord->point_Field(),
                                                      -1);
           }
           if (node && node->getType() == VRML_NURBS_SURFACE) {
               NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
+              if (m_vertexModifierHint)
+                  delete m_vertexModifierHint;
               m_vertexModifierHint = new FieldUpdate(node, 
                                              nurbs->controlPoint_Field(), -1);
           }   
-
           m_fieldView = new VertexModifier(m_scene, m_fieldCanvas, 
                                            m_vertexModifierHint);
           m_vertexModifier_active = true;
@@ -4424,13 +4429,14 @@ MainWindow::showVertexModifier(void)
     if (node && node->getType() == VRML_COORDINATE) {
         NodeCoordinate *coord = (NodeCoordinate *)node;
         m_vertexModifierHint = new FieldUpdate(node, coord->point_Field(), -1);
+        m_vertexModifier_enabled = true;
     }
     if (node && node->getType() == VRML_NURBS_SURFACE) {
         NodeNurbsSurface *nurbs = (NodeNurbsSurface *)node;
         m_vertexModifierHint = new FieldUpdate(node, 
                                                nurbs->controlPoint_Field(), -1);
+        m_vertexModifier_enabled = true;
     }
-    m_vertexModifier_enabled = true;
     ShowView(PW_RIGHT, m_fieldView, ID_DUNE_VIEW_FIELD_VIEW, "ShowFieldView");
     updateVertexModifier();
 }
@@ -12458,24 +12464,16 @@ void MainWindow::setColorCircleIcon()
  
 void MainWindow::setVertexModifierIcon()
 {
+    m_vertexModifier_enabled = false;
     Node *current = m_scene->getSelection()->getNode();
     if (current && (current->getType() == VRML_COORDINATE)) {
         m_vertexModifier_enabled = true;
-        NodeCoordinate *coord = (NodeCoordinate *)current;
-        if (m_vertexModifierHint)
-            delete m_vertexModifierHint;
-        m_vertexModifierHint = new FieldUpdate(coord, coord->point_Field(), -1);
     }
     if (current && (current->getType() == VRML_NURBS_SURFACE)) {
         m_vertexModifier_enabled = true;
-        NodeNurbsSurface *nurbs = (NodeNurbsSurface *)current;
-        if (m_vertexModifierHint)
-            delete m_vertexModifierHint;
-        m_vertexModifierHint = new FieldUpdate(nurbs, 
-                                               nurbs->controlPoint_Field(), -1);
     }
     swMenuSetFlags(m_menu, ID_VERTEX_MODIFIER, SW_MENU_CHECKED, 
-                          m_vertexModifier_active ? SW_MENU_CHECKED : 0);
+                          m_vertexModifier_enabled ? SW_MENU_CHECKED : 0);
     swMenuSetFlags(m_menu, ID_VERTEX_MODIFIER, SW_MENU_DISABLED, 
                           m_vertexModifier_enabled ? 0 : SW_MENU_DISABLED);
     if (m_vertexModifier_enabled)

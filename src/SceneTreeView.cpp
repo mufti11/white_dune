@@ -424,8 +424,8 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
         if (showAllFields) {
             STREEITEM tmp = swTreeGetFirstChild(m_tree, item);
             if (!isNull(tmp)) {
-                item = tmp;
                 if (value->getType() == MFNODE) {
+                    item = tmp;
                     MFNode* mfNode = (MFNode *)value;
                     for (int n = 0; n < mfNode->getSize(); n++) { 
                         if (n == 0) {
@@ -531,16 +531,7 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
         } else if (field->getType() == SFNODE) {
             SFNode *value = (SFNode *) node->getField(i);
             const char *name = (const char *) field->getName(x3d);
-            if (showAllFields) {
-                fieldItem = swTreeInsertItem(m_tree, SW_INSERT_LAST_CHILD,
-                                             item, name);
-                swTreeSetItemData(m_tree, fieldItem, new TreeNode(i, NULL));
-                swTreeSetItemImage(m_tree, fieldItem, m_bitmapItems - 2, 
-                                   m_bitmapItems - 2);
-                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD,
-                              fieldItem);
-            } else
-                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
+            InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
         }
     }
 }
