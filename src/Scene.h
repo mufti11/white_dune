@@ -334,7 +334,7 @@ public:
                                                  int field) const;
 
     void                drawScene(bool pick = false, int x = 0, int y = 0,
-                                  float width = 0, float height = 0,
+                                  double width = 0, double height = 0,
                                   Node *root = NULL, bool update = false,
                                   float scaleX = 1, float scaleY = 1);
 

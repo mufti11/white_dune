@@ -47,6 +47,8 @@
 #include "NodeLayoutLayer.h"
 #include "NodeLayoutGroup.h"
 
+#define PART_BOX 0.1
+
 static int 
 inputDeviceTimerCallback(void *data)
 {
@@ -292,6 +294,15 @@ Scene3DView::drawViewPort(Node *root, int count, bool update)
                m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
                                           m_rubberBandX, m_rubberBandY);
        }
+    if (m_scene->getVertexModifier()) {
+         m_scene->draw3dBoundingBox(0, 0, width * PART_BOX, height * PART_BOX);
+         m_scene->draw3dBoundingBox(width * (1.0f - PART_BOX),
+                                    height * (1.0f - PART_BOX), width, height);
+         m_scene->draw3dBoundingBox(0, height * (1.0f - PART_BOX), 
+                                    width * PART_BOX, height);
+         m_scene->draw3dBoundingBox(width * (1.0f - PART_BOX), 0, 
+                                    width, height * PART_BOX);
+    }
 }
 
 void Scene3DView::OnDraw(int /* x */, int /* y */,
@@ -371,7 +382,7 @@ void Scene3DView::OnKeyUp(int key, int x, int y, int modifiers)
 }
 
 #define PICK_BUFFER_SIZE 65536
-#define PICK_REGION_SIZE 0.1
+#define PICK_REGION_SIZE 0.001
 
 unsigned int
 Scene3DView::getHit(int x, int y)
@@ -381,12 +392,8 @@ Scene3DView::getHit(int x, int y)
 
     swGetSize(m_wnd, &width, &height);
 
-    float xwidth = PICK_REGION_SIZE * TheApp->GetHandleSize();
-    if (width != 0)
-        xwidth = width;
-    float yheight = PICK_REGION_SIZE * TheApp->GetHandleSize();
-    if (height != 0)
-        yheight = height;
+    float xwidth = PICK_REGION_SIZE; 
+    float yheight = PICK_REGION_SIZE;
     GLuint pBuffer[PICK_BUFFER_SIZE];
     GLuint *pickBuffer = pBuffer;
     glSelectBuffer(PICK_BUFFER_SIZE, pickBuffer);
@@ -409,8 +416,8 @@ Scene3DView::getHit(int x, int y)
             unsigned maxDepth = *pickBuffer++;
             for (int i = 0; i < numNames; i++) {
                int buffer = *pickBuffer++;
-               if (maxDepth > depth) {
-                   depth = maxDepth; 
+               if (minDepth > depth) {
+                   depth = minDepth; 
                    hit = buffer;
                }
             } 
@@ -536,7 +543,16 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 swSetCursor(m_wnd, m_cursorRotate);
         }
     }
-    if (m_scene->getVertexModifier()) {
+    bool insideBoxes = false;
+    if ((x < PART_BOX * width) && (y < PART_BOX * height))
+        insideBoxes = true;
+    if ((x > width - PART_BOX * width) && (y > height - PART_BOX * height))
+        insideBoxes = true;
+    if ((x > width - PART_BOX * width) && (y < PART_BOX * height))
+        insideBoxes = true;
+    if ((x < PART_BOX * width) && (y < height - PART_BOX * height))
+        insideBoxes = true;
+    if (m_scene->getVertexModifier() && !insideBoxes) {
         Node *node = m_scene->getVertexModifier()->getNode();
         int field = m_scene->getVertexModifier()->getField();
         MFVec3f *vertices = NULL;
@@ -575,13 +591,16 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
             m_scene->projectPoint(v.x, v.y, v.z, &px, &py, &pz);
             m_scene->unProjectPoint((float) x, (float) height - (float) y, 
                                      pz, &o.x, &o.y, &o.z);
+            unsigned int depth = getHit(x, y);
             m_scene->unProjectPoint((float) x, (float) height - (float) y, 
-                                    (double)getHit(x, y) / UINT_MAX, 
+                                    (float) depth / UINT_MAX, 
                                     &h.x, &h.y, &h.z);
             glPopMatrix();
-            Vec3f v2(viewPos.x, viewPos.y, viewPos.z);
-            float dist = -h.z - (v2 * viewQuat.conj()).z;
+
+            float dist = viewPos.length() + h.z;
             o.z = dist;
+            o = o * viewQuat;
+
             Vec3f compareVec = o * transformMatrix.invert();
             float eps = TheApp->GetHandleEpsilon();
             float amount = m_scene->getVertexModifier()->getAmount();
@@ -596,26 +615,7 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 direction.z = m_scene->getVertexModifier()->getZ();
             }
 
-            // get x-y-neareast vertex as compareVec
-            float compareLen = FLT_MAX;
-            int compareIndex = -1;
-            for (int i = 0; i < vertices->getSFSize(); i++) {
-                Vec3f vec = vertices->getVec(i);
-                vec = vec * viewQuat.conj();
-                vec.z = dist;
-                vec = vec * transformMatrix.invert();
-                Vec3f comp = compareVec; 
-                if ((vec - comp).length() < radius) {
-                    float len = (vec - comp).length();
-                    if (len < compareLen) {
-                        compareLen = len;
-                        compareIndex = i;
-                    }
-                }
-            }
-            if (compareIndex != -1) {
-                compareVec = vertices->getVec(compareIndex);
-
+            if (depth != 0) {
                 for (int i = 0; i < vertices->getSFSize(); i++) {
                     Vec3f vec = vertices->getVec(i);
                     Vec3f oldVec = vec;

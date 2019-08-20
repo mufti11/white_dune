@@ -3819,7 +3819,7 @@ Scene::redo()
 }
 
 void
-Scene::drawScene(bool pick, int x, int y, float width, float height, 
+Scene::drawScene(bool pick, int x, int y, double width, double height, 
                  Node *root, bool useUpdate, float scaleX, float scaleY)
 {
     m_width = width;
@@ -6146,10 +6146,8 @@ Scene::isValidElement(Element *element, bool x3d)
                            ((!x3d) && (!TheApp->getKambiMode()));
     if (
         (flags & FF_NEVER) ||
-        (invalidX3d && invalidX3dKambi) ||
-        (invalidX3dom) ||
-        ((flags & FF_VRML_ONLY) && x3d) ||
-        (invalidKambi && invalidX3dKambi) ||
+        invalidX3d || invalidX3dKambi || invalidX3dKambi || invalidX3dom ||
+        ((flags & FF_VRML_ONLY) && x3d) || 
         ((flags & FF_COVER_ONLY) && (!TheApp->getCoverMode())) ||
         ((flags & FF_ROOT_ONLY) && (getSelection()->getNode() != getRoot()))
        )

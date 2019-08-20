@@ -5254,6 +5254,8 @@ Added workaround for crash in undo/redo and following VertexModifier change
 
 Added workaround for normal/texCoord creation on IndexedTriangleSet conversion
 
+Fixed wrong writing of VRML97 amendment 1 NurbsSurface node
+
 Contact: MUFTI <mufti11@web.de>
 
 

@@ -4300,6 +4300,10 @@ MainWindow::OnCommand(void *vid)
       default:
         // recent files
         if ((id > ID_DUNE_FILE_MRU_FIRST) && (id < ID_DUNE_FILE_MRU_LAST)) { 
+            if (!TheApp->is4Kids())
+                if (m_vertexModifier_active)
+                    TheApp->SetBoolPreference("ShowFieldView", true);
+
 #ifndef HAVE_OPEN_IN_NEW_WINDOW
             if (!TheApp->checkSaveOldWindow())
                 return;
@@ -4405,7 +4409,8 @@ void MainWindow::updateVertexModifier(void)
           m_fieldView = new VertexModifier(m_scene, m_fieldCanvas, 
                                            m_vertexModifierHint);
           m_vertexModifier_active = true;
-          m_scene->AddView(m_fieldView); 
+          m_scene->AddView(m_fieldView);
+          m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
           m_innerPane->SetPane(m_fieldView, PW_RIGHT);
           m_fieldView->setEnabled(false);
           m_scene->setVertexModifier((VertexModifier *)m_fieldView);

@@ -429,34 +429,58 @@ VertexModifier::normalCheckBoxCallback(void *id)
 void 
 VertexModifier::radiusScrollCallback(int type, int value)
 {
+#ifdef WIN32
+    if (type == 0)
+#endif
     setRadius(value / 100.0f);
 }
 
 void 
 VertexModifier::amountScrollCallback(int type, int value)
 {
+#ifdef WIN32
+    if (type == 0)
+#endif
     setAmount(value / 100.0f);
 }
 
 void 
 VertexModifier::xScrollCallback(int type, int value)
 {
+#ifdef WIN32
+    if (type == 0) {
+#endif
     m_x = (value / 100.0f - 0.5f) * 2.0f;
     setX(m_x);
+#ifdef WIN32
+    }
+#endif
 }
 
 void 
 VertexModifier::yScrollCallback(int type, int value)
 {
+#ifdef WIN32
+    if (type == 0) {
+#endif
     m_y = (value / 100.0f - 0.5f) * 2.0f;
     setY(m_y);
+#ifdef WIN32
+    }
+#endif
 }
 
 void 
 VertexModifier::zScrollCallback(int type, int value)
 {
+#ifdef WIN32
+    if (type == 0) {
+#endif
     m_z = (value / 100.0f - 0.5f) * 2.0f;
     setZ(m_z);
+#ifdef WIN32
+    }
+#endif
 }
 
 void 
