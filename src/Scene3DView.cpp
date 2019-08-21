@@ -580,28 +580,21 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
             Quaternion viewQuat = m_scene->getCamera()->getOrientation();
             Vec3d viewPos = m_scene->getCamera()->getPosition();
 
-            float px, py, pz;
-            Vec3f v;
-            Vec3f o;
             Vec3f h;
 
             glPushMatrix();
             glLoadIdentity();
             m_scene->transform(m_scene->getSelection());
-            m_scene->projectPoint(v.x, v.y, v.z, &px, &py, &pz);
-            m_scene->unProjectPoint((float) x, (float) height - (float) y, 
-                                     pz, &o.x, &o.y, &o.z);
             unsigned int depth = getHit(x, y);
             m_scene->unProjectPoint((float) x, (float) height - (float) y, 
                                     (float) depth / UINT_MAX, 
                                     &h.x, &h.y, &h.z);
             glPopMatrix();
 
-            float dist = viewPos.length() + h.z;
-            o.z = dist;
-            o = o * viewQuat;
-
-            Vec3f compareVec = o * transformMatrix.invert();
+            Vec3f view(0, 0, viewPos.length());
+            view = view * viewQuat;
+            h.y = -h.y; // ???
+            Vec3f compareVec = (h * viewQuat + view) * transformMatrix.invert();
             float eps = TheApp->GetHandleEpsilon();
             float amount = m_scene->getVertexModifier()->getAmount();
             float radius = m_scene->getVertexModifier()->getRadius();
