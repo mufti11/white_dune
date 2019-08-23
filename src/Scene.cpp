@@ -4076,20 +4076,24 @@ Scene::draw3dCursor(int x, int y)
     glPopMatrix();
 }
 
-
-void
-Scene::draw3dBoundingBox(int xfrom, int yfrom, int xto, int yto)
+bool
+Scene::isVerticesOrNurbs(void)
 {
     Node *selection = NULL;
     if (getSelection())
         selection = getSelection()->getNode();
-    bool isNurbs = selection && ((selection->getType() == VRML_NURBS_SURFACE) || 
+    bool isNurbs = selection && ((selection->getType() == VRML_NURBS_SURFACE) ||
                                  (selection->getType() == VRML_NURBS_CURVE) ||
                                  (selection->getType() == VRML_NURBS_CURVE_2D) ||
                                  (selection->getType() == DUNE_CURVE_ANIMATION));
-    if ((getSelectionMode() != SELECTION_MODE_VERTICES) && (!isNurbs))
-        return;
+    if ((getSelectionMode() == SELECTION_MODE_VERTICES) || isNurbs)
+        return true;
+    return false;
+}
 
+void
+Scene::draw3dBoundingBox(int xfrom, int yfrom, int xto, int yto)
+{
     float objXfrom;
     float objYfrom;
     float objZfrom;

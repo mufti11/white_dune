@@ -252,8 +252,9 @@ Scene3DView::drawViewPort(Node *root, int count, bool update)
                 m_scene->draw3dCursor(m_mouseX, m_mouseY);
         if (m_button3down)
             if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
-                m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
-                                           m_rubberBandX, m_rubberBandY);
+                if (m_scene->isVerticesOrNurbs())
+                    m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
+                                               m_rubberBandX, m_rubberBandY);
         if (TheApp->isAnaglyphStereo())
             glAccum(GL_ACCUM, 1.0f);
 
@@ -279,8 +280,9 @@ Scene3DView::drawViewPort(Node *root, int count, bool update)
             if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN)) {
                 m_scene->draw3dCursor(m_mouseX, m_mouseY);
                 if (m_button3down)
-                    m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
-                                              m_rubberBandX, m_rubberBandY);
+                    if (m_scene->isVerticesOrNurbs())
+                        m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
+                                                   m_rubberBandX, m_rubberBandY);
             }
         if (TheApp->isAnaglyphStereo())
             glAccum(GL_ACCUM, 1.0f);
@@ -291,8 +293,9 @@ Scene3DView::drawViewPort(Node *root, int count, bool update)
                           scaleX, scaleY);
        if (m_button3down)
            if ((m_mouseX != INT_MIN) && (m_mouseY != INT_MIN))
-               m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
-                                          m_rubberBandX, m_rubberBandY);
+               if (m_scene->isVerticesOrNurbs())
+                   m_scene->draw3dBoundingBox(m_mouseX, m_mouseY, 
+                                              m_rubberBandX, m_rubberBandY);
        }
     if (m_scene->getVertexModifier()) {
          m_scene->draw3dBoundingBox(0, 0, width * PART_BOX, height * PART_BOX);
@@ -382,7 +385,7 @@ void Scene3DView::OnKeyUp(int key, int x, int y, int modifiers)
 }
 
 #define PICK_BUFFER_SIZE 65536
-#define PICK_REGION_SIZE 0.001
+#define PICK_REGION_SIZE 0.0001
 
 unsigned int
 Scene3DView::getHit(int x, int y)
@@ -580,21 +583,21 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
             Quaternion viewQuat = m_scene->getCamera()->getOrientation();
             Vec3d viewPos = m_scene->getCamera()->getPosition();
 
-            Vec3f h;
+            Vec3f hit;
 
+            unsigned int depth = getHit(x, y);
             glPushMatrix();
             glLoadIdentity();
-            m_scene->transform(m_scene->getSelection());
-            unsigned int depth = getHit(x, y);
             m_scene->unProjectPoint((float) x, (float) height - (float) y, 
                                     (float) depth / UINT_MAX, 
-                                    &h.x, &h.y, &h.z);
+                                    &hit.x, &hit.y, &hit.z);
             glPopMatrix();
 
             Vec3f view(0, 0, viewPos.length());
             view = view * viewQuat;
-            h.y = -h.y; // ???
-            Vec3f compareVec = (h * viewQuat + view) * transformMatrix.invert();
+            hit.y = -hit.y; // ???
+            Vec3f compareVec = (hit * viewQuat + view);
+            compareVec = transformMatrix.invert() * compareVec;
             float eps = TheApp->GetHandleEpsilon();
             float amount = m_scene->getVertexModifier()->getAmount();
             float radius = m_scene->getVertexModifier()->getRadius();

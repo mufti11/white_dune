@@ -11097,6 +11097,10 @@ MainWindow::toIndexedFaceSet()
         bool wantNormals = true;
         bool wantTessellation = false;
         bool wantTriangulation = true;
+        if (node->getType() == VRML_NURBS_SURFACE)
+            wantNormals = false;
+        if (node->getType() == X3D_NURBS_TRIMMED_SURFACE)
+            wantNormals = false;
         if (node->getType() == DUNE_SUPER_ELLIPSOID)
             wantNormals = false;
         if (node->getType() == DUNE_SUPER_SHAPE)
@@ -11195,7 +11199,7 @@ MainWindow::toIndexedFaceSetFromMesh()
     if (node->isMesh()) {
         MeshBasedNode *mesh = (MeshBasedNode *)node;
         mesh->simpleQuadTriangulateMesh();
-        Node *newNode = mesh->toIndexedFaceSet(MESH_WANT_NORMAL);
+        Node *newNode = mesh->toIndexedFaceSet();
         MoveCommand *command = new MoveCommand(node, parent, parentField, 
                                                NULL, -1);
         command->execute();            

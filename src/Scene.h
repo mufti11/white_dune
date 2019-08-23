@@ -684,6 +684,7 @@ public:
     void                draw3dCursor(int x, int y);
     void                use3dCursor(bool flag) { m_use3dCursor = flag; }
     bool                use3dCursor(void);
+    bool                isVerticesOrNurbs(void);
     void                draw3dBoundingBox(int xfrom, int yfrom, 
                                           int xto, int yto);
     bool                setPrefix(char* prefix);

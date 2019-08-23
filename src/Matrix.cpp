@@ -195,6 +195,14 @@ Matrix::identity()
     return r;
 }
 
+void printf(Matrix mat)
+{
+    printf("%f %f %f %f\n", mat[0], mat[1], mat[2], mat[3]);
+    printf("%f %f %f %f\n", mat[4], mat[5], mat[6], mat[7]);
+    printf("%f %f %f %f\n", mat[8], mat[9], mat[10], mat[11]);
+    printf("%f %f %f %f\n", mat[12], mat[13], mat[4], mat[15]);
+}
+
 Matrixd::Matrixd()
 {
     for (int i=0; i < 4; i++)

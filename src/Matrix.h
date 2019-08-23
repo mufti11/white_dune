@@ -77,5 +77,6 @@ private:
     double          m_mat[4][4];
 };
 
+void printf(Matrix mat);
 #endif // _MATRIX_H
 
