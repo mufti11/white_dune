@@ -175,6 +175,7 @@ BEGIN
         MENUITEM "Kamera",                              ID_NEW_VIEWPOINT
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Leere Group",                         ID_NEW_GROUP
         MENUITEM "Leerer Transform",                    ID_NEW_TRANSFORM
         MENUITEM "Alles ueber Namenseingabe",           ID_NEW_NODE_BY_NAME
@@ -324,6 +325,7 @@ BEGIN
     END
     POPUP "(IndexedFace)Set"
     BEGIN
+        MENUITEM "Umwandeln in &IndexedFaceSet",         ID_TO_INDEXED_FACESET
         MENUITEM "Subdivide\ts",                         ID_SUBDIVIDE
         MENUITEM "Flaeche einfuegen",                    ID_INSET_FACE
         MENUITEM "Flaeche herausziehen",                 ID_EXTRUDE

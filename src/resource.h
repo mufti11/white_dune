@@ -5460,13 +5460,18 @@
 #define ID_DE_NEW_ONE_TEXT 18512 
 #define ID_IT_NEW_ONE_TEXT 18513 
 #define ID_FR_NEW_ONE_TEXT 18514 
-#define ID_NEW_NODE_BY_NAME 18515 
-#define ID_PT_NEW_NODE_BY_NAME 18516 
-#define ID_DE_NEW_NODE_BY_NAME 18517 
-#define ID_IT_NEW_NODE_BY_NAME 18518 
-#define ID_FR_NEW_NODE_BY_NAME 18519 
+#define ID_NEW_TEXT_3D 18515 
+#define ID_PT_NEW_TEXT_3D 18516 
+#define ID_DE_NEW_TEXT_3D 18517 
+#define ID_IT_NEW_TEXT_3D 18518 
+#define ID_FR_NEW_TEXT_3D 18519 
+#define ID_NEW_NODE_BY_NAME 18520 
+#define ID_PT_NEW_NODE_BY_NAME 18521 
+#define ID_DE_NEW_NODE_BY_NAME 18522 
+#define ID_IT_NEW_NODE_BY_NAME 18523 
+#define ID_FR_NEW_NODE_BY_NAME 18524 
 
-#define ID_PROTO_MRU_1                      18520
+#define ID_PROTO_MRU_1                      18525
 
 // Next default values for new objects
 // 
@@ -5475,7 +5480,7 @@
 #define _APS_3D_CONTROLS                    1
 #define _APS_NEXT_RESOURCE_VALUE          560
 #define _APS_NEXT_CONTROL_VALUE           3000
-#define _APS_NEXT_COMMAND_VALUE           18520
+#define _APS_NEXT_COMMAND_VALUE           18525
 #define _APS_NEXT_SYMED_VALUE             105
 #endif
 #endif

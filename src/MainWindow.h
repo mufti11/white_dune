@@ -442,6 +442,7 @@ protected:
     void                createHeart(void);
     void                createSpindle(void);
     void                createMushroom(bool sulcate);
+    void                createText3D(void);
     void                showColorPerVertexColorCircle(void);
     void                showDiffuseColorCircle(void);
     void                showEmissiveColorCircle(void);

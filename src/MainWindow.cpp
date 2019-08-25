@@ -4065,6 +4065,9 @@ MainWindow::OnCommand(void *vid)
       case ID_NEW_MUSHROOM_SULCATE:
         createMushroom(true);
         break;
+      case ID_NEW_TEXT_3D:
+        createText3D();
+        break;
 
       case ID_NEW_CATT_EXPORT_SRC:
         createNode("CattExportSrc");
@@ -8230,6 +8233,17 @@ MainWindow::createTorus(void)
     m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
 
+void
+MainWindow::createText3D(void)
+{
+    Node *text = createGeometryNode("Text3D");
+    m_scene->setSelection(text);
+    changeOneText();
+    Node *faceset = text->toIndexedFaceSet();
+    m_scene->setSelection(m_scene->replaceNode(text, faceset));
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION);
+}
+
 static Matrix meshDataMatrix;
 static MyArray<Vec3f> points;
 static int numNodes;
@@ -8345,6 +8359,15 @@ void MainWindow::changeOneText(void)
     Node *node = m_scene->getSelection()->getNode();
     if ((node) && (node->getType() == VRML_TEXT)) {
         NodeText *text = (NodeText *) node;
+        MyString s = text->string()->getValue(0);
+        OneTextDialog dlg(m_wnd, IDD_TEXT, s, textValidate);
+        if (dlg.DoModal() == IDCANCEL)
+            return;
+        m_scene->setField(text, text->string_Field(), 
+                        new MFString(dlg.GetValue()));
+    }
+    if ((node) && (node->getType() == KAMBI_TEXT_3D)) {
+        NodeText3D *text = (NodeText3D *) node;
         MyString s = text->string()->getValue(0);
         OneTextDialog dlg(m_wnd, IDD_TEXT, s, textValidate);
         if (dlg.DoModal() == IDCANCEL)

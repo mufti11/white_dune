@@ -1,7 +1,7 @@
 /*
  * Array.h
  *
- * Copyright (C) 1999 Stephen F. White
+ * Copyright (C) 1999 Stephen F. White, 2019 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 
 template<class T> class MyArray {
 public:
-                MyArray(int capacity = DEFAULT_CAPACITY )
+                MyArray(size_t capacity = DEFAULT_CAPACITY )
                 { 
                    if (capacity == 0)
                        capacity = DEFAULT_CAPACITY;
@@ -52,10 +52,10 @@ public:
                   if (m_size == 0) 
                       m_capacity = DEFAULT_CAPACITY;
                   m_data = new T[m_capacity];
-                  for (int i = 0; i < MIN(m_capacity, m_size); i++) 
+                  for (size_t i = 0; i < MIN(m_capacity, m_size); i++) 
                       m_data[i] = a.m_data[i];
                 }
-                MyArray(const T *a, int len)
+                MyArray(const T *a, size_t len)
                 {
                   setData(a, len);
                 }
@@ -68,16 +68,16 @@ public:
                 }
 
 //    MyArray<T>   *copy() { return new Array<T>(*this); }
-    const T    &get(int index) const
+    const T    &get(size_t index) const
                 { return m_data[index]; }
-    void        set(int index, T t)
+    void        set(size_t index, T t)
                 { if (index >= m_size) resize(index+1); m_data[index] = t; }
-    T          &operator[](int index)
+    T          &operator[](size_t index)
                 { if (index >= m_size) resize(index+1); return m_data[index]; }
-    const T    &operator[](int index) const
+    const T    &operator[](size_t index) const
                 { return m_data[index]; }
     const T    *getData() const { return m_data; }
-    void        setData(const T *a, int len)
+    void        setData(const T *a, size_t len)
                 {
                   m_capacity = m_size = len; 
                   if (m_size == 0) {
@@ -87,22 +87,22 @@ public:
                       m_data = (T *)a;
                 }
     T          *extractData() { T *data = m_data; m_data = 0; return data; }
-    int         size() const
+    size_t      size() const
                 { return m_size; }
     void        append(T t)
                 { (*this)[m_size] = t; }
-    void        insert(T t, int index) {                   
+    void        insert(T t, size_t index) {                   
                    if (index < m_size) {
                        resize(m_size + 1);
-                       for (int i = m_size - 1; i > index; i--)
+                       for (size_t i = m_size - 1; i > index; i--)
                            (*this)[i] = (*this)[i-1];
                    }
                    (*this)[index] = t; 
                 }
-    void        remove(int pos) {
+    void        remove(size_t pos) {
                     if (pos < 0)
                         return;
-                    for (int i = pos; i < m_size - 1; i++)
+                    for (size_t i = pos; i < m_size - 1; i++)
                         m_data[i] = m_data[i + 1];
                     m_size--;
                     if (m_size <= 0) {
@@ -110,12 +110,12 @@ public:
                         m_size = 0;
                     }
                 }
-    void        remove(int start, int end) {
+    void        remove(size_t start, size_t end) {
                 assert(start >= 0 && start < m_size);
                 assert(end >= 0 && end < m_size);
-                int len = end - start + 1;
-                int deleted = 0;
-                for (int i = start; i <= end; i++)
+                size_t len = end - start + 1;
+                size_t deleted = 0;
+                for (size_t i = start; i <= end; i++)
                     if ((i + len) < m_size) {
                          deleted++;
                          m_data[i] = m_data[i + len];
@@ -124,7 +124,7 @@ public:
                 if (m_size <= 0)
                     resize(0);
                 }
-    void        resize(int size) {
+    void        resize(size_t size) {
                     if (size == 0) {
                         if (m_size > 0) {
                             delete[] m_data;
@@ -138,21 +138,21 @@ public:
                         while (m_capacity < size)
                             m_capacity <<= 1;
                         T *newData = new T[m_capacity];
-                        for (int i = 0; i < m_size; i++)
+                        for (size_t i = 0; i < m_size; i++)
                             newData[i] = m_data[i];
                         delete[] m_data;
                         m_data = newData;
                     }
                     m_size = size;
                 }
-    int         find(T t) const {
-                    int ret = -1;
+    long        find(T t) const {
+                    long ret = -1;
                     if (m_capacity < m_size)
                         return -1;
                     #pragma omp parallel
                     {
                         #pragma omp for
-                        for (int i = 0; i < m_size; i++)
+                        for (size_t i = 0; i < m_size; i++)
                             if (m_data[i] == t) {
                                ret = i;
                                #pragma omp cancel for
@@ -162,8 +162,8 @@ public:
                     }
                     return ret;
                 }
-    int         findBackward(T t) const {
-                    for (int i = m_size - 1; i >= 0; i--)
+    long        findBackward(T t) const {
+                    for (long i = m_size - 1; i >= 0; i--)
                         if (m_data[i] == t) return i;
                     return -1;
                 }
@@ -177,8 +177,8 @@ public:
                     
         
 protected:
-    int         m_size;
-    int         m_capacity;
+    size_t      m_size;
+    size_t      m_capacity;
     T          *m_data;
 };
 

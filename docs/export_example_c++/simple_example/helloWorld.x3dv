@@ -9,7 +9,7 @@ Anchor {
         }
       }
       geometry Text {
-        string "Hello World"
+        string "Hello World "
       }
     }
 }

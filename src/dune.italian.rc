@@ -175,6 +175,7 @@ BEGIN
         MENUITEM "Visuale",                              ID_NEW_VIEWPOINT
         MENUITEM "Color",                                ID_NEW_COLOR
         MENUITEM "ColorRGBA",                            ID_NEW_COLOR_RGBA
+        MENUITEM "Text3D",                               ID_NEW_TEXT_3D
         MENUITEM "Group vuoto",                          ID_NEW_GROUP
         MENUITEM "Transform vuoto",                      ID_NEW_TRANSFORM
         MENUITEM "New node by name",                     ID_NEW_NODE_BY_NAME
@@ -324,6 +325,7 @@ BEGIN
     END
     POPUP "(IndexedFace)Set"
     BEGIN
+        MENUITEM "Cambia in &IndexedFaceSet",            ID_TO_INDEXED_FACESET
         MENUITEM "Subdivide\ts",                         ID_SUBDIVIDE
         MENUITEM "Inset face",                           ID_INSET_FACE
         MENUITEM "Extrude face",                         ID_EXTRUDE

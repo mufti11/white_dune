@@ -38,7 +38,7 @@
  */
 
 
-/* This is an example for the libCRWD library*/
+/* This is an example for the libCRWD library */
 
 /* libCRWD Library based on*/
 /* libC++RWD Library for C++ Rendering of White_dune Data*/

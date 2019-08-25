@@ -5256,6 +5256,10 @@ Added workaround for normal/texCoord creation on IndexedTriangleSet conversion
 
 Fixed wrong writing of VRML97 amendment 1 NurbsSurface node
 
+Changed int to size_t/long in Array.h
+
+Added Text3D (as IndexedFaceSet) to 4kids menu
+
 Contact: MUFTI <mufti11@web.de>
 
 

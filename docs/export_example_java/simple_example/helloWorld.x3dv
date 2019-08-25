@@ -1,20 +1,20 @@
 #X3D V3.0 utf8
 PROFILE Immersive
 
-Transform {
-  children 
-    Shape {
-      appearance Appearance {
-        material Material {
-        }
-      }
-      geometry Text {
-        string "Hello World"
-      }
-    }
-}
-
 Anchor {
+  children 
+    Transform {
+      children 
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Text {
+            string "Hello World  "
+          }
+        }
+    }
 }
 
 Viewpoint {

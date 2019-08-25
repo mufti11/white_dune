@@ -13,6 +13,8 @@ clean:
 	(cd opengl_scripting_example && make clean)
 	rm -f qt_opengl_example/C++Export.cc
 	rm -f qt_opengl_example/qt_opengl_example
+	rm -rf build-qt_opengl_example-Desktop-Debug
+	rm -f qt_opengl_example/.qmake.stash
 	if test -x /usr/lib/qt5/bin/qmake ; then (cd qt_opengl_example && make clean); fi
 	rm -f build-qt_opengl_example-Desktop-Debug/*
 
