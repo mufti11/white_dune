@@ -12469,7 +12469,6 @@ void MainWindow::setColorCircleIcon()
     if (current && (current->getType() == X3D_COLOR_RGBA) && 
         (m_scene->getSelectedHandlesSize() > 0)) {
         m_colorCircle_enabled = true;
-        m_colorCircle_active = true;
         NodeColorRGBA *color = (NodeColorRGBA *)current;
         if (m_colorCircleHint)
             delete m_colorCircleHint;

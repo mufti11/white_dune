@@ -100,8 +100,6 @@ public:
                    (*this)[index] = t; 
                 }
     void        remove(size_t pos) {
-                    if (pos < 0)
-                        return;
                     for (size_t i = pos; i < m_size - 1; i++)
                         m_data[i] = m_data[i + 1];
                     m_size--;

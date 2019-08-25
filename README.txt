@@ -5260,6 +5260,8 @@ Changed int to size_t/long in Array.h
 
 Added Text3D (as IndexedFaceSet) to 4kids menu
 
+Fixed ColorCircle when ColorRGBA is selected
+
 Contact: MUFTI <mufti11@web.de>
 
 
