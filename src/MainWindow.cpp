@@ -2644,6 +2644,7 @@ MainWindow::OnCommand(void *vid)
         toExtrusion();
         break;
       case ID_TO_INDEXED_FACESET:
+      case ID_TO_INDEXED_FACESET_4KIDS:
         toIndexedFaceSet();
         break;
       case ID_TO_INDEXED_TRIANGLESET:
@@ -6461,6 +6462,9 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_TO_ORIENTATION_INTERPOLATOR_YZ, SW_MENU_DISABLED, 
                    node->canConvertToOrientationInterpolator() ? 
                    0 : SW_MENU_DISABLED);
+
+    swMenuSetFlags(m_menu, ID_TO_INDEXED_FACESET_4KIDS, SW_MENU_DISABLED, 
+                   node->canConvertToIndexedFaceSet() ? 0 : SW_MENU_DISABLED);
 
     setColorCircleIcon();
 

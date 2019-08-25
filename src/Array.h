@@ -94,13 +94,13 @@ public:
     void        insert(T t, size_t index) {                   
                    if (index < m_size) {
                        resize(m_size + 1);
-                       for (size_t i = m_size - 1; i > index; i--)
+                       for (long i = (long)m_size - 1; i > index; i--)
                            (*this)[i] = (*this)[i-1];
                    }
                    (*this)[index] = t; 
                 }
     void        remove(size_t pos) {
-                    for (size_t i = pos; i < m_size - 1; i++)
+                    for (long i = pos; i < (long)m_size - 1; i++)
                         m_data[i] = m_data[i + 1];
                     m_size--;
                     if (m_size <= 0) {
@@ -161,7 +161,7 @@ public:
                     return ret;
                 }
     long        findBackward(T t) const {
-                    for (long i = m_size - 1; i >= 0; i--)
+                    for (long i = (long)m_size - 1; i >= 0; i--)
                         if (m_data[i] == t) return i;
                     return -1;
                 }

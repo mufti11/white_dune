@@ -346,7 +346,7 @@ BEGIN
     END
     POPUP "(IndexedFace)Set"
     BEGIN
-        MENUITEM "convert to &IndexedFaceSet",           ID_TO_INDEXED_FACESET
+        MENUITEM "convert to &IndexedFaceSet",           ID_TO_INDEXED_FACESET_4KIDS
         MENUITEM "Subdivide\ts",                         ID_SUBDIVIDE
         MENUITEM "Inset face",                           ID_INSET_FACE
         MENUITEM "Extrude face",                         ID_EXTRUDE

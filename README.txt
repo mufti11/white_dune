@@ -5262,6 +5262,8 @@ Added Text3D (as IndexedFaceSet) to 4kids menu
 
 Fixed ColorCircle when ColorRGBA is selected
 
+Fixed crash caused by sign bug in Array.h
+
 Contact: MUFTI <mufti11@web.de>
 
 
