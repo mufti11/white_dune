@@ -3636,6 +3636,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                     }
                 }
             }
+        }
         if (searchInRest) {
             // search in next children of current parent
             if (this != m_scene->getRoot())
@@ -3671,7 +3672,6 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                             }
                     }
                 }
-            }
         }
     }
     return searchOn;

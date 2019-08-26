@@ -519,6 +519,7 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 glPushMatrix();
                 Vec3f o;
                 float px, py, pz;
+                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 node->transformForHandle(handle);
                 m_scene->projectPoint(v.x, v.y, v.z, &px, &py, &pz);
@@ -961,6 +962,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 float px, py, pz;
                 glPushMatrix();
                 glLoadIdentity();
+                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 node->transformForHandle(handle);
                 m_scene->projectPoint(old.x, old.y, old.z, &px, &py, &pz);
@@ -973,6 +975,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 float px, py, pz;
                 glPushMatrix();
                 glLoadIdentity();
+                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 node->transformForHandle(handle);
                 m_scene->projectPoint(old.x, old.y, old.z, &px, &py, &pz);
@@ -985,6 +988,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 Matrix mat;
                 glPushMatrix();
                 glLoadIdentity();
+                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 glGetFloatv(GL_MODELVIEW_MATRIX, mat);
                 node->transformForHandle(handle);
@@ -1323,6 +1327,7 @@ void Scene3DView::Handle3D(const Path* path,InputDevice* inputDevice,
         return;
     }
     Vec3f vNew = old;
+    m_scene->applyCamera();
     m_scene->transform(m_scene->getSelection());
     node->transformForHandle(handle);
     TransformMode* tm=m_scene->getTransformMode();

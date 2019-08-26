@@ -4291,10 +4291,8 @@ void
 Scene::transform(const Path *path)
 {
     assert(path != NULL);
-    applyCamera();
     const NodeList *nodes = path->getNodes();
-    int size = nodes->size() - 1;
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < nodes->size(); i++) {
         nodes->get(i)->transform();
     }
 }

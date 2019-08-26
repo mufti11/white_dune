@@ -5264,6 +5264,12 @@ Fixed ColorCircle when ColorRGBA is selected
 
 Fixed crash caused by sign bug in Array.h
 
+Fixed misssing update of make symetric -> y/z menupoint 
+
+Fixed bug in Node::doWithBranch()
+
+Fixed bug in branch CSG operation
+
 Contact: MUFTI <mufti11@web.de>
 
 

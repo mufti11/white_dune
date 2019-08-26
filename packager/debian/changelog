@@ -1,3 +1,10 @@
+whitedune (1.360-1) experimental; urgency=low
+
+  * Version 1.360 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Mon, 26 Aug 2019 10:46:56 +0200
+
 wdune (1.350-1) experimental; urgency=low
 
   * Version 1.350 debian package

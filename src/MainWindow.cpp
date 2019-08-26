@@ -6343,7 +6343,6 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
                    0 : SW_MENU_DISABLED);
-/*
     swMenuSetFlags(m_menu, ID_MAKE_SYMETRIC_Y, SW_MENU_DISABLED, 
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
@@ -6352,7 +6351,7 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
                    0 : SW_MENU_DISABLED);
-*/    
+    
     bool toNurbs = false;
     if (node->hasParent()) {
         Node *parent = node->getParent();
@@ -9490,8 +9489,12 @@ static bool csgUnion(Node *node, void *data)
     if (node->getType() == VRML_TRANSFORM) {
         NodeTransform *transform = (NodeTransform *)node;
         Matrix transformMatrix;
-        transform->transform();
-        transform->getMatrix(transformMatrix);
+
+        glPushMatrix();
+        glLoadIdentity();
+        scene->transform(transform->getPath());
+        glGetFloatv(GL_MODELVIEW_MATRIX, transformMatrix);
+        glPopMatrix();
         if (unionGeometry == NULL)
             unionMeshData1 = transformMatrix;
         else
@@ -9505,7 +9508,6 @@ static bool csgUnion(Node *node, void *data)
             Node *face = docsg(UNION, unionGeometry->copy(), node, scene, 
                                &unionMeshData1, &unionMeshData2);
             unionMeshData1 = Matrix::identity();
-            unionMeshData2 = Matrix::identity();
             if (face)
                 unionGeometry = face;
             else
