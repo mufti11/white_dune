@@ -1507,7 +1507,7 @@ static void
 addCommentsToNode(Node* node)
 {
     if (commentNodeList.size() > 0) {
-        for (int i = 0;i < commentNodeList.size(); i++)
+        for (size_t i = 0; i < commentNodeList.size(); i++)
             node->appendComment(commentNodeList[i]);
         commentNodeList.resize(0);
     }
@@ -1517,7 +1517,7 @@ static void
 addCommentsToNodeList(NodeList *nodelist)
 {
     if (commentNodeList.size() > 0) {
-        for (int i = 0;i < commentNodeList.size(); i++)
+        for (size_t i = 0; i < commentNodeList.size(); i++)
             nodelist->append(commentNodeList[i]);
         commentNodeList.resize(0);
     }    
@@ -1607,7 +1607,7 @@ nodeComment(void)
                 MyString str = "";
                 str += string;
                 str.split(&array, "\n");
-                for (int i = 0; i < array.size(); i++)
+                for (size_t i = 0; i < array.size(); i++)
                     if (array[i][0] == '#')
                         mfString->append(mystrdup(array[i]) + 1);
                     else
@@ -2668,7 +2668,7 @@ static void XMLCALL end(void *data, const char *el)
                     for (int i = 0; i < nc; i++) {
                         Node* child = childList->get(i);
                         int ic = -1;
-                        if (i < containerFields->size())
+                        if (i < (int)containerFields->size())
                             ic = (*containerFields)[i];
                         // it has children so we'll put the node in the children field
                         if (ic < 0)

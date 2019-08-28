@@ -66,11 +66,11 @@ public:
     virtual bool        equals(const FieldValue *value) const;
     int                 getSize() const { return m_value->size(); }
     NodeList           *getValues() const { return m_value; }
-    Node               *getValue(int index) const 
+    Node               *getValue(size_t index) const 
                            { 
                            if (m_value->size() == 0)
                                return NULL;
-                           assert(index >= 0 && index < m_value->size()); 
+                           assert(index < m_value->size()); 
                            return m_value->get(index); 
                            }
 

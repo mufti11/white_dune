@@ -166,7 +166,7 @@ NodeMultiTexture::bind()
     for (int i = 0; i < textureUnits; i++) {
         Node *nTexture = mfTexture->getValue(i);
         if (nTexture) {
-            if (m_modeInt.size() > i)
+            if ((int)m_modeInt.size() > i)
                 if (m_modeInt[i] == -1)
                     continue;
             nTexture->load();

@@ -121,7 +121,13 @@ public:
 
     virtual void        flip(int index) {}
 
-    void                ref() { if (this != NULL) m_refs++; }
+    void                ref() 
+                           { 
+#ifdef HAVE_NULL_COMPARE
+                           if (this != NULL) 
+#endif
+                           m_refs++; 
+                           }
     void                unref() 
                            { 
                            if ((this != NULL) && (--m_refs == 0))

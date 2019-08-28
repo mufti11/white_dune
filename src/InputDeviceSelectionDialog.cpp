@@ -108,7 +108,7 @@ InputDeviceSelectionDialog::InputDeviceSelectionDialog(SWND Parent) :
 #ifdef HAVE_AFLOCK
     device_options.append("-aflock");
 #endif
-    for (int i = 0; i < device_options.size(); i++)
+    for (size_t i = 0; i < device_options.size(); i++)
         swComboBoxAppendItem(combo_device_options, device_options[i]);
 
     swEnableWindow(combo_device_options, true);

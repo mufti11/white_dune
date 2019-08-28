@@ -272,7 +272,7 @@ ScriptEdit::writeSFStringUrl(int f, const char* string)
     bool addComment = true;
     MyString javascript = "";
     InterfaceArray *interfaceData = m_scriptNode->getInterfaceData();
-    for (int j = 0; j < interfaceData->size(); j++) {
+    for (size_t j = 0; j < interfaceData->size(); j++) {
         int ind = interfaceData->get(j)->m_elementIndex;
         MyString text = "";
         MyString cmptext = "";
@@ -428,7 +428,7 @@ ScriptEdit::writeSFStringX3domUrl(int f, const char* string)
     bool addComment = true;
     MyString javascript = "";
     InterfaceArray *interfaceData = m_scriptNode->getInterfaceData();
-    for (int j = 0; j < interfaceData->size(); j++) {
+    for (size_t j = 0; j < interfaceData->size(); j++) {
         int ind = interfaceData->get(j)->m_elementIndex;
         MyString text = "";
         MyString cmptext = "";
@@ -515,7 +515,7 @@ ObjectEdit::readQuotedEditorFile(char *fileName, Node *node, int field)
             edit(false);
             return false;
         } 
-        for (int i = 0 ; i < m_urlStartData.size(); i++) {
+        for (size_t i = 0 ; i < m_urlStartData.size(); i++) {
             m_urlData[m_urlEndData[i]] = '\0';
             MyString urlString = "";
             urlString += (&m_urlData[m_urlStartData[i]+1]);

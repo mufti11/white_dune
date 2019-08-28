@@ -314,7 +314,7 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
     MyArray<Node *> *viewports = m_scene->getViewPorts();
     drawViewPort(NULL, 0, update);
     if (viewports->size() > 0)
-        for (int i = 0; i < (*viewports).size(); i++)
+        for (size_t i = 0; i < (*viewports).size(); i++)
             drawViewPort(viewports->get(i), i);
     if (viewports->size() > 0) {
         int width, height;
@@ -407,7 +407,6 @@ Scene3DView::getHit(int x, int y)
     m_scene->drawScene(true, x, y, xwidth, yheight);
 
     GLint hits = glRenderMode(GL_RENDER);
-    Path *path = NULL;
     if (hits < 0) // overflow flag has been set, ignore
         hits = - hits;
     if (hits) {
@@ -416,8 +415,8 @@ Scene3DView::getHit(int x, int y)
         for (int i = 0; i < hits; i++) {
             unsigned numNames = *pickBuffer++;
             unsigned minDepth = *pickBuffer++;
-            unsigned maxDepth = *pickBuffer++;
-            for (int i = 0; i < numNames; i++) {
+/*          unsigned maxDepth = * */ pickBuffer++;
+            for (unsigned i = 0; i < numNames; i++) {
                int buffer = *pickBuffer++;
                if (minDepth > depth) {
                    depth = minDepth; 
@@ -1078,7 +1077,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                     if (m_scene->getXSymetricMode()) {
                         float eps = TheApp->GetHandleEpsilon();
                         bool alreadyHandled = false;
-                        for (int i = 0; i < alreadyHandledVertices.size(); 
+                        for (size_t i = 0; i < alreadyHandledVertices.size(); 
                              i++) {
                             Vec3f vec = alreadyHandledVertices[i];
                             if ((fabs(oldv.x - vec.x) < eps) &&

@@ -202,7 +202,7 @@ bool collectNode(Node *node, void *data)
 void
 SceneGraphView::InitializeNodes(bool isInsideProto)
 {
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         if (node && ((isInsideProto && node->isInsideProto()) ||
                      ((!isInsideProto) && (!node->isInsideProto()))))  {
@@ -265,7 +265,7 @@ SceneGraphView::Initialize()
 
     const NodeList *nodes = m_scene->getNodes();
 
-    for (int i = 0; i < nodes->size(); i++) {
+    for (size_t i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node && (!node->isInsideProto()) && (node->isInScene(m_scene)) &&
             node != m_scene->getRoot()) {
@@ -274,7 +274,7 @@ SceneGraphView::Initialize()
         }
     }
 
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         Proto *proto = m_nodesOrProtos.get(i).getProto();
         if (node) {
@@ -287,7 +287,7 @@ SceneGraphView::Initialize()
     }
 
     if (TheApp->GetShowRoutesAtBegin()) {
-        for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+        for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
             Node *node = m_nodesOrProtos.get(i).getNode();
             Proto *proto = m_nodesOrProtos.get(i).getProto();
             if (proto && !node) {
@@ -305,7 +305,7 @@ SceneGraphView::Initialize()
         m_lastYPosition = getFirstYPosition();
     }
 
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         if (node) {
             Position(node);
@@ -333,7 +333,7 @@ void SceneGraphView::moveRoutesToTop(Node *moveNode)
              j != NULL; j = j->next()) {
             Node *outputNode = j->item().getNode();
             bool isInList= false;
-            for (int n = 0; n < movingNodes.size(); n++)
+            for (size_t n = 0; n < movingNodes.size(); n++)
                 if (outputNode == movingNodes[n]) {
                     isInList = true;
                     break;
@@ -349,7 +349,7 @@ void SceneGraphView::moveRoutesToTop(Node *moveNode)
              j = j->next()) {
             Node *inputNode = j->item().getNode();
             bool isInList= false;
-            for (int n = 0; n < movingNodes.size(); n++)
+            for (size_t n = 0; n < movingNodes.size(); n++)
                 if (inputNode == movingNodes[n]) {
                     isInList = true;
                     break;
@@ -359,7 +359,7 @@ void SceneGraphView::moveRoutesToTop(Node *moveNode)
         }
     }
 
-    for (int i = 0; i < movingNodes.size(); i++) {
+    for (size_t i = 0; i < movingNodes.size(); i++) {
         int x;
         int y;
         getZoomGraphPosition(x, y, movingNodes[i]);
@@ -393,7 +393,7 @@ void SceneGraphView::moveToTop(Node *moveNode, int x, Node* ignoreNode)
 
     m_YNodesOnlyEventIns += moveHeight;
 
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Proto *proto = m_nodesOrProtos.get(i).getProto();
         if (proto) {
             int width = 1, height = 1;
@@ -458,7 +458,7 @@ void SceneGraphView::OnDraw(int x, int y, int width, int height, bool update)
     swSetFGColor(dc, m_shadow);
     swFillRect(dc, x, y, width, height);
 
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         Proto *proto = m_nodesOrProtos.get(i).getProto();
         if (node) {
@@ -515,7 +515,7 @@ void SceneGraphView::OnDraw(int x, int y, int width, int height, bool update)
         }
     }
 
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         Proto *proto = m_nodesOrProtos.get(i).getProto();
         if (node) {
@@ -963,7 +963,7 @@ void SceneGraphView::DrawNode(SDC dc, Node *node, int xPos, int yPos)
             if (!(field->getFlags() & FF_HIDDEN))
                 fieldArray.append(i);
         }
-        for (int i = 0; i < fieldArray.size(); i++) {
+        for (int i = 0; i < ((int)fieldArray.size()); i++) {
             Field *field = node->getProto()->getField(fieldArray[i]);
             if (m_scene->isInvalidElement(field)) {
                 y += SOCKET_HEIGHT + SOCKET_SPACING;
@@ -1220,7 +1220,7 @@ void SceneGraphView::DrawProto(SDC dc, Proto *proto, int xPos, int yPos)
         if (!(field->getFlags() & FF_HIDDEN))
             fieldArray.append(i);
     }
-    for (int i = 0; i < fieldArray.size(); i++) {
+    for (int i = 0; i < ((int)fieldArray.size()); i++) {
         Field *field = proto->getField(fieldArray[i]);
         if (m_scene->isInvalidElement(field)) {
             y += SOCKET_HEIGHT + SOCKET_SPACING;
@@ -1613,7 +1613,7 @@ void SceneGraphView::InvalidateNodeRec(Node *node)
                 if (child != NULL) InvalidateNodeRec(child);
             } else if (node->getField(i)->getType() == MFNODE) {
                 NodeList *value = ((MFNode *) node->getField(i))->getValues();
-                for (int j = 0; j < value->size(); j++) {
+                for (size_t j = 0; j < value->size(); j++) {
                     InvalidateNodeRec(value->get(j));
                 }
             }
@@ -1623,7 +1623,7 @@ void SceneGraphView::InvalidateNodeRec(Node *node)
 
 Node *SceneGraphView::HitTestNode(int x, int y) const
 {
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         if (node) {
             int nx = 0, ny = 0, width = 1, height = 1;
@@ -1680,7 +1680,7 @@ SceneGraphView::SocketHitTestNode(int x, int y, Node *node, int *side) const
 
 Proto *SceneGraphView::HitTestProto(int x, int y) const
 {
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Proto *proto = m_nodesOrProtos.get(i).getProto();
         if (proto) {
             int nx = 0, ny = 0, width = 1, height = 1;
@@ -2004,7 +2004,7 @@ void SceneGraphView::CutRoutes(const Point &start, const Point &end)
 {
     CommandList *list = NULL;
 
-    for (int i = 0; i < m_nodesOrProtos.size(); i++) {
+    for (size_t i = 0; i < m_nodesOrProtos.size(); i++) {
         Node *node = m_nodesOrProtos.get(i).getNode();
         Proto *proto = m_nodesOrProtos.get(i).getProto();
         if (node) {

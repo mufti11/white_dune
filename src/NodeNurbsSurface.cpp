@@ -1682,7 +1682,7 @@ NodeNurbsSurface::makeSymetric(int direction, bool plus)
                 res.y =  vertices->getVec(i).y;
                 res.z =  vertices->getVec(i).z;
                 int doit = true;
-                for (int j = 0; j < doubleChanges.size(); j++)
+                for (size_t j = 0; j < doubleChanges.size(); j++)
                     if (index == doubleChanges[j]) {
                         doit = false;
                         break;
@@ -1701,7 +1701,7 @@ NodeNurbsSurface::makeSymetric(int direction, bool plus)
                 res.y = -vertices->getVec(i).y;
                 res.z =  vertices->getVec(i).z;
                 int doit = true;
-                for (int j = 0; j < doubleChanges.size(); j++)
+                for (size_t j = 0; j < doubleChanges.size(); j++)
                     if (index == doubleChanges[j]) {
                         doit = false;
                         break;

@@ -125,7 +125,7 @@ NodeLOD::accountNodeToDrawIndex()
     MyArray<int> indexList;
     NodeList tmpChildList;
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         if (childList->get(i)->getType() != VRML_COMMENT) {
             tmpChildList.append(childList->get(i));
             indexList.append(i);
@@ -153,7 +153,7 @@ NodeLOD::accountNodeToDrawIndex()
         // we choose the first level 8-(
         if (mfrange->getSize() > 0)
             for (int i = tmpNodeToDrawIndex; i >= 0; i--)
-                if ((i < tmpChildList.size()) && (i < mfrange->getSize())) 
+                if ((i < (int)tmpChildList.size()) && (i < mfrange->getSize())) 
                     if (v.length() < mfrange->getValues()[i])
                         tmpNodeToDrawIndex = i;
 

@@ -54,31 +54,9 @@ if test "$CFLAGS" != "$OLD_CFLAGS"; then
  echo reseting CFLAGS to $CFLAGS
 fi
 
-AC_LANG_PUSH([C++])    
-dnl Check if -W -Werror -Wno-nonnull-compare is supported
-dnl with the current $CC $CFLAGS $CPPFLAGS.
-AC_MSG_CHECKING(whether -Wno-nonnull-compare is supported)
-OLD_CXXFLAGS2=$CXXFLAGS
-CXXFLAGS="$CXXFLAGS -W -Werror -Wno-nonnull-compare"
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
-                  [[#include <stdio.h>]], [[return 0;]])], 
-                  [
-                  export NONNULL_SUPPORTED=yes;
-                  AC_MSG_RESULT([yes])
-                  ],
-                  [ 
-                  export NONNULL_SUPPORTED=no;
-                  AC_MSG_RESULT([no])
-                  ])
-dnl                  [[]], [NONNULL_SUPPORTED=yes], [NONNULL_SUPPORTED=no])
-CXXFLAGS=$OLD_CXXFLAGS2
-AC_LANG_POP()    
-
-if test "X_$NONNULL_SUPPORTED" = "X_yes"; then
-   if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
-      CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
-      echo reseting CXXFLAGS to $CXXFLAGS
-   fi
+if test "$CXX_FLAGS" != "$OLD_CXXFLAGS"; then
+ CXXFLAGS="$OLD_CXXFLAGS"
+ echo reseting CXXFLAGS to $CXXFLAGS
 fi
 
 dnl Warn about defect compilers
@@ -1462,7 +1440,7 @@ if test "X_$EXPAT_ERROR" = "X_1" ; then
 Couldn't find libexpat, the XML parsing C library.
 This is not a fatal error; the package will be simply built without
 the possiblity to read XML encoded X3D files (ISO/IEC 19776-1).  
-It is recommended to add it, download and install it from:
+It is recommended to add it, or download and install it from:
 
 	http://expat.sourceforge.net
 
@@ -1490,17 +1468,58 @@ else
 
 Couldn't find zlib(==libz) develop package.
 zlib/libz is a library for lossless data-compression.
-This is not a fatal error; the package will be simply built without
-support to open gz compressed VRML files. Some versions of the png library 
-also need zlib for linking.
-It is recommended to add it, download and install it from:
+The package would simply built without support to open gz compressed VRML files,
+but the png library also need zlib for linking.
+
+It is to recommended to add it, or download and install it from:
 
 	http://www.gzip.org/zlib/
 
 and re-run configure.
 
 EOF
-      ZLIB_WARNING="no usable zlib (==libz) library: no reading of compressed VRML files, possibly no rendering of png textures"
+      exit 1
+   fi
+
+   AC_CHECK_LIB(png, png_init_io, , PNG_ERROR=1)
+   if test "X_PNG_ERROR" = "X_1" ; then
+      cat 1>&2 << EOF
+
+*** couldn't find working libpng version ***
+
+libjpeg is a library for rendering png images.
+
+It is recommended to add it, or download and install it from:
+
+	http://www.libpng.org/pub/png/libpng.html
+
+and re-run configure.
+
+EOF
+     exit 1
+   else
+     AC_DEFINE(HAVE_LIBPNG)
+   fi
+
+   AC_CHECK_LIB(jpeg, jpeg_start_decompress, , JPEG_ERROR=1)
+   if test "X_$JPEG_ERROR" = "X_1" ; then
+      cat 1>&2 << EOF
+
+*** couldn't find working jpeg library (libjpeg) version ***
+
+Couldn't find libjpeg develop package.
+libjpeg is a library for rendering jpeg images.
+
+It is recommended to add it, or download and install it from:
+
+	http://libjpeg.sourceforge.net/
+
+and re-run configure.
+
+EOF
+      exit 1
+   else
+      AC_DEFINE(HAVE_LIBJPEG)
    fi
 
    if test "X_$HAVE_OLPC" = "X_1" ; then
@@ -1511,8 +1530,7 @@ EOF
       AC_CHECK_LIB(Xft, XftGetVersion)
    fi
 
-   if test "X_$DEVIL" != "X_no" ; then
- 
+   if test "X_$DEVIL" != "X_no" ; then 
       AC_CHECK_LIB(IL, ilInit , , HAVE_IL=no)
 
       if test "X_$HAVE_IL" != "X_no" ; then
@@ -1520,46 +1538,6 @@ EOF
          if test "X_$HAVE_ILU" != "X_no" ; then
             HAVE_ILU=yes
          fi
-      fi
-   fi
-
-   if test "X_$HAVE_ILU" != "X_yes" ; then
-
-      AC_CHECK_LIB(jpeg, jpeg_start_decompress, ,JPEG_ERROR=1)
-      if test "X_$JPEG_ERROR" = "X_1" ; then
-         cat 1>&2 << EOF
-
-*** couldn't find matching libjpeg version, libjpeg-6b would work ***
-
-Couldn't find libjpeg, the Indepedent JPEG group's jpeg library.
-This is not a fatal error; the package will be simply built without
-jpeg support.  It is recommended to add it, download and install it from:
-
-	http://www.ijg.org/
-	ftp://ftp.uu.net/graphics/jpeg/
-
-and re-run configure.
-
-EOF
-         JPEG_WARNING="no usable jpeg library: no rendering of jpg textures"
-      fi
-
-      AC_CHECK_LIB(png, png_get_IHDR, ,PNG_ERROR=1)
-      if test "X_$PNG_ERROR" = "X_1" ; then
-         cat 1>&2 << EOF
-
-*** couldn't find matching libpng version, libpng-1.06 would work ***
-
-Couldn't find libpng, the Portable Network Graphics library.
-This is not a fatal error; the package will be simply built without
-png support.  It is recommended to add it, download and install it from:
-
-	http://www.libpng.org/pub/png/
-
-and re-run configure.
-
-EOF
-         PNG_WARNING="no usable libpng library: no rendering of png textures"
       fi
    fi
 fi
@@ -1967,24 +1945,6 @@ if test "X_$GLUT_WARNING" != "X_" ; then
     echo " " 1>&2
     echo "Warning:" 1>&2
     echo " " $GLUT_WARNING 1>&2
-fi
-
-if test "X_$ZLIB_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $ZLIB_WARNING 1>&2
-fi
-
-if test "X_$PNG_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $PNG_WARNING 1>&2
-fi
-
-if test "X_$JPEG_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $JPEG_WARNING 1>&2
 fi
 
 if test "X_$EXPAT_WARNING" != "X_" ; then

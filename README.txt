@@ -5270,6 +5270,12 @@ Fixed bug in Node::doWithBranch()
 
 Fixed bug in branch CSG operation
 
+Changed configure to require libpng, libjpeg and zib
+
+Solved a lot of warnings if compiled with -Wall
+
+Fixed bug in german "Datei -> URL oeffnen" menupoint
+
 Contact: MUFTI <mufti11@web.de>
 
 

@@ -265,7 +265,7 @@ NodeVrmlScene::setField(int index, FieldValue *value, int cf)
         IntArray newValues;
         IntArray deleteValues;
         ((MFieldValue *)value)->getDiff(&newValues, &deleteValues, children());
-        for (int i = 0; i < newValues.size(); i++) {
+        for (size_t i = 0; i < newValues.size(); i++) {
             Node *node = ((MFNode *)value)->getValue(newValues[i]);
             node->doWithBranch(routeToTimeSensor, (void *)this);
             node->doWithBranch(routeToViewpoint, (void *)this);

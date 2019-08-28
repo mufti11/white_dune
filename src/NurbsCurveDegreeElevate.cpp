@@ -252,7 +252,7 @@ NurbsCurveDegreeElevate::NurbsCurveDegreeElevate(Vec3f controlPoints[],
   }
    
   //Extract  weights and new controlpoints in cartesian system
-  for(int i=0; i<(newHPoints.size()); i++){
+  for(size_t i=0; i<(newHPoints.size()); i++){
     if(newHPoints[i].length()>NUMZERO){
       newPoints[i].x = newHPoints[i].x / newHPoints[i].w;
       newPoints[i].y = newHPoints[i].y / newHPoints[i].w;

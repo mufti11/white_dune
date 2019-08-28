@@ -60,9 +60,11 @@ public:
     virtual bool        isNull() const { return m_value == NULL; }
 
     Node               *getValue() const { 
+#ifdef HAVE_NULL_COMPARE
                                          // strange fix needed for problem
                                          // incomplete PROTO implementation
                                          if (this==NULL) return NULL; 
+#endif
                                          return m_value; 
                                          }
 

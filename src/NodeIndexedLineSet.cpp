@@ -393,7 +393,7 @@ NodeIndexedLineSet::writeAc3d(int f, int indent)
             inPolyLine = true;
         }    
     RET_ONERROR( mywritef(f, "numsurf %d\n", numberPolyLines) )
-    for (int i = 0; i < stringsToWrite.size(); i++) {
+    for (size_t i = 0; i < stringsToWrite.size(); i++) {
         RET_ONERROR( mywritestr(f, stringsToWrite[i]) )
         free(stringsToWrite[i]);
     }         

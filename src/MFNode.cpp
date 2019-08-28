@@ -39,7 +39,7 @@ MFNode::MFNode(const MFNode &other)
 {
     m_value = new NodeList();
     if (other.m_value)
-        for (int i = 0; i < other.m_value->size(); i++) {
+        for (size_t i = 0; i < other.m_value->size(); i++) {
             m_value->set(i, other.m_value->get(i)->copy());
             m_value->get(i)->ref();
             if (!m_value->get(i)->isPROTO())
@@ -77,7 +77,7 @@ MFNode::MFNode(NodeList *value)
     m_value = new NodeList();
     if (value == NULL)
         return;
-    for (int i = 0; i < value->size(); i++) {
+    for (size_t i = 0; i < value->size(); i++) {
         Node *node = value->get(i);
         if (node != NULL) {
             node->ref();
@@ -89,7 +89,7 @@ MFNode::MFNode(NodeList *value)
 
 MFNode::~MFNode()
 {
-    for (int i = 0; i < m_value->size(); i++) {
+    for (size_t i = 0; i < m_value->size(); i++) {
         Node *node = m_value->get(i);
         if (node != NULL)
             node->unref();
@@ -283,7 +283,7 @@ MFNode::equals(const FieldValue *value) const
     if (value->getType() == MFNODE) {
         NodeList *v = ((MFNode *) value)->getValues();
         if (v->size() != m_value->size()) return false;
-        for (int i = 0; i < m_value->size(); i++)
+        for (size_t i = 0; i < m_value->size(); i++)
             if (v->get(i) != m_value->get(i)) return false;
         return true;
     }
@@ -294,7 +294,7 @@ FieldValue *
 MFNode::addNode(Node *node, int index) const
 {
     NodeList *list = new NodeList();
-    for (int i = 0; i < m_value->size(); i++) {
+    for (size_t i = 0; i < m_value->size(); i++) {
         list->append(m_value->get(i));
     }
     if (index == -1)
@@ -312,7 +312,7 @@ MFNode::removeNode(Node *node) const
     NodeList *list = new NodeList();
 
     bool removed = false;
-    for (int i = 0; i < m_value->size(); i++) {
+    for (size_t i = 0; i < m_value->size(); i++) {
         // remove a node only once (only one USE'd Node)
         if ((m_value->get(i) != node) || removed)
             list->append(m_value->get(i));
@@ -435,7 +435,7 @@ MFNode::preDraw()
 {
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->preDraw();
 }
 
@@ -446,17 +446,17 @@ MFNode::draw(int pass, int mfNodeField)
 
     glPushName(mfNodeField);  // field offset
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->bind();
 
     glPushName(0);
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         glLoadName(i);
         childList->get(i)->draw(pass);
     }
     glPopName();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->unbind();
 
     glPopName();
@@ -469,7 +469,7 @@ MFNode::flip(int index)
 {
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         Node *node = childList->get(i);
         if (!node->getFlag(NODE_FLAG_FLIPPED)) {
             node->setFlag(NODE_FLAG_FLIPPED);
@@ -483,7 +483,7 @@ MFNode::swap(int fromTo)
 {
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         Node *node = childList->get(i);
         if (!node->getFlag(NODE_FLAG_SWAPPED)) {
             node->setFlag(NODE_FLAG_SWAPPED);
@@ -498,7 +498,7 @@ MFNode::countPolygons(void)
     int ret = 0;
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         ret += childList->get(i)->countPolygons();
 
     return ret;
@@ -510,7 +510,7 @@ MFNode::countPrimitives(void)
     int ret = 0;
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         ret += childList->get(i)->countPrimitives();
 
     return ret;
@@ -522,7 +522,7 @@ MFNode::countPolygons1Sided(void)
     int ret = 0;
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         ret += childList->get(i)->countPolygons1Sided();
 
     return ret;
@@ -534,7 +534,7 @@ MFNode::countPolygons2Sided(void)
     int ret = 0;
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         ret += childList->get(i)->countPolygons2Sided();
 
     return ret;
@@ -545,7 +545,7 @@ MFNode::update()
 {
     NodeList *childList = getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->update();
 }
 
@@ -558,7 +558,7 @@ MFNode::convert2X3d(void)
     NodeList *newChilds = new NodeList();
 
     bool newNodes = false;
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         if (childList->get(i) != NULL) {
             Node *newNode = childList->get(i)->convert2X3d();
             if (newNode != NULL) {
@@ -570,7 +570,7 @@ MFNode::convert2X3d(void)
     }
     if (newNodes) {            
         m_value = new NodeList();
-        for (int i = 0; i < newChilds->size(); i++) {
+        for (size_t i = 0; i < newChilds->size(); i++) {
             m_value->set(i, newChilds->get(i)->copy());
             m_value->get(i)->ref();
             if (!m_value->get(i)->isPROTO())
@@ -587,7 +587,7 @@ MFNode::convert2Vrml(void)
     NodeList *newChilds = new NodeList();
 
     bool newNodes = false;
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         if (childList->get(i) != NULL) {
             Node *newNode = childList->get(i)->convert2Vrml();
             if (newNode != NULL) {
@@ -599,7 +599,7 @@ MFNode::convert2Vrml(void)
     }
     if (newNodes) {            
         m_value = new NodeList();
-        for (int i = 0; i < newChilds->size(); i++) {
+        for (size_t i = 0; i < newChilds->size(); i++) {
             m_value->set(i, newChilds->get(i)->copy());
             m_value->get(i)->ref();
             if (!m_value->get(i)->isPROTO())

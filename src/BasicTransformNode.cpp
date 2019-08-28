@@ -161,7 +161,7 @@ BasicTransformNode::preDraw()
     glPushMatrix();
     transform();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->preDraw();
 
     glPopMatrix();
@@ -397,7 +397,7 @@ BasicTransformNode::writeAc3d(int f, int indent)
         transform();
     }
     int kids = 0;
-    int i;
+    size_t i;
     for (i = 0; i < childList->size(); i++)
         if (childList->get(i)->canWriteAc3d())
             kids++;
@@ -441,7 +441,7 @@ BasicTransformNode::writeRib(int f, int indent)
         transform();
     }
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->writeRib(f, indent);
 
     if (!matrixIdentity)

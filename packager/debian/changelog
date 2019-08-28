@@ -1,3 +1,24 @@
+wdune (1.362-1) experimental; urgency=low
+
+  * Version 1.362 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Tue, 27 Aug 2019 19:02:16 +0200
+
+whitedune (1.362-1) experimental; urgency=low
+
+  * Version 1.362 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Tue, 27 Aug 2019 17:45:25 +0200
+
+wdune (1.360-1) experimental; urgency=low
+
+  * Version 1.360 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Mon, 26 Aug 2019 11:33:13 +0200
+
 whitedune (1.360-1) experimental; urgency=low
 
   * Version 1.360 debian package

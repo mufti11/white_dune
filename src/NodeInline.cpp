@@ -115,14 +115,14 @@ NodeInline::draw(int pass)
 
     glPushName(url_Field());  // field offset
 
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         if (m_loadedNodes->get(i))
             m_loadedNodes->get(i)->bind();
 
     glPushName(0);
     if (m_unitLength > 0)
         glScaled(1 / m_unitLength, 1 / m_unitLength, 1 / m_unitLength);
-    for (int i = 0; i < m_loadedNodes->size(); i++) {
+    for (size_t i = 0; i < m_loadedNodes->size(); i++) {
         if (m_loadedNodes->get(i)) {
             glLoadName(i);
             m_loadedNodes->get(i)->draw(pass);
@@ -130,7 +130,7 @@ NodeInline::draw(int pass)
     }
     glPopName();
 
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         if (m_loadedNodes->get(i))
             m_loadedNodes->get(i)->unbind();
 
@@ -145,7 +145,7 @@ NodeInline::preDraw()
 
     if (m_unitLength > 0)
         glScaled(1 / m_unitLength, 1 / m_unitLength, 1 / m_unitLength);
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         if (m_loadedNodes->get(i))
             m_loadedNodes->get(i)->preDraw();
 }
@@ -170,7 +170,7 @@ NodeInline::countPolygons(void)
 
     int ret = 0;
 
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         ret += m_loadedNodes->get(i)->countPolygons();
 
     return ret;
@@ -184,7 +184,7 @@ NodeInline::countPrimitives(void)
 
     int ret = 0;
 
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         ret += m_loadedNodes->get(i)->countPrimitives();
 
     return ret;
@@ -198,7 +198,7 @@ NodeInline::countPolygons1Sided(void)
 
     int ret = 0;
 
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         ret += m_loadedNodes->get(i)->countPolygons1Sided();
 
     return ret;
@@ -212,7 +212,7 @@ NodeInline::countPolygons2Sided(void)
 
     int ret = 0;
 
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         ret += m_loadedNodes->get(i)->countPolygons2Sided();
 
     return ret;
@@ -224,7 +224,7 @@ NodeInline::getProfile(void) const
     int profile = PROFILE_INTERACTIVE;
     if (m_loadedNodes == NULL)
         return profile;
-    for (int i = 0; i < m_loadedNodes->size(); i++) {
+    for (size_t i = 0; i < m_loadedNodes->size(); i++) {
         int nodeProfile = m_loadedNodes->get(i)->getProfile();
         if (nodeProfile > profile)
             profile = nodeProfile;
@@ -254,7 +254,7 @@ NodeInline::canWriteAc3d()
 { 
     if (m_loadedNodes == NULL)
         return false;
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         if (m_loadedNodes->get(i) != NULL)
             if (m_loadedNodes->get(i)->canWriteAc3d())
                 return true; 
@@ -275,7 +275,7 @@ NodeInline::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
 {
     if (m_loadedNodes == NULL)
         return;
-    for (int i = 0; i < m_loadedNodes->size(); i++)    
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)    
         m_loadedNodes->get(i)->handleAc3dMaterial(callback, scene);
 }
 
@@ -284,7 +284,7 @@ NodeInline::canWriteCattGeo()
 { 
     if (m_loadedNodes == NULL)
         return false;
-    for (int i = 0; i < m_loadedNodes->size(); i++)
+    for (size_t i = 0; i < m_loadedNodes->size(); i++)
         if (m_loadedNodes->get(i) != NULL)
             if (m_loadedNodes->get(i)->canWriteCattGeo())
                 return true; 
@@ -314,7 +314,7 @@ NodeInline::addToConvertedNodes(int flags)
     NodeGroup *node = (NodeGroup *)m_scene->createNode("Group");
     node->addParent(getParent(), getParentField());
     if (m_loadedNodes != NULL)
-        for (int i = 0; i < m_loadedNodes->size(); i++) {
+        for (size_t i = 0; i < m_loadedNodes->size(); i++) {
             Node *newNode = m_loadedNodes->get(i);            
             if (newNode != NULL) {
                 if (newNode != this) {

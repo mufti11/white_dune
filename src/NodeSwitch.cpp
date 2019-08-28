@@ -72,7 +72,7 @@ int NodeSwitch::accountWhich()
     int which = whichChoice()->getValue();
     
     int whichCount = 0;
-    for (int i = 0; i < choiceList->size(); i++)
+    for (size_t i = 0; i < choiceList->size(); i++)
         if (choiceList->get(i)->getType() != VRML_COMMENT) {
             if (whichCount == which)
                 return i;
@@ -89,7 +89,7 @@ NodeSwitch::preDraw()
 
     int which = accountWhich();
 
-    if (which < 0 || which >= choiceList->size()) return;
+    if (which < 0 || which >= (int)choiceList->size()) return;
 
     choiceList->get(which)->preDraw();
 }
@@ -101,7 +101,7 @@ NodeSwitch::draw(int pass)
 
     int which = accountWhich();
 
-    if (which < 0 || which >= choiceList->size()) return;
+    if (which < 0 || which >= (int)choiceList->size()) return;
 
     glPushName(choice_Field());
     glPushName(which);
@@ -135,7 +135,7 @@ int
 NodeSwitch::writeAc3d(int filedes, int indent)
 {
     int which = accountWhich();
-    if (which < 0 || which >= choice()->getValues()->size())
+    if (which < 0 || which >= (int)choice()->getValues()->size())
         return choice()->writeAc3d(filedes, indent);
     return choice()->getValues()->get(which)->writeAc3d(filedes, indent);
 }
@@ -144,7 +144,7 @@ int
 NodeSwitch::writeRib(int filedes, int indent)
 {
     int which = accountWhich();
-    if (which > -1 && which < choice()->getValues()->size())
+    if (which > -1 && which < (int)choice()->getValues()->size())
         return choice()->getValues()->get(which)->writeRib(filedes, indent);
     return 0; 
 }
@@ -153,10 +153,11 @@ int
 NodeSwitch::writeCattGeo(int filedes, int indent)
 {
     int which = accountWhich();
-    if (which < 0 || which >= choice()->getValues()->size())
+    if (which < 0 || which >= (int)choice()->getValues()->size())
         return choice()->getValues()->writeCattGeo(this, filedes, indent);
     NodeList tempNode(choice()->getValue(which));
     // The following is a dangerous construct. 
     // Works only, cause writeCattGeo gets only things like name, scene etc. from node
     return tempNode.writeCattGeo(this, filedes, indent);
 }
+

@@ -653,7 +653,7 @@ NodeIndexedFaceSet::checkBorderFace(MyArray<int> innerBorder,
         return true;
     Vec3f vec11(ncoord->point()->getVec(outerBorder[borderIndex1]));
     Vec3f vec12(ncoord->point()->getVec(outerBorder[borderIndex2]));
-    for (int j = 0; j < innerBorder.size() - 1; j++) {
+    for (long j = 0; j < (long)innerBorder.size() - 1; j++) {
         int n = j + 1;
         if (innerBorder[j] == -1)
             continue;
@@ -724,7 +724,7 @@ NodeIndexedFaceSet::deleteFaces(MFInt32 *coordIndex,
     MyArray<int> sortedFaces;
     int facesToDeleteSize = (*facesToDelete).size();
     for (int i = 0; i < facesToDeleteSize; i++) {
-        int k = 0;
+        size_t k = 0;
         while (k < sortedFaces.size()) {
             if ((*facesToDelete)[i] > sortedFaces[k]) {
                 sortedFaces.insert((*facesToDelete)[i], k);
@@ -737,7 +737,7 @@ NodeIndexedFaceSet::deleteFaces(MFInt32 *coordIndex,
         }
     }
 
-    for (int i = 0; i < sortedFaces.size(); i++) {
+    for (size_t i = 0; i < sortedFaces.size(); i++) {
         FaceData *face = getMesh()->getFace(sortedFaces[i]);
         int offset = face->getOffset();
         int numVertices = face->getNumVertices();
@@ -881,7 +881,7 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
                 facesToDelete.append(i);    
         }       
 
-    for (int i = 0; i < symFaces.size(); i++) {
+    for (size_t i = 0; i < symFaces.size(); i++) {
         int facesToDeleteSize = facesToDelete.size();
         bool inserted = false;
         for (int j = 0; j < facesToDeleteSize; j++)
@@ -896,7 +896,7 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
 
     int facesToDeleteSize = facesToDelete.size();
     for (int i = 0; i < facesToDeleteSize; i++) {
-        for (int j = 0; j < newFaces.size(); j++)
+        for (size_t j = 0; j < newFaces.size(); j++)
             newFaces[j] = newFaces[j] - 1;
     }
     deleteFaces(newCoordIndex, &facesToDelete);
@@ -1358,11 +1358,11 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
     MyArray<int> sortedM;
     MyArray<int> sortedL;
     MyArray<int> sortedO;
-    for (int n = 0; n < coordIndexToAdded.size(); n++) {
+    for (size_t n = 0; n < coordIndexToAdded.size(); n++) {
         int m = coordIndexToAdded[n].edgeCoordIndex;
         int l = coordIndexToAdded[n].coordIndex;
         int o = coordIndexToAdded[n].offset;
-        int k = 0;
+        size_t k = 0;
         while (k < sortedM.size()) {
             if ((m > sortedM[k]) && (m > -1)) {
                 sortedM.insert(m, k);
@@ -1381,7 +1381,7 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
     MyArray<int> sortedFaces;
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
         if (m_scene->isInSelectedHandles(i) || symFaces.contains(i)) {
-            int k = 0;
+            size_t k = 0;
             while (k < sortedFaces.size()) {
                 if ((i > sortedFaces[k])) {
                     sortedFaces.insert(i, k);
@@ -1394,18 +1394,18 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
             }
         }
     }
-    for (int i = 0; i < sortedFaces.size(); i++) {
+    for (size_t i = 0; i < sortedFaces.size(); i++) {
         FaceData *face = getMesh()->getFace(sortedFaces[i]);
         int offset = face->getOffset();
         int numVertices = face->getNumVertices();
         for (int j = offset; j < offset + numVertices; j++)
             newCoordIndex->removeSFValue(offset);
         newCoordIndex->removeSFValue(offset);
-        for (int j = 0; j < sortedM.size(); j++)
+        for (size_t j = 0; j < sortedM.size(); j++)
             if (sortedM[j] >= offset)
                 sortedM[j] -= (numVertices + 1); 
     }    
-    for (int j = 0; j < sortedM.size(); j++) {
+    for (size_t j = 0; j < sortedM.size(); j++) {
         newCoordIndex->insertSFValue(sortedM[j], sortedL[j]);
     }
     m_scene->backupFieldsStart();
@@ -1611,7 +1611,7 @@ NodeIndexedFaceSet::insetFace(float factor)
     int inc = m_scene->getSelectedHandlesSize();
     int numFace = m_mesh->getNumFaces() - 1;
     m_scene->removeSelectedHandles();
-    for (int i = 0; i < facesToDelete.size(); i++) {
+    for (size_t i = 0; i < facesToDelete.size(); i++) {
         FaceData *face = getMesh()->getFace(facesToDelete[i]);
         int offset = face->getOffset();
         int numVertices = face->getNumVertices();
@@ -1691,7 +1691,7 @@ NodeIndexedFaceSet::simpleJoin(MyArray<FacesetAndMatrix> data)
         else
             ret->color(new SFNode(scene->createNode("Color")));
         int numCi = 0;
-        for (int i = 0; i < data.size(); i++) {
+        for (size_t i = 0; i < data.size(); i++) {
             NodeIndexedFaceSet *node = data[i].node;
             MyMesh *mesh = node->getMesh();
             MFVec3f *vert = mesh->getVertices();

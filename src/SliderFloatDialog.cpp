@@ -90,9 +90,6 @@ SliderFloatDialog::LoadData()
 #ifndef _WIN32
     int ScrollBarWidth = 200;
     int ScrollBarHeight = 15;
-    int TextEditWidth = 30;
-    int TextEditHeight = 15;
-    int ButtonWidth = 80;
 
     m_scrollBar = swCreateScrollBar(SW_HORIZONTAL, 
                                     X_ScrollBar, 

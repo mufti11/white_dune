@@ -814,8 +814,8 @@ NodeIndexedFaceSet *
 Util::convexHull(Scene *scene, MyArray<Vec3f> vec)
 {
     int diffentVecCount = 0;
-    for (int i = 0; i < vec.size(); i++) {
-        for (int j = i + 1; j < vec.size(); j++) {
+    for (size_t i = 0; i < vec.size(); i++) {
+        for (size_t j = i + 1; j < vec.size(); j++) {
             if ((vec[i] - vec[j]).length() != 0)
                 diffentVecCount++;
             if (diffentVecCount > 3)
@@ -827,7 +827,7 @@ Util::convexHull(Scene *scene, MyArray<Vec3f> vec)
 
     std::vector<Point_3> points;
     Point_3 p;
-    for (int i = 0; i < vec.size(); i++) {
+    for (size_t i = 0; i < vec.size(); i++) {
         Point_3 p(vec[i].x, vec[i].y, vec[i].z);
         points.push_back(p);
     }

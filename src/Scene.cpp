@@ -420,7 +420,7 @@ Scene::~Scene()
             delete j->item()->getData();
         }
     }
-    for (int i = 0; i < m_fonts.size(); i++) {
+    for (size_t i = 0; i < m_fonts.size(); i++) {
         delete m_fonts[i];
     }
     gluDeleteQuadric(m_obj3dCursor);
@@ -589,7 +589,7 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
         scanForInlines(nodes);
     scanForMultimedia(nodes);
     nodes->clearFlag(NODE_FLAG_TOUCHED);
-    for (int i = 0; i < nodes->size(); i++)
+    for (size_t i = 0; i < nodes->size(); i++)
         if (nodes->get(i))
             nodes->get(i)->doWithBranch(searchViewPortOrParticles, this, 
                                         false);
@@ -603,7 +603,7 @@ static bool loadInline(Node *node, void *data)
             NodeInline *nodeInline =(NodeInline *)node;
             node->getScene()->readInline(nodeInline);
             if (node->getLoadedNodes() != NULL)
-                for (int j = 0; j < node->getLoadedNodes()->size(); j++) {
+                for (size_t j = 0; j < node->getLoadedNodes()->size(); j++) {
                     Node *inlinedNode = node->getLoadedNodes()->get(j);
                     inlinedNode->doWithBranch(loadInline, NULL);
                 }
@@ -729,7 +729,7 @@ Scene::searchNodeType(int nodeType)
     m_nodeList.resize(0);
     m_root->doWithBranch(checkNodeType, &nodeType);
     NodeList *nodeList = new NodeList();
-    for (int i = 0; i < m_nodeList.size(); i++)
+    for (size_t i = 0; i < m_nodeList.size(); i++)
         nodeList->append(m_nodeList[i]);  
         // delete returned NodeList after usage
     return nodeList;
@@ -871,7 +871,7 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
         return 0;
     alreadyIn = true;
     // write tempory nodes first
-    for (int i = 0; i < m_delayedWriteNodes.size(); i++) {
+    for (size_t i = 0; i < m_delayedWriteNodes.size(); i++) {
         int ret = 0;
         if (isX3dXml()) 
             ret = m_delayedWriteNodes[i]->writeXml(filedes, indent);
@@ -924,7 +924,7 @@ int Scene::writeExternProto(int f, const char* protoName)
         if (strcmp((const char*)m_protoNames[i], protoName)==0) {
             foundProto = true;   
             // force writing of some nodes despite EXTERNPROTO already exist
-            for (int j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
+            for (size_t j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
                 if (strcmp(m_nodesForceExternProtoWrite[j], protoName) == 0)
                     foundProto = false;
         }        
@@ -932,7 +932,7 @@ int Scene::writeExternProto(int f, const char* protoName)
     if (!foundProto) {
         // write EXTERNPROTO
         const NodeList *nodes = getNodes();
-        for (int i = 0; i < nodes->size(); i++) {
+        for (size_t i = 0; i < nodes->size(); i++) {
             Node *node = nodes->get(i);
             if (node->isInScene(this)) {
                 const char *nodeName = node->getProto()->getName(isX3d());
@@ -1224,7 +1224,7 @@ static bool markUsedProto(Node *node, void *data)
         (node->getType() == VRML_INLINE_LOAD_CONTROL)) {
         NodeList *nodelist = node->getLoadedNodes();
         if (nodelist != NULL)
-            for (int i = 0; i < nodelist->size(); i++)
+            for (size_t i = 0; i < nodelist->size(); i++)
                 nodelist->get(i)->doWithBranch(markUsedProto, data);
     } 
 
@@ -1471,7 +1471,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         }
         bool writeProto = true;
         // avoid writing of Protos, which are forced written via ExternProto
-        for (int j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
+        for (size_t j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
             if (strcmp(m_nodesForceExternProtoWrite[j], protoName) == 0)
                 writeProto = false;
         if (!writeProto)
@@ -1521,7 +1521,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         }
     }
 
-    for (int k = 0; k < m_nodesWithExternProto.size(); k++) {
+    for (size_t k = 0; k < m_nodesWithExternProto.size(); k++) {
         // do not write EXTERN PROTOs for some (e.g. Nurbs Nodes) when using 
         // pureVRML97 cause this nodes are written converted to pure VRML97
         bool doWriteExternProto = true;
@@ -1538,7 +1538,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     getNodes()->clearFlag(NODE_FLAG_TOUCHED);
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         if (::isX3dXml(m_writeFlags)) {
             int rootIndent = indent + TheApp->GetIndent();
             RET_RESET_FLAGS_ONERROR( childList->get(i)->writeXml(f, rootIndent))
@@ -1597,11 +1597,11 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 int Scene::writeHead(int f, int writeFlags)
 {
     int oldWriteFlags = m_writeFlags;
-    int maxMetas = m_metaKeys.size();
+    size_t maxMetas = m_metaKeys.size();
     if (m_metaValues.size() < maxMetas)
         maxMetas = m_metaValues.size(); 
     if (::isX3dXml(writeFlags))
-        for (int i = 0; i < maxMetas; i++) {
+        for (size_t i = 0; i < maxMetas; i++) {
             RET_RESET_FLAGS_ONERROR( indentf(f, TheApp->GetIndent()) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "<meta name='") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_metaKeys[i]) )
@@ -1611,7 +1611,7 @@ int Scene::writeHead(int f, int writeFlags)
             TheApp->incSelectionLinenumber();
         }
     else
-        for (int i = 0; i < maxMetas; i++) {
+        for (size_t i = 0; i < maxMetas; i++) {
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "META \"") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_metaKeys[i]) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "\" \"") )
@@ -1623,13 +1623,13 @@ int Scene::writeHead(int f, int writeFlags)
         RET_RESET_FLAGS_ONERROR( mywritestr(f , "\n") )
         TheApp->incSelectionLinenumber(2);
     }
-    int maxUnits = m_unitCategory.size();
+    size_t maxUnits = m_unitCategory.size();
     if (m_unitName.size() < maxUnits)
         maxUnits = m_unitName.size(); 
     if (m_unitConversionFactor.size() < maxUnits)
         maxUnits = m_unitConversionFactor.size(); 
     if (::isX3dXml(writeFlags))
-        for (int i = 0; i < maxUnits; i++) {
+        for (size_t i = 0; i < maxUnits; i++) {
             RET_RESET_FLAGS_ONERROR( indentf(f, TheApp->GetIndent()) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "<unit category='") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_unitCategory[i]) )
@@ -1647,7 +1647,7 @@ int Scene::writeHead(int f, int writeFlags)
             TheApp->incSelectionLinenumber();
         }
     else
-        for (int i = 0; i < maxUnits; i++) {
+        for (size_t i = 0; i < maxUnits; i++) {
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "UNIT ") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_unitCategory[i]) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , " ") )
@@ -1674,7 +1674,7 @@ bool
 Scene::belongsToNodeWithExternProto(const char *protoName) 
 {
     bool found = false;
-    for (int i = 0; i < m_nodesWithExternProto.size(); i++)
+    for (size_t i = 0; i < m_nodesWithExternProto.size(); i++)
         if (strcmp(protoName, m_nodesWithExternProto[i]) == 0) {
             found = true;
             break;
@@ -1695,7 +1695,7 @@ Scene::writeKanim(int f, const char *url)
         nameBaseEnd = name + strlen(url);
     FloatArray keyTimes;
     bool allInterpolatorsLoop = true;
-    for (int i = 0; i < m_timeSensors.size(); i++) {
+    for (size_t i = 0; i < m_timeSensors.size(); i++) {
         NodeTimeSensor *timer = (NodeTimeSensor *)m_timeSensors[i];
         if (!timer->loop()->getValue())
             allInterpolatorsLoop = false;
@@ -1711,7 +1711,7 @@ Scene::writeKanim(int f, const char *url)
                     keyTimes.append(time);
                 else if (time > keyTimes[keyTimes.size() - 1])
                     keyTimes.append(time);                    
-                else for (int l = 0 ; l < keyTimes.size(); l++) {
+                else for (size_t l = 0 ; l < keyTimes.size(); l++) {
                     if (time == keyTimes[l])
                         break;
                     if (time < keyTimes[l]) {
@@ -1731,11 +1731,11 @@ Scene::writeKanim(int f, const char *url)
     KANIM_RET_ONERROR( mywritestr(f ,">\n") )     
     double t = swGetCurrentTime();
     m_timeStart = t;
-    for (int i = 0; i < m_timeSensors.size(); i++)
+    for (size_t i = 0; i < m_timeSensors.size(); i++)
         ((NodeTimeSensor *) m_timeSensors[i])->start(t);
-    for (int i = 0; i < keyTimes.size(); i++) {
+    for (size_t i = 0; i < keyTimes.size(); i++) {
         updateTimeAt(t + keyTimes[i]);
-        sprintf(nameBaseEnd, "_%d.wrl", i);
+        sprintf(nameBaseEnd, "_%lu.wrl", i);
         int filedes = open(name, O_WRONLY | O_CREAT,00666);
         if (filedes == -1) {
             delete [] name;
@@ -1826,7 +1826,7 @@ Scene::writeAc3d(int f, bool raven)
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->handleAc3dMaterial(handleMaterial ,this);
 
     if (raven) {
@@ -1837,7 +1837,7 @@ Scene::writeAc3d(int f, bool raven)
                  j = j->next()) {
                 const char *materialName = j->item()->getKey();
                 Node *materialNode = NULL;
-                for (int k = 0; k < m_ac3dMaterialNameArray.size(); k++) {
+                for (size_t k = 0; k < m_ac3dMaterialNameArray.size(); k++) {
                      if (strcmp(materialName, m_ac3dMaterialNameArray[k]) == 0) {
                          materialNode = m_ac3dMaterialNodeArray[k];
                          materialNode->setAc3dMaterialIndex(materialIndex);
@@ -1852,7 +1852,7 @@ Scene::writeAc3d(int f, bool raven)
         m_ac3dEmptyMaterial = materialIndex;
     } else {
         int materialIndex = 0;
-        for (int i = 0; i < m_ac3dMaterialNameArray.size(); i++) {
+        for (size_t i = 0; i < m_ac3dMaterialNameArray.size(); i++) {
             const char *materialName = m_ac3dMaterialNameArray[i];
             Node *materialNode = m_ac3dMaterialNodeArray[i]; 
             materialNode->setAc3dMaterialIndex(materialIndex); 
@@ -1872,11 +1872,11 @@ Scene::writeAc3d(int f, bool raven)
     RET_ONERROR( mywritestr(f, "spec 0 0 0  shi 2  trans 0\n") )
 
     int kids = 0;
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         if (childList->get(i)->canWriteAc3d())
             kids++;
     RET_ONERROR( mywritef(f, "OBJECT world\nkids %d\n", kids) )
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         RET_ONERROR( childList->get(i)->writeAc3d(f, 0) )
     return(0);
 }
@@ -2014,7 +2014,7 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         RET_ONERROR( childList->get(i)->writeRib(f, 0) )
 
     RET_ONERROR( mywritestr(f, "WorldEnd\n\n") )
@@ -2047,8 +2047,8 @@ Scene::writeCattGeo(void)
     MyArray<NodeCattExportRec *> cattExportRecNodes;
     getRoot()->doWithBranch(collectCattExportRecNodes, &cattExportRecNodes);
 
-    for (int i = 0; i < cattExportRecNodes.size(); i++)
-        for (int j = 0; j < i; j++)
+    for (size_t i = 0; i < cattExportRecNodes.size(); i++)
+        for (size_t j = 0; j < i; j++)
            if (cattExportRecNodes[i]->id()->getValue() == 
                cattExportRecNodes[j]->id()->getValue()) {
                char message[1024];
@@ -2788,7 +2788,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "struct %sSceneGraph *self, int glName) {\n",
                               TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 
-        for (int i = 0; i < m_glNameData.size(); i++) {
+        for (size_t i = 0; i < m_glNameData.size(); i++) {
             RET_ONERROR( mywritef(f, "       case %d:\n", 
                                  m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "         return ") )         
@@ -2843,9 +2843,9 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "%s::",TheApp->getCSceneGraphName()) ) 
         RET_ONERROR( mywritef(f, "getNodeFromGlName(int glName) {\n") )
         RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 
-        for (int i = 0; i < m_glNameData.size(); i++) {
+        for (size_t i = 0; i < m_glNameData.size(); i++) {
             RET_ONERROR( mywritef(f, "       case %d:\n", 
-                                 m_glNameData[i].glName) )
+                                  m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "         return ") )         
             RET_ONERROR( mywritef(f, "&%s;\n", (const char *)
                                                m_glNameData[i].nodeName) )
@@ -2941,7 +2941,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "getNodeFromGlName(") )
         RET_ONERROR( mywritef(f, "int glName) {\n") )
         RET_ONERROR( mywritestr(f, "        switch (glName) {\n") ) 
-        for (int i = 0; i < m_glNameData.size(); i++) {
+        for (size_t i = 0; i < m_glNameData.size(); i++) {
             RET_ONERROR( mywritef(f, "           case %d:\n", 
                                   m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "             return ") )
@@ -3097,7 +3097,7 @@ Scene::writeCRoutes(int filedes, int languageFlag)
         return 0;
     alreadyIn = true;
     // write tempory nodes first
-    for (int i = 0; i < m_delayedWriteNodes.size(); i++) {
+    for (size_t i = 0; i < m_delayedWriteNodes.size(); i++) {
         int ret = m_delayedWriteNodes[i]->writeC(filedes, languageFlag);
         if (ret < 0) {
             alreadyIn = false;
@@ -3136,7 +3136,7 @@ Scene::writeCRoutes(int filedes, int languageFlag)
     cdata.languageFlag = languageFlag;
     cdata.returnValue = 0;
     m_root->doWithBranch(searchNodesOnlyOutputAndWriteCRoutes, &cdata);
-    for (int i = 0; i < m_sensorNodes.size(); i++) {
+    for (size_t i = 0; i < m_sensorNodes.size(); i++) {
         if (languageFlag & JAVA_SOURCE)
             RET_ONERROR( mywritestr(filedes, "    ") )
         RET_ONERROR( mywritestr(filedes, "    ") )
@@ -3173,7 +3173,7 @@ static bool searchExtensionProto(int extension, Node *node, void *data)
 {
     MyArray<Proto *> *protoArrayPtr = (MyArray<Proto *> *) data;
     if (!node->hasDefault(extension) /* && !node->hasRoute(extension)*/) {
-        for (int i = 0; i < (*protoArrayPtr).size(); i++)
+        for (size_t i = 0; i < (*protoArrayPtr).size(); i++)
             if ((*protoArrayPtr)[i] == node->getProto())
                 return true;        
         (*protoArrayPtr).append(node->getProto());
@@ -3200,7 +3200,7 @@ Scene::writeExtensionProtos(int f, int flag)
         x3d = true;
     MyArray<Proto *> protoArray;
     NodeList *nodes = ((NodeGroup *)getRoot())->children()->getValues();
-    for (int i = 0; i < nodes->size(); i++) {
+    for (size_t i = 0; i < nodes->size(); i++) {
         if (flag == FF_COVER_ONLY)
             nodes->get(i)->doWithBranch(searchCoverExtensionProto, 
                                         &protoArray, false);
@@ -3208,7 +3208,7 @@ Scene::writeExtensionProtos(int f, int flag)
             nodes->get(i)->doWithBranch(searchKambiExtensionProto, 
                                         &protoArray, false);
     }
-    for (int i = 0; i < protoArray.size(); i++) {
+    for (size_t i = 0; i < protoArray.size(); i++) {
         addProtoName(protoArray[i]->getName(false));
         Proto *newProto = new Proto(this, protoArray[i], flag);
         if (newProto->write(f, 0, x3d) != 0) {
@@ -3228,7 +3228,7 @@ Scene::writeExtensionProtos(int f, int flag)
 void
 Scene::deleteExtensionProtos(void)
 {
-    for (int i = 0; i < m_writtenExtensionProtos.size(); i++) {
+    for (size_t i = 0; i < m_writtenExtensionProtos.size(); i++) {
         deleteProtoName(m_writtenExtensionProtos[i]->getName(false));
         deleteProto(m_writtenExtensionProtos[i]->getName(false));
         delete(m_writtenExtensionProtos[i]);
@@ -3239,7 +3239,7 @@ Scene::deleteExtensionProtos(void)
 Proto *
 Scene::getExtensionProto(Proto *proto)
 {
-    for (int i = 0; i < m_writtenExtensionProtos.size(); i++)
+    for (size_t i = 0; i < m_writtenExtensionProtos.size(); i++)
         if (m_writtenExtensionProtos[i]->getNode(0)->getProto() == proto)
             return m_writtenExtensionProtos[i];
     return NULL;
@@ -4212,18 +4212,16 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
     int glPathLen = 0;
     unsigned depth = UINT_MAX;
     unsigned handleDepth = 0;
-    bool pickedHandle = false;
     bool pickedNode = false;
     int handle = -1;
 
     for (int i = 0; i < hits; i++) {
         unsigned numNames = *pickBuffer++;
-        unsigned minDepth = *pickBuffer++;
+/*      unsigned minDepth = * */ pickBuffer++;
         unsigned maxDepth = *pickBuffer++;
         if (*pickBuffer == PICKED_NODE) {
             if (depth >= maxDepth) {
                 pickedNode = true;
-                pickedHandle = false;
                 glPath = pickBuffer + 1;
                 glPathLen = numNames - 1;
                 depth = maxDepth;
@@ -4242,7 +4240,6 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
                               SELECTION_HANIM_JOINT_WEIGHT;
             if ((!isCoord) || isVertices || (handleDepth <= maxDepth)) {
                 if (pickBuffer[numNames - 1] != NO_HANDLE) {
-                    pickedHandle = true;
                     pickedNode = false;
                     glPath = pickBuffer + 1;
                     glPathLen = numNames - 2;
@@ -4292,7 +4289,7 @@ Scene::transform(const Path *path)
 {
     assert(path != NULL);
     const NodeList *nodes = path->getNodes();
-    for (int i = 0; i < nodes->size(); i++) {
+    for (size_t i = 0; i < nodes->size(); i++) {
         nodes->get(i)->transform();
     }
 }
@@ -4624,7 +4621,7 @@ Scene::setBackground(Node *background)
 void
 Scene::addTimeSensor(Node *timeSensor)
 {
-    for (int i = 0; i < m_timeSensors.size(); i++)
+    for (size_t i = 0; i < m_timeSensors.size(); i++)
         if (m_timeSensors[i] == timeSensor)
             return;
     m_timeSensors.append(timeSensor);
@@ -4859,8 +4856,8 @@ MyString Scene::generateVariableName(Node *node)
 void
 Scene::removeNode(Node *node)
 {
-    int index = m_nodes.findBackward(node);
-    if ((index >= 0) && (index < m_nodes.size()))
+    long index = m_nodes.findBackward(node);
+    if ((index >= 0) && (index < (long)m_nodes.size()))
         m_nodes.remove(index);
 }
 
@@ -5082,7 +5079,7 @@ Scene::timeSinceStart(void)
 void
 Scene::updateTimeAt(double t)
 {
-    for (int i = 0; i < m_timeSensors.size(); i++)
+    for (size_t i = 0; i < m_timeSensors.size(); i++)
         ((NodeTimeSensor *) m_timeSensors[i])->setTime(t);
 }
 
@@ -5550,7 +5547,7 @@ Scene::LoadGLFont(const char *fontName, const char *style)
 
     // look for font in cache
 
-    for (int i = 0; i < m_fonts.size(); i++) {
+    for (size_t i = 0; i < m_fonts.size(); i++) {
         if (!strcmp(m_fonts[i]->name, fontName) && m_fonts[i]->style == styleId) {
             return m_fonts[i];
         }
@@ -5844,7 +5841,7 @@ void
 Scene::setPathAllURL(const char *path)
 {
     const NodeList *nodes = getNodes();
-    for (int i = 0; i < nodes->size(); i++) {
+    for (size_t i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node->isInScene(this))
             for (int j = 0; j < node->getProto()->getNumFields(); j++) {
@@ -6148,7 +6145,7 @@ Scene::isValidElement(Element *element, bool x3d)
                            ((!x3d) && (!TheApp->getKambiMode()));
     if (
         (flags & FF_NEVER) ||
-        invalidX3d || invalidX3dKambi || invalidX3dKambi || invalidX3dom ||
+        invalidX3d || invalidKambi || invalidX3dKambi || invalidX3dom ||
         ((flags & FF_VRML_ONLY) && x3d) || 
         ((flags & FF_COVER_ONLY) && (!TheApp->getCoverMode())) ||
         ((flags & FF_ROOT_ONLY) && (getSelection()->getNode() != getRoot()))
@@ -6448,7 +6445,7 @@ Scene::addUnit(const char *category, const char *name,
                double conversionFactor)
 {
     int found = -1;
-    for (int i = 0; i < m_unitCategory.size(); i++)
+    for (size_t i = 0; i < m_unitCategory.size(); i++)
         if (strcmp(m_unitCategory[i], category) == 0) {
             found = i;
             break;
@@ -6475,7 +6472,7 @@ Scene::setUnitLength(double f)
 void
 Scene::setUnitLengthInit(void)
 {
-    for (int i = 0; i < m_unitCategory.size(); i++)
+    for (size_t i = 0; i < m_unitCategory.size(); i++)
         if (strcmp(m_unitCategory[i], "length") == 0)
             m_unitLength = m_unitConversionFactor[i];
 }
@@ -6483,7 +6480,7 @@ Scene::setUnitLengthInit(void)
 void
 Scene::setUnitAngleInit(void)
 {
-    for (int i = 0; i < m_unitCategory.size(); i++)
+    for (size_t i = 0; i < m_unitCategory.size(); i++)
         if (strcmp(m_unitCategory[i], "angle") == 0)
             m_unitAngle = m_unitConversionFactor[i];
 }
@@ -6528,7 +6525,7 @@ Scene::popUnitAngle(void)
 void
 Scene::addToSensorNodes(Node *node)
 {
-    for (int i = 0; i < m_sensorNodes.size(); i++)
+    for (size_t i = 0; i < m_sensorNodes.size(); i++)
         if (m_sensorNodes.get(i) == node)
             return;
     m_sensorNodes.append(node);
@@ -6539,7 +6536,7 @@ Scene::restoreSelectedHandles(void)
 {    
     m_selectedHandles.resize(0); 
     if (m_oldSelectedHandles.size() > 0) {
-        for (int i = 0; i < m_oldSelectedHandles.size(); i++)
+        for (size_t i = 0; i < m_oldSelectedHandles.size(); i++)
             m_selectedHandles.append(m_oldSelectedHandles[i]);
         m_lastSelectedHandle = m_oldLastSelectedHandle;
         m_singleSelectedHandle = m_selectedHandles.size() <= 1;
@@ -6557,7 +6554,7 @@ Scene::getX3dVersion(void)
 {
     int ret = m_x3dVersion; 
     const NodeList *nodes = getNodes();
-    for (int i = 0; i < nodes->size(); i++) {
+    for (size_t i = 0; i < nodes->size(); i++) {
          Node *node = nodes->get(i);
          if (node->getX3dVersion() > ret)
              ret = node->getX3dVersion();
@@ -6588,7 +6585,7 @@ Node *
 Scene::searchProtoNodeId(long id)
 {
     returnNode = NULL;
-    for (int i = 0; i < m_nodes.size(); i++) 
+    for (size_t i = 0; i < m_nodes.size(); i++) 
         if (m_nodes.get(i)->isPROTO()) {
             NodePROTO *protoNode = (NodePROTO *)m_nodes.get(i);
             for (int j = 0; j < protoNode->getNumProtoNodes(); j++) {
@@ -6640,7 +6637,7 @@ Scene::setSelectionMode(int mode)
     
         if ((oldMode == SELECTION_MODE_FACES) && 
             (mode == SELECTION_MODE_VERTICES)) {
-            for (int i = 0; i < oldSelection.size(); i++) {
+            for (size_t i = 0; i < oldSelection.size(); i++) {
                 int handle = oldSelection[i]; 
                 for (int j = 0; j < mesh->getNumFaces(); j++) {
                     FaceData *face = mesh->getFace(j);
@@ -6661,7 +6658,7 @@ Scene::setSelectionMode(int mode)
                 int offset = face->getOffset();
                 int vertexCount = 0;
                 for (int n = offset; n < offset + face->getNumVertices(); n++) {
-                    for (int i = 0; i < oldSelection.size(); i++) {
+                    for (size_t i = 0; i < oldSelection.size(); i++) {
                         int handle = oldSelection[i]; 
                         int meshVertex = ci->getValue(n);
                         if (meshVertex == handle)
@@ -6769,7 +6766,7 @@ Scene::showOnlySelectedVertices(void)
      }
      for (int i = 0; i < node->getNumVertex(); i++) {
          bool skip = false;
-         for (int j = 0; j < notHiddenVertices.size(); j++)
+         for (size_t j = 0; j < notHiddenVertices.size(); j++)
              if (i == notHiddenVertices[j]) {
                  skip = true;
                  break;

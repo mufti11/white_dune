@@ -88,11 +88,11 @@ MeshBased::updateMesh(void)
         if (m_isDoubleMesh) {
             delete m_meshDouble;
             m_meshDouble = NULL;
-            createMesh(this);
+            createMesh();
         } else {
             delete m_mesh;
             m_mesh = NULL;
-            createMesh(this);
+            createMesh();
         }
         m_meshDirty = false;
     }
@@ -1451,7 +1451,7 @@ MeshBasedNode::writeRib(int f, int indent)
 
     RET_ONERROR( mywritef(f, "PointsPolygons [\n") )
     int numVertices = 0;
-    for (int i = 0; i < indexArray.size(); i++) {
+    for (size_t i = 0; i < indexArray.size(); i++) {
         if (indexArray[i] > -1)
             numVertices++;
         else {

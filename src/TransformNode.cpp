@@ -223,7 +223,7 @@ TransformNode::preDraw()
     glPushMatrix();
     transform();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         if (childList->get(i) != this)
             childList->get(i)->preDraw();
 
@@ -594,7 +594,7 @@ TransformNode::writeAc3d(int f, int indent)
         transform();
     }
     int kids = 0;
-    int i;
+    size_t i;
     for (i = 0; i < childList->size(); i++)
         if (childList->get(i)->canWriteAc3d())
             kids++;

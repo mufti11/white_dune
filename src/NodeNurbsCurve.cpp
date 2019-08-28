@@ -1083,7 +1083,7 @@ NodeNurbsCurve::addCoordinateInterpolator(Node *node, bool appendToScene)
     Node *interOutput = NULL;
     int interOutputEvent = -1;
     bool foundInterOutput = false;
-    for (int k = 0; k < info.interpolator.size(); k++) {
+    for (size_t k = 0; k < info.interpolator.size(); k++) {
         Node *node = info.interpolator[k];
         int eventIn = node->lookupEventIn("set_fraction", false);
         if (eventIn == INVALID_INDEX)
@@ -1112,7 +1112,7 @@ NodeNurbsCurve::addCoordinateInterpolator(Node *node, bool appendToScene)
     do {
        foundMinKey = false;
        float minKey = 0;
-       for (int i = 0; i < info.interpolator.size(); i++)
+       for (size_t i = 0; i < info.interpolator.size(); i++)
            for (int j = 0; j < info.interpolator[i]->getNumKeys(); j++)
                if (info.interpolator[i]->getKey(j) > currentKey) {
                    if (foundMinKey == false) {
@@ -1132,8 +1132,8 @@ NodeNurbsCurve::addCoordinateInterpolator(Node *node, bool appendToScene)
     // get data from Interpolators and generate chain
 
     void *data = initializeData();
-    for (int i = 0; i < keys.size(); i++) {
-        for (int j = 0; j < info.interpolator.size(); j++) {
+    for (size_t i = 0; i < keys.size(); i++) {
+        for (size_t j = 0; j < info.interpolator.size(); j++) {
             Interpolator *inter = info.interpolator[j];
             int field = info.field[j];
             if (inter != NULL)
@@ -1145,7 +1145,7 @@ NodeNurbsCurve::addCoordinateInterpolator(Node *node, bool appendToScene)
         m_chainDirty = true;
 
         MFVec3f *vertices = new MFVec3f();
-        for (int n = 0; n < m_chain.size(); n++)
+        for (size_t n = 0; n < m_chain.size(); n++)
              vertices->appendVec(m_chain[n]);
         for (int k = 0; k < vertices->getSize(); k++)
             coordKeyValues.append(vertices->getValues()[k]);
@@ -1214,7 +1214,7 @@ NodeNurbsCurve::findInterpolators(InterpolatorInfo& info)
     if (m_scene->isX3d()) {
         NodeCoordinate *coordinate = (NodeCoordinate *) 
                                      controlPointX3D()->getValue();
-        int field = coordinate->point_Field();
+        field = coordinate->point_Field();
     }
 
     Interpolator *inter = m_scene->findUpstreamInterpolator(node, field); 

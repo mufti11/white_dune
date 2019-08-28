@@ -6,6 +6,9 @@
 /* Define to empty if the keyword does not work.  */
 #undef const
 
+/* Define to test "this" against NULL. Almost! impossible */
+#undef HAVE_NULL_COMPARE
+
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 

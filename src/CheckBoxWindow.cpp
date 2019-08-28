@@ -114,7 +114,7 @@ CheckBoxWindow::~CheckBoxWindow()
 #else
     swSetExposeCallback(canvas, NULL);
 #endif
-    for (int i = 0 ; i < m_buttons.size(); i++)
+    for (size_t i = 0 ; i < m_buttons.size(); i++)
         swDestroyWindow(m_buttons[i]);
     if (canvas)
         swDestroyWindow(canvas);
@@ -133,7 +133,7 @@ void
 CheckBoxWindow::drawInterface(SDC dc)
 {
     int y = 0;
-    for (int i = 0 ; i < m_strings.size(); i++) {
+    for (size_t i = 0 ; i < m_strings.size(); i++) {
         y += Y_SPACING ;
   
         m_buttonsPressed[i] = false;
@@ -174,7 +174,7 @@ void
 CheckBoxWindow::resize0(void)
 {
     m_strings.resize(0);
-    for (int i = 0; i < m_buttons.size(); i++)
+    for (size_t i = 0; i < m_buttons.size(); i++)
         swDestroyWindow(m_buttons[i]);
     m_buttons.resize(0);
     m_buttonsPressed.resize(0);

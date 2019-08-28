@@ -250,7 +250,7 @@ NodeCoordinate::drawHandles(void)
             } else {
                 human->buildJointHasWeightArray();
                 MyArray<int> *arrayPtr = human->getJointHasNoWeightArray();
-                for (int i = 0; i < (*arrayPtr).size(); i++) {
+                for (size_t i = 0; i < (*arrayPtr).size(); i++) {
                     int ci = (*arrayPtr)[i];
                     bool hidden = false;
                     for (int i = 0; i < m_scene->getNumHiddenVertices(); i++)
@@ -351,7 +351,7 @@ NodeCoordinate::setEndHandles(void)
         return;
     if ((m_scene->getSelectionMode() == SELECTION_MODE_FACES) ||
         (m_scene->getSelectionMode() == SELECTION_MODE_LINES)) {
-        for (int i = 0; i < m_selectedVerticesHandles.size(); i++)
+        for (size_t i = 0; i < m_selectedVerticesHandles.size(); i++)
             if (m_validSymVerticesHandles[i]) {
                 setHandleVertices(m_selectedVerticesHandles[i], 
                                   m_selectedVerticesWithoutX[i]);
@@ -384,7 +384,7 @@ NodeCoordinate::setHandleFaces(int handle, const Vec3f &v)
         vecWithoutX.x = vec.x;
         bool validSymVerticesHandles = false;
         bool isInSelectedVertices = false;
-        for (int n = 0; n < m_selectedVertices.size(); n++) {
+        for (size_t n = 0; n < m_selectedVertices.size(); n++) {
             if (m_selectedVerticesHandles[n] == ci->getValue(j)) {
                 isInSelectedVertices = true;
                 break;
@@ -435,7 +435,7 @@ NodeCoordinate::setHandleLines(int handle, const Vec3f &v)
     vecWithoutX.x = vec.x;
     bool validSymVerticesHandles = false;
     bool isInSelectedVertices = false;
-    for (int n = 0; n < m_selectedVertices.size(); n++) {
+    for (size_t n = 0; n < m_selectedVertices.size(); n++) {
         if (m_selectedVerticesHandles[n] == ci->getValue(index1)) {
             isInSelectedVertices = true;
             break;
@@ -458,7 +458,7 @@ NodeCoordinate::setHandleLines(int handle, const Vec3f &v)
     vec = point()->getValue(ci->getValue(index2));
     vec2 = vec + v - first;
     isInSelectedVertices = false;
-    for (int n = 0; n < m_selectedVertices.size(); n++) {
+    for (size_t n = 0; n < m_selectedVertices.size(); n++) {
         if (m_selectedVerticesHandles[n] == ci->getValue(index2))
         {
             isInSelectedVertices = true;

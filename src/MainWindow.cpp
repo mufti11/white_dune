@@ -4324,8 +4324,8 @@ MainWindow::OnCommand(void *vid)
         } 
         // proto usage
         if ((id >= ID_PROTO_MRU_1) && 
-            (id < ID_PROTO_MRU_1 + m_protoMenu.size())) 
-            for (int i = 0; i < m_protoMenu.size(); i++)
+            (id < ID_PROTO_MRU_1 + (long)m_protoMenu.size())) 
+            for (size_t i = 0; i < m_protoMenu.size(); i++)
                 if (((int) id == m_protoMenu[i].id) && 
                     (!m_protoMenu[i].disabled)) {
                     Node *node = createNode((const char*)
@@ -4645,14 +4645,14 @@ void MainWindow::searchInterpolator(void)
             if (!inputNode->isInterpolator())
                 continue;
             bool targetIsNew = true;
-            for (int n = 0; n < targets.size(); n++)
+            for (size_t n = 0; n < targets.size(); n++)
                 if (inputNode == targets[n])
                     targetIsNew = false;
             if (targetIsNew)
                 targets.append(inputNode);
         }
     }
-    for (int i = 0; i < targets.size(); i++) {
+    for (size_t i = 0; i < targets.size(); i++) {
         m_scene->setSelection(targets[i]);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         if (i < (targets.size() - 1)) {
@@ -4675,7 +4675,7 @@ static void searchInInterpolator(MyArray<Node *>& targets, Node *interpolator) {
             if (targetNode->getType() != VRML_TIME_SENSOR)
                 continue;
             bool targetIsNew = true;
-            for (int n = 0; n < targets.size(); n++)
+            for (size_t n = 0; n < targets.size(); n++)
                 if (targetNode == targets[n])
                     targetIsNew = false;
             if (targetIsNew)
@@ -4703,7 +4703,7 @@ void MainWindow::searchTimeSensor(void)
            }
         }
     }
-    for (int i = 0; i < targets.size(); i++) {
+    for (size_t i = 0; i < targets.size(); i++) {
         m_scene->setSelection(targets[i]);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         if (i < (targets.size() - 1)) {
@@ -6526,7 +6526,7 @@ MainWindow::RefreshProtoMenu()
                 continue;
             const char *protoName = m_scene->getProto(i)->getName(true);
             bool found = false;
-            for (int j = 0; j < m_protoMenu.size(); j++) {
+            for (size_t j = 0; j < m_protoMenu.size(); j++) {
                 if (strcmp(protoName, m_protoMenu[j].protoName) == 0) {
                     found = true;
                     m_protoMenu[j].disabled = false;
@@ -6555,7 +6555,7 @@ MainWindow::RefreshProtoMenu()
             menuSize++;
             swInsertMenuItem(m_menu, ID_PROTO_MRU_PLACEHOLDER, buf, id);
         }        
-        for (int i = 0; i < m_protoMenu.size(); i++)
+        for (size_t i = 0; i < m_protoMenu.size(); i++)
             swMenuSetFlags(m_menu, m_protoMenu[i].id, SW_MENU_DISABLED,
                            m_protoMenu[i].disabled ? SW_MENU_DISABLED : 0);
     }
@@ -6836,7 +6836,7 @@ MainWindow::createAnimation(void)
     Node *insertNode = getInsertNode(node);
 
     bool animateSomething = false;
-    for (int i = 0 ; i < eventInFields.size(); i++) 
+    for (size_t i = 0 ; i < eventInFields.size(); i++) 
         if (eventInIsAnimated[i]) {
             animateSomething = true;
             break;
@@ -6851,7 +6851,7 @@ MainWindow::createAnimation(void)
             timeSensor->loop(new SFBool(true));
             timeSensor->start(swGetCurrentTime());
         }
-        for (int i = 0 ; i < eventInFields.size(); i++) {
+        for (size_t i = 0 ; i < eventInFields.size(); i++) {
             if (eventInIsAnimated[i]) {
                 m_scene->setSelection(insertNode);
                 Node* interpolator = NULL;
@@ -8330,17 +8330,18 @@ void MainWindow::convexHull(void)
         removeNode = true;
         node->doWithBranch(searchMeshDataOrTransform, NULL);
     } else
-        for (int i = 0; i < collectedPoints->size(); i++)
+        for (size_t i = 0; i < collectedPoints->size(); i++)
             points.append((*collectedPoints)[i]);
     if (node && points.size() > 3) {
         if ((numNodes == 1) || (isCoordinate && (numNodes == 2))) {
             m_scene->setSelection(node->getParent());
         }
-        if (removeNode) 
+        if (removeNode) {
             if (isSelectionRoot)
                 m_scene->deleteAll();
             else
                 m_scene->deleteLastSelection();
+        }
         NodeIndexedFaceSet *faceSet = Util::convexHull(m_scene, points);
         faceSet->optimize();
         createGeometryNode(faceSet, false, false);
@@ -8624,7 +8625,7 @@ MainWindow::moveBranchToInline()
         }
     }
 
-    for (int i = 0 ; i < allNodes.size() ; i++) {
+    for (size_t i = 0 ; i < allNodes.size() ; i++) {
         Node *node = allNodes[i];
 
         // search for eventIns point outside of rest of scenegraph branch
@@ -8634,7 +8635,7 @@ MainWindow::moveBranchToInline()
             for (j = node->getInput(eIn).first(); j != NULL; j = j->next())
                 if ((j != NULL) && (j->item().getNode())) {
                    bool eventIsOutside = true;
-                   for (int n = 0; n < allNodes.size(); n++) {
+                   for (size_t n = 0; n < allNodes.size(); n++) {
                        if (node != allNodes[n])
                            if (j->item().getNode()->isEqual(allNodes[n])) {
                                eventIsOutside = false;
@@ -8660,7 +8661,7 @@ MainWindow::moveBranchToInline()
             for (j = node->getOutput(eOut).first(); j != NULL; j = j->next())
                 if ((j != NULL) && (j->item().getNode())) {
                     bool eventIsOutside = true;
-                    for (int n = 0; n < allNodes.size(); n++) {
+                    for (size_t n = 0; n < allNodes.size(); n++) {
                         if (node != allNodes[n])
                             if (j->item().getNode()->isEqual(nodesInBranch[n])) {
                                 eventIsOutside = false;
@@ -8711,7 +8712,7 @@ MainWindow::moveBranchToInline()
         }
 
         // write to Inline file
-        for (int i = 0 ; i < nodesInBranch.size() ; i++) 
+        for (size_t i = 0 ; i < nodesInBranch.size() ; i++) 
             if (nodesInBranch[i]->write(f, TheApp->GetIndent()) != 0) {
                 TheApp->MessageBoxPerror(path);                
                 // cleanup Inline node
@@ -8734,7 +8735,7 @@ MainWindow::moveBranchToInline()
         }
 
         // remove nodes from scenegraph
-        for (int i = 0 ; i < nodesInBranch.size() ; i++) {           
+        for (size_t i = 0 ; i < nodesInBranch.size() ; i++) {           
             CommandList *list = new CommandList();
             list->append(new MoveCommand(nodesInBranch[i], target, targetField,
                          NULL, -1));
@@ -8818,7 +8819,7 @@ MainWindow::moveBranchToProto(void)
     Node *targetNode = node;
     if (nodeList.size() > 1)
         targetNode = m_scene->createNode("Group");
-    for (int i = 0; i < nodeList.size();i++) {        
+    for (size_t i = 0; i < nodeList.size();i++) {        
         NodeGroup *group = (NodeGroup *)targetNode;
         if (nodeList.size() > 1) {
             MoveCommand *command = new MoveCommand(nodeList[i]->copy(), 
@@ -9183,7 +9184,7 @@ MainWindow::branchBuildRigidBodyCollection(void) {
         if (collidables.size() > 0) {
             NodeRigidBodyCollection *collection = (NodeRigidBodyCollection *) 
                   m_scene->createNode("RigidBodyCollection");
-            for (int i = 0; i < collidables.size(); i++) {
+            for (size_t i = 0; i < collidables.size(); i++) {
                 NodeRigidBody *rigidBody = (NodeRigidBody*) 
                                            m_scene->createNode("RigidBody");
                 m_scene->execute(new MoveCommand(collidables[i], NULL, -1,
@@ -9195,7 +9196,7 @@ MainWindow::branchBuildRigidBodyCollection(void) {
             }
             NodeCollisionCollection *collision = (NodeCollisionCollection *) 
                   m_scene->createNode("CollisionCollection");
-            for (int i = 0; i < collidables.size(); i++) {
+            for (size_t i = 0; i < collidables.size(); i++) {
                 m_scene->execute(new MoveCommand(collidables[i], NULL, -1,
                                                 collision, 
                                                 collision->collidables_Field()));
@@ -9214,7 +9215,7 @@ MainWindow::branchBuildRigidBodyCollection(void) {
             int eventOut = sensor->getProto()->lookupEventOut("contacts");
             int eventIn = collection->getProto()->lookupEventIn("set_contacts");
             m_scene->addRoute(sensor, eventOut, collection, eventIn);
-            for (int i = 0; i < collidables.size(); i++)
+            for (size_t i = 0; i < collidables.size(); i++)
                 collidables[i]->update();
         }
         m_scene->UpdateViews(NULL, UPDATE_ALL);
@@ -9955,7 +9956,7 @@ void MainWindow::moveTo(int direction)
                     continue;
                 Vec3f vec = point->getValue(coordIndex);
                 bool isInSelectedVertices = false;
-                for (int n = 0; n < selectedVertices.size(); n++)
+                for (size_t n = 0; n < selectedVertices.size(); n++)
                     if (selectedVerticesHandles[n] == coordIndex) {
                         isInSelectedVertices = true;
                         break;
@@ -9975,7 +9976,7 @@ void MainWindow::moveTo(int direction)
             int coordIndex1 = ci->getValue(numLine);
             Vec3f vec1 = point->getValue(coordIndex1);
             bool isInSelectedVertices = false;
-            for (int n = 0; n < selectedVertices.size(); n++)
+            for (size_t n = 0; n < selectedVertices.size(); n++)
                  if (selectedVerticesHandles[n] == coordIndex1) {
                      isInSelectedVertices = true;
                      break;
@@ -9986,7 +9987,7 @@ void MainWindow::moveTo(int direction)
              }
             int coordIndex2 = ci->getValue(mesh->getLine(handle).end);
             Vec3f vec2 = point->getValue(coordIndex2);
-            for (int n = 0; n < selectedVertices.size(); n++)
+            for (size_t n = 0; n < selectedVertices.size(); n++)
                  if (selectedVerticesHandles[n] == coordIndex2) {
                      isInSelectedVertices = true;
                      break;
@@ -9997,7 +9998,7 @@ void MainWindow::moveTo(int direction)
              }
         }
     }
-    for (int j = 0; j < selectedVerticesHandles.size(); j++)
+    for (size_t j = 0; j < selectedVerticesHandles.size(); j++)
         moveTo(node, selectedVerticesHandles[j], direction, 
                 selectedVertices[j], value);
     if (m_scene->getSelectedHandlesSize() > 1)
@@ -10066,7 +10067,7 @@ void MainWindow::scaleBy(int direction)
                     continue;
                 Vec3f vec = point->getValue(coordIndex);
                 bool isInSelectedVertices = false;
-                for (int n = 0; n < selectedVertices.size(); n++)
+                for (size_t n = 0; n < selectedVertices.size(); n++)
                     if (selectedVerticesHandles[n] == coordIndex) {
                         isInSelectedVertices = true;
                         break;
@@ -10086,7 +10087,7 @@ void MainWindow::scaleBy(int direction)
             int coordIndex1 = ci->getValue(numLine);
             Vec3f vec1 = point->getValue(coordIndex1);
             bool isInSelectedVertices = false;
-            for (int n = 0; n < selectedVertices.size(); n++)
+            for (size_t n = 0; n < selectedVertices.size(); n++)
                  if (selectedVerticesHandles[n] == coordIndex1) {
                      isInSelectedVertices = true;
                      break;
@@ -10097,7 +10098,7 @@ void MainWindow::scaleBy(int direction)
              }
             int coordIndex2 = ci->getValue(mesh->getLine(handle).end);
             Vec3f vec2 = point->getValue(coordIndex2);
-            for (int n = 0; n < selectedVertices.size(); n++)
+            for (size_t n = 0; n < selectedVertices.size(); n++)
                  if (selectedVerticesHandles[n] == coordIndex2) {
                      isInSelectedVertices = true;
                      break;
@@ -10108,7 +10109,7 @@ void MainWindow::scaleBy(int direction)
              }
         }
     }
-    for (int j = 0; j < selectedVerticesHandles.size(); j++)
+    for (size_t j = 0; j < selectedVerticesHandles.size(); j++)
         scaleBy(node, selectedVerticesHandles[j], direction, 
                 selectedVertices[j], value);
     if (m_scene->getSelectedHandlesSize() > 1)
@@ -10155,7 +10156,7 @@ void MainWindow::same(int direction,int whichSame)
                     continue;
                 Vec3f vec = point->getValue(coordIndex);
                 bool isInSelectedVertices = false;
-                for (int n = 0; n < selectedVertices.size(); n++)
+                for (size_t n = 0; n < selectedVertices.size(); n++)
                     if (selectedVerticesHandles[n] == coordIndex) {
                         isInSelectedVertices = true;
                         break;
@@ -10175,7 +10176,7 @@ void MainWindow::same(int direction,int whichSame)
             int coordIndex1 = ci->getValue(numLine);
             Vec3f vec1 = point->getValue(coordIndex1);
             bool isInSelectedVertices = false;
-            for (int n = 0; n < selectedVertices.size(); n++)
+            for (size_t n = 0; n < selectedVertices.size(); n++)
                  if (selectedVerticesHandles[n] == coordIndex1) {
                      isInSelectedVertices = true;
                      break;
@@ -10186,7 +10187,7 @@ void MainWindow::same(int direction,int whichSame)
              }
             int coordIndex2 = ci->getValue(mesh->getLine(handle).end);
             Vec3f vec2 = point->getValue(coordIndex2);
-            for (int n = 0; n < selectedVertices.size(); n++)
+            for (size_t n = 0; n < selectedVertices.size(); n++)
                  if (selectedVerticesHandles[n] == coordIndex2) {
                      isInSelectedVertices = true;
                      break;
@@ -10203,7 +10204,7 @@ void MainWindow::same(int direction,int whichSame)
         sameValue = FLT_MAX;
     int constrain = m_scene->getConstrain();
     int field = -1;
-    for (int j = 0; j < selectedVerticesHandles.size(); j++) {
+    for (size_t j = 0; j < selectedVerticesHandles.size(); j++) {
         Vec3f vec = node->getHandle(selectedVerticesHandles[j], &constrain, 
                                     &field);
         switch (direction) {
@@ -10255,7 +10256,7 @@ void MainWindow::same(int direction,int whichSame)
     }
     if ((whichSame == SAME) && (selectedVerticesHandles.size() != 0))
         sameValue /= selectedVerticesHandles.size(); 
-    for (int j = 0; j < selectedVerticesHandles.size(); j++) {
+    for (size_t j = 0; j < selectedVerticesHandles.size(); j++) {
         Vec3f vec = node->getHandle(selectedVerticesHandles[j], &constrain, 
                                     &field);
         moveTo(node, selectedVerticesHandles[j], direction, vec, sameValue);
@@ -11293,8 +11294,8 @@ MainWindow::toPositionAndOrientationInterpolators()
         if (nodeList.size() != 2)
             return;
 
-        int j = -1;
-        for (j = 0; j < nodeList.size(); j++)
+        long j = -1;
+        for (j = 0; j < ((long)nodeList.size()); j++)
             if (nodeList[j] != NULL)
                 m_scene->execute(new MoveCommand(nodeList[j], NULL, -1, 
                                                  m_scene->getRoot(), 
@@ -11871,7 +11872,7 @@ MainWindow::insertHAnimJoint()
             }
             MFFloat *weights = (MFFloat *)joint->skinCoordWeight()->copy();
             MFInt32 *indices = (MFInt32 *)joint->skinCoordIndex()->copy();
-            for (int i = 0; i < handles.size(); i++) {
+            for (size_t i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
                 if (handle >= NO_HANDLE)
                     continue;
@@ -11888,7 +11889,7 @@ MainWindow::insertHAnimJoint()
                 NodeHAnimJoint *parent = (NodeHAnimJoint *)dlg.GetParent();
                 MFFloat *weights = (MFFloat *)parent->skinCoordWeight()->copy();
                 MFInt32 *indices = (MFInt32 *)parent->skinCoordIndex()->copy();
-                for (int i = 0; i < handles.size(); i++) {
+                for (size_t i = 0; i < handles.size(); i++) {
                     int handle = m_scene->getSelectedHandle(i);
                     int f = indices->find(handle);
                     if (f < 0) {
@@ -11967,7 +11968,7 @@ MainWindow::setHAnimJointWeight()
         if (newJoint) {
             MFFloat *newWeights = (MFFloat *)oldJoint->skinCoordWeight()->copy();
             MFInt32 *newIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
-            for (int i = 0; i < handles.size(); i++) {
+            for (size_t i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
                 int index = newIndices->find(handle);
                 if (index > -1) {
@@ -11977,7 +11978,7 @@ MainWindow::setHAnimJointWeight()
             }
             oldJoint->skinCoordIndex(newIndices);
             oldJoint->skinCoordWeight(newWeights);
-            for (int j = 0; j < handles.size(); j++) {
+            for (size_t j = 0; j < handles.size(); j++) {
                 int handle = handles[j];
                 int index = oldIndices->find(handle);
                 if (index > -1) {
@@ -11986,7 +11987,7 @@ MainWindow::setHAnimJointWeight()
                }
            }
         } else {
-            for (int i = 0; i < handles.size(); i++) {
+            for (size_t i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
                 int f = indices->find(handle);
                 if (f < 0) {
@@ -12003,7 +12004,7 @@ MainWindow::setHAnimJointWeight()
             NodeHAnimJoint *parent = (NodeHAnimJoint *)dlg.GetParent();
             MFFloat *weights = (MFFloat *)parent->skinCoordWeight()->copy();
             MFInt32 *indices = (MFInt32 *)parent->skinCoordIndex()->copy();
-            for (int i = 0; i < handles.size(); i++) {
+            for (size_t i = 0; i < handles.size(); i++) {
                 int handle = m_scene->getSelectedHandle(i);
                 if ((handle < 0) || (handle >= NO_HANDLE))
                     continue;
@@ -12055,7 +12056,7 @@ MainWindow::removeHAnimJointWeight()
                 return;
             joints.resize(0);
             skel->doWithBranch(searchJoints, NULL);
-            for (int j = 0; j < joints.size(); j++) {
+            for (size_t j = 0; j < joints.size(); j++) {
                 NodeHAnimJoint *joint = (NodeHAnimJoint *)joints[j]; 
                 bool changed = false;
                 if (joint != NULL) {
@@ -12063,7 +12064,7 @@ MainWindow::removeHAnimJointWeight()
                                        joint->skinCoordWeight()->copy();
                     MFInt32 *indices = (MFInt32 *)
                                        joint->skinCoordIndex()->copy();
-                    for (int i = 0; i < handles.size(); i++) {
+                    for (size_t i = 0; i < handles.size(); i++) {
                         int handle = handles[i];
                         if (handle >= NO_HANDLE)
                             continue;
@@ -13505,13 +13506,13 @@ void MainWindow::OnEditFindAgain()
         NodeArray allNodes;
         m_scene->getRoot()->doWithBranch(getAllNodes, &allNodes);
         int positionSelection = -1;
-        for (int i = 0; i < allNodes.size(); i++)
+        for (size_t i = 0; i < allNodes.size(); i++)
             if (allNodes[i] == node) {
                 positionSelection = i;
                 break;
             }
         searchData data(m_searchText, m_scene); 
-        for (int i = positionSelection + 1; i < allNodes.size(); i++)
+        for (size_t i = positionSelection + 1; i < allNodes.size(); i++)
             if (!searchNode(allNodes[i], &data))
                 break;
     }
@@ -13792,7 +13793,7 @@ MainWindow::removeIllegalNodes()
 {
     Node *selection = m_scene->getSelection()->getNode();
     const NodeList *nodes = m_scene->getNodes();
-    for (int i = 0; i < nodes->size(); i++) {
+    for (size_t i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node->isInvalidChild() && (node != m_scene->getRoot())) {
             CommandList *list = new CommandList();
@@ -13839,7 +13840,7 @@ MainWindow::countPolygons()
                 NodeList *childList = ((MFNode *) parent->getField(i))->
                                       getValues();
                 if (childList) {
-                    for (int j = 0; j < childList->size(); j++) {
+                    for (size_t j = 0; j < childList->size(); j++) {
                         Node *child = childList->get(j);
                     if (child) {
                         if (child == node)
@@ -13894,7 +13895,7 @@ MainWindow::countPolygons4catt()
                 NodeList *childList = ((MFNode *) parent->getField(i))->
                                       getValues();
                 if (childList) {
-                    for (int j = 0; j < childList->size(); j++) {
+                    for (size_t j = 0; j < childList->size(); j++) {
                         Node *child = childList->get(j);
                     if (child) {
                         if (child == node)

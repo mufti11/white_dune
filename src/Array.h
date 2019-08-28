@@ -94,7 +94,7 @@ public:
     void        insert(T t, size_t index) {                   
                    if (index < m_size) {
                        resize(m_size + 1);
-                       for (long i = (long)m_size - 1; i > index; i--)
+                       for (long i = (long)m_size - 1; i > (long)index; i--)
                            (*this)[i] = (*this)[i-1];
                    }
                    (*this)[index] = t; 

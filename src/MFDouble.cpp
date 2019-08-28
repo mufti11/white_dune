@@ -80,7 +80,7 @@ FieldValue *
 MFDouble::copy()
 {
     double *value = new double[m_value.size()];
-    for (int i = 0;i < m_value.size(); i++)
+    for (size_t i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];
     return new MFDouble(value, m_value.size());
 }
@@ -102,8 +102,8 @@ MFDouble::equals(const FieldValue *value) const
 bool
 MFDouble::equals(const MFDouble *value) const
 {
-    if (m_value.size() == value->getSize()) {
-        for (int i = 0; i < m_value.size(); i++)
+    if ((int)m_value.size() == value->getSize()) {
+        for (size_t i = 0; i < m_value.size(); i++)
             if (m_value[i] != value->getValue(i))
                 return false;
         return true;
@@ -133,13 +133,13 @@ void MFDouble::clamp(const FieldValue *min, const FieldValue *max)
 {
     if (min) {
         double fmin = ((SFDouble *) min)->getValue();
-        for (int i = 0; i < m_value.size(); i ++) {
+        for (size_t i = 0; i < m_value.size(); i ++) {
             if (m_value[i] < fmin) m_value[i] = fmin;
         }
     }
     if (max) {
         double fmax = ((SFDouble *) max)->getValue();
-        for (int i = 0; i < m_value.size(); i ++) {
+        for (size_t i = 0; i < m_value.size(); i ++) {
             if (m_value[i] > fmax) m_value[i] = fmax;
         }
     }

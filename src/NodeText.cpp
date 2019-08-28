@@ -455,7 +455,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
         }
 
         float maxX = FLT_MIN;
-        for (int i = 0; i < tris.size(); i++) {
+        for (size_t i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
             float x1 = fsizeX * (t.a.x / height); 
             if (x1 > maxX)
@@ -472,7 +472,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
             addX = -maxX / 2;
         else if (ijustify == JUSTIFY_END)
             addX = -maxX;
-        for (int i = 0; i < tris.size(); i++) {
+        for (size_t i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
             if (bhorizontal) {
                 coords->appendSFValue(fsizeX * (t.a.x / height) + addX, 

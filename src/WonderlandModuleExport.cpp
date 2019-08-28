@@ -382,6 +382,7 @@ so, delete this exception statement from your version.
 #include <fcntl.h>
 #include <ctype.h>
 
+#include "config.h"
 #include "stdafx.h"
 #include "swt.h"
 #include "MyString.h"

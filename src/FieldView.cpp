@@ -173,7 +173,7 @@ void FieldView::DeleteFields()
 {
     if (!getEnabled())
         return;
-    for (int i = 0; i < m_fields.size(); i++) {
+    for (size_t i = 0; i < m_fields.size(); i++) {
        delete m_fields[i];
     }
     m_fields.resize(0);
@@ -234,7 +234,7 @@ void FieldView::OnDraw(int x, int y, int width, int height, bool update)
 int FieldView::FindField(int field)
 {
     int currentField = -1;
-    for (int i = 0; i < m_fields.size(); i++)
+    for (size_t i = 0; i < m_fields.size(); i++)
         if (m_fields[i]->GetIndex() == field) {
            currentField = i;
            break;
@@ -405,7 +405,7 @@ void FieldView::DrawItem(int index, SDC dc)
     if (def == NULL)
         return;
     Field *field = NULL;
-    if (index >= m_items.size())
+    if (index >= (int)m_items.size())
         return;
     FieldViewItem *item = m_items[index];
     if (item == NULL)
@@ -549,7 +549,7 @@ void FieldView::MoveControls(int left)
 {
     Rect r;
 
-    for (int i = 0; i < m_items.size(); i++) {
+    for (size_t i = 0; i < m_items.size(); i++) {
         GetItemRect(i, &r);
         m_items[i]->MoveControl(left, r.top);
     }
@@ -562,7 +562,7 @@ int FieldView::HitTest(int x, int y)
     swHeaderGetSize(m_header, &width, &height);
     int pos = (y - height) / m_itemHeight;
 
-    if (pos >= 0 && pos < m_items.size()) {
+    if (pos >= 0 && pos < (int)m_items.size()) {
         return pos;
     } else {
         return -1;
@@ -643,27 +643,11 @@ void FieldView::UpdateBars()
         swGetSize(m_window, &width, &height);
 
         if (m_height > y + height) {
-//            SCROLLINFO info;
-//            info.cbSize = sizeof(SCROLLINFO);
-//            info.fMask = SIF_PAGE | SIF_RANGE;
-//            info.nMin = 0;
-//            if (m_items.size() > 32767) {
-//                info.nMax = 32767;
-             m_scrollRatio = m_items.size() / 32767.0f;
-//            } else {
-//              info.nMax = m_items.size();
-                m_scrollRatio = 1.0f;
-//            }
-//            info.nPage = m_pageHeight;
-//            SetScrollInfo(SB_VERT, &info);
-            if (m_items.size() > m_pageHeight) {
-//                EnableScrollBarCtrl(SB_VERT, TRUE);
-            } else {
-//                EnableScrollBarCtrl(SB_VERT, FALSE);
+            m_scrollRatio = m_items.size() / 32767.0f;
+            if ((int)m_items.size() <= m_pageHeight) {
                 m_scrollY = 0;
             }
         } else {
-//            EnableScrollBarCtrl(SB_VERT, FALSE);
             m_scrollY = 0;
         }
 
@@ -752,7 +736,7 @@ void FieldView::StopEditing()
     }
     swDestroyWindow(m_edit);
     swEnableAccelerators(TRUE);
-    if (m_selectedItem < m_items.size())
+    if (m_selectedItem < (int) m_items.size())
         if (m_items[m_selectedItem] && !m_items[m_selectedItem]->IsCollapsed())
             RefreshItemList();
     if (m_selectedProto != NULL)
@@ -775,11 +759,12 @@ void FieldView::OnLButtonDown(int x, int y, int modifiers)
 
     if (m_state == EDITING) {
         StopEditing();
-    } else if ((hit >= 0) && (hit < m_items.size())) {
+    } else if ((hit >= 0) && (hit < (int)m_items.size())) {
         FieldViewItem *item = m_items[hit];
         if (m_selectedItem != hit) {
             // unhighlight old selection, if any
-            if ((m_selectedItem > 0) && (m_selectedItem < m_items.size())) { 
+            if ((m_selectedItem > 0) && (m_selectedItem < (int)m_items.size()))
+            { 
                 if (m_items[m_selectedItem] != NULL)
                     m_items[m_selectedItem]->ClearFlag(FVIS_SELECTED);
                 swInvalidateWindow(m_window);
@@ -938,7 +923,7 @@ void FieldView::OnMouseMove(int x, int y, int modifiers)
     }
     UpdateTrackingCursor(x, y);
     if ((m_state == TRACKING) && 
-        (m_selectedItem > -1) && (m_selectedItem < m_items.size())) {
+        (m_selectedItem > -1) && (m_selectedItem < (int)m_items.size())) {
         FieldViewItem  *item = m_items[m_selectedItem];
         if (item == NULL)
             return;

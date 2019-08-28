@@ -244,7 +244,7 @@ public:
     Node               *toIndexedFaceSet(int meshFlags, Scene* scene);
     MFVec3f            *getSmoothNormals(void);
     MFInt32            *getSmoothNormalIndex(void);
-    int                 getTexCoordParameter(int i)
+    int                 getTexCoordParameter(size_t i)
                              {
                              if (i < m_texCoordParameter.size())
                                  return m_texCoordParameter[i];
@@ -295,7 +295,7 @@ protected:
 
     bool                m_isTriangulated;
 
-    int                 m_tessellationStart;
+    size_t              m_tessellationStart;
     GLenum              m_tessellationType;
     bool                m_evenTriangleStrip;
     int                 m_drawCounter;
@@ -408,7 +408,7 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
     m_coordIndex->ref();
 
     m_texCoords.resize(0);
-    for (int i = 0; i < texCoords.size(); i++) {
+    for (size_t i = 0; i < texCoords.size(); i++) {
         m_texCoords[i] = texCoords[i];
         m_texCoords[i]->ref();
     }
@@ -561,7 +561,7 @@ MyMeshX<X, MFX, VEC3X> *
 MyMeshX<X, MFX, VEC3X>::copy(void)
 {
     MyArray<MFVec2f*> texCoords;
-    for (int i = 0; i < m_texCoords.size(); i++)
+    for (size_t i = 0; i < m_texCoords.size(); i++)
         if (m_texCoords[i] != NULL) {
             if (m_texCoords[i]->getSize() > 0)
                 texCoords.append((MFVec2f *)m_texCoords[i]->copy());
@@ -755,17 +755,17 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
                 (texCoordIndex[j] >= 0)) {
                 glTexCoord2fv(texCoords + texCoordIndex[j] * 2);
 #ifdef HAVE_MULTI_TEXTURE
-                int textureUnits = 0;
+                size_t textureUnits = 0;
                 if (m_node)
                     textureUnits = m_node->getTextureUnits();
-                for (int k = 0; k < textureUnits; k++)
+                for (size_t k = 0; k < textureUnits; k++)
                     if (k < m_texCoords.size())
                         glMultiTexCoord2fv(GL_TEXTURE0 + k, 
                                            m_texCoords[k]->getValues() + 
                                            texCoordIndex[j] * 2);
                     else
                         glMultiTexCoord2fv(GL_TEXTURE0 + k, 
-                            m_texCoords[(m_texCoords.size() - 1) > -1 ? 
+                            m_texCoords[((long)m_texCoords.size() - 1) > -1 ? 
                                 m_texCoords.size() -1 : 0]->getValues() +
                                            texCoordIndex[j] * 2);
 #endif
@@ -989,7 +989,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
        return;       
 
     EdgeList::Iterator *j;
-    int nVerts = m_vertices->getSFSize();
+    size_t nVerts = m_vertices->getSFSize();
     MyArray<Vec3f> normals;
     // the created normals are normalPerVertex, so any vertex need a normal
     m_normalPerVertex = true;
@@ -997,13 +997,13 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     int numFaces = 0;
     EdgeList *edgeLists = new EdgeList[nVerts];
     const int *coordIndex = m_coordIndex->getValues();
-    int nCoords = m_coordIndex->getSize();
+    size_t nCoords = m_coordIndex->getSize();
     int start = 0;
     MyArray<int> normalIndex;
 
-    for (int i = 0; i < nCoords; i++) {
-        int v = coordIndex[i];
-        if ((v == -1) || (v >= nVerts)) {
+    for (size_t i = 0; i < nCoords; i++) {
+        long v = coordIndex[i];
+        if ((v == -1) || (v >= (long)nVerts)) {
             if (i - start > 0) {
                 numFaces++;
             }
@@ -1020,9 +1020,9 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         normalIndex[i] = -1;
     }
     // vertices without normals get the face normal
-    for (int n = 0; n < nCoords; n++) {
-        int i = coordIndex[n];
-        if ((i == -1) || (i >= nVerts))
+    for (size_t n = 0; n < nCoords; n++) {
+        long i = coordIndex[n];
+        if ((i == -1) || (i >= (long)nVerts))
             continue;
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
             MyEdge *e = j->item();
@@ -1034,7 +1034,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
                 }
              } else {
                  int index = normalIndex[e->pos1];
-                 if (index < normalIndex.size() &&
+                 if (index < (int)normalIndex.size() &&
                      (normals[index].x < floatEpsilon()) &&
                      (normals[index].y < floatEpsilon()) &&
                      (normals[index].z < floatEpsilon()))
@@ -1042,19 +1042,19 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             }
         }
     }
-    for (int n = 0; n < nCoords; n++) {
-        int i = coordIndex[n];
-        if ((i == -1) || (i >= nVerts))
+    for (size_t n = 0; n < nCoords; n++) {
+        long i = coordIndex[n];
+        if ((i == -1) || (i >= (long)nVerts))
             continue;
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
             MyEdge *e = j->item();
             if (e->face >= m_numFaces)
                 continue;
             const Vec3f &refNormal = m_faces[e->face]->getNormal();
-            if (e->pos2 >= nCoords)
+            if (e->pos2 >= (int)nCoords)
                 continue;
-            int v2 = coordIndex[e->pos2];
-            if (v2 >= nVerts)
+            long v2 = coordIndex[e->pos2];
+            if (v2 >= (long)nVerts)
                 continue;
             MyEdge *f = findEdge(coordIndex, edgeLists[v2].first(), i);
             if (f && (f->face < m_numFaces)) {
@@ -1089,11 +1089,11 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     }
     // join all smoothed normals of a vertex
     MyArray<IntArray *> smoothNormalIndices;
-    for (int i = 0; (i < normalIndex.size()) || (i < nVerts); i++)
+    for (size_t i = 0; (i < normalIndex.size()) || (i < nVerts); i++)
         smoothNormalIndices.append(new IntArray());
-    for (int n = 0; n < nCoords; n++) {
-        int i = coordIndex[n];
-        if ((i == -1) || (i >= nVerts))
+    for (size_t n = 0; n < nCoords; n++) {
+        long i = coordIndex[n];
+        if ((i == -1) || (i >= (long)nVerts))
             continue;
         // find all normals for a vertex
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
@@ -1104,29 +1104,29 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
                 smoothNormalIndices[i]->append(e->pos1);
         }
     }
-    for (int n = 0; n < nCoords; n++) {
-        int i = coordIndex[n];
-        if ((i == -1) || (i >= nVerts))
+    for (size_t n = 0; n < nCoords; n++) {
+        long i = coordIndex[n];
+        if ((i == -1) || (i >= (long)nVerts))
             continue;
         Vec3f averageNormal(0, 0, 0);
         bool hasAverageNormal = false;
-        for (int j = 0; j < smoothNormalIndices[i]->size(); j++) {
+        for (size_t j = 0; j < smoothNormalIndices[i]->size(); j++) {
             hasAverageNormal = true;
             int indexNormal = smoothNormalIndices[i]->get(j);
             averageNormal += normals[normalIndex[indexNormal]];
         }
         if (hasAverageNormal) {
             averageNormal.normalize();
-            for (int j = 0; j < smoothNormalIndices[i]->size(); j++) {
+            for (size_t j = 0; j < smoothNormalIndices[i]->size(); j++) {
                 int indexNormal = smoothNormalIndices[i]->get(j);
                 normals[normalIndex[indexNormal]] = averageNormal;
             }
         }
     }
     // vertices with normal 0 0 0 get the face normal
-    for (int n = 0; n < nCoords; n++) {
-         int i = coordIndex[n];
-         if ((i == -1) || (i >= nVerts))
+    for (size_t n = 0; n < nCoords; n++) {
+         long i = coordIndex[n];
+         if ((i == -1) || (i >= (long)nVerts))
              continue;
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
             MyEdge *e = j->item();
@@ -1147,9 +1147,9 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     }
 
     int face = 0;
-    for (int n = 0; n < normalIndex.size(); n++) {
-        int i = normalIndex[n];        
-        if ((i < 0) || (i >= normalIndex.size())) {
+    for (size_t n = 0; n < normalIndex.size(); n++) {
+        long i = normalIndex[n];        
+        if ((i < 0) || (i >= (long)normalIndex.size())) {
             if (i < 0)
                 face++;
             continue;
@@ -1161,9 +1161,9 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         }
     }
     // cleanup
-    for (int n = 0; n < nCoords; n++) {
+    for (size_t n = 0; n < nCoords; n++) {
          int i = coordIndex[n];
-         if ((i == -1) || (i >= nVerts))
+         if ((i == -1) || (i >= (long)nVerts))
              continue;
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
             MyEdge *e = j->item();
@@ -1172,18 +1172,18 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         edgeLists[i].removeAll();
     }
     delete [] edgeLists;
-    for (int i = 0; i < smoothNormalIndices.size(); i++) {
+    for (size_t i = 0; i < smoothNormalIndices.size(); i++) {
         delete smoothNormalIndices[i];
         smoothNormalIndices[i] = NULL;        
     }
-    int maxNormalIndex = -1;
-    for (int k = 0; k < normalIndex.size(); k++)
+    long maxNormalIndex = -1;
+    for (size_t k = 0; k < normalIndex.size(); k++)
         if (normalIndex[k] > maxNormalIndex)
             maxNormalIndex = normalIndex[k];
     if (normals.size() > 0)
-        for (int k = normals.size() - 1; k > maxNormalIndex; k--)
+        for (long k = normals.size() - 1; k > maxNormalIndex; k--)
             normals.remove(k);
-    for (int k = 0; k < normals.size(); k++) {
+    for (size_t k = 0; k < normals.size(); k++) {
         normals[k].normalize();
     }
     if (m_normals)
@@ -1191,7 +1191,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     m_normals = new MFVec3f((float *)normals.extractData(), normals.size() * 3);
     if (normalIndex.size() > 0) {
         int *n = new int[normalIndex.size() + 1];
-        for (int i = 0; i < normalIndex.size(); i++)
+        for (size_t i = 0; i < normalIndex.size(); i++)
             n[i] = normalIndex[i];
         int nsize = normalIndex.size();
         if (n[nsize - 1] != -1) {
@@ -1205,18 +1205,18 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         m_normalIndex->ref();
 
     m_smoothNormalsArray.resize(0);
-    for (int n = 0; n < nVerts; n++) {
+    for (size_t n = 0; n < nVerts; n++) {
         Vec3f vec;
         m_smoothNormalsArray[n] = vec;
     }
-    for (int n = 0; n < nCoords; n++) {
-        int i = coordIndex[n];
-        if ((i < 0) || (i >= nVerts))
+    for (size_t n = 0; n < nCoords; n++) {
+        long i = coordIndex[n];
+        if ((i < 0) || (i >= (long)nVerts))
             continue;
         m_smoothNormalsArray[i] += m_normals->getVec(m_normalIndex->getValue(n)
                                                     );
     }
-    for (int i = 0; i < m_smoothNormalsArray.size(); i++)
+    for (size_t i = 0; i < m_smoothNormalsArray.size(); i++)
         m_smoothNormalsArray[i].normalize();
 }
 
@@ -2053,7 +2053,7 @@ template <class X,class MFX,class VEC3X>
 void 
 MyMeshX<X, MFX, VEC3X>::addNewVertex(VertexInfo* vertexInfo)
 {
-    int vertexNumber = m_triangulatedVertices.size() / 3;
+    size_t vertexNumber = m_triangulatedVertices.size() / 3;
     if (m_tessellationType == GL_TRIANGLE_FAN) {
         // repeat indices of first and last vertices of triangle fan
         if (vertexNumber > (m_tessellationStart + 2)) {
@@ -2143,17 +2143,17 @@ MyMeshX<X, MFX, VEC3X> *
 MyMeshX<X, MFX, VEC3X>::buildNewTriangulatedMesh(MeshBasedNode *that)
 {
     MFX *vertices = new MFX(m_triangulatedVertices.size() / 3);
-    for (int i = 0; i < m_triangulatedVertices.size(); i++)
+    for (size_t i = 0; i < m_triangulatedVertices.size(); i++)
         vertices->setValue(i, m_triangulatedVertices[i]); 
 
     MFInt32 *coordIndex = new MFInt32(m_triangulatedIndices.size());
-    for (int i = 0; i < m_triangulatedIndices.size(); i++)
+    for (size_t i = 0; i < m_triangulatedIndices.size(); i++)
         coordIndex->setSFValue(i, m_triangulatedIndices[i]);
 
     MFVec3f *normals = NULL;
     if (m_triangulatedHasNormals) {
         normals = new MFVec3f(m_triangulatedNormals.size() / 3);
-        for (int i = 0; i < m_triangulatedNormals.size(); i++)
+        for (size_t i = 0; i < m_triangulatedNormals.size(); i++)
             normals->setValue(i, m_triangulatedNormals[i]); 
     }
     MFInt32 *normalIndex = NULL;
@@ -2161,13 +2161,13 @@ MyMeshX<X, MFX, VEC3X>::buildNewTriangulatedMesh(MeshBasedNode *that)
     MFColor *colors = NULL;
     if (m_triangulatedHasColors) {
         colors = new MFColor(m_triangulatedColors.size() / 4);
-        for (int i = 0; i < m_triangulatedColors.size(); i++)
+        for (size_t i = 0; i < m_triangulatedColors.size(); i++)
             colors->setValue(i, m_triangulatedColors[i]); 
     }
     MFColorRGBA *colorsRGBA = NULL;
     if (m_triangulatedHasColorsRGBA) {
         colorsRGBA = new MFColorRGBA(m_triangulatedColors.size() / 4);
-        for (int i = 0; i < m_triangulatedColors.size(); i++)
+        for (size_t i = 0; i < m_triangulatedColors.size(); i++)
             colorsRGBA->setValue(i, m_triangulatedColors[i]); 
     }    
     MFInt32 *colorIndex = NULL;
@@ -2175,7 +2175,7 @@ MyMeshX<X, MFX, VEC3X>::buildNewTriangulatedMesh(MeshBasedNode *that)
     MFVec2f *texCoord = NULL;
     if (m_triangulatedHasTexCoords) {
         texCoord = new MFVec2f(m_triangulatedTexCoords.size() / 2);
-        for (int i = 0; i < m_triangulatedTexCoords.size(); i++)
+        for (size_t i = 0; i < m_triangulatedTexCoords.size(); i++)
             texCoord->setValue(i, m_triangulatedTexCoords[i]); 
     }
     if (texCoord == NULL)

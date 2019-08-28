@@ -75,17 +75,17 @@ NodeNurbsSet::draw(void)
 
     glPushName(geometry_Field());  // field offset
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->bind();
 
     glPushName(0);
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         glLoadName(i);
         childList->get(i)->draw();
     }
     glPopName();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->unbind();
 
     glPopName();
@@ -144,7 +144,7 @@ NodeNurbsSet::setHandle(Node* caller, float newWeight,
                           const Vec3f &newV, const Vec3f &oldV)
 {
     NodeList   *childList = geometry()->getValues();
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         Node *child = childList->get(i);
         if (child->getType() == VRML_NURBS_SURFACE) {
             if (child != caller)
@@ -161,7 +161,7 @@ void
 NodeNurbsSet::backupFieldsAppend(Node* caller, int field)
 {
     NodeList   *childList = geometry()->getValues();
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         Node *child = childList->get(i);
         if (child->getType() == VRML_NURBS_SURFACE) {
             if (child != caller)

@@ -128,7 +128,7 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
         ((MFieldValue *)value)->getDiff(&newValues, &deleteValues, scenes());
         ProtoVrmlCut *protoVrmlCut = (ProtoVrmlCut *)m_proto;
         int firstDynamicEventOut = protoVrmlCut->getFirstDynamicEventOut();
-        for (int i = 0; i < newValues.size(); i++) {
+        for (size_t i = 0; i < newValues.size(); i++) {
             Node *node = ((MFNode *)value)->getValue(newValues[i]);
             if (node->getType() == DUNE_VRML_SCENE) {
                 MyString name = "";
@@ -169,7 +169,7 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
             }            
         }
 
-        for (int i = 0; i < deleteValues.size(); i++) {
+        for (size_t i = 0; i < deleteValues.size(); i++) {
             int index = deleteValues[i];
             int eventOutIndex = firstDynamicEventOut + index;
             sceneLengths()->removeSFValue(index);
@@ -304,7 +304,7 @@ NodeVrmlCut::accountWhich()
         running = false;
   
     int whichCount = 0;
-    for (int i = 0; i < choiceList->size(); i++)
+    for (size_t i = 0; i < choiceList->size(); i++)
         if (choiceList->get(i)->getType() != VRML_COMMENT) {
             if (whichCount == which)
                 return i;
@@ -329,7 +329,7 @@ NodeVrmlCut::preDraw()
 
     int which = accountWhich();
 
-    if (which < 0 || which >= choiceList->size()) return;
+    if (which < 0 || which >= (int)choiceList->size()) return;
 
     choiceList->get(which)->preDraw();
 }
@@ -341,7 +341,7 @@ NodeVrmlCut::writeRib(int filedes, int indent)
 
     int which = accountWhich();
 
-    if (which < 0 || which >= choiceList->size()) return 0;
+    if (which < 0 || which >= (int)choiceList->size()) return 0;
 
     choiceList->get(which)->writeRib(filedes, indent);
 
@@ -355,7 +355,7 @@ NodeVrmlCut::draw(int pass)
 
     int which = accountWhich();
 
-    if (which < 0 || which >= choiceList->size()) return;
+    if (which < 0 || which >= (int)choiceList->size()) return;
 
     glPushName(scenes_Field());
     glPushName(which);

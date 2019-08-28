@@ -496,7 +496,7 @@ void SceneTreeView::UpdateSelection()
 void SceneTreeView::InsertNodeListRec(NodeList *list, int field, STREEITEM parent)
 {
     if (list == NULL) return;
-    for (int i = 0; i < list->size(); i++) {
+    for (size_t i = 0; i < list->size(); i++) {
         InsertNodeRec(list->get(i), field, SW_INSERT_LAST_CHILD, parent);
     }
 }
@@ -530,7 +530,6 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
                 InsertNodeListRec(value->getValues(), i, item);
         } else if (field->getType() == SFNODE) {
             SFNode *value = (SFNode *) node->getField(i);
-            const char *name = (const char *) field->getName(x3d);
             InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
         }
     }

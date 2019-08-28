@@ -1023,7 +1023,7 @@ public:
     bool                isInAlreadyWrittenEventOuts(int eventOut, 
                                                     int numOutput)
                             {
-                            for (int i = 0; 
+                            for (size_t i = 0; 
                                  i < m_alreadyWrittenEventOuts.size(); i++)
                                  if ((m_alreadyWrittenEventOuts[i].eventOut
                                       == eventOut) &&                   
@@ -1129,8 +1129,10 @@ public:
     void               removeParent(void);
     bool               hasParent(void) const
                            { 
+#ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
                                return false;
+#endif
                            if (getNumParents() < 0) 
                                return false;
                            if (m_geometricParentIndex == -1)

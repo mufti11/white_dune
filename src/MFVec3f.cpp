@@ -50,7 +50,7 @@ FieldValue *MFVec3f::copy()
 MFVec3d *MFVec3f::getMFVec3d(void)
 {
     MFVec3d *values = new MFVec3d();
-    for (int i = 0; i < m_value.size(); i += getStride())
+    for (size_t i = 0; i < m_value.size(); i += getStride())
         values->appendSFValue(m_value[i], 
                               m_value[i + 1],
                               m_value[i + 2]);  

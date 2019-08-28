@@ -128,7 +128,7 @@ void
 SFImage::setWidth(int width)
 {
     for (int i = 0; i < 1; i++)
-        if (m_value.size() <= i) {
+        if ((int)m_value.size() <= i) {
             m_value.resize(i + 1); 
             m_value[i] = 0;
         }
@@ -149,7 +149,7 @@ void
 SFImage::setHeight(int height)
 {
     for (int i = 0; i < 2; i++)
-        if (m_value.size() <= i) {
+        if ((int)m_value.size() <= i) {
             m_value.resize(i + 1); 
             m_value[i] = 0;
         }
@@ -160,7 +160,7 @@ SFImage::setHeight(int height)
 int
 SFImage::getComponents() const
 {
-    if (m_value.size() > 2)
+    if ((int)m_value.size() > 2)
         return m_value[2];
     else
         return 0;
@@ -170,7 +170,7 @@ void
 SFImage::setComponents(int components)
 {
     for (int i = 0; i < 3; i++)
-        if (m_value.size() <= i) {
+        if ((int)m_value.size() <= i) {
             m_value.resize(i + 1); 
             m_value[i] = 0;
         }
@@ -197,7 +197,7 @@ int
 SFImage::getNumPixels() const
 {
     int pixels = getWidth() * getHeight();
-    if (pixels > (m_value.size() - 3))
+    if (pixels > ((int)m_value.size() - 3))
         pixels = m_value.size() - 3;
     return pixels;
 }
@@ -303,7 +303,7 @@ SFImage::resizeImage(void)
     if ((getNumPixels() + 3) != oldSize) {
         m_value.resize(getNumPixels() + 3);
         // fill empty room with a black & white pattern
-        for (int i = oldSize; i < m_value.size(); i++)
+        for (size_t i = oldSize; i < m_value.size(); i++)
             if (i & 1)
                m_value[i] = 0;
             else {

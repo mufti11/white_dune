@@ -43,7 +43,7 @@ public:
                            { m_buttonsPressed[i] = pressed; }
     void                setInitButtonsPressed(int i, bool pressed)
                            { m_initButtonsPressed[i] = pressed; }
-    bool                getChecked(int i) 
+    bool                getChecked(size_t i) 
                            {
                            if (i >= m_buttons.size())
                                return false;

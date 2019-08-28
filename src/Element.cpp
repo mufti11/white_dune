@@ -31,7 +31,7 @@ Element::Element(const Element *ptr)
     m_name = ptr->m_name;
     m_x3dName = ptr->m_x3dName;
     m_x3dName = ptr->m_flags;
-    for (int i = 0; i < ptr->m_isArray.size(); i++)
+    for (size_t i = 0; i < ptr->m_isArray.size(); i++)
         m_isArray[i] = ptr->m_isArray[i];
     m_appinfo = "";
     m_appinfo += ptr->m_appinfo; 
@@ -43,8 +43,10 @@ Element::Element(const Element *ptr)
 const MyString &
 Element::getName(bool x3d) const 
 {
+#ifdef HAVE_NULL_COMPARE
     if (this == NULL)
         return *new MyString("");
+#endif
     if (x3d && (m_x3dName.length() > 0))
         return m_x3dName;
     else
@@ -54,10 +56,12 @@ Element::getName(bool x3d) const
 int
 Element::getType() const 
 { 
+#ifdef HAVE_NULL_COMPARE
     if (this == NULL) 
         return -1; 
     else
-        return m_type; 
+#endif
+    return m_type; 
 }
 
 #include <stdio.h>

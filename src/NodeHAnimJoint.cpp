@@ -160,7 +160,7 @@ NodeHAnimJoint::drawJointHandles(float scale, Node *parent, Node *that)
     }
 
     NodeList *childList = getBasicChildren()->getValues();
-    for (int i = 0; i < childList->size(); i++) {
+    for (size_t i = 0; i < childList->size(); i++) {
         if (childList->get(i) && 
             (childList->get(i)->getType() == X3D_HANIM_JOINT)) {
             if (that == NULL)

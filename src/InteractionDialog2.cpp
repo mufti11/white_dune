@@ -87,7 +87,7 @@ InteractionDialog2::buildInterfaceData(void)
         for (j = 0; j < m_scene->getNumInteractiveProtos(type); j++) {
             Proto *outProto = m_scene->getInteractiveProto(type, j);
             const NodeList *nodes = m_scene->getNodes();
-            for (int k = 0; k < nodes->size(); k++) {
+            for (size_t k = 0; k < nodes->size(); k++) {
                 Node *node = nodes->get(k);
                 if (node->isInScene(m_scene))
                       if (strcmp(outProto->getName(x3d), 
@@ -143,7 +143,7 @@ InteractionDialog2::Validate()
           IDC_INTERACTION_SENSORS));
     if (numSensor <= 0) {
         bool checked = false;
-        for (int i = 0; i < m_protos.size(); i++)
+        for (size_t i = 0; i < m_protos.size(); i++)
             if (m_window.getChecked(i)) {
                 if (checked) {
                     TheApp->MessageBoxId(IDS_NOT_2_INTERACTIVE);
@@ -151,7 +151,7 @@ InteractionDialog2::Validate()
                 }
                 checked = true;
             }    
-        for (int i = 0 ; i < m_protos.size(); i++)
+        for (size_t i = 0 ; i < m_protos.size(); i++)
             if (m_window.getChecked(i))
                 return true;
         TheApp->MessageBoxId(IDS_MAKE_WHAT_INTERACTIVE);
@@ -168,7 +168,7 @@ InteractionDialog2::LoadData()
     SWND comboSensors = swGetDialogItem(m_dlg, IDC_INTERACTION_SENSORS);
     swComboBoxDeleteAll(comboSensors);
 
-    for (int i = 0;i < m_sensors.size(); i++)
+    for (size_t i = 0;i < m_sensors.size(); i++)
         swComboBoxAppendItem(comboSensors, m_sensors[i]);
 }
 
@@ -178,7 +178,7 @@ InteractionDialog2::SaveData()
     int numSensor = swComboBoxGetSelection(swGetDialogItem(m_dlg,
           IDC_INTERACTION_SENSORS));
     if (numSensor <= 0) {
-        for (int i = 0 ; i < m_protos.size(); i++)
+        for (size_t i = 0 ; i < m_protos.size(); i++)
             if (m_window.getChecked(i))
                 m_routeData->nodeProtoName = m_protos[i];
     } else

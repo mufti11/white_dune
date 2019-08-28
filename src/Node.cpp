@@ -133,15 +133,15 @@ NodeData::copyData(const NodeData &node)
     generateTreeLabel();        
     m_isConvertedInCurveAnimaton = node.m_isConvertedInCurveAnimaton;
     m_variableName = node.m_variableName;
-    for (int i = 0; i < node.m_convertedNodes.size(); i++)
+    for (size_t i = 0; i < node.m_convertedNodes.size(); i++)
         m_convertedNodes[i] = node.m_convertedNodes[i];
-    for (int i = 0; i < node.m_isEventIns.size(); i++)
+    for (size_t i = 0; i < node.m_isEventIns.size(); i++)
         m_isEventIns[i] = node.m_isEventIns[i];
-    for (int i = 0; i < node.m_isEventOuts.size(); i++)
+    for (size_t i = 0; i < node.m_isEventOuts.size(); i++)
         m_isEventOuts[i] = node.m_isEventOuts[i];
-    for (int i = 0; i < node.m_isFields.size(); i++)
+    for (size_t i = 0; i < node.m_isFields.size(); i++)
         m_isFields[i] = node.m_isFields[i];
-    for (int i = 0; i < node.m_isExposedFields.size(); i++)
+    for (size_t i = 0; i < node.m_isExposedFields.size(); i++)
         m_isExposedFields[i] = node.m_isExposedFields[i];
     m_scene->addNode((Node*)this);
  }
@@ -228,7 +228,7 @@ NodeData::matchNodeClass(int childType) const
 void
 NodeData::copyParentList(const Node &node)
 { 
-    for (int i = 0; i < node.m_parents.size(); i++)
+    for (size_t i = 0; i < node.m_parents.size(); i++)
         m_parents.append(node.m_parents[i]);
 }
 
@@ -499,7 +499,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
         isNode = true;
         NodeList *childList = ((MFNode *) m_fields[index])->getValues();
         if (childList) {
-            for (int i = 0; i < childList->size(); i++) {
+            for (size_t i = 0; i < childList->size(); i++) {
                 Node *child = childList->get(i);
                 if (child) child->removeParent();
             }
@@ -527,7 +527,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
     } else if (value && value->getType() == MFNODE) {
         NodeList *childList = ((MFNode *) value)->getValues();
         if (childList) {
-            for (int i = 0; i < childList->size(); i++) {
+            for (size_t i = 0; i < childList->size(); i++) {
                 Node *child = childList->get(i);
                 if (child) child->addParent((Node*)this, index);
             }
@@ -572,7 +572,7 @@ Node::addFieldNodeList(int index, NodeList *childList, int containerField)
     if (((MFNode*)m_fields[index])->getSize() == 0)
         setField(index, new MFNode(childList), containerField);
     else {
-        for (int i = 0; i < childList->size(); i++) {
+        for (size_t i = 0; i < childList->size(); i++) {
             Node *child = childList->get(i);
             FieldValue* newField= ((MFNode*)m_fields[index])->addNode(child);
             ((MFNode*)m_fields[index])->setContainerField(containerField);
@@ -1604,7 +1604,7 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
         return 0;
 
     if (m_convertedNodes.size() > 0) {
-        for (int i = 0; i < m_convertedNodes.size(); i++)
+        for (size_t i = 0; i < m_convertedNodes.size(); i++)
             RET_ONERROR( m_convertedNodes[i]->writeCDataFunction(filedes, 
                                                                  languageFlag,
                                                                  forward,
@@ -1706,7 +1706,7 @@ int
 Node::writeC(int f, int languageFlag)
 {
     if (m_convertedNodes.size() > 0) {
-        for (int i = 0; i < m_convertedNodes.size(); i++)
+        for (size_t i = 0; i < m_convertedNodes.size(); i++)
             RET_ONERROR( m_convertedNodes[i]->writeC(f, languageFlag) )
         return 0;
     }
@@ -1936,7 +1936,7 @@ int
 Node::writeCDataAsFunctions(int f, int languageFlag, bool cont)
 {
     if (m_convertedNodes.size() > 0) {
-        for (int i = 0; i < m_convertedNodes.size(); i++)
+        for (size_t i = 0; i < m_convertedNodes.size(); i++)
             RET_ONERROR( m_convertedNodes[i]->writeCDataAsFunctions(f, 
                                                                    languageFlag)
                        )
@@ -1994,7 +1994,7 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
                             bool nodeFlag, bool cont)
 {
     if (m_convertedNodes.size() > 0) {
-        for (int j = 0; j < m_convertedNodes.size(); j++)
+        for (size_t j = 0; j < m_convertedNodes.size(); j++)
             RET_ONERROR( m_convertedNodes[j]->writeCElementFunction(f, 
                                elementType, i, languageFlag, nodeFlag, cont) )
         return 0;
@@ -2979,7 +2979,7 @@ NodeData::reInit()
 void
 Node::addParent(Node *parent, int field)
 {
-    for (int i = 0; i < m_parents.size(); i++)
+    for (size_t i = 0; i < m_parents.size(); i++)
         if ((m_parents[i].m_node == parent) && (m_parents[i].m_field == field)){
             m_geometricParentIndex = i;
             return; // parent already set
@@ -2992,7 +2992,7 @@ void
 Node::removeParent(void)
 {
     if (m_geometricParentIndex != -1) {
-        for (int i = m_geometricParentIndex + 1; i < m_parents.size(); i++)
+        for (size_t i = m_geometricParentIndex + 1; i < m_parents.size(); i++)
             m_parents[i].m_self->m_geometricParentIndex--;
         m_parents.remove(m_geometricParentIndex);
         m_geometricParentIndex = -1;
@@ -3011,7 +3011,7 @@ NodeData::findChild(Node *child, int field) const
         return (((SFNode *) value)->getValue() == child) ? 0 : -1;
     } else if (value->getType() == MFNODE) {
         NodeList *list = ((MFNode *) value)->getValues();
-        for (int i = 0; i < list->size(); i++) {
+        for (size_t i = 0; i < list->size(); i++) {
             if (list->get(i) == child) return i;
         }
         return -1;
@@ -3487,7 +3487,7 @@ Node::appendComment(Node *node)
 
 void Node::appendTo(NodeList* nodelist)
 {
-    for (int i = 0;i < m_commentsList->size(); i++)
+    for (size_t i = 0;i < m_commentsList->size(); i++)
        nodelist->append((*m_commentsList)[i]);
     nodelist->append(this);
     m_commentsList->resize(0);
@@ -3497,9 +3497,9 @@ void
 Node::doWithParents(DoWithNodeCallback callback, void *data,
                     bool searchInRest, bool callSelf)
 {
-    for (int i = 0; i < m_parents.size(); i++) {
+    for (size_t i = 0; i < m_parents.size(); i++) {
         bool call = true;
-        if (i == m_geometricParentIndex)
+        if ((long)i == m_geometricParentIndex)
             if (!callSelf)
                 call = false;
         if (call) 
@@ -3605,7 +3605,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                 if (m_proto->getField(i)->getType() == MFNODE)
                     childList = ((MFNode *) getField(i))->getValues();
                 if (childList) {
-                    for (int j = 0; j < childList->size(); j++) {
+                    for (size_t j = 0; j < childList->size(); j++) {
                         Node *child = childList->get(j);
                         if (child == this) {
                             swDebugf("%s %s: %s",
@@ -3649,7 +3649,8 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                         MFNode *mfNode = (MFNode *)selfField;
                         NodeList *childList = mfNode->getValues();
                         if (childList)
-                            for (int j = index + 1; j < childList->size(); j++){
+                            for (size_t j = index + 1; j < childList->size(); 
+                                 j++) {
                                 Node *child = childList->get(j);
                                 if (child) { 
                                     if (child == getParent()) {
@@ -3705,7 +3706,7 @@ Node::doWithSimilarBranch(DoWithSimilarBranchCallback callback,
             if (childList && nodeList) {
                 if (childList->size() != nodeList->size())
                     return false;
-                for (int j = 0; j < childList->size(); j++) {
+                for (size_t j = 0; j < childList->size(); j++) {
                     Node *child = childList->get(j);
                     Node *node = nodeList->get(j);
                     if (child && node) {
@@ -3742,7 +3743,7 @@ Node::copyChildrenTo(Node *copyedNode, bool copyNonNodes)
                 if (field) {
                     copyedNode->setField(i, field);
                     MFNode *mfnode = (MFNode *) copyedNode->getField(i);
-                    for (int j = 0; j < childList->size(); j++) {
+                    for (size_t j = 0; j < childList->size(); j++) {
                         Node *copyChild = mfnode->getValue(j);
                         if (copyChild && childList->get(j)) {
                             childList->get(j)->ref();
@@ -4062,7 +4063,7 @@ static bool removeConvertedNode(Node *node, void *data)
 void              
 NodeData::deleteConvertedNodes(void)
 {
-    for (int i = 0; i < m_convertedNodes.size(); i++)
+    for (size_t i = 0; i < m_convertedNodes.size(); i++)
         m_convertedNodes[i]->doWithBranch(removeConvertedNode, NULL, 
                                          false);
     m_convertedNodes.resize(0);
@@ -4072,7 +4073,7 @@ bool
 NodeData::needExtraJavaClass(void)
 {
     if (m_convertedNodes.size() > 0)
-        for (int i = 0; i < m_convertedNodes.size(); i++)
+        for (size_t i = 0; i < m_convertedNodes.size(); i++)
             if (m_convertedNodes[i]->needExtraJavaClass())
                 return true;
     if (hasName() || (m_scene->getRoot() == this))
@@ -4153,7 +4154,7 @@ Node::getParentIndex(void) const
 Node *
 Node::searchParent(int nodeType) const
 {
-    for (int i = 0; i < m_parents.size(); i++) {
+    for (size_t i = 0; i < m_parents.size(); i++) {
         Node *node = m_parents[i].m_node;
         if (node->getType() == nodeType)
             return node;
@@ -4164,7 +4165,7 @@ Node::searchParent(int nodeType) const
 Node *
 Node::searchParentField(int parentField) const
 {
-    for (int i = 0; i < m_parents.size(); i++) {
+    for (size_t i = 0; i < m_parents.size(); i++) {
         if (m_parents[i].m_field == parentField)
             return m_parents[i].m_node;
     }

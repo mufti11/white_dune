@@ -139,7 +139,7 @@ NodeRigidBody::preDraw()
     glPushMatrix();
     transform();
 
-    for (int i = 0; i < childList->size(); i++)
+    for (size_t i = 0; i < childList->size(); i++)
         childList->get(i)->preDraw();
 
     glPopMatrix();

@@ -207,9 +207,9 @@ public:
 
     void                  define(Node *primaryNode, NodeList *nodes);
     int                   getNumNodes(void) { return m_protoNodes.size(); }
-    Node                 *getNode(int i) 
+    Node                 *getNode(size_t i) 
                              { 
-                             if ((i < 0) || (i >= m_protoNodes.size()))
+                             if (i >= m_protoNodes.size())
                                  return NULL;
                              return m_protoNodes[i]; 
                              }

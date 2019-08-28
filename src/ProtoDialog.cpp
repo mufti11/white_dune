@@ -115,7 +115,7 @@ ProtoDialogEnterCallback(void *data, int command)
 }
 
 static int fontHeight;
-static int selectedText;
+static long selectedText;
 
 static void
 ProtoDialogKeyCallback(void *data, int key, int value, int x, int y, 
@@ -299,7 +299,7 @@ ProtoDialog::deleteEvent()
         return false;
     if (selectedText == -1)
         return false;
-    for (int i = 0 ; i < interfaceData->size() ; i++) 
+    for (long i = 0 ; i < (long)interfaceData->size() ; i++) 
         if (i == selectedText) {
             int ind = interfaceData->get(i)->m_elementIndex;
             switch (interfaceData->get(i)->m_elementEnum) {
@@ -355,7 +355,7 @@ ProtoDialog::copyEvent(bool andDelete)
     int typeEnum = 0;
     const char *name = "";
     bool lineFound = false;
-    for (int i = 0 ; i < interfaceData->size() ; i++) 
+    for (long i = 0 ; i < (long)interfaceData->size() ; i++) 
         if (i == selectedText) {
             lineFound = true;
             int ind = interfaceData->get(i)->m_elementIndex;
@@ -476,7 +476,7 @@ ProtoDialog::drawInterface()
     if (proto == NULL)
         return;
     int y = 0;
-    for (int i = 0 ; i < interfaceData->size() ; i++) {
+    for (long i = 0 ; i < (long)interfaceData->size() ; i++) {
         MyString text = "";
         int ind = interfaceData->get(i)->m_elementIndex;
         switch (interfaceData->get(i)->m_elementEnum) {

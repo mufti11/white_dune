@@ -333,7 +333,7 @@ NodeElevationGrid::setNormalFromMesh(Node *nnormal)
         return;
 
     if (meshDirty() || (m_mesh == NULL)) {
-        createMesh(this);
+        createMesh();
         m_meshDirty = false;
     }
 

@@ -221,7 +221,7 @@ NodeTrimmedSurface::convert2X3d(void)
     }    
 
     NodeList *trimm = trimmingContour()->getValues();
-    for (int i = 0; i < trimm->size(); i++) {
+    for (size_t i = 0; i < trimm->size(); i++) {
         Node *node = trimm->get(i)->convert2X3d();
         m_scene->execute(new MoveCommand(node, NULL, -1, ret, 
                                          ret->trimmingContour_Field()));

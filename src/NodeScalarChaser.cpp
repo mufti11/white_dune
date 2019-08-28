@@ -88,7 +88,7 @@ NodeScalarChaser::sendChasedEvent(int eventIn, double timestamp,
     m_destinations.append(m_destination);
 
     float outputValue = initDest;      
-    for (int i = 0; i < m_event_times.size(); i++) {
+    for (size_t i = 0; i < m_event_times.size(); i++) {
         float dnmin1;
         if (i == 0)
             dnmin1 = initVal;
