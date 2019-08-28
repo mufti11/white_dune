@@ -24,8 +24,13 @@ LD_OPTIONS =
 
 EGREP_PROBLEMS = no
 
-# gcc Warning flags
-# WARNINGS = -Wall -Wwrite-strings -Werror -Wno-sign-compare -Wno-unused-but-set-variable -Wno-unused-function
+# gcc Warning flags (a lot of -Wno- comes from vcglib usage)
+# WARNINGS = -Wall -D_FORTIFY_SOURCE=2 -Werror -Wno-error=strict-overflow \
+#            -Wno-error=unused-function -Wno-error=ignored-attributes \
+#            -Wno-error=deprecated-declarations -Wno-ignored-attributes \
+#            -Wno-deprecated-declarations -Wno-misleading-indentation \
+#            -Wno-error=int-in-bool-context -Wno-error=sign-compare \
+#            -Wno-sign-compare
 
 # IRIX cc flags
 # WARNINGS = -woff 3303
@@ -34,13 +39,13 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
+CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/home/mufti/vcglib -I.//../vcglib -I/home/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
 CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 

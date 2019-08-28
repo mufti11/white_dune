@@ -3309,9 +3309,11 @@ bool
 NodeData::isEqual(Node* node)
 {
     if (node == NULL) {
+#ifdef HAVE_NULL_COMPARE
         if (this == NULL)
             return true;
         else
+#endif
             return false;
     }
     if (m_identifier == node->m_identifier)
@@ -3324,9 +3326,11 @@ bool
 NodeData::isEqualCopy(Node* node)
 {
     if (node == NULL) {
+#ifdef HAVE_NULL_COMPARE
         if (this == NULL)
             return true;
         else
+#endif
             return false;
     }
     if (m_identifierCopy >= 0)
@@ -3541,8 +3545,10 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                         bool skipProto, bool callSelf, bool skipInline,
                         bool searchInConvertedNodes)
 {
+#ifdef HAVE_NULL_COMPARE
     if (this == NULL)
         return false;
+#endif
     bool searchOn = true;
     bool handleInline = !skipInline;
     if (searchOn && (!skipProto) && hasProtoNodes()) {
@@ -4269,8 +4275,10 @@ Node::isDeepInsideProto(void)
         return true;
     if (isPROTO())
         return true;
+#ifdef HAVE_NULL_COMPARE
     if (this == NULL)
         return false;
+#endif
     Node *parent = this;
     if (hasParent())
          while (parent->hasParent()) {

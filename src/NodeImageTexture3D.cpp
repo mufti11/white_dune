@@ -1584,13 +1584,12 @@ encoding: raw
             int dataLittleEndian;
             size_t element_size = 0L;
             element_size = bsize;
-            fread(data,element_size, (size_t)nvoxel,fp);
-//            printf("num elems read = %llu elemsize %ld bytes requeted = %llu %llu\n",(unsigned long long)nelem_read,(long)bsize,bsize*nvoxel,totalbytes);
+            if (fread(data,element_size, (size_t)nvoxel,fp) == 0)
+                fprintf(stderr, "no data read from %s\n", fname);
             //endian conversion
             dataLittleEndian = iendian == NRRDENDIAN_LITTLE ? TRUE : FALSE;
             if(isMachineLittleEndian() != dataLittleEndian && bsize > 1){
                 //data endian doesnt match machine endian - swap unconditionally
-//                printf("swapping endian\n");
                 for(i=0;i<nvoxel;i++){
                     unsigned char * voxel = &data[i*bsize];
                     for(int j=0;j<bsize/2;j++){

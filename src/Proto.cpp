@@ -42,6 +42,10 @@
 // code for a resuable constructor
 void Proto::protoInitializer(Scene *scene, const MyString &name)
 {
+    metadata.set(
+          addExposedField(SFNODE, "metadata", new SFNode(NULL), METADATA_NODE));
+    setFieldFlags(metadata, FF_X3D_ONLY | FF_HIDDEN);
+
     m_scene = scene;
     m_name = name;
     m_protoNodes.resize(0);
@@ -69,9 +73,6 @@ void Proto::protoInitializer(Scene *scene, const MyString &name)
 Proto::Proto(Scene *scene, const MyString &name)
 {
     protoInitializer(scene, name);
-    metadata.set(
-          addExposedField(SFNODE, "metadata", new SFNode(NULL), METADATA_NODE));
-    setFieldFlags(metadata, FF_X3D_ONLY | FF_HIDDEN);
 }   
 
 Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
@@ -149,9 +150,6 @@ Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
                              this, dstField);
          } 
     }          
-    metadata.set(
-          addExposedField(SFNODE, "metadata", new SFNode(NULL), METADATA_NODE));
-    setFieldFlags(metadata, FF_X3D_ONLY);
 }
 
 Proto::~Proto()

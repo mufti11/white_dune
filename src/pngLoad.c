@@ -104,13 +104,15 @@ jmp_buf pngenv;
 #ifndef HAVE_NO_PNG_HANDLE_UNKNOWN
 # ifndef HAVE_OLPC
 #  ifndef MACOSX
-#   ifndef __alpha
-#    ifndef __hppa
+#   ifndef WIN32
+#    ifndef __alpha
+#     ifndef __hppa
 void png_handle_unknown PNGARG((png_structp png_ptr, png_infop info_ptr, 
                                png_uint_32 length))
    {
    longjmp(pngenv,1);
    }
+#     endif
 #    endif
 #   endif
 #  endif

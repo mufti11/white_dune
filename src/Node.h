@@ -72,6 +72,7 @@ class MFVec3f;
 class MFVec2f;
 class NodeHAnimHumanoid;
 class SFFloat; 
+class SFNode;
 
 class RouteSocket {
 public:

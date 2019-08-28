@@ -57,6 +57,7 @@ public:
                 }
                 MyArray(const T *a, size_t len)
                 {
+                  m_size = 0;
                   setData(a, len);
                 }
                ~MyArray()
@@ -80,11 +81,7 @@ public:
     void        setData(const T *a, size_t len)
                 {
                   m_capacity = m_size = len; 
-                  if (m_size == 0) {
-                      m_capacity = DEFAULT_CAPACITY;
-                      m_data = new T[m_capacity];
-                  } else
-                      m_data = (T *)a;
+                  m_data = (T*)a;
                 }
     T          *extractData() { T *data = m_data; m_data = 0; return data; }
     size_t      size() const

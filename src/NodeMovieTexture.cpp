@@ -670,21 +670,19 @@ int movie_load_from_file(char *fname, void **opaque){
     static int once = 0;
     struct fw_movietexture fw_movie;
     AVFormatContext *pFormatCtx;
-    int i, videoStream, audioStream;
+    size_t i, videoStream, audioStream;
     AVCodecContext *pCodecCtxOrig;
     AVCodecContext *pCodecCtx;
     AVCodecContext  *aCodecCtxOrig;
     AVCodecContext  *aCodecCtx;
     AVCodec         *aCodec;
     AVFrame            *aFrame;
-    AVFrame            *aFrameB;
     //uint8_t *audio_pkt_data = NULL;
     //int audio_pkt_size = 0;
     unsigned int audio_buf_size;
     unsigned int audio_buf_index;
     uint8_t * audio_buf;
     SwrContext *swr; 
-    int audio_resample_target_fmt;
     int do_audio_resample;
     struct SwsContext *sws_ctx;
     int frameFinished;
@@ -693,7 +691,7 @@ int movie_load_from_file(char *fname, void **opaque){
     AVCodec *pCodec;
     Stack *fw_framequeue;
     AVFrame *pFrameRGB;
-    int nchan;
+    int nchan = 0;
     uint8_t *buffer;
 
 
@@ -749,14 +747,12 @@ int movie_load_from_file(char *fname, void **opaque){
     aCodecCtx = NULL;
     aCodec = NULL;
     aFrame = NULL;
-    aFrameB = NULL;
     //uint8_t *audio_pkt_data = NULL;
     //int audio_pkt_size = 0;
     audio_buf_size = 1000000;
     audio_buf_index = 0;
     audio_buf = NULL;
     swr = NULL; 
-    audio_resample_target_fmt = 0;
     do_audio_resample = FALSE;
 
     //audio prep
@@ -813,15 +809,12 @@ int movie_load_from_file(char *fname, void **opaque){
 
         audio_buf = (uint8_t *)malloc(audio_buf_size);
         aFrame=av_frame_alloc();
-        aFrameB=av_frame_alloc();
 
         //assuming we resample to what we want:
-        audio_resample_target_fmt = aCodecCtx->sample_fmt;
         if(aCodecCtx->sample_fmt != AV_SAMPLE_FMT_S16) {
             fw_movie.channels = 2;
             fw_movie.freq = 44100;
             fw_movie.bits_per_channel = 16; 
-            audio_resample_target_fmt = AV_SAMPLE_FMT_S16;
             do_audio_resample = TRUE;
 
             // win32 openAL has problems with FLTP (float) audio format  

@@ -46,6 +46,7 @@ class FieldValue;
 class Scene;
 class Node;
 
+#include "ProtoMacros.h"
 #include "StringArray.h"
 #include "NodeList.h"
 #include "InterfaceArray.h"
@@ -288,8 +289,10 @@ public:
 
     bool                  isInScene() 
                               { 
+#ifdef HAVE_NULL_COMPARE
                               if (this == NULL) 
                                   return false; 
+#endif
                               return m_isInScene; 
                               }
     void                  setIsInScene(bool flag) { m_isInScene = flag; }

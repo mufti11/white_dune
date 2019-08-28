@@ -1806,8 +1806,8 @@ MainWindow::OnCommand(void *vid)
     m_statusText[0] = 0;
     Node *selectionNode = NULL;
     bool vertexModifier_active;
-    float vertexModifier_radius;
-    float vertexModifier_amount;
+    float vertexModifier_radius = 0.5;
+    float vertexModifier_amount = 0.5;
     switch (id) {
       case ID_DUNE_FILE_OPEN:
         OnFileOpen();

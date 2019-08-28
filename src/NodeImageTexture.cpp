@@ -233,7 +233,10 @@ NodeImageTexture::load()
     MFString *urls = url();
     int width = 1;
     int height = 1;
+
+#ifndef HAVE_LIBDEVIL
     unsigned char *data = NULL;
+#endif
 
     if (urls->getSize() == 0)
         return;

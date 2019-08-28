@@ -138,10 +138,10 @@ extern void tesselationError(GLenum error);
 
 #ifdef HAVE_GLUNEWTESS
 struct VertexInfo {
-   GLdouble vertex[3];
-   float normal[3];
-   float color[4];
-   float texCoord[2];
+   GLdouble vertex[3] = { 0, 0, 0 };
+   float normal[3] = { 0, 0, 0 };
+   float color[4] = { 0, 0, 0, 1 };
+   float texCoord[2] = { 0, 0 };
 };
 #endif
 
@@ -261,8 +261,6 @@ protected:
     void                buildFaces(void);
 #ifdef HAVE_GLUNEWTESS
     void                initialiseTriangulation(GLUtesselator *tess);
-    int                 searchInOriginalVertices(GLdouble* vertex);
-    int                 searchInNewVertices(GLdouble* vertex);
     MyMeshX            *buildNewTriangulatedMesh(MeshBasedNode *that); 
 #endif 
 

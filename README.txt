@@ -5272,9 +5272,13 @@ Fixed bug in branch CSG operation
 
 Changed configure to require libpng, libjpeg and zib
 
-Solved a lot of warnings if compiled with -Wall
+Solved a lot of warnings if compiled with g++ -Wall
 
 Fixed bug in german "Datei -> URL oeffnen" menupoint
+
+Solved some of warnings if compiled with g++ -Wall -D_FORTIFY_SOURCE=2
+
+g++ compiles with -Wall -Werror if -Wno- flags are used (caused by e.g. vcglib)
 
 Contact: MUFTI <mufti11@web.de>
 
