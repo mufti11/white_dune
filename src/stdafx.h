@@ -35,7 +35,9 @@
 #if _MSC_VER < 1800
 #pragma string_gs_check(on)
 #endif
-#define M_PI              3.14159265358979323846
+#ifndef M_PI
+# define M_PI              3.14159265358979323846
+#endif
 #define VC_EXTRALEAN      // Exclude rarely-used stuff from Windows headers
 
 #include <windows.h>

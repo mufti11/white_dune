@@ -384,7 +384,6 @@ main.o: main.cpp qt_opengl_example.h
 
 qt_opengl_example.o: qt_opengl_example.cpp qt_opengl_example.h \
 		ui_qt_opengl_example.h \
-		glwidget.h \
 		../../../include/libC++RWD_namespace.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qt_opengl_example.o qt_opengl_example.cpp
 

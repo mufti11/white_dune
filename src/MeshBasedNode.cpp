@@ -1175,8 +1175,8 @@ MeshBasedNode::writeAc3d(int f, int indent)
         else
             texCoords = m_mesh->getTexCoords();
     }
-    for (int i = 0; i < m_isDoubleMesh ? m_meshDouble->getNumFaces() : 
-                                         m_mesh->getNumFaces(); i++) {
+    for (int i = 0; i < (m_isDoubleMesh ? m_meshDouble->getNumFaces() : 
+                                          m_mesh->getNumFaces()); i++) {
         RET_ONERROR( mywritef(f, "SURF 0x%x\n", surfaceFlags) )
         int index = -1; 
         bool materialToWrite = true;

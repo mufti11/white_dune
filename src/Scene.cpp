@@ -1735,7 +1735,11 @@ Scene::writeKanim(int f, const char *url)
         ((NodeTimeSensor *) m_timeSensors[i])->start(t);
     for (size_t i = 0; i < keyTimes.size(); i++) {
         updateTimeAt(t + keyTimes[i]);
+#ifdef WIN32
+        sprintf(nameBaseEnd, "_%zu.wrl", i);
+#else
         sprintf(nameBaseEnd, "_%lu.wrl", i);
+#endif
         int filedes = open(name, O_WRONLY | O_CREAT,00666);
         if (filedes == -1) {
             delete [] name;

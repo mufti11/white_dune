@@ -63,7 +63,7 @@
 #include "NodePointSet.h"
 
 #ifdef _WIN32
-# define random(x) rand(x)
+# define random() rand()
 #endif
 
 ProtoParticleSystem::ProtoParticleSystem(Scene *scene)
