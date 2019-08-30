@@ -2007,7 +2007,7 @@ MeshBasedNode::simpleQuadTriangulateMesh(void)
         m_mesh->simpleQuadTriangulate();
         return m_mesh;
     }
-    return NULL;
+    return m_mesh;
 }
 
 MFVec3f *

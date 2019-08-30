@@ -62,6 +62,9 @@ public:
                    case 3: return w;
                    default: assert(0);
                    }
+                   assert(0);
+                   static float f = 0.0f;
+                   return f;
                 }
      void       zero()
                 { x = y = z = w = 0.0f; }

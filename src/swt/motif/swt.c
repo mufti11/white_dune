@@ -960,15 +960,15 @@ swSetHighlightCallback(SWND wnd, CommandCallback cb)
 }
 
 extern void
-swCallCommandCallback(SWND wnd, int id)
+swCallCommandCallback(SWND wnd, void *id)
 {
-    callCommandCallback(wnd->widget, swToPtr(id));
+    callCommandCallback(wnd->widget, id);
 }
 
 extern void
-swCallHighlightCallback(SWND wnd, int id)
+swCallHighlightCallback(SWND wnd, void *id)
 {
-    callHighlightCallback(wnd->widget, swToPtr(id));
+    callHighlightCallback(wnd->widget, id);
 }
 
 extern void
@@ -2674,7 +2674,7 @@ swAppendMenuItem(SMENU parent, const char *text, int id)
 }
 
 extern void
-swInsertMenuItem(SMENU menu, short beforeId, const char *text, int id)
+swInsertMenuItem(SMENU menu, unsigned int beforeId, const char *text, int id)
 {
     short pos;
     

@@ -510,7 +510,7 @@ swUpload(SUPLOAD upload, char *fileToUpload, SHBROWSER browser, SWND wnd)
         FALSE        
     };
     DWORD bytesWritten;
-    static htmlTags[1024];
+    static char htmlTags[1024];
     int needPassword = 0;
     char *htmlpath = (char *) malloc(1024);
     htmlpath[0] = 0;
@@ -545,7 +545,7 @@ swUpload(SUPLOAD upload, char *fileToUpload, SHBROWSER browser, SWND wnd)
                    FILE_ATTRIBUTE_NORMAL,        // normal file 
                    NULL);                        // no attr. template 
 
-    if (f == -1) {
+    if (f == NULL) {
         char msg[1024];
         mysnprintf(msg, 1023, "creation of new html file %s failed", htmlpath);
         swMessageBox(wnd, msg, "Upload reload error", SW_MB_OK, SW_MB_WARNING);
@@ -950,7 +950,7 @@ swCreateCheckableProcess(const char *cmdline)
     memset(&securityAttributes, 0, sizeof(securityAttributes));
     
     securityAttributes.nLength = sizeof(securityAttributes);
-    securityAttributes.lpSecurityDescriptor = PROCESS_QUERY_INFORMATION;
+    securityAttributes.lpSecurityDescriptor = (void*)PROCESS_QUERY_INFORMATION;
     securityAttributes.bInheritHandle = TRUE;
     
      if (CreateProcess(NULL, cmdline, &securityAttributes, NULL, TRUE, 0, 

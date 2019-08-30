@@ -256,7 +256,6 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
     }
     m_convertedNodes.append(node);
     node->addParent(getParent(), getParentField());
-    m_meshDirty = true;
     return;
 }
 

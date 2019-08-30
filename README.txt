@@ -5280,6 +5280,8 @@ Solved some of warnings if compiled with g++ -Wall -D_FORTIFY_SOURCE=2
 
 g++ compiles with -Wall -Werror if -Wno- flags are used (caused by e.g. vcglib)
 
+Fixed C/C++/java export bug caused by solved warnings
+
 Contact: MUFTI <mufti11@web.de>
 
 

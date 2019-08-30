@@ -137,7 +137,7 @@ static LRESULT CALLBACK mainWndProc(HWND hWnd, UINT message,
 static LRESULT CALLBACK dialogProc(HWND hWnd, UINT message, 
                                    WPARAM wParam, LPARAM lParam);
 static void updateBars(SWND wnd);
-static int CALLBACK timerProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime);
+static int CALLBACK timerProc(HWND hWnd, UINT uMsg, void *idEvent, DWORD dwTime);
 static HWND findFrame(HWND wnd);
 static BOOL doAccelerators(MSG *msg);
 static void trackMouseLeave(HWND wnd);
@@ -337,7 +337,7 @@ swSetClientData(SWND wnd, void *data)
 }
 
 extern void
-swCallCommandCallback(SWND wnd, int id)
+swCallCommandCallback(SWND wnd, void* id)
 {
     if (wnd && wnd->commandCallback) {
         wnd->commandCallback(wnd->data, id);
@@ -653,7 +653,7 @@ swSetTimer(SWND wnd, int timeout, TimerCallback cb, void *data)
     if (!wnd || !cb) return 0;
 
     t = newSTimer(wnd->hWnd, cb, data);
-    t->id = SetTimer(wnd->hWnd, (UINT) t, timeout, (TIMERPROC) timerProc);
+    t->id = SetTimer(wnd->hWnd, (UINT_PTR)t, timeout, (TIMERPROC) timerProc);
     return t;
 }
 
@@ -682,7 +682,7 @@ swCreateMainWindow(const char *text, int x, int y, int width, int height)
                              x, y, width, height,
                              NULL, NULL, TheInstance, NULL);
 
-    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG) wnd);
+    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG_PTR)wnd);
     SendMessage(wnd->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont, MAKELPARAM(FALSE, 0));
 
     return wnd;
@@ -706,7 +706,7 @@ swCreateCanvas(const char *title, int x, int y, int width, int height,
 
     trackMouseLeave(wnd->hWnd);
 
-    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG) wnd);
+    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG_PTR)wnd);
 
     return wnd;
 }
@@ -726,7 +726,7 @@ swCreatePopup(const char *text, int x, int y, int width, int height,
                            x, y, width, height,
                            NULL, NULL, NULL, NULL);
 
-    SetWindowLong(s->hWnd, GWL_USERDATA, (LONG) s);
+    SetWindowLong(s->hWnd, GWL_USERDATA, (LONG_PTR)s);
     SendMessage(s->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont, MAKELPARAM(FALSE, 0));
 
     return s;
@@ -751,7 +751,7 @@ swCreateScrollBar(int flags, int x, int y, int width, int height,
                              x, y, width, height, parent->hWnd,
                              0, NULL, NULL);
 
-    SetWindowLong(hWnd, GWL_USERDATA, (LONG) sb);
+    SetWindowLong(hWnd, GWL_USERDATA, (LONG_PTR)sb);
 
     info.cbSize = sizeof(SCROLLINFO);
     info.fMask = SIF_PAGE | SIF_POS | SIF_RANGE;
@@ -807,7 +807,7 @@ swCreateButton(const char *text, int x, int y, int width, int height,
                              x, y, width, height, 
                              parent->hWnd, 0, NULL, NULL);
 
-    SetWindowLong(hWnd, GWL_USERDATA, (LONG) w);
+    SetWindowLong(hWnd, GWL_USERDATA, (LONG_PTR)w);
     SendMessage(hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont,
                 MAKELPARAM(FALSE, 0));
     w->hWnd = hWnd;
@@ -833,7 +833,7 @@ swCreateCheckBox(const char *text, int x, int y, int width, int height,
                            WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
                            x, y, width, height, parent->hWnd, 0, NULL, NULL);
 
-    SetWindowLong(w->hWnd, GWL_USERDATA, (LONG) w);
+    SetWindowLong(w->hWnd, GWL_USERDATA, (LONG_PTR)w);
     SendMessage(w->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont,
                 MAKELPARAM(FALSE, 0));
 
@@ -873,7 +873,7 @@ swCreateRadioButton(const char *text, int x, int y, int width, int height,
                            BS_AUTORADIOBUTTON, x, y, width, height, 
                            parent->hWnd, 0, NULL, NULL);
 
-    SetWindowLong(w->hWnd, GWL_USERDATA, (LONG) w);
+    SetWindowLong(w->hWnd, GWL_USERDATA, (LONG_PTR)w);
     SendMessage(w->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont, MAKELPARAM(FALSE, 0));
 
     return w;
@@ -898,7 +898,7 @@ swCreateTextEdit(int flags, int x, int y, int width, int height, SWND parent)
                              x, y, width, height,
                              parent->hWnd, 0, NULL, NULL);
 
-    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG) wnd);
+    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG_PTR)wnd);
     SendMessage(wnd->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont,
         MAKELPARAM(FALSE, 0));
 
@@ -985,7 +985,7 @@ swCreateLabel(const char *text, int x, int y, int width, int height,
     l->hWnd = CreateWindow("STATIC", text, WS_CHILD | WS_VISIBLE,
                            x, y, width, height, parent->hWnd, 0, NULL, NULL);
 
-    SetWindowLong(l->hWnd, GWL_USERDATA, (LONG) l);
+    SetWindowLong(l->hWnd, GWL_USERDATA, (LONG_PTR)l);
     SendMessage(l->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont,
                 MAKELPARAM(FALSE, 0));
 
@@ -1016,7 +1016,7 @@ swCreateScrolledWindow(int x, int y, int width, int height, SWND parent)
                              x, y, width, height,
                              parent->hWnd, NULL, NULL, NULL);
     SendMessage(wnd->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont, MAKELPARAM(FALSE, 0));
-    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG) wnd);
+    SetWindowLong(wnd->hWnd, GWL_USERDATA,(LONG_PTR) wnd);
     ShowWindow(wnd->hWnd, SW_SHOW);
 
     return (SWND) wnd;
@@ -1876,7 +1876,7 @@ swAppendMenu(SMENU parent, const char *text)
     if (!parent || !text) return NULL;
 
     menu = CreateMenu();
-    rc = AppendMenu((HMENU) parent, MF_POPUP, (UINT) menu, text);
+    rc = AppendMenu((HMENU) parent, MF_POPUP, (UINT_PTR)menu, text);
     return (SMENU) menu;
 }
 
@@ -1889,7 +1889,7 @@ swAppendMenuItem(SMENU menu, const char *text, int id)
 }
 
 extern void
-swInsertMenuItem(SMENU menu, int position, const char *text, int id)
+swInsertMenuItem(SMENU menu, UINT position, const char *text, int id)
 {
     if (!menu || !text) return;
 
@@ -2197,7 +2197,7 @@ swLoadDialog(SWND parent, int id)
     global = LoadResource(TheInstance, res);
     dlgTemplate = (LPCDLGTEMPLATE) LockResource(global);
     w->hWnd = CreateDialogIndirect(TheInstance, dlgTemplate, parent->hWnd, dialogProc);
-    SetWindowLong(w->hWnd, GWL_USERDATA, (LONG) w);
+    SetWindowLong(w->hWnd, GWL_USERDATA, (LONG_PTR)w);
     centerWindow(w->hWnd, parent->hWnd);
     UnlockResource(dlgTemplate);
     return w;
@@ -2236,22 +2236,21 @@ swEndDialog(int rc)
     inDialog = FALSE;
     dialogRC = rc;
 }
-
 extern SWND
 swGetDialogItem(SWND dialog, int item)
 {
     HWND hWnd;
-    SWindow    *w;
+    SWindow *w;
 
     if (!dialog) return NULL;
 
     hWnd = GetDlgItem(dialog->hWnd, item);
     if (!hWnd) return NULL;
-    w = (SWindow *) GetWindowLong(hWnd, GWL_USERDATA);
-    if (!w) {
-         w = newSWindow();
-         w->hWnd = hWnd;
-         SetWindowLong(hWnd, GWL_USERDATA, (LONG) w);
+        w = (SWindow *)GetWindowLong(hWnd, GWL_USERDATA);
+        if (!w) {
+            w = newSWindow();
+            w->hWnd = hWnd;
+            SetWindowLong(hWnd, GWL_USERDATA, (LONG_PTR)w);
     }
     return w;
 }
@@ -2459,12 +2458,12 @@ void OpenConsole()
             isPopupConsole = 1;
         }
 
-        outHandle = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), 
+        outHandle = _open_osfhandle((intptr_t)GetStdHandle(STD_OUTPUT_HANDLE), 
                                     _O_TEXT);
-        errHandle = _open_osfhandle((long)GetStdHandle(STD_ERROR_HANDLE),
+        errHandle = _open_osfhandle((intptr_t)GetStdHandle(STD_ERROR_HANDLE),
                                      _O_TEXT);
-        inHandle = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE),
-                                   _O_TEXT);
+        inHandle = _open_osfhandle((intptr_t)GetStdHandle(STD_INPUT_HANDLE),
+                                    _O_TEXT);
 
         outFile = _fdopen(outHandle, "w" );
         errFile = _fdopen(errHandle, "w");
@@ -2596,7 +2595,7 @@ swMkdirCommand(SWND wnd,const char* dir)
     char* string;
 //    char* mkdir="COMMAND.COM /C MKDIR ";
     char* mkdir="MKDIR ";
-    char* tonull=swGetToNullDevice();
+    const char* tonull=swGetToNullDevice();
     int ret;
 
     string=(char*)malloc(strlen(mkdir)+strlen(dir)+1+
@@ -2928,7 +2927,7 @@ swGetIntFilePreference(FILE_STABLE table, const char *key, int defaultValue)
 }
 
 static void
-swSetIntFilePreference(FILE_STABLE table, const char *key, int value)
+swSetIntFilePreference(STABLE table, const char *key, int value)
 {
     char str[128];
     mysnprintf(str, 128, "%d", value);
@@ -2957,7 +2956,7 @@ swLoadPreferences(const char *companyName, const char *appName)
     strcat(rcFileEnvironmentName, "RC");
     if (getenv(rcFileEnvironmentName) != NULL) {    
         fileSTable = swLoadFilePreferences(rcFileEnvironmentName, appName);
-        return fileSTable;
+        return (STABLE)fileSTable;
     }
 
     if (RegOpenKeyEx(HKEY_CURRENT_USER, "software", 0, 
@@ -3064,7 +3063,7 @@ extern void
 swSetIntPreference(STABLE table, const char *title, int value)
 {
     if (fileSTable != NULL) {
-        swSetIntFilePreference(fileSTable, title, value);
+        swSetIntFilePreference((STABLE)fileSTable, title, value);
         return;
     }
 
@@ -3146,7 +3145,7 @@ swCreateTree(int x, int y, int width, int height, SWND parent)
     tree->wnd = newSWindow();
     tree->wnd->hWnd = tree->hWnd;
 
-    SetWindowLong(tree->hWnd, GWL_USERDATA, (LONG) tree);
+    SetWindowLong(tree->hWnd, GWL_USERDATA, (LONG_PTR)tree);
     SendMessage(tree->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont, MAKELPARAM(FALSE, 0));
 
     return tree;
@@ -3375,7 +3374,7 @@ extern char *
 swTreeGetItemName(STREE tree, STREEITEM item)
 {
     static const size_t maxLen = 128;
-    WCHAR buffer[/*maxLen*/ 128 + 1];
+    LPSTR buffer[/*maxLen*/ 128 + 1];
 
     if (item == NULL)
         return NULL;
@@ -3463,7 +3462,7 @@ swCreateHeader(int x, int y, int width, int height, SWND parent)
                                 x, y, width, height, parent->hWnd, 
                                 0, TheInstance, NULL);
 
-    SetWindowLong(header->hWnd, GWL_USERDATA, (LONG) header);
+    SetWindowLong(header->hWnd, GWL_USERDATA, (LONG_PTR)header);
     SendMessage(header->hWnd, WM_SETFONT, (WPARAM) TheDefaultFont->hFont, MAKELPARAM(FALSE, 0));
 
     return header;
@@ -3587,14 +3586,14 @@ swCreateToolbar(SWND parent, SBITMAP bitmap, int width, int height, int count,
     wnd->hWnd = CreateToolbarEx(parent->hWnd, WS_CHILD | WS_VISIBLE
                                 | CCS_NOMOVEY | TBSTYLE_TOOLTIPS
                                 | TBSTYLE_FLAT, 0, 
-                                count, NULL, (UINT) bitmap->hBitmap, 
+                                count, NULL, (UINT_PTR)bitmap->hBitmap, 
                                 buttons, count,
                                 width, height, width, height, 
                                 sizeof(TBBUTTON));
 
-    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG) parent);
+    SetWindowLong(wnd->hWnd, GWL_USERDATA, (LONG_PTR)parent);
     tt = (HWND) SendMessage(wnd->hWnd, TB_GETTOOLTIPS, 0, 0);
-    SetWindowLong(tt, GWL_USERDATA, (LONG) wnd);
+    SetWindowLong(tt, GWL_USERDATA, (LONG_PTR)wnd);
     free(buttons);
 
     return (STOOLBAR) wnd;
@@ -3834,8 +3833,8 @@ trackMouseLeave(HWND wnd)
 }
 
 static LRESULT CALLBACK        
-mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{ 
+mainWndProc(HWND hWnd, UINT message, WPARAM  wParam, LPARAM lParam)
+{
     LONG rc = 0L;
 
     switch(message) {
@@ -3941,7 +3940,7 @@ mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                SWindow *w = (SWindow *) GetWindowLong(pnmh->hwndFrom, 
                                                       GWL_USERDATA);
                if (w && w->highlightCallback) {
-                   w->highlightCallback(w->data, info->idNew);
+                   w->highlightCallback(w->data, swToPtr(info->idNew));
                }
            }
            break;
@@ -3959,7 +3958,7 @@ mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          break;
       case WM_CTLCOLORSTATIC:
          {
-             SWindow        *wnd = (SWindow *) GetWindowLong(hWnd, GWL_USERDATA);
+             SWindow *wnd = (SWindow *) GetWindowLong(hWnd, GWL_USERDATA);
              SetBkMode((HDC) wParam, TRANSPARENT);
              rc = (LRESULT) wnd->bgBrush;
              break;
@@ -3986,7 +3985,7 @@ mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       case WM_COMMAND:
          {
              int notifyCode = HIWORD(wParam); /* notification code */
-             int id = LOWORD(wParam); /* item, control, or accelerator identifier */
+             void *id = LOWORD(wParam); /* item, control, or accelerator identifier */
              HWND hWndCtl = (HWND) lParam; /* handle of control */
 
              SWindow *w = NULL;
@@ -4010,7 +4009,7 @@ mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
              SWindow *w = (SWindow *) GetWindowLong(hWnd, GWL_USERDATA);
 
              if (w && w->highlightCallback) {
-                 w->highlightCallback(w->data, LOWORD(wParam));
+                 w->highlightCallback(w->data, (void *)wParam);
              }
          }
          break;
@@ -4124,7 +4123,7 @@ static LRESULT CALLBACK dialogProc(HWND hWnd, UINT message,
              SWindow *w = (SWindow *) GetWindowLong(hWndCtl, GWL_USERDATA);
 
              if (w && w->commandCallback && notifyCode == BN_CLICKED) {
-                 w->commandCallback(w->data, id);
+                 w->commandCallback(w->data, swToPtr(id));
              } else {
                  w = (SWindow *) GetWindowLong(hWnd, GWL_USERDATA);
                  if (w && w->commandCallback) {
@@ -4149,7 +4148,7 @@ static LRESULT CALLBACK dialogProc(HWND hWnd, UINT message,
 }
 
 static int CALLBACK
-timerProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+timerProc(HWND hWnd, UINT uMsg, STimer *idEvent, DWORD dwTime)
 {
     STimer *t = (STimer *) idEvent;
 

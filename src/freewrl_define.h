@@ -19,8 +19,10 @@
 ****************************************************************************/
 
 #ifdef _WIN32
-#define min(A,B) A < B ? A : B;
-#define max(A,B) A < B ? B : A;
+#undef min
+#define min(A,B) (A < B ? A : B);
+#undef max
+#define max(A,B) (A < B ? B : A);
 #else
 #define min(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
 #define max(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __b : __a; })

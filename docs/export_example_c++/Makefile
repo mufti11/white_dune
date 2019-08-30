@@ -10,7 +10,7 @@ all:
 clean:
 	(cd simple_example && make clean)
 	(cd opengl_example && make clean)
-	(cd opengl_scripting_example && make clean)
+	if test -x `which dune`; then (cd opengl_scripting_example && make clean); fi
 	rm -f qt_opengl_example/C++Export.cc
 	rm -f qt_opengl_example/qt_opengl_example
 	rm -rf build-qt_opengl_example-Desktop-Debug

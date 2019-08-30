@@ -76,8 +76,8 @@ extern void swSetCommandCallback(SWND wnd, HighlightCallback cb);
 extern void swSetHighlightCallback(SWND wnd, CommandCallback cb);
 extern void swSetCloseCallback(SWND wnd, CloseCallback cb);
 extern void swSetClientData(SWND wnd, void *data);
-extern void swCallCommandCallback(SWND wnd, int id);
-extern void swCallHighlightCallback(SWND wnd, int id);
+extern void swCallCommandCallback(SWND wnd, void* id);
+extern void swCallHighlightCallback(SWND wnd, void* id);
 
 #ifdef WIN32
 extern void swInitialize(HINSTANCE hInstance, int stereotype, int want8BitFlag);
@@ -439,7 +439,7 @@ extern SMENU swCreateMenuBar(SWND wnd);
 extern SMENU swLoadMenuBar(SWND wnd, int id);
 extern SMENU swAppendMenu(SMENU parent, const char *title);
 extern void swAppendMenuItem(SMENU menu, const char *title, int id);
-extern void swInsertMenuItem(SMENU menu, short position, const char *title,
+extern void swInsertMenuItem(SMENU menu, unsigned int position, const char *title,
                              int id);
 extern void swDeleteMenuItem(SMENU menu, int id);
 extern void swAppendSeparator(SMENU menu);
