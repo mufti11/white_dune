@@ -271,7 +271,7 @@ keyCallback(void *data, int keycode, int value,
                 mouseCallback(data, x, y, modifiers);
                 if (toolbar->current != -1) {
                     swCallCommandCallback(toolbar->parent,
-                                          toolbar->items[toolbar->current].id);
+                        swToPtr(toolbar->items[toolbar->current].id));
                 }
             }
         }
@@ -295,7 +295,7 @@ enterCallback(void *data, int value)
         toolbar->current = -1;
 #endif
         swHideWindow(toolbar->popup);
-        swCallHighlightCallback(toolbar->parent, -1);
+        swCallHighlightCallback(toolbar->parent, swToPtr(-1));
         if (toolbar->timer) {
             swKillTimer(toolbar->timer);
             toolbar->timer = NULL;
@@ -320,7 +320,7 @@ mouseCallback(void *data, int x, int y, int modifiers)
         invalidateItem(toolbar, toolbar->current);
         toolbar->current = item;
         invalidateItem(toolbar, toolbar->current);
-        swCallHighlightCallback(toolbar->parent, id);
+        swCallHighlightCallback(toolbar->parent, swToPtr(id));
         if (toolbar->tooltipCallback) {
             swHideWindow(toolbar->popup);
             if (toolbar->timer) {

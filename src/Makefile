@@ -44,8 +44,7 @@ COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/
 CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-CXXFLAGS_NOFORT =  $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -145,6 +144,7 @@ NODECLASSES = \
         NodeImageCubeMapTexture.o \
 	NodeImageTexture.o \
         NodeImageTexture3D.o \
+        NodeIndexedFaceSet.o \
 	NodeIndexedLineSet.o \
         NodeIndexedQuadSet.o \
 	NodeIndexedTriangleFanSet.o \
@@ -296,9 +296,6 @@ NODECLASSES = \
         NodeComment.o \
         NodeImport.o \
         NodeExport.o
-
-NOFORTCLASSES = \
-	NodeIndexedFaceSet.o
 
 EXTRACLASSES = \
         NodeSuperEllipsoid.o \
@@ -643,7 +640,6 @@ CLASSES = \
         $(TYPECLASSES) \
         $(NODEPARENTCLASSES) \
         $(NODECLASSES) \
-        $(NOFORTCLASSES) \
         $(EXTRACLASSES) \
         $(FONT23DCLASSES) \
 	parser.o \
@@ -673,7 +669,6 @@ SRCSBIGDUNECLASSES = $(BIGDUNECLASSES:.o=.cpp)
 SRCSTYPECLASSES = $(TYPECLASSES:.o=.cpp)
 SRCSNODEPARENTCLASSES = $(NODEPARENTCLASSES:.o=.cpp)
 SRCSNODECLASSES = $(NODECLASSES:.o=.cpp)
-SRCSNOFORTCLASSES = $(NOFORTCLASSES:.o=.cpp)
 SRCSEXTRACLASSES = $(EXTRACLASSES:.o=.cpp)
 
 TESTOJBS = selftest.o allNodesTest.o allNodesTestX3d.o \
@@ -696,10 +691,10 @@ install: target
 	install ../man/dune.1 $(PREFIX)/share/man/man1
 
 mysnprintf.o: mysnprintf.c
-	$(CC) $(CFLAGS) -std=c99 -c -o $@ mysnprintf.c
+	$(CC) -g $(CFLAGS) -std=c99 -c -o $@ mysnprintf.c
 
 debug_mysnprintf.o: mysnprintf.c
-	$(CC) $(CFLAGS) -DDEBUG=1 -std=c99 -c -o mysnprintf.o mysnprintf.c
+	$(CC) -g $(CFLAGS) -DDEBUG=1 -std=c99 -c -o mysnprintf.o mysnprintf.c
 
 debug_Path.o: Path.cpp
 	$(CXX) $(CFLAGS) -DDEBUG=1 -c -o Path.o Path.cpp
@@ -715,9 +710,6 @@ SceneProtoMap.o: SceneProtoMap.cpp
 
 nebula/ExportNebula.o: nebula/ExportNebula.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ nebula/ExportNebula.cpp
-
-NodeIndexedFaceSet.o: NodeIndexedFaceSet.cpp
-	$(CXX) $(CXXFLAGS_NOFORT) -c -o $@ NodeIndexedFaceSet.cpp
 
 ../bin/dune: main.o $(OBJS) swt/lib/libswt.a  
 	$(CXX) main.o $(OBJS) $(LIBS) -o $@
