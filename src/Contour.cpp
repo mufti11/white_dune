@@ -167,8 +167,10 @@ Contour::Contour(FT_Vector* contour, char* tags, unsigned int n, unsigned short 
 {
     Point prev, cur(contour[(n - 1) % n]), next(contour[0]);
     Point a;
-    double olddir, dir = atan2((next - cur).Y(), (next - cur).X());
+    double olddir = 0, dir = atan2((next - cur).Y(), (next - cur).X());
     double angle = 0.0;
+
+    clockwise = false;
 
     minx = 65000.0f;
     miny = 65000.0f;

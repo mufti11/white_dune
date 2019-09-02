@@ -1362,9 +1362,6 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( mywritef(f,
                                           "    <script type=\"text/javascript\" src=\"%sx_ite.min.js\"></script>\n",
                                           TheApp->GetXitePath()) )
-        RET_RESET_FLAGS_ONERROR( mywritef(f,
-                                          "    <script type=\"text/javascript\" src=\"%srigid-body-physics.min.js\"></script>\n",
-                                          TheApp->GetXitePath()) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <style>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"X3DCanvas {\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  width: 100%;\n") )
@@ -1375,7 +1372,8 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <p margin: 1px 0;>") )
-        RET_RESET_FLAGS_ONERROR( mywritef(f,"<X3DCanvas url='\"%s\"'/></p>\n", 
+        RET_RESET_FLAGS_ONERROR( mywritef(f,"<X3DCanvas url='\"%s%s\"'/></p>\n",
+                                          "http://localhost/", 
                                           wrlFile ? wrlFile : url) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </body>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</html>\n") )

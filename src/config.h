@@ -20,7 +20,7 @@
 #define HAVE_LIBVCG 1
 
 /* Define if you have the CGAL library */
-/* #undef HAVE_LIBCGAL */
+#define HAVE_LIBCGAL 1
 
 /* Define if you have the curl library */
 #define HAVE_LIBCURL 1
@@ -61,7 +61,7 @@
 #define HAVE_OMP 1
 
 /* define if you use the spaceball library */
-#define HAVE_LIBSBALL 1
+/* #undef HAVE_LIBSBALL */
 
 /* define if you have the libusb library */
 #ifndef __CYGWIN__
@@ -319,7 +319,7 @@
 #define HAVE_WWW_BROWSER "/usr/bin/xdg-open %s &"
 
 /* vrml browser to view vrml files*/
-#define HAVE_VRML_BROWSER "/usr/bin/view3dscene %s"
+#define HAVE_VRML_BROWSER "LD_LIBRARY_PATH=/usr/local/lib /usr/local/bin/freewrl %s"
 
 /* vrml browser to view vrml files with a remote command*/
 #define HAVE_VRML_REMOTE_BROWSER "/usr/bin/xdg-open %s"
@@ -328,13 +328,13 @@
 #define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
-/* #undef HAVE_ANT */
+#define HAVE_ANT "/usr/bin/ant"
 
 /* (path to) graphical commandline terminal (e.g. xterm) */
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
 
 /* object editor for sound (.wav/.midi) files */
 #define HAVE_SOUND_EDITOR "/usr/bin/audacity"
@@ -343,7 +343,7 @@
 #define HAVE_MOVIE_EDITOR ""
 
 /* renderman image texturer (eg. teqser) */
-#define HAVE_RIB_TEXTURER "/usr/bin/teqser"
+/* #undef HAVE_RIB_TEXTURER */
 
 /* 
   default non interactive of graphical checkin command of a revision control 
@@ -431,7 +431,7 @@
 /* #undef HAVE_X3DOM_PATH */
 
 /* define if you have a tty file for UNIX/Linux fontrendering */
-#define HAVE_DEFAULT_TTF_FILE "/usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf"
+#define HAVE_DEFAULT_TTF_FILE "/usr/share/fonts/TTF/Vera.ttf"
 
 /* 
    Define if you want to document the method to uninstall white_dune
@@ -549,7 +549,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.369"
+#define HAVE_DUNE_VERSION "white_dune 1.374"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

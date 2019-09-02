@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.369
+pkgver=1.374
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -33,7 +33,7 @@ makedepends=(gcc
              m4
              make
              rcs
-             firefox
+             xdg-utils
              lxterminal
              gimp
              audacity
@@ -60,22 +60,13 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('47f245f3437821f7d33a653d0795010e')
+md5sums=('977bbfc7184c3cfa0de646928261dc85')
 validpgpkeys=()
-
-prepare() {
-	cd "$pkgname-$pkgver"
-#	patch -p1 -i "$srcdir/$pkgname-$pkgver.patch"
-}
 
 build() {
 	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R wdune" --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" --with-partial-fortify 
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" --with-partial-fortify 
         make
-}
-
-check() {
-	cd "$pkgname-$pkgver"
 }
 
 package() {

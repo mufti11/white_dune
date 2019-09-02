@@ -85,7 +85,6 @@ public:
     T          *extractData() {
                     T *data = m_data;
                     m_data = 0;
-                    m_size = 0;
                     return data; 
                 }
     size_t      size() const

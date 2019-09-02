@@ -10,6 +10,7 @@ pkgname=wdune
 pkgver=`sh ../../batch/getversion.sh`
 
 export name=white_dune
+name=white_dune
 
 sh ../../batch/mktarbz2.sh > /dev/null
 cp /tmp/$pkgname-$pkgver.tar.bz2 .
@@ -51,7 +52,7 @@ makedepends=(gcc
              m4
              make
              rcs
-             firefox
+             xdg-utils
              lxterminal
              gimp
              audacity
@@ -81,19 +82,10 @@ noextract=()
 md5sums=($MD5SUM)
 validpgpkeys=()
 
-prepare() {
-	cd "\$pkgname-\$pkgver"
-#	patch -p1 -i "\$srcdir/\$pkgname-\$pkgver.patch"
-}
-
 build() {
 	cd "\$pkgname-\$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R wdune" --with-optimization --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" 
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" 
         make
-}
-
-check() {
-	cd "\$pkgname-\$pkgver"
 }
 
 package() {

@@ -5282,6 +5282,8 @@ g++ compiles with -Wall -Werror if -Wno- flags are used (caused by e.g. vcglib)
 
 Fixed C/C++/java export bug caused by solved warnings
 
+Fixed bug in MyArray::extractData
+
 Contact: MUFTI <mufti11@web.de>
 
 

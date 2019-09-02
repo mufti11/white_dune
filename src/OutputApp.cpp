@@ -52,7 +52,7 @@
 #ifdef HAVE_XITE_PATH
 # define DEFAULT_XITE_PATH HAVE_XITE_PATH
 #else
-# define DEFAULT_XITE_PATH "https://cdn.rawgit.com/create3000/x_ite/4.1.7/dist/"
+# define DEFAULT_XITE_PATH "https://code.create3000.de/x_ite/latest/dist/"
 #endif
 
 #ifdef HAVE_X3DOM_PATH
