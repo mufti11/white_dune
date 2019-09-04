@@ -2085,23 +2085,35 @@ MyMeshX<X, MFX, VEC3X>::addNewVertex(VertexInfo* vertexInfo)
     m_triangulatedVertices.append(vertexInfo->vertex[1]);
     m_triangulatedVertices.append(vertexInfo->vertex[2]);
 
+#ifdef HAVE_NULL_COMPARE
     if (vertexInfo->normal != NULL) {
+#endif
         m_triangulatedNormals.append(vertexInfo->normal[0]);
         m_triangulatedNormals.append(vertexInfo->normal[1]);
         m_triangulatedNormals.append(vertexInfo->normal[2]);
+#ifdef HAVE_NULL_COMPARE
     }
+#endif
 
+#ifdef HAVE_NULL_COMPARE
     if (vertexInfo->color != NULL) {
+#endif
         m_triangulatedColors.append(vertexInfo->color[0]);
         m_triangulatedColors.append(vertexInfo->color[1]);
         m_triangulatedColors.append(vertexInfo->color[2]);
         m_triangulatedColors.append(vertexInfo->color[3]);
+#ifdef HAVE_NULL_COMPARE
     }
+#endif
 
+#ifdef HAVE_NULL_COMPARE
     if (vertexInfo->texCoord != NULL) {
+#endif
         m_triangulatedTexCoords.append(vertexInfo->texCoord[0]);
         m_triangulatedTexCoords.append(vertexInfo->texCoord[1]);
+#ifdef HAVE_NULL_COMPARE
     }
+#endif
 }
 
 template <class X,class MFX,class VEC3X>

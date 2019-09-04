@@ -130,7 +130,11 @@ public:
                            }
     void                unref() 
                            { 
+#ifdef HVAVE_NULL_COMPARE
                            if ((this != NULL) && (--m_refs == 0))
+#else
+                           if (--m_refs == 0)
+#endif
                                delete this; 
                            }
     int                 getRefs() { return m_refs; }

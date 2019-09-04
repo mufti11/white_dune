@@ -5284,6 +5284,8 @@ Fixed C/C++/java export bug caused by solved warnings
 
 Fixed bug in MyArray::extractData
 
+Fixed unsigned/signed bug in MovieTexture load
+
 Contact: MUFTI <mufti11@web.de>
 
 

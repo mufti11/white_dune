@@ -670,7 +670,7 @@ int movie_load_from_file(char *fname, void **opaque){
     static int once = 0;
     struct fw_movietexture fw_movie;
     AVFormatContext *pFormatCtx;
-    size_t i, videoStream, audioStream;
+    long videoStream, audioStream;
     AVCodecContext *pCodecCtxOrig;
     AVCodecContext *pCodecCtx;
     AVCodecContext  *aCodecCtxOrig;
@@ -722,7 +722,7 @@ int movie_load_from_file(char *fname, void **opaque){
     // Find the first video stream
     videoStream=-1;
     audioStream=-1;
-    for(i=0; i<pFormatCtx->nb_streams; i++){
+    for(size_t i=0; i<pFormatCtx->nb_streams; i++){
         if(pFormatCtx->streams[i]->codec->codec_type==AVMEDIA_TYPE_VIDEO && videoStream < 0) {
             videoStream=i;
         }
@@ -946,7 +946,7 @@ int movie_load_from_file(char *fname, void **opaque){
     }
 
     //video and audo decoded in combined loop (could split for decode-on-load)
-    i=0;
+    size_t i=0;
     while(av_read_frame(pFormatCtx, &packet)>=0) {
         // Is this a packet from the video stream?
         if(packet.stream_index==videoStream) {

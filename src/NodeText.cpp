@@ -309,8 +309,8 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
                     for (size_t p = 0; p < contour->PointCount(); ++p) {
                         const double* d1 = contour->GetPoint(p);
                         double *d = new double[3];
-                        d[0] = d1[0] / 64.0f + horizontal ? offset : 0;
-                        d[1] = d1[1] / 64.0f + !horizontal ? offset : 0;;
+                        d[0] = d1[0] / 64.0f + (horizontal ? offset : 0);
+                        d[1] = d1[1] / 64.0f + (!horizontal ? offset : 0);
                         d[2] = d1[2] / 64.0f;
                         gluTessVertex(tobj, (GLdouble *)d, (GLvoid *)d);
                     }

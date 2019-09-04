@@ -81,7 +81,7 @@ NodePositionChaser::sendChasedEvent(int eventIn, double timestamp,
     Vec3f initVal(v[0], v[1], v[2]);
 
     // throw out times and durations too old
-    for (size_t i = m_event_times.size() - 1; i >= 0; i--)
+    for (long i = m_event_times.size() - 1; i >= 0; i--)
         if (m_event_times[i] < (now - dduration)) {
             m_event_times.remove(i);
             m_destinations.remove(i);

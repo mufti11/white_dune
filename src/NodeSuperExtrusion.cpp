@@ -811,7 +811,7 @@ void
 NodeSuperExtrusion::finalizeData(void* data)
 {
     m_extrusionDirty = true;
-    createMesh(&m_tempStoreData);
+    createMesh(m_tempStoreData);
     delete (SuperExtrusionData *)data;
 }
 

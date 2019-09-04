@@ -325,7 +325,7 @@ NodeLineSet::writeLdrawDat(int f, int indent)
         return 0;
     else
         vertices = ncoord->point();
-    if ((vertices == NULL))
+    if (vertices == NULL)
         return 0;
     Matrix matrix;
     glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat *) matrix);

@@ -792,7 +792,7 @@ void
 NodeSuperRevolver::finalizeData(void* data)
 {
     m_meshDirty = true;
-    createMesh(&m_tempStoreData);
+    createMesh(m_tempStoreData);
     delete (SuperRevolverData *)data;
 }
 
