@@ -1372,8 +1372,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <p margin: 1px 0;>") )
-        RET_RESET_FLAGS_ONERROR( mywritef(f,"<X3DCanvas url='\"%s%s\"'/></p>\n",
-                                          "http://localhost/", 
+        RET_RESET_FLAGS_ONERROR( mywritef(f,"<X3DCanvas url='\"%s\"'/></p>\n",
                                           wrlFile ? wrlFile : url) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </body>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</html>\n") )

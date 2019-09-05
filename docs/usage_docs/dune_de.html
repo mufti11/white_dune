@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- last update: white_dune-1.306
+ last update: white_dune-1.380
 -->
 <head>
  <title>"white_dune" Dokumentation</title> 
@@ -251,7 +251,10 @@
    <h3><a href="#vrmlcut">VrmlCut scripted Proto</a></h3>
   </li>
   <li>
-   <h3><a href="#upload"><em>Datei -&gt; upload</em></a></h3>
+   <h3><a href="#xite">Benutzung des X_ITE X3D browsers</a></h3>
+  </li>
+  <li>
+   <h3><a href="#upload">Datei -&gt; upload</a></h3>
   </li>
  </li>
  </ul>
@@ -3848,6 +3851,20 @@ Mit den sceneNumber, numberPreviousScenes und numberNextScenes Fields
 des VrmlCut Knotens kann ein reduzierter Bereich der Animationen angeschaut
 werden. Das ist sinnvoll, um die L&auml;ngen der Scenen im  sceneLengths field 
 des VrmlCut Knoten zu optimieren.
+</p>
+<h4><a name="xite"><em>Benutzung des X_ITE X3D browsers</em></a></h4>
+<p>
+<a href="http://create3000.de/x_ite">X_ITE X3D</a> ist ein im Webbrowser
+laufender X3D browser, der (anders als X3DOM) den X3D Script Knoten
+versteht.<br> 
+Moderne Webbrowser Sandbox Probleme machen es unm&ouml;glich, den
+X_ITE X3D browser f&uuml;r die Vorschau von X3D Dateien zu benutzen.<br>
+Stattdessen m&uuml;ssen Sie <em>Datei -&gt; Exportiere als... -&gt; 
+Exportiere als X_ITE html/X3DV...</em> benutzen, um eine .html Datei und
+eine .x3dv Datei zu exportieren.
+Dann muss die .html Datei und die .x3dv Datei auf einen webserver
+ins gleiche Verzeichnis hochgeladen werden, damit die .html Datei in
+den Webbrowser geladen werden kann.
 </p>
 <h4><a name="upload"><em>Datei -&gt; Upload</em></a> </h4>
 <p>

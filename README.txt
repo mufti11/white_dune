@@ -5286,6 +5286,6 @@ Fixed bug in MyArray::extractData
 
 Fixed unsigned/signed bug in MovieTexture load
 
+Removed X_ITE from preview settings cause of webbrowser sandboxing problems
+
 Contact: MUFTI <mufti11@web.de>
-
-

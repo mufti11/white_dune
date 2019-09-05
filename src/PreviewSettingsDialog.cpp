@@ -61,13 +61,12 @@ GetText(SWND item)
 }
 
 static const char *vrmlLevelStrings[] = { 
-    "X_ITE html",
+    "X3DOM html",
     "pure VRML97",
     "VRML97 Amendment 1",
     "VRML97 with COVER extensions",
     "pure X3DV",
-    "X3DV",
-    "X3DOM html"
+    "X3DV"
 };
 
 void PreviewSettingsDialog::LoadData()
@@ -93,24 +92,21 @@ void PreviewSettingsDialog::LoadData()
     int comboSelection = 0;
     switch (vrmlLevel) {
       default:
-        comboSelection = 2;
+        comboSelection = 0;
         break;
       case PURE_VRML97:
         comboSelection = 1;
         break;
       case COVER:
-        comboSelection = 3;
+        comboSelection = 2;
         break;
       case PURE_X3DV:
-        comboSelection = 4;
+        comboSelection = 3;
         break;
       case X3DV:
-        comboSelection = 5;
+        comboSelection = 4;
         break;
       case X3DOM:
-        comboSelection = 6;
-        break;
-      case XITE:
         comboSelection = 0;
         break;
     }
@@ -133,7 +129,7 @@ void
 PreviewSettingsDialog::SaveData()
 {
     MyString command;
-    int vrmlLevel = XITE;
+    int vrmlLevel = X3DOM;
     int useRemote;
     int xtypExecuteOrFork;
     MyString remoteCommand;
@@ -150,8 +146,8 @@ PreviewSettingsDialog::SaveData()
         vrmlLevel = PURE_VRML97;
         break;
       case 2:
-        vrmlLevel = 0;
-        break;    
+        vrmlLevel = 0; // VRML97 amendment 1
+        break;
       case 3:
         vrmlLevel = COVER;
         break;
@@ -161,12 +157,14 @@ PreviewSettingsDialog::SaveData()
       case 5:
         vrmlLevel = X3DV;
         break;
-      case 6:
+      default:
         vrmlLevel = X3DOM;
         break;
+/*
       case 0:
         vrmlLevel = XITE;
         break;
+*/
     }
 #ifdef _WIN32
     xtypExecuteOrFork = swGetCheck(swGetDialogItem(m_dlg, IDC_XTYP_EXECUTE));

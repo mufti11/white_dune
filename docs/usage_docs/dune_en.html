@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */  
   
- last update: white_dune-1.306
+ last update: white_dune-1.380
 -->   
 <head>
  <title>"White_dune" documentation</title> 
@@ -252,7 +252,10 @@
    <h3><a href="#vrmlcut">VrmlCut scripted Proto</a></h3>
   </li>
   <li>
-   <h3><a href="#upload"><em>File -&gt; upload</em></a></h3>
+   <h3><a href="#xite">Using X_ITE X3D browser</a></h3>
+  </li>
+  <li>
+   <h3><a href="#upload">File -&gt; upload</a></h3>
   </li>
  
 </ul>
@@ -3491,6 +3494,18 @@ sequence of animations.<br>
 With the sceneNumber, numberPreviousScenes and numberNextScenes fields of
 VrmlCut can be used play a reduced range of scenes. This is usefull to optimize
 the lengths of the scenes in the sceneLengths field of VrmlCut.
+</p>
+<h4><a name="xite"><em>Using X_ITE X3D browser</em></a></h4>
+<p>
+<a href="http://create3000.de/x_ite">X_ITE X3D</a> is a X3D browser
+in the webbrowser, which (other than X3DOM) supports the X3D Script node.
+<br> 
+Modern webbrowser sandboxing problems make it impossible to use the
+X_ITE X3D browser for previewing X3D files.<br>
+Instead you have to use <em>File -&gt; Export as... -&gt; 
+Export as X_ITE html/X3DV...</em> to write a .html and .x3dv file.
+Then the .html file and the .x3dv file has to be uploaded to a webserver
+to the same directory and the .html file can be loaded in the webbrowser. 
 </p>
 <h4><a name="upload"><em>File -&gt; upload</em></a> </h4>
 <p>

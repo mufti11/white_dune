@@ -59,7 +59,7 @@ BEGIN
         MENUITEM "Salva &Come...\tCtrl+Shift+S",        ID_DUNE_FILE_SAVE_AS
         MENUITEM "Pr&eview\tF12",                       ID_DUNE_FILE_PREVIEW
         MENUITEM "Esporta come &Puro VRML97...",        ID_DUNE_FILE_EXPORT_VRML97
-        MENUITEM "Esporta come X_ITE html...",          ID_DUNE_FILE_EXPORT_XITE
+        MENUITEM "Esporta come X_ITE html/X3DV...",     ID_DUNE_FILE_EXPORT_XITE
         MENUITEM "Esporta come X3DOM html...",          ID_DUNE_FILE_EXPORT_X3DOM
         MENUITEM "Esporta come &Kanim Animazione...",   ID_DUNE_FILE_EXPORT_KANIM
         MENUITEM "Esporta come Open Wonderland 0.5 module", ID_DUNE_FILE_EXPORT_WONDERLAND_5_MODULE

@@ -59,7 +59,7 @@ BEGIN
         MENUITEM "Speichern &Als...\tCtrl+Shift+S",     ID_DUNE_FILE_SAVE_AS
         MENUITEM "Vorschau\tF12",                       ID_DUNE_FILE_PREVIEW
         MENUITEM "Exportieren als &reines VRML97...",   ID_DUNE_FILE_EXPORT_VRML97
-        MENUITEM "Exportieren als X_ITE html...",       ID_DUNE_FILE_EXPORT_XITE
+        MENUITEM "Exportieren als X_ITE/X3DV html...",  ID_DUNE_FILE_EXPORT_XITE
         MENUITEM "Exportieren als X3DOM html...",       ID_DUNE_FILE_EXPORT_X3DOM
         MENUITEM "Exportieren als &Kanim Animation...", ID_DUNE_FILE_EXPORT_KANIM
         MENUITEM "Exportieren als Open Wonderland 0.5 module", ID_DUNE_FILE_EXPORT_WONDERLAND_5_MODULE
@@ -601,7 +601,7 @@ BEGIN
            MENUITEM "Exportiere als &reines VRML97...", ID_DUNE_FILE_EXPORT_VRML97
            MENUITEM "Exportiere als VRML level &X3DV...", ID_DUNE_FILE_EXPORT_X3DV
            MENUITEM "Exportiere als X3D/XML...",        ID_DUNE_FILE_EXPORT_X3D_XML
-           MENUITEM "Exportiere als X_ITE html...",     ID_DUNE_FILE_EXPORT_XITE
+           MENUITEM "Exportiere als X_ITE html/X3DV...", ID_DUNE_FILE_EXPORT_XITE
            MENUITEM "Exportiere als X3DOM html...",     ID_DUNE_FILE_EXPORT_X3DOM
            MENUITEM "Exportiere als VR&ML97 mit COVER Erweiterungen...", ID_DUNE_FILE_EXPORT_VRML97_COVER
            MENUITEM "Exportiere als &Kanim Animation...", ID_DUNE_FILE_EXPORT_KANIM
