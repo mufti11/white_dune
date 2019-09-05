@@ -97,14 +97,17 @@ void PreviewSettingsDialog::LoadData()
       case PURE_VRML97:
         comboSelection = 1;
         break;
-      case COVER:
+      case 0: // VRML97 amendment 1
         comboSelection = 2;
         break;
-      case PURE_X3DV:
+      case COVER:
         comboSelection = 3;
         break;
-      case X3DV:
+      case PURE_X3DV:
         comboSelection = 4;
+        break;
+      case X3DV:
+        comboSelection = 5;
         break;
       case X3DOM:
         comboSelection = 0;
@@ -130,7 +133,7 @@ PreviewSettingsDialog::SaveData()
 {
     MyString command;
     int vrmlLevel = X3DOM;
-    int useRemote;
+    int useRemote = 0;
     int xtypExecuteOrFork;
     MyString remoteCommand;
     MyString application;

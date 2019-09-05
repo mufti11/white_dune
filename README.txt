@@ -5288,4 +5288,6 @@ Fixed unsigned/signed bug in MovieTexture load
 
 Removed X_ITE from preview settings cause of webbrowser sandboxing problems
 
+Fixed by one error in preview settings combo box
+
 Contact: MUFTI <mufti11@web.de>
