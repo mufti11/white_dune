@@ -29,6 +29,7 @@
 # include "Node.h"   
 #endif
 
+#include "config.h"
 
 class FieldValue;
 class ExposedField;

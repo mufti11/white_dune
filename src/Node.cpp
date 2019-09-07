@@ -70,10 +70,12 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_numFields = m_proto->getNumFields();
     m_fields = new FieldValue *[m_numFields];
     for (int i = 0; i < m_numFields; i++) {
-        m_fields[i] = m_proto->getField(i)->getDefault(x3d);
-        if (m_fields[i]) {
-            m_fields[i] = m_fields[i]->copy();
-            m_fields[i]->ref();
+        if (m_proto->getField(i)) {
+            m_fields[i] = m_proto->getField(i)->getDefault(x3d);
+            if (m_fields[i]) {
+                m_fields[i] = m_fields[i]->copy();
+                m_fields[i]->ref();
+            }
         }
     }
     m_numEventIns = m_proto->getNumEventIns();

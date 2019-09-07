@@ -412,8 +412,9 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
     }
 
     if (m_texCoords.size() == 0) {
-        m_texCoords[0] = ::generateTextureCoordinates(m_vertices, m_coordIndex,
-                                                      (X)0.0f);
+        m_texCoords.append(::generateTextureCoordinates(m_vertices, 
+                                                        m_coordIndex,
+                                                        (X)0.0f));
     }
     
     if (m_normalPerVertex && (normalIndex == NULL))
@@ -702,7 +703,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
     const float *texCoords = (m_texCoords.size() > 0) ? 
                               m_texCoords[0] ? m_texCoords[0]->getValues() 
                               : NULL
-                             :NULL;
+                             : NULL;
     const int *texCoordIndex = m_texCoordIndex ? m_texCoordIndex->getValues() 
                                                  : NULL;
     const float *colors = m_colors ? m_colors->getValues() : NULL;
@@ -749,7 +750,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
                 continue;
             if (texCoords && texCoordIndex &&
                 (j < m_texCoordIndex->getSFSize()) &&
-                (texCoordIndex[j] < m_texCoords[0]->getSize()) &&
+                (texCoordIndex[j] < m_texCoords[0]->getSFSize()) &&
                 (texCoordIndex[j] >= 0)) {
                 glTexCoord2fv(texCoords + texCoordIndex[j] * 2);
 #ifdef HAVE_MULTI_TEXTURE

@@ -23,7 +23,7 @@
 #define HAVE_LIBVCG 1
 
 /* Define if you have the CGAL library */
-#define HAVE_LIBCGAL 1
+/* #undef HAVE_LIBCGAL */
 
 /* Define if you have the curl library */
 #define HAVE_LIBCURL 1
@@ -331,13 +331,13 @@
 #define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
-/* #undef HAVE_ANT */
+#define HAVE_ANT "/usr/bin/ant"
 
 /* (path to) graphical commandline terminal (e.g. xterm) */
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gimp"
 
 /* object editor for sound (.wav/.midi) files */
 #define HAVE_SOUND_EDITOR "/usr/bin/audacity"
