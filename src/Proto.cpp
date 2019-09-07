@@ -312,7 +312,7 @@ void
 Proto::deleteElements(void) 
 {
     for (size_t i = 0; i < m_fields.size(); i++)
-        if (m_fields[i]->getDefault(false)->isDefaultValue())
+        if (m_fields[i] && m_fields[i]->getDefault(false)->isDefaultValue())
             m_nameOfFieldsWithDefaultValue.append(m_fields[i]->getName(false));
     int restSize = 1;
     m_fields.resize(restSize);
@@ -694,11 +694,11 @@ Proto::lookupExposedField(const MyString &name, bool x3d) const
 bool 
 Proto::canWriteElement(Element *element, bool x3d) const
 {
-    if (element->getFlags() & FF_ALWAYS)
+    if (element && element->getFlags() & FF_ALWAYS)
         return true;
-    if (element->getFlags() & FF_NEVER)
+    if (element && element->getFlags() & FF_NEVER)
         return false;
-    if (x3d) {
+    if (element && x3d) {
         if (element->getFlags() & FF_COVER_ONLY)
             return false;
         if (element->getFlags() & FF_KAMBI_ONLY)
@@ -706,7 +706,7 @@ Proto::canWriteElement(Element *element, bool x3d) const
         if (element->getFlags() & FF_VRML_ONLY)
             return false;
     } else
-        if (element->getFlags() & FF_X3D_ONLY)
+        if (element && element->getFlags() & FF_X3D_ONLY)
             return false;
     return true;
 }
@@ -718,16 +718,17 @@ Proto::writeEvents(int f, int indent, int flags) const
     if (isX3dXml(flags))
         indent2 = indent + TheApp->GetIndent();
     for (size_t i = 0; i < m_fields.size(); i++)
-        if (canWriteElement(m_fields[i], isX3d(flags)))
+        if (m_fields[i] && canWriteElement(m_fields[i], isX3d(flags)))
             RET_ONERROR( m_fields[i]->write(f, indent2, flags) )
     for (size_t i = 0; i < m_eventIns.size(); i++)
-        if (canWriteElement(m_eventIns[i], isX3d(flags)))
+        if (m_eventIns[i] && canWriteElement(m_eventIns[i], isX3d(flags)))
             RET_ONERROR(m_eventIns[i]->write(f, indent2, flags) )
     for (size_t i = 0; i < m_eventOuts.size(); i++)
-        if (canWriteElement(m_eventOuts[i], isX3d(flags)))
+        if (m_eventOuts[i] && canWriteElement(m_eventOuts[i], isX3d(flags)))
             RET_ONERROR(m_eventOuts[i]->write(f, indent2, flags) )
     for (size_t i = 0; i < m_exposedFields.size(); i++)
-        if (canWriteElement(m_exposedFields[i], isX3d(flags)))
+        if (m_exposedFields[i] &&
+            canWriteElement(m_exposedFields[i], isX3d(flags)))
                 RET_ONERROR(m_exposedFields[i]->write(f, indent2, flags) )
     return(0);
 }
@@ -924,21 +925,25 @@ void
 Proto::compareToIsNodes(Node *node)
 {
     for (size_t i = 0; i < m_fields.size(); i++)
-        for (int j = 0; j < m_fields[i]->getNumIs(); j++)
-            if (m_fields[i]->getIsNode(j) == node)
-                m_fields[i]->setIsNodeIndex(j, m_nodeIndex);
+        if (m_fields[i])
+            for (int j = 0; j < m_fields[i]->getNumIs(); j++)
+                if (m_fields[i]->getIsNode(j) == node)
+                    m_fields[i]->setIsNodeIndex(j, m_nodeIndex);
     for (size_t i = 0; i < m_eventIns.size(); i++)
-        for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
-            if (m_eventIns[i]->getIsNode(j) == node)
-                m_eventIns[i]->setIsNodeIndex(j,m_nodeIndex);
+        if (m_eventIns[i])
+            for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
+                if (m_eventIns[i]->getIsNode(j) == node)
+                    m_eventIns[i]->setIsNodeIndex(j,m_nodeIndex);
     for (size_t i = 0; i < m_eventOuts.size(); i++)
-        for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
-            if (m_eventOuts[i]->getIsNode(j) == node)
-                m_eventOuts[i]->setIsNodeIndex(j, m_nodeIndex);
+        if (m_eventOuts[i])
+            for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
+                if (m_eventOuts[i]->getIsNode(j) == node)
+                    m_eventOuts[i]->setIsNodeIndex(j, m_nodeIndex);
     for (size_t i = 0; i < m_exposedFields.size(); i++)
-        for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
-            if (m_exposedFields[i]->getIsNode(j) == node)
-                m_exposedFields[i]->setIsNodeIndex(j, m_nodeIndex);
+        if (m_exposedFields[i])
+            for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
+                if (m_exposedFields[i]->getIsNode(j) == node)
+                    m_exposedFields[i]->setIsNodeIndex(j, m_nodeIndex);
     m_nodeIndex++;
 }
 
@@ -990,7 +995,9 @@ Proto::lookupIsExposedField(const char *name, int elementType) const
 int
 Proto::lookupIsField(Node *node, int field) const
 {
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (size_t i = 0; i < m_fields.size(); i++) {
+        if (m_fields[i] == NULL)
+            continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
             Node *isNode = m_fields[i]->getIsNode(j);
             if (isNode->isEqual(node))
@@ -998,13 +1005,16 @@ Proto::lookupIsField(Node *node, int field) const
                     field)
                     return i;
         }
+    }
     return -1;
 }
 
 int
 Proto::lookupIsEventIn(Node *node, int eventIn, int elementType) const
 {
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (size_t i = 0; i < m_eventIns.size(); i++) {
+        if (m_eventIns[i] == NULL)
+            continue;
         for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
             if (m_eventIns[i]->getIsNode(j)->isEqual(node))
                 if (m_eventIns[i]->getIsField(j) == eventIn) {
@@ -1013,13 +1023,16 @@ Proto::lookupIsEventIn(Node *node, int eventIn, int elementType) const
                         continue;
                     return i;
                 }
+    }
     return -1;
 }
 
 int
 Proto::lookupIsEventOut(Node *node, int eventOut, int elementType) const
 {
-    for (size_t i = 0; i < m_eventOuts.size(); i++)
+    for (size_t i = 0; i < m_eventOuts.size(); i++) {
+        if (m_eventOuts[i] == NULL)
+            continue;
         for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
             if (m_eventOuts[i]->getIsNode(j)->isEqual(node)) {
                 if (m_eventOuts[i]->getIsField(j) == eventOut) {
@@ -1029,6 +1042,7 @@ Proto::lookupIsEventOut(Node *node, int eventOut, int elementType) const
                     return i;
                 }
             }
+    }
     return -1;
 }
 
@@ -1036,7 +1050,9 @@ Proto::lookupIsEventOut(Node *node, int eventOut, int elementType) const
 int
 Proto::lookupIsExposedField(Node *node, int exposedField) const
 {
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+        if (m_exposedFields[i] == NULL)
+            continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
             Node *isNode = m_exposedFields[i]->getIsNode(j);
             if (isNode->isEqual(node))
@@ -1044,6 +1060,7 @@ Proto::lookupIsExposedField(Node *node, int exposedField) const
                     exposedField)
                     return i;
         }
+    }
     return -1;
 }
 
@@ -1051,16 +1068,22 @@ int
 Proto::getNumIsMSNodes(void) const
 {
     int ret = 0;
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (size_t i = 0; i < m_fields.size(); i++) {
+        if (m_fields[i] == NULL)
+            continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++)
             if ((m_fields[i]->getType() == MFNODE) ||
                 (m_fields[i]->getType() == SFNODE))
                 ret++;
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    }
+    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+        if (m_exposedFields[i] == NULL)
+            continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
             if ((m_exposedFields[i]->getType() == MFNODE) ||
                 (m_exposedFields[i]->getType() == SFNODE)) 
                 ret++;
+    }
     return ret;
 }
 
@@ -1068,7 +1091,9 @@ Node *
 Proto::getIsMSNode(int numNode) const
 {
     int count = 0;
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (size_t i = 0; i < m_fields.size(); i++) {
+        if (m_fields[i] == NULL)
+            continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
             if ((m_fields[i]->getType() == MFNODE) ||
                 (m_fields[i]->getType() == SFNODE)) {
@@ -1077,7 +1102,10 @@ Proto::getIsMSNode(int numNode) const
                 count++;
             }
         }
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    }
+    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+        if (m_exposedFields[i] == NULL)
+            continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
             if ((m_exposedFields[i]->getType() == MFNODE) ||
                 (m_exposedFields[i]->getType() == SFNODE)) {
@@ -1086,6 +1114,7 @@ Proto::getIsMSNode(int numNode) const
                 count++;
             }
         }
+    }
     return NULL;
 }
 
@@ -1093,7 +1122,9 @@ int
 Proto::getIsMSNodeField(int numNode) const
 {
     int count = 0;
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (size_t i = 0; i < m_fields.size(); i++) {
+        if (m_fields[i] == NULL)
+            continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
             if ((m_fields[i]->getType() == MFNODE) ||
                 (m_fields[i]->getType() == SFNODE)) {
@@ -1102,7 +1133,10 @@ Proto::getIsMSNodeField(int numNode) const
                 count++;
             }
         }
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    }
+    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+        if (m_exposedFields[i] == NULL)
+            continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
             if ((m_exposedFields[i]->getType() == MFNODE) ||
                 (m_exposedFields[i]->getType() == SFNODE)) {
@@ -1111,6 +1145,7 @@ Proto::getIsMSNodeField(int numNode) const
                 count++;
             }
         }
+    }
     return -1;
 }
 
@@ -2610,7 +2645,7 @@ NodePROTO::createPROTO(bool bcopy)
     }
     for (int i = 0; i < m_proto->getNumExposedFields(); i++) {
         ExposedField *field = m_proto->getExposedField(i);
-        if (field->getFlags() & FF_IS)
+        if (field && field->getFlags() & FF_IS)
             for (int j = 0; j < field->getNumIs(); j++) {
                 Node *isNode = field->getIsNode(j);
                 FieldValue *value = field->getValue()->copy();
@@ -2622,7 +2657,7 @@ NodePROTO::createPROTO(bool bcopy)
     }
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         Field *field = m_proto->getField(i);
-        if (field->getFlags() & FF_IS)
+        if (field && field->getFlags() & FF_IS)
             for (int j = 0; j < field->getNumIs(); j++) {
                 Node *isNode = field->getIsNode(j);
                 FieldValue *value = field->getDefault(x3d)->copy();
@@ -2646,7 +2681,7 @@ NodePROTO::createPROTO(bool bcopy)
                     m_isHumanoid = true;
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         Field *field = m_proto->getField(i);
-        if (field->getFlags() & FF_IS)
+        if (field && field->getFlags() & FF_IS)
             for (int j = 0; j < field->getNumIs(); j++) {
                 Node *isNode = field->getIsNode(j);
                 FieldValue *value = field->getDefault(x3d);
@@ -2659,7 +2694,7 @@ NodePROTO::createPROTO(bool bcopy)
         // search for Joint.rotation field for H-Anim handle
         if (maybeJoint)
             if (strcmp(field->getName(false), "rotation") == 0)
-                if (field->getType() == SFROTATION) {
+                if (field && field->getType() == SFROTATION) {
                     m_jointRotationField = i;         
                     m_scene->setHasJoints();
                 }                      

@@ -79,7 +79,10 @@ public:
     void            emissive2diffuse(void);
 
     virtual bool    isTransparent(void);
-    virtual float   getTransparency(void) { return transparency()->getValue(); }
+    virtual float   getTransparency(void) 
+                        { 
+                        return transparency() ? transparency()->getValue() : 0; 
+                        }
 
     virtual void    reInit();
 

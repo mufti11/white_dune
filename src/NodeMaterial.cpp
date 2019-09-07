@@ -101,6 +101,19 @@ NodeMaterial::NodeMaterial(Scene *scene, Proto *def)
 
 void NodeMaterial::bind()
 {
+    if (diffuseColor() == NULL)
+        return;
+    if (emissiveColor() == NULL)
+        return;
+    if (specularColor() == NULL)
+        return;
+    if (ambientIntensity() == NULL)
+        return;
+    if (transparency() == NULL)
+        return;
+    if (shininess() == NULL)
+        return;
+
     float ambientColor[4], dc[4], ec[4];
 
     for (int i = 0; i < 3; i++) {
@@ -127,6 +140,19 @@ void NodeMaterial::bind()
 
 void NodeMaterial::unbind()
 {
+    if (diffuseColor() == NULL)
+        return;
+    if (emissiveColor() == NULL)
+        return;
+    if (specularColor() == NULL)
+        return;
+    if (ambientIntensity() == NULL)
+        return;
+    if (transparency() == NULL)
+        return;
+    if (shininess() == NULL)
+        return;
+
     float ambientColor[4];
 
     for (int i = 0; i < 3; i++) {
@@ -175,7 +201,7 @@ NodeMaterial::diffuse2emissive(void)
 bool    
 NodeMaterial::isTransparent(void)
 {
-    if (transparency()->getValue() > 0.0)
+    if (transparency() && transparency()->getValue() > 0.0)
         return true;
     else
         return false;

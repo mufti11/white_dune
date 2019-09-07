@@ -151,9 +151,9 @@ NodeShape::isLit() const
                                  ((SFNode *) getField(m_appearance))->getValue();
     if (appearance == NULL)
         return false;
-    if (appearance->material()->getValue())
+    if (appearance->material() && appearance->material()->getValue())
         return true;
-    if (appearance->texture()->getValue())
+    if (appearance->texture() && appearance->texture()->getValue())
         return true;
     return false;
 }
@@ -163,14 +163,18 @@ NodeShape::doSpecularPass(Node *appearance, Node *geometry)
 {
 //    if (!glIsEnabled(GL_TEXTURE_2D)) return;
 
-    if (appearance != NULL) {
-        Node *material = ((SFNode *) 
-                         appearance->getField(m_appearance))->getValue();
-        if ((material != NULL) && (material->getType() == VRML_MATERIAL)) {
+    if ((appearance != NULL)) {
+        Node *nMaterial = ((NodeAppearance *)appearance)->material() ?
+            ((NodeAppearance *)appearance)->material()->getValue() : NULL;
+        if ((nMaterial != NULL) && (nMaterial->getType() == VRML_MATERIAL)) {
+            if (((NodeMaterial *) nMaterial)->specularColor() == NULL)
+                return;
+            if (((NodeMaterial *) nMaterial)->transparency() == NULL)
+                return;
             const float *specular = 
-                  ((NodeMaterial *) material)->specularColor()->getValue();
+                  ((NodeMaterial *) nMaterial)->specularColor()->getValue();
             float transparency = 
-                  ((NodeMaterial *) material)->transparency()->getValue();
+                  ((NodeMaterial *) nMaterial)->transparency()->getValue();
             if (specular[0] != 0.0f || specular[1] != 0.0f || 
                 specular[2] != 0.0f) {
                 float s[4];

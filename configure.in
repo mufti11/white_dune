@@ -597,7 +597,7 @@ elif test "X_$OS" = "X_Darwin" ; then
     else
         CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include -DMACOSX=1"
         export CPPFLAGS
-        CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions"
+        CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions -Wno-tautological-undefined-compare -Wno-tautological-pointer-compare"
         export CXXFLAGS
         dnl fat binaries options
         dnl

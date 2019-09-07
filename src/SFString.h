@@ -35,7 +35,14 @@ public:
                         SFString(const char *str);
                         SFString(void) { m_value = ""; } // silly default
 
-    const char         *getValue() const { return m_value; }
+    const char         *getValue() const
+                           {
+#ifdef HAVE_NULL_COMPARE
+                           if (this == NULL)
+                               return "";
+#endif 
+                           return m_value; 
+                           }
     virtual int         getType() const { return SFSTRING; }
     virtual const char *getTypeName() const { return "SFString"; }
     virtual MyString    getString(int index, int stride) const;

@@ -25,12 +25,12 @@ LD_OPTIONS =
 EGREP_PROBLEMS = no
 
 # gcc Warning flags (a lot of -Wno- comes from vcglib usage)
-# WARNINGS = -Wall -D_FORTIFY_SOURCE=2 -Werror -Wno-error=strict-overflow \
-#            -Wno-error=unused-function -Wno-error=ignored-attributes \
-#            -Wno-error=deprecated-declarations -Wno-ignored-attributes \
-#            -Wno-deprecated-declarations -Wno-misleading-indentation \
-#            -Wno-error=int-in-bool-context -Wno-error=sign-compare \
-#            -Wno-sign-compare
+ WARNINGS = -Wall -D_FORTIFY_SOURCE=2 -Werror -Wno-error=strict-overflow \
+            -Wno-error=unused-function -Wno-error=ignored-attributes \
+            -Wno-error=deprecated-declarations -Wno-ignored-attributes \
+            -Wno-deprecated-declarations -Wno-misleading-indentation \
+            -Wno-error=int-in-bool-context -Wno-error=sign-compare \
+            -Wno-sign-compare -Wno-error=nonnull-compare
 
 # IRIX cc flags
 # WARNINGS = -woff 3303

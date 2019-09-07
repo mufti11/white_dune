@@ -48,7 +48,14 @@ public:
 
     virtual FieldValue *copy() { return new SFFloat(*this); }
 
-    float               getValue() const { return m_value; }
+    float               getValue() const 
+                           {
+#ifdef HAVE_NULL_COMPARE
+                           if (this == NULL)
+                               return 0;
+#endif 
+                           return m_value; 
+                           }
 
     virtual bool        equals(const FieldValue *value) const;
     virtual bool        equalsAngle(const FieldValue *value, double angleUnit) 
@@ -57,6 +64,10 @@ public:
 
     double              getFixedAngle(double angleUnit) 
                             {
+#ifdef HAVE_NULL_COMPARE
+                            if (this == NULL)
+                                return 0;
+#endif
                             if (angleUnit != 0) 
                                 return m_value * angleUnit;
                             return m_value;

@@ -3,6 +3,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+/* Define to test "this" against NULL. Almost! impossible, but needed... */
+#define HAVE_NULL_COMPARE 1
+
 /* Define to empty if the keyword does not work.  */
 #undef const
 

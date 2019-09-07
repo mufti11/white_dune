@@ -101,10 +101,24 @@ TransformNode::getScale(void)
 void
 TransformNode::transform()
 {
+    if (center() == NULL)
+        return;
     const float *fcenter = center()->getValue();
+
+    if (rotation() == NULL)
+        return;
     const float *frotation = rotation()->getValue();
+
+    if (scale() == NULL)
+        return;
     const float *fscale = scale()->getValue();
+
+    if (scaleOrientation() == NULL)
+        return;
     const float *fscaleOrientation = scaleOrientation()->getValue();
+
+    if (translation() == NULL)
+        return;
     const float *ftranslation = translation()->getValue();
 
     if (m_matrixDirty) {

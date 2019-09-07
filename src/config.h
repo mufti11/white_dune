@@ -4,6 +4,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+/* Define to test "this" against NULL. Almost! impossible, but needed... */
+#define HAVE_NULL_COMPARE 1
+
 /* Define to empty if the keyword does not work.  */
 /* #undef const */
 
@@ -549,7 +552,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.383"
+#define HAVE_DUNE_VERSION "white_dune 1.386"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

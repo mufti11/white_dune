@@ -64,8 +64,24 @@ public:
     virtual int         getNumbersPerType(void) const { return 0; }
 
     virtual bool        equals(const FieldValue *value) const;
-    int                 getSize() const { return m_value->size(); }
-    NodeList           *getValues() const { return m_value; }
+    int                 getSize() const
+                           {
+#ifdef HAVE_NULL_COMPARE
+                           if (this == NULL)
+                               return 0; 
+#endif
+                           if (m_value == NULL) 
+                               return 0;
+                           return m_value->size(); 
+                           }
+    NodeList           *getValues() const 
+                           { 
+#ifdef HAVE_NULL_COMPARE
+                           if (this == NULL)
+                               return NULL; 
+#endif
+                           return m_value; 
+                           }
     Node               *getValue(size_t index) const 
                            { 
                            if (m_value->size() == 0)
@@ -76,10 +92,9 @@ public:
 
     virtual int         getSFSize() const 
                            { 
-                           if (m_value==NULL) 
+                           if (m_value == NULL) 
                                return 0;
-                           else 
-                               return m_value->size(); 
+                           return m_value->size(); 
                            }
     virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);

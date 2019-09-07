@@ -287,17 +287,19 @@ NodeNurbsCurve::createChain(void *data)
     Vec3f* cpoints = (Vec3f *)data;
     if (getControlPoints() == NULL)
         return;
-    int iTess = tessellation()->getValue();
+    int iTess = 32;
+    if (tessellation())
+        tessellation()->getValue();
     float *weights = NULL;
     int iDimension = getControlPoints()->getSize() / 3;
 
-    if (weight()->getSize() == 0) {
+    if ((weight() == NULL) || (weight() && weight()->getSize() == 0)) {
         weights = new float[iDimension];
         for (int i=0; i<iDimension; i++){
             weights[i] = 1.0f;
         }
     } 
-    else if(weight()->getSize() != iDimension) {
+    else if(weight() && weight()->getSize() != iDimension) {
         return;
     }
     
@@ -941,7 +943,7 @@ NodeNurbsCurve::repairKnotAndWeight()
     int iorder = order()->getValue();
 
     if (controlPoints && controlPoints->getSFSize() > 0) { 
-        if (controlPoints->getSFSize() > weight()->getSize()) {
+        if (weight() && controlPoints->getSFSize() > weight()->getSize()) {
             MFFloat *oldWeights = weight();
             MFFloat *newWeights = new MFFloat();
             for (int i = 0; i < oldWeights->getSize(); i++)

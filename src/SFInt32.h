@@ -48,7 +48,14 @@ public:
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy() { return new SFInt32(*this); }
 
-    int                 getValue() const { return m_value; }
+    int                 getValue() const 
+                           {
+#ifdef HAVE_NULL_COMPARE
+                           if (this == NULL)
+                               return 0;
+#endif 
+                           return m_value; 
+                           }
 
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 

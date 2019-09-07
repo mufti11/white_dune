@@ -61,7 +61,7 @@ public:
                 Vec3x(T nx, T ny, T nz)
                    { x = nx; y = ny; z = nz; }
                 Vec3x(const T *v)
-                   { x = v[0]; y = v[1]; z = v[2]; }
+                   { if (v) { x = v[0]; y = v[1]; z = v[2];} }
 
      int        operator==(const Vec3x &v) const
                    { return x == v.x && y == v.y && z == v.z; }

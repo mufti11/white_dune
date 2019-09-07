@@ -565,9 +565,11 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
         m_root->addFieldNodeList(m_rootField, nodes);
     else if (targetField == -1)
         targetNode->addFieldNodeList(m_rootField, nodes);
-    else if (targetNode->getField(targetField)->getType() == MFNODE) {
+    else if (targetNode->getField(targetField) &&
+             targetNode->getField(targetField)->getType() == MFNODE) {
         targetNode->setField(targetField, new MFNode(nodes));        
-    } else if (targetNode->getField(targetField)->getType() == SFNODE) {
+    } else if (targetNode->getField(targetField) &&
+               targetNode->getField(targetField)->getType() == SFNODE) {
         SFNode *oldSFNode = (SFNode *)targetNode->getField(targetField);
         MoveCommand *removeCommand = new MoveCommand(oldSFNode->getValue(), 
                                                      targetNode, targetField,
@@ -579,7 +581,7 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
                                                       targetNode, targetField);
            addCommand->execute();
        }
-    } else {
+    } else if (targetNode->getField(targetField)) {
         // wrong targetField
         assert(0);
     }
@@ -3849,8 +3851,9 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
     glLoadIdentity();
     if (pick) 
         gluPickMatrix(x, y, width, height, v);
-    float fieldOfView = RAD2DEG(getCamera()->fov()->getValue() *
-                                getUnitAngle());
+    float fieldOfView = getCamera()->fov() ? 
+                        RAD2DEG(getCamera()->fov()->getValue() *
+                        getUnitAngle()) : TheApp->getFixFieldOfView();
     if (TheApp->hasFixFieldOfView())
         fieldOfView = TheApp->getFixFieldOfView();
     gluPerspective(fieldOfView, aspect, TheApp->GetNearClippingPlaneDist(),
@@ -5013,7 +5016,7 @@ Scene::applyCamera()
         ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
     else if (m_currentViewpoint->getType() == VRML_GEO_VIEWPOINT)
         ((NodeGeoViewpoint *)m_currentViewpoint)->apply();
-    else
+    else if (m_currentViewpoint->getType() == VRML_VIEWPOINT)
         ((NodeViewpoint *)m_currentViewpoint)->apply(TheApp->useStereo(),
                                                      Vec3d(), SFRotation());
 

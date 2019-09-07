@@ -166,6 +166,13 @@ NodeAppearance::NodeAppearance(Scene *scene, Proto *def)
 
 void NodeAppearance::bind()
 {
+    if (material() == NULL)
+        return;
+    if (texture() == NULL)
+        return;
+    if (textureTransform() == NULL)
+        return;
+
     Node    *nMaterial = ((SFNode *) getField(material_Field()))->getValue();
     Node    *nTexture = ((SFNode *) getField(texture_Field()))->getValue();
     Node    *nTextureTransform = ((SFNode *) getField(textureTransform_Field()))
@@ -176,7 +183,8 @@ void NodeAppearance::bind()
     while (nMaterial && (nMaterial->getType() == VRML_MATERIAL) && 
            nMaterial->isPROTO())
         nMaterial = ((NodePROTO *)nMaterial)->getProtoNode(0);
-    if (nMaterial && (nMaterial->getType() == VRML_MATERIAL)) {
+    if (nMaterial && (nMaterial->getType() == VRML_MATERIAL) &&
+        ((NodeMaterial *)nMaterial)->transparency()) {
         nMaterial->bind();
         ftransparency = ((NodeMaterial *) 
                          nMaterial)->transparency()->getValue();
@@ -212,6 +220,13 @@ void NodeAppearance::bind()
 
 void NodeAppearance::unbind()
 {
+    if (material() == NULL)
+        return;
+    if (texture() == NULL)
+        return;
+    if (textureTransform() == NULL)
+        return;
+
     Node *nMaterial = ((SFNode *) getField(material_Field()))->getValue();
     Node *nTexture = ((SFNode *) getField(texture_Field()))->getValue();
     Node *nTextureTransform = ((SFNode *) getField(textureTransform_Field()))
@@ -224,23 +239,29 @@ void NodeAppearance::unbind()
 
 bool NodeAppearance::isTransparent(void)
 {
-    Node *nMaterial = ((SFNode *) getField(material_Field()))->getValue();
-    if (nMaterial) 
-        if (nMaterial->isTransparent())
-            return true;
+    if (getField(material_Field())) {
+        Node *nMaterial = ((SFNode *) getField(material_Field()))->getValue();
+        if (nMaterial) 
+            if (nMaterial->isTransparent())
+                return true;
+     }
 
-    Node *nTexture = ((SFNode *) getField(texture_Field()))->getValue();
-    if (nTexture) 
-        return nTexture->isTransparent();
+    if (getField(texture_Field())) {
+        Node *nTexture = ((SFNode *) getField(texture_Field()))->getValue();
+        if (nTexture) 
+            return nTexture->isTransparent();
+    }
     return false; 
 }
 
 float NodeAppearance::getTransparency(void)
 {
     float ret = 0;
-    Node *nMaterial = ((SFNode *) getField(material_Field()))->getValue();
-    if (nMaterial) 
-        ret = nMaterial->getTransparency();
+    if (material()) {
+        Node *nMaterial = material()->getValue();
+        if (nMaterial) 
+            ret = nMaterial->getTransparency();
+    }
     return ret; 
 }
 

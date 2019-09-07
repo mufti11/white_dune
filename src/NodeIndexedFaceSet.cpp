@@ -308,26 +308,27 @@ void
 NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
 {
     Node *coord = ((SFNode *) getField(coord_Field()))->getValue();
-    bool bcolorPerVertex = colorPerVertex()->getValue();
-    bool bnormalPerVertex = normalPerVertex()->getValue();
+    bool bcolorPerVertex = colorPerVertex() ? 
+                           colorPerVertex()->getValue() : true;
+    bool bnormalPerVertex = normalPerVertex() ?
+                            normalPerVertex()->getValue() : true;
     MFInt32 *colorIndex = getColorIndex();
     MFInt32 *coordIndex = getCoordIndex();
     MFInt32 *normalIndex = getNormalIndex();
     MFInt32 *texCoordIndex = getTexCoordIndex();
    
-//    if (!coord || ((NodeCoordinate *) coord)->point()->getType() != MFVEC3F)
     if (!coord)
         return;
 
     MFVec3f *normals = NULL;
     MFFloat *colors = NULL;
 
-    if (normal()->getValue())
+    if (normal() && normal()->getValue())
         if (normal()->getValue()->getType() == VRML_NORMAL)
             normals = ((NodeNormal *)(normal()->getValue()))->vector();
     
     int meshFlags = 0;
-    if (color()->getValue()) {
+    if (color() && color()->getValue()) {
         if (color()->getValue()->getType() == VRML_COLOR) 
             colors = ((NodeColor *)(color()->getValue()))->color();
         else if (color()->getValue()->getType() == X3D_COLOR_RGBA) {
@@ -337,30 +338,31 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     }    
 
     MFFloat *fogCoords = NULL;
-    if (fogCoord()->getValue())
+    if (fogCoord() && fogCoord()->getValue())
         if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
             fogCoords = ((NodeFogCoordinate *) 
                          (fogCoord()->getValue()))->depth();
 
     MyArray<MFVec2f *> texCoords;
-    Util::getTexCoords(texCoords, texCoord()->getValue());    
+    if (texCoord())
+        Util::getTexCoords(texCoords, texCoord()->getValue());    
 
     if (bcolorPerVertex)
-        if (colorIndex->getSize() != coordIndex->getSize())
+        if (colorIndex && colorIndex->getSize() != coordIndex->getSize())
             colorIndex = NULL;
-    if (texCoordIndex->getSize() != coordIndex->getSize())
+    if (texCoordIndex && texCoordIndex->getSize() != coordIndex->getSize())
         texCoordIndex = NULL;
     if (bnormalPerVertex)
-        if (normalIndex->getSize() != coordIndex->getSize())
+        if (normalIndex && normalIndex->getSize() != coordIndex->getSize())
             normalIndex = NULL;
     float transparency = 0;
     if (hasParent())
         transparency = getParent()->getTransparency();
-    if (ccw()->getValue())
+    if (ccw() && ccw()->getValue())
         meshFlags |= MESH_CCW;
-    if (solid()->getValue())
+    if (solid() && solid()->getValue())
         meshFlags |= MESH_SOLID;
-    if (convex()->getValue())
+    if (convex() && convex()->getValue())
         meshFlags |= MESH_CONVEX;
     if (bcolorPerVertex)
         meshFlags |= MESH_COLOR_PER_VERTEX;
@@ -374,7 +376,7 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                             creaseAngle()->getFixedAngle(
                                 m_scene->getUnitAngle()), 
                             meshFlags, transparency, fogCoords, 
-                            texCoord()->getValue());
+                            texCoord() ? texCoord()->getValue() : NULL);
         m_isDoubleMesh = false;
     } else if (coord->getType() == VRML_GEO_COORDINATE) {
         MFVec3d *coords = ((NodeGeoCoordinate *)coord)->pointX3D();
@@ -384,7 +386,8 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                                         creaseAngle()->getFixedAngle(
                                             m_scene->getUnitAngle()), 
                                         meshFlags, transparency, fogCoords,
-                                        texCoord()->getValue());
+                                        texCoord() ? texCoord()->getValue() :
+                                        NULL);
         m_isDoubleMesh = true;
     }
 }

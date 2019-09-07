@@ -118,10 +118,11 @@ NodeData::copyData(const NodeData &node)
         else
             m_scene->makeSimilarName((Node *)this, node.m_name);
     }
-    for (int i = 0; i < m_numFields; i++) {
-        m_fields[i] = node.m_fields[i]->copy();
-        m_fields[i]->ref();
-    }
+    for (int i = 0; i < m_numFields; i++)
+        if (node.m_fields[i]) {
+            m_fields[i] = node.m_fields[i]->copy();
+            m_fields[i]->ref();
+        }
     m_numEventIns = m_proto->getNumEventIns();
     m_inputs = new SocketList[m_numEventIns];
     m_numEventOuts = m_proto->getNumEventOuts();
@@ -491,11 +492,11 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
     // children's parent list
 
     bool isNode = false;
-    if (m_fields[index]->getType() == SFNODE) {
+    if (m_fields[index] && m_fields[index]->getType() == SFNODE) {
         isNode = true;
         Node *child = ((SFNode *) m_fields[index])->getValue();
         if (child) child->removeParent();
-    } else if (m_fields[index]->getType() == MFNODE) {
+    } else if (m_fields[index] && m_fields[index]->getType() == MFNODE) {
         isNode = true;
         NodeList *childList = ((MFNode *) m_fields[index])->getValues();
         if (childList) {
@@ -3179,12 +3180,12 @@ NodeData::clearFlagRec(int flag)
     clearFlag(flag);
 
     for (int i = 0; i < m_numFields; i++) {
-        if (m_fields[i]->getType() == MFNODE) {
+        if (m_fields[i] && m_fields[i]->getType() == MFNODE) {
             MFNode *nodes = (MFNode *) m_fields[i];
             for (int j = 0; j < nodes->getSize(); j++)
                 if (nodes->getValue(j) != NULL)
                     nodes->getValue(j)->clearFlagRec(flag);
-        } else if (m_fields[i]->getType() == SFNODE) {
+        } else if (m_fields[i] && m_fields[i]->getType() == SFNODE) {
             SFNode *value = (SFNode *) m_fields[i];
             if (value->getValue()) value->getValue()->clearFlagRec(flag);
         }
@@ -3574,7 +3575,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
             if (m_scene->isInvalidElement(m_proto->getField(i)))
                 continue;
 
-            if (m_proto->getField(i)->getType() == SFNODE) {
+            if (getField(i) && m_proto->getField(i)->getType() == SFNODE) {
                 Node *child = ((SFNode *) getField(i))->getValue();
                 if (child) {
                     if (child == this) { 
@@ -3608,7 +3609,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                      childList = node->getLoadedNodes();
                      handleInline = false;
                 }    
-                if (m_proto->getField(i)->getType() == MFNODE)
+                if (getField(i) && m_proto->getField(i)->getType() == MFNODE)
                     childList = ((MFNode *) getField(i))->getValues();
                 if (childList) {
                     for (size_t j = 0; j < childList->size(); j++) {
@@ -3732,7 +3733,7 @@ void
 Node::copyChildrenTo(Node *copyedNode, bool copyNonNodes)
 {
     for (int i = 0; i < m_numFields; i++) {
-        if (m_fields[i]->getType() == SFNODE) {
+        if (m_fields[i] && m_fields[i]->getType() == SFNODE) {
             Node *child = ((SFNode *) m_fields[i])->getValue();
             if (child) {
                 Node *copyChild = child->copy();
@@ -3742,7 +3743,7 @@ Node::copyChildrenTo(Node *copyedNode, bool copyNonNodes)
                 child->copyChildrenTo(copyChild, copyNonNodes);
                 child->copyOutputsTo(copyChild);
             }
-        } else if (m_fields[i]->getType() == MFNODE) {
+        } else if (m_fields[i] && m_fields[i]->getType() == MFNODE) {
             NodeList *childList = ((MFNode *) m_fields[i])->getValues();
             if (childList) {
                 MFNode *field = new MFNode((MFNode *)m_fields[i]);
@@ -3760,7 +3761,7 @@ Node::copyChildrenTo(Node *copyedNode, bool copyNonNodes)
                         }
                     }
                 }
-            } else if (copyNonNodes) {
+            } else if (m_fields[i] && copyNonNodes) {
                 FieldValue *value = m_fields[i];
                 if (value)
                     setField(i, value->copy());
@@ -3817,7 +3818,7 @@ NodeData::handleIs(void)
     for (int i = 0; i < m_proto->getNumExposedFields(); i++) {
         m_isExposedFields[i] = NULL;
         ExposedField *field = m_proto->getExposedField(i);
-        if (field->getFlags() & FF_IS)
+        if (field && field->getFlags() & FF_IS)
             for (int j = 0; j < field->getNumIs(); j++)
                 if (field->getFlags() & FF_IS) {
                     Node *isNode = field->getIsNode(j);
@@ -3834,7 +3835,7 @@ NodeData::handleIs(void)
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         m_isFields[i] = NULL;
         Field *field = m_proto->getField(i);
-        if (field->getFlags() & FF_IS)
+        if (field && field->getFlags() & FF_IS)
             for (int j = 0; j < field->getNumIs(); j++)
                 if (field->getFlags() & FF_IS) {
                     Node *isNode = field->getIsNode(j);
@@ -3852,7 +3853,7 @@ NodeData::handleIs(void)
     for (int i = 0; i < m_proto->getNumEventOuts(); i++) {
         m_isEventOuts[i] = NULL;
         EventOut *eventOut = m_proto->getEventOut(i);
-        if (eventOut->getFlags() & FF_IS)
+        if (eventOut && eventOut->getFlags() & FF_IS)
             for (int j = 0; j < eventOut->getNumIs(); j++)
                 if (eventOut->getFlags() & EOF_IS) {
                     Node *isNode = eventOut->getIsNode(j); 
@@ -3866,7 +3867,7 @@ NodeData::handleIs(void)
     for (int i = 0; i < m_proto->getNumEventIns(); i++) {
         m_isEventIns[i] = NULL;
         EventIn *eventIn = m_proto->getEventIn(i);
-        if (eventIn->getFlags() & FF_IS)
+        if (eventIn && eventIn->getFlags() & FF_IS)
             for (int j = 0; j < eventIn->getNumIs(); j++)
                 if (eventIn->getFlags() & EIF_IS) {
                     Node *isNode = eventIn->getIsNode(j); 
@@ -3895,6 +3896,11 @@ bool
 NodeData::isDefault(int field) const
 {
     bool x3d = m_scene->isX3d();
+
+    if (getProto()->getField(field) == NULL)
+        return false;    
+    if (m_fields[field] == NULL)
+        return false;    
     return m_fields[field]->equals(
                 getProto()->getField(field)->getDefault(x3d));
 }

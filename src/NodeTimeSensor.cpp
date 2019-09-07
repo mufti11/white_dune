@@ -99,7 +99,8 @@ NodeTimeSensor::NodeTimeSensor(Scene *scene, Proto *def)
 void
 NodeTimeSensor::preDraw()
 {
-    if (enabled()->getValue()) m_scene->addTimeSensor(this);
+    if (enabled() && enabled()->getValue()) 
+        m_scene->addTimeSensor(this);
 }
 
 void

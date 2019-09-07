@@ -30,7 +30,7 @@ EGREP_PROBLEMS = @EGREP_PROBLEMS@
 #            -Wno-error=deprecated-declarations -Wno-ignored-attributes \
 #            -Wno-deprecated-declarations -Wno-misleading-indentation \
 #            -Wno-error=int-in-bool-context -Wno-error=sign-compare \
-#            -Wno-sign-compare
+#            -Wno-sign-compare -Wno-error=nonnull-compare
 
 # IRIX cc flags
 # WARNINGS = -woff 3303

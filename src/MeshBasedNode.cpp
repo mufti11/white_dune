@@ -2074,7 +2074,9 @@ MeshBasedNode::getTextureUnits(void)
         node = nshape->appearance()->getValue();
         if (node && node->getType() == VRML_APPEARANCE) {
             NodeAppearance *nappearance = (NodeAppearance *) node;
-            Node *ntexture = nappearance->texture()->getValue();
+            Node *ntexture = nappearance->texture() ?
+                             nappearance->texture()->getValue() :
+                             NULL;
             if (ntexture && ntexture->getType() == X3D_MULTI_TEXTURE) {
                 NodeMultiTexture *multiTex = (NodeMultiTexture *)ntexture;
                 return multiTex->texture()->getSize();

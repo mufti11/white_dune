@@ -458,10 +458,12 @@ NodeImageTexture::bind(GLuint textureId, GLuint textureName)
     } else {
         glBindTexture(textureId, textureName);
     }
-    glTexParameteri(textureId, GL_TEXTURE_WRAP_S, 
-                    repeatS()->getValue() ? GL_REPEAT : GL_CLAMP);
-    glTexParameteri(textureId, GL_TEXTURE_WRAP_T, 
-                    repeatT()->getValue() ? GL_REPEAT : GL_CLAMP);
+    if (repeatS())
+        glTexParameteri(textureId, GL_TEXTURE_WRAP_S, 
+                        repeatS()->getValue() ? GL_REPEAT : GL_CLAMP);
+    if (repeatT())
+        glTexParameteri(textureId, GL_TEXTURE_WRAP_T, 
+                        repeatT()->getValue() ? GL_REPEAT : GL_CLAMP);
 
     if (TheApp->getCoverMode()) {
         // non standard Covise/COVER extensions

@@ -56,6 +56,9 @@ NodeTextureTransform::NodeTextureTransform(Scene *scene, Proto *def)
 void
 NodeTextureTransform::bind()
 {
+     if (center() == NULL)
+         return;
+
     double unitAngle = m_scene->getUnitAngle();
 
     const float *fcenter = center()->getValue();
@@ -67,8 +70,9 @@ NodeTextureTransform::bind()
     glScalef(scale()->getValue()[0], scale()->getValue()[1], 1.0f);
     glRotatef(RAD2DEG(rotation()->getValue() * unitAngle), 0.0f, 0.0f, 1.0f);
     glTranslatef(fcenter[0], fcenter[1], 0.0f);
-    glTranslatef(translation()->getValue()[0], translation()->getValue()[1], 
-                 0.0f);
+    if (translation())
+        glTranslatef(translation()->getValue()[0], 
+                     translation()->getValue()[1], 0.0f);
     glMatrixMode(GL_MODELVIEW);
 }
 

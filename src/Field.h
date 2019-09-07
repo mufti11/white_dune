@@ -49,6 +49,10 @@ public:
     virtual int     write(int filedes, int indent, int flags = 0) const;
     FieldValue     *getDefault(bool x3d) const 
                        { 
+#ifdef HAVE_NULL_COMPARE
+                       if (this == NULL)
+                           return NULL;
+#endif
                        if (x3d && (m_x3dValue != NULL))
                            return m_x3dValue; 
                        return m_value; 

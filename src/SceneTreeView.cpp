@@ -530,7 +530,8 @@ void SceneTreeView::InsertChildren(STREEITEM item, Node *node)
                 InsertNodeListRec(value->getValues(), i, item);
         } else if (field->getType() == SFNODE) {
             SFNode *value = (SFNode *) node->getField(i);
-            InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
+            if (value)
+                InsertNodeRec(value->getValue(), i, SW_INSERT_LAST_CHILD, item);
         }
     }
 }

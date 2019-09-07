@@ -81,6 +81,9 @@ NodePointLight::preDraw()
 {
 //    float radius = ((SFFloat *) getField(radius_Field()))->getValue();
 
+    if (color() == NULL)
+        return;
+
     if (on()->getValue()) {
         float ambientColor[4], diffuseColor[4];
         float pos[4];

@@ -5290,4 +5290,6 @@ Removed X_ITE from preview settings cause of webbrowser sandboxing problems
 
 Fixed by one error in preview settings combo box
 
+Reenabled "if (this == NULL)" code parts 
+
 Contact: MUFTI <mufti11@web.de>

@@ -376,12 +376,12 @@ NodeCylinder::swap(int fromTo)
 void
 NodeCylinder::createMesh(bool cleanDoubleVertices, bool triangulate)
 {
-    float fradius = radius()->getValue();
-    float fheight = height()->getValue();
+    float fradius = radius() ? radius()->getValue() : 1;
+    float fheight = height() ? height()->getValue() : 2;
 
-    bool bside = side()->getValue();
-    bool btop = top()->getValue();
-    bool bbottom = bottom()->getValue();
+    bool bside = side() ? side()->getValue() : true;
+    bool btop = top() ? top()->getValue() : true;
+    bool bbottom = bottom() ? bottom()->getValue() : true;
 
     int tess = TheApp->getTessellation();
     int sizePoints = (1 + tess + tess + 1) * 3;

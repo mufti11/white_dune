@@ -326,7 +326,8 @@ NodeBackground::drawBackgroundTextures()
     glScalef(40.0f, 40.0f, 40.0f);
 
     for (int i = 0; i < 6; i++) {
-        if (imageTextures[i]->url()->getSize() != 0) {
+        if (imageTextures[i]->url() && 
+            imageTextures[i]->url()->getSize() != 0) {
             imageTextures[i]->bind();
             glBegin(GL_POLYGON);
             if (i < 4)

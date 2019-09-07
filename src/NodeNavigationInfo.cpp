@@ -157,7 +157,8 @@ NodeNavigationInfo::NodeNavigationInfo(Scene *scene, Proto *def)
 void
 NodeNavigationInfo::preDraw()
 {
-    m_scene->setHeadlight(headlight()->getValue());
+    if (headlight())
+        m_scene->setHeadlight(headlight()->getValue());
 }
 
 int NodeNavigationInfo::getProfile(void) const

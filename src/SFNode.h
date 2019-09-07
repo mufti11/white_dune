@@ -22,6 +22,8 @@
 #ifndef _SFNODE_H
 #define _SFNODE_H
 
+#include "config.h"
+
 #ifndef _FIELDVALUE_H
 #include "FieldValue.h"
 #endif

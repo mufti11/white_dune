@@ -51,7 +51,14 @@ public:
     virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFBool(*this); }
 
-    bool                getValue() const { return m_value; }
+    bool                getValue() const 
+                           {
+#ifdef HAVE_NULL_COMPARE
+                           if (this == NULL)
+                               return false;
+#endif 
+                           return m_value; 
+                           }
 
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 
