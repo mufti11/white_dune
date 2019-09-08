@@ -5292,4 +5292,6 @@ Fixed by one error in preview settings combo box
 
 Reenabled "if (this == NULL)" code parts 
 
+Fixed crash cause of false Proto::deleteElements call
+
 Contact: MUFTI <mufti11@web.de>

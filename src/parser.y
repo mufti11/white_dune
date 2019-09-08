@@ -257,10 +257,9 @@ proto:
           PROTO nodeType         { 
                                    Proto *proto = scene->getProto(SYMB($2));
                                    if ((proto == NULL) || 
-                                       proto->isScriptedProto())
+                                       proto->isScriptedProto()) {
                                        proto = new Proto(scene, SYMB($2));
-                                   else if (!proto->isExternProto())
-                                       proto->deleteElements(); 
+                                   }
                                    protoStack.push(proto);
                                    if (!scene->addProtoName(SYMB($2)))
                                       scene->warning(IDS_PROTO_ALREADY_DEFINED,
