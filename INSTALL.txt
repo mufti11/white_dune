@@ -86,8 +86,12 @@ Systems supported by "packager" directory
  For OpenSuse (and possibly other rpm based systems) use (as root):
      (cd packager/rpm && sh mkrpm_opensuse.sh)
 
- For Debian Linux (stable) use:
-     (cd packager/debian && sh mkdeb_stretch.sh)
+ For Debian Linux (stable) use as root:
+     (cd packager/debian && sh mkdeb_buster.sh)
+ See README_debian.txt for more information
+
+ For Ubuntu Linux (LTS) use:
+     (cd packager/debian && sh mkdeb_ubuntu.sh)
 
  For Slackware Linux use:
      (cd packager/slackware && sh mkpkg.sh)

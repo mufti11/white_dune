@@ -86,8 +86,8 @@ awk -v dir=`dirname $0`/.. '
 
 END { 
    print ""
-   print "The following statement is about the files in /lib/textures/README"
-   system(" cat " dir "/lib/textures/README")
+   print "The following statement is about the files in /lib/textures/README.txt"
+   system(" cat " dir "/lib/textures/README.txt")
    print ""
    print "The following files use the GNU General Public License:"
    if (ARGV[1] == "debian")

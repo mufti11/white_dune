@@ -55,6 +55,7 @@ code of generateTextureCoordinates() in Mesh.cpp
 based on Polyrep.c of FreeWRL
 setColor(), drawQuad(), drawSky() and drawGround() in NodeBackground.cpp
 based on render_Background() in Bindable.c of FreeWRL
+The ImageTexture3D reading code is also based on FreeWRL
 
  Copyright (C) 1998 Tuomas J. Lukka
  Copyright (C) 2002 John Stewart, CRC Canada.
@@ -184,120 +185,105 @@ code of gif.c/gif.h/kljcpyrght.h
 
 code of GpsMathLib.cpp/gpsdatum.h/gpsmath.h/gpsport.h
 
-/* @source// This file is part of Eigen, a lightweight C++ template library
-// for linear algebra.
-//
-// Copyright (C) 2010 Manuel Yguel <manuel.yguel@gmail.com>
-//
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+/* @source JEEPS functions
+**
+** @author Copyright (C) 1999 Alan Bleasby
+** @version 1.0 
+** @modified Feb 04 2000 Alan Bleasby. First version
+** @@
+** 
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Library General Public
+** License as published by the Free Software Foundation; either
+** version 2 of the License, or (at your option) any later version.
+** 
+** This library is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+** Library General Public License for more details.
+** 
+** You should have received a copy of the GNU Library General Public
+** License along with this library; if not, write to the
+** Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+//BOBMAX INSERT--------------------------------------------------------------------
 
-#include "main.h"
-#include <unsupported/Eigen/Polynomials>
-#include <iostream>
+***********************************************************
 
-using namespace std;
+code of openglutfont.c/openglutfont.h
 
-namespace Eigen {
-namespace internal {
-template<int Size>
-struct increment_if_fixed_size
-{
-  enum {
-    ret = (Size == Dynamic) ? Dynamic : Size+1
-  };
-};
-}
-}
+/*
+ * Portions copyright (C) 2004, the OpenGLUT project contributors.
+ * OpenGLUT branched from freeglut in February, 2004.
+ *
+ * Copyright (c) 1999-2000 Pawel W. Olszta. All Rights Reserved.
+ * Written by Pawel W. Olszta, <olszta@sourceforge.net>
+ * Creation date: Thu Dec 2 1999
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * PAWEL W. OLSZTA BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-template<typename _Scalar, int _Deg>
-void realRoots_to_monicPolynomial_test(int deg)
-{
-  typedef internal::increment_if_fixed_size<_Deg>            Dim;
-  typedef Matrix<_Scalar,Dim::ret,1>                  PolynomialType;
-  typedef Matrix<_Scalar,_Deg,1>                      EvalRootsType;
+***********************************************************
 
-  PolynomialType pols(deg+1);
-  EvalRootsType roots = EvalRootsType::Random(deg);
-  roots_to_monicPolynomial( roots, pols );
+ code of Quaternion::Quaternion(Vec3f from, Vec3f to) based on quaternion.cpp
+ of libQGLViewer-2.2.4-1
+ code of Vec3x::orthogonalVec() based on vec.cpp of libQGLViewer-2.2.4-1
 
-  EvalRootsType evr( deg );
-  for( int i=0; i<roots.size(); ++i ){
-    evr[i] = std::abs( poly_eval( pols, roots[i] ) ); }
+ Copyright (C) 2002-2006 Gilles Debunne (Gilles.Debunne@imag.fr)
 
-  bool evalToZero = evr.isZero( test_precision<_Scalar>() );
-  if( !evalToZero ){
-    cerr << evr.transpose() << endl; }
-  VERIFY( evalToZero );
-}
+This function is part of the QGLViewer library.
+ Version 2.2.4-1, released on December 12, 2006.
 
-template<typename _Scalar> void realRoots_to_monicPolynomial_scalar()
-{
-  CALL_SUBTEST_2( (realRoots_to_monicPolynomial_test<_Scalar,2>(2)) );
-  CALL_SUBTEST_3( (realRoots_to_monicPolynomial_test<_Scalar,3>(3)) );
-  CALL_SUBTEST_4( (realRoots_to_monicPolynomial_test<_Scalar,4>(4)) );
-  CALL_SUBTEST_5( (realRoots_to_monicPolynomial_test<_Scalar,5>(5)) );
-  CALL_SUBTEST_6( (realRoots_to_monicPolynomial_test<_Scalar,6>(6)) );
-  CALL_SUBTEST_7( (realRoots_to_monicPolynomial_test<_Scalar,7>(7)) );
-  CALL_SUBTEST_8( (realRoots_to_monicPolynomial_test<_Scalar,17>(17)) );
+ http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
 
-  CALL_SUBTEST_9( (realRoots_to_monicPolynomial_test<_Scalar,Dynamic>(
-          internal::random<int>(18,26) )) );
-}
+ libQGLViewer is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
 
+ libQGLViewer is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
+ You should have received a copy of the GNU General Public License
+ along with libQGLViewer; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+***********************************************************
 
-template<typename _Scalar, int _Deg>
-void CauchyBounds(int deg)
-{
-  typedef internal::increment_if_fixed_size<_Deg>            Dim;
-  typedef Matrix<_Scalar,Dim::ret,1>                  PolynomialType;
-  typedef Matrix<_Scalar,_Deg,1>                      EvalRootsType;
+/* 
+ * swSetFontPath() in swt/motif/swt.c based on
+ * $Xorg: xset.c,v 1.6 2001/02/09 02:05:58 xorgcvs Exp $
+ */
 
-  PolynomialType pols(deg+1);
-  EvalRootsType roots = EvalRootsType::Random(deg);
-  roots_to_monicPolynomial( roots, pols );
-  _Scalar M = cauchy_max_bound( pols );
-  _Scalar m = cauchy_min_bound( pols );
-  _Scalar Max = roots.array().abs().maxCoeff();
-  _Scalar min = roots.array().abs().minCoeff();
-  bool eval = (M >= Max) && (m <= min);
-  if( !eval )
-  {
-    cerr << "Roots: " << roots << endl;
-    cerr << "Bounds: (" << m << ", " << M << ")" << endl;
-    cerr << "Min,Max: (" << min << ", " << Max << ")" << endl;
-  }
-  VERIFY( eval );
-}
+/*
 
-template<typename _Scalar> void CauchyBounds_scalar()
-{
-  CALL_SUBTEST_2( (CauchyBounds<_Scalar,2>(2)) );
-  CALL_SUBTEST_3( (CauchyBounds<_Scalar,3>(3)) );
-  CALL_SUBTEST_4( (CauchyBounds<_Scalar,4>(4)) );
-  CALL_SUBTEST_5( (CauchyBounds<_Scalar,5>(5)) );
-  CALL_SUBTEST_6( (CauchyBounds<_Scalar,6>(6)) );
-  CALL_SUBTEST_7( (CauchyBounds<_Scalar,7>(7)) );
-  CALL_SUBTEST_8( (CauchyBounds<_Scalar,17>(17)) );
+Copyright 1985, 1998  The Open Group
 
-  CALL_SUBTEST_9( (CauchyBounds<_Scalar,Dynamic>(
-          internal::random<int>(18,26) )) );
-}
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation.
 
-void test_polynomialutils()
-{
-  for(int i = 0; i < g_repeat; i++)
-  {
-    realRoots_to_monicPolynomial_scalar<double>();
-    realRoots_to_monicPolynomial_scalar<float>();
-    CauchyBounds_scalar<double>();
-    CauchyBounds_scalar<float>();
-  }
-}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           notice and this permission notice shall be included in
+The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -606,1178 +592,1253 @@ winres.h
  This file is compiled with CGAL: CGAL is licenced under different
  licences including GNU General Public License 3 
 
+ This file is compiled with freetype2: freetype is licenced under different
+ licences including GNU General Public License 3 
+
  This file is compiled with libvcg: libvcg is licenced under
  GNU General Public License 3
 
+ This file is compiled with OpenSubdiv: OpenSubdiv is licenced under
+ Apache License, Version 2.0
+
+This file uses code from vx
+https://github.com/neurolabusc/vx/blob/master/src/tex3d.inc
+
+****************************************************************************
+This is a BSD 3-Clause License :: https://opensource.org/licenses/BSD-3-Clause
+
+The Software has been developed for research purposes only and is not a clinical tool
+Copyright (c) 2014-2018 Chris Rorden. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the copyright owner may be used to endorse or promote
+   products derived from this software without specific prior written
+   permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT OWNER ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+****************************************************************************/
+file: ../../batch/../docs/rendering_bugs/textures/test_texture.png
+Licence: Custom
+from Copyright-Free Photo Archive: http://gimp-savvy.com/PHOTO-ARCHIVE/ Public domain.
+
+file: ../../batch/../include/libCRWD.h
+Copyright: (c) Stefan Wolf, 2010.
+Copyright: (c) J.  Scheurich, 2010.
+License: Modified BSD style
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+file: ../../batch/../include/libC++RWD.h
+Copyright: (c) Stefan Wolf, 2010.
+License: Modified BSD style
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+The following statement is about the files in /lib/textures/README
+
 The following files use the GNU General Public License:
 
-batch/convert_gpl2.sh
-src/jpegLoad.c
-src/CommandlineLanguages.h.m4
-src/lexer.l
-src/SceneViewDebugOnUpdate.cpp.m4
-src/parser.y
-src/swt/tests/buttons.c
-src/swt/tests/tree.c
-src/swt/tests/restest.c
-src/swt/tests/text.c
-src/swt/tests/drawing.c
-src/swt/tests/swTest.c
-src/swt/tests/doodle.c
-src/swt/rc/rclex.l
-src/swt/rc/rcparse.y
-src/swt/rc/rc.c
-src/swt/motif/swt.c
-src/swt/motif/error_mask.xbm
-src/swt/motif/statusbar.c
-src/swt/motif/util.c
-src/swt/motif/tree.c
-src/swt/motif/link.xbm
-src/swt/motif/header.c
-src/swt/motif/dune_mask.xbm
-src/swt/motif/cursor_none.xbm
-src/swt/motif/copy.xbm
-src/swt/motif/groupbox.c
-src/swt/motif/copy_mask.xbm
-src/swt/motif/dune.xbm
-src/swt/motif/error.xbm
-src/swt/motif/toolbar.c
-src/swt/motif/resload.c
-src/swt/motif/link_mask.xbm
-src/swt/motif/browser.c
-src/swt/generic/statusbar.c
-src/swt/generic/util.c
-src/swt/generic/tree.c
-src/swt/generic/header.c
-src/swt/generic/groupbox.c
-src/swt/generic/toolbar.c
-src/swt/generic/resload.c
-src/swt/include/swlanguages.h.m4
-src/swt/TODO
-src/swt/win32/swt.c
-src/swt/win32/browser.c
-desktop/kde/build_redhat.sh
-desktop/kde/install_redhat_global.sh
+warbird/fake_cake_bullet.wrl
+warbird/bullet.wrl
+warbird/bill.wrl
+warbird/warbird.wrl
+warbird/thing.wrl
+warbird/moving_bill.wrl
+docs/usage_docs/dune_en_exercise.html
+docs/usage_docs/dune4kids_glider_en.html
+docs/usage_docs/dune4kids_tutorial_de.html
+docs/usage_docs/dune_ru.html
+docs/usage_docs/xml_parser.html
+docs/usage_docs/dune_it.html
+docs/usage_docs/dune4kids_fish_en.html
+docs/usage_docs/dune4kids_start_en.html
+docs/usage_docs/dune4kids_fisch.html
+docs/usage_docs/dune4kids_quallen.html
+docs/usage_docs/dune_de_exercise.html
+docs/usage_docs/dune_java_export.html
+docs/usage_docs/dune4kids_schiff.html
+docs/usage_docs/dune4kids_start_de.html
+docs/usage_docs/dune_en.html
+docs/usage_docs/dune4kids_glider_extrusion_en.html
+docs/usage_docs/dune_commandline_de.html
+docs/usage_docs/dune_de_tutorial.html
+docs/usage_docs/dune4kids_tutorial_en.html
+docs/usage_docs/dune_de.html
+docs/usage_docs/dune_en_tutorial.html
+docs/index.html
+docs/VRML97protos_examples/ParticleSourcePROTO/flame.wrl
+docs/VRML97protos_examples/ParticleSourcePROTO/waterfall.wrl
+docs/VRML97protos_examples/ParticleSourcePROTO/bubbles.wrl
+docs/hanim_history/gehmess_proto.x3dv
+docs/hanim_history/laufmess.wrl
+docs/hanim_history/gehmess.x3dv
+docs/hanim_history/gehmess.wrl
+docs/hanim_history/laufmess.x3dv
+docs/developer_docs/dune_developer.html
+docs/rendering_bugs/textures/pure_white.png
+docs/rendering_bugs/text_textured.png
+docs/rendering_bugs/triangle_fan_strips_smoothing.png
+docs/rendering_bugs/background_z_oriented.png
+docs/rendering_bugs/background_pure_white.png
+docs/rendering_bugs/non_convex_face.png
+docs/x3dDraft/LoadSensorPROTO.wrl
+docs/x3dDraft/MultiTexturePROTO.wrl
+docs/x3dDraft/FillPropertiesPROTO.wrl
+docs/x3dDraft/LinePropertiesPROTO.wrl
+docs/scripted_Nodes/CurveAnimationPROTO.wrl
+docs/scripted_Nodes/SuperRevolverPROTO.wrl
+docs/scripted_Nodes/SuperExtrusionPROTO.wrl
+docs/vrml97Amendment1/NurbsGroupPROTO.wrl
+docs/vrml97Amendment1/index.html
+docs/vrml97Amendment1/NurbsSurfacePROTO.wrl
+docs/vrml97Amendment1/NurbsCurvePROTO.wrl
+docs/vrml97Amendment1/testall.wrl
+docs/vrml97Amendment1/NurbsSurface.wrl
+docs/vrml97Amendment1/NurbsGroup.wrl
+docs/vrml97Amendment1/TrimmedSurfacePROTO.wrl
+docs/vrml97Amendment1/NurbsCurve.wrl
+docs/german_workshop_documents/serpens_appendicis_04.jpg
+docs/x3d/NurbsPatchSurfacePROTO.wrl
+docs/typical_vrml_examples/ecmascript/particles.wrl
+docs/typical_vrml_examples/ecmascript/simple3Dmodeller.wrl
+docs/typical_vrml_examples/transform_human_motioncapture_run.wrl
+docs/typical_vrml_examples/transform_human_motioncapture_walk.wrl
+tools/img2pixeltexture.sh
+tools/povray_mkskybox.sh
+tools/addAngle2OrientationInterpolator.awk
+tools/collectViewpoints.awk
+tools/creaseangleChange.sh
+tools/creaseangleChange.awk
+packager/aix/mkbff.sh
+packager/debian/copyright
+packager/gentoo/white_dune.ebuild
+packager/gentoo/mkebuild.sh
 desktop/olpc/WhiteDune4kids.activity/activity.py
 desktop/olpc/WhiteDune4kids.activity/setup.py
 desktop/olpc/WhiteDune4kids.activity/COPYING
-desktop/macosx/white_dune_tiger.app.tar
-desktop/macosx/xcode/MyDocument.m
+desktop/kde/build_redhat.sh
+desktop/kde/install_redhat_global.sh
 desktop/macosx/xcode_tiger.tar
-desktop/macosx/white_dune.app.tar
-packager/debian/copyright
-packager/gentoo/mkebuild.sh
-packager/gentoo/white_dune.ebuild
-packager/aix/mkbff.sh
-tools/img2pixeltexture.sh
-tools/creaseangleChange.awk
-tools/povray_mkskybox.sh
-tools/creaseangleChange.sh
-tools/addAngle2OrientationInterpolator.awk
-tools/collectViewpoints.awk
-logo/dune.wrl
-docs/exportContainers/CattExportRecPROTO.wrl
-docs/exportContainers/CattExportSrcPROTO.wrl
-docs/exportContainers/WonderlandImportJavaPROTO.wrl
-docs/exportContainers/LdrawDatExportPROTO.wrl
-docs/developer_docs/dune_developer.html
-docs/hanim_history/gehmess.x3dv
-docs/hanim_history/laufmess.x3dv
-docs/hanim_history/laufmess.wrl
-docs/hanim_history/gehmess.wrl
-docs/index.html
-docs/typical_vrml_examples/ecmascript/particles.wrl
-docs/typical_vrml_examples/ecmascript/simple3Dmodeller.wrl
-docs/typical_vrml_examples/transform_human_motioncapture_walk.wrl
-docs/typical_vrml_examples/transform_human_motioncapture_run.wrl
-docs/german_workshop_documents/serpens_appendicis_04.jpg
-docs/rendering_bugs/background_z_oriented.png
-docs/rendering_bugs/non_convex_face.png
-docs/rendering_bugs/triangle_fan_strips_smoothing.png
-docs/rendering_bugs/text_textured.png
-docs/rendering_bugs/textures/pure_white.png
-docs/rendering_bugs/background_pure_white.png
-docs/vrml97Amendment1/NurbsCurve.wrl
-docs/vrml97Amendment1/NurbsSurfacePROTO.wrl
-docs/vrml97Amendment1/NurbsSurface.wrl
-docs/vrml97Amendment1/index.html
-docs/vrml97Amendment1/NurbsCurvePROTO.wrl
-docs/vrml97Amendment1/testall.wrl
-docs/vrml97Amendment1/NurbsPositionInterpolator.wrl
-docs/vrml97Amendment1/NurbsGroup.wrl
-docs/vrml97Amendment1/TrimmedSurfacePROTO.wrl
-docs/vrml97Amendment1/NurbsGroupPROTO.wrl
-docs/scripted_Nodes/SuperExtrusionPROTO.wrl
-docs/scripted_Nodes/SuperRevolverPROTO.wrl
-docs/scripted_Nodes/CurveAnimationPROTO.wrl
-docs/usage_docs/dune_1.html
-docs/usage_docs/dune_de_exercise.html
-docs/usage_docs/dune_commandline_de.html
-docs/usage_docs/dune_java_export.html
-docs/usage_docs/dune_en_tutorial.html
-docs/usage_docs/dune_en_exercise.html
-docs/usage_docs/dune4kids_start_en.html
-docs/usage_docs/dune4kids_schiff.html
-docs/usage_docs/dune_de.html
-docs/usage_docs/dune_it.html
-docs/usage_docs/dune_en.html
-docs/usage_docs/dune4kids_start_de.html
-docs/usage_docs/dune_ru.html
-docs/usage_docs/dune4kids_quallen.html
-docs/usage_docs/dune4kids_tutorial_en.html
-docs/usage_docs/dune4kids_tutorial_de.html
-docs/usage_docs/dune_de_tutorial.html
-docs/usage_docs/xml_parser.html
-docs/usage_docs/dune4kids_fisch.html
-docs/x3d/NurbsPatchSurfacePROTO.wrl
-docs/x3dDraft/FillPropertiesPROTO.wrl
-docs/x3dDraft/LoadSensorPROTO.wrl
-docs/x3dDraft/MultiTexturePROTO.wrl
-docs/x3dDraft/LinePropertiesPROTO.wrl
-docs/scriptedNodes/SuperExtrusionPROTO.wrl
-docs/VRML97protos_examples/ParticleSourcePROTO/flame.wrl
-docs/VRML97protos_examples/ParticleSourcePROTO/bubbles.wrl
-docs/VRML97protos_examples/ParticleSourcePROTO/waterfall.wrl
-COPYING.txt
-TODO.txt
-README.txt
-lib/VRML97protos/ParticleSourcePROTO.wrl
+desktop/macosx/xcode/MyDocument.m
+desktop/macosx/white_dune_tiger.app.tar
 lib/VRML97protos/PseudoCollision4ExaminePROTO.wrl
+lib/VRML97protos/ParticleSourcePROTO.wrl
+README.txt
+src/SceneViewDebugOnUpdate.cpp.m4
+src/y.tab.c
+src/lexer.l
+src/jpegLoad.c
+src/CommandlineLanguages.h.m4
+src/parser.y
+src/swt/rc/rc.c
+src/swt/rc/rcparse.y
+src/swt/rc/rcparse.c
+src/swt/rc/rclex.l
+src/swt/generic/statusbar.c
+src/swt/generic/header.c
+src/swt/generic/resload.c
+src/swt/generic/tree.c
+src/swt/generic/util.c
+src/swt/generic/toolbar.c
+src/swt/generic/groupbox.c
+src/swt/TODO
+src/swt/win32/swt.c
+src/swt/win32/browser.c
+src/swt/include/swlanguages.h.m4
+src/swt/tests/doodle.c
+src/swt/tests/restest.c
+src/swt/tests/tree.c
+src/swt/tests/buttons.c
+src/swt/tests/swTest.c
+src/swt/tests/text.c
+src/swt/tests/drawing.c
+src/swt/motif/error.xbm
+src/swt/motif/cursor_none.xbm
+src/swt/motif/dune.xbm
+src/swt/motif/statusbar.c
+src/swt/motif/copy.xbm
+src/swt/motif/swt.c
+src/swt/motif/header.c
+src/swt/motif/resload.c
+src/swt/motif/tree.c
+src/swt/motif/util.c
+src/swt/motif/link.xbm
+src/swt/motif/toolbar.c
+src/swt/motif/link_mask.xbm
+src/swt/motif/error_mask.xbm
+src/swt/motif/copy_mask.xbm
+src/swt/motif/browser.c
+src/swt/motif/dune_mask.xbm
+src/swt/motif/groupbox.c
+TODO.txt
+batch/convert_gpl2.sh
+COPYING
+debian/tmp/usr/bin
+LICENSE.txt
+bin/dune
 
 The following files use the GNU Library General Public License:
 
-src/SDLjoystick/bsd/SDL_sysjoystick.c
-src/SDLjoystick/joysticktest.c
-src/SDLjoystick/mini_SDL_joystick.c
-src/SDLjoystick/darwin/SDL_sysjoystick.c
-src/SDLjoystick/linux/SDL_sysjoystick.c
-docs/typical_vrml_examples/ecmascript/worldcoordmessurement.wrl
-docs/typical_vrml_examples/ecmascript/text_change.wrl
-docs/typical_vrml_examples/ecmascript/sfimage.wrl
-docs/typical_vrml_examples/ecmascript/endless_world.wrl
-docs/typical_vrml_examples/ecmascript/simple_stopwatch.wrl
-docs/typical_vrml_examples/ecmascript/switching_animations.wrl
-docs/typical_vrml_examples/ecmascript/increase_switch.wrl
-docs/typical_vrml_examples/ecmascript/teleporter.wrl
-docs/typical_vrml_examples/ecmascript/superellipsoid.wrl
-docs/typical_vrml_examples/ecmascript/planesensor2interpolatormophing.wrl
-docs/typical_vrml_examples/ecmascript/pseudoCollision4examine.wrl
-docs/typical_vrml_examples/ecmascript/planesensor2interpolator.wrl
-docs/typical_vrml_examples/ecmascript/switching_animations_NURBS.wrl
-docs/typical_vrml_examples/ecmascript/texture_change.wrl
-docs/typical_vrml_examples/ecmascript/supershape.wrl
-docs/typical_vrml_examples/ecmascript/on_off.wrl
-docs/typical_vrml_examples/ecmascript/oneshot_trigger_increase_switch.wrl
-docs/typical_vrml_examples/ecmascript/teleport_animation.wrl
-docs/typical_vrml_examples/index.html
-docs/rendering_bugs/triangle_fan_strips_smoothing.x3dv
-docs/rendering_bugs/background_z_oriented.wrl
-docs/rendering_bugs/non_convex_face.wrl
-docs/rendering_bugs/text_textured.wrl
-docs/rendering_bugs/background_pure_white.wrl
-docs/vrml97Amendment1/NurbsCurve2DPROTO.wrl
-docs/vrml97Amendment1/NurbsPositionInterpolatorPROTO.wrl
-docs/vrml97Amendment1/NurbsTextureSurfacePROTO.wrl
-docs/vrml97Amendment1/InlineLoadControlPROTO.wrl
-docs/vrml97Amendment1/CoordinateDeformerPROTO.wrl
-docs/vrml97Amendment1/Contour2DPROTO.wrl
-docs/scripted_Nodes/SuperEllipsoidPROTO.wrl
-docs/scripted_Nodes/SuperShapePROTO.wrl
-docs/x3d/NurbsPositionInterpolatorPROTO.wrl
-docs/x3d/PositionInterpolator2DPROTO.wrl
-docs/x3d/StringSensorPROTO.wrl
-docs/x3d/FillPropertiesPROTO.wrl
-docs/x3d/KeySensorPROTO.wrl
-docs/x3d/LoadSensorPROTO.wrl
-docs/x3d/ColorRGBAPROTO.wrl
-docs/x3d/CoordinateInterpolator2DPROTO.wrl
-docs/x3d/MultiTexturePROTO.wrl
-docs/x3d/LinePropertiesPROTO.wrl
-docs/commandline_examples/wingmanrumblepad.sh
-docs/commandline_examples/joystick2.sh.html
-docs/commandline_examples/spaceball_solaris8.sh
-docs/commandline_examples/sidewinder3dpro.sh.html
-docs/commandline_examples/saitekp880.sh
-docs/commandline_examples/index.html
-docs/commandline_examples/wingmanrumblepad.sh.html
-docs/commandline_examples/wingmanrumblepad_linux_SDLjoystick.sh
-docs/commandline_examples/nostereo.sh.html
-docs/commandline_examples/nostereo.sh
-docs/commandline_examples/wingmanrumblepad_mswindows.bat.html
-docs/commandline_examples/spaceball_joystick_example.sh.html
-docs/commandline_examples/sidewinder3dpro.sh
-docs/commandline_examples/xinput_xorg_linux.sh
-docs/commandline_examples/xinput_example.sh.html
-docs/commandline_examples/xinput_irix6.2_example.sh
-docs/commandline_examples/xinput_example.sh
-docs/commandline_examples/wingmanrumblepad_macosx.sh
-docs/commandline_examples/wingmancordlessgamepad.sh
-docs/commandline_examples/joystick2.sh
-docs/commandline_examples/saitekp430.sh
-docs/commandline_examples/spaceball_joystick_example.sh
-docs/scriptedNodes/SuperEllipsoidPROTO.wrl
-docs/scriptedNodes/SuperShapePROTO.wrl
 docs/VRML97protos_examples/PseudoCollision4ExaminePROTO/pseudoCollision.wrl
-docs/export_example_c++/fluid_fltk_opengl_example/OpenGLWindow.cxx
-docs/export_example_c++/fluid_fltk_opengl_example/GUIMain.cxx
-docs/coverNodes/COVER_example.wrl
-docs/coverNodes/SpaceSensor_example.wrl
-docs/coverNodes/ARSensorPROTO.wrl
-docs/coverNodes/TUISliderPROTO.wrl
-docs/coverNodes/TUIMapPROTO.wrl
-docs/coverNodes/COVERPROTO.wrl
-docs/coverNodes/TUIListBoxPROTO.wrl
-docs/coverNodes/CubeTexturePROTO.wrl
-docs/coverNodes/WavePROTO.wrl
+docs/rendering_bugs/background_pure_white.wrl
+docs/rendering_bugs/non_convex_face.wrl
+docs/rendering_bugs/background_z_oriented.wrl
+docs/rendering_bugs/triangle_fan_strips_smoothing.x3dv
+docs/rendering_bugs/text_textured.wrl
 docs/coverNodes/SteeringWheelPROTO.wrl
-docs/coverNodes/SkyPROTO.wrl
-docs/coverNodes/TUIFloatSliderPROTO.wrl
-docs/coverNodes/SpaceSensorPROTO.wrl
-docs/coverNodes/TUIComboBoxPROTO.wrl
+docs/coverNodes/CubeTexturePROTO.wrl
+docs/coverNodes/SpaceSensor_example.wrl
 docs/coverNodes/CubeTexture_example.wrl
-docs/coverNodes/TUIElementPROTO.wrl
+docs/coverNodes/SpaceSensorPROTO.wrl
+docs/coverNodes/nodesRef.html
+docs/coverNodes/WavePROTO.wrl
+docs/coverNodes/TUIComboBoxPROTO.wrl
+docs/coverNodes/TUITabPROTO.wrl
+docs/coverNodes/TUIFloatSliderPROTO.wrl
 docs/coverNodes/TUIProgressBarPROTO.wrl
+docs/coverNodes/ARSensorPROTO.wrl
 docs/coverNodes/VehiclePROTO.wrl
 docs/coverNodes/TUIToggleButtonPROTO.wrl
-docs/coverNodes/TUILabelPROTO.wrl
-docs/coverNodes/TUISplitterPROTO.wrl
-docs/coverNodes/TUITabPROTO.wrl
-docs/coverNodes/TUITabFolderPROTO.wrl
+docs/coverNodes/COVER_example.wrl
+docs/coverNodes/COVERPROTO.wrl
 docs/coverNodes/TUIButtonPROTO.wrl
-docs/coverNodes/nodesRef.html
+docs/coverNodes/TUISplitterPROTO.wrl
+docs/coverNodes/TUISliderPROTO.wrl
+docs/coverNodes/TUIMapPROTO.wrl
 docs/coverNodes/TUIFramePROTO.wrl
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/ogl/nodes/rigidphysics/OGLOdeSliderJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/ogl/nodes/rigidphysics/OGLOdeMotorJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/ogl/nodes/rigidphysics/Makefile
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/ogl/nodes/rigidphysics/OGLOdeSingleAxisHingeJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/j3d/nodes/rigidphysics/J3DOdeMotorJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/j3d/nodes/rigidphysics/J3DOdeSliderJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/j3d/nodes/rigidphysics/J3DOdeSingleAxisHingeJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/j3d/nodes/rigidphysics/Makefile
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/norender/nodes/rigidphysics/NROdeSingleAxisHingeJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/norender/nodes/rigidphysics/Makefile
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/norender/nodes/rigidphysics/NROdeSliderJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/norender/nodes/rigidphysics/NROdeMotorJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/common/nodes/Makefile
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/common/nodes/rigidphysics/BaseOdeSliderJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/common/nodes/rigidphysics/BaseOdeMotorJoint.java
-xj3dFmaxJoints/Xj3D/src/java/org/web3d/vrml/renderer/common/nodes/rigidphysics/BaseOdeSingleAxisHingeJoint.java
-xj3dFmaxJoints/README
+docs/coverNodes/TUIListBoxPROTO.wrl
+docs/coverNodes/SkyPROTO.wrl
+docs/coverNodes/TUIElementPROTO.wrl
+docs/coverNodes/TUITabFolderPROTO.wrl
+docs/coverNodes/TUILabelPROTO.wrl
+docs/scripted_Nodes/SuperEllipsoidPROTO.wrl
+docs/scripted_Nodes/SuperShapePROTO.wrl
+docs/commandline_examples/spaceball_solaris8.sh
+docs/commandline_examples/index.html
+docs/commandline_examples/wingmanrumblepad_macosx.sh
+docs/commandline_examples/wingmanrumblepad_linux_SDLjoystick.sh
+docs/commandline_examples/xinput_example.sh.html
+docs/commandline_examples/saitekp880.sh
+docs/commandline_examples/joystick2.sh.html
+docs/commandline_examples/joystick2.sh
+docs/commandline_examples/nostereo.sh
+docs/commandline_examples/sidewinder3dpro.sh.html
+docs/commandline_examples/sidewinder3dpro.sh
+docs/commandline_examples/xinput_irix6.2_example.sh
+docs/commandline_examples/wingmanrumblepad_mswindows.bat.html
+docs/commandline_examples/xinput_example.sh
+docs/commandline_examples/xinput_xorg_linux.sh
+docs/commandline_examples/spaceball_joystick_example.sh.html
+docs/commandline_examples/wingmanrumblepad.sh.html
+docs/commandline_examples/wingmanrumblepad.sh
+docs/commandline_examples/spaceball_joystick_example.sh
+docs/commandline_examples/nostereo.sh.html
+docs/commandline_examples/saitekp430.sh
+docs/vrml97Amendment1/InlineLoadControlPROTO.wrl
+docs/vrml97Amendment1/Contour2DPROTO.wrl
+docs/vrml97Amendment1/NurbsTextureSurfacePROTO.wrl
+docs/vrml97Amendment1/CoordinateDeformerPROTO.wrl
+docs/vrml97Amendment1/NurbsCurve2DPROTO.wrl
+docs/vrml97Amendment1/NurbsPositionInterpolatorPROTO.wrl
+docs/x3d/ColorRGBAPROTO.wrl
+docs/x3d/LoadSensorPROTO.wrl
+docs/x3d/CoordinateInterpolator2DPROTO.wrl
+docs/x3d/MultiTexturePROTO.wrl
+docs/x3d/PositionInterpolator2DPROTO.wrl
+docs/x3d/KeySensorPROTO.wrl
+docs/x3d/NurbsPositionInterpolatorPROTO.wrl
+docs/x3d/FillPropertiesPROTO.wrl
+docs/x3d/LinePropertiesPROTO.wrl
+docs/x3d/StringSensorPROTO.wrl
+docs/typical_vrml_examples/ecmascript/switching_animations.wrl
+docs/typical_vrml_examples/ecmascript/planesensor2interpolator.wrl
+docs/typical_vrml_examples/ecmascript/supershape.wrl
+docs/typical_vrml_examples/ecmascript/switching_animations_NURBS.wrl
+docs/typical_vrml_examples/ecmascript/teleport_animation.wrl
+docs/typical_vrml_examples/ecmascript/increase_switch.wrl
+docs/typical_vrml_examples/ecmascript/on_off.wrl
+docs/typical_vrml_examples/ecmascript/teleporter.wrl
+docs/typical_vrml_examples/ecmascript/planesensor2interpolatormophing.wrl
+docs/typical_vrml_examples/ecmascript/texture_change.wrl
+docs/typical_vrml_examples/ecmascript/endless_world.wrl
+docs/typical_vrml_examples/ecmascript/pseudoCollision4examine.wrl
+docs/typical_vrml_examples/ecmascript/simple_stopwatch.wrl
+docs/typical_vrml_examples/ecmascript/oneshot_trigger_increase_switch.wrl
+docs/typical_vrml_examples/ecmascript/text_change.wrl
+docs/typical_vrml_examples/ecmascript/sfimage.wrl
+docs/typical_vrml_examples/ecmascript/superellipsoid.wrl
+docs/typical_vrml_examples/ecmascript/worldcoordmessurement.wrl
+docs/typical_vrml_examples/index.html
+src/SDLjoystick/bsd/SDL_sysjoystick.c
+src/SDLjoystick/darwin/SDL_sysjoystick.c
+src/SDLjoystick/linux/SDL_sysjoystick.c
+src/SDLjoystick/mini_SDL_joystick.c
+src/SDLjoystick/joysticktest.c
 
 The following files use the copyright statement:
 
 The/This file/Makefile/script/program is free software; the Free Software
 Foundation gives unlimited permission to copy, distribute and modify it.
 
-README_IRIX_desktop.txt
-batch/testiconsize.sh
-batch/edit_one_file_to_remove_tab.sh
-batch/usebison.bat
-batch/binary_patch.pl
-batch/comment_images.sh
-batch/mknodec++part3.sh
-batch/mknodesource.awk
-batch/print_unused_geo_files.sh
-batch/inserticon.sh
-batch/mktarbz2.sh
-batch/inserticon-gimp2_4.scm
-batch/edit_types_h.sh
-batch/update_VRML_url.sh
-batch/chfind.sh
-batch/insertdefecticon.sh
-batch/fix_not_translated_rcfiles.sh
-batch/checksingleheaderfiles.sh
-batch/replaceversion.awk
-batch/getversion.sh
-batch/bin_gsub.pl
-batch/yydebug.sh
-batch/inserticon-gimp2_6.scm
-batch/testdirectory.sh
-batch/dbxstart
-batch/gdbdumastart
-batch/edit_types_cc.sh
-batch/replaceversion.sh
-batch/mkSFMFTypes.sh
-batch/mknodec++part2.sh
-batch/mknodehpart3.sh
-batch/mknodehpart1.sh
-batch/mksrcfloppy.sh
-batch/repair_apple_bugs.sh
-batch/gdbstart_joystick
-batch/check_geo_files.sh
-batch/jpg_png_zlib.bat
-batch/findcopyrights.sh
-batch/mkfloppies.sh
-batch/inserticon-gimp2_2.scm
-batch/mknodehpart2.sh
-batch/inserticon-gimp1_2.scm
-batch/testiconsize2.sh
-batch/gdbefencestart
-batch/findprint.sh
-batch/inserticonWithoutTarget.sh
-batch/useflex.bat
-batch/replace_url.sh
-batch/edit_once_to_remove_tab.sh
-batch/nt.bat
-batch/fixpermissions.sh
-batch/gdbstart_spaceball
-batch/source2cpp.sh
-batch/mkdep.sh
-batch/mknodec++part1.sh
-test/testxml.sh
-test/testzeroclass.sh
-test/testmenus.sh
-test/testprotos.sh
-test/Makefile.in
-test/testresourcenumbers.sh
-test/testtabs.sh
-test/Makefile
-README_MSwindows.txt
-src/dune.english.rc
-src/dune.german.rc
-src/res/readme
-src/singleResources.rc
-src/dune.rc
-src/dune.french.rc
-src/Makefile.in
-src/catt_test/material.geo
-src/Makefile
-src/resource.h.m4
-src/dune.italian.rc
-src/dune.portuguese.rc
-src/swt/tests/Makefile.in
-src/swt/tests/Makefile
-src/swt/rc/Makefile.in
-src/swt/rc/Makefile
-src/swt/motif/Makefile.in
-src/swt/motif/Makefile
-src/swt/tests.new/Makefile.in
-src/swt/tests.new/Makefile
-src/swt/generic/Makefile
-src/swt/include/resource.m4
-src/swt/include/languages.m4
-src/swt/include/Makefile
-src/swt/win32/Makefile
-src/swt/Makefile
-desktop/cde/Makefile
-desktop/cde/README
-desktop/debian/dune.xpm
-desktop/kde/dune4kids.png
-desktop/kde/dune.png
-desktop/kde/README
-desktop/twm/Makefile
-desktop/xfce/dune.xpm
-desktop/xfce/dune4kids.xpm
-desktop/irix/data/cosmo2vrml97filter
-desktop/irix/data/cosmo2vrml
-desktop/irix/data/README
-desktop/irix/irix6.2_global/Makefile
-desktop/irix/irix6.2_global/readme
-desktop/irix/irix6.2_global/Dune.ftr
-desktop/irix/irix6.2_global/Dune.ftr.m4
-desktop/irix/irix6.2_global/fm_cosmo2vrml97
-desktop/irix/irix6.2_global/duneoptions.m4
-desktop/irix/irix6.5_personal/makefile.static
-desktop/irix/irix6.5_personal/makefile.host
-desktop/irix/irix6.5_personal/Makefile
-desktop/irix/irix6.5_personal/readme
-desktop/irix/irix6.5_personal/Dune.ftr
-desktop/irix/irix6.5_personal/Dune.ftr.m4
-desktop/irix/irix6.5_personal/fm_cosmo2vrml97
-desktop/irix/irix6.5_personal/duneoptions.m4
-desktop/irix/readme
-desktop/irix/irix6.5_global/Makefile
-desktop/irix/irix6.5_global/readme
-desktop/irix/irix6.5_global/Dune.ftr
-desktop/irix/irix6.5_global/Dune.ftr.m4
-desktop/irix/irix6.5_global/fm_cosmo2vrml97
-desktop/irix/irix6.5_global/duneoptions.m4
-desktop/macosx/README
-desktop/fvwm2/mini-dune.xpm
-desktop/fvwm2/Makefile
-packager/slackware/mkpkg-j4.sh
-packager/README
-packager/irix/relnotes/Img/dunelogo.jpg
-packager/Announcements/freshmeat_screenshot.jpg
+warbird/plane.wrl
+warbird/wing1.wrl
+warbird/wings.wrl
+warbird/wing2.wrl
+warbird/Makefile
+docs/usage_docs/indexedfacesettexture.jpg
+docs/usage_docs/scriptedit_icon1.jpg
+docs/usage_docs/frog51.png
+docs/usage_docs/rocket.png
+docs/usage_docs/simple_scriptbuild9.jpg
+docs/usage_docs/frog16.jpg
+docs/usage_docs/pfeil.png
+docs/usage_docs/closedpeak.jpg
+docs/usage_docs/scenegraph_multiple_target.png
+docs/usage_docs/simple_scriptbuild10.jpg
+docs/usage_docs/frog41.jpg
+docs/usage_docs/array_dialog.png
+docs/usage_docs/recording_one.jpg
+docs/usage_docs/mantasurface1side.jpg
+docs/usage_docs/supershapes.wrl
+docs/usage_docs/superellipsoid2nurbssurface_dialog.png
+docs/usage_docs/inlinetransform2.png
+docs/usage_docs/delete_keys2.jpg
+docs/usage_docs/nurbsgroup1.jpg
+docs/usage_docs/inlines.png
+docs/usage_docs/simple_scriptbuild1.jpg
+docs/usage_docs/scripteditor.jpg
+docs/usage_docs/routeview_full.png
+docs/usage_docs/frog09a.png
+docs/usage_docs/spherefaceset2.jpg
+docs/usage_docs/array_changed.png
+docs/usage_docs/joystick_3D_move.jpg
+docs/usage_docs/tess11.jpg
+docs/usage_docs/frog07.png
+docs/usage_docs/nurbsgroup6.jpg
+docs/usage_docs/array_result.png
+docs/usage_docs/array_start.png
+docs/usage_docs/frog17.jpg
+docs/usage_docs/xwings.png
+docs/usage_docs/indexedfacesetwrongside.jpg
+docs/usage_docs/frog06a.png
+docs/usage_docs/tools/nxt_udev.sh
+docs/usage_docs/nurbssmall.jpg
+docs/usage_docs/zfightok.jpg
+docs/usage_docs/degree1faceset2.jpg
+docs/usage_docs/nurbs0.jpg
+docs/usage_docs/frog21.jpg
+docs/usage_docs/animation_single_recording.png
+docs/usage_docs/nurbsrotationsurface.jpg
+docs/usage_docs/frog03b.png
+docs/usage_docs/timesensor.jpg
+docs/usage_docs/box2nurbsdialog.jpg
+docs/usage_docs/dials_normal.jpg
+docs/usage_docs/nurbscurverotation2.jpg
+docs/usage_docs/routemake1.jpg
+docs/usage_docs/degree1faceset1.jpg
+docs/usage_docs/sixboxnurbs.jpg
+docs/usage_docs/routemake2.jpg
+docs/usage_docs/simple_scriptbuild7.jpg
+docs/usage_docs/animation_recording.jpg
+docs/usage_docs/upload.png
+docs/usage_docs/frog53.png
+docs/usage_docs/recording.jpg
+docs/usage_docs/frog29.jpg
+docs/usage_docs/tess181.jpg
+docs/usage_docs/preview1.jpg
+docs/usage_docs/convex_dune.png
+docs/usage_docs/frog44.jpg
+docs/usage_docs/sphere_sensor2.jpg
+docs/usage_docs/preview2.jpg
+docs/usage_docs/spaceball.jpg
+docs/usage_docs/sphere_sensor_routes.jpg
+docs/usage_docs/mffieldpipeselect.jpg
+docs/usage_docs/frog30.jpg
+docs/usage_docs/slower.png
+docs/usage_docs/indexedfacesetmaterial.jpg
+docs/usage_docs/nurbscurvedialog.jpg
+docs/usage_docs/simple_scriptbuild5.jpg
+docs/usage_docs/frog11.jpg
+docs/usage_docs/interpolator.jpg
+docs/usage_docs/center.jpg
+docs/usage_docs/no_only.jpg
+docs/usage_docs/simple_scriptbuild3.jpg
+docs/usage_docs/frog31.jpg
+docs/usage_docs/elevate_target.jpg
+docs/usage_docs/symetric2.jpg
+docs/usage_docs/scenegraphbranch_start.png
+docs/usage_docs/frog54.jpg
+docs/usage_docs/animationdialog.jpg
+docs/usage_docs/frog39.png
+docs/usage_docs/frog37.jpg
+docs/usage_docs/transform.jpg
+docs/usage_docs/smooth2.jpg
+docs/usage_docs/superellipsoid2indexedfaceset.jpg
+docs/usage_docs/box.jpg
+docs/usage_docs/colorcircle1.png
+docs/usage_docs/frog42.jpg
+docs/usage_docs/nurbsgroup3.jpg
+docs/usage_docs/spherefaceset5.jpg
+docs/usage_docs/crash.jpg
+docs/usage_docs/frog28.jpg
+docs/usage_docs/superellipsoid_tesselation_creaseangle.jpg
+docs/usage_docs/frog02b.png
+docs/usage_docs/6dlocal_wrong.jpg
+docs/usage_docs/mffieldpiperesult.jpg
+docs/usage_docs/frog55.png
+docs/usage_docs/cylinderedge.jpg
+docs/usage_docs/schieb.png
+docs/usage_docs/frog14.jpg
+docs/usage_docs/frog22.jpg
+docs/usage_docs/degree1faceset4.jpg
+docs/usage_docs/supershape2nurbssurface.png
+docs/usage_docs/zfight1.jpg
+docs/usage_docs/xyzonly.jpg
+docs/usage_docs/node_add_invalid.jpg
+docs/usage_docs/frog20.jpg
+docs/usage_docs/hover.png
+docs/usage_docs/smooth1.png
+docs/usage_docs/frog09.png
+docs/usage_docs/frog00.png
+docs/usage_docs/convex_freewrl.png
+docs/usage_docs/frog46.png
+docs/usage_docs/upload_copy.png
+docs/usage_docs/indexedfacesetcreaseangle.jpg
+docs/usage_docs/delete_keys3.jpg
+docs/usage_docs/morphing_result.png
+docs/usage_docs/fieldchange.jpg
+docs/usage_docs/mantasurface2side.jpg
+docs/usage_docs/frog19.png
+docs/usage_docs/frog04a.png
+docs/usage_docs/routeview_inline.png
+docs/usage_docs/simple_scriptbuild4.jpg
+docs/usage_docs/frog52.jpg
+docs/usage_docs/nurbscurve.jpg
+docs/usage_docs/weight.jpg
+docs/usage_docs/delete_keys1.jpg
+docs/usage_docs/frog40.jpg
+docs/usage_docs/superellipsoid2nurbssurface_inexact.jpg
+docs/usage_docs/faster.png
+docs/usage_docs/tess0.jpg
+docs/usage_docs/frog56.jpg
+docs/usage_docs/spheretransform.jpg
+docs/usage_docs/routecut2.jpg
+docs/usage_docs/morphing_start.png
+docs/usage_docs/nurbsgroup4.jpg
+docs/usage_docs/sffieldpipeselect.jpg
+docs/usage_docs/frog49.png
+docs/usage_docs/superellipsoid_cylinder.jpg
+docs/usage_docs/animation_single_recorded.png
+docs/usage_docs/yonly1.jpg
+docs/usage_docs/joystick_3D_rot.jpg
+docs/usage_docs/nurbscurve_scenegraph.jpg
+docs/usage_docs/morphing_last.png
+docs/usage_docs/6dloc.png
+docs/usage_docs/routecut1.jpg
+docs/usage_docs/routeview_jump.png
+docs/usage_docs/scale.jpg
+docs/usage_docs/6d.png
+docs/usage_docs/scenegraphbranch_up1.png
+docs/usage_docs/dials_default.jpg
+docs/usage_docs/frog04.jpg
+docs/usage_docs/simple_scriptbuild8.jpg
+docs/usage_docs/up_down.png
+docs/usage_docs/nurbsrotationsurface2.jpg
+docs/usage_docs/xwings.wrl
+docs/usage_docs/spherefaceset1.jpg
+docs/usage_docs/nurbsurface2.jpg
+docs/usage_docs/nurbscurverotationy.jpg
+docs/usage_docs/inlinetransform1.png
+docs/usage_docs/cylinder.jpg
+docs/usage_docs/knot.jpg
+docs/usage_docs/controlpoint.jpg
+docs/usage_docs/elevate_after.jpg
+docs/usage_docs/wrong_center.png
+docs/usage_docs/supershape.png
+docs/usage_docs/channelview.jpg
+docs/usage_docs/frog23.jpg
+docs/usage_docs/nurbsrotationdialog.jpg
+docs/usage_docs/scenegraph_multiple_fields.png
+docs/usage_docs/frog43.png
+docs/usage_docs/mid_center.png
+docs/usage_docs/yonly.jpg
+docs/usage_docs/nurbsgroup5.jpg
+docs/usage_docs/near_far.png
+docs/usage_docs/sceneicon.jpg
+docs/usage_docs/frog24.jpg
+docs/usage_docs/oneboxnurbs.jpg
+docs/usage_docs/animation_onetime.png
+docs/usage_docs/simple_scriptbuild2.jpg
+docs/usage_docs/zfight2.jpg
+docs/usage_docs/6dlocal_right1.jpg
+docs/usage_docs/frog48.png
+docs/usage_docs/supershapes.jpg
+docs/usage_docs/sphere_sensor.jpg
+docs/usage_docs/superellipsoid_sphere.jpg
+docs/usage_docs/degree1faceset3.jpg
+docs/usage_docs/superellipsoid_sphere_half.jpg
+docs/usage_docs/colorcircle2.png
+docs/usage_docs/indexedfacesetappearance.jpg
+docs/usage_docs/sphere_sensor_mkroute.jpg
+docs/usage_docs/urledit.jpg
+docs/usage_docs/frog35.png
+docs/usage_docs/tess3.jpg
+docs/usage_docs/supershape_menu.png
+docs/usage_docs/frog47.jpg
+docs/usage_docs/frog08a.png
+docs/usage_docs/6dlocal_right3.jpg
+docs/usage_docs/spherefaceset3.jpg
+docs/usage_docs/joystick_sidewinder.jpg
+docs/usage_docs/crashrestore.jpg
+docs/usage_docs/superellipsoid2nurbssurface.jpg
+docs/usage_docs/rot.png
+docs/usage_docs/frog15.png
+docs/usage_docs/mantasurface.jpg
+docs/usage_docs/indexedfacesetonly.jpg
+docs/usage_docs/simple_scriptbuild6.jpg
+docs/usage_docs/frog26.jpg
+docs/usage_docs/xzonly.jpg
+docs/usage_docs/transform2.jpg
+docs/usage_docs/symetric1.jpg
+docs/usage_docs/spherefaceset4.jpg
+docs/usage_docs/6dlocal_right2.jpg
+docs/usage_docs/nurbsgroup2.jpg
+docs/usage_docs/nurbsurface1.jpg
+docs/usage_docs/superellipsoid_box_smooth.jpg
+docs/usage_docs/routeview_animation.jpg
+docs/usage_docs/yonly2.jpg
+docs/usage_docs/frog57.png
+docs/usage_docs/elevate_before.jpg
+docs/usage_docs/order.jpg
+docs/usage_docs/dunes.jpg
+docs/usage_docs/node_add_valid.jpg
+docs/usage_docs/frog33.png
+docs/usage_docs/animation_onetime2.png
+docs/usage_docs/zfight.jpg
+docs/usage_docs/frog03.png
+docs/usage_docs/routeview_zoom.png
+docs/usage_docs/superellipsoid_cylinder_smooth.jpg
+docs/usage_docs/doubleobject.jpg
+docs/usage_docs/navigation.jpg
+docs/usage_docs/superextrusion.png
+docs/usage_docs/frog45.jpg
+docs/usage_docs/xwing_planet.wrl
+docs/VRML97protos_examples/ParticleSourcePROTO/waterfall.png
+docs/VRML97protos_examples/ParticleSourcePROTO/flame.png
+docs/hanim_history/build.awk
+docs/hanim_history/Makefile
+docs/english.jpg
+docs/export_example_c++/opengl_example/README.txt
+docs/export_example_c++/opengl_example/Makefile
+docs/export_example_c++/simple_example/Makefile.in
+docs/export_example_c++/simple_example/Makefile
+docs/export_example_c++/simple_example/mainHelloWorld.cc
+docs/export_example_c++/opengl_scripting_example/README.txt
+docs/export_example_c++/opengl_scripting_example/Makefile
+docs/export_example_c++/Makefile
+docs/developer_docs/man2html.sh
+docs/developer_docs/dialog.jpg
+docs/developer_docs/png2jpg.sh
+docs/developer_docs/dune.png
+docs/developer_docs/standard.jpg
+docs/developer_docs/mkdoxygen.sh
+docs/developer_docs/Makefile
+docs/interactive_open_wonderland_examples/sphere_sensor_example.x3dv
+docs/coverNodes/CubeTexture.png
+docs/russian.jpg
+docs/scripted_Nodes/vrmlcut_example.wrl
+docs/scripted_Nodes/superextrusion_example.wrl
+docs/scripted_Nodes/superextrusion_donut_example.wrl
+docs/scripted_Nodes/superellipsoid_example.wrl
+docs/commandline_examples/wingmanrumblepad_mswindows.bat
+docs/commandline_examples/animation_example.wrl
+docs/export_example_c/opengl_example/README.txt
+docs/export_example_c/opengl_example/Makefile
+docs/export_example_c/simple_example/Makefile.in
+docs/export_example_c/simple_example/Makefile
+docs/export_example_c/opengl_scripting_example/README.txt
+docs/export_example_c/opengl_scripting_example/Makefile
+docs/export_example_c/Makefile
+docs/fieldpipe_examples/C_example/main.c
+docs/deutsch.jpg
+docs/vrml97Amendment1/inlineloadcontrol_example.wrl
+docs/vrml97Amendment1/nurbs.png
+docs/vrml97Amendment1/NurbsSurface_example.wrl
+docs/german_workshop_documents/animation_workshops_background_teacher.odt
+docs/german_workshop_documents/supershapes.jpg
+docs/typical_vrml_examples/forward_kinematic_animation.wrl
+docs/typical_vrml_examples/movie_trigger.wrl
+docs/typical_vrml_examples/ecmascript/test1.jpg
+docs/typical_vrml_examples/ecmascript/test2.jpg
+docs/typical_vrml_examples/touch_trigger.wrl
+docs/typical_vrml_examples/sound_transform.wrl
+docs/typical_vrml_examples/material_animation.wrl
+docs/typical_vrml_examples/forward_kinematic_spheresensor.wrl
+docs/typical_vrml_examples/README
+docs/typical_vrml_examples/elevator_proximity_trigger.wrl
+docs/typical_vrml_examples/door_cylindersensor.wrl
+docs/typical_vrml_examples/camera_animation.wrl
+docs/typical_vrml_examples/checker_touchsensor.wrl
+docs/typical_vrml_examples/billboard.wrl
+docs/typical_vrml_examples/checker_planesensor.wrl
+docs/typical_vrml_examples/visibilty_trigger.wrl
+docs/typical_vrml_examples/loadsensor.wrl
+docs/typical_vrml_examples/transform_animation.wrl
+docs/typical_vrml_examples/misc_animation.wrl
+docs/typical_vrml_examples/headupdisplay_example.wrl
+docs/typical_vrml_examples/sound_trigger.wrl
+docs/italian.jpg
+docs/export_example_java/jogl_simple_scripting_example/README.txt
+docs/export_example_java/jogl_simple_scripting_example/Makefile
+docs/export_example_java/simple_example/Makefile.in
+docs/export_example_java/simple_example/Makefile
+docs/export_example_java/jogl_example/Makefile
+docs/export_example_java/Makefile
 tools/collectViewpoints.sh
 tools/nxt_udev.sh
 tools/readme
-README_MacOSX.txt
-logo/flow2.jpg
-logo/manta2.wrl
-logo/manta.wrl
-logo/whitesand.jpg
-logo/white_dune_text.png
-build.sh
-docs/developer_docs/png2jpg.sh
-docs/developer_docs/man2html.sh
-docs/developer_docs/dialog.jpg
-docs/developer_docs/standard.jpg
-docs/developer_docs/dune.png
-docs/developer_docs/Makefile
-docs/developer_docs/deutsch.jpg
-docs/developer_docs/mkdoxygen.sh
-docs/typical_vrml_examples/sound_trigger.wrl
-docs/typical_vrml_examples/headupdisplay_example.wrl
-docs/typical_vrml_examples/ecmascript/test1.jpg
-docs/typical_vrml_examples/ecmascript/test2.jpg
-docs/typical_vrml_examples/elevator_proximity_trigger.wrl
-docs/typical_vrml_examples/sound_transform.wrl
-docs/typical_vrml_examples/loadsensor.wrl
-docs/typical_vrml_examples/visibilty_trigger.wrl
-docs/typical_vrml_examples/movie_trigger.wrl
-docs/typical_vrml_examples/forward_kinematic_spheresensor.wrl
-docs/typical_vrml_examples/misc_animation.wrl
-docs/typical_vrml_examples/material_animation.wrl
-docs/typical_vrml_examples/forward_kinematic_animation.wrl
-docs/typical_vrml_examples/camera_animation.wrl
-docs/typical_vrml_examples/touch_trigger.wrl
-docs/typical_vrml_examples/checker_touchsensor.wrl
-docs/typical_vrml_examples/checker_planesensor.wrl
-docs/typical_vrml_examples/door_cylindersensor.wrl
-docs/typical_vrml_examples/README
-docs/typical_vrml_examples/billboard.wrl
-docs/typical_vrml_examples/transform_animation.wrl
-docs/export_example_java/jme2_simple_scripting_example/Makefile
-docs/export_example_java/jme2_simple_scripting_example/README.txt
-docs/export_example_java/simple_example/Makefile.in
-docs/export_example_java/simple_example/Makefile
-docs/export_example_java/Makefile
-docs/export_example_java/jme2_scripting_examples/Makefile
-docs/export_example_java/jme2_example/Makefile
-docs/german_workshop_documents/animation_workshops_background_teacher.odt
-docs/german_workshop_documents/supershapes.jpg
-docs/vrml97Amendment1/nurbs.png
-docs/vrml97Amendment1/NurbsSurface_example.wrl
-docs/vrml97Amendment1/inlineloadcontrol_example.wrl
-docs/russian.jpg
-docs/english.jpg
-docs/scripted_Nodes/vrmlcut_example.wrl
-docs/scripted_Nodes/superellipsoid_example.wrl
-docs/scripted_Nodes/superextrusion_donut_example.wrl
-docs/scripted_Nodes/superextrusion_example.wrl
-docs/usage_docs/near_far.png
-docs/usage_docs/scriptedit_icon1.jpg
-docs/usage_docs/superellipsoid_cylinder.jpg
-docs/usage_docs/colorcircle2.png
-docs/usage_docs/routeview_jump.png
-docs/usage_docs/mid_center.png
-docs/usage_docs/routeview_full.png
-docs/usage_docs/frog37.jpg
-docs/usage_docs/frog04a.png
-docs/usage_docs/frog31.jpg
-docs/usage_docs/nurbsurface1.jpg
-docs/usage_docs/node_add_valid.jpg
-docs/usage_docs/frog41.jpg
-docs/usage_docs/weight.jpg
-docs/usage_docs/superellipsoid_tesselation_creaseangle.jpg
-docs/usage_docs/elevate_target.jpg
-docs/usage_docs/tess11.jpg
-docs/usage_docs/slower.png
-docs/usage_docs/controlpoint.jpg
-docs/usage_docs/6dlocal_right2.jpg
-docs/usage_docs/elevate_before.jpg
-docs/usage_docs/6dlocal_right1.jpg
-docs/usage_docs/nurbsrotationsurface.jpg
-docs/usage_docs/simple_scriptbuild3.jpg
-docs/usage_docs/xyzonly.jpg
-docs/usage_docs/zfightok.jpg
-docs/usage_docs/frog52.jpg
-docs/usage_docs/zfight2.jpg
-docs/usage_docs/superellipsoid2indexedfaceset.jpg
-docs/usage_docs/nurbssmall.jpg
-docs/usage_docs/frog21.jpg
-docs/usage_docs/preview1.jpg
-docs/usage_docs/degree1faceset1.jpg
-docs/usage_docs/oneboxnurbs.jpg
-docs/usage_docs/pfeil.png
-docs/usage_docs/supershape2nurbssurface.png
-docs/usage_docs/smooth2.jpg
-docs/usage_docs/frog03.png
-docs/usage_docs/spheretransform.jpg
-docs/usage_docs/box2nurbsdialog.jpg
-docs/usage_docs/navigation.jpg
-docs/usage_docs/frog11.jpg
-docs/usage_docs/dials_normal.jpg
-docs/usage_docs/degree1faceset3.jpg
-docs/usage_docs/nurbsgroup5.jpg
-docs/usage_docs/degree1faceset2.jpg
-docs/usage_docs/dunes.jpg
-docs/usage_docs/preview2.jpg
-docs/usage_docs/frog00.png
-docs/usage_docs/dune4kids.png
-docs/usage_docs/frog08a.png
-docs/usage_docs/simple_scriptbuild6.jpg
-docs/usage_docs/urledit.jpg
-docs/usage_docs/frog55.png
-docs/usage_docs/superellipsoid2nurbssurface.jpg
-docs/usage_docs/sphere_sensor.jpg
-docs/usage_docs/upload_copy.png
-docs/usage_docs/nurbs0.jpg
-docs/usage_docs/tess181.jpg
-docs/usage_docs/routecut1.jpg
-docs/usage_docs/xwing_planet.wrl
-docs/usage_docs/tools/nxt_udev.sh
-docs/usage_docs/zfight.jpg
-docs/usage_docs/frog29.jpg
-docs/usage_docs/indexedfacesetappearance.jpg
-docs/usage_docs/convex_dune.png
-docs/usage_docs/routeview_inline.png
-docs/usage_docs/scale.jpg
-docs/usage_docs/routemake1.jpg
-docs/usage_docs/scenegraph_multiple_fields.png
-docs/usage_docs/nurbscurve_scenegraph.jpg
-docs/usage_docs/frog48.png
-docs/usage_docs/simple_scriptbuild8.jpg
-docs/usage_docs/delete_keys3.jpg
-docs/usage_docs/frog33.png
-docs/usage_docs/frog53.png
-docs/usage_docs/wrong_center.png
-docs/usage_docs/spherefaceset5.jpg
-docs/usage_docs/doubleobject.jpg
-docs/usage_docs/no_only.jpg
-docs/usage_docs/array_dialog.png
-docs/usage_docs/scenegraphbranch_start.png
-docs/usage_docs/frog20.jpg
-docs/usage_docs/routecut2.jpg
-docs/usage_docs/nurbsurface2.jpg
-docs/usage_docs/nurbscurvedialog.jpg
-docs/usage_docs/superellipsoid2nurbssurface_inexact.jpg
-docs/usage_docs/faster.png
-docs/usage_docs/sixboxnurbs.jpg
-docs/usage_docs/center.jpg
-docs/usage_docs/frog44.jpg
-docs/usage_docs/animation_single_recorded.png
-docs/usage_docs/yonly2.jpg
-docs/usage_docs/delete_keys1.jpg
-docs/usage_docs/up_down.png
-docs/usage_docs/frog24.jpg
-docs/usage_docs/6dlocal_right3.jpg
-docs/usage_docs/fieldchange.jpg
-docs/usage_docs/knot.jpg
-docs/usage_docs/scenegraph_multiple_target.png
-docs/usage_docs/indexedfacesettexture.jpg
-docs/usage_docs/spherefaceset2.jpg
-docs/usage_docs/mantasurface.jpg
-docs/usage_docs/6d.png
-docs/usage_docs/simple_scriptbuild2.jpg
-docs/usage_docs/symetric2.jpg
-docs/usage_docs/array_result.png
-docs/usage_docs/supershapes.wrl
-docs/usage_docs/elevate_after.jpg
-docs/usage_docs/mffieldpiperesult.jpg
-docs/usage_docs/sphere_sensor_mkroute.jpg
-docs/usage_docs/scripteditor.jpg
-docs/usage_docs/crash.jpg
-docs/usage_docs/channelview.jpg
-docs/usage_docs/tess3.jpg
-docs/usage_docs/inlinetransform1.png
-docs/usage_docs/6dloc.png
-docs/usage_docs/frog19.png
-docs/usage_docs/frog45.jpg
-docs/usage_docs/animation_recording.jpg
-docs/usage_docs/superellipsoid_box_smooth.jpg
-docs/usage_docs/supershapes.jpg
-docs/usage_docs/yonly_2.jpg
-docs/usage_docs/frog14.jpg
-docs/usage_docs/nurbscurverotationy.jpg
-docs/usage_docs/nurbsgroup1.jpg
-docs/usage_docs/routeview_zoom.png
-docs/usage_docs/timesensor.jpg
-docs/usage_docs/simple_scriptbuild7.jpg
-docs/usage_docs/frog40.jpg
-docs/usage_docs/zfight1.jpg
-docs/usage_docs/spherefaceset4.jpg
-docs/usage_docs/sffieldpipeselect.jpg
-docs/usage_docs/inlines.png
-docs/usage_docs/indexedfacesetwrongside.jpg
-docs/usage_docs/simple_scriptbuild5.jpg
-docs/usage_docs/hover.png
-docs/usage_docs/frog07.png
-docs/usage_docs/frog56.jpg
-docs/usage_docs/joystick_3D_rot.jpg
-docs/usage_docs/frog17.jpg
-docs/usage_docs/morphing_result.png
-docs/usage_docs/cylinder.jpg
-docs/usage_docs/frog35.png
-docs/usage_docs/rot.png
-docs/usage_docs/frog43.png
-docs/usage_docs/smooth1.png
-docs/usage_docs/rocket.png
-docs/usage_docs/sphere_sensor_routes.jpg
-docs/usage_docs/superellipsoid_sphere_half.jpg
-docs/usage_docs/animation_onetime.png
-docs/usage_docs/sceneicon.jpg
-docs/usage_docs/simple_scriptbuild9.jpg
-docs/usage_docs/dune.png
-docs/usage_docs/crashrestore.jpg
-docs/usage_docs/yonly_1.jpg
-docs/usage_docs/frog09a.png
-docs/usage_docs/nurbscurverotation2.jpg
-docs/usage_docs/frog42.jpg
-docs/usage_docs/superextrusion.png
-docs/usage_docs/spherefaceset3.jpg
-docs/usage_docs/morphing_start.png
-docs/usage_docs/sphere_sensor2.jpg
-docs/usage_docs/indexedfacesetcreaseangle.jpg
-docs/usage_docs/nurbsgroup3.jpg
-docs/usage_docs/spherefaceset1.jpg
-docs/usage_docs/frog09.png
-docs/usage_docs/superellipsoid_sphere.jpg
-docs/usage_docs/nurbscurve.jpg
-docs/usage_docs/frog06a.png
-docs/usage_docs/nurbsgroup6.jpg
-docs/usage_docs/indexedfacesetonly.jpg
-docs/usage_docs/simple_scriptbuild1.jpg
-docs/usage_docs/frog15.png
-docs/usage_docs/joystick_3D_move.jpg
-docs/usage_docs/degree1faceset4.jpg
-docs/usage_docs/frog39.png
-docs/usage_docs/superellipsoid2nurbssurface_dialog.png
-docs/usage_docs/transform2.jpg
-docs/usage_docs/6dlocal_wrong.jpg
-docs/usage_docs/frog51.png
-docs/usage_docs/routemake2.jpg
-docs/usage_docs/frog57.png
-docs/usage_docs/simple_scriptbuild10.jpg
-docs/usage_docs/mffieldpipeselect.jpg
-docs/usage_docs/mantasurface2side.jpg
-docs/usage_docs/indexedfacesetmaterial.jpg
-docs/usage_docs/recording.jpg
-docs/usage_docs/frog30.jpg
-docs/usage_docs/superellipsoid_cylinder_smooth.jpg
-docs/usage_docs/symetric1.jpg
-docs/usage_docs/simple_scriptbuild4.jpg
-docs/usage_docs/xwings.png
-docs/usage_docs/frog54.jpg
-docs/usage_docs/upload.png
-docs/usage_docs/frog47.jpg
-docs/usage_docs/convex_freewrl.png
-docs/usage_docs/array_start.png
-docs/usage_docs/morphing_last.png
-docs/usage_docs/frog04.jpg
-docs/usage_docs/spaceball.jpg
-docs/usage_docs/order.jpg
-docs/usage_docs/frog49.png
-docs/usage_docs/nurbsrotationsurface2.jpg
-docs/usage_docs/inlinetransform2.png
-docs/usage_docs/yonly1.jpg
-docs/usage_docs/animation_onetime2.png
-docs/usage_docs/xzonly.jpg
-docs/usage_docs/array_changed.png
-docs/usage_docs/box.jpg
-docs/usage_docs/routeview_animation.jpg
-docs/usage_docs/supershape.png
-docs/usage_docs/dials_default.jpg
-docs/usage_docs/recording_one.jpg
-docs/usage_docs/supershape_menu.png
-docs/usage_docs/frog46.png
-docs/usage_docs/xwings.wrl
-docs/usage_docs/frog02b.png
-docs/usage_docs/frog28.jpg
-docs/usage_docs/nurbsgroup2.jpg
-docs/usage_docs/frog10.jpg
-docs/usage_docs/tess0.jpg
-docs/usage_docs/colorcircle1.png
-docs/usage_docs/frog03b.png
-docs/usage_docs/frog16.jpg
-docs/usage_docs/closedpeak.jpg
-docs/usage_docs/nurbsgroup4.jpg
-docs/usage_docs/transform.jpg
-docs/usage_docs/node_add_invalid.jpg
-docs/usage_docs/cylinderedge.jpg
-docs/usage_docs/animation_single_recording.png
-docs/usage_docs/mantasurface1side.jpg
-docs/usage_docs/interpolator.jpg
-docs/usage_docs/joystick_sidewinder.jpg
-docs/usage_docs/animationdialog.jpg
-docs/usage_docs/frog23.jpg
-docs/usage_docs/delete_keys2.jpg
-docs/usage_docs/scenegraphbranch_up1.png
-docs/usage_docs/schieb.png
-docs/usage_docs/yonly.jpg
-docs/usage_docs/frog26.jpg
-docs/usage_docs/nurbsrotationdialog.jpg
-docs/usage_docs/frog22.jpg
-docs/fieldpipe_examples/C_example/main.c
-docs/commandline_examples/animation_example.wrl
-docs/commandline_examples/wingmanrumblepad_mswindows.bat
-docs/scriptedNodes/vrmlcut_example.wrl
-docs/scriptedNodes/README_outdated.txt
-docs/scriptedNodes/supershape_example.wrl
-docs/scriptedNodes/superellipsoid_example.wrl
-docs/scriptedNodes/superextrusion_donut_example.wrl
-docs/scriptedNodes/superextrusion_example.wrl
-docs/italian.jpg
-docs/interactive_open_wonderland_examples/sphere_sensor_example.x3dv
-docs/export_example_c/opengl_example/Makefile
-docs/export_example_c/opengl_example/README.txt
-docs/export_example_c/opengl_scripting_example/Makefile
-docs/export_example_c/opengl_scripting_example/README.txt
-docs/export_example_c/simple_example/Makefile.in
-docs/export_example_c/simple_example/Makefile
-docs/export_example_c/Makefile
-docs/VRML97protos_examples/ParticleSourcePROTO/flame.png
-docs/VRML97protos_examples/ParticleSourcePROTO/waterfall.png
-docs/deutsch.jpg
-docs/export_example_c++/opengl_example/Makefile
-docs/export_example_c++/opengl_example/README.txt
-docs/export_example_c++/opengl_scripting_example/Makefile
-docs/export_example_c++/opengl_scripting_example/README.txt
-docs/export_example_c++/simple_example/Makefile.in
-docs/export_example_c++/simple_example/mainHelloWorld.cc
-docs/export_example_c++/simple_example/helloWorld2.x3dv
-docs/export_example_c++/simple_example/Makefile
-docs/export_example_c++/fluid_fltk_opengl_example/Makefile
-docs/export_example_c++/Makefile
-docs/coverNodes/CubeTexture.png
-buildscripts/build-freebsd.sh
-buildscripts/build-iconscale2-j4.sh
-buildscripts/build-freebsd-teachermenu.sh
-buildscripts/build-teachermenu.sh
-buildscripts/build-P.sh
-buildscripts/build-j4.sh
-buildscripts/build-olpcdebug.sh
-buildscripts/build-updatedebug.sh
-buildscripts/build-efence.sh
-buildscripts/build-ode.sh
-buildscripts/build-aflockdebug.sh
-buildscripts/build-kj4.sh
-buildscripts/build-gprof-j4.sh
-buildscripts/build-gcov-j4.sh
-buildscripts/build-oldmotif.sh
-buildscripts/build-olpc.sh
-buildscripts/build-archives.sh
-buildscripts/build-duma.sh
+tools/modify_orientation_interpolator.awk
+packager/README
+packager/irix/relnotes/Img/dunelogo.jpg
+packager/Announcements/freshmeat_screenshot.jpg
+desktop/kde/README
+desktop/kde/dune.png
+desktop/kde/dune4kids.png
+desktop/cde/README
+desktop/cde/Makefile
+desktop/macosx/README.txt
+desktop/fvwm2/mini-dune.xpm
+desktop/fvwm2/Makefile
+desktop/irix/irix6.2_global/duneoptions.m4
+desktop/irix/irix6.2_global/fm_cosmo2vrml97
+desktop/irix/irix6.2_global/Dune.ftr.m4
+desktop/irix/irix6.2_global/Dune.ftr
+desktop/irix/irix6.2_global/readme
+desktop/irix/irix6.2_global/Makefile
+desktop/irix/irix6.5_personal/makefile.static
+desktop/irix/irix6.5_personal/duneoptions.m4
+desktop/irix/irix6.5_personal/fm_cosmo2vrml97
+desktop/irix/irix6.5_personal/Dune.ftr.m4
+desktop/irix/irix6.5_personal/Dune.ftr
+desktop/irix/irix6.5_personal/readme
+desktop/irix/irix6.5_personal/Makefile
+desktop/irix/irix6.5_personal/makefile.host
+desktop/irix/data/cosmo2vrml97filter
+desktop/irix/data/README
+desktop/irix/data/cosmo2vrml
+desktop/irix/irix6.5_global/duneoptions.m4
+desktop/irix/irix6.5_global/fm_cosmo2vrml97
+desktop/irix/irix6.5_global/Dune.ftr.m4
+desktop/irix/irix6.5_global/Dune.ftr
+desktop/irix/irix6.5_global/readme
+desktop/irix/irix6.5_global/Makefile
+desktop/irix/readme
+desktop/twm/Makefile
+desktop/debian/dune.xpm
+desktop/xfce/dune.xpm
+desktop/xfce/dune4kids.xpm
 INSTALL.txt
-bin/germandune
-bin/illegal2vrml
-bin/italiandune
-bin/stereodune
-bin/dune4kids
-bin/redgreendune
-bin/redbluedune
-bin/nostereodune
-Makefile
+test/testtabs.sh
+test/testresourcenumbers.sh
+test/testzeroclass.sh
+test/testxmlmgdiff.sh
+test/testx3domaddfield.sh
+test/testmenus.sh
+test/Makefile.in
+test/Makefile
+test/testprotos.sh
+src/dune.italian.rc
+src/dune.german.rc
+src/dune.portuguese.rc
+src/catt_test/material.geo
+src/test/Makefile
+src/dune.rc
+src/dune.english.rc
+src/dune.french.rc
+src/res/readme
+src/config.status
+src/Makefile.in
+src/Makefile.bak
+src/singleResources.rc
+src/resource.h.m4
+src/Makefile
+src/swt/rc/Makefile.in
+src/swt/rc/Makefile
+src/swt/generic/Makefile
+src/swt/win32/Makefile
+src/swt/include/resource.m4
+src/swt/include/languages.m4
+src/swt/include/Makefile
+src/swt/tests.new/Makefile.in
+src/swt/tests.new/Makefile
+src/swt/tests/Makefile.in
+src/swt/tests/Makefile
+src/swt/motif/Makefile.in
+src/swt/motif/Makefile.bak
+src/swt/motif/Makefile
+src/swt/Makefile
+README_IRIX_desktop.txt
+build.sh
+batch/mknodehpart1.sh
+batch/inserticon-gimp2_4.scm
+batch/fixpermissions.sh
+batch/useflex.bat
+batch/testiconsize2.sh
+batch/makedebian.sh
+batch/getwhiteversion.sh
+batch/mktarbz2white_dune.sh
+batch/gdbefencestart
+batch/update_VRML_url.sh
+batch/mksrcfloppy.sh
+batch/nt.bat
+batch/mknodec++part3.sh
+batch/gdbstart_joystick
+batch/mktargz.sh
+batch/findprint.sh
+batch/inserticon-gimp2_8.scm
+batch/edit_types_h.sh
+batch/repair_apple_bugs.sh
+batch/replaceversion.sh
+batch/checksingleheaderfiles.sh
+batch/mkSFMFTypes.sh
+batch/inserticon-gimp2_6.scm
+batch/comment_images.sh
+batch/testdirectory.sh
+batch/inserticonWithoutTarget.sh
+batch/mknodehpart2.sh
+batch/replaceversion.awk
+batch/usebison.bat
+batch/inserticon-gimp1_2.scm
+batch/print_unused_geo_files.sh
+batch/gdbdumastart
+batch/mknodehpart3.sh
+batch/findcopyrights.sh
+batch/inserticon.sh
+batch/binary_patch.pl
+batch/mknodec++part1.sh
+batch/edit_one_file_to_remove_tab.sh
+batch/mkdep.sh
+batch/source2cpp.sh
+batch/jpg_png_zlib.bat
+batch/replace_url.sh
+batch/edit_once_to_remove_tab.sh
+batch/gdbstart_spaceball
+batch/check_geo_files.sh
+batch/getversion.sh
+batch/insertdefecticon.sh
+batch/edit_types_cc.sh
+batch/mktargzwhite_dune.sh
+batch/yydebug.sh
+batch/mktarbz2.sh
+batch/chfind.sh
+batch/fix_not_translated_rcfiles.sh
+batch/bin_gsub.pl
+batch/mknodesource.awk
+batch/mkfloppies.sh
+batch/inserticon-gimp2_2.scm
+batch/dbxstart
+batch/mknodec++part2.sh
+batch/testiconsize.sh
+buildscripts/build-j4.sh
+buildscripts/build-duma.sh
+buildscripts/build-j8.sh
+buildscripts/build-ode.sh
+buildscripts/build-gprof-j4.sh
+buildscripts/build-kj4.sh
+buildscripts/build-archives.sh
+buildscripts/build-withcgalheaders.j4.sh
+buildscripts/build-updatedebug.sh
+buildscripts/build-olpc.sh
+buildscripts/build-gcov-j4.sh
+buildscripts/build-iconscale2-j4.sh
+buildscripts/build-oldmotif.sh
+buildscripts/build-aflockdebug.sh
+buildscripts/build-teachermenu.sh
+buildscripts/build-efence.sh
+buildscripts/build-fortify.sh
+buildscripts/build-olpcdebug.sh
+buildscripts/build-P.sh
+buildscripts/build-without-cgal-j4.sh
+config.status
 configure
 configure.in
+Makefile
+bin/redbluedune
+bin/nostereodune
+bin/italiandune
+bin/stereodune
+bin/illegal2vrml
+bin/germandune
+bin/dune4kids
+bin/redgreendune
+README_MSwindows.txt
+logo/flow2.jpg
+logo/whitesand.jpg
+logo/manta.wrl
+logo/manta2.wrl
+logo/white_dune_text.png
+README_MacOSX.txt
 
-batch/proto2standard.sh
-batch/print_forbidden_in_id.sh
-batch/search_variable_h.sh
-batch/replace.sh
-batch/dune_stick.bat
-batch/grepmore.sh
-batch/repair_apple_bugs_fat.sh
-batch/search_variable.sh
-batch/gdiffrch.sh
-batch/gdbstart
-batch/removeLexYacc.sh
-batch/new_wonderland_export.sh
-batch/update_node_source.sh
-src/config.h.in
-src/res/node_icons2.bmp
-src/res/fullSocketSquare.bmp
-src/res/vcr.bmp
-src/res/wonderlandSocketSquare.bmp
-src/res/gray.bmp
-src/res/dune.ico.devil
-src/res/empty_node_icon.bmp
-src/res/emptySocketSquare.bmp
-src/res/halftone.bmp
-src/res/gray_not_implemented.bmp
-src/res/dune-rc.ico
-src/res/dune-pl.ico
-src/res/cvs/Entries
-src/res/cvs/Root
-src/res/dune.ico.jpg_png_zlib
-src/res/recommendedSocketSquare.bmp
-src/res/Makefile
-src/res/recommendedWonderlandSocketSquare.bmp
-src/res/dune.ico.nt
-src/res/standard_toolbar2.bmp
-src/res/vcr2.bmp
-src/res/standard_toolbar.bmp
-src/res/node_icons.bmp
-src/res/dune.ico
-src/config.h.jpg_png_zlib
-src/UpgradeLog.XML
-src/config.h.nt.devil.sand
-src/dune.vcproj.jpg_png_zlib
-src/dune.vcproj
-src/NodeTriangleSet.cpp:
-src/config.h.nt
-src/cvsroot/config
-src/cvsroot/taginfo
-src/cvsroot/editinfo
-src/cvsroot/modules
-src/cvsroot/commitinfo
-src/cvsroot/rcsinfo
-src/cvsroot/cvs/Entries
-src/cvsroot/cvs/Root
-src/cvsroot/cvs/Repository
-src/cvsroot/loginfo
-src/cvsroot/checkoutlist
-src/cvsroot/verifymsg
-src/cvsroot/cvswrappers
-src/cvsroot/notify
-src/SDLjoystick/Makefile.depend_main
-src/SDLjoystick/Makefile.depend_nodes
-src/SDLjoystick/Make
-src/SDLjoystick/Makefile.in
-src/SDLjoystick/Makefile
-src/pngLoad.c
-src/deprecated/dune.dsw
-src/deprecated/dune.dsp.nt
-src/deprecated/dune.dsp.jpg_png_zlib
-src/deprecated/dune.dsp
-src/cvs/Entries
-src/cvs/Entries.Log
-src/cvs/Root
-src/cvs/Repository
-src/gif.c
-src/mysnprintf.c
-src/openglutfont.c
-src/resource.c
-src/swt/tests/bitmap1.bmp
-src/swt/tests/res.rc
-src/swt/tests/cvs/Entries
-src/swt/tests/cvs/Root
-src/swt/tests/cvs/Repository
-src/swt/rc/rc.dsp
-src/swt/rc/cvs/Entries
-src/swt/rc/cvs/Root
-src/swt/rc/cvs/Repository
-src/swt/rc/rc.dsw
-src/swt/motif/cvs/Entries
-src/swt/motif/cvs/Root
-src/swt/motif/cvs/Repository
-src/swt/tests.new/tests/tests.dsw
-src/swt/tests.new/tests/tests.dsp
-src/swt/tests.new/bitmap1.bmp
-src/swt/tests.new/restest
-src/swt/tests.new/koordinaten.txt
-src/swt/tests.new/res.rc
-src/swt/tests.new/resource.c
-src/swt/generic/cvs/Entries
-src/swt/generic/cvs/Root
-src/swt/generic/cvs/Repository
-src/swt/include/cvs/Entries
-src/swt/include/cvs/Root
-src/swt/include/cvs/Repository
-src/swt/win32/swt.dsw
-src/swt/win32/swt.dsp
-src/swt/win32/swt.vcproj
-src/swt/win32/cvs/Entries
-src/swt/win32/cvs/Root
-src/swt/win32/cvs/Repository
-src/swt/cvs/Entries
-src/swt/cvs/Entries.Log
-src/swt/cvs/Root
-src/swt/cvs/Repository
-src/swt/lib/cvs/Entries
-src/swt/lib/cvs/Root
-src/swt/lib/cvs/Repository
-desktop/cde/icons/white_dune.t.bm
-desktop/cde/icons/white_dune.m.pm
+warbird/game_over.wrl
+warbird/routes.wrl
+warbird/rot_trans.wrl
+warbird/multimedia/bubble.wav
+warbird/warbird.desktop
+warbird/p_fly_glass.wrl
+docs/usage_docs/schiff.wrl
+docs/usage_docs/DOME.wrl
+docs/usage_docs/door.x3dv
+docs/usage_docs/nxtdials_en.wrl
+docs/usage_docs/qualle.wrl
+docs/usage_docs/cuvex_hull_before.wrl
+docs/usage_docs/glider_movie.mp4
+docs/usage_docs/xwings.wings
+docs/usage_docs/ProximityProtoExample.wrl
+docs/usage_docs/nxtdials.wrl.gz
+docs/usage_docs/x3domScripting.wrl
+docs/usage_docs/human.x3dv
+docs/usage_docs/dune_1.html
+docs/usage_docs/nxtdials_de.wrl
+docs/usage_docs/nxtdials.lcd
+docs/usage_docs/illegal2vrml_1.html
+docs/usage_docs/fish.wrl
+docs/usage_docs/lila_white_dune4wonderland.odp
+docs/usage_docs/human.x3d
+docs/usage_docs/dune4kids_animal_en.html
+docs/hanim_history/gehmess_useproto.x3dv
+docs/export_example_c++/opengl_example/README_fedora.txt
+docs/export_example_c++/opengl_example/robot.x3dv
+docs/export_example_c++/simple_example/helloWorld.x3dv
+docs/export_example_c++/simple_example/helloWorld2.x3dv
+docs/export_example_c++/qt_opengl_example/qt_opengl_example.pro.user
+docs/export_example_c++/qt_opengl_example/README.txt
+docs/export_example_c++/qt_opengl_example/qt_opengl_example.ui
+docs/export_example_c++/qt_opengl_example/Makefile
+docs/export_example_c++/qt_opengl_example/Untitled.wrl
+docs/export_example_c++/qt_opengl_example/qt_opengl_example.pro
+docs/export_example_c++/opengl_scripting_example/ScriptingExample.wrl
+docs/developer_docs/Doxyfile.in
+docs/rendering_bugs/README
+docs/rendering_bugs/rendering_errors.html
+docs/rendering_bugs/proto_animation_error.wrl
+docs/interactive_open_wonderland_examples/cylindersensor_disk_rotation.x3dv
+docs/interactive_open_wonderland_examples/stringsensor.x3dv
+docs/interactive_open_wonderland_examples/planesensor_slider.x3dv
+docs/interactive_open_wonderland_examples/touchsensor_start_stop.x3dv
+docs/interactive_open_wonderland_examples/cylindersensor_cylinder_rotation.x3dv
+docs/interactive_open_wonderland_examples/keysensor_pressed.x3dv
+docs/interactive_open_wonderland_examples/proximitysensor_follower.x3dv
+docs/interactive_open_wonderland_examples/touchsensor_pressed_released.x3dv
+docs/interactive_open_wonderland_examples/simple_sliders_example.x3dv
+docs/interactive_open_wonderland_examples/open_wonderland_export_howto.txt
+docs/ldraw_dat_export.wrl
+docs/scripted_Nodes/curveanimation_example.wrl
+docs/scripted_Nodes/supershape_example.wrl
+docs/commandline_examples/create_movie.sh
+docs/commandline_examples/create_movie.html
+docs/export_example_c/opengl_example/main.c
+docs/export_example_c/opengl_example/Untitled.wrl
+docs/export_example_c/simple_example/mainHelloWorld.c
+docs/export_example_c/simple_example/helloWorld.x3dv
+docs/export_example_c/simple_example/helloWorld2.x3dv
+docs/export_example_c/opengl_scripting_example/main.c
+docs/export_example_c/opengl_scripting_example/ScriptingExample.wrl
+docs/german_workshop_documents/gelenk.wrl
+docs/german_workshop_documents/augen.wrl
+docs/german_workshop_documents/animation_computeranimation_workshop_description.odt
+docs/german_workshop_documents/kameras.wrl
+docs/german_workshop_documents/augen_falsch.wrl
+docs/german_workshop_documents/animation_3dmodelling_workshop_description.odt
+docs/german_workshop_documents/schiefer_wurf.wrl
+docs/german_workshop_documents/animation_kinematic_workshop_description.odt
+docs/german_workshop_documents/holes.wrl
+docs/german_workshop_documents/wuerfelmaennchen.wrl
+docs/x3d/CurveAnimationPROTO.wrl
+docs/x3d/CADGeometryPROTO.wrl
+docs/x3d/PositionInterpolator2DExample.wrl
+docs/x3d/CoordinateInterpolator2DExample.wrl
+docs/x3d/MetadataPrototypes.x3d
+docs/typical_vrml_examples/image.gif
+docs/typical_vrml_examples/bubble.wav
+docs/typical_vrml_examples/rigidBodyPhysics/spherecrash.x3dv
+docs/typical_vrml_examples/movie.mpg
+docs/typical_vrml_examples/ldraw_dat_export.wrl
+docs/export_example_java/jogl_simple_scripting_example/ScriptingExample.wrl
+docs/export_example_java/simple_example/helloWorld.x3dv
+docs/export_example_java/simple_example/helloWorld2.x3dv
+docs/export_example_java/simple_example/mainHelloWorld.java
+docs/export_example_java/jogl_example/x3d.java
+docs/export_example_java/jogl_example/Extra.java
+docs/export_example_java/jogl_example/robot.x3dv
+man/dune.1
+man/dune4kids.1
+man/illegal2vrml.1
+.gitignore
+packager/olpc/mkrpm.sh
+packager/rpm/mkrpm.sh
+packager/rpm/mkrpm_with_vcglib_installed.sh
+packager/rpm/mkrpm_opensuse.sh
+packager/openbsd/distinfo
+packager/openbsd/mkpkg.sh
+packager/openbsd/pkg-plist
+packager/openbsd/pkg-descr
+packager/openbsd/THIS_IS_UNTESTED
+packager/openbsd/pkg-comment
+packager/openbsd/Makefile
+packager/freebsd/mkpkg.sh
+packager/freebsd/pkg-plist
+packager/freebsd/pkg-descr
+packager/freebsd/pkg-comment
+packager/freebsd/Makefile
+packager/macosx/mksit.sh
+packager/lsb/mkrpm.sh
+packager/archlinux/PKGBUILD
+packager/archlinux/mkpacman.sh
+packager/archlinux/wdune-1.388.tar.bz2
+packager/archlinux/wdune-1.388-1-x86_64.pkg.tar.xz
+packager/archlinux/mkpacman_alarm.sh
+packager/archlinux/Makefile
+packager/irix/relnotes/white_dune.html
+packager/irix/mkpkg.sh
+packager/solaris/mkpkg.sh
+packager/debian/Makefile.debian_extension
+packager/debian/rules_ubuntu_without_scene3dview
+packager/debian/mkinstalldirs
+packager/debian/wdune-docs.docs
+packager/debian/menu
+packager/debian/rules_jessi
+packager/debian/rules_ubuntu
+packager/debian/postinst
+packager/debian/rules_stretch
+packager/debian/rules_rasbian
+packager/debian/mkdeb_stretch.sh
+packager/debian/whitedune-doc.doc-base
+packager/debian/changelog
+packager/debian/Makefile.in.debian
+packager/debian/mkdeb_ubuntu_without_scene3dview.sh
+packager/debian/control_wheezy
+packager/debian/control_buster
+packager/debian/control_stretch
+packager/debian/control_ubuntu
+packager/debian/rules_wheezy
+packager/debian/rules
+packager/debian/mkdeb_wheezy.sh
+packager/debian/control_jessi
+packager/debian/compat
+packager/debian/source/format
+packager/debian/source/format.old
+packager/debian/control
+packager/debian/control_ubuntu_without_scene3dview
+packager/debian/Makefile.in.debian_extension
+packager/debian/mkdeb_ubuntu.sh
+packager/debian/mkdeb_jessi.sh
+packager/debian/wdune.install
+packager/debian/rules_buster
+packager/debian/mkdeb_buster.sh
+packager/debian/prerm
+packager/debian/mkdeb_rasbian.sh
+packager/hpux/mkswpackage
+packager/hpux/THIS_IS_UNTESTED
+packager/Announcements/pad_spec.xml
+packager/Announcements/down.sh
+packager/Announcements/LSM.entry
+packager/Announcements/spec.php
+packager/Announcements/freewaredirectory_template_dune.txt
+packager/Announcements/protocol.php
+packager/Announcements/xtensions_spec.php
+packager/Makefile
+packager/slackware/mkpkg.sh
+packager/slackware/vcglib/vcglib.SlackBuild
+packager/slackware/vcglib/README
+packager/slackware/vcglib/vcglib.info
+packager/slackware/vcglib/slack-desc
+packager/slackware/white_dune/white_dune.SlackBuild
+packager/slackware/white_dune/README
+packager/slackware/white_dune/slack-desc
+packager/slackware/white_dune/white_dune.info
+desktop/olpc/activity-dune.svg
+desktop/olpc/WhiteDune4kids.activity/.git/info/exclude
+desktop/olpc/WhiteDune4kids.activity/.git/HEAD
+desktop/olpc/WhiteDune4kids.activity/.git/objects/pack/pack-4835c0c82ea7b853bb6edcc239c20b1c2198fd0a.pack
+desktop/olpc/WhiteDune4kids.activity/.git/objects/pack/pack-4835c0c82ea7b853bb6edcc239c20b1c2198fd0a.idx
+desktop/olpc/WhiteDune4kids.activity/.git/index
+desktop/olpc/WhiteDune4kids.activity/.git/config
+desktop/olpc/WhiteDune4kids.activity/.git/description
+desktop/olpc/WhiteDune4kids.activity/.git/refs/heads/master
+desktop/olpc/WhiteDune4kids.activity/.git/refs/remotes/origin/HEAD
+desktop/olpc/WhiteDune4kids.activity/.git/packed-refs
+desktop/olpc/WhiteDune4kids.activity/.git/logs/HEAD
+desktop/olpc/WhiteDune4kids.activity/.git/logs/refs/heads/master
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-commit.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-receive.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-update.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/applypatch-msg.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/commit-msg.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-rebase.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/update.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/prepare-commit-msg.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-commit.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-applypatch.sample
+desktop/olpc/WhiteDune4kids.activity/activity/activity-dune4kids.svg
+desktop/olpc/WhiteDune4kids.activity/activity/activity.info
+desktop/olpc/WhiteDune4kids.activity/po/WhiteDune4kids.pot
+desktop/kde/dune4kids.bmp
+desktop/kde/dune.bmp
+desktop/kde/dune4kids.desktop
+desktop/kde/dune.desktop
+desktop/kde/redhat/dune4kids.desktop
+desktop/kde/redhat/dune.desktop
 desktop/cde/icons/VRML97.m.pm
-desktop/cde/icons/VRML97.t.bm
-desktop/cde/icons/white_dune.m.bm
-desktop/cde/icons/VRML97.m_m.bm
 desktop/cde/icons/VRML97.m.bm
 desktop/cde/icons/white_dune.t.pm
-desktop/cde/icons/VRML97.t.pm
-desktop/cde/icons/VRML97.t_m.bm
-desktop/cde/icons/white_dune.l.bm
 desktop/cde/icons/white_dune.l.pm
+desktop/cde/icons/VRML97.t.bm
+desktop/cde/icons/white_dune.l.bm
+desktop/cde/icons/VRML97.t_m.bm
+desktop/cde/icons/white_dune.t.bm
+desktop/cde/icons/white_dune.m.bm
+desktop/cde/icons/VRML97.t.pm
+desktop/cde/icons/white_dune.m.pm
+desktop/cde/icons/VRML97.m_m.bm
 desktop/cde/types/white_dune.dt
 desktop/cde/os/aix/usr_local_bin_white_dune.dt
 desktop/cde/os/aix/white_dune
 desktop/cde/os/solaris/opt_White_Dune_bin_white_dune.dt
 desktop/cde/os/solaris/white_dune
-desktop/kde/dune4kids.desktop
-desktop/kde/redhat/dune4kids.desktop
-desktop/kde/redhat/dune.desktop
-desktop/kde/dune.desktop
-desktop/olpc/activity-dune.svg
-desktop/olpc/WhiteDune4kids.activity/po/WhiteDune4kids.pot
-desktop/olpc/WhiteDune4kids.activity/.git/info/exclude
-desktop/olpc/WhiteDune4kids.activity/.git/config
-desktop/olpc/WhiteDune4kids.activity/.git/HEAD
-desktop/olpc/WhiteDune4kids.activity/.git/objects/pack/pack-4835c0c82ea7b853bb6edcc239c20b1c2198fd0a.pack
-desktop/olpc/WhiteDune4kids.activity/.git/objects/pack/pack-4835c0c82ea7b853bb6edcc239c20b1c2198fd0a.idx
-desktop/olpc/WhiteDune4kids.activity/.git/logs/HEAD
-desktop/olpc/WhiteDune4kids.activity/.git/logs/refs/heads/master
-desktop/olpc/WhiteDune4kids.activity/.git/description
-desktop/olpc/WhiteDune4kids.activity/.git/index
-desktop/olpc/WhiteDune4kids.activity/.git/refs/heads/master
-desktop/olpc/WhiteDune4kids.activity/.git/refs/remotes/origin/HEAD
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-applypatch.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/applypatch-msg.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/update.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/prepare-commit-msg.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-commit.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/commit-msg.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-rebase.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-receive.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-commit.sample
-desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-update.sample
-desktop/olpc/WhiteDune4kids.activity/.git/packed-refs
-desktop/olpc/WhiteDune4kids.activity/activity/activity.info
-desktop/olpc/WhiteDune4kids.activity/activity/activity-dune4kids.svg
-desktop/irix/data/nostereoDune.fti
-desktop/irix/data/Dune4kids.fti
-desktop/irix/data/Dune4kids.open.fti
-desktop/irix/data/Dune.fti
-desktop/irix/data/Dune.icon
-desktop/irix/data/Dunebackground.fti
-desktop/irix/data/Dune.open.fti
-desktop/irix/data/nostereoDune.open.fti
-desktop/macosx/xcode/version.plist
-desktop/macosx/xcode/main.m
-desktop/macosx/xcode/white_dune_Prefix.pch
-desktop/macosx/xcode/white_dune.xcode/project.pbxproj
-desktop/macosx/xcode/white_dune.xcode/mufti.pbxuser
-desktop/macosx/xcode/white_dune.icns
+desktop/macosx/xcode/WhiteDuneHelp/whiteDuneHelp.html
+desktop/macosx/xcode/English.lproj/MainMenu.nib/classes.nib
+desktop/macosx/xcode/English.lproj/MainMenu.nib/keyedobjects.nib
+desktop/macosx/xcode/English.lproj/MainMenu.nib/info.nib
+desktop/macosx/xcode/English.lproj/MainMenu.nib/objects.nib
 desktop/macosx/xcode/English.lproj/InfoPlist.strings
+desktop/macosx/xcode/English.lproj/Credits.rtf
 desktop/macosx/xcode/English.lproj/MyDocument.nib/classes.nib
 desktop/macosx/xcode/English.lproj/MyDocument.nib/info.nib
 desktop/macosx/xcode/English.lproj/MyDocument.nib/objects.nib
-desktop/macosx/xcode/English.lproj/Credits.rtf
-desktop/macosx/xcode/English.lproj/MainMenu.nib/keyedobjects.nib
-desktop/macosx/xcode/English.lproj/MainMenu.nib/classes.nib
-desktop/macosx/xcode/English.lproj/MainMenu.nib/info.nib
-desktop/macosx/xcode/English.lproj/MainMenu.nib/objects.nib
-desktop/macosx/xcode/white_dune.xcodeproj/mufti.mode1
-desktop/macosx/xcode/white_dune.xcodeproj/project.pbxproj
-desktop/macosx/xcode/white_dune.xcodeproj/mufti.pbxuser
+desktop/macosx/xcode/version.plist
 desktop/macosx/xcode/white_dune.xcodeproj/mufti.mode1v3
-desktop/macosx/xcode/Info.plist
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/PkgInfo
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Info.plist
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/MacOS/dunestarter
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/MacOS/white_dune
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/whiteDuneHelp/whiteDuneHelp.html
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/whiteDuneHelp.html
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/white_dune.icns
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/InfoPlist.strings
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/classes.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/info.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/objects.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/Credits.rtf
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/keyedobjects.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/classes.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/info.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/objects.nib
-desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/Info.plist
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/decls.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/cdecls.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/protocols.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/subclasses.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/files.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/symbols0.pbxsymbols
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/refs.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/imports.pbxbtree
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/strings.pbxstrings/strings
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/strings.pbxstrings/control
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/pbxindex.header
-desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/categories.pbxbtree
+desktop/macosx/xcode/white_dune.xcodeproj/mufti.pbxuser
+desktop/macosx/xcode/white_dune.xcodeproj/project.pbxproj
+desktop/macosx/xcode/white_dune.xcodeproj/mufti.mode1
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune.hmap
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune~.dep
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune.dep
 desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/ppc/white_dune.LinkFileList
 desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/ppc/white_dune
 desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/i386/white_dune.LinkFileList
 desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/i386/white_dune
-desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune~.dep
-desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune.hmap
-desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune.dep
-desktop/macosx/xcode/WhiteDuneHelp/whiteDuneHelp.html
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/subclasses.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/strings.pbxstrings/strings
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/strings.pbxstrings/control
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/decls.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/symbols0.pbxsymbols
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/pbxindex.header
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/cdecls.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/categories.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/protocols.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/refs.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/files.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/imports.pbxbtree
+desktop/macosx/xcode/white_dune_Prefix.pch
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/classes.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/keyedobjects.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/info.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/objects.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/InfoPlist.strings
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/Credits.rtf
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/classes.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/info.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/objects.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/whiteDuneHelp.html
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/whiteDuneHelp/whiteDuneHelp.html
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/Info.plist
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/white_dune.icns
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/PkgInfo
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Info.plist
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/MacOS/dunestarter
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/MacOS/white_dune
+desktop/macosx/xcode/main.m
+desktop/macosx/xcode/white_dune.xcode/mufti.pbxuser
+desktop/macosx/xcode/white_dune.xcode/project.pbxproj
+desktop/macosx/xcode/Info.plist
+desktop/macosx/xcode/white_dune.icns
 desktop/fvwm2/mini-dune_4kids.xpm
-packager/rpm/mkrpm.sh
-packager/rpm/mkrpm_sl6.sh
-packager/debian/mkdeb_ubuntu.sh
-packager/debian/changelog
-packager/debian/mkdeb_wheezy.sh
-packager/debian/rules
-packager/debian/rules_ubuntu
-packager/debian/menu
-packager/debian/whitedune-doc.doc-base
-packager/debian/source/format
-packager/debian/control_ubuntu
-packager/debian/Makefile.in.debian_extension
-packager/debian/postinst
-packager/debian/control_wheezy
-packager/debian/Makefile.debian_extension
-packager/debian/rules_wheezy
-packager/debian/control
-packager/debian/mkinstalldirs
-packager/debian/prerm
-packager/hpux/THIS_IS_UNTESTED
-packager/hpux/mkswpackage
-packager/olpc/mkrpm.sh
-packager/slackware/files/install/slack-desc
-packager/slackware/mkpkg-iconscale2.sh
-packager/slackware/mkpkg_slackware2_1.sh
-packager/slackware/mkpkg.sh
-packager/freebsd/pkg-comment
-packager/freebsd/pkg-descr
-packager/freebsd/Makefile
-packager/freebsd/pkg-plist
-packager/freebsd/mkpkg.sh
-packager/irix/relnotes/white_dune.html
-packager/irix/mkpkg.sh
-packager/macosx/mksit.sh
-packager/openbsd/THIS_IS_UNTESTED
-packager/openbsd/pkg-comment
-packager/openbsd/pkg-descr
-packager/openbsd/distinfo
-packager/openbsd/Makefile
-packager/openbsd/pkg-plist
-packager/openbsd/mkpkg.sh
-packager/lsb/mkrpm.sh
-packager/Announcements/LSM.entry
-packager/Announcements/protocol.php
-packager/Announcements/xtensions_spec.php
-packager/Announcements/freewaredirectory_template_dune.txt
-packager/Announcements/down.sh
-packager/Announcements/spec.php
-packager/Announcements/pad_spec.xml
-packager/solaris/mkpkg.sh
-docs/developer_docs/Doxyfile.in
-docs/typical_vrml_examples/ldraw_dat_export.wrl
-docs/typical_vrml_examples/bubble.wav
-docs/typical_vrml_examples/image.gif
-docs/typical_vrml_examples/movie.mpg
-docs/typical_vrml_examples/xj3d_RigidBodyPhysics/spherecrash.x3dv
-docs/export_example_java/jme2_simple_scripting_example/properties.cfg
-docs/export_example_java/jme2_simple_scripting_example/ScriptingExample.wrl
-docs/export_example_java/main.java
-docs/export_example_java/simple_example/mainHelloWorld.java
-docs/export_example_java/simple_example/helloWorld.x3dv
-docs/export_example_java/simple_example/helloWorld2.x3dv
-docs/export_example_java/jme2_scripting_examples/properties.cfg
-docs/export_example_java/jme2_scripting_examples/examples.x3dv
-docs/export_example_java/jme2_example/properties.cfg
-docs/export_example_java/jme2_example/robot.x3dv
-docs/german_workshop_documents/animation_computeranimation_workshop_description.odt
-docs/german_workshop_documents/augen_falsch.wrl
-docs/german_workshop_documents/augen.wrl
-docs/german_workshop_documents/wuerfelmaennchen.wrl
-docs/german_workshop_documents/animation_3dmodelling_workshop_description.odt
-docs/german_workshop_documents/holes.wrl
-docs/german_workshop_documents/gelenk.wrl
-docs/german_workshop_documents/schiefer_wurf.wrl
-docs/german_workshop_documents/kameras.wrl
-docs/german_workshop_documents/animation_kinematic_workshop_description.odt
-docs/rendering_bugs/rendering_errors.html
-docs/rendering_bugs/README
-docs/scripted_Nodes/supershape_example.wrl
-docs/scripted_Nodes/curveanimation_example.wrl
-docs/usage_docs/nxtdials.wrl
-docs/usage_docs/qualle.wrl
-docs/usage_docs/schiff.wrl
-docs/usage_docs/nxtdials_en.wrl
-docs/usage_docs/lila_white_dune4wonderland.odp
-docs/usage_docs/ProximityProtoExample.wrl
-docs/usage_docs/nxtdials.lcd
-docs/usage_docs/nxtdials_de.wrl
-docs/usage_docs/test-0000.mpeg
-docs/usage_docs/illegal2vrml_1.html
-docs/usage_docs/xwings.wings
-docs/usage_docs/fish.wrl
-docs/usage_docs/test.fld
-docs/usage_docs/dune4kids_glider_en.html
-docs/usage_docs/glider10.png
-docs/usage_docs/glider11a.png
-docs/usage_docs/glider11.png
-docs/usage_docs/glider12.png
-docs/usage_docs/glider13.png
-docs/usage_docs/glider14.png
-docs/usage_docs/glider15.png
-docs/usage_docs/glider16.png
-docs/usage_docs/glider17.png
-docs/usage_docs/glider18.png
-docs/usage_docs/glider19.png
-docs/usage_docs/glider1.png
-docs/usage_docs/glider20.png
-docs/usage_docs/glider21.png
-docs/usage_docs/glider22.png
-docs/usage_docs/glider23.png
-docs/usage_docs/glider24.png
-docs/usage_docs/glider25.png
-docs/usage_docs/glider26.png
-docs/usage_docs/glider27.png
-docs/usage_docs/glider28.png
-docs/usage_docs/glider29.png
-docs/usage_docs/glider2.png
-docs/usage_docs/glider30.png
-docs/usage_docs/glider31a.png
-docs/usage_docs/glider31b.png
-docs/usage_docs/glider31.png
-docs/usage_docs/glider32.png
-docs/usage_docs/glider33.png
-docs/usage_docs/glider34.png
-docs/usage_docs/glider35.png
-docs/usage_docs/glider36.png
-docs/usage_docs/glider37.png
-docs/usage_docs/glider38.png
-docs/usage_docs/glider39.png
-docs/usage_docs/glider3.png
-docs/usage_docs/glider40.png
-docs/usage_docs/glider41a.png
-docs/usage_docs/glider41.png
-docs/usage_docs/glider42a.png
-docs/usage_docs/glider42.png
-docs/usage_docs/glider45.png
-docs/usage_docs/glider46.png
-docs/usage_docs/glider47.png
-docs/usage_docs/glider48a.png
-docs/usage_docs/glider48b.png
-docs/usage_docs/glider48.png
-docs/usage_docs/glider49.png
-docs/usage_docs/glider4.png
-docs/usage_docs/glider50.png
-docs/usage_docs/glider51.png
-docs/usage_docs/glider52.png
-docs/usage_docs/glider53.png
-docs/usage_docs/glider54.png
-docs/usage_docs/glider55.png
-docs/usage_docs/glider56.png
-docs/usage_docs/glider57.png
-docs/usage_docs/glider58.png
-docs/usage_docs/glider59.png
-docs/usage_docs/glider5.png
-docs/usage_docs/glider60.png
-docs/usage_docs/glider6.png
-docs/usage_docs/glider7.png
-docs/usage_docs/glider8.png
-docs/usage_docs/glider9.png
-docs/usage_docs/glider_movie.mp4
-docs/x3d/PositionInterpolator2DExample.wrl
-docs/x3d/CADGeometryPROTO.wrl
-docs/x3d/CoordinateInterpolator2DExample.wrl
-docs/interactive_open_wonderland_examples/simple_sliders_example.x3dv
-docs/interactive_open_wonderland_examples/proximitysensor_follower.x3dv
-docs/interactive_open_wonderland_examples/planesensor_slider.x3dv
-docs/interactive_open_wonderland_examples/cylindersensor_cylinder_rotation.x3dv
-docs/interactive_open_wonderland_examples/touchsensor_start_stop.x3dv
-docs/interactive_open_wonderland_examples/open_wonderland_export_howto.txt
-docs/interactive_open_wonderland_examples/touchsensor_pressed_released.x3dv
-docs/interactive_open_wonderland_examples/keysensor_pressed.x3dv
-docs/interactive_open_wonderland_examples/stringsensor.x3dv
-docs/interactive_open_wonderland_examples/cylindersensor_disk_rotation.x3dv
-docs/export_example_c/opengl_example/main.c
-docs/export_example_c/opengl_scripting_example/main.c
-docs/export_example_c/opengl_scripting_example/ScriptingExample.wrl
-docs/export_example_c/simple_example/helloWorld.x3dv
-docs/export_example_c/simple_example/mainHelloWorld.c
-docs/export_example_c/simple_example/helloWorld2.x3dv
-docs/export_example_c++/opengl_example/robot.x3dv
-docs/export_example_c++/opengl_scripting_example/ScriptingExample.wrl
-docs/export_example_c++/simple_example/helloWorld.x3dv
-docs/export_example_c++/fluid_fltk_opengl_example/callbacksToVrml.cxx
-docs/export_example_c++/fluid_fltk_opengl_example/GUIElements.fl
-README_LINUX.txt
-man/illegal2vrml.1
-man/dune.1
+desktop/irix/data/Dune.icon
+desktop/irix/data/nostereoDune.open.fti
+desktop/irix/data/Dunebackground.fti
+desktop/irix/data/Dune4kids.open.fti
+desktop/irix/data/Dune.fti
+desktop/irix/data/Dune4kids.fti
+desktop/irix/data/nostereoDune.fti
+desktop/irix/data/Dune.open.fti
+build
 lib/cvs/Entries
 lib/cvs/Root
 lib/cvs/Repository
+src/openglutfont.c
+src/resource.c
+src/cvs/Entries.Log
+src/cvs/Entries
+src/cvs/Root
+src/cvs/Repository
+src/subd_mesh.c
+src/mysnprintf.c
+src/gif.c
+src/buf.c
+src/SDLjoystick/Makefile.in
+src/SDLjoystick/Makefile
+src/config.h.nt
+src/deprecated/dune.dsp
+src/deprecated/dune.dsw
+src/deprecated/dune.dsp.nt
+src/deprecated/dune.dsp.jpg_png_zlib
+src/cvsroot/cvswrappers
+src/cvsroot/rcsinfo
+src/cvsroot/cvs/Entries
+src/cvsroot/cvs/Root
+src/cvsroot/cvs/Repository
+src/cvsroot/loginfo
+src/cvsroot/notify
+src/cvsroot/verifymsg
+src/cvsroot/config
+src/cvsroot/modules
+src/cvsroot/editinfo
+src/cvsroot/commitinfo
+src/cvsroot/checkoutlist
+src/cvsroot/taginfo
+src/mathx.c
+src/dune.vcxproj
+src/config.h.in
+src/res/dune_jpg_png_zlib.ico
+src/res/emptySocketSquare.bmp
+src/res/wonderlandSocketSquare.bmp
+src/res/halftone.bmp
+src/res/vcr2.bmp
+src/res/cvs/Entries
+src/res/cvs/Root
+src/res/dune.ico
+src/res/node_icons2.bmp
+src/res/recommendedSocketSquare.bmp
+src/res/standard_toolbar.bmp
+src/res/dune-rc.ico
+src/res/dune-pl.ico
+src/res/node_icons.bmp
+src/res/dune.devil.ico
+src/res/dune_nt.ico
+src/res/vcr.bmp
+src/res/gray_not_implemented.bmp
+src/res/gray.bmp
+src/res/fullSocketSquare.bmp
+src/res/Makefile
+src/res/recommendedWonderlandSocketSquare.bmp
+src/res/empty_node_icon.bmp
+src/res/standard_toolbar2.bmp
+src/subd.c
+src/swt/rc/rc
+src/swt/rc/cvs/Entries
+src/swt/rc/cvs/Root
+src/swt/rc/cvs/Repository
+src/swt/rc/rc.dsw
+src/swt/rc/rc.dsp
+src/swt/cvs/Entries.Log
+src/swt/cvs/Entries
+src/swt/cvs/Root
+src/swt/cvs/Repository
+src/swt/generic/cvs/Entries
+src/swt/generic/cvs/Root
+src/swt/generic/cvs/Repository
+src/swt/lib/cvs/Entries
+src/swt/lib/cvs/Root
+src/swt/lib/cvs/Repository
+src/swt/win32/swt.dsw
+src/swt/win32/cvs/Entries
+src/swt/win32/cvs/Root
+src/swt/win32/cvs/Repository
+src/swt/win32/swt.vcproj
+src/swt/win32/swt.dsp
+src/swt/include/cvs/Entries
+src/swt/include/cvs/Root
+src/swt/include/cvs/Repository
+src/swt/tests.new/res.rc
+src/swt/tests.new/resource.c
+src/swt/tests.new/bitmap1.bmp
+src/swt/tests.new/koordinaten.txt
+src/swt/tests.new/tests/tests.dsw
+src/swt/tests.new/tests/tests.dsp
+src/swt/tests.new/restest
+src/swt/tests/res.rc
+src/swt/tests/cvs/Entries
+src/swt/tests/cvs/Root
+src/swt/tests/cvs/Repository
+src/swt/tests/bitmap1.bmp
+src/swt/motif/cvs/Entries
+src/swt/motif/cvs/Root
+src/swt/motif/cvs/Repository
+src/pngLoad.c
+src/config.h.nt.devil.sand
+batch/repair_apple_bugs_fat.sh
+batch/print_forbidden_in_id.sh
+batch/removeLexYacc.sh
+batch/search_variable_h.sh
+batch/gdiffrch.sh
+batch/grepmore.sh
+batch/debugcommands.sh
+batch/new_wonderland_export.sh
+batch/gdbstart
+batch/diffrch.sh
+batch/replace.sh
+batch/rcsmdiff.sh
+batch/search_variable.sh
+batch/install_build_requirements.sh
+batch/dune_stick.bat
+batch/update_node_source.sh
+batch/proto2standard.sh
+debian/mkinstalldirs
+debian/menu
+debian/postinst
+debian/changelog
+debian/rules
+debian/compat
+debian/tmp/DEBIAN/postinst
+debian/tmp/DEBIAN/prerm
+debian/source/format
+debian/control
+debian/Makefile.in.debian_extension
+debian/prerm
+config.log
+logo/dune.wrl
+README_LINUX.txt

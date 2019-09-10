@@ -91,7 +91,14 @@ selftest:
 fastselftest:
 	cd test && $(MAKE) $$DUNEMAKEFLAGS fasttests
 
+debian:
+	sh batch/makedebian.sh
+
+debianclean:
+	rm -rf build
+	rm -rf debian
+
 install:
-	cd src && $(MAKE) install
+	(cd src && make install)
 
 # DO NOT DELETE

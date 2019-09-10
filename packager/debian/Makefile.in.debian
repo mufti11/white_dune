@@ -1,0 +1,31 @@
+srcdir = @srcdir@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+package=wdune
+     
+.PHONY: build
+build:
+	./configure --prefix=/usr --with-uninstallcomment="dpkg -P whitedune" --with-optimization --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity with-vrmlbrowser=view3dscene
+	$(MAKE) -j4
+
+install: build
+	debian/mkinstalldirs $(bindir)
+	$(INSTALL_PROGRAM) ../bin/dune $(bindir)/dune
+
+dist:	$(DISTFILES)
+	pwd | sed 's|.*/||' > .dname
+	rm -rf `cat .dname`
+	mkdir `cat .dname`
+	ln $(DISTFILES) `cat .dname`
+	cd res ; $(MAKE) dist
+	cd swt ; $(MAKE) dist
+	tar cf - `cat .dname` | gzip > `cat .dname`.tar.gz
+	rm -rf `cat .dname` .dname
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
