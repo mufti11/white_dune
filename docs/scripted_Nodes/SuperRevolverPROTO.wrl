@@ -362,10 +362,10 @@ PROTO SuperRevolver
            cindex = 0;
            sidesClosed = false;
 
-           superTess=(superTessellation==0)?17:superTessellation+1;
-           nurbsTess=(nurbsTessellation==0)?17:nurbsTessellation+1;
+           superTess=(superTessellation==0)?32:superTessellation;
+           nurbsTess=(nurbsTessellation==0)?16:nurbsTessellation;
 
-           inc1=(border-bottomBorder)/(superTess-1);
+           inc1=(border-bottomBorder)/superTess;
 
            if (border!=(Math.PI/2.0))
               if (bottomBorder!=(-Math.PI/2.0))
@@ -382,7 +382,7 @@ PROTO SuperRevolver
               }
  
            angle1=bottomBorder;
-           for (a1=0;a1<superTess;a1++)
+           for (a1 = 0; a1 < superTess; a1++)
               {
               r1[a1]=r(angle1,a,b,m,n1,n2,n3);
               c1[a1]=Math.cos(angle1);
@@ -390,10 +390,9 @@ PROTO SuperRevolver
               angle1+=inc1;
               }
 
-
            for (a2 = 0; a2 < nurbsTess; a2++) 
-              {
-              for (a1 = 0; a1 < superTess; a1++) 
+               {
+               for (a1 = 0; a1 < superTess; a1++) 
                  {
                  x = tess[a2].x * r1[a1] * c1[a1];
                  y = tess[a2].y;
@@ -402,6 +401,7 @@ PROTO SuperRevolver
                  vert[index].y = y;
                  vert[index].z = z;
                  index++;
+
                  n1 = a1 + 1;
                  closed = false;
                  if (n1 == superTess) 
@@ -416,16 +416,12 @@ PROTO SuperRevolver
                     if (closed) 
                        {
                        ci[cindex++] = -1;
-                       ci[cindex++] = -1;
-                       ci[cindex++] = -1;
-                       ci[cindex++] = -1;
-                       ci[cindex++] = -1;
-                       } 
+                       }
                     else 
                        {
-                       ci[cindex++] = a1 + n2 * superTess;
-                       ci[cindex++] = n1 + n2 * superTess;
                        ci[cindex++] = n1 + a2 * superTess;
+                       ci[cindex++] = n1 + n2 * superTess;
+                       ci[cindex++] = a1 + n2 * superTess;
                        ci[cindex++] = a1 + a2 * superTess;
                        ci[cindex++] = -1;
                        }
@@ -480,26 +476,36 @@ PROTO SuperRevolver
            var mid;
            var high;
            var n;
-    
+
            n = dimension + order - 1;
     
            if (u >= knots[n]) 
               {
               return n - order;
               }
-           low = order - 1;    high = n - order + 1;
+           low = order - 1;
+           high = n - order + 1;
+
+           mid = Math.floor((low + high) / 2);
     
-           mid = (low + high) / 2;
-    
-           while (u < knots[mid] || u >= knots[mid+1]) 
+           var oldLow = low;
+           var oldHigh = high;
+           var oldMid = mid;
+           while (u < knots[mid] || u >= knots[mid + 1]) 
               {
               if (u < knots[mid])
                  high = mid;
               else
                  low = mid;
-              mid = (low+high)/2;
+              mid = Math.floor((low + high) / 2);
+              if ((low == oldLow) && (high == oldHigh) && (mid == oldMid))
+                  break;
+              oldLow = low;
+              oldHigh = high;
+              oldMid = mid;
               }
-           return Math.floor(mid);
+
+           return mid;
            }
     
         function basisFuns(span, u, order, knots, basis, deriv)
@@ -519,11 +525,21 @@ PROTO SuperRevolver
               dsaved = 0.0;
               for (r = 0; r < j; r++) 
                  {
+                 var divisor = (right[r+1] + left[j-r]);
+                 var temp = 0;
+                 if (divisor != 0)                             
+                    temp = basis[r] / divisor;
+                 basis[r] = saved + right[r+1] * temp;
+                 deriv[r] = dsaved - j * temp;
+                 saved = left[j-r] * temp;
+                 dsaved = j * temp;
+/*
                  temp = basis[r] / (right[r+1] + left[j-r]);
                  basis[r] = saved + right[r+1] * temp;
                  deriv[r] = dsaved - j * temp;
                  saved = left[j-r] * temp;
                  dsaved = j * temp;
+*/
                  }
               basis[j] = saved;
               deriv[j] = dsaved;
@@ -540,7 +556,7 @@ PROTO SuperRevolver
   
            var base;
    
-           var index;
+           var index2;
   
            var w;
            var dw;
@@ -549,12 +565,12 @@ PROTO SuperRevolver
            var dgain;
     
            span = findSpan(dimension, order, u, knot);
-    
+
            basisFuns(span, u, order, knot, basis, deriv);
     
            base = span-order+1;
     
-           index = base;
+           index2 = base;
     
            S=new SFVec3f(0.0, 0.0, 0.0);
            du=new SFVec3f(0.0, 0.0, 0.0);
@@ -565,15 +581,15 @@ PROTO SuperRevolver
               {
               gain = basis[i];
               dgain = deriv[i];
-              S.x += controlPoint[index].x * gain;
-              S.y += controlPoint[index].y * gain;
-              S.z += controlPoint[index].z * gain;
-              w += weight[index] * gain;
-              du.x += controlPoint[index].x * dgain;
-              du.y += controlPoint[index].y * dgain;
-              du.z += controlPoint[index].z * dgain;
-              dw += weight[index] * dgain;
-              index++;
+              S.x += controlPoint[index2].x * gain;
+              S.y += controlPoint[index2].y * gain;
+              S.z += controlPoint[index2].z * gain;
+              w += weight[index2] * gain;
+              du.x += controlPoint[index2].x * dgain;
+              du.y += controlPoint[index2].y * dgain;
+              du.z += controlPoint[index2].z * dgain;
+              dw += weight[index2] * dgain;
+              index2++;
               }
            S.x = S.x / w;
            S.y = S.y / w;
@@ -636,11 +652,10 @@ PROTO SuperRevolver
     
            size = (uTess + 1);
        
-           inc = (knot[knot.length-1] - knot[0]) / uTess;
-       
+           inc = (knot[knot.length-1] - knot[0]) / (uTess - 1);
            index = 0;
            w = (weight.length == 0) ? weights : weight;
-           for (i = 0, u = knot[0]; i <= uTess; i++) 
+           for (i = 0, u = knot[0]; i < uTess; i++) 
               {
               tess[index] = linePoint(w,u,index);
               index++;
@@ -655,6 +670,7 @@ PROTO SuperRevolver
               {
               controlPoint[i].x=value[i].x;
               controlPoint[i].y=value[i].y;
+              controlPoint[i].z=0;
               }
            makeLine();
            }    

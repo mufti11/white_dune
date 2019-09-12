@@ -92,7 +92,6 @@ NodeViewpoint::getPosition() const
 {
     if (position() == NULL) {
         SFVec3f *value = (SFVec3f *)m_fields[position_Field()];
-printf("%d\n", position_Field());
         const float *v = value->getValue();
         return Vec3d(v[0], v[1], v[2]);
                 

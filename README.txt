@@ -5294,4 +5294,6 @@ Reenabled "if (this == NULL)" code parts
 
 Fixed crash cause of false Proto::deleteElements call
 
+Fixed rendering bug of SuperRevolver node
+
 Contact: MUFTI <mufti11@web.de>

@@ -46,7 +46,7 @@ NurbsCurve::findSpan(int dimension, int order, float u, const float knots[])
         } else {
             low = mid;
         }
-        mid = (low+high)/2;
+        mid = (low + high) / 2;
         // emergency abort of loop, otherwise a endless loop can occure
         if ((low == oldLow) && (high == oldHigh) && (mid == oldMid))
             break;
@@ -98,7 +98,7 @@ NurbsCurve::curvePoint(int dimension, int order, const float knots[],
     float *deriv = (float *) malloc(order * sizeof(float));
 
     if((basis==NULL) || (deriv==NULL)){
-      return NULL;
+        return NULL;
     }
     
     int span = findSpan(dimension, order, u, knots);
@@ -108,8 +108,8 @@ NurbsCurve::curvePoint(int dimension, int order, const float knots[],
     Vec3f C(0.0f, 0.0f, 0.0f);
     float w = 0.0f;
     for(int i=0; i<order; i++){
-      C += controlPoints[span-order+1+i] * basis[i];
-      w += weight[span-order+1+i] * basis[i];
+        C += controlPoints[span-order+1+i] * basis[i];
+        w += weight[span-order+1+i] * basis[i];
     }   
     
     if (w != 0)
@@ -117,7 +117,7 @@ NurbsCurve::curvePoint(int dimension, int order, const float knots[],
 
     free(basis);
     free(deriv);
-    
+
     return C;
 }
 

@@ -289,7 +289,7 @@ NodeNurbsCurve::createChain(void *data)
         return;
     int iTess = 32;
     if (tessellation())
-        tessellation()->getValue();
+        iTess = tessellation()->getValue();
     float *weights = NULL;
     int iDimension = getControlPoints()->getSize() / 3;
 
@@ -315,7 +315,6 @@ NodeNurbsCurve::createChain(void *data)
     const float *knots = knot()->getValues();
     
     float inc = (knots[knot()->getSize()-1] - knots[0]) / iTess;
-    
     const float *w = weights ? weights : weight()->getValues();
     int i;
     float u;

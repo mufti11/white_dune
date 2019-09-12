@@ -51,7 +51,7 @@ FieldViewItem::FieldViewItem(FieldView *view)
 
 FieldViewItem::~FieldViewItem()
 {
-    if (m_value) m_value->unref();
+//    if (m_value) m_value->unref();
 }
 
 void
