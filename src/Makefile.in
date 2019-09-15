@@ -687,8 +687,12 @@ target: mysnprintf.o
 	$(MAKE) ../bin/dune
 
 install: target
-	install ../bin/dune $(EXEC_PREFIX)/bin
-	install ../man/dune.1 $(PREFIX)/share/man/man1
+	install -m 755 -p ../bin/dune /usr/bin
+	install -m 644 -p ../man/dune.1 /usr/share/man/man1
+	install -m 644 -p ../desktop/kde/dune.desktop /usr/share/applications/dune.desktop
+	install -m 644 -p ../desktop/kde/dune.png /usr/share/pixmaps/dune.png
+	install -m 644 -p ../desktop/kde/dune4kids.desktop /usr/share/applications/dune4kids.desktop
+	install -m 644 -p ../desktop/kde/dune4kids.png /usr/share/pixmaps/dune4kids.png
 
 mysnprintf.o: mysnprintf.c
 	$(CC) -g $(CFLAGS) @C99@ -c -o $@ mysnprintf.c

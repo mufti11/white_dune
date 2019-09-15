@@ -5296,4 +5296,8 @@ Fixed crash cause of false Proto::deleteElements call
 
 Fixed rendering bug of SuperRevolver node
 
+Added packager snap for snap package creation
+
+Added access to OpenSuvdiv in /usr/local to snap package
+
 Contact: MUFTI <mufti11@web.de>

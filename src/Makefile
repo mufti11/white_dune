@@ -687,8 +687,8 @@ target: mysnprintf.o
 	$(MAKE) ../bin/dune
 
 install: target
-	install ../bin/dune $(EXEC_PREFIX)/bin
-	install ../man/dune.1 $(PREFIX)/share/man/man1
+	install ../bin/dune /usr/bin
+	install ../man/dune.1 /usr/share/man/man1
 
 mysnprintf.o: mysnprintf.c
 	$(CC) -g $(CFLAGS) -std=c99 -c -o $@ mysnprintf.c

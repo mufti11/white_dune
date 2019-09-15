@@ -1,7 +1,7 @@
 #!/bin/sh
 # set -x
 
-# creates a .deb (dpkg) installable binary package for debian lenny
+# creates a .deb (dpkg) installable binary package for debian jessi
 
 VER=`sh ../../batch/getversion.sh`
 VERSION=wdune-$VER

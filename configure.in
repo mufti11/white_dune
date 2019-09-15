@@ -1256,9 +1256,9 @@ if test "X_$VCG_ERROR" = "X_1" ; then
  [ 
  cat 1>&2 << EOF
 
- *** couldn't find a working libvcg development system (headers ony) ***
+ *** couldn't find a working vcglib development system (headers ony) ***
 
- if libvcg is not available, the polygon reducer function is not available 
+ if vcglib is not available, the polygon reducer function is not available 
 
 EOF
  ]
