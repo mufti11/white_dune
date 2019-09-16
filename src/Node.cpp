@@ -676,7 +676,13 @@ Node::writeXml(int f, int indent, int containerField)
             RET_ONERROR( indentf(f, indent) )
         RET_ONERROR( mywritestr(f, "-->\n") )
         return 0;
+    } else if ((getType() == VRML_IMAGE_TEXTURE) && 
+               ((m_scene->getWriteFlags() & X3DOM) != 0)) { 
+        NodeImageTexture *texture = (NodeImageTexture *)this;
+        Node *pixelTexture = texture->getPixelTexture();
+        return pixelTexture->writeXml(f, indent, containerField);
     }
+
     if (m_proto) {
         Proto *protoToWrite = NULL;
         TheApp->checkSelectionLinenumberCounting(m_scene, (Node*) this);

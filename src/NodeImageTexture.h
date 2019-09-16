@@ -107,6 +107,8 @@ public:
 
     virtual int     textureGlColorMode(void) { return m_glColorMode; }
 
+    Node           *getPixelTexture(void);
+
     fieldMacros(MFString, url,               ProtoImageTexture)
     fieldMacros(SFBool,   repeatS,           ProtoImageTexture)
     fieldMacros(SFBool,   repeatT,           ProtoImageTexture)

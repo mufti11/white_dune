@@ -7,23 +7,25 @@ BINARY INSTALLATION FOR Linux/UNIX/MacOSX
 
 You may want to check, if you can get installable packages/binaries for 
 your operation system under 
-http://wdune.ourproject.org/
+http://wdune.ourproject.org
+or
+https://snapcraft.io/wdune (Linux snap package)
 To get rid of deprecated configuration information after installation, you
 may need to remove $HOME/.dunerc (Linux/UNIX/MacOSX) as user or start
-wdune-0.99????? -uninstall (from the Micro$oft Windows commandline).
+wdune-1.????.exe -uninstall (from the Micro$oft Windows commandline).
 
 
 BINARY INSTALLATION FOR M$Windows
 =================================
 
 white_dune under M$Windows do not have a installation procedure. 
-It should run on all win32 compatible windows versions from scratch (except 
+It should run on all "win32 compatible" windows versions from scratch (except 
 early versions of Windows 95, which requires the installation of OpenGL first). 
 
 Currently there are only 64 Bit binary versions of white_dune for 
-Windows 7 or Windows 10 available. These are win32 compatible.
+Windows 7 or Windows 10 available. These are "win32 compatible".
 If you need a 32 Bit version or older Windows version of white_dune, 
-you have to build it and the needed libraries.
+you have to build it and the needed libraries from source.
 
 white_dune under M$Windows usually stores some configuration information in 
 the user section of the registry. It is possible to remove this information 
@@ -41,19 +43,14 @@ the windows registry with a additional batchfile like
 set DUNERC=%~d0:\dune.rc 
 %~d0:\dune.exe
 
-This is also usefull on (misconfigured ?) M$Windows installations which 
+This is usefull on (misconfigured ?) M$Windows installations which 
 forbid the modification of the windows registry completely.
 
 
 BUILD INSTRUCTIONS FOR UNIX/Linux:
 ----------------------------------
 
-The installation procedure of white_dune do not contain a "make install"
-process. This is intentional. 
-Instead, if you have root, a systemdependend binary package should be build 
-and installed, so white_dune is available to the systemdependend 
-installer/packing mechanism. 
-If there is no systemdependend installer/packing mechanism, white_dune
+If there is no systemdependend install mechanism, white_dune
 can be installed with "./configure && make" and the source directory should
 not be deleted, as it contains the help/PROTO files.
 
@@ -63,11 +60,16 @@ directory.
 Systems supported by "packager" directory
 =========================================
 
+ You need to install a lot of libraries, see the next section for information.
+
+ For MacOSX, the needed static static libraries (and headers) are available at
+ ftp://ftp.ourproject.org/pub/wdune/macosx_static_inc_libs.tar.gz
  For MacOSX 10.2 "jaguar"/MacOSX 10.3 "Panther" you need "X11 for MacOSX" and 
  the matching X11 SDK package. 
  More modern MacOSX systems usually install "X11 for MacOSX" and the X11 SDK 
  package is available on installation media.
- For current MacOSX systems you have to install XQuartz from the internet.
+ For current MacOSX systems you have to install XQuartz 
+ (https://www.xquartz.org) from the internet.
  For MacOSX use:
      (cd packager/macosx && sh mksit.sh)
 
@@ -80,10 +82,10 @@ Systems supported by "packager" directory
  For FreeBSD use (as root):
      (cd packager/freebsd && sh mkpkg.sh)
 
- For Redhat Linux (and possibly other rpm based systems) use (as root):
+ For Redhat/Fedora Linux (and possibly other rpm based systems):
      (cd packager/rpm && sh mkrpm.sh)
 
- For OpenSuse (and possibly other rpm based systems) use (as root):
+ For OpenSuse (and possibly other rpm based systems) use:
      (cd packager/rpm && sh mkrpm_opensuse.sh)
 
  For Debian Linux (stable) use as root:
@@ -107,6 +109,11 @@ Systems supported by "packager" directory
  use:
      (cd packager/aix && sh mkbff.sh)
      
+ Under Ubuntu Linux you can try (as root):
+     (cd packager/snap && sh mksnap.sh)
+ You need to install "snapcraft", the result is a "snap" package that
+ installs under several Linux distributions
+
 You will find the binary package files either in /tmp or in the usual 
 systemdependend place like /usr/src/Redhat or $HOME/lppdir/bff 
 

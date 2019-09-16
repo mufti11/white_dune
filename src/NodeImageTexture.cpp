@@ -45,6 +45,7 @@
 #include "Texture.h"
 #include "MyMesh.h"
 #include "NodeShape.h"
+#include "NodePixelTexture.h"
 
 ProtoImageTexture::ProtoImageTexture(Scene *scene)
   : WonderlandExportProto(scene, "ImageTexture")
@@ -576,3 +577,30 @@ NodeImageTexture::isLoaded()
 {
     return m_imageStatus == IMG_STATUS_LOADED;
 }
+
+Node *
+NodeImageTexture::getPixelTexture(void)
+{
+    NodePixelTexture *texture = (NodePixelTexture *)
+                                m_scene->createNode("PixelTexture");
+    texture->repeatS(repeatS());
+    texture->repeatT(repeatT());
+    MyArray<int> data;
+    for (int i = 0; i < m_textureWidth; i++)
+        for (int j = 0; j < m_textureHeight; j++) {
+            if (m_components == 3)
+                data.append(m_image[i * j * m_components] + 
+                            m_image[i * j * m_components + 1] * 256 + 
+                            m_image[i * j * m_components + 2] * 256 * 256);
+            if (m_components == 4)
+                data.append(m_image[i * j * m_components + 3] + 
+                            m_image[i * j * m_components + 0] * 256 + 
+                            m_image[i * j * m_components + 1] * 256 * 256 +
+                            m_image[i * j * m_components + 2] * 256 * 256 * 256
+                           ); 
+       }
+    texture->image(new SFImage(m_textureWidth, m_textureHeight, m_components,
+                   data.getData()));
+    return texture;
+}
+

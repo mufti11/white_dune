@@ -5300,4 +5300,6 @@ Added packager snap for snap package creation
 
 Added access to OpenSuvdiv in /usr/local to snap package
 
+Added conversion from ImageTexture to PixelTexture for X3DOM preview
+
 Contact: MUFTI <mufti11@web.de>

@@ -60,7 +60,7 @@ int SFImage::writeData(int f, int i) const
       default:
         number = getPixels()[i - 3];
     }
-    return mywritef(f, "0x%08x", number);
+    return mywritef(f, "0x%x", number);
 }
 
 int SFImage::write(int f, int indent) const
@@ -80,7 +80,7 @@ int SFImage::writeXml(int f, int indent) const
     RET_ONERROR( mywritef(f, "'%d %d %d", getWidth(), getHeight(), 
                           getComponents()) )
     for (int i = 0; i < getNumPixels(); i++)
-        RET_ONERROR( mywritef(f, " 0x%08x", getPixels()[i]) )
+        RET_ONERROR( mywritef(f, " 0x%x", getPixels()[i]) )
     RET_ONERROR( mywritef(f, "'") )
     return 0;
 }
