@@ -442,6 +442,7 @@ Chris Rorden              (https://github.com/neurolabusc/vx)
 Brian Wellington          (bill.jpg for Tux warbird from xbill)
 Matias Duarte             (bill.jpg for Tux warbird from xbill)
 Pixar                     (code from OpenSubdiv tutorial)
+Andreas Quiring           (raspian hosting) 
 
 ==========================================================================
 
