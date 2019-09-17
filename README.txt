@@ -5302,4 +5302,6 @@ Added access to OpenSuvdiv in /usr/local to snap package
 
 Added conversion from ImageTexture to PixelTexture for X3DOM preview
 
+Fixed bug in conversion from ImageTexture to PixelTexture
+
 Contact: MUFTI <mufti11@web.de>

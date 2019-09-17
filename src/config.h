@@ -68,7 +68,7 @@
 
 /* define if you have the libusb library */
 #ifndef __CYGWIN__
-/* # undef HAVE_LIBUSB */
+# define HAVE_LIBUSB 1
 #endif
 
 /* define if you want to convert to The Nebula Device 3D engine ("sanddune") */
@@ -322,7 +322,7 @@
 #define HAVE_WWW_BROWSER "/usr/bin/xdg-open %s &"
 
 /* vrml browser to view vrml files*/
-#define HAVE_VRML_BROWSER "/usr/bin/xdg-open %s"
+#define HAVE_VRML_BROWSER "/usr/bin/view3dscene %s"
 
 /* vrml browser to view vrml files with a remote command*/
 #define HAVE_VRML_REMOTE_BROWSER "/usr/bin/xdg-open %s"

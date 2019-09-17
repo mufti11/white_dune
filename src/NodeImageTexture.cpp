@@ -307,7 +307,7 @@ NodeImageTexture::load()
                m_glColorMode = GL_LUMINANCE_ALPHA;
             else
                m_glColorMode = GL_LUMINANCE;
-            data = new unsigned char [width * height * m_components];
+            data = new unsigned char[width * height * m_components];
             image.Read(data);
             break;
         }
@@ -366,7 +366,7 @@ NodeImageTexture::load()
     } else {
         m_scaleRequired = true;
         m_image = new unsigned char[m_textureWidth * m_textureHeight * 
-                                   m_components];
+                                    m_components];
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         gluScaleImage(m_glColorMode, width, height, GL_UNSIGNED_BYTE, data,
@@ -581,26 +581,30 @@ NodeImageTexture::isLoaded()
 Node *
 NodeImageTexture::getPixelTexture(void)
 {
+    load();
     NodePixelTexture *texture = (NodePixelTexture *)
                                 m_scene->createNode("PixelTexture");
     texture->repeatS(repeatS());
     texture->repeatT(repeatT());
     MyArray<int> data;
-    for (int i = 0; i < m_textureWidth; i++)
-        for (int j = 0; j < m_textureHeight; j++) {
+    int size = m_textureWidth * m_textureHeight * m_components;
+    for (int i = 0; i < size; i += m_components) {
+            if (m_components == 2)
+                data.append(m_image[i + 0] * 256 + 
+                            m_image[i + 1]);
             if (m_components == 3)
-                data.append(m_image[i * j * m_components] + 
-                            m_image[i * j * m_components + 1] * 256 + 
-                            m_image[i * j * m_components + 2] * 256 * 256);
+                data.append(m_image[i + 0] * 256 * 256 +
+                            m_image[i + 1] * 256 + 
+                            m_image[i + 2]); 
             if (m_components == 4)
-                data.append(m_image[i * j * m_components + 3] + 
-                            m_image[i * j * m_components + 0] * 256 + 
-                            m_image[i * j * m_components + 1] * 256 * 256 +
-                            m_image[i * j * m_components + 2] * 256 * 256 * 256
+                data.append(m_image[i + 0] * 256 * 256 * 256 +
+                            m_image[i + 1] * 256 * 256 +
+                            m_image[i + 2] * 256 +
+                            m_image[i + 3] 
                            ); 
        }
     texture->image(new SFImage(m_textureWidth, m_textureHeight, m_components,
-                   data.getData()));
+                               data.getData()));
     return texture;
 }
 

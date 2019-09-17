@@ -44,7 +44,7 @@ COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/
 CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
