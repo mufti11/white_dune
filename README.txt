@@ -5305,4 +5305,6 @@ Added conversion from ImageTexture to PixelTexture for X3DOM preview
 
 Fixed bug in conversion from ImageTexture to PixelTexture
 
+Fixed missing containerField bug
+
 Contact: MUFTI <mufti11@web.de>

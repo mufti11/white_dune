@@ -3071,8 +3071,7 @@ NodeData::findValidFieldType(int childType)
 int
 NodeData::findFirstValidFieldType(int childType)
 {
-    // start loop with 1 to avoid metadataField
-    for (int field = 1; field < m_numFields; field++) {
+    for (int field = 0; field < m_numFields; field++) {
         if (validChildType(field, childType)) {
             return field;
         }
