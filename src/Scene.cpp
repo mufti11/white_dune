@@ -699,10 +699,14 @@ Scene::scanForExternProtos(NodeList *nodes)
                     MyString files = "";
                     for (int i = 0; i < urls->getSize(); i++) {
                          files += urls->getValue(i);
+                         static MyString path = urls->getValue(i);
+                         if (Download((const char*)getURL(), &path))
+                             break;
                          files += " ";
+                         if (i == urls->getSize() -1)
+                            TheApp->MessageBox(IDS_EXTERNPROTO_FILE_FAILED, 
+                                               proto->getName(isX3d()), files);
                     }     
-                    TheApp->MessageBox(IDS_EXTERNPROTO_FILE_FAILED, 
-                                       proto->getName(isX3d()), files);
                 }
             }
         }

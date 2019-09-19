@@ -5307,4 +5307,6 @@ Fixed bug in conversion from ImageTexture to PixelTexture
 
 Fixed missing containerField bug
 
+Fixed error of unnecessary warnings in EXTERN PROTO warnings
+
 Contact: MUFTI <mufti11@web.de>
