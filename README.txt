@@ -14,7 +14,7 @@ white_dune is:
 - a graphical editor to load/create/store X3D/VRML97 files
 - a simple NURBS/Superformula/Subdivide based 3D modeller
 - a 3D animation tool
-- a commandline X3D/VRML97 compiler in development
+- a commandline X3D/VRML97 compiler
 - a program with (currently) 3 different GUIs
 - a program for beginners/children to create their first 3D animation ("-4kids")
 - a tool (and examples) that supports you in learning X3D or VRML97
@@ -442,7 +442,7 @@ Chris Rorden              (https://github.com/neurolabusc/vx)
 Brian Wellington          (bill.jpg for Tux warbird from xbill)
 Matias Duarte             (bill.jpg for Tux warbird from xbill)
 Pixar                     (code from OpenSubdiv tutorial)
-Andreas Quiring           (raspian hosting) 
+Dipl. Ing. Andreas Quiring(raspian hosting) 
 
 ==========================================================================
 

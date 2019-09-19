@@ -1,0 +1,4 @@
+!GlobalState
+assets:
+  build-packages: ['libjpeg62-dev=1:6b2-3']
+  build-snaps: []
