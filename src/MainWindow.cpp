@@ -1443,7 +1443,8 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     m_movieEdit = NULL;
     m_movieEditorInUse = false;
     m_selectedField = -1;
-    m_statusText[0] = 0;
+    static MyString staticString;
+    m_statusText = staticString;
     m_searchText = "";
 
     scene->UpdateViews(this, UPDATE_ALL, NULL);
@@ -1803,7 +1804,6 @@ MainWindow::OnCommand(void *vid)
     // start command
     m_scene->addNextCommand();
     bool exitFlag = false;
-    m_statusText[0] = 0;
     Node *selectionNode = NULL;
     bool vertexModifier_active;
     float vertexModifier_radius = 0.5;
@@ -13638,7 +13638,7 @@ bool MainWindow::SaveModified()
 void
 MainWindow::setStatusText(const char *str)
 {
-    mystrncpy_secure(m_statusText, str, 256);
+    m_statusText = str;
     OnHighlight(NULL);
 }
 
@@ -13858,10 +13858,11 @@ MainWindow::countPolygons()
     swLoadString(IDS_NUMBER_POLYGONS, numberPolygons, 255);
     char numberPrimitives[256];
     swLoadString(IDS_NUMBER_PRIMITIVES, numberPrimitives, 255);
-    mysnprintf(m_statusText, 255, "%s: %d  %s: %d",
+    char statusText[256];
+    mysnprintf(statusText, 255, "%s: %d  %s: %d",
                numberPolygons, polygons,  
                numberPrimitives, primitives);
-    m_statusBar->SetText(m_statusText);
+    m_statusBar->SetText(statusText);
 }
 
 void
@@ -13921,18 +13922,19 @@ MainWindow::countPolygons4catt()
     char numberPolygons[256];
     swLoadString(IDS_NUMBER_POLYGONS_4_CATT, numberPolygons, 255);
 
-    mysnprintf(m_statusText, 255, "%s: %d  %s: %d   %s: %d",
+    char statusText[256]; 
+    mysnprintf(statusText, 255, "%s: %d  %s: %d   %s: %d",
                numberDoubleSidedPolygons, doubleSided / 2,
                numberSingleSidedPolygons, singleSided,
                numberPolygons, singleSided + doubleSided);
 
-    m_statusBar->SetText(m_statusText);
+    m_statusBar->SetText(statusText);
 }
 
 void
 MainWindow::clearStatusText()
 {
-    m_statusText[0] = 0;
+    m_statusText = "";
     OnHighlight(NULL);
 }
 

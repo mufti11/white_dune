@@ -535,10 +535,19 @@ void DuneApp::OnFilePreview(Scene* scene)
     mystrncpy_secure(wrlpath, posixPath, 1024);
 #endif
     }
-    char *temppath = SaveTempFile(scene,".dune_preview",
-                                  swBrowserGetVrmlLevel(TheApp->GetBrowser()),
-                                  wrlpath[0] ? wrlpath : NULL);
 
+    int oldWriteFlags = scene->getWriteFlags();
+    int newVrmlLevel = swBrowserGetVrmlLevel(TheApp->GetBrowser());
+    if (swBrowserGetVrmlLevel(GetBrowser()) & X3DOM)
+            if (scene->hasPROTONodes()) {
+                newVrmlLevel = X3DV;     
+                scene->setWriteFlags(X3DV);
+            }           
+
+    char *temppath = SaveTempFile(scene,".dune_preview",
+                                  newVrmlLevel,
+                                  wrlpath[0] ? wrlpath : NULL);
+    scene->setWriteFlags(oldWriteFlags);
 #ifndef _WIN32
     if (!swBrowserGetUseFork(TheApp->GetBrowser())) {
         
@@ -555,10 +564,40 @@ void DuneApp::OnFilePreview(Scene* scene)
                           &textEditCommand, &textEditLinenumberOption,
                           &textEditUseExtensionTxt);
     saveTempFiles(m_currentWindow, textEditUseExtensionTxt);
+
+    const char *command;
+    int vrmlLevel;
+    int useRemote;
+    int xtypExecuteOrFork;
+    const char *remoteCommand;
+    const char *application;
+    const char *topic;
+
+    swBrowserGetSettings(GetBrowser(), &command, 
+                         &vrmlLevel, &useRemote, &xtypExecuteOrFork,
+                         &remoteCommand, &application, &topic);
+
+    const char *command2 = strdup(command);
+    const char *remoteCommand2 = strdup(remoteCommand);
+
+    int oldVrmlLevel = vrmlLevel;
+    bool resetBrowserType = false;
     if (strlen(temppath) != 0) {
         int remote = swBrowserGetRemote(GetBrowser());
-        if (swBrowserGetVrmlLevel(GetBrowser()) & (X3DOM | XITE))
+        if (swBrowserGetVrmlLevel(GetBrowser()) & X3DOM) {
+            if (scene->hasPROTONodes()) {
+                swBrowserSetSettings(GetBrowser(), command2, 
+                                     X3DV, 0, xtypExecuteOrFork,
+                                     remoteCommand2, application, topic);
+                swBrowserSetRemote(GetBrowser(), 0);
+                resetBrowserType = true;
+
+                TheApp->PrintMessageWindows("PROTOS in scene, not using remote Browser");
+            }
+        }
+        if (swBrowserGetVrmlLevel(GetBrowser()) & XITE)
             swBrowserSetRemote(GetBrowser(), 1);
+
 #ifdef _WIN32
         MyString path = "";
         path += "file://";
@@ -582,6 +621,12 @@ void DuneApp::OnFilePreview(Scene* scene)
 #else
     restoreTempFiles();
 #endif
+    if (resetBrowserType) {
+        int dummy;
+        swBrowserSetSettings(GetBrowser(), command2, 
+                             oldVrmlLevel, useRemote, xtypExecuteOrFork,
+                             remoteCommand2, application, topic);
+    }
 }
 
 void

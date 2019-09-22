@@ -5309,4 +5309,10 @@ Fixed missing containerField bug
 
 Fixed error of unnecessary warnings in EXTERN PROTO warnings
 
+Added better errormessage for failed downloads
+
+Added selection of non remote browser if X3DOM is selected and PROTOs are used
+
+(X3DOM do not support PROTOs) 
+
 Contact: MUFTI <mufti11@web.de>

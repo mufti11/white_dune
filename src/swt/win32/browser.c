@@ -131,16 +131,18 @@ swBrowserSetSettings(SBROWSER browser, const char *command,
                      const char *remoteCommand, const char *application,
                      const char *topic)
 {
+    char *oldCommand = strdup(command);
+    char *oldRemoteCommand = strdup(remoteCommand);
     free(browser->command);
     free(browser->remoteCommand);
     free(browser->application);
     free(browser->topic);
 
-    browser->command = mystrdup(command);
+    browser->command = oldCommand;
     browser->vrmlLevel = vrmlLevel;
     browser->useRemote = useRemote;
     browser->xtypExecute = xtypExecute;
-    browser->remoteCommand = mystrdup(remoteCommand);
+    browser->remoteCommand = oldRemoteCommand;
     browser->application = mystrdup(application);
     browser->topic = mystrdup(topic);
 

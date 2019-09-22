@@ -372,7 +372,9 @@ NodeImageTexture::load()
         gluScaleImage(m_glColorMode, width, height, GL_UNSIGNED_BYTE, data,
                       m_textureWidth, m_textureHeight, GL_UNSIGNED_BYTE, 
                       m_image);
+#ifdef _WIN32
         delete [] data;
+#endif
     }
 #endif
     if ((m_components == 2) || (m_components == 4)) {

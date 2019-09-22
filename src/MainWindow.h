@@ -550,7 +550,7 @@ protected:
     AudioClipEdit      *m_soundEdit;
     bool                m_soundEditorInUse;
     int                 m_selectedField;
-    char                m_statusText[256];
+    const char *        m_statusText;
     MyString            m_searchText;
     Node               *m_vrmlCutNode;
     MyString            m_fieldPipeFilterNode;

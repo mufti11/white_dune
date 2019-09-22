@@ -67,7 +67,7 @@ build-packages:
     - libavformat-dev
     - libavresample-dev
     - libswscale-dev
-    -  libswresample-dev
+    - libswresample-dev
     - ttf-bitstream-vera
     - xdg-utils
     - aqsis

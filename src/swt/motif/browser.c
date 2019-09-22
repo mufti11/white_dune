@@ -144,14 +144,16 @@ swBrowserSetSettings(SBROWSER browser, const char *command,
                      const char *remoteCommand, const char *application,
                      const char *topic)
 {
+    char *oldCommand = mystrdup(command);
+    char *oldRemoteCommand = mystrdup(remoteCommand);
     free(browser->command);
     free(browser->remoteCommand);
 
-    browser->command = mystrdup(command);
+    browser->command = oldCommand;
     browser->vrmlLevel = vrmlLevel;
     browser->useRemote = useRemote;
     browser->useFork = useFork;
-    browser->remoteCommand = mystrdup(remoteCommand);
+    browser->remoteCommand = oldRemoteCommand;
 
     swSetPreference(browser->prefs, "PreviewCommand", browser->command);
     swSetIntPreference(browser->prefs, "PreviewUseRemote", browser->useRemote);

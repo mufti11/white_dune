@@ -5513,9 +5513,11 @@ Scene::Download(const URL &url, MyString *path)
                 fprintf(stderr, "curl: %s\n",  curl_easy_strerror(res));
             } else
                 m_downloaded = true;
-        } else
+        } else {
+            swDebugf("failed download %s\n", (const char *)url);
             return false; 
-      
+        }
+
         if (httpfile.stream)
             fclose(httpfile.stream); /* close the local file */
       
@@ -6860,6 +6862,22 @@ Scene::addToStore4Convex_hull(void)
     }
 }
 
+static bool searchPROTO(Node *node, void *data)
+{
+    bool *result = (bool *)data;
+    if (node->isPROTO()) 
+        *result = true;
+    return true;
+}     
+
+
+bool
+Scene::hasPROTONodes(void)
+{
+    bool result = false;
+    m_root->doWithBranch(searchPROTO, &result, true, false, false, true, false);
+    return result;
+}   
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
 {

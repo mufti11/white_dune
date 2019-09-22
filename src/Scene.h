@@ -297,6 +297,7 @@ public:
                            return true;
                            }
     void                deleteProto(MyString name);
+    bool                hasPROTONodes(void); 
     Proto              *getExtensionProto(MyString name);
 
     static bool         validRoute(Node *src, int eventOut, Node *dst, 
@@ -548,6 +549,7 @@ public:
                            { return m_writeFlags & CONVERT2X3D; }
     bool                converts2VRML(void) const 
                            { return m_writeFlags & CONVERT2VRML; }
+    void                setWriteFlags(int flags) { m_writeFlags = flags; }
     int                 getWriteFlags(void) { return m_writeFlags; }
     void                setX3d(void);
     void                setX3dv(void);
