@@ -94,7 +94,7 @@ public:
     virtual int     writeCDynamicNodeCallback(int f, int languageFlag);
 
     virtual int      writeXml(int filedes, int indent, 
-                              int containerField = -1);
+                              int containerField = -1, bool avoidUse = false);
                                                 
 
 protected:

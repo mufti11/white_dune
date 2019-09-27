@@ -272,7 +272,7 @@ NodeShape::getTransparency(void)
 }
 
 int
-NodeShape::write(int filedes, int indent)
+NodeShape::write(int filedes, int indent, bool avoidUse)
 {
     Node *geo = geometry()->getValue();
     bool vrml97 = false;
@@ -281,13 +281,13 @@ NodeShape::write(int filedes, int indent)
     if (vrml97 && (geo->getType() == VRML_NURBS_GROUP)) {
         NodeNurbsGroup *nurbsGroup = (NodeNurbsGroup *)geo;
         NodeGroup group(nurbsGroup);
-        RET_ONERROR( group.write(filedes, indent) )                
+        RET_ONERROR( group.write(filedes, indent, avoidUse) )                
     } else if (vrml97 && (geo->getType() == X3D_NURBS_SET)) {
         NodeNurbsSet *nurbsSet = (NodeNurbsSet *)geo;
         NodeGroup group(nurbsSet);
-        RET_ONERROR( group.write(filedes, indent) )                
+        RET_ONERROR( group.write(filedes, indent, avoidUse) )
     } else
-        RET_ONERROR( Node::write(filedes, indent) )
+        RET_ONERROR( Node::write(filedes, indent, avoidUse) )
     return 0;
 }
 

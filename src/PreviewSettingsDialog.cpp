@@ -40,6 +40,9 @@ PreviewSettingsDialog::OnCommand(void *vid)
       case IDC_BROWSE:
         OnBrowse();
         break;
+      case IDC_BROWSE_REMOTE:
+        OnBrowseRemote();
+        break;
       case IDC_USE_REMOTE:
         OnUseRemote();
         break;
@@ -196,6 +199,17 @@ void PreviewSettingsDialog::OnBrowse()
     if (TheApp->browseCommand(buf, 1024, IDS_PREVIEW_COMMAND_PROMPT)) {
         mysnprintf(buf2, 1024, "%s \"%%s\"", buf);
         swSetText(swGetDialogItem(m_dlg, IDC_COMMAND), buf2);
+    }
+}
+
+void PreviewSettingsDialog::OnBrowseRemote() 
+{
+    char buf[1024] = "";
+    char buf2[1024] = "";
+
+    if (TheApp->browseCommand(buf, 1024, IDS_PREVIEW_COMMAND_PROMPT)) {
+        mysnprintf(buf2, 1024, "%s \"%%s\"", buf);
+        swSetText(swGetDialogItem(m_dlg, IDC_REMOTE_COMMAND), buf2);
     }
 }
 

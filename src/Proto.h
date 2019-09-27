@@ -465,11 +465,11 @@ public:
 
     virtual bool        isPROTO(void) const { return true; }
 
-    virtual int         write(int filedes, int indent)
-                            { return Node::write(filedes, indent); }
+    virtual int         write(int filedes, int indent, bool avoidUse);
 
-    virtual int         writeXml(int filedes, int indent)
-                            { return Node::writeXml(filedes, indent); }
+    virtual int         writeXml(int filedes, int indent, 
+                                 int containerField = -1, 
+                                 bool avoidUse = false);
 
     virtual int         writeFields(int filedes, int indent)
                             { return Node::writeFields(filedes, indent); }

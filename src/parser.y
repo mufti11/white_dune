@@ -1682,8 +1682,6 @@ public:
     IntArray *containerFields;
 };
 
-static MyStack<DataNode> nodes;
-
 #define STATUS_NONE 0
 #define STATUS_NODE 1
 #define STATUS_USE 2
@@ -1698,6 +1696,13 @@ static MyStack<DataNode> nodes;
 #define STATUS_HEAD 11
 #define STATUS_IMPORTEXPORT 12
 #define STATUS_SHADERPART 13
+#define STATUS_HTML_BODY 14
+
+static MyStack<DataNode> nodes;
+
+static bool insideX3D = false;
+static bool canStoreHTML = false;
+static bool htmlFirstPart = true;
 
 static MyStack<int> status;
 static MyStack<int> currentFieldIndex;
@@ -1734,8 +1739,27 @@ static void XMLCALL endCDATA (void *userData)
     doingcdata = 0;
 }
 
+static const char *htmlData = "";
+
+static void XMLCALL handleHtmlData (void *userData, const char *string, int len) 
+{
+    if (len == 1)
+        if (string[0] == '\r')
+            return;
+
+    char *temp = (char *)malloc(len + 2);
+    strncpy(temp, string, len);
+    temp[len] = '\0';
+    temp[len + 1] = '\0';
+    if (canStoreHTML) {
+        // store HTML part to scene
+        scene->storeHtmlData(temp);
+    }
+}
+
 static void XMLCALL handleCDATA (void *userData, const char *string, int len) 
 {
+    htmlData = "";
     if (doingcdata) {
         if (len == 1)
             if (string[0] == '\r')
@@ -2075,6 +2099,8 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
     Proto *current_proto = protoStack.peek(); //null is in the scene context
 
     if (strcmp(element, "X3D") == 0) { 
+        insideX3D = true;
+        canStoreHTML = false;
         x3d = true;
         bool setX3dVersion = false;
         for (int i = 0; attrib[i] != NULL; i += 2)
@@ -2391,12 +2417,35 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                 }
                 status.pop();
                 status.push(STATUS_NODE);
-            } else {
+            } else if (strcmp(element, "html") == 0 ||
+                       strcmp(element, "title") == 0 ||
+                       strcmp(element, "link") == 0 ||
+                       strcmp(element, "script") == 0) {
+                // parse X3DDOM content into void
+                node = NULL;
+            } else if (strcmp(element, "body") == 0) {
+                // parse HTML content
+                status.pop();
+                status.push(STATUS_HTML_BODY);
+                canStoreHTML = true;
+                node = NULL;
+            } else if (strcmp(element, "x3d") == 0) {
+                insideX3D = true;
+                canStoreHTML = false;
+                node = NULL;
+            } else if (insideX3D) {
                 node = newNode(element); // element would be a string like "Transform" 
                 if (node) {
                     status.pop();
                     status.push(STATUS_NODE);
                 } 
+            } else {
+                int numAttrib = 0;
+                for (int i = 0; attrib[i] != NULL; i++)
+                    numAttrib = i + 1;
+                scene->storeHtmlElementAndAttributes(element, attrib, 
+                                                     numAttrib, htmlFirstPart);
+                node = NULL;
             }
             if (node != NULL) {
                 nodeStack.pop();
@@ -2406,8 +2455,10 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                 node->appendTo(nodes.peek().nodeList);
                 for (int i = 0; attrib[i] != NULL; i += 2) { 
                     if (strcmp("DEF", attrib[i]) == 0)   //"DEF" 
-                        scene->def(uniqName(attrib[i + 1]), node);  // "myTrans"
-                    else if (!strcmp("containerField", attrib[i])) {
+                        scene->def(uniqName(attrib[i + 1]), node);
+                    else if (strcmp("id", attrib[i]) == 0) {
+                        // special X3DOM attribute "id"
+                    } else if (!strcmp("containerField", attrib[i])) {
                         parseContainerField(current_node, attrib, i);
                     } else if (!strcmp("name", attrib[i]) && protoInstance) {
                         //ProtoInstance has a name= field processed above, but checkField doesn't handle
@@ -2556,6 +2607,14 @@ static void XMLCALL end(void *data, const char *el)
     Node *current_node = nodeStack.pop();
     Proto *current_proto = protoStack.peek(); 
     int istatus = status.pop();
+
+    if (strcasecmp(el, "X3D") == 0) {
+        insideX3D = false;        
+        canStoreHTML = true;
+        htmlFirstPart = false;
+        // empty HTML attribute second
+        scene->storeHtmlElementAndAttributes("", NULL, 0, htmlFirstPart);
+    }
 
     if (istatus > 0) {
         if (istatus == STATUS_SCRIPT_ELEMENT || istatus == STATUS_PROTO_ELEMENT) {
@@ -2718,11 +2777,18 @@ static void XMLCALL end(void *data, const char *el)
                 rootNodes->append(current_node);
             }
         } 
-    } 
+    }
 }
 
 const char *parseX3d()
 {
+    insideX3D = false;
+    canStoreHTML = false;
+    htmlFirstPart = true;
+
+    // empty HTML attribute first
+    scene->storeHtmlElementAndAttributes("", NULL, 0, htmlFirstPart);
+
     scene->setX3dXml();
     rootNodes = new NodeList();
     done = false;     
@@ -2734,6 +2800,7 @@ const char *parseX3d()
     //XML_SetCdataSectionHandler(x3dParser[contextIndex], startCDATA, endCDATA);
     //XML_SetDefaultHandler(x3dParser[contextIndex], handleCDATA);
     //XML_SetUserData(x3dParser[contextIndex], &iparent); // iparent
+    XML_SetCharacterDataHandler(x3dParser[contextIndex], handleHtmlData);
     XML_SetCommentHandler(x3dParser[contextIndex], handleComment);
 
     int max_size = 1024; 

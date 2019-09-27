@@ -11,6 +11,9 @@
 /* Define to empty if the keyword does not work.  */
 /* #undef const */
 
+/* Define to 0 if X3DOM support PROTOS (not yet) */
+#define HAVE_NO_PROTOS_X3DOM 1
+
 /* Define if you have the ANSI C header files.  */
 #define STDC_HEADERS 1
 

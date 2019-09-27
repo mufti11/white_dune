@@ -132,10 +132,10 @@ NodeNurbsCurve2D::writeProto(int f)
 }
 
 int             
-NodeNurbsCurve2D::write(int filedes, int indent)
+NodeNurbsCurve2D::write(int filedes, int indent, bool avoidUse)
 {
     if (!m_scene->isPureVRML())
-        RET_ONERROR( Node::write(filedes, indent) )
+        RET_ONERROR( Node::write(filedes, indent, avoidUse) )
     return 0;
 }
 

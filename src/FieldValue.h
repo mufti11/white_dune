@@ -63,7 +63,9 @@ public:
     // write data in VRML syntax to file
     virtual int         write(int filedes, int indent) const;
     // write data in X3D/XML syntax to file
-    virtual int         writeXml(int filedes, int indent) const;
+    virtual int         writeXml(int filedes, int indent, 
+                                 int containerField = -1,
+                                 bool avoidUse = false) const;
     virtual int         writeDataXml(int filedes, int i) const 
                             { return writeData(filedes, i); }
     // write data in AC3D b syntax to file
@@ -185,7 +187,9 @@ public:
                            { return write(filedes, indent, writeBrackets()); }
     virtual int         write4FieldPipe(int filedes, int indent) const 
                             { return write(filedes, indent, false); } 
-    virtual int         writeXml(int filedes, int indent) const;
+    virtual int         writeXml(int filedes, int indent,
+                                 int containerField = -1,
+                                 bool avoidUse = false) const;
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag) const;
     virtual int         writeCSendEventFunction(int filedes, int languageFlag);

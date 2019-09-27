@@ -308,7 +308,7 @@ NodeScript::writeCDynamicNodeCallback(int f, int languageFlag)
 
    
 int
-NodeScript::writeXml(int filedes, int indent, int containerField)
+NodeScript::writeXml(int filedes, int indent, int containerField, bool avoidUse)
 {
      if (m_scene->getWriteFlags() & X3DOM) {
          for (int i = 0; i < url()->getSize(); i++)
@@ -322,7 +322,8 @@ NodeScript::writeXml(int filedes, int indent, int containerField)
                  RET_ONERROR( mywritestr(filedes, "</script>\n") )
              }
      } else
-        return DynamicFieldsNode::writeXml(filedes, indent, containerField);
+        return DynamicFieldsNode::writeXml(filedes, indent, containerField, 
+                                           avoidUse);
      return 0;
 }
 

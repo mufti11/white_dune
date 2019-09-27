@@ -97,18 +97,18 @@ NodeTrimmedSurface::writeProto(int f)
 }
 
 int             
-NodeTrimmedSurface::write(int filedes, int indent)
+NodeTrimmedSurface::write(int filedes, int indent, bool avoidUse)
 {
     if (m_scene->isPureVRML()) {
         if (surface()->getValue())
             return surface()->getValue()->write(filedes, indent);
         NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
                                       m_scene->createNode("IndexedFaceSet");
-        int ret = faceSet->write(filedes, indent);
+        int ret = faceSet->write(filedes, indent, avoidUse);
         m_scene->removeNode(faceSet);
         return ret;
     }
-    return Node::write(filedes, indent);
+    return Node::write(filedes, indent, avoidUse);
 }
 
 void    

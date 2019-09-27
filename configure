@@ -795,6 +795,7 @@ with_debug
 with_x
 enable_input_events
 with_about
+with_allow_multiple_definition
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1504,6 +1505,7 @@ Optional Packages:
 --with-debug 	          set -DDEBUG=1 to enable debugging code
   --with-x                use the X Window System
 --with-about=\"about text\" about text
+--with-allow-multiple-definition allow multiple linker symbols
 
 Some influential environment variables:
   CC          C compiler command
@@ -10411,6 +10413,14 @@ if test "X_$DUNE_VERSION2" != "X_" ; then
 _ACEOF
 
 fi
+
+
+# Check whether --with-allow-multiple-definition was given.
+if test "${with_allow_multiple_definition+set}" = set; then :
+  withval=$with_allow_multiple_definition; LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition";export LDFLAGS
+fi
+
+
 
 
 (cd $SELFDIR && sh batch/mkSFMFTypes.sh)

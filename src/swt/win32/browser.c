@@ -185,9 +185,9 @@ swBrowserSetDefault(SBROWSER browser)
 void
 swBrowserPreview(SBROWSER browser, const char *path, SWND wnd)
 {
-    if (browser->useRemote) {
+    if (browser->useRemote != 0) {
 //        if (!browserGoTo(browser, path)) {
-            if (browserLaunch(browser->command,browser->hProcess, path, wnd)) {
+            if (browserLaunch(browser->remoteCommand,browser->hProcess, path, wnd)) {
                 browserGoTo(browser, path);
             }
 //        }

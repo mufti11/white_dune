@@ -43,7 +43,7 @@ int SFBool::writeData(int f, int i) const
     return mywritestr(f, m_value ? "TRUE" : "FALSE");
 }
 
-int SFBool::writeXml(int f, int i) const
+int SFBool::writeXml(int f, int i, int containerField, bool avoidUse) const
 {
     return mywritestr(f, m_value ? "'true'" : "'false'");
 }

@@ -54,7 +54,7 @@ public:
     virtual int     getX3dVersion(void) const { return 0; }    
     virtual Node   *copy() const { return new NodeComment(*this); }
 
-    virtual int     write(int filedes, int indent);
+    virtual int     write(int filedes, int indent, bool avoidUse = false);
 
     fieldMacros(MFString, comment, ProtoComment)
 };

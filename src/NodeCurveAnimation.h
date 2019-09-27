@@ -95,9 +95,12 @@ public:
 
     virtual Node   *degreeElevate(int newDegree); 
 
-    virtual int     write(int filedes, int indent);
-    virtual int     writeXml(int filedes, int indent, int containerField = -1) 
-                       { return write(filedes, indent); }
+    virtual int     write(int filedes, int indent, bool avoidUse = false);
+    virtual int     writeXml(int filedes, int indent, int containerField = -1,
+                             bool avoidUse = false) 
+                        { 
+                        return write(filedes, indent, avoidUse);
+                        }
 
     virtual int     writeC(int filedes, int languageFlag);
     virtual int     writeCDeclaration(int filedes, int languageFlag);

@@ -58,8 +58,9 @@ public:
     virtual int     getX3dVersion(void) const { return 0; }    
     virtual Node   *copy() const { return new NodeImport(*this); }
 
-    virtual int     write(int filedes, int indent);
-    virtual int     writeXml(int filedes, int indent, int containerField = -1);
+    virtual int     write(int filedes, int indent, bool avoidUse = false);
+    virtual int     writeXml(int filedes, int indent, int containerField = -1, 
+                             bool avoidUse = false);
 
     virtual void    update();
 

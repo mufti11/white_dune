@@ -79,7 +79,7 @@ public:
 
     virtual bool    hasCoverFields(void) { return true; }   
 
-    virtual int     write(int filedes, int indent);
+    virtual int     write(int filedes, int indent, bool avoidUse = false);
 
     virtual Node   *convert2Vrml(void);
 

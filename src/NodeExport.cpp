@@ -48,7 +48,7 @@ NodeExport::NodeExport(Scene *scene, Proto *def)
 {
 }
 
-int NodeExport::write(int f, int indent)
+int NodeExport::write(int f, int indent, bool avoidUse)
 {
     TheApp->checkSelectionLinenumberCounting(m_scene, this);
     RET_ONERROR( indentf(f, indent) )
@@ -64,7 +64,7 @@ int NodeExport::write(int f, int indent)
     return(0);
 }
 
-int NodeExport::writeXml(int f, int indent, int containerField)
+int NodeExport::writeXml(int f, int indent, int containerField, bool avoidUse)
 {
     TheApp->checkSelectionLinenumberCounting(m_scene, this);
     RET_ONERROR( indentf(f, indent) )

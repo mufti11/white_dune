@@ -60,7 +60,7 @@ public:
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
     int             writeProto(int filedes);
-    int             write(int filedes, int indent);
+    int             write(int filedes, int indent, bool avoidUse = false);
 };
 
 #endif // _NODE_NURBS_TEXTURE_SURFACE_H

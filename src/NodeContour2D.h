@@ -69,7 +69,7 @@ public:
     virtual void    swap(int fromTo) { children()->swap(fromTo); }
 
     int             writeProto(int f);
-    int             write(int filedes, int indent);
+    int             write(int filedes, int indent, bool avoidUse = false);
  
     virtual Node   *convert2X3d(void);
     virtual Node   *convert2Vrml(void);

@@ -41,6 +41,7 @@ public:
 
 protected:
     void                OnBrowse();
+    void                OnBrowseRemote();
     void                OnUseRemote();
     void                OnSetDefault();
 };

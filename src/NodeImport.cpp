@@ -50,7 +50,7 @@ NodeImport::NodeImport(Scene *scene, Proto *def)
 {
 }
 
-int NodeImport::write(int f, int indent)
+int NodeImport::write(int f, int indent, bool avoidUse)
 {
     TheApp->checkSelectionLinenumberCounting(m_scene, this);
     RET_ONERROR( mywritestr(f, "IMPORT ") )
@@ -67,7 +67,7 @@ int NodeImport::write(int f, int indent)
     return(0);
 }
 
-int NodeImport::writeXml(int f, int indent, int containerField)
+int NodeImport::writeXml(int f, int indent, int containerField, bool avoidUse)
 {
     TheApp->checkSelectionLinenumberCounting(m_scene, this);
     RET_ONERROR( mywritestr(f, "<IMPORT inlineDEF='") )

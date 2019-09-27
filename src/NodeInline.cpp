@@ -332,3 +332,18 @@ NodeInline::addToConvertedNodes(int flags)
     node->ref();
     m_convertedNodes.append(node);
 }
+
+int         
+NodeInline::writeXml(int filedes, int indent, int containerField, bool avoidUse)
+{ 
+#if HAVE_NO_PROTOS_X3DOM
+    if ((m_scene->getWriteFlags() & X3DOM) && m_loadedNodes) {
+        for (int i = 0; i < m_loadedNodes->size(); i++) 
+            RET_ONERROR( (*m_loadedNodes)[i]->writeXml(filedes, indent, 
+                                                       containerField, true) )
+        return 0;
+    }    
+#endif
+    return Node::writeXml(filedes, indent); 
+}
+

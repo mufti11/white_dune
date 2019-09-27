@@ -1815,6 +1815,12 @@ MainWindow::OnCommand(void *vid)
         exitFlag = true;
 #endif
         break;
+      case ID_DUNE_FILE_HTML_OPEN:
+        OnFileOpenHtml();
+#ifndef HAVE_OPEN_IN_NEW_WINDOW
+        exitFlag = true;
+#endif
+        break;
       case ID_DUNE_FILE_URL_OPEN:
         OnFileOpenUrl();
         break;
@@ -4270,6 +4276,9 @@ MainWindow::OnCommand(void *vid)
         break;
       case ID_OPTIONS_START_LANGUAGE_FRENCH:
         TheApp->SetStartLanguage("fr");
+        break;
+      case ID_OPTIONS_START_LANGUAGE_PORTUGENESE:
+        TheApp->SetStartLanguage("pt");
         break;
       case ID_TEACHER_CORRECT_NAME:
         setName(IDS_CORRECT);
@@ -8693,8 +8702,12 @@ MainWindow::moveBranchToInline()
     if (TheApp->getFileDialogDir())
         while (chdir(TheApp->getFileDialogDir()) == -2);
     if (swSaveFileDialog(TheApp->mainWnd(), "Save As Inline",
-        "Inline VRML File (.wrl)\0*.wrl;*.WRL\0All Files (*.*)\0*.*\0\0",
-        path, 1024,".wrl")) {
+#ifdef _WIN32
+            "Inline VRML File (.wrl)\0*.wrl;*.WRL\0All Files (*.*)\0*.*\0\0",
+#else
+            "*.wrl",
+#endif
+            path, 1024,".wrl")) {
         int f = open(path, O_WRONLY | O_CREAT,00666);  
         if (f == -1) {
             TheApp->MessageBoxPerror(path);
@@ -9751,9 +9764,17 @@ MainWindow::createBranchImageTexture(void)
         while (chdir(TheApp->getFileDialogDir()) == -2);
     if (swOpenFileDialog(m_wnd, "Select Image (*.jpg, *.png)",
 #ifdef HAVE_LIBDEVIL
+# ifdef _WIN32
         "All Files (*.*)\0*.*\0\0",
+# else
+        "*.*",
+# endif
 #else
+# ifdef _WIN32
         "Image Files (*.gif, *.jpg, *.png)\0*.gif;*.jpg;*.png\0All Files (*.*)\0*.*\0\0",
+# else
+        "*.[gjp][ipn][fgg]",
+# endif
 #endif
                          buf, MY_MAX_PATH)) {
         NodeImageTexture *node = (NodeImageTexture *)
@@ -11452,7 +11473,11 @@ MainWindow::insertAudioClip()
         if (TheApp->getFileDialogDir())
             while (chdir(TheApp->getFileDialogDir()) == -2);
         if (swOpenFileDialog(m_wnd, "Select Sound Data (*.wav,*.midi)",
+#ifdef _WIN32
                              "Sound Files (*.wav, *.midi)\0*.wav;*.midi\0All Files (*.*)\0*.*\0\0",
+#else
+                             "*.[wm][ai][vd]*]",
+#endif
                              buf, MY_MAX_PATH)) {
 
             NodeAudioClip *node = (NodeAudioClip *)
@@ -11487,9 +11512,17 @@ MainWindow::insertImageTexture()
            while (chdir(TheApp->getFileDialogDir()) == -2);
         if (swOpenFileDialog(m_wnd, "Select Image (*.jpg, *.png)",
 #ifdef HAVE_LIBDEVIL
+#ifdef _WIN32
             "All Files (*.*)\0*.*\0\0",
+# else
+            "*.*",
+# endif
 #else
+#ifdef _WIN32
             "Image Files (*.gif, *.jpg, *.png)\0*.gif;*.jpg;*.png\0All Files (*.*)\0*.*\0\0",
+# else
+            "*.[gjp][ipn][fgg]",
+# endif
 #endif
                              buf, MY_MAX_PATH)) {
             NodeImageTexture *node = (NodeImageTexture *)
@@ -11650,7 +11683,11 @@ MainWindow::insertCubeTexture()
             if (TheApp->getFileDialogDir())
                 while (chdir(TheApp->getFileDialogDir()) == -2);
             if (swOpenFileDialog(m_wnd, message,
+#ifdef _WIN32
                 "Image Files (*.jpg, *.png)\0*.jpg;*.png\0All Files (*.*)\0*.*\0\0",
+#else
+                "*.[gjp][ipn][fgg]",
+#endif
                              buf, MY_MAX_PATH)) {
                 URL url;
                 url.FromPath(buf);
@@ -11719,7 +11756,11 @@ MainWindow::insertInline(bool withLoadControl)
     buf[0] = '\0';
     if (TheApp->getFileDialogDir())
         while (chdir(TheApp->getFileDialogDir()) == -2);    
+#ifdef WIN32
     char *fileSelectorText = getFileSelectorText();
+#else
+    const char *fileSelectorText = "*.[wWxX][rR33][lLdD]*";
+#endif
     if (swOpenFileDialog(m_wnd, "Insert Inline", fileSelectorText, buf, 
                          MY_MAX_PATH)) {
          NodeInline *node;
@@ -11744,7 +11785,11 @@ MainWindow::insertMovieTexture()
     if (TheApp->getFileDialogDir())
         while (chdir(TheApp->getFileDialogDir()) == -2);
     if (swOpenFileDialog(m_wnd, "Select movie (MPEG1) File (*.mpg, *.mpeg)",
+#ifdef WIN32
          "MPEG1 Files (*.mpg, *.mpeg)\0*.mpg;*.mpeg\0All Files (*.*)\0*.*\0\0",
+#else
+         "*.mpg",
+#endif
          buf, MY_MAX_PATH)) {
         Node *current = m_scene->getSelection()->getNode();
         int field = m_scene->getSelection()->getField();
@@ -12164,7 +12209,11 @@ MainWindow::insertVirtualSoundSource()
         if (TheApp->getFileDialogDir())
             while (chdir(TheApp->getFileDialogDir()) == -2);
         if (swOpenFileDialog(m_wnd, "Select Sound Wave File (*.wav, *.wave)",
+#ifdef WIN32
                              "Wave Sound Files (*.wav, *.wave)\0*.wav;*.wave\0All Files (*.*)\0*.*\0\0",
+#else
+                             "*.wav*",
+#endif
                              buf, MY_MAX_PATH)) {
             NodeVirtualSoundSource *node = (NodeVirtualSoundSource *)
                   m_scene->createNode("VirtualSoundSource");
@@ -12796,7 +12845,11 @@ MainWindow::OnFileOpen()
 #endif
     char path[1024];
     path[0] = '\0';
+#ifdef _WIN32
     char *fileSelectorText = getFileSelectorText();
+#else
+    const char *fileSelectorText = "*.[wWxX][rR33][lLdD]*";
+#endif
     if (TheApp->getFileDialogDir())
         while(chdir(TheApp->getFileDialogDir()) == -2);
     if (swOpenFileDialog(m_wnd, "Open", fileSelectorText, path, 1024)) {
@@ -12806,7 +12859,29 @@ MainWindow::OnFileOpen()
 #endif
         }
     }
-    delete [] fileSelectorText;
+}
+
+void
+MainWindow::OnFileOpenHtml()
+{
+#ifndef HAVE_OPEN_IN_NEW_WINDOW
+    if (!TheApp->checkSaveOldWindow())
+        return;
+#endif
+    char path[1024];
+    path[0] = '\0';
+    const char *fileSelectorText = "*.html";
+    if (TheApp->getFileDialogDir())
+        while(chdir(TheApp->getFileDialogDir()) == -2);
+    if (swOpenFileDialog(m_wnd, "Open X3DOM html", fileSelectorText, path, 
+                         1024)) {
+        if (OpenFileCheck(path)) {
+            m_scene->storeAsHtml();
+#ifndef HAVE_OPEN_IN_NEW_WINDOW
+            TheApp->deleteOldWindow();
+#endif
+        }
+    }
 }
 
 static bool urlValidate(MyString text)
@@ -12876,7 +12951,6 @@ MainWindow::OnFileImport()
         m_scene->setX3d();
     else if ((!oldX3d) && m_scene->isX3d())             
         m_scene->setVrml();
-
 }
 
 //
@@ -12980,8 +13054,10 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
         const char *errors = m_scene->getErrors();
         if (strlen(errors) > 0)
             TheApp->MessageBox(errors);
+#ifndef _WIN32
         if (errno != 0)
             TheApp->MessageBoxPerror(path);
+#endif
         return false;
     }
     return true;
@@ -12995,6 +13071,12 @@ bool MainWindow::OnFileSave()
     if ((testx3dv != NULL) && 
         ((path + strlen(path) - strlen(".x3dv")) == testx3dv))
        writeFlags = X3DV;
+    const char *testhtml = strstr(path,".html");
+    if ((testhtml != NULL) && 
+        ((path + strlen(path) - strlen(".html")) == testhtml)) {
+       writeFlags = X3D_XML | X3DOM;
+       m_scene->storeAsHtml();
+    }
     if (path[0] && (path[0] != '-')) {
         char lastChar = path[strlen(path) > 0 ? strlen(path) - 1 : 0];
         if (lastChar == 'z')
@@ -13098,7 +13180,12 @@ bool MainWindow::OnFileExportOff()
         NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)node->copy();
         char path[1024] = { 0 };
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "off (.off)\0*.off;*.OFF\0All Files (*.*)\0*.*\0\0",
+#else
+                             "*.off",
+
+#endif
                              path, 1024, ".off")) {
             faceset->writeOff(path);
             ((Node *)faceset)->unref();
@@ -13208,67 +13295,121 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
     }
     if (writeFlags & XITE) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "html (.html)\0*.html;*.HTML\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.html", 
+#endif
                              path, 1024, ".html"))
            save = true; 
     } else if (writeFlags & (X3DV | PURE_X3DV)) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "X3DV (.x3dv)\0*.x3dv;*.X3DV\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.x3dv", 
+#endif
                              path, 1024, ".x3dv"))
            save = true; 
     } else if (writeFlags & KANIM) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "Kambi VRML engine's animation (.kanim)\0*.kanim;*.KANIM\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.kanim", 
+#endif
                              path, 1024, ".kanim"))
             save = true; 
     } else if (writeFlags & X3DOM) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                             "X3DOM html page (.html)\0*.html;*.HTML\0All Files (*.*)\0*.*\0\0",
-                             path, 1024, ".html"))
+#else
+                            "*.html", 
+#endif
+                            path, 1024, ".html"))
             save = true; 
     } else if (writeFlags & C_SOURCE) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                             "C source (.c)\0*.c;*.AC\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.c", 
+#endif
                             path, 1024, ".c"))
             save = true; 
     } else if (writeFlags & CC_SOURCE) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "C++ source (.cc)\0*.cc;*.AC\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.cc", 
+#endif
                              path, 1024, ".cc"))
             save = true; 
     } else if (writeFlags & JAVA_SOURCE) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "java source (.java)\0*.java;*.AC\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.java", 
+#endif
                              path, 1024, ".java"))
             save = true; 
     } else if (writeFlags & AC3D) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "ac3d (.ac)\0*.ac;*.AC\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.ac", 
+#endif
                              path, 1024, ".ac"))
             save = true; 
     } else if (writeFlags & RIB) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "rib (.rib)\0*.rib;*.RIB\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.ib", 
+#endif
                              path, 1024, ".rib"))
             save = true; 
     } else if (writeFlags & LDRAW_DAT) {   
         if (m_scene->validateLdrawExport())
             if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                                  "ldraw dat (.dat)\0*.dat;*.DAT\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.dat", 
+#endif
                                  path, 1024, ".dat"))
                 save = true; 
     } else if (writeFlags & X3D_XML) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "x3d (.x3d)\0*.x3d;*.X3D\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.x3d", 
+#endif
                              path, 1024, ".x3d"))
             save = true; 
     } else if (writeFlags & X3DV) {   
         if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
                              "x3dv (.x3dv)\0*.x3dv;*.X3DV\0All Files (*.*)\0*.*\0\0",
+#else
+                            "*.x3dv", 
+#endif
                              path, 1024, ".x3dv"))
             save = true; 
+
+#ifdef _WIN32
     } else if (swSaveFileDialog(m_wnd, "Save As", fileSelectorText, path, 1024,
                                 ".wrl"))
+#else
+    } else if (swSaveFileDialog(m_wnd, "Save As", "*.wrl", path, 1024,
+                                ".wrl"))
+#endif
         save = true; 
 
     if (writeFlags & SKIP_SAVED_TEST) {
@@ -13338,8 +13479,7 @@ bool MainWindow::OnFileExportCattGeo()
     if (swOpenFileDialog(m_wnd, "Select", "Catt GEO Material file(material.geo)\0material.geo\0\0", 
                          path, 1024)) {
 #else
-    if (swOpenFileDialog(m_wnd, "Select", "Catt GEO Material file(material.geo)\0material.geo;MATERIAL.GEO\0\0", 
-                         path, 1024)) {
+    if (swOpenFileDialog(m_wnd, "Select", "material.geo", path, 1024)) {
 #endif
         for (int i = strlen(path); i >=0; i--)
              if (path[i] == swGetPathSelector()) {

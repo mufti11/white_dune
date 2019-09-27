@@ -43,7 +43,8 @@ FieldValue::write(int filedes, int indent) const
 }
 
 int
-FieldValue::writeXml(int filedes, int indent) const
+FieldValue::writeXml(int filedes, int indent, int containerField,
+                     bool avoidUse) const
 { 
     RET_ONERROR( mywritestr(filedes, "'") )
     RET_ONERROR( writeDataXml(filedes, 0) )
@@ -380,7 +381,8 @@ int MFieldValue::write(int f, int indent, bool writeBrackets) const
     return(0);
 }
 
-int MFieldValue::writeXml(int f, int indent) const
+int MFieldValue::writeXml(int f, int indent, int containterField,
+                          bool avoidUse) const
 {
     RET_ONERROR( mywritestr(f, "'") )
     for (int i = 0; i < getSFSize(); i++) { 

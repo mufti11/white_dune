@@ -374,6 +374,7 @@ Scene::Scene()
     m_infoHandles = false;
     m_glName = 0;
     m_vertexModifier = NULL;
+    m_storeAsHtml = false;
 }
 
 void
@@ -893,6 +894,17 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
         m_delayedWriteNodes.resize(0);
     alreadyIn = false;
 
+    // sort out multiple ROUTEs
+    if (m_routeList.size() != 0)
+       for (List<MyString>::Iterator* routepointer = m_routeList.first();
+            routepointer != NULL; routepointer = routepointer->next() ) 
+            for (List<MyString>::Iterator* routepointer2 = m_routeList.first();
+                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
+          if (routepointer != routepointer)
+              if (strcmp((const char*) routepointer->item(), 
+                         (const char*) routepointer2->item()) == 0)
+                  m_routeList.remove(routepointer2);
+
     if (m_routeList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_routeList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
@@ -906,6 +918,18 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
        TheApp->incSelectionLinenumber();
        m_routeList.removeAll();
     }
+
+    // sort out multiple ROUTEs
+    if (end && m_endRouteList.size() != 0)
+       for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
+            routepointer != NULL; routepointer = routepointer->next() ) 
+            for (List<MyString>::Iterator* routepointer2 = m_endRouteList.first();
+                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
+          if (routepointer != routepointer)
+              if (strcmp((const char*) routepointer->item(), 
+                         (const char*) routepointer2->item()) == 0)
+                  m_endRouteList.remove(routepointer2);
+
     if (end && m_endRouteList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
@@ -1248,6 +1272,14 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
                 return 0;
     }    
 
+    if (m_storeAsHtml)
+        writeFlags |= (X3DOM | X3D_XML);
+
+    const char *ext = strrchr(url, '.');
+    if (ext)
+        if (strcasecmp(ext, ".html") == 0)
+            writeFlags |= (X3DOM | X3D_XML);
+
     TheApp->setWriteUrl(url);
     ProtoMap::Chain::Iterator *j;
     for (int i = 0; i < m_protos.width(); i++)
@@ -1353,6 +1385,16 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( writeHead(f, writeFlags) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
+        for (int i = 0; i < m_htmlFirstPart.size(); i++)
+            if (m_htmlFirstPart[i]) {
+                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
+                                                  (const char *)m_htmlBegin[i])
+                                       )
+                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
+                                                  (const char *)m_htmlData[i]) )
+                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s\n", 
+                                                  (const char *)m_htmlEnd[i]) )
+            }
         RET_RESET_FLAGS_ONERROR( mywritef(f,"    <x3d %s>\n",
                                               TheApp->GetX3domParameter()) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"      <Scene>\n") )
@@ -1576,6 +1618,16 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( indentf(f, indent > 0 ? 2 : 0) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</body>\n") )
         TheApp->incSelectionLinenumber();
+        for (int i = 0; i < m_htmlFirstPart.size(); i++)
+            if (!(m_htmlFirstPart[i])) {
+                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
+                                                  (const char *)m_htmlBegin[i])
+                                        )
+                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
+                                                  (const char *)m_htmlData[i]) )
+                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s\n", 
+                                                  (const char *)m_htmlEnd[i]) )
+            }
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</html>\n") )
         TheApp->incSelectionLinenumber();
     }
@@ -3406,7 +3458,7 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
             }
         }
     }
-    UpdateViews(sender, UPDATE_ADD_ROUTE, (Hint *) &hint);
+//    UpdateViews(sender, UPDATE_ADD_ROUTE, (Hint *) &hint);
     return true;
 }
 
@@ -4841,6 +4893,23 @@ Scene::getUniqueNodeName(Node *node)
     return getUniqueNodeName(name);
 }
 
+
+MyString
+Scene::generateUniqueNodeName(Node *node, const char *name)
+{
+    int i;
+    static char buf[512];
+
+    mysnprintf(buf, 512, "%s%d", name, 1);
+    for (i = 1; hasAlreadyName(buf); i++) {
+        mysnprintf(buf, 512, "%s%d", name, i);
+    }
+    MyString ret = "";
+    ret += buf;
+    def(ret, node);
+    return ret;
+}
+
 MyString
 Scene::generateUniqueNodeName(Node *node)
 {
@@ -5525,8 +5594,8 @@ Scene::Download(const URL &url, MyString *path)
                 
         *path = filename;
     } else
-#endif
         *path = data.string;
+#endif
 
     return true;
 }
@@ -6095,10 +6164,10 @@ Scene::setX3dv(void)
 void
 Scene::setX3dXml(void) 
 {
+    setX3d();
     if (!(m_writeFlags & X3D_XML)) {
         m_writeFlags |= X3D_XML; 
     }
-    setX3d();
 }
 
 void
@@ -6266,7 +6335,37 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
                                           i->item().getNode(), 
                                           i->item().getField()));
         }
-    if (list) execute(list);
+    if (list) 
+        execute(list);
+}
+
+void                
+Scene::copyRoutesToScene(Node *node) {
+    int j = -1;
+    SocketList::Iterator *i = NULL;
+    CommandList *list = NULL;
+
+    Proto *fromProto = node->getProto();
+
+    for (j = 0; j < fromProto->getNumEventIns(); j++)
+        for (i = node->getInput(j).first(); i != NULL; 
+             i = i->next()) {
+            if (list == NULL) 
+                list = new CommandList();
+            list->append(new RouteCommand(i->item().getNode(), i->item().getField(),
+                                          node, j));
+        }                                        
+    for (j = 0; j < fromProto->getNumEventOuts(); j++)
+        for (i = node->getOutput(j).first(); i != NULL; 
+             i = i->next()) {
+            if (list == NULL) 
+                list = new CommandList();
+            list->append(new RouteCommand(node, j, i->item().getNode(), 
+                                                   i->item().getField()));
+        }
+    if (list)
+        execute(list);
+
 }
 
 
@@ -6860,6 +6959,45 @@ Scene::addToStore4Convex_hull(void)
              } 
          m_store4convex_hull.append(transformMatrix * vertex);
     }
+}
+
+void                
+Scene::storeHtmlData(const char *data) 
+{
+    if (data)
+        if (m_htmlData.size() > 0)
+            m_htmlData[m_htmlData.size() - 1] += data;
+}
+
+void
+Scene::storeHtmlElementAndAttributes(const char *element, 
+                                     const char **attributes,
+                                     int numAttributes, bool htmlFirstPart)
+{
+    MyString begin = "";
+    MyString end = "";
+    if (strlen(element) > 0) {
+        begin += "<";
+        begin += element;
+        for (int i = 0; i < numAttributes; i += 2) {
+            begin += " ";
+            begin += attributes[i];
+            begin += "=";
+            begin += "'";
+            if (i + 1 < numAttributes)
+                begin += attributes[i + 1];
+            begin += "'";
+        }     
+        begin += ">";        
+        
+        end += "</";
+        end += element;
+        end += ">";
+    }
+    m_htmlBegin.append(begin);
+    m_htmlData.append("");
+    m_htmlEnd.append(end);
+    m_htmlFirstPart.append(htmlFirstPart);
 }
 
 static bool searchPROTO(Node *node, void *data)

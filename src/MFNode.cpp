@@ -147,13 +147,14 @@ int MFNode::write(int f, int indent, bool writeBrackets) const
 }
 
 int 
-MFNode::writeXml(int f, int indent) const
+MFNode::writeXml(int f, int indent, int containerField, bool avoidUse) 
+const
 { 
     for (int i = 0; i < getSFSize(); i++) {
         Node *node = m_value->get(i);
         if (node != NULL) {
             RET_ONERROR( node->writeXml(f, indent  + TheApp->GetIndent(),
-                                        m_containerField) )
+                                        m_containerField, avoidUse) )
         }
     }
     return(0);

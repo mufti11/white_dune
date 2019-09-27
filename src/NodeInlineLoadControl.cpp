@@ -92,12 +92,12 @@ NodeInlineLoadControl::writeProto(int f)
 
    
 int             
-NodeInlineLoadControl::write(int filedes, int indent) 
+NodeInlineLoadControl::write(int filedes, int indent, bool avoidUse) 
 {
     if (m_scene->isPureVRML())
-        RET_ONERROR( NodeInline::write(filedes, indent) )
+        RET_ONERROR( NodeInline::write(filedes, indent, avoidUse) )
     else
-        RET_ONERROR( Node::write(filedes, indent) )
+        RET_ONERROR( Node::write(filedes, indent, avoidUse) )
     return 0;
 }
 

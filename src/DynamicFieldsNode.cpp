@@ -36,7 +36,7 @@ void DynamicFieldsNode::initialise(void)
     m_proto->setDynamicProto();
 }
 
-int DynamicFieldsNode::write(int f, int indent)
+int DynamicFieldsNode::write(int f, int indent, bool avoidUse)
 {
     int flags = m_scene->getWriteFlags();
     TheApp->checkSelectionLinenumberCounting(m_scene, this);
@@ -82,7 +82,8 @@ int DynamicFieldsNode::write(int f, int indent)
     return(0);
 }
 
-int DynamicFieldsNode::writeXml(int f, int indent, int containerField)
+int DynamicFieldsNode::writeXml(int f, int indent, int containerField, 
+                                bool avoidUse)
 {
     if (getType() == VRML_SCRIPT) { 
         NodeScript *node = (NodeScript *) this;
@@ -104,7 +105,9 @@ int DynamicFieldsNode::writeXml(int f, int indent, int containerField)
         for (i = 0; i < m_proto->getNumExposedFields(); i++)
                 m_proto->getExposedField(i)->addFlags(FF_IN_SCRIPT);
     }
-    return Node::writeXml(f, indent);
+    if (isPROTO())
+        return ((NodePROTO *)this)->writeXml(f, indent, avoidUse);
+    return Node::writeXml(f, indent, avoidUse);
 }
 
 int DynamicFieldsNode::writeField(int f, int indent, int fieldIndex)
@@ -248,8 +251,8 @@ void DynamicFieldsNode::updateEventIn(int newIndex, int oldIndex)
                  // add new route to m_routeList
                  if (!m_routeList) m_routeList = new CommandList();
                  m_routeList->append(new RouteCommand(outS.getNode(), 
-                                                     outS.getField(), 
-                                                     this, newIndex));
+                                                      outS.getField(), 
+                                                      this, newIndex));
              }
          }
      }
@@ -412,7 +415,8 @@ DynamicFieldsNode::updateDynamicFields()
     } else {
         // delete ?
         for (int i = 0; i < m_numEventOuts; i++)
-            if ((m_proto->getEventOut(i)->getFlags() & FF_DELETED) != 0) {
+            if (m_proto->getEventOut(i) && 
+                ((m_proto->getEventOut(i)->getFlags() & FF_DELETED) != 0)) {
                 // delete !
                 newNumEventOuts = m_numEventOuts-1;
                 SocketList *newOutputs = new SocketList[newNumEventOuts];

@@ -547,15 +547,15 @@ NodeNurbsCurve::writeProto(int f)
 }
 
 int             
-NodeNurbsCurve::write(int filedes, int indent)
+NodeNurbsCurve::write(int filedes, int indent, bool avoidUse)
 {
     if (m_scene->isPureVRML()) {
         Node *node = toIndexedLineSet();
         addCoordinateInterpolator(node, true);
-        RET_ONERROR( node->write(filedes, indent) )
+        RET_ONERROR( node->write(filedes, indent, avoidUse) )
         node->unref();
     } else
-        RET_ONERROR( Node::write(filedes, indent) )
+        RET_ONERROR( Node::write(filedes, indent, avoidUse) )
     return 0;
 }
 

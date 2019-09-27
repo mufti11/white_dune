@@ -145,6 +145,7 @@ public:
 
     void                OnFileOpen();
     void                OnFileOpenUrl();
+    void                OnFileOpenHtml();
     void                OnFileImport();
     bool                OnFileSave();
     bool                OnFileSaveAs(int writeFlags = 0);

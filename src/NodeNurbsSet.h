@@ -65,7 +65,7 @@ public:
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
     int             writeProto(int f);
-    int             write(int filedes, int indent);
+    int             write(int filedes, int indent, bool avoidUse = false);
 
     void            setHandle(Node* caller, float newWeight,
                               const Vec3f &newV, const Vec3f &oldV);

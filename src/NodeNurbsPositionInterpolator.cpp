@@ -180,7 +180,7 @@ NodeNurbsPositionInterpolator::writeProto(int f)
 }
 
 int             
-NodeNurbsPositionInterpolator::write(int filedes, int indent) 
+NodeNurbsPositionInterpolator::write(int filedes, int indent, bool avoidUse) 
 {
     if (m_scene->isPureVRML()) {
         Node *node = m_nurbsCurve->toPositionInterpolator();
@@ -190,10 +190,10 @@ NodeNurbsPositionInterpolator::write(int filedes, int indent)
         // fixme: read Route connects of node and 
         // build routes to new node instead
 
-        RET_ONERROR( node->write(filedes, indent) )
+        RET_ONERROR( node->write(filedes, indent, avoidUse) )
         node->unref();
     } else
-        RET_ONERROR( Node::write(filedes, indent) )
+        RET_ONERROR( Node::write(filedes, indent, avoidUse) )
     return 0;
 }
 

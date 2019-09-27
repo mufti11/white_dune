@@ -52,7 +52,8 @@ public:
                            { return write(filedes, indent, writeBrackets()); }
     virtual int         write4FieldPipe(int filedes, int indent) const 
                             { return write(filedes, indent, false); } 
-    virtual int         writeXml(int filedes, int indent) const;
+    virtual int         writeXml(int filedes, int indent, int containerField,
+                                 bool avoidUse) const;
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag) const;

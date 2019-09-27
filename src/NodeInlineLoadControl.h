@@ -55,7 +55,7 @@ public:
     virtual Node   *copy() const { return new NodeInlineLoadControl(*this); }
 
     int             writeProto(int f);
-    int             write(int filedes, int indent);
+    int             write(int filedes, int indent, bool avoidUse = false);
 
     virtual void    preDraw(void);
     virtual void    draw(int pass);

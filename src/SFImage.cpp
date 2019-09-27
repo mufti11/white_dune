@@ -75,7 +75,8 @@ int SFImage::write(int f, int indent) const
     return 0;
 }
 
-int SFImage::writeXml(int f, int indent) const
+int SFImage::writeXml(int f, int indent, int containerField, bool avoidUse)
+const
 {
     RET_ONERROR( mywritef(f, "'%d %d %d", getWidth(), getHeight(), 
                           getComponents()) )

@@ -511,6 +511,8 @@ public:
 
     MyString            getUniqueNodeName(const char *name);
     MyString            getUniqueNodeName(Node *node);
+    MyString            generateUniqueNodeName(Node *node, 
+                                               const char *name);
     MyString            generateUniqueNodeName(Node *node);
 
     MyString            generateVariableName(Node *node);
@@ -631,6 +633,7 @@ public:
     int                 writeRouteStrings(int filedes, int indent, 
                                           bool end = false);
     void                copyRoutes(Node *toNode, Node *fromNode);
+    void                copyRoutesToScene(Node *node);
     void                changeRoutes(Node *toNode, int toField,
                                      Node *fromNode, int fromField);
     void                changeRoutes(Node *toNode, int toField, 
@@ -869,6 +872,14 @@ public:
     void                setVertexModifier(VertexModifier *mod) 
                             { m_vertexModifier = mod; }
 
+    void                storeHtmlData(const char *data);
+    void                storeHtmlElementAndAttributes(const char *element,
+                                                      const char **attribures,
+                                                      int numAttributes,
+                                                      bool htmlFirstPart);
+
+    void                storeAsHtml(void) { m_storeAsHtml = true; }
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -889,6 +900,12 @@ protected:
     int                 m_numProtoDefinitions;
     int                 m_statusNumProtoDefinitions;
     ProtoMap            m_protos;
+
+    MyArray<MyString>   m_htmlBegin;
+    MyArray<MyString>   m_htmlData;
+    MyArray<MyString>   m_htmlEnd;
+    MyArray<bool>       m_htmlFirstPart;
+
 
     int                 m_numDraw;
 
@@ -1101,6 +1118,9 @@ protected:
     MyArray<Vec3f>      m_store4convex_hull;
 
     VertexModifier     *m_vertexModifier;
+
+    bool                m_storeAsHtml;
+
 public:
     MyArray<CGlNameData> m_glNameData;               
 };
@@ -1144,6 +1164,9 @@ enum {
 };
 
 class Hint {
+    int m_dummyHint;
+public:
+    Hint() { m_dummyHint = 0; }
 };
 
 class FieldUpdate : public Hint {

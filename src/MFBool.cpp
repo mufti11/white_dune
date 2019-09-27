@@ -75,7 +75,8 @@ int MFBool::writeData(int f, int i) const
     return mywritestr(f, m_value[i] ? "TRUE" : "FALSE");
 }
 
-int MFBool::writeXml(int f, int indent) const
+int MFBool::writeXml(int f, int indent, int containerField, bool avoidUse)
+const
 {
     RET_ONERROR( mywritestr(f, "'") )
     for (int i = 0; i < getSFSize(); i++) { 

@@ -87,11 +87,12 @@ SFNode::write(int filedes, int indent) const
 }
 
 int
-SFNode::writeXml(int filedes, int indent) const
+SFNode::writeXml(int filedes, int indent, int containerField, 
+                 bool avoidUse) const
 { 
     if (m_value)
         return m_value->writeXml(filedes, indent + TheApp->GetIndent(), 
-                                 m_containerField);
+                                 m_containerField, avoidUse);
     else       
         RET_ONERROR( mywritestr(filedes, "value='NULL'") )
     return 0;

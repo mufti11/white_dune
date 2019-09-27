@@ -829,7 +829,7 @@ MeshBasedNode::setTexCoordFromMesh(Node *ntexCoord)
 }
 
 int             
-MeshBasedNode::write(int f, int indent) 
+MeshBasedNode::write(int f, int indent, bool avoidUse) 
 {
     int flags = m_scene->getWriteFlags();
     if (flags & TRIANGULATE) {
@@ -839,13 +839,13 @@ MeshBasedNode::write(int f, int indent)
         if (shouldBeTriangleSet) {
             Node *node = (NodeTriangleSet *)toTriangleSet();
             node->setVariableName(strdup(getVariableName()));
-            int ret = node->write(f, indent);
+            int ret = node->write(f, indent, avoidUse);
             node->unref();
             return ret;
         } else if (shouldBeIndexedTriangleSet) {
             Node *node = (NodeIndexedTriangleSet *)toIndexedTriangleSet();
             node->setVariableName(strdup(getVariableName()));
-            int ret = node->write(f, indent);
+            int ret = node->write(f, indent, avoidUse);
             node->unref();
             return ret;
         }
@@ -853,15 +853,15 @@ MeshBasedNode::write(int f, int indent)
                shouldConvertToIndexedFaceSet()) {
         NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)toIndexedFaceSet();
         node->setVariableName(strdup(getVariableName()));
-        int ret = node->write(f, indent);
+        int ret = node->write(f, indent, avoidUse);
         node->unref();
         return ret;
     }
-    return Node::write(f, indent);
+    return Node::write(f, indent, avoidUse);
 }
 
 int             
-MeshBasedNode::writeXml(int f, int indent, int containerField) 
+MeshBasedNode::writeXml(int f, int indent, int containerField, bool avoidUse) 
 {
     int flags = m_scene->getWriteFlags();
     if (flags & X3D_4_WONDERLAND) {
@@ -951,11 +951,11 @@ MeshBasedNode::writeXml(int f, int indent, int containerField)
             ncolor->color(uniqColours);
         }                    
         faceSet->color(new SFNode(ncolor));
-        RET_ONERROR( node->Node::writeXml(f, indent) )
+        RET_ONERROR( node->Node::writeXml(f, indent, containerField, avoidUse) )
         node->unref();
         m_meshDirty = true;
     } else
-        RET_ONERROR( Node::writeXml(f, indent) )
+        RET_ONERROR( Node::writeXml(f, indent, containerField, avoidUse) )
     return 0;
 }
 

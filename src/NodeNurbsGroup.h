@@ -57,7 +57,7 @@ public:
     virtual void    draw(void);
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
-    virtual int     write(int filedes, int indent);
+    virtual int     write(int filedes, int indent, bool avoidUse = false);
 
     virtual Node   *convert2X3d(void);
     virtual Node   *convert2Vrml(void);

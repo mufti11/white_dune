@@ -60,5 +60,3 @@ cat Makefile.in.debian_extension >> /tmp/$VERSION_DEBIAN/src/Makefile.in
 cp /tmp/$VERSION_DEBIAN/debian/changelog . &&
 VERSION_DEB=`awk -v ver=$VERSION_DEBIAN 'BEGIN {gsub("-","_",ver);print ver}'` &&
 rm -rf /tmp/$VERSION_DEBIAN
-
-

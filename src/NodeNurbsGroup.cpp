@@ -122,13 +122,13 @@ NodeNurbsGroup::writeProto(int f)
 
    
 int             
-NodeNurbsGroup::write(int filedes, int indent) 
+NodeNurbsGroup::write(int filedes, int indent, bool avoidUse) 
 {
     if (m_scene->isPureVRML()) {
         NodeGroup group(this);
-        RET_ONERROR( group.write(filedes, indent) )
+        RET_ONERROR( group.write(filedes, indent, avoidUse) )
     } else
-        RET_ONERROR( Node::write(filedes, indent) )
+        RET_ONERROR( Node::write(filedes, indent, avoidUse) )
     return 0;
 }
 

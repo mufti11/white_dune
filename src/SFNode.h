@@ -44,7 +44,8 @@ public:
 
     virtual int         writeData(int filedes, int i) const; 
     virtual int         write(int filedes, int indent) const;
-    virtual int         writeXml(int filedes, int indent) const;
+    virtual int         writeXml(int filedes, int indent, int containerField,
+                                 bool aviodUse) const;
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag) const;

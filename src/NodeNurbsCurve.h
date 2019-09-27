@@ -106,7 +106,7 @@ public:
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
     int             writeProto(int filedes);
-    int             write(int filedes, int indent);
+    int             write(int filedes, int indent, bool avoidUse = false);
 
     bool            revolveFlatten(int direction);
     void            revolveFlatter(int zero, int change);

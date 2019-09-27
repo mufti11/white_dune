@@ -70,7 +70,7 @@ public:
                 { if (index >= m_size) resize(index+1); m_data[index] = t; }
     T          &operator[](size_t index)
                 { if (index >= m_size) resize(index+1); return m_data[index]; }
-	const T &operator[](size_t index) const { 
+    const T &operator[](size_t index) const { 
                     if (index >= m_size) {
                         static T t;
                         return t;

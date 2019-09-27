@@ -182,24 +182,26 @@ NodeCurveAnimation::createRoutes(Interpolator *node, bool appendToScene)
 }
 
 int             
-NodeCurveAnimation::write(int f, int indent) 
+NodeCurveAnimation::write(int f, int indent, bool avoidUse) 
 {
     int flags = m_scene->getWriteFlags();
     if (flags & (PURE_VRML97 | PURE_X3DV | X3DOM)) {
         if (isX3dXml(flags)) {
-            RET_ONERROR( m_positionInterpolator->writeXml(f, indent) )
-            RET_ONERROR( m_orientationInterpolator->writeXml(f, indent) )
+            RET_ONERROR( m_positionInterpolator->writeXml(f, indent, -1, 
+                                                          avoidUse) )
+            RET_ONERROR( m_orientationInterpolator->writeXml(f, indent, -1, 
+                                                            avoidUse) )
         } else {
-            RET_ONERROR( m_positionInterpolator->write(f, indent) )
-            RET_ONERROR( m_orientationInterpolator->write(f, indent) )
+            RET_ONERROR( m_positionInterpolator->write(f, indent, avoidUse) )
+            RET_ONERROR( m_orientationInterpolator->write(f, indent, avoidUse) )
         }
         createRoutes(m_positionInterpolator, true);
         createRoutes(m_orientationInterpolator, true);
     } else {
         if (isX3dXml(flags))
-            RET_ONERROR( Node::writeXml(f, indent) )
+            RET_ONERROR( Node::writeXml(f, indent, -1, avoidUse) )
         else
-            RET_ONERROR( Node::write(f, indent) )
+            RET_ONERROR( Node::write(f, indent, avoidUse) )
     }
     return 0;
 }

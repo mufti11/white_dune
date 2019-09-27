@@ -42,7 +42,8 @@ public:
     virtual int         writeData(int filedes, int i) const; 
 
     virtual int         write(int filedes, int indent) const;
-    virtual int         writeXml(int filedes, int indent) const;
+    virtual int         writeXml(int filedes, int indent, int containerField,
+                                 bool avoidUse) const;
 
     virtual bool        readLine(int index, char *line);
 

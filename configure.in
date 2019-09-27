@@ -1828,6 +1828,10 @@ if test "X_$DUNE_VERSION2" != "X_" ; then
    AC_DEFINE_UNQUOTED(HAVE_DUNE_VERSION,"${DUNE_VERSION2}")
 fi
 
+AC_ARG_WITH(allow-multiple-definition,--with-allow-multiple-definition allow multiple linker symbols,
+            [LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition"];export LDFLAGS)
+
+
 dnl automatic generate functions/lists for VRML types (e.g. SFBool <=> SFBOOL)
 
 (cd $SELFDIR && sh batch/mkSFMFTypes.sh)

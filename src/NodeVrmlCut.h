@@ -70,8 +70,8 @@ public:
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
-    virtual int     write(int filedes, int indent) 
-                       { return Node::write(filedes, indent); }
+    virtual int     write(int filedes, int indent, bool avoidUse = false) 
+                       { return Node::write(filedes, indent, avoidUse); }
     virtual int     writeRib(int filedes, int indent);
     virtual int     writeProto(int filedes);
     virtual int     writeXmlProto(int filedes);

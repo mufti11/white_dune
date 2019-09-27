@@ -86,6 +86,9 @@ public:
     virtual void    draw(int pass);
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
+    virtual int     writeXml(int filedes, int indent, int containerField = -1, 
+                             bool avoidUse = false);
+
     virtual bool    canWriteAc3d();
     virtual int     writeAc3d(int filedes, int indent);
     virtual void    handleAc3dMaterial(ac3dMaterialCallback callback, 

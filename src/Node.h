@@ -1067,9 +1067,13 @@ protected:
     int                writeXmlProtoInstanceField(int f, int indent, 
                                                   const char *name, 
                                                   FieldValue *value); 
-    int                writeXmlFields(int f, int indent, int when);
+    int                writeXmlFields(int f, int indent, int when,
+                                      int containerField = -1,
+                                      bool avoidUse = false);
     int                writeXmlField(int f, int indent, int i, int when,
-                                     bool script = false);
+                                     bool script = false,
+                                      int containerField = -1,
+                                      bool avoidUse = false);
     int                writeXmlEventIn(int f, int indent, int i, int when,
                                        bool eventName = false);
     int                writeXmlEventOut(int f, int indent, int i, int when,
@@ -1175,9 +1179,9 @@ public:
 
     bool              hasBranchInputs(void);
 
-    virtual int       write(int filedes, int indent);
+    virtual int       write(int filedes, int indent, bool avoidUse = false);
     virtual int       writeXml(int filedes, int indent, 
-                               int containerField = -1);
+                               int containerField = -1, bool avoidUse = false);
 
     bool              isInScene(Scene* scene) const;
     virtual void      addFieldNodeList(int index, NodeList *value,

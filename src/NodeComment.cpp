@@ -48,7 +48,7 @@ NodeComment::NodeComment(Scene *scene, Proto *def)
 {
 }
 
-int NodeComment::write(int f, int indent)
+int NodeComment::write(int f, int indent, bool avoidUse)
 {
     MFString *value = comment();
     TheApp->checkSelectionLinenumberCounting(m_scene, this);

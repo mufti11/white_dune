@@ -5315,4 +5315,16 @@ Added selection of non remote browser if X3DOM is selected and PROTOs are used
 
 (X3DOM do not support PROTOs) 
 
+Added configure option for raspbian
+
+Advanced M$Windows preview settings dialog
+
+Fixed portuguese (-4kids) language settings
+
+Added PROTO expansion for X3DOM preview
+
+Added Inline expansion for X3DOM preview
+
+Added reading/writing of a XML well formed X3DOM html file
+
 Contact: MUFTI <mufti11@web.de>

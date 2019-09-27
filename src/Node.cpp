@@ -594,19 +594,24 @@ Node::addFieldNodeList(int index, NodeList *childList, int containerField)
 }
 
 int 
-Node::write(int f, int indent)
+Node::write(int f, int indent, bool avoidUse)
 {
     bool x3d = m_scene->isX3dv();
     if (m_proto) {
         TheApp->checkSelectionLinenumberCounting(m_scene, (Node*) this);
-        if (getFlag(NODE_FLAG_DEFED) && (m_name.length() > 0)) {
+        if ((!avoidUse) && getFlag(NODE_FLAG_DEFED) && (m_name.length() > 0)) {
             RET_ONERROR( mywritestr(f, "USE ") )
             RET_ONERROR( mywritestr(f, (const char *) m_name) )
             RET_ONERROR( mywritestr(f, "\n") )
             TheApp->incSelectionLinenumber();
         } else {
+            if (avoidUse) {
+                 m_scene->generateUniqueNodeName((Node*)this,
+                                                 getProto()->getName(x3d));
+            }
             if (((Node *)this)->needsDEF()) {
-                if (!m_name[0]) m_scene->generateUniqueNodeName((Node*)this);
+                if (!m_name[0]) 
+                    m_scene->generateUniqueNodeName((Node*)this);
                 RET_ONERROR( mywritestr(f, "DEF ") )
                 RET_ONERROR( mywritestr(f, (const char *) m_name) )
                 RET_ONERROR( mywritestr(f, " ") )
@@ -623,7 +628,8 @@ Node::write(int f, int indent)
                     }
                 }
             if (writeProtoName) {
-                RET_ONERROR( mywritestr(f, (const char *) m_proto->getName(x3d)))
+                RET_ONERROR( mywritestr(f, 
+                                        (const char *) m_proto->getName(x3d)))
             }
 
             if (!TheApp->GetkrFormating()) {
@@ -654,7 +660,7 @@ Node::write(int f, int indent)
 }
 
 int
-Node::writeXml(int f, int indent, int containerField)
+Node::writeXml(int f, int indent, int containerField, bool avoidUse)
 {
     bool x3d = true;
     if (getType() == VRML_COMMENT) {
@@ -724,7 +730,7 @@ Node::writeXml(int f, int indent, int containerField)
             RET_ONERROR( mywritestr(f, "'") )
         }
 
-        if (getFlag(NODE_FLAG_DEFED)) {
+        if ((!avoidUse) && getFlag(NODE_FLAG_DEFED)) {
             RET_ONERROR( mywritestr(f, " USE='") )
             RET_ONERROR( mywritestr(f, (const char *) m_name) )
             RET_ONERROR( mywritestr(f, "'") )
@@ -749,27 +755,35 @@ Node::writeXml(int f, int indent, int containerField)
             RET_ONERROR( mywritestr(f, "/>\n") )
             TheApp->incSelectionLinenumber();
         } else {
+            if (avoidUse) {
+                m_scene->generateUniqueNodeName((Node*)this,
+                                                getProto()->getName(x3d));
+            }
             if (((Node *)this)->needsDEF()) {
-                if (!m_name[0]) m_scene->generateUniqueNodeName((Node*)this);
+                if (!m_name[0]) 
+                    m_scene->generateUniqueNodeName((Node*)this);
                 RET_ONERROR( mywritestr(f, " DEF='") )
                 RET_ONERROR( mywritestr(f, (const char *) m_name) )
                 RET_ONERROR( mywritestr(f, "' ") )
                 setFlag(NODE_FLAG_DEFED);
                 if (m_scene->getWriteFlags() & X3DOM) {
-                    RET_ONERROR( mywritestr(f, " id='") )
+                    RET_ONERROR( mywritestr(f, "id='") )
                     RET_ONERROR( mywritestr(f, (const char *) m_name) )
                     RET_ONERROR( mywritestr(f, "' ") )
                 }   
             }
             RET_ONERROR( mywritestr(f, " ") )
-            RET_ONERROR( writeXmlFields(f, indent, XML_IN_TAG) )
+            RET_ONERROR( writeXmlFields(f, indent, XML_IN_TAG, 
+                         containerField, avoidUse) )
             RET_ONERROR( mywritestr(f, ">\n") )
             TheApp->incSelectionLinenumber();
-            RET_ONERROR( writeXmlFields(f, indent, XML_NODE) )
+            RET_ONERROR( writeXmlFields(f, indent, XML_NODE,
+                                        containerField, avoidUse) )
             RET_ONERROR( writeXmlFields(f, indent + TheApp->GetIndent(), 
-                                        XML_PROTO_INSTANCE_FIELD) )
+                                        XML_PROTO_INSTANCE_FIELD,
+                                        containerField, avoidUse) )
             RET_ONERROR( writeXmlFields(f, indent + TheApp->GetIndent(), 
-                                        XML_IS) )
+                                        XML_IS, containerField, avoidUse) )
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f, "</") )
             if (protoToWrite == NULL)
@@ -778,8 +792,11 @@ Node::writeXml(int f, int indent, int containerField)
                 RET_ONERROR( mywritestr(f, "ProtoInstance") )
             RET_ONERROR( mywritestr(f, ">\n") )
             TheApp->incSelectionLinenumber();
-            RET_ONERROR( writeRoutes(f, indent) )
-            setFlag(NODE_FLAG_TOUCHED);
+            if (!avoidUse) {
+                RET_ONERROR( writeRoutes(f, indent) )
+                setFlag(NODE_FLAG_TOUCHED);
+            } else 
+                m_scene->copyRoutesToScene(this);
         }
     }
     return 0;
@@ -1025,7 +1042,8 @@ NodeData::writeFields(int f, int indent)
 }
 
 int 
-NodeData::writeXmlFields(int f, int indent, int when)
+NodeData::writeXmlFields(int f, int indent, int when, int containerField,
+                         bool avoidUse)
 {
     if (!m_proto) return(0);
 
@@ -1049,6 +1067,8 @@ NodeData::writeXmlFields(int f, int indent, int when)
             if (searchIsName(i, EL_EVENT_OUT) != NULL)
                 writeIs = true;
     }
+    if (avoidUse)
+        writeIs = false;
     if (writeIs) {
         RET_ONERROR( indentf(f, indent) )
         RET_ONERROR( mywritestr(f, "<IS>\n") )
@@ -1066,43 +1086,45 @@ NodeData::writeXmlFields(int f, int indent, int when)
     }
     for (int i = 0; i < m_numFields; i++)
         if ((i != scriptUrlField) && (i != scriptMetadataField))
-            RET_ONERROR( writeXmlField(f, indent, i, when, isScript) )
+            RET_ONERROR( writeXmlField(f, indent, i, when, isScript, 
+                                           containerField, avoidUse) )
 
-    for (int i = 0; i < m_numEventIns; i++)
-        RET_ONERROR( writeXmlEventIn(f, indent, i, when) )
+    if (!avoidUse) {
+        for (int i = 0; i < m_numEventIns; i++)
+            RET_ONERROR( writeXmlEventIn(f, indent, i, when) )
 
-    for (int i = 0; i < m_numEventOuts; i++)
-        RET_ONERROR( writeXmlEventOut(f, indent, i, when) )
+         for (int i = 0; i < m_numEventOuts; i++)
+             RET_ONERROR( writeXmlEventOut(f, indent, i, when) )
+    }
 
     if (scriptUrlField != -1)
         RET_ONERROR( writeXmlField(f, indent, scriptUrlField, when) )
 
     if (when == XML_IN_TAG) {
-            SocketList::Iterator *j;
+        SocketList::Iterator *j;
 
-            for (int i = 0; i < m_numEventOuts; i++)
-                for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
-                    Node *dest = j->item().getNode();
-                    int field = j->item().getField();
-                    if ((dest->getType() == VRML_SCRIPT) &&
-                        (hasX3domOnoutputchange() || hasX3domOnclick())) {
-                        NodeScript *script = (NodeScript *)dest;
-                        for (int n = 0; n < script->url()->getSize(); n++)
-                            if (isX3domscript(script->url()->getValue(n))) {
-                                RET_ONERROR( mywritestr(f, " ") )
-                                if (hasX3domOnclick())
-                                    RET_ONERROR( mywritestr(f, "onclick") )
-                                else
-                                    RET_ONERROR( mywritestr(f, 
-                                                            "onoutputchange") )
-                                RET_ONERROR( mywritestr(f, "=\'") )
-                                const char *name = script->getProto()->
-                                    getEventIn(field)->getName(true);
-                                RET_ONERROR( mywritestr(f, name) )
-                                RET_ONERROR( mywritestr(f, "(event)\' ") )
-                            }
-                    }    
-                }     
+        for (int i = 0; i < m_numEventOuts; i++)
+            for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
+                Node *dest = j->item().getNode();
+                int field = j->item().getField();
+                if ((dest->getType() == VRML_SCRIPT) &&
+                    (hasX3domOnoutputchange() || hasX3domOnclick())) {
+                    NodeScript *script = (NodeScript *)dest;
+                    for (int n = 0; n < script->url()->getSize(); n++)
+                        if (isX3domscript(script->url()->getValue(n))) {
+                            RET_ONERROR( mywritestr(f, " ") )
+                            if (hasX3domOnclick())
+                                RET_ONERROR( mywritestr(f, "onclick") )
+                            else
+                                RET_ONERROR( mywritestr(f, "onoutputchange") )
+                            RET_ONERROR( mywritestr(f, "=\'") )
+                            const char *name = script->getProto()->
+                                getEventIn(field)->getName(true);
+                            RET_ONERROR( mywritestr(f, name) )
+                            RET_ONERROR( mywritestr(f, "(event)\' ") )
+                        }
+                }    
+            }
     }
 
     if (writeIs) {
@@ -1168,7 +1190,8 @@ NodeData::writeField(int f, int indent, int i, bool script)
 }
  
 int 
-NodeData::writeXmlField(int f, int indent, int i, int when, bool script)
+NodeData::writeXmlField(int f, int indent, int i, int when, bool script,
+                        int containerField, bool avoidUse)
 {
     if (!m_proto) return(0);
     const char *oldBase = m_scene->getURL();
@@ -1305,7 +1328,8 @@ NodeData::writeXmlField(int f, int indent, int i, int when, bool script)
                     delete value;
                 }
             } else {
-                RET_ONERROR( value->writeXml(f, indent) )
+                RET_ONERROR( value->writeXml(f, indent, containerField, 
+                                             avoidUse) )
             }
             if (inTag) {
                 RET_ONERROR( mywritestr(f ," ") )
@@ -1513,7 +1537,7 @@ NodeData::writeRoutes(int f, int indent) const
 
 #ifndef HAVE_ROUTE_AT_END
     if (indent==0)
-       RET_ONERROR( m_scene->writeRouteStrings(f, indent) )
+       RET_ONERROR( m_scene->writeRouteStrings(f, indent, true) )
 #endif
     return 0;
 }

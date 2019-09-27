@@ -542,9 +542,7 @@ Proto::addExposedField(ExposedField *exposedField)
     m_eventIns.append(new EventIn(type, buf, flags, exposedField));
 
     exposedField->setEventIn(m_eventIns.size() - 1);
-    // now add a hidden EventOut called <name>_changed
-    mysnprintf(buf, 1024, "%s_changed", (const char *) name);
-    m_eventOuts.append(new EventOut(type, buf, flags, exposedField));
+    m_eventOuts.append(new EventOut(type, name, flags, exposedField));
 
     exposedField->setEventOut(m_eventOuts.size() - 1);
 
@@ -2599,6 +2597,93 @@ bool
 Proto::matchNodeClass(int childType) const
 {
     return ::matchNodeClass(getNodeClass(), childType);
+}
+
+class FiledesAndIndent {
+public:
+    int filedes;
+    int indent;
+};
+
+static bool writeRoutesPerNode(Node *node, void *data)
+{
+    FiledesAndIndent *fid = (FiledesAndIndent *)data;
+    node->setFlag(NODE_FLAG_TOUCHED);
+    indentf(fid->filedes, fid->indent);
+    node->writeRoutes(fid->filedes, 0);
+    return true;
+}
+
+int         
+NodePROTO::write(int filedes, int indent, bool avoidUse)
+{ 
+#if HAVE_NO_PROTOS_X3DOM
+    if ((m_scene->getWriteFlags() & X3DOM) && (getProto()->getNumNodes() > 0)) {
+        for (int k = 0; k < getProto()->getNumNodes(); k++)
+            RET_ONERROR( getProto()->getNode(k)->write(filedes, indent,  true) )
+        FiledesAndIndent fid;
+        fid.filedes = filedes;
+        fid.indent = indent;
+        for (int i = 0; i < getProto()->getNumNodes(); i++) 
+            getProto()->getNode(i)->doWithBranch(writeRoutesPerNode, &fid);
+        return 0;
+    }    
+#endif
+    return Node::write(filedes, indent); 
+}
+
+int         
+NodePROTO::writeXml(int filedes, int indent, int containerField, bool avoidUse)
+{ 
+#if HAVE_NO_PROTOS_X3DOM
+    if ((m_scene->getWriteFlags() & X3DOM) && (getProto()->getNumNodes() > 0)) {
+        for (int k = 0; k < getProto()->getNumNodes(); k++)
+            RET_ONERROR( getProto()->getNode(k)->writeXml(filedes, indent, 
+                                                          containerField, true)
+                       )
+
+        Node *node = this;
+        Proto *fromProto = node->getProto();
+
+        for (int j = 0; j < fromProto->getNumEventOuts(); j++)
+            for (int n = 0; n < fromProto->getEventOut(j)->getNumIs(); n++)
+                if (fromProto->getEventOut(j)->getIsElementType(n) == 
+                    EL_EVENT_OUT) {
+                    const char *srcName =
+                        fromProto->getEventOut(j)->getIsNode(n)->getName();
+                    int field = fromProto->getEventOut(j)->getIsField(n);
+                    EventOut *srcEvent = fromProto->getEventOut(j)->
+                                             getIsNode(n)->
+                                             getProto()->getEventOut(field);
+
+                    SocketList::Iterator *i = NULL;
+
+                    for (i = node->getOutput(j).first(); i != NULL; 
+                         i = i->next()) {
+                         Node *dstNode = i->item().getNode();
+                         int dstEventOut = i->item().getField();
+                         EventOut *dstEvent = 
+                             dstNode->getProto()->getEventOut(dstEventOut);
+                        indentf(filedes, 3 * TheApp->GetIndent());
+                        RET_ONERROR( mywritef(filedes, 
+                            "<ROUTE fromNode='%s' fromField='%s' ",
+                            srcName, (const char *)srcEvent->getName(true)) )
+                        RET_ONERROR( mywritef(filedes, 
+                            "toNode='%s' toField='%s'></ROUTE>\n",
+                            (const char *)dstNode->getName(), 
+                            (const char *)dstEvent->getName(true)) )
+                    }
+                }
+
+        FiledesAndIndent fid;
+        fid.filedes = filedes;
+        fid.indent = indent;
+        for (int i = 0; i < getProto()->getNumNodes(); i++) 
+            getProto()->getNode(i)->doWithBranch(writeRoutesPerNode, &fid);
+        return 0;
+    }    
+#endif
+    return Node::writeXml(filedes, indent); 
 }
 
 void NodePROTO::appendToIndexedNodes(Node *node)
