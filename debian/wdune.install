@@ -1,0 +1,6 @@
+bin/dune /usr/bin
+desktop/kde/dune.png /usr/share/pixmaps
+desktop/kde/dune.desktop /usr/share/applications
+desktop/kde/dune4kids.png /usr/share/pixmaps
+desktop/kde/dune4kids.desktop /usr/share/applications
+

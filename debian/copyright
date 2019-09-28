@@ -1,0 +1,1844 @@
+for all .c/.h/.cpp/.m4 source files:
+License for most parts of this program:
+
+Copyright (C) 1999-2015 Stephen F. White and others
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program (see the file "COPYING" for details); if 
+ not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA 02110-1301, USA.
+
+***********************************************************
+
+This software is based in part on the work of the Independent JPEG Group
+
+***********************************************************
+
+code of pngLoad.c based on a similar file in OpenVRML
+codebase of hull creation of NodeExtrusion::createMesh and supporting functions of OpenVRML
+CylinderSensor code in WonderlandModuleExport.cpp based on cylinder_sensor.cpp of OpenVRML
+SphereSensor code in WonderlandModuleExport.cpp based on sphere_sensor.cpp of OpenVRML
+
+Copyright (C) 1998  Chris Morley
+Copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007  Braden McDaniel
+Copyright 2002  S. K. Bose
+
+patches to OpenVRML's NodeExtrusion::createMesh from the Orbisnap free vrml viewerCopyright 1998-2004 HUMUSOFT s.r.o.
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston MA 02110-1301, USA.
+
+***********************************************************
+
+code of generateTextureCoordinates() in Mesh.cpp 
+based on Polyrep.c of FreeWRL
+setColor(), drawQuad(), drawSky() and drawGround() in NodeBackground.cpp
+based on render_Background() in Bindable.c of FreeWRL
+The ImageTexture3D reading code is also based on FreeWRL
+
+ Copyright (C) 1998 Tuomas J. Lukka
+ Copyright (C) 2002 John Stewart, CRC Canada.
+ DISTRIBUTED WITH NO WARRANTY, EXPRESS OR IMPLIED.
+ See the GNU Library General Public License (file COPYING in the distribution)
+ for conditions of use and redistribution.
+
+***********************************************************
+
+code of Aflock.h/cpp based on similar files in VR Juggler
+
+VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+
+Original Authors:
+  Allen Bierbaum, Christopher Just,
+  Patrick Hartling, Kevin Meinert,
+  Carolina Cruz-Neira, Albert Baker
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the
+ Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ MA 02110-1301, USA.
+
+***********************************************************
+
+code of createMesh() in NodeExtrusion.cpp
+    based on ExtrusionNode.cpp of "CyberX3D for C++"
+code of VectorNormalize(), VectorGetDirection(), VectorGetCross() and
+    GetNormalFromVertices in NodeExtrusion.cpp based on 
+    MathUtill.cpp of "CyberX3D for C++"
+
+  Copyright (C) 2002-2003 Satoshi Konno
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without 
+  modification, are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, 
+     this list of conditions and the following disclaimer. 
+
+  2. Redistributions in binary form must reproduce the above copyright notice, 
+     this list of conditions and the following disclaimer in the documentation 
+     and/or other materials provided with the distribution. 
+
+  3. The name of the author may not be used to endorse or promote products 
+     derived from this software without specific prior written permission. 
+
+  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
+  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+***********************************************************
+
+code of EulerAngle.cpp/EulerAngle.h/unmatrix.cpp/unmatrix.h/GraphicsGems.h
+http://www1.acm.org/pubs/tog/GraphicsGems/gemsiv/euler_angle/
+
+ from http://www1.acm.org/pubs/tog/GraphicsGems/index.html
+
+ This is the official on-line repository for the code from the 
+ Graphics Gems series of books (from Academic Press). This series
+ focusses on short to medium length pieces of code which perform a 
+ wide variety of computer graphics related tasks. All code
+ here can be used without restrictions. The code distributions here 
+ contain all known bug fixes and enhancements. We also
+ provide errata listings for the text of each book. Please report any 
+ new errata or bugs to Eric Haines (erich@acm.org).
+
+***********************************************************
+
+code of mysnprintf.h/mysnprintf.c
+
+/*
+ * Copyright Patrick Powell 1995
+ * This code is based on code written by Patrick Powell (papowell@astart.com)
+ * It may be used for any purpose as long as this notice remains intact
+ * on all source code distributions
+ */
+
+***********************************************************
+
+code of gif.c/gif.h/kljcpyrght.h
+
+/****
+ * adapted from code by kirk johnson (tuna@athena.mit.edu).  most of this
+ * code is unchanged. -- jim frost 12.31.89
+ * Copyright 1989 Kirk L. Johnson (see the included file
+ * "kljcpyrght.h" for complete copyright information)
+ *
+  Copyright 1989, 1990 Kirk L. Johnson
+
+  Permission to use, copy, modify, distribute, and sell this
+  software and its documentation for any purpose is hereby granted
+  without fee, provided that the above copyright notice appear in
+  all copies and that both that copyright notice and this
+  permission notice appear in supporting documentation. The
+  author makes no representations about the suitability of this
+  software for any purpose. It is provided "as is" without express
+  or implied warranty.
+
+  THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
+  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, INDIRECT
+  OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+****/
+
+***********************************************************
+
+code of GpsMathLib.cpp/gpsdatum.h/gpsmath.h/gpsport.h
+
+/* @source JEEPS functions
+**
+** @author Copyright (C) 1999 Alan Bleasby
+** @version 1.0 
+** @modified Feb 04 2000 Alan Bleasby. First version
+** @@
+** 
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Library General Public
+** License as published by the Free Software Foundation; either
+** version 2 of the License, or (at your option) any later version.
+** 
+** This library is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+** Library General Public License for more details.
+** 
+** You should have received a copy of the GNU Library General Public
+** License along with this library; if not, write to the
+** Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+** MA 02110-1301, USA.
+*/
+//BOBMAX INSERT--------------------------------------------------------------------
+
+***********************************************************
+
+code of openglutfont.c/openglutfont.h
+
+/*
+ * Portions copyright (C) 2004, the OpenGLUT project contributors.
+ * OpenGLUT branched from freeglut in February, 2004.
+ *
+ * Copyright (c) 1999-2000 Pawel W. Olszta. All Rights Reserved.
+ * Written by Pawel W. Olszta, <olszta@sourceforge.net>
+ * Creation date: Thu Dec 2 1999
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * PAWEL W. OLSZTA BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+***********************************************************
+
+ code of Quaternion::Quaternion(Vec3f from, Vec3f to) based on quaternion.cpp
+ of libQGLViewer-2.2.4-1
+ code of Vec3x::orthogonalVec() based on vec.cpp of libQGLViewer-2.2.4-1
+
+ Copyright (C) 2002-2006 Gilles Debunne (Gilles.Debunne@imag.fr)
+
+This function is part of the QGLViewer library.
+ Version 2.2.4-1, released on December 12, 2006.
+
+ http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
+
+ libQGLViewer is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ libQGLViewer is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with libQGLViewer; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+***********************************************************
+
+/* 
+ * swSetFontPath() in swt/motif/swt.c based on
+ * $Xorg: xset.c,v 1.6 2001/02/09 02:05:58 xorgcvs Exp $
+ */
+
+/*
+
+Copyright 1985, 1998  The Open Group
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation.
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of The Open Group shall not be
+used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization from The Open Group.
+
+*/
+/* $XFree86: xc/programs/xset/xset.c,v 3.31 2003/05/27 22:27:09 tsi Exp $ */
+/* Modified by Stephen so keyboard rate is set using XKB extensions */
+
+***********************************************************
+
+ Mesa off screen rendering functions in swt/motif/swt.c based on
+ Demo of off-screen Mesa rendering
+ 
+ See Mesa/include/GL/osmesa.h for documentation of the OSMesa functions.
+ 
+ This demo program is in the public domain.
+ 
+ Brian Paul
+
+***********************************************************
+
+License of
+BooleanSequencerPROTO.wrl
+BooleanSequencerExample.wrl
+IntegerSequencerPROTO.wrl
+Arc2DPROTO.wrl
+ArcClose2DPROTO.wrl
+Circle2DPROTO.wrl
+CADGeometryPROTO.wrl
+Disk2DPROTO.wrl
+Polyline2DPROTO.wrl
+Polypoint2DPROTO.wrl
+Rectangle2DPROTO.wrl
+TriangleSet2DPROTO.wrl
+BooleanFilterPROTO.wrl
+BooleanTogglePROTO.wrl
+BooleanTriggerPROTO.wrl
+IntegerTriggerPROTO.wrl
+TimeTriggerPROTO.wrl
+
+NPS MOVES Software License
+
+Copyright (c) 1995-2008 held by the author(s).  All rights reserved.</p>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+       Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+
+       Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer
+       in the documentation and/or other materials provided with the
+       distribution.
+
+       Neither the names of the 
+       Naval Postgraduate School (NPS)
+       Modeling Virtual Environments and Simulation (MOVES) Institute
+       nor the names of its contributors may be used to endorse or
+       promote products derived from this software without specific
+       prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+description: NPS MOVES Software License
+author: Donald P. Brutzman
+created: 4 March 2005
+revised: 17 December 2006
+reference: http://www.oreilly.com/catalog/osfreesoft
+reference: http://opensource.org/licenses/bsd-license.php
+reference: http://xchat.movesinstitute.org/bugzilla/show_bug.cgi?id=32
+***********************************************************
+
+License of
+writeWonderlandModule.cpp
+
+Copyright (c) 2004-2009, Sun Microsystems, Inc., All Rights Reserved
+
+Redistributions in source code form must reproduce the above
+copyright and this condition.
+
+The contents of this file are subject to the GNU General Public
+License, Version 2 (the "License"); you may not use this file
+except in compliance with the License. A copy of the License is
+available at http://www.opensource.org/licenses/gpl-license.php.
+
+Sun designates this particular file as subject to the "Classpath"
+exception as provided by Sun in the License file that accompanied
+this code.
+
+The License file is a standard Licence File of the
+GNU General Public License (GPL) Version 2, June 1991
+with the following attachment:
+
+"CLASSPATH" EXCEPTION TO THE GPL VERSION 2
+
+Certain source files distributed by Sun Microsystems, Inc.  are subject to the
+following clarification and special exception to the GPL Version 2, but only
+where Sun has expressly included in the particular source file's header the
+words "Sun designates this particular file as subject to the "Classpath"
+exception as provided by Sun in the License file that accompanied this code." 
+
+Linking this library statically or dynamically with other modules is making a
+combined work based on this library.  Thus, the terms and conditions of the GNU
+General Public License Version 2 cover the whole combination. 
+
+As a special exception, the copyright holders of this library give you 
+permission to link this library with independent modules to produce an 
+executable, regardless of the license terms of these independent modules, 
+and to copy and distribute the resulting executable under terms of your 
+choice, provided that you also meet, for each linked independent module, 
+the terms and conditions of the license of that module.  An independent 
+module is a module which is not derived from or based on this library.  If 
+you modify this library, you may extend this exception to your version of 
+the library, but you are not obligated to do so.  If you do not wish to do 
+so, delete this exception statement from your version.
+***********************************************************
+
+License of
+winres.h
+
+ * Copyright (C) 2000 Francois Gouget
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+***********************************************************
+
+/*
+ * write_png_file() in WonderlandModuleExport.cpp based on example application
+ *
+ * Copyright 2002-2010 Guillaume Cottenceau.
+ *
+ * This software may be freely redistributed under the terms
+ * of the X11 license.
+ *
+ */
+***********************************************************
+
+/*
+ * XML parsing code from doug sanden (inside parser.y)
+ *
+ * Copyright (C) 2010 Doug Sanden
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ *
+ * I, Doug Sanden, hereby grant the permission to change the License on the 
+ * white_dune XML parsing code from GPL to LGPL. 
+ *
+ */
+***********************************************************
+ /*
+  * copyright for mesh.h/mesh.c subd.h/subd.c
+                  mathx.h/mathx.c and buf.h/buf.c
+ 
+ The MIT License
+ 
+ Copyright (c) 2009-2017 Slavomir Kaslev, https://github.com/skaslev/catmull-clark
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+
+/***************************************************************************
+ * Scene::Download() based on ftpget example of Curl library
+ * 
+ * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * 
+ * This software is licensed as described in the file COPYING, which   
+ * you should have received as part of this distribution. The terms 
+ * are also available at https://curl.haxx.se/docs/copyright.html.
+ *
+ * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+ * copies of the Software, and permit persons to whom the Software is
+ * furnished to do so, under the terms of the COPYING file.
+ * 
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+ * KIND, either express or implied.
+ * 
+ ***************************************************************************/
+
+/***************************************************************************
+ * Text rendering in NodeText.cpp based on https://github.com/codetiger/Font23D/ Font2OBJ.cpp
+ * with the following license:
+ *
+ * A license with no conditions whatsoever which dedicates works to the public
+ * domain. Unlicensed works, modifications, and larger works may be
+ * distributed under different terms and without source code.
+ ***************************************************************************/
+
+/***************************************************************************
+ * Contour.cpp/.h, PointFtgl.cpp/.h and Vectoriser.cpp/.h based on FTGL lib
+ * 
+ * FTGL - OpenGL font library
+ *
+ * Copyright (c) 2001-2004 Henry Maddocks <ftgl@opengl.geek.nz>
+ * Copyright (c) 2008 Éric Beets <ericbeets@freefr>
+ * Copyright (c) 2008 Sam Hocevar <sam@zoy.org>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ ***************************************************************************/
+
+/***************************************************************************
+ * poly2tri.h, advancing_front.cpp/.h, sweep.cpp/.h, cdt.cpp/.h, utils.h
+ * and shapes.cpp/.h based on Poly2Tri library
+ * 
+ * Poly2Tri Copyright (c) 2009-2010, Poly2Tri Contributors
+ * http://code.google.com/p/poly2tri/
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ * * Neither the name of Poly2Tri nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without specific
+ *   prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ***************************************************************************/
+
+
+ This file is compiled with CGAL: CGAL is licenced under different
+ licences including GNU General Public License 3 
+
+ This file is compiled with freetype2: freetype is licenced under different
+ licences including GNU General Public License 3 
+
+ This file is compiled with libvcg: libvcg is licenced under
+ GNU General Public License 3
+
+ This file is compiled with OpenSubdiv: OpenSubdiv is licenced under
+ Apache License, Version 2.0
+
+This file uses code from vx
+https://github.com/neurolabusc/vx/blob/master/src/tex3d.inc
+
+****************************************************************************
+This is a BSD 3-Clause License :: https://opensource.org/licenses/BSD-3-Clause
+
+The Software has been developed for research purposes only and is not a clinical tool
+Copyright (c) 2014-2018 Chris Rorden. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the copyright owner may be used to endorse or promote
+   products derived from this software without specific prior written
+   permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT OWNER ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+****************************************************************************/
+file: ../../batch/../docs/rendering_bugs/textures/test_texture.png
+Licence: Custom
+from Copyright-Free Photo Archive: http://gimp-savvy.com/PHOTO-ARCHIVE/ Public domain.
+
+file: ../../batch/../include/libCRWD.h
+Copyright: (c) Stefan Wolf, 2010.
+Copyright: (c) J.  Scheurich, 2010.
+License: Modified BSD style
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+file: ../../batch/../include/libC++RWD.h
+Copyright: (c) Stefan Wolf, 2010.
+License: Modified BSD style
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+The following statement is about the files in /lib/textures/README
+
+The following files use the GNU General Public License:
+
+warbird/fake_cake_bullet.wrl
+warbird/bullet.wrl
+warbird/bill.wrl
+warbird/warbird.wrl
+warbird/thing.wrl
+warbird/moving_bill.wrl
+docs/usage_docs/dune_en_exercise.html
+docs/usage_docs/dune4kids_glider_en.html
+docs/usage_docs/dune4kids_tutorial_de.html
+docs/usage_docs/dune_ru.html
+docs/usage_docs/xml_parser.html
+docs/usage_docs/dune_it.html
+docs/usage_docs/dune4kids_fish_en.html
+docs/usage_docs/dune4kids_start_en.html
+docs/usage_docs/dune4kids_fisch.html
+docs/usage_docs/dune4kids_quallen.html
+docs/usage_docs/dune_de_exercise.html
+docs/usage_docs/dune_java_export.html
+docs/usage_docs/dune4kids_schiff.html
+docs/usage_docs/dune4kids_start_de.html
+docs/usage_docs/dune_en.html
+docs/usage_docs/dune4kids_glider_extrusion_en.html
+docs/usage_docs/dune_commandline_de.html
+docs/usage_docs/dune_de_tutorial.html
+docs/usage_docs/dune4kids_tutorial_en.html
+docs/usage_docs/dune_de.html
+docs/usage_docs/dune_en_tutorial.html
+docs/index.html
+docs/VRML97protos_examples/ParticleSourcePROTO/flame.wrl
+docs/VRML97protos_examples/ParticleSourcePROTO/waterfall.wrl
+docs/VRML97protos_examples/ParticleSourcePROTO/bubbles.wrl
+docs/hanim_history/gehmess_proto.x3dv
+docs/hanim_history/laufmess.wrl
+docs/hanim_history/gehmess.x3dv
+docs/hanim_history/gehmess.wrl
+docs/hanim_history/laufmess.x3dv
+docs/developer_docs/dune_developer.html
+docs/rendering_bugs/textures/pure_white.png
+docs/rendering_bugs/text_textured.png
+docs/rendering_bugs/triangle_fan_strips_smoothing.png
+docs/rendering_bugs/background_z_oriented.png
+docs/rendering_bugs/background_pure_white.png
+docs/rendering_bugs/non_convex_face.png
+docs/x3dDraft/LoadSensorPROTO.wrl
+docs/x3dDraft/MultiTexturePROTO.wrl
+docs/x3dDraft/FillPropertiesPROTO.wrl
+docs/x3dDraft/LinePropertiesPROTO.wrl
+docs/scripted_Nodes/CurveAnimationPROTO.wrl
+docs/scripted_Nodes/SuperRevolverPROTO.wrl
+docs/scripted_Nodes/SuperExtrusionPROTO.wrl
+docs/vrml97Amendment1/NurbsGroupPROTO.wrl
+docs/vrml97Amendment1/index.html
+docs/vrml97Amendment1/NurbsSurfacePROTO.wrl
+docs/vrml97Amendment1/NurbsCurvePROTO.wrl
+docs/vrml97Amendment1/testall.wrl
+docs/vrml97Amendment1/NurbsSurface.wrl
+docs/vrml97Amendment1/NurbsGroup.wrl
+docs/vrml97Amendment1/TrimmedSurfacePROTO.wrl
+docs/vrml97Amendment1/NurbsCurve.wrl
+docs/german_workshop_documents/serpens_appendicis_04.jpg
+docs/x3d/NurbsPatchSurfacePROTO.wrl
+docs/typical_vrml_examples/ecmascript/particles.wrl
+docs/typical_vrml_examples/ecmascript/simple3Dmodeller.wrl
+docs/typical_vrml_examples/transform_human_motioncapture_run.wrl
+docs/typical_vrml_examples/transform_human_motioncapture_walk.wrl
+tools/img2pixeltexture.sh
+tools/povray_mkskybox.sh
+tools/addAngle2OrientationInterpolator.awk
+tools/collectViewpoints.awk
+tools/creaseangleChange.sh
+tools/creaseangleChange.awk
+packager/aix/mkbff.sh
+packager/debian/copyright
+packager/gentoo/white_dune.ebuild
+packager/gentoo/mkebuild.sh
+desktop/olpc/WhiteDune4kids.activity/activity.py
+desktop/olpc/WhiteDune4kids.activity/setup.py
+desktop/olpc/WhiteDune4kids.activity/COPYING
+desktop/kde/build_redhat.sh
+desktop/kde/install_redhat_global.sh
+desktop/macosx/xcode_tiger.tar
+desktop/macosx/xcode/MyDocument.m
+desktop/macosx/white_dune_tiger.app.tar
+lib/VRML97protos/PseudoCollision4ExaminePROTO.wrl
+lib/VRML97protos/ParticleSourcePROTO.wrl
+README.txt
+src/SceneViewDebugOnUpdate.cpp.m4
+src/y.tab.c
+src/lexer.l
+src/jpegLoad.c
+src/CommandlineLanguages.h.m4
+src/parser.y
+src/swt/rc/rc.c
+src/swt/rc/rcparse.y
+src/swt/rc/rcparse.c
+src/swt/rc/rclex.l
+src/swt/generic/statusbar.c
+src/swt/generic/header.c
+src/swt/generic/resload.c
+src/swt/generic/tree.c
+src/swt/generic/util.c
+src/swt/generic/toolbar.c
+src/swt/generic/groupbox.c
+src/swt/TODO
+src/swt/win32/swt.c
+src/swt/win32/browser.c
+src/swt/include/swlanguages.h.m4
+src/swt/tests/doodle.c
+src/swt/tests/restest.c
+src/swt/tests/tree.c
+src/swt/tests/buttons.c
+src/swt/tests/swTest.c
+src/swt/tests/text.c
+src/swt/tests/drawing.c
+src/swt/motif/error.xbm
+src/swt/motif/cursor_none.xbm
+src/swt/motif/dune.xbm
+src/swt/motif/statusbar.c
+src/swt/motif/copy.xbm
+src/swt/motif/swt.c
+src/swt/motif/header.c
+src/swt/motif/resload.c
+src/swt/motif/tree.c
+src/swt/motif/util.c
+src/swt/motif/link.xbm
+src/swt/motif/toolbar.c
+src/swt/motif/link_mask.xbm
+src/swt/motif/error_mask.xbm
+src/swt/motif/copy_mask.xbm
+src/swt/motif/browser.c
+src/swt/motif/dune_mask.xbm
+src/swt/motif/groupbox.c
+TODO.txt
+batch/convert_gpl2.sh
+COPYING
+debian/tmp/usr/bin
+LICENSE.txt
+bin/dune
+
+The following files use the GNU Library General Public License:
+
+docs/VRML97protos_examples/PseudoCollision4ExaminePROTO/pseudoCollision.wrl
+docs/rendering_bugs/background_pure_white.wrl
+docs/rendering_bugs/non_convex_face.wrl
+docs/rendering_bugs/background_z_oriented.wrl
+docs/rendering_bugs/triangle_fan_strips_smoothing.x3dv
+docs/rendering_bugs/text_textured.wrl
+docs/coverNodes/SteeringWheelPROTO.wrl
+docs/coverNodes/CubeTexturePROTO.wrl
+docs/coverNodes/SpaceSensor_example.wrl
+docs/coverNodes/CubeTexture_example.wrl
+docs/coverNodes/SpaceSensorPROTO.wrl
+docs/coverNodes/nodesRef.html
+docs/coverNodes/WavePROTO.wrl
+docs/coverNodes/TUIComboBoxPROTO.wrl
+docs/coverNodes/TUITabPROTO.wrl
+docs/coverNodes/TUIFloatSliderPROTO.wrl
+docs/coverNodes/TUIProgressBarPROTO.wrl
+docs/coverNodes/ARSensorPROTO.wrl
+docs/coverNodes/VehiclePROTO.wrl
+docs/coverNodes/TUIToggleButtonPROTO.wrl
+docs/coverNodes/COVER_example.wrl
+docs/coverNodes/COVERPROTO.wrl
+docs/coverNodes/TUIButtonPROTO.wrl
+docs/coverNodes/TUISplitterPROTO.wrl
+docs/coverNodes/TUISliderPROTO.wrl
+docs/coverNodes/TUIMapPROTO.wrl
+docs/coverNodes/TUIFramePROTO.wrl
+docs/coverNodes/TUIListBoxPROTO.wrl
+docs/coverNodes/SkyPROTO.wrl
+docs/coverNodes/TUIElementPROTO.wrl
+docs/coverNodes/TUITabFolderPROTO.wrl
+docs/coverNodes/TUILabelPROTO.wrl
+docs/scripted_Nodes/SuperEllipsoidPROTO.wrl
+docs/scripted_Nodes/SuperShapePROTO.wrl
+docs/commandline_examples/spaceball_solaris8.sh
+docs/commandline_examples/index.html
+docs/commandline_examples/wingmanrumblepad_macosx.sh
+docs/commandline_examples/wingmanrumblepad_linux_SDLjoystick.sh
+docs/commandline_examples/xinput_example.sh.html
+docs/commandline_examples/saitekp880.sh
+docs/commandline_examples/joystick2.sh.html
+docs/commandline_examples/joystick2.sh
+docs/commandline_examples/nostereo.sh
+docs/commandline_examples/sidewinder3dpro.sh.html
+docs/commandline_examples/sidewinder3dpro.sh
+docs/commandline_examples/xinput_irix6.2_example.sh
+docs/commandline_examples/wingmanrumblepad_mswindows.bat.html
+docs/commandline_examples/xinput_example.sh
+docs/commandline_examples/xinput_xorg_linux.sh
+docs/commandline_examples/spaceball_joystick_example.sh.html
+docs/commandline_examples/wingmanrumblepad.sh.html
+docs/commandline_examples/wingmanrumblepad.sh
+docs/commandline_examples/spaceball_joystick_example.sh
+docs/commandline_examples/nostereo.sh.html
+docs/commandline_examples/saitekp430.sh
+docs/vrml97Amendment1/InlineLoadControlPROTO.wrl
+docs/vrml97Amendment1/Contour2DPROTO.wrl
+docs/vrml97Amendment1/NurbsTextureSurfacePROTO.wrl
+docs/vrml97Amendment1/CoordinateDeformerPROTO.wrl
+docs/vrml97Amendment1/NurbsCurve2DPROTO.wrl
+docs/vrml97Amendment1/NurbsPositionInterpolatorPROTO.wrl
+docs/x3d/ColorRGBAPROTO.wrl
+docs/x3d/LoadSensorPROTO.wrl
+docs/x3d/CoordinateInterpolator2DPROTO.wrl
+docs/x3d/MultiTexturePROTO.wrl
+docs/x3d/PositionInterpolator2DPROTO.wrl
+docs/x3d/KeySensorPROTO.wrl
+docs/x3d/NurbsPositionInterpolatorPROTO.wrl
+docs/x3d/FillPropertiesPROTO.wrl
+docs/x3d/LinePropertiesPROTO.wrl
+docs/x3d/StringSensorPROTO.wrl
+docs/typical_vrml_examples/ecmascript/switching_animations.wrl
+docs/typical_vrml_examples/ecmascript/planesensor2interpolator.wrl
+docs/typical_vrml_examples/ecmascript/supershape.wrl
+docs/typical_vrml_examples/ecmascript/switching_animations_NURBS.wrl
+docs/typical_vrml_examples/ecmascript/teleport_animation.wrl
+docs/typical_vrml_examples/ecmascript/increase_switch.wrl
+docs/typical_vrml_examples/ecmascript/on_off.wrl
+docs/typical_vrml_examples/ecmascript/teleporter.wrl
+docs/typical_vrml_examples/ecmascript/planesensor2interpolatormophing.wrl
+docs/typical_vrml_examples/ecmascript/texture_change.wrl
+docs/typical_vrml_examples/ecmascript/endless_world.wrl
+docs/typical_vrml_examples/ecmascript/pseudoCollision4examine.wrl
+docs/typical_vrml_examples/ecmascript/simple_stopwatch.wrl
+docs/typical_vrml_examples/ecmascript/oneshot_trigger_increase_switch.wrl
+docs/typical_vrml_examples/ecmascript/text_change.wrl
+docs/typical_vrml_examples/ecmascript/sfimage.wrl
+docs/typical_vrml_examples/ecmascript/superellipsoid.wrl
+docs/typical_vrml_examples/ecmascript/worldcoordmessurement.wrl
+docs/typical_vrml_examples/index.html
+src/SDLjoystick/bsd/SDL_sysjoystick.c
+src/SDLjoystick/darwin/SDL_sysjoystick.c
+src/SDLjoystick/linux/SDL_sysjoystick.c
+src/SDLjoystick/mini_SDL_joystick.c
+src/SDLjoystick/joysticktest.c
+
+The following files use the copyright statement:
+
+The/This file/Makefile/script/program is free software; the Free Software
+Foundation gives unlimited permission to copy, distribute and modify it.
+
+warbird/plane.wrl
+warbird/wing1.wrl
+warbird/wings.wrl
+warbird/wing2.wrl
+warbird/Makefile
+docs/usage_docs/indexedfacesettexture.jpg
+docs/usage_docs/scriptedit_icon1.jpg
+docs/usage_docs/frog51.png
+docs/usage_docs/rocket.png
+docs/usage_docs/simple_scriptbuild9.jpg
+docs/usage_docs/frog16.jpg
+docs/usage_docs/pfeil.png
+docs/usage_docs/closedpeak.jpg
+docs/usage_docs/scenegraph_multiple_target.png
+docs/usage_docs/simple_scriptbuild10.jpg
+docs/usage_docs/frog41.jpg
+docs/usage_docs/array_dialog.png
+docs/usage_docs/recording_one.jpg
+docs/usage_docs/mantasurface1side.jpg
+docs/usage_docs/supershapes.wrl
+docs/usage_docs/superellipsoid2nurbssurface_dialog.png
+docs/usage_docs/inlinetransform2.png
+docs/usage_docs/delete_keys2.jpg
+docs/usage_docs/nurbsgroup1.jpg
+docs/usage_docs/inlines.png
+docs/usage_docs/simple_scriptbuild1.jpg
+docs/usage_docs/scripteditor.jpg
+docs/usage_docs/routeview_full.png
+docs/usage_docs/frog09a.png
+docs/usage_docs/spherefaceset2.jpg
+docs/usage_docs/array_changed.png
+docs/usage_docs/joystick_3D_move.jpg
+docs/usage_docs/tess11.jpg
+docs/usage_docs/frog07.png
+docs/usage_docs/nurbsgroup6.jpg
+docs/usage_docs/array_result.png
+docs/usage_docs/array_start.png
+docs/usage_docs/frog17.jpg
+docs/usage_docs/xwings.png
+docs/usage_docs/indexedfacesetwrongside.jpg
+docs/usage_docs/frog06a.png
+docs/usage_docs/tools/nxt_udev.sh
+docs/usage_docs/nurbssmall.jpg
+docs/usage_docs/zfightok.jpg
+docs/usage_docs/degree1faceset2.jpg
+docs/usage_docs/nurbs0.jpg
+docs/usage_docs/frog21.jpg
+docs/usage_docs/animation_single_recording.png
+docs/usage_docs/nurbsrotationsurface.jpg
+docs/usage_docs/frog03b.png
+docs/usage_docs/timesensor.jpg
+docs/usage_docs/box2nurbsdialog.jpg
+docs/usage_docs/dials_normal.jpg
+docs/usage_docs/nurbscurverotation2.jpg
+docs/usage_docs/routemake1.jpg
+docs/usage_docs/degree1faceset1.jpg
+docs/usage_docs/sixboxnurbs.jpg
+docs/usage_docs/routemake2.jpg
+docs/usage_docs/simple_scriptbuild7.jpg
+docs/usage_docs/animation_recording.jpg
+docs/usage_docs/upload.png
+docs/usage_docs/frog53.png
+docs/usage_docs/recording.jpg
+docs/usage_docs/frog29.jpg
+docs/usage_docs/tess181.jpg
+docs/usage_docs/preview1.jpg
+docs/usage_docs/convex_dune.png
+docs/usage_docs/frog44.jpg
+docs/usage_docs/sphere_sensor2.jpg
+docs/usage_docs/preview2.jpg
+docs/usage_docs/spaceball.jpg
+docs/usage_docs/sphere_sensor_routes.jpg
+docs/usage_docs/mffieldpipeselect.jpg
+docs/usage_docs/frog30.jpg
+docs/usage_docs/slower.png
+docs/usage_docs/indexedfacesetmaterial.jpg
+docs/usage_docs/nurbscurvedialog.jpg
+docs/usage_docs/simple_scriptbuild5.jpg
+docs/usage_docs/frog11.jpg
+docs/usage_docs/interpolator.jpg
+docs/usage_docs/center.jpg
+docs/usage_docs/no_only.jpg
+docs/usage_docs/simple_scriptbuild3.jpg
+docs/usage_docs/frog31.jpg
+docs/usage_docs/elevate_target.jpg
+docs/usage_docs/symetric2.jpg
+docs/usage_docs/scenegraphbranch_start.png
+docs/usage_docs/frog54.jpg
+docs/usage_docs/animationdialog.jpg
+docs/usage_docs/frog39.png
+docs/usage_docs/frog37.jpg
+docs/usage_docs/transform.jpg
+docs/usage_docs/smooth2.jpg
+docs/usage_docs/superellipsoid2indexedfaceset.jpg
+docs/usage_docs/box.jpg
+docs/usage_docs/colorcircle1.png
+docs/usage_docs/frog42.jpg
+docs/usage_docs/nurbsgroup3.jpg
+docs/usage_docs/spherefaceset5.jpg
+docs/usage_docs/crash.jpg
+docs/usage_docs/frog28.jpg
+docs/usage_docs/superellipsoid_tesselation_creaseangle.jpg
+docs/usage_docs/frog02b.png
+docs/usage_docs/6dlocal_wrong.jpg
+docs/usage_docs/mffieldpiperesult.jpg
+docs/usage_docs/frog55.png
+docs/usage_docs/cylinderedge.jpg
+docs/usage_docs/schieb.png
+docs/usage_docs/frog14.jpg
+docs/usage_docs/frog22.jpg
+docs/usage_docs/degree1faceset4.jpg
+docs/usage_docs/supershape2nurbssurface.png
+docs/usage_docs/zfight1.jpg
+docs/usage_docs/xyzonly.jpg
+docs/usage_docs/node_add_invalid.jpg
+docs/usage_docs/frog20.jpg
+docs/usage_docs/hover.png
+docs/usage_docs/smooth1.png
+docs/usage_docs/frog09.png
+docs/usage_docs/frog00.png
+docs/usage_docs/convex_freewrl.png
+docs/usage_docs/frog46.png
+docs/usage_docs/upload_copy.png
+docs/usage_docs/indexedfacesetcreaseangle.jpg
+docs/usage_docs/delete_keys3.jpg
+docs/usage_docs/morphing_result.png
+docs/usage_docs/fieldchange.jpg
+docs/usage_docs/mantasurface2side.jpg
+docs/usage_docs/frog19.png
+docs/usage_docs/frog04a.png
+docs/usage_docs/routeview_inline.png
+docs/usage_docs/simple_scriptbuild4.jpg
+docs/usage_docs/frog52.jpg
+docs/usage_docs/nurbscurve.jpg
+docs/usage_docs/weight.jpg
+docs/usage_docs/delete_keys1.jpg
+docs/usage_docs/frog40.jpg
+docs/usage_docs/superellipsoid2nurbssurface_inexact.jpg
+docs/usage_docs/faster.png
+docs/usage_docs/tess0.jpg
+docs/usage_docs/frog56.jpg
+docs/usage_docs/spheretransform.jpg
+docs/usage_docs/routecut2.jpg
+docs/usage_docs/morphing_start.png
+docs/usage_docs/nurbsgroup4.jpg
+docs/usage_docs/sffieldpipeselect.jpg
+docs/usage_docs/frog49.png
+docs/usage_docs/superellipsoid_cylinder.jpg
+docs/usage_docs/animation_single_recorded.png
+docs/usage_docs/yonly1.jpg
+docs/usage_docs/joystick_3D_rot.jpg
+docs/usage_docs/nurbscurve_scenegraph.jpg
+docs/usage_docs/morphing_last.png
+docs/usage_docs/6dloc.png
+docs/usage_docs/routecut1.jpg
+docs/usage_docs/routeview_jump.png
+docs/usage_docs/scale.jpg
+docs/usage_docs/6d.png
+docs/usage_docs/scenegraphbranch_up1.png
+docs/usage_docs/dials_default.jpg
+docs/usage_docs/frog04.jpg
+docs/usage_docs/simple_scriptbuild8.jpg
+docs/usage_docs/up_down.png
+docs/usage_docs/nurbsrotationsurface2.jpg
+docs/usage_docs/xwings.wrl
+docs/usage_docs/spherefaceset1.jpg
+docs/usage_docs/nurbsurface2.jpg
+docs/usage_docs/nurbscurverotationy.jpg
+docs/usage_docs/inlinetransform1.png
+docs/usage_docs/cylinder.jpg
+docs/usage_docs/knot.jpg
+docs/usage_docs/controlpoint.jpg
+docs/usage_docs/elevate_after.jpg
+docs/usage_docs/wrong_center.png
+docs/usage_docs/supershape.png
+docs/usage_docs/channelview.jpg
+docs/usage_docs/frog23.jpg
+docs/usage_docs/nurbsrotationdialog.jpg
+docs/usage_docs/scenegraph_multiple_fields.png
+docs/usage_docs/frog43.png
+docs/usage_docs/mid_center.png
+docs/usage_docs/yonly.jpg
+docs/usage_docs/nurbsgroup5.jpg
+docs/usage_docs/near_far.png
+docs/usage_docs/sceneicon.jpg
+docs/usage_docs/frog24.jpg
+docs/usage_docs/oneboxnurbs.jpg
+docs/usage_docs/animation_onetime.png
+docs/usage_docs/simple_scriptbuild2.jpg
+docs/usage_docs/zfight2.jpg
+docs/usage_docs/6dlocal_right1.jpg
+docs/usage_docs/frog48.png
+docs/usage_docs/supershapes.jpg
+docs/usage_docs/sphere_sensor.jpg
+docs/usage_docs/superellipsoid_sphere.jpg
+docs/usage_docs/degree1faceset3.jpg
+docs/usage_docs/superellipsoid_sphere_half.jpg
+docs/usage_docs/colorcircle2.png
+docs/usage_docs/indexedfacesetappearance.jpg
+docs/usage_docs/sphere_sensor_mkroute.jpg
+docs/usage_docs/urledit.jpg
+docs/usage_docs/frog35.png
+docs/usage_docs/tess3.jpg
+docs/usage_docs/supershape_menu.png
+docs/usage_docs/frog47.jpg
+docs/usage_docs/frog08a.png
+docs/usage_docs/6dlocal_right3.jpg
+docs/usage_docs/spherefaceset3.jpg
+docs/usage_docs/joystick_sidewinder.jpg
+docs/usage_docs/crashrestore.jpg
+docs/usage_docs/superellipsoid2nurbssurface.jpg
+docs/usage_docs/rot.png
+docs/usage_docs/frog15.png
+docs/usage_docs/mantasurface.jpg
+docs/usage_docs/indexedfacesetonly.jpg
+docs/usage_docs/simple_scriptbuild6.jpg
+docs/usage_docs/frog26.jpg
+docs/usage_docs/xzonly.jpg
+docs/usage_docs/transform2.jpg
+docs/usage_docs/symetric1.jpg
+docs/usage_docs/spherefaceset4.jpg
+docs/usage_docs/6dlocal_right2.jpg
+docs/usage_docs/nurbsgroup2.jpg
+docs/usage_docs/nurbsurface1.jpg
+docs/usage_docs/superellipsoid_box_smooth.jpg
+docs/usage_docs/routeview_animation.jpg
+docs/usage_docs/yonly2.jpg
+docs/usage_docs/frog57.png
+docs/usage_docs/elevate_before.jpg
+docs/usage_docs/order.jpg
+docs/usage_docs/dunes.jpg
+docs/usage_docs/node_add_valid.jpg
+docs/usage_docs/frog33.png
+docs/usage_docs/animation_onetime2.png
+docs/usage_docs/zfight.jpg
+docs/usage_docs/frog03.png
+docs/usage_docs/routeview_zoom.png
+docs/usage_docs/superellipsoid_cylinder_smooth.jpg
+docs/usage_docs/doubleobject.jpg
+docs/usage_docs/navigation.jpg
+docs/usage_docs/superextrusion.png
+docs/usage_docs/frog45.jpg
+docs/usage_docs/xwing_planet.wrl
+docs/VRML97protos_examples/ParticleSourcePROTO/waterfall.png
+docs/VRML97protos_examples/ParticleSourcePROTO/flame.png
+docs/hanim_history/build.awk
+docs/hanim_history/Makefile
+docs/english.jpg
+docs/export_example_c++/opengl_example/README.txt
+docs/export_example_c++/opengl_example/Makefile
+docs/export_example_c++/simple_example/Makefile.in
+docs/export_example_c++/simple_example/Makefile
+docs/export_example_c++/simple_example/mainHelloWorld.cc
+docs/export_example_c++/opengl_scripting_example/README.txt
+docs/export_example_c++/opengl_scripting_example/Makefile
+docs/export_example_c++/Makefile
+docs/developer_docs/man2html.sh
+docs/developer_docs/dialog.jpg
+docs/developer_docs/png2jpg.sh
+docs/developer_docs/dune.png
+docs/developer_docs/standard.jpg
+docs/developer_docs/mkdoxygen.sh
+docs/developer_docs/Makefile
+docs/interactive_open_wonderland_examples/sphere_sensor_example.x3dv
+docs/coverNodes/CubeTexture.png
+docs/russian.jpg
+docs/scripted_Nodes/vrmlcut_example.wrl
+docs/scripted_Nodes/superextrusion_example.wrl
+docs/scripted_Nodes/superextrusion_donut_example.wrl
+docs/scripted_Nodes/superellipsoid_example.wrl
+docs/commandline_examples/wingmanrumblepad_mswindows.bat
+docs/commandline_examples/animation_example.wrl
+docs/export_example_c/opengl_example/README.txt
+docs/export_example_c/opengl_example/Makefile
+docs/export_example_c/simple_example/Makefile.in
+docs/export_example_c/simple_example/Makefile
+docs/export_example_c/opengl_scripting_example/README.txt
+docs/export_example_c/opengl_scripting_example/Makefile
+docs/export_example_c/Makefile
+docs/fieldpipe_examples/C_example/main.c
+docs/deutsch.jpg
+docs/vrml97Amendment1/inlineloadcontrol_example.wrl
+docs/vrml97Amendment1/nurbs.png
+docs/vrml97Amendment1/NurbsSurface_example.wrl
+docs/german_workshop_documents/animation_workshops_background_teacher.odt
+docs/german_workshop_documents/supershapes.jpg
+docs/typical_vrml_examples/forward_kinematic_animation.wrl
+docs/typical_vrml_examples/movie_trigger.wrl
+docs/typical_vrml_examples/ecmascript/test1.jpg
+docs/typical_vrml_examples/ecmascript/test2.jpg
+docs/typical_vrml_examples/touch_trigger.wrl
+docs/typical_vrml_examples/sound_transform.wrl
+docs/typical_vrml_examples/material_animation.wrl
+docs/typical_vrml_examples/forward_kinematic_spheresensor.wrl
+docs/typical_vrml_examples/README
+docs/typical_vrml_examples/elevator_proximity_trigger.wrl
+docs/typical_vrml_examples/door_cylindersensor.wrl
+docs/typical_vrml_examples/camera_animation.wrl
+docs/typical_vrml_examples/checker_touchsensor.wrl
+docs/typical_vrml_examples/billboard.wrl
+docs/typical_vrml_examples/checker_planesensor.wrl
+docs/typical_vrml_examples/visibilty_trigger.wrl
+docs/typical_vrml_examples/loadsensor.wrl
+docs/typical_vrml_examples/transform_animation.wrl
+docs/typical_vrml_examples/misc_animation.wrl
+docs/typical_vrml_examples/headupdisplay_example.wrl
+docs/typical_vrml_examples/sound_trigger.wrl
+docs/italian.jpg
+docs/export_example_java/jogl_simple_scripting_example/README.txt
+docs/export_example_java/jogl_simple_scripting_example/Makefile
+docs/export_example_java/simple_example/Makefile.in
+docs/export_example_java/simple_example/Makefile
+docs/export_example_java/jogl_example/Makefile
+docs/export_example_java/Makefile
+tools/collectViewpoints.sh
+tools/nxt_udev.sh
+tools/readme
+tools/modify_orientation_interpolator.awk
+packager/README
+packager/irix/relnotes/Img/dunelogo.jpg
+packager/Announcements/freshmeat_screenshot.jpg
+desktop/kde/README
+desktop/kde/dune.png
+desktop/kde/dune4kids.png
+desktop/cde/README
+desktop/cde/Makefile
+desktop/macosx/README.txt
+desktop/fvwm2/mini-dune.xpm
+desktop/fvwm2/Makefile
+desktop/irix/irix6.2_global/duneoptions.m4
+desktop/irix/irix6.2_global/fm_cosmo2vrml97
+desktop/irix/irix6.2_global/Dune.ftr.m4
+desktop/irix/irix6.2_global/Dune.ftr
+desktop/irix/irix6.2_global/readme
+desktop/irix/irix6.2_global/Makefile
+desktop/irix/irix6.5_personal/makefile.static
+desktop/irix/irix6.5_personal/duneoptions.m4
+desktop/irix/irix6.5_personal/fm_cosmo2vrml97
+desktop/irix/irix6.5_personal/Dune.ftr.m4
+desktop/irix/irix6.5_personal/Dune.ftr
+desktop/irix/irix6.5_personal/readme
+desktop/irix/irix6.5_personal/Makefile
+desktop/irix/irix6.5_personal/makefile.host
+desktop/irix/data/cosmo2vrml97filter
+desktop/irix/data/README
+desktop/irix/data/cosmo2vrml
+desktop/irix/irix6.5_global/duneoptions.m4
+desktop/irix/irix6.5_global/fm_cosmo2vrml97
+desktop/irix/irix6.5_global/Dune.ftr.m4
+desktop/irix/irix6.5_global/Dune.ftr
+desktop/irix/irix6.5_global/readme
+desktop/irix/irix6.5_global/Makefile
+desktop/irix/readme
+desktop/twm/Makefile
+desktop/debian/dune.xpm
+desktop/xfce/dune.xpm
+desktop/xfce/dune4kids.xpm
+INSTALL.txt
+test/testtabs.sh
+test/testresourcenumbers.sh
+test/testzeroclass.sh
+test/testxmlmgdiff.sh
+test/testx3domaddfield.sh
+test/testmenus.sh
+test/Makefile.in
+test/Makefile
+test/testprotos.sh
+src/dune.italian.rc
+src/dune.german.rc
+src/dune.portuguese.rc
+src/catt_test/material.geo
+src/test/Makefile
+src/dune.rc
+src/dune.english.rc
+src/dune.french.rc
+src/res/readme
+src/config.status
+src/Makefile.in
+src/Makefile.bak
+src/singleResources.rc
+src/resource.h.m4
+src/Makefile
+src/swt/rc/Makefile.in
+src/swt/rc/Makefile
+src/swt/generic/Makefile
+src/swt/win32/Makefile
+src/swt/include/resource.m4
+src/swt/include/languages.m4
+src/swt/include/Makefile
+src/swt/tests.new/Makefile.in
+src/swt/tests.new/Makefile
+src/swt/tests/Makefile.in
+src/swt/tests/Makefile
+src/swt/motif/Makefile.in
+src/swt/motif/Makefile.bak
+src/swt/motif/Makefile
+src/swt/Makefile
+README_IRIX_desktop.txt
+build.sh
+batch/mknodehpart1.sh
+batch/inserticon-gimp2_4.scm
+batch/fixpermissions.sh
+batch/useflex.bat
+batch/testiconsize2.sh
+batch/makedebian.sh
+batch/getwhiteversion.sh
+batch/mktarbz2white_dune.sh
+batch/gdbefencestart
+batch/update_VRML_url.sh
+batch/mksrcfloppy.sh
+batch/nt.bat
+batch/mknodec++part3.sh
+batch/gdbstart_joystick
+batch/mktargz.sh
+batch/findprint.sh
+batch/inserticon-gimp2_8.scm
+batch/edit_types_h.sh
+batch/repair_apple_bugs.sh
+batch/replaceversion.sh
+batch/checksingleheaderfiles.sh
+batch/mkSFMFTypes.sh
+batch/inserticon-gimp2_6.scm
+batch/comment_images.sh
+batch/testdirectory.sh
+batch/inserticonWithoutTarget.sh
+batch/mknodehpart2.sh
+batch/replaceversion.awk
+batch/usebison.bat
+batch/inserticon-gimp1_2.scm
+batch/print_unused_geo_files.sh
+batch/gdbdumastart
+batch/mknodehpart3.sh
+batch/findcopyrights.sh
+batch/inserticon.sh
+batch/binary_patch.pl
+batch/mknodec++part1.sh
+batch/edit_one_file_to_remove_tab.sh
+batch/mkdep.sh
+batch/source2cpp.sh
+batch/jpg_png_zlib.bat
+batch/replace_url.sh
+batch/edit_once_to_remove_tab.sh
+batch/gdbstart_spaceball
+batch/check_geo_files.sh
+batch/getversion.sh
+batch/insertdefecticon.sh
+batch/edit_types_cc.sh
+batch/mktargzwhite_dune.sh
+batch/yydebug.sh
+batch/mktarbz2.sh
+batch/chfind.sh
+batch/fix_not_translated_rcfiles.sh
+batch/bin_gsub.pl
+batch/mknodesource.awk
+batch/mkfloppies.sh
+batch/inserticon-gimp2_2.scm
+batch/dbxstart
+batch/mknodec++part2.sh
+batch/testiconsize.sh
+buildscripts/build-j4.sh
+buildscripts/build-duma.sh
+buildscripts/build-j8.sh
+buildscripts/build-ode.sh
+buildscripts/build-gprof-j4.sh
+buildscripts/build-kj4.sh
+buildscripts/build-archives.sh
+buildscripts/build-withcgalheaders.j4.sh
+buildscripts/build-updatedebug.sh
+buildscripts/build-olpc.sh
+buildscripts/build-gcov-j4.sh
+buildscripts/build-iconscale2-j4.sh
+buildscripts/build-oldmotif.sh
+buildscripts/build-aflockdebug.sh
+buildscripts/build-teachermenu.sh
+buildscripts/build-efence.sh
+buildscripts/build-fortify.sh
+buildscripts/build-olpcdebug.sh
+buildscripts/build-P.sh
+buildscripts/build-without-cgal-j4.sh
+config.status
+configure
+configure.in
+Makefile
+bin/redbluedune
+bin/nostereodune
+bin/italiandune
+bin/stereodune
+bin/illegal2vrml
+bin/germandune
+bin/dune4kids
+bin/redgreendune
+README_MSwindows.txt
+logo/flow2.jpg
+logo/whitesand.jpg
+logo/manta.wrl
+logo/manta2.wrl
+logo/white_dune_text.png
+README_MacOSX.txt
+
+warbird/game_over.wrl
+warbird/routes.wrl
+warbird/rot_trans.wrl
+warbird/multimedia/bubble.wav
+warbird/warbird.desktop
+warbird/p_fly_glass.wrl
+docs/usage_docs/schiff.wrl
+docs/usage_docs/DOME.wrl
+docs/usage_docs/door.x3dv
+docs/usage_docs/nxtdials_en.wrl
+docs/usage_docs/qualle.wrl
+docs/usage_docs/cuvex_hull_before.wrl
+docs/usage_docs/glider_movie.mp4
+docs/usage_docs/xwings.wings
+docs/usage_docs/ProximityProtoExample.wrl
+docs/usage_docs/nxtdials.wrl.gz
+docs/usage_docs/x3domScripting.wrl
+docs/usage_docs/human.x3dv
+docs/usage_docs/dune_1.html
+docs/usage_docs/nxtdials_de.wrl
+docs/usage_docs/nxtdials.lcd
+docs/usage_docs/illegal2vrml_1.html
+docs/usage_docs/fish.wrl
+docs/usage_docs/lila_white_dune4wonderland.odp
+docs/usage_docs/human.x3d
+docs/usage_docs/dune4kids_animal_en.html
+docs/hanim_history/gehmess_useproto.x3dv
+docs/export_example_c++/opengl_example/README_fedora.txt
+docs/export_example_c++/opengl_example/robot.x3dv
+docs/export_example_c++/simple_example/helloWorld.x3dv
+docs/export_example_c++/simple_example/helloWorld2.x3dv
+docs/export_example_c++/qt_opengl_example/qt_opengl_example.pro.user
+docs/export_example_c++/qt_opengl_example/README.txt
+docs/export_example_c++/qt_opengl_example/qt_opengl_example.ui
+docs/export_example_c++/qt_opengl_example/Makefile
+docs/export_example_c++/qt_opengl_example/Untitled.wrl
+docs/export_example_c++/qt_opengl_example/qt_opengl_example.pro
+docs/export_example_c++/opengl_scripting_example/ScriptingExample.wrl
+docs/developer_docs/Doxyfile.in
+docs/rendering_bugs/README
+docs/rendering_bugs/rendering_errors.html
+docs/rendering_bugs/proto_animation_error.wrl
+docs/interactive_open_wonderland_examples/cylindersensor_disk_rotation.x3dv
+docs/interactive_open_wonderland_examples/stringsensor.x3dv
+docs/interactive_open_wonderland_examples/planesensor_slider.x3dv
+docs/interactive_open_wonderland_examples/touchsensor_start_stop.x3dv
+docs/interactive_open_wonderland_examples/cylindersensor_cylinder_rotation.x3dv
+docs/interactive_open_wonderland_examples/keysensor_pressed.x3dv
+docs/interactive_open_wonderland_examples/proximitysensor_follower.x3dv
+docs/interactive_open_wonderland_examples/touchsensor_pressed_released.x3dv
+docs/interactive_open_wonderland_examples/simple_sliders_example.x3dv
+docs/interactive_open_wonderland_examples/open_wonderland_export_howto.txt
+docs/ldraw_dat_export.wrl
+docs/scripted_Nodes/curveanimation_example.wrl
+docs/scripted_Nodes/supershape_example.wrl
+docs/commandline_examples/create_movie.sh
+docs/commandline_examples/create_movie.html
+docs/export_example_c/opengl_example/main.c
+docs/export_example_c/opengl_example/Untitled.wrl
+docs/export_example_c/simple_example/mainHelloWorld.c
+docs/export_example_c/simple_example/helloWorld.x3dv
+docs/export_example_c/simple_example/helloWorld2.x3dv
+docs/export_example_c/opengl_scripting_example/main.c
+docs/export_example_c/opengl_scripting_example/ScriptingExample.wrl
+docs/german_workshop_documents/gelenk.wrl
+docs/german_workshop_documents/augen.wrl
+docs/german_workshop_documents/animation_computeranimation_workshop_description.odt
+docs/german_workshop_documents/kameras.wrl
+docs/german_workshop_documents/augen_falsch.wrl
+docs/german_workshop_documents/animation_3dmodelling_workshop_description.odt
+docs/german_workshop_documents/schiefer_wurf.wrl
+docs/german_workshop_documents/animation_kinematic_workshop_description.odt
+docs/german_workshop_documents/holes.wrl
+docs/german_workshop_documents/wuerfelmaennchen.wrl
+docs/x3d/CurveAnimationPROTO.wrl
+docs/x3d/CADGeometryPROTO.wrl
+docs/x3d/PositionInterpolator2DExample.wrl
+docs/x3d/CoordinateInterpolator2DExample.wrl
+docs/x3d/MetadataPrototypes.x3d
+docs/typical_vrml_examples/image.gif
+docs/typical_vrml_examples/bubble.wav
+docs/typical_vrml_examples/rigidBodyPhysics/spherecrash.x3dv
+docs/typical_vrml_examples/movie.mpg
+docs/typical_vrml_examples/ldraw_dat_export.wrl
+docs/export_example_java/jogl_simple_scripting_example/ScriptingExample.wrl
+docs/export_example_java/simple_example/helloWorld.x3dv
+docs/export_example_java/simple_example/helloWorld2.x3dv
+docs/export_example_java/simple_example/mainHelloWorld.java
+docs/export_example_java/jogl_example/x3d.java
+docs/export_example_java/jogl_example/Extra.java
+docs/export_example_java/jogl_example/robot.x3dv
+man/dune.1
+man/dune4kids.1
+man/illegal2vrml.1
+.gitignore
+packager/olpc/mkrpm.sh
+packager/rpm/mkrpm.sh
+packager/rpm/mkrpm_with_vcglib_installed.sh
+packager/rpm/mkrpm_opensuse.sh
+packager/openbsd/distinfo
+packager/openbsd/mkpkg.sh
+packager/openbsd/pkg-plist
+packager/openbsd/pkg-descr
+packager/openbsd/THIS_IS_UNTESTED
+packager/openbsd/pkg-comment
+packager/openbsd/Makefile
+packager/freebsd/mkpkg.sh
+packager/freebsd/pkg-plist
+packager/freebsd/pkg-descr
+packager/freebsd/pkg-comment
+packager/freebsd/Makefile
+packager/macosx/mksit.sh
+packager/lsb/mkrpm.sh
+packager/archlinux/PKGBUILD
+packager/archlinux/mkpacman.sh
+packager/archlinux/wdune-1.388.tar.bz2
+packager/archlinux/wdune-1.388-1-x86_64.pkg.tar.xz
+packager/archlinux/mkpacman_alarm.sh
+packager/archlinux/Makefile
+packager/irix/relnotes/white_dune.html
+packager/irix/mkpkg.sh
+packager/solaris/mkpkg.sh
+packager/debian/Makefile.debian_extension
+packager/debian/rules_ubuntu_without_scene3dview
+packager/debian/mkinstalldirs
+packager/debian/wdune-docs.docs
+packager/debian/menu
+packager/debian/rules_jessi
+packager/debian/rules_ubuntu
+packager/debian/postinst
+packager/debian/rules_stretch
+packager/debian/rules_rasbian
+packager/debian/mkdeb_stretch.sh
+packager/debian/whitedune-doc.doc-base
+packager/debian/changelog
+packager/debian/Makefile.in.debian
+packager/debian/mkdeb_ubuntu_without_scene3dview.sh
+packager/debian/control_wheezy
+packager/debian/control_buster
+packager/debian/control_stretch
+packager/debian/control_ubuntu
+packager/debian/rules_wheezy
+packager/debian/rules
+packager/debian/mkdeb_wheezy.sh
+packager/debian/control_jessi
+packager/debian/compat
+packager/debian/source/format
+packager/debian/source/format.old
+packager/debian/control
+packager/debian/control_ubuntu_without_scene3dview
+packager/debian/Makefile.in.debian_extension
+packager/debian/mkdeb_ubuntu.sh
+packager/debian/mkdeb_jessi.sh
+packager/debian/wdune.install
+packager/debian/rules_buster
+packager/debian/mkdeb_buster.sh
+packager/debian/prerm
+packager/debian/mkdeb_rasbian.sh
+packager/hpux/mkswpackage
+packager/hpux/THIS_IS_UNTESTED
+packager/Announcements/pad_spec.xml
+packager/Announcements/down.sh
+packager/Announcements/LSM.entry
+packager/Announcements/spec.php
+packager/Announcements/freewaredirectory_template_dune.txt
+packager/Announcements/protocol.php
+packager/Announcements/xtensions_spec.php
+packager/Makefile
+packager/slackware/mkpkg.sh
+packager/slackware/vcglib/vcglib.SlackBuild
+packager/slackware/vcglib/README
+packager/slackware/vcglib/vcglib.info
+packager/slackware/vcglib/slack-desc
+packager/slackware/white_dune/white_dune.SlackBuild
+packager/slackware/white_dune/README
+packager/slackware/white_dune/slack-desc
+packager/slackware/white_dune/white_dune.info
+desktop/olpc/activity-dune.svg
+desktop/olpc/WhiteDune4kids.activity/.git/info/exclude
+desktop/olpc/WhiteDune4kids.activity/.git/HEAD
+desktop/olpc/WhiteDune4kids.activity/.git/objects/pack/pack-4835c0c82ea7b853bb6edcc239c20b1c2198fd0a.pack
+desktop/olpc/WhiteDune4kids.activity/.git/objects/pack/pack-4835c0c82ea7b853bb6edcc239c20b1c2198fd0a.idx
+desktop/olpc/WhiteDune4kids.activity/.git/index
+desktop/olpc/WhiteDune4kids.activity/.git/config
+desktop/olpc/WhiteDune4kids.activity/.git/description
+desktop/olpc/WhiteDune4kids.activity/.git/refs/heads/master
+desktop/olpc/WhiteDune4kids.activity/.git/refs/remotes/origin/HEAD
+desktop/olpc/WhiteDune4kids.activity/.git/packed-refs
+desktop/olpc/WhiteDune4kids.activity/.git/logs/HEAD
+desktop/olpc/WhiteDune4kids.activity/.git/logs/refs/heads/master
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-commit.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-receive.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/post-update.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/applypatch-msg.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/commit-msg.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-rebase.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/update.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/prepare-commit-msg.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-commit.sample
+desktop/olpc/WhiteDune4kids.activity/.git/hooks/pre-applypatch.sample
+desktop/olpc/WhiteDune4kids.activity/activity/activity-dune4kids.svg
+desktop/olpc/WhiteDune4kids.activity/activity/activity.info
+desktop/olpc/WhiteDune4kids.activity/po/WhiteDune4kids.pot
+desktop/kde/dune4kids.bmp
+desktop/kde/dune.bmp
+desktop/kde/dune4kids.desktop
+desktop/kde/dune.desktop
+desktop/kde/redhat/dune4kids.desktop
+desktop/kde/redhat/dune.desktop
+desktop/cde/icons/VRML97.m.pm
+desktop/cde/icons/VRML97.m.bm
+desktop/cde/icons/white_dune.t.pm
+desktop/cde/icons/white_dune.l.pm
+desktop/cde/icons/VRML97.t.bm
+desktop/cde/icons/white_dune.l.bm
+desktop/cde/icons/VRML97.t_m.bm
+desktop/cde/icons/white_dune.t.bm
+desktop/cde/icons/white_dune.m.bm
+desktop/cde/icons/VRML97.t.pm
+desktop/cde/icons/white_dune.m.pm
+desktop/cde/icons/VRML97.m_m.bm
+desktop/cde/types/white_dune.dt
+desktop/cde/os/aix/usr_local_bin_white_dune.dt
+desktop/cde/os/aix/white_dune
+desktop/cde/os/solaris/opt_White_Dune_bin_white_dune.dt
+desktop/cde/os/solaris/white_dune
+desktop/macosx/xcode/WhiteDuneHelp/whiteDuneHelp.html
+desktop/macosx/xcode/English.lproj/MainMenu.nib/classes.nib
+desktop/macosx/xcode/English.lproj/MainMenu.nib/keyedobjects.nib
+desktop/macosx/xcode/English.lproj/MainMenu.nib/info.nib
+desktop/macosx/xcode/English.lproj/MainMenu.nib/objects.nib
+desktop/macosx/xcode/English.lproj/InfoPlist.strings
+desktop/macosx/xcode/English.lproj/Credits.rtf
+desktop/macosx/xcode/English.lproj/MyDocument.nib/classes.nib
+desktop/macosx/xcode/English.lproj/MyDocument.nib/info.nib
+desktop/macosx/xcode/English.lproj/MyDocument.nib/objects.nib
+desktop/macosx/xcode/version.plist
+desktop/macosx/xcode/white_dune.xcodeproj/mufti.mode1v3
+desktop/macosx/xcode/white_dune.xcodeproj/mufti.pbxuser
+desktop/macosx/xcode/white_dune.xcodeproj/project.pbxproj
+desktop/macosx/xcode/white_dune.xcodeproj/mufti.mode1
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune.hmap
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune~.dep
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/white_dune.dep
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/ppc/white_dune.LinkFileList
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/ppc/white_dune
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/i386/white_dune.LinkFileList
+desktop/macosx/xcode/white_dune.build/Deployment/white_dune.build/Objects-normal/i386/white_dune
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/subclasses.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/strings.pbxstrings/strings
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/strings.pbxstrings/control
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/decls.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/symbols0.pbxsymbols
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/pbxindex.header
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/cdecls.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/categories.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/protocols.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/refs.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/files.pbxbtree
+desktop/macosx/xcode/white_dune.build/white_dune.pbxindex/imports.pbxbtree
+desktop/macosx/xcode/white_dune_Prefix.pch
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/classes.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/keyedobjects.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/info.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MainMenu.nib/objects.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/InfoPlist.strings
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/Credits.rtf
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/classes.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/info.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/English.lproj/MyDocument.nib/objects.nib
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/whiteDuneHelp.html
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/whiteDuneHelp/whiteDuneHelp.html
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/Info.plist
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Resources/white_dune.icns
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/PkgInfo
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/Info.plist
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/MacOS/dunestarter
+desktop/macosx/xcode/Deployment/white_dune.app/Contents/MacOS/white_dune
+desktop/macosx/xcode/main.m
+desktop/macosx/xcode/white_dune.xcode/mufti.pbxuser
+desktop/macosx/xcode/white_dune.xcode/project.pbxproj
+desktop/macosx/xcode/Info.plist
+desktop/macosx/xcode/white_dune.icns
+desktop/fvwm2/mini-dune_4kids.xpm
+desktop/irix/data/Dune.icon
+desktop/irix/data/nostereoDune.open.fti
+desktop/irix/data/Dunebackground.fti
+desktop/irix/data/Dune4kids.open.fti
+desktop/irix/data/Dune.fti
+desktop/irix/data/Dune4kids.fti
+desktop/irix/data/nostereoDune.fti
+desktop/irix/data/Dune.open.fti
+build
+lib/cvs/Entries
+lib/cvs/Root
+lib/cvs/Repository
+src/openglutfont.c
+src/resource.c
+src/cvs/Entries.Log
+src/cvs/Entries
+src/cvs/Root
+src/cvs/Repository
+src/subd_mesh.c
+src/mysnprintf.c
+src/gif.c
+src/buf.c
+src/SDLjoystick/Makefile.in
+src/SDLjoystick/Makefile
+src/config.h.nt
+src/deprecated/dune.dsp
+src/deprecated/dune.dsw
+src/deprecated/dune.dsp.nt
+src/deprecated/dune.dsp.jpg_png_zlib
+src/cvsroot/cvswrappers
+src/cvsroot/rcsinfo
+src/cvsroot/cvs/Entries
+src/cvsroot/cvs/Root
+src/cvsroot/cvs/Repository
+src/cvsroot/loginfo
+src/cvsroot/notify
+src/cvsroot/verifymsg
+src/cvsroot/config
+src/cvsroot/modules
+src/cvsroot/editinfo
+src/cvsroot/commitinfo
+src/cvsroot/checkoutlist
+src/cvsroot/taginfo
+src/mathx.c
+src/dune.vcxproj
+src/config.h.in
+src/res/dune_jpg_png_zlib.ico
+src/res/emptySocketSquare.bmp
+src/res/wonderlandSocketSquare.bmp
+src/res/halftone.bmp
+src/res/vcr2.bmp
+src/res/cvs/Entries
+src/res/cvs/Root
+src/res/dune.ico
+src/res/node_icons2.bmp
+src/res/recommendedSocketSquare.bmp
+src/res/standard_toolbar.bmp
+src/res/dune-rc.ico
+src/res/dune-pl.ico
+src/res/node_icons.bmp
+src/res/dune.devil.ico
+src/res/dune_nt.ico
+src/res/vcr.bmp
+src/res/gray_not_implemented.bmp
+src/res/gray.bmp
+src/res/fullSocketSquare.bmp
+src/res/Makefile
+src/res/recommendedWonderlandSocketSquare.bmp
+src/res/empty_node_icon.bmp
+src/res/standard_toolbar2.bmp
+src/subd.c
+src/swt/rc/rc
+src/swt/rc/cvs/Entries
+src/swt/rc/cvs/Root
+src/swt/rc/cvs/Repository
+src/swt/rc/rc.dsw
+src/swt/rc/rc.dsp
+src/swt/cvs/Entries.Log
+src/swt/cvs/Entries
+src/swt/cvs/Root
+src/swt/cvs/Repository
+src/swt/generic/cvs/Entries
+src/swt/generic/cvs/Root
+src/swt/generic/cvs/Repository
+src/swt/lib/cvs/Entries
+src/swt/lib/cvs/Root
+src/swt/lib/cvs/Repository
+src/swt/win32/swt.dsw
+src/swt/win32/cvs/Entries
+src/swt/win32/cvs/Root
+src/swt/win32/cvs/Repository
+src/swt/win32/swt.vcproj
+src/swt/win32/swt.dsp
+src/swt/include/cvs/Entries
+src/swt/include/cvs/Root
+src/swt/include/cvs/Repository
+src/swt/tests.new/res.rc
+src/swt/tests.new/resource.c
+src/swt/tests.new/bitmap1.bmp
+src/swt/tests.new/koordinaten.txt
+src/swt/tests.new/tests/tests.dsw
+src/swt/tests.new/tests/tests.dsp
+src/swt/tests.new/restest
+src/swt/tests/res.rc
+src/swt/tests/cvs/Entries
+src/swt/tests/cvs/Root
+src/swt/tests/cvs/Repository
+src/swt/tests/bitmap1.bmp
+src/swt/motif/cvs/Entries
+src/swt/motif/cvs/Root
+src/swt/motif/cvs/Repository
+src/pngLoad.c
+src/config.h.nt.devil.sand
+batch/repair_apple_bugs_fat.sh
+batch/print_forbidden_in_id.sh
+batch/removeLexYacc.sh
+batch/search_variable_h.sh
+batch/gdiffrch.sh
+batch/grepmore.sh
+batch/debugcommands.sh
+batch/new_wonderland_export.sh
+batch/gdbstart
+batch/diffrch.sh
+batch/replace.sh
+batch/rcsmdiff.sh
+batch/search_variable.sh
+batch/install_build_requirements.sh
+batch/dune_stick.bat
+batch/update_node_source.sh
+batch/proto2standard.sh
+debian/mkinstalldirs
+debian/menu
+debian/postinst
+debian/changelog
+debian/rules
+debian/compat
+debian/tmp/DEBIAN/postinst
+debian/tmp/DEBIAN/prerm
+debian/source/format
+debian/control
+debian/Makefile.in.debian_extension
+debian/prerm
+config.log
+logo/dune.wrl
+README_LINUX.txt

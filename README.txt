@@ -5327,4 +5327,6 @@ Added Inline expansion for X3DOM preview
 
 Added reading/writing of a XML well formed X3DOM html file
 
+Fixed bug of loosing X3DOM HTML data during preview
+
 Contact: MUFTI <mufti11@web.de>
