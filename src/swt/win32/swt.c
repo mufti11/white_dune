@@ -3894,6 +3894,12 @@ mainWndProc(HWND hWnd, UINT message, WPARAM  wParam, LPARAM lParam)
          break;
       case WM_RBUTTONUP:
          rc = doMButtonCallback(SW_MOUSE3, FALSE, hWnd, message, wParam, lParam);
+      case WM_MOUSEWHEEL:
+         if ((short)HIWORD(wParam) > 0)
+             rc = doMButtonCallback(SW_MOUSE4, TRUE, hWnd, message, wParam, lParam);
+         else
+             rc = doMButtonCallback(SW_MOUSE5, TRUE, hWnd, message, wParam, lParam);
+         break;
       case WM_KEYDOWN:
          rc = doKeyCallback(TRUE, hWnd, message, wParam, lParam);
          break;

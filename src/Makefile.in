@@ -144,7 +144,6 @@ NODECLASSES = \
         NodeImageCubeMapTexture.o \
 	NodeImageTexture.o \
         NodeImageTexture3D.o \
-        NodeIndexedFaceSet.o \
 	NodeIndexedLineSet.o \
         NodeIndexedQuadSet.o \
 	NodeIndexedTriangleFanSet.o \
@@ -176,7 +175,6 @@ NODECLASSES = \
 	NodeMetadataSet.o \
 	NodeMetadataString.o \
         NodeMotorJoint.o \
-	NodeMovieTexture.o \
 	NodeMultiTexture.o \
 	NodeMultiTextureCoordinate.o \
 	NodeMultiTextureTransform.o \
@@ -299,12 +297,28 @@ NODECLASSES = \
 
 EXTRACLASSES = \
         NodeSuperEllipsoid.o \
-        NodeSuperShape.o \
-        NodeSuperRevolver.o \
-        NodeSuperExtrusion.o \
 	NodeVrmlCut.o \
+        NodeGeneratedShadowMap.o \
+        NodeMatrixTransform.o \
+        NodeMultiGeneratedTextureCoordinate.o \
+        NodeRenderedTexture.o \
+        NodeSuperShape.o \
 	NodeVrmlScene.o \
+	NodeKambiAppearance.o \
+	NodeKambiHeadLight.o \
+        NodeKambiInline.o \
+        NodeKambiNavigationInfo.o \
+        NodeKambiOctreeProperties.o \
+	NodeKambiTriangulation.o \
+	NodeProjectedTextureCoordinate.o \
+        NodeSuperRevolver.o \
+        NodeScreenEffect.o \
+        NodeTeapot.o \
+	NodeText3D.o \
+        NodeShaderTexture.o \
+        NodeVectorInterpolator.o \
         NodeCurveAnimation.o \
+        NodeSuperExtrusion.o \
 	NodeCOVER.o \
 	NodeSpaceSensor.o \
 	NodeCubeTexture.o \
@@ -336,22 +350,6 @@ EXTRACLASSES = \
         NodeColorSetInterpolator.o \
         NodeEffect.o \
         NodeEffectPart.o \
-        NodeGeneratedShadowMap.o \
-        NodeMatrixTransform.o \
-        NodeMultiGeneratedTextureCoordinate.o \
-	NodeKambiAppearance.o \
-	NodeKambiHeadLight.o \
-        NodeKambiInline.o \
-        NodeKambiNavigationInfo.o \
-        NodeKambiOctreeProperties.o \
-	NodeKambiTriangulation.o \
-	NodeProjectedTextureCoordinate.o \
-        NodeRenderedTexture.o \
-        NodeScreenEffect.o \
-        NodeTeapot.o \
-	NodeText3D.o \
-        NodeShaderTexture.o \
-        NodeVectorInterpolator.o \
         NodeBinaryGeometry.o \
         NodeBlock.o \
         NodeColorMaskMode.o \
@@ -587,7 +585,6 @@ DUNECLASSES = \
 	SceneView.o \
 	FieldView.o \
 	FieldViewItem.o \
-	Util.o \
 	URL.o \
 	PanedWindow.o \
 	StatusBar.o \
@@ -610,18 +607,21 @@ DUNECLASSES = \
         GpsMathLib.o \
         WonderlandModuleExport.o \
         WriteWonderlandCellRenderCode.o \
-        MeshSubdivide.o \
         NurbsCurve.o \
         Vec3x.o \
-        quadric_simp.o \
         VertexModifier.o \
         illegal2vrml.o $(NEBULA)
 
 BIGDUNECLASSES = \
+        quadric_simp.o \
+	NodeMovieTexture.o \
+        MeshSubdivide.o \
+	Util.o \
         Scene.o \
         SceneProtoMap.o \
 	Node.o \
-        MainWindow.o
+        MainWindow.o \
+	NodeIndexedFaceSet.o
 
 FONT23DCLASSES = \
         advancing_front.o \

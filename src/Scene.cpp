@@ -1272,13 +1272,8 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
                 return 0;
     }    
 
-    if (m_storeAsHtml)
+    if (getStoreAsHtml())
         writeFlags |= (X3DOM | X3D_XML);
-
-    const char *ext = strrchr(url, '.');
-    if (ext)
-        if (strcasecmp(ext, ".html") == 0)
-            writeFlags |= (X3DOM | X3D_XML);
 
     TheApp->setWriteUrl(url);
     ProtoMap::Chain::Iterator *j;
@@ -1616,7 +1611,6 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     }
     if (writeFlags & X3DOM) {
         RET_RESET_FLAGS_ONERROR( indentf(f, indent > 0 ? 2 : 0) )
-        RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</body>\n") )
         TheApp->incSelectionLinenumber();
         for (int i = 0; i < m_htmlFirstPart.size(); i++)
             if (!(m_htmlFirstPart[i])) {
@@ -1627,7 +1621,10 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
                                                   (const char *)m_htmlData[i]) )
                 RET_RESET_FLAGS_ONERROR( mywritef(f,"%s\n", 
                                                   (const char *)m_htmlEnd[i]) )
+                TheApp->incSelectionLinenumber();
             }
+        RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</body>\n") )
+        TheApp->incSelectionLinenumber();
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</html>\n") )
         TheApp->incSelectionLinenumber();
     }
