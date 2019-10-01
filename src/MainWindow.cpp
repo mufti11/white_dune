@@ -7757,7 +7757,7 @@ MainWindow::createSuperRevolver()
 {
     int degree = 2;
 
-    OneIntDialog dlg(m_wnd, IDD_SUPER_REVOLVER_POINTS, 5, 3, INT_MAX);
+    OneIntDialog dlg(m_wnd, IDD_SUPER_REVOLVER_POINTS, 7, 3, INT_MAX);
     if (dlg.DoModal() == IDCANCEL)
         return;
 
@@ -7773,8 +7773,9 @@ MainWindow::createSuperRevolver()
         float *knots = new float[dimension + order]; 
         
         for (int i = 0; i < dimension; i++) {
-            controlPoints[i * 2] = 1.0f;
-            controlPoints[i * 2 + 1] = i / (dimension - 1.0);
+            float y = i / (dimension - 1.0);
+            controlPoints[i * 2] = sin(y * M_PI);
+            controlPoints[i * 2 + 1] = y;
             weights[i] = 1.0f;
         }
         controlPoints[0] = 0.0f;
@@ -7985,19 +7986,19 @@ MainWindow::createSpindle(void)
         controlPoints[0] = 0;
         controlPoints[1] = -3;
 
-        controlPoints[2] = 1;
+        controlPoints[2] = 2;
         controlPoints[3] = -2;
 
-        controlPoints[4] = 1;
+        controlPoints[4] = 2;
         controlPoints[5] = -1;
 
-        controlPoints[6] = 1;
+        controlPoints[6] = 2;
         controlPoints[7] = 0;
 
-        controlPoints[8] = 1;
+        controlPoints[8] = 2;
         controlPoints[9] = 1;
 
-        controlPoints[10] = 1;
+        controlPoints[10] = 2;
         controlPoints[11] = 2;
 
         controlPoints[12] = 0;

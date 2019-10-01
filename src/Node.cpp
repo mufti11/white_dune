@@ -544,12 +544,23 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
                 isNode->setField(field->getIsField(i), value);
         }
     ExposedField *expField = field->getExposedField();
-    if (expField && (expField->getFlags() & FF_IS))
-        for (int i = 0; i < expField->getNumIs(); i++) {
-            Node *isNode = getIsNode(expField->getIsNodeIndex(i));
-            if (isNode)
-                isNode->setField(expField->getIsField(i), value);
+    if (expField) {
+        if (expField->getFlags() & FF_IS)
+            for (int i = 0; i < expField->getNumIs(); i++) {
+                Node *isNode = getIsNode(expField->getIsNodeIndex(i));
+                if (isNode)
+                    isNode->setField(expField->getIsField(i), value);
+            }
+        if (m_scene) {
+            int eventOut = expField->getEventOut();
+            SocketList::Iterator *i;
+            for (i = m_outputs[eventOut].first(); i != NULL; i = i->next()) {
+                RouteSocket s = i->item();
+                s.getNode()->receiveEvent(s.getField(), swGetCurrentTime(),
+                                          value);
+            }
         }
+    }    
     if (m_scene)
         m_scene->setNotSaved();
 }
@@ -2370,7 +2381,7 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
         else
             RET_ONERROR( mywritestr(f, "NULL") )
         RET_ONERROR( mywritestr(f, ") {\n") )
-    
+
         if (languageFlag & JAVA_SOURCE) {
             RET_ONERROR( indentf(f, indent + 8) )
             RET_ONERROR( mywritestr(f, "try {\n") )
@@ -2404,10 +2415,10 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
             RET_ONERROR( indentf(f, indent + 12) )
             RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
             RET_ONERROR( mywritestr(f, "ShowError(e);\n") )
+
             RET_ONERROR( indentf(f, indent + 8) )
             RET_ONERROR( mywritestr(f, "}\n") )
         }
-    
     }
     RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
@@ -2596,8 +2607,32 @@ int
 Node::writeCAndFollowRoutes(int f, int indent, int languageFlag, 
                             bool writeSensorNodes, const char *eventName)
 {
+    bool x3d = m_scene->isX3d();
+
+    bool writeProcessEvent = true;
+
+    SocketList::Iterator *j;
+    for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
+        int numOutput = 0;
+        for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
+            numOutput++;
+            RouteSocket s = j->item();
+
+            Node *sNode = s.getNode();
+
+            Field *field = sNode->getProto()->getField(s.getField());
+            ExposedField *expField = field->getExposedField();
+            if (expField) {
+                int eventOut = expField->getEventOut();
+                EventOut *source = m_proto->getEventOut(eventOut);
+                SocketList::Iterator *i;
+                for (i = m_outputs[eventOut].first(); i != NULL; i = i->next()) 
+                    writeProcessEvent = false;
+           }
+       }
+    }
     Proto *proto = getProto();
-    if (!getProto()->isLoaded())
+    if (writeProcessEvent && !getProto()->isLoaded())
         RET_ONERROR( writeCProcessEvent(f, indent, languageFlag, eventName) )
     else
         indent = indent - 4;
@@ -2676,7 +2711,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
         }
     }
 
-    SocketList::Iterator *j;
     for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
         int numOutput = 0;
         for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
@@ -2800,9 +2834,29 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             if (languageFlag & JAVA_SOURCE)
                 RET_ONERROR( mywritestr(f, "    ") )
             RET_ONERROR( mywritestr(f, "}\n") )
+
+            Field *field = sNode->getProto()->getField(s.getField());
+            ExposedField *expField = field->getExposedField();
+            if (expField) {
+                int eventOut = expField->getEventOut();
+                EventOut *source = m_proto->getEventOut(eventOut);
+                SocketList::Iterator *i;
+                indent -= 4;
+                for (i = m_outputs[eventOut].first(); i != NULL; i = i->next()) 
+                {
+                    RouteSocket s = i->item();
+                    Node *sNode = s.getNode();
+                    EventIn *target = 
+                        sNode->getProto()->getEventIn(s.getField());
+                    if (writeCSendEvent(f, indent, languageFlag, target, source,
+                                        sNode) != 0)
+                        return -1;
+                }
+            }
         }
     }
-    writeCEndSendEvent(f, indent, languageFlag);
+    if (writeProcessEvent)
+        writeCEndSendEvent(f, indent, languageFlag);
     return 0;
 }                                                                
 

@@ -8,7 +8,7 @@ CXXCPP = g++ -E
 YACC = bison -y
 LEX = flex --nounistd
 AWK = gawk
-PREFIX = /usr/local
+PREFIX = /usr
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
 
@@ -39,12 +39,12 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
-CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
+CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/root/vcglib -I.//../vcglib -I/root/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/root/vcglib -I.//../vcglib -I/root/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
+CFLAGS_BIG = -O2 -g $(COMMON_FLAGS)  -fopenmp -g -O2 -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
-CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
+CXXFLAGS = -O2 -g $(COMMON_FLAGS) -g -O2 -fopenmp
+LIBS =   -L/usr/local/lib -L/usr/local/lib -O2 -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXt -lXmu -lX11 -lm -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -144,7 +144,6 @@ NODECLASSES = \
         NodeImageCubeMapTexture.o \
 	NodeImageTexture.o \
         NodeImageTexture3D.o \
-        NodeIndexedFaceSet.o \
 	NodeIndexedLineSet.o \
         NodeIndexedQuadSet.o \
 	NodeIndexedTriangleFanSet.o \
@@ -176,7 +175,6 @@ NODECLASSES = \
 	NodeMetadataSet.o \
 	NodeMetadataString.o \
         NodeMotorJoint.o \
-	NodeMovieTexture.o \
 	NodeMultiTexture.o \
 	NodeMultiTextureCoordinate.o \
 	NodeMultiTextureTransform.o \
@@ -299,12 +297,28 @@ NODECLASSES = \
 
 EXTRACLASSES = \
         NodeSuperEllipsoid.o \
-        NodeSuperShape.o \
-        NodeSuperRevolver.o \
-        NodeSuperExtrusion.o \
 	NodeVrmlCut.o \
+        NodeGeneratedShadowMap.o \
+        NodeMatrixTransform.o \
+        NodeMultiGeneratedTextureCoordinate.o \
+        NodeRenderedTexture.o \
+        NodeSuperShape.o \
 	NodeVrmlScene.o \
+	NodeKambiAppearance.o \
+	NodeKambiHeadLight.o \
+        NodeKambiInline.o \
+        NodeKambiNavigationInfo.o \
+        NodeKambiOctreeProperties.o \
+	NodeKambiTriangulation.o \
+	NodeProjectedTextureCoordinate.o \
+        NodeSuperRevolver.o \
+        NodeScreenEffect.o \
+        NodeTeapot.o \
+	NodeText3D.o \
+        NodeShaderTexture.o \
+        NodeVectorInterpolator.o \
         NodeCurveAnimation.o \
+        NodeSuperExtrusion.o \
 	NodeCOVER.o \
 	NodeSpaceSensor.o \
 	NodeCubeTexture.o \
@@ -336,22 +350,6 @@ EXTRACLASSES = \
         NodeColorSetInterpolator.o \
         NodeEffect.o \
         NodeEffectPart.o \
-        NodeGeneratedShadowMap.o \
-        NodeMatrixTransform.o \
-        NodeMultiGeneratedTextureCoordinate.o \
-	NodeKambiAppearance.o \
-	NodeKambiHeadLight.o \
-        NodeKambiInline.o \
-        NodeKambiNavigationInfo.o \
-        NodeKambiOctreeProperties.o \
-	NodeKambiTriangulation.o \
-	NodeProjectedTextureCoordinate.o \
-        NodeRenderedTexture.o \
-        NodeScreenEffect.o \
-        NodeTeapot.o \
-	NodeText3D.o \
-        NodeShaderTexture.o \
-        NodeVectorInterpolator.o \
         NodeBinaryGeometry.o \
         NodeBlock.o \
         NodeColorMaskMode.o \
@@ -587,7 +585,6 @@ DUNECLASSES = \
 	SceneView.o \
 	FieldView.o \
 	FieldViewItem.o \
-	Util.o \
 	URL.o \
 	PanedWindow.o \
 	StatusBar.o \
@@ -610,18 +607,21 @@ DUNECLASSES = \
         GpsMathLib.o \
         WonderlandModuleExport.o \
         WriteWonderlandCellRenderCode.o \
-        MeshSubdivide.o \
         NurbsCurve.o \
         Vec3x.o \
-        quadric_simp.o \
         VertexModifier.o \
         illegal2vrml.o $(NEBULA)
 
 BIGDUNECLASSES = \
+        quadric_simp.o \
+	NodeMovieTexture.o \
+        MeshSubdivide.o \
+	Util.o \
         Scene.o \
         SceneProtoMap.o \
 	Node.o \
-        MainWindow.o
+        MainWindow.o \
+	NodeIndexedFaceSet.o
 
 FONT23DCLASSES = \
         advancing_front.o \

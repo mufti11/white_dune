@@ -5331,4 +5331,8 @@ Fixed bug of loosing X3DOM HTML data during preview
 
 Added mouse wheel support for M$Windows version
 
+Changed shape of 4kids "spindle" object
+
+Fixed missing update of exposedField in routing
+
 Contact: MUFTI <mufti11@web.de>
