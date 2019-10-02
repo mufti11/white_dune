@@ -502,16 +502,19 @@ NodeImageTexture::bind()
             Node *parent = getParent(i);
             if (parent && parent->hasParent()) {
                 for (int j = 0; j < getNumParents(); j++) {
-                    parent = parent->getParent(j);
-                    if (parent && parent->getType() == VRML_SHAPE) {
-                        NodeShape *shape = (NodeShape *)parent;
-                        if (shape->geometry()->getValue()) {
-                            if (shape->geometry()->getValue()->isMeshBasedNode()) {
-                                MeshBasedNode *meshBased = (MeshBasedNode *)
-                                    shape->geometry()->getValue();
-                               mesh = meshBased->getMesh();
-                           }
-                       }
+                    if (parent->hasParent()) {
+                        parent = parent->getParent(j);
+                        if (parent && parent->getType() == VRML_SHAPE) {
+                            NodeShape *shape = (NodeShape *)parent;
+                            if (shape->geometry()->getValue()) {
+                                if (shape->geometry()->getValue()->
+                                    isMeshBasedNode()) {
+                                    MeshBasedNode *meshBased = (MeshBasedNode *)
+                                        shape->geometry()->getValue();
+                                    mesh = meshBased->getMesh();
+                                }
+                            }
+                        }
                     }
                 }
             }                     

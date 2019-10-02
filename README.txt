@@ -5335,4 +5335,8 @@ Changed shape of 4kids "spindle" object
 
 Fixed missing update of exposedField in routing
 
+Fixed crash in C/C++/java export
+
+Fixed crash in NodeImageTexture::bind
+
 Contact: MUFTI <mufti11@web.de>
