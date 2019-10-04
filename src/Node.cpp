@@ -560,7 +560,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
                                           value);
             }
         }
-    }    
+    }
     if (m_scene)
         m_scene->setNotSaved();
 }
@@ -2381,7 +2381,7 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
         else
             RET_ONERROR( mywritestr(f, "NULL") )
         RET_ONERROR( mywritestr(f, ") {\n") )
-
+    
         if (languageFlag & JAVA_SOURCE) {
             RET_ONERROR( indentf(f, indent + 8) )
             RET_ONERROR( mywritestr(f, "try {\n") )
@@ -2415,10 +2415,10 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
             RET_ONERROR( indentf(f, indent + 12) )
             RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
             RET_ONERROR( mywritestr(f, "ShowError(e);\n") )
-
             RET_ONERROR( indentf(f, indent + 8) )
             RET_ONERROR( mywritestr(f, "}\n") )
         }
+    
     }
     RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
@@ -2440,7 +2440,7 @@ NodeData::writeCSendEvent(int f, int indent, int languageFlag,
     if (target->getExposedField() != NULL)
         targetVariableName = target->getExposedField()->getName(true);
 
-    return writeCDowithEvent(f, indent,  languageFlag, targetVariableName,
+    return writeCDowithEvent(f, indent + 4,  languageFlag, targetVariableName,
                              sourceVariableName, sNode, 
                              isArrayInC(target->getType()), target->getType());
 }
@@ -2486,7 +2486,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                             Node *sNode, bool isArray, int type)
 { 
     if ((languageFlag & JAVA_SOURCE) && isArray) {
-        RET_ONERROR( indentf(f, indent + 8) )
+        RET_ONERROR( indentf(f, indent + 12) )
         RET_ONERROR( mywritestr(f, "if ((") )
         RET_ONERROR( writeCVariable(f, languageFlag) )
         RET_ONERROR( mywritestr(f, ".") )
@@ -2524,7 +2524,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
         RET_ONERROR( mywritestr(f, "];\n") )
     }
 
-    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( indentf(f, indent + 8) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     if ((languageFlag & JAVA_SOURCE) && isArray) {
@@ -2603,19 +2603,15 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
     return 0;
 }
 
-int 
-Node::writeCAndFollowRoutes(int f, int indent, int languageFlag, 
-                            bool writeSensorNodes, const char *eventName)
-{
-    bool x3d = m_scene->isX3d();
 
-    bool writeProcessEvent = true;
+bool
+NodeData::hasRouteToExposedField(void)
+{
+    bool hasExposedFieldInRoute = true;
 
     SocketList::Iterator *j;
     for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
-        int numOutput = 0;
         for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
-            numOutput++;
             RouteSocket s = j->item();
 
             Node *sNode = s.getNode();
@@ -2625,20 +2621,35 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 ExposedField *expField = field->getExposedField();
                 if (expField) {
                     int eventOut = expField->getEventOut();
-                    EventOut *source = m_proto->getEventOut(eventOut);
-                    if (source == NULL)
+                    EventOut *target = m_proto->getEventOut(eventOut);
+                    if (target == NULL)
                         continue;
-                    SocketList::Iterator *i;
-                    for (i = m_outputs[eventOut].first(); i != NULL; 
-                         i = i->next()) 
-                        writeProcessEvent = false;
+                    SocketList::Iterator *n;
+                    for (n = m_outputs[i].first(); n != NULL; 
+                         n = n->next()) {
+                         RouteSocket s = n->item();
+                         if (eventOut == i)
+                             hasExposedFieldInRoute = false;
+                    }
                 }
             }
         }
     }
+    return hasExposedFieldInRoute;
+}
+
+int 
+Node::writeCAndFollowRoutes(int f, int indent, int languageFlag, 
+                            bool writeSensorNodes, const char *eventName)
+{
+    bool x3d = m_scene->isX3d();
+
+    bool hasExposedFieldInRoute = hasRouteToExposedField();
+
     Proto *proto = getProto();
-    if (writeProcessEvent && !getProto()->isLoaded())
-        RET_ONERROR( writeCProcessEvent(f, indent, languageFlag, eventName) )
+    if (hasExposedFieldInRoute && !getProto()->isLoaded())
+        RET_ONERROR( writeCProcessEvent(f, indent + 4, languageFlag, eventName) 
+                   )
 
     if (isInsideProto()) {
         Node *parentNode = getProtoParent();
@@ -2694,7 +2705,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                                                        eF->getIsField(j));
                             if (this->writeCCopyEvent(f, indent, languageFlag, 
                                                       protoSource, target, node
-                                                     ) != 0)
+                                                      ) != 0)
                                 return -1;
                         }
                     }
@@ -2716,6 +2727,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
         }
     }
 
+    SocketList::Iterator *j;
     for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
         int numOutput = 0;
         for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
@@ -2731,8 +2743,9 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 continue;
             EventOut *source = proto->getEventOut(i);
 
-            RET_ONERROR( indentf(f, indent + 8) )
+            RET_ONERROR( indentf(f, indent + 12) )
             if ((languageFlag & JAVA_SOURCE) && !isCurveAnimation) {
+                RET_ONERROR( indentf(f, indent + 4) )
                 RET_ONERROR( mywritestr(f, "if (") )
                 RET_ONERROR( sNode->writeCVariable(f, languageFlag) )
                 RET_ONERROR( mywritestr(f, " != null) ") )
@@ -2752,7 +2765,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 hasOutputsOrIs()) {
                 m_scene->addToSensorNodes(this);
             }
-           
+
             bool replaceEventOut = false;
             if (sNode->getType() == DUNE_CURVE_ANIMATION) {
                 NodeCurveAnimation *curve = (NodeCurveAnimation *) sNode;
@@ -2770,10 +2783,10 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                         source = timer->getProto()->getEventOut(eventOut);
                     }     
 
-                    if (writeCSendEvent(f, indent + 8, languageFlag, target, 
+                    if (writeCSendEvent(f, indent + 4, languageFlag, target, 
                                         source, inter) != 0)
                         return -1;
-                    if (writeCEndSendEvent(f, indent, languageFlag) !=0)
+                    if (writeCEndSendEvent(f, indent + 4, languageFlag) !=0)
                         return -1;
  
                     NodeOrientationInterpolator *inter2 =
@@ -2788,7 +2801,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                         source = timer->getProto()->getEventOut(eventOut);
                     }     
 
-                    if (writeCSendEvent(f, indent + 8, languageFlag, target, 
+                    if (writeCSendEvent(f, indent + 4, languageFlag, target, 
                                         source, inter2) != 0)
                         return -1;
                 }
@@ -2803,7 +2816,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                         getPositionInterpolator());
                     source = inter->getProto()->getEventOut(
                                  inter->value_changed_Field());
-                    if (inter->writeCSendEvent(f, indent + 8, languageFlag, 
+                    if (inter->writeCSendEvent(f, indent + 4, languageFlag, 
                                                target, source, sNode) != 0)
                         return -1;
                 }
@@ -2814,13 +2827,13 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                         getOrientationInterpolator());
                     source = inter->getProto()->getEventOut(
                                  inter->value_changed_Field());
-                    if (inter->writeCSendEvent(f, indent + 8, languageFlag, 
+                    if (inter->writeCSendEvent(f, indent + 4, languageFlag, 
                                                target, source, sNode) != 0)
                         return -1;
                 }
             }
             if ((!replaceEventOut) && (!replaceEventIn))
-                if (writeCSendEvent(f, indent + 12, languageFlag, 
+                if (writeCSendEvent(f, indent +  4, languageFlag, 
                                     target, source, sNode) != 0)
                     return -1;
 
@@ -2830,12 +2843,12 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             if (!isInAlreadyWrittenEventOuts(i, numOutput))
                 appendToAlreadyWrittenEventOuts(i, numOutput); 
 
-            RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 8,
+            RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 12,
                                                       languageFlag, 
                                                       writeSensorNodes, 
                                                       targetVariableName) )
 
-            RET_ONERROR( indentf(f, indent + 8) )
+            RET_ONERROR( indentf(f, indent + 12) )
             if (languageFlag & JAVA_SOURCE)
                 RET_ONERROR( mywritestr(f, "    ") )
             RET_ONERROR( mywritestr(f, "}\n") )
@@ -2852,9 +2865,10 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                              i = i->next()) {
                             RouteSocket s = i->item();
                             Node *sNode = s.getNode();
+
                             EventIn *target = 
                                  sNode->getProto()->getEventIn(s.getField());
-                            if (writeCSendEvent(f, indent + 12, languageFlag, 
+                            if (writeCSendEvent(f, indent + 4, languageFlag, 
                                                 target, source, sNode) != 0)
                                 return -1;
                         }
@@ -2863,8 +2877,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             }
         }
     }
-    if (writeProcessEvent)
-        writeCEndSendEvent(f, indent, languageFlag);
+    if (hasExposedFieldInRoute)
+        writeCEndSendEvent(f, indent + 4, languageFlag);
     return 0;
 }                                                                
 
@@ -2873,12 +2887,11 @@ Node::writeCEndSendEvent(int f, int indent, int languageFlag)
 {
     if (getProto()->isLoaded())
         return 0;
-    indent -= 4;
-    RET_ONERROR( indentf(f, indent + 8) )
+    RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "}\n") )
-    RET_ONERROR( indentf(f, indent + 4) )
+    RET_ONERROR( indentf(f, indent) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
     RET_ONERROR( mywritestr(f, "}\n") )

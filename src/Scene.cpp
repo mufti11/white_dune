@@ -3136,7 +3136,7 @@ static bool searchNodesOnlyOutputAndWriteCRoutes(Node *node, void *data)
 {
     WriteCFunctionCallData *cdata = (WriteCFunctionCallData *)data;
     if (node->hasOutputs() && !(node->hasInputs())) {
-        if (node->writeCAndFollowRoutes(cdata->filedes, 4, cdata->languageFlag, 
+        if (node->writeCAndFollowRoutes(cdata->filedes, 0, cdata->languageFlag,
                                         false, "") != 0) {
             cdata->returnValue = -1;     
             return false;

@@ -5339,4 +5339,10 @@ Fixed crash in C/C++/java export
 
 Fixed crash in NodeImageTexture::bind
 
+Fixed another crash in NodeImageTexture::bind
+
+Fixed bugs in C/C++/java export
+
+Advanced formatting of C/C++/java export
+
 Contact: MUFTI <mufti11@web.de>

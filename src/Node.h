@@ -1011,38 +1011,40 @@ public:
     long               getId(void);
 
     // for Node*Viewpoint
-    virtual Vec3d       getPosition() const { return Vec3d(); }
-    virtual Quaternion  getOrientation() const { return Quaternion(); } 
-    virtual void        setPosition(const Vec3d &pos) {}
-    virtual void        setOrientation(const Quaternion &quat)  {}
-    virtual SFFloat    *fov() { return NULL; };
-    virtual void        getMatrix(float* matrix) {}
-    void                apply(bool useStereo = false) {}
-    bool                getWritten(void) { return m_written; }
-    void                setWritten(bool flag) { m_written = flag; }
+    virtual Vec3d      getPosition() const { return Vec3d(); }
+    virtual Quaternion getOrientation() const { return Quaternion(); } 
+    virtual void       setPosition(const Vec3d &pos) {}
+    virtual void       setOrientation(const Quaternion &quat)  {}
+    virtual SFFloat   *fov() { return NULL; };
+    virtual void       getMatrix(float* matrix) {}
+    void               apply(bool useStereo = false) {}
+    bool               getWritten(void) { return m_written; }
+    void               setWritten(bool flag) { m_written = flag; }
 
-    bool                isInAlreadyWrittenEventOuts(int eventOut, 
+    bool               isInAlreadyWrittenEventOuts(int eventOut, 
                                                     int numOutput)
-                            {
-                            for (size_t i = 0; 
-                                 i < m_alreadyWrittenEventOuts.size(); i++)
-                                 if ((m_alreadyWrittenEventOuts[i].eventOut
-                                      == eventOut) &&                   
-                                    (m_alreadyWrittenEventOuts[i].numOutput
+                           {
+                           for (size_t i = 0; 
+                               i < m_alreadyWrittenEventOuts.size(); i++)
+                               if ((m_alreadyWrittenEventOuts[i].eventOut
+                                    == eventOut) &&                   
+                                   (m_alreadyWrittenEventOuts[i].numOutput
                                      == numOutput)) return true;
-                           return false;
-                           }
-
-    void                appendToAlreadyWrittenEventOuts(int eventOut, 
-                                                        int numOutput)
-                            {
-                            EventOutData data;
-                            data.eventOut = eventOut;
-                            data.numOutput = numOutput;
-                            m_alreadyWrittenEventOuts.append(data);
+                            return false;
                             }
-    void                removeAlreadyWrittenEventOuts(void)
+
+    void               appendToAlreadyWrittenEventOuts(int eventOut, 
+                                                        int numOutput)
+                           {
+                           EventOutData data;
+                           data.eventOut = eventOut;
+                           data.numOutput = numOutput;
+                           m_alreadyWrittenEventOuts.append(data);
+                           }
+    void               removeAlreadyWrittenEventOuts(void)
                            { m_alreadyWrittenEventOuts.resize(0); }
+
+    bool               hasRouteToExposedField(void);
 
 protected:
     const char        *searchIsName(int i, int type);
@@ -1082,6 +1084,7 @@ protected:
     void               addIsElement(Node *node, int field, int elementType,
                                     Proto *origProto, int origField, 
                                     int flags = 0);
+
 protected:
     Scene             *m_scene;
     ParentArray        m_parents;
@@ -1309,6 +1312,7 @@ public:
     void              setProtoParent(Node *n) { m_protoParent = n; }
     void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
+
 protected:
     int               m_geometricParentIndex;
     NodeList         *m_commentsList;

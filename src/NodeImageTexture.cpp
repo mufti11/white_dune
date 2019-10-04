@@ -502,7 +502,7 @@ NodeImageTexture::bind()
             Node *parent = getParent(i);
             if (parent && parent->hasParent()) {
                 for (int j = 0; j < getNumParents(); j++) {
-                    if (parent->hasParent()) {
+                    if (parent && parent->hasParent()) {
                         parent = parent->getParent(j);
                         if (parent && parent->getType() == VRML_SHAPE) {
                             NodeShape *shape = (NodeShape *)parent;
