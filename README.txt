@@ -5345,4 +5345,12 @@ Fixed bugs in C/C++/java export
 
 Advanced formatting of C/C++/java export
 
+Avoided unneccesary "save ?" dialog
+
+Fixed animation completely inside a PROTO
+
+Fixed animation of a RROTO noode eventOut
+
+Fixed C/C++/java export of animation completely inside a PROTO
+
 Contact: MUFTI <mufti11@web.de>

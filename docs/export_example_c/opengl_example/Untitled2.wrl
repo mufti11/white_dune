@@ -1,0 +1,54 @@
+#VRML V2.0 utf8
+
+PROTO PROTO1 [
+]
+{
+  Group {
+    children [
+      DEF Transform1_8 Transform {
+        translation 0.767492 0.525243 0
+        children 
+          Shape {
+            appearance Appearance {
+              material Material {
+              }
+            }
+            geometry Box {
+              size 2 1 1
+            }
+          }
+      }
+      DEF TimeSensor1_9 TimeSensor {
+        cycleInterval 5
+        loop TRUE
+      }
+      DEF PositionInterpolator1_19 PositionInterpolator {
+        key [
+          0
+          1
+        ]
+        keyValue [
+          0 0 0
+          2.630864 1.800463 0
+        ]
+      }
+    ]
+  }
+  ROUTE TimeSensor1_9.fraction_changed TO PositionInterpolator1_19.set_fraction
+  ROUTE PositionInterpolator1_19.value_changed TO Transform1_8.set_translation
+
+}
+
+Transform {
+  children 
+    PROTO1 {
+    }
+}
+
+Transform {
+  translation -2.700156 -1.104565 0
+  children 
+    PROTO1 {
+    }
+}
+

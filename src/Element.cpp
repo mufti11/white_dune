@@ -30,7 +30,7 @@ Element::Element(const Element *ptr)
     m_type = ptr->m_type;
     m_name = ptr->m_name;
     m_x3dName = ptr->m_x3dName;
-    m_x3dName = ptr->m_flags;
+    m_flags = ptr->m_flags;
     for (size_t i = 0; i < ptr->m_isArray.size(); i++)
         m_isArray[i] = ptr->m_isArray[i];
     m_appinfo = "";
@@ -70,9 +70,9 @@ void
 Element::addIs(Node *node, int field, int elementType, 
                Proto *origProto, int origField, int flags)
 {
-    m_flags |= FF_IS | flags;
     m_isArray.append(new IsElement(node, field, elementType,
                                    origProto, origField));
+    m_flags |= FF_IS | flags;
 }
 
 int Element::writeElementPart(int f, int indent, int flags) const

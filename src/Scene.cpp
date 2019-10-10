@@ -375,6 +375,7 @@ Scene::Scene()
     m_glName = 0;
     m_vertexModifier = NULL;
     m_storeAsHtml = false;
+    m_similarNameFlag = true; 
 }
 
 void
@@ -5157,11 +5158,23 @@ Scene::updateTimeAt(double t)
         ((NodeTimeSensor *) m_timeSensors[i])->setTime(t);
 }
 
+static bool timeUpdateNodePROTO(Node *node, void *data)
+{
+    if (node->isPROTO()) {
+        ((NodePROTO *)node)->handleIs();
+        ((NodePROTO *)node)->createPROTO();
+        ((NodePROTO *)node)->reInit();
+    }
+    return true;
+}
+
 void
 Scene::updateTime()
 {
     m_currentTime = swGetCurrentTime();
     updateTimeAt(m_currentTime);
+    getRoot()->doWithBranch(timeUpdateNodePROTO, NULL,
+                            false, false, false, true, false);
     UpdateViews(NULL, UPDATE_TIME);
 }
 
@@ -5217,8 +5230,6 @@ Scene::OnFieldChange(Node *node, int field, int index)
         (node->getType() == VRML_GEO_VIEWPOINT))
         if (node != getSelection()->getNode())
             return;
-    if ((!m_running) || (!(time == m_currentTime)))
-        updateNodePROTOs(node->getOutsideProto());
 
     time = m_currentTime;
 
@@ -6015,6 +6026,8 @@ Scene::recalibrate(void)
 void 
 Scene::makeSimilarName(Node *node, const char *name)
 {
+    if (!m_similarNameFlag)
+        return;
     char* reducedName = mystrdup(name);
     int i;
     // strip _ number (e.g. _0 or _12) constructs at end
@@ -6310,11 +6323,13 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
 {
     int j = -1;
     SocketList::Iterator *i = NULL;
+    SocketList::Iterator *last = NULL;
     CommandList *list = NULL;
     
     Proto *fromProto = fromNode->getProto();
 
-    for (j = 0; j < fromProto->getNumEventIns(); j++)
+    for (j = 0; j < fromProto->getNumEventIns(); j++) {
+        last = fromNode->getInput(j).last(); 
         for (i = fromNode->getInput(j).first(); i != NULL; 
              i = i->next()) {
             if (list == NULL) 
@@ -6322,8 +6337,13 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
             list->append(new RouteCommand(i->item().getNode(), 
                                           i->item().getField(),
                                           toNode, j));
+            if (i == last)
+               break;
         }                                        
-    for (j = 0; j < fromProto->getNumEventOuts(); j++)
+   }
+
+    for (j = 0; j < fromProto->getNumEventOuts(); j++) {
+        last = fromNode->getInput(j).last(); 
         for (i = fromNode->getOutput(j).first(); i != NULL; 
              i = i->next()) {
             if (list == NULL) 
@@ -6331,7 +6351,10 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
             list->append(new RouteCommand(toNode, j,
                                           i->item().getNode(), 
                                           i->item().getField()));
+            if (i == last)
+               break;
         }
+    }
     if (list) 
         execute(list);
 }
@@ -6595,7 +6618,6 @@ void
 Scene::setUnitAngle(double f)
 {
     m_unitAngle = f;
-//    updateViewpoint();
 }
 
 void                
@@ -6686,6 +6708,20 @@ static bool searchNodeById(Node *node, void *data)
     return true;     
 }
 
+
+Node *
+Scene::searchProtoNodeIdInNode(Node *node, long id)
+{
+    returnNode = NULL;
+//    node->doWithBranch(searchNodeById, &id);
+    if (node->isPROTO()) {
+        NodePROTO *nodePROTO = (NodePROTO *)node;
+        for (int i = 0; i < nodePROTO->getNumIndexedNodes(); i++)
+             if (nodePROTO->getIndexedNode(i)->getId() == id)
+                 returnNode = nodePROTO->getIndexedNode(i);
+    }
+    return returnNode;
+}
 
 Node *
 Scene::searchProtoNodeId(long id)

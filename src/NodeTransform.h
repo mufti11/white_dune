@@ -73,7 +73,10 @@ public:
     // X3D profile changes addChildren, removeChildren
     virtual int       getProfile(void) const;
     virtual int       getX3dVersion(void) const { return 0; }
-    virtual Node     *copy() const { return new NodeTransform(*this); }
+    virtual Node     *copy() const 
+                          { 
+                          return new NodeTransform(*this); 
+                          }
 
     virtual void      setField(int field, FieldValue *value, int cf = -1);
 

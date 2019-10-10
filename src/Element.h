@@ -139,7 +139,13 @@ public:
                               Proto *origProto, int origField, int flags = 0);
     int                 getNumIs(void) { return m_isArray.size(); }
     Node               *getIsNode(int i) { return m_isArray[i]->getNode(); }
-    int                 getIsField(int i) { return m_isArray[i]->getField(); }
+    int                 getIsField(int i) 
+                             { 
+                             int ret = -1;
+                             if (m_isArray[i] != NULL)
+                                 ret = m_isArray[i]->getField();
+                             return ret;
+                             } 
     int                 getIsElementType(int i) 
                            { return m_isArray[i]->getElementType(); }
     void                removeIs(int i) { m_isArray.remove(i); }

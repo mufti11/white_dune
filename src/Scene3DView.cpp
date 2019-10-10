@@ -140,7 +140,6 @@ void Scene3DView::OnUpdate(SceneView *sender, int type, Hint *hint)
         if (nodeUpdate->node != NULL)
             nodeUpdate->node->update();
         }
-        swInvalidateWindow(m_wnd);
         break;
       CASE_UPDATE(UPDATE_MODE)
       CASE_UPDATE(UPDATE_REDRAW)

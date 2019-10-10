@@ -64,6 +64,20 @@ enum UrlSchemas {
     URL_EXPORT_CONTAINER
 };
 
+class RouteInfo {
+public:
+                    RouteInfo(Node *s, int out, Node *d, int in)
+                    { src = s; eventOut = out; dest = d; eventIn = in; }
+                    RouteInfo()
+                    { src = NULL; eventOut = -1; dest = NULL; eventIn = -1; }
+
+    Node           *src;
+    Node           *dest;
+    int             eventOut;
+    int             eventIn;
+};
+
+
 class Proto {
 public:
 
@@ -499,12 +513,17 @@ public:
 
     virtual FieldValue *getField(int index) const;
     virtual void        setField(int index, FieldValue *value, int cf = -1);
+    void                receiveProtoEvent(int eventOut, double timestamp, 
+                                         FieldValue *value);
     virtual void        sendEvent(int eventOut, double timestamp, 
                                   FieldValue *value);
     virtual void        receiveEvent(int eventIn, double timestamp, 
                                      FieldValue *value);
     Node               *getIsNode(int nodeIndex);
     void                appendToIndexedNodes(Node *node);
+    int                 getNumIndexedNodes(void) 
+                            { return m_indexedNodes.size(); }
+    Node               *getIndexedNode(int i) { return m_indexedNodes[i]; }
     virtual bool        isJoint(void) { return m_jointRotationField != -1; }
     virtual bool        isHumanoid(void) { return m_isHumanoid; }
     virtual void        drawHandles(void);
@@ -527,7 +546,8 @@ public:
     virtual bool        canWriteCattGeo();
     virtual int         writeCattGeo(int filedes, int indent);
 
-    virtual bool        hasProtoNodes(void) { return m_indexedNodes.size() > 0; }
+    virtual bool        hasProtoNodes(void) 
+                            { return m_indexedNodes.size() > 0; }
     Node               *getProtoRoot(void);
 
     Node               *getProtoNode(int i) { return m_nodes.get(i); }

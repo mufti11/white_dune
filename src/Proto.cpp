@@ -2692,12 +2692,75 @@ void NodePROTO::appendToIndexedNodes(Node *node)
         m_indexedNodes.append(node);
 }
 
+static MyArray<RouteInfo> routeInfo;
+
+static bool fixEventOuts(Node *node, void *data)
+{
+    Node *compareNode = (Node *)data;
+    if (compareNode == NULL)
+        return true;
+    if (node == NULL)
+        return true;
+    if ((node != compareNode) &&
+        compareNode->getId() == node->getId()) {
+        Proto *proto = node->getProto();
+        for (int j = 0; j < proto->getNumEventIns(); j++) {
+            EventIn *evIn = proto->getEventIn(j);
+            int eventIn = j;
+            SocketList::Iterator *i;
+            int counter = 0;
+            int listLength = node->getInput(j).size();
+            static Node *sNode = NULL;
+            static int sField = -1;
+            for (i = node->getInput(j).first(); i != NULL;i = i->next()) {
+                // list increases in loop
+                if (counter++ > listLength)
+                    break;
+                RouteSocket s = i->item();                
+                if ((s.getNode() != sNode) || (sField != s.getField())) {
+                    node->getScene()->addRoute(s.getNode(), s.getField(), 
+                                               compareNode, j);
+                    routeInfo.append(RouteInfo(s.getNode(), s.getField(), 
+                                               compareNode, j));
+                }
+            }
+        }
+    }
+    return true;
+}
+
 static bool buildNodeIndexInBranch(Node *node, void *data)
 {
     NodePROTO *self = (NodePROTO *)data;
+    if (self == NULL)
+        return true;
+
+    for (int i = 0; i < self->getProto()->getNumNodes(); i++)
+        self->getProto()->getNode(i)->doWithBranch(fixEventOuts, node, false);
+
+    node->setVariableName(node->getScene()->generateVariableName(node));
     self->appendToIndexedNodes(node);
     node->ref();
     node->setNodePROTO(self);
+    return true;
+}
+
+static bool getIds(Node *node, void *data)
+{
+    MyArray<long> *ids = (MyArray<long> *)data;
+    if (node) 
+        (*ids).append(node->getId());
+    return true;
+}
+
+static int idCounter = 0;
+
+static bool setIds(Node *node, void *data)
+{
+    MyArray<long> *ids = (MyArray<long> *)data;
+    if (node) {
+        node->setId((*ids)[idCounter++]);
+    }
     return true;
 }
 
@@ -2710,22 +2773,30 @@ NodePROTO::createPROTO(bool bcopy)
     if (bcopy) {
         m_nodes.resize(0);
         for (int i = 0; i < m_proto->getNumNodes(); i++) {
-            if ((m_proto->getNode(i) != NULL)) {
+            if (m_proto->getNode(i)) {
+                long id = m_proto->getNode(i)->getId();
+                idCounter = 0;
+                MyArray<long> ids;
+                m_proto->getNode(i)->doWithBranch(getIds, &ids, false);
                 m_nodes[i] = m_proto->getNode(i)->copy();   
-                m_proto->getNode(i)->copyChildrenTo(m_nodes[i], true);
-            }
-        }
-        for (int i = 0; i < m_proto->getNumNodes(); i++) {
-            if (m_proto->getNode(i) != NULL) {
+                m_nodes[i]->setId(id);
+                m_nodes[i]->doWithBranch(setIds, &ids, false);
                 m_proto->getNode(i)->copyOutputsTo(m_nodes[i]);
+                m_proto->getNode(i)->copyInputsTo(m_nodes[i]);
+                m_scene->disableMakeSimilarName();
+                m_proto->getNode(i)->copyChildrenTo(m_nodes[i], true);
+                m_scene->enableMakeSimilarName();
             }
         }
+        for (int i = 0; i < routeInfo.size(); i++)
+            m_scene->deleteRoute(routeInfo[i].src, routeInfo[i].eventOut,
+                                 routeInfo[i].dest, routeInfo[i].eventIn);
+        routeInfo.resize(0);
         m_indexedNodes.resize(0);
         for (int i = 0; i < m_proto->getNumNodes(); i++)
-            if (m_nodes[i] != NULL)
-                m_nodes[i]->doWithBranch(buildNodeIndexInBranch, this);
+            m_nodes[i]->doWithBranch(buildNodeIndexInBranch, this, false);
         for (size_t i = 0; i < m_indexedNodes.size(); i++)
-            if (m_indexedNodes[i] != NULL)
+            if (m_indexedNodes[i])
                m_indexedNodes[i]->setScene(m_scene);
     }
     for (int i = 0; i < m_proto->getNumExposedFields(); i++) {
@@ -2873,9 +2944,10 @@ NodePROTO::preDraw()
     if (m_indexedNodes.size() > 0)
         if (m_indexedNodes[0] != NULL)
             m_indexedNodes[0]->preDraw();
-    for (size_t i = 1; i < m_indexedNodes.size(); i++)
+    for (size_t i = 1; i < m_indexedNodes.size(); i++) {
         if (m_indexedNodes[i]->getType() == VRML_TIME_SENSOR)
             m_indexedNodes[i]->preDraw();
+    }
 
     if (unitLength > 0)
         glScaled(unitLength, unitLength, unitLength);
@@ -2951,6 +3023,18 @@ NodePROTO::setField(int index, FieldValue *value, int cf)
     Node::setField(index, value, cf);
 }
 
+void
+NodePROTO::receiveProtoEvent(int eventOut, double timestamp, FieldValue *value)
+{
+    for (int j = 0; j < m_proto->getNumEventOuts(); j++) {
+        SocketList::Iterator *i;
+        for (i = m_outputs[j].first(); 
+             i != NULL; i = i->next()) {
+            RouteSocket s = i->item();
+            s.getNode()->receiveEvent(s.getField(), swGetCurrentTime(),value);
+        }
+    }
+}
 void
 NodePROTO::sendEvent(int eventOut, double timestamp, FieldValue *value)
 {

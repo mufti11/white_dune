@@ -121,6 +121,50 @@ enum {
      SCAN_FOR_INLINE
 };
 
+class Hint {
+    int m_dummyHint;
+public:
+    Hint() { m_dummyHint = 0; }
+};
+
+class FieldUpdate : public Hint {
+public:
+                    FieldUpdate(Node *n = NULL, int f = -1, int i = -1);
+
+
+    Node           *node;
+    int             field;
+    int             index;
+};
+
+class NodeUpdate : public Hint {
+public:
+                    NodeUpdate(Node *n, Node *p, int f)
+                    { node = n; parent = p, field = f; }
+
+    Node           *node;
+    Node           *parent;
+    int             field;
+};
+
+class RouteUpdate : public Hint {
+public:
+                    RouteUpdate(Node *s, int out, Node *d, int in)
+                    { src = s; eventOut = out; dest = d; eventIn = in; }
+
+    Node           *src;
+    Node           *dest;
+    int             eventOut;
+    int             eventIn;
+};
+
+class ProtoUpdate : public Hint {
+public:
+                    ProtoUpdate(Proto *p) { proto = p; }
+
+    Proto          *proto;
+};
+
 struct WriteCDynamicNodeData {
     int filedes;
     int languageFlag;
@@ -668,7 +712,9 @@ public:
     void                pasteSymetricLastSelection(int direction);
     void                deleteLastSelection(void);
 
+    void                disableMakeSimilarName() { m_similarNameFlag = false; } 
     void                makeSimilarName(Node *node, const char *name);
+    void                enableMakeSimilarName() { m_similarNameFlag = true; } 
 
     void                saveProtoStatus(void);
     void                restoreProtoStatus(void);
@@ -787,6 +833,7 @@ public:
     int                 getNumProtos(void) { return m_protoNames.size(); }
     void                toggleDeselect(void) { m_deselect = !m_deselect; }
     bool                getDeselect(void) { return m_deselect; }
+    Node               *searchProtoNodeIdInNode(Node *node, long id);
     Node               *searchProtoNodeId(long id);
     int                 getProtoType(Proto *proto);
     void                setLastSelectedHAnimJoint(Node *n) 
@@ -815,6 +862,11 @@ public:
                             m_saved_vrml = false;
                             m_saved_x3dv = false;
                             m_saved_x3dxml = false;
+                        }
+     void               setSaved(void) {
+                            m_saved_vrml = true;
+                            m_saved_x3dv = true;
+                            m_saved_x3dxml = true;
                         }
      MyArray<Node *>   *getViewPorts();
      void               setViewPorts(void);
@@ -1122,6 +1174,8 @@ protected:
 
     bool                m_storeAsHtml;
 
+    bool                m_similarNameFlag; 
+
 public:
     MyArray<CGlNameData> m_glNameData;               
 };
@@ -1162,50 +1216,6 @@ enum {
     RENDER_PASS_GEOMETRY,
     RENDER_PASS_NON_TRANSPARENT,
     RENDER_PASS_TRANSPARENT
-};
-
-class Hint {
-    int m_dummyHint;
-public:
-    Hint() { m_dummyHint = 0; }
-};
-
-class FieldUpdate : public Hint {
-public:
-                    FieldUpdate(Node *n = NULL, int f = -1, int i = -1);
-
-
-    Node           *node;
-    int             field;
-    int             index;
-};
-
-class NodeUpdate : public Hint {
-public:
-                    NodeUpdate(Node *n, Node *p, int f)
-                    { node = n; parent = p, field = f; }
-
-    Node           *node;
-    Node           *parent;
-    int             field;
-};
-
-class RouteUpdate : public Hint {
-public:
-                    RouteUpdate(Node *s, int out, Node *d, int in)
-                    { src = s; eventOut = out; dest = d; eventIn = in; }
-
-    Node           *src;
-    Node           *dest;
-    int             eventOut;
-    int             eventIn;
-};
-
-class ProtoUpdate : public Hint {
-public:
-                    ProtoUpdate(Proto *p) { proto = p; }
-
-    Proto          *proto;
 };
 
 void BackupRoutesRec(Node *node, CommandList *list);

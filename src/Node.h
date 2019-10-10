@@ -588,6 +588,7 @@ class EventOutData {
 public:
     int eventOut;
     int numOutput;
+    Node *protoNode;
 };
 
 class Colored;
@@ -600,6 +601,8 @@ public:
                       NodeData(Scene *scene, Proto *proto);
                       NodeData(const Node &node);
     virtual          ~NodeData();
+
+    void              initIdentifier(void);
 
     void              delete_this(void);
     bool              isClassType(int type) { return type >= ANY_NODE; }
@@ -824,297 +827,306 @@ public:
     virtual bool      hasControlPoints(void) { return false; }
 
     //nurbs conversion virtual
-    virtual Node      *toNurbs() {return NULL;}
-    virtual Node      *toNurbs(int nshell, int narea, int narcs, 
-                               int uDegree, int vDegree) {return NULL;}
-    virtual Node      *toNurbs(int narcslong,  int narcslat, 
-                               int uDegree, int vDegree) {return NULL;}
-    virtual Node      *toNurbs(int nAreaPoints, int Degree) {return NULL;}
-    virtual Node      *toNurbs(int narcs, int pDegree, float rDegree, 
-                               int axis) {return NULL;}
-    virtual Node      *toNurbs(int narcs, int pDegree, float uDegree, 
-                               Vec3f &P1, Vec3f &P2) {return NULL;}
-    virtual Node      *degreeElevate(int newDegree) {return NULL;}
-    virtual Node      *degreeElevate(int newUDegree, int newVDegree)
-                           {return NULL;}
+    virtual Node     *toNurbs() {return NULL;}
+    virtual Node     *toNurbs(int nshell, int narea, int narcs, 
+                              int uDegree, int vDegree) {return NULL;}
+    virtual Node     *toNurbs(int narcslong,  int narcslat, 
+                              int uDegree, int vDegree) {return NULL;}
+    virtual Node     *toNurbs(int nAreaPoints, int Degree) {return NULL;}
+    virtual Node     *toNurbs(int narcs, int pDegree, float rDegree, 
+                              int axis) {return NULL;}
+    virtual Node     *toNurbs(int narcs, int pDegree, float uDegree, 
+                              Vec3f &P1, Vec3f &P2) {return NULL;}
+    virtual Node     *degreeElevate(int newDegree) {return NULL;}
+    virtual Node     *degreeElevate(int newUDegree, int newVDegree)
+                          {return NULL;}
 
-    virtual int        getDegree(bool u = true) { return -1; }
-    virtual void       elongateNurbs(int handle, float *controlPoints) {}
+    virtual int       getDegree(bool u = true) { return -1; }
+    virtual void      elongateNurbs(int handle, float *controlPoints) {}
 
     // mesh conversion virtual
-    virtual Node      *toIndexedFaceSet(int meshFlags = MESH_WANT_NORMAL,
-                                        bool cleanVertices = true,
-                                        bool triangulate = true)
-                           { return NULL; }
-    virtual bool       canConvertToIndexedFaceSet(void) { return false; }
-    virtual bool       shouldConvertToIndexedFaceSet(void) 
-                           { return canConvertToIndexedFaceSet(); }
+    virtual Node     *toIndexedFaceSet(int meshFlags = MESH_WANT_NORMAL,
+                                       bool cleanVertices = true,
+                                       bool triangulate = true)
+                          { return NULL; }
+    virtual bool      canConvertToIndexedFaceSet(void) { return false; }
+    virtual bool      shouldConvertToIndexedFaceSet(void) 
+                          { return canConvertToIndexedFaceSet(); }
 
-    virtual Node      *toNurbsTrimmedSurface(void) { return NULL; }
+    virtual Node     *toNurbsTrimmedSurface(void) { return NULL; }
 
     // indexed triangle set conversion virtual
-    virtual Node      *toIndexedTriangleSet(int meshFlags = MESH_TARGET_HAS_CCW)
-                           { return NULL; }
-    virtual bool       canConvertToIndexedTriangleSet(void) { return false; }
-    virtual bool       shouldConvertToIndexedTriangleSet(void) 
-                          { return canConvertToIndexedTriangleSet(); }
+    virtual Node     *toIndexedTriangleSet(int meshFlags = MESH_TARGET_HAS_CCW)
+                          { return NULL; }
+    virtual bool      canConvertToIndexedTriangleSet(void) { return false; }
+    virtual bool      shouldConvertToIndexedTriangleSet(void) 
+                         { return canConvertToIndexedTriangleSet(); }
 
     // triangle set conversion virtual
-    virtual Node      *toTriangleSet(int meshFlags = MESH_TARGET_HAS_CCW) 
-                           { return NULL; }
-    virtual bool       canConvertToTriangleSet(void) { return false; }
-    virtual bool       shouldConvertToTriangleSet(void)
-                           { return canConvertToTriangleSet(); }
+    virtual Node     *toTriangleSet(int meshFlags = MESH_TARGET_HAS_CCW) 
+                          { return NULL; }
+    virtual bool      canConvertToTriangleSet(void) { return false; }
+    virtual bool      shouldConvertToTriangleSet(void)
+                          { return canConvertToTriangleSet(); }
 
-    virtual bool       canSimpleTriangulate(void) { return false; }
-    void               simpleTriangulation(void) {}
+    virtual bool      canSimpleTriangulate(void) { return false; }
+    void              simpleTriangulation(void) {}
 
     // chain conversion virtual
-    virtual Node      *toIndexedLineSet(void) { return NULL; }
-    virtual bool       canConvertToIndexedLineSet(void) { return false; }
+    virtual Node     *toIndexedLineSet(void) { return NULL; }
+    virtual bool      canConvertToIndexedLineSet(void) { return false; }
 
     // extrusion conversion virtual
-    virtual Node      *toExtrusion(void) { return NULL; }
-    virtual bool       canConvertToExtrusion(void) { return false; }
+    virtual Node     *toExtrusion(void) { return NULL; }
+    virtual bool      canConvertToExtrusion(void) { return false; }
 
     // convertion to interpolators
-    virtual bool       canConvertToPositionInterpolator(void) 
-                           { return false; }
-    virtual Node      *toPositionInterpolator(void)
-                           { return NULL; }
+    virtual bool      canConvertToPositionInterpolator(void) 
+                          { return false; }
+    virtual Node     *toPositionInterpolator(void)
+                          { return NULL; }
 
-    virtual bool       canConvertToOrientationInterpolator(void) 
-                           { return false; }
-    virtual Node      *toOrientationInterpolator(Direction direction)
-                           { return NULL; }
+    virtual bool      canConvertToOrientationInterpolator(void) 
+                          { return false; }
+    virtual Node     *toOrientationInterpolator(Direction direction)
+                          { return NULL; }
 
-    virtual bool       canConvertToPositionAndOrientationInterpolators(void) 
-                           { return false; }
-    virtual void       toPositionAndOrientationInterpolators(NodeList *nodes)
-                           { return; }
+    virtual bool      canConvertToPositionAndOrientationInterpolators(void) 
+                          { return false; }
+    virtual void      toPositionAndOrientationInterpolators(NodeList *nodes)
+                          { return; }
 
     // other conversions
-    virtual Node      *toCurveAnimation(void) { return NULL; }
+    virtual Node     *toCurveAnimation(void) { return NULL; }
 
-    virtual void       setMeshDirty(void) {}
+    virtual void      setMeshDirty(void) {}
 
     // texture glColorMode
-    virtual int        textureGlColorMode(void) { return -1; }
+    virtual int       textureGlColorMode(void) { return -1; }
 
-    virtual bool       isMeshBasedNode(void) { return false; }
-    virtual bool       isChainBasedNode(void) { return false; }
+    virtual bool      isMeshBasedNode(void) { return false; }
+    virtual bool      isChainBasedNode(void) { return false; }
 
     // compare content
-    bool               isEqual(Node* node);
-    friend bool        isEqual(Node* node);
+    bool              isEqual(Node* node);
+    friend bool       isEqual(Node* node);
 
-    bool               isEqualCopy(Node* node);
-    MyString           newEventName(int typeEnum, bool out);
+    bool              isEqualCopy(Node* node);
+    MyString          newEventName(int typeEnum, bool out);
 
-    bool               hasRoute(SocketList socketlist);
+    bool              hasRoute(SocketList socketlist);
 
-    virtual bool       isInvalidChildNode(void)
-                           {
-                           // true if node may not be part of a MFNode field
-                           // of a other node (or at root of scenegraph)
-                           return false;
-                           }
+    virtual bool      isInvalidChildNode(void)
+                          {
+                          // true if node may not be part of a MFNode field
+                          // of a other node (or at root of scenegraph)
+                          return false;
+                          }
 
-    virtual bool       isProgrammableShaderObject(void) { return false; }
+    virtual bool      isProgrammableShaderObject(void) { return false; }
 
-    virtual bool       isNodeWithAdditionalEvents(void) 
-                           { return isProgrammableShaderObject(); }
+    virtual bool      isNodeWithAdditionalEvents(void) 
+                          { return isProgrammableShaderObject(); }
 
-    virtual int        getX3dVersion(void) const = 0;
-    virtual bool       isCoverNode(void) { return false; }
-    virtual bool       hasCoverFields(void) { return false; }
-    bool               hasCoverDefault() { return hasDefault(FF_COVER_ONLY); }
-    virtual bool       isKambiNode(void) { return false; }
-    virtual bool       hasKambiFields(void) { return false; }
-    bool               hasKambiDefault() { return hasDefault(FF_KAMBI_ONLY); }
-    bool               hasX3dDefault() { return hasDefault(FF_X3D_ONLY); }
-    bool               hasDefault(int flag);
+    virtual int       getX3dVersion(void) const = 0;
+    virtual bool      isCoverNode(void) { return false; }
+    virtual bool      hasCoverFields(void) { return false; }
+    bool              hasCoverDefault() { return hasDefault(FF_COVER_ONLY); }
+    virtual bool      isKambiNode(void) { return false; }
+    virtual bool      hasKambiFields(void) { return false; }
+    bool              hasKambiDefault() { return hasDefault(FF_KAMBI_ONLY); }
+    bool              hasX3dDefault() { return hasDefault(FF_X3D_ONLY); }
+    bool              hasDefault(int flag);
 
-    virtual void       setNormalFromMesh(Node *nnormal) {}
-    virtual void       setTexCoordFromMesh(Node *ntexCoord) {}
+    virtual void      setNormalFromMesh(Node *nnormal) {}
+    virtual void      setTexCoordFromMesh(Node *ntexCoord) {}
 
-    virtual bool       isTransparent(void) { return false; }
-    virtual float      getTransparency(void) { return 0; }
+    virtual bool      isTransparent(void) { return false; }
+    virtual float     getTransparency(void) { return 0; }
 
-    virtual bool       isFlat(void) { return false; }
+    virtual bool      isFlat(void) { return false; }
 
     virtual NodeCoordinate *getCoordinateNode() { return NULL; }
 
     virtual NodeColor *getColorNode() { return NULL; }
-    virtual bool       hasColor(void) { return false; }
-    virtual bool       hasColorRGBA(void) { return false; }
+    virtual bool      hasColor(void) { return false; }
+    virtual bool      hasColorRGBA(void) { return false; }
     virtual NodeColorRGBA *getColorRGBANode() { return NULL; }
 
-    virtual bool       hasX3domOnoutputchange(void) { return false; }
-    virtual bool       hasX3domOnclick(void) { return false; }
+    virtual bool      hasX3domOnoutputchange(void) { return false; }
+    virtual bool      hasX3domOnclick(void) { return false; }
 
-    void               handleIs(void);
-    Node              *getIsNode(int nodeIndex);
-    void               setScene(Scene *scene) { m_scene = scene; }
-    bool               isInsideProto(void) { return m_insideProto != NULL; }
-    void               setOutsideProto(Proto *proto) { m_insideProto = proto; }
-    Proto             *getOutsideProto(void) { return m_insideProto; }
+    void              handleIs(void);
+    Node             *getIsNode(int nodeIndex);
+    void              setScene(Scene *scene) { m_scene = scene; }
+    bool              isInsideProto(void) { return m_insideProto != NULL; }
+    void              setOutsideProto(Proto *proto) { m_insideProto = proto; }
+    Proto            *getOutsideProto(void) { return m_insideProto; }
 
-    NodePROTO         *getNodePROTO(void) { return m_nodePROTO; }
+    NodePROTO        *getNodePROTO(void) { return m_nodePROTO; }
 
-    void               removeChildren(void);
-    bool               isDefault(int field) const;
-    bool               isDefaultAngle(int field) const;
-    bool               hasOutput(const char* routename) const;
-    bool               hasOutputs(void);
-    bool               hasOutputsOrIs(void);
-    bool               hasInput(const char* routename) const;
-    bool               hasInputs(void);
-    bool               hasInputsOrIs(void);
-    int                writeRoutes(int f, int indent) const;
-    void               removeRoutes(void);
+    void              removeChildren(void);
+    bool              isDefault(int field) const;
+    bool              isDefaultAngle(int field) const;
+    bool              hasOutput(const char* routename) const;
+    bool              hasOutputs(void);
+    bool              hasOutputsOrIs(void);
+    bool              hasInput(const char* routename) const;
+    bool              hasInputs(void);
+    bool              hasInputsOrIs(void);
+    bool              hasInputsIs(void);
+    int               writeRoutes(int f, int indent) const;
+    void              removeRoutes(void);
 
-    void               generateTreeLabel(void);
+    void              generateTreeLabel(void);
 
-    void               setDefault(void);
-    virtual bool       canMoveTo(int direction) { return false; }
+    void              setDefault(void);
+    virtual bool      canMoveTo(int direction) { return false; }
 
-    virtual Node      *convert2X3d(void);
-    virtual Node      *convert2Vrml(void);
+    virtual Node     *convert2X3d(void);
+    virtual Node     *convert2Vrml(void);
 
-    virtual void       setupFinished(void) {}
+    virtual void      setupFinished(void) {}
 
-    virtual int        getChildrenField(void) const { return -1; }
+    virtual int       getChildrenField(void) const { return -1; }
 
     virtual const char *getVariableName(void);
-    void               setVariableName(const char *name);
-    void               unSetVariableName(void) { m_variableName = ""; }
+    void              setVariableName(const char *name);
+    void              unSetVariableName(void) { m_variableName = ""; }
 
-    const char        *getClassName(void);
+    const char       *getClassName(void);
 
-    virtual bool       isDynamicFieldsNode(void) { return false; }
+    virtual bool      isDynamicFieldsNode(void) { return false; }
 
-    virtual bool       isPROTO(void) const;
+    virtual bool      isPROTO(void) const;
 
-    virtual NodeList  *getLoadedNodes(void) { return NULL; }
+    virtual NodeList *getLoadedNodes(void) { return NULL; }
 
-    virtual int        repairField(int field) const;
-    virtual int        translateField(int field) const;
+    virtual int       repairField(int field) const;
+    virtual int       translateField(int field) const;
 
-    int                writeCVariable(int f, int languageFlag);
-    int                getCounter4SceneTreeView(void)
-                           { return m_counter4SceneTreeView; }
-    void               addCounter4SceneTreeView(void)
-                           { m_counter4SceneTreeView++; }
-    void               setCounter4SceneTreeViewToZero(void )
-                           { m_counter4SceneTreeView = 0; }
-    long               getId(void);
+    int               writeCVariable(int f, int languageFlag);
+    int               getCounter4SceneTreeView(void)
+                          { return m_counter4SceneTreeView; }
+    void              addCounter4SceneTreeView(void)
+                          { m_counter4SceneTreeView++; }
+    void              setCounter4SceneTreeViewToZero(void )
+                          { m_counter4SceneTreeView = 0; }
+    long              getId(void);
+    void              setId(long id);
 
     // for Node*Viewpoint
-    virtual Vec3d      getPosition() const { return Vec3d(); }
+    virtual Vec3d     getPosition() const { return Vec3d(); }
     virtual Quaternion getOrientation() const { return Quaternion(); } 
-    virtual void       setPosition(const Vec3d &pos) {}
-    virtual void       setOrientation(const Quaternion &quat)  {}
-    virtual SFFloat   *fov() { return NULL; };
-    virtual void       getMatrix(float* matrix) {}
-    void               apply(bool useStereo = false) {}
-    bool               getWritten(void) { return m_written; }
-    void               setWritten(bool flag) { m_written = flag; }
+    virtual void      setPosition(const Vec3d &pos) {}
+    virtual void      setOrientation(const Quaternion &quat)  {}
+    virtual SFFloat  *fov() { return NULL; };
+    virtual void      getMatrix(float* matrix) {}
+    void              apply(bool useStereo = false) {}
+    bool              getWritten(void) { return m_written; }
+    void              setWritten(bool flag) { m_written = flag; }
 
-    bool               isInAlreadyWrittenEventOuts(int eventOut, 
-                                                    int numOutput)
-                           {
-                           for (size_t i = 0; 
-                               i < m_alreadyWrittenEventOuts.size(); i++)
-                               if ((m_alreadyWrittenEventOuts[i].eventOut
-                                    == eventOut) &&                   
-                                   (m_alreadyWrittenEventOuts[i].numOutput
-                                     == numOutput)) return true;
-                            return false;
-                            }
+    bool              isInAlreadyWrittenEventOuts(int eventOut, 
+                                                  int numOutput,
+                                                  Node *protoNode)
+                          {
+                          for (size_t i = 0; 
+                              i < m_alreadyWrittenEventOuts.size(); i++)
+                              if ((m_alreadyWrittenEventOuts[i].eventOut
+                                   == eventOut) &&                   
+                                  (m_alreadyWrittenEventOuts[i].numOutput
+                                   == numOutput) &&
+                                  (m_alreadyWrittenEventOuts[i].protoNode
+                                   == protoNode)
+                                 ) 
+                                 return true;
+                          return false;
+                          }
 
-    void               appendToAlreadyWrittenEventOuts(int eventOut, 
-                                                        int numOutput)
-                           {
-                           EventOutData data;
-                           data.eventOut = eventOut;
-                           data.numOutput = numOutput;
-                           m_alreadyWrittenEventOuts.append(data);
-                           }
-    void               removeAlreadyWrittenEventOuts(void)
-                           { m_alreadyWrittenEventOuts.resize(0); }
+    void              appendToAlreadyWrittenEventOuts(int eventOut, 
+                                                      int numOutput,
+                                                      Node *protoNode)
+                          {
+                          EventOutData data;
+                          data.eventOut = eventOut;
+                          data.numOutput = numOutput;
+                          data.protoNode = protoNode;
+                          m_alreadyWrittenEventOuts.append(data);
+                          }
+    void              removeAlreadyWrittenEventOuts(void)
+                          { m_alreadyWrittenEventOuts.resize(0); }
 
-    bool               hasRouteToExposedField(void);
+    bool              hasRouteToExposedField(void);
 
 protected:
-    const char        *searchIsName(int i, int type);
+    const char       *searchIsName(int i, int type);
 
-    int                writeIs(int f, int indent, 
-                               const char *name, const char * isName);
-    virtual int        writeFields(int f, int indent);
-    int                writeField(int f, int indent, int i, 
-                                  bool script = false);
-    int                writeEventIn(int f, int indent, int i, 
+    int               writeIs(int f, int indent, 
+                              const char *name, const char * isName);
+    virtual int       writeFields(int f, int indent);
+    int               writeField(int f, int indent, int i, 
+                                 bool script = false);
+    int               writeEventIn(int f, int indent, int i, 
+                                   bool eventName = false);
+    int               writeEventOut(int f, int indent, int i, 
                                     bool eventName = false);
-    int                writeEventOut(int f, int indent, int i, 
-                                     bool eventName = false);
 
-    int                writeEventInStr(int f);
-    int                writeEventOutStr(int f);
-    int                writeFieldStr(int f);
-    int                writeExposedFieldStr(int f);
+    int               writeEventInStr(int f);
+    int               writeEventOutStr(int f);
+    int               writeFieldStr(int f);
+    int               writeExposedFieldStr(int f);
 
-    int                writeXmlIs(int f, int indent, 
-                                  const char *name, const char *isName);
-    int                writeXmlProtoInstanceField(int f, int indent, 
-                                                  const char *name, 
-                                                  FieldValue *value); 
-    int                writeXmlFields(int f, int indent, int when,
-                                      int containerField = -1,
-                                      bool avoidUse = false);
-    int                writeXmlField(int f, int indent, int i, int when,
-                                     bool script = false,
-                                      int containerField = -1,
-                                      bool avoidUse = false);
-    int                writeXmlEventIn(int f, int indent, int i, int when,
+    int               writeXmlIs(int f, int indent, 
+                                 const char *name, const char *isName);
+    int               writeXmlProtoInstanceField(int f, int indent, 
+                                                 const char *name, 
+                                                 FieldValue *value); 
+    int               writeXmlFields(int f, int indent, int when,
+                                     int containerField = -1,
+                                     bool avoidUse = false);
+    int               writeXmlField(int f, int indent, int i, int when,
+                                    bool script = false,
+                                    int containerField = -1,
+                                    bool avoidUse = false);
+    int               writeXmlEventIn(int f, int indent, int i, int when,
+                                      bool eventName = false);
+    int               writeXmlEventOut(int f, int indent, int i, int when,
                                        bool eventName = false);
-    int                writeXmlEventOut(int f, int indent, int i, int when,
-                                        bool eventName = false);
 
-    void               addIsElement(Node *node, int field, int elementType,
-                                    Proto *origProto, int origField, 
-                                    int flags = 0);
+    void              addIsElement(Node *node, int field, int elementType,
+                                   Proto *origProto, int origField, 
+                                   int flags = 0);
 
 protected:
-    Scene             *m_scene;
-    ParentArray        m_parents;
-    MyString           m_name;
-    MyString           m_treeLabel;
-    MyString           m_variableName;
-    NodeArray          m_convertedNodes;
-    int                m_refs;
-    int                m_flags;
-    Proto             *m_proto;
-    FieldValue       **m_fields;
-    int                m_numFields;
-    int                m_numEventIns;
-    int                m_numEventOuts;
-    SocketList        *m_inputs;
-    SocketList        *m_outputs;
-    float              m_graphX, m_graphY;
-    int                m_graphWidth, m_graphHeight;
-    long               m_identifier;
-    long               m_identifierCopy;
-    Proto             *m_insideProto;
-    NodePROTO         *m_nodePROTO;
-    bool               m_canDraw;
-    bool               m_isConvertedInCurveAnimaton;
+    Scene            *m_scene;
+    ParentArray       m_parents;
+    MyString          m_name;
+    MyString          m_treeLabel;
+    MyString          m_variableName;
+    NodeArray         m_convertedNodes;
+    int               m_refs;
+    int               m_flags;
+    Proto            *m_proto;
+    FieldValue      **m_fields;
+    int               m_numFields;
+    int               m_numEventIns;
+    int               m_numEventOuts;
+    SocketList       *m_inputs;
+    SocketList       *m_outputs;
+    float             m_graphX, m_graphY;
+    int               m_graphWidth, m_graphHeight;
+    long              m_identifier;
+    long              m_identifierCopy;
+    Proto            *m_insideProto;
+    NodePROTO        *m_nodePROTO;
+    bool              m_canDraw;
+    bool              m_isConvertedInCurveAnimaton;
     MyArray<EventIn *>      m_isEventIns;
     MyArray<EventOut *>     m_isEventOuts;
     MyArray<Field *>        m_isFields;
     MyArray<ExposedField *> m_isExposedFields;
-    int                m_counter4SceneTreeView;
-    bool               m_written;
+    int               m_counter4SceneTreeView;
+    bool              m_written;
     MyArray<EventOutData> m_alreadyWrittenEventOuts;
 };
    
@@ -1127,42 +1139,39 @@ typedef void (*DoWithAllElementsCallback)(Element *element, void *data);
 class Node : public NodeData
 {
 public:
-                       Node(Scene *scene, Proto *proto);
-                       Node(const Node &node);
-                       Node(const Node &node, Proto *proto);
+                      Node(Scene *scene, Proto *proto);
+                      Node(const Node &node);
+                      Node(const Node &node, Proto *proto);
 
-    virtual           ~Node();
+    virtual          ~Node();
 
-    void               addParent(Node *parent, int index);
-    void               removeParent(void);
-    bool               hasParent(void) const
-                           { 
+    void              addParent(Node *parent, int index);
+    void              removeParent(void);
+    bool              hasParent(void) const
+                          { 
 #ifdef HAVE_NULL_COMPARE
-                           if (this == NULL)
-                               return false;
+                          if (this == NULL)
+                              return false;
 #endif
-                           if (getNumParents() < 0) 
-                               return false;
-                           if (m_geometricParentIndex == -1)
-                               return false;
-                           if (m_geometricParentIndex > getNumParents())
-                               return false;
-                           return (getParent() != NULL);
-                           }
-    Node              *getParent(void) const 
-                           { 
-                           if (m_parents.size() == 0)
-                               return NULL;
-                           return getParent(m_geometricParentIndex);
-                           }
-    bool               hasParentOrProtoParent(void) const
-                           { return (getParentOrProtoParent() != NULL); }
-    Node              *getParentOrProtoParent(void) const;
-    int                getParentField(void) const 
-                           { 
-                           return 
-                                getParentField(m_geometricParentIndex);
-                           }
+                          if (getNumParents() < 0) 
+                              return false;
+                          if (m_geometricParentIndex == -1)
+                              return false;
+                          if (m_geometricParentIndex > getNumParents())
+                              return false;
+                          return (getParent() != NULL);
+                          }
+    Node             *getParent(void) const 
+                          { 
+                          if (m_parents.size() == 0)
+                              return NULL;
+                          return getParent(m_geometricParentIndex);
+                          }
+    bool              hasParentOrProtoParent(void) const
+                          { return (getParentOrProtoParent() != NULL); }
+    Node             *getParentOrProtoParent(void) const;
+    int               getParentField(void) const 
+                          { return  getParentField(m_geometricParentIndex); }
 
     Node             *getParent(int index) const 
                           { 
@@ -1253,6 +1262,7 @@ public:
     void              copyChildrenTo(Node *copyedNode, 
                                      bool copyNonNodes = false);
     void              copyOutputsTo(Node *copyedNode);
+    void              copyInputsTo(Node *copyedNode);
 
     int               getPrevSiblingIndex(void);
     int               getNextSiblingIndex(void);

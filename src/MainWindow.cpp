@@ -13061,6 +13061,7 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
 #endif
         return false;
     }
+    m_scene->setSaved();
     return true;
 }
 
@@ -13078,18 +13079,22 @@ bool MainWindow::OnFileSave()
        writeFlags = X3D_XML | X3DOM;
        m_scene->storeAsHtml();
     }
+    int ret = -1;
     if (path[0] && (path[0] != '-')) {
         char lastChar = path[strlen(path) > 0 ? strlen(path) - 1 : 0];
         if (lastChar == 'z')
-            return OnFileSaveAs(m_scene->isX3d() ? X3DV | SKIP_SAVED_TEST: 0);
+            ret = OnFileSaveAs(m_scene->isX3d() ? X3DV | SKIP_SAVED_TEST: 0);
         else    
-            return SaveFile(path, m_scene->getURL(), 
-                            writeFlags | SKIP_SAVED_TEST);
+            ret = SaveFile(path, m_scene->getURL(), 
+                           writeFlags | SKIP_SAVED_TEST);
     }
     else if (m_scene->isX3dXml())
-        return OnFileSaveAs(X3D_XML | SKIP_SAVED_TEST);
+        ret = OnFileSaveAs(X3D_XML | SKIP_SAVED_TEST);
     else
-        return OnFileSaveAs(m_scene->isX3dv() ? X3DV | SKIP_SAVED_TEST: 0);
+        ret = OnFileSaveAs(m_scene->isX3dv() ? X3DV | SKIP_SAVED_TEST: 0);
+    if (ret == 0)
+        m_scene->setSaved();
+    return ret;
 }
 
 bool MainWindow::OnFileExportVRML97()

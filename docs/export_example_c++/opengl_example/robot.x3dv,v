@@ -1,4 +1,32 @@
-#X3D V3.2 utf8
+head	1.2;
+access;
+symbols;
+locks
+	mufti:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2019.10.10.02.01.14;	author mufti;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2019.10.10.02.01.13;	author mufti;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@#X3D V3.2 utf8
 PROFILE Immersive
 COMPONENT NURBS:1
 COMPONENT ParticleSystems:4
@@ -66696,3 +66724,42 @@ Transform {
     }
 }
 
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@a26 2
+
+
+d4034 1
+a4034 1
+                      rotation 0.959729 -9.136494e-2 -0.265654 2.531110
+d4377 1
+a4377 1
+                          rotation 0.961693 -0.256143 9.766061e-2 1.574796
+d5166 1
+a5166 1
+                              rotation 0.985911 0.166917 1.083423e-2 0.754261
+d32669 1
+a32669 1
+                      rotation -0.961715 5.822425e-2 0.267796 0.526806
+a63418 14
+
+NavigationInfo {
+  avatarSize [
+    0.250000
+    1.600000
+    0.750000
+    33.406113
+  ]
+  type [
+    "WALK"
+    "EXAMINE"
+    "ANY"
+  ]
+}
+@

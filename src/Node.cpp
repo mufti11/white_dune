@@ -50,12 +50,17 @@
 #include "NodeInline.h"
 #include "NodeComment.h"
 
-NodeData::NodeData(Scene *scene, Proto *proto)
+void
+NodeData::initIdentifier(void) 
 {
     static int identifier_source = 0;
     identifier_source++;
     m_identifier = identifier_source;
     m_identifierCopy = -1;
+}
+
+NodeData::NodeData(Scene *scene, Proto *proto)
+{
     m_scene = scene;
 
     m_graphX = m_graphY = 0;
@@ -189,6 +194,7 @@ NodeData::isMesh(void)
 
 Node::Node(Scene *scene, Proto *proto) : NodeData(scene,proto) 
 {
+    initIdentifier();
     m_commentsList = new NodeList;
     m_geometricParentIndex = -1;     
     m_numberCDataFunctions = 0;
@@ -207,6 +213,7 @@ Node::Node(const Node &node) : NodeData(node)
 
 Node::Node(const Node &node, Proto *proto) : NodeData(node)
 { 
+    initIdentifier();
     m_geometricParentIndex = node.getGeometricParentIndex();
     m_proto = proto;
     for (int i = 0; i < proto->getNumEventOuts(); i++)
@@ -2418,8 +2425,8 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
             RET_ONERROR( indentf(f, indent + 8) )
             RET_ONERROR( mywritestr(f, "}\n") )
         }
-    
     }
+
     RET_ONERROR( indentf(f, indent + 4) )
     if (languageFlag & JAVA_SOURCE)
         RET_ONERROR( mywritestr(f, "    ") )
@@ -2651,7 +2658,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
         RET_ONERROR( writeCProcessEvent(f, indent + 4, languageFlag, eventName) 
                    )
 
-    if (isInsideProto()) {
+    if (isInsideProto() && getProtoParent()) {
         Node *parentNode = getProtoParent();
         Proto *parentProto = parentNode->getProto();
 
@@ -2739,7 +2746,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             bool isCurveAnimation = (sNode->getType() == DUNE_CURVE_ANIMATION);
 
             EventIn *target = sNode->getProto()->getEventIn(s.getField());
-            if (isInAlreadyWrittenEventOuts(i, numOutput))
+            if (isInAlreadyWrittenEventOuts(i, numOutput, m_nodePROTO))
                 continue;
             EventOut *source = proto->getEventOut(i);
 
@@ -2753,7 +2760,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             RET_ONERROR( mywritestr(f, "{\n") )
 
             if (isInsideProto()) {
-                sNode = m_scene->searchProtoNodeId(sNode->getId());
+                sNode = m_scene->searchProtoNodeIdInNode(m_nodePROTO,
+                                                         sNode->getId());
                 if (sNode == NULL) {
                     swDebugf("internal Error: sNode == NULL\n");
                     return -1;
@@ -2840,8 +2848,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             const char *targetVariableName = target->getName(true);
             if (target->getExposedField() != NULL)
                 targetVariableName = target->getExposedField()->getName(true);
-            if (!isInAlreadyWrittenEventOuts(i, numOutput))
-                appendToAlreadyWrittenEventOuts(i, numOutput); 
+            if (!isInAlreadyWrittenEventOuts(i, numOutput, m_nodePROTO))
+                appendToAlreadyWrittenEventOuts(i, numOutput, m_nodePROTO); 
 
             RET_ONERROR( sNode->writeCAndFollowRoutes(f, indent + 12,
                                                       languageFlag, 
@@ -3072,9 +3080,6 @@ NodeData::update()
     // used by Script to update its fields and
     // used by shapes to redraw after a change of a MF-field and
     // used by nodes to redraw parent after a change of a field
-
-    // also update C export name of node
-    m_scene->generateVariableName((Node *)this);
 }
 
 void
@@ -3299,6 +3304,42 @@ NodeData::clearFlagRec(int flag)
     }
 }
 
+class ReceiveData {
+public:
+    Proto *outSideProto;
+    int field;
+    double timestamp;
+    FieldValue *value;
+};
+
+static bool branchReceiveEvent(Node *node, void *data)
+{
+    ReceiveData *receiveData = (ReceiveData *)data;
+    if ((node != NULL) && (node->isPROTO()))
+        if (strcmp(node->getProto()->getName(true),
+                   receiveData->outSideProto->getName(true)) == 0) {
+            NodePROTO *protoNode = (NodePROTO *)node;
+            Proto *proto = protoNode->getProto();
+            for (int i = 0; i < proto->getNumEventOuts(); i++) {
+                EventOut *evOut = proto->getEventOut(i);
+                for (int j = 0; j < evOut->getNumIs(); j++) {
+                    if (evOut->getIsField(j) == receiveData->field) {
+                        for (int i = 0; i < proto->getNumEventOuts(); i++) {
+                            if (protoNode->getOutput(i).size() > 0 &&
+                                protoNode->getOutput(i).first() != NULL) {
+                                RouteSocket s = 
+                                     protoNode->getOutput(i).first()->item();
+                                s.getNode()->receiveEvent(s.getField(), 
+                                    receiveData->timestamp, receiveData->value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    return true;
+}     
+
 void
 NodeData::sendEvent(int eventOut, double timestamp, FieldValue *value)
 {
@@ -3306,14 +3347,24 @@ NodeData::sendEvent(int eventOut, double timestamp, FieldValue *value)
 
     // handle IS
     EventOut *evOut = m_proto->getEventOut(eventOut);
-    if ((m_isEventOuts.size() > 0) && (m_isEventOuts[eventOut] != NULL))
-        evOut = m_isEventOuts[eventOut];
-    if (evOut && (evOut->getFlags() & FF_IS))
-        for (int i = 0; i < evOut->getNumIs(); i++)
-            if (evOut->getFlags() & EOF_IS_HIDDEN) {
+    if (getOutsideProto()) {
+        for (int i = 0; i < getOutsideProto()->getNumEventOuts(); i++)    
+            if (getOutsideProto()->getEventOut(i)->getIsField(i) == eventOut)
+                evOut = getOutsideProto()->getEventOut(i);
+        if (evOut && (evOut->getFlags() & FF_IS))
+            for (int i = 0; i < evOut->getNumIs(); i++) {
                 Node *isNode = evOut->getIsNode(i);
-                isNode->sendEvent(evOut->getIsField(i), timestamp, value);
+
+                ReceiveData receiveData;
+                receiveData.outSideProto = getOutsideProto();
+                receiveData.field = evOut->getIsField(i);
+                receiveData.timestamp = timestamp;
+                receiveData.value = value;
+
+                m_scene->getRoot()->doWithBranch(branchReceiveEvent,
+                                                  &receiveData, false);
             }
+    }
     SocketList::Iterator *i;
     for (i = m_outputs[eventOut].first(); i != NULL; i = i->next()) {
         RouteSocket s = i->item();
@@ -3329,17 +3380,21 @@ NodeData::receiveEvent(int eventIn, double timestamp, FieldValue *value)
             return;
     }
 
+/*
     // check to see if this eventIn is part of an exposedField or
     // conntected to a normal field
 
     int field = -1;
-    ExposedField *e = m_proto->getEventIn(eventIn)->getExposedField();
+    if (m_proto->getEventIn(eventIn)) {
+        ExposedField *e = m_proto->getEventIn(eventIn)->getExposedField();
 
-    if (e) {
-        field = e->getFieldIndex();
-        eventIn = e->getEventIn();
-    } else
-        field = m_proto->getEventIn(eventIn)->getField();
+        if (e) {
+            field = e->getFieldIndex();
+            eventIn = e->getEventIn();
+        }
+    }
+*/
+    int field = eventIn;
 
     // handle IS
     EventIn *evIn = m_proto->getEventIn(eventIn);
@@ -3350,7 +3405,6 @@ NodeData::receiveEvent(int eventIn, double timestamp, FieldValue *value)
             for (int i = 0; i < evIn->getNumIs(); i++) {
                 Node *isNode = evIn->getIsNode(i);
                 isNode->receiveEvent(evIn->getIsField(i), timestamp, value);
-
             }
         }
     } else {
@@ -3384,10 +3438,12 @@ NodeData::addIsElement(Node *node, int field, int elementType,
             if (m_isEventOuts.size() == 0)
                 for (int i = 0; i < origProto->getNumEventOuts(); i++)
                     m_isEventOuts[i] = NULL;
-            m_isEventOuts[origField] = new EventOut(origProto->
-                                                    getEventOut(origField));
-            m_isEventOuts[origField]->addIs(node, field, elementType, 
-                                            origProto, origField, flags);
+            if (origProto->getExposedField(origField))
+                m_isExposedFields[origField] = new ExposedField(origProto->
+                    getExposedField(origField));
+            if (m_isEventOuts[origField])
+                m_isEventOuts[origField]->addIs(node, field, elementType, 
+                                                origProto, origField, flags);
         }
         break;
       case EL_EXPOSED_FIELD:
@@ -3406,7 +3462,7 @@ NodeData::addIsElement(Node *node, int field, int elementType,
                 m_isFields[i] = NULL;
             m_isFields[origField] = new Field(origProto->getField(origField));
             m_isFields[origField]->addIs(node, field, elementType, 
-                                        origProto, origField, flags);
+                                         origProto, origField, flags);
         }
         break;
     }
@@ -3843,12 +3899,15 @@ Node::copyChildrenTo(Node *copyedNode, bool copyNonNodes)
         if (m_fields[i] && m_fields[i]->getType() == SFNODE) {
             Node *child = ((SFNode *) m_fields[i])->getValue();
             if (child) {
+                long id = getId();
                 Node *copyChild = child->copy();
+                copyChild->setId(id);
                 copyChild->ref();
                 copyedNode->unSetVariableName();
                 copyedNode->setField(i, new SFNode(copyChild));
                 child->copyChildrenTo(copyChild, copyNonNodes);
                 child->copyOutputsTo(copyChild);
+                child->copyInputsTo(copyChild);
             }
         } else if (m_fields[i] && m_fields[i]->getType() == MFNODE) {
             NodeList *childList = ((MFNode *) m_fields[i])->getValues();
@@ -3865,6 +3924,7 @@ Node::copyChildrenTo(Node *copyedNode, bool copyNonNodes)
                             childList->get(j)->copyChildrenTo(copyChild,
                                                               copyNonNodes);
                             childList->get(j)->copyOutputsTo(copyChild);
+                            childList->get(j)->copyInputsTo(copyChild);
                         }
                     }
                 }
@@ -3884,6 +3944,18 @@ Node::copyOutputsTo(Node *copyedNode)
         for (SocketList::Iterator *j = getOutput(i).first(); 
              j != NULL; j = j->next()) 
             copyedNode->addOutput(i, j->item().getNode(), 
+                                     j->item().getField());
+    }   
+}
+
+
+void
+Node::copyInputsTo(Node *copyedNode)
+{
+    for (int i = 0; i < m_proto->getNumEventIns(); i++) {
+        for (SocketList::Iterator *j = getInput(i).first(); 
+             j != NULL; j = j->next()) 
+            copyedNode->addInput(i, j->item().getNode(), 
                                      j->item().getField());
     }   
 }
@@ -3936,6 +4008,7 @@ NodeData::handleIs(void)
                     m_isExposedFields[i] = new ExposedField(field);
                     isNode->addIsElement((Node *)this, i, 
                                          EL_EXPOSED_FIELD, proto, 
+                                         field->getIsField(j),
                                          field->getIsField(j));
             }
     }
@@ -3953,6 +4026,7 @@ NodeData::handleIs(void)
                     }
                     m_isFields[i] = new Field(field);
                     isNode->addIsElement((Node *)this, i, EL_FIELD, proto,
+                                         field->getIsField(j), 
                                          field->getIsField(j));
                 }                                 
     }
@@ -3967,8 +4041,8 @@ NodeData::handleIs(void)
                     Proto *proto = isNode->getProto();
                     int evOut = eventOut->getIsField(j);
                     m_isEventOuts[i] = new EventOut(eventOut);
-                    isNode->addIsElement((Node *)this, i, EL_EVENT_OUT, proto, 
-                                          evOut, EOF_IS_HIDDEN);
+                    isNode->addIsElement((Node *)this, i, EL_EVENT_OUT, 
+                                         proto, evOut, EOF_IS_HIDDEN);
                 }
     }
     for (int i = 0; i < m_proto->getNumEventIns(); i++) {
@@ -4034,6 +4108,21 @@ NodeData::hasInputsOrIs(void)
             continue;
         if (isInsideProto() && getOutsideProto()->lookupIsField((Node *)this, i)
             != -1)
+            return true;
+    }
+    return false;
+}
+
+bool 
+NodeData::hasInputsIs(void)
+{
+    for (int i = 0; i < m_proto->getNumEventIns(); i++) {
+        EventIn *eventIn = getProto()->getEventIn(i);
+        if (eventIn == NULL)
+            continue;
+        if (eventIn->getFlags() & FF_HIDDEN)
+            continue;
+        if (isPROTO() && getProto()->lookupIsEventIn((Node *)this, i) != -1)
             return true;
     }
     return false;
@@ -4221,15 +4310,11 @@ NodeData::generateTreeLabel(void)
             } else
                m_treeLabel += "(only 1 side) ";
         }     
-    if (hasName()) {
-        m_treeLabel += getName();
-        const char *protoName = m_proto->getName(m_scene->isX3d());
-        if (stringncmp(getName(), protoName) != 0) { 
-            m_treeLabel += " ";
-            m_treeLabel += protoName;
-        }
-    } else
-        m_treeLabel += m_proto->getName(m_scene->isX3d());
+    m_treeLabel += getName();
+    if (hasName())
+        m_treeLabel += " ";
+    const char *protoName = m_proto->getName(m_scene->isX3d());
+    m_treeLabel += protoName;
 }
 
 Node *
@@ -4543,6 +4628,12 @@ long
 NodeData::getId(void) 
 { 
     return m_identifier; 
+}
+
+void
+NodeData::setId(long id)
+{
+    m_identifier = id; 
 }
 
 bool
