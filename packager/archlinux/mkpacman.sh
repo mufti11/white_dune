@@ -27,7 +27,9 @@ arch=()
 url="ftp://ftp.ourproject.org/pub/wdune/\$pkgname-\$pkgver.tar.bz2"
 license=('GPL')
 groups=()
-depends=()
+depends=(xorg-fonts-misc
+         xorg-fonts-alias
+)
 makedepends=(gcc
              fakeroot
              glu 

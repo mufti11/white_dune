@@ -5353,4 +5353,8 @@ Fixed animation of a RROTO noode eventOut
 
 Fixed C/C++/java export of animation completely inside a PROTO
 
+Fixed lost editing of PROTOs
+
+Fixed PROTO rendering
+
 Contact: MUFTI <mufti11@web.de>

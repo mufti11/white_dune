@@ -81,9 +81,8 @@ Path::Path(const int *path, int len, Scene *scene, bool protoInTree,
                  break;
             }
             if (i < m_len) {
-                if (path[i] == -1) {
-                    m_len = i;
-                    break;
+                if (path[0] == -1) {
+                    m_len = len;
                 }
             } else {
                 m_field = field;
@@ -129,7 +128,8 @@ Path::getNextNode(Node *n, int f, int i) const
     FieldValue *value = NULL;
     if ((field < 0) || (field >= node->getProto()->getNumFields()))
         return NULL;
-    if (node->getScene() && (node != node->getScene()->getRoot()))
+    if (node->getScene() && (node != node->getScene()->getRoot()) &&
+        (node->getOutsideProto() == NULL))
         if (node->getNumParents() == 0)
             return NULL;
     if (node->getProto()->getField(field) == NULL)

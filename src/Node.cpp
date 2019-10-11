@@ -3365,6 +3365,16 @@ NodeData::sendEvent(int eventOut, double timestamp, FieldValue *value)
                                                   &receiveData, false);
             }
     }
+    evOut = m_proto->getEventOut(eventOut);
+    if ((m_isEventOuts.size() > 0) && (m_isEventOuts[eventOut] != NULL))
+        evOut = m_isEventOuts[eventOut];
+    if (evOut && (evOut->getFlags() & FF_IS))
+        for (int i = 0; i < evOut->getNumIs(); i++)
+            if (evOut->getFlags() & EOF_IS_HIDDEN) {
+                Node *isNode = evOut->getIsNode(i);
+                isNode->sendEvent(evOut->getIsField(i), timestamp, value);
+            }
+
     SocketList::Iterator *i;
     for (i = m_outputs[eventOut].first(); i != NULL; i = i->next()) {
         RouteSocket s = i->item();
@@ -3380,21 +3390,17 @@ NodeData::receiveEvent(int eventIn, double timestamp, FieldValue *value)
             return;
     }
 
-/*
     // check to see if this eventIn is part of an exposedField or
     // conntected to a normal field
 
     int field = -1;
-    if (m_proto->getEventIn(eventIn)) {
-        ExposedField *e = m_proto->getEventIn(eventIn)->getExposedField();
+    ExposedField *e = m_proto->getEventIn(eventIn)->getExposedField();
 
-        if (e) {
-            field = e->getFieldIndex();
-            eventIn = e->getEventIn();
-        }
-    }
-*/
-    int field = eventIn;
+    if (e) {
+        field = e->getFieldIndex();
+        eventIn = e->getEventIn();
+    } else
+        field = m_proto->getEventIn(eventIn)->getField();
 
     // handle IS
     EventIn *evIn = m_proto->getEventIn(eventIn);
@@ -3438,12 +3444,22 @@ NodeData::addIsElement(Node *node, int field, int elementType,
             if (m_isEventOuts.size() == 0)
                 for (int i = 0; i < origProto->getNumEventOuts(); i++)
                     m_isEventOuts[i] = NULL;
+/*
+// hier/hier
             if (origProto->getExposedField(origField))
                 m_isExposedFields[origField] = new ExposedField(origProto->
                     getExposedField(origField));
             if (m_isEventOuts[origField])
                 m_isEventOuts[origField]->addIs(node, field, elementType, 
                                                 origProto, origField, flags);
+// da/da
+*/
+// hier
+            m_isEventOuts[origField] = new EventOut(origProto->
+                                                    getEventOut(origField));
+            m_isEventOuts[origField]->addIs(node, field, elementType, 
+                                            origProto, origField, flags);
+// da
         }
         break;
       case EL_EXPOSED_FIELD:
