@@ -115,7 +115,7 @@ find -L . \\
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 export CFLAGS=\$SLKCFLAGS
-export CXXFLAGS=\$SLKCFLAGS
+export CXXFLAGS="\$SLKCFLAGS -std=c++11"
 ./configure \\
  --with-wwwbrowser=firefox \\
  --with-helpurl="/usr/doc/\$PRGNAM-\$VERSION/docs" \\
@@ -152,5 +152,6 @@ cd white_dune
 cp /tmp/wdune-$VERSION.tar.bz2 .
 sh white_dune.SlackBuild
 )
+rm -f white_dune/wdune*.tar.bz2
 tar -cvf /tmp/white_dune.tar white_dune
 gzip -9f /tmp/white_dune.tar

@@ -3393,6 +3393,7 @@ BEGIN
     IDS_DE_MISSING_CLOSING_QUOTE "Fehlendes schliessendes "" : Zeile %d Zeichen %d"
     IDS_DE_ERROR_SAVE_FILE_TO_EDIT "Die temporaere Datei ""%s"",\ndie editiert werden soll,\nkann nicht gespeichert werden: %s\nWenn es ein Problem mit dem aktuellen Verzeichnis gibt,\nspeichern Sie bitte die aktuelle VRML/X3D Datei in ein schreibbares Verzeichnis"
     IDS_DE_ERROR_READ_SCRIPT_DATA "Die Script-Daten koennen nicht von Datei %s gelesen werden: "
+    IDS_DE_ERROR_READ_TEXT_DATA "Die Text-Daten koennen nicht von Datei %s gelesen werden: "
     IDS_DE_PREVIOUS_EOF        "Vorzeitiges Ende der Datei %s\n(Fehler im Dateisystem ?)"
     IDS_DE_MISSING_QUOTE_PAIR  "fehlendes "" "" Paar in Datei %s"
     IDS_DE_LDRAW_DAT_EXPORT_FIELD_FOR_TOO_LONG "Ldraw.dat Export field fuer %s zu lang\n(%d Zeichen sind erlaubt)"

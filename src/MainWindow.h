@@ -318,6 +318,7 @@ protected:
 
     void                EditProto(Proto* oldproto);
     void                EditScript(Node* oldnode);
+    void                EditText(Node* oldnode);
     void                EditObject();
     void                EditUrl();
     void                createAnimation(void);
@@ -541,8 +542,9 @@ protected:
     MyArray<ProtoMenuItem> m_protoMenu;
     ScriptEdit         *m_scriptEdit;
     bool                m_scriptEditorInUse;
-    ObjectEdit         *m_shaderEdit;
+    ObjectEdit         *m_textEdit;
     bool                m_textEditorInUse;
+    ObjectEdit         *m_shaderEdit;
     ImageTextureEdit   *m_imageTextureEdit;
     PixelTextureEdit   *m_pixelTextureEdit;
     bool                m_imageEditorInUse;

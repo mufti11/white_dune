@@ -49,6 +49,7 @@ protected:
     bool                checkEditorData(void);
     bool                readQuotedEditorFile(char *fileName, 
                                              Node *node, int field);
+    bool                readEditorFile(char *fileName, Node *node, int field);
 
     virtual void        generateFilename(bool secondTry) = 0;
     virtual bool        needOpen(void) { return false; }
@@ -100,6 +101,27 @@ protected:
 private:
 
     NodeScript         *m_scriptNode;
+};
+
+class TextEdit : public ObjectEdit {
+public:
+                        TextEdit(Node* node, SWND wnd, 
+                                 EditorReadyCallback editorReadyCallback,
+                                 void *data);
+    virtual            ~TextEdit();
+    virtual bool        readEditorfile(void);
+
+protected:
+
+    virtual void        generateFilename(bool secondTry);
+    virtual bool        needOpen(void) { return true; }
+    virtual bool        writeFile(int f);
+    virtual void        generateCommand(bool is4Kids);
+
+    bool                writeSFStringText(int f, const char* string);
+
+    char               *textEdit(void);
+    bool                textReadEditorfile(char* filename = NULL);
 };
 
 class ShaderEdit : public ObjectEdit {

@@ -3392,6 +3392,7 @@ BEGIN
     IDS_IT_MISSING_CLOSING_QUOTE "missing closing "" : line %d character %d"
     IDS_IT_ERROR_SAVE_FILE_TO_EDIT "unable to save intermediate file ""%s""\nwhich should be changed: %s\nIf there is a problem with the current directory,\nplease save current VRML/X3D file to a writeable directory first"
     IDS_IT_ERROR_READ_SCRIPT_DATA "can not read Script data from file %s : "
+    IDS_IT_ERROR_READ_TEXT_DATA "can not read text data from file %s : "
     IDS_IT_PREVIOUS_EOF        "Unexpected end of file %s\n(error in filesystem ?)"
     IDS_IT_MISSING_QUOTE_PAIR  "missing "" "" pair in file %s"
     IDS_IT_LDRAW_DAT_EXPORT_FIELD_FOR_TOO_LONG "Ldraw.dat Export field for %s too long\n(%d characters allowed)"

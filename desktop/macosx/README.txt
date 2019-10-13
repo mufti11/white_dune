@@ -108,3 +108,7 @@ xcode/WhiteDuneHelp/whiteDuneHelp.html
 xcode/WhiteDuneHelp/white_dune.jpg
 xcode/WhiteDuneHelp
 xcode/version.plist
+
+The file MyDocument.m is a patch for xcode/MyDocument.m
+If you have access to Xcode, try to recompile the white_dune MacOSX starter
+program.

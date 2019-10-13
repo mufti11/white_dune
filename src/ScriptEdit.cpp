@@ -40,6 +40,11 @@
 #include "NodePackagedShader.h"
 #include "NodeShaderProgram.h"
 #include "NodeShaderPart.h"
+#include "NodeText.h"
+#include "NodeText3D.h"
+#include "NodeWorldInfo.h"
+
+enum { blankOrTabMode, someTextMode };
 
 ObjectEdit::ObjectEdit(Node *node, SWND wnd, 
                        EditorReadyCallback editorReadyCallback, void *data)
@@ -473,8 +478,160 @@ ScriptEdit::writeSFStringX3domUrl(int f, const char* string)
 bool
 ScriptEdit::ecmaScriptReadEditorfile(char *fileName)
 {
-    return readQuotedEditorFile(fileName, m_scriptNode, 
-                                          m_scriptNode->url_Field());
+    return readQuotedEditorFile(fileName, m_scriptNode,
+                                 m_scriptNode->url_Field());
+}
+
+
+TextEdit::TextEdit(Node *node, SWND wnd, 
+                   EditorReadyCallback editorReadyCallback, void *data) :
+ObjectEdit(node, wnd, editorReadyCallback, data)
+{
+    m_node = node;
+    m_urlData = NULL;
+}
+
+TextEdit::~TextEdit()
+{
+    delete [] m_urlData;
+}
+
+void
+TextEdit::generateFilename(bool secondTry)
+{
+    TheApp->checkAndRepairTextEditCommand();
+
+    int texteditUseExtensionTxt;
+
+    swTextEditGetSettingsUseExtensionTxt(TheApp->GetTextedit(),
+                                         &texteditUseExtensionTxt);
+
+    if (texteditUseExtensionTxt) {
+        if (secondTry) 
+            swGetTempPath(m_editorFile,".dune_ecmascript",".txt",1024);
+        else
+            swGetTempFile(m_editorFile,".dune_ecmascript", ".txt", 1024);
+    } else {
+        if (secondTry) 
+            swGetTempPath(m_editorFile,".dune_ecmascript",".js",1024);
+        else
+            swGetTempFile(m_editorFile,".dune_ecmascript", ".js", 1024);
+    }
+}
+
+bool
+TextEdit::writeFile(int f)
+{
+    bool writeError = false;
+    MFString *text = NULL;
+
+    switch (m_node->getType()) {
+      case VRML_TEXT:
+        {
+        NodeText *textNode = (NodeText *)m_node;
+        text = textNode->string();
+        }
+        break;
+      case KAMBI_TEXT_3D:
+        {
+        NodeText3D *textNode = (NodeText3D *)m_node;
+        text = textNode->string();
+        }
+        break;
+      case VRML_WORLD_INFO:
+        {
+        NodeWorldInfo *worldNode = (NodeWorldInfo *)m_node;
+        text = worldNode->info();
+        }
+        break;
+    }    
+
+    bool hasText = true;
+    if (text == NULL)
+        hasText = false;
+    if (text->getSize() == 0)
+        hasText = false;
+    const char* string = "";           
+    if (hasText) {
+        for (int i = 0; i < text->getSize(); i++) {
+            string = text->getValue(i);
+            if (!writeSFStringText(f, string))
+                writeError = true;
+            if (i < text->getSize()-1)
+                if (!write2file(f, "\n")) 
+                    writeError = true;
+        }
+    } else {
+        if (!writeSFStringText(f, ""))
+            writeError = true;
+    }
+    if (writeError) {
+        TheApp->MessageBoxPerror(m_editorFile);
+        return false;
+    }
+         
+    return true;
+}    
+
+void
+TextEdit::generateCommand(bool is4Kids)
+{
+    TheApp->checkAndRepairTextEditCommand();
+    mysnprintf(m_command, sizeof(m_command), "%s %s", 
+               swTextEditGetCommand(TheApp->GetTextedit()), m_editorFile);
+    
+}
+
+bool   
+TextEdit::readEditorfile(void)
+{
+    return textReadEditorfile(m_editorFile);     
+}
+
+// write to file to be edited
+
+bool
+TextEdit::writeSFStringText(int f, const char* string)  
+{
+     bool hasJavascript = false;
+ 
+     Proto* proto = m_node->getProto();
+     if (proto == NULL)
+         return false;
+ 
+    if (!write2file(f, string))
+        return false;
+    return true;
+}
+
+bool
+TextEdit::textReadEditorfile(char *fileName)
+{
+    int field = -1;
+
+    switch (m_node->getType()) {
+      case VRML_TEXT:
+        {
+        NodeText *text = (NodeText *)m_node;
+        field = text->string_Field();
+        }
+        break;
+      case KAMBI_TEXT_3D:
+        {
+        NodeText3D *text = (NodeText3D *)m_node;
+        field = text->string_Field();
+        }
+        break;
+      case VRML_WORLD_INFO:
+        {
+        NodeWorldInfo *worldNode = (NodeWorldInfo *)m_node;
+        field = worldNode->info_Field();
+        }
+        break;
+    }    
+    if (field != -1)
+        return readEditorFile(fileName, m_node, field);
+    return false;
 }
 
 bool
@@ -509,23 +666,18 @@ ObjectEdit::readQuotedEditorFile(char *fileName, Node *node, int field)
     } while (offset < m_urlDataLength);  
 
     MFString* newUrl = new MFString();
-    if (checkEditorData()) {
-        if (m_urlStartData.size() != m_urlEndData.size()) {
-            TheApp->MessageBox(IDS_MISSING_QUOTE_PAIR, m_editorFile);
-            edit(false);
-            return false;
-        } 
-        for (size_t i = 0 ; i < m_urlStartData.size(); i++) {
-            m_urlData[m_urlEndData[i]] = '\0';
-            MyString urlString = "";
-            urlString += (&m_urlData[m_urlStartData[i]+1]);
-            newUrl->setSFValue(i, new SFString(urlString));
-        }       
-        node->setField(field, newUrl);     
-    } else {
+    if (m_urlStartData.size() != m_urlEndData.size()) {
+        TheApp->MessageBox(IDS_MISSING_QUOTE_PAIR, m_editorFile);
         edit(false);
         return false;
-    }
+    } 
+    for (size_t i = 0 ; i < m_urlStartData.size(); i++) {
+        m_urlData[m_urlEndData[i]] = '\0';
+        MyString urlString = "";
+        urlString += (&m_urlData[m_urlStartData[i]+1]);
+        newUrl->setSFValue(i, new SFString(urlString));
+    }       
+    node->setField(field, newUrl);     
     return true;
 }
 
@@ -565,8 +717,6 @@ static bool is2CharLineFeed(char* data, int offset)
   else
       return false;
 }
-
-enum { blankOrTabMode, someTextMode };
 
 // additionly to check for this tokens, ecmaScriptCheckEditorData
 // also checks for beginning and end of the Script url field(s) (type MFString)
@@ -627,6 +777,61 @@ ObjectEdit::checkEditorData(void)
         return true;   
 }
 
+
+bool
+ObjectEdit::readEditorFile(char *fileName, Node *node, int field)
+{
+    char *file = fileName; 
+    if (file == NULL)
+        file = m_editorFile;
+    int f = open(file, O_RDONLY, 00666);   
+    if (f == -1) {
+        TheApp->MessageBoxPerror(IDS_ERROR_READ_TEXT_DATA, file);
+        return true;
+    } 
+    lseek(f, 0, SEEK_SET);
+    m_urlDataLength = lseek(f, 0, SEEK_END);
+    lseek(f,0,SEEK_SET);
+    m_urlData = new char[m_urlDataLength + 1];
+    int offset = 0;
+    do {
+        int bytes = read(f, m_urlData + offset, m_urlDataLength - offset);
+#ifdef _WIN32
+        // M$Windows do a CR-LF translation, number of read byte is reduced
+        // under M$Windows bytes == 0 is EOF
+        if (bytes == 0)
+            m_urlDataLength = offset;
+#endif
+        if (bytes < 0) {
+            TheApp->MessageBox(IDS_PREVIOUS_EOF, m_editorFile);
+            return true;
+        } 
+        offset += bytes;
+    } while (offset < m_urlDataLength);  
+
+    int mode = blankOrTabMode;
+    int lineCount = 1;
+    bool beforeFirstDoubleQuoute = true;
+    m_urlStartData.resize(0);    
+    m_urlEndData.resize(0);    
+    m_urlStartData.append(0);
+    for (int offset = 0; offset < m_urlDataLength; offset++)
+        if (isLineFeed(m_urlData,offset)) {
+            m_urlStartData.append(offset + 1);
+            m_urlEndData.append(offset);
+        }
+    m_urlEndData.append(m_urlDataLength);
+
+    MFString* newUrl = new MFString();
+    for (size_t i = 0 ; i < m_urlStartData.size(); i++) {
+        m_urlData[m_urlEndData[i]] = '\0';
+        MyString urlString = "";
+        urlString += (&m_urlData[m_urlStartData[i]]);
+        newUrl->setSFValue(i, new SFString(urlString));
+    }       
+    node->setField(field, newUrl);     
+    return true;
+}
 
 ShaderEdit::ShaderEdit(Node *node, SWND wnd, 
                        EditorReadyCallback editorReadyCallback, void *data) :

@@ -992,7 +992,8 @@ swTextEditInit(STABLE prefs)
               prefs, "TextEditLinenumberOption", ""));
     } else {
         textEdit->textEditCommand = mystrdup(swGetPreference(
-              prefs, "TextEditCommand", "C:\\Windows\\system32\\edit.com"));
+              prefs, "TextEditCommand", 
+              "\"C:\\Program Files\\Windows NT\\Accessories\\Wordpad.exe\""));
         textEdit->textEditLinenumberOption = mystrdup(swGetPreference(
               prefs, "TextEditLinenumberOption", " "));
     }

@@ -106,6 +106,9 @@ NodeTimeSensor::preDraw()
 void
 NodeTimeSensor::setTime(double t)
 {
+    if (!m_scene->isRunning())
+        return;
+
     double dstopTime = m_stopTime;
 
     if (enabled()->getValue()) {

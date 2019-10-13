@@ -5357,4 +5357,8 @@ Fixed lost editing of PROTOs
 
 Fixed PROTO rendering
 
+Avoided problem of PROTO editing for animation completely inside a PROTO
+
+Added oject edit for nodes with MFString field (e.g. NodeText) 
+
 Contact: MUFTI <mufti11@web.de>

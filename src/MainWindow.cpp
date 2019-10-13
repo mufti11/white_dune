@@ -116,6 +116,7 @@
 #include "NodeViewpoint.h"
 #include "NodeOrthoViewpoint.h"
 #include "NodeNavigationInfo.h"
+#include "NodeWorldInfo.h"
 
 #include "NodeLineSet.h"
 
@@ -1433,8 +1434,9 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
 
     m_scriptEdit = NULL;
     m_scriptEditorInUse = false;
-    m_shaderEdit = NULL;
     m_textEditorInUse = false;
+    m_textEdit = NULL;
+    m_shaderEdit = NULL;
     m_imageTextureEdit = NULL;
     m_pixelTextureEdit = NULL;
     m_imageEditorInUse = false;
@@ -5209,6 +5211,7 @@ void
 MainWindow::UpdateObjectEdit(const Path *selection)
 {
     Node *node = selection->getNode();
+    int field = m_selectedField;
     bool editObject_flag = false;
     bool editUrl_flag = false;
     if (!isEditorInUse()) {
@@ -5230,6 +5233,27 @@ MainWindow::UpdateObjectEdit(const Path *selection)
                 break;
               case X3D_COMPOSED_SHADER:
                 editObject_flag = true;
+                break;
+              case VRML_TEXT:
+                {
+                NodeText *text = (NodeText *)node;
+                if (field == text->string_Field())
+                    editObject_flag = true;
+                }
+                break;
+              case KAMBI_TEXT_3D:
+                {
+                NodeText3D *text = (NodeText3D *)node;
+                if (field == text->string_Field())
+                    editObject_flag = true;
+                }
+                break;
+              case VRML_WORLD_INFO:
+                {
+                NodeWorldInfo *world = (NodeWorldInfo *)node;
+                if (field == world->info_Field())
+                    editObject_flag = true;
+                }
                 break;
             }
         }
@@ -7199,26 +7223,35 @@ MainWindowTextEditorReadyCallback(void *data)
 void
 MainWindow::OnTextEditorReadyCallback(void)
 {
-    Node *node = m_shaderEdit->getNode();
+    Node *node = m_textEdit->getNode();
     int field = -1;
     switch(node->getType()) {
-      case X3D_PACKAGED_SHADER:
-        field = ((NodePackagedShader *)node)->url_Field();
+      case VRML_TEXT:
+        {
+        NodeText *text = (NodeText *)node;
+        field = text->string_Field();
+        }
         break;
-      case X3D_SHADER_PROGRAM:
-        field = ((NodeShaderProgram *)node)->url_Field();
+      case KAMBI_TEXT_3D:
+        {
+        NodeText3D *text = (NodeText3D *)node;
+        field = text->string_Field();
+        }
         break;
-      case X3D_SHADER_PART:
-        field = ((NodeShaderPart *)node)->url_Field();
+      case VRML_WORLD_INFO:
+        {
+        NodeWorldInfo *world = (NodeWorldInfo *)node;
+        field = world->info_Field();
+        }
         break;
     }
     FieldUpdate* hint = new FieldUpdate(node, field);
     m_scene->UpdateViews(NULL, UPDATE_FIELD, (Hint *) hint);
     delete hint;
     m_textEditorInUse = false;
-    if (m_shaderEdit != NULL)
-        delete m_shaderEdit;
-    m_shaderEdit = NULL;
+    if (m_textEdit != NULL)
+        delete m_textEdit;
+    m_textEdit = NULL;
     UpdateToolbar(ID_OBJECT_EDIT);
 }
 
@@ -7282,6 +7315,14 @@ MainWindow::OnMovieEditorReadyCallback(void)
     if (m_movieEdit != NULL)
         delete  m_movieEdit;
     UpdateToolbar(ID_OBJECT_EDIT);
+}
+
+void
+MainWindow::EditText(Node* oldNode)
+{
+    m_textEdit  = new TextEdit(oldNode, m_wnd, 
+                               MainWindowTextEditorReadyCallback, this);
+    m_textEdit->edit();
 }
 
 void
@@ -7389,6 +7430,17 @@ MainWindow::EditObject()
             return;
         }
         EditScript(node);
+        hint = new NodeUpdate(node, NULL, 0);
+        m_scene->UpdateViews(NULL, UPDATE_CHANGE_INTERFACE_NODE, (Hint*) hint);
+        break;
+      case VRML_TEXT:
+      case KAMBI_TEXT_3D:
+      case VRML_WORLD_INFO:
+        if (m_textEditorInUse) {
+            TheApp->MessageBoxId(IDS_TEXT_EDITOR_IN_USE_ERROR);
+            return;
+        }
+        EditText(node);
         hint = new NodeUpdate(node, NULL, 0);
         m_scene->UpdateViews(NULL, UPDATE_CHANGE_INTERFACE_NODE, (Hint*) hint);
         break;

@@ -761,7 +761,7 @@ void FieldView::OnLButtonDown(int x, int y, int modifiers)
         StopEditing();
     } else if ((hit >= 0) && (hit < (int)m_items.size())) {
         FieldViewItem *item = m_items[hit];
-        if (m_selectedItem != hit) {
+//        if (m_selectedItem != hit) {
             // unhighlight old selection, if any
             if ((m_selectedItem > 0) && (m_selectedItem < (int)m_items.size()))
             { 
@@ -774,7 +774,7 @@ void FieldView::OnLButtonDown(int x, int y, int modifiers)
             item->SetFlag(FVIS_SELECTED);
             m_selectedItem = hit;
             swInvalidateWindow(m_window);
-        }
+//        }
 
         bool colorcircle_flag=false;
         if (item->GetParent()) {

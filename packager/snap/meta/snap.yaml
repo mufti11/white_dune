@@ -1,5 +1,5 @@
 name: wdune
-version: '1.470'
+version: '1.478'
 summary: simple X3D/VRML NURBS/Superformula 3D modeller and animation tool
 description: X3D/VRML editor, simple NURBS/Superformula 3D modeller and animation tool
 type: app
@@ -13,7 +13,7 @@ apps:
 
 parts:
     wdune:
-        source: ftp://ftp.ourproject.org/pub/wdune/wdune-1.470.tar.bz2
+        source: ftp://ftp.ourproject.org/pub/wdune/wdune-1.478.tar.bz2
         plugin: autotools
 
 # access OpenSubdiv in /usr/local

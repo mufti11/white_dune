@@ -11,8 +11,8 @@ package=wdune
 
 build:
 	$(checkdir)
-	./configure --without-omp --prefix=/usr --without-devil --with-uninstallcomment="dpkg -P whitedune" --with-optimization --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-vrmlbrowser=view3dscene --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity --with-allow-multiple-definition
-	$(MAKE) -j1
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="dpkg -P whitedune" --with-optimization --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-vrmlbrowser=view3dscene --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity --with-allow-multiple-definition
+	$(MAKE) -j4
 	touch build
 
 clean:
