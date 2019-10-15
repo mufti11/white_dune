@@ -90,6 +90,7 @@ BuildRequires: pkg-config
 BuildRequires: pkgconfig(eigen3) pkgconfig(vcglib)
 BuildRequires: freeglut-devel
 Requires: rcs
+Requires: gedit
 Requires: ImageMagick
 Requires: aqsis-core
 Requires: bitstream-vera-sans-fonts
@@ -142,6 +143,7 @@ Documentation for white_dune
     --with-helpurl="%{_docdir}/wdune-docs/docs/" \\
     --with-protobaseurl="%{_docdir}/wdune-docs/docs" \\
     --with-checkincommand="ci" \\
+    --with-x11-editor="gedit" \\
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity

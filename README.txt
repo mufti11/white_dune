@@ -5359,6 +5359,8 @@ Fixed PROTO rendering
 
 Avoided problem of PROTO editing for animation completely inside a PROTO
 
-Added oject edit for nodes with MFString field (e.g. NodeText) 
+Added object edit for nodes with MFString field (e.g. NodeText) 
+
+Fixed text editor selection in configure (new default "gedit")
 
 Contact: MUFTI <mufti11@web.de>

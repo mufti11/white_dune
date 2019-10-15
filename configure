@@ -708,7 +708,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -753,6 +752,7 @@ with_coverwave
 with_covertuimap
 with_wwwbrowser
 with_vrmlbrowser
+with_x11_editor
 with_imageeditor
 with_imageeditor4kids
 with_soundeditor
@@ -851,7 +851,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1104,15 +1103,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1250,7 +1240,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1403,7 +1393,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1463,7 +1452,7 @@ Optional Packages:
 --with-covertuimap        allow creation of incomplete cover node TUIMap
 --with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla...
 --with-vrmlbrowser=vrmlbrowser  VRML browser eg. firefox view3dscene freewrl ...
---with-x11-editor=editor  X11 text editor eg. gvim gedit ...
+--with-x11-editor=editor  X11 text editor eg. gedit gvim ...
 --with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp krita xpaint imgworks...
 --with-imageeditor4kids=imageeditor  simple object editor for bitmap (.jpg/.png/.gif) files usefull for kids eg. kolourpaint gpaint...
 --with-soundeditor=soundeditor  object editor for sound (.wav) files eg. audacity rezound wavesurfer gnusound sweep soundeditor...
@@ -3976,9 +3965,9 @@ if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
 fi
 
 
-# Check whether --with-vrmlbrowser was given.
-if test "${with_vrmlbrowser+set}" = set; then :
-  withval=$with_vrmlbrowser; X11_EDITOR="$withval";export X11_EDITOR
+# Check whether --with-x11-editor was given.
+if test "${with_x11_editor+set}" = set; then :
+  withval=$with_x11_editor; X11_EDITOR="$withval";export X11_EDITOR
 fi
 
 if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
@@ -4723,8 +4712,8 @@ fi
 export GREP_FLAGS
 
 
-if test "X_$X11_EDITOR" != "X_" ; then
-   for ac_prog in gvim gedit
+if test "X_$X11_EDITOR" = "X_" ; then
+   for ac_prog in gedit gvim
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2

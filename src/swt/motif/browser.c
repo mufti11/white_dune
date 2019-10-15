@@ -717,6 +717,10 @@ swTextEditInit(STABLE prefs)
               prefs, "TextEditLinenumberOption", ""));
 #endif
     }
+#ifdef HAVE_X11_EDITOR
+    textEdit->textEditCommand = mystrdup(swGetPreference(prefs, 
+         "TextEditCommand", HAVE_X11_EDITOR));
+#else
     if (editor != NULL) {
         const char *term = TERM;
         const char *executeoption = " -e ";
@@ -730,7 +734,7 @@ swTextEditInit(STABLE prefs)
         textEdit->textEditCommand = mystrdup(swGetPreference(prefs, 
               "TextEditCommand", command));
     }
-
+#endif
     textEdit->textEditUseExtensionTxt = swGetIntPreference(
           prefs, "TextEditUseExtensionTxt", 1);
     textEdit->imageEditCommand = mystrdup(swGetPreference(

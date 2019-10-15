@@ -99,6 +99,7 @@ BuildRequires: desktop-file-utils
 BuildRequires: xdg-utils
 BuildRequires: grep
 Requires: rcs
+Requires: gedit
 Requires: ImageMagick
 Requires: aqsis-core
 Requires: bitstream-vera-sans-fonts
@@ -132,6 +133,7 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
     --with-helpurl="%{_docdir}/wdune-docs/docs/" \\
     --with-protobaseurl="%{_docdir}/wdune-docs/docs" \\
     --with-checkincommand="ci" \\
+    --with-x11-editor="gedit" \\
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity

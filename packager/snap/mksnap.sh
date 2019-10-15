@@ -56,7 +56,7 @@ build-packages:
     - libglu-dev
     - libmotif-dev
     - libpng-dev
-    - libjpeg62-dev
+    - libjpeg-dev
     - g++
     - gcc
     - libcurl4-openssl-dev
@@ -69,12 +69,14 @@ build-packages:
     - libswscale-dev
     - libswresample-dev
     - ttf-bitstream-vera
+    - xfonts-base 
+    - gedit
     - xdg-utils
     - aqsis
     - imagemagick
     - kolourpaint
     - audacity
-    - rcs 
+    - rcs
 EOT
 
 cp meta/snap.yaml snap/snapcraft.yaml

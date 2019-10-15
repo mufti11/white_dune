@@ -55,6 +55,7 @@ makedepends=(gcc
              make
              rcs
              xdg-utils
+             gedit
              lxterminal
              gimp
              audacity

@@ -329,6 +329,9 @@
 /* vrml browser to view vrml files with a remote command*/
 #undef HAVE_VRML_REMOTE_BROWSER
 
+/* text editor for txt files */
+#undef HAVE_X11_EDITOR
+
 /* object editor for bitmap (.png/.jpg/.gif) files */
 #undef HAVE_IMAGE_EDITOR
 

@@ -183,7 +183,7 @@ if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
    export VRMLBROWSER
 fi
 
-AC_ARG_WITH(vrmlbrowser,--with-x11-editor=editor  X11 text editor eg. gvim gedit ...,
+AC_ARG_WITH(x11-editor,--with-x11-editor=editor  X11 text editor eg. gedit gvim ...,
             X11_EDITOR="$withval";export X11_EDITOR)
 if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
     AC_DEFINE_UNQUOTED(HAVE_X11_EDITOR,"$X11_EDITOR -f ")
@@ -427,8 +427,8 @@ fi
 export GREP_FLAGS
 AC_SUBST(GREP_FLAGS)
 
-if test "X_$X11_EDITOR" != "X_" ; then
-   AC_PATH_PROGS(X11_EDITOR,[gvim gedit])
+if test "X_$X11_EDITOR" = "X_" ; then
+   AC_PATH_PROGS(X11_EDITOR,[gedit gvim])
    if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
       AC_DEFINE_UNQUOTED(HAVE_X11_EDITOR,"$X11_EDITOR -f ")
    else
