@@ -5363,4 +5363,8 @@ Added object edit for nodes with MFString field (e.g. NodeText)
 
 Fixed text editor selection in configure (new default "gedit")
 
+Updated german "Schiff" documentation
+
+Fixed ugly object flipping bug on mouse Transform move 
+
 Contact: MUFTI <mufti11@web.de>

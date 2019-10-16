@@ -10,4 +10,4 @@ Icon=dune.png
 MimeType=model/vrml
 #FilePattern=*.wrl
 #Patterns=*.wrl;*.wrz;
-Exec=dune -fn 9x15bold -x3dv %F
+Exec=env LD_LIBRARY_PATH=/usr/local/lib dune -fn 9x15bold -x3dv %F

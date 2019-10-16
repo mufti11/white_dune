@@ -121,50 +121,6 @@ enum {
      SCAN_FOR_INLINE
 };
 
-class Hint {
-    int m_dummyHint;
-public:
-    Hint() { m_dummyHint = 0; }
-};
-
-class FieldUpdate : public Hint {
-public:
-                    FieldUpdate(Node *n = NULL, int f = -1, int i = -1);
-
-
-    Node           *node;
-    int             field;
-    int             index;
-};
-
-class NodeUpdate : public Hint {
-public:
-                    NodeUpdate(Node *n, Node *p, int f)
-                    { node = n; parent = p, field = f; }
-
-    Node           *node;
-    Node           *parent;
-    int             field;
-};
-
-class RouteUpdate : public Hint {
-public:
-                    RouteUpdate(Node *s, int out, Node *d, int in)
-                    { src = s; eventOut = out; dest = d; eventIn = in; }
-
-    Node           *src;
-    Node           *dest;
-    int             eventOut;
-    int             eventIn;
-};
-
-class ProtoUpdate : public Hint {
-public:
-                    ProtoUpdate(Proto *p) { proto = p; }
-
-    Proto          *proto;
-};
-
 struct WriteCDynamicNodeData {
     int filedes;
     int languageFlag;
@@ -341,7 +297,6 @@ public:
                            return true;
                            }
     void                deleteProto(MyString name);
-    bool                hasPROTONodes(void); 
     Proto              *getExtensionProto(MyString name);
 
     static bool         validRoute(Node *src, int eventOut, Node *dst, 
@@ -432,7 +387,7 @@ public:
                            if (m_firstSelectionRangeHandle > -1)
                                return; 
                            m_oldSelectedHandles.resize(0); 
-                           for (size_t i = 0; i < m_selectedHandles.size(); i++)
+                           for (int i = 0; i < m_selectedHandles.size(); i++)
                                m_oldSelectedHandles.append(
                                      m_selectedHandles[i]);
                            m_selectedHandles.resize(0); 
@@ -595,8 +550,8 @@ public:
                            { return m_writeFlags & CONVERT2X3D; }
     bool                converts2VRML(void) const 
                            { return m_writeFlags & CONVERT2VRML; }
-    void                setWriteFlags(int flags) { m_writeFlags = flags; }
     int                 getWriteFlags(void) { return m_writeFlags; }
+    void                setWriteFlags(int flags) { m_writeFlags = flags; }
     void                setX3d(void);
     void                setX3dv(void);
     void                setX3dXml(void);
@@ -824,17 +779,17 @@ public:
     void                warning(int id);
     void                warning(int id, const char *string);
 
-    Proto              *getProto(size_t i) 
+    Proto              *getProto(int i) 
                             {
-                            if (i >= m_protoNames.size())
+                            if ((i < 0) || (i >= m_protoNames.size()))
                                 return NULL;
                             return m_protos[m_protoNames[i]]; 
                             }
     int                 getNumProtos(void) { return m_protoNames.size(); }
     void                toggleDeselect(void) { m_deselect = !m_deselect; }
     bool                getDeselect(void) { return m_deselect; }
-    Node               *searchProtoNodeIdInNode(Node *node, long id);
     Node               *searchProtoNodeId(long id);
+    Node               *searchProtoNodeIdInNode(Node *node, long id);
     int                 getProtoType(Proto *proto);
     void                setLastSelectedHAnimJoint(Node *n) 
                            { m_lastSelectedHAnimJoint = n; }
@@ -858,15 +813,15 @@ public:
      bool               getSavedVrml(void) { return m_saved_vrml; }
      bool               getSavedX3dv(void) { return m_saved_x3dv; }
      bool               getSavedX3dXml(void) { return m_saved_x3dxml; }
-     void               setNotSaved(void) {
-                            m_saved_vrml = false;
-                            m_saved_x3dv = false;
-                            m_saved_x3dxml = false;
-                        }
      void               setSaved(void) {
                             m_saved_vrml = true;
                             m_saved_x3dv = true;
                             m_saved_x3dxml = true;
+                        }
+     void               setNotSaved(void) {
+                            m_saved_vrml = false;
+                            m_saved_x3dv = false;
+                            m_saved_x3dxml = false;
                         }
      MyArray<Node *>   *getViewPorts();
      void               setViewPorts(void);
@@ -958,7 +913,6 @@ protected:
     MyArray<MyString>   m_htmlData;
     MyArray<MyString>   m_htmlEnd;
     MyArray<bool>       m_htmlFirstPart;
-
 
     int                 m_numDraw;
 
@@ -1171,11 +1125,10 @@ protected:
     MyArray<Vec3f>      m_store4convex_hull;
 
     VertexModifier     *m_vertexModifier;
-
+ 
     bool                m_storeAsHtml;
 
     bool                m_similarNameFlag; 
-
 public:
     MyArray<CGlNameData> m_glNameData;               
 };
@@ -1216,6 +1169,47 @@ enum {
     RENDER_PASS_GEOMETRY,
     RENDER_PASS_NON_TRANSPARENT,
     RENDER_PASS_TRANSPARENT
+};
+
+class Hint {
+};
+
+class FieldUpdate : public Hint {
+public:
+                    FieldUpdate(Node *n = NULL, int f = -1, int i = -1);
+
+
+    Node           *node;
+    int             field;
+    int             index;
+};
+
+class NodeUpdate : public Hint {
+public:
+                    NodeUpdate(Node *n, Node *p, int f)
+                    { node = n; parent = p, field = f; }
+
+    Node           *node;
+    Node           *parent;
+    int             field;
+};
+
+class RouteUpdate : public Hint {
+public:
+                    RouteUpdate(Node *s, int out, Node *d, int in)
+                    { src = s; eventOut = out; dest = d; eventIn = in; }
+
+    Node           *src;
+    Node           *dest;
+    int             eventOut;
+    int             eventIn;
+};
+
+class ProtoUpdate : public Hint {
+public:
+                    ProtoUpdate(Proto *p) { proto = p; }
+
+    Proto          *proto;
 };
 
 void BackupRoutesRec(Node *node, CommandList *list);

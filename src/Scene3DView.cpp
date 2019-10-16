@@ -140,7 +140,7 @@ void Scene3DView::OnUpdate(SceneView *sender, int type, Hint *hint)
         if (nodeUpdate->node != NULL)
             nodeUpdate->node->update();
         }
-        OnDraw(0, 0, 0, 0, true);
+        swInvalidateWindow(m_wnd);
         break;
       CASE_UPDATE(UPDATE_MODE)
       CASE_UPDATE(UPDATE_REDRAW)
@@ -314,7 +314,7 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
     MyArray<Node *> *viewports = m_scene->getViewPorts();
     drawViewPort(NULL, 0, update);
     if (viewports->size() > 0)
-        for (size_t i = 0; i < (*viewports).size(); i++)
+        for (int i = 0; i < (*viewports).size(); i++)
             drawViewPort(viewports->get(i), i);
     if (viewports->size() > 0) {
         int width, height;
@@ -407,6 +407,7 @@ Scene3DView::getHit(int x, int y)
     m_scene->drawScene(true, x, y, xwidth, yheight);
 
     GLint hits = glRenderMode(GL_RENDER);
+    Path *path = NULL;
     if (hits < 0) // overflow flag has been set, ignore
         hits = - hits;
     if (hits) {
@@ -415,8 +416,8 @@ Scene3DView::getHit(int x, int y)
         for (int i = 0; i < hits; i++) {
             unsigned numNames = *pickBuffer++;
             unsigned minDepth = *pickBuffer++;
-/*          unsigned maxDepth = * */ pickBuffer++;
-            for (unsigned i = 0; i < numNames; i++) {
+            unsigned maxDepth = *pickBuffer++;
+            for (int i = 0; i < numNames; i++) {
                int buffer = *pickBuffer++;
                if (minDepth > depth) {
                    depth = minDepth; 
@@ -518,7 +519,6 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 glPushMatrix();
                 Vec3f o;
                 float px, py, pz;
-                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 node->transformForHandle(handle);
                 m_scene->projectPoint(v.x, v.y, v.z, &px, &py, &pz);
@@ -961,7 +961,6 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 float px, py, pz;
                 glPushMatrix();
                 glLoadIdentity();
-                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 node->transformForHandle(handle);
                 m_scene->projectPoint(old.x, old.y, old.z, &px, &py, &pz);
@@ -974,7 +973,6 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 float px, py, pz;
                 glPushMatrix();
                 glLoadIdentity();
-                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 node->transformForHandle(handle);
                 m_scene->projectPoint(old.x, old.y, old.z, &px, &py, &pz);
@@ -987,7 +985,6 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                 Matrix mat;
                 glPushMatrix();
                 glLoadIdentity();
-                m_scene->applyCamera();
                 m_scene->transform(m_scene->getSelection());
                 glGetFloatv(GL_MODELVIEW_MATRIX, mat);
                 node->transformForHandle(handle);
@@ -1077,7 +1074,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                     if (m_scene->getXSymetricMode()) {
                         float eps = TheApp->GetHandleEpsilon();
                         bool alreadyHandled = false;
-                        for (size_t i = 0; i < alreadyHandledVertices.size(); 
+                        for (int i = 0; i < alreadyHandledVertices.size(); 
                              i++) {
                             Vec3f vec = alreadyHandledVertices[i];
                             if ((fabs(oldv.x - vec.x) < eps) &&
@@ -1326,7 +1323,6 @@ void Scene3DView::Handle3D(const Path* path,InputDevice* inputDevice,
         return;
     }
     Vec3f vNew = old;
-    m_scene->applyCamera();
     m_scene->transform(m_scene->getSelection());
     node->transformForHandle(handle);
     TransformMode* tm=m_scene->getTransformMode();

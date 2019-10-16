@@ -422,7 +422,7 @@ Scene::~Scene()
             delete j->item()->getData();
         }
     }
-    for (size_t i = 0; i < m_fonts.size(); i++) {
+    for (int i = 0; i < m_fonts.size(); i++) {
         delete m_fonts[i];
     }
     gluDeleteQuadric(m_obj3dCursor);
@@ -567,11 +567,9 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
         m_root->addFieldNodeList(m_rootField, nodes);
     else if (targetField == -1)
         targetNode->addFieldNodeList(m_rootField, nodes);
-    else if (targetNode->getField(targetField) &&
-             targetNode->getField(targetField)->getType() == MFNODE) {
+    else if (targetNode->getField(targetField)->getType() == MFNODE) {
         targetNode->setField(targetField, new MFNode(nodes));        
-    } else if (targetNode->getField(targetField) &&
-               targetNode->getField(targetField)->getType() == SFNODE) {
+    } else if (targetNode->getField(targetField)->getType() == SFNODE) {
         SFNode *oldSFNode = (SFNode *)targetNode->getField(targetField);
         MoveCommand *removeCommand = new MoveCommand(oldSFNode->getValue(), 
                                                      targetNode, targetField,
@@ -583,7 +581,7 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
                                                       targetNode, targetField);
            addCommand->execute();
        }
-    } else if (targetNode->getField(targetField)) {
+    } else {
         // wrong targetField
         assert(0);
     }
@@ -593,7 +591,7 @@ Scene::addNodes(Node *targetNode, int targetField, NodeList *nodes, int scanFor)
         scanForInlines(nodes);
     scanForMultimedia(nodes);
     nodes->clearFlag(NODE_FLAG_TOUCHED);
-    for (size_t i = 0; i < nodes->size(); i++)
+    for (int i = 0; i < nodes->size(); i++)
         if (nodes->get(i))
             nodes->get(i)->doWithBranch(searchViewPortOrParticles, this, 
                                         false);
@@ -607,7 +605,7 @@ static bool loadInline(Node *node, void *data)
             NodeInline *nodeInline =(NodeInline *)node;
             node->getScene()->readInline(nodeInline);
             if (node->getLoadedNodes() != NULL)
-                for (size_t j = 0; j < node->getLoadedNodes()->size(); j++) {
+                for (int j = 0; j < node->getLoadedNodes()->size(); j++) {
                     Node *inlinedNode = node->getLoadedNodes()->get(j);
                     inlinedNode->doWithBranch(loadInline, NULL);
                 }
@@ -701,14 +699,10 @@ Scene::scanForExternProtos(NodeList *nodes)
                     MyString files = "";
                     for (int i = 0; i < urls->getSize(); i++) {
                          files += urls->getValue(i);
-                         static MyString path = urls->getValue(i);
-                         if (Download((const char*)getURL(), &path))
-                             break;
                          files += " ";
-                         if (i == urls->getSize() -1)
-                            TheApp->MessageBox(IDS_EXTERNPROTO_FILE_FAILED, 
-                                               proto->getName(isX3d()), files);
                     }     
+                    TheApp->MessageBox(IDS_EXTERNPROTO_FILE_FAILED, 
+                                       proto->getName(isX3d()), files);
                 }
             }
         }
@@ -737,7 +731,7 @@ Scene::searchNodeType(int nodeType)
     m_nodeList.resize(0);
     m_root->doWithBranch(checkNodeType, &nodeType);
     NodeList *nodeList = new NodeList();
-    for (size_t i = 0; i < m_nodeList.size(); i++)
+    for (int i = 0; i < m_nodeList.size(); i++)
         nodeList->append(m_nodeList[i]);  
         // delete returned NodeList after usage
     return nodeList;
@@ -879,7 +873,7 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
         return 0;
     alreadyIn = true;
     // write tempory nodes first
-    for (size_t i = 0; i < m_delayedWriteNodes.size(); i++) {
+    for (int i = 0; i < m_delayedWriteNodes.size(); i++) {
         int ret = 0;
         if (isX3dXml()) 
             ret = m_delayedWriteNodes[i]->writeXml(filedes, indent);
@@ -895,17 +889,6 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
         m_delayedWriteNodes.resize(0);
     alreadyIn = false;
 
-    // sort out multiple ROUTEs
-    if (m_routeList.size() != 0)
-       for (List<MyString>::Iterator* routepointer = m_routeList.first();
-            routepointer != NULL; routepointer = routepointer->next() ) 
-            for (List<MyString>::Iterator* routepointer2 = m_routeList.first();
-                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer != routepointer)
-              if (strcmp((const char*) routepointer->item(), 
-                         (const char*) routepointer2->item()) == 0)
-                  m_routeList.remove(routepointer2);
-
     if (m_routeList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_routeList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
@@ -919,18 +902,6 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
        TheApp->incSelectionLinenumber();
        m_routeList.removeAll();
     }
-
-    // sort out multiple ROUTEs
-    if (end && m_endRouteList.size() != 0)
-       for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
-            routepointer != NULL; routepointer = routepointer->next() ) 
-            for (List<MyString>::Iterator* routepointer2 = m_endRouteList.first();
-                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer != routepointer)
-              if (strcmp((const char*) routepointer->item(), 
-                         (const char*) routepointer2->item()) == 0)
-                  m_endRouteList.remove(routepointer2);
-
     if (end && m_endRouteList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
@@ -955,7 +926,7 @@ int Scene::writeExternProto(int f, const char* protoName)
         if (strcmp((const char*)m_protoNames[i], protoName)==0) {
             foundProto = true;   
             // force writing of some nodes despite EXTERNPROTO already exist
-            for (size_t j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
+            for (int j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
                 if (strcmp(m_nodesForceExternProtoWrite[j], protoName) == 0)
                     foundProto = false;
         }        
@@ -963,7 +934,7 @@ int Scene::writeExternProto(int f, const char* protoName)
     if (!foundProto) {
         // write EXTERNPROTO
         const NodeList *nodes = getNodes();
-        for (size_t i = 0; i < nodes->size(); i++) {
+        for (int i = 0; i < nodes->size(); i++) {
             Node *node = nodes->get(i);
             if (node->isInScene(this)) {
                 const char *nodeName = node->getProto()->getName(isX3d());
@@ -1255,7 +1226,7 @@ static bool markUsedProto(Node *node, void *data)
         (node->getType() == VRML_INLINE_LOAD_CONTROL)) {
         NodeList *nodelist = node->getLoadedNodes();
         if (nodelist != NULL)
-            for (size_t i = 0; i < nodelist->size(); i++)
+            for (int i = 0; i < nodelist->size(); i++)
                 nodelist->get(i)->doWithBranch(markUsedProto, data);
     } 
 
@@ -1272,9 +1243,6 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
             if (m_saved_x3dxml == true)
                 return 0;
     }    
-
-    if (getStoreAsHtml())
-        writeFlags |= (X3DOM | X3D_XML);
 
     TheApp->setWriteUrl(url);
     ProtoMap::Chain::Iterator *j;
@@ -1381,16 +1349,6 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( writeHead(f, writeFlags) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
-        for (int i = 0; i < m_htmlFirstPart.size(); i++)
-            if (m_htmlFirstPart[i]) {
-                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
-                                                  (const char *)m_htmlBegin[i])
-                                       )
-                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
-                                                  (const char *)m_htmlData[i]) )
-                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s\n", 
-                                                  (const char *)m_htmlEnd[i]) )
-            }
         RET_RESET_FLAGS_ONERROR( mywritef(f,"    <x3d %s>\n",
                                               TheApp->GetX3domParameter()) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"      <Scene>\n") )
@@ -1406,6 +1364,9 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( mywritef(f,
                                           "    <script type=\"text/javascript\" src=\"%sx_ite.min.js\"></script>\n",
                                           TheApp->GetXitePath()) )
+        RET_RESET_FLAGS_ONERROR( mywritef(f,
+                                          "    <script type=\"text/javascript\" src=\"%srigid-body-physics.min.js\"></script>\n",
+                                          TheApp->GetXitePath()) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <style>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"X3DCanvas {\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  width: 100%;\n") )
@@ -1416,7 +1377,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <p margin: 1px 0;>") )
-        RET_RESET_FLAGS_ONERROR( mywritef(f,"<X3DCanvas url='\"%s\"'/></p>\n",
+        RET_RESET_FLAGS_ONERROR( mywritef(f,"<X3DCanvas url='\"%s\"'/></p>\n", 
                                           wrlFile ? wrlFile : url) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </body>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</html>\n") )
@@ -1512,7 +1473,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         }
         bool writeProto = true;
         // avoid writing of Protos, which are forced written via ExternProto
-        for (size_t j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
+        for (int j = 0; j < m_nodesForceExternProtoWrite.size(); j++)
             if (strcmp(m_nodesForceExternProtoWrite[j], protoName) == 0)
                 writeProto = false;
         if (!writeProto)
@@ -1562,7 +1523,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         }
     }
 
-    for (size_t k = 0; k < m_nodesWithExternProto.size(); k++) {
+    for (int k = 0; k < m_nodesWithExternProto.size(); k++) {
         // do not write EXTERN PROTOs for some (e.g. Nurbs Nodes) when using 
         // pureVRML97 cause this nodes are written converted to pure VRML97
         bool doWriteExternProto = true;
@@ -1579,7 +1540,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     getNodes()->clearFlag(NODE_FLAG_TOUCHED);
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (int i = 0; i < childList->size(); i++) {
         if (::isX3dXml(m_writeFlags)) {
             int rootIndent = indent + TheApp->GetIndent();
             RET_RESET_FLAGS_ONERROR( childList->get(i)->writeXml(f, rootIndent))
@@ -1612,18 +1573,6 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     }
     if (writeFlags & X3DOM) {
         RET_RESET_FLAGS_ONERROR( indentf(f, indent > 0 ? 2 : 0) )
-        TheApp->incSelectionLinenumber();
-        for (int i = 0; i < m_htmlFirstPart.size(); i++)
-            if (!(m_htmlFirstPart[i])) {
-                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
-                                                  (const char *)m_htmlBegin[i])
-                                        )
-                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
-                                                  (const char *)m_htmlData[i]) )
-                RET_RESET_FLAGS_ONERROR( mywritef(f,"%s\n", 
-                                                  (const char *)m_htmlEnd[i]) )
-                TheApp->incSelectionLinenumber();
-            }
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</body>\n") )
         TheApp->incSelectionLinenumber();
         RET_RESET_FLAGS_ONERROR( mywritestr(f ,"</html>\n") )
@@ -1650,11 +1599,11 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 int Scene::writeHead(int f, int writeFlags)
 {
     int oldWriteFlags = m_writeFlags;
-    size_t maxMetas = m_metaKeys.size();
+    int maxMetas = m_metaKeys.size();
     if (m_metaValues.size() < maxMetas)
         maxMetas = m_metaValues.size(); 
     if (::isX3dXml(writeFlags))
-        for (size_t i = 0; i < maxMetas; i++) {
+        for (int i = 0; i < maxMetas; i++) {
             RET_RESET_FLAGS_ONERROR( indentf(f, TheApp->GetIndent()) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "<meta name='") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_metaKeys[i]) )
@@ -1664,7 +1613,7 @@ int Scene::writeHead(int f, int writeFlags)
             TheApp->incSelectionLinenumber();
         }
     else
-        for (size_t i = 0; i < maxMetas; i++) {
+        for (int i = 0; i < maxMetas; i++) {
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "META \"") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_metaKeys[i]) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "\" \"") )
@@ -1676,13 +1625,13 @@ int Scene::writeHead(int f, int writeFlags)
         RET_RESET_FLAGS_ONERROR( mywritestr(f , "\n") )
         TheApp->incSelectionLinenumber(2);
     }
-    size_t maxUnits = m_unitCategory.size();
+    int maxUnits = m_unitCategory.size();
     if (m_unitName.size() < maxUnits)
         maxUnits = m_unitName.size(); 
     if (m_unitConversionFactor.size() < maxUnits)
         maxUnits = m_unitConversionFactor.size(); 
     if (::isX3dXml(writeFlags))
-        for (size_t i = 0; i < maxUnits; i++) {
+        for (int i = 0; i < maxUnits; i++) {
             RET_RESET_FLAGS_ONERROR( indentf(f, TheApp->GetIndent()) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "<unit category='") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_unitCategory[i]) )
@@ -1700,7 +1649,7 @@ int Scene::writeHead(int f, int writeFlags)
             TheApp->incSelectionLinenumber();
         }
     else
-        for (size_t i = 0; i < maxUnits; i++) {
+        for (int i = 0; i < maxUnits; i++) {
             RET_RESET_FLAGS_ONERROR( mywritestr(f , "UNIT ") )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , m_unitCategory[i]) )
             RET_RESET_FLAGS_ONERROR( mywritestr(f , " ") )
@@ -1727,7 +1676,7 @@ bool
 Scene::belongsToNodeWithExternProto(const char *protoName) 
 {
     bool found = false;
-    for (size_t i = 0; i < m_nodesWithExternProto.size(); i++)
+    for (int i = 0; i < m_nodesWithExternProto.size(); i++)
         if (strcmp(protoName, m_nodesWithExternProto[i]) == 0) {
             found = true;
             break;
@@ -1748,7 +1697,7 @@ Scene::writeKanim(int f, const char *url)
         nameBaseEnd = name + strlen(url);
     FloatArray keyTimes;
     bool allInterpolatorsLoop = true;
-    for (size_t i = 0; i < m_timeSensors.size(); i++) {
+    for (int i = 0; i < m_timeSensors.size(); i++) {
         NodeTimeSensor *timer = (NodeTimeSensor *)m_timeSensors[i];
         if (!timer->loop()->getValue())
             allInterpolatorsLoop = false;
@@ -1764,7 +1713,7 @@ Scene::writeKanim(int f, const char *url)
                     keyTimes.append(time);
                 else if (time > keyTimes[keyTimes.size() - 1])
                     keyTimes.append(time);                    
-                else for (size_t l = 0 ; l < keyTimes.size(); l++) {
+                else for (int l = 0 ; l < keyTimes.size(); l++) {
                     if (time == keyTimes[l])
                         break;
                     if (time < keyTimes[l]) {
@@ -1784,15 +1733,11 @@ Scene::writeKanim(int f, const char *url)
     KANIM_RET_ONERROR( mywritestr(f ,">\n") )     
     double t = swGetCurrentTime();
     m_timeStart = t;
-    for (size_t i = 0; i < m_timeSensors.size(); i++)
+    for (int i = 0; i < m_timeSensors.size(); i++)
         ((NodeTimeSensor *) m_timeSensors[i])->start(t);
-    for (size_t i = 0; i < keyTimes.size(); i++) {
+    for (int i = 0; i < keyTimes.size(); i++) {
         updateTimeAt(t + keyTimes[i]);
-#ifdef WIN32
-        sprintf(nameBaseEnd, "_%zu.wrl", i);
-#else
-        sprintf(nameBaseEnd, "_%lu.wrl", i);
-#endif
+        sprintf(nameBaseEnd, "_%d.wrl", i);
         int filedes = open(name, O_WRONLY | O_CREAT,00666);
         if (filedes == -1) {
             delete [] name;
@@ -1883,7 +1828,7 @@ Scene::writeAc3d(int f, bool raven)
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (int i = 0; i < childList->size(); i++)
         childList->get(i)->handleAc3dMaterial(handleMaterial ,this);
 
     if (raven) {
@@ -1894,7 +1839,7 @@ Scene::writeAc3d(int f, bool raven)
                  j = j->next()) {
                 const char *materialName = j->item()->getKey();
                 Node *materialNode = NULL;
-                for (size_t k = 0; k < m_ac3dMaterialNameArray.size(); k++) {
+                for (int k = 0; k < m_ac3dMaterialNameArray.size(); k++) {
                      if (strcmp(materialName, m_ac3dMaterialNameArray[k]) == 0) {
                          materialNode = m_ac3dMaterialNodeArray[k];
                          materialNode->setAc3dMaterialIndex(materialIndex);
@@ -1909,7 +1854,7 @@ Scene::writeAc3d(int f, bool raven)
         m_ac3dEmptyMaterial = materialIndex;
     } else {
         int materialIndex = 0;
-        for (size_t i = 0; i < m_ac3dMaterialNameArray.size(); i++) {
+        for (int i = 0; i < m_ac3dMaterialNameArray.size(); i++) {
             const char *materialName = m_ac3dMaterialNameArray[i];
             Node *materialNode = m_ac3dMaterialNodeArray[i]; 
             materialNode->setAc3dMaterialIndex(materialIndex); 
@@ -1929,11 +1874,11 @@ Scene::writeAc3d(int f, bool raven)
     RET_ONERROR( mywritestr(f, "spec 0 0 0  shi 2  trans 0\n") )
 
     int kids = 0;
-    for (size_t i = 0; i < childList->size(); i++)
+    for (int i = 0; i < childList->size(); i++)
         if (childList->get(i)->canWriteAc3d())
             kids++;
     RET_ONERROR( mywritef(f, "OBJECT world\nkids %d\n", kids) )
-    for (size_t i = 0; i < childList->size(); i++)
+    for (int i = 0; i < childList->size(); i++)
         RET_ONERROR( childList->get(i)->writeAc3d(f, 0) )
     return(0);
 }
@@ -2071,7 +2016,7 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (int i = 0; i < childList->size(); i++)
         RET_ONERROR( childList->get(i)->writeRib(f, 0) )
 
     RET_ONERROR( mywritestr(f, "WorldEnd\n\n") )
@@ -2104,8 +2049,8 @@ Scene::writeCattGeo(void)
     MyArray<NodeCattExportRec *> cattExportRecNodes;
     getRoot()->doWithBranch(collectCattExportRecNodes, &cattExportRecNodes);
 
-    for (size_t i = 0; i < cattExportRecNodes.size(); i++)
-        for (size_t j = 0; j < i; j++)
+    for (int i = 0; i < cattExportRecNodes.size(); i++)
+        for (int j = 0; j < i; j++)
            if (cattExportRecNodes[i]->id()->getValue() == 
                cattExportRecNodes[j]->id()->getValue()) {
                char message[1024];
@@ -2845,7 +2790,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "struct %sSceneGraph *self, int glName) {\n",
                               TheApp->getCPrefix()) )
         RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 
-        for (size_t i = 0; i < m_glNameData.size(); i++) {
+        for (int i = 0; i < m_glNameData.size(); i++) {
             RET_ONERROR( mywritef(f, "       case %d:\n", 
                                  m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "         return ") )         
@@ -2900,9 +2845,9 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "%s::",TheApp->getCSceneGraphName()) ) 
         RET_ONERROR( mywritef(f, "getNodeFromGlName(int glName) {\n") )
         RET_ONERROR( mywritestr(f, "    switch (glName) {\n") ) 
-        for (size_t i = 0; i < m_glNameData.size(); i++) {
+        for (int i = 0; i < m_glNameData.size(); i++) {
             RET_ONERROR( mywritef(f, "       case %d:\n", 
-                                  m_glNameData[i].glName) )
+                                 m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "         return ") )         
             RET_ONERROR( mywritef(f, "&%s;\n", (const char *)
                                                m_glNameData[i].nodeName) )
@@ -2998,7 +2943,7 @@ Scene::writeC(int f, int languageFlag)
         RET_ONERROR( mywritef(f, "getNodeFromGlName(") )
         RET_ONERROR( mywritef(f, "int glName) {\n") )
         RET_ONERROR( mywritestr(f, "        switch (glName) {\n") ) 
-        for (size_t i = 0; i < m_glNameData.size(); i++) {
+        for (int i = 0; i < m_glNameData.size(); i++) {
             RET_ONERROR( mywritef(f, "           case %d:\n", 
                                   m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "             return ") )
@@ -3137,7 +3082,7 @@ static bool searchNodesOnlyOutputAndWriteCRoutes(Node *node, void *data)
 {
     WriteCFunctionCallData *cdata = (WriteCFunctionCallData *)data;
     if (node->hasOutputs() && !(node->hasInputs())) {
-        if (node->writeCAndFollowRoutes(cdata->filedes, 0, cdata->languageFlag,
+        if (node->writeCAndFollowRoutes(cdata->filedes, 4, cdata->languageFlag, 
                                         false, "") != 0) {
             cdata->returnValue = -1;     
             return false;
@@ -3154,7 +3099,7 @@ Scene::writeCRoutes(int filedes, int languageFlag)
         return 0;
     alreadyIn = true;
     // write tempory nodes first
-    for (size_t i = 0; i < m_delayedWriteNodes.size(); i++) {
+    for (int i = 0; i < m_delayedWriteNodes.size(); i++) {
         int ret = m_delayedWriteNodes[i]->writeC(filedes, languageFlag);
         if (ret < 0) {
             alreadyIn = false;
@@ -3193,7 +3138,7 @@ Scene::writeCRoutes(int filedes, int languageFlag)
     cdata.languageFlag = languageFlag;
     cdata.returnValue = 0;
     m_root->doWithBranch(searchNodesOnlyOutputAndWriteCRoutes, &cdata);
-    for (size_t i = 0; i < m_sensorNodes.size(); i++) {
+    for (int i = 0; i < m_sensorNodes.size(); i++) {
         if (languageFlag & JAVA_SOURCE)
             RET_ONERROR( mywritestr(filedes, "    ") )
         RET_ONERROR( mywritestr(filedes, "    ") )
@@ -3230,7 +3175,7 @@ static bool searchExtensionProto(int extension, Node *node, void *data)
 {
     MyArray<Proto *> *protoArrayPtr = (MyArray<Proto *> *) data;
     if (!node->hasDefault(extension) /* && !node->hasRoute(extension)*/) {
-        for (size_t i = 0; i < (*protoArrayPtr).size(); i++)
+        for (int i = 0; i < (*protoArrayPtr).size(); i++)
             if ((*protoArrayPtr)[i] == node->getProto())
                 return true;        
         (*protoArrayPtr).append(node->getProto());
@@ -3257,7 +3202,7 @@ Scene::writeExtensionProtos(int f, int flag)
         x3d = true;
     MyArray<Proto *> protoArray;
     NodeList *nodes = ((NodeGroup *)getRoot())->children()->getValues();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (int i = 0; i < nodes->size(); i++) {
         if (flag == FF_COVER_ONLY)
             nodes->get(i)->doWithBranch(searchCoverExtensionProto, 
                                         &protoArray, false);
@@ -3265,7 +3210,7 @@ Scene::writeExtensionProtos(int f, int flag)
             nodes->get(i)->doWithBranch(searchKambiExtensionProto, 
                                         &protoArray, false);
     }
-    for (size_t i = 0; i < protoArray.size(); i++) {
+    for (int i = 0; i < protoArray.size(); i++) {
         addProtoName(protoArray[i]->getName(false));
         Proto *newProto = new Proto(this, protoArray[i], flag);
         if (newProto->write(f, 0, x3d) != 0) {
@@ -3285,7 +3230,7 @@ Scene::writeExtensionProtos(int f, int flag)
 void
 Scene::deleteExtensionProtos(void)
 {
-    for (size_t i = 0; i < m_writtenExtensionProtos.size(); i++) {
+    for (int i = 0; i < m_writtenExtensionProtos.size(); i++) {
         deleteProtoName(m_writtenExtensionProtos[i]->getName(false));
         deleteProto(m_writtenExtensionProtos[i]->getName(false));
         delete(m_writtenExtensionProtos[i]);
@@ -3296,7 +3241,7 @@ Scene::deleteExtensionProtos(void)
 Proto *
 Scene::getExtensionProto(Proto *proto)
 {
-    for (size_t i = 0; i < m_writtenExtensionProtos.size(); i++)
+    for (int i = 0; i < m_writtenExtensionProtos.size(); i++)
         if (m_writtenExtensionProtos[i]->getNode(0)->getProto() == proto)
             return m_writtenExtensionProtos[i];
     return NULL;
@@ -3456,7 +3401,7 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
             }
         }
     }
-//    UpdateViews(sender, UPDATE_ADD_ROUTE, (Hint *) &hint);
+    UpdateViews(sender, UPDATE_ADD_ROUTE, (Hint *) &hint);
     return true;
 }
 
@@ -3905,9 +3850,8 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
     glLoadIdentity();
     if (pick) 
         gluPickMatrix(x, y, width, height, v);
-    float fieldOfView = getCamera()->fov() ? 
-                        RAD2DEG(getCamera()->fov()->getValue() *
-                        getUnitAngle()) : TheApp->getFixFieldOfView();
+    float fieldOfView = RAD2DEG(getCamera()->fov()->getValue() *
+                                getUnitAngle());
     if (TheApp->hasFixFieldOfView())
         fieldOfView = TheApp->getFixFieldOfView();
     gluPerspective(fieldOfView, aspect, TheApp->GetNearClippingPlaneDist(),
@@ -4270,16 +4214,18 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
     int glPathLen = 0;
     unsigned depth = UINT_MAX;
     unsigned handleDepth = 0;
+    bool pickedHandle = false;
     bool pickedNode = false;
     int handle = -1;
 
     for (int i = 0; i < hits; i++) {
         unsigned numNames = *pickBuffer++;
-/*      unsigned minDepth = * */ pickBuffer++;
+        unsigned minDepth = *pickBuffer++;
         unsigned maxDepth = *pickBuffer++;
         if (*pickBuffer == PICKED_NODE) {
             if (depth >= maxDepth) {
                 pickedNode = true;
+                pickedHandle = false;
                 glPath = pickBuffer + 1;
                 glPathLen = numNames - 1;
                 depth = maxDepth;
@@ -4298,6 +4244,7 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
                               SELECTION_HANIM_JOINT_WEIGHT;
             if ((!isCoord) || isVertices || (handleDepth <= maxDepth)) {
                 if (pickBuffer[numNames - 1] != NO_HANDLE) {
+                    pickedHandle = true;
                     pickedNode = false;
                     glPath = pickBuffer + 1;
                     glPathLen = numNames - 2;
@@ -4346,8 +4293,10 @@ void
 Scene::transform(const Path *path)
 {
     assert(path != NULL);
+    applyCamera();
     const NodeList *nodes = path->getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    int size = nodes->size() - 1;
+    for (int i = 0; i < size; i++) {
         nodes->get(i)->transform();
     }
 }
@@ -4679,7 +4628,7 @@ Scene::setBackground(Node *background)
 void
 Scene::addTimeSensor(Node *timeSensor)
 {
-    for (size_t i = 0; i < m_timeSensors.size(); i++)
+    for (int i = 0; i < m_timeSensors.size(); i++)
         if (m_timeSensors[i] == timeSensor)
             return;
     m_timeSensors.append(timeSensor);
@@ -4891,7 +4840,6 @@ Scene::getUniqueNodeName(Node *node)
     return getUniqueNodeName(name);
 }
 
-
 MyString
 Scene::generateUniqueNodeName(Node *node, const char *name)
 {
@@ -4931,8 +4879,8 @@ MyString Scene::generateVariableName(Node *node)
 void
 Scene::removeNode(Node *node)
 {
-    long index = m_nodes.findBackward(node);
-    if ((index >= 0) && (index < (long)m_nodes.size()))
+    int index = m_nodes.findBackward(node);
+    if ((index >= 0) && (index < m_nodes.size()))
         m_nodes.remove(index);
 }
 
@@ -5087,7 +5035,7 @@ Scene::applyCamera()
         ((NodeOrthoViewpoint *)getSelection()->getNode())->apply();
     else if (m_currentViewpoint->getType() == VRML_GEO_VIEWPOINT)
         ((NodeGeoViewpoint *)m_currentViewpoint)->apply();
-    else if (m_currentViewpoint->getType() == VRML_VIEWPOINT)
+    else
         ((NodeViewpoint *)m_currentViewpoint)->apply(TheApp->useStereo(),
                                                      Vec3d(), SFRotation());
 
@@ -5154,18 +5102,8 @@ Scene::timeSinceStart(void)
 void
 Scene::updateTimeAt(double t)
 {
-    for (size_t i = 0; i < m_timeSensors.size(); i++)
+    for (int i = 0; i < m_timeSensors.size(); i++)
         ((NodeTimeSensor *) m_timeSensors[i])->setTime(t);
-}
-
-static bool timeUpdateNodePROTO(Node *node, void *data)
-{
-    if (node->isPROTO()) {
-        ((NodePROTO *)node)->handleIs();
-        ((NodePROTO *)node)->createPROTO();
-        ((NodePROTO *)node)->reInit();
-    }
-    return true;
 }
 
 void
@@ -5173,8 +5111,6 @@ Scene::updateTime()
 {
     m_currentTime = swGetCurrentTime();
     updateTimeAt(m_currentTime);
-    getRoot()->doWithBranch(timeUpdateNodePROTO, NULL,
-                            false, false, false, true, false);
     UpdateViews(NULL, UPDATE_TIME);
 }
 
@@ -5230,6 +5166,8 @@ Scene::OnFieldChange(Node *node, int field, int index)
         (node->getType() == VRML_GEO_VIEWPOINT))
         if (node != getSelection()->getNode())
             return;
+    if ((!m_running) || (!(time == m_currentTime)))
+        updateNodePROTOs(node->getOutsideProto());
 
     time = m_currentTime;
 
@@ -5590,11 +5528,9 @@ Scene::Download(const URL &url, MyString *path)
                 fprintf(stderr, "curl: %s\n",  curl_easy_strerror(res));
             } else
                 m_downloaded = true;
-        } else {
-            swDebugf("failed download %s\n", (const char *)url);
+        } else
             return false; 
-        }
-
+      
         if (httpfile.stream)
             fclose(httpfile.stream); /* close the local file */
       
@@ -5602,8 +5538,8 @@ Scene::Download(const URL &url, MyString *path)
                 
         *path = filename;
     } else
-        *path = data.string;
 #endif
+        *path = data.string;
 
     return true;
 }
@@ -5634,7 +5570,7 @@ Scene::LoadGLFont(const char *fontName, const char *style)
 
     // look for font in cache
 
-    for (size_t i = 0; i < m_fonts.size(); i++) {
+    for (int i = 0; i < m_fonts.size(); i++) {
         if (!strcmp(m_fonts[i]->name, fontName) && m_fonts[i]->style == styleId) {
             return m_fonts[i];
         }
@@ -5928,7 +5864,7 @@ void
 Scene::setPathAllURL(const char *path)
 {
     const NodeList *nodes = getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (int i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node->isInScene(this))
             for (int j = 0; j < node->getProto()->getNumFields(); j++) {
@@ -6026,8 +5962,6 @@ Scene::recalibrate(void)
 void 
 Scene::makeSimilarName(Node *node, const char *name)
 {
-    if (!m_similarNameFlag)
-        return;
     char* reducedName = mystrdup(name);
     int i;
     // strip _ number (e.g. _0 or _12) constructs at end
@@ -6174,10 +6108,10 @@ Scene::setX3dv(void)
 void
 Scene::setX3dXml(void) 
 {
-    setX3d();
     if (!(m_writeFlags & X3D_XML)) {
         m_writeFlags |= X3D_XML; 
     }
+    setX3d();
 }
 
 void
@@ -6234,7 +6168,7 @@ Scene::isValidElement(Element *element, bool x3d)
                            ((!x3d) && (!TheApp->getKambiMode()));
     if (
         (flags & FF_NEVER) ||
-        invalidX3d || invalidKambi || invalidX3dKambi || invalidX3dom ||
+        invalidX3d || invalidX3dKambi || invalidX3dKambi || invalidX3dom ||
         ((flags & FF_VRML_ONLY) && x3d) || 
         ((flags & FF_COVER_ONLY) && (!TheApp->getCoverMode())) ||
         ((flags & FF_ROOT_ONLY) && (getSelection()->getNode() != getRoot()))
@@ -6323,13 +6257,11 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
 {
     int j = -1;
     SocketList::Iterator *i = NULL;
-    SocketList::Iterator *last = NULL;
     CommandList *list = NULL;
     
     Proto *fromProto = fromNode->getProto();
 
-    for (j = 0; j < fromProto->getNumEventIns(); j++) {
-        last = fromNode->getInput(j).last(); 
+    for (j = 0; j < fromProto->getNumEventIns(); j++)
         for (i = fromNode->getInput(j).first(); i != NULL; 
              i = i->next()) {
             if (list == NULL) 
@@ -6337,13 +6269,8 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
             list->append(new RouteCommand(i->item().getNode(), 
                                           i->item().getField(),
                                           toNode, j));
-            if (i == last)
-               break;
         }                                        
-   }
-
-    for (j = 0; j < fromProto->getNumEventOuts(); j++) {
-        last = fromNode->getInput(j).last(); 
+    for (j = 0; j < fromProto->getNumEventOuts(); j++)
         for (i = fromNode->getOutput(j).first(); i != NULL; 
              i = i->next()) {
             if (list == NULL) 
@@ -6351,12 +6278,8 @@ Scene::copyRoutes(Node *toNode, Node *fromNode)
             list->append(new RouteCommand(toNode, j,
                                           i->item().getNode(), 
                                           i->item().getField()));
-            if (i == last)
-               break;
         }
-    }
-    if (list) 
-        execute(list);
+    if (list) execute(list);
 }
 
 void                
@@ -6387,7 +6310,6 @@ Scene::copyRoutesToScene(Node *node) {
         execute(list);
 
 }
-
 
 static bool searchBindableNodes(Node *node, void *data)
 {
@@ -6574,7 +6496,7 @@ Scene::addUnit(const char *category, const char *name,
                double conversionFactor)
 {
     int found = -1;
-    for (size_t i = 0; i < m_unitCategory.size(); i++)
+    for (int i = 0; i < m_unitCategory.size(); i++)
         if (strcmp(m_unitCategory[i], category) == 0) {
             found = i;
             break;
@@ -6601,7 +6523,7 @@ Scene::setUnitLength(double f)
 void
 Scene::setUnitLengthInit(void)
 {
-    for (size_t i = 0; i < m_unitCategory.size(); i++)
+    for (int i = 0; i < m_unitCategory.size(); i++)
         if (strcmp(m_unitCategory[i], "length") == 0)
             m_unitLength = m_unitConversionFactor[i];
 }
@@ -6609,7 +6531,7 @@ Scene::setUnitLengthInit(void)
 void
 Scene::setUnitAngleInit(void)
 {
-    for (size_t i = 0; i < m_unitCategory.size(); i++)
+    for (int i = 0; i < m_unitCategory.size(); i++)
         if (strcmp(m_unitCategory[i], "angle") == 0)
             m_unitAngle = m_unitConversionFactor[i];
 }
@@ -6618,6 +6540,7 @@ void
 Scene::setUnitAngle(double f)
 {
     m_unitAngle = f;
+//    updateViewpoint();
 }
 
 void                
@@ -6653,7 +6576,7 @@ Scene::popUnitAngle(void)
 void
 Scene::addToSensorNodes(Node *node)
 {
-    for (size_t i = 0; i < m_sensorNodes.size(); i++)
+    for (int i = 0; i < m_sensorNodes.size(); i++)
         if (m_sensorNodes.get(i) == node)
             return;
     m_sensorNodes.append(node);
@@ -6664,7 +6587,7 @@ Scene::restoreSelectedHandles(void)
 {    
     m_selectedHandles.resize(0); 
     if (m_oldSelectedHandles.size() > 0) {
-        for (size_t i = 0; i < m_oldSelectedHandles.size(); i++)
+        for (int i = 0; i < m_oldSelectedHandles.size(); i++)
             m_selectedHandles.append(m_oldSelectedHandles[i]);
         m_lastSelectedHandle = m_oldLastSelectedHandle;
         m_singleSelectedHandle = m_selectedHandles.size() <= 1;
@@ -6682,7 +6605,7 @@ Scene::getX3dVersion(void)
 {
     int ret = m_x3dVersion; 
     const NodeList *nodes = getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (int i = 0; i < nodes->size(); i++) {
          Node *node = nodes->get(i);
          if (node->getX3dVersion() > ret)
              ret = node->getX3dVersion();
@@ -6710,24 +6633,10 @@ static bool searchNodeById(Node *node, void *data)
 
 
 Node *
-Scene::searchProtoNodeIdInNode(Node *node, long id)
-{
-    returnNode = NULL;
-//    node->doWithBranch(searchNodeById, &id);
-    if (node->isPROTO()) {
-        NodePROTO *nodePROTO = (NodePROTO *)node;
-        for (int i = 0; i < nodePROTO->getNumIndexedNodes(); i++)
-             if (nodePROTO->getIndexedNode(i)->getId() == id)
-                 returnNode = nodePROTO->getIndexedNode(i);
-    }
-    return returnNode;
-}
-
-Node *
 Scene::searchProtoNodeId(long id)
 {
     returnNode = NULL;
-    for (size_t i = 0; i < m_nodes.size(); i++) 
+    for (int i = 0; i < m_nodes.size(); i++) 
         if (m_nodes.get(i)->isPROTO()) {
             NodePROTO *protoNode = (NodePROTO *)m_nodes.get(i);
             for (int j = 0; j < protoNode->getNumProtoNodes(); j++) {
@@ -6735,6 +6644,19 @@ Scene::searchProtoNodeId(long id)
                 rootNode->doWithBranch(searchNodeById, &id);
             }
         }
+    return returnNode;
+}
+
+Node *
+Scene::searchProtoNodeIdInNode(Node *node, long id)
+{
+    returnNode = NULL;
+    if (node->isPROTO()) {
+        NodePROTO *nodePROTO = (NodePROTO *)node;
+        for (int i = 0; i < nodePROTO->getNumIndexedNodes(); i++)
+             if (nodePROTO->getIndexedNode(i)->getId() == id)
+                 returnNode = nodePROTO->getIndexedNode(i);
+    }
     return returnNode;
 }
 
@@ -6779,7 +6701,7 @@ Scene::setSelectionMode(int mode)
     
         if ((oldMode == SELECTION_MODE_FACES) && 
             (mode == SELECTION_MODE_VERTICES)) {
-            for (size_t i = 0; i < oldSelection.size(); i++) {
+            for (int i = 0; i < oldSelection.size(); i++) {
                 int handle = oldSelection[i]; 
                 for (int j = 0; j < mesh->getNumFaces(); j++) {
                     FaceData *face = mesh->getFace(j);
@@ -6800,7 +6722,7 @@ Scene::setSelectionMode(int mode)
                 int offset = face->getOffset();
                 int vertexCount = 0;
                 for (int n = offset; n < offset + face->getNumVertices(); n++) {
-                    for (size_t i = 0; i < oldSelection.size(); i++) {
+                    for (int i = 0; i < oldSelection.size(); i++) {
                         int handle = oldSelection[i]; 
                         int meshVertex = ci->getValue(n);
                         if (meshVertex == handle)
@@ -6908,7 +6830,7 @@ Scene::showOnlySelectedVertices(void)
      }
      for (int i = 0; i < node->getNumVertex(); i++) {
          bool skip = false;
-         for (size_t j = 0; j < notHiddenVertices.size(); j++)
+         for (int j = 0; j < notHiddenVertices.size(); j++)
              if (i == notHiddenVertices[j]) {
                  skip = true;
                  break;
@@ -7032,23 +6954,6 @@ Scene::storeHtmlElementAndAttributes(const char *element,
     m_htmlEnd.append(end);
     m_htmlFirstPart.append(htmlFirstPart);
 }
-
-static bool searchPROTO(Node *node, void *data)
-{
-    bool *result = (bool *)data;
-    if (node->isPROTO()) 
-        *result = true;
-    return true;
-}     
-
-
-bool
-Scene::hasPROTONodes(void)
-{
-    bool result = false;
-    m_root->doWithBranch(searchPROTO, &result, true, false, false, true, false);
-    return result;
-}   
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
 {

@@ -10,5 +10,5 @@ Icon=dune4kids.png
 MimeType=model/vrml
 #FilePattern=*.wrl
 #Patterns=*.wrl;*.wrz;
-Exec=dune -4kids -fn 9x15bold -x3dv %F
+Exec=env LD_LIBRARY_PATH=/usr/local/lib dune -4kids -fn 9x15bold -x3dv %F
 

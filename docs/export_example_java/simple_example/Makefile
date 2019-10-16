@@ -1,7 +1,7 @@
 # This Makefile is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-JAVAC = /usr/bin/javac
+JAVAC = echo
 
 all: classes/helloWorld.class
 
