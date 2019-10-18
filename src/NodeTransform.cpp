@@ -90,18 +90,35 @@ NodeTransform::~NodeTransform()
 {
 }
 
+void      
+NodeTransform::setBoundingBox(void)
+{
+    TransformNode::setField(bboxSize_Field(), 
+                            new SFVec3f(children()->getBboxSize()));
+    TransformNode::setField(bboxCenter_Field(), 
+                            new SFVec3f(children()->getBboxCenter()));
+}
+
 void
 NodeTransform::setField(int field, FieldValue *value, int cf)
 {
-    if (field != getChildrenField()) 
-        m_matrixDirty = true;
-    if (field < children_Field())
-        TransformNode::setField(field, value, cf);
-    else
-        Node::setField(field, value, cf);
+    bool setBbox = false;
+    if (field == bboxSize_Field()) {
+        Vec3f size = children()->getBboxSize();
+        if ((size.x != -1) || (size.y != -1) || (size.z != -1)) {
+            setBbox = true;
+            setBoundingBox();
+        }
+    }
+    if (!setBbox) { 
+        if (field != getChildrenField()) 
+            m_matrixDirty = true;
+        if (field < children_Field())
+            TransformNode::setField(field, value, cf);
+        else
+            Node::setField(field, value, cf);
+    }
 }
-
-
 
 int
 NodeTransform::getAnimationCommentID(void) 
@@ -117,52 +134,3 @@ int NodeTransform::getProfile(void) const
         return PROFILE_INTERACTIVE;
     return PROFILE_INTERCHANGE; 
 }
-
-/*
-int       
-NodeTransform::writeRib(int f, int indent)
-{
-    const float *fcenter = center()->getValue();
-    const float *frotation = rotation()->getValue();
-    const float *fscale = scale()->getValue();
-    const float *fscaleOrientation = scaleOrientation()->getValue();
-    const float *ftranslation = translation()->getValue();
-
-    double rotAngle = frotation[3];
-    double oriAngle = fscaleOrientation[3];
-    if (m_scene) {
-        double angleUnit = m_scene->getUnitAngle();
-        if (angleUnit != 0) {
-            rotAngle *= angleUnit;
-            oriAngle *= angleUnit;
-        }
-    }
-
-    RET_ONERROR( mywritestr(f, "TransformBegin\n") )
-    RET_ONERROR( mywritef(f, "Translate %f %f %f\n",
-                          ftranslation[0], ftranslation[1], -ftranslation[2]))
-    RET_ONERROR( mywritef(f, "Translate %f %f %f\n",
-                          fcenter[0], fcenter[1], -fcenter[2]) )
-    RET_ONERROR( mywritef(f, "Rotate %f %f %f %f\n",
-                          RAD2DEG(rotAngle), 
-                          frotation[0], frotation[1], -frotation[2]) )
-    RET_ONERROR( mywritef(f, "Rotate %f %f %f %f\n",
-                          RAD2DEG(oriAngle), 
-                          fscaleOrientation[0], 
-                          fscaleOrientation[1], 
-                          -fscaleOrientation[2]) )
-    RET_ONERROR( mywritef(f, "Scale %f %f %f\n",
-                          fscale[0], fscale[1], fscale[2]) )
-    RET_ONERROR( mywritef(f, "Rotate %f %f %f %f\n",
-                          -RAD2DEG(oriAngle), 
-                          fscaleOrientation[0], 
-                          fscaleOrientation[1], 
-                          -fscaleOrientation[2]) )
-    RET_ONERROR( mywritef(f, "Translate %f %f %f\n",
-                          -fcenter[0], -fcenter[1], fcenter[2]) )
-    RET_ONERROR( mywritestr(f, "TransformEnd\n") )
-
-    RET_ONERROR( children()->writeRib(f, indent) )
-    return 0;
-}
-*/

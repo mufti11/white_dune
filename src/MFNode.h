@@ -145,6 +145,9 @@ public:
     virtual int         getContainerField(void) { return m_containerField; }
     virtual void        setContainerField(int f) { m_containerField = f; }
 
+    Vec3f               getBboxSize(void);
+    Vec3f               getBboxCenter(void);
+
 private:
     NodeList           *m_value;
     int                 m_containerField;

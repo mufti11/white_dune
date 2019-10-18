@@ -2384,6 +2384,9 @@ MainWindow::OnCommand(void *vid)
         branchCSGUnion();
         break;
 #endif
+      case ID_BRANCH_SET_BBOX:
+        m_scene->branchSetBbox();
+        break;
       case ID_VERTEX_MODIFIER:
         showVertexModifier();
         break;

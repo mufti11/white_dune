@@ -1358,6 +1358,7 @@ BEGIN
                 MENUITEM "&creaseAngle",                 ID_BRANCH_SET_CREASE_ANGLE
                 MENUITEM "&transparency",                ID_BRANCH_SET_TRANSPARENCY
                 MENUITEM "&shininess",                   ID_BRANCH_SET_SHININESS
+                MENUITEM "&bounding box",                ID_BRANCH_SET_BBOX
             END
             POPUP "Convert:"
             BEGIN

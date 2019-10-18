@@ -21,6 +21,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #ifndef _WIN32
 # include <fcntl.h>
 # include <sys/wait.h>
@@ -531,7 +532,7 @@ MeshBasedNode::getMinBoundingBox(void)
 { 
     updateMesh(); 
 
-    Vec3f ret(0, 0, 0);
+    Vec3f ret(FLT_MAX, FLT_MAX, FLT_MAX);
     if (m_isDoubleMesh) {
         if (m_mesh && m_meshDouble->getVertices())
            return m_meshDouble->getVertices()->getMFVec3f()->
@@ -548,7 +549,7 @@ MeshBasedNode::getMaxBoundingBox(void)
 { 
     updateMesh(); 
 
-    Vec3f ret(0, 0, 0);
+    Vec3f ret(FLT_MIN, FLT_MIN, FLT_MIN);
     if (m_isDoubleMesh) {
         if (m_mesh && m_meshDouble->getVertices())
            return m_meshDouble->getVertices()->getMFVec3f()->

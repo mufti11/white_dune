@@ -71,6 +71,10 @@ public:
 
     NodeList       *buildVrml97Children(MFNode *children);
 
+    virtual void    setBoundingBox(void);
+
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+
     fieldMacros(SFBool,   render, ProtoGroup)
     fieldMacros(SFBool,   doPickPass, ProtoGroup)
     fieldMacros(SFString, pickMode, ProtoGroup)

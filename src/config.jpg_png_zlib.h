@@ -6,6 +6,12 @@
 /* Define to test "this" against NULL. Almost! impossible, but needed... */
 #define HAVE_NULL_COMPARE 1
 
+/* Define to 0 if X3DOM support PROTOS (not yet) */
+#define HAVE_NO_PROTOS_X3DOM 1
+
+/* Define to 0 if X3DOM support StaticGroup (not really yet) */
+#define HAVE_NO_STATIC_GROUP_X3DOM 1
+
 /* Define to empty if the keyword does not work.  */
 #undef const
 

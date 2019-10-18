@@ -6087,7 +6087,7 @@ void
 Scene::setX3d(void)
 {
     m_writeFlags = m_writeFlags & ~(CONVERT2VRML); 
-    if ((!::isX3d(m_writeFlags)) && (m_root != NULL)) {
+    if (m_root != NULL) {
         getNodes()->clearFlag(NODE_FLAG_CONVERTED);
         m_writeFlags |= CONVERT2X3D;
         for (int i = 0; i < getNumProtos(); i++)
@@ -6631,7 +6631,6 @@ static bool searchNodeById(Node *node, void *data)
     return true;     
 }
 
-
 Node *
 Scene::searchProtoNodeId(long id)
 {
@@ -6954,6 +6953,20 @@ Scene::storeHtmlElementAndAttributes(const char *element,
     m_htmlEnd.append(end);
     m_htmlFirstPart.append(htmlFirstPart);
 }
+
+static bool setBoundingBox(Node *node, void *data)
+{
+    if (node != NULL)
+        node->setBoundingBox();
+    return true;     
+}
+
+void                
+Scene::branchSetBbox(void)
+{
+    m_root->doWithBranch(setBoundingBox, NULL, false);
+}
+
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
 {

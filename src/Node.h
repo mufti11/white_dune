@@ -1208,8 +1208,11 @@ public:
     virtual int       getInteractionCommentID(void) { return -1; }
     virtual bool      isInvalidChild(void);
     virtual bool      hasBoundingBox(void) { return false; }
+    virtual void      setBoundingBox(void) {}
     virtual Vec3f     getMinBoundingBox(void);
     virtual Vec3f     getMaxBoundingBox(void);
+    Vec3f             getBboxSize(void);
+    Vec3f             getBboxCenter(void);
     virtual void      flip(int index) {}
     virtual void      swap(int fromTo) {}
     virtual bool      showFields(); 

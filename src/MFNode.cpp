@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include "stdafx.h"
 
+#ifndef FLT_MIN
+# include <float.h>
+#endif
+
 #include "MFNode.h"
 #include "SFNode.h"
 #include "Node.h"
@@ -644,6 +648,85 @@ MFNode::writeLdrawDat(int f, int indent) const
     RET_ONERROR( getValues()->writeLdrawDat(f, indent) )
     return 0;
 }
+
+Vec3f               
+MFNode::getBboxSize(void)
+{
+    Vec3f minResult(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3f maxResult(FLT_MIN, FLT_MIN, FLT_MIN);
+    NodeList *childList = getValues();
+    for (size_t i = 0; i < childList->size(); i++)
+        if (childList->get(i) != NULL) {
+            Vec3f min = childList->get(i)->getMinBoundingBox();
+            Vec3f max = childList->get(i)->getMaxBoundingBox();
+            if ((min.x == FLT_MAX) && (min.y == FLT_MAX) && (min.y == FLT_MAX) 
+                && 
+                (max.x == FLT_MIN) && (max.y == FLT_MIN) && (max.y == FLT_MIN))
+                 continue;
+        if (min.x < minResult.x)
+            minResult.x = min.x;
+        if (max.x > maxResult.x)
+            maxResult.x = max.x;
+        if (min.y < minResult.y)
+            minResult.y = min.y;
+        if (max.y > maxResult.y)
+            maxResult.y = max.y;
+        if (min.z < minResult.z)
+            minResult.z = min.z;
+        if (max.z > maxResult.z)
+            maxResult.z = max.z;
+        }
+    if ((minResult.x == FLT_MAX) && 
+        (minResult.y == FLT_MAX) && 
+        (minResult.y == FLT_MAX) && 
+        (maxResult.x == FLT_MIN) && 
+        (maxResult.y == FLT_MIN) && 
+        (maxResult.y == FLT_MIN))
+        return Vec3f(-1, -1, -1);
+    return Vec3f(maxResult.x - minResult.x, 
+                 maxResult.y - minResult.y, 
+                 maxResult.z - minResult.z);
+}
+
+Vec3f               
+MFNode::getBboxCenter(void)
+{
+    Vec3f minResult(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3f maxResult(FLT_MIN, FLT_MIN, FLT_MIN);
+    NodeList *childList = getValues();
+    for (size_t i = 0; i < childList->size(); i++)
+        if (childList->get(i) != NULL) {
+            Vec3f min = childList->get(i)->getMinBoundingBox();
+            Vec3f max = childList->get(i)->getMaxBoundingBox();
+            if ((min.x == FLT_MAX) && (min.y == FLT_MAX) && (min.y == FLT_MAX) 
+                && 
+                (max.x == FLT_MIN) && (max.y == FLT_MIN) && (max.y == FLT_MIN))
+                 continue;
+        if (min.x < minResult.x)
+            minResult.x = min.x;
+        if (max.x > maxResult.x)
+            maxResult.x = max.x;
+        if (min.y < minResult.y)
+            minResult.y = min.y;
+        if (max.y > maxResult.y)
+            maxResult.y = max.y;
+        if (min.z < minResult.z)
+            minResult.z = min.z;
+        if (max.z > maxResult.z)
+            maxResult.z = max.z;
+        }
+    if ((minResult.x == FLT_MAX) && 
+        (minResult.y == FLT_MAX) && 
+        (minResult.y == FLT_MAX) && 
+        (maxResult.x == FLT_MIN) && 
+        (maxResult.y == FLT_MIN) && 
+        (maxResult.y == FLT_MIN))
+        return Vec3f(-1, -1, -1);
+    return Vec3f((maxResult.x + minResult.x) / 2.0f, 
+                 (maxResult.y + minResult.y) / 2.0f, 
+                 (maxResult.z + minResult.z) / 2.0f);
+}
+
 
 #include "Scene.h"
 

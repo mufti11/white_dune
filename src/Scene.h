@@ -762,6 +762,8 @@ public:
     void                branchCreateTextureCoordinates(Node *node);
     void                createTextureCoordinate(Node *node);
 
+    void                branchSetBbox(void);
+
     bool                isCurrentViewpoint(Node *node)
                             { return node == (Node *)m_currentViewpoint; }
     bool                isDefaultViewpoint(Node *node)

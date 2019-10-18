@@ -46,11 +46,15 @@ protected:
                                               bool optimize, 
                                               bool appendToScene);
 
-    virtual int     write(int filedes, int indent);
-    virtual int     writeXml(int filedes, int indent, int containerField = -1) 
-                        { return write(filedes, indent); }
+    virtual int     write(int filedes, int indent, bool avoidUse = false);
+    virtual int     writeXml(int filedes, int indent, int containerField = -1,
+                             bool avoidUse = false) 
+                        { return write(filedes, indent, avoidUse); }
 
     virtual void    addToConvertedNodes(int writeFlags);
+
+    virtual Vec3f   getMinBoundingBox(void);
+    virtual Vec3f   getMaxBoundingBox(void);
 
     virtual void   *initializeData(void) = 0;
     virtual void    loadDataFromInterpolators(void *data, Interpolator *inter,

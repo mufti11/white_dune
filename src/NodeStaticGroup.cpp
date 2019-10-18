@@ -91,6 +91,31 @@ NodeStaticGroup::NodeStaticGroup(Scene *scene, Proto *def)
 {
 }
 
+
+void      
+NodeStaticGroup::setBoundingBox(void)
+{
+    GroupNode::setField(bboxSize_Field(), 
+                        new SFVec3f(children()->getBboxSize()));
+    GroupNode::setField(bboxCenter_Field(), 
+                        new SFVec3f(children()->getBboxCenter()));
+}
+
+void 
+NodeStaticGroup::setField(int index, FieldValue *value, int cf)
+{
+    bool setBbox = false;
+    if (index == bboxSize_Field()) {
+        Vec3f size = children()->getBboxSize();
+        if ((size.x != -1) || (size.y != -1) || (size.z != -1)) {
+            setBbox = true;
+            setBoundingBox();
+        } 
+    }
+    if (!setBbox)
+        GroupNode::setField(index, value, cf);
+}
+
 const char* 
 NodeStaticGroup::getComponentName(void) const
 { 

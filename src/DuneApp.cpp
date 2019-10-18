@@ -540,18 +540,10 @@ void DuneApp::OnFilePreview(Scene* scene)
     int oldWriteFlags = scene->getWriteFlags();
     int newVrmlLevel = swBrowserGetVrmlLevel(TheApp->GetBrowser());
     int newWriteFlags = scene->getWriteFlags();
-    if (swBrowserGetVrmlLevel(GetBrowser()) & X3DOM)
-#if HAVE_NO_PROTOS_X3DOM
-         {
+    if (swBrowserGetVrmlLevel(GetBrowser()) & X3DOM) {
          newVrmlLevel = X3DOM;     
          scene->setWriteFlags(X3DOM);
-         }
-#else
-        if (scene->hasPROTONodes()) {
-            newVrmlLevel = X3DV;     
-            scene->setWriteFlags(X3DV);
-        }           
-#endif
+    }
     newWriteFlags |= newVrmlLevel;
 
 #ifndef _WIN32

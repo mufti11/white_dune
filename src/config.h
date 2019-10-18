@@ -13,6 +13,9 @@
 /* Define to 0 if X3DOM support PROTOS (not yet) */
 #define HAVE_NO_PROTOS_X3DOM 1
 
+/* Define to 0 if X3DOM support StaticGroup (not really yet) */
+#define HAVE_NO_STATIC_GROUP_X3DOM 1
+
 /* Define to test "this" against NULL. Almost! impossible */
 /* #undef HAVE_NULL_COMPARE */
 
@@ -331,7 +334,7 @@
 #define HAVE_VRML_REMOTE_BROWSER "/usr/bin/xdg-open %s"
 
 /* text editor for txt files */
-/* #undef HAVE_X11_EDITOR */
+#define HAVE_X11_EDITOR "/usr/bin/gedit"
 
 /* object editor for bitmap (.png/.jpg/.gif) files */
 #define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
@@ -558,7 +561,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.486"
+#define HAVE_DUNE_VERSION "white_dune 1.499"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

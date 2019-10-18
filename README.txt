@@ -5367,4 +5367,10 @@ Updated german "Schiff" documentation
 
 Fixed ugly object flipping bug on mouse Transform move 
 
+Added branch set of bounding box for Transform, Group and StaticGroup
+
+Added workaround for X3DOMs missing support of StaticGroup
+
+Fixed lost pure VRML97 export
+
 Contact: MUFTI <mufti11@web.de>

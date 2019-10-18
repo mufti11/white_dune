@@ -753,6 +753,7 @@ with_coverwave
 with_covertuimap
 with_wwwbrowser
 with_vrmlbrowser
+with_x11_editor
 with_imageeditor
 with_imageeditor4kids
 with_soundeditor
@@ -795,6 +796,7 @@ with_debug
 with_x
 enable_input_events
 with_about
+with_allow_multiple_definition
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1462,7 +1464,7 @@ Optional Packages:
 --with-covertuimap        allow creation of incomplete cover node TUIMap
 --with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla...
 --with-vrmlbrowser=vrmlbrowser  VRML browser eg. firefox view3dscene freewrl ...
---with-x11-editor=editor  X11 text editor eg. gvim gedit ...
+--with-x11-editor=editor  X11 text editor eg. gedit gvim ...
 --with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp krita xpaint imgworks...
 --with-imageeditor4kids=imageeditor  simple object editor for bitmap (.jpg/.png/.gif) files usefull for kids eg. kolourpaint gpaint...
 --with-soundeditor=soundeditor  object editor for sound (.wav) files eg. audacity rezound wavesurfer gnusound sweep soundeditor...
@@ -1504,6 +1506,7 @@ Optional Packages:
 --with-debug 	          set -DDEBUG=1 to enable debugging code
   --with-x                use the X Window System
 --with-about=\"about text\" about text
+--with-allow-multiple-definition allow multiple linker symbols
 
 Some influential environment variables:
   CC          C compiler command
@@ -3731,55 +3734,9 @@ if test "$CFLAGS" != "$OLD_CFLAGS"; then
  echo reseting CFLAGS to $CFLAGS
 fi
 
-ac_ext=cpp
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether -Wno-nonnull-compare is supported" >&5
-$as_echo_n "checking whether -Wno-nonnull-compare is supported... " >&6; }
-OLD_CXXFLAGS2=$CXXFLAGS
-CXXFLAGS="$CXXFLAGS -W -Werror -Wno-nonnull-compare"
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdio.h>
-int
-main ()
-{
-return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-
-                  export NONNULL_SUPPORTED=yes;
-                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-else
-
-                  export NONNULL_SUPPORTED=no;
-                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-CXXFLAGS=$OLD_CXXFLAGS2
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
-if test "X_$NONNULL_SUPPORTED" = "X_yes"; then
-   if test "$CXXFLAGS -std=c++11 -Wno-nonnull-compare" != "OLD_CXXFLAGS"; then
-      CXXFLAGS="$OLD_CXXFLAGS -std=c++11 -Wno-nonnull-compare"
-      echo reseting CXXFLAGS to $CXXFLAGS
-   fi
+if test "$CXX_FLAGS" != "$OLD_CXXFLAGS"; then
+ CXXFLAGS="$OLD_CXXFLAGS"
+ echo reseting CXXFLAGS to $CXXFLAGS
 fi
 
 
@@ -4020,9 +3977,9 @@ if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
 fi
 
 
-# Check whether --with-vrmlbrowser was given.
-if test "${with_vrmlbrowser+set}" = set; then :
-  withval=$with_vrmlbrowser; X11_EDITOR="$withval";export X11_EDITOR
+# Check whether --with-x11-editor was given.
+if test "${with_x11_editor+set}" = set; then :
+  withval=$with_x11_editor; X11_EDITOR="$withval";export X11_EDITOR
 fi
 
 if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
@@ -4767,8 +4724,8 @@ fi
 export GREP_FLAGS
 
 
-if test "X_$X11_EDITOR" != "X_" ; then
-   for ac_prog in gvim gedit
+if test "X_$X11_EDITOR" = "X_" ; then
+   for ac_prog in gedit gvim
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -6218,6 +6175,9 @@ elif test "X_$OS" = "X_Darwin" ; then
         COMMONFLAGS="$FAT_COMMONFLAGS"
     else
         CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include -DMACOSX=1"
+        export CPPFLAGS
+        CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions -Wno-tautological-undefined-compare -Wno-tautological-pointer-compare"
+        export CXXFLAGS
                         if test "X_$MACOSX" = "X_10.5" ; then
             FAT_COMMONFLAGS="-arch i386 -arch ppc"
 #        else
@@ -8033,7 +7993,8 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
     SAVE_LIBS="$LIBS"
     LIBS="$LIBS -lCGAL"
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -8374,9 +8335,9 @@ if test "X_$VCG_ERROR" = "X_1" ; then
 
  cat 1>&2 << EOF
 
- *** couldn't find a working libvcg development system (headers ony) ***
+ *** couldn't find a working vcglib development system (headers ony) ***
 
- if libvcg is not available, the polygon reducer function is not available
+ if vcglib is not available, the polygon reducer function is not available
 
 EOF
 
@@ -9079,7 +9040,7 @@ if test "X_$EXPAT_ERROR" = "X_1" ; then
 Couldn't find libexpat, the XML parsing C library.
 This is not a fatal error; the package will be simply built without
 the possiblity to read XML encoded X3D files (ISO/IEC 19776-1).
-It is recommended to add it, download and install it from:
+It is recommended to add it, or download and install it from:
 
 	http://expat.sourceforge.net
 
@@ -9165,17 +9126,152 @@ fi
 
 Couldn't find zlib(==libz) develop package.
 zlib/libz is a library for lossless data-compression.
-This is not a fatal error; the package will be simply built without
-support to open gz compressed VRML files. Some versions of the png library
-also need zlib for linking.
-It is recommended to add it, download and install it from:
+The package would simply built without support to open gz compressed VRML files,
+but the png library also need zlib for linking.
+
+It is to recommended to add it, or download and install it from:
 
 	http://www.gzip.org/zlib/
 
 and re-run configure.
 
 EOF
-      ZLIB_WARNING="no usable zlib (==libz) library: no reading of compressed VRML files, possibly no rendering of png textures"
+      exit 1
+   fi
+
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for png_init_io in -lpng" >&5
+$as_echo_n "checking for png_init_io in -lpng... " >&6; }
+if ${ac_cv_lib_png_png_init_io+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lpng  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char png_init_io ();
+int
+main ()
+{
+return png_init_io ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_png_png_init_io=yes
+else
+  ac_cv_lib_png_png_init_io=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_png_png_init_io" >&5
+$as_echo "$ac_cv_lib_png_png_init_io" >&6; }
+if test "x$ac_cv_lib_png_png_init_io" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBPNG 1
+_ACEOF
+
+  LIBS="-lpng $LIBS"
+
+else
+  PNG_ERROR=1
+fi
+
+   if test "X_PNG_ERROR" = "X_1" ; then
+      cat 1>&2 << EOF
+
+*** couldn't find working libpng version ***
+
+libjpeg is a library for rendering png images.
+
+It is recommended to add it, or download and install it from:
+
+	http://www.libpng.org/pub/png/libpng.html
+
+and re-run configure.
+
+EOF
+     exit 1
+   else
+     $as_echo "#define HAVE_LIBPNG 1" >>confdefs.h
+
+   fi
+
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for jpeg_start_decompress in -ljpeg" >&5
+$as_echo_n "checking for jpeg_start_decompress in -ljpeg... " >&6; }
+if ${ac_cv_lib_jpeg_jpeg_start_decompress+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ljpeg  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char jpeg_start_decompress ();
+int
+main ()
+{
+return jpeg_start_decompress ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_jpeg_jpeg_start_decompress=yes
+else
+  ac_cv_lib_jpeg_jpeg_start_decompress=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_jpeg_jpeg_start_decompress" >&5
+$as_echo "$ac_cv_lib_jpeg_jpeg_start_decompress" >&6; }
+if test "x$ac_cv_lib_jpeg_jpeg_start_decompress" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBJPEG 1
+_ACEOF
+
+  LIBS="-ljpeg $LIBS"
+
+else
+  JPEG_ERROR=1
+fi
+
+   if test "X_$JPEG_ERROR" = "X_1" ; then
+      cat 1>&2 << EOF
+
+*** couldn't find working jpeg library (libjpeg) version ***
+
+Couldn't find libjpeg develop package.
+libjpeg is a library for rendering jpeg images.
+
+It is recommended to add it, or download and install it from:
+
+	http://libjpeg.sourceforge.net/
+
+and re-run configure.
+
+EOF
+      exit 1
+   else
+      $as_echo "#define HAVE_LIBJPEG 1" >>confdefs.h
+
    fi
 
    if test "X_$HAVE_OLPC" = "X_1" ; then
@@ -9407,7 +9503,6 @@ fi
    fi
 
    if test "X_$DEVIL" != "X_no" ; then
-
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ilInit  in -lIL" >&5
 $as_echo_n "checking for ilInit  in -lIL... " >&6; }
 if ${ac_cv_lib_IL_ilInit_+:} false; then :
@@ -9507,138 +9602,6 @@ fi
          if test "X_$HAVE_ILU" != "X_no" ; then
             HAVE_ILU=yes
          fi
-      fi
-   fi
-
-   if test "X_$HAVE_ILU" != "X_yes" ; then
-
-      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for jpeg_start_decompress in -ljpeg" >&5
-$as_echo_n "checking for jpeg_start_decompress in -ljpeg... " >&6; }
-if ${ac_cv_lib_jpeg_jpeg_start_decompress+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-ljpeg  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char jpeg_start_decompress ();
-int
-main ()
-{
-return jpeg_start_decompress ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_jpeg_jpeg_start_decompress=yes
-else
-  ac_cv_lib_jpeg_jpeg_start_decompress=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_jpeg_jpeg_start_decompress" >&5
-$as_echo "$ac_cv_lib_jpeg_jpeg_start_decompress" >&6; }
-if test "x$ac_cv_lib_jpeg_jpeg_start_decompress" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBJPEG 1
-_ACEOF
-
-  LIBS="-ljpeg $LIBS"
-
-else
-  JPEG_ERROR=1
-fi
-
-      if test "X_$JPEG_ERROR" = "X_1" ; then
-         cat 1>&2 << EOF
-
-*** couldn't find matching libjpeg version, libjpeg-6b would work ***
-
-Couldn't find libjpeg, the Indepedent JPEG group's jpeg library.
-This is not a fatal error; the package will be simply built without
-jpeg support.  It is recommended to add it, download and install it from:
-
-	http://www.ijg.org/
-	ftp://ftp.uu.net/graphics/jpeg/
-
-and re-run configure.
-
-EOF
-         JPEG_WARNING="no usable jpeg library: no rendering of jpg textures"
-      fi
-
-      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for png_get_IHDR in -lpng" >&5
-$as_echo_n "checking for png_get_IHDR in -lpng... " >&6; }
-if ${ac_cv_lib_png_png_get_IHDR+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lpng  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char png_get_IHDR ();
-int
-main ()
-{
-return png_get_IHDR ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_png_png_get_IHDR=yes
-else
-  ac_cv_lib_png_png_get_IHDR=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_png_png_get_IHDR" >&5
-$as_echo "$ac_cv_lib_png_png_get_IHDR" >&6; }
-if test "x$ac_cv_lib_png_png_get_IHDR" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBPNG 1
-_ACEOF
-
-  LIBS="-lpng $LIBS"
-
-else
-  PNG_ERROR=1
-fi
-
-      if test "X_$PNG_ERROR" = "X_1" ; then
-         cat 1>&2 << EOF
-
-*** couldn't find matching libpng version, libpng-1.06 would work ***
-
-Couldn't find libpng, the Portable Network Graphics library.
-This is not a fatal error; the package will be simply built without
-png support.  It is recommended to add it, download and install it from:
-
-	http://www.libpng.org/pub/png/
-
-and re-run configure.
-
-EOF
-         PNG_WARNING="no usable libpng library: no rendering of png textures"
       fi
    fi
 fi
@@ -10451,6 +10414,14 @@ if test "X_$DUNE_VERSION2" != "X_" ; then
 _ACEOF
 
 fi
+
+
+# Check whether --with-allow-multiple-definition was given.
+if test "${with_allow_multiple_definition+set}" = set; then :
+  withval=$with_allow_multiple_definition; LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition";export LDFLAGS
+fi
+
+
 
 
 (cd $SELFDIR && sh batch/mkSFMFTypes.sh)
@@ -12059,24 +12030,6 @@ if test "X_$GLUT_WARNING" != "X_" ; then
     echo " " 1>&2
     echo "Warning:" 1>&2
     echo " " $GLUT_WARNING 1>&2
-fi
-
-if test "X_$ZLIB_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $ZLIB_WARNING 1>&2
-fi
-
-if test "X_$PNG_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $PNG_WARNING 1>&2
-fi
-
-if test "X_$JPEG_WARNING" != "X_" ; then
-    echo " " 1>&2
-    echo "Warning:" 1>&2
-    echo " " $JPEG_WARNING 1>&2
 fi
 
 if test "X_$EXPAT_WARNING" != "X_" ; then

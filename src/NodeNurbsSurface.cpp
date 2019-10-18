@@ -155,7 +155,7 @@ void
 NodeNurbsSurface::setField(int index, FieldValue *value, int cf)
 {
     if (index == controlPoint_Field()) {
-        if (controlPointX3D()->getType() == X3D_COORDINATE_DOUBLE) {
+        if (value->getType() == MFVEC3D) {
             NodeCoordinateDouble *coord = (NodeCoordinateDouble *)
                                           controlPointX3D()->getValue();
             if (coord == NULL) {
@@ -163,7 +163,8 @@ NodeNurbsSurface::setField(int index, FieldValue *value, int cf)
                 return;
             }
             m_scene->setField(coord, coord->point_Field(), value);
-        } else if (controlPointX3D()->getType() == VRML_COORDINATE) {
+        }
+        if (value->getType() == MFVEC3F) {
             NodeCoordinate *coord = (NodeCoordinate *)
                                     controlPointX3D()->getValue();
             if (coord == NULL) {

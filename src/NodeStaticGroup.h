@@ -75,6 +75,10 @@ public:
     virtual void    flip(int index);
     virtual void    swap(int fromTo);
 
+    virtual void    setBoundingBox(void);
+
+    virtual void    setField(int index, FieldValue *value, int cf = -1);
+
     fieldMacros(SFVec3f, bboxCenter, ProtoStaticGroup)
     fieldMacros(SFVec3f, bboxSize, ProtoStaticGroup)
     fieldMacros(SFString, bvhType, ProtoStaticGroup)

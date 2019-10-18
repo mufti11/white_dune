@@ -80,13 +80,13 @@ public:
 
     virtual void      setField(int field, FieldValue *value, int cf = -1);
 
+    virtual void      setBoundingBox(void);
+
     virtual bool      hasNumbers4kids(void) { return true; } 
 
     virtual int       getAnimationCommentID(void);
 
     virtual bool      supportCurveAnimation(void) { return true; }
-
-//    virtual int       writeRib(int filedes, int indent);
 
     fieldMacros(MFNode, children, ProtoTransform)
     fieldMacros(SFBool, render,   ProtoTransform)

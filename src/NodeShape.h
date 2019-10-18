@@ -72,6 +72,21 @@ public:
     virtual int     countPolygons1Sided(void);
     virtual int     countPolygons2Sided(void);
 
+    virtual Vec3f   getMinBoundingBox(void)
+                        {
+                        Node *ngeometry = geometry()->getValue();
+                        if (ngeometry)
+                            return ngeometry->getMinBoundingBox(); 
+                        return Vec3f(0, 0, 0); 
+                        }
+    virtual Vec3f   getMaxBoundingBox(void)
+                        {
+                        Node *ngeometry = geometry()->getValue();
+                        if (ngeometry)
+                            return ngeometry->getMaxBoundingBox(); 
+                        return Vec3f(0, 0, 0); 
+                        }
+
     virtual void    flip(int index);
     virtual void    swap(int fromTo);
 

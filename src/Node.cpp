@@ -24,6 +24,10 @@
 #include <ctype.h>
 #include "stdafx.h"
 
+#ifndef FLT_MIN
+# include <float.h>
+#endif
+
 #include "Node.h"
 #include "Scene.h"
 #include "Field.h"
@@ -723,7 +727,15 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
         }    
         bool containerFieldWritten = false;
         if (protoToWrite == NULL) {
-            RET_ONERROR( mywritestr(f, (const char *) m_proto->getName(x3d)))
+#ifdef HAVE_NO_STATIC_GROUP_X3DOM
+            if ((m_scene->getWriteFlags() & X3DOM) &&
+                strcmp(m_proto->getName(x3d), "StaticGroup") == 0)
+                RET_ONERROR( mywritestr(f, "Group") )
+            else
+                RET_ONERROR(mywritestr(f, (const char *) m_proto->getName(x3d)))
+#else 
+            RET_ONERROR( mywritestr(f, (const char *) m_proto->getName(x3d)) )
+#endif
             if (hasParent()) {
                 if ((getParent()->showFields()) && 
                     (getParent()->getType() != VRML_SCRIPT)) {
@@ -804,9 +816,18 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                                         XML_IS, containerField, avoidUse) )
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f, "</") )
-            if (protoToWrite == NULL)
+            if (protoToWrite == NULL) {
+#ifdef HAVE_NO_STATIC_GROUP_X3DOM
+                if ((m_scene->getWriteFlags() & X3DOM) &&
+                    strcmp(m_proto->getName(x3d), "StaticGroup") == 0)
+                    RET_ONERROR( mywritestr(f, "Group") )
+                else
+                    RET_ONERROR( mywritestr(f, 
+                        (const char *) m_proto->getName(x3d)) )
+#else 
                 RET_ONERROR( mywritestr(f, (const char *) m_proto->getName(x3d)))
-            else
+#endif
+            } else
                 RET_ONERROR( mywritestr(f, "ProtoInstance") )
             RET_ONERROR( mywritestr(f, ">\n") )
             TheApp->incSelectionLinenumber();
@@ -3652,15 +3673,37 @@ Node::isInvalidChild(void)
 Vec3f               
 Node::getMinBoundingBox(void)
 {
-   Vec3f ret(0, 0, 0);
-   return ret;
+   return Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
 }
 
 Vec3f               
 Node::getMaxBoundingBox(void)
 {
-   Vec3f ret(0, 0, 0);
-   return ret;
+   return Vec3f(FLT_MIN, FLT_MIN, FLT_MIN);
+}
+
+Vec3f             
+Node::getBboxSize(void)
+{
+    Vec3f min = getMinBoundingBox();
+    Vec3f max = getMaxBoundingBox();
+    if ((min.x == FLT_MAX) && (min.y == FLT_MAX) && (min.y == FLT_MAX) && 
+        (max.x == FLT_MIN) && (max.y == FLT_MIN) && (max.y == FLT_MIN))
+        return Vec3f(0, 0, 0);
+    return Vec3f(max.x - min.x, max.y - min.y, max.z - min.z);
+}
+
+Vec3f             
+Node::getBboxCenter(void)
+{
+    Vec3f min = getMinBoundingBox();
+    Vec3f max = getMaxBoundingBox();
+    if ((min.x == FLT_MAX) && (min.y == FLT_MAX) && (min.y == FLT_MAX) && 
+        (max.x == FLT_MIN) && (max.y == FLT_MIN) && (max.y == FLT_MIN))
+        return Vec3f(0, 0, 0);
+    return Vec3f((max.x + min.x) / 2.0f, 
+                 (max.y + min.y) / 2.0f, 
+                 (max.z + min.z) / 2.0f);
 }
 
 void 
