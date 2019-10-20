@@ -566,6 +566,18 @@ public:
                             }
     const char         *getPath() const { return m_path; }
 
+    void                setPathIntern(const char *path) 
+                            { 
+                            m_pathIntern = "";
+                            m_pathIntern += path; 
+                            }
+    const char         *getPathIntern() const 
+                           {
+                           if (m_pathIntern.length() == 0)
+                               return m_path;
+                           return m_pathIntern; 
+                           }
+
     void                getProtoList(MyArray<int> *protoList, const Node *node);
     void                setPathAllURL(const char *path);
 
@@ -890,6 +902,8 @@ public:
     void                storeAsHtml(void) { m_storeAsHtml = true; }
     bool                getStoreAsHtml(void) { return m_htmlData.size() > 0; }
 
+    bool                hasPROTONodes(void);
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -988,6 +1002,7 @@ protected:
     MyArray<FontInfo *> m_fonts;
 
     MyString            m_path;
+    MyString            m_pathIntern;
 
     List<MyString>      m_routeList;
     List<MyString>      m_endRouteList;

@@ -3383,7 +3383,7 @@ NodeData::sendEvent(int eventOut, double timestamp, FieldValue *value)
                 receiveData.value = value;
 
                 m_scene->getRoot()->doWithBranch(branchReceiveEvent,
-                                                  &receiveData, false);
+                                                 &receiveData, false);
             }
     }
     evOut = m_proto->getEventOut(eventOut);
@@ -3423,25 +3423,12 @@ NodeData::receiveEvent(int eventIn, double timestamp, FieldValue *value)
     } else
         field = m_proto->getEventIn(eventIn)->getField();
 
-    // handle IS
-    EventIn *evIn = m_proto->getEventIn(eventIn);
-    if ((m_isEventIns.size() > 0) && (m_isEventIns[eventIn] != NULL))
-        evIn = m_isEventIns[eventIn];
-    if (evIn && (evIn->getFlags() & FF_IS)) {
-        if (getType() != VRML_SCRIPT) {
-            for (int i = 0; i < evIn->getNumIs(); i++) {
-                Node *isNode = evIn->getIsNode(i);
-                isNode->receiveEvent(evIn->getIsField(i), timestamp, value);
-            }
-        }
-    } else {
-        if (field != -1) {
-            // set the appropriate field
-            setField(field, value);
-            m_scene->OnFieldChange((Node*)this, field);
-            // fire off an event here?
-        }
-    }        
+    if (field != -1) {
+        // set the appropriate field
+        setField(field, value);
+        m_scene->OnFieldChange((Node*)this, field);
+        // fire off an event here?
+    }
 }
 
 void                

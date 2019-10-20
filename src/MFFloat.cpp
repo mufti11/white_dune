@@ -86,8 +86,6 @@ MFFloat::getString(int index, int stride) const
 FieldValue *
 MFFloat::copy()
 {
-    if (m_value.size() == 0)
-        return new MFFloat();
     float *value = new float[m_value.size()];
     for (size_t i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];

@@ -5373,4 +5373,8 @@ Added workaround for X3DOMs missing support of StaticGroup
 
 Fixed lost pure VRML97 export
 
+Fixed EventIn/EventOut PROTO problem
+
+Fixed File->Save problem of X3D files with downloads.
+
 Contact: MUFTI <mufti11@web.de>

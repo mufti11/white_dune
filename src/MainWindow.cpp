@@ -12793,7 +12793,9 @@ void MainWindow::setT2axes(T2axes axes)
 int MainWindow::OnTimer()
 {
     if (m_scene->isRunning()) {
+        m_scene->disableMakeSimilarName();
         m_scene->updateTime();
+        m_scene->enableMakeSimilarName();
         if (m_vrmlCutNode != NULL)
             ((NodeVrmlCut *)m_vrmlCutNode)->updateTime();
         return TRUE;

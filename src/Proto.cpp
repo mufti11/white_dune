@@ -2783,9 +2783,9 @@ NodePROTO::createPROTO(bool bcopy)
                 m_nodes[i]->doWithBranch(setIds, &ids, false);
                 m_proto->getNode(i)->copyOutputsTo(m_nodes[i]);
                 m_proto->getNode(i)->copyInputsTo(m_nodes[i]);
-                m_scene->disableMakeSimilarName();
+//                m_scene->disableMakeSimilarName();
                 m_proto->getNode(i)->copyChildrenTo(m_nodes[i], true);
-                m_scene->enableMakeSimilarName();
+//                m_scene->enableMakeSimilarName();
             }
         }
         for (int i = 0; i < routeInfo.size(); i++)
@@ -3035,6 +3035,7 @@ NodePROTO::receiveProtoEvent(int eventOut, double timestamp, FieldValue *value)
         }
     }
 }
+
 void
 NodePROTO::sendEvent(int eventOut, double timestamp, FieldValue *value)
 {
@@ -3044,6 +3045,18 @@ NodePROTO::sendEvent(int eventOut, double timestamp, FieldValue *value)
 void
 NodePROTO::receiveEvent(int eventIn, double timestamp, FieldValue *value)
 {
+    // handle IS
+    EventIn *evIn = m_proto->getEventIn(eventIn);
+    if ((m_isEventIns.size() > 0) && (m_isEventIns[eventIn] != NULL))
+        evIn = m_isEventIns[eventIn];
+    if (evIn && (evIn->getFlags() & FF_IS)) {
+        if (getType() != VRML_SCRIPT) {
+            for (int i = 0; i < evIn->getNumIs(); i++) {
+                Node *isNode = evIn->getIsNode(i);
+                isNode->receiveEvent(evIn->getIsField(i), timestamp, value);
+            }
+        }
+    }
     NodeData::receiveEvent(eventIn, timestamp, value);
 }
 
