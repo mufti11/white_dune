@@ -86,6 +86,7 @@ typedef struct SWindow {
     CloseCallback      closeCallback;
     DropCallback       dropCallback;
     int                isVisible;
+    int                isHidden;
 #define PASSWORD_LENGTH 1024
     char               password_data[PASSWORD_LENGTH];
 } SWindow;

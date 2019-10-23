@@ -4138,11 +4138,6 @@ MainWindow::OnCommand(void *vid)
       case ID_HELP_SELECTION_COVER:
         OnHelpCoverSelection();
         break;
-      case ID_OPTIONS_SWITCH_TO_DUNE4KIDS:
-          {
-//            TheApp->reOpenWindow(m_scene);
-            break;
-          }
 
       case ID_OPTIONS_MODELLING:
           {
@@ -4342,6 +4337,13 @@ MainWindow::OnCommand(void *vid)
             for (size_t i = 0; i < m_protoMenu.size(); i++)
                 if (((int) id == m_protoMenu[i].id) && 
                     (!m_protoMenu[i].disabled)) {
+                    Node *currentNode = m_scene->getSelection()->getNode();
+                    Proto *outsideProto = currentNode->getOutsideProto();
+                    if (outsideProto) {
+                        if (strcmp(outsideProto->getName(m_scene->isX3d()),
+                                   m_protoMenu[i].protoName) == 0)
+                            continue;
+                    }    
                     Node *node = createNode((const char*)
                                             m_protoMenu[i].protoName);
                     node->handleIs();
@@ -8884,7 +8886,7 @@ MainWindow::moveBranchToProto(void)
     m_scene->addProtoName(dlg.getName());
     m_scene->addProto(dlg.getName(), proto);
     NodeList nodeList;
-    node->doWithSiblings(collectBranch, &nodeList);
+    node->doWithNextSiblings(collectBranch, &nodeList);
     Node *targetNode = node;
     if (nodeList.size() > 1)
         targetNode = m_scene->createNode("Group");

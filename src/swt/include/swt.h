@@ -96,6 +96,7 @@ extern void swCleanup(void);
 extern void swGetScreenSize(int *x, int *y);
 extern void swSetDefaultIcon(int resource);
 extern void swDestroyWindow(SWND wnd);
+extern int  swIsHidden(SWND wnd);
 extern void swDestroyUpdate(SWND wnd);
 extern void swSetPosition(SWND wnd, int x, int y);
 extern void swGetPosition(SWND wnd, int *x, int *y);

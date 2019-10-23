@@ -531,12 +531,20 @@ swIconifyWindow(SWND wnd)
     CloseWindow(wnd->hWnd);
 }
 
+extern int
+swIsHidden(SWND wnd)
+{
+    return wnd->isHidden;
+}
+
 extern void
 swShowWindow(SWND wnd)
 {
     if (!wnd || !wnd->hWnd) return;
 
     ShowWindow(wnd->hWnd, SW_SHOW);
+
+    wnd->isHidden = FALSE;
 }
 
 extern void
@@ -545,6 +553,8 @@ swHideWindow(SWND wnd)
     if (!wnd || !wnd->hWnd) return;
 
     ShowWindow(wnd->hWnd, SW_HIDE);
+
+    wnd->isHidden = TRUE;
 }
 
 extern void
@@ -3684,6 +3694,7 @@ newSWindow(void)
     wnd->mouseInWindow = FALSE;
     wnd->bgColor = GetSysColor(COLOR_WINDOW);
     wnd->bgBrush = GetSysColorBrush(COLOR_WINDOW);
+    wnd->isHidden = FALSE;
 
     if (!registered) {
          registerMainWindowClass();

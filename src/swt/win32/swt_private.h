@@ -45,6 +45,7 @@ typedef struct SWindow {
     BOOL              mouseInWindow;
     int               bgColor;
     HBRUSH            bgBrush;
+    int               isHidden;
 } SWindow;
 
 typedef struct Pair {

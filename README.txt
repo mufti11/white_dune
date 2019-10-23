@@ -5377,4 +5377,12 @@ Fixed EventIn/EventOut PROTO problem
 
 Fixed File->Save problem of X3D files with downloads.
 
+Fixed proto creation: really create with rest of scenegraph, not whole scene
+
+Fixed crash in writing of X3DOM preview
+
+Added start of Windows and of MACOSX per default with -4kids 
+
+C/C++/java export of in/out Events PROTO 
+
 Contact: MUFTI <mufti11@web.de>

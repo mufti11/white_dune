@@ -1231,6 +1231,9 @@ public:
     void              doWithSiblings(DoWithNodeCallback callback, void *data,
                                      bool searchInRest = true, 
                                      bool callSelf = true);
+    void              doWithNextSiblings(DoWithNodeCallback callback, 
+                                         void *data, bool searchInRest = true, 
+                                         bool callSelf = true);
 
     bool              doWithBranch(DoWithNodeCallback callback, void *data,
                                    bool searchInRest = true, 

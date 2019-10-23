@@ -621,7 +621,6 @@ void DuneApp::OnFilePreview(Scene* scene)
 //        swDeIconifyWindow(m_mainWnd);
         restoreTempFiles();
         swEnableTimers();
-
     }
 #else
     restoreTempFiles();

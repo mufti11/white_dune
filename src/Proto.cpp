@@ -2729,6 +2729,15 @@ static bool fixEventOuts(Node *node, void *data)
     return true;
 }
 
+static bool buildSetNodePROTO(Node *node, void *data)
+{
+    NodePROTO *self = (NodePROTO *)data;
+    if (self == NULL)
+        return true;
+    node->setNodePROTO(self);
+    return true;
+}
+
 static bool buildNodeIndexInBranch(Node *node, void *data)
 {
     NodePROTO *self = (NodePROTO *)data;
@@ -2738,7 +2747,7 @@ static bool buildNodeIndexInBranch(Node *node, void *data)
     for (int i = 0; i < self->getProto()->getNumNodes(); i++)
         self->getProto()->getNode(i)->doWithBranch(fixEventOuts, node, false);
 
-    node->setVariableName(node->getScene()->generateVariableName(node));
+//    node->setVariableName(node->getScene()->generateVariableName(node));
     self->appendToIndexedNodes(node);
     node->ref();
     node->setNodePROTO(self);
@@ -2764,6 +2773,25 @@ static bool setIds(Node *node, void *data)
     return true;
 }
 
+static bool getNames(Node *node, void *data)
+{
+    MyArray<const char *> *names = (MyArray<const char *> *)data;
+    if (node) 
+        (*names).append(node->getVariableName());
+    return true;
+}
+
+static int nameCounter = 0;
+
+static bool setNames(Node *node, void *data)
+{
+    MyArray<const char *> *names = (MyArray<const char *> *)data;
+    if (node) {
+        node->setVariableName((*names)[nameCounter++]);
+    }
+    return true;
+}
+
 void
 NodePROTO::createPROTO(bool bcopy)
 {
@@ -2778,14 +2806,22 @@ NodePROTO::createPROTO(bool bcopy)
                 idCounter = 0;
                 MyArray<long> ids;
                 m_proto->getNode(i)->doWithBranch(getIds, &ids, false);
+
+                const char *name = m_proto->getNode(i)->getVariableName();
+                nameCounter = 0;
+                MyArray<const char *> names;
+                m_proto->getNode(i)->doWithBranch(getNames, &names, false);
+
+                m_proto->getNode(i)->doWithBranch(buildSetNodePROTO, this, 
+                                                  false);
                 m_nodes[i] = m_proto->getNode(i)->copy();   
-                m_nodes[i]->setId(id);
+                m_nodes[i]->setId(id);                
                 m_nodes[i]->doWithBranch(setIds, &ids, false);
+                m_nodes[i]->setVariableName(name);
+                m_nodes[i]->doWithBranch(setNames, &names, false);
                 m_proto->getNode(i)->copyOutputsTo(m_nodes[i]);
                 m_proto->getNode(i)->copyInputsTo(m_nodes[i]);
-//                m_scene->disableMakeSimilarName();
                 m_proto->getNode(i)->copyChildrenTo(m_nodes[i], true);
-//                m_scene->enableMakeSimilarName();
             }
         }
         for (int i = 0; i < routeInfo.size(); i++)

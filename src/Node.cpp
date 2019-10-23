@@ -2478,11 +2478,11 @@ NodeData::writeCCopyEvent(int f, int indent, int languageFlag,
                           EventOut *target, EventOut *source, Node *sNode)
 { 
     const char *sourceVariableName = source->getName(true);
-    if (source->getExposedField() != NULL)
+    if (source && source->getExposedField() != NULL)
         sourceVariableName = source->getExposedField()->getName(true);
     
     const char *targetVariableName = target->getName(true);
-    if (target->getExposedField() != NULL)
+    if (target && target->getExposedField() != NULL)
         targetVariableName = target->getExposedField()->getName(true);
 
     return writeCDowithEvent(f, indent,  languageFlag, targetVariableName,
@@ -2585,10 +2585,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                 RET_ONERROR( mywritestr(f, "&(") )
             RET_ONERROR( mywritestr(f, "self->") )
         }
-        if (languageFlag & JAVA_SOURCE)
-            RET_ONERROR( sNode->writeCVariable(f, languageFlag) )
-        else
-            RET_ONERROR( mywritestr(f, sNode->getVariableName()) )
+        RET_ONERROR( mywritestr(f, sNode->getVariableName()) )
         RET_ONERROR( mywritestr(f, ".") )
         if (nurbsSurfaceCorrection)
             RET_ONERROR( mywritestr(f, "coord)->point") )
@@ -2599,22 +2596,12 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                 RET_ONERROR( mywritestr(f, ")") )
         RET_ONERROR( mywritestr(f, ", ") )
     }
-    if (languageFlag & (C_SOURCE | CC_SOURCE))
-        RET_ONERROR( mywritestr(f, "self->") )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( writeCVariable(f, languageFlag) )
-    else
-        RET_ONERROR( mywritestr(f, getVariableName()) )
+    RET_ONERROR( writeCVariable(f, languageFlag) )
     RET_ONERROR( mywritestr(f, ".") )
     RET_ONERROR( mywritestr(f, sourceVariableName) )
     if (isMFType(type)) {
         RET_ONERROR( mywritestr(f, ", ") )
-        if (languageFlag & (C_SOURCE | CC_SOURCE))
-            RET_ONERROR( mywritestr(f, "self->") )
-        if (languageFlag & JAVA_SOURCE)
-            RET_ONERROR( writeCVariable(f, languageFlag) )
-        else
-            RET_ONERROR( mywritestr(f, getVariableName()) )
+        RET_ONERROR( writeCVariable(f, languageFlag) )
         RET_ONERROR( mywritestr(f, ".") )
         RET_ONERROR( mywritestr(f, sourceVariableName) )
         if (languageFlag & JAVA_SOURCE)
@@ -2635,7 +2622,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
 bool
 NodeData::hasRouteToExposedField(void)
 {
-    bool hasExposedFieldInRoute = true;
+    bool hasExposedField = true;
 
     SocketList::Iterator *j;
     for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
@@ -2657,13 +2644,13 @@ NodeData::hasRouteToExposedField(void)
                          n = n->next()) {
                          RouteSocket s = n->item();
                          if (eventOut == i)
-                             hasExposedFieldInRoute = false;
+                             hasExposedField = false;
                     }
                 }
             }
         }
     }
-    return hasExposedFieldInRoute;
+    return hasExposedField;
 }
 
 int 
@@ -2674,11 +2661,17 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
 
     bool hasExposedFieldInRoute = hasRouteToExposedField();
 
+    int countCloseWings = 0;
+
     Proto *proto = getProto();
-    if (hasExposedFieldInRoute && !getProto()->isLoaded())
+    if (hasExposedFieldInRoute &&  !getProto()->isLoaded()) {
         RET_ONERROR( writeCProcessEvent(f, indent + 4, languageFlag, eventName) 
                    )
-
+        RET_ONERROR( indentf(f, indent + 8) )
+        RET_ONERROR( mywritestr(f, "}\n") )
+        countCloseWings++;
+    }
+        
     if (isInsideProto() && getProtoParent()) {
         Node *parentNode = getProtoParent();
         Proto *parentProto = parentNode->getProto();
@@ -2697,6 +2690,31 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                    return -1;
             }
         }
+    } else if (isPROTO()) {
+        for (int i = 0; i < m_proto->getNumEventOuts(); i++) {
+	    for (int j = 0; j < m_proto->getEventOut(i)->getNumIs(); j++) {
+                 Node *isNode = m_proto->getEventOut(i)->getIsNode(j);
+                 int event = m_proto->getEventOut(i)->getIsField(j);
+                 if (event < 0)
+                     continue;
+                 EventOut *source = m_proto->getEventOut(i);
+                 int isEventOut = event; 
+                 if (isEventOut != -1) {
+                     EventOut *protoTarget = isNode->getProto()->getEventOut(isEventOut);
+                     if (isNode->writeCCopyEvent(f, indent, languageFlag, 
+                                                 source, protoTarget, this
+                                                ) != 0)
+                     return -1;
+
+                     RET_ONERROR( isNode->writeCProcessEvent(f, indent + 4, 
+                                                             languageFlag, 
+                                                             eventName) )
+                     RET_ONERROR( indentf(f, indent + 8) )
+                     RET_ONERROR( mywritestr(f, "}\n") )
+                     countCloseWings++;
+                }
+            }
+        }        
     }
     if (getProto()->isLoaded()) {
         for (int i = 0; i < m_proto->getNumEventIns(); i++) {
@@ -2815,9 +2833,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                     if (writeCSendEvent(f, indent + 4, languageFlag, target, 
                                         source, inter) != 0)
                         return -1;
-                    if (writeCEndSendEvent(f, indent + 4, languageFlag) !=0)
-                        return -1;
- 
+
                     NodeOrientationInterpolator *inter2 =
                         (NodeOrientationInterpolator *)(curve->
                         getOrientationInterpolator());
@@ -2906,8 +2922,10 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             }
         }
     }
-    if (hasExposedFieldInRoute)
-        writeCEndSendEvent(f, indent + 4, languageFlag);
+    for (int i = 0; i < countCloseWings; i++) {
+        RET_ONERROR( indentf(f, indent + 4 - i * 4) )
+        RET_ONERROR( mywritestr(f, "}\n") )
+    }
     return 0;
 }                                                                
 
@@ -3741,6 +3759,36 @@ Node::doWithSiblings(DoWithNodeCallback callback, void *data,
                         if (!callSelf)
                             call = false;
                     if (call)    
+                        if (!callback(sibling, data))
+                            if (!searchInRest)
+                                break; 
+                }
+            }      
+        }
+    }
+}
+
+void
+Node::doWithNextSiblings(DoWithNodeCallback callback, void *data,
+                         bool searchInRest, bool callSelf)
+{
+    bool skip = true;
+    if (hasParent()) {
+        Node *parent = getParent();
+        int parentField = getParentField();
+        FieldValue *parentValue = parent->getField(parentField);
+        if (parentValue->getType() == MFNODE) {
+            MFNode *value = (MFNode *)parentValue;
+            for (int i = 0; i < value->getSize(); i++) {
+                Node *sibling = value->getValue(i);
+                if (sibling != NULL) {
+                    bool call = true;
+                    if (sibling == this) {
+                        skip = false;
+                        if (!callSelf)
+                            call = false;
+                    }
+                    if (call && (!skip))    
                         if (!callback(sibling, data))
                             if (!searchInRest)
                                 break; 

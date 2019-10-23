@@ -94,7 +94,6 @@ public:
     virtual void        moveRoutesToTop(Node *node) {}
 
     virtual bool        isFieldView(void) { return false; }
-
 #ifdef HAVE_UPDATE_DEBUG
     void                debugOnUpdate(SceneView* sender, int type, Hint *hint);
 #endif

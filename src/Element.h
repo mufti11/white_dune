@@ -138,16 +138,21 @@ public:
     void                addIs(Node *node, int field, int elementType,
                               Proto *origProto, int origField, int flags = 0);
     int                 getNumIs(void) { return m_isArray.size(); }
-    Node               *getIsNode(int i) { return m_isArray[i]->getNode(); }
+    Node               *getIsNode(int i) 
+                            { 
+                                if (m_isArray[i])
+                                    return m_isArray[i]->getNode();
+                                return NULL;
+                            }
     int                 getIsField(int i) 
-                             { 
-                             int ret = -1;
-                             if (m_isArray[i] != NULL)
-                                 ret = m_isArray[i]->getField();
-                             return ret;
-                             } 
+                            { 
+                            int ret = -1;
+                            if (m_isArray[i] != NULL)
+                                ret = m_isArray[i]->getField();
+                            return ret;
+                            } 
     int                 getIsElementType(int i) 
-                           { return m_isArray[i]->getElementType(); }
+                            { return m_isArray[i]->getElementType(); }
     void                removeIs(int i) { m_isArray.remove(i); }
 
     int                 getIsNodeIndex(int i) 

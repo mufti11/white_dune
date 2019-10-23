@@ -1,5 +1,29 @@
 #VRML V2.0 utf8
 
+PROTO PROTO1 [
+  eventIn SFFloat in
+  eventOut SFVec3f out
+]
+{
+  Group {
+    children 
+      DEF PositionInterpolator2 PositionInterpolator {
+        key [
+          0
+          1
+        ]
+        keyValue [
+          0 0 0
+          -2 0 0
+        ]
+        set_fraction IS in
+        value_changed IS out
+      }
+  }
+}
+
+
+
 EXTERNPROTO NurbsSurface[
  field SFInt32 uDimension
  field SFInt32 vDimension
@@ -19,7 +43,7 @@ EXTERNPROTO NurbsSurface[
  "urn:web3d:vrml97:node:NurbsSurface",
  "urn:inet:blaxxun.com:node:NurbsSurface",
  "urn:ParaGraph:NurbsSurface",
- "/usr/share/doc/whitedune/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
+ ".//docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
  "http://wdune.ourproject.org/docs/vrml97Amendment1/NurbsSurfacePROTO.wrl"
 ]
 
@@ -310,4 +334,33 @@ Transform {
       }
     }
 }
+
+DEF PROTO11 PROTO1 {
+}
+
+DEF TimeSensor1 TimeSensor {
+  loop TRUE
+}
+
+ROUTE TimeSensor1.fraction_changed TO PROTO11.in
+
+Transform {
+  translation -0.209638 5.574809 0
+  children 
+    DEF Transform2 Transform {
+      translation -1.944830 0 0
+      children 
+        Shape {
+          appearance Appearance {
+            material Material {
+            }
+          }
+          geometry Box {
+            size 1 1 1
+          }
+        }
+    }
+}
+
+ROUTE PROTO11.out TO Transform2.set_translation
 

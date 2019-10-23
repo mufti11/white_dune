@@ -2323,6 +2323,8 @@ bool writeCHAnimJointFirst(Node *node, void *data)
     return true;
 }
 
+static MyArray<const char *> variableNames;
+
 bool writeCNodeData(Node *node, void *data)
 {
     if (node == NULL)
@@ -2371,22 +2373,49 @@ bool writeCNodeData(Node *node, void *data)
         } 
     }
     if (node->getType() != DUNE_CURVE_ANIMATION) {
-        writeCVariableNameLine(node, node->getVariableName(), cWrite,
-                               extraJavaClass);
-        if (cWrite->ret != 0)
-            return false;
+        bool writeName = true;
+        for (int i = 0; i < variableNames.size(); i++)  
+            if (strcmp(variableNames[i], node->getVariableName()) == 0) {
+                writeName = false;
+                break;
+            } 
+        if (writeName) {
+            writeCVariableNameLine(node, node->getVariableName(), cWrite,
+                                   extraJavaClass);
+            if (cWrite->ret != 0)
+                return false;
+            variableNames.append(node->getVariableName());
+        }
     } else {
         NodeCurveAnimation *curve = (NodeCurveAnimation *)node;
         Node *inter = curve->getPositionInterpolator();
         const char *variableName = inter->getVariableName();
-        writeCVariableNameLine(inter, variableName, cWrite, extraJavaClass);
-        if (cWrite->ret != 0)
-            return false;
+        bool writeName = true;
+        for (int i = 0; i < variableNames.size(); i++)  
+            if (strcmp(variableNames[i], variableName) == 0) {
+                writeName = false;
+                break;
+            } 
+        if (writeName) {
+            writeCVariableNameLine(inter, variableName, cWrite, extraJavaClass);
+            if (cWrite->ret != 0)
+                return false;
+            variableNames.append(variableName);
+        }
         inter = curve->getOrientationInterpolator();
         variableName = inter->getVariableName();
-        writeCVariableNameLine(inter, variableName, cWrite, extraJavaClass);
-        if (cWrite->ret != 0)
-            return false;
+        writeName = true;
+        for (int i = 0; i < variableNames.size(); i++)  
+            if (strcmp(variableNames[i], node->getVariableName()) == 0) {
+                writeName = false;
+                break;
+            } 
+        if (writeName) {
+            writeCVariableNameLine(inter, variableName, cWrite, extraJavaClass);
+            if (cWrite->ret != 0)
+               return false;
+            variableNames.append(variableName);
+        }
     }
     int f = cWrite->filedes;
     if (cWrite->languageFlag & MANY_JAVA_CLASSES) 
@@ -2800,6 +2829,7 @@ Scene::writeC(int f, int languageFlag)
     cWrite.languageFlag = languageFlag;
     cWrite.outsideJavaClass = false;
     getNodes()->clearFlag(NODE_FLAG_TOUCHED); // to handle DEF/USE
+    variableNames.resize(0);;
     m_root->doWithBranch(writeCNodeData, &cWrite);
     if (cWrite.ret !=0)
         return -1;
@@ -5276,7 +5306,7 @@ Scene::UpdateViewsNow(SceneView *sender, int type, Hint *hint)
     for (List<SceneView *>::Iterator *i = m_views.first(); i != NULL; 
          i = i->next()) {
         SceneView *view = i->item();
-        if (view != sender)
+        if (view != sender && (!swIsHidden(TheApp->mainWnd())))
             view->OnUpdate(sender, type, hint);
     }
 }

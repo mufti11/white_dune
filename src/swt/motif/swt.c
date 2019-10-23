@@ -1198,6 +1198,8 @@ swShowWindow(SWND wnd)
     } else {
          XtManageChild(wnd->widget);
     }
+
+    wnd->isHidden = FALSE;
 }
 
 extern void
@@ -1212,6 +1214,8 @@ swHideWindow(SWND wnd)
     } else {
          XtUnmanageChild(wnd->widget);
     }
+
+    wnd->isHidden = TRUE;
 }
 
 extern void
@@ -1239,6 +1243,12 @@ swDeIconifyWindow(SWND wnd)
     XtVaSetValues(wnd->mainWnd, XmNiconic, False, NULL);
 
     XSync(TheDisplay, False);
+}
+
+extern int
+swIsHidden(SWND wnd)
+{
+    return wnd->isHidden;
 }
 
 extern void
@@ -3902,6 +3912,7 @@ newSWindow()
     wnd->closeCallback = NULL;
     wnd->dropCallback = NULL;
     wnd->invx1 = wnd->invx2 = wnd->invy1 = wnd->invy2 = -1;
+    wnd->isHidden = FALSE;
 
     return wnd;
 }
