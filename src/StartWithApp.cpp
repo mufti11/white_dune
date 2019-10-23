@@ -55,10 +55,12 @@ StartWithApp::StartWithLoadPreferences()
        free(m_startVariant);
 #ifdef _WIN32
    m_startVariant = mystrdup(TheApp->GetPreference("StartWith", "4kids"));
-#elifdef DARWIN
-   m_startVariant = mystrdup(TheApp->GetPreference("StartWith", "4kids"));
 #else
-   m_startVariant = mystrdup(TheApp->GetPreference("StartWith", "dune"));
+   #ifdef MACOSX
+       m_startVariant = mystrdup(TheApp->GetPreference("StartWith", "4kids"));
+   #else
+       m_startVariant = mystrdup(TheApp->GetPreference("StartWith", "dune"));
+   #endif
 #endif
    if (m_startLanguage != NULL)
        free(m_startLanguage);
