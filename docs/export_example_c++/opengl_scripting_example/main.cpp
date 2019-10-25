@@ -48,7 +48,7 @@
 #include <cstdio>
 extern void reInitSensor(void *);
 #include "C++Export.cc"
-#include "libC++RWD.h"
+#include "white_dune/libC++RWD.h"
 #include <math.h>
 #include <unistd.h>
 

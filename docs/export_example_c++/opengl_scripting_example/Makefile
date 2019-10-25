@@ -1,7 +1,7 @@
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-render: ../../../include/libC++RWD.h main.cpp C++Export.cc
+render: main.cpp C++Export.cc
 	g++ -g -o $@ -I. -I../../../include main.cpp -lpng -ljpeg -lglut -lGLU -lGL -lXmu -lX11
 
 clean:

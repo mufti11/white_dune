@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui opengl
+QMAKE_CXXFLAGS += -I ../../../include
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

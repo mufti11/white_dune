@@ -41,15 +41,16 @@
 /* Copyright (c) Stefan Wolf, 2010. */
 /* Changed to add CPPRWD::draw(); and CPPRWD::init();*/
 
+#include <cstdio>
+
+#include <math.h>
 #include <GL/glut.h>
+extern void reInitSensor(void *);
+#include "C++Export.cc"
+#include "white_dune/libC++RWD.h"
 #ifdef WIN32
 #include <windows.h>
 #endif
-#include <cstdio>
-extern void reInitSensor(void *);
-#include "C++Export.cc"
-#include "libC++RWD.h"
-#include <math.h>
 #include <unistd.h>
 
 float dist = 10.0f;

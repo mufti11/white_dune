@@ -886,7 +886,7 @@ DEF Switch2 Switch {
       top_translation_out=top_translation;
       }
    "
-            "c++:
+   "c++:
       X3dScript_FLY_ON *self = (X3dScript_FLY_ON *)node;
       static bool FLY_ON_init = false;
       if (!FLY_ON_init) {
@@ -977,7 +977,7 @@ DEF Switch2 Switch {
       self->top_translation_out = self->top_translation;   
 "
           ]
-          field SFVec3f           top_translation 0 0 0
+          field SFVec3f           top_translation -1 0 0
           field SFVec3f           translation_old 0 0 0
           field SFVec3f           bullet_translation_start 0 0 0
           field SFVec3f           bullet_direction 0 0 0

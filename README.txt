@@ -5385,4 +5385,8 @@ Added start of Windows and of MACOSX per default with -4kids
 
 C/C++/java export of in/out Events PROTO 
 
+Moved include files into include/white_dune
+
+Fixed error in C++ export
+
 Contact: MUFTI <mufti11@web.de>

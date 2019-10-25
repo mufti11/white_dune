@@ -71,17 +71,16 @@ BuildRequires: mesa-libGLU-devel
 BuildRequires: expat-devel
 BuildRequires: flex
 BuildRequires: bison
-BuildRequires: imlib2-devel
 BuildRequires: libusb-devel
 BuildRequires: CGAL-devel
 BuildRequires: gmp-devel
 BuildRequires: libcurl-devel
 BuildRequires: eigen3-devel
 BuildRequires: vcglib-devel
+BuildRequires: opensubdiv-devel
 BuildRequires: ImageMagick
 BuildRequires: aqsis-core
 BuildRequires: freetype-devel 
-BuildRequires: imlib2-devel
 BuildRequires: bitstream-vera-sans-fonts
 BuildRequires: desktop-file-utils
 BuildRequires: xdg-utils
@@ -114,6 +113,14 @@ or all devices supported via the Xinput protocol.
 White_dune support quad-buffer stereo visuals. Under Linux, this can be used
 with Elsa Revelator, Crystal Eyes or Nvidia 3D Vision shutter-glasses and 
 special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
+
+%package devel
+License: BSD and MIT
+Summary: Develop files for white_dune
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: freeglut%{?_isa}
+%description devel
+Develop files for white_dune
 
 %package opengl-examples
 License: BSD and MIT
@@ -158,6 +165,7 @@ popd
 %install
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man1
+mkdir -p $RPM_BUILD_ROOT/%{_includedir}/white_dune
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/pixmaps/
@@ -172,11 +180,13 @@ install -m 644 -p desktop/kde/dune4kids.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/
 install -m 644 -p man/dune.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune.1
 install -m 644 -p man/dune4kids.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune4kids.1
 install -m 644 -p man/illegal2vrml.1 $RPM_BUILD_ROOT/%{_mandir}/man1/illegal2vrml.1
-install -m 755 -p docs/export_example_c++/opengl_example/render_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/white_dune_opengl_example
-install -m 644 -p include/libC++RWD.h $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example/libC++RWD.h
+install -m 644 -p include/white_dune/libC++RWD.h $RPM_BUILD_ROOT/%{_includedir}/white_dune/libC++RWD.h
+install -m 644 -p include/white_dune/libCRWD.h $RPM_BUILD_ROOT/%{_includedir}/white_dune/libCRWD.h
+install -m 644 -p include/white_dune/libC++RWD_namespace.h $RPM_BUILD_ROOT/%{_includedir}/white_dune/libC++RWD_namespace.h
 install -m 755 -p warbird/warbird_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/warbird
 install -m 644 -p warbird/warbird.desktop $RPM_BUILD_ROOT/%{_datadir}/applications/warbird.desktop
 install -m 644 -p warbird/warbird.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/warbird.png
+install -m 755 -p docs/export_example_c++/opengl_example/render_with_picture_path $RPM_BUILD_ROOT/%{_bindir}/white_dune_opengl_example
 install -m 644 -p warbird/cake.png $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example/cake.png
 install -m 644 -p warbird/bill.jpg $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example/bill.jpg
 # remove binary from noarch package
@@ -208,7 +218,16 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %{_mandir}/man1/dune.1*
 %{_mandir}/man1/dune4kids.1*
 %{_mandir}/man1/illegal2vrml.1*
+
+%files devel
+%{_includedir}/white_dune/libC++RWD.h
+%{_includedir}/white_dune/libCRWD.h
+%{_includedir}/white_dune/libC++RWD_namespace.h
+
 %files opengl-examples
+%{_bindir}/warbird
+%{_datadir}/applications/warbird.desktop
+%{_datadir}/pixmaps/warbird.png
 %dir %{_datadir}/white_dune/
 %dir %{_datadir}/white_dune/opengl_example/
 %{_bindir}/white_dune_opengl_example
@@ -219,12 +238,9 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %{_datadir}/white_dune/opengl_example/README_fedora.txt
 %{_datadir}/white_dune/opengl_example/main.cpp
 %{_datadir}/white_dune/opengl_example/robot.x3dv
-%{_datadir}/white_dune/opengl_example/libC++RWD.h
-%{_bindir}/warbird
-%{_datadir}/applications/warbird.desktop
-%{_datadir}/pixmaps/warbird.png
 %{_datadir}/white_dune/opengl_example/cake.png
 %{_datadir}/white_dune/opengl_example/bill.jpg
+
 %files docs
 %license COPYING
 %doc README.txt docs

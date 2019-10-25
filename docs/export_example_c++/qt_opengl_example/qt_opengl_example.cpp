@@ -21,7 +21,7 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 #include <QTimer>
 #include <sys/time.h>
 #include <GL/glu.h>
-#include "../../../include/libC++RWD_namespace.h"
+#include "white_dune/libC++RWD_namespace.h"
 
 extern void startAnimation(void);
 

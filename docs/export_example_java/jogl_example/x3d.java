@@ -3268,9 +3268,9 @@ class MyTouchSensorProcessEventCallback extends X3dTouchSensorProcessEventCallba
 {
     public boolean processEvent(X3dNode node, String event) {
         X3dTouchSensor touchSensor = (X3dTouchSensor)node;
-        touchSensor.isActive = !x3d2.released;
         if (touchSensor == null)
             return false;
+        touchSensor.isActive = !x3d2.released;
         if (!touchSensor.enabled)
             return false;
         return true;

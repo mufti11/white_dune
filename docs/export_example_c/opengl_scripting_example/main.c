@@ -52,7 +52,7 @@
 #include <stdio.h>
 extern void reInitSensor(void *);
 #include "CExport.c"
-#include "libCRWD.h"
+#include "white_dune/libCRWD.h"
 #include <math.h>
 
 float dist = 10.0f;

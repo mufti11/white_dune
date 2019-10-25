@@ -5,7 +5,7 @@ Under debian Linux, you can create a .deb package in two ways:
   # as root
   (cd wdune-*/packager/debian && sh mkdeb_buster.sh)
 
-  the .deb files are in /tmp
+  the .deb files are in wdune-*/..
 
 - create a debian subdirectory in wdune-*
 

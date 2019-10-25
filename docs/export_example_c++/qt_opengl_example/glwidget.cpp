@@ -18,7 +18,7 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 class X3dNode;
 extern void reInitSensor(void *node);
 #include "C++Export.cc"
-#include "../../../include/libC++RWD.h"
+#include "white_dune/libC++RWD.h"
 #include "callbacksToVrml.cpp"
 #include <QOpenGLFunctions>
 #include <QTimer>

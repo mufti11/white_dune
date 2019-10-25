@@ -1056,7 +1056,7 @@ public:
     void              removeAlreadyWrittenEventOuts(void)
                           { m_alreadyWrittenEventOuts.resize(0); }
 
-    bool              hasRouteToExposedField(void);
+    bool              hasRouteForProcessEvent(void);
 
 protected:
     const char       *searchIsName(int i, int type);
