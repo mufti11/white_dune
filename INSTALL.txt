@@ -1,6 +1,26 @@
 This file is free software; the Free Software Foundation    
 gives unlimited permission to copy, distribute and modify it.
 
+SOURCE INSTALLATION FOR Linux/UNIX/MacOSX
+=========================================
+
+In short, just extract the source archive (* is the version number)
+
+$ bzip2 -cd wdune-*.tar.bz2 | tar -xvf -
+
+Change the directory to the created directory
+
+$ cd  wdune-*
+
+Type
+
+$ sh build.sh
+
+If all development packages are installed you can start the program with
+
+$ ../bin/dune
+
+If not all development packages are installed, read on
 
 BINARY INSTALLATION FOR Linux/UNIX/MacOSX
 =========================================
@@ -10,9 +30,9 @@ your operation system under
 http://wdune.ourproject.org
 or
 https://snapcraft.io/wdune (Linux snap package)
-To get rid of deprecated configuration information after installation, you
-may need to remove $HOME/.dunerc (Linux/UNIX/MacOSX) as user or start
-wdune-1.????.exe -uninstall (from the Micro$oft Windows commandline).
+
+To get rid of deprecated configuration information (from a older install)
+after installation, you may need to remove $HOME/.dunerc
 
 
 BINARY INSTALLATION FOR M$Windows
@@ -46,13 +66,20 @@ set DUNERC=%~d0:\dune.rc
 This is usefull on (misconfigured ?) M$Windows installations which 
 forbid the modification of the windows registry completely.
 
+To get rid of deprecated configuration information (from a older install)
+after installation, you may need to start 
+
+w*dune-*.exe -uninstall 
+
+(in the Micro$oft Windows commandline).
+
 
 BUILD INSTRUCTIONS FOR UNIX/Linux:
 ----------------------------------
 
 If there is no systemdependend install mechanism, white_dune
-can be installed with "./configure && make" and the source directory should
-not be deleted, as it contains the help/PROTO files.
+can be installed with "./configure && make -j8" and the source directory 
+should not be deleted, as it contains the help/PROTO files.
 
 The building of systemdependend binary packages is done in the "packager" 
 directory.
@@ -70,6 +97,7 @@ Systems supported by "packager" directory
  package is available on installation media.
  For current MacOSX systems you have to install XQuartz 
  (https://www.xquartz.org) from the internet.
+
  For MacOSX use:
      (cd packager/macosx && sh mksit.sh)
 
@@ -97,9 +125,6 @@ Systems supported by "packager" directory
 
  For Slackware Linux use:
      (cd packager/slackware && sh mkpkg.sh)
-
- For gentoo Linux use:
-     (cd packager/gentoo && sh mkebuild.sh)
 
  For Arch Linux use:
      (cd packager/archlinux && mkpacman.sh)

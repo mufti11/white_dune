@@ -15,7 +15,7 @@ JFLAGS=-Xlint:unchecked -g
 # guess library path...
 LIBS=-Djava.library.path=/usr/lib/jogl/:/usr/lib/jni/:/usr/lib64/jogl2/:/usr/lib64/
 
-MEM="-J-Xmx2000m"
+MEM="-J-Xmx3000m"
 
 run: classes/X3dSceneGraph.class classes/x3d.class
 	java $(LIBS) -cp .:classes:$(JARS) x3d

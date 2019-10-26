@@ -1688,7 +1688,7 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
     if (forward)
         writeCDataFunctionFields(filedes, languageFlag, forward, cont);
 
-    if (m_numberCDataFunctions > 0) {
+    if (m_numberCDataFunctions >= 0) {
         if (!cont){
             RET_ONERROR( mywritestr(filedes , "    ") )
             if ((languageFlag & MANY_JAVA_CLASSES) &&
@@ -2072,9 +2072,6 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
         return 0;
     }
 
-    if ((elementType == EL_FIELD) && (i == m_proto->metadata_Field()))
-        return 0;
-
     Element *element = m_proto->getElement(elementType, i);
     int type = element->getType();
 
@@ -2088,7 +2085,7 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
     FieldValue *value = NULL; 
     switch(elementType) {
       case EL_FIELD:
-        value =m_fields[i];
+        value = m_fields[i];
         break;
       case EL_EVENT_IN:
         if (m_proto->getEventIn(i)->getExposedField() != NULL)

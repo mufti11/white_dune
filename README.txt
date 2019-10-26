@@ -5389,4 +5389,6 @@ Moved include files into include/white_dune
 
 Fixed error in C++ export
 
+Fixed error in java export
+
 Contact: MUFTI <mufti11@web.de>
