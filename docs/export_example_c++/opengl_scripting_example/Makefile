@@ -7,6 +7,6 @@ render: main.cpp C++Export.cc
 clean:
 	rm -f C++Export.cc render core
 
-C++Export.cc: ScriptingExample.wrl ../../../bin/dune
-	../../../bin/dune -c++ ScriptingExample.wrl > C++Export.cc
+C++Export.cc: ScriptingExample.wrl
+	dune -c++ ScriptingExample.wrl > C++Export.cc
 

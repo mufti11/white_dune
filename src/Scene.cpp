@@ -3471,6 +3471,22 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
         field = dst->getProto()->getEventIn(eventIn)->getField();
         isFlag = dst->getProto()->getEventIn(eventIn)->getFlags() & FF_IS;
     }
+    if ((field != -1) && (!isFlag)) {
+        Interpolator *interp = findUpstreamInterpolator(dst, field);
+        if (interp && !((Node *)interp)->isPROTO()) {
+            bool setValue = false;
+            if (interp->getNumKeys() == 0) 
+                setValue = true;
+            if (interp->getNumKeys() == 1)
+                if (interp->getKey(0) == 0.0f)
+                    setValue = true;
+            if (setValue) {
+                FieldValue *value = dst->getField(field);
+                if (value)
+                    interp->recordKey(value, true);
+            }
+        }
+    }
     UpdateViews(sender, UPDATE_ADD_ROUTE, (Hint *) &hint);
     return true;
 }

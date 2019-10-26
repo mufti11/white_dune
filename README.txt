@@ -5391,4 +5391,6 @@ Fixed error in C++ export
 
 Fixed error in java export
 
+Fixed ugly bug in morphing animation creation
+
 Contact: MUFTI <mufti11@web.de>
