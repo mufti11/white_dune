@@ -34,7 +34,7 @@
 #include "SFVec3f.h"
 
 ProtoPositionInterpolator::ProtoPositionInterpolator(Scene *scene)
-  : ProtoInterpolator(scene, "PositionInterpolator", SFVEC3F, MFVEC3F, 
+  : ProtoInterpolator(scene, "PositionInterpolator", SFVEC3F, MFVEC3F,
                       new MFVec3f())
 {
 }

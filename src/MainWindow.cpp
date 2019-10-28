@@ -4653,21 +4653,7 @@ void MainWindow::searchInterpolator(void)
     Node *node = m_scene->getSelection()->getNode();
     if (!node->hasInputs())
         return;
-    MyArray<Node *> targets;
-    for (int i = 0; i < node->getProto()->getNumEventIns(); i++) {
-        for (SocketList::Iterator *j = node->getInput(i).first(); 
-             j != NULL; j = j->next()) {
-            Node *inputNode = j->item().getNode();
-            if (!inputNode->isInterpolator())
-                continue;
-            bool targetIsNew = true;
-            for (size_t n = 0; n < targets.size(); n++)
-                if (inputNode == targets[n])
-                    targetIsNew = false;
-            if (targetIsNew)
-                targets.append(inputNode);
-        }
-    }
+    MyArray<Node *> targets = m_scene->searchInterpolators();
     for (size_t i = 0; i < targets.size(); i++) {
         m_scene->setSelection(targets[i]);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
@@ -4683,42 +4669,9 @@ void MainWindow::searchInterpolator(void)
     }     
 }
 
-static void searchInInterpolator(MyArray<Node *>& targets, Node *interpolator) {
-    for (int k = 0; k < interpolator->getProto()->getNumEventIns(); k++) {
-        for (SocketList::Iterator *l = interpolator->getInput(k).first(); 
-             l != NULL; l = l->next()) {
-            Node *targetNode = l->item().getNode();
-            if (targetNode->getType() != VRML_TIME_SENSOR)
-                continue;
-            bool targetIsNew = true;
-            for (size_t n = 0; n < targets.size(); n++)
-                if (targetNode == targets[n])
-                    targetIsNew = false;
-            if (targetIsNew)
-                targets.append(targetNode);
-        }
-    }
-}
-
 void MainWindow::searchTimeSensor(void)
 {
-    Node *node = m_scene->getSelection()->getNode();
-    MyArray<Node *> targets;
-    if (node->isInterpolator())
-        searchInInterpolator(targets, node);
-    else {
-        if (!node->hasInputs())
-            return;
-        for (int i = 0; i < node->getProto()->getNumEventIns(); i++) {
-            for (SocketList::Iterator *j = node->getInput(i).first(); j != NULL;
-                 j = j->next()) {
-                Node *inputNode = j->item().getNode();
-                if (!inputNode->isInterpolator())
-                    continue;
-                searchInInterpolator(targets, inputNode);
-           }
-        }
-    }
+    MyArray<Node *> targets = m_scene->searchTimeSensors();
     for (size_t i = 0; i < targets.size(); i++) {
         m_scene->setSelection(targets[i]);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);

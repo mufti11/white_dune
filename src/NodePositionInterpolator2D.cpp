@@ -34,7 +34,7 @@
 #include "SFVec2f.h"
 
 ProtoPositionInterpolator2D::ProtoPositionInterpolator2D(Scene *scene)
-  : ProtoInterpolator(scene, "PositionInterpolator2D", SFVEC2F, MFVEC2F, 
+  : ProtoInterpolator(scene, "PositionInterpolator2D", SFVEC2F, MFVEC2F,
                       new MFVec2f())
 {
     addURLs(URL_X3D);

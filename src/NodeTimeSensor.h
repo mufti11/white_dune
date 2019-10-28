@@ -72,6 +72,7 @@ public:
     virtual void    preDraw();
     void            setTime(double t);
     void            start(double t);
+    float           getFraction(double t);
     void            updateStart(int field, FieldValue *value, double t);
     void            checkStart(bool loop, double startTime, double stopTime, 
                                double time);

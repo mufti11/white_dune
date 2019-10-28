@@ -40,15 +40,20 @@ class CommandList;
 class ProtoInterpolator : public WonderlandExportProto {
 public:
                         ProtoInterpolator(Scene *scene, const char *name,
-                                          int keyType, int keysType, 
+                                          int keyType, int keysType,
                                           FieldValue *defaultValue);
     virtual Node       *create(Scene *scene) = 0;
 
     int                 getNodeClass() const 
                            { return CHILD_NODE | INTERPOLATOR_NODE; }
 
+    int                 getStride(void) { return m_stride; }
+
     FieldIndex          key;
     FieldIndex          keyValue;
+
+protected:
+    int                 m_stride;
 };
 
 
@@ -82,6 +87,7 @@ public:
     virtual int         getStride() const { return 1; }
 
     int                 findKey(float value) const;
+    int                 findLessKey(float value) const;
     int                 findKeyInclusive(float value) const;
     int                 findKeyExclusive(float value) const;
     bool                getNearestKeys(float k, float *k1, float *k2,
@@ -91,6 +97,9 @@ public:
 
     void                recordKey(FieldValue *value, bool isrunning);
     virtual void        recordValue(int key, FieldValue *value);
+
+    void                removeKeys(float firstFraction, float lastFraction);
+    void                removeOldKeys(double currentTime, double oldTime);
 
     bool                isInterpolator() { return true; }
     int                 set_fraction_Field() { return m_set_fractionField; }

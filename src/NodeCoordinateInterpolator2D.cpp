@@ -30,7 +30,7 @@
 #include "MFVec2f.h"
 
 ProtoCoordinateInterpolator2D::ProtoCoordinateInterpolator2D(Scene *scene)
-  : ProtoInterpolator(scene, "CoordinateInterpolator2D", MFVEC2F, MFVEC2F, 
+  : ProtoInterpolator(scene, "CoordinateInterpolator2D", MFVEC2F, MFVEC2F,
                       new MFVec2f())
 {
     addURLs(URL_X3D);

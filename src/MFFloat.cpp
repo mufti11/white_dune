@@ -182,6 +182,13 @@ MFFloat::removeSFValue(int index)
         m_value.remove(index * stride + i); 
 }
 
+
+void        
+MFFloat::removeMFFloatSFValue(int index) 
+{ 
+    m_value.remove(index); 
+}
+
 MyString
 MFFloat::getEcmaScriptComment(MyString name, int flags) const
 {

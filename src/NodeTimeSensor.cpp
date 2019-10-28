@@ -103,11 +103,10 @@ NodeTimeSensor::preDraw()
         m_scene->addTimeSensor(this);
 }
 
-void
-NodeTimeSensor::setTime(double t)
+float
+NodeTimeSensor::getFraction(double t)
 {
-    if (!m_scene->isRunning())
-        return;
+    float fraction = 0;
 
     double dstopTime = m_stopTime;
 
@@ -121,13 +120,21 @@ NodeTimeSensor::setTime(double t)
                 m_active = false;
             }
             double temp = (t - m_startTime) / cycleInterval()->getValue();
-            double fraction = temp - floor(temp);
-            if (fraction == 0.0 && (t > m_startTime)) fraction = 1.0;
-            sendEvent(fraction_changed_Field(), t, 
-                      new SFFloat((float) fraction));
-            sendEvent(time_Field(), t, new SFTime(t));
+            fraction = temp - floor(temp);
+            if (fraction == 0.0 && (t > m_startTime))
+                fraction = 1.0;
         }
     }
+    return fraction;
+}
+
+void
+NodeTimeSensor::setTime(double t)
+{
+    float fraction = getFraction(t);
+
+    sendEvent(fraction_changed_Field(), t, new SFFloat(fraction));
+    sendEvent(time_Field(), t, new SFTime(t));
 }
 
 void

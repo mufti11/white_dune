@@ -38,7 +38,7 @@
 #include "FieldCommand.h"
 
 ProtoGeoPositionInterpolator::ProtoGeoPositionInterpolator(Scene *scene)
-  : ProtoInterpolator(scene, "GeoPositionInterpolator", SFVEC3D, MFVEC3D, 
+  : ProtoInterpolator(scene, "GeoPositionInterpolator", SFVEC3D, MFVEC3D,
                       new MFVec3d())
 {
     setFieldFlags(keyValue, FF_X3D_ONLY);

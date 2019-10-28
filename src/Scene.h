@@ -904,6 +904,10 @@ public:
 
     bool                hasPROTONodes(void);
 
+    MyArray<Node *>     searchTimeSensors(void);
+    MyArray<Node *>     searchInterpolators(void);
+    MyArray<Node *>     searchTimeSensorInInterpolator(Node *interpolator);
+
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
@@ -1101,6 +1105,7 @@ protected:
     StringArray         m_warnings;
 
     double              m_currentTime;
+    double              m_oldTime;
 
     bool                m_deselect;
 

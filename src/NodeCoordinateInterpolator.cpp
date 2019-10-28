@@ -30,7 +30,7 @@
 #include "MFVec3f.h"
 
 ProtoCoordinateInterpolator::ProtoCoordinateInterpolator(Scene *scene)
-  : ProtoInterpolator(scene, "CoordinateInterpolator", MFVEC3F, MFVEC3F, 
+  : ProtoInterpolator(scene, "CoordinateInterpolator", MFVEC3F, MFVEC3F,
                       new MFVec3f())
 {
 }

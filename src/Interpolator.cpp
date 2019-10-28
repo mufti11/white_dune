@@ -32,6 +32,7 @@
 #include "Field.h"
 #include "swt.h"
 #include "NodeCurveAnimation.h"
+#include "NodeTimeSensor.h"
 
 ProtoInterpolator::ProtoInterpolator(Scene *scene, const char *name, 
                                      int keyType, int keysType, 
@@ -120,7 +121,7 @@ Interpolator::backup(CommandList *list)
 {
     int pos = findKeyInclusive(m_fraction);
 
-    if (pos != getNumKeys()) {
+    if ((getNumKeys() > 0) && (pos > -1) && (pos != getNumKeys())) {
         list->append(new MFieldCommand(this, m_keyField, pos));
         list->append(new MFieldCommand(this, m_keyValueField, pos));
     }
@@ -152,6 +153,29 @@ Interpolator::findKey(float value) const
 }
 
 //
+// findLessKey() - return the closest key stricty less than the given value,
+//                 or n if none found
+//
+
+int
+Interpolator::findLessKey(float value) const
+{
+    MFFloat *key = (MFFloat *) getField(m_keyField);
+    int i, numKeys = key->getSize();
+
+    for (i = 0; i < numKeys; i++) {
+        float k = key->getValue(i);
+        if (k >= value) {
+            return i - 1;
+        }
+        if (k >= 1.0) {
+           break;
+        }
+    }
+    return i;
+}
+
+//
 // findKeyInclusive() - return the closest key greater than or equal to 
 //                      the given value, or numKeys if none found
 //
@@ -160,7 +184,8 @@ int
 Interpolator::findKeyInclusive(float value) const
 {
     MFFloat *key = (MFFloat *) getField(m_keyField);
-    int i, numKeys = key->getSize();
+    int numKeys = key->getSize();
+    int i = numKeys;
 
     for (i = 0; i < numKeys; i++) {
         float k = key->getValue(i);
@@ -323,45 +348,17 @@ Interpolator::insertKey(int pos, float key, const float *values, int numValues)
     MFFloat *keyValues = (MFFloat *) getField(m_keyValueField);
     int numKeys = keys->getSize();
     int numChannels = numValues;
-    const float *k = keys->getValues();
-    const float *v = keyValues->getValues();
 
-    float *newK = new float[numKeys + 1];
-    float *newV = new float[(numKeys + 1) * numChannels];
+    keys->insertSFValue(pos, key);
+    for (int j = 0; j < numChannels; j++)
+         if (values == NULL)
+             keyValues->insertSFValue(pos * numChannels + j, 0.0f);
+         else
+             keyValues->insertSFValue(pos * numChannels + j, values[j]);
 
-    if (pos > 0) {
-        memcpy(newK, k, pos * sizeof(float));
-        memcpy(newV, v, pos * numChannels * sizeof(float));
-    }
-
-    if (pos < numKeys) {
-        memcpy(newK + pos + 1, k + pos, (numKeys - pos) * sizeof(float));
-        memcpy(newV + (pos + 1) * numChannels, v + pos * numChannels, 
-               (numKeys - pos) * numChannels * sizeof(float));
-    }
-
-    newK[pos] = key;
-    for (int i = 0; i < numChannels; i++) {
-        if (values) {
-            newV[pos * numChannels + i] = values[i];
-        } else {
-            newV[pos * numChannels + i] = 0.0;
-        }
-    }
-
-    MFFloat *newKey = new MFFloat(newK, numKeys + 1);
-    FieldValue *newKeyValue = createKeys(newV, numKeys + 1);
-    newKeyValue->ref();    
-
-    if (values) {
-        CommandList *list = new CommandList();
-
-        list->append(new FieldCommand(this, m_keyField, newKey));
-        list->append(new FieldCommand(this, m_keyValueField, newKeyValue));
-        m_scene->execute(list);
-    } else {
-        setField(m_keyField, newKey);
-        setField(m_keyValueField, newKeyValue);
+    if ((keys->getSize() > 0) && (keyValues->getSize() > 0)) {
+        setField(m_keyField, keys);
+        setField(m_keyValueField, keyValues);
         m_scene->OnFieldChange(this, m_keyField);
         m_scene->OnFieldChange(this, m_keyValueField);
     }
@@ -380,44 +377,25 @@ Interpolator::deleteKeys(int start, int end)
     MFFloat *keyValue = (MFFloat *) getField(m_keyValueField);
     int numKeys = key->getSize();
     int numChannels = getNumChannels();
-    const float *k = key->getValues();
-    const float *v = keyValue->getValues();
 
-    if (start == numKeys)
-        start--;
-    if (end == numKeys)
-        end--;
+    if (key->getSize() * numChannels != keyValue->getSize()) 
+        return;
 
-    if (start > end) return;
+    if (end > numKeys - 1)
+        end = numKeys -1;
 
-    int newLen = numKeys - ((end - start) == 0 ? (end - start) + 1 :
-                                                 (end - start)) ;
-    if (newLen <= 0) {
-        newLen = 1;
-        start++;
+    for (int i = start; i < end; i++) {
+        key->removeSFValue(i);
+        for (int j = 0; j < numChannels; j++)
+            keyValue->removeMFFloatSFValue(i * numChannels + j);
+    }   
+
+    if ((end > start) && (key->getSize() > 0) && (keyValue->getSize() > 0)) {
+        setField(m_keyField, key);
+        setField(m_keyValueField, keyValue);
+        m_scene->OnFieldChange(this, m_keyField);
+        m_scene->OnFieldChange(this, m_keyValueField);
     }
-    float *newK = new float[newLen];
-    float *newV = new float[newLen * numChannels];
-
-    if (start > 0) {
-        memcpy(newK, k, start * sizeof(float));
-        memcpy(newV, v, start * numChannels * sizeof(float));
-    }
-
-    if (end < numKeys) {
-        memcpy(newK + start, k + end, (numKeys - end) * sizeof(float));
-        memcpy(newV + start * numChannels, v + end * numChannels, 
-               (numKeys - end) * numChannels * sizeof(float));
-    }
-
-    MFFloat *newKey = new MFFloat(newK, newLen);
-    FieldValue *newKeyValue = createKeys(newV, newLen);
-
-    CommandList *list = new CommandList();
-
-    list->append(new FieldCommand(this, m_keyField, newKey));
-    list->append(new FieldCommand(this, m_keyValueField, newKeyValue));
-    m_scene->execute(list);
 }
 
 void 
@@ -434,6 +412,13 @@ Interpolator::recordValue(int key, FieldValue *value)
 void
 Interpolator::recordKey(FieldValue *value, bool isrunning)
 {
+    MFFloat *keys = (MFFloat *) getField(m_keyField);
+    MFFloat *keyValues = (MFFloat *) getField(m_keyValueField);
+    int numChannels = getNumChannels();
+
+    if (keys->getSize() * numChannels != keyValues->getSize()) 
+        return;
+
     int key = findKeyInclusive(m_fraction);
 
     if (isrunning) {
@@ -456,6 +441,36 @@ Interpolator::recordKey(FieldValue *value, bool isrunning)
     m_scene->OnFieldChange(this, m_keyValueField);
     if (isrunning)
         m_oldRecordedFraction = m_fraction;
+}
+
+void
+Interpolator::removeKeys(float firstFraction, float lastFraction)
+{
+    int firstKey = findKey(firstFraction);
+    int lastKey = findLessKey(lastFraction);
+    int numKeys = getNumKeys();
+
+    if ((firstKey <= lastKey) &&
+        (firstKey > 1) && (firstKey < numKeys) && 
+        (lastKey > 1) && (lastKey < numKeys)) {
+        deleteKeys(firstKey, lastKey);
+        recordKey(getInterpolatedFieldValue(firstFraction), true);
+    }
+}
+
+void                
+Interpolator::removeOldKeys(double currentTime, double oldTime)
+{
+    MyArray<Node *> timeSensors = 
+        m_scene->searchTimeSensorInInterpolator(this);
+    // only handle first timeSensor
+    if (timeSensors.size() > 0) {
+        NodeTimeSensor *timeSensor = (NodeTimeSensor *)timeSensors[0];
+        float firstFraction = timeSensor->getFraction(oldTime);
+        float lastFraction = timeSensor->getFraction(currentTime);
+        if (lastFraction >= firstFraction)
+            removeKeys(firstFraction, lastFraction);
+    }
 }
 
 //

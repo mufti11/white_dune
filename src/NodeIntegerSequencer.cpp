@@ -36,7 +36,7 @@
 #include "FieldCommand.h"
 
 ProtoIntegerSequencer::ProtoIntegerSequencer(Scene *scene)
-  : ProtoInterpolator(scene, "IntegerSequencer", SFINT32, MFINT32, 
+  : ProtoInterpolator(scene, "IntegerSequencer", SFINT32, MFINT32,
                       new MFInt32())
 {
 }

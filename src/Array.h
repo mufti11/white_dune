@@ -102,7 +102,8 @@ public:
     void        remove(size_t pos) {
                     for (long i = pos; i < (long)m_size - 1; i++)
                         m_data[i] = m_data[i + 1];
-                    m_size--;
+                    if (m_size > 0)
+                        m_size--;
                     if (m_size <= 0) {
                         resize(0);
                         m_size = 0;

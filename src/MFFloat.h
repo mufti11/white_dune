@@ -78,6 +78,7 @@ public:
     void                insertSFValue(int index, const float value);
     virtual void        appendSFValue(const float value);
     virtual void        removeSFValue(int index);
+    void                removeMFFloatSFValue(int index);
 
     float               getMaxValue();
     float               getMinValue();

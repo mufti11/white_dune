@@ -365,6 +365,7 @@ Scene::Scene()
     m_saved_x3dxml = true;
     setSelection(getRoot());
     setViewPorts();
+    m_oldTime = swGetCurrentTime();
     updateTime();
     m_viewpointUpdated = false;
     m_drawViewPorts = true;
@@ -3795,7 +3796,7 @@ Scene::setField(Node *node, int field, FieldValue *value)
         Interpolator *interp = findUpstreamInterpolator(node, field);
 
         if (interp) {
-            interp->recordKey(value,isRunning());
+            interp->recordKey(value, isRunning());
         }
     }
     node->setField(field, value);
@@ -5200,12 +5201,33 @@ static bool timeUpdateNodePROTO(Node *node, void *data)
     return true;
 }
 
+class TimeStep {
+public:
+    double currentTime;
+    double oldTime;
+};
+
+static bool timeUpdateInterpolator(Node *node, void *data)
+{
+    TimeStep *step = (TimeStep *)data;
+    if (node->isInterpolator()) {
+        ((Interpolator *)node)->removeOldKeys(step->currentTime, step->oldTime);
+    }
+    return true;
+}
+
 void
 Scene::updateTime()
 {
+    m_oldTime = m_currentTime;
     m_currentTime = swGetCurrentTime();
     updateTimeAt(m_currentTime);
     getRoot()->doWithBranch(timeUpdateNodePROTO, NULL,
+                            false, false, false, true, false);
+    TimeStep timeStep;
+    timeStep.currentTime = m_currentTime;
+    timeStep.oldTime = m_oldTime;
+    getRoot()->doWithBranch(timeUpdateInterpolator, &timeStep,
                             false, false, false, true, false);
     UpdateViews(NULL, UPDATE_TIME);
 }
@@ -7093,6 +7115,75 @@ void
 Scene::branchSetBbox(void)
 {
     m_root->doWithBranch(setBoundingBox, NULL, false);
+}
+
+MyArray<Node *> 
+Scene::searchInterpolators(void)
+{
+    MyArray<Node *> targets;
+    Node *node = getSelection()->getNode();
+    for (int i = 0; i < node->getProto()->getNumEventIns(); i++) {
+        for (SocketList::Iterator *j = node->getInput(i).first(); 
+             j != NULL; j = j->next()) {
+            Node *inputNode = j->item().getNode();
+            if (!inputNode->isInterpolator())
+                continue;
+            bool targetIsNew = true;
+            for (size_t n = 0; n < targets.size(); n++)
+                if (inputNode == targets[n])
+                    targetIsNew = false;
+            if (targetIsNew)
+                targets.append(inputNode);
+        }
+    }
+    return targets;
+}
+
+MyArray<Node *> 
+Scene::searchTimeSensorInInterpolator(Node *interpolator) 
+{
+    MyArray<Node *> targets;
+    for (int k = 0; k < interpolator->getProto()->getNumEventIns(); k++) {
+        for (SocketList::Iterator *l = interpolator->getInput(k).first(); 
+             l != NULL; l = l->next()) {
+            Node *targetNode = l->item().getNode();
+            if (targetNode->getType() != VRML_TIME_SENSOR)
+                continue;
+            bool targetIsNew = true;
+            for (size_t n = 0; n < targets.size(); n++)
+                if (targetNode == targets[n])
+                    targetIsNew = false;
+            if (targetIsNew)
+                targets.append(targetNode);
+        }
+    }
+    return targets;
+}
+
+MyArray<Node *> 
+Scene::searchTimeSensors(void)
+{
+    MyArray<Node *> targets;
+    Node *node = getSelection()->getNode();
+    if (node->isInterpolator())
+        targets = searchTimeSensorInInterpolator(node);
+    else {
+        if (!node->hasInputs())
+            return targets;
+        for (int i = 0; i < node->getProto()->getNumEventIns(); i++) {
+            for (SocketList::Iterator *j = node->getInput(i).first(); j != NULL;
+                 j = j->next()) {
+                Node *inputNode = j->item().getNode();
+                if (!inputNode->isInterpolator())
+                    continue;
+                MyArray<Node *> interpolatorTargets = 
+                    searchTimeSensorInInterpolator(inputNode);
+                for (int i = 0; i < interpolatorTargets.size(); i++)
+                     targets.append(interpolatorTargets[i]);
+           }
+        }
+    }
+    return targets;
 }
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
