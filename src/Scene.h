@@ -387,7 +387,8 @@ public:
                            if (m_firstSelectionRangeHandle > -1)
                                return; 
                            m_oldSelectedHandles.resize(0); 
-                           for (int i = 0; i < m_selectedHandles.size(); i++)
+                           for (size_t i = 0; i < m_selectedHandles.size(); 
+                                i++)
                                m_oldSelectedHandles.append(
                                      m_selectedHandles[i]);
                            m_selectedHandles.resize(0); 

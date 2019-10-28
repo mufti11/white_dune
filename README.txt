@@ -5395,4 +5395,6 @@ Fixed ugly bug in morphing animation creation
 
 Advanced animation tracking
 
+Fixed bug in Edit->delete of ChannelView keyframes
+
 Contact: MUFTI <mufti11@web.de>

@@ -570,8 +570,8 @@ void ChannelView::SetSelection(int pos)
 void ChannelView::OnEditDelete() 
 {
     if (m_interpolator) {
-        int min = m_interpolator->findKeyInclusive(m_selMin / (float) (m_rect.Width() - 1));
-        int max = m_interpolator->findKey(m_selMax / (float) (m_rect.Width() - 1));
+        int min = m_interpolator->findKey(m_selMin / (float) (m_rect.Width() - 1));
+        int max = m_interpolator->findLessKey(m_selMax / (float) (m_rect.Width() - 1));
         if (max == m_interpolator->key()->getSize())
             max--;
         m_interpolator->deleteKeys(min, max);

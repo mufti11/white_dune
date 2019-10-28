@@ -384,13 +384,13 @@ Interpolator::deleteKeys(int start, int end)
     if (end > numKeys - 1)
         end = numKeys -1;
 
-    for (int i = start; i < end; i++) {
+    for (int i = end; i >= start; i--) {
         key->removeSFValue(i);
         for (int j = 0; j < numChannels; j++)
-            keyValue->removeMFFloatSFValue(i * numChannels + j);
+            keyValue->removeMFFloatSFValue(i * numChannels);
     }   
 
-    if ((end > start) && (key->getSize() > 0) && (keyValue->getSize() > 0)) {
+    if ((end >= start) && (key->getSize() > 0) && (keyValue->getSize() > 0)) {
         setField(m_keyField, key);
         setField(m_keyValueField, keyValue);
         m_scene->OnFieldChange(this, m_keyField);
@@ -451,8 +451,8 @@ Interpolator::removeKeys(float firstFraction, float lastFraction)
     int numKeys = getNumKeys();
 
     if ((firstKey <= lastKey) &&
-        (firstKey > 1) && (firstKey < numKeys) && 
-        (lastKey > 1) && (lastKey < numKeys)) {
+        (firstKey > -1) && (firstKey < numKeys) && 
+        (lastKey > -1) && (lastKey < numKeys)) {
         deleteKeys(firstKey, lastKey);
         recordKey(getInterpolatedFieldValue(firstFraction), true);
     }
@@ -468,8 +468,12 @@ Interpolator::removeOldKeys(double currentTime, double oldTime)
         NodeTimeSensor *timeSensor = (NodeTimeSensor *)timeSensors[0];
         float firstFraction = timeSensor->getFraction(oldTime);
         float lastFraction = timeSensor->getFraction(currentTime);
-        if (lastFraction >= firstFraction)
+        if (lastFraction < firstFraction) {
+            removeKeys(firstFraction, 1.0f);
+            removeKeys(0.0f, lastFraction);
+         } else {
             removeKeys(firstFraction, lastFraction);
+        }
     }
 }
 
