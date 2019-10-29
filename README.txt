@@ -5397,4 +5397,6 @@ Advanced animation tracking
 
 Fixed bug in Edit->delete of ChannelView keyframes
 
+Added OpenMP parallelisation to animation tracking
+
 Contact: MUFTI <mufti11@web.de>

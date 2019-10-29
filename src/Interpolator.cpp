@@ -350,6 +350,7 @@ Interpolator::insertKey(int pos, float key, const float *values, int numValues)
     int numChannels = numValues;
 
     keys->insertSFValue(pos, key);
+    #pragma omp for
     for (int j = 0; j < numChannels; j++)
          if (values == NULL)
              keyValues->insertSFValue(pos * numChannels + j, 0.0f);
@@ -386,6 +387,7 @@ Interpolator::deleteKeys(int start, int end)
 
     for (int i = end; i >= start; i--) {
         key->removeSFValue(i);
+        #pragma omp for
         for (int j = 0; j < numChannels; j++)
             keyValue->removeMFFloatSFValue(i * numChannels);
     }   

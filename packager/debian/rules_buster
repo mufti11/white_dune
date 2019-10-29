@@ -67,7 +67,7 @@ binary:		binary-indep binary-arch
 
 checkroot:
 	$(checkdir)
-	test $$(id -u) = 0
+#	test $$(id -u) = 0
 
 wdune-docs: 
 	dh_testdir

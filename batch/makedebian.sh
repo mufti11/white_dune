@@ -37,5 +37,5 @@ DATE=`date -R`
 echo ' -- J. "MUFTI" Scheurich <mufti11@web.de>  '$DATE >> debian/changelog
 
 echo use as root:
-echo dpkg-buildpackage -i -D -us -uc -rfakeroot -T wdune -T wdune-docs
+echo dpkg-buildpackage -i -D -us -uc -rfakeroot -Twdune -Twdune-docs
 
