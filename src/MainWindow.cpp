@@ -2288,6 +2288,9 @@ MainWindow::OnCommand(void *vid)
       case ID_BRANCH_TO_COLLISION_SPACE:
         moveBranchTo("CollisionSpace", "collidables");
         break;
+     case ID_BRANCH_TO_VRML_SCENE:
+        moveBranchToVrmlScene();
+        break;
       case ID_BRANCH_TO_PROTO:
         moveBranchToProto();
         break;
@@ -8803,6 +8806,15 @@ MainWindow::moveBranchToParent(void)
     moveBranchTo(target, targetField, current);
 }
 
+static Node *vrmlCut = NULL;
+
+static bool getVrmlCut(Node *node, void *data)
+{
+    if (node && node->getType() == DUNE_VRML_CUT)
+        vrmlCut = node;
+    return true;     
+}
+
 static bool collectBranch(Node *node, void *data)
 {
     NodeList *list = (NodeList *)data;
@@ -8810,6 +8822,45 @@ static bool collectBranch(Node *node, void *data)
         list->append(node);
     return true;     
 }
+
+void 
+MainWindow::moveBranchToVrmlScene(void)
+{
+    NodeList nodeList;
+    Node *node = m_scene->getSelection()->getNode();
+    node->doWithNextSiblings(collectBranch, &nodeList);
+    vrmlCut = NULL;
+    m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
+    Node *targetNode = vrmlCut;
+    if (vrmlCut == NULL) {
+        targetNode = m_scene->createNode("VrmlCut");
+        MoveCommand *command = new MoveCommand(targetNode, NULL, -1, 
+                                   m_scene->getRoot(), 
+                                   m_scene->getRoot()->getChildrenField());
+        command->execute();
+    }
+    NodeVrmlCut *cut = (NodeVrmlCut *)targetNode;
+    MFNode *cutScenes = cut->scenes();
+    NodeVrmlScene *vscene = (NodeVrmlScene *)m_scene->createNode("VrmlScene");
+    MoveCommand *command = new MoveCommand(vscene, NULL, -1, 
+                                                   cut, cut->scenes_Field());
+    command->execute();
+    m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+    for (size_t i = 0; i < nodeList.size(); i++) {        
+
+        if (node->getParent()) {
+            command = new MoveCommand(nodeList.get(nodeList.size() - 1 - i), 
+                                      node->getParent(), node->getParentField(),
+                                      vscene, vscene->children_Field());
+            command->execute();
+            m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+        }        
+    }
+    m_scene->setSelection(cut);
+    moveSiblingFirst();
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION, NULL);
+}
+
 
 void 
 MainWindow::moveBranchToProto(void)

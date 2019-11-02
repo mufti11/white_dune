@@ -613,10 +613,10 @@ DUNECLASSES = \
         illegal2vrml.o $(NEBULA)
 
 BIGDUNECLASSES = \
+	Util.o \
         quadric_simp.o \
 	NodeMovieTexture.o \
         MeshSubdivide.o \
-	Util.o \
         Scene.o \
         SceneProtoMap.o \
 	Node.o \
@@ -646,6 +646,8 @@ CLASSES = \
 	lexer.o
 
 OBJSC = \
+        resource.o \
+        mysnprintf.o \
         buf.o \
         mathx.o \
         subd_mesh.o \
@@ -654,14 +656,16 @@ OBJSC = \
 	jpegLoad.o \
 	pngLoad.o gif.o
 
-OBJS = $(BIGDUNECLASSES) $(CLASSES) $(OBJSC) resource.o mysnprintf.o 
+OBJS = $(BIGDUNECLASSES) $(CLASSES) $(OBJSC) 
+
+OBJS_LOW_MEM = $(CLASSES) $(OBJSC)
 
 ARCHIVES = MainWindow.o SceneProtoMap.o Scene.o parser.o lexer.o \
            libdune_extra.a libdune_nodes.a libdune_nodeparents.a \
            libdune_dialogs.a libdune_app.a libdune_dune.a \
            Node.o libdune_type.a libdune_c.a resource.o mysnprintf.o
 
-SRCSC = $(OBJSC:.o=.c) mysnprintf.c
+SRCSC = $(OBJSC:.o=.c) resource.c mysnprintf.c
 SRCSDUNECLASSES = $(DUNECLASSES:.o=.cpp)
 SRCSAPPCLASSES = $(APPCLASSES:.o=.cpp)
 SRCSDIALOGCLASSES = $(DIALOGCLASSES:.o=.cpp)
@@ -714,6 +718,20 @@ SceneProtoMap.o: SceneProtoMap.cpp
 
 nebula/ExportNebula.o: nebula/ExportNebula.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ nebula/ExportNebula.cpp
+
+objc: $(SRCSC)
+	$(CC) $(CFLAGS) -c $(SRCSC)
+
+# special target to compile in low memory/no swap situtations 
+duneLowMem: main.o objc $(CLASSES) 
+	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	$(MAKE) SFMFTypes.h
+	(cd swt ; $(MAKE))
+	make -j2 $(BIGDUNECLASSES)
+	$(CXX) main.o $(OBJS) $(LIBS) -o ../bin/dune
+	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 ../bin/dune ; fi"
+	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 ../bin/dune ; fi"
+	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
 ../bin/dune: main.o $(OBJS) swt/lib/libswt.a  
 	$(CXX) main.o $(OBJS) $(LIBS) -o $@

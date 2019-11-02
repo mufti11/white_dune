@@ -5399,4 +5399,10 @@ Fixed bug in Edit->delete of ChannelView keyframes
 
 Added OpenMP parallelisation to animation tracking
 
+Patched src/Makefile to work in low memory/no swap situtations
+
+Added workaround for strange crash on Arch Linux ARM
+
+Added rest of scenegraph branch to VrmlScene
+
 Contact: MUFTI <mufti11@web.de>

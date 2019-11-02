@@ -246,6 +246,7 @@ Dune has been successfully compiled with
 - gcc/g++ 7.3.0
 - gcc/g++ 8.2.1
 - gcc/g++ 8.3.0
+- gcc/g++ 8.3.1
 - clang 6.0.1
 - Apple LLVM version 7.3.0
 - MIPSpro 7.30 (SGI IRIX)

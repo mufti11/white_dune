@@ -338,6 +338,7 @@ protected:
                                      const char* fieldName);
     void                moveBranchTo(Node* node, int field, Node* current);
     void                moveBranchToInline();
+    void                moveBranchToVrmlScene(void);
     void                moveBranchToProto(void);
     void                doWithBranch(DoWithNodeCallback callback, void *data);
     void                doWithBranchUpdate(DoWithNodeCallback callback, 

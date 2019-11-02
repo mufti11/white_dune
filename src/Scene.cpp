@@ -5224,11 +5224,13 @@ Scene::updateTime()
     updateTimeAt(m_currentTime);
     getRoot()->doWithBranch(timeUpdateNodePROTO, NULL,
                             false, false, false, true, false);
-    TimeStep timeStep;
-    timeStep.currentTime = m_currentTime;
-    timeStep.oldTime = m_oldTime;
-    getRoot()->doWithBranch(timeUpdateInterpolator, &timeStep,
-                            false, false, false, true, false);
+    if (isRunning() && isRecording()) {
+        TimeStep timeStep;
+        timeStep.currentTime = m_currentTime;
+        timeStep.oldTime = m_oldTime;
+        getRoot()->doWithBranch(timeUpdateInterpolator, &timeStep,
+                                false, false, false, true, false);
+    }
     UpdateViews(NULL, UPDATE_TIME);
 }
 

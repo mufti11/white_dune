@@ -356,13 +356,6 @@ Interpolator::insertKey(int pos, float key, const float *values, int numValues)
              keyValues->insertSFValue(pos * numChannels + j, 0.0f);
          else
              keyValues->insertSFValue(pos * numChannels + j, values[j]);
-
-    if ((keys->getSize() > 0) && (keyValues->getSize() > 0)) {
-        setField(m_keyField, keys);
-        setField(m_keyValueField, keyValues);
-        m_scene->OnFieldChange(this, m_keyField);
-        m_scene->OnFieldChange(this, m_keyValueField);
-    }
 }
 
 void
@@ -391,13 +384,6 @@ Interpolator::deleteKeys(int start, int end)
         for (int j = 0; j < numChannels; j++)
             keyValue->removeMFFloatSFValue(i * numChannels);
     }   
-
-    if ((end >= start) && (key->getSize() > 0) && (keyValue->getSize() > 0)) {
-        setField(m_keyField, key);
-        setField(m_keyValueField, keyValue);
-        m_scene->OnFieldChange(this, m_keyField);
-        m_scene->OnFieldChange(this, m_keyValueField);
-    }
 }
 
 void 

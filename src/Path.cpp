@@ -140,7 +140,7 @@ Path::getNextNode(Node *n, int f, int i) const
     if (value->getType() == SFNODE)
         ret = ((SFNode *) value)->getValue();
     else if ((value->getType() == MFNODE) && 
-             (m_path[i] < ((MFNode *)value)->getSize()))
+             (m_path[i] > -1) && (m_path[i] < ((MFNode *)value)->getSize()))
         ret = ((MFNode *) value)->getValue(m_path[i]);
     else {
         if (i != (m_len - 1)) {

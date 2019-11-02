@@ -529,9 +529,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
     if (value)
         m_fields[index]->ref();
     if (value && isNode) {
-        if (containerField == -1)
-            m_fields[index]->setContainerField(index);
-        else
+        if (containerField != -1)
             m_fields[index]->setContainerField(containerField);
     }
 
