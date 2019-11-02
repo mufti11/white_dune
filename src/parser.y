@@ -2050,6 +2050,12 @@ static void parseContainerField(Node *node, const char **attrib, int index)
     }
 }
 
+bool strCompare(const char *element, const char *str, Scene *scene)
+{
+     return (!strcmp(element, str)) || (scene->getStoreAsHtml() && 
+                                        (!strcasecmp(element, str)));
+}
+
 /*
 Concept of operation:
 <X3D>
@@ -2236,13 +2242,14 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                 }
                 // we need to look for SFNode/MFNode contained field values 
                 // when we get to xml end()
-            } else if (!strcmp(element, "Script") || 
-                       !strcmp(element, "ComposedShader") || 
-                       !strcmp(element, "ShaderProgram") || 
-                       !strcmp(element, "PackagedShader")) {
-                if (!strcmp(element, "Script"))
+            } else if ((insideX3D && 
+                        strCompare(element, "Script", scene)) || 
+                       strCompare(element, "ComposedShader", scene) || 
+                       strCompare(element, "ShaderProgram", scene) || 
+                       strCompare(element, "PackagedShader", scene)) {
+                if (insideX3D && strCompare(element, "Script", scene))
                     node = new NodeScript(scene);
-                else
+                else if (insideX3D)
                     node = newNode(element);
                 if (node) {
                     status.pop();
@@ -2253,7 +2260,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                                                 handleCDATA);
                     gotcdata = 0;
                 }
-            } else if (!strcmp(element, "ShaderPart")) {
+            } else if (strCompare(element, "ShaderPart", scene)) {
                 //seems like if you have a url, the url can be a CDATA child.
                 //problem: ComposedShader can have a direct CDATA, 
                 // and so can it's child ShaderPart have a CDATA
@@ -2267,9 +2274,9 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                     status.pop();
                     status.push(STATUS_SHADERPART);
                 } 
-            } else if (!strcmp(element, "fieldValue")) {
+            } else if (strCompare(element, "fieldValue", scene)) {
                 /* doesn't create a node, adds to it's parents fields */
-                //<fieldValue name='initValuep' value='.15'/>
+                // <fieldValue name='initValue' value='.15'/>
                 const char *name = NULL;
                 const char *value = NULL;
                 for (int i = 0; attrib[i] != NULL; i += 2) { 
@@ -2308,7 +2315,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                         status.push(STATUS_PROTOINSTANCE_FIELDVALUE); 
                     }
                 }
-            } else if (!strcmp(element, "ProtoDeclare")) {
+            } else if (strCompare(element, "ProtoDeclare", scene)) {
                 const char *name = NULL;
                 const char *appinfo = NULL;
                 const char *documentation = NULL;
@@ -2338,7 +2345,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                 if (!scene->addProtoName(MyString(name)))
                     scene->warning(IDS_PROTO_ALREADY_DEFINED, name);
                 startProto();
-            } else if (!strcmp(element, "ExternProtoDeclare")) {
+            } else if (strCompare(element, "ExternProtoDeclare", scene)) {
                 const char *name = NULL;
                 const char *appinfo = NULL;
                 const char *documentation = NULL;
@@ -2376,14 +2383,14 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                     swDebugf("warning: extern proto already definied: %s\n",name);
                 } 
                 startProto();
-            } else if (!strcmp(element, "ProtoInterface")) {
+            } else if (strCompare(element, "ProtoInterface", scene)) {
                 status.pop();
                 status.push(STATUS_PROTOINTERFACE);
-            } else if (!strcmp(element, "ProtoBody")) {
+            } else if (strCompare(element, "ProtoBody", scene)) {
                 status.pop();
                 status.push(STATUS_PROTOBODY);
-            } else if (!strcmp(element, "IS")) {
-            } else if (!strcmp(element, "connect")) {
+            } else if (strCompare(element, "IS", scene)) {
+            } else if (strCompare(element, "connect", scene)) {
                 const char *nodeField = NULL;
                 const char *protoField = NULL;
 
@@ -2397,7 +2404,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                                  attrib[i], lineno);
                 }
                 isField(current_node, MyString(nodeField), MyString(protoField));
-            } else if (!strcmp(element, "ProtoInstance")) {
+            } else if (strCompare(element, "ProtoInstance", scene)) {
                 // <ProtoInstance DEF='SliderPhotoTransparency' containerField='children' name='sliderProto'>
                 const char *name = NULL;
                 for (int i = 0; attrib[i] != NULL; i += 2) { 
@@ -2411,8 +2418,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                     if (proto) {
                         protoInstance = true;
                         node = proto->create(scene);
-                    }
-                    else
+                    } else
                         swDebugf("ProtoInstance - failed to find proto of type %s line %d\n",name,lineno);
                 }
                 status.pop();
@@ -2420,8 +2426,8 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
             } else if (strcmp(element, "html") == 0 ||
                        strcmp(element, "title") == 0 ||
                        strcmp(element, "link") == 0 ||
-                       strcmp(element, "script") == 0) {
-                // parse X3DDOM content into void
+                       ((!canStoreHTML) && strcmp(element, "script") == 0)) {
+                // parse X3DDOM header content into void
                 node = NULL;
             } else if (strcmp(element, "body") == 0) {
                 // parse HTML content
@@ -2454,10 +2460,18 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
                 level++;
                 node->appendTo(nodes.peek().nodeList);
                 for (int i = 0; attrib[i] != NULL; i += 2) { 
-                    if (strcmp("DEF", attrib[i]) == 0)   //"DEF" 
+                    if (strcmp("DEF", attrib[i]) == 0) {
+                        //"DEF" 
                         scene->def(uniqName(attrib[i + 1]), node);
-                    else if (strcmp("id", attrib[i]) == 0) {
+                    } else if (strcmp("id", attrib[i]) == 0) {
                         // special X3DOM attribute "id"
+                        node->setX3domId(attrib[i + 1]);
+                    } else if (strcasecmp("OnOutputChange", attrib[i]) == 0) {
+                        // special X3DOM attribute "OnOutputChange"
+                        node->setX3domOnOutputChange(attrib[i + 1]);
+                    } else if (strcasecmp("OnClick", attrib[i]) == 0) {
+                        // special X3DOM attribute "OnOutputChange"
+                        node->setX3domOnClick(attrib[i + 1]);
                     } else if (!strcmp("containerField", attrib[i])) {
                         parseContainerField(current_node, attrib, i);
                     } else if (!strcmp("name", attrib[i]) && protoInstance) {
@@ -2484,7 +2498,7 @@ static void XMLCALL start(void *data, const char *element, const char **attrib)
             }
         }
     } else {
-        if (!strcmp(element, "ROUTE")) {
+        if (strCompare(element, "ROUTE", scene)) {
             MyString srcNode, srcField, dstNode, dstField, tmp;
             for (int i = 0; attrib[i] != NULL; i += 2) { 
                 tmp = "";

@@ -3366,13 +3366,26 @@ Scene::getExtensionProto(MyString name)
     Proto *proto = NULL;
     MyString protoName = name;
     // TODO: handle X3D node names like the following in a better way
-    if (strcmp(protoName, "NurbsPatchSurface") == 0) {
+    if ((strcmp(protoName, "NurbsPatchSurface") == 0) || 
+        (getStoreAsHtml() && 
+        (strcasecmp(protoName, "NurbsPatchSurface") == 0))) {
         protoName = "";
         protoName += "NurbsSurface";
     }
     if (m_protos.hasKey(protoName)) 
         proto = m_protos[protoName];
-    else
+    else if (getStoreAsHtml()) {
+        // X3DOM users tend to use low case namenames
+        ProtoMap::Chain::Iterator *j;
+        for (int i = 0; i < m_protos.width(); i++)
+            for (j = m_protos.chain(i).first(); j != NULL; j = j->next())
+                if (strcasecmp(j->item()->getKey(), protoName) == 0) {
+                    proto =  m_protos[j->item()->getKey()];
+                    break;                     
+                }
+        if (proto == NULL)
+            return NULL;
+    } else
         return NULL;
     if (TheApp->getCoverMode() && proto->isExtensionProto(FF_COVER_ONLY)) {
         proto = proto->getNode(0)->getProto();

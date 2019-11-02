@@ -1058,6 +1058,12 @@ public:
 
     bool              hasRouteForProcessEvent(void);
 
+    void              setX3domId(const char *id) { m_x3domId = strdup(id); }
+    void              setX3domOnOutputChange(const char *function) 
+                          { m_x3domOnOutputChange = strdup(function); }
+    void              setX3domOnClick(const char *function) 
+                          { m_x3domOnClick = strdup(function); }
+
 protected:
     const char       *searchIsName(int i, int type);
 
@@ -1128,6 +1134,9 @@ protected:
     int               m_counter4SceneTreeView;
     bool              m_written;
     MyArray<EventOutData> m_alreadyWrittenEventOuts;
+    const char *      m_x3domId;
+    const char *      m_x3domOnOutputChange;
+    const char *      m_x3domOnClick;
 };
    
 

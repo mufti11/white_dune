@@ -794,9 +794,9 @@ public:
     void                warning(int id);
     void                warning(int id, const char *string);
 
-    Proto              *getProto(int i) 
+    Proto              *getProto(size_t i) 
                             {
-                            if ((i < 0) || (i >= m_protoNames.size()))
+                            if (i >= m_protoNames.size())
                                 return NULL;
                             return m_protos[m_protoNames[i]]; 
                             }

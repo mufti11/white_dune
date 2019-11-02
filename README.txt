@@ -5405,4 +5405,8 @@ Added workaround for strange crash on Arch Linux ARM
 
 Added rest of scenegraph branch to VrmlScene
 
+Parser accepts now lower case nodenames if a X3DOM HTML file is parsed
+
+Parser read now special X3DOM attributes "id", "OnOutputChange" and "OnClick" 
+
 Contact: MUFTI <mufti11@web.de>

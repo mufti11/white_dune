@@ -101,6 +101,9 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_isConvertedInCurveAnimaton = false;
     setCounter4SceneTreeViewToZero();
     m_written = false;
+    m_x3domId = "";
+    m_x3domOnOutputChange = "";
+    m_x3domOnClick = "";
     m_scene->addNode((Node*)this);
 }
 
@@ -796,8 +799,21 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                 setFlag(NODE_FLAG_DEFED);
                 if (m_scene->getWriteFlags() & X3DOM) {
                     RET_ONERROR( mywritestr(f, "id='") )
-                    RET_ONERROR( mywritestr(f, (const char *) m_name) )
+                    if (strlen(m_x3domId) == 0)
+                        RET_ONERROR( mywritestr(f, (const char *) m_name) )
+                    else
+                        RET_ONERROR( mywritestr(f,m_x3domId) )
                     RET_ONERROR( mywritestr(f, "' ") )
+                    if (strlen(m_x3domOnOutputChange) != 0) {
+                        RET_ONERROR( mywritestr(f, "OnOutputChange='") )
+                        RET_ONERROR( mywritestr(f,m_x3domOnOutputChange) )
+                        RET_ONERROR( mywritestr(f, "' ") )
+                    }
+                    if (strlen(m_x3domOnClick) != 0) {
+                        RET_ONERROR( mywritestr(f, "OnClick='") )
+                        RET_ONERROR( mywritestr(f,m_x3domOnClick) )
+                        RET_ONERROR( mywritestr(f, "' ") )
+                    }
                 }   
             }
             RET_ONERROR( mywritestr(f, " ") )
