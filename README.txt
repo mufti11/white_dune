@@ -443,7 +443,7 @@ Brian Wellington          (bill.jpg for Tux warbird from xbill)
 Matias Duarte             (bill.jpg for Tux warbird from xbill)
 Pixar                     (code from OpenSubdiv tutorial)
 Dipl. Ing. Andreas Quiring(raspian hosting) 
-
+Andreas Plesch            (debugging of X3DOM VrmlCut scripting)
 ==========================================================================
 
 Changed in white_dune Version 0.16:
@@ -5408,5 +5408,13 @@ Added rest of scenegraph branch to VrmlScene
 Parser accepts now lower case nodenames if a X3DOM HTML file is parsed
 
 Parser read now special X3DOM attributes "id", "OnOutputChange" and "OnClick" 
+
+Fixed crash in exporting .rib file
+
+Added VrmlCut/VrmlScene scripting implementation for X3DOM
+
+Fixed some missing Translation errors in the documentation.
+
+Fixed missing polygon count in statusbar
 
 Contact: MUFTI <mufti11@web.de>

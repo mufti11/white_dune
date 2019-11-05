@@ -953,7 +953,7 @@ public:
     virtual bool      hasColorRGBA(void) { return false; }
     virtual NodeColorRGBA *getColorRGBANode() { return NULL; }
 
-    virtual bool      hasX3domOnoutputchange(void) { return false; }
+    virtual bool      hasX3domOnOutputChange(void) { return false; }
     virtual bool      hasX3domOnclick(void) { return false; }
 
     void              handleIs(void);
@@ -1058,6 +1058,12 @@ public:
 
     bool              hasRouteForProcessEvent(void);
 
+    const char *      getX3domId(void) 
+                          { 
+                          if (strlen(m_x3domId) > 0) 
+                              return m_x3domId; 
+                          return m_name; 
+                          }
     void              setX3domId(const char *id) { m_x3domId = strdup(id); }
     void              setX3domOnOutputChange(const char *function) 
                           { m_x3domOnOutputChange = strdup(function); }

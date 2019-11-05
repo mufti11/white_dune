@@ -120,7 +120,7 @@ int Field::write(int f, int indent, int flags) const
                 RET_ONERROR( mywritestr(f, " value='NULL'") )
         bool nodeField = (m_type == SFNODE) || (m_type == MFNODE);
         if ((flags & (WITHOUT_VALUE | NULL_VALUE)) && (!m_value->isUseNode())) {
-            RET_ONERROR( mywritestr(f, "/>\n") )
+            RET_ONERROR( mywritestr(f, "></field>\n") )
             TheApp->incSelectionLinenumber();
         } else if (nodeField) {
             RET_ONERROR( mywritestr(f, ">\n") )
@@ -140,7 +140,7 @@ int Field::write(int f, int indent, int flags) const
                 RET_ONERROR( mywritestr(f, " value=") )
                 RET_ONERROR( m_value->writeXml(f, 0) )
             }
-            RET_ONERROR( mywritestr(f, " />\n") )
+            RET_ONERROR( mywritestr(f, " ></field>\n") )
             TheApp->incSelectionLinenumber();
         }
     } else {

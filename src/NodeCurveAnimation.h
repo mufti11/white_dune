@@ -133,7 +133,6 @@ public:
     fieldMacros(SFBool,  hover,          ProtoCurveAnimation)
 
 protected:
-    void               createInterpolators();
     void               sendPosition(double timestamp, float fraction);
     void               sendOrientation(double timestamp, float fraction);
 protected:

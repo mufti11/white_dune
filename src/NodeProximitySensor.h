@@ -66,6 +66,8 @@ public:
     virtual Vec3f   getHandle(int handle, int *constraint, int *field);
     virtual void    setHandle(int handle, const Vec3f &v);
 
+    virtual bool    hasX3domOnOutputChange(void) { return true; } 
+
     fieldMacros(SFVec3f, center,  ProtoProximitySensor)
     fieldMacros(SFVec3f, size,    ProtoProximitySensor)
     fieldMacros(SFBool,  enabled, ProtoProximitySensor)

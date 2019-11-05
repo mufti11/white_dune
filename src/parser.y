@@ -59,6 +59,7 @@
 #include "NodeGeoOrigin.h"
 #include "NodeGeoPositionInterpolator.h"
 #include "NodeGeoViewpoint.h"
+#include "NodeVrmlCut.h"
 
 #ifdef NURBS_CURVE_ANIMATION_COMPATIBILTY
 #include "NodeCurveAnimation.h"
@@ -1788,7 +1789,6 @@ static void XMLCALL handleCDATA (void *userData, const char *string, int len)
         gotcdata = strlen(currentURL);
     }
 }
-
 
 static void XMLCALL handleComment(void *userData, const XML_Char *data)
 {

@@ -135,6 +135,8 @@ NodeVrmlScene::writeXmlProto(int f)
 int
 NodeVrmlScene::writeProto(int f)
 {
+    if (m_scene->isX3dom())
+        return 0;
     if (m_scene->isX3dXml())
         return writeXmlProto(f);
 

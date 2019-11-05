@@ -40,6 +40,10 @@
 #include "UnRouteCommand.h"
 #include "NodeTimeSensor.h"
 #include "NodeViewpoint.h"
+#include "NodeBackground.h"
+#include "NodeCurveAnimation.h"
+#include "NodePositionInterpolator.h"
+#include "NodeOrientationInterpolator.h"
 #include "NodeVrmlScene.h"
 
 ProtoVrmlCut::ProtoVrmlCut(Scene *scene)
@@ -606,6 +610,8 @@ NodeVrmlCut::writeXmlProto(int f)
 int
 NodeVrmlCut::writeProto(int f)
 {
+    if (m_scene->isX3dom())
+        return 0;
     if (m_scene->isX3dXml())
         return writeXmlProto(f);
 
@@ -772,7 +778,6 @@ NodeVrmlCut::writeProto(int f)
     RET_ONERROR( mywritestr(f, "\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "NavigationInfo {\n") )
-    TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, " transitionType \"TELEPORT\"\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "}\n") )    
@@ -780,3 +785,346 @@ NodeVrmlCut::writeProto(int f)
     TheApp->incSelectionLinenumber();
     return(0);
 }
+
+class X3domSendEventData {
+public:
+    int f;
+    int indent;
+    MyArray<Node *>curveAnimations;
+};
+
+static X3domSendEventData data;
+
+static bool writeX3domSendEvent(Node *node, void *data)
+{
+    X3domSendEventData *sendData = (X3domSendEventData *)data;
+    int f = sendData->f;
+    if (node->getType() == VRML_VIEWPOINT) {
+        indentf(f, sendData->indent + TheApp->GetIndent());
+        mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
+        mywritestr(f, ".setAttribute('bind', true);\n");
+    }
+    if (node->getType() == VRML_BACKGROUND) {
+        if (!node->hasName())
+            node->getScene()->generateUniqueNodeName(node);
+        indentf(f, sendData->indent + TheApp->GetIndent());
+        mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
+        mywritestr(f, ".setAttribute('bind', true);\n");
+    }
+    if (node->getType() == VRML_FOG) {
+        if (!node->hasName())
+            node->getScene()->generateUniqueNodeName(node);
+        indentf(f, sendData->indent + TheApp->GetIndent());
+        mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
+        mywritestr(f, ".setAttribute('bind', true);\n");
+    }
+    if (node->getType() == VRML_TIME_SENSOR) {
+        indentf(f, sendData->indent + TheApp->GetIndent());
+        mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
+        mywritestr(f, ".setAttribute('startTime', value.toString());\n");
+    }
+    if (node->getType() == DUNE_CURVE_ANIMATION) {
+        sendData->curveAnimations.append(node);
+    }
+    return true;
+}
+
+int
+NodeVrmlCut::writeX3domScript(int f, int indent)
+{
+    RET_ONERROR( mywritestr(f, "\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "<Script>\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var firstTime;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritef(f, "var numberScenes = %d;\n", 
+                          scenes()->getSize()) )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var firstScene = 0;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritef(f, "var lastScene = %d;\n", 
+                          scenes()->getSize() - 1) )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var currentScene = firstScene;\n") )
+    TheApp->incSelectionLinenumber();
+
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var sceneLengths = [") )
+    for (size_t i = 0; i < sceneLengths()->getSize(); i++) { 
+         RET_ONERROR( mywritef(f, "%f", sceneLengths()->getValue(i)) )
+         if (i < sceneLengths()->getSize() - 1)
+             RET_ONERROR( mywritestr(f, ", ") )
+    }
+    RET_ONERROR( mywritestr(f, "];\n") )
+    TheApp->incSelectionLinenumber();
+
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "function vrmlCutInit(eventObject)\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "{\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "if (eventObject.type != \"outputchange\"") )
+    RET_ONERROR( mywritestr(f, " || eventObject.fieldName != ") )
+    RET_ONERROR( mywritestr(f, "\"time\")\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "return;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var value = eventObject.value;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "firstTime = 0;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "document.getElementById(") )
+    RET_ONERROR( mywritestr(f, "\"VrmlCutInitTimeSensor\")") )
+    RET_ONERROR( mywritestr(f, ".setAttribute('stoptime', value);\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "}\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "function changeScene(value)\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "{\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "document.getElementById(") )
+    RET_ONERROR( mywritestr(f, "\"VrmlCutSwitch\").") )
+    RET_ONERROR( mywritestr(f, "setAttribute('whichChoice',") )
+    RET_ONERROR( mywritestr(f, " currentScene);\n") )
+    TheApp->incSelectionLinenumber();
+
+    data.curveAnimations.resize(0);
+    for (size_t i = 0; i < scenes()->getSize(); i++) {
+        indentf(f, indent + TheApp->GetIndent());
+        mywritef(f, "if (currentScene == %d) {\n", i);
+        data.f = f;
+        data.indent = indent + TheApp->GetIndent();
+        scenes()->getValue(i)->doWithBranch(writeX3domSendEvent, &data, false);
+        indentf(f, indent + TheApp->GetIndent());
+        mywritestr(f, "}\n");
+    }
+
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "}\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "function time_in(value)\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "{\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "if ((firstTime == 0) || ") )
+    RET_ONERROR( mywritestr(f, "(currentScene > lastScene))\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "{\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "firstTime = value;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "currentScene = firstScene;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "changeScene(value);\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "}\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "if (value >= firstTime + ") )
+    RET_ONERROR( mywritestr(f, "sceneLengths[currentScene])\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "{\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "firstTime = value;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "currentScene++;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "changeScene(value);\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "}\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "}\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "function getTime(eventObject)\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "{\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "if (eventObject.type != \"outputchange\"") )
+    RET_ONERROR( mywritestr(f, "|| eventObject.fieldName != \"time\")\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "return;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var value = eventObject.value;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "time_in(value);\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "}\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent) )
+    RET_ONERROR( mywritestr(f, "</Script>\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "\n") )
+    TheApp->incSelectionLinenumber();
+    return 0;
+}
+
+
+int
+NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
+{
+    if (m_scene->getWriteFlags() && X3DOM) {
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "<TimeSensor DEF='VrmlCutTimeSensor' ") )
+        RET_ONERROR( mywritestr(f, "id='VrmlCutTimeSensor' ") )
+        RET_ONERROR( mywritestr(f, "OnOutputChange='getTime(event)'") )
+        RET_ONERROR( mywritestr(f, " loop='true' >\n") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "</TimeSensor>\n") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "<TimeSensor DEF='VrmlCutInitTimeSensor' ") )
+        RET_ONERROR( mywritestr(f, "id='VrmlCutInitTimeSensor' ") )
+        RET_ONERROR( mywritestr(f, "OnOutputChange='vrmlCutInit(event)' ") )
+        RET_ONERROR( mywritestr(f, "loop='true' >\n") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "</TimeSensor>\n") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "<NavigationInfo ") )
+        RET_ONERROR( mywritestr(f, "DEF='VrmlCutNavigationInfo' ") ) 
+        RET_ONERROR( mywritestr(f, "id='VrmlCutNavigationInfo' ") )
+        RET_ONERROR( mywritestr(f, "transitionType 'TELEPORT'>") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "</NavigationInfo>\n") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "\n") )
+        TheApp->incSelectionLinenumber();
+        RET_ONERROR( indentf(f, indent ) )
+        RET_ONERROR( mywritestr(f, "<Switch DEF='VrmlCutSwitch' ") )
+        RET_ONERROR( mywritestr(f, "id='VrmlCutSwitch'  whichChoice='-1' >\n") )
+        TheApp->incSelectionLinenumber();
+
+        for (size_t i = 0; i < scenes()->getSize(); i++) { 
+             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+             RET_ONERROR( mywritestr(f, "<Group >\n") )
+             TheApp->incSelectionLinenumber();
+
+             NodeVrmlScene *vrmlScene = (NodeVrmlScene *)scenes()->getValue(i);
+             for (size_t j = 0; j < vrmlScene->children()->getSize(); j++)
+                  vrmlScene->children()->getValue(j)->writeXml(f,
+                      indent + 2 * TheApp->GetIndent());        
+
+             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+             RET_ONERROR( mywritestr(f, "</Group>\n") )
+             TheApp->incSelectionLinenumber();
+        }
+        RET_ONERROR( indentf(f, indent) )
+        RET_ONERROR( mywritestr(f, "</Switch>\n") )
+        TheApp->incSelectionLinenumber();
+        for (int n = 0; n < data.curveAnimations.size(); n++) {
+            NodeCurveAnimation *anim = (NodeCurveAnimation *)
+                                       data.curveAnimations[n];
+            NodePositionInterpolator *posInter = 
+                (NodePositionInterpolator *)
+                anim->getPositionInterpolator();
+
+            Proto *outProto = posInter->getProto();
+            int eventOuts = outProto->getNumEventOuts();
+            for (int i = 0; i < eventOuts; i++) {
+                for (SocketList::Iterator *j = posInter->getOutput(i).first();
+                     j != NULL; j = j->next()) {
+                    RouteSocket s = j->item();
+                    RET_ONERROR( indentf(f, indent) )
+                    RET_ONERROR( mywritestr(f, "<ROUTE ") )
+                    RET_ONERROR( mywritef(f, " fromNode='%s' ", 
+                                          (const char *)
+                                          posInter->getName()) )
+                    EventOut *outEvent = outProto->getEventOut(i);
+                    RET_ONERROR( mywritef(f, " fromField='%s' ", 
+                                          (const char *)
+                                          outEvent->getName(true)) )
+                    RET_ONERROR( mywritef(f, " toNode='%s' ", 
+                                          (const char *)
+                                          s.getNode()->getName()) )
+                    Field *outField = s.getNode()->getProto()->getField(
+                                           s.getField());
+                    RET_ONERROR( mywritef(f, " toField='%s' ", 
+                                          (const char *)
+                                          outField->getName(true)) )
+                    RET_ONERROR( mywritestr(f, "></ROUTE>") )
+                }
+            }
+            NodeOrientationInterpolator *orientInter = 
+                (NodeOrientationInterpolator *) 
+                anim->getOrientationInterpolator();
+            outProto = orientInter->getProto();
+            eventOuts = outProto->getNumEventOuts();
+            for (int i = 0; i < eventOuts; i++) {
+                for (SocketList::Iterator *j = orientInter->getOutput(i).first();
+                     j != NULL; j = j->next()) {
+                    RouteSocket s = j->item();
+                    RET_ONERROR( indentf(f, indent) )
+                    RET_ONERROR( mywritestr(f, "<ROUTE ") )
+                    RET_ONERROR( mywritef(f, " fromNode='%s' ", 
+                                          (const char *)
+                                          orientInter->getName()) )
+                    EventOut *outEvent = outProto->getEventOut(i);
+                    RET_ONERROR( mywritef(f, " fromField='%s' ", 
+                                          (const char *)
+                                          outEvent->getName(true)) )
+                    RET_ONERROR( mywritef(f, " toNode='%s' ", 
+                                          (const char *)
+                                          s.getNode()->getName()) )
+                    Field *outField = s.getNode()->getProto()->getField(
+                                           s.getField());
+                    RET_ONERROR( mywritef(f, " toField='%s' ", 
+                                          (const char *)
+                                          outField->getName(true)) )
+                    RET_ONERROR( mywritestr(f, "></ROUTE>") )
+                }
+            }
+        }
+    } else
+        RET_ONERROR( Node::writeXml(f, indent, containerField, avoidUse) )
+    return 0;
+}
+    

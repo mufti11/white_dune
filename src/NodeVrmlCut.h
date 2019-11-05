@@ -35,6 +35,9 @@
 #include "CommandList.h"
 #include "DynamicFieldsNode.h"
 
+#define BEGIN_VRML_CUT_SCRIPT "BEGIN VrmlCut Script"
+#define END_VRML_CUT_SCRIPT   "END VrmlCut Script"
+
 class ProtoVrmlCut : public Proto {
 public:
                     ProtoVrmlCut(Scene *scene);
@@ -72,6 +75,12 @@ public:
 
     virtual int     write(int filedes, int indent, bool avoidUse = false) 
                        { return Node::write(filedes, indent, avoidUse); }
+
+    virtual int     writeXml(int filedes, int indent, 
+                             int containerField = -1, bool avoidUse = false);
+
+    int             writeX3domScript(int filedes, int indent);
+
     virtual int     writeRib(int filedes, int indent);
     virtual int     writeProto(int filedes);
     virtual int     writeXmlProto(int filedes);

@@ -1,0 +1,245 @@
+<!--
+/*
+ * Copyright (C) 2019 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h1>How to build a movie (easy)</h1>
+<br>
+This tutorial needs at least 
+<a href="https://wdune.ourproject.org">white_dune</a> version 1.555.
+<br> 
+<h2>First a few informations to read</h2>
+<br>
+On some systems (e.g. Linux KDE/Gnome and SGI IRIX 4dwm), there is a 
+program icon fuer "dune4kids", it looks something like this:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+On systems like Micro$oft Windows or MacOSX there is only one (other)
+programm icon:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normally, the program of this icon starts with the english full version,
+usually with very much icons and too much menues.
+<br>
+<a href="dune4kids_start_en.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+In this case, you have to switch to dune4kids.<br> 
+You have to <a href="dune4kids_start_en.html" target="_blank"> 
+click here</a> to switch to the right version.<br>
+<img src="frog01_en.png">
+<br><br>
+<h2>What to do, if the program crashes ?</h2>
+With a bit of luck, you can load the last situation, if there is a
+new ".dune_crash" file in the list of recent files.
+<br>
+<img src="frog00_en.png">
+<br>
+<h1>Navigation</h1>
+Navigation means the movment in the 3D modell.<br>
+This is important, cause it can happen very easily, that you get inside or
+behind your peace of work and see therefore nothing.<br><br>
+When you see nothing there are two way to continue, ofthen you use this
+ways together:
+<ul>
+<li> <b>Move backwards</b><br>
+     You can go forwards and backwards, if you press together the 
+     left mouse button and the "Shift" key on the keyboard and move the
+     mouse up and down.
+     If you use "Examine" (when the icon <img src="examine.png"> is pressed)
+     this also works with the middle button of a 3-button mouse.
+     If there is a mouse with a scroll wheel, you have to press the mouse
+     wheel.
+</li>
+<li> <b>Turn the 3D world</b><br>
+     When you press together the left mouse button and the "Control" key
+     on the keyboard ("ctrl" on a english keyboard) you can turn the
+     whole 3D-world around you. 
+     This is usually used to look to a new created object near to you
+     from all sides, but do not help, when you are into the void.<br>
+     But keep in mind, that the content can be not only be hidden behind 
+     you, it can be also above, below, left or right.<br>
+     You need to turn around a lot to find your object.
+</li>
+</ul>
+Additionally there you can press together the left mouse button, the "Shift" 
+key and the "Control" key and move the mouse (or use the icon 
+<img src="move_along_screen.png">). This results in the movement in direction
+of the screen plane: up, down, left and right.
+<br>
+<br>
+After you find the object and moved near to it, you should press again the
+"Examine" icon <img src="examine.png"> in order to continue to work normally.
+<br>
+You should also select the object and press the icon
+<img src="icon_turnpoint.png">, so you can turn the object as usual.
+<br>
+<h1>Icons for changes</h1>
+In Order to show, how things are changed, a box is created.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, to changed whole objects:
+<ul>
+<li>Move: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Rotate: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Scale: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>uniform scale: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>move center of rotation: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+With small white boxes you can change the objects itself.
+With the single arrow icons <img src="xyz.png"> you can select the direction.
+<br>
+For example if only the green arrow is pushed,
+<img src="y_only.jpg"> you can move the little box<br> 
+<br>
+<img src="yonly_1.jpg"> 
+<br>
+only into the direction of the green arrow.<br>
+<br>
+<img src="yonly_2.jpg">. 
+<br>
+In the same way as arrows grabed by the stem to move inside a plane,
+you can also push two arrows <img src="xz_only.jpg"> in one time
+to move a little box in one plane. 
+<br>
+<h1>How to build a movie (easy)</h1>
+<br>
+VRML/X3D let you create an animation, but do not support the creation
+of a movie with two or more scenes.<br>
+white_dune can help here, cause if supports the creation of a movie using
+standard VRML/X3D scripting or X3DOM Scripting.<br>
+If the file is exported to renderman RIB files, the created movie data
+is also exported.  
+You don't have to obey the following description exactly, but should 
+(at least at the first reading) stick to the clue.<br>
+The movie will show a moving sphere, a moving cone and two different 
+Viewpoints (aka "camera").<br>
+<h2>Moving Sphere</h2>
+To create a sphere, use <em>New -&gt; Sphere</em>.<br>
+<br>
+<img src="movie1.png">
+<br>
+Select the Transform.
+<br>
+<img src="movie2.png">
+<br>
+Use <em>Animation -&gt; Create curve animation (need Transform)</em>
+<br>
+<img src="movie3.png">
+<br>
+Change 5 to 2 in the form amd press OK.
+<br>
+<img src="movie4.png">
+<br>
+A animation path has been created.<br>
+Use <em>New -&gt; camera</em>
+<br>
+<img src="movie5.png">
+<br>
+Select the Transform and use <em>Change -&gt; Scenegraph &gt;
+Move rest of branch into a new VrmlScene</em>
+<br>
+<img src="movie6.png">
+<br>
+A VrmlCut node has been created. If you click to it's + and all other +, 
+you can see, that all nodes have been moved into the first VrmlScene.
+<br>
+<img src="movie7.png">
+<br>
+<h2>Moving Cone</h2>
+To create a cone, use <em>New -&gt; Cone</em>.<br>
+<br>
+<img src="movie8.png">
+<br>
+Select the Transform of the cone.
+<br>
+<img src="movie9.png">
+<br>
+Use <em>Animation -&gt; Animate (need object e.g. Transform)</em>
+<br>
+<img src="movie10.png">
+<br>
+Change the 5 to 2 and press OK.
+<br>
+<img src="movie11.png">
+<br>
+Use <em>New -&gt; camera</em>
+<br>
+<img src="movie12.png">
+<br>
+Select the PositionInterpolator which has only the start-value.
+<br>
+<img src="movie13.png">
+<br>
+Select the Transform of the cone.
+<br>
+<img src="movie14.png">
+<br>
+In the lower bar, click the red circle and click the double triangles.
+<br>
+<img src="movie15.png">
+<br>
+Select the Transform of the cone.
+<br>
+<img src="movie16.png">
+<br>
+Move the cone by dragging the arrows.
+<br>
+<img src="movie17.png">
+<br>
+The new value has been recorded.<br>
+Select the Transform and use <em>Change -&gt; Scenegraph &gt;
+Move rest of branch into a new VrmlScene</em>
+<br>
+<img src="movie18.png">
+<br>
+Nothing is shown, but when you press the blue triangle in the lower bar,
+the animation loops.<br>
+<br>
+<img src="movie19.png">
+<br>
+You can use e.g. <em>File -&gt; Export X3DOM html</em> to export the file
+into a HTML file, that can be edited with your favorite XHTML editor.<br>
+With aqsis and mencoder (e.g. under Ubuntu Linux) you can create the
+following video<br> <video src="movie_movie.mp4" controls>Video problem</video>
+<pre>
+rm -rf RibExport*.tif && dune -o RibExport.rib -rib file.x3dv && 
+aqsis RibExport.rib && 
+mencoder "mf://RibExport*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -o movie.mp4 -mf type=tif:fps=24
+</pre>
+

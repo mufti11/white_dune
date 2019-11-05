@@ -1264,6 +1264,18 @@ static bool markUsedProto(Node *node, void *data)
     return true;
 }
 
+static NodeVrmlCut *vrmlCut = NULL;
+
+static bool searchVrmlCut(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+    if (node->getType() == DUNE_VRML_CUT)
+        vrmlCut = (NodeVrmlCut *)node;
+
+    return true;
+}
+
 int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 {
     if (!(writeFlags & SKIP_SAVED_TEST)) {
@@ -1383,6 +1395,10 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( writeHead(f, writeFlags) )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
+        vrmlCut = NULL;
+        getRoot()->doWithBranch(searchVrmlCut, NULL);
+        if (vrmlCut)
+            RET_ONERROR( vrmlCut->writeX3domScript(f, 4) )
         for (int i = 0; i < m_htmlFirstPart.size(); i++)
             if (m_htmlFirstPart[i]) {
                 RET_RESET_FLAGS_ONERROR( mywritef(f,"%s", 
@@ -3502,6 +3518,7 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
         }
     }
     UpdateViews(sender, UPDATE_ADD_ROUTE, (Hint *) &hint);
+
     return true;
 }
 

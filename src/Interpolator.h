@@ -109,7 +109,7 @@ public:
 
     // keyValue can not use FieldMacros cause datatype is various at this point
 
-    virtual bool        hasX3domOnoutputchange(void) { return true; }
+    virtual bool        hasX3domOnOutputChange(void) { return true; }
 
 protected:
     float               m_fraction;

@@ -2084,6 +2084,7 @@ MainWindow::OnCommand(void *vid)
              m_scene->setfirstSelectionRangeHandle();
              static char message[256];
              swLoadString(IDS_SELECT_NEXT_VERTEX, message, 255);
+             m_statusText = message;
              m_statusBar->SetText(message);
         }
         break;
@@ -14071,7 +14072,7 @@ MainWindow::countPolygons()
     mysnprintf(statusText, 255, "%s: %d  %s: %d",
                numberPolygons, polygons,  
                numberPrimitives, primitives);
-    m_statusBar->SetText(statusText);
+    setStatusText(statusText);
 }
 
 void
@@ -14137,7 +14138,7 @@ MainWindow::countPolygons4catt()
                numberSingleSidedPolygons, singleSided,
                numberPolygons, singleSided + doubleSided);
 
-    m_statusBar->SetText(statusText);
+    setStatusText(statusText);
 }
 
 void

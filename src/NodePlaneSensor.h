@@ -63,7 +63,7 @@ public:
     virtual int     getX3dVersion(void) const { return 0; } 
     virtual Node   *copy() const { return new NodePlaneSensor(*this); }
 
-    virtual bool    hasX3domOnoutputchange(void) { return true; } 
+    virtual bool    hasX3domOnOutputChange(void) { return true; } 
 
     fieldMacros(SFBool,     autoOffset,   ProtoPlaneSensor)
     fieldMacros(SFRotation, axisRotation, ProtoPlaneSensor)

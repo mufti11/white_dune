@@ -68,8 +68,6 @@ public:
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
 
-    virtual bool    hasX3domOnoutputchange(void) { return true; } 
-
     virtual FieldValue *createKey(void *value) const;
     virtual FieldValue *createKeys(void *value, int numKeys) const;
 

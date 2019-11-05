@@ -55,6 +55,8 @@ public:
     virtual int     getX3dVersion(void) const { return 0; }    
     virtual Node   *copy() const { return new NodeVisibilitySensor(*this); }
 
+    virtual bool    hasX3domOnOutputChange(void) { return true; } 
+
     fieldMacros(SFVec3f, center,  ProtoVisibilitySensor)
     fieldMacros(SFBool,  enabled, ProtoVisibilitySensor)
     fieldMacros(SFVec3f, size,    ProtoVisibilitySensor)

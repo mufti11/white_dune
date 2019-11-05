@@ -1380,16 +1380,18 @@ MeshBasedNode::writeRib(int f, int indent)
     bool colorPerVertex;
     MFInt32 *texCoordIndex;
     if (m_isDoubleMesh) {
-        if (m_mesh->getColors())
+        if (m_mesh->getColors()) {
             colors = m_meshDouble->getColors()->getValues();
-        numColors = m_meshDouble->getColors()->getSFSize();
+            numColors = m_meshDouble->getColors()->getSFSize();
+        }
         colorIndex = m_meshDouble->getColorIndex();
         colorPerVertex = m_meshDouble->colorPerVertex();
         texCoordIndex = m_meshDouble->getTexCoordIndex();
     } else {
-        if (m_mesh->getColors())
+        if (m_mesh->getColors()) {
             colors = m_mesh->getColors()->getValues();
-        numColors = m_mesh->getColors()->getSFSize();
+            numColors = m_mesh->getColors()->getSFSize();
+        }
         colorIndex = m_mesh->getColorIndex();
         colorPerVertex = m_mesh->colorPerVertex();
         texCoordIndex = m_mesh->getTexCoordIndex();

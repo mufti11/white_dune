@@ -67,7 +67,7 @@ int EventIn::write(int f, int indent, int flags) const
     RET_ONERROR( writeElementPart(f, indent, flags) )
 
     if (isX3dXml(flags))
-        RET_ONERROR( mywritestr(f, "/>\n") )    
+        RET_ONERROR( mywritestr(f, "></field>\n") )    
     else
         RET_ONERROR( mywritestr(f, "\n") )    
     TheApp->incSelectionLinenumber();

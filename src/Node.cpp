@@ -158,6 +158,10 @@ NodeData::copyData(const NodeData &node)
         m_isFields[i] = node.m_isFields[i];
     for (size_t i = 0; i < node.m_isExposedFields.size(); i++)
         m_isExposedFields[i] = node.m_isExposedFields[i];
+    m_x3domId = m_x3domId ? strdup(node.m_x3domId) : NULL;
+    m_x3domOnOutputChange = m_x3domOnOutputChange ?
+                            strdup(node.m_x3domOnOutputChange) : NULL;
+    m_x3domOnClick = m_x3domOnClick ? strdup(node.m_x3domOnClick) : NULL;
     m_scene->addNode((Node*)this);
  }
 
@@ -749,9 +753,11 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                     }              
                     const char *name = parent->getProto()->getField(
                                            cField)->getName(x3d);
+/*
                     RET_ONERROR( mywritestr(f, " containerField='") )
                     RET_ONERROR( mywritestr(f, name) )
                     RET_ONERROR( mywritestr(f, "'") )
+*/
                     containerFieldWritten = true;
                 }
             }
@@ -778,9 +784,11 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                     }              
                     const char *name = parent->getProto()->getField(
                                            cField)->getName(x3d);
+/*
                     RET_ONERROR( mywritestr(f, " containerField='") )
                     RET_ONERROR( mywritestr(f, name) )
                     RET_ONERROR( mywritestr(f, "'") )
+*/
                 }
             }
             RET_ONERROR( mywritestr(f, "/>\n") )
@@ -799,17 +807,18 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                 setFlag(NODE_FLAG_DEFED);
                 if (m_scene->getWriteFlags() & X3DOM) {
                     RET_ONERROR( mywritestr(f, "id='") )
-                    if (strlen(m_x3domId) == 0)
+                    if ((m_x3domId == NULL) || strlen(m_x3domId) == 0)
                         RET_ONERROR( mywritestr(f, (const char *) m_name) )
                     else
                         RET_ONERROR( mywritestr(f,m_x3domId) )
                     RET_ONERROR( mywritestr(f, "' ") )
-                    if (strlen(m_x3domOnOutputChange) != 0) {
+                    if (m_x3domOnOutputChange &&
+                        strlen(m_x3domOnOutputChange) != 0) {
                         RET_ONERROR( mywritestr(f, "OnOutputChange='") )
                         RET_ONERROR( mywritestr(f,m_x3domOnOutputChange) )
                         RET_ONERROR( mywritestr(f, "' ") )
                     }
-                    if (strlen(m_x3domOnClick) != 0) {
+                    if (m_x3domOnClick && strlen(m_x3domOnClick) != 0) {
                         RET_ONERROR( mywritestr(f, "OnClick='") )
                         RET_ONERROR( mywritestr(f,m_x3domOnClick) )
                         RET_ONERROR( mywritestr(f, "' ") )
@@ -1161,15 +1170,15 @@ NodeData::writeXmlFields(int f, int indent, int when, int containerField,
                 Node *dest = j->item().getNode();
                 int field = j->item().getField();
                 if ((dest->getType() == VRML_SCRIPT) &&
-                    (hasX3domOnoutputchange() || hasX3domOnclick())) {
+                    (hasX3domOnOutputChange() || hasX3domOnclick())) {
                     NodeScript *script = (NodeScript *)dest;
                     for (int n = 0; n < script->url()->getSize(); n++)
                         if (isX3domscript(script->url()->getValue(n))) {
                             RET_ONERROR( mywritestr(f, " ") )
                             if (hasX3domOnclick())
-                                RET_ONERROR( mywritestr(f, "onclick") )
+                                RET_ONERROR( mywritestr(f, "onClick") )
                             else
-                                RET_ONERROR( mywritestr(f, "onoutputchange") )
+                                RET_ONERROR( mywritestr(f, "onOutputChange") )
                             RET_ONERROR( mywritestr(f, "=\'") )
                             const char *name = script->getProto()->
                                 getEventIn(field)->getName(true);
@@ -1343,7 +1352,7 @@ NodeData::writeXmlField(int f, int indent, int i, int when, bool script,
             int type = field->getType();
             bool nodeField = (type == SFNODE) || (type == MFNODE);
             if ((flags & NULL_VALUE) && (!(flags & WITHOUT_VALUE))) {
-                RET_ONERROR( mywritestr(f, "/>\n") )
+                RET_ONERROR( mywritestr(f, "></field>\n") )
                 TheApp->incSelectionLinenumber();
             } else if (nodeField ) {
                 RET_ONERROR( mywritestr(f, ">\n") )
@@ -1355,7 +1364,7 @@ NodeData::writeXmlField(int f, int indent, int i, int when, bool script,
             } else {
                 RET_ONERROR( mywritestr(f, " value=") )
                 RET_ONERROR( value->writeXml(f, 0) )
-                RET_ONERROR( mywritestr(f, " />\n") )
+                RET_ONERROR( mywritestr(f, " ></field>\n") )
                 TheApp->incSelectionLinenumber();
             }
         } else if (!inTag && !isNode)

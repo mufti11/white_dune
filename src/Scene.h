@@ -551,6 +551,8 @@ public:
                            { return m_writeFlags & CONVERT2X3D; }
     bool                converts2VRML(void) const 
                            { return m_writeFlags & CONVERT2VRML; }
+    bool                isX3dom(void) const
+                           { return m_writeFlags & X3DOM; }
     int                 getWriteFlags(void) { return m_writeFlags; }
     void                setWriteFlags(int flags) { m_writeFlags = flags; }
     void                setX3d(void);

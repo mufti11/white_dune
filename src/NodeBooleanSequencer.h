@@ -57,8 +57,6 @@ public:
     virtual int     getX3dVersion(void) const { return 0; }
     virtual Node   *copy() const { return new NodeBooleanSequencer(*this); }
 
-    virtual bool    hasX3domOnoutputchange(void) { return true; } 
-
     virtual FieldValue *createKey(void *value) const;
     virtual FieldValue *createKeys(void *value, int numKeys) const;
 

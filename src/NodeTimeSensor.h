@@ -70,6 +70,9 @@ public:
     virtual Node   *copy() const { return new NodeTimeSensor(*this); }
 
     virtual void    preDraw();
+
+    virtual bool    hasX3domOnOutputChange(void) { return true; } 
+
     void            setTime(double t);
     void            start(double t);
     float           getFraction(double t);
