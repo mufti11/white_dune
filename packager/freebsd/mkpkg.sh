@@ -34,9 +34,11 @@ mkdir -p $PREFIX/bin/ &&
 cp $WTMP/wdune-$VERSION/bin/dune $PREFIX/bin/ &&
 cp $WTMP/wdune-$VERSION/bin/dune4kids $PREFIX/bin/ &&
 cp $WTMP/wdune-$VERSION/bin/illegal2vrml $PREFIX/bin/ &&
+cp $WTMP/wdune-$VERSION/tools/run_dune_and_aqsis_freebsd.sh $PREFIX/bin/run_dune_and_aqsis.sh &&
 chmod 755 $PREFIX/bin/dune &&
 chmod 755 $PREFIX/bin/dune4kids &&
 chmod 755 $PREFIX/bin/illegal2vrml &&
+chmod 755 $PREFIX/bin/run_dune_and_aqsis.sh &&
 
 mkdir -p $PREFIX/man/man1 &&
 cp $WTMP/wdune-$VERSION/man/dune.1 $PREFIX/man/man1 &&

@@ -5417,4 +5417,8 @@ Fixed some missing Translation errors in the documentation.
 
 Fixed missing polygon count in statusbar
 
+Fixed filename creation for RIB -files option 
+
+added run_dune_and_aqsis.sh scipt to use and run aqsis with SMP support
+
 Contact: MUFTI <mufti11@web.de>

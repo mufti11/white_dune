@@ -96,6 +96,7 @@ build() {
 package() {
 	cd "\$pkgname-\$pkgver"
         install -Dm755 bin/dune \$pkgdir/usr/bin/dune 
+        install -Dm755 tools/run_dune_and_aqsis.sh \$pkgdir/usr/bin/run_dune_and_aqsis.sh 
         mkdir -p "\$pkgdir/usr/share/doc/\$name/docs"
         cp -r "docs" "\$pkgdir/usr/share/doc/\$name/"
         install -Dm644 desktop/kde/dune.desktop \$pkgdir/usr/share/applications/dune.desktop

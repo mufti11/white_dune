@@ -45,8 +45,9 @@ binary-arch: checkroot build
 	cp -a desktop/debian/dune.xpm $(DESTDIR)/share/pixmaps
 	cp -a packager/debian/menu $(DESTDIR)/lib/menu/white_dune
 	cp -a packager/debian/control_buster debian/${package}/DEBIAN/control
-	install bin/dune ${DESTDIR}/bin/
-	dpkg-shlibdeps $(DESTDIR)/bin/dune
+	cp -a man/dune.1 debian/tmp/usr/share/man/man1
+	dpkg-shlibdeps bin/dune
+	install tools/run_dune_and_aqsis.sh ${DESTDIR}/bin/ 
 #	chown -R root.root debian/wdune
 	chmod -R g-ws debian/wdune
 

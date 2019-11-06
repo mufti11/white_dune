@@ -26,7 +26,7 @@ of the windows registry-
 To compile with Visual C++, execute batch/nt.bat (or batch/jpg_png_zlib.bat
 if you have the matching libraries/SDKs (see INSTALL)). Then go to the src
 directory and click to the dune.dsw files for the older Visual C++ compiler
-or dune.vcprojx for the newer Visual C++ (Express) compilers.
+or dune.vcxproj for the newer Visual C++ (Express) compilers.
  
 After successfull compilation, search for a M$Windows executable "dune.exe" 
 in the subdirectory "src/x64/Debug" (or "src/Debug" for the older 

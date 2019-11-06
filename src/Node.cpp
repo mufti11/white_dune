@@ -791,7 +791,19 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
 */
                 }
             }
-            RET_ONERROR( mywritestr(f, "/>\n") )
+            RET_ONERROR( mywritestr(f, ">\n") )
+            RET_ONERROR( indentf(f, indent) )
+            RET_ONERROR( mywritestr(f, "</") )
+#ifdef HAVE_NO_STATIC_GROUP_X3DOM
+            if ((m_scene->getWriteFlags() & X3DOM) &&
+                strcmp(m_proto->getName(x3d), "StaticGroup") == 0)
+                RET_ONERROR( mywritestr(f, "Group") )
+            else
+                RET_ONERROR(mywritestr(f, (const char *) m_proto->getName(x3d)))
+#else 
+            RET_ONERROR( mywritestr(f, (const char *) m_proto->getName(x3d)) )
+#endif
+            RET_ONERROR( mywritestr(f, ">\n") )
             TheApp->incSelectionLinenumber();
         } else {
             if (avoidUse) {

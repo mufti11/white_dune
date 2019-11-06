@@ -116,6 +116,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/lib/debug/usr/bin/
 install -m 755 bin/dune $RPM_BUILD_ROOT/usr/bin/dune
 install -m 755 bin/dune4kids $RPM_BUILD_ROOT/usr/bin/dune4kids
 install -m 755 bin/illegal2vrml $RPM_BUILD_ROOT/usr/bin/illegal2vrml
+install -m 755 tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
 install -m 644 desktop/kde/dune.desktop $RPM_BUILD_ROOT/usr/share/applications/dune.desktop
 install -m 644 desktop/kde/dune.png $RPM_BUILD_ROOT/usr/share/pixmaps/dune.png
 install -m 644 desktop/kde/dune4kids.desktop $RPM_BUILD_ROOT/usr/share/applications/dune4kids.desktop
@@ -139,6 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 
 /usr/bin/dune
 /usr/bin/dune4kids
+/usr/bin/run_dune_and_aqsis.sh
 /usr/bin/illegal2vrml
 /usr/share/applications/dune.desktop
 /usr/share/pixmaps/dune.png

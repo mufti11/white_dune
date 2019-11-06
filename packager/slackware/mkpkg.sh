@@ -123,7 +123,8 @@ export CXXFLAGS="\$SLKCFLAGS -std=c++11"
 make
 
 install -c -d \$PKG/install \$PKG/usr/bin \$PKG/usr/man/man1
-cp bin/* /\$PKG/usr/bin
+cp -a bin/* /\$PKG/usr/bin
+cp -a tools/run_dune_and_aqsis.sh /\$PKG/usr/bin
 install -c -m 644 ./man/dune.1 /\$PKG/usr/man/man1
 install -c -d \$PKG/usr/doc/\$PRGNAM-\$VERSION
 cp -fr docs \$PKG/usr/doc/\$PRGNAM-\$VERSION

@@ -172,6 +172,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/pixmaps/
 
 install -m 755 -p bin/dune $RPM_BUILD_ROOT/%{_bindir}/dune
 install -m 755 -p bin/dune4kids $RPM_BUILD_ROOT/%{_bindir}/dune4kids
+install -m 755 -p tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
 install -m 755 -p bin/illegal2vrml $RPM_BUILD_ROOT/%{_bindir}/illegal2vrml
 install -m 644 -p desktop/kde/dune.desktop $RPM_BUILD_ROOT/%{_datadir}/applications/dune.desktop
 install -m 644 -p desktop/kde/dune.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/dune.png
@@ -210,6 +211,7 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %license COPYING
 %{_bindir}/dune
 %{_bindir}/dune4kids
+%{_bindir}/run_dune_and_aqsis.sh
 %{_bindir}/illegal2vrml
 %{_datadir}/applications/dune.desktop
 %{_datadir}/pixmaps/dune.png

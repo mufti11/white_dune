@@ -31,6 +31,7 @@ binary-arch:	checkroot build
 	$(checkdir)
 	rm -rf debian/tmp
 	install -d debian/tmp/DEBIAN \
+                -d debian/tmp/usr/bin/ \
 		-d debian/tmp/usr/share/doc/$(package) \
 		-d debian/tmp/usr/share/applications \
 		-d debian/tmp/usr/share/pixmaps \
@@ -53,6 +54,7 @@ binary-arch:	checkroot build
 	cp -a desktop/debian/dune.xpm debian/tmp/usr/share/pixmaps
 	cp -a packager/debian/menu debian/tmp/usr/lib/menu/white_dune
 	dpkg-shlibdeps bin/dune
+	install tools/run_dune_and_aqsis.sh ${DESTDIR}/bin/
 	dpkg-gencontrol -isp
 	chown -R root.root debian/tmp
 	chmod -R g-ws debian/tmp

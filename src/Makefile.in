@@ -692,6 +692,7 @@ target: mysnprintf.o
 
 install: target
 	install -m 755 -p ../bin/dune /usr/bin
+	install -m 755 -p ../tools/run_dune_and_aqsis.sh /usr/bin
 	install -m 644 -p ../man/dune.1 /usr/share/man/man1
 	install -m 644 -p ../desktop/kde/dune.desktop /usr/share/applications/dune.desktop
 	install -m 644 -p ../desktop/kde/dune.png /usr/share/pixmaps/dune.png
@@ -733,17 +734,19 @@ duneLowMem: main.o objc $(CLASSES) @SDL_JOYSTICK_LIBS@
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 ../bin/dune ; fi"
 	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
-../bin/dune: main.o @OBJS@ swt/lib/libswt.a @SDL_JOYSTICK_LIBS@ 
+../bin/dune: main.o @OBJS@ @SDL_JOYSTICK_LIBS@ 
+	(cd swt ; $(MAKE))
 	$(CXX) main.o @OBJS@ $(LIBS) -o $@
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
 ../bin/efencedune:  main.o $(OBJS) @SDL_JOYSTICK_LIBS@
+	(cd swt ; $(MAKE))
 	(cd swt ; $(MAKE) efence)
 	rm -f /tmp/efencedune.o
 	@ARXSTRDUP_O@
-	ld $(LD_OPTIONS) -r -o /tmp/efencedune.o @STRDUP_O@ main.o $(OBJS) swt/lib/libswt.a @SDL_JOYSTICK_LIBS@ $(LIBEFENCE_A)
+	ld $(LD_OPTIONS) -r -o /tmp/efencedune.o @STRDUP_O@ main.o $(OBJS) @SDL_JOYSTICK_LIBS@ $(LIBEFENCE_A)
 	perl ../batch/bin_gsub.pl /tmp/efencedune.o malloc madune
 	perl ../batch/bin_gsub.pl /tmp/efencedune.o calloc cadune
 	perl ../batch/bin_gsub.pl /tmp/efencedune.o valloc vadune

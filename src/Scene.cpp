@@ -2018,12 +2018,8 @@ Scene::writeRib(int filedes, const char *file)
             (((currentfile == 0) && (frames > 1)) && 
              (TheApp->getNumExportFiles() > 1)))  {
             URL file(url);
-            const char *ext = strstr(url, ".");
-            if (ext != NULL)
-                ext++;
-            snprintf(filename, 4095, "%s%d.%s", 
-                     file.GetFileNameWithoutExtension(), ++currentfile, 
-                     ext != NULL ? ext : "");
+            snprintf(filename, 4095, "%s%d.rib", 
+                     file.GetFileNameWithoutExtension(), ++currentfile);
             if ((TheApp->getNumExportFiles() > 1) || 
                 ((TheApp->getNumExportFiles() == 1) && (f != 1))) {
                 swTruncateClose(f);

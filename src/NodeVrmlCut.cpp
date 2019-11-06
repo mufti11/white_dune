@@ -1030,7 +1030,7 @@ NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
         RET_ONERROR( mywritestr(f, "<NavigationInfo ") )
         RET_ONERROR( mywritestr(f, "DEF='VrmlCutNavigationInfo' ") ) 
         RET_ONERROR( mywritestr(f, "id='VrmlCutNavigationInfo' ") )
-        RET_ONERROR( mywritestr(f, "transitionType 'TELEPORT'>") )
+        RET_ONERROR( mywritestr(f, "transitionType='TELEPORT' >\n") )
         TheApp->incSelectionLinenumber();
         RET_ONERROR( indentf(f, indent ) )
         RET_ONERROR( mywritestr(f, "</NavigationInfo>\n") )

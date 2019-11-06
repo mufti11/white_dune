@@ -40,7 +40,7 @@ makedepends=(gcc
              lxterminal
              gimp
              audacity
-#             cinelerra-cv #not available under ArchLinuxARM
+             cinelerra-cv
              kolourpaint
              imagemagick
              netpbm
@@ -51,8 +51,6 @@ makedepends=(gcc
              curl
              freetype2
              ttf-bitstream-vera             
-             xorg-fonts-misc
-             xorg-fonts-alias
 )
 checkdepends=()
 optdepends=()
@@ -65,13 +63,13 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('9f16524416f233b007ef6a599e98907d')
+md5sums=('f33c7d049a4e5f88542736828f1b858f')
 validpgpkeys=()
 
 build() {
 	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" --with-partial-fortify 
-        (cd src && make duneLowMem)
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" 
+        make
 }
 
 package() {

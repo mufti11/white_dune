@@ -21,7 +21,7 @@
 <h1>How to build a movie (easy)</h1>
 <br>
 This tutorial needs at least 
-<a href="https://wdune.ourproject.org">white_dune</a> version 1.555.
+<a href="https://wdune.ourproject.org">white_dune</a> version 1.556.
 <br> 
 <h2>First a few informations to read</h2>
 <br>
@@ -235,11 +235,10 @@ the animation loops.<br>
 <br>
 You can use e.g. <em>File -&gt; Export X3DOM html</em> to export the file
 into a HTML file, that can be edited with your favorite XHTML editor.<br>
-With aqsis and mencoder (e.g. under Ubuntu Linux) you can create the
-following video<br> <video src="movie_movie.mp4" controls>Video problem</video>
+With aqsis and mencoder installed (e.g. under Ubuntu Linux) you can create the
+following video<br> <video src="movie.mp4" controls>Video problem</video>
 <pre>
-rm -rf RibExport*.tif && dune -o RibExport.rib -rib file.x3dv && 
-aqsis RibExport.rib && 
-mencoder "mf://RibExport*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -o movie.mp4 -mf type=tif:fps=24
+rm -rf RibExport*.tif && run_dune_and_aqsis.sh file.x3dv
+mencoder -o movie.mp4 "mf://untitled*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -mf type=tif:fps=24
 </pre>
 

@@ -447,8 +447,7 @@ into a HTML file, that can be edited with your favorite HTML editor.<br>
 With aqsis and mencoder (e.g. under Ubuntu Linux) you can create the
 following video<br> <video src="glider_movie.mp4" controls>Video problem</video>
 <pre>
-rm -rf RibExport*.tif && dune -o RibExport.rib -rib file.x3dv && 
-aqsis RibExport.rib && 
-mencoder "mf://RibExport*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -o movie.mp4 -mf type=tif:fps=24
+rm -rf RibExport*.tif && run_dune_and_aqsis.sh  
+mencoder -o movie.mp4 "mf://untitled*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -mf type=tif:fps=24
 </pre>
 
