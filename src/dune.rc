@@ -354,7 +354,7 @@ BEGIN
             MENUITEM "Move rest of current branch into selection (need Transform)", ID_BRANCH_TO_TRANSFORM_SELECTION
             MENUITEM "Move rest of current branch into a new Transform", ID_BRANCH_TO_TRANSFORM
             MENUITEM "Move rest of current branch into a new &VrmlScene (begin of VrmlCut)", ID_BRANCH_TO_VRML_SCENE_BEGIN
-            MENUITEM "Move rest of current branch into a new V&rmlScene (end of VrmlCut)", ID_BRANCH_TO_VRML_SCENES_END
+            MENUITEM "Move rest of current branch into a new V&rmlScene (end of VrmlCut)", ID_BRANCH_TO_VRML_SCENE_END
             MENUITEM "Move rest of current branch &1 level up", ID_BRANCH_TO_PARENT
             MENUITEM "Flip side in rest of branch",         ID_BRANCH_SET_FLIP_SIDE
 #ifdef HAVE_LIBCGAL
@@ -5941,7 +5941,7 @@ BEGIN
                 MENUITEM "&Switch",                        ID_BRANCH_TO_SWITCH
                 MENUITEM "&Inline",                        ID_BRANCH_TO_INLINE
                 MENUITEM "C&ollisionSpace",                ID_BRANCH_TO_COLLISION_SPACE
-                MENUITEM "&VrmlScene (debut de VrmlCut)",  ID_BRANCH_TO_VRML_SCENE_BEGIM
+                MENUITEM "&VrmlScene (debut de VrmlCut)",  ID_BRANCH_TO_VRML_SCENE_BEGIN
                 MENUITEM "V&rmlScene (fin de VrmlCut)",    ID_BRANCH_TO_VRML_SCENE_END
                 MENUITEM "&new PROTO",                     ID_BRANCH_TO_PROTO
             END
