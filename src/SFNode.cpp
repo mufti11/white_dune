@@ -162,7 +162,7 @@ SFNode::addNode(Node *node, int index) const
 }
 
 FieldValue *
-SFNode::removeNode(Node *node) const
+SFNode::removeNode(Node *node, int index) const
 {
     if (m_value != node)
         return NULL;

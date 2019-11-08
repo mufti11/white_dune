@@ -92,11 +92,9 @@ public:
     void        append(T t)
                 { (*this)[m_size] = t; }
     void        insert(T t, size_t index) {                   
-                    if (index > m_size) {
-                        resize(index + 1);
-                        for (long i = (long)m_size - 1; i > (long)index; i--)
-                            (*this)[i] = (*this)[i-1];
-                    }
+                    resize(m_size + 1);
+                    for (long i = (long)m_size - 1; i > (long)index; i--)
+                         (*this)[i] = (*this)[i-1];
                     (*this)[index] = t; 
                 }
     void        remove(size_t pos) {

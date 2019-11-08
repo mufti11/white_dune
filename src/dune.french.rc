@@ -282,7 +282,8 @@ BEGIN
             MENUITEM "Move down in scenegraph\tCtrl+K",     ID_MOVE_SIBLING_DOWN
             MENUITEM "Déplacer le reste de la branche du graphique de scène dans le &Transform désigné (a besoin de Transform)", ID_BRANCH_TO_TRANSFORM_SELECTION
             MENUITEM "Déplacer le reste de la branche du graphique de scène dans un nouveau Transform", ID_BRANCH_TO_TRANSFORM
-            MENUITEM "Déplacer le reste de la branche du graphique de scène dans un nouvea &VrmlScene", ID_BRANCH_TO_VRML_SCENE
+            MENUITEM "Déplacer le reste de la branche du graphique de scène dans un nouvea &VrmlScene (debut de VrmlCut)", ID_BRANCH_TO_VRML_SCENE_BEGIN
+            MENUITEM "Déplacer le reste de la branche du graphique de scène dans un nouvea &VrmlScene (fin de VrmlCut)", ID_BRANCH_TO_VRML_SCENE_END
             MENUITEM "Déplacer le reste de la branche du graphique de scène dans le &Transform désigné", ID_BRANCH_TO_PARENT
             MENUITEM "Flip side in reste de la branche du graphique de scène", ID_BRANCH_SET_FLIP_SIDE
 #ifdef HAVE_LIBCGAL
@@ -1318,7 +1319,8 @@ BEGIN
                 MENUITEM "&Switch",                        ID_BRANCH_TO_SWITCH
                 MENUITEM "&Inline",                        ID_BRANCH_TO_INLINE
                 MENUITEM "C&ollisionSpace",                ID_BRANCH_TO_COLLISION_SPACE
-                MENUITEM "&VrmlScene",                     ID_BRANCH_TO_VRML_SCENE
+                MENUITEM "&VrmlScene (debut de VrmlCut)",  ID_BRANCH_TO_VRML_SCENE_BEGIM
+                MENUITEM "V&rmlScene (fin de VrmlCut)",    ID_BRANCH_TO_VRML_SCENE_END
                 MENUITEM "&new PROTO",                     ID_BRANCH_TO_PROTO
             END
             POPUP "Créer:"

@@ -89,7 +89,7 @@ validpgpkeys=()
 
 build() {
 	cd "\$pkgname-\$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" --without-aqsis --with-partial-fortify 
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" --with-partial-fortify 
         (cd src && make duneLowMem)
 }
 

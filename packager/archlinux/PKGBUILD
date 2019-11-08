@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.555
+pkgver=1.568
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -40,7 +40,7 @@ makedepends=(gcc
              lxterminal
              gimp
              audacity
-             cinelerra-cv
+#             cinelerra-cv #not available under ArchLinuxARM
              kolourpaint
              imagemagick
              netpbm
@@ -51,6 +51,8 @@ makedepends=(gcc
              curl
              freetype2
              ttf-bitstream-vera             
+             xorg-fonts-misc
+             xorg-fonts-alias
 )
 checkdepends=()
 optdepends=()
@@ -63,18 +65,19 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('f33c7d049a4e5f88542736828f1b858f')
+md5sums=('abdc38b3ec5d1fd63fefd19b5e796028')
 validpgpkeys=()
 
 build() {
 	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" 
-        make
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" --with-partial-fortify 
+        (cd src && make duneLowMem)
 }
 
 package() {
 	cd "$pkgname-$pkgver"
         install -Dm755 bin/dune $pkgdir/usr/bin/dune 
+        install -Dm755 tools/run_dune_and_aqsis.sh $pkgdir/usr/bin/run_dune_and_aqsis.sh 
         mkdir -p "$pkgdir/usr/share/doc/$name/docs"
         cp -r "docs" "$pkgdir/usr/share/doc/$name/"
         install -Dm644 desktop/kde/dune.desktop $pkgdir/usr/share/applications/dune.desktop

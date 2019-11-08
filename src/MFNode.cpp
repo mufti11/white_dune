@@ -312,19 +312,22 @@ MFNode::addNode(Node *node, int index) const
 }
 
 FieldValue *
-MFNode::removeNode(Node *node) const
+MFNode::removeNode(Node *node, int index) const
 {
     NodeList *list = new NodeList();
-
-    bool removed = false;
     for (size_t i = 0; i < m_value->size(); i++) {
-        // remove a node only once (only one USE'd Node)
-        if ((m_value->get(i) != node) || removed)
-            list->append(m_value->get(i));
-        else 
-            removed = true;
+        list->append(m_value->get(i));
     }
-    return new MFNode(list);
+    for (size_t i = 0; i < list->size(); i++) {
+        if (list->get(i) == node) {
+            if (index == -1)
+                list->remove(i);
+            else
+                list->remove(index);
+        }
+    }
+    MFNode *ret = new MFNode(list);
+    return ret;
 }
 
 FieldValue *

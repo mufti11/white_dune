@@ -102,8 +102,11 @@ AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use c
 AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version of the CGAL library,
             CGALHEADERS=yes)
 
-AC_ARG_WITH(omp,--without-omp             do not use OpenMP (usefull on raspberry PI),
+AC_ARG_WITH(omp,--without-omp             do not use OpenMP,
             OMP=no)
+
+AC_ARG_WITH(aqsis,--without-aqsis           do not use aqsis to render .RIB files,
+            AQSIS=no)
 
 AC_ARG_WITH(ffmpeg,--without-ffmpeg          do not use ffmpeg libraries to load movie texture,
             FFMPEG=no)
@@ -515,11 +518,12 @@ else
    echo "unable to convert textures to bmp for ac3d export and unable to convert textures for RIB export" 1>&2
 fi
 
-AC_PATH_PROGS(RIB_TEXTURER,[teqser txmake])
-if test "X_$RIB_TEXTURER" != "X_" ; then
-   AC_DEFINE_UNQUOTED(HAVE_RIB_TEXTURER,"${RIB_TEXTURER}")
+if test "X_$AQSIS" != "X_no" ; then
+   AC_PATH_PROGS(RIB_TEXTURER,[teqser txmake])
+   if test "X_$RIB_TEXTURER" != "X_" ; then
+      AC_DEFINE_UNQUOTED(HAVE_RIB_TEXTURER,"${RIB_TEXTURER}")
+   fi
 fi
-
 
 SDL_JOYSTICK_BSD="no"
 SDL_JOYSTICK_LINUX="no"

@@ -75,7 +75,7 @@ public:
     virtual Node       *convert2Vrml(void);
 
     virtual FieldValue *addNode(Node *node, int index = -1) const;
-    virtual FieldValue *removeNode(Node *node) const;
+    virtual FieldValue *removeNode(Node *node, int index = 1) const;
 
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 

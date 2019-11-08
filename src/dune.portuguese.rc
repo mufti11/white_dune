@@ -283,7 +283,8 @@ BEGIN
             MENUITEM "Mover para baixo em scenegraph\tCtrl+K", ID_MOVE_SIBLING_DOWN
             MENUITEM "Mover o restante do ramo atual na selecao (necessidade Transform)", ID_BRANCH_TO_TRANSFORM_SELECTION
             MENUITEM "Mover o restante do ramo atual em novo Transform", ID_BRANCH_TO_TRANSFORM
-            MENUITEM "Mover o restante do ramo atual em novo &VrmlScene", ID_BRANCH_TO_VRML_SCENE
+            MENUITEM "Mover o restante do ramo atual em novo &VrmlScene (de face VrmlCut)", ID_BRANCH_TO_VRML_SCENE_BEGIN
+            MENUITEM "Mover o restante do ramo atual em novo V&rmlScene (oposto de face VrmlCut)", ID_BRANCH_TO_VRML_SCENE_END
             MENUITEM "Mover o restante do ramo atual &1 nivel acima", ID_BRANCH_TO_PARENT
             MENUITEM "Inverta o rosto ou restante",     ID_BRANCH_SET_FLIP_SIDE
 #ifdef HAVE_LIBCGAL
@@ -1321,7 +1322,8 @@ BEGIN
                 MENUITEM "&Switch",                      ID_BRANCH_TO_SWITCH
                 MENUITEM "&Inline",                      ID_BRANCH_TO_INLINE
                 MENUITEM "C&ollisionSpace",              ID_BRANCH_TO_COLLISION_SPACE
-                MENUITEM "&VrmlScene",                   ID_BRANCH_TO_VRML_SCENE
+                MENUITEM "&VrmlScene (begin of VrmlCut)", ID_BRANCH_TO_VRML_SCENE_BEGIN
+                MENUITEM "V&rmlScene (end of VrmlCut)",  ID_BRANCH_TO_VRML_SCENE_END
                 MENUITEM "&new PROTO",                   ID_BRANCH_TO_PROTO
             END
             POPUP "Cr&eate:"

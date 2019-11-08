@@ -85,6 +85,8 @@ NodeVrmlCut::NodeVrmlCut(Scene *scene, Proto *proto)
 void 
 NodeVrmlCut::initialize(void)
 {
+    m_firstScene = 0;
+    m_lastScene = 0;
     m_currentScene = -1;
     accountAllSceneLengths();
 }

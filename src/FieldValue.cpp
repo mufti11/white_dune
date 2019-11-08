@@ -194,7 +194,7 @@ FieldValue::addNode(Node * /* node */, int /* index */) const
 }
 
 FieldValue *
-FieldValue::removeNode(Node * /* node */) const
+FieldValue::removeNode(Node * node, int index) const
 {
     assert(0);
     return NULL;

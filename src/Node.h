@@ -1285,6 +1285,7 @@ public:
     void              copyOutputsTo(Node *copyedNode);
     void              copyInputsTo(Node *copyedNode);
 
+    int               getSiblingIndex(void);
     int               getPrevSiblingIndex(void);
     int               getNextSiblingIndex(void);
 

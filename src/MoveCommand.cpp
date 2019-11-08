@@ -47,7 +47,7 @@ MoveCommand::MoveCommand(Node *node, Node *src, int srcField,
         m_oldValueSrc->ref();
         if ((m_oldValueSrc->getType() == SFNODE) ||
             (m_oldValueSrc->getType() == MFNODE))
-            m_newValueSrc = m_oldValueSrc->removeNode(node);
+            m_newValueSrc = m_oldValueSrc->removeNode(node, destIndex);
         else
             m_newValueSrc = NULL;
         if (m_newValueSrc == NULL) {

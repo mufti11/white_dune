@@ -708,7 +708,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -740,6 +739,7 @@ with_devil
 with_cgal
 with_cgalheaders
 with_omp
+with_aqsis
 with_ffmpeg
 with_png_handle_unknown
 with_sdljoystick
@@ -852,7 +852,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1105,15 +1104,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1251,7 +1241,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1404,7 +1394,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1449,7 +1438,8 @@ Optional Packages:
 --without-devil           do not use DevIL library to load textureimages
 --without-cgal            do not use CGAL library e.g. to use convex hull
 --with-cgalheaders        use the headers only version of the CGAL library
---without-omp             do not use OpenMP (usefull on raspberry PI)
+--without-omp             do not use OpenMP
+--without-aqsis           do not use aqsis to render .RIB files
 --without-ffmpeg          do not use ffmpeg libraries to load movie texture
 --without-png_handle_unknown  use if link fails cause of png_handle_unknown
 --with-sdljoystick 	  use SDL joystick code
@@ -3823,6 +3813,13 @@ fi
 
 
 
+# Check whether --with-aqsis was given.
+if test "${with_aqsis+set}" = set; then :
+  withval=$with_aqsis; AQSIS=no
+fi
+
+
+
 # Check whether --with-ffmpeg was given.
 if test "${with_ffmpeg+set}" = set; then :
   withval=$with_ffmpeg; FFMPEG=no
@@ -5232,7 +5229,8 @@ else
    echo "unable to convert textures to bmp for ac3d export and unable to convert textures for RIB export" 1>&2
 fi
 
-for ac_prog in teqser txmake
+if test "X_$AQSIS" != "X_no" ; then
+   for ac_prog in teqser txmake
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5277,13 +5275,13 @@ fi
   test -n "$RIB_TEXTURER" && break
 done
 
-if test "X_$RIB_TEXTURER" != "X_" ; then
-   cat >>confdefs.h <<_ACEOF
+   if test "X_$RIB_TEXTURER" != "X_" ; then
+      cat >>confdefs.h <<_ACEOF
 #define HAVE_RIB_TEXTURER "${RIB_TEXTURER}"
 _ACEOF
 
+   fi
 fi
-
 
 SDL_JOYSTICK_BSD="no"
 SDL_JOYSTICK_LINUX="no"

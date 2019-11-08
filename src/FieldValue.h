@@ -117,7 +117,7 @@ public:
     virtual bool        equalsAngle(const FieldValue *value, double angleUnit) 
                             const { return false; }
     virtual FieldValue *addNode(Node *node, int index = -1) const;
-    virtual FieldValue *removeNode(Node *node) const;
+    virtual FieldValue *removeNode(Node *node, int index = -1) const;
 
     virtual void        clamp(const FieldValue *min, const FieldValue *max) {}
 

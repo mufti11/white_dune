@@ -5421,4 +5421,10 @@ Fixed filename creation for RIB -files option
 
 added run_dune_and_aqsis.sh scipt to use and run aqsis with SMP support
 
+Fixed insert() bug in Array.h
+
+Fixed bugs in moveSibling*
+
+Added rest of scenegraph ranch to VrmlCut at begin/end of VrmlCut
+
 Contact: MUFTI <mufti11@web.de>

@@ -4509,6 +4509,15 @@ Node::getParentFieldValue(void) const
 }
 
 int
+Node::getSiblingIndex(void)
+{
+    int parentIndex = getParentIndex();
+    if (parentIndex > -1)
+        return parentIndex;
+    return -1;
+}
+
+int
 Node::getPrevSiblingIndex(void)
 {
     int parentIndex = getParentIndex();

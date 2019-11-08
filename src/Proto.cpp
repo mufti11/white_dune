@@ -998,7 +998,7 @@ Proto::lookupIsField(Node *node, int field) const
             continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
             Node *isNode = m_fields[i]->getIsNode(j);
-            if (isNode->isEqual(node))
+            if (isNode && isNode->isEqual(node))
                 if (isNode->translateField(m_fields[i]->getIsField(j)) == 
                     field)
                     return i;
@@ -1014,7 +1014,8 @@ Proto::lookupIsEventIn(Node *node, int eventIn, int elementType) const
         if (m_eventIns[i] == NULL)
             continue;
         for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
-            if (m_eventIns[i]->getIsNode(j)->isEqual(node))
+            if (m_eventIns[i]->getIsNode(j) &&
+                m_eventIns[i]->getIsNode(j)->isEqual(node))
                 if (m_eventIns[i]->getIsField(j) == eventIn) {
                     if ((elementType != -1) && 
                         (m_eventIns[i]->getIsElementType(j) != elementType))
@@ -1032,7 +1033,8 @@ Proto::lookupIsEventOut(Node *node, int eventOut, int elementType) const
         if (m_eventOuts[i] == NULL)
             continue;
         for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
-            if (m_eventOuts[i]->getIsNode(j)->isEqual(node)) {
+            if (m_eventOuts[i]->getIsNode(j) && 
+                m_eventOuts[i]->getIsNode(j)->isEqual(node)) {
                 if (m_eventOuts[i]->getIsField(j) == eventOut) {
                     if ((elementType != -1) && 
                         (m_eventOuts[i]->getIsElementType(j) != elementType))

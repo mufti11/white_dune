@@ -2289,8 +2289,11 @@ MainWindow::OnCommand(void *vid)
       case ID_BRANCH_TO_COLLISION_SPACE:
         moveBranchTo("CollisionSpace", "collidables");
         break;
-     case ID_BRANCH_TO_VRML_SCENE:
-        moveBranchToVrmlScene();
+     case ID_BRANCH_TO_VRML_SCENE_BEGIN:
+        moveBranchToVrmlScene(true);
+        break;
+     case ID_BRANCH_TO_VRML_SCENE_END:
+        moveBranchToVrmlScene(false);
         break;
       case ID_BRANCH_TO_PROTO:
         moveBranchToProto();
@@ -8423,16 +8426,14 @@ MainWindow::moveSibling(int command)
         oldIndex = newIndex - 1;
         break;
       case MOVE_SIBLING_FIRST:
-        if (node->getPrevSiblingIndex() != -1) {
-            newIndex = 0;
-            oldIndex = node->getPrevSiblingIndex() + 1;
-        }
+        newIndex = 0;
+        oldIndex = node->getSiblingIndex() + 1;
         break;
       case MOVE_SIBLING_LAST:
-        if (node->getNextSiblingIndex() != -1) {
-            MFNode *mfNode = (MFNode *)node->getParentFieldValue();
-            newIndex = mfNode->getSize() - 1;
-            oldIndex = node->getNextSiblingIndex() - 1;
+        {
+        MFNode *mfNode = (MFNode *)node->getParentFieldValue();
+        newIndex = mfNode->getSize() - 1;
+        oldIndex = node->getSiblingIndex();
         }
         break;
     }
@@ -8448,10 +8449,10 @@ MainWindow::moveSibling(int command)
             oldSceneLength = vrmlCut->sceneLengths()->getValue(oldIndex);
             newSceneLength = vrmlCut->sceneLengths()->getValue(newIndex);
         }
-        m_scene->execute(new MoveCommand(node, parent, parentField, 
-                                         NULL, -1));
         m_scene->execute(new MoveCommand(node, NULL, -1, 
                                          parent, parentField, newIndex));
+        m_scene->execute(new MoveCommand(node, parent, parentField, 
+                                         NULL, -1, oldIndex));
         if (parent->getType() == DUNE_VRML_CUT) {
             vrmlCut->sceneLengths()->setValue(newIndex, oldSceneLength);
             vrmlCut->sceneLengths()->setValue(oldIndex, newSceneLength);
@@ -8825,40 +8826,64 @@ static bool collectBranch(Node *node, void *data)
 }
 
 void 
-MainWindow::moveBranchToVrmlScene(void)
+MainWindow::moveBranchToVrmlScene(bool begin)
 {
-    NodeList nodeList;
     Node *node = m_scene->getSelection()->getNode();
-    node->doWithNextSiblings(collectBranch, &nodeList);
+    Node *beforeSelection = node->getPrevSibling();
+    int nodeParentIndex = node->getParentIndex(); 
     vrmlCut = NULL;
     m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
     Node *targetNode = vrmlCut;
+    bool createVrmlCut = false;
     if (vrmlCut == NULL) {
         targetNode = m_scene->createNode("VrmlCut");
         MoveCommand *command = new MoveCommand(targetNode, NULL, -1, 
                                    m_scene->getRoot(), 
                                    m_scene->getRoot()->getChildrenField());
         command->execute();
+        createVrmlCut = true;
     }
-    NodeVrmlCut *cut = (NodeVrmlCut *)targetNode;
+    m_scene->setSelection(vrmlCut);
+    moveSiblingFirst();
+    m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+    vrmlCut = NULL;
+    m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
+    NodeGroup *root = (NodeGroup *)m_scene->getRoot();
+    if (node->getParent() == root) {
+        for (size_t i = 0; i < root->children()->getSize(); i++) {
+            Node *compare = root->children()->getValue(i);
+            if ((compare == node) && 
+                (compare->getParentIndex() == nodeParentIndex)) {
+                node = compare;
+                break;
+            }
+        }
+    }
+    NodeList nodeList;
+    node->doWithNextSiblings(collectBranch, &nodeList);
+    m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
+    NodeVrmlCut *cut = (NodeVrmlCut *) vrmlCut;
     MFNode *cutScenes = cut->scenes();
     NodeVrmlScene *vscene = (NodeVrmlScene *)m_scene->createNode("VrmlScene");
-    MoveCommand *command = new MoveCommand(vscene, NULL, -1, 
-                                                   cut, cut->scenes_Field());
+        MoveCommand *command = NULL;
+    if (createVrmlCut || !begin ) 
+        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field());
+    else
+        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field(),
+                                  0);
     command->execute();
     m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
-    for (size_t i = 0; i < nodeList.size(); i++) {        
-
-        if (node->getParent()) {
-            command = new MoveCommand(nodeList.get(nodeList.size() - 1 - i), 
-                                      node->getParent(), node->getParentField(),
-                                      vscene, vscene->children_Field());
+    for (size_t i = 0; i < nodeList.size(); i++) {
+        if (node->hasParent()) {
+            MoveCommand *command = new MoveCommand(
+                 nodeList.get((nodeList.size() - 1) - i), 
+                 node->getParent(), node->getParentField(),
+                 vscene, vscene->children_Field());
             command->execute();
             m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
         }        
     }
-    m_scene->setSelection(cut);
-    moveSiblingFirst();
+    m_scene->setSelection(beforeSelection);
     m_scene->UpdateViews(NULL, UPDATE_SELECTION, NULL);
 }
 
