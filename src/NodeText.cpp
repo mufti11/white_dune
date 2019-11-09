@@ -32,10 +32,10 @@
 #include "SFString.h"
 #include "SFBool.h"
 #include "Scene.h"
-#include "FontStyleNode.h"
 #include "FontInfo.h"
 #include "Util.h"
 #include "MyMesh.h"
+#include "NodeFontStyle.h"
 
 ProtoText::ProtoText(Scene *scene, const char* name)
   : GeometryProto(scene, name)
@@ -414,7 +414,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
 
     FT_Set_Char_Size( face, height << 6, height << 6, 96, 96);
 
-    FontStyleNode *fontStyle = (FontStyleNode *)
+    NodeFontStyle *fontStyle = (NodeFontStyle *)
         ((SFNode *)getField(fontStyle_Field()))->getValue();
 
     float fsizeX = SPACING;
@@ -427,7 +427,8 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
     if (fontStyle) {
         fsizeX = fontStyle->getSizeX() * SPACING;
         fsizeY = fontStyle->getSizeY() * SPACING;
-        fspacing = fontStyle->spacing()->getValue();
+        fspacing = fontStyle->spacing()->getValue() * 
+                   fontStyle->size()->getValue();
         bleftToRight = fontStyle->leftToRight()->getValue();
         bhorizontal = fontStyle->horizontal()->getValue();
     }
@@ -685,7 +686,7 @@ NodeText::draw()
     float sPlane[4] = {1.0, 0.0, 0.0, 0.0};
     float tPlane[4] = {0.0, 1.0, 0.0, 0.0};
 
-    float ySpacing = btopToBottom ? - fspacing : fspacing;
+    float ySpacing = btopToBottom ? - (fspacing * fsize): (fspacing * fsize);
 
     for (int j = 0; j < mfstring->getSize(); j++) {
         const char  *str = mfstring->getValue(j);

@@ -5429,4 +5429,6 @@ Added rest of scenegraph ranch to VrmlCut at begin/end of VrmlCut
 
 Fixed 3 simple NULL pointer crashes 
 
+Fixed rendering of "size" field of FontStyle node
+
 Contact: MUFTI <mufti11@web.de>
