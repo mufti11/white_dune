@@ -5427,4 +5427,6 @@ Fixed bugs in moveSibling*
 
 Added rest of scenegraph ranch to VrmlCut at begin/end of VrmlCut
 
+Fixed 3 simple NULL pointer crashes 
+
 Contact: MUFTI <mufti11@web.de>

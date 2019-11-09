@@ -1823,7 +1823,14 @@ AC_SUBST(STRDUP_O)
 
 dnl build version number
 
-DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
+# snap compile is in directory build...
+WHITE_DUNE_PATH=`pwd`
+export WHITE_DUNE_PATH
+if test X_`basename $WHITE_DUNE_PATH` = X_build ; then
+   DUNE_VERSION="white_dune `(cd ../../../../.. && sh ./batch/getversion.sh)`"
+else
+   DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
+fi
 AC_DEFINE_UNQUOTED(HAVE_DUNE_VERSION,"${DUNE_VERSION}")
 
 AC_ARG_WITH(about,--with-about=\"about text\" about text,

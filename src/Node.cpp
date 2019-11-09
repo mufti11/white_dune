@@ -158,10 +158,13 @@ NodeData::copyData(const NodeData &node)
         m_isFields[i] = node.m_isFields[i];
     for (size_t i = 0; i < node.m_isExposedFields.size(); i++)
         m_isExposedFields[i] = node.m_isExposedFields[i];
-    m_x3domId = m_x3domId ? strdup(node.m_x3domId) : NULL;
-    m_x3domOnOutputChange = m_x3domOnOutputChange ?
+    m_x3domId = m_x3domId && node.m_x3domId ? 
+                strdup(node.m_x3domId) : NULL;
+    m_x3domOnOutputChange = m_x3domOnOutputChange && 
+                            node.m_x3domOnOutputChange ?
                             strdup(node.m_x3domOnOutputChange) : NULL;
-    m_x3domOnClick = m_x3domOnClick ? strdup(node.m_x3domOnClick) : NULL;
+    m_x3domOnClick = m_x3domOnClick && node.m_x3domOnClick ? 
+                     strdup(node.m_x3domOnClick) : NULL;
     m_scene->addNode((Node*)this);
  }
 
