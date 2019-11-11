@@ -33,7 +33,7 @@
 #define HAVE_LIBVCG 1
 
 /* Define if you have the CGAL library */
-#define HAVE_LIBCGAL 1
+/* #undef HAVE_LIBCGAL */
 
 /* Define if you have the curl library */
 #define HAVE_LIBCURL 1
@@ -565,7 +565,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.581"
+#define HAVE_DUNE_VERSION "white_dune 1.583"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

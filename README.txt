@@ -5437,4 +5437,8 @@ Optimized PROTO initialisation of each frame
 
 Fixed PROTO initialisation as optional feature
 
+Fixed crashes when working with 3D inputdevices
+
+Fixed wrong move sibling behavour
+
 Contact: MUFTI <mufti11@web.de>

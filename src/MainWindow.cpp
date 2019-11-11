@@ -8415,12 +8415,13 @@ void
 MainWindow::moveSibling(int command)
 {
     Node *node = m_scene->getSelection()->getNode();
+    MFNode *mfNode = (MFNode *)node->getParentFieldValue();
     int newIndex = -1;
     int oldIndex = -1;
     switch (command) {
       case MOVE_SIBLING_UP:
         newIndex = node->getPrevSiblingIndex();
-        oldIndex = newIndex + 1;
+        oldIndex = newIndex + 1;;
         break;
       case MOVE_SIBLING_DOWN:
         newIndex = node->getNextSiblingIndex();
@@ -8431,11 +8432,8 @@ MainWindow::moveSibling(int command)
         oldIndex = node->getSiblingIndex() + 1;
         break;
       case MOVE_SIBLING_LAST:
-        {
-        MFNode *mfNode = (MFNode *)node->getParentFieldValue();
         newIndex = mfNode->getSize() - 1;
         oldIndex = node->getSiblingIndex();
-        }
         break;
     }
     if (newIndex != -1) {
@@ -8450,10 +8448,12 @@ MainWindow::moveSibling(int command)
             oldSceneLength = vrmlCut->sceneLengths()->getValue(oldIndex);
             newSceneLength = vrmlCut->sceneLengths()->getValue(newIndex);
         }
-        m_scene->execute(new MoveCommand(node, NULL, -1, 
-                                         parent, parentField, newIndex));
-        m_scene->execute(new MoveCommand(node, parent, parentField, 
-                                         NULL, -1, oldIndex));
+        if (newIndex != oldIndex) {
+            m_scene->execute(new MoveCommand(node, parent, parentField, 
+                                             NULL, -1, oldIndex));
+            m_scene->execute(new MoveCommand(node, NULL, -1, 
+                                             parent, parentField, newIndex));
+        }
         if (parent->getType() == DUNE_VRML_CUT) {
             vrmlCut->sceneLengths()->setValue(newIndex, oldSceneLength);
             vrmlCut->sceneLengths()->setValue(oldIndex, newSceneLength);

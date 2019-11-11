@@ -1222,6 +1222,8 @@ Scene3DView::walk()
 
 void Scene3DView::Transform3D(const Path* path,InputDevice* inputDevice)
 {
+    if (path->getNode()->getType() != VRML_TRANSFORM)
+        return;
     glPushMatrix();
     glLoadIdentity();
     Quaternion viewrot=m_scene->getCamera()->getOrientation();

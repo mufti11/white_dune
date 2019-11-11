@@ -4420,7 +4420,8 @@ Path* Scene::searchTransform(void)
     if (transform != NULL) { 
         if (transform->getNode()->getType() == VRML_TRANSFORM)
             return transform;
-        while (transform->getNode() != m_root) {
+        while (transform->getNode() != m_root && 
+               transform->getNode()->hasParent()) {
             transform = new Path(*(transform->getNode()->getParent()->getPath()));
             if (transform->getNode()->getType() == VRML_TRANSFORM)
                 break;
@@ -5005,7 +5006,7 @@ Scene::setSelection(Path *path)
             m_oldSelection = m_selection->getNode();
         else
             m_oldSelection = NULL;
-        delete m_selection;        
+//        delete m_selection;        
         m_selection = path;
         Node *node = m_selection->getNode();
         if (node == NULL) {

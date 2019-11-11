@@ -117,6 +117,9 @@ MFieldViewItem::InitIndexValue(int index, FieldValue *value)
 void
 MFieldViewItem::SetValue(FieldValue *value)
 {
+    if (!value->isMFieldValue())
+        return;
+
     MFieldValue *v = (MFieldValue *) value;
 
     m_children.resize(v->getSFSize());

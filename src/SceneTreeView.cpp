@@ -389,7 +389,7 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
             break;
         }
         FieldValue *value = NULL;
-        if (field > -1)
+        if ((field > -1) && (field < node->getProto()->getNumFields()))
             value = node->getField(field);
         if (value == NULL)
             return;
