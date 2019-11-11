@@ -5219,11 +5219,24 @@ Scene::updateTimeAt(double t)
 
 static bool timeUpdateNodePROTO(Node *node, void *data)
 {
+#ifdef HAVE_PROTO_INITIALIZATION_OPTIMIZATION
     if (node->isPROTO()) {
-        ((NodePROTO *)node)->handleIs();
-        ((NodePROTO *)node)->createPROTO();
-        ((NodePROTO *)node)->reInit();
+        NodePROTO *protoNode = (NodePROTO *)node;
+        if (protoNode->getProto()->hasTimeSensor() || 
+            protoNode->getProto()->specialInit())  {
+            protoNode->handleIs();
+            protoNode->createPROTO();
+            protoNode->reInit();
+        }
     }
+#else
+    if (node->isPROTO()) {
+        NodePROTO *protoNode = (NodePROTO *)node;
+        protoNode->handleIs();
+        protoNode->createPROTO();
+        protoNode->reInit();
+    }
+#endif
     return true;
 }
 

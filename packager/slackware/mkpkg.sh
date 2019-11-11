@@ -120,7 +120,7 @@ export CXXFLAGS="\$SLKCFLAGS -std=c++11"
  --with-wwwbrowser=firefox \\
  --with-helpurl="/usr/doc/\$PRGNAM-\$VERSION/docs" \\
  --with-protobaseurl="/usr/doc/\$PRGNAM-\$VERSION/docs"
-make
+make -j4
 
 install -c -d \$PKG/install \$PKG/usr/bin \$PKG/usr/man/man1
 cp -a bin/* /\$PKG/usr/bin

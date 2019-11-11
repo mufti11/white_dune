@@ -1333,7 +1333,8 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
 
     InitToolbars();
 
-    m_fullScreen_enabled = TheApp->GetBoolPreference("FullScreen", false);
+    m_fullScreen_enabled = TheApp->GetBoolPreference("FullScreen", false) ||
+                           TheApp->getFullScreenAtBegin();
     swMenuSetFlags(m_menu, ID_DUNE_VIEW_FULL_SCREEN, SW_MENU_RADIO_ITEM, 0);
     swMenuSetFlags(m_menu, ID_DUNE_VIEW_FULL_SCREEN, SW_MENU_CHECKED, 0);
 
@@ -1479,7 +1480,7 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     swShowWindow(m_wnd);
 
     if (m_fullScreen_enabled)
-        toggleFullScreen();
+        setFullScreen();
 
     swToolbarSetButtonFlags(m_standardToolbar, m_xOnlyIconPos, 
                             SW_TB_DISABLED, 0);
@@ -12395,6 +12396,11 @@ void MainWindow::toggleFullScreen()
 {
     m_fullScreen_enabled=!m_fullScreen_enabled;
     TheApp->SetBoolPreference("FullScreen", m_fullScreen_enabled);
+    setFullScreen();
+}
+
+void MainWindow::setFullScreen()
+{
     swMenuSetFlags(m_menu, ID_DUNE_VIEW_FULL_SCREEN, SW_MENU_CHECKED, 
                    m_fullScreen_enabled ? SW_MENU_CHECKED  : 0);
     swToolbarSetButtonFlags(m_standardToolbar, m_fullScreenIconPos, 

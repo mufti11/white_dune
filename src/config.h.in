@@ -15,6 +15,10 @@
 /* Define to 0 if X3DOM support StaticGroup (not really yet) */
 #define HAVE_NO_STATIC_GROUP_X3DOM 1
 
+// define if you want optimization and do not have animation in a PROTO 
+// use with care !
+#undef HAVE_PROTO_INITIALIZATION_OPTIMIZATION
+
 /* Define to test "this" against NULL. Almost! impossible */
 #undef HAVE_NULL_COMPARE
 

@@ -5431,4 +5431,10 @@ Fixed 3 simple NULL pointer crashes
 
 Fixed rendering of "size" field of FontStyle node
 
+Added -fullscreen option
+
+Optimized PROTO initialisation of each frame
+
+Fixed PROTO initialisation as optional feature
+
 Contact: MUFTI <mufti11@web.de>

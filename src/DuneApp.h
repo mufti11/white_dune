@@ -356,6 +356,10 @@ public:
 
     void               setExitPid(int pid) { m_exitPid = pid; }
 
+    bool               getFullScreenAtBegin(void) 
+                           { return m_fullScreenAtBegin; }
+    void               setFullScreenAtBegin(void) { m_fullScreenAtBegin = 1; }
+
 protected:
     void                Exit(void);
 
@@ -428,8 +432,11 @@ protected:
     int                 m_numExportFiles;
 
     int                 m_exitPid;
+
+    int                 m_fullScreenAtBegin;
 };
 
 extern DuneApp *TheApp;
 
 #endif // _DUNE_APP_H
+

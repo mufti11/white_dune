@@ -263,6 +263,7 @@ protected:
 
     void                toggleCreateAtZero(int index);
     void                toggleFullScreen();
+    void                setFullScreen();
     void                toggleView(int direction, SceneView *view, int id,
                                    const char *name);
     void                ShowView(int direction, SceneView *view, int id,

@@ -369,6 +369,19 @@ public:
 
     virtual bool          isCRouteSource(void) { return false; } 
 
+    bool                  hasTimeSensor(void)
+                              { return m_hasTimeSensor; }
+
+    bool                  specialInit(void) 
+                              { 
+                              static bool init = true; 
+                              if (init) {
+                                  init = false;
+                                  return true;
+                              }
+                              return false;
+                              }
+
 protected:
     Proto                *copy() const { return new Proto(*this); }
     int                   addField(int fieldType, const MyString &name,
@@ -465,6 +478,8 @@ protected:
     bool                  m_fromProtoLibrary;
     double                m_unitLength;
     double                m_unitAngle;
+
+    bool                  m_hasTimeSensor;
 };
 
 #include "DynamicFieldsNode.h"

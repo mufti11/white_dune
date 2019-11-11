@@ -243,6 +243,9 @@ bool parseCommandlineArgument(int & i,int argc, char** argv)
        if (++i >= argc) return found;
        found=true;
        TheApp->setPrefix(argv[i]);
+    } else if (strcmp(argv[i],"-fullscreen")==0) {
+       found=true;
+       TheApp->setFullScreenAtBegin();
     } else if (strcmp(argv[i],"-proto")==0) {
        if (++i >= argc) return found;
        char *category = argv[i];

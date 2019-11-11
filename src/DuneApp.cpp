@@ -142,6 +142,7 @@ DuneApp::DuneApp() : PreferencesApp(), EcmaScriptApp(), StereoViewApp(),
     m_disableGlList = false;
     m_numExportFiles = 1;
     m_exitPid = 0;
+    m_fullScreenAtBegin = 0;
 }
 
 void DuneApp::initPreferences(void)

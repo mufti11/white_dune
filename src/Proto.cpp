@@ -67,6 +67,7 @@ void Proto::protoInitializer(Scene *scene, const MyString &name)
     m_numbers4KidsInit = false;
     m_unitLength = 1;
     m_unitAngle = 1;
+    m_hasTimeSensor = false;
     buildExportNames();
 }
 
@@ -74,6 +75,15 @@ Proto::Proto(Scene *scene, const MyString &name)
 {
     protoInitializer(scene, name);
 }   
+
+
+static bool searchTimeSensor(Node *node, void *data)
+{
+    bool *found = (bool *)data;
+    if (node->getType() == VRML_TIME_SENSOR)
+        *found = true;
+    return true;
+}
 
 Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
 {
@@ -150,6 +160,12 @@ Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
                              this, dstField);
          } 
     }          
+    for (int i = 0; i < m_protoNodes.size(); i++) {
+        bool hasTimeSensor = false;
+        m_protoNodes[i]->doWithBranch(searchTimeSensor, &hasTimeSensor, false);
+        if (hasTimeSensor)
+            m_hasTimeSensor;
+    }
 }
 
 Proto::~Proto()
