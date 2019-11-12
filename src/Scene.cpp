@@ -1299,6 +1299,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     m_root->doWithBranch(markUsedProto, this);
 
     int oldWriteFlags = m_writeFlags;
+    m_writeFlags = writeFlags;
     bool done = false;
     int ret = 0;
     bool x3dv = ::isX3dv(writeFlags);

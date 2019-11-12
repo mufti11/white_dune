@@ -903,7 +903,7 @@ public:
                                                       bool htmlFirstPart);
 
     void                storeAsHtml(void) { m_storeAsHtml = true; }
-    bool                getStoreAsHtml(void) { return m_htmlData.size() > 0; }
+    bool                getStoreAsHtml(void) { return m_htmlData.size() > 1; }
 
     bool                hasPROTONodes(void);
 

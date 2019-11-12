@@ -1979,6 +1979,8 @@ swCreateStatusBar(SWND wnd)
 extern void
 swStatusBarSetText(SSTATUSBAR bar, const char *text)
 {
+    if (text == NULL)
+        return;
     SendMessage(((SWindow *) bar)->hWnd, SB_SETTEXT, 0, (LPARAM) text);
 }
 

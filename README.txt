@@ -5445,4 +5445,6 @@ Fixed File->Import dialog
 
 Advanced "Array" class
 
+Fixed error of storing a ImageTexture as PixelTexture
+
 Contact: MUFTI <mufti11@web.de>
