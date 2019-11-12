@@ -73,6 +73,8 @@ swStatusBarSetText(SSTATUSBAR bar, const char *text)
     int width, height;
     if (!bar || !text) return;
 
+    if (text == NULL)
+        return;
     free(bar->text);
     bar->text = mystrdup(text);
     swGetSize(bar->wnd, &width, &height);

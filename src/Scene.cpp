@@ -5006,7 +5006,7 @@ Scene::setSelection(Path *path)
             m_oldSelection = m_selection->getNode();
         else
             m_oldSelection = NULL;
-//        delete m_selection;        
+        delete m_selection;        
         m_selection = path;
         Node *node = m_selection->getNode();
         if (node == NULL) {

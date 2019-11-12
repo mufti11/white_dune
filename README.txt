@@ -5441,4 +5441,8 @@ Fixed crashes when working with 3D inputdevices
 
 Fixed wrong move sibling behavour
 
+Fixed File->Import dialog
+
+Advanced "Array" class
+
 Contact: MUFTI <mufti11@web.de>

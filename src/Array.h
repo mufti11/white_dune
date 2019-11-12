@@ -38,7 +38,7 @@
 
 template<class T> class MyArray {
 public:
-                MyArray(size_t capacity = DEFAULT_CAPACITY ) { 
+                MyArray(long capacity = DEFAULT_CAPACITY ) { 
                     if (capacity == 0)
                         capacity = DEFAULT_CAPACITY;
                     m_capacity = capacity; 
@@ -50,10 +50,10 @@ public:
                     if (m_size == 0) 
                         m_capacity = DEFAULT_CAPACITY;
                     m_data = new T[m_capacity];
-                    for (size_t i = 0; i < MIN(m_capacity, m_size); i++) 
+                    for (long i = 0; i < MIN(m_capacity, m_size); i++) 
                         m_data[i] = a.m_data[i];
                 }
-                MyArray(const T *a, size_t len) {
+                MyArray(const T *a, long len) {
                     m_size = 0;
                     setData(a, len);
                 }
@@ -64,40 +64,43 @@ public:
                     m_size = 0;
                 }
 
-    const T    &get(size_t index) const
+    const T    &get(long index) const
                 { return m_data[index]; }
-    void        set(size_t index, T t)
+    void        set(long index, T t)
                 { if (index >= m_size) resize(index+1); m_data[index] = t; }
-    T          &operator[](size_t index)
+    T          &operator[](long index)
                 { if (index >= m_size) resize(index+1); return m_data[index]; }
-    const T &operator[](size_t index) const { 
+    const T &operator[](long index) const 
+                { 
                     if (index >= m_size) {
+                        ((MyArray *)this)->resize(index + 1);
                         static T t;
                         return t;
                     }
                     return m_data[index]; 
                 }
     const T    *getData() const { return m_data; }
-    void        setData(const T *a, size_t len) {
+    void        setData(const T *a, long len) {
                     m_capacity = m_size = len; 
                     m_data = (T*)a;
                 }
-    T          *extractData() {
+    T          *extractData() 
+                {
                     T *data = m_data;
                     m_data = 0;
                     return data; 
                 }
-    size_t      size() const
+    long        size() const
                 { return m_size; }
     void        append(T t)
                 { (*this)[m_size] = t; }
-    void        insert(T t, size_t index) {                   
+    void        insert(T t, long index) {                   
                     resize(m_size + 1);
                     for (long i = (long)m_size - 1; i > (long)index; i--)
                          (*this)[i] = (*this)[i-1];
                     (*this)[index] = t; 
                 }
-    void        remove(size_t pos) {
+    void        remove(long pos) {
                     if (pos + 1 != m_size)
                         for (long i = pos; i < (long)m_size - 1; i++)
                             m_data[i] = m_data[i + 1];
@@ -108,12 +111,12 @@ public:
                         m_size = 0;
                     }
                 }
-    void        remove(size_t start, size_t end) {
+    void        remove(long start, long end) {
                     assert(start >= 0 && start < m_size);
                     assert(end >= 0 && end < m_size);
-                    size_t len = end - start + 1;
-                    size_t deleted = 0;
-                    for (size_t i = start; i <= end; i++)
+                    long len = end - start + 1;
+                    long deleted = 0;
+                    for (long i = start; i <= end; i++)
                          if ((i + len) < m_size) {
                              deleted++;
                              m_data[i] = m_data[i + len];
@@ -122,7 +125,7 @@ public:
                     if (m_size <= 0)
                         resize(0);
                 }
-    void        resize(size_t size) {
+    void        resize(long size) {
                     if (size == 0) {
                         if (m_size > 0) {
                             delete[] m_data;
@@ -136,7 +139,7 @@ public:
                         while (m_capacity < size)
                             m_capacity <<= 1;
                         T *newData = new T[m_capacity];
-                        for (size_t i = 0; i < m_size; i++)
+                        for (long i = 0; i < m_size; i++)
                             newData[i] = m_data[i];
                         delete[] m_data;
                         m_data = newData;
@@ -150,7 +153,7 @@ public:
                     #pragma omp parallel
                     {
                         #pragma omp for
-                        for (size_t i = 0; i < m_size; i++)
+                        for (long i = 0; i < m_size; i++)
                             if (m_data[i] == t) {
                                ret = i;
                                #pragma omp cancel for
@@ -177,8 +180,8 @@ public:
                     
         
 protected:
-    size_t      m_size;
-    size_t      m_capacity;
+    long        m_size;
+    long        m_capacity;
     T          *m_data;
 };
 

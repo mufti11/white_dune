@@ -13038,11 +13038,14 @@ MainWindow::OnFileImport()
     path[0] = '\0';
     if (TheApp->getFileDialogDir())
         while(chdir(TheApp->getFileDialogDir()) == -2);    
+#ifdef _WIN32  
     char *fileSelectorText = getFileSelectorText();
+#else
+    const char *fileSelectorText = "*.[wWxX][rR33][lLdD]*";
+#endif
     if (swOpenFileDialog(m_wnd, "Import", fileSelectorText, path, 1024)) {
         ImportFileCheck(path, current, field);
     }        
-    delete [] fileSelectorText;
     if (oldX3d && (!m_scene->isX3d()))
         m_scene->setX3d();
     else if ((!oldX3d) && m_scene->isX3d())             
