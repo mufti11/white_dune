@@ -125,7 +125,7 @@ NodeLOD::accountNodeToDrawIndex()
     MyArray<int> indexList;
     NodeList tmpChildList;
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         if (childList->get(i)->getType() != VRML_COMMENT) {
             tmpChildList.append(childList->get(i));
             indexList.append(i);

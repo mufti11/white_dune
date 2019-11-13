@@ -308,12 +308,12 @@ NodeNurbsCurve2D::setHandle(int handle, const Vec3f &v)
                     }                    
                 }
             }
-            for (size_t j = 0; j < sameChanges.size(); j++) {
+            for (long j = 0; j < sameChanges.size(); j++) {
                 newValue->setVec(sameChanges[j].index, sameChanges[j].vec);
             }
-            for (size_t j = 0; j < symChanges.size(); j++) {
+            for (long j = 0; j < symChanges.size(); j++) {
                 bool flag = false;
-                for (size_t k = 0; k < sameChanges.size(); k++)
+                for (long k = 0; k < sameChanges.size(); k++)
                     if (sameChanges[k].index == (int)j)
                         flag = true;
                 if (flag)

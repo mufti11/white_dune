@@ -230,7 +230,7 @@ NodeNurbsTrimmedSurface::convert2Vrml(void)
     NodeTrimmedSurface *ret = (NodeTrimmedSurface *)toTrimmedSurface();
 
     NodeList *trimm = trimmingContour()->getValues();
-    for (size_t i = 0; i < trimm->size(); i++)
+    for (long i = 0; i < trimm->size(); i++)
         m_scene->execute(new MoveCommand(trimm->get(i), NULL, -1, ret, 
                                         ret->trimmingContour_Field()));
     return ret;    
@@ -466,7 +466,7 @@ NodeNurbsTrimmedSurface::drawOrCreateMesh(void)
 
     gluEndSurface(m_theNurb); 
     m_meshDirty = false;
-    for (size_t i = 0; i < point.size(); i++)
+    for (long i = 0; i < point.size(); i++)
         delete [] point[i];
 #ifdef USE_NEW
     delete [] cpAndW;

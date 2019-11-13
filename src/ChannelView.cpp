@@ -686,7 +686,7 @@ ChannelView::PasteLastSelection(void)
             return;
         float keyStart = m_selMin / (float) (m_rect.Width() - 1);
         int keys = 0;
-        size_t i = 0;
+        long i = 0;
         while (i < m_copiedValues.size()) {
             float key = keyStart + m_copiedValues[keys++ * 
                                                   (m_copiedChannels + 1)];
@@ -712,7 +712,7 @@ ChannelView::PasteSymetricLastSelection(int direction)
         float keyStart = m_selMin / (float) (m_rect.Width() - 1);
         int stride = m_interpolator->getStride();
         int keys = 0;
-        size_t i = 0;
+        long i = 0;
         while (i < m_copiedValues.size()) {
             float key = keyStart + m_copiedValues[keys++ * 
                                                   (m_copiedChannels + 1)];

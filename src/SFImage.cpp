@@ -304,7 +304,7 @@ SFImage::resizeImage(void)
     if ((getNumPixels() + 3) != oldSize) {
         m_value.resize(getNumPixels() + 3);
         // fill empty room with a black & white pattern
-        for (size_t i = oldSize; i < m_value.size(); i++)
+        for (long i = oldSize; i < m_value.size(); i++)
             if (i & 1)
                m_value[i] = 0;
             else {

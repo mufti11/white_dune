@@ -90,7 +90,7 @@ NodePositionChaser2D::sendChasedEvent(int eventIn, double timestamp,
     m_destinations.append(m_destination);
 
     Vec2f outputValue = initDest;      
-    for (size_t i = 0; i < m_event_times.size(); i++) {
+    for (long i = 0; i < m_event_times.size(); i++) {
         Vec2f dnmin1;
         if (i == 0)
             dnmin1 = initVal;

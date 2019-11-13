@@ -22,11 +22,6 @@ if test "$MKRPM_SRC" = "" ; then
    exit 1
 fi
 
-if test ! -d $HOME/vcglib ; then
-   echo "$HOME/vcglib" not found 1>&2
-   exit 1
-fi
-
 UNAME_A=`uname -a`
 UNAME_PS2="Linux $USER 2.2.1 #1 Wed Nov 14 18:28:00 JST 2001 mips unknown"
 
@@ -43,7 +38,6 @@ VERSION=$VERSION1
    cd ../../.. && 
    rm -rf /tmp/$VERSION5 && \
    cp -r $VERSION1 /tmp/$VERSION5 && \
-   cp -r $HOME/vcglib /tmp/$VERSION5 && \
    cd /tmp/$VERSION5 && 
    sh -x batch/fix_not_translated_rcfiles.sh &&
    make realclean && rm -rf desktop/macosx desktop/irix

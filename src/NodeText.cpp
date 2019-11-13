@@ -149,7 +149,7 @@ MyArray<Tri> tris;
 vector<p2t::Point*> triangulateContour(Vectoriser *vectoriser, int c, float offset) {
     vector<p2t::Point*> polyline;
     const Contour* contour = vectoriser->GetContour(c);
-    for (size_t p = 0; p < contour->PointCount(); ++p) {
+    for (long p = 0; p < contour->PointCount(); ++p) {
         const double* d = contour->GetPoint(p);
         polyline.push_back(new p2t::Point((d[0]/64.0f) + offset, d[1]/64.0f));
     }
@@ -255,10 +255,10 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
     prev_rsb_delta = face->glyph->rsb_delta;                       
 
     Vectoriser *vectoriser = new Vectoriser(face->glyph, bezierSteps);
-    for (size_t c = 0; c < vectoriser->ContourCount(); ++c) {
+    for (long c = 0; c < vectoriser->ContourCount(); ++c) {
         const Contour* contour = vectoriser->GetContour(c);
 
-        for (size_t p = 0; p < contour->PointCount() - 1; ++p) {
+        for (long p = 0; p < contour->PointCount() - 1; ++p) {
             const double* d1 = contour->GetPoint(p);
             const double* d2 = contour->GetPoint(p + 1);
             Tri t1;
@@ -303,10 +303,10 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
                 gluTessNormal(tobj, 0.0f, 0.0f, 0.0f);
 
                 gluTessBeginPolygon(tobj, NULL);
-                for (size_t c = 0; c < vectoriser->ContourCount(); ++c) {
+                for (long c = 0; c < vectoriser->ContourCount(); ++c) {
                     const Contour* contour = vectoriser->GetContour(c);
                     gluTessBeginContour(tobj);
-                    for (size_t p = 0; p < contour->PointCount(); ++p) {
+                    for (long p = 0; p < contour->PointCount(); ++p) {
                         const double* d1 = contour->GetPoint(p);
                         double *d = new double[3];
                         d[0] = d1[0] / 64.0f + (horizontal ? offset : 0);
@@ -323,7 +323,7 @@ float AddCharacter(FT_Face face, char ch, unsigned short bezierSteps,
                 vector<p2t::Point*> polyline = triangulateContour(vectoriser, c, offset);
                 CDT* cdt = new CDT(polyline);
 
-                for (size_t cm = 0; cm < vectoriser->ContourCount(); ++cm) {
+                for (long cm = 0; cm < vectoriser->ContourCount(); ++cm) {
                     const Contour* sm = vectoriser->GetContour(cm);
                     if (c != cm && !sm->GetDirection() && 
                         sm->IsInside(contour)) {
@@ -456,7 +456,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
         }
 
         float maxX = FLT_MIN;
-        for (size_t i = 0; i < tris.size(); i++) {
+        for (long i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
             float x1 = fsizeX * (t.a.x / height); 
             if (x1 > maxX)
@@ -473,7 +473,7 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
             addX = -maxX / 2;
         else if (ijustify == JUSTIFY_END)
             addX = -maxX;
-        for (size_t i = 0; i < tris.size(); i++) {
+        for (long i = 0; i < tris.size(); i++) {
             Tri t = tris[i];
             if (bhorizontal) {
                 coords->appendSFValue(fsizeX * (t.a.x / height) + addX, 

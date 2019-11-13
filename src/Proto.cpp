@@ -170,16 +170,16 @@ Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
 
 Proto::~Proto()
 {
-    for (size_t i = 0; i < m_eventIns.size(); i++) 
+    for (long i = 0; i < m_eventIns.size(); i++) 
         delete m_eventIns[i];
-    for (size_t i = 0; i < m_eventOuts.size(); i++) 
+    for (long i = 0; i < m_eventOuts.size(); i++) 
         delete m_eventOuts[i];
-    for (size_t i = 0; i < m_exposedFields.size(); i++) 
+    for (long i = 0; i < m_exposedFields.size(); i++) 
         delete m_exposedFields[i];
-    for (size_t i = 0; i < m_fields.size(); i++) 
+    for (long i = 0; i < m_fields.size(); i++) 
         delete m_fields[i];
 
-    for (size_t i = 0; i < m_protoNodes.size(); i++) 
+    for (long i = 0; i < m_protoNodes.size(); i++) 
         if (m_protoNodes[i])
             m_protoNodes[i]->unref();
 }
@@ -306,19 +306,19 @@ Proto::handleVrmlCut(EventOut *event)
 void
 Proto::removeFromIs(Node *node)
 {
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         for (int j = 0; j < m_fields[i]->getNumIs(); j++)
             if (m_fields[i]->getIsNode(j)->hasAncestor(node))
                 m_fields[i]->removeIs(j);
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
             if (m_eventIns[i]->getIsNode(j)->hasAncestor(node))
                 m_eventIns[i]->removeIs(j);;
-    for (size_t i = 0; i < m_eventOuts.size(); i++)
+    for (long i = 0; i < m_eventOuts.size(); i++)
         for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
             if (m_eventOuts[i]->getIsNode(j)->hasAncestor(node))
                 m_eventOuts[i]->removeIs(j);
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    for (long i = 0; i < m_exposedFields.size(); i++)
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
             if (m_exposedFields[i]->getIsNode(j)->hasAncestor(node))
                 m_exposedFields[i]->removeIs(j);
@@ -327,7 +327,7 @@ Proto::removeFromIs(Node *node)
 void
 Proto::deleteElements(void) 
 {
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         if (m_fields[i] && m_fields[i]->getDefault(false)->isDefaultValue())
             m_nameOfFieldsWithDefaultValue.append(m_fields[i]->getName(false));
     int restSize = 1;
@@ -342,28 +342,28 @@ Proto::addOrUpdateElement(Element *element)
 {
     switch( element->getElementType() ) {
       case EL_FIELD:
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             if (m_fields[i]->getName(false) == element->getName(false)) {
                 m_fields[i] = (Field *)element;
                 return i;
             }
         break;
       case EL_EVENT_IN:
-        for (size_t i = 0; i < m_eventIns.size(); i++)
+        for (long i = 0; i < m_eventIns.size(); i++)
             if (m_eventIns[i]->getName(false) == element->getName(false)) {
                 m_eventIns[i] = (EventIn *)element;
                 return i;
             }
         break;
       case EL_EVENT_OUT:
-        for (size_t i = 0; i < m_eventOuts.size(); i++)
+        for (long i = 0; i < m_eventOuts.size(); i++)
             if (m_eventOuts[i]->getName(false) == element->getName(false)) {
                 m_eventOuts[i] = (EventOut *)element;
                 return i;
             }
         break;
       case EL_EXPOSED_FIELD:
-        for (size_t i = 0; i < m_exposedFields.size(); i++)
+        for (long i = 0; i < m_exposedFields.size(); i++)
             if (m_exposedFields[i]->getName(false) == element->getName(false)) {
                 m_exposedFields[i] = (ExposedField *)element;
                 return i;
@@ -387,7 +387,7 @@ Proto::addElement(Element *element)
             swDebugf("ignoring element %s\n", (const char*)field->getName(false));
             return -1; 
         }
-        for (size_t i = 0; i < m_nameOfFieldsWithDefaultValue.size(); i++)
+        for (long i = 0; i < m_nameOfFieldsWithDefaultValue.size(); i++)
             if (field->getName(false) == m_nameOfFieldsWithDefaultValue[i])
                 field->getDefault(false)->setIsDefaultValue();
         m_fields.append(field);
@@ -628,7 +628,7 @@ Proto::getFieldOfExposed(ExposedField *field)
 int
 Proto::lookupSimpleEventIn(const MyString &name, bool x3d) const
 {
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         if (m_eventIns[i]->getName(x3d) == name) return i;
     if (m_protoNodes.size() > 0)
         m_protoNodes[0]->getProto()->lookupSimpleEventIn(name, x3d);
@@ -657,7 +657,7 @@ Proto::lookupEventIn(const MyString &name, bool x3d) const
 int
 Proto::lookupSimpleEventOut(const MyString &name, bool x3d) const
 {
-    for (size_t i = 0; i < m_eventOuts.size(); i++)
+    for (long i = 0; i < m_eventOuts.size(); i++)
         if (m_eventOuts[i]->getName(x3d) == name)
             return i;
     if (m_protoNodes.size() > 0)
@@ -687,7 +687,7 @@ Proto::lookupEventOut(const MyString &name, bool x3d) const
 int
 Proto::lookupField(const MyString &name, bool x3d) const
 {
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         if (m_fields[i]->getName(x3d) == name)
             return i;
     if (m_protoNodes.size() > 0)
@@ -698,7 +698,7 @@ Proto::lookupField(const MyString &name, bool x3d) const
 int
 Proto::lookupExposedField(const MyString &name, bool x3d) const
 {
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    for (long i = 0; i < m_exposedFields.size(); i++)
         if (m_exposedFields[i]->getName(x3d) == name)
             return i;
 
@@ -731,16 +731,16 @@ Proto::writeEvents(int f, int indent, int flags) const
     int indent2 = indent;
     if (isX3dXml(flags))
         indent2 = indent + TheApp->GetIndent();
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         if (m_fields[i] && canWriteElement(m_fields[i], isX3d(flags)))
             RET_ONERROR( m_fields[i]->write(f, indent2, flags) )
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         if (m_eventIns[i] && canWriteElement(m_eventIns[i], isX3d(flags)))
             RET_ONERROR(m_eventIns[i]->write(f, indent2, flags) )
-    for (size_t i = 0; i < m_eventOuts.size(); i++)
+    for (long i = 0; i < m_eventOuts.size(); i++)
         if (m_eventOuts[i] && canWriteElement(m_eventOuts[i], isX3d(flags)))
             RET_ONERROR(m_eventOuts[i]->write(f, indent2, flags) )
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    for (long i = 0; i < m_exposedFields.size(); i++)
         if (m_exposedFields[i] &&
             canWriteElement(m_exposedFields[i], isX3d(flags)))
                 RET_ONERROR(m_exposedFields[i]->write(f, indent2, flags) )
@@ -762,7 +762,7 @@ Proto::define(Node *primaryNode, NodeList *nodes)
     if (primaryNode == NULL)
         return; 
     m_protoNodes[0] = primaryNode;
-    for (size_t i = 0; i < (nodes->size() + 1); i++) {
+    for (long i = 0; i < (nodes->size() + 1); i++) {
         if (i > 0)
             m_protoNodes[i] = nodes->get(i - 1);
         if (m_protoNodes[i] != NULL)
@@ -828,14 +828,14 @@ int Proto::write(int f, int indent, int flags) const
             RET_ONERROR( mywritestr(f, "<ProtoBody>\n") )
             TheApp->incSelectionLinenumber();    
 
-            for (size_t i = 0; i < m_protoNodes.size(); i++) {
+            for (long i = 0; i < m_protoNodes.size(); i++) {
                 if (::isX3dXml(flags))
                     RET_ONERROR( m_protoNodes.get(i)->writeXml(f, indent4) )
                 else
                     RET_ONERROR( m_protoNodes.get(i)->write(f, indent4) )
             }
             RET_ONERROR( mywritestr(f, "\n") )
-            for (size_t i = 0; i < m_protoNodes.size(); i++) 
+            for (long i = 0; i < m_protoNodes.size(); i++) 
                 RET_ONERROR( m_protoNodes.get(i)->writeRoutes(f, indent4) )
             m_scene->writeRouteStrings(f, indent4, true);
 
@@ -914,11 +914,11 @@ int Proto::write(int f, int indent, int flags) const
             if (TheApp->GetkrFormating())
                 indent = indent + TheApp->GetIndent();
 
-            for (size_t i = 0; i < m_protoNodes.size(); i++) {
+            for (long i = 0; i < m_protoNodes.size(); i++) {
                 RET_ONERROR( indentf(f, indent) )
                 RET_ONERROR( m_protoNodes.get(i)->write(f, indent) )
             }
-            for (size_t i = 0; i < m_protoNodes.size(); i++) 
+            for (long i = 0; i < m_protoNodes.size(); i++) 
                 RET_ONERROR( m_protoNodes.get(i)->writeRoutes(f, indent) )
             m_scene->writeRouteStrings(f, indent, true);
 
@@ -938,22 +938,22 @@ int Proto::write(int f, int indent, int flags) const
 void 
 Proto::compareToIsNodes(Node *node)
 {
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         if (m_fields[i])
             for (int j = 0; j < m_fields[i]->getNumIs(); j++)
                 if (m_fields[i]->getIsNode(j) == node)
                     m_fields[i]->setIsNodeIndex(j, m_nodeIndex);
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         if (m_eventIns[i])
             for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
                 if (m_eventIns[i]->getIsNode(j) == node)
                     m_eventIns[i]->setIsNodeIndex(j,m_nodeIndex);
-    for (size_t i = 0; i < m_eventOuts.size(); i++)
+    for (long i = 0; i < m_eventOuts.size(); i++)
         if (m_eventOuts[i])
             for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
                 if (m_eventOuts[i]->getIsNode(j) == node)
                     m_eventOuts[i]->setIsNodeIndex(j, m_nodeIndex);
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    for (long i = 0; i < m_exposedFields.size(); i++)
         if (m_exposedFields[i])
             for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
                 if (m_exposedFields[i]->getIsNode(j) == node)
@@ -980,7 +980,7 @@ Proto::setIsNodeIndex(void)
 int
 Proto::lookupIsEventIn(const char *name, int elementType) const
 {
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
             if (strcmp(m_eventIns[i]->getName(true), name) == 0) {
                 if ((elementType != -1) && 
@@ -995,7 +995,7 @@ Proto::lookupIsEventIn(const char *name, int elementType) const
 int
 Proto::lookupIsExposedField(const char *name, int elementType) const
 {
-    for (size_t i = 0; i < m_exposedFields.size(); i++)
+    for (long i = 0; i < m_exposedFields.size(); i++)
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
             if (strcmp(m_exposedFields[i]->getName(true), name) == 0) {
                 if ((elementType != -1) && 
@@ -1009,7 +1009,7 @@ Proto::lookupIsExposedField(const char *name, int elementType) const
 int
 Proto::lookupIsField(Node *node, int field) const
 {
-    for (size_t i = 0; i < m_fields.size(); i++) {
+    for (long i = 0; i < m_fields.size(); i++) {
         if (m_fields[i] == NULL)
             continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
@@ -1026,7 +1026,7 @@ Proto::lookupIsField(Node *node, int field) const
 int
 Proto::lookupIsEventIn(Node *node, int eventIn, int elementType) const
 {
-    for (size_t i = 0; i < m_eventIns.size(); i++) {
+    for (long i = 0; i < m_eventIns.size(); i++) {
         if (m_eventIns[i] == NULL)
             continue;
         for (int j = 0; j < m_eventIns[i]->getNumIs(); j++)
@@ -1045,7 +1045,7 @@ Proto::lookupIsEventIn(Node *node, int eventIn, int elementType) const
 int
 Proto::lookupIsEventOut(Node *node, int eventOut, int elementType) const
 {
-    for (size_t i = 0; i < m_eventOuts.size(); i++) {
+    for (long i = 0; i < m_eventOuts.size(); i++) {
         if (m_eventOuts[i] == NULL)
             continue;
         for (int j = 0; j < m_eventOuts[i]->getNumIs(); j++)
@@ -1066,7 +1066,7 @@ Proto::lookupIsEventOut(Node *node, int eventOut, int elementType) const
 int
 Proto::lookupIsExposedField(Node *node, int exposedField) const
 {
-    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+    for (long i = 0; i < m_exposedFields.size(); i++) {
         if (m_exposedFields[i] == NULL)
             continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
@@ -1084,7 +1084,7 @@ int
 Proto::getNumIsMSNodes(void) const
 {
     int ret = 0;
-    for (size_t i = 0; i < m_fields.size(); i++) {
+    for (long i = 0; i < m_fields.size(); i++) {
         if (m_fields[i] == NULL)
             continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++)
@@ -1092,7 +1092,7 @@ Proto::getNumIsMSNodes(void) const
                 (m_fields[i]->getType() == SFNODE))
                 ret++;
     }
-    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+    for (long i = 0; i < m_exposedFields.size(); i++) {
         if (m_exposedFields[i] == NULL)
             continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
@@ -1107,7 +1107,7 @@ Node *
 Proto::getIsMSNode(int numNode) const
 {
     int count = 0;
-    for (size_t i = 0; i < m_fields.size(); i++) {
+    for (long i = 0; i < m_fields.size(); i++) {
         if (m_fields[i] == NULL)
             continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
@@ -1119,7 +1119,7 @@ Proto::getIsMSNode(int numNode) const
             }
         }
     }
-    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+    for (long i = 0; i < m_exposedFields.size(); i++) {
         if (m_exposedFields[i] == NULL)
             continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
@@ -1138,7 +1138,7 @@ int
 Proto::getIsMSNodeField(int numNode) const
 {
     int count = 0;
-    for (size_t i = 0; i < m_fields.size(); i++) {
+    for (long i = 0; i < m_fields.size(); i++) {
         if (m_fields[i] == NULL)
             continue;
         for (int j = 0; j < m_fields[i]->getNumIs(); j++) {
@@ -1150,7 +1150,7 @@ Proto::getIsMSNodeField(int numNode) const
             }
         }
     }
-    for (size_t i = 0; i < m_exposedFields.size(); i++) {
+    for (long i = 0; i < m_exposedFields.size(); i++) {
         if (m_exposedFields[i] == NULL)
             continue;
         for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
@@ -1364,7 +1364,7 @@ Proto::isExtensionProto(int flag)
 {
     bool ret = false;
     bool x3d = (flag == FF_X3D_ONLY) ? true : false;
-    for (size_t i = 0; i < m_fields.size(); i++) {
+    for (long i = 0; i < m_fields.size(); i++) {
         const char* name = m_fields[i]->getName(x3d);
         Element *element = m_fields[i];
         ExposedField *exposedField = m_fields[i]->getExposedField();
@@ -1399,7 +1399,7 @@ Proto::isExtensionProto(int flag)
         } else
             return false;
     }
-    for (size_t i = 0; i < m_eventIns.size(); i++) {
+    for (long i = 0; i < m_eventIns.size(); i++) {
         const char* name = m_eventIns[i]->getName(x3d);
         if (m_eventIns[i]->getExposedField()) {
             // already handled 
@@ -1434,7 +1434,7 @@ Proto::isExtensionProto(int flag)
         } else
             return false;
     }
-    for (size_t i = 0; i < m_eventOuts.size(); i++) {
+    for (long i = 0; i < m_eventOuts.size(); i++) {
         const char* name = m_eventOuts[i]->getName(x3d);
         if (m_eventOuts[i]->getExposedField()) {
             // already handled 
@@ -1531,11 +1531,11 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "    void") )
         RET_ONERROR( mywritestr(f, " *m_data;\n") )
     }
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         RET_ONERROR( writeCDeclarationEventIn(f, i, languageFlag) )
-    for (size_t i = 0; i < m_eventOuts.size(); i++)
+    for (long i = 0; i < m_eventOuts.size(); i++)
         RET_ONERROR( writeCDeclarationEventOut(f, i, languageFlag) )
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         RET_ONERROR( writeCDeclarationField(f, i, languageFlag) )
     writeCExtraFields(f, languageFlag);
     if (languageFlag & CC_SOURCE) {
@@ -1774,7 +1774,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "    self->m_protoRoot = NULL;\n") )
     }
     if (languageFlag & (C_SOURCE | CC_SOURCE))
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCConstructorField(f, i, languageFlag) )
     if (languageFlag & (CC_SOURCE | JAVA_SOURCE))
         RET_ONERROR( mywritestr(f, "    ") )
@@ -1874,7 +1874,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "*)self)->m_protoRoot, dataptr);\n") )
         RET_ONERROR( mywritestr(f, "    else {\n") )
 
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeRenderCallback", 
                                              languageFlag) )
 
@@ -1936,7 +1936,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "*)self)->m_protoRoot, dataptr);\n") )
         RET_ONERROR( mywritestr(f, "    else {\n") )
 
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeDoWithDataCallback", languageFlag) )
 
         RET_ONERROR( mywritestr(f, "        ") )
@@ -1965,7 +1965,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "treeRender(dataptr);\n") )
         RET_ONERROR( mywritestr(f, "        else {\n") )
 
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeRender", languageFlag,
                                              "renderCallback") )
 
@@ -2008,7 +2008,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, "treeDoWithData(dataptr);\n") )
         RET_ONERROR( mywritestr(f, "        else {\n") )
 
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeDoWithData", 
                                              languageFlag, 
                                              "doWithDataCallback") )
@@ -2103,7 +2103,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, ".treeRender(this, object);\n") )
         RET_ONERROR( mywritestr(f, "            return;\n") )
         RET_ONERROR( mywritestr(f, "        }\n") )
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeRender", languageFlag,
                                              "renderCallback", true) )
         RET_ONERROR( mywritestr(f, "        if (m_protoRoot != null)\n") )
@@ -2136,7 +2136,7 @@ Proto::writeCDeclaration(int f, int languageFlag)
         RET_ONERROR( mywritestr(f, ".treeDoWithData(this);\n") )
         RET_ONERROR( mywritestr(f, "            return;\n") )
         RET_ONERROR( mywritestr(f, "        }\n") )
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
             RET_ONERROR( writeCCallTreeField(f, i, "TreeDoWithData", 
                                              languageFlag, 
                                              "treeDoWithDataCallback") )
@@ -2582,7 +2582,7 @@ Proto::buildInterfaceData(bool protoFlag)
     for (int i = 0; i < proto->getNumEventOuts(); i++) {
         // ignore Exposedfields (eg. "url")
         bool isExposedField = false;
-        for (size_t j = 0; j < proto->m_exposedFields.size(); j++) {
+        for (long j = 0; j < proto->m_exposedFields.size(); j++) {
             MyString exposedName = "";
             exposedName += mystrdup(proto->getExposedField(j)->getName(x3d));
             exposedName += "_changed";
@@ -2597,7 +2597,7 @@ Proto::buildInterfaceData(bool protoFlag)
     for (int i = 0; i < proto->getNumEventIns(); i++) {
         // ignore Exposedfields (eg. "url")
         bool isExposedField = false;
-        for (size_t j = 0; j < proto->m_exposedFields.size(); j++) {
+        for (long j = 0; j < proto->m_exposedFields.size(); j++) {
             MyString exposedName = "";
             exposedName += "set_";
             exposedName += proto->getExposedField(j)->getName(x3d);
@@ -2849,7 +2849,7 @@ NodePROTO::createPROTO(bool bcopy)
         m_indexedNodes.resize(0);
         for (int i = 0; i < m_proto->getNumNodes(); i++)
             m_nodes[i]->doWithBranch(buildNodeIndexInBranch, this, false);
-        for (size_t i = 0; i < m_indexedNodes.size(); i++)
+        for (long i = 0; i < m_indexedNodes.size(); i++)
             if (m_indexedNodes[i])
                m_indexedNodes[i]->setScene(m_scene);
     }
@@ -2998,7 +2998,7 @@ NodePROTO::preDraw()
     if (m_indexedNodes.size() > 0)
         if (m_indexedNodes[0] != NULL)
             m_indexedNodes[0]->preDraw();
-    for (size_t i = 1; i < m_indexedNodes.size(); i++) {
+    for (long i = 1; i < m_indexedNodes.size(); i++) {
         if (m_indexedNodes[i]->getType() == VRML_TIME_SENSOR)
             m_indexedNodes[i]->preDraw();
     }
@@ -3211,7 +3211,7 @@ int
 NodePROTO::getProfile(void) const
 {
     int profile = PROFILE_IMMERSIVE;
-    for (size_t i = 0; i < m_nodes.size(); i++)
+    for (long i = 0; i < m_nodes.size(); i++)
          if (profile != PROFILE_FULL)
              m_nodes[i]->doWithBranch(getProfileInBranch, &profile);
     return profile;
@@ -3220,7 +3220,7 @@ NodePROTO::getProfile(void) const
 void                
 NodePROTO::getComponentsInBranch(DoWithNodeCallback callback, void *data) 
 {
-    for (size_t i = 0; i < m_nodes.size(); i++)
+    for (long i = 0; i < m_nodes.size(); i++)
         m_nodes[i]->doWithBranch(callback, data);
 }
 
@@ -3243,7 +3243,7 @@ NodePROTO::writeAc3d(int filedes, int indent)
 void
 NodePROTO::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
 {
-   for (size_t i = 0; i < m_nodes.size(); i++)
+   for (long i = 0; i < m_nodes.size(); i++)
        m_nodes.get(i)->handleAc3dMaterial(callback, scene);
 }
 
@@ -3427,7 +3427,7 @@ Proto::hasNumbers4kids(void)
     if (m_numbers4KidsInit == false) {
         m_numbers4KidsInit = true;
         m_numbers4Kids = false;
-        for (size_t i = 0; i < m_fields.size(); i++)
+        for (long i = 0; i < m_fields.size(); i++)
            if (m_fields[i]->getFlags() & FF_4KIDS) {
                m_numbers4Kids = true;
                break;
@@ -3447,14 +3447,14 @@ Proto::removeNode(int i)
 void                  
 Proto::convert2X3d(void) 
 {
-    for (size_t i = 0; i < m_protoNodes.size(); i++)
+    for (long i = 0; i < m_protoNodes.size(); i++)
         m_protoNodes[i]->convert2X3d();
 }
 
 void
 Proto::convert2Vrml(void) 
 {
-    for (size_t i = 0; i < m_protoNodes.size(); i++)
+    for (long i = 0; i < m_protoNodes.size(); i++)
         m_protoNodes[i]->convert2X3d();
 }
 

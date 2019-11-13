@@ -118,7 +118,7 @@ Node *
 NodeContour2D::convert2X3d(void)
 {
     NodeList *child = children()->getValues();
-    for (size_t i = 0; i < child->size(); i++) {
+    for (long i = 0; i < child->size(); i++) {
         Node *node = child->get(i);
         if (node->getType() == VRML_POLYLINE_2D) {
             m_scene->execute(new MoveCommand(node, this, children_Field(),
@@ -147,7 +147,7 @@ Node *
 NodeContour2D::convert2Vrml(void)
 {
     NodeList *child = children()->getValues();
-    for (size_t i = 0; i < child->size(); i++) {
+    for (long i = 0; i < child->size(); i++) {
         Node *node = child->get(i);
         if (node->getType() == X3D_CONTOUR_POLYLINE_2D) {
             m_scene->execute(new MoveCommand(node, this, children_Field(),

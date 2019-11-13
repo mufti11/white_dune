@@ -31,7 +31,7 @@ Element::Element(const Element *ptr)
     m_name = ptr->m_name;
     m_x3dName = ptr->m_x3dName;
     m_flags = ptr->m_flags;
-    for (size_t i = 0; i < ptr->m_isArray.size(); i++)
+    for (long i = 0; i < ptr->m_isArray.size(); i++)
         m_isArray[i] = ptr->m_isArray[i];
     m_appinfo = "";
     m_appinfo += ptr->m_appinfo; 

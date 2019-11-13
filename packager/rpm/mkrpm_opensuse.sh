@@ -23,11 +23,6 @@ if test "$MKRPM_SRC" = "" ; then
    exit 1
 fi
 
-if test ! -d $HOME/vcglib ; then
-   echo "$HOME/vcglib" not found 1>&2
-   exit 1
-fi
-
 VERSION=wdune-`sh ../../batch/getversion.sh`
 VERSION2=`echo $VERSION | awk '{gsub("wdune-","",$0);print $0}'`
 VERSION3=white_dune-$VERSION2
@@ -157,7 +152,6 @@ EOT
    cd ../../.. && 
    rm -rf /tmp/$VERSION3 && \
    cp -r $VERSION /tmp/$VERSION3 && \
-   cp -r $HOME/vcglib /tmp/$VERSION3 && \
    cd /tmp/$VERSION3 && 
    sh -x batch/fix_not_translated_rcfiles.sh &&
    make realclean && rm -rf desktop/macosx desktop/irix

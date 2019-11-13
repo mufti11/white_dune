@@ -92,7 +92,7 @@ CurveAnimationDialog::LoadData()
     timeSensors[0] = "new TimeSensor"; 
 
     const NodeList *nodes = m_scene->getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (long i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node->isInScene(m_scene))
             if (node->getType() == VRML_TIME_SENSOR)
@@ -100,7 +100,7 @@ CurveAnimationDialog::LoadData()
                     timeSensors.append(node->getName()); 
     }
     
-    for (size_t i = 0;i < timeSensors.size(); i++)
+    for (long i = 0;i < timeSensors.size(); i++)
         swComboBoxAppendItem(comboTimeSensors, timeSensors[i]);
 
     char buf[128];

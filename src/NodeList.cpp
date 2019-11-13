@@ -36,7 +36,7 @@
 void
 NodeList::clearFlag(int flag) const
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (m_data[i] != NULL)
             m_data[i]->clearFlag(flag);
 }
@@ -44,7 +44,7 @@ NodeList::clearFlag(int flag) const
 void
 NodeList::setFlag(int flag) const
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (m_data[i] != NULL)
             m_data[i]->setFlag(flag);
 }
@@ -52,7 +52,7 @@ NodeList::setFlag(int flag) const
 void            
 NodeList::setZeroCounter4SceneTreeView(void) const
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (m_data[i] != NULL)
             m_data[i]->setCounter4SceneTreeViewToZero();
 }
@@ -61,7 +61,7 @@ NodeList::setZeroCounter4SceneTreeView(void) const
 bool
 NodeList::canWriteAc3d()
 {
-    for (size_t i = 0; i < size(); i++) {
+    for (long i = 0; i < size(); i++) {
         Node *node = get(i);
         if (node != NULL)
             if (node->canWriteAc3d())
@@ -74,7 +74,7 @@ int
 NodeList::writeAc3d(int f, int indent) const
 {
     int kids = 0;
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i) && get(i)->canWriteAc3d())
             kids++;
 
@@ -85,7 +85,7 @@ NodeList::writeAc3d(int f, int indent) const
 
     RET_ONERROR( mywritef(f, "kids %d\n", kids) )        
 
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i))
             RET_ONERROR( get(i)->writeAc3d(f, indent) )
     return 0; 
@@ -94,7 +94,7 @@ NodeList::writeAc3d(int f, int indent) const
 int 
 NodeList::writeRib(int f, int indent) const
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i))
             RET_ONERROR( get(i)->writeRib(f, indent) )
 
@@ -104,7 +104,7 @@ NodeList::writeRib(int f, int indent) const
 bool    
 NodeList::canWriteCattGeo()
 {
-    for (size_t i = 0; i < size(); i++) {
+    for (long i = 0; i < size(); i++) {
         Node *node = get(i);
         if (node != NULL)
             if (node->canWriteCattGeo())
@@ -120,7 +120,7 @@ int
 NodeList::writeCattGeo(Node *node, int filedes, int indent)
 { 
     int children = 0;
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i) && get(i)->canWriteCattGeo())
             children++;
 
@@ -155,7 +155,7 @@ NodeList::writeCattGeo(Node *node, int filedes, int indent)
         RET_ONERROR( mywritef(f, swGetLinefeedString()) )
     }
 
-    for (size_t i = 0; i < size(); i++) {
+    for (long i = 0; i < size(); i++) {
         if (get(i) && get(i)->canWriteCattGeo()) {
             if ((get(i)->getType() == DUNE_CATT_EXPORT_REC) ||
                 (get(i)->getType() == DUNE_CATT_EXPORT_SRC)) {
@@ -185,7 +185,7 @@ NodeList::writeCattGeo(Node *node, int filedes, int indent)
 bool
 NodeList::canWriteLdrawDat()
 {
-    for (size_t i = 0; i < size(); i++) {
+    for (long i = 0; i < size(); i++) {
         Node *node = get(i);
         if (node != NULL)
             if (node->canWriteLdrawDat())
@@ -197,7 +197,7 @@ NodeList::canWriteLdrawDat()
 int 
 NodeList::writeLdrawDat(int f, int indent) const
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i) != NULL)
             RET_ONERROR( get(i)->writeLdrawDat(f, indent) )
     return 0; 
@@ -208,7 +208,7 @@ NodeList::doWithBranch(DoWithNodeCallback callback, void *data,
                        bool searchInRest, bool skipBranch, bool skipProto,
                        bool callSelf, bool skipInline)
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i) != NULL)
             if (!get(i)->doWithBranch(callback, data,
                                       searchInRest, skipBranch, skipProto,
@@ -220,7 +220,7 @@ NodeList::doWithBranch(DoWithNodeCallback callback, void *data,
 void
 NodeList::update()
 {
-    for (size_t i = 0; i < size(); i++)
+    for (long i = 0; i < size(); i++)
         if (get(i) != NULL)
             get(i)->update();
 }

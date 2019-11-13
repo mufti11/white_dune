@@ -68,17 +68,17 @@ NodeNurbsGroup::draw(void)
 
     glPushName(children_Field());  // field offset
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         childList->get(i)->bind();
 
     glPushName(0);
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         glLoadName(i);
         childList->get(i)->draw();
     }
     glPopName();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         childList->get(i)->unbind();
 
     glPopName();
@@ -137,7 +137,7 @@ NodeNurbsGroup::setHandle(Node* caller, float newWeight,
                           const Vec3f &newV, const Vec3f &oldV)
 {
     NodeList   *childList = children()->getValues();
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         Node *child = childList->get(i);
         if (child->getType() == VRML_NURBS_SURFACE) {
             if (child != caller)
@@ -157,7 +157,7 @@ NodeNurbsGroup::backupFieldsAppend(Node* caller, int field)
 {
     m_scene->addNextCommand();
     NodeList *childList = children()->getValues();
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         Node *child = childList->get(i);
         if (child->getType() == VRML_NURBS_SURFACE) {
             if (child != caller)
@@ -177,7 +177,7 @@ NodeNurbsGroup::convert2X3d(void)
     NodeList *childs = children()->getValues();
     NodeList *groupChilds = new NodeList();
     NodeList *nurbsSetChilds = new NodeList();
-    for (size_t i = 0; i < childs->size(); i++) {
+    for (long i = 0; i < childs->size(); i++) {
         Node *node = childs->get(i);
         if (node != NULL)
             node = node->convert2X3d();

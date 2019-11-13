@@ -68,7 +68,7 @@ FieldValue *
 MFTime::copy() 
 { 
     double *value = new double[m_value.size()];
-    for (size_t i = 0; i < m_value.size(); i++)
+    for (long i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];
     return new MFTime(value, m_value.size());
 }
@@ -91,7 +91,7 @@ bool
 MFTime::equals(const MFTime *value) const
 {
     if ((int)m_value.size() == value->getSize()) {
-        for (size_t i = 0; i < m_value.size(); i++)
+        for (long i = 0; i < m_value.size(); i++)
             if (m_value[i] != value->getValue(i))
                 return false;
         return true;
@@ -108,13 +108,13 @@ void MFTime::clamp(const FieldValue *min, const FieldValue *max)
 {
     if (min) {
         double dmin = ((SFTime *) min)->getValue();
-        for (size_t i = 0; i < m_value.size(); i++) {
+        for (long i = 0; i < m_value.size(); i++) {
             if (m_value[i] < dmin) m_value[i] = dmin;
         }
     }
     if (max) {
         double dmax = ((SFTime *) max)->getValue();
-        for (size_t i = 0; i < m_value.size(); i++) {
+        for (long i = 0; i < m_value.size(); i++) {
             if (m_value[i] > dmax) m_value[i] = dmax;
         }
     }

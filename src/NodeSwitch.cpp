@@ -72,7 +72,7 @@ int NodeSwitch::accountWhich()
     int which = whichChoice()->getValue();
     
     int whichCount = 0;
-    for (size_t i = 0; i < choiceList->size(); i++)
+    for (long i = 0; i < choiceList->size(); i++)
         if (choiceList->get(i)->getType() != VRML_COMMENT) {
             if (whichCount == which)
                 return i;

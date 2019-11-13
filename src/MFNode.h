@@ -83,7 +83,7 @@ public:
 #endif
                            return m_value; 
                            }
-    Node               *getValue(size_t index) const 
+    Node               *getValue(long index) const 
                            { 
                            if (m_value->size() == 0)
                                return NULL;

@@ -68,7 +68,7 @@ InputDeviceNameSelectionDialog::InputDeviceNameSelectionDialog(SWND Parent,
         device->guessInputDeviceNames(&device_names);
     }
     swComboBoxAppendItem(combo_device_names, "(none)");
-    for (size_t i = 0;i < device_names.size(); i++) {
+    for (long i = 0;i < device_names.size(); i++) {
         device_info[i] = "";
         device_info[i] += device_names[i];
         if (/* rate known devices usually useless as 3D input devices */

@@ -142,7 +142,7 @@ NodeGeoTransform::preDraw()
     glPushMatrix();
     transform();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         if (childList->get(i) != this)
             childList->get(i)->preDraw();
 

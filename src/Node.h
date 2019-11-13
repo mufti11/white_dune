@@ -1030,7 +1030,7 @@ public:
                                                   int numOutput,
                                                   Node *protoNode)
                           {
-                          for (size_t i = 0; 
+                          for (long i = 0; 
                               i < m_alreadyWrittenEventOuts.size(); i++)
                               if ((m_alreadyWrittenEventOuts[i].eventOut
                                    == eventOut) &&                   

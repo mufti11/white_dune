@@ -67,7 +67,7 @@ FieldValue *
 MFInt32::copy()
 {
     int *value = new int[m_value.size()];
-    for (size_t i = 0; i < m_value.size(); i++)
+    for (long i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];
     return new MFInt32(value, m_value.size());
 }
@@ -95,13 +95,13 @@ int MFInt32::write(int f, int indent, bool writeBrackets,
     /* search for -1 values */
     bool noMinus1=true;
     {
-    for (size_t i = 0; i < m_value.size(); i++)
+    for (long i = 0; i < m_value.size(); i++)
         if (m_value[i]==-1)
             noMinus1=false;
     }
     /* if compactFormat, write all values in one line till -1 */
     bool indentflag = true;
-    for (size_t i = 0; i < m_value.size(); i++) {
+    for (long i = 0; i < m_value.size(); i++) {
         if (indentflag) 
             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
         RET_ONERROR( mywritef(f, "%d ", m_value[i]) )
@@ -141,7 +141,7 @@ MFInt32::equals(const FieldValue *value) const
     if (value->getType() == MFINT32) {
         MFInt32 *v = (MFInt32 *) value;
         if (v->getSize() != (int)m_value.size()) return false;
-        for (size_t i = 0; i < m_value.size(); i++)
+        for (long i = 0; i < m_value.size(); i++)
             if (m_value[i] != v->getValue(i))
                 return false;
         return true;

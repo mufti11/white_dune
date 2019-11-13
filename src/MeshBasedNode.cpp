@@ -1454,7 +1454,7 @@ MeshBasedNode::writeRib(int f, int indent)
 
     RET_ONERROR( mywritef(f, "PointsPolygons [\n") )
     int numVertices = 0;
-    for (size_t i = 0; i < indexArray.size(); i++) {
+    for (long i = 0; i < indexArray.size(); i++) {
         if (indexArray[i] > -1)
             numVertices++;
         else {

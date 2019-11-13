@@ -87,7 +87,7 @@ MFColor::setSFValue(int index, float r, float g, float b)
 void 
 MFColor::clamp(const FieldValue *min, const FieldValue *max)
 {
-    for (size_t i = 0; i < m_value.size(); i++) {
+    for (long i = 0; i < m_value.size(); i++) {
         if (m_value[i] < 0.0f) m_value[i] = 0.0f;
         if (m_value[i] > 1.0f) m_value[i] = 1.0f;
     }

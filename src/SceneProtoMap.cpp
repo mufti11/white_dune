@@ -886,7 +886,7 @@ SceneProtoMap::updateProtoMap(ProtoMap* protos, Scene *scene)
     contourPolyline2D += "ContourPolyline2D";
     (*protos)[contourPolyline2D] = new ProtoContourPolyline2D(scene);    
     const NodeList *nodes = scene->getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (long i = 0; i < nodes->size(); i++) {
          Node *node = nodes->get(i);
          if (node->getType() == X3D_CONTOUR_POLYLINE_2D) 
              node->setProto((*protos)[contourPolyline2D]);

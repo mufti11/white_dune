@@ -126,7 +126,7 @@ NodeCoordinateChaser::sendChasedEvent(int eventIn, double timestamp,
 
     MFVec3f *outputValue = (MFVec3f *)initDest->copy();
     outputValue->ref();      
-    for (size_t i = 0; i < m_event_times.size(); i++) {
+    for (long i = 0; i < m_event_times.size(); i++) {
         MFVec3f *dnmin1;
         if (i == 0)
             dnmin1 = initVal;

@@ -5447,4 +5447,8 @@ Advanced "Array" class
 
 Fixed error of storing a ImageTexture as PixelTexture
 
+Advanced CurveAnimation for Viewpoint animation
+
+You have to z-flip your objects animated by CurveAnimation 8-(
+
 Contact: MUFTI <mufti11@web.de>

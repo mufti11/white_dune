@@ -79,7 +79,7 @@ ChainBasedNode::draw()
     Util::myGlColor4fv(c);
 
     glBegin(GL_LINE_STRIP);
-    for (size_t i = 0; i < m_chain.size(); i++)
+    for (long i = 0; i < m_chain.size(); i++)
         glVertex3f(m_chain[i].x, m_chain[i].y, m_chain[i].z);
     glEnd();
     glEnable(GL_LIGHTING);
@@ -327,7 +327,12 @@ ChainBasedNode::toOrientationInterpolator(NodeOrientationInterpolator *
             quat = quat * correctionY; 
             quat = quat * correctionX; 
         }
-        SFRotation rot(quat);
+
+        SFRotation flip(0, 1, 0, M_PI);
+        Quaternion flipped(quat * flip.getQuat());
+        flipped.normalize();
+
+        SFRotation rot(flipped);
         for (int i = 0; i < 4; i++)
             chainRot[j * 4 + i] =  rot.getValue()[i];
         oldQuat = quat;
@@ -398,7 +403,7 @@ ChainBasedNode::writeLdrawDat(int f, int indent)
     if (hasName())
         RET_ONERROR( mywritef(f, "name \"%s\"\n", getName().getData()) )
         
-    for (size_t i = 0; i < m_chain.size(); i++) {
+    for (long i = 0; i < m_chain.size(); i++) {
         if (i > 0) {
             RET_ONERROR( mywritef(f, "2 24 ") )
             for (int j = 0; j < 2; j++)  {

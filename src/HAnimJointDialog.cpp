@@ -137,7 +137,7 @@ HAnimJointDialog::LoadData()
         m_joints.append("split HAimJoint into 2 joints"); 
 
     const NodeList *nodes = m_scene->getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (long i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node->isInScene(m_scene))
             if (node->getType() == X3D_HANIM_JOINT)
@@ -148,7 +148,7 @@ HAnimJointDialog::LoadData()
                 }
     }
     
-    for (size_t i = 0;i < m_joints.size(); i++)
+    for (long i = 0;i < m_joints.size(); i++)
         swComboBoxAppendItem(comboNode, m_joints[i]);
 
     if (m_parent != NULL) {
@@ -156,7 +156,7 @@ HAnimJointDialog::LoadData()
     } else
         m_joints[0] = "NULL";
      
-    for (size_t i = 0; i < m_joints.size(); i++)
+    for (long i = 0; i < m_joints.size(); i++)
         swComboBoxAppendItem(comboParent, m_joints[i]);
 }
 

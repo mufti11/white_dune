@@ -127,7 +127,7 @@ InteractionDialog::Validate()
     if (!m_window.isValid())
         return false;
     bool checked = false;
-    for (size_t i = 0 ; i < m_eventIns.size(); i++)
+    for (long i = 0 ; i < m_eventIns.size(); i++)
         if (m_window.getChecked(i)) {
             if (checked) {
                 TheApp->MessageBoxId(IDS_NOT_2_INTERACTIVE);
@@ -135,7 +135,7 @@ InteractionDialog::Validate()
             }
             checked = true;
         }
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         if (m_window.getChecked(i))
             return true;
     int commentID = m_interactionNode->getInteractionCommentID();
@@ -165,7 +165,7 @@ InteractionDialog::LoadData()
 void 
 InteractionDialog::SaveData()
 {
-    for (size_t i = 0; i < m_eventIns.size(); i++)
+    for (long i = 0; i < m_eventIns.size(); i++)
         if (m_window.getChecked(i)) {
             Proto* inProto = m_interactionNode->getProto();
             m_routeData->eventInField =m_eventIns[i];

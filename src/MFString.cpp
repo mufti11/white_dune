@@ -70,7 +70,7 @@ FieldValue *
 MFString::copy()
 {
     StringArray *value= new StringArray();
-    for (size_t i = 0;i < m_value.size(); i++)
+    for (long i = 0;i < m_value.size(); i++)
         value->append(*new MyString(m_value[i]));
     return new MFString(value);
 }
@@ -171,7 +171,7 @@ MFString::equals(const FieldValue *value) const
     if (value->getType() == MFSTRING) {
         MFString *v = (MFString *) value;
         if (v->getSize() != (int)m_value.size()) return false;
-        for (size_t i = 0; i < m_value.size(); i++)
+        for (long i = 0; i < m_value.size(); i++)
             if (v->getValue(i) != m_value[i]) return false;
         return true;
     }

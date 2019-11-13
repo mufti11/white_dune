@@ -56,7 +56,7 @@ protected:
     virtual bool        writeFile(int f) { return true; }
     virtual void        generateCommand(bool is4Kids) = 0;
 
-    bool                write2file(int f, const void *data, size_t count);
+    bool                write2file(int f, const void *data, long count);
     bool                write2file(int f, const char* string) 
                            { 
                            return ObjectEdit::write2file(f, string, 

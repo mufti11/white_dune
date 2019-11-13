@@ -496,7 +496,7 @@ void SceneTreeView::UpdateSelection()
 void SceneTreeView::InsertNodeListRec(NodeList *list, int field, STREEITEM parent)
 {
     if (list == NULL) return;
-    for (size_t i = 0; i < list->size(); i++) {
+    for (long i = 0; i < list->size(); i++) {
         InsertNodeRec(list->get(i), field, SW_INSERT_LAST_CHILD, parent);
     }
 }

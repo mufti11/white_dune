@@ -87,7 +87,7 @@ FieldValue *
 MFFloat::copy()
 {
     float *value = new float[m_value.size()];
-    for (size_t i = 0; i < m_value.size(); i++)
+    for (long i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];
     return new MFFloat(value, m_value.size());
 }
@@ -110,7 +110,7 @@ bool
 MFFloat::equals(const MFFloat *value) const
 {
     if ((int)m_value.size() == value->getSize()) {
-        for (size_t i = 0; i < m_value.size(); i++)
+        for (long i = 0; i < m_value.size(); i++)
             if (m_value[i] != value->getValue(i))
                 return false;
         return true;
@@ -142,13 +142,13 @@ void MFFloat::clamp(const FieldValue *min, const FieldValue *max)
 {
     if (min) {
         float fmin = ((SFFloat *) min)->getValue();
-        for (size_t i = 0; i < m_value.size(); i ++) {
+        for (long i = 0; i < m_value.size(); i ++) {
             if (m_value[i] < fmin) m_value[i] = fmin;
         }
     }
     if (max) {
         float fmax = ((SFFloat *) max)->getValue();
-        for (size_t i = 0; i < m_value.size(); i ++) {
+        for (long i = 0; i < m_value.size(); i ++) {
             if (m_value[i] > fmax) m_value[i] = fmax;
         }
     }

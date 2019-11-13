@@ -172,7 +172,7 @@ NodeBox::toNurbs(int nuAreaPoints, int uDegree, int nvAreaPoints,
     tmpxSize = j * xSize / (nzAreaPoints-1);
     tmpySize = j * ySize / (nzAreaPoints-1);
     makeNurbsRectangle(tmpxSize, tmpySize, zPosition, nuAreaPoints, uDegree);
-    for (size_t i = 0; i < m_rectangle.size(); i++) {
+    for (long i = 0; i < m_rectangle.size(); i++) {
       controlPoints[(j*uDimension + i)*3    ] = m_rectangle[i].x;  
       controlPoints[(j*uDimension + i)*3 + 1] = m_rectangle[i].y;
       controlPoints[(j*uDimension + i)*3 + 2] = m_rectangle[i].z;  
@@ -184,7 +184,7 @@ NodeBox::toNurbs(int nuAreaPoints, int uDegree, int nvAreaPoints,
   tmpindex = 0;
   for (int j=index; j<index+vDegree-1; j++) {
     makeNurbsRectangle(xSize, ySize, zPosition, nuAreaPoints, uDegree);
-    for (size_t i = 0; i < m_rectangle.size(); i++) {
+    for (long i = 0; i < m_rectangle.size(); i++) {
       controlPoints[(j*uDimension + i)*3    ] = m_rectangle[i].x;  
       controlPoints[(j*uDimension + i)*3 + 1] = m_rectangle[i].y;
       controlPoints[(j*uDimension + i)*3 + 2] = m_rectangle[i].z;  
@@ -198,7 +198,7 @@ NodeBox::toNurbs(int nuAreaPoints, int uDegree, int nvAreaPoints,
   for (int j=index, index2=0; j<index+nvAreaPoints; j++, index2++) {  
     zPosition = zSize / 2 - index2 * dz;
     makeNurbsRectangle(xSize, ySize, zPosition, nuAreaPoints, uDegree);
-    for (size_t i = 0; i < m_rectangle.size(); i++) {
+    for (long i = 0; i < m_rectangle.size(); i++) {
       controlPoints[(j*uDimension + i)*3    ] = m_rectangle[i].x;  
       controlPoints[(j*uDimension + i)*3 + 1] = m_rectangle[i].y;
       controlPoints[(j*uDimension + i)*3 + 2] = m_rectangle[i].z;  
@@ -212,7 +212,7 @@ NodeBox::toNurbs(int nuAreaPoints, int uDegree, int nvAreaPoints,
   for (int j = index; j < index+vDegree - 1; j++) {
     zPosition = -zSize / 2;
     makeNurbsRectangle(xSize, ySize, zPosition, nuAreaPoints, uDegree);
-    for (size_t i = 0; i < m_rectangle.size(); i++) {
+    for (long i = 0; i < m_rectangle.size(); i++) {
       controlPoints[(j*uDimension + i)*3    ] = m_rectangle[i].x;  
       controlPoints[(j*uDimension + i)*3 + 1] = m_rectangle[i].y;
       controlPoints[(j*uDimension + i)*3 + 2] = m_rectangle[i].z;  
@@ -227,7 +227,7 @@ NodeBox::toNurbs(int nuAreaPoints, int uDegree, int nvAreaPoints,
     tmpxSize = xSize - index2 * xSize / (nzAreaPoints-1);
     tmpySize = ySize - index2 * ySize / (nzAreaPoints-1);
     makeNurbsRectangle(tmpxSize, tmpySize, zPosition, nuAreaPoints, uDegree);
-    for (size_t i=0; i<m_rectangle.size(); i++) {
+    for (long i=0; i<m_rectangle.size(); i++) {
       controlPoints[(j*uDimension + i)*3    ] = m_rectangle[i].x;  
       controlPoints[(j*uDimension + i)*3 + 1] = m_rectangle[i].y;
       controlPoints[(j*uDimension + i)*3 + 2] = m_rectangle[i].z;  
@@ -238,10 +238,10 @@ NodeBox::toNurbs(int nuAreaPoints, int uDegree, int nvAreaPoints,
 
   makeKnotvectors(uOrder, uDimension, vOrder, vDimension);
 
-  for (size_t i=0; i<m_uKnots.size(); i++) {
+  for (long i=0; i<m_uKnots.size(); i++) {
     uKnots[i] = m_uKnots[i];
   }
-  for (size_t i=0; i<m_vKnots.size(); i++) {
+  for (long i=0; i<m_vKnots.size(); i++) {
     vKnots[i] = m_vKnots[i];
   }  
   
@@ -421,10 +421,10 @@ NodeBox::makeNurbsSurfaces(int surface)
     break;
   }
 
-  for (size_t i=0; i<m_uKnots.size(); i++) {
+  for (long i=0; i<m_uKnots.size(); i++) {
     uKnots[i] = m_uKnots[i];
   }
-  for (size_t i=0; i<m_vKnots.size(); i++) {
+  for (long i=0; i<m_vKnots.size(); i++) {
     vKnots[i] = m_vKnots[i];
   }
 

@@ -93,7 +93,7 @@ bool
 InteractionDialog3::Validate()
 {
     bool checked = false;
-    for (size_t i = 0 ;i < m_eventOuts.size() ;i++)
+    for (long i = 0 ;i < m_eventOuts.size() ;i++)
         if (m_window.getChecked(i)) {
             if (checked) {
                 TheApp->MessageBoxId(IDS_NOT_2_INTERACTIVE);
@@ -101,7 +101,7 @@ InteractionDialog3::Validate()
             }
             checked = true;
         }
-    for (size_t i = 0 ;i < m_eventOuts.size() ;i++)
+    for (long i = 0 ;i < m_eventOuts.size() ;i++)
         if (m_window.getChecked(i))
             return true;
     if (m_routeData->node == NULL)
@@ -124,7 +124,7 @@ InteractionDialog3::LoadData()
 void 
 InteractionDialog3::SaveData()
 {
-    for (size_t i = 0; i < m_eventOuts.size() ;i++)
+    for (long i = 0; i < m_eventOuts.size() ;i++)
         if (m_window.getChecked(i)) {
             m_routeData->eventOutField = m_eventOuts[i];
             return;

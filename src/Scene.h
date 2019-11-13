@@ -387,7 +387,7 @@ public:
                            if (m_firstSelectionRangeHandle > -1)
                                return; 
                            m_oldSelectedHandles.resize(0); 
-                           for (size_t i = 0; i < m_selectedHandles.size(); 
+                           for (long i = 0; i < m_selectedHandles.size(); 
                                 i++)
                                m_oldSelectedHandles.append(
                                      m_selectedHandles[i]);
@@ -796,7 +796,7 @@ public:
     void                warning(int id);
     void                warning(int id, const char *string);
 
-    Proto              *getProto(size_t i) 
+    Proto              *getProto(long i) 
                             {
                             if (i >= m_protoNames.size())
                                 return NULL;

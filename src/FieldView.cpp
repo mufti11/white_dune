@@ -173,7 +173,7 @@ void FieldView::DeleteFields()
 {
     if (!getEnabled())
         return;
-    for (size_t i = 0; i < m_fields.size(); i++) {
+    for (long i = 0; i < m_fields.size(); i++) {
        delete m_fields[i];
     }
     m_fields.resize(0);
@@ -234,7 +234,7 @@ void FieldView::OnDraw(int x, int y, int width, int height, bool update)
 int FieldView::FindField(int field)
 {
     int currentField = -1;
-    for (size_t i = 0; i < m_fields.size(); i++)
+    for (long i = 0; i < m_fields.size(); i++)
         if (m_fields[i]->GetIndex() == field) {
            currentField = i;
            break;
@@ -549,7 +549,7 @@ void FieldView::MoveControls(int left)
 {
     Rect r;
 
-    for (size_t i = 0; i < m_items.size(); i++) {
+    for (long i = 0; i < m_items.size(); i++) {
         GetItemRect(i, &r);
         m_items[i]->MoveControl(left, r.top);
     }

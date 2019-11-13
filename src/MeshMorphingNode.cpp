@@ -124,7 +124,7 @@ MeshMorphingNode::findInterpolators(InterpolatorInfo& info)
         }
     }
     
-    for (size_t i = 0; i < fieldList.size(); i++) {
+    for (long i = 0; i < fieldList.size(); i++) {
         Interpolator *inter = m_scene->findUpstreamInterpolator(nodeList[i], 
                                                                fieldList[i]);
         if (inter != NULL) {
@@ -157,7 +157,7 @@ MeshMorphingNode::addCoordinateInterpolator(Node *node,
     Node *interOutput = NULL;
     int interOutputEvent = -1;
     bool foundInterOutput = false;
-    for (size_t k = 0; k < info.interpolator.size(); k++) {
+    for (long k = 0; k < info.interpolator.size(); k++) {
         Node *node = info.interpolator[k];
         int eventIn = node->lookupEventIn("set_fraction", false);
         if (eventIn == INVALID_INDEX)
@@ -186,7 +186,7 @@ MeshMorphingNode::addCoordinateInterpolator(Node *node,
     do {
        foundMinKey = false;
        float minKey = 0;
-       for (size_t i = 0; i < info.interpolator.size(); i++)
+       for (long i = 0; i < info.interpolator.size(); i++)
            for (int j = 0; j < info.interpolator[i]->getNumKeys(); j++)
                if (info.interpolator[i]->getKey(j) > currentKey) {
                    if (foundMinKey == false) {
@@ -209,8 +209,8 @@ MeshMorphingNode::addCoordinateInterpolator(Node *node,
     void *data = initializeData();
     if (data == NULL)
         return true;
-    for (size_t i = 0; i < keys.size(); i++) {
-        for (size_t j = 0; j < info.interpolator.size(); j++) {
+    for (long i = 0; i < keys.size(); i++) {
+        for (long j = 0; j < info.interpolator.size(); j++) {
             Interpolator *inter = info.interpolator[j];
             int field = info.field[j];
             if (inter != NULL)
@@ -340,7 +340,7 @@ MeshMorphingNode::getMinBoundingBox(void)
     Node *interOutput = NULL;
     int interOutputEvent = -1;
     bool foundInterOutput = false;
-    for (size_t k = 0; k < info.interpolator.size(); k++) {
+    for (long k = 0; k < info.interpolator.size(); k++) {
         Node *node = info.interpolator[k];
         int eventIn = node->lookupEventIn("set_fraction", false);
         if (eventIn == INVALID_INDEX)
@@ -369,7 +369,7 @@ MeshMorphingNode::getMinBoundingBox(void)
     do {
        foundMinKey = false;
        float minKey = 0;
-       for (size_t i = 0; i < info.interpolator.size(); i++)
+       for (long i = 0; i < info.interpolator.size(); i++)
            for (int j = 0; j < info.interpolator[i]->getNumKeys(); j++)
                if (info.interpolator[i]->getKey(j) > currentKey) {
                    if (foundMinKey == false) {
@@ -393,8 +393,8 @@ MeshMorphingNode::getMinBoundingBox(void)
     Vec3f minResult = m_mesh->getVertices()->getMinBoundingBox();
     if (data == NULL)
         return minResult;
-    for (size_t i = 0; i < keys.size(); i++) {
-        for (size_t j = 0; j < info.interpolator.size(); j++) {
+    for (long i = 0; i < keys.size(); i++) {
+        for (long j = 0; j < info.interpolator.size(); j++) {
             Interpolator *inter = info.interpolator[j];
             int field = info.field[j];
             if (inter != NULL)
@@ -435,7 +435,7 @@ MeshMorphingNode::getMaxBoundingBox(void)
     Node *interOutput = NULL;
     int interOutputEvent = -1;
     bool foundInterOutput = false;
-    for (size_t k = 0; k < info.interpolator.size(); k++) {
+    for (long k = 0; k < info.interpolator.size(); k++) {
         Node *node = info.interpolator[k];
         int eventIn = node->lookupEventIn("set_fraction", false);
         if (eventIn == INVALID_INDEX)
@@ -464,7 +464,7 @@ MeshMorphingNode::getMaxBoundingBox(void)
     do {
        foundMinKey = false;
        float minKey = 0;
-       for (size_t i = 0; i < info.interpolator.size(); i++)
+       for (long i = 0; i < info.interpolator.size(); i++)
            for (int j = 0; j < info.interpolator[i]->getNumKeys(); j++)
                if (info.interpolator[i]->getKey(j) > currentKey) {
                    if (foundMinKey == false) {
@@ -488,8 +488,8 @@ MeshMorphingNode::getMaxBoundingBox(void)
     Vec3f maxResult = m_mesh->getVertices()->getMaxBoundingBox();
     if (data == NULL)
         return maxResult;
-    for (size_t i = 0; i < keys.size(); i++) {
-        for (size_t j = 0; j < info.interpolator.size(); j++) {
+    for (long i = 0; i < keys.size(); i++) {
+        for (long j = 0; j < info.interpolator.size(); j++) {
             Interpolator *inter = info.interpolator[j];
             int field = info.field[j];
             if (inter != NULL)

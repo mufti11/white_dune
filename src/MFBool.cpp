@@ -65,7 +65,7 @@ FieldValue *
 MFBool::copy()
 {
     bool *value = new bool[m_value.size()];
-    for (size_t i = 0;i < m_value.size(); i++)
+    for (long i = 0;i < m_value.size(); i++)
         value[i] = m_value[i];
     return new MFBool(value, m_value.size());
 }
@@ -123,7 +123,7 @@ MFBool::equals(const FieldValue *value) const
     if (value->getType() == MFBOOL) {
         MFBool *v = (MFBool *) value;
         if (v->getSize() != (int)m_value.size()) return false;
-        for (size_t i = 0; i < m_value.size(); i++)
+        for (long i = 0; i < m_value.size(); i++)
             if (m_value[i] != v->getValue(i))
                 return false;
         return true;

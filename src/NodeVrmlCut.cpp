@@ -134,7 +134,7 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
         ((MFieldValue *)value)->getDiff(&newValues, &deleteValues, scenes());
         ProtoVrmlCut *protoVrmlCut = (ProtoVrmlCut *)m_proto;
         int firstDynamicEventOut = protoVrmlCut->getFirstDynamicEventOut();
-        for (size_t i = 0; i < newValues.size(); i++) {
+        for (long i = 0; i < newValues.size(); i++) {
             Node *node = ((MFNode *)value)->getValue(newValues[i]);
             if (node->getType() == DUNE_VRML_SCENE) {
                 MyString name = "";
@@ -175,7 +175,7 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
             }            
         }
 
-        for (size_t i = 0; i < deleteValues.size(); i++) {
+        for (long i = 0; i < deleteValues.size(); i++) {
             int index = deleteValues[i];
             int eventOutIndex = firstDynamicEventOut + index;
             sceneLengths()->removeSFValue(index);
@@ -310,7 +310,7 @@ NodeVrmlCut::accountWhich()
         running = false;
   
     int whichCount = 0;
-    for (size_t i = 0; i < choiceList->size(); i++)
+    for (long i = 0; i < choiceList->size(); i++)
         if (choiceList->get(i)->getType() != VRML_COMMENT) {
             if (whichCount == which)
                 return i;
@@ -859,7 +859,7 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
 
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
     RET_ONERROR( mywritestr(f, "var sceneLengths = [") )
-    for (size_t i = 0; i < sceneLengths()->getSize(); i++) { 
+    for (long i = 0; i < sceneLengths()->getSize(); i++) { 
          RET_ONERROR( mywritef(f, "%f", sceneLengths()->getValue(i)) )
          if (i < sceneLengths()->getSize() - 1)
              RET_ONERROR( mywritestr(f, ", ") )
@@ -909,7 +909,7 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
     TheApp->incSelectionLinenumber();
 
     data.curveAnimations.resize(0);
-    for (size_t i = 0; i < scenes()->getSize(); i++) {
+    for (long i = 0; i < scenes()->getSize(); i++) {
         indentf(f, indent + TheApp->GetIndent());
         mywritef(f, "if (currentScene == %d) {\n", i);
         data.f = f;
@@ -1045,13 +1045,13 @@ NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
         RET_ONERROR( mywritestr(f, "id='VrmlCutSwitch'  whichChoice='-1' >\n") )
         TheApp->incSelectionLinenumber();
 
-        for (size_t i = 0; i < scenes()->getSize(); i++) { 
+        for (long i = 0; i < scenes()->getSize(); i++) { 
              RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
              RET_ONERROR( mywritestr(f, "<Group >\n") )
              TheApp->incSelectionLinenumber();
 
              NodeVrmlScene *vrmlScene = (NodeVrmlScene *)scenes()->getValue(i);
-             for (size_t j = 0; j < vrmlScene->children()->getSize(); j++)
+             for (long j = 0; j < vrmlScene->children()->getSize(); j++)
                   vrmlScene->children()->getValue(j)->writeXml(f,
                       indent + 2 * TheApp->GetIndent());        
 

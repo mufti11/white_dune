@@ -47,7 +47,7 @@ void
 InputDeviceApp::accoutMaxNumberAxesInputDevices(void)
 {
    int max=0;       
-   for (size_t i=0;i<m_inputDevices.size();i++)
+   for (long i=0;i<m_inputDevices.size();i++)
       if (m_inputDevices[i]->get_number_axes()>max)
          max=m_inputDevices[i]->get_number_axes();
    m_maxNumberAxes=max;
@@ -58,7 +58,7 @@ InputDeviceApp::hasInputDevices(void)
 {
    if (m_inputDevices.size()>0)
       {
-      for (size_t i=0; i < m_inputDevices.size(); i++)
+      for (long i=0; i < m_inputDevices.size(); i++)
          if (m_inputDevices[i]->isValid()) 
             return true;
       return false;
@@ -70,7 +70,7 @@ InputDeviceApp::hasInputDevices(void)
 bool                
 InputDeviceApp::has2AxesInputDevices(void)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++)
+   for (long i=0;i<m_inputDevices.size();i++)
       if (m_inputDevices[i]->get_number_axes()==2)
          return true;
    return false;
@@ -79,7 +79,7 @@ InputDeviceApp::has2AxesInputDevices(void)
 bool                
 InputDeviceApp::has3AxesInputDevices(void)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++)
+   for (long i=0;i<m_inputDevices.size();i++)
       if (m_inputDevices[i]->get_number_axes()==3)
          return true;
    return false;
@@ -88,7 +88,7 @@ InputDeviceApp::has3AxesInputDevices(void)
 int                
 InputDeviceApp::searchInputDevice(const char *option, const char *deviceName)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++)
+   for (long i=0;i<m_inputDevices.size();i++)
       if ((strcmp(m_inputDevices[i]->getDeviceOption(),
                   option) == 0) &&
           (strcmp(m_inputDevices[i]->getDeviceName(),
@@ -119,7 +119,7 @@ InputDeviceApp::replaceOrAddInputDevice(InputDevice* newDevice,
 void                
 InputDeviceApp::deleteInputDevice(InputDevice* device)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++)
+   for (long i=0;i<m_inputDevices.size();i++)
       if (m_inputDevices[i] == device)
            m_inputDevices.remove(i);
 }
@@ -144,7 +144,7 @@ InputDeviceApp::setAflockDevice(AflockDevice* aflockDevice)
 int                
 InputDeviceApp::searchAflockDevice(const char *deviceName)
 {
-   for (size_t i=0;i<m_aflockDevices.size();i++)
+   for (long i=0;i<m_aflockDevices.size();i++)
       if (strcmp(m_aflockDevices[i]->getDeviceName(),
                  deviceName) == 0)
          return i;
@@ -173,7 +173,7 @@ InputDeviceApp::returnTracker(void)
    if (m_aflockDevices.size()==0)
       return(false);
    else
-      for (size_t i=0;i<m_aflockDevices.size();i++)
+      for (long i=0;i<m_aflockDevices.size();i++)
          delete m_aflockDevices[i];
    return(true);
 } 
@@ -181,21 +181,21 @@ InputDeviceApp::returnTracker(void)
 void                
 InputDeviceApp::stopTrackers(void)
 {
-   for (size_t i=0;i<m_aflockDevices.size();i++)
+   for (long i=0;i<m_aflockDevices.size();i++)
       m_aflockDevices[i]->stop();
 } 
 
 void                
 InputDeviceApp::restartTrackers(void)
 {
-   for (size_t i=0;i<m_aflockDevices.size();i++)
+   for (long i=0;i<m_aflockDevices.size();i++)
       m_aflockDevices[i]->start();
 } 
 
 void                
 InputDeviceApp::deleteAflockDevice(AflockDevice* device)
 {
-   for (size_t i=0;i<m_aflockDevices.size();i++)
+   for (long i=0;i<m_aflockDevices.size();i++)
       if (m_aflockDevices[i] == device)
            m_aflockDevices.remove(i);    
 }
@@ -205,14 +205,14 @@ InputDeviceApp::deleteAflockDevice(AflockDevice* device)
 void                
 InputDeviceApp::calibrateInputDevices(void)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++)
+   for (long i=0;i<m_inputDevices.size();i++)
       m_inputDevices[i]->set_firstflag();
 }
 
 void                
 InputDeviceApp::increaseInputDevice(TransformMode* tm)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++) 
+   for (long i=0;i<m_inputDevices.size();i++) 
       {
       if (m_inputDevices[i]->isTracker() || 
           m_inputDevices[i]->isWand()) continue;
@@ -232,7 +232,7 @@ InputDeviceApp::increaseInputDevice(TransformMode* tm)
 void                
 InputDeviceApp::decreaseInputDevice(TransformMode* tm)
 {
-   for (size_t i=0;i<m_inputDevices.size();i++) 
+   for (long i=0;i<m_inputDevices.size();i++) 
       {
       if (m_inputDevices[i]->isTracker() || 
           m_inputDevices[i]->isWand()) continue;
@@ -266,7 +266,7 @@ InputDeviceApp::sortInputDevices(void)
     do {
        InputDevice* tmp;
        changedflag=false;
-       for (size_t i=0;i<m_inputDevices.size()-1;i++)
+       for (long i=0;i<m_inputDevices.size()-1;i++)
           if (!m_inputDevices[i]->hasReadDelay() && 
                m_inputDevices[i+1]->hasReadDelay()) {
              tmp=m_inputDevices[i];

@@ -153,7 +153,7 @@ NodeHAnimHumanoid::drawHandles(void)
     glPushName(getBasicChildrenField());  // field
     glPushName(0);                 // index
     NodeList *childList = getBasicChildren()->getValues();
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         if (childList->get(i) &&
             (childList->get(i)->getType() == X3D_HANIM_JOINT)) {
             glLoadName(i);
@@ -171,7 +171,7 @@ NodeHAnimHumanoid::updateHandles(void)
     float fscale = TheApp->getHumanoidScale();
 
     NodeList *childList = getBasicChildren()->getValues();
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         if (childList->get(i) &&
             childList->get(i)->getType() == X3D_HANIM_JOINT) {
             childList->get(i)->drawJointHandles(fscale, this, NULL);
@@ -183,7 +183,7 @@ void
 NodeHAnimHumanoid::drawJointHandle(float scale, Node *that)
 {
     NodeList *childList = getBasicChildren()->getValues();
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         if (childList->get(i) &&
             childList->get(i)->getType() == X3D_HANIM_JOINT) {
             childList->get(i)->drawJointHandles(scale, this, that);
@@ -425,7 +425,7 @@ NodeHAnimHumanoid::preDraw()
     bool matrixDirty = false;
     NodeList *childList = getBasicChildren()->getValues();
 
-    for (size_t i = 0; i < childList->size(); i++) {
+    for (long i = 0; i < childList->size(); i++) {
         if (childList->get(i)) {
             childList->get(i)->doWithBranch(searchDirty, &matrixDirty,
                                             false, false);
@@ -437,7 +437,7 @@ NodeHAnimHumanoid::preDraw()
     glPushMatrix();
     transform();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         if (childList->get(i))
             childList->get(i)->preDraw();
 
@@ -445,7 +445,7 @@ NodeHAnimHumanoid::preDraw()
         matrixDirty = true;
 
     bool meshesDirty = false;
-    for (size_t i = 0; i < m_meshNodes.size(); i++)
+    for (long i = 0; i < m_meshNodes.size(); i++)
         if (m_meshNodes[i]->meshDirty())
             meshesDirty = true;
 
@@ -576,7 +576,7 @@ static bool addToMesh(Node *node, void *data)
 void
 NodeHAnimHumanoid::update()
 {
-    for (size_t i = 0; i < m_meshNodes.size(); i++)
+    for (long i = 0; i < m_meshNodes.size(); i++)
         m_meshNodes[i]->setMeshDirty();
      m_hasNoWeightArrayDirty = true;
 }
@@ -632,7 +632,7 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
          }
 
      m_numMeshes = numMeshes;
-     for (size_t i = 0; i < meshNodes.size(); i++)
+     for (long i = 0; i < meshNodes.size(); i++)
          m_meshNodes.append(meshNodes[i]);
 
      for (int i = 0; i < m_numMeshes; i++) {
@@ -713,7 +713,7 @@ NodeHAnimHumanoid::jointHasNoWeight(int vertex)
 
     NodeList *childList = skeleton()->getValues();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         childList->get(i)->doWithBranch(searchNoWeight, &noWeight);
 
     return noWeight.noWeight;
@@ -756,7 +756,7 @@ NodeHAnimHumanoid::getJointParent(Node *node)
 
     NodeList *childList = skeleton()->getValues();
 
-    for (size_t i = 0; i < childList->size(); i++)
+    for (long i = 0; i < childList->size(); i++)
         if (childList->get(i)->getType() == X3D_HANIM_JOINT) {
             NodeHAnimJoint *joint = (NodeHAnimJoint *)childList->get(i);
             ret = joint->getJointParent(node, this);

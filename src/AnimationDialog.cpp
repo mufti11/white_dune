@@ -141,7 +141,7 @@ AnimationDialog::LoadData()
     timeSensors[0] = "new TimeSensor"; 
 
     const NodeList *nodes = m_animationNode->getScene()->getNodes();
-    for (size_t i = 0; i < nodes->size(); i++) {
+    for (long i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node->isInScene(m_animationNode->getScene()))
             if (node->getType() == VRML_TIME_SENSOR)
@@ -156,7 +156,7 @@ AnimationDialog::LoadData()
                 }
     }
     
-    for (size_t i = 0;i < timeSensors.size(); i++)
+    for (long i = 0;i < timeSensors.size(); i++)
         swComboBoxAppendItem(comboTimeSensors, timeSensors[i]);
 
     char buf[128];
@@ -164,7 +164,7 @@ AnimationDialog::LoadData()
     mysnprintf(buf, 128, "%g", m_newTimeSensorSeconds);
     swSetText(swGetDialogItem(m_dlg, IDC_TIMESENSOR_SECONDS), buf);
 
-    for (size_t i = 0; i < m_eventInNames.size(); i++) {
+    for (long i = 0; i < m_eventInNames.size(); i++) {
         m_window.setInitButtonsPressed(i,false);
         if (TheApp->is4Kids()) {
             if (m_animationNode->getType() == VRML_TRANSFORM) {
@@ -214,7 +214,7 @@ void  AnimationDialog::SaveData()
     if (sensor > 0) {
         int index = 1;
         const NodeList *nodes = m_animationNode->getScene()->getNodes();
-        for (size_t i = 0; i < nodes->size() && (m_timeSensor == NULL); i++) {
+        for (long i = 0; i < nodes->size() && (m_timeSensor == NULL); i++) {
             Node *node = nodes->get(i);
             if (node->isInScene(m_animationNode->getScene()))
                 if (node->getType() == VRML_TIME_SENSOR)
