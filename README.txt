@@ -5451,4 +5451,6 @@ Advanced CurveAnimation for Viewpoint animation
 
 You have to z-flip your objects animated by CurveAnimation 8-(
 
+Fixed CurveAnimation of a Transform
+
 Contact: MUFTI <mufti11@web.de>

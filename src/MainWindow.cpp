@@ -7041,13 +7041,25 @@ MainWindow::createCurveAnimation(void)
               curve->getProto()->lookupEventIn("set_fraction")));
         int eventInPosition;
         int eventInOrientation;
-        if (selection->getType() == VRML_TRANSFORM) {
+        if (selection->getType() == VRML_TRANSFORM && selection->hasParent()) {
             NodeTransform *transform = (NodeTransform *)selection;
             eventInPosition = transform->translation_Field();
             eventInOrientation = transform->rotation_Field();
-            if (selection->isInScene(m_scene)) {
-                insertNode = selection;
-                insertField = transform->children_Field();
+            NodeTransform *newTransform = (NodeTransform *)
+                                          m_scene->createNode("Transform");
+            SFRotation *rot =new SFRotation(0, 1, 0, M_PI);
+            newTransform->rotation(rot);
+            m_scene->execute(new MoveCommand(newTransform, NULL, -1,
+                                             transform, 
+                                             transform->children_Field()));
+            MFNode *mfNode = transform->children();
+            for (int i = mfNode->getSize() - 2; i > -1; i--) {
+                 m_scene->execute(new MoveCommand(mfNode->getValue(i), 
+                                                  transform, 
+                                                  transform->children_Field(), 
+                                                  newTransform,
+                                                  newTransform->children_Field()
+                                                 ));
             }
         } else if (selection->getType() == VRML_VIEWPOINT) {
             NodeViewpoint *viewpoint = (NodeViewpoint *)selection;

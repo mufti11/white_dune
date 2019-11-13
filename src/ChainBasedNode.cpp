@@ -348,6 +348,7 @@ ChainBasedNode::toOrientationInterpolator(NodeOrientationInterpolator *
     }
     
     if (chainLength > 0) {
+        oldQuat.y *= -1;
         SFRotation rot(oldQuat);
         for (int i = 0; i < 4; i++)
             chainRot[(chainLength - 1) * 4 + i] = rot.getValue()[i];
