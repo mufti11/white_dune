@@ -5455,4 +5455,6 @@ Fixed CurveAnimation of a Transform
 
 Updated CurveAnimation PROTO
 
+Really fixed error of storing a ImageTexture as PixelTexture
+
 Contact: MUFTI <mufti11@web.de>
