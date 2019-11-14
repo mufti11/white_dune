@@ -5453,4 +5453,6 @@ You have to z-flip your objects animated by CurveAnimation 8-(
 
 Fixed CurveAnimation of a Transform
 
+Updated CurveAnimation PROTO
+
 Contact: MUFTI <mufti11@web.de>

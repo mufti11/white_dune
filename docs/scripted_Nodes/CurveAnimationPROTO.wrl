@@ -342,6 +342,8 @@ DEF NURBS_SCRIPT Script
        var rlen;
        var axis;
        var rot;
+       var flipAxis;
+       var flip;
 
        if (tess.length == 0) 
           makeChain();
@@ -381,12 +383,16 @@ DEF NURBS_SCRIPT Script
           axis = new SFVec3f(quat[0], quat[1], quat[2]); 
           axis.normalize();
           rot = new SFRotation(axis, 2.0 * Math.acos(quat[3]));
+          flipAxis = new SFVec3f(0, 1, 0);
+          flip = new SFRotation(flipAxis, 3.141592);
+          rot = rot.multiply(flip); 
           for (i = 0; i < 4; i++)
              chainRot[j * 4 + i] = rot[i];
           oldQuat = quat;
        }    
 
        if (chainLength > 0) {
+          oldQuat[1] *= -1;
           for (i = 0; i < 4; i++)
              chainRot[(chainLength - 1) * 4 + i] =  oldQuat[i];
        }
