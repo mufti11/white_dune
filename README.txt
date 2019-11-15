@@ -5457,4 +5457,6 @@ Updated CurveAnimation PROTO
 
 Really fixed error of storing a ImageTexture as PixelTexture
 
+Fixed wrong TextureCoordinate for Box node
+
 Contact: MUFTI <mufti11@web.de>

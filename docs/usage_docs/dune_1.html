@@ -156,10 +156,13 @@ start dune with a simplified GUI as simple 3D modeller for kids.
 <DT><B>-x3dv</B>
 
 <DD>
-if no file is loaded, start dune with a new X3DV file.
+if no file is loaded, start dune with a new X3DV file. 
 <BR>
 
 Per default, dune is started with a new VRML97 file.
+<BR>
+
+If a file is loaded, dune prints a X3DV to standart out.
 <DT><B>-kambi</B>
 
 <DD>
@@ -1083,13 +1086,19 @@ Set the unix font. Check for valid fonts with the <A HREF="/cgi-bin/man/man2html
 This options is intended for running the program as eyecatcher eg. on a fair.
 <BR>
 
-The option is only usefull, if a viewpoint animation is running.
+The animation of a scene (e.g. Viewpoint animation) is started.
+<BR>
+
 In case of input from the mouse (mouseclick), keyboard or a 3D inputdevice, 
 the animation is stopped an the user can navigate through the 3D world.
 <BR>
 
-<B>timeout</B> seconds after the last input, the viewpoint animation is not
-supressed anymore.
+<B>timeout</B> seconds after the last input, the animation is starting
+again.
+<DT><B>-fullscreen</B>
+
+<DD>
+Starts dune in full screen mode
 <DT><B>-filedialogdir directory</B>
 
 <DD>
@@ -2077,6 +2086,6 @@ See README file for details
 This document was created by
 <A HREF="/cgi-bin/man/man2html">man2html</A>,
 using the manual pages.<BR>
-Time: 19:27:05 GMT, August 03, 2019
+Time: 03:54:12 GMT, November 15, 2019
 </BODY>
 </HTML>

@@ -582,7 +582,7 @@ NodeBox::createMesh(bool cleanDoubleVertices, bool triangulate)
         0, 1, 3, 2, -1, 
         0, 1, 3, 2, -1, 
         0, 1, 3, 2, -1,
-        0, 1, 3, 2, -1,
+        2, 0, 1, 3, -1,
     };
 
     MFVec3f *coords = new MFVec3f();

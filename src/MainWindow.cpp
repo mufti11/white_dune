@@ -1482,6 +1482,9 @@ MainWindow::MainWindow(Scene *scene, SWND wnd)
     if (m_fullScreen_enabled)
         setFullScreen();
 
+    if (TheApp->getDemoMode())
+        Play();
+
     swToolbarSetButtonFlags(m_standardToolbar, m_xOnlyIconPos, 
                             SW_TB_DISABLED, 0);
     swToolbarSetButtonFlags(m_standardToolbar, m_yOnlyIconPos, 
