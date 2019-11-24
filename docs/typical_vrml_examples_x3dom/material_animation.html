@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="http://x3dom.org/download/dev/x3dom.css" />
+    <script type="text/javascript" src="http://x3dom.org/download/dev/x3dom-full.js"></script>
+  </head>
+  <body>
+    <x3d xmlns="http://www.web3d.org/specifications/x3d-namespace"  showStat="false" showLog="false" x="0px" y="0px" width="1024px" height="512px">
+      <Scene>
+      <ColorInterpolator DEF='ColorInterpolator1' id='ColorInterpolator1'  key='0.044010  0.194376  0.271393  0.295843  0.360635  0.372860  0.429095  0.446210  0.528117  0.595354  0.669926  0.880195  0.922982' keyValue='0 0 0  0 0 0.846153  0 0 1  0 1 0.057692  0 0 0.401075  0.070175 1 0.288461  1 0.423076 0.730769  1 0.076923 0.913995  1 0 0.557692  0.615384 0 0  0 0 0  0 0 0  0 0 0' >
+      </ColorInterpolator>
+      <ScalarInterpolator DEF='ScalarInterpolator1' id='ScalarInterpolator1'  key='0.006112  0.288508  0.399755  0.504889  0.573349  0.644254  0.679706  0.699266  0.740831  0.793398  0.823960  0.880195' keyValue='0.019992  0.019231  0.827769  0.403846  0.807692  0.538461  0.038462  0.076923  0.305588  0.757417  0.769230  0.192307' >
+      </ScalarInterpolator>
+      <Shape >
+        <Appearance >
+          <Material DEF='Material1' id='Material1'  ambientIntensity='1' diffuseColor='0.566954 0.474150 0.744087' emissiveColor='0.478201 5.769230e-2 3.846153e-2' shininess='1' transparency='0.192307' >
+          </Material>
+        </Appearance>
+        <Sphere radius='2' >
+        </Sphere>
+      </Shape>
+      <ColorInterpolator DEF='ColorInterpolator2' id='ColorInterpolator2'  key='0.096577  0.179706  0.228606  0.306845  0.444987  0.475550  0.520782  0.550122  0.622249  0.638141  0.710268  0.729828  0.859413  0.903423  0.946210' keyValue='0.115384 0.019231 0.288461  0 0.057692 0.211538  0 0 0.230769  0.335227 0.153846 0  1 0.365384 0.923076  0.952988 0.846153 0.711538  0.271321 0.443570 0  0.192307 0.383234 0.711538  0.718668 0.246277 0  1 0.750000 0.711538  0.576923 0.173076 0.211538  0.230769 0.961538 0.660256  1 0.173076 0.980769  1 0.942307 0.346153  0.288461 0.173076 1' >
+      </ColorInterpolator>
+      <ColorInterpolator DEF='ColorInterpolator3' id='ColorInterpolator3'  key='0.123471  0.261613  0.283618  0.315403  0.525672  0.636919  0.646699  0.678484  0.871638  0.993887' keyValue='0 0 0  0 0 0  0 0 1  0 0 0  0 0 0.076923  0 0.038462 0.013986  0 1 0  0.016200 0.038462 0.006480  0.096154 0.057692 0.038462  0.903846 0.057692 0.038462' >
+      </ColorInterpolator>
+      <Transform translation='-5.912889 1.079226 0' >
+        <Shape >
+          <Appearance >
+            <Material >
+            </Material>
+          </Appearance>
+          <Text string='"material animation"' >
+          </Text>
+        </Shape>
+      </Transform>
+      <TimeSensor DEF='TimeSensor1' id='TimeSensor1'  cycleInterval='10' loop='true' >
+      </TimeSensor>
+      <ROUTE fromNode='ColorInterpolator1' fromField='value_changed' toNode='Material1' toField='set_specularColor'></ROUTE>
+      <ROUTE fromNode='ScalarInterpolator1' fromField='value_changed' toNode='Material1' toField='set_transparency'></ROUTE>
+      <ROUTE fromNode='ColorInterpolator2' fromField='value_changed' toNode='Material1' toField='set_diffuseColor'></ROUTE>
+      <ROUTE fromNode='ColorInterpolator3' fromField='value_changed' toNode='Material1' toField='set_emissiveColor'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='ScalarInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='ColorInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='ColorInterpolator2' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='ColorInterpolator3' toField='set_fraction'></ROUTE>
+
+    </Scene>
+    </x3d>
+  </body>
+</html>

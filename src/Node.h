@@ -1190,7 +1190,7 @@ public:
 
     Node             *getParent(int index) const 
                           { 
-                          return index == -1 ? NULL: m_parents[index].m_node; 
+                          return index == -1 ? NULL : m_parents[index].m_node; 
                           }
     int               getParentField(int index) const 
                           { 
@@ -1279,6 +1279,8 @@ public:
                               return m_geometricParentIndex == 0; 
                           }
     bool              isUnused(void) { return m_geometricParentIndex == -1; }
+    bool              getIsUse(void) { return m_isUse; }
+    void              setIsUse(bool flag) { m_isUse = flag; }
 
     void              copyChildrenTo(Node *copyedNode, 
                                      bool copyNonNodes = false);
@@ -1344,13 +1346,13 @@ public:
     void              setProtoParent(Node *n) { m_protoParent = n; }
     void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
-
 protected:
     int               m_geometricParentIndex;
     NodeList         *m_commentsList;
     int               m_numberCDataFunctions;
     int               m_containerField;
     Node             *m_protoParent;
+    bool              m_isUse;
 };
 
 #endif // _NODE_H

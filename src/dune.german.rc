@@ -176,6 +176,7 @@ BEGIN
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Leere Group",                         ID_NEW_GROUP
         MENUITEM "Leerer Transform",                    ID_NEW_TRANSFORM
         MENUITEM "Alles ueber Namenseingabe",           ID_NEW_NODE_BY_NAME
@@ -355,6 +356,11 @@ BEGIN
         END
 #endif
         MENUITEM "Vereinige in IndexedFaceSet (braucht Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&Szenen"
+    BEGIN
+        MENUITEM "&Hinzufuegen",                         ID_SCENES_ADD
+        MENUITEM "&Verwalten (brauvht VrmlScene)",       ID_SCENES_MANAGE
     END
     POPUP "Bewegungs&art"
     BEGIN
@@ -1521,6 +1527,11 @@ BEGIN
         MENUITEM "Heraus zoomen\t-",                    ID_ROUTE_ZOOM_OUT
         MENUITEM "Hinein zoomen\t+",                    ID_ROUTE_ZOOM_IN
         MENUITEM "Neu aufbauen",                        ID_ROUTE_REBUILD
+    END
+    POPUP "&Szenen"
+    BEGIN
+        MENUITEM "&Hinzufuegen",                         ID_SCENES_ADD
+        MENUITEM "&Verwalten (brauvht VrmlScene)",       ID_SCENES_MANAGE
     END
     POPUP "&Modus"
     BEGIN
@@ -3133,6 +3144,25 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_DE_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Szene verwalten"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "Erste",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "Letzte", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Szenen Nummer",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Szenen Laenge",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Laenge der Szenen ohne Animation",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,165,105,50,14
+END
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // DESIGNINFO
@@ -4395,6 +4425,13 @@ BEGIN
     ID_DE_NEW_UNIFORM              "Uniform.\nUniform"        
     ID_DE_NEW_IMAGE_TEXTURE_ATLAS  "ImageTextureAtlas (need texture).\nImageTextureAtlas (need texture)"
     ID_DE_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_DE_SCENES_NUMBER_NOT_FIRST_AND_LAST "Benutze bitte Erste oder Letze, nicht Beide"
+    IDS_DE_SCENES_NUMBER_NOT_VALID          "Szenennummer ausserhalb des legalen Bereichs"
+    IDS_DE_SCENES_LAST                      "Letze Szene"
 END
 
 #ifdef HAVE_SAND

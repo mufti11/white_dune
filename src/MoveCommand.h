@@ -33,7 +33,7 @@ class MoveCommand : public Command {
 public:
                         MoveCommand(Node *node, Node *src, int srcField, 
                                     Node *dest, int destField, 
-                                    int destIndex = -1);
+                                    int destIndex = -1, bool handleUSE = true);
     virtual            ~MoveCommand();
 
     virtual void        execute(SceneView *sender = NULL);
@@ -51,6 +51,7 @@ protected:
     FieldValue         *m_newValueSrc;
     FieldValue         *m_newValueDest;
     bool                m_failed;
+    bool                m_isUSE;
 };
 
 #endif // _MOVE_COMMAND_H

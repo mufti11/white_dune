@@ -1,3 +1,24 @@
+whitedune (1.630-1) experimental; urgency=low
+
+  * Version 1.630 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Fri, 22 Nov 2019 04:00:08 +0100
+
+whitedune (1.624-1) experimental; urgency=low
+
+  * Version 1.624 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Sun, 17 Nov 2019 04:05:35 +0100
+
+whitedune (1.618-1) experimental; urgency=low
+
+  * Version 1.618 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Fri, 15 Nov 2019 05:16:15 +0100
+
 whitedune (1.617-1) experimental; urgency=low
 
   * Version 1.617 debian package

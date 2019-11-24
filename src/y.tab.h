@@ -53,35 +53,36 @@ extern int yydebug;
     COMPOSED_SHADER = 263,
     PACKAGED_SHADER = 264,
     SHADER_PROGRAM = 265,
-    EXPORT = 266,
-    IMPORT = 267,
-    AS = 268,
-    ID = 269,
-    ID_X3D = 270,
-    STRING = 271,
-    INT_NUM = 272,
-    FLOAT_NUM = 273,
-    DEF = 274,
-    EXTERNPROTO = 275,
-    FALSE_TOK = 276,
-    IS = 277,
-    NULL_TOK = 278,
-    PROTO = 279,
-    ROUTE = 280,
-    TO = 281,
-    TRUE_TOK = 282,
-    USE = 283,
-    EVENT_IN = 284,
-    EVENT_OUT = 285,
-    EXPOSED_FIELD = 286,
-    INPUT_OUTPUT = 287,
-    FIELD = 288,
-    X3D = 289,
-    PROFILE = 290,
-    COMPONENT = 291,
-    UNIT = 292,
-    META = 293,
-    VRML1 = 294
+    VRML_CUT = 266,
+    EXPORT = 267,
+    IMPORT = 268,
+    AS = 269,
+    ID = 270,
+    ID_X3D = 271,
+    STRING = 272,
+    INT_NUM = 273,
+    FLOAT_NUM = 274,
+    DEF = 275,
+    EXTERNPROTO = 276,
+    FALSE_TOK = 277,
+    IS = 278,
+    NULL_TOK = 279,
+    PROTO = 280,
+    ROUTE = 281,
+    TO = 282,
+    TRUE_TOK = 283,
+    USE = 284,
+    EVENT_IN = 285,
+    EVENT_OUT = 286,
+    EXPOSED_FIELD = 287,
+    INPUT_OUTPUT = 288,
+    FIELD = 289,
+    X3D = 290,
+    PROFILE = 291,
+    COMPONENT = 292,
+    UNIT = 293,
+    META = 294,
+    VRML1 = 295
   };
 #endif
 /* Tokens.  */
@@ -93,42 +94,43 @@ extern int yydebug;
 #define COMPOSED_SHADER 263
 #define PACKAGED_SHADER 264
 #define SHADER_PROGRAM 265
-#define EXPORT 266
-#define IMPORT 267
-#define AS 268
-#define ID 269
-#define ID_X3D 270
-#define STRING 271
-#define INT_NUM 272
-#define FLOAT_NUM 273
-#define DEF 274
-#define EXTERNPROTO 275
-#define FALSE_TOK 276
-#define IS 277
-#define NULL_TOK 278
-#define PROTO 279
-#define ROUTE 280
-#define TO 281
-#define TRUE_TOK 282
-#define USE 283
-#define EVENT_IN 284
-#define EVENT_OUT 285
-#define EXPOSED_FIELD 286
-#define INPUT_OUTPUT 287
-#define FIELD 288
-#define X3D 289
-#define PROFILE 290
-#define COMPONENT 291
-#define UNIT 292
-#define META 293
-#define VRML1 294
+#define VRML_CUT 266
+#define EXPORT 267
+#define IMPORT 268
+#define AS 269
+#define ID 270
+#define ID_X3D 271
+#define STRING 272
+#define INT_NUM 273
+#define FLOAT_NUM 274
+#define DEF 275
+#define EXTERNPROTO 276
+#define FALSE_TOK 277
+#define IS 278
+#define NULL_TOK 279
+#define PROTO 280
+#define ROUTE 281
+#define TO 282
+#define TRUE_TOK 283
+#define USE 284
+#define EVENT_IN 285
+#define EVENT_OUT 286
+#define EXPOSED_FIELD 287
+#define INPUT_OUTPUT 288
+#define FIELD 289
+#define X3D 290
+#define PROFILE 291
+#define COMPONENT 292
+#define UNIT 293
+#define META 294
+#define VRML1 295
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 169 "parser.y" /* yacc.c:1909  */
+#line 170 "parser.y" /* yacc.c:1909  */
 
     int                  int32;
     int                  id;
@@ -142,7 +144,7 @@ union YYSTYPE
     IntArray            *intArray;
     DoubleArray         *doubleArray;
 
-#line 146 "y.tab.h" /* yacc.c:1909  */
+#line 148 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

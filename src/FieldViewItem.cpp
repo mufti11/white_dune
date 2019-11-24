@@ -117,6 +117,8 @@ MFieldViewItem::InitIndexValue(int index, FieldValue *value)
 void
 MFieldViewItem::SetValue(FieldValue *value)
 {
+    if (value == NULL)
+        return;
     if (!value->isMFieldValue())
         return;
 

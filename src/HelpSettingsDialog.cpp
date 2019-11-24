@@ -127,7 +127,12 @@ void HelpSettingsDialog::OnBrowseDocDirectory()
 {
     char buf[1024] = "";
 
-    if (swOpenDirDialog(m_dlg, "Select", "Directory or index.html(*)\0*\0\0",
+    if (swOpenDirDialog(m_dlg, "Select", 
+#ifdef _WIN32
+                        "Directory or index.html(*)\0*\0\0",
+# else
+                        "*.html",
+# endif
                         buf, 1024)) {
         swSetText(swGetDialogItem(m_dlg, IDC_DOC_DIRECTORY), buf);
     }
@@ -138,7 +143,11 @@ void HelpSettingsDialog::OnBrowseVrmlDirectory()
     char buf[1024] = "";
 
     if (swOpenFileDialog(m_dlg, "Select",
+#ifdef _WIN32
                          "nodesRef.html(*.html, *.htm)\0*.html;*.htm\0All Files (*)\0*\0\0",
+#else
+                         "*.html",
+#endif
                          buf, 1024)) {
         swSetText(swGetDialogItem(m_dlg, IDC_VRML_HTML), buf);
     }
@@ -149,7 +158,11 @@ void HelpSettingsDialog::OnBrowseX3dDirectory()
     char buf[1024] = "";
 
     if (swOpenDirDialog(m_dlg, "Select",
+#ifdef _WIN32
                         "directory containing X3D standard(*)\0;*\0\0",
+#else
+                         "*",
+#endif
                          buf, 1024)) {
         swSetText(swGetDialogItem(m_dlg, IDC_X3D_HTML), buf);
     }

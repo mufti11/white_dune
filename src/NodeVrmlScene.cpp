@@ -140,9 +140,7 @@ NodeVrmlScene::writeProto(int f)
     if (m_scene->isX3dXml())
         return writeXmlProto(f);
 
-    RET_ONERROR( mywritestr(f, "PROTO VrmlScene\n") )
-    TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "  [\n") )
+    RET_ONERROR( mywritestr(f, "PROTO VrmlScene [\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  ") )
     RET_ONERROR( writeEventInStr(f) )
@@ -164,7 +162,7 @@ NodeVrmlScene::writeProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    ]\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "  ]\n") )
+    RET_ONERROR( mywritestr(f, "]\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "{\n") )
     TheApp->incSelectionLinenumber();
@@ -263,6 +261,8 @@ static bool routeToViewpoint(Node *node, void *data)
 void
 NodeVrmlScene::setField(int index, FieldValue *value, int cf)
 {
+    if (value == NULL)
+        return;
     if (index == children_Field()) {
         IntArray newValues;
         IntArray deleteValues;

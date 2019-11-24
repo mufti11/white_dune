@@ -176,6 +176,7 @@ BEGIN
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vide",                          ID_NEW_GROUP
         MENUITEM "Transform vide",                      ID_NEW_TRANSFORM
         MENUITEM "Nouveau noeud par dessus le texte",   ID_NEW_NODE_BY_NAME
@@ -355,6 +356,11 @@ BEGIN
         END
 #endif
         MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&Scene"
+    BEGIN
+        MENUITEM "&ajouter",                             ID_SCENES_ADD
+        MENUITEM "administrer (need VrmlScene)",         ID_SCENES_MANAGE
     END
     POPUP "Mode"
     BEGIN
@@ -1521,6 +1527,11 @@ BEGIN
         MENUITEM "Zoomer\t-",                              ID_ROUTE_ZOOM_OUT
         MENUITEM "Dézoomer\t+",                            ID_ROUTE_ZOOM_IN
         MENUITEM "reconstruire",                           ID_ROUTE_REBUILD
+    END
+    POPUP "&Scene"
+    BEGIN
+        MENUITEM "&ajouter",                             ID_SCENES_ADD
+        MENUITEM "administrer (need VrmlScene)",         ID_SCENES_MANAGE
     END
     POPUP "&Mode"
     BEGIN
@@ -3125,6 +3136,24 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_FR_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Scene management"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "Begin",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "End", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Scene Number",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Scene length",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Lenght of scenes without animation",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,105,50,14
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4399,13 +4428,20 @@ BEGIN
     ID_FR_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FR_SCENES_NUMBER_NOT_FIRST_AND_LAST "Use either first or last"
+    IDS_FR_SCENES_NUMBER_NOT_VALID          "Scene number out of range"
+    IDS_FR_SCENES_LAST                      "Last scene"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
-    ID_FR_SAND_EXPORT          "Export Nebula Device Scene"
-    ID_FR_SAND_WRITEMESHES     "If checked, script file and all mesh files will be exported.  If not checked, only the script file will be exported."
-    ID_FR_SAND_RELPATHS        "If checked, relative paths will be used (for exporting avatars)"
-    ID_FR_SAND_ALPHATEST       "If checked, adds a default alpha test to alpha-mapped materials"
+    ID_SAND_EXPORT          "Export Nebula Device Scene"
+    ID_SAND_WRITEMESHES     "If checked, script file and all mesh files will be exported.  If not checked, only the script file will be exported."
+    ID_SAND_RELPATHS        "If checked, relative paths will be used (for exporting avatars)"
+    ID_SAND_ALPHATEST       "If checked, adds a default alpha test to alpha-mapped materials"
 END
 #endif
 

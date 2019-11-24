@@ -46,6 +46,7 @@ public:
     virtual int     getType() const { return DUNE_VRML_CUT; }
 
     FieldIndex sceneLengths;
+    FieldIndex sceneDelays;
     FieldIndex sceneNumber;
     FieldIndex scenes;
     FieldIndex numberPreviousScenes;
@@ -74,7 +75,11 @@ public:
     virtual bool    hasNumbers4kids(void) { return true; } 
 
     virtual int     write(int filedes, int indent, bool avoidUse = false) 
-                       { return Node::write(filedes, indent, avoidUse); }
+                       { 
+                       writeProto(filedes);
+                       return DynamicFieldsNode::write(filedes, indent, 
+                                                       avoidUse); 
+                       }
 
     virtual int     writeXml(int filedes, int indent, 
                              int containerField = -1, bool avoidUse = false);
@@ -110,8 +115,15 @@ public:
 
     virtual void    update();
     void            updateCycleInterval(Node *vrmlScene, SFTime *interval);
+    void            updateSelection(void);
+
+    bool            getEventOutsInitialised(void)
+                        { return m_eventOutsInitialised; }
+    void            setEventOutsInitialised(void)
+                        { m_eventOutsInitialised = true; }
 
     fieldMacros(MFTime,  sceneLengths,         ProtoVrmlCut)
+    fieldMacros(MFTime,  sceneDelays,          ProtoVrmlCut)
     fieldMacros(SFInt32, sceneNumber,          ProtoVrmlCut)
     fieldMacros(MFNode,  scenes,               ProtoVrmlCut)
     fieldMacros(SFInt32, numberPreviousScenes, ProtoVrmlCut)
@@ -122,14 +134,18 @@ protected:
 
     char           *newStartTimeName(void);
     void            startNextScene(int currentScene, double time);
-    int             accountWhich();
+    int             accountWhich(void);
+    int             getVrmlSceneWhich(void);
+
     void            accountAllSceneLengths();
 
 protected:
     int            m_firstScene;
     int            m_lastScene;
-    double         m_allSceneLengths;
     int            m_currentScene;
+    int            m_selectionWhich;
+    double         m_allSceneLengths;
+    bool           m_eventOutsInitialised;
 };
 
 #endif // _NODE_VRML_CUT_H

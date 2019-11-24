@@ -536,7 +536,8 @@ DIALOGCLASSES = \
         NurbsCurve2DDialog.o \
         InsertToNurbsCurveDialog.o \
         InsertToNurbsSurfaceDialog.o \
-        SliderFloatDialog.o
+        SliderFloatDialog.o \
+        SceneDialog.o
 
 APPCLASSES = \
 	DuneApp.o \

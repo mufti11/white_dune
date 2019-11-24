@@ -264,7 +264,7 @@ SceneGraphView::Initialize()
     }
 
     const NodeList *nodes = m_scene->getNodes();
-
+    nodes->clearFlag(NODE_FLAG_TOUCHED);
     for (long i = 0; i < nodes->size(); i++) {
         Node *node = nodes->get(i);
         if (node && (!node->isInsideProto()) && (node->isInScene(m_scene)) &&
@@ -1612,9 +1612,12 @@ void SceneGraphView::InvalidateNodeRec(Node *node)
                 Node *child = ((SFNode *) node->getField(i))->getValue();
                 if (child != NULL) InvalidateNodeRec(child);
             } else if (node->getField(i)->getType() == MFNODE) {
-                NodeList *value = ((MFNode *) node->getField(i))->getValues();
-                for (long j = 0; j < value->size(); j++) {
-                    InvalidateNodeRec(value->get(j));
+                MFNode *value = (MFNode *)node->getField(i);
+                for (long j = 0; j < value->getSize(); j++) {
+                    if (!value->getValue(j)->getFlag(NODE_FLAG_TOUCHED)) {
+                        value->getValue(j)->setFlag(NODE_FLAG_TOUCHED);
+                        InvalidateNodeRec(value->getValue(j));
+                    }
                 }
             }
         }
@@ -2309,6 +2312,7 @@ void SceneGraphView::OnUpdate(SceneView *sender, int type, Hint *hint)
       CASE_UPDATE(UPDATE_ADD_NODE_SCENE_GRAPH_VIEW)
         nodeUpdate = (NodeUpdate *) hint;
         accountGraphSize(nodeUpdate->node);
+        m_scene->getNodes()->clearFlag(NODE_FLAG_TOUCHED);
         InvalidateNodeRec(nodeUpdate->node);
         Initialize();
         if (!TheApp->GetRouteViewShowAll()) {
@@ -2328,6 +2332,7 @@ void SceneGraphView::OnUpdate(SceneView *sender, int type, Hint *hint)
       CASE_UPDATE(UPDATE_REMOVE_NODE)
         nodeUpdate = (NodeUpdate *) hint;
         accountGraphSize(nodeUpdate->node);
+        m_scene->getNodes()->clearFlag(NODE_FLAG_TOUCHED);
         InvalidateNodeRec(nodeUpdate->node);
         if (!TheApp->GetRouteViewShowAll())
             m_maxYPosition = getFirstYPosition();

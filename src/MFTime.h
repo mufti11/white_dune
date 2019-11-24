@@ -39,6 +39,7 @@ public:
                         MFTime(double *values, int len);
                         MFTime(const double *values, int len);
                         MFTime(double value);
+                        MFTime(MFTime *value);
 
     virtual int         getType() const             { return MFTIME; }
     virtual MyString    getString(int index, int stride) const;

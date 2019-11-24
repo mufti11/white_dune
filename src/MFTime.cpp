@@ -54,6 +54,14 @@ MFTime::MFTime(const double *value, int len)
        m_value.append(value[i]);
 }
 
+MFTime::MFTime(MFTime *mValue)
+{
+    m_value.resize(0);    
+    const double *value = mValue->getValues();
+    for (int i = 0;i < mValue->getSize(); i++)
+       m_value.append(value[i]);
+}
+
 MyString    
 MFTime::getString(int index, int stride) const
 {

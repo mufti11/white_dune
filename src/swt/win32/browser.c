@@ -613,7 +613,11 @@ SHBROWSER swHelpBrowserInit(STABLE prefs)
     browser->helpRemoteCommand = mystrdup(swGetPreference(prefs, 
                                           "HelpRemoteCommand",""));
     browser->helpApplication = mystrdup(swGetPreference(prefs, 
+#ifdef _WIN32
+                                        "HelpApplication", DEFAULT_BROWSER));
+#else
                                         "HelpApplication", ""));
+#endif
     browser->helpTopic = mystrdup(swGetPreference(prefs, "HelpTopic", ""));
     url = (char *) malloc(strlen(HELP_URL) + strlen(index) + 2);
     strcpy(url, HELP_URL);
@@ -734,7 +738,8 @@ void swHelpBrowserHTML(SHBROWSER browser, SWND wnd)
 void
 swHelpBrowserPath(SHBROWSER browser, const char* path, SWND wnd)
 {
-    if (strstr(browser->helpCommand, "%s") != NULL) {
+    if ((strstr(browser->helpCommand, "%s") != NULL) || 
+        (strstr(browser->helpCommand, "%1") != NULL)) {
         char buf[4096];
         mysnprintf(buf,4096, browser->helpCommand, path);
         browserLaunch(buf, browser->hProcess, " ", wnd);

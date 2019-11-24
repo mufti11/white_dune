@@ -67,6 +67,7 @@ public:
                     NodeCylinder(Scene *scene, Proto *proto);
 
     virtual Node   *copy() const { return new NodeCylinder(*this); }
+    virtual bool    isInvalidChildNode(void) { return true; }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);

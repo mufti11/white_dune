@@ -46,7 +46,7 @@ public:
     virtual int     getNodeClass() const 
                        { return PRIMITIVE_GEOMETRY_OR_MASS_DENSITY_MODEL_NODE |
                                 GEOMETRY_NODE; }
-
+    
     virtual bool    isMesh(void) { return true; }
 
     FieldIndex radius;
@@ -64,6 +64,8 @@ public:
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; } 
     virtual Node   *copy() const { return new NodeSphere(*this); }
+
+    virtual bool    isInvalidChildNode(void) { return true; }
 
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);

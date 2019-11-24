@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="http://x3dom.org/download/dev/x3dom.css" />
+    <script type="text/javascript" src="http://x3dom.org/download/dev/x3dom-full.js"></script>
+  </head>
+  <body>
+    <x3d xmlns="http://www.web3d.org/specifications/x3d-namespace"  showStat="false" showLog="false" x="0px" y="0px" width="1024px" height="512px">
+      <Scene>
+      <Transform DEF='Transform1' id='Transform1'  rotation='-0.698241 -0.715703 1.511352e-2 2.279995' translation='4.095915 -0.263414 4.264435' scale='1.391921 1.514385 1.069305' >
+        <Shape >
+          <Appearance >
+            <Material >
+            </Material>
+          </Appearance>
+          <Cylinder >
+          </Cylinder>
+        </Shape>
+      </Transform>
+      <PositionInterpolator DEF='PositionInterpolator1' id='PositionInterpolator1'  key='0  0.031579  0.047368  0.061842  0.080263  0.138157  0.257894  0.303947  0.365789  0.543421  0.576315  0.602631  0.625000  0.640789  0.781642  0.881422  1.003952' keyValue='0.980554 -1.891168 4.264435  0.975242 -1.807100 3.351021  -0.099652 -1.756660 1.651644  -0.020347 -1.739867 0.868304  0.968852 -1.705976 -0.302633  1.243803 -1.540005 -0.020347  1.794554 -1.207549 3.057455  1.971171 -1.100936 3.479897  1.802171 -0.978601 3.419548  -6.087587 -0.659854 0.410744  -6.087587 -0.593250 -0.217961  -5.206563 -0.571731 -0.421085  -0.064967 -0.311603 -0.619778  1.087138 -0.251430 0.083274  0.854326 0.106432 4.264435  4.095915 -0.061987 4.264435  4.095915 -1.453900 4.264435' >
+      </PositionInterpolator>
+      <OrientationInterpolator DEF='OrientationInterpolator1' id='OrientationInterpolator1'  key='0.019737  0.108036  0.110526  0.239473  0.263504  0.383399  0.517786  0.582345  0.785243  0.915678  0.923583  1' keyValue='0 1 0 0.676470  -0.445061 0.266447 -0.149069 1.140203  0 1 0 0.688622  0 1 0 0.705882  -0.908325 0.002479 -0.412595 3.004315  0.122098 0.080863 -0.683032 1.546755  -0.329402 0.870402 -0.363410 3.056094  -0.933565 0.264731 0.216951 2.928548  0.142739 0.084765 -0.600528 1.345277  -0.670979 -0.680031 0.089546 2.570567  0.384293 0.543646 0.087512 1.472419  0.527648 0.480366 -0.113128 1.614737' >
+      </OrientationInterpolator>
+      <TimeSensor DEF='TimeSensor1' id='TimeSensor1'  cycleInterval='20' loop='true' >
+      </TimeSensor>
+      <PositionInterpolator DEF='PositionInterpolator2' id='PositionInterpolator2'  key='0.005263  0.169736  0.214473  0.259210  0.390789  0.489473  0.551315  0.560526  0.602108  0.730263  0.809210  0.822134  0.963109  0.990777' keyValue='1 0.968858 1.024221  1.596616 1.799307 1.092851  1.960072 2.311418 1.134661  2.323529 2.823529 1.176470  1.437323 0.941176 0.739789  1.082840 9.100086 3.542081  0.644093 0.170500 1.427464  0.294117 1 0.176470  0.367026 0.045693 0.364818  0.584177 1.338248 0.925792  0.730156 0.629367 1.302904  0.752816 0.278463 1.361443  1 0.400000 2  1 0.018064 2' >
+      </PositionInterpolator>
+      <Transform translation='-4.200090 2.344733 0' >
+        <Shape >
+          <Appearance >
+            <Material >
+            </Material>
+          </Appearance>
+          <Text string='"Simple Transform Animation"' >
+          </Text>
+        </Shape>
+      </Transform>
+      <ROUTE fromNode='PositionInterpolator1' fromField='value_changed' toNode='Transform1' toField='set_translation'></ROUTE>
+      <ROUTE fromNode='OrientationInterpolator1' fromField='value_changed' toNode='Transform1' toField='set_rotation'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='OrientationInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='PositionInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='PositionInterpolator2' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='PositionInterpolator2' fromField='value_changed' toNode='Transform1' toField='set_scale'></ROUTE>
+
+    </Scene>
+    </x3d>
+  </body>
+</html>

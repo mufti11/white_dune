@@ -156,6 +156,14 @@ EXPONENT        ([Ee]("-"|"+")?[0-9]+)
 
 Script          { toProto(yytext); return SCRIPT; }
 
+VrmlCut         { 
+                toProto(yytext); 
+                if (hasX3DFlag && !protoFlag)       
+                    return VRML_CUT;
+                yylval.id = scene->addSymbol(yytext); 
+                return ID;
+                }
+
 ComposedShader  { 
                 toProto(yytext); 
                 if (hasX3DFlag)       

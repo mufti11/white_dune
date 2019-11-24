@@ -44,15 +44,16 @@
 #include "ExposedField.h"
 #include "URL.h"
 #include "DuneApp.h"
-#include "NodeScript.h"
 #include "swDebugf.h"
-#include "ScriptEventDialog.h"
+#include "MoveCommand.h"
+#include "NodeScript.h"
 #include "NodeCurveAnimation.h"
 #include "NodePositionInterpolator.h"
 #include "NodeOrientationInterpolator.h"
 #include "NodeTimeSensor.h"
 #include "NodeInline.h"
 #include "NodeComment.h"
+#include "ScriptEventDialog.h"
 
 void
 NodeData::initIdentifier(void) 
@@ -214,6 +215,7 @@ Node::Node(Scene *scene, Proto *proto) : NodeData(scene,proto)
     m_numberCDataFunctions = 0;
     m_containerField = -1;
     m_protoParent = NULL;
+    m_isUse = false;
     ref();
 }
 
@@ -2716,7 +2718,7 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
         }
     } else if (isPROTO()) {
         for (int i = 0; i < m_proto->getNumEventOuts(); i++) {
-	    for (int j = 0; j < m_proto->getEventOut(i)->getNumIs(); j++) {
+            for (int j = 0; j < m_proto->getEventOut(i)->getNumIs(); j++) {
                  Node *isNode = m_proto->getEventOut(i)->getIsNode(j);
                  int event = m_proto->getEventOut(i)->getIsField(j);
                  if (event < 0)
@@ -3177,7 +3179,8 @@ Node::removeParent(void)
 {
     if (m_geometricParentIndex != -1) {
         for (long i = m_geometricParentIndex + 1; i < m_parents.size(); i++)
-            m_parents[i].m_self->m_geometricParentIndex--;
+            if (m_parents[i].m_self)
+                m_parents[i].m_self->m_geometricParentIndex--;
         m_parents.remove(m_geometricParentIndex);
         m_geometricParentIndex = -1;
     }
@@ -3191,9 +3194,9 @@ NodeData::findChild(Node *child, int field) const
 
     FieldValue *value = m_fields[field];
 
-    if (value->getType() == SFNODE) {
+    if (value && value->getType() == SFNODE) {
         return (((SFNode *) value)->getValue() == child) ? 0 : -1;
-    } else if (value->getType() == MFNODE) {
+    } else if (value && value->getType() == MFNODE) {
         NodeList *list = ((MFNode *) value)->getValues();
         for (long i = 0; i < list->size(); i++) {
             if (list->get(i) == child) return i;
@@ -3658,10 +3661,12 @@ Node::isInScene(Scene* scene) const
         else
             return false;
     }
-    if (!this->hasParent())
+    if (!hasParent())
         return false;
-    if (this->getParent()->isInScene(scene))
+    if (!getParent()->getFlag(NODE_FLAG_TOUCHED)) {
+        getParent()->setFlag(NODE_FLAG_TOUCHED);
         return true;
+    }
     return false;
 }
 
@@ -3698,10 +3703,7 @@ Node::isInvalidChild(void)
 {
     if (this == m_scene->getRoot())
         return true;
-    if (isInvalidChildNode() && hasParent() &&
-        (getParent()->getProto()->getField(getParentField())->getType() 
-         == MFNODE)
-       )
+    if (isInvalidChildNode() && hasParent())
         return true;
     return false;
 }
@@ -3863,8 +3865,9 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
             if (m_scene->isInvalidElement(m_proto->getField(i)))
                 continue;
 
-            if (getField(i) && m_proto->getField(i)->getType() == SFNODE) {
-                Node *child = ((SFNode *) getField(i))->getValue();
+            if (m_proto->getField(i) && 
+                m_proto->getField(i)->getType() == SFNODE) {
+                Node *child = ((SFNode *)getField(i))->getValue();
                 if (child) {
                     if (child == this) { 
                         swDebugf("%s %s: %s",
@@ -3897,8 +3900,9 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                      childList = node->getLoadedNodes();
                      handleInline = false;
                 }    
-                if (getField(i) && m_proto->getField(i)->getType() == MFNODE)
-                    childList = ((MFNode *) getField(i))->getValues();
+                if (m_proto->getField(i) && 
+                    m_proto->getField(i)->getType() == MFNODE)
+                    childList = ((MFNode *)getField(i))->getValues();
                 if (childList) {
                     for (long j = 0; j < childList->size(); j++) {
                         Node *child = childList->get(j);
@@ -3934,7 +3938,8 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
         }
         if (searchInRest) {
             // search in next children of current parent
-            if (this != m_scene->getRoot())
+            if (this != m_scene->getRoot()) {
+                m_scene->getNodes()->clearFlag(NODE_FLAG_TOUCHED);
                 if (hasParent() && isInScene(m_scene)) {
                     Node *parent = getParent();
                     FieldValue *selfField = parent->getField(getParentField()); 
@@ -3966,6 +3971,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                                     }
                                 }
                             }
+                        }
                     }
                 }
         }
@@ -4770,6 +4776,13 @@ NodeData::setId(long id)
     m_identifier = id; 
 }
 
+
+bool       
+NodeData::isPROTO(void) const 
+{ 
+    return false;
+}
+
 bool
 Node::canWriteCattGeo(void)
 { 
@@ -4883,11 +4896,5 @@ Node::getParents(void)
     for (int i = 0; i < getNumParents(); i++)
         ret.append(getParent(i));
     return ret;
-}
-
-bool       
-NodeData::isPROTO(void) const 
-{ 
-    return false;
 }
 

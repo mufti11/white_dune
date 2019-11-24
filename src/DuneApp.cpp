@@ -53,8 +53,8 @@
 #define DEFAULT_WIDTH 1200
 #define DEFAULT_HEIGHT 900
 #else
-#define DEFAULT_WIDTH 1024
-#define DEFAULT_HEIGHT 768
+#define DEFAULT_WIDTH 1090
+#define DEFAULT_HEIGHT 700
 #endif
 
 DuneApp *TheApp = NULL;

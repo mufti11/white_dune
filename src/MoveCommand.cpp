@@ -32,7 +32,8 @@
 #include "DuneApp.h"
 
 MoveCommand::MoveCommand(Node *node, Node *src, int srcField, 
-                         Node *dest, int destField, int destIndex)
+                         Node *dest, int destField, int destIndex, 
+                         bool handleUSE)
 {
     m_node = node;
 
@@ -41,8 +42,18 @@ MoveCommand::MoveCommand(Node *node, Node *src, int srcField,
     m_dest = dest;
     m_destField = destField;
     m_failed = false;
+    m_isUSE = false;
 
-    if (m_src) {
+    if (handleUSE && (m_dest == NULL) && m_src && (m_node->getRefs() > 1)) {
+        if (!m_isUSE) {     
+            m_isUSE = true;
+            m_node->setIsUse(m_isUSE);
+            m_node->getScene()->unuse(m_node->getName());
+            return;
+        }        
+    }
+
+    if (m_src) {        
         m_oldValueSrc = m_src->getField(m_srcField);
         m_oldValueSrc->ref();
         if ((m_oldValueSrc->getType() == SFNODE) ||
@@ -61,9 +72,11 @@ MoveCommand::MoveCommand(Node *node, Node *src, int srcField,
 
     if (m_dest) {
         m_oldValueDest = m_dest->getField(m_destField);
-        m_oldValueDest->ref();
-        m_newValueDest = m_oldValueDest->addNode(node, destIndex);
-        m_newValueDest->ref();
+        if (m_oldValueDest) {
+            m_oldValueDest->ref();
+            m_newValueDest = m_oldValueDest->addNode(node, destIndex);
+            m_newValueDest->ref();
+        }
     } else {
         m_oldValueDest = m_newValueDest = NULL;
     }
@@ -88,22 +101,19 @@ MoveCommand::execute(SceneView* sender)
         return;
     if (m_node == NULL)
         return;
-    const Path *selection = m_node->getScene()->getSelection();
-    if (selection && (m_node == selection->getNode())) {
-        if ((m_dest == NULL) && m_node->hasParent()) {
-            m_node->getScene()->setSelection(m_node->getParent());
-            TheApp->removeClipboardNode(m_node);
-        } else
-            m_node->getScene()->setSelection(m_node);
-        m_node->getScene()->UpdateViews(sender, UPDATE_SELECTION);
-    }
     if (m_src) {
         m_src->setField(m_srcField, m_newValueSrc);
         MyString nodeName = "";
         if (m_node->hasName())
             nodeName += m_node->getName();
-        m_node->getScene()->OnRemoveNode(m_node, m_src, m_srcField);
-        m_node->getScene()->def(nodeName, m_node);
+        if (m_isUSE && m_node->hasName()) {
+            m_isUSE = false;
+            m_node->setIsUse(m_isUSE);
+        } else  {
+            m_node->getScene()->setSelection(m_node->getPrevSibling());
+            m_node->getScene()->UpdateViews(NULL, UPDATE_SELECTION, NULL);
+            m_node->getScene()->OnRemoveNode(m_node, m_src, m_srcField);
+       }
     }
     if (m_dest) {
         MyString nodeName = "";

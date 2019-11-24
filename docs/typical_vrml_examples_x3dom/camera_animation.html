@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="http://x3dom.org/download/dev/x3dom.css" />
+    <script type="text/javascript" src="http://x3dom.org/download/dev/x3dom-full.js"></script>
+  </head>
+  <body>
+    <x3d xmlns="http://www.web3d.org/specifications/x3d-namespace"  showStat="false" showLog="false" x="0px" y="0px" width="1024px" height="512px">
+      <Scene>
+      <TimeSensor DEF='TimeSensor1' id='TimeSensor1'  cycleInterval='3' loop='true' >
+      </TimeSensor>
+      <Viewpoint DEF='Viewpoint1' id='Viewpoint1'  position='-0.255424 -3.328841 25.586575' >
+      </Viewpoint>
+      <PositionInterpolator DEF='PositionInterpolator1' id='PositionInterpolator1'  key='0.002721  0.502040  0.989115' keyValue='0 0 10  -0.272922 -3.556889 26.654360  0 0 9.756641' >
+      </PositionInterpolator>
+      <OrientationInterpolator DEF='OrientationInterpolator1' id='OrientationInterpolator1'  key='0.006803  0.180952  0.990476  1.008163' keyValue='0 0 0 0  0 1.043416 0 0.500000  0 0.963020 0 -0.557192  0 0 0 -0.574547' >
+      </OrientationInterpolator>
+      <Group >
+        <Transform translation='3 1.753935 0' >
+          <Shape >
+            <Appearance >
+              <Material >
+              </Material>
+            </Appearance>
+            <Box >
+            </Box>
+          </Shape>
+        </Transform>
+        <Transform translation='-3.306951 -1.457715 0' >
+          <Shape >
+            <Appearance >
+              <Material >
+              </Material>
+            </Appearance>
+            <Cylinder >
+            </Cylinder>
+          </Shape>
+        </Transform>
+        <Transform translation='2.872603 -1.657109 3.370387' >
+          <Shape >
+            <Appearance >
+              <Material >
+              </Material>
+            </Appearance>
+            <Cone >
+            </Cone>
+          </Shape>
+        </Transform>
+        <Transform translation='-2.295416 2.844802 -3.317089' >
+          <Shape >
+            <Appearance >
+              <Material >
+              </Material>
+            </Appearance>
+            <Sphere >
+            </Sphere>
+          </Shape>
+        </Transform>
+      </Group>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='PositionInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='PositionInterpolator1' fromField='value_changed' toNode='Viewpoint1' toField='set_position'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='OrientationInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='OrientationInterpolator1' fromField='value_changed' toNode='Viewpoint1' toField='set_orientation'></ROUTE>
+
+    </Scene>
+    </x3d>
+  </body>
+</html>

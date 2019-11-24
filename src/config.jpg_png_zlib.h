@@ -233,7 +233,7 @@
 #undef HAVE_TEST_IN_MENU
 
 /* www browser to view html/vrml files*/
-#undef HAVE_WWW_BROWSER
+#define HAVE_WWW_BROWSER "\"C:\\Program Files\\Internet Explorer\\IExplore.exe\" %s"
 
 /* vrml browser to view vrml files*/
 #undef HAVE_VRML_BROWSER

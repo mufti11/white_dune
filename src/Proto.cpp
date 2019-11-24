@@ -170,6 +170,7 @@ Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
 
 Proto::~Proto()
 {
+/*
     for (long i = 0; i < m_eventIns.size(); i++) 
         delete m_eventIns[i];
     for (long i = 0; i < m_eventOuts.size(); i++) 
@@ -178,7 +179,7 @@ Proto::~Proto()
         delete m_exposedFields[i];
     for (long i = 0; i < m_fields.size(); i++) 
         delete m_fields[i];
-
+*/
     for (long i = 0; i < m_protoNodes.size(); i++) 
         if (m_protoNodes[i])
             m_protoNodes[i]->unref();
@@ -287,22 +288,6 @@ Proto::buildExportNames(const char *nodeName)
     m_processEventCallbackName = buildCallbackName("processEvent");
 }
 
-void 
-Proto::handleVrmlCut(EventOut *event)
-{
-    if (strcmp(getName(false), "VrmlCut") == 0) {
-        if (this != m_scene->getProto("VrmlCut")) {
-            Proto *vrmlCutProto = m_scene->getProto("VrmlCut");
-            if (vrmlCutProto != NULL) {
-                MyString outName = "";
-                outName += event->getName(false);
-                EventOut *eventOut = new EventOut(event->getType(), outName);
-                vrmlCutProto->addElement(eventOut);
-            }
-        }
-    } 
-}
-
 void
 Proto::removeFromIs(Node *node)
 {
@@ -397,7 +382,6 @@ Proto::addElement(Element *element)
         m_eventIns.append((EventIn *) element);
         break;
       case EL_EVENT_OUT:
-        handleVrmlCut((EventOut *) element);
         m_eventOuts.append((EventOut *) element);
         break;
       case EL_EXPOSED_FIELD:

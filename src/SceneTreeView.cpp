@@ -411,7 +411,10 @@ void SceneTreeView::UpdateNode(const Path *updatePath)
                 item = swTreeGetFirstChild(m_tree, item);
                 isNotSFNode = false;
             } else if ((value->getType() == MFNODE) && (pos > -1)) {
-                node = ((MFNode *) value)->getValue(pos);
+                MFNode *mfNode = (MFNode *) value;
+                if (pos >= mfNode->getSize())
+                    pos = mfNode->getSize() - 1; 
+                node = mfNode->getValue(pos);
                 item = swTreeGetFirstChild(m_tree, item);
                 if (item && strcmp(swTreeGetItemName(m_tree, item), 
                                    "metadata") == 0)
@@ -782,13 +785,12 @@ SceneTreeView::GetIndex(STREEITEM item)
             return 0;
         }
         FieldValue *value = p->node->getField(t->field);
-        if (value->getType() == MFNODE) {
+        if (value && value->getType() == MFNODE) {
             int pos = ((MFNode *) value)->getValues()->find(t->node);
             return pos;
-        } else if (value->getType() == SFNODE)  {
+        } else if (value && value->getType() == SFNODE)  {
             return 0;
         } else {
-            assert(0);
             return -1;
         }
     } else {

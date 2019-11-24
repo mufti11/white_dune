@@ -2525,6 +2525,20 @@ ac_config_headers="$ac_config_headers $SELFDIR/src/config.h"
 
 OS=`uname`
 
+# snap compile is in directory build...
+WHITE_DUNE_PATH=`pwd`
+export WHITE_DUNE_PATH
+if test X_`basename $WHITE_DUNE_PATH` = X_build ; then
+   WHITE_DUNE_PATH=`(cd ../../../../.. && pwd)`
+   DUNE_VERSION="white_dune `(cd ../../../../.. && sh ./batch/getversion.sh)`"
+else
+   DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
+fi
+cat >>confdefs.h <<_ACEOF
+#define HAVE_DUNE_VERSION "${DUNE_VERSION}"
+_ACEOF
+
+
 echo fix unix filepermissions
 sh $SELFDIR/batch/fixpermissions.sh
 
@@ -3867,7 +3881,13 @@ _ACEOF
 else
    if test -d docs ; then
       cat >>confdefs.h <<_ACEOF
-#define HAVE_HELP_URL "${SELFDIR}/docs/"
+#define HAVE_HELP_URL "${WHITE_DUNE_PATH}/docs/index.html"
+_ACEOF
+
+   fi
+   if test X_`basename $PWD` = X_build ; then
+      cat >>confdefs.h <<_ACEOF
+#define HAVE_HELP_URL "http://wdune.ourproject.org/docs/index.html"
 _ACEOF
 
    fi
@@ -10403,20 +10423,6 @@ fi
 
 
 
-
-
-
-# snap compile is in directory build...
-WHITE_DUNE_PATH=`pwd`
-export WHITE_DUNE_PATH
-if test X_`basename $WHITE_DUNE_PATH` = X_build ; then
-   DUNE_VERSION="white_dune `(cd ../../../../.. && sh ./batch/getversion.sh)`"
-else
-   DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
-fi
-cat >>confdefs.h <<_ACEOF
-#define HAVE_DUNE_VERSION "${DUNE_VERSION}"
-_ACEOF
 
 
 

@@ -94,6 +94,7 @@ NodeTimeSensor::NodeTimeSensor(Scene *scene, Proto *def)
     m_active = false;
     m_startTime = 0;
     m_stopTime = 0;
+    m_delay = 0;
 }
 
 void
@@ -108,18 +109,21 @@ NodeTimeSensor::getFraction(double t)
 {
     float fraction = 0;
 
-    double dstopTime = m_stopTime;
+    double dstopTime = m_stopTime + m_delay;
 
     if (enabled()->getValue()) {
         if ((t < m_stopTime) || ((m_stopTime <= m_startTime) && 
                                 loop()->getValue()))
             m_active = true;
+        if (t - m_startTime < m_delay) 
+            m_active = false;
         if (m_active) {
             if ((t >= dstopTime) && 
-                (dstopTime > m_startTime) && !loop()->getValue()) {
+                dstopTime > m_startTime && !loop()->getValue()) {
                 m_active = false;
             }
-            double temp = (t - m_startTime) / cycleInterval()->getValue();
+            double temp = (t - m_startTime - m_delay) / 
+                          cycleInterval()->getValue();
             fraction = temp - floor(temp);
             if (fraction == 0.0 && (t > m_startTime))
                 fraction = 1.0;
@@ -139,17 +143,18 @@ NodeTimeSensor::setTime(double t)
 
 void
 NodeTimeSensor::checkStart(bool loop, double startTime, double stopTime, 
-                           double t)
+                           double t, double delay)
 {
     if ((t < m_stopTime) || ((stopTime <= startTime) && loop)) {
         m_active = true;
-        m_startTime = t;
+        m_startTime = t + delay;
         m_stopTime = stopTime;
     } else {
         m_active = false;
-        m_startTime = startTime;
+        m_startTime = startTime + delay;
         m_stopTime = stopTime;
     }
+    m_delay = delay;
 }
 
 void

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="http://x3dom.org/download/dev/x3dom.css" />
+    <script type="text/javascript" src="http://x3dom.org/download/dev/x3dom-full.js"></script>
+  </head>
+  <body>
+    <x3d xmlns="http://www.web3d.org/specifications/x3d-namespace"  showStat="false" showLog="false" x="0px" y="0px" width="1024px" height="512px">
+      <Scene>
+      <Transform DEF='Transform1' id='Transform1'  translation='1.289904 0.295843 2.502840e-2' >
+        <Shape >
+          <Appearance >
+            <Material >
+            </Material>
+          </Appearance>
+          <Cylinder >
+          </Cylinder>
+        </Shape>
+        <TouchSensor DEF='TouchSensor1' id='TouchSensor1'  >
+        </TouchSensor>
+      </Transform>
+      <TimeSensor DEF='TimeSensor1' id='TimeSensor1'  >
+      </TimeSensor>
+      <PositionInterpolator DEF='PositionInterpolator1' id='PositionInterpolator1'  key='0.002445  0.177261  0.370415  0.837408  0.947432  0.965770  0.986552' keyValue='0 0 0.040982  2.459907 1.533037 2.885766  1.967039 -1.147370 -0.351653  1.189745 0.509316 0.080745  0.885980 0.734098 0.506274  0.080745 0.062112 0.759412  0.080745 0.062112 0.759412' >
+      </PositionInterpolator>
+      <Transform translation='-5.452226 2.124099 0' >
+        <Shape >
+          <Appearance >
+            <Material >
+            </Material>
+          </Appearance>
+          <Text string='"touchsensor animation trigger"' >
+          </Text>
+        </Shape>
+      </Transform>
+      <ROUTE fromNode='TouchSensor1' fromField='touchTime' toNode='TimeSensor1' toField='set_startTime'></ROUTE>
+      <ROUTE fromNode='TimeSensor1' fromField='fraction_changed' toNode='PositionInterpolator1' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='PositionInterpolator1' fromField='value_changed' toNode='Transform1' toField='set_translation'></ROUTE>
+
+    </Scene>
+    </x3d>
+  </body>
+</html>

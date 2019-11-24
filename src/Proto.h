@@ -413,8 +413,6 @@ protected:
     int                   lookupSimpleEventOut(const MyString &name,
                                                bool x3d) const;
     void                  setFieldFlags(int index, int flags);
-
-    void                  handleVrmlCut(EventOut *eventOut);
  
 protected:
     Scene                *m_scene;

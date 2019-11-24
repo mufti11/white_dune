@@ -142,6 +142,8 @@ public:
     void                def(Node *value) { m_defNode = value; }
     Node               *use(const char *nodeName);
     bool                use(Node *parentNode, int parentField);
+    void                unuse(const char *nodeName);
+    void                removeUse(Node *node);
     bool                canUse(Node *parentNode, int parentField);
     void                undef(MyString nodeName);
     bool                hasAlreadyName(const char *name) { return use(name); }
@@ -202,6 +204,9 @@ public:
     Node               *createNode(const char *nodeType, 
                                    int flags = NODE_FLAG_COLLAPSED);
     Node               *createNode(int nodeType);
+
+    DynamicFieldsNode  *createDynamicFieldsNode(const char *nodeType, 
+                            int flags = NODE_FLAG_COLLAPSED);
 
     int                 write(int filedes, const char *url, int writeFlags = 0,
                               char *wrlFile = NULL);

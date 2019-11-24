@@ -26,7 +26,6 @@
 #include "Scene.h"
 
 class Hint;
-class Scene;
 
 #include "swttypedef.h"
 

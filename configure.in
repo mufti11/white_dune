@@ -10,6 +10,18 @@ AC_CONFIG_HEADER($SELFDIR/src/config.h)
 
 OS=`uname`
 
+dnl build version number
+# snap compile is in directory build...
+WHITE_DUNE_PATH=`pwd`
+export WHITE_DUNE_PATH
+if test X_`basename $WHITE_DUNE_PATH` = X_build ; then
+   WHITE_DUNE_PATH=`(cd ../../../../.. && pwd)`
+   DUNE_VERSION="white_dune `(cd ../../../../.. && sh ./batch/getversion.sh)`"
+else
+   DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
+fi
+AC_DEFINE_UNQUOTED(HAVE_DUNE_VERSION,"${DUNE_VERSION}")
+
 dnl fix unix filepermissions first
 echo fix unix filepermissions
 sh $SELFDIR/batch/fixpermissions.sh
@@ -123,7 +135,10 @@ if test "X_$HELPURL" != "X_" ; then
    AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"${HELPURL}")
 else 
    if test -d docs ; then
-      AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"${SELFDIR}/docs/")
+      AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"${WHITE_DUNE_PATH}/docs/index.html")
+   fi
+   if test X_`basename $PWD` = X_build ; then
+      AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"http://wdune.ourproject.org/docs/index.html")
    fi
 fi
 
@@ -1820,18 +1835,6 @@ AC_SUBST(DUMA_EXTRA_LIBS)
 
 AC_SUBST(ARXSTRDUP_O)
 AC_SUBST(STRDUP_O)
-
-dnl build version number
-
-# snap compile is in directory build...
-WHITE_DUNE_PATH=`pwd`
-export WHITE_DUNE_PATH
-if test X_`basename $WHITE_DUNE_PATH` = X_build ; then
-   DUNE_VERSION="white_dune `(cd ../../../../.. && sh ./batch/getversion.sh)`"
-else
-   DUNE_VERSION="white_dune `$SELFDIR/batch/getversion.sh`"
-fi
-AC_DEFINE_UNQUOTED(HAVE_DUNE_VERSION,"${DUNE_VERSION}")
 
 AC_ARG_WITH(about,--with-about=\"about text\" about text,
             DUNE_VERSION2="$withval";export DUNE_VERSION2)

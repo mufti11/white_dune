@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="http://x3dom.org/download/dev/x3dom.css" />
+    <script type="text/javascript" src="http://x3dom.org/download/dev/x3dom-full.js"></script>
+  </head>
+  <body>
+    <x3d xmlns="http://www.web3d.org/specifications/x3d-namespace"  showStat="false" showLog="false" x="0px" y="0px" width="1024px" height="512px">
+      <Scene>
+      <Transform >
+        <Shape >
+          <Appearance >
+            <Material >
+            </Material>
+            <MovieTexture DEF='MovieTexture1' id='MovieTexture1'  url='"movie.mpg"' >
+            </MovieTexture>
+          </Appearance>
+          <Sphere >
+          </Sphere>
+        </Shape>
+      </Transform>
+      <Sound >
+        <AudioClip DEF='AudioClip1' id='AudioClip1'  url='"bubble.wav"' >
+        </AudioClip>
+      </Sound>
+      <LoadSensor DEF='LoadSensor2' id='LoadSensor2'  >
+        <AudioClip USE='AudioClip1'>
+        </AudioClip>
+        <MovieTexture USE='MovieTexture1'>
+        </MovieTexture>
+      </LoadSensor>
+      <ROUTE fromNode='LoadSensor2' fromField='isLoaded' toNode='AudioClip1' toField='set_loop'></ROUTE>
+      <ROUTE fromNode='LoadSensor2' fromField='isLoaded' toNode='MovieTexture1' toField='set_loop'></ROUTE>
+      <ROUTE fromNode='LoadSensor2' fromField='loadTime' toNode='MovieTexture1' toField='set_startTime'></ROUTE>
+      <ROUTE fromNode='LoadSensor2' fromField='loadTime' toNode='AudioClip1' toField='set_startTime'></ROUTE>
+
+    </Scene>
+    </x3d>
+  </body>
+</html>

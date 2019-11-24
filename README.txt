@@ -5451,12 +5451,38 @@ Advanced CurveAnimation for Viewpoint animation
 
 You have to z-flip your objects animated by CurveAnimation 8-(
 
-Fixed CurveAnimation of a Transform
+fFixed CurveAnimation of a Transform
 
 Updated CurveAnimation PROTO
 
 Really fixed error of storing a ImageTexture as PixelTexture
 
 Fixed wrong TextureCoordinate for Box node
+
+Fixed some file dialogs
+
+Fixed default help URL
+
+Fixed crash in removeParent
+
+Updated help URL for snap builds
+
+Fixed Help->Overview om M$Windows
+
+Converted matching typical VRML97 examples to X3DOM
+
+Fixed error in MoveSibling
+
+Fixed error in delete of a USEd node
+
+Added scenes menu
+
+Updated documentation
+
+Fixed missing update of sceneLengths Field of VrmlCut on Scenes->add
+
+Fixed showing the right scene when you click inside a VrmlScene
+
+Fixed error in SceneGraphView (ROUTEing window)
 
 Contact: MUFTI <mufti11@web.de>

@@ -78,7 +78,7 @@ public:
     float           getFraction(double t);
     void            updateStart(int field, FieldValue *value, double t);
     void            checkStart(bool loop, double startTime, double stopTime, 
-                               double time);
+                               double time, double delay = 0);
 
     fieldMacros(SFTime,  cycleInterval,    ProtoTimeSensor)
     fieldMacros(SFBool,  enabled,          ProtoTimeSensor)
@@ -97,6 +97,7 @@ protected:
     bool            m_active;
     double          m_startTime;
     double          m_stopTime;
+    double          m_delay;
 };
 
 #endif // _NODE_TIMESENSOR_H

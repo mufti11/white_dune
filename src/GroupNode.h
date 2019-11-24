@@ -48,8 +48,12 @@ class GroupNode : public Node {
 public:
                     GroupNode(Scene *scene, Proto *proto);
 
-    virtual void    preDraw() { children()->preDraw(); }
-    virtual void    draw(int pass) { children()->draw(pass, children_Field()); }
+    virtual void    preDraw() { if (children()) children()->preDraw(); }
+    virtual void    draw(int pass) 
+                        { 
+                        if (children())
+                            children()->draw(pass, children_Field());
+                        }
 
     virtual void    flip(int index);
     virtual void    swap(int fromTo);

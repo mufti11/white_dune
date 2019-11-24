@@ -120,7 +120,7 @@ export CXXFLAGS="\$SLKCFLAGS -std=c++11"
  --with-wwwbrowser=firefox \\
  --with-helpurl="/usr/doc/\$PRGNAM-\$VERSION/docs" \\
  --with-protobaseurl="/usr/doc/\$PRGNAM-\$VERSION/docs"
-make -j4
+make
 
 install -c -d \$PKG/install \$PKG/usr/bin \$PKG/usr/man/man1
 cp -a bin/* /\$PKG/usr/bin
@@ -151,6 +151,7 @@ chmod +x white_dune/white_dune.SlackBuild
 (
 cd white_dune
 cp /tmp/wdune-$VERSION.tar.bz2 .
+export MAKEFLAGS=-j4
 sh white_dune.SlackBuild
 )
 rm -f white_dune/wdune*.tar.bz2

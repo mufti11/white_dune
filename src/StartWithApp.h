@@ -44,6 +44,11 @@ public:
                            m_startLanguage = strdup(language);
                            }
 
+    double              getDefaultSceneLength()
+                           { return m_defaultSceneLength; }
+    void                setDefaultSceneLength(double time) 
+                           { m_defaultSceneLength = time; }
+
     void                StartWithSetDefaults();
 
     void                StartWithLoadPreferences();
@@ -52,6 +57,7 @@ public:
 private:
     char               *m_startVariant;
     char               *m_startLanguage;
+    double              m_defaultSceneLength;
 };
 
 #endif

@@ -476,6 +476,7 @@ protected:
     void                setName(int id);
     void                createText(int id);
     void                toogleMaterialName(int id);
+    void                manageScenes(bool add);
 #ifdef HAVE_SAND
     void OnSANDExport(void);
 #endif

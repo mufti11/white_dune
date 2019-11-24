@@ -185,6 +185,7 @@
 #include "NurbsCurve2DDialog.h"
 #include "InsertToNurbsCurveDialog.h"
 #include "InsertToNurbsSurfaceDialog.h"
+#include "SceneDialog.h"
 
 #ifdef HAVE_AFLOCK
 # include "AflockSettingsDialog.h"
@@ -2973,7 +2974,11 @@ MainWindow::OnCommand(void *vid)
         createNode("BallJoint");
         break;
       case ID_NEW_BILLBOARD:
-        createNode("Billboard");
+        {
+        NodeBillboard *board = (NodeBillboard *)createNode("Billboard");
+        if (TheApp->is4Kids())
+            board->axisOfRotation(new SFVec3f(0, 0, 0));
+        }
         break;
       case ID_NEW_BOOLEAN_FILTER:
         createNode("BooleanFilter");
@@ -4107,6 +4112,13 @@ MainWindow::OnCommand(void *vid)
 
       case ID_NEW_NODE_BY_NAME:
         insertNodeByName();
+        break;
+
+      case ID_SCENES_ADD:
+        manageScenes(true);
+        break;
+      case ID_SCENES_MANAGE:
+        manageScenes(false);
         break;
 
       case ID_PLAY:
@@ -6464,6 +6476,14 @@ MainWindow::UpdateToolbarSelection(void)
                    node->canConvertToOrientationInterpolator() ? 
                    0 : SW_MENU_DISABLED);
 
+    swMenuSetFlags(m_menu, ID_SCENES_ADD, SW_MENU_DISABLED, 
+                   node->isInvalidChild() && (node != m_scene->getRoot()) ?
+                   SW_MENU_DISABLED : 0);
+    swMenuSetFlags(m_menu, ID_SCENES_MANAGE, SW_MENU_DISABLED, 
+                   node->getType() == DUNE_VRML_SCENE ?
+                   0 : SW_MENU_DISABLED);
+
+
     swMenuSetFlags(m_menu, ID_TO_INDEXED_FACESET_4KIDS, SW_MENU_DISABLED, 
                    node->canConvertToIndexedFaceSet() ? 0 : SW_MENU_DISABLED);
 
@@ -8451,7 +8471,7 @@ MainWindow::moveSibling(int command)
         oldIndex = node->getSiblingIndex();
         break;
     }
-    if (newIndex != -1) {
+    if (newIndex != -1 && node->hasParent()) {
         node->ref();
         Node* parent = node->getParent();
         int parentField = node->getParentField();
@@ -8463,18 +8483,24 @@ MainWindow::moveSibling(int command)
             oldSceneLength = vrmlCut->sceneLengths()->getValue(oldIndex);
             newSceneLength = vrmlCut->sceneLengths()->getValue(newIndex);
         }
-        if (newIndex != oldIndex) {
-            m_scene->execute(new MoveCommand(node, parent, parentField, 
-                                             NULL, -1, oldIndex));
+        if (0 && newIndex != oldIndex) {
             m_scene->execute(new MoveCommand(node, NULL, -1, 
                                              parent, parentField, newIndex));
+            if (oldIndex < newIndex)
+                oldIndex++;
+
+            m_scene->execute(new MoveCommand(node, parent, parentField, 
+                                             NULL, -1, oldIndex));
         }
         if (parent->getType() == DUNE_VRML_CUT) {
             vrmlCut->sceneLengths()->setValue(newIndex, oldSceneLength);
             vrmlCut->sceneLengths()->setValue(oldIndex, newSceneLength);
         }
         MFNode *mfNode = (MFNode *)node->getParentFieldValue();
-        m_scene->setSelection(mfNode->getValue(newIndex));
+        if (mfNode)
+            m_scene->setSelection(mfNode->getValue(newIndex));
+        else
+            m_scene->setSelection(node);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }       
 }
@@ -8845,25 +8871,29 @@ void
 MainWindow::moveBranchToVrmlScene(bool begin)
 {
     Node *node = m_scene->getSelection()->getNode();
+    if (node && 
+        ((node->getType() == DUNE_VRML_CUT) ||
+         (node->getType() == DUNE_VRML_SCENE)))
+         return;
     Node *beforeSelection = node->getPrevSibling();
     int nodeParentIndex = node->getParentIndex(); 
     vrmlCut = NULL;
     m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
-    Node *targetNode = vrmlCut;
     bool createVrmlCut = false;
     if (vrmlCut == NULL) {
-        targetNode = m_scene->createNode("VrmlCut");
-        MoveCommand *command = new MoveCommand(targetNode, NULL, -1, 
+        vrmlCut = m_scene->createNode("VrmlCut");
+        MoveCommand *command = new MoveCommand(vrmlCut, NULL, -1, 
                                    m_scene->getRoot(), 
-                                   m_scene->getRoot()->getChildrenField());
+                                   m_scene->getRoot()->getChildrenField(), 0);
         command->execute();
+        m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
         createVrmlCut = true;
     }
-    m_scene->setSelection(vrmlCut);
-    moveSiblingFirst();
-    m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
-    vrmlCut = NULL;
-    m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
+    if (createVrmlCut) {
+        m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+        vrmlCut = NULL;
+        m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
+    }
     NodeGroup *root = (NodeGroup *)m_scene->getRoot();
     if (node->getParent() == root) {
         for (long i = 0; i < root->children()->getSize(); i++) {
@@ -8877,17 +8907,18 @@ MainWindow::moveBranchToVrmlScene(bool begin)
     }
     NodeList nodeList;
     node->doWithNextSiblings(collectBranch, &nodeList);
-    m_scene->getRoot()->doWithBranch(getVrmlCut, NULL);
-    NodeVrmlCut *cut = (NodeVrmlCut *) vrmlCut;
+    NodeVrmlCut *cut = (NodeVrmlCut *)vrmlCut;
     MFNode *cutScenes = cut->scenes();
     NodeVrmlScene *vscene = (NodeVrmlScene *)m_scene->createNode("VrmlScene");
-        MoveCommand *command = NULL;
-    if (createVrmlCut || !begin ) 
-        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field());
-    else
+    MoveCommand *command = NULL;
+    if (createVrmlCut || begin ) 
         command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field(),
                                   0);
-    command->execute();
+    else 
+        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field()),
+                                  cutScenes->getSize();
+    if (command)
+        command->execute();
     m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
     for (long i = 0; i < nodeList.size(); i++) {
         if (node->hasParent()) {
@@ -9868,7 +9899,7 @@ MainWindow::createBranchImageTexture(void)
         while (chdir(TheApp->getFileDialogDir()) == -2);
     if (swOpenFileDialog(m_wnd, "Select Image (*.jpg, *.png)",
 #ifdef HAVE_LIBDEVIL
-# ifdef _WIN32
+#ifdef _WIN32
         "All Files (*.*)\0*.*\0\0",
 # else
         "*.*",
@@ -12857,6 +12888,65 @@ int MainWindow::OnTimer()
     }
 }
 
+void MainWindow::manageScenes(bool add)
+{
+    Node *node = m_scene->getSelection()->getNode();
+
+    if (add && node && 
+        ((node->getType() == DUNE_VRML_CUT) ||
+         (node->getType() == DUNE_VRML_SCENE)))
+        return;
+    if ((!add) && node && 
+        (node->getType() != DUNE_VRML_SCENE))
+        return;
+
+    vrmlCut = NULL;
+    m_scene->getRoot()->doWithBranch(getVrmlCut, m_parentWindow);
+    if (add || (vrmlCut == NULL)) {
+        moveBranchToVrmlScene(false);
+        return;
+    }
+    NodeVrmlCut *cut = (NodeVrmlCut *)vrmlCut;
+
+    int sceneNumber = 0;
+    for (int i = 0; i < cut->scenes()->getSize(); i++) {
+         if ((!add) && cut->scenes()->getValue(i) == node)
+             break;
+         sceneNumber++;
+    }   
+    int oldSceneNumber = sceneNumber;
+    SceneDialog dlg(m_wnd, node, add, sceneNumber, cut);
+    if (dlg.DoModal() == IDCANCEL)
+        return;
+    sceneNumber = dlg.getSceneNumber();
+    if (sceneNumber < oldSceneNumber) {
+        Node *currentNode = cut->scenes()->getValue(sceneNumber);;
+        m_scene->setSelection(currentNode);
+        for (int i = 0; i < sceneNumber - oldSceneNumber; i++) {
+            moveSiblingUp();
+        }
+        int tmp = cut->sceneLengths()->getValue(oldSceneNumber);
+        cut->sceneLengths()->setValue(oldSceneNumber,
+            cut->sceneLengths()->getValue(sceneNumber));
+        cut->sceneLengths()->setValue(sceneNumber, tmp); 
+    }
+    if (sceneNumber > oldSceneNumber) {
+        Node *currentNode = cut->scenes()->getValue(sceneNumber);
+        m_scene->setSelection(currentNode);
+        for (int i = 0; i < oldSceneNumber - sceneNumber; i++) {
+            moveSiblingDown();
+        }
+        int tmp = cut->sceneLengths()->getValue(oldSceneNumber);
+        cut->sceneLengths()->setValue(oldSceneNumber,
+            cut->sceneLengths()->getValue(sceneNumber));
+        cut->sceneLengths()->setValue(sceneNumber, tmp); 
+    }
+    if (sceneNumber == oldSceneNumber)
+        m_scene->setSelection(cut->scenes()->getValue(sceneNumber));
+
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION, NULL);    
+}
+
 void MainWindow::Play()
 {
     if (m_scene->isRunning()) {
@@ -12981,7 +13071,12 @@ MainWindow::OnFileOpenHtml()
 #endif
     char path[1024];
     path[0] = '\0';
+#ifdef _WIN32
+    const char *fileSelectorText = 
+       "HTML Files (*.html)\0*.html\0All Files (*.*)\0*.*\0\0";
+#else
     const char *fileSelectorText = "*.html";
+#endif
     if (TheApp->getFileDialogDir())
         while(chdir(TheApp->getFileDialogDir()) == -2);
     if (swOpenFileDialog(m_wnd, "Open X3DOM html", fileSelectorText, path, 
@@ -13300,7 +13395,7 @@ bool MainWindow::OnFileExportOff()
         char path[1024] = { 0 };
         if (swSaveFileDialog(m_wnd, "Save As",
 #ifdef _WIN32
-                             "off (.off)\0*.off;*.OFF\0All Files (*.*)\0*.*\0\0",
+                             "off (.off)\0*.off\0*.OFF\0All Files (*.*)\0*.*\0\0",
 #else
                              "*.off",
 
@@ -13324,8 +13419,13 @@ bool MainWindow::OnFileExportOff()
 bool MainWindow::OnFileImportOff()
 {
     char path[1024] = { 0 };
-    if (swOpenFileDialog(m_wnd, "Select OFF (*.off)", "*.off\0\0", path, 
-                         1024)) {
+    if (swOpenFileDialog(m_wnd, "Load OFF",
+#ifdef _WIN32 
+                         "Select OFF (*.off)\0*.off\0\0",
+#else
+                         "*.off",
+#endif
+                         path, 1024)) {
         NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)
                                       m_scene->createNode("IndexedFaceSet");
         faceset = faceset->readOff(path);

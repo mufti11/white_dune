@@ -247,6 +247,7 @@ BEGIN
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Empt&y Group",                        ID_NEW_GROUP
         MENUITEM "Empt&y Transform",                    ID_NEW_TRANSFORM
         MENUITEM "New node by name",                    ID_NEW_NODE_BY_NAME
@@ -426,6 +427,11 @@ BEGIN
         END
 #endif
         MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&Scenes"
+    BEGIN
+        MENUITEM "&Add",                                 ID_SCENES_ADD
+        MENUITEM "&Manage (need VrmlScene)",             ID_SCENES_MANAGE
     END
     POPUP "&Movement"
     BEGIN
@@ -1594,6 +1600,11 @@ BEGIN
         MENUITEM "Zoom &out\t-",                         ID_ROUTE_ZOOM_OUT
         MENUITEM "Zoom &in\t+",                          ID_ROUTE_ZOOM_IN
         MENUITEM "Rebuild",                              ID_ROUTE_REBUILD
+    END
+    POPUP "&Scenes"
+    BEGIN
+        MENUITEM "&Add",                                 ID_SCENES_ADD
+        MENUITEM "&Manage (need VrmlScene)",             ID_SCENES_MANAGE
     END
     POPUP "&Mode"
     BEGIN
@@ -3270,6 +3281,25 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Scene management"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "Begin",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "End", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Scene Number",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Scene length",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Lenght of scenes without animation",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,105,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4152,6 +4182,7 @@ BEGIN
     ID_MOVE_SIBLING_LAST     "move to last position in same level of scenegraph branch\nmove to last sibling"
 END
 
+
 STRINGTABLE DISCARDABLE
 BEGIN
     ID_BRANCH_TO_PARENT      "move nodes from selected node to end of scenegraph branch of selected node to parent node in scenegraph\nscenegraph branch move to parent"
@@ -4544,6 +4575,13 @@ BEGIN
     ID_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_SCENES_NUMBER_NOT_FIRST_AND_LAST "Use either first or last"
+    IDS_SCENES_NUMBER_NOT_VALID          "Scene number out of range"
+    IDS_SCENES_LAST                      "Last scene"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -4798,6 +4836,7 @@ BEGIN
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vide",                          ID_NEW_GROUP
         MENUITEM "Transform vide",                      ID_NEW_TRANSFORM
         MENUITEM "Nouveau noeud par dessus le texte",   ID_NEW_NODE_BY_NAME
@@ -4977,6 +5016,11 @@ BEGIN
         END
 #endif
         MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&Scene"
+    BEGIN
+        MENUITEM "&ajouter",                             ID_SCENES_ADD
+        MENUITEM "administrer (need VrmlScene)",         ID_SCENES_MANAGE
     END
     POPUP "Mode"
     BEGIN
@@ -6143,6 +6187,11 @@ BEGIN
         MENUITEM "Zoomer\t-",                              ID_ROUTE_ZOOM_OUT
         MENUITEM "Dézoomer\t+",                            ID_ROUTE_ZOOM_IN
         MENUITEM "reconstruire",                           ID_ROUTE_REBUILD
+    END
+    POPUP "&Scene"
+    BEGIN
+        MENUITEM "&ajouter",                             ID_SCENES_ADD
+        MENUITEM "administrer (need VrmlScene)",         ID_SCENES_MANAGE
     END
     POPUP "&Mode"
     BEGIN
@@ -7747,6 +7796,24 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_FR_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Scene management"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "Begin",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "End", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Scene Number",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Scene length",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Lenght of scenes without animation",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,105,50,14
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -9021,13 +9088,20 @@ BEGIN
     ID_FR_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FR_SCENES_NUMBER_NOT_FIRST_AND_LAST "Use either first or last"
+    IDS_FR_SCENES_NUMBER_NOT_VALID          "Scene number out of range"
+    IDS_FR_SCENES_LAST                      "Last scene"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
-    ID_FR_SAND_EXPORT          "Export Nebula Device Scene"
-    ID_FR_SAND_WRITEMESHES     "If checked, script file and all mesh files will be exported.  If not checked, only the script file will be exported."
-    ID_FR_SAND_RELPATHS        "If checked, relative paths will be used (for exporting avatars)"
-    ID_FR_SAND_ALPHATEST       "If checked, adds a default alpha test to alpha-mapped materials"
+    ID_SAND_EXPORT          "Export Nebula Device Scene"
+    ID_SAND_WRITEMESHES     "If checked, script file and all mesh files will be exported.  If not checked, only the script file will be exported."
+    ID_SAND_RELPATHS        "If checked, relative paths will be used (for exporting avatars)"
+    ID_SAND_ALPHATEST       "If checked, adds a default alpha test to alpha-mapped materials"
 END
 #endif
 
@@ -9225,6 +9299,7 @@ BEGIN
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Leere Group",                         ID_NEW_GROUP
         MENUITEM "Leerer Transform",                    ID_NEW_TRANSFORM
         MENUITEM "Alles ueber Namenseingabe",           ID_NEW_NODE_BY_NAME
@@ -9404,6 +9479,11 @@ BEGIN
         END
 #endif
         MENUITEM "Vereinige in IndexedFaceSet (braucht Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&Szenen"
+    BEGIN
+        MENUITEM "&Hinzufuegen",                         ID_SCENES_ADD
+        MENUITEM "&Verwalten (brauvht VrmlScene)",       ID_SCENES_MANAGE
     END
     POPUP "Bewegungs&art"
     BEGIN
@@ -10570,6 +10650,11 @@ BEGIN
         MENUITEM "Heraus zoomen\t-",                    ID_ROUTE_ZOOM_OUT
         MENUITEM "Hinein zoomen\t+",                    ID_ROUTE_ZOOM_IN
         MENUITEM "Neu aufbauen",                        ID_ROUTE_REBUILD
+    END
+    POPUP "&Szenen"
+    BEGIN
+        MENUITEM "&Hinzufuegen",                         ID_SCENES_ADD
+        MENUITEM "&Verwalten (brauvht VrmlScene)",       ID_SCENES_MANAGE
     END
     POPUP "&Modus"
     BEGIN
@@ -12182,6 +12267,25 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_DE_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Szene verwalten"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "Erste",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "Letzte", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Szenen Nummer",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Szenen Laenge",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Laenge der Szenen ohne Animation",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,165,105,50,14
+END
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // DESIGNINFO
@@ -13446,6 +13550,13 @@ BEGIN
     ID_DE_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_DE_SCENES_NUMBER_NOT_FIRST_AND_LAST "Benutze bitte Erste oder Letze, nicht Beide"
+    IDS_DE_SCENES_NUMBER_NOT_VALID          "Szenennummer ausserhalb des legalen Bereichs"
+    IDS_DE_SCENES_LAST                      "Letze Szene"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -13648,6 +13759,7 @@ BEGIN
         MENUITEM "Color",                                ID_NEW_COLOR
         MENUITEM "ColorRGBA",                            ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                               ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vuoto",                          ID_NEW_GROUP
         MENUITEM "Transform vuoto",                      ID_NEW_TRANSFORM
         MENUITEM "New node by name",                     ID_NEW_NODE_BY_NAME
@@ -13827,6 +13939,11 @@ BEGIN
         END
 #endif
         MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&scena"
+    BEGIN
+        MENUITEM "&apporra",                             ID_SCENES_ADD
+        MENUITEM "&administrer (need VrmlScene)",        ID_SCENES_MANAGE
     END
     POPUP "&Movimento"
     BEGIN
@@ -14996,6 +15113,11 @@ BEGIN
         MENUITEM "Zoom &out\t-",                        ID_ROUTE_ZOOM_OUT
         MENUITEM "Zoom &in\t+",                         ID_ROUTE_ZOOM_IN
         MENUITEM "Ricostruisci",                        ID_ROUTE_REBUILD
+    END
+    POPUP "&scena"
+    BEGIN
+        MENUITEM "&apporra",                             ID_SCENES_ADD
+        MENUITEM "&administrer (need VrmlScene)",        ID_SCENES_MANAGE
     END
     POPUP "&Modo"
     BEGIN
@@ -16603,6 +16725,24 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_IT_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Scena amministrare"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "primo",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "ultimo", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Scena numero",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Scena lungo",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Lungo of scena senza animazione",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,105,50,14
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -17878,6 +18018,13 @@ BEGIN
     ID_IT_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_IT_SCENES_NUMBER_NOT_FIRST_AND_LAST "Use either first or last"
+    IDS_IT_SCENES_NUMBER_NOT_VALID          "Scene number out of range"
+    IDS_IT_SCENES_LAST                      "Last scene"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -18081,6 +18228,7 @@ BEGIN
         MENUITEM "Color",                               ID_NEW_COLOR
         MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
+        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vazio",                         ID_NEW_GROUP
         MENUITEM "Transform vazio",                     ID_NEW_TRANSFORM
         MENUITEM "Novo no por nome",                    ID_NEW_NODE_BY_NAME
@@ -18260,6 +18408,11 @@ BEGIN
         END
 #endif
         MENUITEM "Join to IndexedFaceSet (need Group)",  ID_SIMPLE_JOIN
+    END
+    POPUP "&cena"
+    BEGIN
+        MENUITEM "&aditar",                              ID_SCENES_ADD
+        MENUITEM "&administrar (need VrmlScene)",        ID_SCENES_MANAGE
     END
     POPUP "&Movimento"
     BEGIN
@@ -19428,6 +19581,11 @@ BEGIN
         MENUITEM "Zoom &out\t-",                         ID_ROUTE_ZOOM_OUT
         MENUITEM "Zoom &in\t+",                          ID_ROUTE_ZOOM_IN
         MENUITEM "Rebuild",                              ID_ROUTE_REBUILD
+    END
+    POPUP "&Scenes"
+    BEGIN
+        MENUITEM "&Add",                                 ID_SCENES_ADD
+        MENUITEM "&Manage (need VrmlScene)",             ID_SCENES_MANAGE
     END
     POPUP "&Mode"
     BEGIN
@@ -21037,6 +21195,25 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,120,25,50,14
 END
 
+IDD_PT_SCENES_MANAGE DIALOG DISCARDABLE  0, 0, 240, 135
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Scene management"
+FONT 8, "MS Sans Serif"
+BEGIN
+    AUTOCHECKBOX    "Begin",IDC_SCENES_FIRST,5,20,50,14
+    AUTOCHECKBOX    "End", IDC_SCENES_LAST,80,20,50,14
+    LTEXT           "Scene Number",IDC_STATIC,5,35,120,15
+    EDITTEXT        IDC_SCENES_NUMBER,130,35,40,15,ES_AUTOHSCROLL
+    COMBOBOX        IDC_SCENE_NUMBER,5,45,120,15,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL
+    LTEXT           "Scene length",IDC_STATIC,5,65,120,15
+    EDITTEXT        IDC_SCENES_LENGTH,130,65,40,15,ES_AUTOHSCROLL
+    LTEXT           "Lenght of scenes without animation",IDC_STATIC,5,90,120,15
+    EDITTEXT        IDC_DEFAULT_SCENE_LENGTH,130,90,40,15 ,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,15,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,105,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -22309,6 +22486,13 @@ BEGIN
     ID_PT_NEW_UNIFORM              "Uniform.\nUniform"        
     ID_PT_NEW_IMAGE_TEXTURE_ATLAS  "ImageTextureAtlas (need texture).\nImageTextureAtlas (need texture)"
     ID_PT_NEW_COMMON_SURFACE_SHADER "CommonSurfaceShader (need texture).\nCommonSurfaceShader (need texture)" 
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_PT_SCENES_NUMBER_NOT_FIRST_AND_LAST "Use either first or last"
+    IDS_PT_SCENES_NUMBER_NOT_VALID          "Scene number out of range"
+    IDS_PT_SCENES_LAST                      "Last scene"
 END
 
 #ifdef HAVE_SAND

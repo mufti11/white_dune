@@ -131,6 +131,7 @@ special drivers for expensive graphic-cards like Nvidia Quadro or ATI FireGL 4.
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity
+CXXFLAGS="$CXXFLAGS -Wnoignored-attributes"
 %make_build 
 
 %install

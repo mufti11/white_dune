@@ -48,6 +48,7 @@
 
 #include "Node.h"
 #include "NodeScript.h"
+#include "NodeVrmlCut.h"
 #include "NodeNurbsSurface.h"
 #include "NodeNurbsTrimmedSurface.h"
 #include "NodeNurbsCurve.h"
@@ -181,7 +182,7 @@ void setVrml(void)
 };
 
 %token BRACKET_ON BRACKET_OFF WING_BRACKET_ON WING_BRACKET_OFF
-%token SCRIPT COMPOSED_SHADER PACKAGED_SHADER SHADER_PROGRAM 
+%token SCRIPT COMPOSED_SHADER PACKAGED_SHADER SHADER_PROGRAM VRML_CUT 
 %token EXPORT IMPORT AS 
 %token <id> ID ID_X3D STRING
 %token <int32> INT_NUM
@@ -193,6 +194,7 @@ void setVrml(void)
 
 %type <id> id
 %type <node> node dynamicNode shaderNode nodeStatement 
+//%type <dynamicNode> VRML_CUT
 %type <node> importStatement exportStatement statement 
 %type <nodeList> nodeStatements statements
 %type <element> externInterfaceDeclaration restrictedInterfaceDeclaration
@@ -431,6 +433,12 @@ nodeBody:
 
 dynamicNode: SCRIPT                     { $$ = new NodeScript(scene); }
         | shaderNode                    { $$ = $1; }
+        ;
+
+dynamicNode: VRML_CUT                   { 
+                                        $$ = scene->createDynamicFieldsNode(
+                                            "VrmlCut"); 
+                                        }
         ;
 
 shaderNode: COMPOSED_SHADER             { $$ = newNode("ComposedShader"); }

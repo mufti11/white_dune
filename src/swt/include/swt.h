@@ -186,7 +186,11 @@ extern int       swFromPtr(void *id);
 #ifdef HAVE_WWW_BROWSER
 # define WWW_BROWSER HAVE_WWW_BROWSER
 #else                                   
-# define WWW_BROWSER "netscape -remote OpenURL\\(%s,new-window\\)"
+# ifdef _WIN32
+#  define WWW_BROWSER "\"C:\\Program Files\\Internet Explorer\\IExplore.exe\" %s"
+# else
+#  define WWW_BROWSER "firefox %s"
+# endif
 #endif
 
 #ifdef HAVE_HELP_URL

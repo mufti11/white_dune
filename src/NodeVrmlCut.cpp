@@ -31,6 +31,7 @@
 #include "MFNode.h"
 #include "MFFloat.h"
 #include "SFBool.h"
+#include "Path.h"
 #include "ExposedField.h"
 #include "Field.h"
 #include "EventIn.h"
@@ -52,6 +53,9 @@ ProtoVrmlCut::ProtoVrmlCut(Scene *scene)
     sceneLengths.set(
           addField(MFTIME, "sceneLengths", new MFTime(), new SFTime(0)));
     setFieldFlags(sceneLengths, FF_STATIC);
+    sceneDelays.set(
+          addField(MFTIME, "sceneDelays", new MFTime(), new SFTime(0)));
+    setFieldFlags(sceneDelays, FF_STATIC);
     sceneNumber.set(
           addField(SFINT32, "sceneNumber", new SFInt32(-1), new SFInt32(-1)));
     setFieldFlags(sceneNumber, FF_STATIC);
@@ -88,6 +92,8 @@ NodeVrmlCut::initialize(void)
     m_firstScene = 0;
     m_lastScene = 0;
     m_currentScene = -1;
+    m_selectionWhich = -1;
+    m_eventOutsInitialised = true;
     accountAllSceneLengths();
 }
 
@@ -134,45 +140,52 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
         ((MFieldValue *)value)->getDiff(&newValues, &deleteValues, scenes());
         ProtoVrmlCut *protoVrmlCut = (ProtoVrmlCut *)m_proto;
         int firstDynamicEventOut = protoVrmlCut->getFirstDynamicEventOut();
-        for (long i = 0; i < newValues.size(); i++) {
+        for (long i = 0; i < ((MFNode *)value)->getSize(); i++) {
             Node *node = ((MFNode *)value)->getValue(newValues[i]);
             if (node->getType() == DUNE_VRML_SCENE) {
                 MyString name = "";
-                    int event =  newValues[i] + firstDynamicEventOut;
-                    if ((event < getProto()->getNumEventOuts()) &&
-                        m_scene->isParsing())
-                        name += getProto()->getEventOut(event)->getName(false);
-                    else {
-                        name += newStartTimeName();
-                        addEventOut(SFTIME, name);
-                        update();
-                    }
+                int event =  newValues[i] + firstDynamicEventOut;
+                if ((event < getProto()->getNumEventOuts()) &&
+                    m_scene->isParsing())
+                    name += getProto()->getEventOut(event)->getName(false);
+                else {
+                    name += newStartTimeName();
+                    addEventOut(SFTIME, name);
+                    update();
+                }
                 int field = getProto()->lookupEventOut(name);
-                bool alreadyRouted = false;
                 for (SocketList::Iterator *j = this->getOutput(field).first(); 
                      j != NULL; j = j->next()) {
                     Node *outputNode = j->item().getNode();
                     if (outputNode == node) {
-                        alreadyRouted = true;
                         break;
                     }
                 }    
-                if ((!alreadyRouted) && (!m_scene->isParsing())) {
-                    NodeVrmlScene *vrmlScene = (NodeVrmlScene *)node;
-                    m_scene->execute(new RouteCommand(
-                         this, getProto()->lookupEventOut(name),
-                         vrmlScene, vrmlScene->timeIn_Field()));
-                }
-                if (m_scene->isParsing() && (!m_scene->getImportIntoVrmlScene()))
+                NodeVrmlScene *vrmlScene = (NodeVrmlScene *)node;
+                m_scene->execute(new RouteCommand(
+                     this, getProto()->lookupEventOut(name),
+                     vrmlScene, vrmlScene->timeIn_Field()));
+                if (m_scene->isParsing() && 
+                    (!m_scene->getImportIntoVrmlScene()))
                     continue;
-                double sceneLength = 0;
-                node->doWithBranch(searchGreatestCycleInterval, 
-                                   (void *)(&sceneLength));
-                if (sceneLengths()->getSize() < ((MFNode *)value)->getSize())
-                    sceneLengths()->insertSFValue(newValues[i], sceneLength);
-                else
-                    sceneLengths()->setValue(newValues[i], sceneLength);
+                if (sceneLengths()->getValue(i) == 0) {
+                    double sceneLength = 0;
+                    node->doWithBranch(searchGreatestCycleInterval, 
+                                       (void *)(&sceneLength));
+                    if (sceneLength == 0)
+                        sceneLength = TheApp->getDefaultSceneLength();
+                    sceneLengths()->setValue(i, sceneLength);
+                }
             }            
+            m_eventOutsInitialised = false;
+            Proto *vrmlCutProto = getProto();;
+            int numEventOuts = vrmlCutProto->getNumEventOuts();
+            for (int i = numEventOuts - 1; i > -1; i--) {
+                 EventOut *eventOut = vrmlCutProto->getEventOut(i);
+                 if (stringncmp(eventOut->getName(false), "startTime") == 0)
+                     vrmlCutProto->deleteEventOut(i);
+        }
+
         }
 
         for (long i = 0; i < deleteValues.size(); i++) {
@@ -184,9 +197,10 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
             deleteEventOut(eventOutIndex);
             update();
         }
-    } else if (index == sceneLengths_Field())
-        accountAllSceneLengths();
+    }
     Node::setField(index, value, cf);
+    if (index == sceneLengths_Field())
+        accountAllSceneLengths();
     update();
 }
  
@@ -239,8 +253,10 @@ NodeVrmlCut::startNextScene(int currentScene, double time)
              if (outputNode->getType() == VRML_TIME_SENSOR) {
                  NodeTimeSensor *timer = (NodeTimeSensor *)outputNode;
                  timer->checkStart(true, time, 
-                                   time + timer->cycleInterval()->getValue(),
-                                   time);
+                                   time + timer->cycleInterval()->getValue() +
+                                   sceneDelays()->getValue(currentScene),
+                                   time, 
+                                   sceneDelays()->getValue(currentScene));
              }
          }             
 
@@ -260,8 +276,44 @@ NodeVrmlCut::startNextScene(int currentScene, double time)
      }    
 }
 
+static Node *vrmlScene = NULL;
+
+static bool searchVrmlScene(Node *node, void *data)
+{
+    Node *selection = (Node *)data; 
+    if ((node != NULL) && node->getType() == DUNE_VRML_SCENE) {
+        vrmlScene = node;
+    }
+    if (node == selection)
+        return false;
+    return true;     
+}
+
 int 
-NodeVrmlCut::accountWhich()
+NodeVrmlCut::getVrmlSceneWhich(void)
+{
+    int which = -1;
+    Node *selection = m_scene->getSelection()->getNode();
+    vrmlScene = NULL;
+    getScene()->getRoot()->doWithBranch(searchVrmlScene, selection, false); 
+    if (vrmlScene && vrmlScene->getType() == DUNE_VRML_SCENE) {
+        for (int i = 0; i < scenes()->getSize(); i++)
+             if (vrmlScene == scenes()->getValue(i)) {
+                 which = i;
+                 break;
+              }
+    }
+    return which;
+}
+
+void
+NodeVrmlCut::updateSelection(void)
+{
+    m_selectionWhich = getVrmlSceneWhich();
+}
+
+int 
+NodeVrmlCut::accountWhich(void)
 {
     static int currentScene = -1;
     static double firstTime = 0;
@@ -269,21 +321,25 @@ NodeVrmlCut::accountWhich()
     NodeList *choiceList = scenes()->getValues();
     static int firstScene = 0;
     static int lastScene = 0;
- 
+
+    int vrmlSceneWhich = m_selectionWhich; 
+
     int which = sceneNumber()->getValue();
     if (m_scene->isRunning()) {
         // start Scenes
-        firstScene = sceneNumber()->getValue() - 
-                     numberPreviousScenes()->getValue();
+        firstScene = vrmlSceneWhich == -1 ? sceneNumber()->getValue() - 
+                     numberPreviousScenes()->getValue() : vrmlSceneWhich;
         if (firstScene < 0)
             firstScene = 0;
-        lastScene = sceneNumber()->getValue() + numberNextScenes()->getValue();
+        lastScene = vrmlSceneWhich == -1 ? sceneNumber()->getValue() + 
+                    numberNextScenes()->getValue() : vrmlSceneWhich;
         if (lastScene >= sceneLengths()->getSize())
             lastScene = sceneLengths()->getSize() - 1;
         double t = m_scene->getCurrentTime();
-        if (sceneNumber()->getValue() < 0) {
+        if ((vrmlSceneWhich == -1) && (sceneNumber()->getValue() < 0)) {
             firstScene = 0;
-            lastScene = sceneLengths()->getSize() - 1;
+            lastScene = vrmlSceneWhich == -1 ? sceneLengths()->getSize() - 1 :
+                        vrmlSceneWhich;
         }            
         if (!running) {
             currentScene = firstScene;
@@ -295,10 +351,11 @@ NodeVrmlCut::accountWhich()
         if (currentScene > lastScene) {
             firstTime = t;
             currentScene = firstScene;
-            startNextScene(currentScene, t);
+            startNextScene(currentScene, 
+                           t + sceneLengths()->getValue(currentScene) +
+                           2 * sceneDelays()->getValue(currentScene));
         }
-        if ((t) >= 
-            (firstTime + sceneLengths()->getValue(currentScene))) {
+        if ((t) >= (firstTime + sceneLengths()->getValue(currentScene))) {
             firstTime = t;
             currentScene++;
             if (currentScene > lastScene)
@@ -306,9 +363,9 @@ NodeVrmlCut::accountWhich()
             startNextScene(currentScene, t);
         }
         which = currentScene;
-    } else 
-        running = false;
-  
+    } else
+        which = vrmlSceneWhich;
+
     int whichCount = 0;
     for (long i = 0; i < choiceList->size(); i++)
         if (choiceList->get(i)->getType() != VRML_COMMENT) {
@@ -335,6 +392,9 @@ NodeVrmlCut::preDraw()
 
     int which = accountWhich();
 
+    if (which == -1)
+        which = 0; 
+
     if (which < 0 || which >= (int)choiceList->size()) return;
 
     choiceList->get(which)->preDraw();
@@ -360,6 +420,9 @@ NodeVrmlCut::draw(int pass)
     NodeList *choiceList = scenes()->getValues();
 
     int which = accountWhich();
+
+    if (which == -1)
+        which = 0; 
 
     if (which < 0 || which >= (int)choiceList->size()) return;
 
@@ -401,9 +464,9 @@ NodeVrmlCut::writeJavaScript(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            lastScene=sceneLengths.length-1;\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "            }            \n") )
+    RET_ONERROR( mywritestr(f, "            }\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "         bind_out = true\n") )
+    RET_ONERROR( mywritestr(f, "         bind_out = true;\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "         }\n") )
     TheApp->incSelectionLinenumber();
@@ -424,8 +487,9 @@ NodeVrmlCut::writeJavaScript(int f)
     RET_ONERROR( mywritestr(f, "         {\n") )
     TheApp->incSelectionLinenumber();
     int numScenes = 0;
-    for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
-        const char *name = getProto()->getEventOut(i)->getName(false); 
+    Proto *vrmlCutProto = getProto();
+    for (int i = 0; i < vrmlCutProto->getNumEventOuts(); i++) {
+        const char *name = vrmlCutProto->getEventOut(i)->getName(false); 
         if (stringncmp(name, "startTime") == 0) {
             RET_ONERROR( mywritef(f, "         if (nextScene==%d)\n", 
                                   numScenes) )
@@ -465,7 +529,8 @@ NodeVrmlCut::writeJavaScript(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            }\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "         if (value>=firstTime+sceneLengths[currentScene])\n") )
+    RET_ONERROR( mywritestr(f, "         if (value>=firstTime+") )
+    RET_ONERROR( mywritestr(f, "sceneLengths[currentScene])\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            {\n") )
     TheApp->incSelectionLinenumber();
@@ -490,6 +555,8 @@ NodeVrmlCut::writeXmlProto(int f)
     RET_ONERROR( mywritestr(f, "  <ProtoInterface>\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    <field name='sceneLengths' type='MFFloat' accessType='initializeOnly' value='' />\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "    <field name='sceneDelays' type='MFFloat' accessType='initializeOnly' value='' />\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    <field name='sceneNumber' type='SFInt32' accessType='initializeOnly' value='-1' />\n") )
     TheApp->incSelectionLinenumber();
@@ -516,7 +583,7 @@ NodeVrmlCut::writeXmlProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    <IS>\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "      <connect nodeField='children' protoField='scenes' />\n") )
+    RET_ONERROR( mywritestr(f, "      <connect nodeField='choice' protoField='scenes' />\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    </IS>\n") )
     TheApp->incSelectionLinenumber();
@@ -525,6 +592,8 @@ NodeVrmlCut::writeXmlProto(int f)
     RET_ONERROR( mywritestr(f, "    <Script DEF='VrmlCutScript'  >\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    <field name='sceneLengths' type='MFFloat' accessType='initializeOnly' />\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "    <field name='sceneDelays' type='MFFloat' accessType='initializeOnly' />\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    <field name='sceneNumber' type='SFInt32' accessType='initializeOnly' />\n") )
     TheApp->incSelectionLinenumber();
@@ -546,8 +615,9 @@ NodeVrmlCut::writeXmlProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    <field name='time_in' type='SFTime' accessType='inputOnly'/>\n") )
     TheApp->incSelectionLinenumber();
-    for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
-        const char *name = getProto()->getEventOut(i)->getName(false); 
+    Proto *vrmlCutProto = getProto();
+    for (int i = 0; i < vrmlCutProto->getNumEventOuts(); i++) {
+        const char *name = vrmlCutProto->getEventOut(i)->getName(false); 
         if (stringncmp(name, "startTime") == 0) {
             RET_ONERROR( mywritef(f, "    <field name='%s' type='SFTime' ",
                                   name) )
@@ -563,6 +633,8 @@ NodeVrmlCut::writeXmlProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "      <connect nodeField='sceneLengths' protoField='sceneLengths' />\n") )
     TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "      <connect nodeField='sceneDelays' protoField='sceneDelays' />\n") )
+    TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "      <connect nodeField='sceneNumber' protoField='sceneNumber' />\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "      <connect nodeField='numberPreviousScenes' protoField='numberPreviousScenes' />\n") )
@@ -571,8 +643,8 @@ NodeVrmlCut::writeXmlProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "      <connect nodeField='time_in' protoField='time_in' />\n") )
     TheApp->incSelectionLinenumber();
-    for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
-        const char *name = getProto()->getEventOut(i)->getName(false); 
+    for (int i = 0; i < vrmlCutProto->getNumEventOuts(); i++) {
+        const char *name = vrmlCutProto->getEventOut(i)->getName(false); 
         if (stringncmp(name, "startTime") == 0) {
             RET_ONERROR( mywritef(f, "      <connect nodeField='%s'", name) )
             RET_ONERROR( mywritef(f, " protoField='%s' />\n", name) )
@@ -596,24 +668,24 @@ NodeVrmlCut::writeXmlProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutScript' fromField='whichScene_out' toNode='VrmlCutSwitch' toField='whichChoice'></ROUTE>\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutScript' fromField='bind_out' toNode='VrmlCutNavigationInfo' toField='set_bind'></ROUTE>\n") )
-    TheApp->incSelectionLinenumber();
+//    RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutScript' fromField='bind_out' toNode='VrmlCutNavigationInfo' toField='set_bind'></ROUTE>\n") )
+//    TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutTimeSensor' fromField='time' toNode='VrmlCutScript' toField='time_in'></ROUTE>\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  </ProtoBody>\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "</ProtoDeclare>\n\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "  <NavigationInfo DEF='VrmlCutNavigationInfo' transitionType='\"TELEPORT\"'/>\n") )
-    TheApp->incSelectionLinenumber();
+//    RET_ONERROR( mywritestr(f, "  <NavigationInfo DEF='VrmlCutNavigationInfo' transitionType='\"TELEPORT\"'/>\n") )
+//    TheApp->incSelectionLinenumber();
     return 0;
 }
 
 int
 NodeVrmlCut::writeProto(int f)
 {
-    if (m_scene->isX3dom())
-        return 0;
+//    if (m_scene->isX3dom())
+//        return 0;
     if (m_scene->isX3dXml())
         return writeXmlProto(f);
 
@@ -632,6 +704,16 @@ NodeVrmlCut::writeProto(int f)
     RET_ONERROR( mywritestr(f, "    ]\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  ") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( writeFieldStr(f) )
+    RET_ONERROR( mywritestr(f, " MFFloat sceneDelays \n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "    [\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "    ]\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "  ") )
+    TheApp->incSelectionLinenumber();
     RET_ONERROR( writeFieldStr(f) )
     RET_ONERROR( mywritestr(f, " SFInt32 sceneNumber -1\n") )
     TheApp->incSelectionLinenumber();
@@ -655,7 +737,7 @@ NodeVrmlCut::writeProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "    ]\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "  ]\n") )
+    RET_ONERROR( mywritestr(f, "]\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "{\n") )
     TheApp->incSelectionLinenumber();
@@ -678,8 +760,9 @@ NodeVrmlCut::writeProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  {\n") )
     TheApp->incSelectionLinenumber();
-    for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
-        const char *name = getProto()->getEventOut(i)->getName(false); 
+    Proto *vrmlCutProto = getProto();
+    for (int i = 0; i < vrmlCutProto->getNumEventOuts(); i++) {
+        const char *name = vrmlCutProto->getEventOut(i)->getName(false); 
         if (stringncmp(name, "startTime") == 0) {
             RET_ONERROR( mywritef(f, "  ") )
             RET_ONERROR( writeEventOutStr(f) )
@@ -704,6 +787,10 @@ NodeVrmlCut::writeProto(int f)
     RET_ONERROR( mywritestr(f, "  ") )
     RET_ONERROR( writeFieldStr(f) )
     RET_ONERROR( mywritestr(f, " MFFloat sceneLengths IS sceneLengths\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "  ") )
+    RET_ONERROR( writeFieldStr(f) )
+    RET_ONERROR( mywritestr(f, " MFFloat sceneDelays IS sceneDelays\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  ") )
     RET_ONERROR( writeFieldStr(f) )
@@ -867,6 +954,16 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
     RET_ONERROR( mywritestr(f, "];\n") )
     TheApp->incSelectionLinenumber();
 
+    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "var sceneDelays = [") )
+    for (long i = 0; i < sceneLengths()->getSize(); i++) { 
+         RET_ONERROR( mywritef(f, "%f", sceneDelays()->getValue(i)) )
+         if (i < sceneLengths()->getSize() - 1)
+             RET_ONERROR( mywritestr(f, ", ") )
+    }
+    RET_ONERROR( mywritestr(f, "];\n") )
+    TheApp->incSelectionLinenumber();
+
     RET_ONERROR( indentf(f, indent) )
     RET_ONERROR( mywritestr(f, "function vrmlCutInit(eventObject)\n") )
     TheApp->incSelectionLinenumber();
@@ -954,7 +1051,7 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
     RET_ONERROR( mywritestr(f, "\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
-    RET_ONERROR( mywritestr(f, "if (value >= firstTime + ") )
+    RET_ONERROR( mywritestr(f, "if (value >=firstTime + ") )
     RET_ONERROR( mywritestr(f, "sceneLengths[currentScene])\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
@@ -1009,6 +1106,7 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
 int
 NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
 {
+    writeXmlProto(f);
     if (m_scene->getWriteFlags() && X3DOM) {
         RET_ONERROR( indentf(f, indent ) )
         RET_ONERROR( mywritestr(f, "<TimeSensor DEF='VrmlCutTimeSensor' ") )
@@ -1130,3 +1228,4 @@ NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
     return 0;
 }
     
+

@@ -60,8 +60,10 @@ realclean: clean
 	find . -name 'X3domExport*.html,v' -print | xargs rm -f
 	find . -name 'Ac3dExport*.ac' -print | xargs rm -f
 	find . -name 'RibExport*.rib' -print | xargs rm -f
+	find . -name 'output*.rib' -print | xargs rm -f
+	find . -name '*.tx' -print | xargs rm -f
 	find . -name 'ri.pic' -print | xargs rm -f
-	find . -name 'export*.tif' -print | xargs rm -f
+	find . -name 'untitled*.tif' -print | xargs rm -f
 	find . -name 'C++Export*.cc' -print | xargs rm -f
 	find . -name 'LdrawExport*.dat' -print | xargs rm -f
 	find . -name 'KanimExport*.wrl' -print | xargs rm -f

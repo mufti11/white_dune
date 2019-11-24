@@ -78,6 +78,7 @@ extern "C" {
 #include "UnRouteCommand.h"
 #include "MoveCommand.h"
 #include "Node.h"
+#include "DynamicFieldsNode.h"
 #include "SFNode.h"
 #include "SFRotation.h"
 #include "SFTime.h"
@@ -100,6 +101,7 @@ extern "C" {
 
 #include "NodeTimeSensor.h"
 #include "NodeVrmlCut.h"
+#include "NodeVrmlScene.h"
 #include "NodeNavigationInfo.h"
 #include "NodeViewpoint.h"
 #include "NodeOrthoViewpoint.h"
@@ -450,7 +452,7 @@ void Scene::undef(MyString nodeName)
 {
     if (nodeName && nodeName.length() > 0) {
        m_defNode = m_nodeMap[nodeName];
-       if (m_defNode)
+       if (m_defNode && m_defNode->getRefs() > 1)
            m_nodeMap.remove(nodeName);
     }
 }
@@ -458,6 +460,36 @@ void Scene::undef(MyString nodeName)
 Node *Scene::use(const char *nodeName)
 {
     return m_nodeMap[nodeName];
+}
+
+void Scene::unuse(const char *nodeName)
+{
+    NodeMap::Chain::Iterator *nodeIterator;
+    NodeMap::Chain::Iterator *j;
+    for (int i = 0; i < m_nodeMap.width(); i++) {
+        for (j = m_nodeMap.chain(i).first(); j != NULL; j = j->next())
+            nodeIterator = j;
+    }
+    if (nodeIterator) {
+        Node *node = nodeIterator->item()->getData();
+        if (node->hasParent()) {
+            Node *parent = node->getParent();
+            int parentField = node->getParentField();
+            MFNode *mfnode = (MFNode *)parent->getField(parentField);
+            int index = 0;
+            for (int i = 0; i < mfnode->getSize(); i++) {
+                 if (mfnode->getValue(i) == node)
+                     index = i;
+            }
+            Node *selection = node->getScene()->getSelection()->getNode();
+            MoveCommand command(node, parent, parentField, NULL, -1, index,
+                                false);
+            command.execute();
+            selection->getScene()->UpdateViews(NULL, UPDATE_ALL, NULL);
+            selection->getScene()->setSelection(selection);
+            selection->getScene()->UpdateViews(NULL, UPDATE_SELECTION, NULL);
+        }    
+    }
 }
 
 bool Scene::canUse(Node *parentNode, int parentField)
@@ -483,6 +515,7 @@ bool Scene::use(Node *parentNode, int parentField)
     int destField = getDestField(m_defNode, parentNode, parentField);
     if (destField >= 0)
         execute(new MoveCommand(m_defNode, NULL, -1, parentNode, destField));
+
     return true;
 }
 
@@ -1276,6 +1309,19 @@ static bool searchVrmlCut(Node *node, void *data)
     return true;
 }
 
+static NodeVrmlScene *vrmlScene = NULL;
+
+static bool searchVrmlScene(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+    if (node->getType() == DUNE_VRML_SCENE) {
+        vrmlScene = (NodeVrmlScene *)node;;
+        return false;
+    }
+    return true;
+}
+
 int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 {
     if (!(writeFlags & SKIP_SAVED_TEST)) {
@@ -1397,7 +1443,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  </head>\n") )
         RET_RESET_FLAGS_ONERROR( mywritestr(f,"  <body>\n") )
         vrmlCut = NULL;
-        getRoot()->doWithBranch(searchVrmlCut, NULL);
+        getRoot()->doWithBranch(searchVrmlCut, NULL, false);
         if (vrmlCut)
             RET_ONERROR( vrmlCut->writeX3domScript(f, 4) )
         for (int i = 0; i < m_htmlFirstPart.size(); i++)
@@ -1595,16 +1641,23 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
             )
     }
 
+    vrmlScene = NULL;
+    getRoot()->doWithBranch(searchVrmlScene, NULL, false);
+    if (vrmlScene)
+        vrmlScene->writeProto(f);
+
     getNodes()->clearFlag(NODE_FLAG_TOUCHED);
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
-    for (long i = 0; i < childList->size(); i++) {
-        if (::isX3dXml(m_writeFlags)) {
-            int rootIndent = indent + TheApp->GetIndent();
-            RET_RESET_FLAGS_ONERROR( childList->get(i)->writeXml(f, rootIndent))
-        } else
-            RET_RESET_FLAGS_ONERROR( childList->get(i)->write(f, 0) )
-    }
+    if (childList)
+        for (long i = 0; i < childList->size(); i++) {
+            if (::isX3dXml(m_writeFlags)) {
+                int rootIndent = indent + TheApp->GetIndent();
+                RET_RESET_FLAGS_ONERROR( childList->get(i)->
+                                             writeXml(f, rootIndent))
+            } else
+                 RET_RESET_FLAGS_ONERROR( childList->get(i)->write(f, 0) )
+        }
 
     if ((!isTempSave()) && (!isPureVRML())) {
         m_unmodified = m_undoStack.empty() ? (Command *) NULL : m_undoStack.peek();
@@ -4909,7 +4962,6 @@ Scene::createNode(const char *nodeType, int flags)
     return node;
 }
 
-
 Node *
 Scene::createNode(int nodeType)
 {
@@ -4922,6 +4974,22 @@ Scene::createNode(int nodeType)
         }
     }
     return (Node *) NULL;
+}
+
+DynamicFieldsNode *
+Scene::createDynamicFieldsNode(const char *nodeType, int flags)
+{
+    Proto *def = NULL;
+    if (isX3d() && strcmp(nodeType, "NurbsPatchSurface") == 0)
+        def = m_protos["NurbsSurface"];
+    else
+        def = m_protos[nodeType];
+
+    DynamicFieldsNode *node = def ? (DynamicFieldsNode *)def->create(this) : 
+                              (DynamicFieldsNode *) NULL;
+    if (node != NULL)
+        node->setFlag(flags);
+    return node;
 }
 
 void
@@ -5036,6 +5104,13 @@ Scene::setSelection(Path *path)
             m_firstSelectionRangeHandle = -1;
             removeSelectedHandles();
         }
+        MFNode *children = ((NodeGroup *)getRoot())->children();
+        for (int i = 0; i < children->getSize(); i++)
+            if (children->getValue(i)->getType() == DUNE_VRML_CUT) {
+                NodeVrmlCut *cut = (NodeVrmlCut *)children->getValue(i);
+                cut->updateSelection();
+                break;
+            }
     }
 }
 
@@ -5457,19 +5532,21 @@ void
 Scene::deleteSelected()
 {
     Proto *proto = m_selection->getProto(this); 
+    Node *node = m_selection->getNode();
+    if (node->getIsUse())
+        return;
     if (proto != NULL) {
-        Node *node = m_selection->getNode();
         for (int i = 0; i < proto->getNumNodes(); i++)
             if (node->isEqual(proto->getNode(i))) {
                 proto->removeNode(i);
                 proto->setIsNodeIndex();
+                updateNodePROTOs(proto);
+                UpdateViews(NULL, UPDATE_ALL);
                 if (i > 0)
                     setSelection(newPath(proto->getNode(i - 1)));
                 else
                     setSelection(getRoot());
                 UpdateViews(NULL, UPDATE_SELECTION);
-                updateNodePROTOs(proto);
-                UpdateViews(NULL, UPDATE_ALL);
                 return;
             }
     }
@@ -5478,9 +5555,7 @@ Scene::deleteSelected()
     if ((parent != NULL) && (parentField != -1)) {
         CommandList *list = new CommandList();
         deleteSelectedAppend(list);
-        selectNext();
         execute(list);
-        UpdateViews(NULL, UPDATE_SELECTION);
     }    
 }
 
@@ -7228,6 +7303,13 @@ Scene::searchTimeSensors(void)
     }
     return targets;
 }
+
+void
+Scene::removeUse(Node *node)
+{
+    unuse(node->getName());        
+    UpdateViews(NULL, UPDATE_ALL, NULL);
+} 
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
 {
