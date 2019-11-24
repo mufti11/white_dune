@@ -87,7 +87,12 @@ public:
                            { 
                            if (m_value->size() == 0)
                                return NULL;
+#ifdef _WIN32
+                           if (index >= m_value->size())
+                               return m_value->get(m_value->size() - 1); 
+#else
                            assert(index < m_value->size()); 
+#endif
                            return m_value->get(index); 
                            }
 

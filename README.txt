@@ -5483,6 +5483,6 @@ Fixed missing update of sceneLengths Field of VrmlCut on Scenes->add
 
 Fixed showing the right scene when you click inside a VrmlScene
 
-Fixed error in SceneGraphView (ROUTEing window)
+Fixed errors in SceneGraphView (ROUTEing window)
 
 Contact: MUFTI <mufti11@web.de>
