@@ -5485,6 +5485,8 @@ Fixed showing the right scene when you click inside a VrmlScene
 
 Fixed errors in SceneGraphView (ROUTEing window)
 
-Fixed time settings of CurveAnimation and Scenes->add menu
+Fixed time settings of CurveAnimation and Scenes -> add
+
+Fixed crash in Edit -> Delete
 
 Contact: MUFTI <mufti11@web.de>

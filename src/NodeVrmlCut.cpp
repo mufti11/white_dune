@@ -353,9 +353,9 @@ NodeVrmlCut::accountWhich(void)
         if (currentScene > lastScene) {
             firstTime = t;
             currentScene = firstScene;
-            startNextScene(currentScene, 
-                           t + sceneLengths()->getValue(currentScene) +
-                           2 * sceneDelays()->getValue(currentScene));
+            startNextScene(currentScene, t + 
+                           sceneLengths()->getValue(currentScene) +
+                           sceneDelays()->getValue(currentScene));
         }
         if ((t) >= (firstTime + sceneLengths()->getValue(currentScene))) {
             firstTime = t;
@@ -468,7 +468,7 @@ NodeVrmlCut::writeJavaScript(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            }\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "         bind_out = true;\n") )
+    RET_ONERROR( mywritestr(f, "         bind_out=true;\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "         }\n") )
     TheApp->incSelectionLinenumber();
@@ -496,7 +496,8 @@ NodeVrmlCut::writeJavaScript(int f)
             RET_ONERROR( mywritef(f, "         if (nextScene==%d)\n", 
                                   numScenes) )
             TheApp->incSelectionLinenumber();
-            RET_ONERROR( mywritef(f, "            %s=value;\n", name) )
+            RET_ONERROR( mywritef(f, "            %s=value+", name) )
+            RET_ONERROR( mywritef(f, "sceneDelays[%d];\n", numScenes) )
             TheApp->incSelectionLinenumber();
             numScenes++;
         }
@@ -670,24 +671,18 @@ NodeVrmlCut::writeXmlProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutScript' fromField='whichScene_out' toNode='VrmlCutSwitch' toField='whichChoice'></ROUTE>\n") )
     TheApp->incSelectionLinenumber();
-//    RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutScript' fromField='bind_out' toNode='VrmlCutNavigationInfo' toField='set_bind'></ROUTE>\n") )
-//    TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  <ROUTE fromNode='VrmlCutTimeSensor' fromField='time' toNode='VrmlCutScript' toField='time_in'></ROUTE>\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "  </ProtoBody>\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "</ProtoDeclare>\n\n") )
     TheApp->incSelectionLinenumber();
-//    RET_ONERROR( mywritestr(f, "  <NavigationInfo DEF='VrmlCutNavigationInfo' transitionType='\"TELEPORT\"'/>\n") )
-//    TheApp->incSelectionLinenumber();
     return 0;
 }
 
 int
 NodeVrmlCut::writeProto(int f)
 {
-//    if (m_scene->isX3dom())
-//        return 0;
     if (m_scene->isX3dXml())
         return writeXmlProto(f);
 
@@ -868,12 +863,6 @@ NodeVrmlCut::writeProto(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "\n") )
     TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "NavigationInfo {\n") )
-    RET_ONERROR( mywritestr(f, " transitionType \"TELEPORT\"\n") )
-    TheApp->incSelectionLinenumber();
-    RET_ONERROR( mywritestr(f, "}\n") )    
-    RET_ONERROR( mywritestr(f, "\n") )
-    TheApp->incSelectionLinenumber();
     return(0);
 }
 
@@ -881,6 +870,7 @@ class X3domSendEventData {
 public:
     int f;
     int indent;
+    int currentScene;
     MyArray<Node *>curveAnimations;
 };
 
@@ -890,6 +880,14 @@ static bool writeX3domSendEvent(Node *node, void *data)
 {
     X3domSendEventData *sendData = (X3domSendEventData *)data;
     int f = sendData->f;
+    int currentScene = sendData->currentScene;
+    if (node->getType() == VRML_TIME_SENSOR) {
+        indentf(f, sendData->indent + TheApp->GetIndent());
+        mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
+        mywritef(f, ".setAttribute('startTime', (value+sceneDelays[%d]).",
+                 currentScene);
+        mywritestr(f, "toString());\n");
+    }
     if (node->getType() == VRML_VIEWPOINT) {
         indentf(f, sendData->indent + TheApp->GetIndent());
         mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
@@ -908,11 +906,6 @@ static bool writeX3domSendEvent(Node *node, void *data)
         indentf(f, sendData->indent + TheApp->GetIndent());
         mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
         mywritestr(f, ".setAttribute('bind', true);\n");
-    }
-    if (node->getType() == VRML_TIME_SENSOR) {
-        indentf(f, sendData->indent + TheApp->GetIndent());
-        mywritef(f, "document.getElementById(\"%s\")", node->getX3domId());
-        mywritestr(f, ".setAttribute('startTime', value.toString());\n");
     }
     if (node->getType() == DUNE_CURVE_ANIMATION) {
         sendData->curveAnimations.append(node);
@@ -1013,6 +1006,7 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
         mywritef(f, "if (currentScene == %d) {\n", i);
         data.f = f;
         data.indent = indent + TheApp->GetIndent();
+        data.currentScene = i;
         scenes()->getValue(i)->doWithBranch(writeX3domSendEvent, &data, false);
         indentf(f, indent + TheApp->GetIndent());
         mywritestr(f, "}\n");
@@ -1038,7 +1032,8 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
     RET_ONERROR( mywritestr(f, "{\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
-    RET_ONERROR( mywritestr(f, "firstTime = value;\n") )
+    RET_ONERROR( mywritestr(f, "firstTime = value + ") )
+    RET_ONERROR( mywritestr(f, "sceneDelays[currentScene]\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
     RET_ONERROR( mywritestr(f, "currentScene = firstScene;\n") )
@@ -1053,7 +1048,7 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
     RET_ONERROR( mywritestr(f, "\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
-    RET_ONERROR( mywritestr(f, "if (value >=firstTime + ") )
+    RET_ONERROR( mywritestr(f, "if (value >= firstTime + ") )
     RET_ONERROR( mywritestr(f, "sceneLengths[currentScene])\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )

@@ -16,7 +16,9 @@ export VERSION
 export CC=clang
 export CFLAGS="-Wno-unused-command-line-argument -L/usr/local/lib"
 export CXX=clang
-export CXXFLAGS=-Wno-tautological-undefined-compare
+export CXXFLAGS="-Wno-tautological-undefined-compare \
+                 -Wno-tautological-pointer-compare \
+                 -Wno-deprecated-declarations"
 export CPPFLAGS=-I/usr/local/include/freetype2
 export LIBS=-lstdc++
 
@@ -48,6 +50,8 @@ gzip -9f $PREFIX/man/man1/illegal2vrml.1
 
 chmod 644 $PREFIX/man/man1/dune.1.gz
 chmod 644 $PREFIX/man/man1/illegal2vrml.1.gz
+
+(cd $WTMP/wdune-$VERSION && rm -r vcglib)
 
 mkdir -p $PREFIX/share/doc/wdune/ &&
 cp -r $WTMP/wdune-$VERSION/docs/* $PREFIX/share/doc/wdune/

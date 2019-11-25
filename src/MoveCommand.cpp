@@ -44,6 +44,9 @@ MoveCommand::MoveCommand(Node *node, Node *src, int srcField,
     m_failed = false;
     m_isUSE = false;
 
+    m_oldValueSrc = m_newValueSrc = NULL;
+    m_oldValueDest = m_newValueDest = NULL;
+
     if (handleUSE && (m_dest == NULL) && m_src && (m_node->getRefs() > 1)) {
         if (!m_isUSE) {     
             m_isUSE = true;
@@ -52,7 +55,7 @@ MoveCommand::MoveCommand(Node *node, Node *src, int srcField,
             return;
         }        
     }
-
+ 
     if (m_src) {        
         m_oldValueSrc = m_src->getField(m_srcField);
         m_oldValueSrc->ref();

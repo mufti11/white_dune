@@ -839,6 +839,7 @@
 #define IDC_SCENES_LAST                     1341
 #define IDC_SCENES_NUMBER                   1342
 #define IDC_SCENES_LENGTH                   1343
+#define IDC_SCENES_DELAY                    1344
 
 #define IDC_STATIC_ALTGRTEXT                1995
 #define IDC_STATIC_SHIFTTEXT                1996

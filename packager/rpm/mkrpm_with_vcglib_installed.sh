@@ -154,7 +154,7 @@ Documentation for white_dune
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity
-CXXFLAGS="$CXXFLAGS -Wnoignored-attributes -Wnonnull-compare"
+CXXFLAGS="$CXXFLAGS -Wnoignored-attributes -Wnonnull-compare -Wmaybe-uninitialized"
 %make_build 
 pushd docs/export_example_c++/opengl_example
 make render_with_picture_path

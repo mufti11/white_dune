@@ -13841,6 +13841,7 @@ void MainWindow::OnEditPasteSymetric(int direction)
 void MainWindow::OnEditDelete()
 {
     Node *node = m_scene->getSelection()->getNode();
+    Node *nextSelection = node->getNextSibling();
     bool deleteTwice = false;
     // libGLU crashes if a single NurbsCurve2D is not deleted with its Contour2D
     if (node && node->getType() == VRML_NURBS_CURVE_2D)
@@ -13855,6 +13856,9 @@ void MainWindow::OnEditDelete()
     m_scene->deleteLastSelection();
     if (deleteTwice)
         m_scene->deleteLastSelection();
+    m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
+    m_scene->setSelection(nextSelection);
+    m_scene->UpdateViews(NULL, UPDATE_SELECTION, NULL);
 }
 
 void MainWindow::OnEditFindAgain()

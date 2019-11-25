@@ -42,6 +42,8 @@ protected:
 
     double              getSceneLength(void);
     void                setSceneLength(double length);
+    double              getSceneDelay(void);
+    void                setSceneDelay(double length);
     void                loadComboxData(void);
     
 protected:

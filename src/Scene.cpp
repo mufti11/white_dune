@@ -483,7 +483,7 @@ void Scene::unuse(const char *nodeName)
             }
             Node *selection = node->getScene()->getSelection()->getNode();
             MoveCommand command(node, parent, parentField, NULL, -1, index,
-                                false);
+                                true);
             command.execute();
             selection->getScene()->UpdateViews(NULL, UPDATE_ALL, NULL);
             selection->getScene()->setSelection(selection);

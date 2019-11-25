@@ -107,7 +107,7 @@ SceneDialog::LoadData()
     swComboBoxAppendItem(comboNumbers, " ");
 
     char buf[256];
-    for (int i = 1; i <= m_vrmlCut->scenes()->getSize(); i++) {
+    for (int i = 0; i < m_vrmlCut->scenes()->getSize(); i++) {
          snprintf(buf, 256, "%d", i);
          swComboBoxAppendItem(comboNumbers, buf);
     }
@@ -119,6 +119,9 @@ SceneDialog::LoadData()
 
     snprintf(buf, 256, "%lf", getSceneLength());
     swSetText(swGetDialogItem(m_dlg, IDC_SCENES_LENGTH), buf);
+
+    snprintf(buf, 256, "%lf", getSceneDelay());
+    swSetText(swGetDialogItem(m_dlg, IDC_SCENES_DELAY), buf);
 
     snprintf(buf, 256, "%lf", TheApp->getDefaultSceneLength());
     swSetText(swGetDialogItem(m_dlg, IDC_DEFAULT_SCENE_LENGTH), buf);
@@ -139,10 +142,12 @@ SceneDialog::SaveData()
         m_sceneNumber = 0;
     if (swGetCheck(swGetDialogItem(m_dlg, IDC_SCENES_LAST)))
         m_sceneNumber = m_vrmlCut->scenes()->getSize();
-    swGetText(swGetDialogItem(m_dlg, IDC_DEFAULT_SCENE_LENGTH), buf, 255);
-    TheApp->setDefaultSceneLength(atof(buf));
     swGetText(swGetDialogItem(m_dlg, IDC_SCENES_LENGTH), buf, 255);
     setSceneLength(atof(buf)); 
+    swGetText(swGetDialogItem(m_dlg, IDC_SCENES_DELAY), buf, 255);
+    setSceneDelay(atof(buf)); 
+    swGetText(swGetDialogItem(m_dlg, IDC_DEFAULT_SCENE_LENGTH), buf, 255);
+    TheApp->setDefaultSceneLength(atof(buf));
 }
 
 double              
@@ -155,6 +160,18 @@ void
 SceneDialog::setSceneLength(double length) 
 {
      m_vrmlCut->sceneLengths()->setValue(m_oldSceneNumber, length);
+}
+
+double              
+SceneDialog::getSceneDelay(void) 
+{
+     return m_vrmlCut->sceneDelays()->getValue(m_oldSceneNumber);
+}
+
+void              
+SceneDialog::setSceneDelay(double delay) 
+{
+     m_vrmlCut->sceneDelays()->setValue(m_oldSceneNumber, delay);
 }
 
 
