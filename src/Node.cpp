@@ -3663,11 +3663,7 @@ Node::isInScene(Scene* scene) const
     }
     if (!hasParent())
         return false;
-    if (!getFlag(NODE_FLAG_TOUCHED)) {
-        ((Node *)this)->setFlag(NODE_FLAG_TOUCHED);
-        return true;
-    }
-    return false;
+    return true;
 }
 
 bool 

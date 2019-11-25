@@ -140,11 +140,13 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
         ((MFieldValue *)value)->getDiff(&newValues, &deleteValues, scenes());
         ProtoVrmlCut *protoVrmlCut = (ProtoVrmlCut *)m_proto;
         int firstDynamicEventOut = protoVrmlCut->getFirstDynamicEventOut();
-        for (long i = 0; i < ((MFNode *)value)->getSize(); i++) {
-            Node *node = ((MFNode *)value)->getValue(newValues[i]);
+        MFNode *mfNode = (MFNode *)value;
+        int len = newValues.size() - 1;
+        Node *node = mfNode->getValue(newValues.get(len));
+        for (long i = 0; i < newValues.size(); i++) {
             if (node->getType() == DUNE_VRML_SCENE) {
                 MyString name = "";
-                int event =  newValues[i] + firstDynamicEventOut;
+                int event =  newValues[len] + firstDynamicEventOut;
                 if ((event < getProto()->getNumEventOuts()) &&
                     m_scene->isParsing())
                     name += getProto()->getEventOut(event)->getName(false);
@@ -168,14 +170,12 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
                 if (m_scene->isParsing() && 
                     (!m_scene->getImportIntoVrmlScene()))
                     continue;
-                if (sceneLengths()->getValue(i) == 0) {
-                    double sceneLength = 0;
-                    node->doWithBranch(searchGreatestCycleInterval, 
-                                       (void *)(&sceneLength));
-                    if (sceneLength == 0)
-                        sceneLength = TheApp->getDefaultSceneLength();
-                    sceneLengths()->setValue(i, sceneLength);
-                }
+                double sceneLength = 0;
+                node->doWithBranch(searchGreatestCycleInterval,
+                                   (void *)(&sceneLength));
+                if (sceneLength == 0)
+                    sceneLength = TheApp->getDefaultSceneLength();
+                sceneLengths()->setValue(mfNode->getSize() - 1, sceneLength);
             }            
             m_eventOutsInitialised = false;
             Proto *vrmlCutProto = getProto();;
@@ -184,8 +184,7 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
                  EventOut *eventOut = vrmlCutProto->getEventOut(i);
                  if (stringncmp(eventOut->getName(false), "startTime") == 0)
                      vrmlCutProto->deleteEventOut(i);
-        }
-
+            }
         }
 
         for (long i = 0; i < deleteValues.size(); i++) {
