@@ -53,6 +53,8 @@ CurveAnimationDialog::SaveData()
 {
     char buf[128];
 
+    swGetText(swGetDialogItem(m_dlg, IDC_TIMESENSOR_SECONDS), buf, 128);
+    m_newTimeSensorSeconds = atoi(buf);
     swGetText(swGetDialogItem(m_dlg, IDC_NPOINTS), buf, 128);
     m_nPoints = atoi(buf);
     swGetText(swGetDialogItem(m_dlg, IDC_DEGREE), buf, 128);

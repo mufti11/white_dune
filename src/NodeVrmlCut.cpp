@@ -130,19 +130,20 @@ static bool searchGreatestCycleInterval(Node *node, void *data)
     return true;     
 }
 
-
 void
 NodeVrmlCut::setField(int index, FieldValue *value, int cf)
 {
+    MFNode *mfNode = (MFNode *)value;
+    int len = -1; 
+    Node *node = NULL;
+    IntArray newValues;
+    IntArray deleteValues;
     if (index == scenes_Field()) {
-        IntArray newValues;
-        IntArray deleteValues;
         ((MFieldValue *)value)->getDiff(&newValues, &deleteValues, scenes());
         ProtoVrmlCut *protoVrmlCut = (ProtoVrmlCut *)m_proto;
         int firstDynamicEventOut = protoVrmlCut->getFirstDynamicEventOut();
-        MFNode *mfNode = (MFNode *)value;
-        int len = newValues.size() - 1;
-        Node *node = mfNode->getValue(newValues.get(len));
+        len = newValues.size() - 1;
+        node = mfNode->getValue(newValues.get(len));
         for (long i = 0; i < newValues.size(); i++) {
             if (node->getType() == DUNE_VRML_SCENE) {
                 MyString name = "";
@@ -163,6 +164,14 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
                         break;
                     }
                 }    
+                if (node && node->getType() == DUNE_VRML_SCENE) {
+                    double sceneLength = 0;
+                    node->doWithBranch(searchGreatestCycleInterval,
+                                       (void *)(&sceneLength));
+                    if (sceneLength == 0)
+                        sceneLength = TheApp->getDefaultSceneLength();
+                   sceneLengths()->setValue(mfNode->getSize() - 1, sceneLength);
+                }
                 NodeVrmlScene *vrmlScene = (NodeVrmlScene *)node;
                 m_scene->execute(new RouteCommand(
                      this, getProto()->lookupEventOut(name),
@@ -170,12 +179,6 @@ NodeVrmlCut::setField(int index, FieldValue *value, int cf)
                 if (m_scene->isParsing() && 
                     (!m_scene->getImportIntoVrmlScene()))
                     continue;
-                double sceneLength = 0;
-                node->doWithBranch(searchGreatestCycleInterval,
-                                   (void *)(&sceneLength));
-                if (sceneLength == 0)
-                    sceneLength = TheApp->getDefaultSceneLength();
-                sceneLengths()->setValue(mfNode->getSize() - 1, sceneLength);
             }            
             m_eventOutsInitialised = false;
             Proto *vrmlCutProto = getProto();;

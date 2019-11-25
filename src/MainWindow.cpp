@@ -8910,16 +8910,6 @@ MainWindow::moveBranchToVrmlScene(bool begin)
     NodeVrmlCut *cut = (NodeVrmlCut *)vrmlCut;
     MFNode *cutScenes = cut->scenes();
     NodeVrmlScene *vscene = (NodeVrmlScene *)m_scene->createNode("VrmlScene");
-    MoveCommand *command = NULL;
-    if (createVrmlCut || begin ) 
-        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field(),
-                                  0);
-    else 
-        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field()),
-                                  cutScenes->getSize();
-    if (command)
-        command->execute();
-    m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
     for (long i = 0; i < nodeList.size(); i++) {
         if (node->hasParent()) {
             MoveCommand *command = new MoveCommand(
@@ -8930,6 +8920,16 @@ MainWindow::moveBranchToVrmlScene(bool begin)
             m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
         }        
     }
+    MoveCommand *command = NULL;
+    if (createVrmlCut || begin ) 
+        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field(),
+                                  0);
+    else 
+        command = new MoveCommand(vscene, NULL, -1, cut, cut->scenes_Field()),
+                                  cutScenes->getSize();
+    if (command)
+        command->execute();
+    m_scene->UpdateViews(NULL, UPDATE_ALL, NULL);
     m_scene->setSelection(beforeSelection);
     m_scene->UpdateViews(NULL, UPDATE_SELECTION, NULL);
 }
