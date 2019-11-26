@@ -1,3 +1,10 @@
+whitedune (1.646-1) experimental; urgency=low
+
+  * Version 1.646 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  Mon, 25 Nov 2019 22:06:59 +0100
+
 whitedune (1.642-1) experimental; urgency=low
 
   * Version 1.642 debian package

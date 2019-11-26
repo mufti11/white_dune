@@ -81,6 +81,7 @@ BuildRequires: bison
 BuildRequires: imlib2-devel
 BuildRequires: libusb-devel
 BuildRequires: CGAL-devel
+BuildRequires: opensubdiv-devel
 BuildRequires: gmp-devel
 BuildRequires: libcurl-devel
 BuildRequires: eigen3-devel

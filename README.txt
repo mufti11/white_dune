@@ -5489,4 +5489,10 @@ Fixed time settings of CurveAnimation and Scenes -> add
 
 Fixed crash in Edit -> Delete
 
+Added \n to VrmlCut X3D/XML ROUTE commands
+
+Changed default X3DOM width to 1024 pixels
+
+Fixed bug that stops X3DOM rendering on multiple scenes
+
 Contact: MUFTI <mufti11@web.de>

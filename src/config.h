@@ -33,7 +33,7 @@
 #define HAVE_LIBVCG 1
 
 /* Define if you have the CGAL library */
-#define HAVE_LIBCGAL 1
+/* #undef HAVE_LIBCGAL */
 
 /* Define if you have the curl library */
 #define HAVE_LIBCURL 1
@@ -68,7 +68,7 @@
 #define HAVE_LIBZ 1
 
 /* Define if you have the ffmpeg libraries (see configure/configure.in */
-#define HAVE_FFMPEG 1
+/* #undef HAVE_FFMPEG */
 
 /* Define if you have OpenMP */
 #define HAVE_OMP 1
@@ -174,7 +174,7 @@
 #define HAVE_LIBFREETYPE 1
 
 /* define if you have the OpenSubdiv headers/library */
-#define HAVE_LIBOSDCPU 1
+/* #undef HAVE_LIBOSDCPU */
 
 /* Define if you have stdarg.h */ 
 #define HAVE_STDARG_H 1
@@ -341,7 +341,7 @@
 #define HAVE_X11_EDITOR "/usr/bin/gedit"
 
 /* object editor for bitmap (.png/.jpg/.gif) files */
-#define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
+#define HAVE_IMAGE_EDITOR ""
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
 /* #undef HAVE_ANT */
@@ -350,10 +350,10 @@
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
+#define HAVE_IMAGE_EDITOR4KIDS ""
 
 /* object editor for sound (.wav/.midi) files */
-#define HAVE_SOUND_EDITOR "/usr/bin/audacity"
+#define HAVE_SOUND_EDITOR ""
 
 /* object editor for movie (.mpeg) files */
 #define HAVE_MOVIE_EDITOR ""
@@ -365,13 +365,13 @@
   default non interactive of graphical checkin command of a revision control 
   system such as rcs, csv, svn etc.
 */
-#define HAVE_CHECK_IN_COMMAND "ci -l -q -f \"%s\" < /dev/null"
+/* #undef HAVE_CHECK_IN_COMMAND */
 
 /* converter to convert from bitmap (.png/.jpg/.gif) files to bmp files for ac3d export*/
 #define HAVE_IMAGE_CONVERTER "/usr/bin/convert"
 
 /* Define if you want to set the URL of the helppages */
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.646/docs/index.html"
+#define HAVE_HELP_URL "/home/home/mufti/wdune-1.649/docs/index.html"
 
 /* Define if you want to set the URL of the vrml node list */
 /* #undef HAVE_VRML_NODES_URL */
@@ -565,7 +565,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.646"
+#define HAVE_DUNE_VERSION "white_dune 1.649"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

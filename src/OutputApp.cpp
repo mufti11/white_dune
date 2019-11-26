@@ -61,7 +61,7 @@
 # define DEFAULT_X3DOM_PATH "http://x3dom.org/download/dev/"
 #endif
 
-#define DEFAULT_X3DOM_PARAMETER "xmlns=\"http://www.web3d.org/specifications/x3d-namespace\"  showStat=\"false\" showLog=\"false\" x=\"0px\" y=\"0px\" width=\"512px\" height=\"512px\""
+#define DEFAULT_X3DOM_PARAMETER "xmlns=\"http://www.web3d.org/specifications/x3d-namespace\"  showStat=\"false\" showLog=\"false\" x=\"0px\" y=\"0px\" width=\"1024px\" height=\"512px\""
 
 #define WONDERLAND_PREFIX "X3d"
 

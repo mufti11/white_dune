@@ -541,6 +541,11 @@ NodeVrmlCut::writeJavaScript(int f)
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            currentScene++;\n") )
     TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "            if (currentScene>=") )
+    RET_ONERROR( mywritestr(f, "lastScene)\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( mywritestr(f, "               currentScene=0;\n") )
+    TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            changeScene(value);\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( mywritestr(f, "            }\n") )
@@ -685,6 +690,8 @@ NodeVrmlCut::writeProto(int f)
 {
     if (m_scene->isX3dXml())
         return writeXmlProto(f);
+    if (m_scene->isX3dom())
+        return 0;
 
     const char* nodeName = m_proto->getName(m_scene->isX3d());
     RET_ONERROR( mywritef(f, "PROTO %s [\n", nodeName) )    
@@ -1061,6 +1068,13 @@ NodeVrmlCut::writeX3domScript(int f, int indent)
     RET_ONERROR( mywritestr(f, "currentScene++;\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "if (currentScene > ") )
+    RET_ONERROR( mywritestr(f, "lastScene)\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 3 * TheApp->GetIndent()) )
+    RET_ONERROR( mywritestr(f, "currentScene = 0;\n") )
+    TheApp->incSelectionLinenumber();
+    RET_ONERROR( indentf(f, indent + 2 * TheApp->GetIndent()) )
     RET_ONERROR( mywritestr(f, "changeScene(value);\n") )
     TheApp->incSelectionLinenumber();
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
@@ -1172,22 +1186,22 @@ NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
                     RouteSocket s = j->item();
                     RET_ONERROR( indentf(f, indent) )
                     RET_ONERROR( mywritestr(f, "<ROUTE ") )
-                    RET_ONERROR( mywritef(f, " fromNode='%s' ", 
+                    RET_ONERROR( mywritef(f, "fromNode='%s' ", 
                                           (const char *)
                                           posInter->getName()) )
                     EventOut *outEvent = outProto->getEventOut(i);
-                    RET_ONERROR( mywritef(f, " fromField='%s' ", 
+                    RET_ONERROR( mywritef(f, "fromField='%s' ", 
                                           (const char *)
                                           outEvent->getName(true)) )
-                    RET_ONERROR( mywritef(f, " toNode='%s' ", 
+                    RET_ONERROR( mywritef(f, "toNode='%s' ", 
                                           (const char *)
                                           s.getNode()->getName()) )
                     Field *outField = s.getNode()->getProto()->getField(
                                            s.getField());
-                    RET_ONERROR( mywritef(f, " toField='%s' ", 
+                    RET_ONERROR( mywritef(f, "toField='%s' ", 
                                           (const char *)
                                           outField->getName(true)) )
-                    RET_ONERROR( mywritestr(f, "></ROUTE>") )
+                    RET_ONERROR( mywritestr(f, "></ROUTE>\n") )
                 }
             }
             NodeOrientationInterpolator *orientInter = 
@@ -1201,22 +1215,22 @@ NodeVrmlCut::writeXml(int f, int indent, int containerField, bool avoidUse)
                     RouteSocket s = j->item();
                     RET_ONERROR( indentf(f, indent) )
                     RET_ONERROR( mywritestr(f, "<ROUTE ") )
-                    RET_ONERROR( mywritef(f, " fromNode='%s' ", 
+                    RET_ONERROR( mywritef(f, "fromNode='%s' ", 
                                           (const char *)
                                           orientInter->getName()) )
                     EventOut *outEvent = outProto->getEventOut(i);
-                    RET_ONERROR( mywritef(f, " fromField='%s' ", 
+                    RET_ONERROR( mywritef(f, "fromField='%s' ", 
                                           (const char *)
                                           outEvent->getName(true)) )
-                    RET_ONERROR( mywritef(f, " toNode='%s' ", 
+                    RET_ONERROR( mywritef(f, "toNode='%s' ", 
                                           (const char *)
                                           s.getNode()->getName()) )
                     Field *outField = s.getNode()->getProto()->getField(
                                            s.getField());
-                    RET_ONERROR( mywritef(f, " toField='%s' ", 
+                    RET_ONERROR( mywritef(f, "toField='%s' ", 
                                           (const char *)
                                           outField->getName(true)) )
-                    RET_ONERROR( mywritestr(f, "></ROUTE>") )
+                    RET_ONERROR( mywritestr(f, "></ROUTE>\n") )
                 }
             }
         }
