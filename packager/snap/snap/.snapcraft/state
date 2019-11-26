@@ -1,4 +1,24 @@
 !GlobalState
 assets:
-  build-packages: []
+  build-packages: ['libavresample-dev=7:3.4.6-0ubuntu0.18.04.1', libkf5kiowidgets5=5.44.0-0ubuntu1,
+    audacity=2.2.1-1, libkf5kdelibs4support5=5.44.0-0ubuntu3, libkf5kdelibs4support-data=5.44.0-0ubuntu3,
+    libkf5attica5=5.44.0-0ubuntu1, libkf5xmlgui-bin=5.44.0-0ubuntu2, sonnet-plugins=5.44.0-0ubuntu1,
+    kinit=5.44.0-0ubuntu1, libqt5test5=5.9.5+dfsg-0ubuntu2.3, libkf5sane5=17.12.3-0ubuntu1,
+    libflac++6v5=1.3.2-1, libjpeg-dev=8c-2ubuntu8, libkf5kiofilewidgets5=5.44.0-0ubuntu1,
+    libkf5globalaccel5=5.44.0-0ubuntu1, libsuil-0-0=0.10.0~dfsg0-1, libsratom-0-0=0.6.0~dfsg0-1,
+    libkf5bookmarks-data=5.44.0-0ubuntu1, liblilv-0-0=0.24.2~dfsg0-1, libkf5jobwidgets5=5.44.0-0ubuntu1,
+    libkf5globalaccel-data=5.44.0-0ubuntu1, libkf5textwidgets-data=5.44.0-0ubuntu1,
+    libvoikko1=4.1.1-1.1, libkf5bookmarks5=5.44.0-0ubuntu1, kio=5.44.0-0ubuntu1, libwxgtk3.0-0v5=3.0.4+dfsg-3,
+    libvamp-hostsdk3v5=2.7.1~repack0-1, libqt5printsupport5=5.9.5+dfsg-0ubuntu2.3,
+    libkf5completion5=5.44.0-0ubuntu1, libkf5completion-data=5.44.0-0ubuntu1, 'xbase-clients=1:7.7+19ubuntu7.1',
+    libkf5xmlgui5=5.44.0-0ubuntu2, 'kolourpaint=4:17.12.3-0ubuntu1', libkf5textwidgets5=5.44.0-0ubuntu1,
+    libsoundtouch1=1.9.2-3, libkf5solid5-data=5.44.0-0ubuntu1, libkf5sonnetcore5=5.44.0-0ubuntu1,
+    libhfstospell9=0.4.5~r343-2.1build2, libkf5sane-data=17.12.3-0ubuntu1, libkf5kiontlm5=5.44.0-0ubuntu1,
+    audacity-data=2.2.1-1, libwxbase3.0-0v5=3.0.4+dfsg-3, libsord-0-0=0.16.0~dfsg0-1,
+    libkf5jobwidgets-data=5.44.0-0ubuntu1, libkf5globalaccel-bin=5.44.0-0ubuntu1,
+    libkf5globalaccelprivate5=5.44.0-0ubuntu1, libkf5sonnetui5=5.44.0-0ubuntu1, libkf5kdelibs4support5-bin=5.44.0-0ubuntu3,
+    libjpeg8-dev=8c-2ubuntu8, libkf5parts-data=5.44.0-0ubuntu1, libkf5xmlgui-data=5.44.0-0ubuntu2,
+    libkf5solid5=5.44.0-0ubuntu1, libkf5doctools5=5.44.0-0ubuntu1, libkf5parts5=5.44.0-0ubuntu1,
+    libkf5parts-plugins=5.44.0-0ubuntu1, libportsmf0v5=0.1~svn20101010-5ubuntu1, libserd-0-0=0.28.0~dfsg0-1,
+    libkf5kiocore5=5.44.0-0ubuntu1, libkf5sonnet5-data=5.44.0-0ubuntu1]
   build-snaps: []

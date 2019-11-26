@@ -336,6 +336,9 @@
 /* vrml browser to view vrml files with a remote command*/
 #undef HAVE_VRML_REMOTE_BROWSER
 
+/* xuse X3D browser, not remote browser*/
+#undef HAVE_X3D_BROWSER
+
 /* text editor for txt files */
 #undef HAVE_X11_EDITOR
 

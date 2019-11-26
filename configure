@@ -754,6 +754,7 @@ with_coverwave
 with_covertuimap
 with_wwwbrowser
 with_vrmlbrowser
+with_x3dbrowser
 with_x11_editor
 with_imageeditor
 with_imageeditor4kids
@@ -1466,6 +1467,7 @@ Optional Packages:
 --with-covertuimap        allow creation of incomplete cover node TUIMap
 --with-wwwbrowser=wwwbrowser  webbrowser eg. netscape firefox mozilla...
 --with-vrmlbrowser=vrmlbrowser  VRML browser eg. firefox view3dscene freewrl ...
+--with-x3d-browser        use X3D browser not remote browser
 --with-x11-editor=editor  X11 text editor eg. gedit gvim ...
 --with-imageeditor=imageeditor  object editor for bitmap (.jpg/.png/.gif) files eg. gimp krita xpaint imgworks...
 --with-imageeditor4kids=imageeditor  simple object editor for bitmap (.jpg/.png/.gif) files usefull for kids eg. kolourpaint gpaint...
@@ -4004,6 +4006,13 @@ if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
    VRMLBROWSER="LD_LIBRARY_PATH=/usr/local/lib $VRMLBROWSER"
    export VRMLBROWSER
 fi
+
+
+# Check whether --with-x3dbrowser was given.
+if test "${with_x3dbrowser+set}" = set; then :
+  withval=$with_x3dbrowser; X3DBROWSER="1";export X3DBROWSER
+fi
+
 
 
 # Check whether --with-x11-editor was given.

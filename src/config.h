@@ -33,7 +33,7 @@
 #define HAVE_LIBVCG 1
 
 /* Define if you have the CGAL library */
-/* #undef HAVE_LIBCGAL */
+#define HAVE_LIBCGAL 1
 
 /* Define if you have the curl library */
 #define HAVE_LIBCURL 1
@@ -68,7 +68,7 @@
 #define HAVE_LIBZ 1
 
 /* Define if you have the ffmpeg libraries (see configure/configure.in */
-/* #undef HAVE_FFMPEG */
+#define HAVE_FFMPEG 1
 
 /* Define if you have OpenMP */
 #define HAVE_OMP 1
@@ -174,7 +174,7 @@
 #define HAVE_LIBFREETYPE 1
 
 /* define if you have the OpenSubdiv headers/library */
-/* #undef HAVE_LIBOSDCPU */
+#define HAVE_LIBOSDCPU 1
 
 /* Define if you have stdarg.h */ 
 #define HAVE_STDARG_H 1
@@ -337,6 +337,9 @@
 /* vrml browser to view vrml files with a remote command*/
 #define HAVE_VRML_REMOTE_BROWSER "/usr/bin/xdg-open %s"
 
+/* xuse X3D browser, not remote browser*/
+/* #undef HAVE_X3D_BROWSER */
+
 /* text editor for txt files */
 #define HAVE_X11_EDITOR "/usr/bin/gedit"
 
@@ -365,13 +368,13 @@
   default non interactive of graphical checkin command of a revision control 
   system such as rcs, csv, svn etc.
 */
-/* #undef HAVE_CHECK_IN_COMMAND */
+#define HAVE_CHECK_IN_COMMAND "ci -l -q -f \"%s\" < /dev/null"
 
 /* converter to convert from bitmap (.png/.jpg/.gif) files to bmp files for ac3d export*/
 #define HAVE_IMAGE_CONVERTER "/usr/bin/convert"
 
 /* Define if you want to set the URL of the helppages */
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.649/docs/index.html"
+#define HAVE_HELP_URL "/home/home/mufti/wdune-1.656/docs/index.html"
 
 /* Define if you want to set the URL of the vrml node list */
 /* #undef HAVE_VRML_NODES_URL */
@@ -565,7 +568,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.649"
+#define HAVE_DUNE_VERSION "white_dune 1.656"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

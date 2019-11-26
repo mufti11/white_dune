@@ -930,17 +930,6 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
         m_delayedWriteNodes.resize(0);
     alreadyIn = false;
 
-    // sort out multiple ROUTEs
-    if (m_routeList.size() != 0)
-       for (List<MyString>::Iterator* routepointer = m_routeList.first();
-            routepointer != NULL; routepointer = routepointer->next() ) 
-            for (List<MyString>::Iterator* routepointer2 = m_routeList.first();
-                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer != routepointer)
-              if (strcmp((const char*) routepointer->item(), 
-                         (const char*) routepointer2->item()) == 0)
-                  m_routeList.remove(routepointer2);
-
     if (m_routeList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_routeList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
@@ -954,17 +943,6 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
        TheApp->incSelectionLinenumber();
        m_routeList.removeAll();
     }
-
-    // sort out multiple ROUTEs
-    if (end && m_endRouteList.size() != 0)
-       for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
-            routepointer != NULL; routepointer = routepointer->next() ) 
-            for (List<MyString>::Iterator* routepointer2 = m_endRouteList.first();
-                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer != routepointer)
-              if (strcmp((const char*) routepointer->item(), 
-                         (const char*) routepointer2->item()) == 0)
-                  m_endRouteList.remove(routepointer2);
 
     if (end && m_endRouteList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
