@@ -19,15 +19,16 @@
  * Cambridge, MA 02139, USA.
  */
 
+#ifndef FLT_MAX
+# include <float.h>
+#endif
+
 #ifdef TEST
 #include "Scene.h"
 #include "NodeBox.h"
 #endif
 
 #include "MyMesh.h"
-#ifndef FLT_MAX
-# include <float.h>
-#endif
 
 void MyMesh::drawVertex(float *v)
 {
@@ -98,6 +99,7 @@ combineVertices(GLdouble coords[3], GLdouble *vertex_data[4],
 
     *dataOut = &vertexInfo->vertex[0];
 }
+
 
 #ifdef _WIN32
 void tesselationError(GLenum error) 

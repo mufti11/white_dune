@@ -344,7 +344,7 @@
 #define HAVE_X11_EDITOR "/usr/bin/gedit"
 
 /* object editor for bitmap (.png/.jpg/.gif) files */
-#define HAVE_IMAGE_EDITOR ""
+#define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
 /* #undef HAVE_ANT */
@@ -353,10 +353,10 @@
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS ""
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
 
 /* object editor for sound (.wav/.midi) files */
-#define HAVE_SOUND_EDITOR ""
+#define HAVE_SOUND_EDITOR "/usr/bin/audacity"
 
 /* object editor for movie (.mpeg) files */
 #define HAVE_MOVIE_EDITOR ""
@@ -374,7 +374,7 @@
 #define HAVE_IMAGE_CONVERTER "/usr/bin/convert"
 
 /* Define if you want to set the URL of the helppages */
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.656/docs/index.html"
+#define HAVE_HELP_URL "/home/home/mufti/wdune-1.658/docs/index.html"
 
 /* Define if you want to set the URL of the vrml node list */
 /* #undef HAVE_VRML_NODES_URL */
@@ -568,7 +568,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.656"
+#define HAVE_DUNE_VERSION "white_dune 1.658"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

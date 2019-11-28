@@ -14,7 +14,7 @@ DOCDIR?=debian/${package_docs}/usr
 
 build:
 	$(checkdir)
-	./configure --with-debian --with-optimization --prefix=/usr --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-x3d-browser --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
+	./configure --with-debian --with-optimization --prefix=/usr --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-x3dbrowser --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
 	$(MAKE) -j4
 	touch build
 

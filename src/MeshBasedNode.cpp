@@ -217,7 +217,10 @@ MeshBasedNode::toIndexedFaceSet(int meshFlags, bool cleanVertices,
 
     m_meshDirty = true;
     
-    return m_mesh->toIndexedFaceSet(meshFlags, m_scene);
+    NodeIndexedFaceSet *ret = (NodeIndexedFaceSet *)
+                              m_mesh->toIndexedFaceSet(meshFlags, m_scene);
+    ret->writeOffInit();
+    return ret;
 }
 
 #define createNormalFromMesh(node) \
@@ -2114,4 +2117,7 @@ MeshBasedNode::reInit(void)
     m_meshDirty = true; 
     Node::reInit();
 }
+
+
+
 

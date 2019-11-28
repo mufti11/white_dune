@@ -5495,4 +5495,6 @@ Changed default X3DOM width to 1024 pixels
 
 Fixed bug that stops X3DOM rendering on multiple scenes
 
+Use view3dscene as default preview browser under debian/raspian buster
+
 Contact: MUFTI <mufti11@web.de>

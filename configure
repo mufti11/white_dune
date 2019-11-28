@@ -4010,7 +4010,8 @@ fi
 
 # Check whether --with-x3dbrowser was given.
 if test "${with_x3dbrowser+set}" = set; then :
-  withval=$with_x3dbrowser; X3DBROWSER="1";export X3DBROWSER
+  withval=$with_x3dbrowser; $as_echo "#define HAVE_X3D_BROWSER 1" >>confdefs.h
+
 fi
 
 

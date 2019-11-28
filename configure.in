@@ -202,7 +202,7 @@ if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
 fi
 
 AC_ARG_WITH(x3dbrowser,--with-x3d-browser        use X3D browser not remote browser,
-            X3DBROWSER="1";export X3DBROWSER) 
+            AC_DEFINE(HAVE_X3D_BROWSER))
 
 AC_ARG_WITH(x11-editor,--with-x11-editor=editor  X11 text editor eg. gedit gvim ...,
             X11_EDITOR="$withval";export X11_EDITOR)

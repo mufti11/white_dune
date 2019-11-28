@@ -166,9 +166,9 @@ public:
     bool                OnFileExportRib();
     bool                OnFileExportCattGeo();
     bool                OnFileExportLdrawDat();
+    void                OnFileExportOff();
 #ifdef HAVE_LIBCGAL
-    bool                OnFileExportOff();
-    bool                OnFileImportOff();
+    void                OnFileImportOff();
 #endif
     int                 OnTimer();
     bool                SaveModified();

@@ -619,13 +619,11 @@ BEGIN
            MENUITEM "Exporter comme texte C++ (mesh)...", ID_DUNE_FILE_EXPORT_CC_SOURCE
            MENUITEM "Exporter comme texte C (mesh)...", ID_DUNE_FILE_EXPORT_C_SOURCE
 //           MENUITEM "Exporter comme X3D fuer SUN wonderland 0.4...",  ID_DUNE_FILE_EXPORT_X3D_4_WONDERLAND
+           MENUITEM "Export comme OFF",                 ID_DUNE_FILE_EXPORT_OFF
            MENUITEM "Exporter comme AC3D b...",         ID_DUNE_FILE_EXPORT_AC3D
            MENUITEM "Exporter comme RIB...",            ID_DUNE_FILE_EXPORT_RIB
            MENUITEM "Exporter comme Catt 8 GEO...",     ID_DUNE_FILE_EXPORT_GEO_CATT
            MENUITEM "Exporter comme Ldraw DAT...",      ID_DUNE_FILE_EXPORT_LDRAW_DAT
-#ifdef HAVE_LIBCGAL
-            MENUITEM "Export comme OFF (need IndexedFaceSet)", ID_DUNE_FILE_EXPORT_OFF
-#endif
         END
 #ifdef HAVE_LIBCGAL
         POPUP "&Import mesh"

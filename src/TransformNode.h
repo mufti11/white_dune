@@ -57,6 +57,7 @@ public:
     virtual void      setField(int index, FieldValue *value, int cf = -1);
     virtual void      drawHandles(void);
     virtual void      drawRotationHandles(float scale);
+    virtual void      update(void) { m_matrixDirty = true; }
     virtual void      transform();
     virtual void      transformForHandle(int handle);
 

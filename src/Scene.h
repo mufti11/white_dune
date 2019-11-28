@@ -285,6 +285,8 @@ public:
                            { m_currentLdrawColor = c; }
 
 
+    int                 writeOff(int filedes);
+
     void                deleteExtensionProtos(void);
     Proto              *getExtensionProto(Proto *proto);
 

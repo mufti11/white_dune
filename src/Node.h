@@ -626,6 +626,8 @@ public:
     virtual void      handleAc3dMaterial(ac3dMaterialCallback callback, 
                                          Scene* scene);
 
+    virtual int       writeOff(int filedes);
+
     virtual int       writeRib(int filedes, int indent);
 
     virtual bool      canWriteLdrawDat();

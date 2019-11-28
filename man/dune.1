@@ -272,6 +272,16 @@ A example:
  $ for i in RibExport*.rib ; do (aqsis $i &); done
 .br
 .TP
+.BI \-off
+Convert file to the OFF format (Object File Format), write it to standart 
+output and exit. This option uses OpenGL commands and can not be used in a 
+commandline only environment.
+.br
+The OFF file format do not support several features of VRML/X3D 
+(e.g. the OFF format do not support texture, animation or interaction).
+Therefore the OFF file format can not keep the complete information of a 
+VRML/X3D file in general.
+.TP
 .BI \-ac3d
 Convert file to the AC3D format (Version AC3Db), write it to standart output 
 and exit. This option uses OpenGL commands and can not be used in a 

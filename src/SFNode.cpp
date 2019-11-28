@@ -157,7 +157,6 @@ SFNode::equals(const FieldValue *value) const
 FieldValue *
 SFNode::addNode(Node *node, int index) const
 {
-    assert(m_value == NULL);
     return new SFNode(node);
 }
 

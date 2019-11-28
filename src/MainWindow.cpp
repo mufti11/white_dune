@@ -13384,39 +13384,29 @@ bool MainWindow::OnFileExportLdrawDat()
     return OnFileSaveAs(LDRAW_DAT | TEMP_EXPORT);
 }
 
-#ifdef HAVE_LIBCGAL
-bool MainWindow::OnFileExportOff()
+void MainWindow::OnFileExportOff()
 {
-    Node *node = m_scene->getSelection()->getNode();
-    if (node->getType() == VRML_COORDINATE) 
-        node = node->getParent();
-    if (node->isMeshBasedNode()) {
-        NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)node->copy();
-        char path[1024] = { 0 };
-        if (swSaveFileDialog(m_wnd, "Save As",
+    char path[1024] = { 0 };
+    if (swSaveFileDialog(m_wnd, "Save As",
 #ifdef _WIN32
-                             "off (.off)\0*.off\0*.OFF\0All Files (*.*)\0*.*\0\0",
+                         "off (.off)\0*.off\0*.OFF\0All Files (*.*)\0*.*\0\0",
 #else
-                             "*.off",
+                         "*.off",
 
 #endif
-                             path, 1024, ".off")) {
-            faceset->writeOff(path);
-            ((Node *)faceset)->unref();
-            return true;
-        } else
-            ((Node *)faceset)->unref();
-    } else {
-        char str[256], title[256], message[256];
-        swLoadString(IDS_DUNE, title, 255);
-        swLoadString(IDS_SELECT_A_INDEXEDFACESET, str, 255);
-        mysnprintf(message, 255, str);
-        swMessageBox(m_wnd, message, title, SW_MB_OK, SW_MB_WARNING);
+                         path, 1024, ".off")) {
+        int filedes = open(path, O_WRONLY | O_CREAT, 00664);
+        if (filedes == -1)
+            TheApp->MessageBoxPerror(path);
+        else {
+            m_scene->writeOff(filedes);
+            swTruncateClose(filedes);
+        }
     }
-    return false;
 }
 
-bool MainWindow::OnFileImportOff()
+#ifdef HAVE_LIBCGAL
+void MainWindow::OnFileImportOff()
 {
     char path[1024] = { 0 };
     if (swOpenFileDialog(m_wnd, "Load OFF",
@@ -13429,12 +13419,9 @@ bool MainWindow::OnFileImportOff()
         NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)
                                       m_scene->createNode("IndexedFaceSet");
         faceset = faceset->readOff(path);
-        if (faceset) {
+        if (faceset)
             createGeometryNode(faceset);
-            return true;
-        }
     }
-    return false;
 }
 #endif
 

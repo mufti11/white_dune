@@ -1344,7 +1344,10 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     if (writeFlags & (C_SOURCE | CC_SOURCE | JAVA_SOURCE)) {
         m_root->doWithBranch(getVariableNames, &writeFlags);
     }
-    if (writeFlags & AC3D) {
+    if (writeFlags & OFF) {
+        ret = writeOff(f);
+        done = true;
+    } else if (writeFlags & AC3D) {
         ret = writeAc3d(f, writeFlags & AC3D_4_RAVEN);
         done = true;
     } else if (writeFlags & RIB) {
@@ -1987,6 +1990,84 @@ Scene::writeAc3d(int f, bool raven)
         RET_ONERROR( childList->get(i)->writeAc3d(f, 0) )
     return(0);
 }
+
+static bool getAllNodes(Node *node, void *data)
+{
+    NodeArray *nodeArray = (NodeArray *) data;
+    nodeArray->append(node);
+    return true;     
+}
+
+int 
+Scene::writeOff(int f) 
+{
+    int sumVerticesPerFace = 0;
+    int numFaces = 0;
+    int sumVertices = 0;
+
+    RET_ONERROR( mywritestr(f, "OFF\n\n") )
+    NodeArray childList;
+    getRoot()->doWithBranch(getAllNodes, &childList, false);
+    for (long i = 0; i < childList.size(); i++) {
+        Node *node = childList.get(i);
+        if (node->isMeshBasedNode()) {
+            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
+            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                       mBasedNode->toIndexedFaceSet();
+            face->ref();
+            face->setFlag(NODE_FLAG_CONVERTED);
+            MoveCommand *command = new MoveCommand(face, NULL, -1, 
+                node->getParent(), node->getParentField());
+            command->execute();
+            face->writeOffInit();
+            command = new MoveCommand(face, 
+                node->getParent(), node->getParentField(), NULL, -1);
+            command->execute();
+        }
+    }
+    for (long i = 0; i < childList.size(); i++) {
+        Node *node = childList.get(i);
+        if (node->isMeshBasedNode()) {
+            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
+            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                       mBasedNode->toIndexedFaceSet();
+            face->accountOffData(f);
+            sumVerticesPerFace += face->getSumVerticesPerFaces();
+            sumVertices += face->getSumVertices();
+            numFaces += mBasedNode->getMesh()->getNumFaces();
+        }
+    }
+    mywritef(f, "%d %d %d\n", sumVertices, numFaces, sumVerticesPerFace);
+    for (long i = 0; i < childList.size(); i++) {
+        Node *node = childList.get(i);
+        if (node->isMeshBasedNode()) {
+            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
+            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                       mBasedNode->toIndexedFaceSet();
+            face->writeOffVertices(f, node);
+        }
+    }
+    for (long i = 0; i < childList.size(); i++) {
+        Node *node = childList.get(i);
+        if (node->isMeshBasedNode()) {
+            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
+            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                       mBasedNode->toIndexedFaceSet();
+            face->writeOffIndices(f, node);
+        }
+    }
+    for (long i = 0; i < childList.size(); i++) {
+        Node *node = childList.get(i);
+        if (node->isMeshBasedNode()) {
+            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
+            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                       mBasedNode->toIndexedFaceSet();
+            face->writeOffNormalsAndColors(f, node);
+        }
+    }
+    return(0);
+}
+
 
 static bool searchLongestTime(Node *node, void *data)
 {

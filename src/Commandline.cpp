@@ -477,7 +477,8 @@ void parseCommandlineUsage(
             url = argv[convertionArgument];
             if (strlen(TheApp->getCPrefix()) == 0)
                 TheApp->setPrefix("X3d");
-        } else if ((strcmp(argv[convertionArgument],"-ac3d")==0) || 
+        } else if ((strcmp(argv[convertionArgument],"-off")==0) || 
+                   (strcmp(argv[convertionArgument],"-ac3d")==0) || 
                    (strcmp(argv[convertionArgument],"-rib")==0) || 
                    (strcmp(argv[convertionArgument],"-ldraw")==0) || 
                    (convert & TRIANGULATE)) {
@@ -496,7 +497,9 @@ void parseCommandlineUsage(
             swHideWindow(TheApp->mainWnd());
             swIconifyWindow(TheApp->mainWnd());
         } 
-        if (strcmp(argv[convertionArgument],"-ac3d")==0)
+        if (strcmp(argv[convertionArgument],"-off")==0)
+            convert = OFF;
+        else if (strcmp(argv[convertionArgument],"-ac3d")==0)
             convert = AC3D;
         else if (strcmp(argv[convertionArgument],"-rib")==0)
             convert = RIB;
@@ -526,9 +529,10 @@ void parseCommandlineUsage(
                 checkNotEnoughArgumentsError(argc, inputFileArg++);
             }
             Scene *scene = new Scene();
-            if ((strcmp(argv[convertionArgument],"-ac3d")==0) || 
-                (strcmp(argv[1],"-rib")==0) || 
-                (strcmp(argv[1],"-ldraw")==0) || 
+            if ((strcmp(argv[convertionArgument],"-off")==0) || 
+                (strcmp(argv[convertionArgument],"-ac3d")==0) || 
+                (strcmp(argv[convertionArgument],"-rib")==0) || 
+                (strcmp(argv[convertionArgument],"-ldraw")==0) || 
                 (convert & TRIANGULATE)) {
                 scene->drawScene();
             }

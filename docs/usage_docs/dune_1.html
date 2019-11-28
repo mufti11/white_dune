@@ -377,6 +377,18 @@ A example:
 <BR>&nbsp;$&nbsp;for&nbsp;i&nbsp;in&nbsp;RibExport*.rib&nbsp;;&nbsp;do&nbsp;(aqsis&nbsp;$i&nbsp;&amp;);&nbsp;done
 <BR>
 
+<DT><B>-off</B>
+
+<DD>
+Convert file to the OFF format (Object File Format), write it to standart 
+output and exit. This option uses OpenGL commands and can not be used in a 
+commandline only environment.
+<BR>
+
+The OFF file format do not support several features of VRML/X3D 
+(e.g. the OFF format do not support texture, animation or interaction).
+Therefore the OFF file format can not keep the complete information of a 
+VRML/X3D file in general.
 <DT><B>-ac3d</B>
 
 <DD>
@@ -2086,6 +2098,6 @@ See README file for details
 This document was created by
 <A HREF="/cgi-bin/man/man2html">man2html</A>,
 using the manual pages.<BR>
-Time: 03:54:12 GMT, November 15, 2019
+Time: 20:27:11 GMT, November 27, 2019
 </BODY>
 </HTML>

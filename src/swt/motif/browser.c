@@ -83,10 +83,12 @@ swBrowserInit(STABLE prefs)
     browser->command = mystrdup(swGetPreference(prefs, "PreviewCommand",
                                                 VRML_BROWSER));
     browser->useFork = swGetIntPreference(prefs, "PreviewUseFork", FALSE);
-    browser->vrmlLevel = swGetIntPreference(prefs, "PreviewVrmlLevel", X3DOM);
     int flag = TRUE;
 #ifdef HAVE_X3D_BROWSER
         flag = FALSE;
+    browser->vrmlLevel = swGetIntPreference(prefs, "PreviewVrmlLevel", X3DV);
+#else
+    browser->vrmlLevel = swGetIntPreference(prefs, "PreviewVrmlLevel", X3DOM);
 #endif
     browser->useRemote = swGetIntPreference(prefs, "PreviewUseRemote", flag);
     browser->remoteCommand = mystrdup(swGetPreference(prefs,
@@ -181,12 +183,17 @@ void
 swBrowserSetDefault(SBROWSER browser)
 {
     browser->command = mystrdup(VRML_BROWSER);
-#ifdef VRML_REMOTE
-    browser->useRemote = TRUE;
-#else
+#ifdef HAVE_X3D_BROWSER
+    browser->vrmlLevel = X3DV;
     browser->useRemote = FALSE;
-#endif
+#else
     browser->vrmlLevel = X3DOM;
+# ifdef VRML_REMOTE
+    browser->useRemote = TRUE;
+# else
+    browser->useRemote = FALSE;
+# endif
+#endif
     browser->useFork = TRUE;
     browser->remoteCommand = mystrdup(VRML_REMOTE_BROWSER);
     browser->pid = 0;

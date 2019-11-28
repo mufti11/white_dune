@@ -46,6 +46,7 @@
 #include "DuneApp.h"
 #include "swDebugf.h"
 #include "MoveCommand.h"
+#include "NodeIndexedFaceSet.h"
 #include "NodeScript.h"
 #include "NodeCurveAnimation.h"
 #include "NodePositionInterpolator.h"
@@ -4688,11 +4689,11 @@ NodeData::convert2Vrml(void) {
     setFlag(NODE_FLAG_CONVERTED);
     for (int i = 0; i < m_numFields; i++)
         if (m_fields[i] != NULL) {
-           if (m_fields[i]->getType() == SFNODE) {
-               if (((SFNode *) m_fields[i])->getValue())
+           if (((SFNode *) m_fields[i])->getValue())
+               if (m_fields[i]->getType() == SFNODE)
                    ((SFNode *) m_fields[i])->getValue()->convert2Vrml();
-           } else if (m_fields[i]->getType() == MFNODE)
-               ((MFNode *) m_fields[i])->convert2Vrml();
+               else if (m_fields[i]->getType() == MFNODE)
+                   ((MFNode *) m_fields[i])->convert2Vrml();
         }
     return NULL;
 }
@@ -4729,6 +4730,33 @@ NodeData::writeAc3d(int f, int indent)
            else if (m_fields[i]->getType() == MFNODE)
                RET_ONERROR( ((MFNode *) m_fields[i])->writeAc3d(f, indent) )
         }
+    return 0; 
+}
+
+int
+NodeData::writeOff(int f)
+{ 
+    for (int i = 0; i < m_numFields; i++)
+        if (m_fields[i] != NULL) {
+           if (m_fields[i]->getType() == SFNODE)  {
+               Node *node = ((SFNode *)m_fields[i])->getValue();
+               if (node && node->canConvertToIndexedFaceSet()) {
+                   NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
+                                                 node->toIndexedFaceSet();
+                   faceSet->writeOff(f);
+               } 
+           } else if (m_fields[i]->getType() == MFNODE) {
+               MFNode *mfNode = (MFNode *)m_fields[i];
+               for (int j = 0; j < mfNode->getSize(); j++) {
+                    Node *node = mfNode->getValue(j);
+                    if (node && node->canConvertToIndexedFaceSet()) {
+                        NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
+                                                      node->toIndexedFaceSet();
+                       faceSet->writeOff(f);
+                    } 
+               }
+           }
+       }
     return 0; 
 }
 

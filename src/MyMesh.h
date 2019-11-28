@@ -293,7 +293,7 @@ protected:
 
     bool                m_isTriangulated;
 
-    long              m_tessellationStart;
+    long                m_tessellationStart;
     GLenum              m_tessellationType;
     bool                m_evenTriangleStrip;
     int                 m_drawCounter;
@@ -304,6 +304,9 @@ protected:
     MyArray<bool>       m_validVertices;
 
     MyArray<int>        m_texCoordParameter;
+
+    int                 m_numVertices;   
+
 #ifdef HAVE_GLUNEWTESS
     MyArray<VertexInfo> m_verticesInfo;
 
@@ -337,7 +340,8 @@ public:
            Node *texCoordGen = NULL) :
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
-                transparency, fogCoords, texCoordGen) {}
+                transparency, fogCoords, texCoordGen) {
+        }
     void static drawVertex(float *v); 
     void draw(int pass) { MyMeshX::draw(pass, &drawVertex); }
 };

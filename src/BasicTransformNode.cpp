@@ -72,8 +72,8 @@ BasicTransformProto::BasicTransformProto(Scene *scene, const char *name)
 BasicTransformNode::BasicTransformNode(Scene *scene, Proto *def)
   : Node(scene, def)
 {
-    m_matrixDirty = true;
     m_handleScale = 1.0f;
+    m_matrixDirty = false;
     m_matrix = Matrix::identity();
 }
 
@@ -347,8 +347,8 @@ BasicTransformNode::receiveEvent(int eventIn, double timestamp, FieldValue *valu
 void
 BasicTransformNode::setField(int field, FieldValue *value, int cf)
 {
-    if (field != getBasicChildrenField()) 
-        m_matrixDirty = true;
+    if (field != getBasicChildrenField())
+        transform();
     Node::setField(field, value, cf);
 }
 

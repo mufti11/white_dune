@@ -195,11 +195,29 @@ public:
                                       int jLoop, int nLoop,
                                       int uPieces, int vPieces);
     void            splitIntoPieces(int piecesU, int piecesV);
+
+
+    void            writeOffInit(void)
+                       {
+                       m_sumVerticesPerFaces = 0;
+                       m_sumVertices = 0;
+                       }
+    void            accountOffData(int f);
+    void            writeOffVertices(int f, Node *node);
+    void            writeOffIndices(int f, Node *node);
+    void            writeOffNormalsAndColors(int f, Node *node);
+
+    int             getSumVertices(void) { return m_sumVertices; }       
+    int             getSumVerticesPerFaces(void)
+                        { return m_sumVerticesPerFaces; }
+    int             getNumVertices(void) 
+                        { return getCoordinates()->getSFSize(); }   
+
+
 #ifdef HAVE_LIBCGAL
     NodeIndexedFaceSet *csg(NodeIndexedFaceSet *face, int operation,
                             Matrix matrix1, Matrix matrix2);
     NodeIndexedFaceSet *readOff(const char *filename);
-    int                 writeOff(const char *filename);
 #endif
 #ifdef HAVE_LIBVCG
     NodeIndexedFaceSet *meshReduce(float percent);
@@ -237,7 +255,13 @@ public:
 protected:
     void            createMesh(bool cleanDoubleVertices = true,
                                bool triangulate = true);
-                               
+
+protected:
+    int                 m_numVertices;
+    int                 m_sumVertices;       
+    int                 m_sumVerticesPerFaces;
+    int                 m_sumNumFaces;
+
 };
 
 #endif // _NODE_INDEXEDFACESET_H
