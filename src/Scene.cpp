@@ -2011,6 +2011,7 @@ Scene::writeOff(int f)
     for (long i = 0; i < childList.size(); i++) {
         Node *node = childList.get(i);
         if (node->isMeshBasedNode()) {
+            Node *selection = getSelection()->getNode();
             MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
             NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
                                        mBasedNode->toIndexedFaceSet();
@@ -2023,6 +2024,9 @@ Scene::writeOff(int f)
             command = new MoveCommand(face, 
                 node->getParent(), node->getParentField(), NULL, -1);
             command->execute();
+            UpdateViews(NULL, UPDATE_ALL, NULL);
+            setSelection(selection);
+            UpdateViews(NULL, UPDATE_SELECTION);
         }
     }
     for (long i = 0; i < childList.size(); i++) {

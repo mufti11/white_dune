@@ -374,7 +374,7 @@
 #define HAVE_IMAGE_CONVERTER "/usr/bin/convert"
 
 /* Define if you want to set the URL of the helppages */
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.658/docs/index.html"
+#define HAVE_HELP_URL "/home/home/mufti/wdune-1.661/docs/index.html"
 
 /* Define if you want to set the URL of the vrml node list */
 /* #undef HAVE_VRML_NODES_URL */
@@ -568,7 +568,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.658"
+#define HAVE_DUNE_VERSION "white_dune 1.661"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)
