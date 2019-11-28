@@ -5497,4 +5497,6 @@ Fixed bug that stops X3DOM rendering on multiple scenes
 
 Use view3dscene as default preview browser under debian/raspian buster
 
+Added OFF writing
+
 Contact: MUFTI <mufti11@web.de>
