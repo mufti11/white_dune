@@ -17,6 +17,6 @@ clean:
 	rm -f C++Export.cc render render_with_picture_path core
 
 C++Export.cc: robot.x3dv
-	(../../../bin/dune -c++ robot.x3dv > C++Export.cc) || \
-	dune -c++ robot.x3dv > C++Export.cc
+	(../../../bin/dune -c++ robot.x3dv > C++Export.cc 2> /dev/null) || \
+	dune -c++ robot.x3dv > C++Export.cc 2> /dev/null
 

@@ -48,20 +48,20 @@ NodeOrientationInterpolator::NodeOrientationInterpolator(Scene *scene, Proto *de
 }
 
 int
-NodeOrientationInterpolator::getNumChannels() const
+NodeOrientationInterpolator::getNumChannels()
 {
     return 4;
 }
 
 FieldValue *
-NodeOrientationInterpolator::createKey(void *value) const
+NodeOrientationInterpolator::createKey(void *value)
 {
     FieldValue *r = new SFRotation((float *)value);
     return r;
 }
 
 FieldValue *
-NodeOrientationInterpolator::createKeys(void *value, int numKeys) const
+NodeOrientationInterpolator::createKeys(void *value, int numKeys)
 {
     return new MFRotation((float *)value, numKeys * 4);
 }

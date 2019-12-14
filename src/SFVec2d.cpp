@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
+#include "SFDouble.h"
 
 #include "SFVec2d.h"
 
@@ -30,7 +32,7 @@ SFVec2d::SFVec2d(double x, double y)
     m_value[0] = x; m_value[1] = y;
 }
 
-SFVec2d::SFVec2d(const double *values)
+SFVec2d::SFVec2d(double *values)
 {
     m_value[0] = values[0]; m_value[1] = values[1];
 }
@@ -41,7 +43,7 @@ SFVec2d::SFVec2d(void)
 }
 
 MyString    
-SFVec2d::getString(int index, int stride) const
+SFVec2d::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -67,21 +69,39 @@ SFVec2d::setValue(double v1, double v2)
 
 
 bool
-SFVec2d::equals(const FieldValue *value) const
+SFVec2d::equals(FieldValue *value)
 {
     return value->getType() == SFVEC2D
         && ((SFVec2d *) value)->getValue(0) == m_value[0]
         && ((SFVec2d *) value)->getValue(1) == m_value[1];
 }
 
+void
+SFVec2d::clamp(const FieldValue *min, const FieldValue *max)
+{
+    if (min) {
+        double fmin = ((SFDouble *) min)->getValue();
+        for (int i = 0; i < 2; i++) {
+            if (m_value[i] < fmin) m_value[i] = fmin;
+        }
+    }
+
+    if (max) {
+        double fmax = ((SFDouble *) max)->getValue();
+        for (int i = 0; i < 2; i++) {
+            if (m_value[i] > fmax) m_value[i] = fmax;
+        }
+    }
+}
+
 int 
-SFVec2d::writeData(int f, int i) const
+SFVec2d::writeData(int f, int i)
 {
     return mywritef(f, "%g %g", m_value[0], m_value[1]);
 }
 
 int
-SFVec2d::writeC(int filedes, const char* variableName, int languageFlag) const
+SFVec2d::writeC(int filedes, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -98,7 +118,7 @@ SFVec2d::writeC(int filedes, const char* variableName, int languageFlag) const
 }
 
 MyString
-SFVec2d::getEcmaScriptComment(MyString name, int flags) const
+SFVec2d::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

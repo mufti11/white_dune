@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program (see the file "COPYING" for details); if 
  * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
- * Cambridge, MA 02139, USA.
+x * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MODELLING_APP_H
-#define _MODELLING_APP_H
+#pragma once
 
 #include "swttypedef.h"
 #include "MyString.h"
@@ -90,4 +89,3 @@ private:
     float               m_extrusionAmount;
 };
 
-#endif

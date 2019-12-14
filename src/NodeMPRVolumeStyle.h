@@ -23,6 +23,7 @@
 #define _NODE_MPR_VOLUME_STYLE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -52,7 +53,7 @@ class NodeMPRVolumeStyle : public Node {
 public:
                     NodeMPRVolumeStyle(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeMPRVolumeStyle(*this); }
+    virtual Node   *copy() { return new NodeMPRVolumeStyle(m_scene, m_proto); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 

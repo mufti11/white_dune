@@ -29,32 +29,14 @@
  for conditions of use and redistribution.
 *********************************************************************/
 
-#ifndef _MY_MESH_H
-#define _MY_MESH_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-
-#ifndef _LIST_H
 #include "List.h"
-#endif
-
-#ifndef _VEC4F_H
 #include "Vec4f.h"
-#endif
-
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
-#ifndef _VEC2F_H
 #include "Vec2f.h"
-#endif
-
-#ifndef _VEC3D_H
 #include "Vec3d.h"
-#endif
 
 #include <stdlib.h>
 #ifndef FLT_MAX 
@@ -121,16 +103,15 @@ class MFVec2f;
 class MFVec3d;
 class MFInt32;
 
-extern void beginTriangleCallback(GLenum type, void *data);
 
-extern void newVertexCallback(void *vertex_data, void *data);
+void beginTriangleCallback(GLenum type, void *data);
 
-extern void endTriangleCallback(void *data);
+void newVertexCallback(void *vertex_data, void *data);
 
-extern void 
-combineVertices(GLdouble coords[3], GLdouble *vertex_data[4],
-                GLfloat weight[4], GLdouble **dataOut, void *data); 
+void endTriangleCallback(void *data);
 
+void combineVertices(GLdouble coords[3], GLdouble *vertex_data[4],
+                     GLfloat weight[4], GLdouble **dataOut, void *data); 
 
 #ifdef _WIN32
 extern void tesselationError(GLenum error); 
@@ -217,10 +198,12 @@ public:
     void                setCcw(bool ccw) { m_ccw = ccw; }
     void                setNormals(MFVec3f *normals);
 
+/*
     Vec3f               getSmoothNormal(int i)
                             { return m_smoothNormalsArray[i]; }
     int                 getNumSmoothNormal(void)
                             { return m_smoothNormalsArray.size(); }
+*/
 
     void                optimize(float epsilon = 0.0f);
     MFInt32            *optimizeCoordIndex(void);
@@ -329,7 +312,6 @@ protected:
 
 
 template class MyMeshX<float, MFVec3f, Vec3f>;
-
 class MyMesh : public MyMeshX<float, MFVec3f, Vec3f> {
 public:
     MyMesh(MeshBasedNode *that, MFVec3f *vertices, MFInt32 *coordIndex,
@@ -340,14 +322,12 @@ public:
            Node *texCoordGen = NULL) :
         MyMeshX(that, vertices, coordIndex, normals, normalIndex, colors, 
                 colorIndex, texCoords, texCoordIndex, creaseAngle, meshFlags,
-                transparency, fogCoords, texCoordGen) {
-        }
+                transparency, fogCoords, texCoordGen) {}
     void static drawVertex(float *v); 
     void draw(int pass) { MyMeshX::draw(pass, &drawVertex); }
 };
 
 template class MyMeshX<double, MFVec3d, Vec3d>;
-
 class MyMeshDouble : public MyMeshX<double, MFVec3d, Vec3d> {
 public:
     MyMeshDouble(MeshBasedNode *that, MFVec3d *vertices, MFInt32 *coordIndex,
@@ -421,15 +401,15 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
                                                         (X)0.0f));
     }
     
-    if (m_normalPerVertex && (normalIndex == NULL))
+    if (m_normalPerVertex && (m_normalIndex == NULL)) {
         m_normalIndex = m_coordIndex;
-    if (m_normalIndex)
         m_normalIndex->ref();
+    }
 
-    if (m_colorPerVertex && (colorIndex == NULL))
+    if (m_colorPerVertex && (colorIndex == NULL)) {
         m_colorIndex = m_coordIndex;
-    if (m_colorIndex)
         m_colorIndex->ref();
+    }
 
     if (m_texCoordIndex == NULL)
         m_texCoordIndex = m_coordIndex;
@@ -494,6 +474,7 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
 template <class X,class MFX,class VEC3X>
 MyMeshX<X, MFX, VEC3X>::~MyMeshX()
 {
+/*
     if (m_vertices) {
         bool last = m_vertices->getRefs() == 1;
         m_vertices->unref();
@@ -550,6 +531,7 @@ MyMeshX<X, MFX, VEC3X>::~MyMeshX()
         if (last)
             m_texCoordIndex = NULL;
     }
+*/
 
     for (int i = 0; i < m_numFaces; i++) {
         delete m_faces[i];
@@ -575,9 +557,8 @@ MyMeshX<X, MFX, VEC3X>::copy(void)
                                (MFInt32 *)m_coordIndex->copy(), 
                                getNormals() ? 
                                (MFVec3f *)getNormals()->copy() : NULL, 
-                               getNormalIndex() ? (MFInt32 *)
-                                                  getNormalIndex()->copy() : 
-                                                  NULL, 
+                               m_normalIndex ? (MFInt32 *)
+                                                m_normalIndex->copy() : NULL, 
                                getColors() ? (MFFloat *) getColors()->copy() : 
                                             NULL, 
                                getColorIndex() ? (MFInt32 *)
@@ -801,7 +782,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
             }
             if (normals) {
                 int index = -1; 
-                if (m_normalPerVertex) {
+                if (m_normalIndex && m_normalPerVertex) {
                     if (j < m_normalIndex->getSize())
                         index = m_normalIndex->getValue(j) * 3;
                 } else {
@@ -817,13 +798,12 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
 #ifdef HAVE_GLFOGCOORDF
             if (fogDepth) {
                 int fogIndex = numFogDepth - 1;
-                    if (coordIndex[j] < numFogDepth)
-                        fogIndex = coordIndex[j];
-                    if (fogIndex > -1)
-                        glFogCoordf(fogDepth[fogIndex]);
-               }
+                if (coordIndex[j] < numFogDepth)
+                    fogIndex = coordIndex[j];
+                if (fogIndex > -1)
+                    glFogCoordf(fogDepth[fogIndex]);
+           }
 #endif
-
             drawVert((X *)(vertices + coordIndex[j] * 3));            
         }
         glEnd();
@@ -832,7 +812,6 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
     if (m_colors) {
         glDisable(GL_COLOR_MATERIAL);
     }
-
     if (solid) {
         glDisable(GL_CULL_FACE);
         glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
@@ -897,16 +876,16 @@ MyMeshX<X, MFX, VEC3X>::drawNormals(void)
 
 class MyEdge {
 public:
-                MyEdge(int p1, int p2, int f, bool s = false)
+                MyEdge(long p1, long p2, long f, bool s = false)
                    { 
                    pos1 = p1;
                    pos2 = p2; 
                    face = f; 
                    smooth = s; 
                    }
-    int         pos1;
-    int         pos2;
-    int         face;
+    long         pos1;
+    long        pos2;
+    long        face;
     bool        smooth;
 };
 
@@ -1002,7 +981,10 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     const int *coordIndex = m_coordIndex->getValues();
     long nCoords = m_coordIndex->getSize();
     int start = 0;
-    MyArray<int> normalIndex;
+//    MyArray<int> normalIndex;
+    MFInt32 *normalIndex = m_normalIndex;
+    if (!normalIndex)
+        return;
 
     for (long i = 0; i < nCoords; i++) {
         long v = coordIndex[i];
@@ -1020,7 +1002,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             }
             edgeLists[v].append(new MyEdge(i, pos2, numFaces));
         }
-        normalIndex[i] = -1;
+//        normalIndex->setSFValue(i, -1);
     }
     // vertices without normals get the face normal
     for (long n = 0; n < nCoords; n++) {
@@ -1029,15 +1011,15 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             continue;
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
             MyEdge *e = j->item();
-            if (normalIndex[e->pos1] == -1) {
+            if (normalIndex && normalIndex->getValue(e->pos1) == -1) {
                 int index = normals.size();
                 if ((e->face < m_numFaces) && m_faces[e->face]) {
                     normals[index] = m_faces[e->face]->getNormal();
-                    normalIndex[e->pos1] = index;
+//                    normalIndex->setSFValue(e->pos1, index);
                 }
-             } else {
-                 int index = normalIndex[e->pos1];
-                 if (index < (int)normalIndex.size() &&
+             } else if (normalIndex) {
+                 int index = normalIndex->getValue(e->pos1);
+                 if (index < normalIndex->getSize() &&
                      (normals[index].x < floatEpsilon()) &&
                      (normals[index].y < floatEpsilon()) &&
                      (normals[index].z < floatEpsilon()))
@@ -1065,8 +1047,8 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
                 float dotNormals = refNormal.dot(otherNormal);
                 if (dotNormals > cosAngle) {
                     // this edge is smooth
-                    int i1 = normalIndex[e->pos1];
-                    int i2 = normalIndex[f->pos2];
+                    int i1 = normalIndex->getValue(e->pos1);
+                    int i2 = normalIndex->getValue(f->pos2);
                     if (i1 == -1 && i2 == -1) {
                         // create a new normal
                         normals[i1] = (refNormal + otherNormal);
@@ -1090,9 +1072,10 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             }
         }
     }
+/*
     // join all smoothed normals of a vertex
     MyArray<IntArray *> smoothNormalIndices;
-    for (long i = 0; (i < normalIndex.size()) || (i < nVerts); i++)
+    for (long i = 0; (i < normalIndex->getSize()) || (i < nVerts); i++)
         smoothNormalIndices.append(new IntArray());
     for (long n = 0; n < nCoords; n++) {
         long i = coordIndex[n];
@@ -1113,19 +1096,22 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             continue;
         Vec3f averageNormal(0, 0, 0);
         bool hasAverageNormal = false;
+        if (smoothNormalIndices[i] == NULL)
+            continue;
         for (long j = 0; j < smoothNormalIndices[i]->size(); j++) {
             hasAverageNormal = true;
             int indexNormal = smoothNormalIndices[i]->get(j);
-            averageNormal += normals[normalIndex[indexNormal]];
+            averageNormal += normals[normalIndex->getValue(indexNormal)];
         }
         if (hasAverageNormal) {
             averageNormal.normalize();
             for (long j = 0; j < smoothNormalIndices[i]->size(); j++) {
                 int indexNormal = smoothNormalIndices[i]->get(j);
-                normals[normalIndex[indexNormal]] = averageNormal;
+                normals[normalIndex->getValue(indexNormal)] = averageNormal;
             }
         }
     }
+*/
     // vertices with normal 0 0 0 get the face normal
     for (long n = 0; n < nCoords; n++) {
          long i = coordIndex[n];
@@ -1133,14 +1119,14 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
              continue;
         for (j = edgeLists[i].first(); j != NULL; j = j->next()) {
             MyEdge *e = j->item();
-            if (normalIndex[e->pos1] == -1) {
+            if (normalIndex && normalIndex->getValue(e->pos1) == -1) {
                 int index = normals.size();
                 if ((e->face < m_numFaces) && m_faces[e->face]) {
                     normals[index] = m_faces[e->face]->getNormal();
                     normalIndex[e->pos1] = index;
                 }
-             } else {
-                 int index = normalIndex[e->pos1];
+             } else if (normalIndex) {
+                 int index = normalIndex->getValue(e->pos1);
                  if ((normals[index].x < floatEpsilon()) &&
                      (normals[index].y < floatEpsilon()) &&
                      (normals[index].z < floatEpsilon()))
@@ -1150,18 +1136,18 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     }
 
     int face = 0;
-    for (long n = 0; n < normalIndex.size(); n++) {
-        long i = normalIndex[n];        
-        if ((i < 0) || (i >= (long)normalIndex.size())) {
+    for (long n = 0; n < normalIndex->getSize(); n++) {
+        long i = normalIndex->getValue(n);        
+        if ((i < 0) || (i >= normalIndex->getSize())) {
             if (i < 0)
                 face++;
             continue;
         }
-        normals[i].normalize();
-        if (normals[i].isZero()) {
-            if (face < m_numFaces)
+        if (normals[i].isZero())
+            if (face < m_numFaces) {
                 normals[i] = m_faces[face]->getNormal();
-        }
+                normals[i].normalize();
+            }
     }
     // cleanup
     for (long n = 0; n < nCoords; n++) {
@@ -1175,52 +1161,50 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         edgeLists[i].removeAll();
     }
     delete [] edgeLists;
+/*
     for (long i = 0; i < smoothNormalIndices.size(); i++) {
         delete smoothNormalIndices[i];
         smoothNormalIndices[i] = NULL;        
     }
+*/
     long maxNormalIndex = -1;
-    for (long k = 0; k < normalIndex.size(); k++)
-        if (normalIndex[k] > maxNormalIndex)
-            maxNormalIndex = normalIndex[k];
+    for (long k = 0; k < normalIndex->getSize(); k++)
+        if (normalIndex->getValue(k) > maxNormalIndex)
+            maxNormalIndex = normalIndex->getValue(k);
     if (normals.size() > 0)
         for (long k = normals.size() - 1; k > maxNormalIndex; k--)
             normals.remove(k);
     for (long k = 0; k < normals.size(); k++) {
         normals[k].normalize();
     }
-    if (m_normals)
-        m_normals->unref();
-    m_normals = new MFVec3f((float *)normals.extractData(), normals.size() * 3);
-    if (normalIndex.size() > 0) {
-        int *n = new int[normalIndex.size() + 1];
-        for (long i = 0; i < normalIndex.size(); i++)
-            n[i] = normalIndex[i];
-        int nsize = normalIndex.size();
-        if (n[nsize - 1] != -1) {
-            nsize++;
-            n[nsize - 1] = -1;
-        }
-        m_normalIndex = new MFInt32(n, nsize);
-    }
-    m_normals->ref();
-    if (m_normalIndex)
-        m_normalIndex->ref();
 
+    m_normals = new MFVec3f((float *)normals.extractData(), normals.size() * 3);
+    m_normals->ref();
+/*
+    if (normalIndex->getSize() > 0) {
+        int *n = new int[normalIndex->getSize() + 1];
+        for (long i = 0; i < normalIndex->getSize(); i++)
+            n[i] = normalIndex->getValue(i);
+        int nsize = normalIndex->getSize();
+        m_normalIndex = new MFInt32(n, nsize);
+        m_normalIndex->ref();
+    }
+*/
+/*
     m_smoothNormalsArray.resize(0);
     for (long n = 0; n < nVerts; n++) {
         Vec3f vec;
         m_smoothNormalsArray[n] = vec;
     }
     for (long n = 0; n < nCoords; n++) {
-        long i = coordIndex[n];
-        if ((i < 0) || (i >= (long)nVerts))
+        long i = m_normalIndex->getValue(i);
+        if  (i >= nVerts)
             continue;
-        m_smoothNormalsArray[i] += m_normals->getVec(m_normalIndex->getValue(n)
-                                                    );
+        m_smoothNormalsArray[i] += m_normals->getVec(i);
     }
-    for (long i = 0; i < m_smoothNormalsArray.size(); i++)
-        m_smoothNormalsArray[i].normalize();
+//    for (long i = 0; i < m_smoothNormalsArray.size(); i++)
+//        m_smoothNormalsArray[i].normalize();
+*/
 }
 
 static int
@@ -1755,6 +1739,7 @@ MyMeshX<X, MFX, VEC3X>::simpleQuadTriangulate(void)
             texCoordIndices->appendSFValue(-1);
         }
     }
+/*
     if (m_coordIndex) m_coordIndex->unref();
     m_coordIndex = coordIndices;
     if (m_normalIndex) m_normalIndex->unref();
@@ -1763,6 +1748,7 @@ MyMeshX<X, MFX, VEC3X>::simpleQuadTriangulate(void)
     m_colorIndex = colorIndices;
     if (m_texCoordIndex) m_texCoordIndex->unref();
     m_texCoordIndex = texCoordIndices;
+*/
     m_isTriangulated = true;
 }
 
@@ -1933,78 +1919,6 @@ int
 MyMeshX<X, MFX, VEC3X>::countPolygons1Sided(void)
 {
     return m_node->isDoubleSided() ? 0 : countPolygons();
-}
-
-template <class X,class MFX,class VEC3X>
-Node * 
-MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
-{
-    bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
-
-    NodeCoordinate *ncoord = (NodeCoordinate *)scene->createNode("Coordinate");
-    MFVec3f *points = new MFVec3f();
-    MFX *vertices = getVertices();
-    for (int i = 0; i < vertices->getSFSize(); i++) {
-        VEC3X vec = vertices->getValue(i);
-        Vec3f point(vec.x, vec.y, vec.z); 
-        points->setVec(i, point);
-    } 
-    ncoord->point(points);
-    NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)
-                               scene->createNode("IndexedFaceSet");
-    node->coord(new SFNode(ncoord));
-    if (wantNormal) {
-        NodeNormal *nnormal = NULL;
-        if (getSmoothNormals()) {
-            nnormal = (NodeNormal *)scene->createNode("Normal");
-            nnormal->vector(getSmoothNormals());
-        }
-        if (nnormal) {
-            node->normal(new SFNode(nnormal));
-            MFInt32 *ni = getSmoothNormalIndex();
-            if (ni != NULL) {
-                node->normalIndex(ni);
-                node->normalIndex()->ref();
-            }
-        } 
-    } 
-    node->colorPerVertex(new SFBool(colorPerVertex()));
-    if (getColorIndex())
-        node->colorIndex(new MFInt32(getColorIndex()));
-    node->normalPerVertex(new SFBool(normalPerVertex()));
-    if (getNormalIndex())
-        node->normalIndex(new MFInt32(getNormalIndex()));
-    node->creaseAngle(new SFFloat(creaseAngle())); 
-    node->coordIndex(new MFInt32(getCoordIndex()));
-    node->solid(new SFBool(solid()));
-    node->ccw(new SFBool(ccw()));
-    node->convex(new SFBool(convex()));
-    NodeColor *nColor = NULL;
-    if (getColors()) {
-        nColor = (NodeColor *)
-                    scene->createNode("Color");
-        nColor->color(new MFColor((float *)getColors()->getValues(), 
-                                  getColors()->getSize()));
-    }
-    if (nColor) {
-        node->color(new SFNode(nColor));
-        node->color()->ref();
-    }
-    NodeTextureCoordinate *ntexCoord = NULL;
-    if (getTexCoords()) {
-        ntexCoord = (NodeTextureCoordinate *)
-                    scene->createNode("TextureCoordinate");
-        ntexCoord->point(getTexCoords());
-    }
-    if (ntexCoord) {
-        node->texCoord(new SFNode(ntexCoord));
-        node->texCoordIndex(getTexCoordIndex());
-        node->texCoordIndex()->ref();
-    }
-
-    node->ref();
-
-    return node;
 }
 
 template <class X,class MFX,class VEC3X>
@@ -2357,7 +2271,5 @@ MyMeshX<X, MFX, VEC3X>::triangulate(MeshBasedNode *that)
 }
 
 #endif
-
-#endif // _MY_MESH_H
 
 

@@ -46,25 +46,25 @@ public:
 
     void                generateQuaternion();
     virtual int         getType() const { return SFROTATION; }
-    virtual const char *getTypeName() const { return "SFRotation"; }
-    virtual int         getStride() const { return 4; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFRotation"; }
+    virtual int         getStride() { return 4; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
-    virtual bool        isArrayInC(void) const { return true; }
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
+    virtual bool        isArrayInC(void) { return true; }
 
-    virtual int         writeAc3d(int filedes, int indent) const;
+    virtual int         writeAc3d(int filedes, int indent);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 4; }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return 4; }
+    virtual bool        needCheckFloat(void) { return true; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual FieldValue *copy() { return new SFRotation(*this); }
 
     virtual void        fixAngle(double angleUnit) 
@@ -79,22 +79,22 @@ public:
                                 m_value[3] /= angleUnit;
                             }
 
-    const float        *getValue() const { return m_value; }
-    float               getValue(int pos) const { return m_value[pos]; }
+    float              *getValue() { return m_value; }
+    float               getValue(int pos) { return m_value[pos]; }
     void                setValue(int index, float value);
     void                setValue(float v1, float v2, float v3, float v4);
     Vec3f               getEulerAngles(int order);
     void                setEulerAngles(Vec3f angles, int order);
     void                angleMult(float mult);
-    const Quaternion   &getQuat() const;
+    const Quaternion   &getQuat();
     void                normalize();
 
-    Vec3f               operator *(const Vec3f &v) const;
+    Vec3f               operator *(const Vec3f &v);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual bool        supportAnimation(bool x3d) const { return true; }
-    virtual bool        supportInteraction(void) const { return true; }
+    virtual bool        supportAnimation(bool x3d) { return true; }
+    virtual bool        supportInteraction(void) { return true; }
 
     void                flip(int index);
     void                swap(int fromTo);

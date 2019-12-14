@@ -4518,7 +4518,7 @@ update()
     for (i = 0; i < NumWindowsToUpdate; i++) {
         SWND w = WindowsToUpdate[i];
 
-        if (w && w->invx1 >= 0 && w->exposeCallback) {
+        if (w && w->invx1 >= 0 && w->exposeCallback && !w->isHidden) {
             w->exposeCallback(w->data, w->invx1, w->invy1,
                               w->invx2 - w->invx1 + 1, 
                               w->invy2 - w->invy1 + 1);

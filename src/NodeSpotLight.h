@@ -23,6 +23,7 @@
 #define _NODE_SPOTLIGHT_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -77,7 +78,7 @@ public:
     virtual const char* getComponentName(void) const;
     virtual int     getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeSpotLight(*this); }
+    virtual Node   *copy() { return new NodeSpotLight(m_scene, m_proto); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 

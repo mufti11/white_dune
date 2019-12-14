@@ -19,23 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_APPEARANCE_H
-#define _NODE_APPEARANCE_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-
 #include "SFMFTypes.h"
+#include "MFNode.h"
 
 class ProtoAppearance : public WonderlandExportProto {
 public:
@@ -81,7 +73,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeAppearance(*this); }
+    virtual Node   *copy() { return new NodeAppearance(m_scene, m_proto); }
 
     void            bind();
     void            unbind();
@@ -124,4 +116,3 @@ public:
     fieldMacros(SFString, sortType,           ProtoAppearance);
 };
 
-#endif // _NODE_APPEARANCE_H

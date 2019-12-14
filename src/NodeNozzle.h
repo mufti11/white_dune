@@ -57,7 +57,7 @@ public:
                     NodeNozzle(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeNozzle(*this); }
+    virtual Node   *copy() { return new NodeNozzle(m_scene, m_proto); }
 
     fieldMacros(SFBool,  ccw,          ProtoNozzle)
     fieldMacros(SFFloat, height,       ProtoNozzle)

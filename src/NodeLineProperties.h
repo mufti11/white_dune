@@ -23,6 +23,7 @@
 #define _NODE_LINE_PROPERTIES_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -57,9 +58,9 @@ public:
                     NodeLineProperties(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const { return "Shape"; }
-    virtual int         getComponentLevel(void) const { return 2; }
+    virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeLineProperties(*this); }
+    virtual Node   *copy() { return new NodeLineProperties(m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 

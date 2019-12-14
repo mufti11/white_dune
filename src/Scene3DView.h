@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCENE3DVIEW_H
-#define _SCENE3DVIEW_H
+#pragma once
 
 #include "Vec3f.h"
 #include "Quaternion.h"
@@ -65,9 +64,9 @@ public:
     int                 walk();
 
     int                 readInputDevice(void);
-    void                Transform3D(const Path* path, InputDevice* inputDevice);
+    void                Transform3D(Path* path, InputDevice* inputDevice);
     void                Navigate3D(InputDevice * inputDevice);
-    void                Handle3D(const Path* path,InputDevice* inputDevice, 
+    void                Handle3D(Path* path,InputDevice* inputDevice, 
                                  int handle);
     void                drawViewPort(Node* viewport, int count, 
                                      bool update = false);
@@ -125,4 +124,3 @@ protected:
     bool        m_hitHandle;
 };
 
-#endif // !defined(_SCENE3DVIEW_H)

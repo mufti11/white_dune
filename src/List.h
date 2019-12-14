@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _LIST_H
-#define _LIST_H
+#pragma once
 
 #ifndef NULL
 #define NULL 0L
@@ -35,13 +34,9 @@ public:
                            { m_prev = m_next = (Iterator *)NULL; }
 
         Iterator       *prev()          { return m_prev; }
-        const Iterator *prev() const    { return m_prev; }
         Iterator       *next()          { return m_next; }
-        const Iterator *next() const    { return m_next; }
-
-        const T        &item() const    { return m_value; }
         T               item()          { return m_value; }
-        void            setItem(const T &t)
+        void            setItem(T &t)
                                         { m_value = t; }
 
     private:
@@ -68,7 +63,7 @@ public:
                            m_length = 0;
                            for (Iterator *i = l.first(); i != NULL; 
                                 i = i->next())
-                               append(i->item());
+                                append(i->item());
                            }
 
                        ~List()
@@ -208,4 +203,4 @@ private:
         Iterator           *m_tail;
         int                 m_length;
 };
-#endif // _LIST_H
+

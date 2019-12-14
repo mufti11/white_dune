@@ -20,13 +20,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef INSERT_TO_NURBS_CURVE_DIALOG_H
-#define INSERT_TO_NURBS_CURVE_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class InsertToNurbsCurveDialog : public Dialog 
@@ -48,5 +44,3 @@ private:
     int                 m_to;
     int                 m_points;
 };
-
-#endif

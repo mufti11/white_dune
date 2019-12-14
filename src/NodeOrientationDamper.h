@@ -23,6 +23,7 @@
 #define _NODE_ORIENTATION_DAMPER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -50,7 +51,8 @@ class NodeOrientationDamper : public DamperNode {
 public:
                     NodeOrientationDamper(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeOrientationDamper(*this); }
+    virtual Node    *copy() { return new NodeOrientationDamper(
+                                     m_scene, m_proto); }
 
     virtual void    sendDampedEvent(int eventIn, double timestamp, 
                                     FieldValue * value);

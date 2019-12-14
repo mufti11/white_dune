@@ -23,6 +23,7 @@
 #define _NODE_VECTOR_INTERPOLATOR_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -51,11 +52,12 @@ class NodeVectorInterpolator : public Node {
 public:
                     NodeVectorInterpolator(Scene *scene, Proto *proto);
 
-//    virtual int     getProfile(void) const { return PROFILE_; }
+//    virtual int    getProfile(void) const { return PROFILE_; }
 //    virtual const char* getComponentName(void) const { return ""; }
 //    virtual int         getComponentLevel(void) const { return -1; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeVectorInterpolator(*this); }
+    virtual Node   *copy() { return new NodeVectorInterpolator( 
+                             m_scene, m_proto); }
 
     virtual bool    isKambiNode(void) { return true; }
 

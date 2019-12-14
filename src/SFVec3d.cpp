@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "SFVec3d.h"
 #include "SFDouble.h"
@@ -33,7 +34,7 @@ SFVec3d::SFVec3d(SFString *value)
 }
 
 MyString    
-SFVec3d::getString(int index, int stride) const
+SFVec3d::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -62,7 +63,7 @@ SFVec3d::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 bool
-SFVec3d::equals(const FieldValue *value) const
+SFVec3d::equals(FieldValue *value)
 {
     if (value->getType() == SFVEC3D) {
         SFVec3d *v = (SFVec3d *) value;
@@ -83,13 +84,13 @@ SFVec3d::readLine(int index, char *line)
 }
 
 int 
-SFVec3d::writeData(int f, int i) const
+SFVec3d::writeData(int f, int i)
 {
     return mywritef(f, "%lg %lg %lg", m_value[0], m_value[1], m_value[2]);
 }
 
 int
-SFVec3d::writeC(int filedes, const char* variableName, int languageFlag) const
+SFVec3d::writeC(int filedes, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -105,7 +106,7 @@ SFVec3d::writeC(int filedes, const char* variableName, int languageFlag) const
 }
 
 MyString
-SFVec3d::getEcmaScriptComment(MyString name, int flags) const
+SFVec3d::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

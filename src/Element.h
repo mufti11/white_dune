@@ -19,18 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ELEMENT_H
-#define _ELEMENT_H
+#pragma once
 
-#ifndef _DUNE_STRING_H
-# include "MyString.h"
-#endif
-
+#include "MyString.h"
 #include "Array.h"
 #include "x3dFlags.h"
-
-class Node;
-class Proto;
 
 enum {
     EL_UNKNOWN,
@@ -79,6 +72,11 @@ enum {
     EIF_WONDERLAND_SUPPORTED = 1<<30,
     EOF_WONDERLAND_SUPPORTED = 1<<31
 };
+
+class Proto;
+class Element;
+
+#include "Node.h"
 
 class IsElement {
 public:
@@ -181,4 +179,4 @@ protected:
 
 int indentf(int filedes, int indent);
 
-#endif // _ELEMENT_H
+

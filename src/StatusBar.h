@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _STATUS_BAR_H
-#define _STATUS_BAR_H
+#pragma once
 
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
 
 typedef struct SStatusBar *SSTATUSBAR;
 
@@ -45,5 +42,3 @@ private:
     SceneView          *m_parent;
     SSTATUSBAR          m_bar;
 };
-
-#endif // _STATUS_BAR_H

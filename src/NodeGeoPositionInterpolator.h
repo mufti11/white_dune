@@ -48,7 +48,7 @@ public:
     FieldIndex geoOrigin;
     FieldIndex geoSystem;
 
-    virtual int     translateField(int field) const;
+    virtual int     translateField(int field);
 
     // not fields but eventIn/eventOut
     FieldIndex geovalue_changed;
@@ -59,25 +59,27 @@ public:
                     NodeGeoPositionInterpolator(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
-    virtual Node   *copy() const { return new NodeGeoPositionInterpolator(*this); }
+    virtual Node   *copy()
+                    { return new NodeGeoPositionInterpolator( 
+                      m_scene, m_proto); }
 
-    virtual int     getStride() const { return 3; }
-    virtual int     getNumChannels() const { return 3; }
+    virtual int     getStride() { return 3; }
+    virtual int     getNumChannels() { return 3; }
 
     virtual const char* getComponentName(void) const { return "Geospatial"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
 
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *value, int numKeys) const;
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *value, int numKeys);
 
-    virtual float       getKeyValue(int channel, int index) const;
+    virtual float       getKeyValue(int channel, int index);
 
     virtual FieldValue *getInterpolatedFieldValue(float k);
 
     virtual void        setKeyValue(int channel, int index, float value);
 
-    virtual void        insertKey(int pos, float key, const float *values);
+    virtual void        insertKey(int pos, float key, float *values);
 
     void                interpolate(float key, double *values); 
 

@@ -23,6 +23,7 @@
 #define _NODE_REMOTE_SELECTION_GROUP_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -60,7 +61,8 @@ class NodeRemoteSelectionGroup : public NodeGroup {
 public:
                     NodeRemoteSelectionGroup(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeRemoteSelectionGroup(*this); }
+    virtual Node *copy() { return new NodeRemoteSelectionGroup(
+                                  m_scene, m_proto); }
 
     fieldMacros(SFBool, enableCulling, ProtoRemoteSelectionGroup)
     fieldMacros(MFString, invisibleNodes, ProtoRemoteSelectionGroup)

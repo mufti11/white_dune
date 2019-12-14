@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef CONE2NURBS_DIALOG_H
-#define CONE2NURBS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
-
 #include "Node.h"
 
 class Cone2NurbsDialog : public Dialog 
@@ -57,4 +52,3 @@ private:
     int                 m_bottom;
 };
 
-#endif

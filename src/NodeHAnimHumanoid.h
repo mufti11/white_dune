@@ -22,7 +22,11 @@
 #ifndef _NODE_HAnim_HUMANOID_H
 #define _NODE_HAnim_HUMANOID_H
 
+#ifndef _MY_MESH_H
+#include "MyMesh.h"
+#endif
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -33,9 +37,6 @@
 #endif
 #ifndef _MATRIX_H
 #include "Matrix.h"
-#endif
-#ifndef _MY_MESH_H
-#include "MyMesh.h"
 #endif
 
 #include "swt.h"
@@ -80,13 +81,14 @@ protected:
                      ~NodeHAnimHumanoid();
 
 public:
-    virtual int       getChildrenField(void) const
+    virtual int       getChildrenField(void)
                          { return skeleton_Field(); }
 
     virtual const char* getComponentName(void) const;
-    virtual int         getComponentLevel(void) const;
-    virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node     *copy() const { return new NodeHAnimHumanoid(*this); }
+    virtual int       getComponentLevel(void) const;
+    virtual int       getX3dVersion(void) const { return 0; }
+    virtual Node     *copy() { return new NodeHAnimHumanoid(m_scene, 
+                                      m_proto); }
 
     virtual void      setField(int index, FieldValue *value, int cf = -1);
 

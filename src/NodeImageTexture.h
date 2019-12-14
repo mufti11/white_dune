@@ -21,21 +21,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_IMAGETEXTURE_H
-#define _NODE_IMAGETEXTURE_H
+#pragma once
 
-#ifndef _NODE_H
 # include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 # include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "KambiTextureCommonFields.h"
 
 #ifdef HAVE_LIBDEVIL
@@ -75,12 +66,12 @@ public:
 class NodeImageTexture : public Node {
 public:
                     NodeImageTexture(Scene *scene, Proto *proto);
-                    NodeImageTexture(const NodeImageTexture &node);
+                    NodeImageTexture(NodeImageTexture &node);
     virtual        ~NodeImageTexture();
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeImageTexture(*this); }
+    virtual Node   *copy() { return new NodeImageTexture(m_scene, m_proto); }
     virtual void    setField(int field, FieldValue *value, int cf = -1);
 
     virtual bool    hasNumbers4kids(void) { return true; } 
@@ -149,4 +140,3 @@ protected:
 #endif
 };
 
-#endif // _NODE_IMAGETEXTURE_H

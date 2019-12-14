@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MESH_MORPHING_NODE_H
-#define _MESH_MORPHING_NODE_H
+#pragma once
 
 #include "Array.h"
 #include "Interpolator.h"
@@ -63,4 +62,3 @@ protected:
     virtual void    finalizeData(void* data) = 0;
 };
 
-#endif

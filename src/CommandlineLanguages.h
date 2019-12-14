@@ -1,21 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  * CommandlineLanguages.h.m4 
  *

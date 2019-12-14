@@ -61,7 +61,7 @@ class NodeDish : public Node {
 public:
                     NodeDish(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeDish(*this); }
+   virtual Node    *copy() { return new NodeDish(m_scene, m_proto); }
     virtual int     getX3dVersion(void) const { return -1; }
 
     fieldMacros(SFBool,  bottom,      ProtoDish)

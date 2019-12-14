@@ -19,12 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _OUTPUT_DIALOG_H
-#define _OUTPUT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
+
 
 class OutputSettingsDialog : public Dialog
 {
@@ -36,4 +34,4 @@ public:
     virtual void        SaveData();
     void                OnCommand(void *id); 
 };
-#endif
+

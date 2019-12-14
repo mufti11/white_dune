@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PREFERENCES_APP_H
-#define _PREFERENCES_APP_H
+#pragma once
 
 #include "swttypedef.h"
 #include "MyString.h"
@@ -90,4 +89,3 @@ private:
     MyString            m_ttfFile;
 };
 
-#endif

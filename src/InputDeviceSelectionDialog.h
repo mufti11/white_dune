@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INPUT_DEVICE_SELECTION_DIALOG_H
-#define _INPUT_DEVICE_SELECTION_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 
 class InputDevice;
 class AflockDevice;
@@ -68,4 +65,3 @@ public:
     SWND combo_existing_devices;
     SWND button_delete_device;
 };
-#endif

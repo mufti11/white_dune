@@ -25,6 +25,7 @@
 
 #include "SFImage.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 SFImage::SFImage(int width, int height, int components, const int *pixels)
 {
@@ -44,7 +45,7 @@ SFImage::SFImage(void)
     setComponents(0);
 }
 
-int SFImage::writeData(int f, int i) const
+int SFImage::writeData(int f, int i)
 {
     int number;
     switch (i) {
@@ -63,7 +64,7 @@ int SFImage::writeData(int f, int i) const
     return mywritef(f, "0x%x", number);
 }
 
-int SFImage::write(int f, int indent) const
+int SFImage::write(int f, int indent)
 {
     RET_ONERROR( mywritef(f, "%d %d %d\n", getWidth(), getHeight(), 
                           getComponents()) )
@@ -76,7 +77,6 @@ int SFImage::write(int f, int indent) const
 }
 
 int SFImage::writeXml(int f, int indent, int containerField, bool avoidUse)
-const
 {
     RET_ONERROR( mywritef(f, "'%d %d %d", getWidth(), getHeight(), 
                           getComponents()) )
@@ -93,7 +93,7 @@ SFImage::readLine(int index, char *line)
 }
 
 bool
-SFImage::equals(const FieldValue *value) const
+SFImage::equals(FieldValue *value)
 {
     if (value->getType() == SFIMAGE) {
         SFImage *v = (SFImage *) value;
@@ -117,7 +117,7 @@ SFImage::equals(const FieldValue *value) const
 }
 
 int
-SFImage::getWidth(void) const
+SFImage::getWidth(void)
 {
     if (m_value.size() > 0)
         return m_value[0];
@@ -138,7 +138,7 @@ SFImage::setWidth(int width)
 }
 
 int
-SFImage::getHeight() const
+SFImage::getHeight()
 {
     if (m_value.size() > 1)
         return m_value[1];
@@ -159,7 +159,7 @@ SFImage::setHeight(int height)
 }
 
 int
-SFImage::getComponents() const
+SFImage::getComponents()
 {
     if ((int)m_value.size() > 2)
         return m_value[2];
@@ -180,7 +180,7 @@ SFImage::setComponents(int components)
 }
 
 const int *
-SFImage::getPixels() const
+SFImage::getPixels()
 {
     if ((getWidth() != 0) && (getHeight() != 0) && (getComponents() != 0))
         return m_value.getData() + 3;
@@ -195,7 +195,7 @@ SFImage::setPixel(int index, int pixel)
 }
  
 int
-SFImage::getNumPixels() const
+SFImage::getNumPixels()
 {
     int pixels = getWidth() * getHeight();
     if (pixels > ((int)m_value.size() - 3))
@@ -217,7 +217,7 @@ SFImage::setSFValue(int index, FieldValue *value)
 
 
 MyString
-SFImage::getEcmaScriptComment(MyString name, int flags) const
+SFImage::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

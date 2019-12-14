@@ -74,7 +74,7 @@ public:
     FieldIndex zSpacingX3D;
     x3domGeometryCommonFieldIndex()
 
-    virtual int     translateField(int field) const;
+    virtual int     translateField(int field);
 };
 
 class NodeGeoElevationGrid : public MeshBasedNode {
@@ -84,8 +84,9 @@ public:
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual const char* getComponentName(void) const { return "Geospatial"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual Node   *copy() const { return new NodeGeoElevationGrid(*this); }
+    virtual int     getComponentLevel(void) const { return 1; }
+    virtual Node   *copy() 
+                    { return new NodeGeoElevationGrid(m_scene, m_proto); }
 
     virtual void    draw();
 
@@ -99,11 +100,6 @@ public:
     virtual bool    validHandle(int handle);
     virtual bool    checkHandle(int handle);
     virtual int     getMaxHandle(void);
-
-    virtual NodeColor *getColorNode() 
-                    { return (NodeColor *)color()->getValue(); }
-    virtual NodeColorRGBA *getColorRGBANode() 
-                    { return (NodeColorRGBA *)color()->getValue(); }
 
     GeometryNodeDeclarationMacros()
 

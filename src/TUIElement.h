@@ -21,19 +21,11 @@
  * Implements the Cover/Covise TUIElement node
  */
 
-#ifndef _TUI_ELEMENT_H
-#define _TUI_ELEMENT_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTUIElement : public Proto {
@@ -57,11 +49,10 @@ public:
 
     virtual int     getType() const { return -1; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new TUIElement(*this); }
+    virtual Node   *copy() { return new TUIElement(*this); }
 
     fieldMacros(SFString, elementName,     ProtoTUIElement)
     fieldMacros(SFString, parent,          ProtoTUIElement)
     fieldMacros(SFVec2f,  pos,             ProtoTUIElement)
 };
 
-#endif // _TUI_ELEMENT_H

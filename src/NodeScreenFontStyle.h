@@ -23,6 +23,7 @@
 #define _NODE_SCREEN_FONTSTYLE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -54,12 +55,12 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeScreenFontStyle(*this); }
+    virtual Node   *copy() { return new NodeScreenFontStyle(m_scene, m_proto); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
-    virtual float   getSizeX(void) const;
-    virtual float   getSizeY(void) const;
+    virtual float   getSizeX(void);
+    virtual float   getSizeY(void);
     virtual bool    isScreenFontStyle(void) { return false; }
 
     void            setField(int index, FieldValue *value, int cf = -1);

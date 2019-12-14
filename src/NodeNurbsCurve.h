@@ -23,8 +23,8 @@
 #define _NODE_NURBS_CURVE_H
 
 #include "NurbsCurve.h"
+#include "Interpolator.h"
 
-class Interpolator;
 class InterpolatorInfo;
 
 typedef enum {
@@ -67,7 +67,7 @@ class NodeNurbsCurve : public ChainBasedGeometryNode, NurbsCurve {
 public:
                     NodeNurbsCurve(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeNurbsCurve(*this); }
+    virtual Node   *copy() { return new NodeNurbsCurve(m_scene, m_proto); }
 
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
@@ -81,7 +81,7 @@ public:
     virtual Vec3f   getHandle(int handle, int *constraint, int *field);
     virtual void    setHandle(int handle, const Vec3f &v);
 
-    virtual int     repairField(int field) const;
+    virtual int     repairField(int field);
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
     void            repairKnotAndWeight();

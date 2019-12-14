@@ -19,19 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PROTO_MAP_H
-#define _PROTO_MAP_H
+#pragma once
 
-#ifndef _MAP_H
 #include "Map.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
-
-class Proto;
+#include "Proto.h"
 
 typedef Map<MyString, Proto *> ProtoMap;
-
-#endif

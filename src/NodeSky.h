@@ -62,7 +62,7 @@ public:
                     NodeSky(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; } 
-    virtual Node   *copy() const { return new NodeSky(*this); }
+    virtual Node   *copy() { return new NodeSky( m_scene, m_proto); }
 
     fieldMacros(SFBool,  enabled,     ProtoSky)
     fieldMacros(SFBool,  timeLapse,   ProtoSky)

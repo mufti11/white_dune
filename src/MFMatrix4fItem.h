@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFMATRIX4F_ITEM_H
-#define _MFMATRIX4F_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 #include "MFFloatItem.h"
@@ -39,5 +38,3 @@ public:
     virtual void             RemoveSFValue(int index);
     virtual int              GetFieldOffset(int xpos) const;
 };
-
-#endif 

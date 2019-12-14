@@ -32,23 +32,23 @@ public:
                         SFFloat(void) { m_value = 0.0; } // silly default
 
     virtual int         getType() const { return SFFLOAT; }
-    virtual const char *getTypeName() const { return "SFFloat"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFFloat"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const; 
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataC(int filedes, int i, int languageFlag); 
 
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
-    virtual const char *getDefaultC(int languageFlag) const { return "0.0f"; }
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
+    virtual const char *getDefaultC(int languageFlag) { return "0.0f"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 1; }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return 1; }
+    virtual bool        needCheckFloat(void) { return true; }
 
     virtual FieldValue *copy() { return new SFFloat(*this); }
 
-    float               getValue() const 
+    float               getValue() 
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -57,9 +57,8 @@ public:
                            return m_value; 
                            }
 
-    virtual bool        equals(const FieldValue *value) const;
-    virtual bool        equalsAngle(const FieldValue *value, double angleUnit) 
-                            const;
+    virtual bool        equals(FieldValue *value);
+    virtual bool        equalsAngle(const FieldValue *value, double angleUnit);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 
     double              getFixedAngle(double angleUnit) 
@@ -73,9 +72,9 @@ public:
                             return m_value;
                             }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    bool                supportAnimation(bool x3d) const { return true; }
+    bool                supportAnimation(bool x3d) { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype) 
                            { return new SFFloat(FLOAT_RAND()); }

@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FACE_DATA_H
-#define _FACE_DATA_H
+#pragma once
 
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
 
 class FaceData {
 public:
@@ -46,5 +43,3 @@ private:
     Vec3f       m_normal;
     float       m_minZ, m_maxZ;
 };
-
-#endif // _FACE_DATA_H

@@ -48,8 +48,8 @@ public:
                            { return "RigidBodyPhysics"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node       *copy() const 
-                           { return new NodeCollisionSensor(*this); }
+    virtual Node       *copy() { return new NodeCollisionSensor(
+                                        m_scene, m_proto); }
 
     fieldMacros(SFNode, collider, ProtoCollisionSensor)
     fieldMacros(SFBool, enabled,     ProtoCollisionSensor)

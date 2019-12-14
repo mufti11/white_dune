@@ -23,6 +23,7 @@
 #define _NODE_VIEWPOINT_GROUP_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -60,7 +61,7 @@ public:
     virtual const char* getComponentName(void) const { return "Navigation"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; }    
-    virtual Node   *copy() const { return new NodeViewpointGroup(*this); }
+    virtual Node   *copy() { return new NodeViewpointGroup(m_scene, m_proto); }
 
     fieldMacros(SFVec3f,  center,            ProtoViewpointGroup);
     fieldMacros(MFNode,   children,          ProtoViewpointGroup);

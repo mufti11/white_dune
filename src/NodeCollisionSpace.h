@@ -45,9 +45,9 @@ public:
                     NodeCollisionSpace(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeCollisionSpace(*this); }
+    virtual Node   *copy() { return new NodeCollisionSpace(m_scene, m_proto); }
 
-    virtual int     getChildrenField(void) const { return collidables_Field(); }
+    virtual int     getChildrenField(void) { return collidables_Field(); }
 
     fieldMacros(MFNode, collidables, ProtoCollisionSpace)
     fieldMacros(SFBool, useGeometry, ProtoCollisionSpace)

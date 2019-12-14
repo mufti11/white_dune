@@ -19,40 +19,18 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_INDEXEDFACESET_H
-#define _NODE_INDEXEDFACESET_H
-
-#ifndef _MESH_BASED_NODE_H
+#pragma once
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-//#ifndef _MY_MESH_H
-//#include "MyMesh.h"
-//#endif
-#ifndef _MY_MESH_H
-class MyMesh;
-#endif
-#ifndef _VEC3F_H
+#include "MyMesh.h"
 #include "Vec3f.h"
-#endif 
-#ifndef _NODE_COORDINATE_H
 #include "NodeCoordinate.h"
-#endif
-#ifndef _COLORED_H
 #include "Colored.h"
-#endif
 #include "SFMFTypes.h"
 #include "ComposedGeometryMacros.h"
-
-class Matrix;
+#include "Matrix.h"
 
 enum {
     UNION,
@@ -101,7 +79,7 @@ class FacesetAndMatrix {
 public:
     NodeIndexedFaceSet *node;
     NodeMaterial *material;
-    Matrix matrix;
+    Matrixd matrix;
 };
 
 class NodeIndexedFaceSet : public MeshBasedNode, Colored {
@@ -115,7 +93,7 @@ public:
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
     virtual void    setField(int index, FieldValue *value, int cf = -1);
-    virtual Node   *copy() const { return new NodeIndexedFaceSet(*this); }
+    virtual Node   *copy() { return new NodeIndexedFaceSet(m_scene, m_proto); }
 
     virtual void    draw();
 
@@ -152,9 +130,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() const 
+    virtual int     colorPerVertexField() 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField() const
+    virtual int     colorIndexField()
                        { return colorIndex_Field(); }
 
     MFVec3f        *getCoordinates();
@@ -195,30 +173,25 @@ public:
                                       int jLoop, int nLoop,
                                       int uPieces, int vPieces);
     void            splitIntoPieces(int piecesU, int piecesV);
-
-
-    void            writeOffInit(void)
-                       {
-                       m_sumVerticesPerFaces = 0;
-                       m_sumVertices = 0;
-                       }
-    void            accountOffData(int f);
-    void            writeOffVertices(int f, Node *node);
-    void            writeOffIndices(int f, Node *node);
-    void            writeOffNormalsAndColors(int f, Node *node);
-
-    int             getSumVertices(void) { return m_sumVertices; }       
-    int             getSumVerticesPerFaces(void)
-                        { return m_sumVerticesPerFaces; }
-    int             getNumVertices(void) 
-                        { return getCoordinates()->getSFSize(); }   
-
-
 #ifdef HAVE_LIBCGAL
     NodeIndexedFaceSet *csg(NodeIndexedFaceSet *face, int operation,
-                            Matrix matrix1, Matrix matrix2);
+                            Matrixd matrix1, Matrixd matrix2);
     NodeIndexedFaceSet *readOff(const char *filename);
 #endif
+    void                writeOffInit(void) 
+                            {
+                            m_sumVertices = 0; 
+                            m_sumVerticesPerFaces = 0;
+                            }
+    void                accountOffData(int f);
+    void                writeOffVertices(int f, Node *node);
+    void                writeOffIndices(int f, Node *node);
+    void                writeOffNormalsAndColors(int f, Node *node);
+    int                 getSumVertices(void)
+                            { return m_sumVertices; }
+    int                 getSumVerticesPerFaces(void) 
+                            { return m_sumVerticesPerFaces; }
+
 #ifdef HAVE_LIBVCG
     NodeIndexedFaceSet *meshReduce(float percent);
 #endif
@@ -255,13 +228,7 @@ public:
 protected:
     void            createMesh(bool cleanDoubleVertices = true,
                                bool triangulate = true);
-
 protected:
-    int                 m_numVertices;
-    int                 m_sumVertices;       
-    int                 m_sumVerticesPerFaces;
-    int                 m_sumNumFaces;
-
+    int m_sumVertices; 
+    int m_sumVerticesPerFaces ;                           
 };
-
-#endif // _NODE_INDEXEDFACESET_H

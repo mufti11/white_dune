@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ELEVATION_GRID_DIALOG_H
-#define _ELEVATION_GRID_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class ElevationGridDialog : public Dialog {
@@ -43,4 +39,3 @@ private:
     int                 m_depth;
 };
 
-#endif

@@ -34,40 +34,41 @@ public:
                         SFColorRGBA(void); // silly default
 
     virtual int         getType() const { return SFCOLORRGBA; }
-    virtual const char *getTypeName() const { return "SFColorRGBA"; }
-    virtual int         getStride() const { return 3; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFColorRGBA"; }
+    virtual int         getStride() { return 3; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
-    virtual bool        isArrayInC(void) const { return true; }
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
+    virtual bool        isArrayInC(void) { return true; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 4; }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return 4; }
+    virtual bool        needCheckFloat(void) { return true; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy() { return new SFColorRGBA(*this); }
 
-    const float        *getValue() const { return m_value; }
-    float               getValue(int index) const { return m_value[index]; }
+    const float        *getValue() { return m_value; }
+    float               getValue(int index) { return m_value[index]; }
     void                setValue(int index, float value)
                            { m_value[index] = value; }
     void                setValue(float v1, float v2, float v3);
     void                setValue(float v1, float v2, float v3, float v4);
+    void                setSFValue(FieldValue *value);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    bool                supportAnimation(bool x3d) const { return false; }
+    bool                supportAnimation(bool x3d) { return false; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 protected:
-    bool                equals(const SFColorRGBA *value) const;
+    bool                equals(const SFColorRGBA *value);
 
 
 protected:

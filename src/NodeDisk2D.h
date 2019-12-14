@@ -60,7 +60,7 @@ class NodeDisk2D : public MeshBasedNode {
 public:
                     NodeDisk2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeDisk2D(*this); }
+    virtual Node   *copy() { return new NodeDisk2D(m_scene, m_proto); }
 
     virtual const char* getComponentName(void) const 
                            { return "Geometry2D"; }

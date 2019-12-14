@@ -36,31 +36,30 @@ public:
                         SFDouble(void) { m_value = 0.0f; } // silly default
 
     virtual int         getType() const { return SFDOUBLE; }
-    virtual const char *getTypeName() const { return "SFDouble"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFDouble"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag) const { return "double"; }
-    virtual const char *getDefaultC(int languageFlag) const { return "0"; }
+    virtual const char *getTypeC(int languageFlag) { return "double"; }
+    virtual const char *getDefaultC(int languageFlag) { return "0"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 1; }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return 1; }
+    virtual bool        needCheckFloat(void) { return true; }
 
     virtual FieldValue *copy() { return new SFDouble(*this); }
 
-    double              getValue() const { return m_value; }
+    double              getValue() { return m_value; }
 
-    virtual bool        equals(const FieldValue *value) const;
-    virtual bool        equalsAngle(const FieldValue *value, double angleUnit)
-                            const;
+    virtual bool        equals(FieldValue *value);
+    virtual bool        equalsAngle(FieldValue *value, double angleUnit);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    bool                supportAnimation(bool x3d) const { return x3d; }
+    bool                supportAnimation(bool x3d) { return x3d; }
     void                setValue(const char *value)
                            {
                            sscanf(value, "%lf", &m_value);

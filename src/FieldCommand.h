@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FIELD_CHANGE_H
-#define _FIELD_CHANGE_H
+#pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
 
 class Node;
 class FieldValue;
@@ -46,4 +43,3 @@ private:
     FieldValue         *m_newValue;
 };
 
-#endif // _FIELD_CHANGE_H

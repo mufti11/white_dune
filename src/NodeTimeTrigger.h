@@ -23,6 +23,7 @@
 #define _NODE_TIME_TRIGGER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -50,13 +51,13 @@ public:
 class NodeTimeTrigger : public Node {
 public:
                     NodeTimeTrigger(Scene *scene, Proto *proto);
-                    NodeTimeTrigger(const NodeTimeTrigger &node);
+                    NodeTimeTrigger(NodeTimeTrigger &node);
     virtual        ~NodeTimeTrigger();
 
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeTimeTrigger(*this); }
+    virtual Node *copy() { return new NodeTimeTrigger(m_scene, m_proto); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 };

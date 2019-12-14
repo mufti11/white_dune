@@ -54,11 +54,11 @@ class NodeCircle2D : public ChainBasedGeometryNode {
 public:
                     NodeCircle2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeCircle2D(*this); }
+    virtual Node   *copy() { return new NodeCircle2D(m_scene, m_proto); }
 
     virtual const char* getComponentName(void) const 
                            { return "Geometry2D"; }
-    virtual int         getComponentLevel(void) const { return 2; }
+    virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 0; }
 
     virtual int     countPrimitives(void) {return 1;}

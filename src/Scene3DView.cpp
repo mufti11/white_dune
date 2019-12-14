@@ -1220,7 +1220,7 @@ Scene3DView::walk()
     return 0;
 }
 
-void Scene3DView::Transform3D(const Path* path,InputDevice* inputDevice)
+void Scene3DView::Transform3D(Path* path,InputDevice* inputDevice)
 {
     if (path->getNode()->getType() != VRML_TRANSFORM)
         return;
@@ -1312,8 +1312,7 @@ void Scene3DView::Transform3D(const Path* path,InputDevice* inputDevice)
     glPopMatrix();
 }
 
-void Scene3DView::Handle3D(const Path* path,InputDevice* inputDevice, 
-                           int handle)
+void Scene3DView::Handle3D(Path* path,InputDevice* inputDevice, int handle)
 {
     glPushMatrix();
     glLoadIdentity();
@@ -1398,7 +1397,8 @@ void Scene3DView::Navigate3D(InputDevice* inputDevice)
        v[0]=v[0]+vcamera.x;
        v[1]=v[1]+vcamera.y;
        v[2]=v[2]+vcamera.z;
-       camera->setPosition(Vec3d(v.x, v.y, v.z));
+       Vec3d vec(v.x, v.y, v.z);
+       camera->setPosition(vec);
     }
     m_scene->applyCamera();
     swInvalidateWindow(m_wnd);
@@ -1421,7 +1421,7 @@ Scene3DView::readInputDevice(void)
              fprintf(stderr,"internal error in Scene3DView::readInputDevice\n");
           if (inputDevice->readInputDevice() && !(inputDevice->allzero())) {
              TheApp->interact();
-             const Path *path = m_scene->getSelection();
+             Path *path = m_scene->getSelection();
              Node *node = path->getNode();
              Path *transform = NULL;
              if (m_scene->getInputDeviceNavigationMode() &&

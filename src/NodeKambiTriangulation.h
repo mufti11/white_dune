@@ -23,6 +23,7 @@
 #define _NODE_KAMBI_TRIANGULATION_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -54,7 +55,8 @@ class NodeKambiTriangulation : public Node {
 public:
                     NodeKambiTriangulation(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeKambiTriangulation(*this); }
+    virtual Node   *copy() { return new NodeKambiTriangulation( 
+                             m_scene, m_proto); }
 
     kambiCommonFunctions()
 

@@ -121,25 +121,25 @@ NodeOrthoViewpoint::transformForViewpoint(bool useStereo)
 }
 
 Vec3d
-NodeOrthoViewpoint::getPosition() const
+NodeOrthoViewpoint::getPosition()
 {
-     Vec3f vec(((NodeOrthoViewpoint *)this)->position()->getValue());
+     Vec3f vec(position()->getValue());
      return Vec3d(vec.x, vec.y, vec.z);
 }
 
-void NodeOrthoViewpoint::setPosition(const Vec3d &pos)
+void NodeOrthoViewpoint::setPosition(Vec3d pos)
 {
     m_scene->setField(this, position_Field(), 
                             new SFVec3f(pos.x, pos.y, pos.z));
 }
 
 Quaternion 
-NodeOrthoViewpoint::getOrientation() const
+NodeOrthoViewpoint::getOrientation()
 {
-    return ((NodeOrthoViewpoint *)this)->orientation()->getQuat();
+    return orientation()->getQuat();
 }
 
-void NodeOrthoViewpoint::setOrientation(const Quaternion &quat)
+void NodeOrthoViewpoint::setOrientation(Quaternion quat)
 {
     SFRotation *rot = new SFRotation(quat);
     rot->reverseFixAngle(m_scene->getUnitAngle());

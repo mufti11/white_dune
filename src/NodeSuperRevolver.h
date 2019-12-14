@@ -90,7 +90,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }  
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeSuperRevolver(*this); }
+    virtual Node   *copy() { return new NodeSuperRevolver( m_scene, m_proto); }
 
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);

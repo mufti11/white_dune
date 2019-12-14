@@ -24,6 +24,7 @@
 
 #include "MFFloat.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFFloat::MFFloat()
 {
@@ -38,12 +39,12 @@ MFFloat::MFFloat(int size)
 
 }
 
-MFFloat::MFFloat(const float *values, int len, int /* stride */)
+MFFloat::MFFloat(float *values, int len, int /* stride */)
 {
     m_value.setData(values, len);
 }
 
-MFFloat::MFFloat(const double *values, int len, int /* stride */)
+MFFloat::MFFloat(double *values, int len, int /* stride */)
 {
     float* floats = new float[len];
     for (int i = 0; i < len; i++)
@@ -51,17 +52,27 @@ MFFloat::MFFloat(const double *values, int len, int /* stride */)
     m_value.setData(floats, len);    
 }
 
-MFFloat::MFFloat(const MFFloat *value)
+MFFloat::MFFloat(MFFloat *value)
 {
-    m_value.setData(value->getValues(), value->getSize());
+    m_value.setData(((MFFloat *)value)->getValues(), 
+                    ((MFFloat *)value)->getSize());
 }
 
-MFFloat::MFFloat(const MFFloat &value)
+MFFloat::MFFloat(MFFloat &values)
 {
-    m_value.setData(value.getValues(), value.getSize());
+    int len = values.getSize();
+    if (len == 0) {
+        float* floats = new float[1];
+        m_value.setData(floats, 0);  
+        return;
+    }
+    float* floats = new float[len];
+    for (int i = 0; i < len; i++)
+         floats[i] = values.getValue(i);
+    m_value.setData(floats, len);    
 }
 
-MFFloat::MFFloat(const float value)
+MFFloat::MFFloat(float value)
 {
     m_value.resize(0);
     m_value[0] = value;
@@ -74,7 +85,7 @@ MFFloat::~MFFloat()
 }
 
 MyString    
-MFFloat::getString(int index, int stride) const
+MFFloat::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -86,6 +97,10 @@ MFFloat::getString(int index, int stride) const
 FieldValue *
 MFFloat::copy()
 {
+    if (m_value.size() == 0) {
+        m_value.resize(0);
+        return new MFFloat(m_value.getData(), 0);
+    }
     float *value = new float[m_value.size()];
     for (long i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];
@@ -101,15 +116,9 @@ MFFloat::readLine(int index, char *line)
 }
 
 bool
-MFFloat::equals(const FieldValue *value) const
+MFFloat::equals(MFFloat *value)
 {
-    return value->getType() == MFFLOAT && equals((const MFFloat *) value);
-}
-
-bool
-MFFloat::equals(const MFFloat *value) const
-{
-    if ((int)m_value.size() == value->getSize()) {
+    if (m_value.size() == value->getSize()) {
         for (long i = 0; i < m_value.size(); i++)
             if (m_value[i] != value->getValue(i))
                 return false;
@@ -118,7 +127,7 @@ MFFloat::equals(const MFFloat *value) const
     return false;
 }
 
-int MFFloat::writeData(int f, int i) const
+int MFFloat::writeData(int f, int i)
 {
    RET_ONERROR( mywritef(f, "%f", m_value[i * getStride()]) )
    if (getStride() > 1)   
@@ -127,7 +136,7 @@ int MFFloat::writeData(int f, int i) const
    return 0;
 }
 
-int MFFloat::writeDataC(int f, int i, int languageFlag) const
+int MFFloat::writeDataC(int f, int i, int languageFlag)
 {
    bool java = (languageFlag & JAVA_SOURCE);
    RET_ONERROR( mywritef(f, java ? "%ff" : "%f", m_value[i * getStride()]) )
@@ -161,14 +170,14 @@ MFFloat::setSFValue(int index, FieldValue *value)
 }
 
 void 
-MFFloat::setSFValue(int index, const float value)
+MFFloat::setSFValue(int index, float value)
 {
     assert(index<getSFSize());
     m_value[index] = value;
 }
 
 FieldValue *
-MFFloat::getSFValue(int index) const
+MFFloat::getSFValue(int index)
 {
     assert(index<getSFSize());
     return new SFFloat(m_value[index]); 
@@ -190,7 +199,7 @@ MFFloat::removeMFFloatSFValue(int index)
 }
 
 MyString
-MFFloat::getEcmaScriptComment(MyString name, int flags) const
+MFFloat::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -267,13 +276,13 @@ MFFloat::insertSFValue(int index, FieldValue *value)
 }
 
 void 
-MFFloat::insertSFValue(int index, const float value)
+MFFloat::insertSFValue(int index, float value)
 {
     m_value.insert(value, index);
 }
 
 void 
-MFFloat::appendSFValue(const float value)
+MFFloat::appendSFValue(float value)
 {
     m_value.append(value);
 }

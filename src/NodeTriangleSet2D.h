@@ -74,7 +74,7 @@ public:
                            { return "Geometry2D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeTriangleSet2D(*this); }
+    virtual Node *copy() { return new NodeTriangleSet2D(m_scene, m_proto); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 

@@ -30,6 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#pragma once
+
+#include "DuneApp.h"
+#include "ExternTheApp.h"
 
 //===============================================================
 // Aflock
@@ -74,8 +78,7 @@
 //  +----------------------+   +-----------+    +-----------+
 
 //===============================================================
-#ifndef _ASCENSION_FLOCKOFBIRD_H_
-#define _ASCENSION_FLOCKOFBIRD_H_
+#pragma once
 
 //do not use
 //#define USE_AFLOCK_QUATERNION 1
@@ -391,6 +394,4 @@ private:
 #define AFLOCK_PRINT(message) fprintf(stderr,message)
 #else
 #define AFLOCK_PRINT(message)   
-#endif
-
 #endif

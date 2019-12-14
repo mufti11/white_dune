@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_INDEXEDLINESET_H
-#define _NODE_INDEXEDLINESET_H
+#pragma once
 
-#ifndef _GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _COLORED_H
 #include "Colored.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoIndexedLineSet : public GeometryProto {
@@ -66,7 +56,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeIndexedLineSet(*this); }
+    virtual Node   *copy() { return new NodeIndexedLineSet(m_scene, m_proto); }
 
     virtual void    draw();
 
@@ -95,9 +85,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() const 
+    virtual int     colorPerVertexField() 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField() const
+    virtual int     colorIndexField()
                        { return colorIndex_Field(); }
 
     fieldMacros(MFNode,  attrib,         ProtoIndexedLineSet)
@@ -114,5 +104,3 @@ public:
     void            lineDraw();
 };
 
-
-#endif // _NODE_INDEXEDLINESET_H

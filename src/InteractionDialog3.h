@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INTERACTION_DIALOG3_H
-#define _INTERACTION_DIALOG3_H
+#pragma once
 
 #include "Scene.h"
-#include "CheckBoxWindow.h"
 #include "InteractionDialog.h"
 
 class InteractionDialog3 : public Dialog {
@@ -44,7 +42,6 @@ protected:
     void                drawInterface(SDC dc);
     
 protected:
-    CheckBoxWindow        m_window;
     InteractionRouteData *m_routeData;
     Scene                *m_scene;
     bool                  m_okFlag;
@@ -54,5 +51,4 @@ protected:
     MyArray<int>          m_eventOuts;        
 };
 
-#endif
 

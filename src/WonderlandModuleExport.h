@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef WONDERLAND_MODULE_EXPORT_H
-#define WONDERLAND_MODULE_EXPORT_H
+#pragma once
 
 #define WONDERLAND_EXPORT_DIRECTORY "exportX3d"
 
@@ -42,4 +41,3 @@ protected:
 extern int       
 writeCellRendererCode(int f, const char *upperName, const char *lowerName,
                       Scene *scene);
-#endif

@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ONE_BOOL_DIALOG_H
-#define _ONE_BOOL_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class OneBoolDialog : public Dialog {
@@ -40,4 +36,3 @@ private:
     bool                m_value;
 };
 
-#endif

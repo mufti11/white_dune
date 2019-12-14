@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef SPLIT_FACES_DIALOG_H
-#define SPLIT_FACES_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class SplitFacesDialog : public Dialog 
@@ -42,4 +38,3 @@ private:
     bool                m_otherDirection;
 };
 
-#endif

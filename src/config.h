@@ -353,7 +353,7 @@
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
 
 /* object editor for sound (.wav/.midi) files */
 #define HAVE_SOUND_EDITOR "/usr/bin/audacity"

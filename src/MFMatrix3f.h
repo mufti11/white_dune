@@ -19,48 +19,46 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFMATRIX3F_H
-#define _MFMATRIX3F_H
+#pragma once
 
-#ifndef _MFFLOAT_H
 # include "MFFloat.h"
-#endif
 
 class MFMatrix3f : public MFFloat {
 public:
                         MFMatrix3f() : MFFloat() {}
                         MFMatrix3f(int size) : MFFloat(size * 9) {}
-                        MFMatrix3f(const MFMatrix3f *values) :
-                              MFFloat(values->getValues(), values->getSize()) {}
-                        MFMatrix3f(const float *values, int len) :
+                        MFMatrix3f(MFMatrix3f *values) :
+                                   MFFloat(
+                                    ((MFFloat *)values)->getValues(), 
+                                    ((MFFloat *)values)->getSize()) {}
+                        MFMatrix3f(float *values, int len) :
                               MFFloat(values, len) {}
-                        MFMatrix3f(const double *values, int len) :
+                        MFMatrix3f(double *values, int len) :
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFMATRIX3F; }
-    virtual const char *getTypeName() const { return "MFMatrix3f"; }
-    virtual int         getStride() const { return 9; }
+    virtual const char *getTypeName() { return "MFMatrix3f"; }
+    virtual int         getStride() { return 9; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
 
-    virtual FieldValue *getSFValue(int index) const;
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const float *values);
 
-    const float        *getValue(int index) const
+    float              *getValue(int index)
                               { return m_value.getData() + index * 9; } 
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const float *values);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    bool                supportAnimation(bool x3d) const { return false; }
+    bool                supportAnimation(bool x3d) { return false; }
 
     randomFunction(MFMatrix3f)                  
 };
 
-#endif

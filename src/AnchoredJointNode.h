@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ANCHORED_JOINT_NODE_H
-#define _ANCHORED_JOINT_NODE_H
+#pragma once
 
 #include "SFMFTypes.h"
 
@@ -48,5 +47,3 @@ public:
 protected:
     float           m_handleScale;
 };
-
-#endif 

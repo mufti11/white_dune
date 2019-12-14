@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BACKGROUND_H
-#define _NODE_BACKGROUND_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoBackground : public Proto {
@@ -39,7 +32,7 @@ public:
                     ProtoBackground(Scene *scene);
     virtual Node   *create(Scene *scene);
 
-    virtual int         getType() const { return VRML_BACKGROUND; }
+    virtual int     getType() const { return VRML_BACKGROUND; }
 
     virtual bool    needUpdate(void) { return true; }
 
@@ -94,7 +87,7 @@ public:
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() const { return new NodeBackground(*this); }
+    virtual Node       *copy() { return new NodeBackground(m_scene, m_proto); }
 
     virtual void        setField(int field, FieldValue *value, int cf = -1);
     virtual void        preDraw();
@@ -107,11 +100,9 @@ public:
     void                drawSky(void);
     void                drawGround(void);
     void                drawQuad(float r, float va1, float va2, 
-                                 float h1, float h2, const float *newColor);
-    void                setColor(const float *newColor);
+                                 float h1, float h2, float *newColor);
+    void                setColor(float *newColor);
 private:
     NodeImageTexture   *imageTextures[6];
     float               m_matrix[16];
 };
-
-#endif // _NODE_BACKGROUND_H

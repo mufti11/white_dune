@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MOVE_COMMAND_H
-#define _MOVE_COMMAND_H
+#pragma once
 
 #ifndef _COMMAND_H
 #include "Command.h"
@@ -53,5 +52,3 @@ protected:
     bool                m_failed;
     bool                m_isUSE;
 };
-
-#endif // _MOVE_COMMAND_H

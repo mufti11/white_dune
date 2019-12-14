@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BOOLEAN_FILTER_H
-#define _NODE_BOOLEAN_FILTER_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoBooleanFilter : public Proto {
@@ -52,15 +45,13 @@ public:
 class NodeBooleanFilter : public Node {
 public:
                     NodeBooleanFilter(Scene *scene, Proto *proto);
-                    NodeBooleanFilter(const NodeBooleanFilter &node);
+                    NodeBooleanFilter(NodeBooleanFilter &node);
     virtual        ~NodeBooleanFilter();
 
     virtual const char* getComponentName(void) const;
-    virtual int         getComponentLevel(void) const;
+    virtual int     getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeBooleanFilter(*this); }
+    virtual Node   *copy() { return new NodeBooleanFilter(m_scene, m_proto); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 };
-
-#endif // _NODE_BOOLEAN_FILTER_H

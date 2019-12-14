@@ -12,6 +12,9 @@
 
    http://www1.acm.org/pubs/tog/GraphicsGems/gemsiv/euler_angle/
 */
+
+#pragma once
+
 /**** EulerAngles.h - Support for 24 angle schemes ****/
 /* Ken Shoemake, 1993 */
 #ifndef _H_EulerAngles

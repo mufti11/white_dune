@@ -19,22 +19,18 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _HANIM_JOINT_DIALOG_H
-#define _HANIM_JOINT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
+#include "Array.h"
+
 #ifndef FLT_MAX 
 # include <float.h>
 #endif
 #ifndef FLT_MIN
 # include <float.h>
 #endif
-
-#include "Array.h"
 
 class Scene;
 class Node;
@@ -64,5 +60,3 @@ private:
     MyArray<MyString>   m_joints;
     bool                m_newJoint;
 };
-
-#endif

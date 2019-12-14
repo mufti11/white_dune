@@ -19,14 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INPUT_DEVICE_APP_H
-#define _INPUT_DEVICE_APP_H
+#pragma once
 
 #include <string.h>
-
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
 #include "TransformMode.h"
 
 class InputDevice;
@@ -106,7 +102,4 @@ private:
     MyArray<AflockDevice*>m_aflockDevices;
 #endif
 };
-
-
-#endif
 

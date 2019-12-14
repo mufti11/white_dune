@@ -23,6 +23,7 @@
 #define _NODE_TEAPOT_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -54,7 +55,7 @@ class NodeTeapot : public Node {
 public:
                     NodeTeapot(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeTeapot(*this); }
+    virtual Node *copy() { return new NodeTeapot(m_scene, m_proto); }
 
     kambiCommonFunctions()
 

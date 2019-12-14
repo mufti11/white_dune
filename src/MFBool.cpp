@@ -25,6 +25,7 @@
 #include "MFBool.h"
 #include "SFBool.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFBool::MFBool()
 {
@@ -54,7 +55,7 @@ MFBool::~MFBool()
 }
 
 MyString    
-MFBool::getString(int index, int stride) const
+MFBool::getString(int index, int stride)
 {
     MyString ret = "";
     ret +=  m_value[index * getStride() + stride] ? "true" : "false";
@@ -70,13 +71,12 @@ MFBool::copy()
     return new MFBool(value, m_value.size());
 }
 
-int MFBool::writeData(int f, int i) const
+int MFBool::writeData(int f, int i)
 {
     return mywritestr(f, m_value[i] ? "TRUE" : "FALSE");
 }
 
 int MFBool::writeXml(int f, int indent, int containerField, bool avoidUse)
-const
 {
     RET_ONERROR( mywritestr(f, "'") )
     for (int i = 0; i < getSFSize(); i++) { 
@@ -88,7 +88,7 @@ const
     return(0);
 }
 
-int MFBool::writeDataC(int f, int i, int languageFlag) const
+int MFBool::writeDataC(int f, int i, int languageFlag)
 {
     if (languageFlag & C_SOURCE)
         RET_ONERROR( mywritestr(f, m_value[i] ? "-1" : "0") )
@@ -98,7 +98,7 @@ int MFBool::writeDataC(int f, int i, int languageFlag) const
 }
 
 const char *
-MFBool::getTypeC(int languageFlag) const 
+MFBool::getTypeC(int languageFlag) 
 { 
     if (languageFlag & C_SOURCE)
         return "short";
@@ -118,7 +118,7 @@ MFBool::readLine(int index, char *line)
 }
 
 bool
-MFBool::equals(const FieldValue *value) const
+MFBool::equals(FieldValue *value)
 {
     if (value->getType() == MFBOOL) {
         MFBool *v = (MFBool *) value;
@@ -132,7 +132,7 @@ MFBool::equals(const FieldValue *value) const
 }
 
 FieldValue *
-MFBool::getSFValue(int index) const
+MFBool::getSFValue(int index)
 {
     return new SFBool(m_value[index]);
 }
@@ -151,7 +151,7 @@ MFBool::setSFValue(int index, const int value)
 
 
 MyString
-MFBool::getEcmaScriptComment(MyString name, int flags) const
+MFBool::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

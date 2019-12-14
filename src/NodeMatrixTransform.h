@@ -23,6 +23,7 @@
 #define _NODE_MATRIX_TRANSFORM_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,7 +60,7 @@ class NodeMatrixTransform : public Node {
 public:
                     NodeMatrixTransform(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeMatrixTransform(*this); }
+    virtual Node *copy() { return new NodeMatrixTransform(m_scene, m_proto); }
 
     kambiCommonFunctions()
 

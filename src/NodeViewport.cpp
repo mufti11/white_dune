@@ -62,4 +62,18 @@ NodeViewport::setField(int index, FieldValue *value, int containerField)
     NodeGroup::setField(index, value, containerField);
 }
 
+void
+NodeViewport::preDraw() 
+{ 
+    if (m_scene->getDrawViewports())
+        children()->preDraw(); 
+}
+void
+NodeViewport::draw(int pass) 
+{ 
+    if (m_scene->getDrawViewports())
+        children()->draw(pass, children_Field()); 
+}
+
+
 

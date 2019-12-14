@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "SFBool.h"
 
@@ -31,24 +32,24 @@ SFBool::SFBool(bool value)
 }
 
 MyString    
-SFBool::getString(int index, int stride) const
+SFBool::getString(int index, int stride)
 {
     MyString ret = "";
     ret += m_value ? "true" : "false";
     return ret;
 }
 
-int SFBool::writeData(int f, int i) const
+int SFBool::writeData(int f, int i)
 {
     return mywritestr(f, m_value ? "TRUE" : "FALSE");
 }
 
-int SFBool::writeXml(int f, int i, int containerField, bool avoidUse) const
+int SFBool::writeXml(int f, int i, int containerField, bool avoidUse)
 {
     return mywritestr(f, m_value ? "'true'" : "'false'");
 }
 
-int SFBool::writeC(int f, const char* variableName, int languageFlag) const
+int SFBool::writeC(int f, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(f, variableName) );
     RET_ONERROR( mywritestr(f, " = ") );
@@ -61,7 +62,7 @@ int SFBool::writeC(int f, const char* variableName, int languageFlag) const
 }
 
 const char *
-SFBool::getTypeC(int languageFlag) const 
+SFBool::getTypeC(int languageFlag)
 { 
     if (languageFlag & C_SOURCE)
         return "short";
@@ -71,24 +72,12 @@ SFBool::getTypeC(int languageFlag) const
 }
 
 const char *
-SFBool::getDefaultC(int languageFlag) const 
+SFBool::getDefaultC(int languageFlag)
 { 
     if (languageFlag & C_SOURCE)
         return "0";
     return "false"; 
 }
-
-/* not implemented yet
-int SFBool::writeDune(int f, char* variableName) const
-{
-    RET_ONERROR( mywritestr(f, "SFBool sfBool_") )
-    RET_ONERROR( mywritestr(f, variableName) )
-    RET_ONERROR( mywritestr(f, " = new SFBool(") )
-    RET_ONERROR( mywritestr(f, variableName) )
-    RET_ONERROR( mywritestr(f, ");\n") )
-    return 0;
-}
-*/
 
 bool 
 SFBool::checkInput(char *line)
@@ -115,14 +104,14 @@ SFBool::readLine(int index, char *line)
 }
 
 bool
-SFBool::equals(const FieldValue *value) const
+SFBool::equals(FieldValue *value)
 {
     return value->getType() == SFBOOL 
         && ((SFBool *) value)->getValue() == m_value;
 }
 
 MyString
-SFBool::getEcmaScriptComment(MyString name, int flags) const
+SFBool::getEcmaScriptComment(MyString name, int flags)
 {    
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

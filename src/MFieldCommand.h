@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFIELD_COMMAND_H
-#define _MFIELD_COMMAND_H
+#pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
 
 class Node;
 class FieldValue;
@@ -48,4 +45,3 @@ private:
     FieldValue         *m_newValue;      // the element (in SFValue form)
 };
 
-#endif // _MFIELD_COMMAND_H

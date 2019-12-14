@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ROUTE_VIEW_APP_H
-#define _ROUTE_VIEW_APP_H
+#pragma once
 
 class RouteViewApp {
 public:
@@ -57,5 +56,4 @@ private:
     int                 m_routedNodeIndent;
 };
 
-#endif
 

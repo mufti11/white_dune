@@ -21,10 +21,11 @@
 
 #include "SFBoolItem.h"
 
-#include "FieldView.h"
 #include "SFBool.h"
+#include "Scene.h"
 #include "Path.h"
 #include "FieldCommand.h"
+#include "FieldView.h"
 
 SFBoolItem::SFBoolItem(FieldView *view) : FieldViewItem(view)
 {

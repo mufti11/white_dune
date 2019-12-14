@@ -23,6 +23,7 @@
 #define _NODE_LAYER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -57,11 +58,11 @@ public:
     virtual const char* getComponentName(void) const { return "Layering"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node       *copy() const { return new NodeLayer(*this); }
+    virtual Node       *copy() { return new NodeLayer(m_scene, m_proto); }
 
     virtual bool        showFields() { return true; }
 
-    virtual int         getChildrenField(void) const { return -1; }
+    virtual int         getChildrenField(void) { return -1; }
 
     fieldMacros(SFBool, isPickable, ProtoLayer);
     fieldMacros(SFNode, viewport,   ProtoLayer);

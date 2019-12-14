@@ -55,7 +55,7 @@ public:
     virtual const char* getComponentName(void) const { return "Geospatial"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeGeoMetadata(*this); }
+    virtual Node   *copy() { return new NodeGeoMetadata(m_scene, m_proto); }
 
     fieldMacros(MFNode,   data,    ProtoGeoMetadata)
     fieldMacros(MFString, summary, ProtoGeoMetadata)

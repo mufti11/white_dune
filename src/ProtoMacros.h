@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PROTO_MACROS_H
-#define _PROTO_MACROS_H
+#pragma once
 
 // the following macro will produce 4 functions: 
 //
@@ -73,4 +72,3 @@
      return ((proto *)getPrimaryProto())->what; \
  }
 
-#endif // _PROTO_MACROS_H

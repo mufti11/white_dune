@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef CYLINDER2NURBS_DIALOG_H
-#define CYLINDER2NURBS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 #include "Node.h"
 
@@ -56,5 +52,3 @@ private:
     int                 m_bottom;
     int                 m_top;
 };
-
-#endif

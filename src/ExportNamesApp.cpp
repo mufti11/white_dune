@@ -20,6 +20,7 @@
  */
 
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 #include "ExportNamesApp.h"
 
 

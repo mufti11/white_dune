@@ -23,6 +23,7 @@
 #define _NODE_NURBS_CURVE_2D_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -67,7 +68,7 @@ public:
                     NodeNurbsCurve2D(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNurbsCurve2D(*this); }
+    virtual Node   *copy() { return new NodeNurbsCurve2D(m_scene, m_proto); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 

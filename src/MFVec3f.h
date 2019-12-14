@@ -19,28 +19,23 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFVEC3F_H
-#define _MFVEC3F_H
+#pragma once
 
-#ifndef _MFFLOAT_H
-# include "MFFloat.h"
-#endif
-#ifndef _VEC3F_H
-# include "Vec3f.h"
-#endif
-
-class MFVec2f;
-class MFVec3d;
+#include "MFFloat.h"
+#include "Vec3f.h"
+#include "MFVec3d.h"
+#include "MFString.h"
 
 class MFVec3f : public MFFloat {
 public:
                         MFVec3f() : MFFloat() {}
                         MFVec3f(int size) : MFFloat(size * 3) {}
-                        MFVec3f(const MFVec3f *values) :
-                              MFFloat(values->getValues(), values->getSize()) {}
-                        MFVec3f(const float *values, int len) :
+                        MFVec3f(MFVec3f *values) :
+                              MFFloat(((MFVec3f *)values)->getValues(), 
+                                      ((MFVec3f *)values)->getSize()) {}
+                        MFVec3f(float *values, int len) :
                                 MFFloat(values, len) {}
-                        MFVec3f(const double *values, int len) :
+                        MFVec3f(double *values, int len) :
                                 MFFloat(values, len) {}
                         MFVec3f(MFVec2f *mfVec2f);
                         MFVec3f(float x, float y, float z) : MFFloat(3) 
@@ -50,35 +45,36 @@ public:
                              m_value[2] = z;
                              }
 
+    MFVec3f            *getMFVec3f(void);
     MFVec3d            *getMFVec3d(void);
 
     virtual int         getType() const { return MFVEC3F; }
-    virtual const char *getTypeName() const { return "MFVec3f"; }
-    virtual int         getStride() const { return 3; }
+    virtual const char *getTypeName() { return "MFVec3f"; }
+    virtual int         getStride() { return 3; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
 
-    virtual FieldValue *getSFValue(int index) const;
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
-    virtual void        setSFValue(int index, const float *values);
+    virtual void        setSFValue(int index, float *values);
     virtual void        setSFValue(int index, float x, float y, float z);
 
-    const float        *getValue(int index) const
+    float              *getValue(int index)
                               { return m_value.getData() + index * 3; } 
 
     void                setVec(int index, Vec3f v);
     Vec3f               getVec(int index);
 
     virtual void        insertSFValue(int index, FieldValue *value);
-    virtual void        insertSFValue(int index, const float *values);
+    virtual void        insertSFValue(int index, float *values);
     virtual void        insertSFValue(int index, float x, float y, float z);
 
     virtual void        appendSFValue(float x, float y, float z) 
                            { insertSFValue(getSFSize(), x, y, z); }
-    virtual void        appendSFValue(const float *values) 
+    virtual void        appendSFValue(float *values) 
                            { insertSFValue(getSFSize(), values); }
     virtual void        appendVec(Vec3f v) 
                            { insertSFValue(getSFSize(), v.x, v.y, v.z); }
@@ -96,11 +92,9 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    bool                supportAnimation(bool x3d) const { return true; }
+    bool                supportAnimation(bool x3d) { return true; }
 
     randomFunction(MFVec3f)                  
 };
-
-#endif // _MFVEC3F_H

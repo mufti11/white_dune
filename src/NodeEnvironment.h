@@ -23,6 +23,7 @@
 #define _NODE_ENVIRONMENT_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -75,7 +76,7 @@ class NodeEnvironment : public Node {
 public:
                     NodeEnvironment(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeEnvironment(*this); }
+    virtual Node   *copy() { return new NodeEnvironment(m_scene, m_proto); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 

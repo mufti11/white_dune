@@ -23,6 +23,7 @@
 #define _NODE_COLOR_MASK_MODE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -56,7 +57,7 @@ class NodeColorMaskMode : public Node {
 public:
                     NodeColorMaskMode(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeColorMaskMode(*this); }
+    virtual Node   *copy() { return new NodeColorMaskMode(m_scene, m_proto); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 

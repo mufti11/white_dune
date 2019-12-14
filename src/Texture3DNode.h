@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
  
-#ifndef TEXTURE3D_NODE_H
-#define TEXTURE3D_NODE_H 1
+#pragma once
 
 class Texture3DNode {
 public:
@@ -43,4 +42,3 @@ protected:
 #endif
 };
 
-#endif

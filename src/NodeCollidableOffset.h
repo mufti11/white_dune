@@ -44,7 +44,8 @@ public:
                     NodeCollidableOffset(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeCollidableOffset(*this); }
+    virtual Node   *copy() { return new NodeCollidableOffset(
+                                    m_scene, m_proto); }
 
     virtual void    preDraw();
     virtual void    draw(int pass);

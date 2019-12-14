@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_AUDIOCLIP_H
-#define _NODE_AUDIOCLIP_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoAudioClip : public Proto {
@@ -59,7 +52,7 @@ public:
                     NodeAudioClip(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
-    virtual Node   *copy() const { return new NodeAudioClip(*this); }
+    virtual Node   *copy() { return new NodeAudioClip(m_scene, m_proto); }
     virtual int     getX3dVersion(void) const { return 0; }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
@@ -77,5 +70,3 @@ public:
     fieldMacros(MFString, url,         ProtoAudioClip)
     fieldMacros(SFBool,   enabled,     ProtoAudioClip)
 };
-
-#endif // _NODE_AUDIOCLIP_H

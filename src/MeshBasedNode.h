@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MESH_BASED_NODE_H
-#define _MESH_BASED_NODE_H
+#pragma once
 
-#ifndef GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _VEC3F
 # include "Vec3f.h"
-#endif
 
 #include "MeshFlags.h"
 
@@ -172,5 +167,4 @@ public:
     virtual MyMeshDouble *getMeshDouble(void);
 };
 
-#endif // _MESH_BASED_NODE_H
 

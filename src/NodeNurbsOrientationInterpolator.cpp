@@ -112,7 +112,7 @@ NodeNurbsOrientationInterpolator::getControlPoints(void)
 }
 
 void
-NodeNurbsOrientationInterpolator::setControlPoints(const MFVec3f *points)
+NodeNurbsOrientationInterpolator::setControlPoints(MFVec3f *points)
 {
     NodeCoordinate *coord = (NodeCoordinate *)controlPoint()->getValue();
     if (!coord)

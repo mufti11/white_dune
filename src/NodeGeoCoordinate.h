@@ -47,7 +47,7 @@ public:
     FieldIndex point;
     FieldIndex pointX3D;
 
-    virtual int     translateField(int field) const;
+    virtual int     translateField(int field);
 };
 
 class NodeGeoCoordinate : public GeoNode {
@@ -56,7 +56,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeGeoCoordinate(*this); }
+    virtual Node   *copy() { return new NodeGeoCoordinate(m_scene, m_proto); }
 
     Node           *convert2Vrml(void);
 
@@ -91,6 +91,7 @@ public:
 
     virtual bool    canMoveTo(int direction) { return true; }
 
+/*
     virtual NodeColor *getColorNode() { 
                         if (hasParent())
                             return getParent()->getColorNode();
@@ -101,7 +102,7 @@ public:
                             return getParent()->getColorRGBANode();
                         return NULL;     
                     }
-
+*/
     fieldMacros(MFString, point,    ProtoGeoCoordinate)
     fieldMacros(MFVec3d,  pointX3D, ProtoGeoCoordinate)
 protected:

@@ -25,6 +25,7 @@
 #define _NODE_TUI_SLIDER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -63,7 +64,7 @@ public:
                     NodeTUISlider(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeTUISlider(*this); }
+    virtual Node   *copy() { return new NodeTUISlider(m_scene, m_proto); }
 
     fieldMacros(SFInt32, min,   ProtoTUISlider)
     fieldMacros(SFInt32, max,   ProtoTUISlider)

@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ECMASCRIPT_APP_H
-#define _ECMASCRIPT_APP_H
+#pragma once
 
 class EcmaScriptApp {
 public:
@@ -79,5 +78,3 @@ private:
     bool                m_ecmaScriptAddMathObject;
     bool                m_ecmaScriptAddBrowserObject;
 };
-
-#endif

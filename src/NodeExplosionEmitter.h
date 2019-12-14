@@ -23,6 +23,7 @@
 #define _NODE_EXPLOSION_EMITTER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -53,9 +54,10 @@ class NodeExplosionEmitter : public EmitterNode {
 public:
                     NodeExplosionEmitter(Scene *scene, Proto *proto);
 
-    virtual int         getComponentLevel(void) const { return 1; }
+    virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeExplosionEmitter(*this); }
+    virtual Node   *copy() 
+                    { return new NodeExplosionEmitter(m_scene, m_proto); }
 
     fieldMacros(SFVec3f, position, ProtoExplosionEmitter);
 

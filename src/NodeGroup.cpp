@@ -87,23 +87,7 @@ NodeGroup::buildVrml97Children(MFNode *children)
 
     for (int i = 0; i < children->getSize(); i++) {
         Node *node = children->getValue(i);
-        if (node->matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
-            node->matchNodeClass(GEOMETRY_NODE)) {
-            NodeShape *shape = (NodeShape *)m_scene->createNode("Shape");
-            NodeShape *parentShape = NULL;
-            if (node->hasParent())
-                if (node->getParent()->getType() == VRML_SHAPE)
-                    parentShape = (NodeShape *)node->getParent();
-            if (parentShape != NULL) {
-                Node *oldAppearance = parentShape->appearance()->getValue();
-                shape->appearance(new SFNode(oldAppearance));
-            } else
-                shape->createNewAppearance(false);
-            shape->geometry(new SFNode(node));
-            shape->geometry()->convert2Vrml();
-            newChildren->append(shape);
-        } else
-            newChildren->append(node);
+        newChildren->append(node);
     }
     return newChildren;
 }
@@ -160,9 +144,9 @@ NodeGroup::setField(int index, FieldValue *value, int cf)
 
 int NodeGroup::getProfile(void) const
 { 
-    if (hasInput("addChildren"))
+    if (((NodeGroup *)this)->hasInput("addChildren"))
         return PROFILE_INTERACTIVE;
-    if (hasInput("removeChildren"))
+    if (((NodeGroup *)this)->hasInput("removeChildren"))
         return PROFILE_INTERACTIVE;
     return PROFILE_INTERCHANGE; 
 }

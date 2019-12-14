@@ -19,8 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
+#pragma once
+
 #ifdef _WIN32
-#include <windows.h>
+# include <windows.h>
 #endif
 
 #include <stdio.h>

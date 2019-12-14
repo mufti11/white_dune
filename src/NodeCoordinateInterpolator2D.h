@@ -49,12 +49,12 @@ public:
     virtual const char* getComponentName(void) const { return "Interpolation"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() const 
-                           { return new NodeCoordinateInterpolator2D(*this); }
+    virtual Node *copy() { return new NodeCoordinateInterpolator2D(
+                           m_scene, m_proto); }
 
-    virtual int         getNumChannels() const;
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *values, int numKeys) const;
+    virtual int         getNumChannels();
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *values, int numKeys);
     virtual void        recordValue(int key, FieldValue *value);
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }

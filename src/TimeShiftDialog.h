@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TIME_SHIFT_DIALOG_H
-#define _TIME_SHIFT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
@@ -48,4 +45,3 @@ private:
     bool        m_wrapAround;
 };
 
-#endif

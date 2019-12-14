@@ -49,7 +49,7 @@ public:
                     NodeParam(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeParam(*this); }
+    virtual Node   *copy() { return new NodeParam( m_scene, m_proto); }
 
     fieldMacros(SFString, name,  ProtoParam)
     fieldMacros(SFString, value, ProtoParam)

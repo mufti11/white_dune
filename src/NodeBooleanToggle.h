@@ -19,19 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BOOLEAN_TOGGLE_H
-#define _NODE_BOOLEAN_TOGGLE_H
-
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoBooleanToggle : public Proto {
@@ -50,17 +41,16 @@ public:
 class NodeBooleanToggle : public Node {
 public:
                     NodeBooleanToggle(Scene *scene, Proto *proto);
-                    NodeBooleanToggle(const NodeBooleanToggle &node);
+                    NodeBooleanToggle(NodeBooleanToggle &node);
     virtual        ~NodeBooleanToggle();
 
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeBooleanToggle(*this); }
+    virtual Node   *copy() { return new NodeBooleanToggle(m_scene, m_proto); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 
     fieldMacros(SFBool, toggle, ProtoBooleanToggle)
 };
 
-#endif // _NODE_BOOLEAN_TOGGLE_H

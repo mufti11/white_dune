@@ -19,53 +19,43 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFNODE_H
-#define _MFNODE_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _NODELIST_H
 #include "NodeList.h"
-#endif
+#include "ac3dMaterialCallback.h"
 
 class MFNode : public MFieldValue {
 public:
                         MFNode();
                         MFNode(NodeList *value);
-                        MFNode(const MFNode &other);
                         MFNode(const MFNode *other);
                         MFNode(const Node *other);
     virtual            ~MFNode();
 
     virtual int         getType() const { return MFNODE; }
-    virtual const char *getTypeName() const { return "MFNode"; }
+    virtual const char *getTypeName() { return "MFNode"; }
 
-    virtual bool        writeBrackets(void) const;
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         write(int filedes, int indent, 
-                              bool writeBrackets) const;
-    virtual int         write(int filedes, int indent) const 
-                           { return write(filedes, indent, writeBrackets()); }
-    virtual int         write4FieldPipe(int filedes, int indent) const 
+    virtual bool        writeBrackets(void);
+    virtual int         writeData(int filedes, int i); 
+    virtual int         write(int filedes, int indent, bool writeBrackets);
+    virtual int         write4FieldPipe(int filedes, int indent)
                             { return write(filedes, indent, false); } 
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse) const;
+                                 bool avoidUse);
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const;
-    virtual int         writeCDeclaration(int filedes, int languageFlag) const;
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag);
+    virtual int         writeCDeclaration(int filedes, int languageFlag);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 0; }
+    virtual int         getNumbersPerType(void) { return 0; }
 
-    virtual bool        equals(const FieldValue *value) const;
-    int                 getSize() const
+    virtual bool        equals(FieldValue *value);
+    int                 getSize()
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -75,7 +65,7 @@ public:
                                return 0;
                            return m_value->size(); 
                            }
-    NodeList           *getValues() const 
+    NodeList           *getValues() 
                            { 
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -83,7 +73,7 @@ public:
 #endif
                            return m_value; 
                            }
-    Node               *getValue(long index) const 
+    Node               *getValue(long index)
                            { 
                            if (m_value->size() == 0)
                                return NULL;
@@ -96,24 +86,24 @@ public:
                            return m_value->get(index); 
                            }
 
-    virtual int         getSFSize() const 
+    virtual int         getSFSize()
                            { 
                            if (m_value == NULL) 
                                return 0;
                            return m_value->size(); 
                            }
-    virtual FieldValue *getSFValue(int index) const;
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const Node* value);
 
     virtual void        removeSFValue(int index) 
                            { removeNode((*m_value)[index]); }
 
-    virtual FieldValue *addNode(Node *node, int index = -1) const;
-    virtual FieldValue *removeNode(Node *node, int index = -1) const;
+    virtual FieldValue *addNode(Node *node, int index = -1);
+    virtual FieldValue *removeNode(Node *node, int index = -1);
     virtual FieldValue *copy() { return new MFNode(*this); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     virtual void        preDraw();
     virtual void        draw(int pass, int mfNodeField);
@@ -132,18 +122,18 @@ public:
     virtual Node       *convert2X3d(void);
     virtual Node       *convert2Vrml(void);
 
-    virtual bool        isNode(void) const { return true; } 
-    virtual bool        isMFNode(void) const { return true; } 
+    virtual bool        isNode(void) { return true; } 
+    virtual bool        isMFNode(void) { return true; } 
 
-    virtual int         writeAc3d(int filedes, int indent) const;
+    virtual int         writeAc3d(int filedes, int indent);
     virtual void        handleAc3dMaterial(ac3dMaterialCallback callback, 
                                            Scene* scene);
 
-    virtual int         writeRib(int filedes, int indent) const;
+    virtual int         writeRib(int filedes, int indent);
 
-    virtual int         writeCattGeo(Node *node, int filedes, int indent) const;
+    virtual int         writeCattGeo(Node *node, int filedes, int indent);
 
-    virtual int         writeLdrawDat(int filedes, int indent) const;
+    virtual int         writeLdrawDat(int filedes, int indent);
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 
@@ -159,4 +149,3 @@ private:
     
 };
 
-#endif // _MFNODE_H

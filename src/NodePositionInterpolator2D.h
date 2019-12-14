@@ -50,13 +50,13 @@ public:
     virtual const char* getComponentName(void) const { return "Interpolation"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int         getX3dVersion(void) const { return 0; } 
-    virtual Node       *copy() const 
-                           { return new NodePositionInterpolator2D(*this); }
+    virtual Node        *copy() { return new NodePositionInterpolator2D(
+                                         m_scene, m_proto); }
 
-    virtual int         getStride() const { return 2; } 
-    virtual int         getNumChannels() const { return 2; }
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *values, int numKeys) const;
+    virtual int         getStride() { return 2; } 
+    virtual int         getNumChannels() { return 2; }
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *values, int numKeys);
 
     virtual int         writeProto(int f) { return writeX3dProto(f); }
 

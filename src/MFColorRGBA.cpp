@@ -25,6 +25,7 @@
 #include "MFColorRGBA.h"
 #include "SFColorRGBA.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFColorRGBA::MFColorRGBA() : MFFloat()
 {
@@ -52,25 +53,26 @@ MFColorRGBA::readLine(int index, char *line)
 }
 
 bool
-MFColorRGBA::equals(const FieldValue *value) const
+MFColorRGBA::equals(FieldValue *value)
 {
-    return value->getType() == MFCOLORRGBA && MFFloat::equals((const MFFloat *) value);
+    return value->getType() == MFCOLORRGBA && 
+           MFFloat::equals((MFFloat *) value);
 }
 
 FieldValue *
-MFColorRGBA::getSFValue(int index) const
+MFColorRGBA::getSFValue(int index)
 {
-    return new SFColorRGBA(m_value.getData() + index * 4);
+    return new SFColorRGBA((float *)(m_value.getData() + index * 4));
 } 
 
 void
 MFColorRGBA::setSFValue(int index, FieldValue *value)
 {
-    setSFValue(index, ((SFColorRGBA *) value)->getValue());
+    setSFValue(index, (float *)((SFColorRGBA *) value)->getValue());
 }
 
 void
-MFColorRGBA::setSFValue(int index, const float *values)
+MFColorRGBA::setSFValue(int index, float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value[index * getStride() + i] = values[i];
@@ -95,7 +97,7 @@ MFColorRGBA::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-MFColorRGBA::getEcmaScriptComment(MyString name, int flags) const
+MFColorRGBA::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -187,11 +189,11 @@ MFColorRGBA::getEcmaScriptComment(MyString name, int flags) const
 void 
 MFColorRGBA::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, ((SFColorRGBA *)value)->getValue()); 
+    setSFValue(index, (float *)((SFColorRGBA *)value)->getValue()); 
 }
 
 void 
-MFColorRGBA::insertSFValue(int index, const float *values)
+MFColorRGBA::insertSFValue(int index, float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);

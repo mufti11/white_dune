@@ -57,7 +57,7 @@ public:
                     NodeRectangularTorus(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeRectangularTorus(*this); }
+    virtual Node   *copy() { return new NodeRectangularTorus( m_scene, m_proto); }
 
     x3domGeometryCommonFieldMacros(ProtoRectangularTorus) 
     fieldMacros(SFFloat, angle, ProtoRectangularTorus)

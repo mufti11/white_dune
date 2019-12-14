@@ -19,24 +19,14 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_VIEWPOINT_H
-#define _NODE_VIEWPOINT_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _QUATERNION_H
 #include "Quaternion.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
 
 #include "ViewpointNode.h"
 #include "swt.h"
@@ -57,7 +47,6 @@ public:
 
     virtual bool        isDeclaredInRwd_h() { return true; }      
 
-    FieldIndex position;
     FieldIndex type;
 
     virtual int     writeProto(int filedes) 
@@ -81,18 +70,12 @@ public:
                         NodeViewpoint(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() const { return new NodeViewpoint(*this); }
-
-    virtual Vec3d       getPosition() const;
-    virtual void        setPosition(const Vec3d &pos);
+    virtual Node *copy() { return new NodeViewpoint(m_scene, m_proto); }
 
     virtual void        flip(int index);
     virtual void        swap(int fromTo);
 
-    fieldMacros(SFVec3f,    position,          ProtoViewpoint)
     fieldMacros(SFString,   type,              ProtoViewpoint)
 
     kambiViewpointCommonFieldMacros(ProtoViewpoint)
 };
-
-#endif

@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _GEOMETRY_NODE_H
-#define _GEOMETRY_NODE_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
 #include "NodeAppearance.h"
 #include "NodeMaterial.h"
 #include "NodeImageTexture.h"
@@ -61,6 +58,4 @@ public:
     useGeoCache.set( \
           addField(SFBOOL, "useGeoCache", new SFBool(true)));  \
     setFieldFlags(useGeoCache, FF_X3DOM_ONLY);
-
-#endif // _GEOMETRY_NODE_H
 

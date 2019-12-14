@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MODELLING_SETTINGS_DIALOG_H
-#define _MODELLING_SETTINGS_DIALOG_H
+#pragma once
 
 #ifndef _DIALOG_H
 #include "Dialog.h"
@@ -37,4 +36,3 @@ public:
     virtual void        SaveData();
     void                shouldBeMoreThanZero(const char *name);
 };
-#endif

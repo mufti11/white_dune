@@ -92,11 +92,11 @@ NodeLayout::modifyViewportData(float *data,
     bool sizeChangedX = false;
     bool sizePixelsX = false;
     if (sizeUnits()->getSize() > 0)
-       sizePixelsX = strcmp(sizeUnits()->getValue(0), "PIXEL") == 0;
+       sizePixelsX = strcmp(sizeUnits()->getValue(0)->getValue(), "PIXEL") == 0;
     bool sizeChangedY = false;
     bool sizePixelsY = false;
     if (sizeUnits()->getSize() > 1)
-       sizePixelsY = strcmp(sizeUnits()->getValue(1), "PIXEL") == 0;
+       sizePixelsY = strcmp(sizeUnits()->getValue(1)->getValue(), "PIXEL") == 0;
 
     float sizeX = 1;
     if (size()->getSize() > 0) {
@@ -117,11 +117,13 @@ NodeLayout::modifyViewportData(float *data,
     bool offsetPixelsX = false;
     bool offsetChangedX = false;
     if (offsetUnits()->getSize() > 0)
-       offsetPixelsX = strcmp(offsetUnits()->getValue(0), "PIXEL") == 0;
+       offsetPixelsX = strcmp(offsetUnits()->getValue(0)->getValue(), 
+                              "PIXEL") == 0;
     bool offsetChangedY = false;
     bool offsetPixelsY = false;
     if (offsetUnits()->getSize() > 1)
-       offsetPixelsY = strcmp(offsetUnits()->getValue(1), "PIXEL") == 0;
+       offsetPixelsY = strcmp(offsetUnits()->getValue(1)->getValue(), 
+                              "PIXEL") == 0;
 
     float offsetX = 0;
     if (offset()->getSize() > 0) {
@@ -139,25 +141,25 @@ NodeLayout::modifyViewportData(float *data,
     }
 
     if (align()->getValue(0)) {
-        if (strcmp(align()->getValue(0),"LEFT") == 0) {
+        if (strcmp(align()->getValue(0)->getValue(),"LEFT") == 0) {
             offsetX = 0;
             offsetChangedX = true;
-        } else if (strcmp(align()->getValue(0), "CENTER") == 0) {
+        } else if (strcmp(align()->getValue(0)->getValue(), "CENTER") == 0) {
             offsetX = sizeX - offsetX / 2.0f;
             offsetChangedX = true;
-        } else if (strcmp(align()->getValue(0), "RIGHT") == 0) {
+        } else if (strcmp(align()->getValue(0)->getValue(), "RIGHT") == 0) {
             offsetX = 1 - sizeX - 0.01;
             offsetChangedX = true;
         }
     }
     if (align()->getValue(1)) {
-        if (strcmp(align()->getValue(1),"BOTTOM") == 0) {
+        if (strcmp(align()->getValue(1)->getValue(),"BOTTOM") == 0) {
             offsetY = 0;
             offsetChangedY = true;
-        } else if (strcmp(align()->getValue(1), "CENTER") == 0) {
+        } else if (strcmp(align()->getValue(1)->getValue(), "CENTER") == 0) {
             offsetY = sizeY - offsetY / 2.0f;
             offsetChangedY = true;
-        } else if (strcmp(align()->getValue(1), "TOP") == 0) {
+        } else if (strcmp(align()->getValue(1)->getValue(), "TOP") == 0) {
             offsetY = 1 - sizeY - 0.01;
             offsetChangedY = true;
         }
@@ -167,19 +169,19 @@ NodeLayout::modifyViewportData(float *data,
     *scaleY = 1;
 
     if (scaleMode()->getSize() > 0) {
-        if (strcmp(scaleMode()->getValue(0), "PIXEL") == 0)
+        if (strcmp(scaleMode()->getValue(0)->getValue(), "PIXEL") == 0)
             *scaleX = 2.0f / screenWidth;
-        if (strcmp(scaleMode()->getValue(0), "WORLD") == 0)
+        if (strcmp(scaleMode()->getValue(0)->getValue(), "WORLD") == 0)
             *scaleX = 2.0f;
-        if (strcmp(scaleMode()->getValue(0), "FRACTION") == 0)
+        if (strcmp(scaleMode()->getValue(0)->getValue(), "FRACTION") == 0)
             *scaleX = 2.0f;
     }
     if (scaleMode()->getSize() > 1) {
-        if (strcmp(scaleMode()->getValue(1), "PIXEL") == 0)
+        if (strcmp(scaleMode()->getValue(1)->getValue(), "PIXEL") == 0)
             *scaleY = 2.0f / screenHeight;
-        if (strcmp(scaleMode()->getValue(1), "WORLD") == 0)
+        if (strcmp(scaleMode()->getValue(1)->getValue(), "WORLD") == 0)
             *scaleY = 2.0f;
-        if (strcmp(scaleMode()->getValue(1), "FRACTION") == 0)
+        if (strcmp(scaleMode()->getValue(1)->getValue(), "FRACTION") == 0)
             *scaleY = 2.0f;
     }
 
@@ -187,10 +189,12 @@ NodeLayout::modifyViewportData(float *data,
     if (sizeX != 0)
          differentialScale = sizeY/sizeX;
     if (scaleMode()->getSize() > 0)
-        if (strcmp(scaleMode()->getValue(0), "STRETCH") == 0)
+        if (strcmp(scaleMode()->getValue(0)->getValue(), 
+                   "STRETCH") == 0)
             *scaleX = *scaleY / differentialScale;
     if (scaleMode()->getSize() > 1)
-        if (strcmp(scaleMode()->getValue(1), "STRETCH") == 0)
+        if (strcmp(scaleMode()->getValue(1)->getValue(),
+                   "STRETCH") == 0)
             *scaleY = *scaleX * differentialScale;
 
     if (sizeChangedX) {

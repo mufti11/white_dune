@@ -23,6 +23,7 @@
 #define _NODE_MULTI_GENERATED_TEXTURE_COORDINATE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -57,8 +58,9 @@ public:
                            { return "Texturing"; }
     virtual int         getComponentLevel(void) const { return -1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const 
-                       { return new NodeMultiGeneratedTextureCoordinate(*this); }
+    virtual Node   *copy()     
+                    { return new NodeMultiGeneratedTextureCoordinate(
+                      m_scene, m_proto);  }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 

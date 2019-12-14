@@ -79,7 +79,8 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNurbsSwungSurface(*this); }
+    virtual Node   *copy() { return new NodeNurbsSwungSurface(
+                             m_scene, m_proto); }
 
     virtual void    draw();
 

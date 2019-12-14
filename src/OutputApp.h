@@ -19,10 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _OUTPUT_APP_H
-#define _OUTPUT_APP_H
+#pragma once
 
-extern bool parseCommandlineArgumentOutput(int & i,int argc, char** argv);
+bool parseCommandlineArgumentOutput(int & i,int argc, char** argv);
 
 enum {
     MATERIAL_NAME_BEFORE_LAST_UNDERSCORE = 1,
@@ -259,5 +258,4 @@ private:
     char                   *m_imageConverter;
 };
 
-#endif
 

@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BLEND_MODE_H
-#define _NODE_BLEND_MODE_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 
@@ -59,7 +52,7 @@ class NodeBlendMode : public Node {
 public:
                     NodeBlendMode(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeBlendMode(*this); }
+    virtual Node *copy() { return new NodeBlendMode(m_scene, m_proto); }
 
     kambiCommonFunctions()
 
@@ -73,5 +66,4 @@ public:
 
 };
 
-#endif
 

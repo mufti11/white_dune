@@ -188,8 +188,8 @@ NodeScript::getEcmaScriptUrl(void)
         hasUrl = false;
     if (hasUrl) {
         for (int i = 0; i < mfurl->getSize(); i++)
-             if (isSortOfEcmascript(mfurl->getValue(i)))
-                 return mfurl->getValue(i);
+             if (isSortOfEcmascript(mfurl->getValue(i)->getValue()))
+                 return mfurl->getValue(i)->getValue();
     } 
     return NULL;
 }
@@ -205,8 +205,9 @@ NodeScript::getUrlWithoutHeader(const char *header)
         hasUrl = false;
     if (hasUrl) {
         for (int i = 0; i < mfurl->getSize(); i++)   
-             if (strncasecmp(mfurl->getValue(i),header,strlen(header))==0)
-                 return mfurl->getValue(i)+strlen(header);
+             if (strncasecmp(mfurl->getValue(i)->getValue(), header, 
+                 strlen(header))==0)
+                 return mfurl->getValue(i)->getValue() + strlen(header);
     }
     return NULL;
 }
@@ -312,9 +313,9 @@ NodeScript::writeXml(int filedes, int indent, int containerField, bool avoidUse)
 {
      if (m_scene->getWriteFlags() & X3DOM) {
          for (int i = 0; i < url()->getSize(); i++)
-             if (isX3domscript(url()->getValue(i))) {
+             if (isX3domscript(url()->getValue(i)->getValue())) {
                  RET_ONERROR( mywritestr(filedes, "<script>") )
-                 const char *string = url()->getValue(i);
+                 const char *string = url()->getValue(i)->getValue();
                  while (isspace(string[0]))
                      string++;
                  string +=strlen("x3domscript:");

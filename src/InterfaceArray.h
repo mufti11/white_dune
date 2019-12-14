@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INTERFACE_ARRAY_H
-#define _INTERFACE_ARRAY_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
 
 class InterfaceData {
 public:
@@ -37,6 +34,4 @@ public:
 
 typedef MyArray<InterfaceData *> InterfaceArray;
 
-
-#endif
 

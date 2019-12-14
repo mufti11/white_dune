@@ -216,9 +216,13 @@ MeshBasedNode::toIndexedFaceSet(int meshFlags, bool cleanVertices,
         m_mesh->simpleQuadTriangulate();
 
     m_meshDirty = true;
-    
-    NodeIndexedFaceSet *ret = (NodeIndexedFaceSet *)
-                              m_mesh->toIndexedFaceSet(meshFlags, m_scene);
+
+    NodeIndexedFaceSet *ret = NULL;    
+    if (getType() == VRML_INDEXED_FACE_SET)
+        ret = (NodeIndexedFaceSet *)this;
+    else
+        ret = (NodeIndexedFaceSet *)
+              m_mesh->toIndexedFaceSet(meshFlags, m_scene);
     ret->writeOffInit();
     return ret;
 }
@@ -301,7 +305,7 @@ MeshBasedNode::toTriangleSet(int meshFlags)
                                            mfColors->getValues() + index * 4); 
                 if (hasTexCoords)
                     coords->setSFValue(numVertices, 
-                                       texCoords->getValue(index)); 
+                                       (float *)texCoords->getValue(index)); 
 
                 numVertices++;
             }
@@ -322,7 +326,7 @@ MeshBasedNode::toTriangleSet(int meshFlags)
                                            mfColors->getValues() + index * 4); 
                 if (hasTexCoords)
                     coords->setSFValue(numVertices, 
-                                       texCoords->getValue(index)); 
+                                       (float *)texCoords->getValue(index)); 
 
                 numVertices++;
             }
@@ -1075,7 +1079,8 @@ MeshBasedNode::writeAc3d(int f, int indent)
         RET_ONERROR( mywritef(f, "name \"%s\"\n", (const char *)getName()) )
         
     if (nimageTexture) {
-        const char *texture = nimageTexture->url()->getValue(0);
+        const char *texture = (const char *)
+                              nimageTexture->url()->getValue(0)->getValue();
         if (texture) {
             URL url;
             url.FromPath(texture);
@@ -1268,7 +1273,8 @@ MeshBasedNode::writeRib(int f, int indent)
         RET_ONERROR( mywritef(f, "# name \"%s\"\n", (const char *)getName()) )
         
     if (nimageTexture) {
-        const char *texture = nimageTexture->url()->getValue(0);
+        const char *texture = (const char *)
+                              nimageTexture->url()->getValue(0)->getValue();
         if (texture) {
             URL url(TheApp->getImportURL(), texture);
             MyString filename = "";

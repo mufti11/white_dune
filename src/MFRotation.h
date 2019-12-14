@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFROTATION_H
-#define _MFROTATION_H
+#pragma once
 
-#ifndef _MFFLOAT_H
 #include "MFFloat.h"
-#endif
 
 class MFRotation : public MFFloat {
 public:
@@ -35,18 +32,18 @@ public:
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFROTATION; }
-    virtual const char *getTypeName() const { return "MFRotation"; }
-    virtual int         getStride() const { return 4; }
+    virtual const char *getTypeName() { return "MFRotation"; }
+    virtual int         getStride() { return 4; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual void        fixAngle(double angleUnit); 
 
-    const float        *getValue(int index) const
+    float              *getValue(int index)
                            { return m_value.getData() + index * 4; }
-    virtual FieldValue *getSFValue(int index) const;
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const float *values);
 
@@ -57,9 +54,7 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     randomFunction(MFRotation)                  
 };
-
-#endif // _MFROTATION_H

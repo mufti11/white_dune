@@ -23,6 +23,7 @@
 #define _NODE_TRANSFORM_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -67,16 +68,13 @@ public:
                      ~NodeTransform();
 
 public:
-    virtual int       getChildrenField(void) const 
+    virtual int       getChildrenField(void)
                          { return children_Field(); }
 
     // X3D profile changes addChildren, removeChildren
     virtual int       getProfile(void) const;
     virtual int       getX3dVersion(void) const { return 0; }
-    virtual Node     *copy() const 
-                          { 
-                          return new NodeTransform(*this); 
-                          }
+    virtual Node     *copy() { return new NodeTransform(m_scene, m_proto); }
 
     virtual void      setField(int field, FieldValue *value, int cf = -1);
 

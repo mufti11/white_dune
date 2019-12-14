@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _EMITTER_NODE_H
-#define _EMITTER_NODE_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
 #include "NodeAppearance.h"
 #include "NodeMaterial.h"
 #include "NodeImageTexture.h"
@@ -54,6 +51,4 @@ public:
     fieldMacros(SFFloat, mass,        EmitterProto);
     fieldMacros(SFFloat, surfaceArea, EmitterProto);
 };
-
-#endif
 

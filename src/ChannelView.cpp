@@ -308,7 +308,7 @@ ChannelView::DrawSelection(SDC dc)
 
 void ChannelView::OnLButtonDown(int px, int py, int modifiers) 
 {
-    const Interpolator *node = m_interpolator;
+    Interpolator *node = m_interpolator;
 
     if (node == NULL) return;
 
@@ -484,7 +484,7 @@ int ChannelView::OnAutoScrollTimer()
 
 void ChannelView::OnUpdate(SceneView* sender, int type, Hint *hint) 
 {
-    const Path *sel = m_scene->getSelection();
+    Path *sel = m_scene->getSelection();
     Node *node = sel ? sel->getNode() : NULL;
     if (node == NULL)
         return;

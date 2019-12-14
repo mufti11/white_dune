@@ -5501,4 +5501,12 @@ Added OFF export
 
 Fixed possible crash after OFF export
 
+Enabled OFF color export of objects without normals
+
+Added workaround for HAnimHumanoid smoothNormals() problem
+
+Cleaned up #ifdef/#include using #pragma once
+
+Added workaround to identify invalid nodes by limiting USEs to 65535
+
 Contact: MUFTI <mufti11@web.de>

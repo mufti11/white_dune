@@ -22,13 +22,14 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "swt.h"
 #include "SFMatrix4f.h"
 #include "SFFloat.h"
 
 MyString    
-SFMatrix4f::getString(int index, int stride) const
+SFMatrix4f::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -38,7 +39,7 @@ SFMatrix4f::getString(int index, int stride) const
 }
 
 bool
-SFMatrix4f::equals(const FieldValue *value) const
+SFMatrix4f::equals(FieldValue *value)
 {
     if (value->getType() == SFMATRIX4F) {
         SFMatrix4f *v = (SFMatrix4f *) value;
@@ -83,7 +84,7 @@ SFMatrix4f::readLine(int index, char *line)
 }
 
 int 
-SFMatrix4f::writeData(int f, int i) const
+SFMatrix4f::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g %g  %g %g %g %g  %g %g %g %g  %g %g %g %g", 
                        m_value[0], m_value[1], m_value[2], m_value[3], 
@@ -93,7 +94,7 @@ SFMatrix4f::writeData(int f, int i) const
 }
 
 int 
-SFMatrix4f::write(int f, int indent) const
+SFMatrix4f::write(int f, int indent)
 {
     RET_ONERROR( mywritef(f, "%g %g %g %g\n  %g %g %g %g\n  %g %g %g %g\n  %g %g %g %g\n", 
                        m_value[0], m_value[1], m_value[2], m_value[3], 
@@ -107,7 +108,7 @@ SFMatrix4f::write(int f, int indent) const
 }
 
 int
-SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag) const
+SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -128,14 +129,14 @@ SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag) cons
 }
 
 int
-SFMatrix4f::writeAc3d(int filedes, int indent) const
+SFMatrix4f::writeAc3d(int filedes, int indent)
 {
     // not needed yet
     return 0;
 }
 
 MyString
-SFMatrix4f::getEcmaScriptComment(MyString name, int flags) const
+SFMatrix4f::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

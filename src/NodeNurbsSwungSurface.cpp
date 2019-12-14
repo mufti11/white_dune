@@ -208,9 +208,9 @@ NodeNurbsSwungSurface::createExtrusion()
         int chainLength = spinePoints->getSFSize();
         float *fchain = new float[chainLength * 3];
         for (int i = 0; i < chainLength; i++) {
-            fchain[i * 3    ] = chain->getValue(i)[0];
+            fchain[i * 3    ] = ((MFVec2d *)chain)->getValue(i)[0];
             fchain[i * 3 + 1] = 0;
-            fchain[i * 3 + 2] = chain->getValue(i)[1];
+            fchain[i * 3 + 2] = ((MFVec2d *)chain)->getValue(i)[1];
         }   
         m_extrusion->spine(new MFVec3f(fchain, chainLength * 3));
     }

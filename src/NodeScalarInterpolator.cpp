@@ -47,14 +47,14 @@ NodeScalarInterpolator::NodeScalarInterpolator(Scene *scene, Proto *def)
 }
 
 FieldValue *
-NodeScalarInterpolator::createKey(void *value) const
+NodeScalarInterpolator::createKey(void *value)
 {
     FieldValue *r = new SFFloat(((float *)value)[0]);
     return r;
 }
 
 FieldValue *
-NodeScalarInterpolator::createKeys(void *value, int numKeys) const
+NodeScalarInterpolator::createKeys(void *value, int numKeys)
 {
     return new MFFloat((float *)value, numKeys);
 }

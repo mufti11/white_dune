@@ -23,6 +23,7 @@
 #define _NODE_HANIN_JOINT_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -63,9 +64,9 @@ public:
                     NodeHAnimJoint(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const;
-    virtual int         getComponentLevel(void) const;
-    virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeHAnimJoint(*this); }
+    virtual int     getComponentLevel(void) const;
+    virtual int     getX3dVersion(void) const { return 0; }
+    virtual Node   *copy() { return new NodeHAnimJoint(m_scene, m_proto); }
 
     void            setField(int field, FieldValue *value, int cf = -1);
 
@@ -81,7 +82,7 @@ public:
 
     virtual void    setHandle(int handle, const Vec3f &v);
 
-    void            getJointMatrix(Matrix &matrix) 
+    void            getJointMatrix(Matrixd &matrix) 
                         { m_jointMatrix.copyTo(matrix); } 
 
     Node           *getJointParent(Node *node, Node *parent);
@@ -95,7 +96,7 @@ public:
     fieldMacros(MFFloat,    stiffness,        ProtoHAnimJoint)
     fieldMacros(MFFloat,    ulimit,           ProtoHAnimJoint)
 protected:
-    Matrix m_jointMatrix;
+    Matrixd m_jointMatrix;
     NodeCoordinate *m_coord;
 };
 

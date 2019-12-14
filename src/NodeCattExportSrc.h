@@ -18,20 +18,12 @@
  * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
  * Cambridge, MA 02139, USA.
  */
+#pragma once
 
-#ifndef _NODE_CATT_EXPORT_SRC_H
-#define _NODE_CATT_EXPORT_SRC_H
-
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCattExportSrc : public Proto {
@@ -58,7 +50,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeCattExportSrc(*this); }
+    virtual Node   *copy() { return new NodeCattExportSrc(m_scene, m_proto); }
     
     virtual int     writeProto(int filedes);
 
@@ -81,5 +73,3 @@ public:
     fieldMacros(SFFloat,  roll,                     ProtoCattExportSrc)
     fieldMacros(MFString, furtherParameters,        ProtoCattExportSrc)
 };
-
-#endif

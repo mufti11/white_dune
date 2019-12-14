@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BALL_JOINT_H
-#define _NODE_BALL_JOINT_H
+#pragma once
 
 #include "AnchoredJointNode.h"
 
@@ -42,11 +41,10 @@ public:
                     NodeBallJoint(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeBallJoint(*this); }
+    virtual Node   *copy() { return new NodeBallJoint(m_scene, m_proto); }
 
 protected:
     float           m_handleScale;
 
 };
 
-#endif 

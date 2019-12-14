@@ -70,7 +70,8 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNurbsSurfaceInterpolator(*this); }
+    virtual Node   *copy() { return new NodeNurbsSurfaceInterpolator( 
+                             m_scene, m_proto); }
 
     virtual void    drawHandles(void);
 
@@ -107,8 +108,8 @@ public:
     void            linearVknot(void);
 
     MFVec3f        *getControlPoints(void);
-    void            setControlPoints(const MFVec3f *points);
-    void            createControlPoints(const MFVec3f *points);
+    void            setControlPoints(MFVec3f *points);
+    void            createControlPoints(MFVec3f *points);
 
 protected:
     static int      findSpan(int dimension, int order, float u,

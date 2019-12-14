@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BOX_H
-#define _NODE_BOX_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoBox : public Proto {
@@ -63,7 +53,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeBox(*this); }
+virtual Node *copy() { return new NodeBox( m_scene, m_proto); }
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);
@@ -118,5 +108,3 @@ protected:
     MyArray<Vec3f>  m_rectangle;
 };
 
-
-#endif // _NODE_BOX_H

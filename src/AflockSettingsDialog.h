@@ -19,14 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_AFLOCK
+#pragma once
 
-#ifndef _AFLOCK_SETTINGS_DIALOG_H
-#define _AFLOCK_SETTINGS_DIALOG_H
-
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 
 #define MAX_LEN_COMMANDLINE 128
 #define AFLOCK_DEVICE_NUMBER 4
@@ -80,7 +75,3 @@ public:
         AflockSettingsDialog(SWND parent, AflockDevice *device);
         virtual ~AflockSettingsDialog();
 };
-
-#endif // !defined(AFLOCK_SETTINGS_DIALOG)
-
-#endif

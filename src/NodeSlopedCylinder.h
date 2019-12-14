@@ -65,7 +65,7 @@ class NodeSlopedCylinder : public Node {
 public:
                     NodeSlopedCylinder(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeSlopedCylinder(*this); }
+    virtual Node   *copy() { return new NodeSlopedCylinder(m_scene, m_proto); }
     virtual int     getX3dVersion(void) const { return -1; }
 
     x3domGeometryCommonFieldMacros(ProtoSlopedCylinder) 

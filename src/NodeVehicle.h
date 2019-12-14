@@ -53,7 +53,7 @@ public:
                     NodeVehicle(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeVehicle(*this); }
+    virtual Node   *copy() { return new NodeVehicle(m_scene, m_proto); }
 
     fieldMacros(SFRotation, carRotation,    ProtoVehicle)
     fieldMacros(SFVec3f,    carTranslation, ProtoVehicle)

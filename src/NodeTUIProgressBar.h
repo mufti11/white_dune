@@ -25,6 +25,7 @@
 #define _NODE_TUI_PROGRESS_BAR_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -58,7 +59,7 @@ public:
                     NodeTUIProgressBar(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeTUIProgressBar(*this); }
+    virtual Node   *copy() { return new NodeTUIProgressBar(m_scene, m_proto); }
 
     fieldMacros(SFInt32, max,   ProtoTUIProgressBar)
     fieldMacros(SFInt32, value, ProtoTUIProgressBar)

@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _KAMBI_LIGHT_COMMON_FIELDS_H
-#define _KAMBI_LIGHT_COMMON_FIELDS_H
+#pragma once
 
 #define kambiLightCommonFieldIndex() \
     FieldIndex shadows; \
@@ -79,4 +78,4 @@
     shadowVolumesMain.set( \
           addField(SFBOOL, "shadowVolumesMain", new SFBool(false)));  \
     setFieldFlags(shadowVolumesMain, FF_KAMBI_ONLY);
-#endif
+

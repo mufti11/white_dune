@@ -19,18 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ANCHOR_H
-#define _NODE_ANCHOR_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "NodeGroup.h"
 
 #include "SFMFTypes.h"
@@ -54,7 +48,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERACTIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeAnchor(*this); }
+    virtual Node   *copy() { return new NodeAnchor(m_scene, m_proto); }
 
     virtual bool    hasNumbers4kids(void) { return true; }
 
@@ -66,5 +60,3 @@ public:
     fieldMacros(MFString, url,         ProtoAnchor)
     fieldMacros(SFBool,   render,      ProtoAnchor)
 };
-
-#endif // _NODE_ANCHOR_H

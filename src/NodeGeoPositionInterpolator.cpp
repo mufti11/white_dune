@@ -63,7 +63,7 @@ ProtoGeoPositionInterpolator::create(Scene *scene)
 }
 
 int 
-ProtoGeoPositionInterpolator::translateField(int field) const
+ProtoGeoPositionInterpolator::translateField(int field)
 {
     bool x3d = m_scene->isX3d();
     if (x3d && (field == keyValue))
@@ -108,10 +108,11 @@ NodeGeoPositionInterpolator::convert2Vrml(void)
 }
 
 float
-NodeGeoPositionInterpolator::getKeyValue(int channel, int index) const
+NodeGeoPositionInterpolator::getKeyValue(int channel, int index)
 {
     MFVec3d *keyValue = (MFVec3d *) getField(m_keyValueField);
-    int i = index * getNumChannels() + channel;
+    int i = index * ((NodeGeoPositionInterpolator *)this)->getNumChannels() + 
+            channel;
     if (i < keyValue->getSize()) {
         const double *ret = keyValue->getValue(i);
         return (float)*ret;
@@ -132,15 +133,16 @@ NodeGeoPositionInterpolator::getInterpolatedFieldValue(float k)
 }
 
 FieldValue *
-NodeGeoPositionInterpolator::createKey(void *value) const
+NodeGeoPositionInterpolator::createKey(void *value)
 {
     return new SFVec3d((double *)value);
 }
 
 FieldValue *
-NodeGeoPositionInterpolator::createKeys(void *value, int numKeys) const
+NodeGeoPositionInterpolator::createKeys(void *value, int numKeys)
 {
-    return new MFVec3d((double *)value, numKeys * getNumChannels());
+    return new MFVec3d((double *)value, numKeys * 
+        ((NodeGeoPositionInterpolator *)this)->getNumChannels());
 }
 
 void
@@ -153,7 +155,7 @@ NodeGeoPositionInterpolator::setKeyValue(int channel, int index, float value)
 }
 
 void
-NodeGeoPositionInterpolator::insertKey(int pos, float key, const float *values)
+NodeGeoPositionInterpolator::insertKey(int pos, float key, float *values)
 {
     MFFloat *keys = (MFFloat *) getField(m_keyField);
     MFVec3d *keyValues = (MFVec3d *) getField(m_keyValueField);

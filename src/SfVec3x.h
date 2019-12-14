@@ -19,41 +19,35 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFVEC3X_H
-#define _SFVEC3X_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 # include "FieldValue.h"
-#endif
-#ifndef _VEC3F_H
 # include "Vec3f.h"
-#endif
-#ifndef _QUATERNION_H
 # include "Quaternion.h"
-#endif
 
 template<class X> class SfVec3x : public FieldValue {
 public:
-    virtual int         getType() const=0;
-    virtual const char *getTypeName() const=0;
+    virtual int         getType() { return -1; }
+    virtual const char *getTypeName() { return ""; }
 
-    virtual int         writeData(int filedes, int i) const = 0; 
+    virtual int         writeData(int filedes, int i) { return 0;} 
 
-    virtual bool        readLine(int index, char *line)=0;
+    virtual bool        readLine(int index, char *line) { return false; }
 
-    virtual bool        equals(const FieldValue *value) const=0;
+    virtual bool        equals(const FieldValue *value) { return false; }
 
-    virtual void        clamp(const FieldValue *min, const FieldValue *max)=0;
+    virtual void        clamp(const FieldValue *min, const FieldValue *max) {}
 
-    virtual MyString    getEcmaScriptComment(MyString name, int flags) const=0;
+    virtual MyString    getEcmaScriptComment(MyString name, int flags)
+                            { return "{}\n"; }
 
-    virtual int         getNumbersPerType(void) const { return 3; }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return 3; }
+    virtual bool        needCheckFloat(void) { return true; }
 
-    virtual FieldValue *copy()=0;
+    virtual FieldValue *copy() { return NULL; }
     
     const X            *getValue() const { return m_value; }
-    X                   getValue(int pos) const { return m_value[pos]; }
+    X                   getValue(int pos) { return m_value[pos]; }
     void                setValue(int index, X value)
                            {
                            assert(index >= 0 && index < 3);
@@ -115,4 +109,3 @@ protected:
     X                   m_value[3];
 };
 
-#endif // _SFVEC3X_H

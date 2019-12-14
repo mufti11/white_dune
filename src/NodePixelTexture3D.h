@@ -23,6 +23,7 @@
 #define _NODE_PIXEL_TEXTURE_3D_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -66,7 +67,7 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing3D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 1; } 
-    virtual Node   *copy() const { return new NodePixelTexture3D(*this); }
+    virtual Node   *copy() { return new NodePixelTexture3D(m_scene, m_proto); }
 
     virtual void    draw(int pass);
     virtual void    preDraw() 

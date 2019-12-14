@@ -23,6 +23,7 @@
 #define _NODE_GROUP_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -65,7 +66,7 @@ public:
                     NodeGroup(NodeAnchor *anchor);
 
     virtual int     getProfile(void) const;
-    virtual Node   *copy() const { return new NodeGroup(*this); }
+    virtual Node   *copy() { return new NodeGroup(m_scene, m_proto); }
 
     virtual bool    hasX3domOnclick(void) { return true; }
 

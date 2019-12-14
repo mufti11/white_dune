@@ -22,13 +22,14 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "swt.h"
 #include "SFMatrix3f.h"
 #include "SFFloat.h"
 
 MyString    
-SFMatrix3f::getString(int index, int stride) const
+SFMatrix3f::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -38,7 +39,7 @@ SFMatrix3f::getString(int index, int stride) const
 }
 
 bool
-SFMatrix3f::equals(const FieldValue *value) const
+SFMatrix3f::equals(FieldValue *value)
 {
     if (value->getType() == SFMATRIX3F) {
         SFMatrix3f *v = (SFMatrix3f *) value;
@@ -82,7 +83,7 @@ SFMatrix3f::readLine(int index, char *line)
 }
 
 int 
-SFMatrix3f::writeData(int f, int i) const
+SFMatrix3f::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g  %g %g %g  %g %g %g", 
                        m_value[0], m_value[1], m_value[2],
@@ -91,7 +92,7 @@ SFMatrix3f::writeData(int f, int i) const
 }
 
 int 
-SFMatrix3f::write(int f, int indent) const
+SFMatrix3f::write(int f, int indent)
 {
     RET_ONERROR( mywritef(f, "%g %g %g\n%g %g %g\n%g %g %g\n", 
                           m_value[0], m_value[1], m_value[2],
@@ -104,7 +105,7 @@ SFMatrix3f::write(int f, int indent) const
 }
 
 int
-SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag) const
+SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -123,14 +124,14 @@ SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag) cons
 }
 
 int
-SFMatrix3f::writeAc3d(int filedes, int indent) const
+SFMatrix3f::writeAc3d(int filedes, int indent)
 {
     // not needed yet
     return 0;
 }
 
 MyString
-SFMatrix3f::getEcmaScriptComment(MyString name, int flags) const
+SFMatrix3f::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

@@ -52,7 +52,7 @@ public:
                     NodeSteeringWheel(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; } 
-    virtual Node   *copy() const { return new NodeSteeringWheel(*this); }
+    virtual Node   *copy() { return new NodeSteeringWheel(m_scene, m_proto); }
 
     fieldMacros(SFBool,  enabled,        ProtoSteeringWheel)
     fieldMacros(SFInt32, joystickNumber, ProtoSteeringWheel)

@@ -36,6 +36,9 @@ EGREP_PROBLEMS = no
 # WARNINGS = -woff 3303
 # LFLAGS = -woff 1167 -woff 1110 -woff 3322
 
+# GNU ld linker flags
+GNULDFLAGS = -Wl,--allow-multiple-definition
+
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
@@ -44,7 +47,8 @@ COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/
 CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
+LIBS = $(GNULDFLAGS)   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick \
+        -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -622,7 +626,7 @@ BIGDUNECLASSES = \
         SceneProtoMap.o \
 	Node.o \
         MainWindow.o \
-	NodeIndexedFaceSet.o
+        NodeIndexedFaceSet.o
 
 FONT23DCLASSES = \
         advancing_front.o \
@@ -635,14 +639,14 @@ FONT23DCLASSES = \
         Vectoriser.o
 
 CLASSES = \
-        $(DUNECLASSES) \
         $(APPCLASSES) \
         $(DIALOGCLASSES) \
         $(TYPECLASSES) \
+        $(FONT23DCLASSES) \
         $(NODEPARENTCLASSES) \
         $(NODECLASSES) \
+        $(DUNECLASSES) \
         $(EXTRACLASSES) \
-        $(FONT23DCLASSES) \
 	parser.o \
 	lexer.o
 
@@ -657,7 +661,7 @@ OBJSC = \
 	jpegLoad.o \
 	pngLoad.o gif.o
 
-OBJS = $(BIGDUNECLASSES) $(CLASSES) $(OBJSC) 
+OBJS = 	NodeIndexedFaceSet.o $(CLASSES) $(BIGDUNECLASSES) $(OBJSC) 
 
 OBJS_LOW_MEM = $(CLASSES) $(OBJSC)
 
@@ -737,7 +741,7 @@ duneLowMem: main.o objc $(CLASSES)
 
 ../bin/dune: main.o $(OBJS)  
 	(cd swt ; $(MAKE))
-	$(CXX) main.o $(OBJS) $(LIBS) -o $@
+	$(CXX) -Wl,--start-group main.o $(OBJS) $(LIBS) -Wl,--end-group -o $@
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"

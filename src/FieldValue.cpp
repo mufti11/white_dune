@@ -29,12 +29,12 @@
 #include "DuneApp.h"
 
 FieldValue::FieldValue() {
-    m_refs = 0;
+//    m_refs = 0;
     m_isDefaultValue = false;
 }
 
 int
-FieldValue::write(int filedes, int indent) const
+FieldValue::write(int filedes, int indent)
 { 
     RET_ONERROR( writeData(filedes, indent) )
     RET_ONERROR( mywritestr(filedes, "\n") )
@@ -44,7 +44,7 @@ FieldValue::write(int filedes, int indent) const
 
 int
 FieldValue::writeXml(int filedes, int indent, int containerField,
-                     bool avoidUse) const
+                     bool avoidUse)
 { 
     RET_ONERROR( mywritestr(filedes, "'") )
     RET_ONERROR( writeDataXml(filedes, 0) )
@@ -79,7 +79,7 @@ FieldValue::writeDequoted(int filedes, const char *string)
 
 int
 FieldValue::writeC(int filedes, const char* variableName, 
-                   int languageFlag) const
+                   int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, variableName) )
     RET_ONERROR( mywritestr(filedes, " = ") )
@@ -181,20 +181,20 @@ FieldValue::writeCSendEventFunction(int filedes, int languageFlag)
 }
 
 const char *
-FieldValue::getDefaultC(int languageFlag) const
+FieldValue::getDefaultC(int languageFlag)
 { 
     return "NULL"; 
 }
 
 FieldValue *
-FieldValue::addNode(Node * /* node */, int /* index */) const
+FieldValue::addNode(Node * /* node */, int /* index */)
 {
     assert(0);
     return NULL;
 }
 
 FieldValue *
-FieldValue::removeNode(Node * node, int index) const
+FieldValue::removeNode(Node * node, int index)
 {
     assert(0);
     return NULL;
@@ -317,7 +317,8 @@ rewriteField(FieldValue *value, const char *oldBase, const char *newBase,
         int n = ((MFString *) value)->getSize();
         for (int i = 0; i < n; i++) {
             bool flag = false;
-            flag = !isSortOfEcmascript(((MFString *) value)->getValue(i));
+            flag = !isSortOfEcmascript(((MFString *) value)->getValue(i)->
+                                        getValue());
             const char* url = (const char*) ((MFString *) value)->getValue(i);
             if (notURN(url) && flag) {
                (*a)[i] = rewriteURL(url, oldBase, newBase);
@@ -342,7 +343,7 @@ rewriteField(FieldValue *value, const char *oldBase, const char *newBase,
     }
 }
 
-int MFieldValue::write(int f, int indent, bool writeBrackets) const
+int MFieldValue::write(int f, int indent, bool writeBrackets)
 { 
     // SFImage is not a real MFType, it may not use brackets
     if (writeBrackets) {
@@ -382,7 +383,7 @@ int MFieldValue::write(int f, int indent, bool writeBrackets) const
 }
 
 int MFieldValue::writeXml(int f, int indent, int containterField,
-                          bool avoidUse) const
+                          bool avoidUse)
 {
     RET_ONERROR( mywritestr(f, "'") )
     for (int i = 0; i < getSFSize(); i++) { 
@@ -395,7 +396,7 @@ int MFieldValue::writeXml(int f, int indent, int containterField,
 }
 
 bool                
-FieldValue::writeType(int languageFlag) const
+FieldValue::writeType(int languageFlag)
 {
     if (languageFlag & JAVA_SOURCE)
         if (isMFieldValue() && (!isNode()))
@@ -405,7 +406,7 @@ FieldValue::writeType(int languageFlag) const
 
 int
 MFieldValue::writeC(int filedes, const char* variableName, 
-                    int languageFlag) const
+                    int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") );
     RET_ONERROR( mywritestr(filedes, variableName) );
@@ -428,8 +429,7 @@ int
 MFieldValue::writeJavaLongArray(int filedes, int languageFlag,
                                 const char* variableName, 
                                 int offset, int length, bool wonderlandArt,
-                                const char *sceneUrl) 
-                                const
+                                const char *sceneUrl)
 {
     RET_ONERROR( mywritestr(filedes, "        ") )
     if (languageFlag & MANY_JAVA_CLASSES)
@@ -569,7 +569,7 @@ MFieldValue::getDiff(IntArray *newIndices, IntArray *deleteIndices,
 }
 
 int
-FieldValue::writeAc3d(int filedes, int indent) const
+FieldValue::writeAc3d(int filedes, int indent)
 {
     int appIndent = TheApp->GetIndent();
     TheApp->SetIndent(0);
@@ -579,7 +579,7 @@ FieldValue::writeAc3d(int filedes, int indent) const
 }
 
 int
-FieldValue::writeCattGeo(int filedes, int indent) const
+FieldValue::writeCattGeo(int filedes, int indent)
 {
     int appIndent = TheApp->GetIndent();
     TheApp->SetIndent(0);

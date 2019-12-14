@@ -844,6 +844,7 @@ if test "X_$AVOID_RANLIB" = "X_yes" ; then
 else
    AC_PATH_PROGS(RANLIB,ranlib,echo)
 fi
+AC_PATH_PROGS(AR,ar,echo)
 
 if test "X_$SDL_JOYSTICK" = "X_yes" ; then
 

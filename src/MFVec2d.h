@@ -19,51 +19,46 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFVEC2d_H
-#define _MFVEC2d_H
+#pragma once
 
-#ifndef _MFDOUBLE_H
-# include "MFDouble.h"
-#endif
-#ifndef _VEC2d_H
-# include "Vec2d.h"
-#endif
-
-class MFVec2f;
-class MFString;
+#include "MFDouble.h"
+#include "MFVec2d.h"
+#include "Vec2d.h"
+#include "MFString.h"
 
 class MFVec2d : public MFDouble {
 public:
                         MFVec2d() : MFDouble(2) {}
                         MFVec2d(int size) : MFDouble(size * 2) {}
-                        MFVec2d(const double *values, int len) :
+                        MFVec2d(double *values, int len) :
                                 MFDouble(values, len) {}
+                        MFVec2d(double *values);
                         MFVec2d(MFString *values);
                         MFVec2d(MFVec2d *values);
 
     virtual int         getType() const { return MFVEC2D; }
-    virtual const char *getTypeName() const { return "MFVec2d"; }
-    virtual int         getStride() const { return 2; }
+    virtual const char *getTypeName() { return "MFVec2d"; }
+    virtual int         getStride() { return 2; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
 
-    virtual FieldValue *getSFValue(int index) const;
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
-    virtual void        setSFValue(int index, const double *values);
+    virtual void        setSFValue(int index, double *values);
     virtual void        setSFValue(int index, double x, double y);
     virtual void        setSFValue(int index, const char* values);
 
-    const double       *getValue(int index) const 
+    double             *getValue(int index)
                               { return m_value.getData() + index * 2; } 
 
     void                setVec(int index, Vec2d v);
     Vec2d               getVec(int index);
 
     virtual void        insertSFValue(int index, FieldValue *value);
-    virtual void        insertSFValue(int index, const double *values);
+    virtual void        insertSFValue(int index, double *values);
     virtual void        insertSFValue(int index, double x, double y, double z);
 
     Vec2d               getMinBoundingBox(void);
@@ -72,10 +67,7 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 };
-
-#endif // _MFVEC2d_H
-

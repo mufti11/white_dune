@@ -23,6 +23,7 @@
 #define _NODE_CoordinateDouble_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -58,7 +59,8 @@ public:
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
 
-    virtual Node   *copy() const { return new NodeCoordinateDouble(*this); }
+    virtual Node   *copy() { return new NodeCoordinateDouble(
+                                    m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual void    flip(int index);

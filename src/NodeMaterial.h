@@ -23,6 +23,7 @@
 #define _NODE_MATERIAL_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -67,7 +68,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeMaterial(*this); }
+    virtual Node   *copy() { return new NodeMaterial( m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual int     getAnimationCommentID(void);

@@ -19,14 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _STRINGARRAY_H
-#define _STRINGARRAY_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
+
 class MyString;
 
 typedef MyArray<MyString> StringArray;
 
-#endif // _STRINGARRAY_H

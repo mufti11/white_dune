@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FIELD_INDEX_H
-#define _FIELD_INDEX_H
+#pragma once
 
 class FieldIndex {
 // in principle, this is a readonly integer
@@ -36,9 +35,7 @@ public:
     void set(int i)      { 
                          if (m_written == 0) {
                              m_written = 1;
-                             if (i < 0) {
-                                 assert(0);
-                             } else 
+                             if (i > -1)
                                  m_fieldIndex = i;
                          } else 
                              assert(0);
@@ -51,5 +48,3 @@ protected:
     int m_written;
     int m_fieldIndex;
 };
-
-#endif

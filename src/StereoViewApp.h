@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _STEREO_VIEW_APP_H
-#define _STEREO_VIEW_APP_H
+#pragma once
 
 #include "swt/include/stereoview.h"
 
@@ -37,7 +36,7 @@ typedef enum {
     CM_3DCURSOR_ALWAYS
 } Cursor3dMode;
 
-extern bool parseCommandlineArgumentStereoView(int & i,int argc, char** argv);
+bool parseCommandlineArgumentStereoView(int & i,int argc, char** argv);
 
 class StereoViewApp {
 public:
@@ -154,5 +153,4 @@ private:
     float               m_cursor3dLength;
 };
 
-#endif
 

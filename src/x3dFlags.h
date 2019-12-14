@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _X3D_FLAGS_H
-#define _X3D_FLAGS_H
+#pragma once
 
 #include "WriteFlags.h"
 
@@ -31,4 +30,3 @@ inline bool isX3dXml(const int flags)
 inline bool isX3d(const int flags)   
     { return isX3dv(flags) || isX3dXml(flags); }
 
-#endif

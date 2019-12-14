@@ -19,19 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BOOLEAN_TRIGGER_H
-#define _NODE_BOOLEAN_TRIGGER_H
-
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoBooleanTrigger : public Proto {
@@ -50,15 +41,13 @@ public:
 class NodeBooleanTrigger : public Node {
 public:
                     NodeBooleanTrigger(Scene *scene, Proto *proto);
-                    NodeBooleanTrigger(const NodeBooleanTrigger &node);
+                    NodeBooleanTrigger(NodeBooleanTrigger &node);
     virtual        ~NodeBooleanTrigger();
 
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeBooleanTrigger(*this); }
+    virtual Node   *copy() { return new NodeBooleanTrigger(m_scene, m_proto); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 };
-
-#endif // _NODE_BOOLEAN_TRIGGER_H

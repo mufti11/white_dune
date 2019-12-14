@@ -23,6 +23,7 @@
 #define _NODE_RADAR_VOLUME_STYLE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,7 +60,8 @@ public:
                     NodeRadarVolumeStyle(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeRadarVolumeStyle(*this); }
+    virtual Node   *copy() { return new NodeRadarVolumeStyle( 
+                             m_scene, m_proto); }
 
     fieldMacros(SFBool, enabled, ProtoRadarVolumeStyle);
     fieldMacros(SFNode, transferFunction, ProtoRadarVolumeStyle);

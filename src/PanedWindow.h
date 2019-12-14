@@ -19,18 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PANED_WINDOW_H
-#define _PANED_WINDOW_H
+#pragma once
 
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
-
-#ifndef _LIST_H
 #include "List.h"
-#endif
-
 #include "swttypedef.h"
+#include "DuneApp.h"
+#include "ExternTheApp.h"
 
 class PanedWindow : public SceneView {
 public:
@@ -77,4 +72,3 @@ enum {
     PW_CENTER
 };
 
-#endif /* _PANED_WINDOW_H */

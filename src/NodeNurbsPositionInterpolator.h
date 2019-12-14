@@ -57,8 +57,8 @@ public:
                     NodeNurbsPositionInterpolator(Scene *scene, Proto *proto);
                     ~NodeNurbsPositionInterpolator();
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const 
-                       { return new NodeNurbsPositionInterpolator(*this); }
+    virtual Node   *copy() { return new NodeNurbsPositionInterpolator(
+                             m_scene, m_proto); }
 
     virtual void    draw();
     virtual void    drawHandles(void);
@@ -87,7 +87,7 @@ public:
     void            update() { m_nurbsCurveDirty = true; }
 
     MFVec3f        *getControlPoints(void);
-    void            setControlPoints(const MFVec3f *points);
+    void            setControlPoints(MFVec3f *points);
 
     fieldMacros(SFInt32, dimension,         ProtoNurbsPositionInterpolator)
     fieldMacros(SFNode,  controlPoint,      ProtoNurbsPositionInterpolator)

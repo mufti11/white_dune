@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SELECTION_COMMAND_H
-#define _SELECTION_COMMAND_H
+#pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
 
 class Scene;
 class Path;
@@ -45,4 +42,3 @@ private:
     Path               *m_newPath;
 };
 
-#endif // _SELECTION_COMMAND_H

@@ -62,11 +62,12 @@ public:
 class NodeSurfaceShaderTexture : public Node {
 public:
                     NodeSurfaceShaderTexture(Scene *scene, Proto *proto);
-                    NodeSurfaceShaderTexture(const NodeSurfaceShaderTexture &node);
+                    NodeSurfaceShaderTexture(NodeSurfaceShaderTexture &node);
     virtual        ~NodeSurfaceShaderTexture();
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeSurfaceShaderTexture(*this); }
+    virtual Node *copy() { return new NodeSurfaceShaderTexture( 
+                           m_scene, m_proto); }
 
     virtual void    load();
 

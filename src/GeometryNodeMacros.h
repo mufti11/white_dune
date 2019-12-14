@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _GEOMETRY_NODE_MACROS_H
-#define _GEOMETRY_NODE_MACROS_H
+#pragma once
 
 class NodeCoordinate;
 
@@ -90,4 +89,3 @@ SelfNode::getTextureTransformNode(void) \
                             nappearance->textureTransform()->getValue(); \
     return ntextureTransfrom; \
 }
-#endif

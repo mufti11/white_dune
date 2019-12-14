@@ -25,6 +25,7 @@
 #define _NODE_TUI_LABEL_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -51,7 +52,7 @@ public:
                     NodeTUILabel(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeTUILabel(*this); }
+    virtual Node   *copy() { return new NodeTUILabel(m_scene, m_proto); }
 };
 
 #endif // _NODE_TUI_LABEL_H

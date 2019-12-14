@@ -22,20 +22,12 @@
  * Cover/Covise vrml browser 
  */
 
-#ifndef _COVER_NODE_H
-#define _COVER_NODE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
+#include "Node.h"
 
 class CoverNode : public Node {
 public:
@@ -55,5 +47,4 @@ public:
     virtual bool    isCoverNode(void) { return true; }
 };
 
-#endif // _COVER_NODE_H
 

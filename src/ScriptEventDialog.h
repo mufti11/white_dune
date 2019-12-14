@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef SCRIPT_EVENT_DIALOG_H
-#define SCRIPT_EVENT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 #include "MyString.h"
 #include "Node.h"
@@ -46,4 +42,3 @@ private:
     Node                   *m_node;
 };
 
-#endif

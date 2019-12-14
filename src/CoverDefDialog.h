@@ -19,16 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _COVER_DEF_DIALOG_H
-#define _COVER_DEF_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
-
 #include "swttypedef.h"
 
 class CoverDefDialog : public Dialog {
@@ -48,5 +44,3 @@ private:
     Scene      *m_scene;
 
 };
-
-#endif

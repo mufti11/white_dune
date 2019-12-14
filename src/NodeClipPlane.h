@@ -23,6 +23,7 @@
 #define _NODE_CLIP_PLANE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,7 +60,7 @@ public:
     virtual const char* getComponentName(void) const { return "Rendering"; }
     virtual int         getComponentLevel(void) const { return 5; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeClipPlane(*this); }
+    virtual Node   *copy() { return new NodeClipPlane(m_scene, m_proto); }
 
     void            bind();
     void            unbind();

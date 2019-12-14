@@ -24,6 +24,7 @@
 
 #include "SFString.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 SFString::SFString(const MyString &value)
   : m_value(value)
@@ -37,7 +38,7 @@ SFString::SFString(const char *str)
 
 
 MyString    
-SFString::getString(int index, int stride) const
+SFString::getString(int index, int stride)
 {    
     MyString ret = "";
     ret += '"';
@@ -56,13 +57,13 @@ SFString::readLine(int index, char *line)
 }
 
 bool
-SFString::equals(const FieldValue *value) const
+SFString::equals(FieldValue *value)
 {
     return value->getType() == SFSTRING &&
       !strcmp(((SFString *) value)->getValue(), (const char *) m_value);
 }
 
-int SFString::writeData(int f, int i) const
+int SFString::writeData(int f, int i)
 {
     RET_ONERROR( mywritestr(f, "\"") )
     RET_ONERROR( mywritestr(f, (const char *)m_value) )
@@ -70,7 +71,7 @@ int SFString::writeData(int f, int i) const
     return(0);
 }
 
-int SFString::writeDataXml(int f, int i) const
+int SFString::writeDataXml(int f, int i)
 {
     MyString string = "";
     string += m_value;
@@ -85,7 +86,7 @@ int SFString::writeDataXml(int f, int i) const
     return(0);
 }
 
-int SFString::writeRaw(int f, int indent) const
+int SFString::writeRaw(int f, int indent)
 {
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
     RET_ONERROR( mywritestr(f, m_value) )
@@ -94,13 +95,13 @@ int SFString::writeRaw(int f, int indent) const
     return(0);
 }
 
-int SFString::write4FieldPipe(int filedes, int indent) const
+int SFString::write4FieldPipe(int filedes, int indent)
 {
     return ((FieldValue *)this)->writeDequoted(filedes, m_value);
 }
 
 const char *
-SFString::getTypeC(int languageFlag) const
+SFString::getTypeC(int languageFlag)
 { 
     if (languageFlag & JAVA_SOURCE)
         return "String";
@@ -109,7 +110,7 @@ SFString::getTypeC(int languageFlag) const
 
 int
 SFString::writeCWonderlandArt(int filedes, const char* variableName,
-                              int languageFlag) const
+                              int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, variableName) )
     RET_ONERROR( mywritestr(filedes, " = ") )
@@ -119,7 +120,7 @@ SFString::writeCWonderlandArt(int filedes, const char* variableName,
 }
 
 MyString
-SFString::getEcmaScriptComment(MyString name, int flags) const
+SFString::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

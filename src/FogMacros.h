@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FOG_MACROS_H
-#define _FOG_MACROS_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
 
 #define FogProtoMacro() \
     FieldIndex volumetric; \
@@ -53,4 +48,3 @@
                           new SFFloat(0.0f)));                       \
     setFieldFlags(volumetricVisibilityStart, FF_KAMBI_ONLY); 
 
-#endif

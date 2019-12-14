@@ -22,13 +22,14 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "swt.h"
 #include "SFVec4f.h"
 #include "SFFloat.h"
 
 MyString    
-SFVec4f::getString(int index, int stride) const
+SFVec4f::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -38,7 +39,7 @@ SFVec4f::getString(int index, int stride) const
 }
 
 bool
-SFVec4f::equals(const FieldValue *value) const
+SFVec4f::equals(FieldValue *value)
 {
     if (value->getType() == SFVEC4F) {
         SFVec4f *v = (SFVec4f *) value;
@@ -79,14 +80,14 @@ SFVec4f::readLine(int index, char *line)
 }
 
 int 
-SFVec4f::writeData(int f, int i) const
+SFVec4f::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g %g", m_value[0], m_value[1], m_value[2], 
                     m_value[3]);
 }
 
 int
-SFVec4f::writeC(int filedes, const char* variableName, int languageFlag) const
+SFVec4f::writeC(int filedes, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -106,7 +107,7 @@ SFVec4f::writeC(int filedes, const char* variableName, int languageFlag) const
 }
 
 int
-SFVec4f::writeAc3d(int filedes, int indent) const
+SFVec4f::writeAc3d(int filedes, int indent)
 {
     RET_ONERROR( mywritef(filedes, "%f %f %f %f", 
                           m_value[0], m_value[1], m_value[2], m_value[3]) )
@@ -115,7 +116,7 @@ SFVec4f::writeAc3d(int filedes, int indent) const
 }
 
 MyString
-SFVec4f::getEcmaScriptComment(MyString name, int flags) const
+SFVec4f::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

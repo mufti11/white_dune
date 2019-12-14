@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _COMMAND_LIST_H
-#define _COMMAND_LIST_H
+#pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
-#ifndef _LIST_H
 #include "List.h"
-#endif
 
 class CommandList : public Command {
 public:
@@ -42,5 +37,3 @@ public:
 private:
     List<Command *>     m_children;
 };
-
-#endif // _COMMAND_LIST_H

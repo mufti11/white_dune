@@ -1995,8 +1995,8 @@ NodeImageTexture3D::load()
         bool validPath = false;
         MyString path;
         for (int i = 0; i < urls->getSize(); i++) {
-            URL urlI(baseURL, urls->getValue(i));
-            if (urls->getValue(i).length() == 0) continue;
+            URL urlI(baseURL, urls->getValue(i)->getValue());
+            if (strlen(urls->getValue(i)->getValue()) == 0) continue;
             if (m_scene->Download(urlI, &path)) {
                 validPath = true;
                 break;

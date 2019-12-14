@@ -25,12 +25,11 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#pragma once
+
 #include "config.h"
 
 #ifdef HAVE_LIBFREETYPE
-
-#ifndef _DIFONT_CONTOUR_H_
-#define _DIFONT_CONTOUR_H_
 
 #include <vector>
 #include <ft2build.h>
@@ -166,6 +165,4 @@
 
 };
 
-#endif // __Contour__
-
-#endif
+#endif 

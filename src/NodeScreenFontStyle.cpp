@@ -60,7 +60,7 @@ NodeScreenFontStyle::setField(int index, FieldValue *value, int cf)
 }
 
 float   
-NodeScreenFontStyle::getSizeX(void) const 
+NodeScreenFontStyle::getSizeX(void)
 { 
      float sceneWidth = m_scene->getWidth();
      if (sceneWidth != 0)
@@ -69,7 +69,7 @@ NodeScreenFontStyle::getSizeX(void) const
 }
 
 float   
-NodeScreenFontStyle::getSizeY(void) const 
+NodeScreenFontStyle::getSizeY(void) 
 { 
      float sceneHeight = m_scene->getHeight();
      if (sceneHeight != 0)

@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _X3DN_BODY_COLLIDABLE_NODE_H
-#define _X3DN_BODY_COLLIDABLE_NODE_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
 
@@ -72,9 +71,8 @@ public:
     bool              modelViewIsIdentity(void);
 private:
     bool              m_matrixDirty;
-    Matrix            m_matrix;
+    Matrixd            m_matrix;
     float             m_handleScale;
 };
 
-#endif
 

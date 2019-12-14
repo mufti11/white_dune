@@ -19,24 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
+#pragma once
+
 // basic class for the Transform node, but without center, scale 
 // and scaleOrientation fields (usefull for nodes like CollidableOffset)
 
-#ifndef _BASIC_TRANSFORM_H
-#define _BASIC_TRANSFORM_H
-
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _MATRIX_H
 #include "Matrix.h"
-#endif
 
 #include "swt.h"
 
@@ -62,7 +53,7 @@ public:
                      ~BasicTransformNode();
 
 public:
-    virtual int       getBasicChildrenField(void) const = 0;
+    virtual int       getBasicChildrenField(void) = 0;
 
     virtual MFNode   *getBasicChildren(void) 
                          { return (MFNode *)getField(getBasicChildrenField()); }
@@ -94,10 +85,10 @@ public:
 
     virtual void      receiveEvent(int eventIn, double timestamp, FieldValue *value);
 
-    void              getMatrix(float* matrix);
-    void              setMatrix(float* matrix);
-    const Quaternion &getQuat(void);
-    void              setQuat(const Quaternion &quat);    
+    void              getMatrix(double* matrix);
+    void              setMatrix(double* matrix);
+    Quaternion        getQuat(void);
+    void              setQuat(Quaternion quat);    
 
     virtual int       writeAc3d(int filedes, int indent);
     virtual int       writeRib(int filedes, int indent);
@@ -113,8 +104,6 @@ public:
     bool              modelViewIsIdentity(void);
 protected:
     bool              m_matrixDirty;
-    Matrix            m_matrix;
+    Matrixd           m_matrix;
     float             m_handleScale;
 };
-
-#endif // _NODE_TRANSFORM_H

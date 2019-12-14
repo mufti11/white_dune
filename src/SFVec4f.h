@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFVEC4F_H
-#define _SFVEC4F_H
+#pragma once
 
-#ifndef _VEC4F_H
-# include "Vec4f.h"
-#endif
+#include "Vec4f.h"
 #include "FieldValue.h"
 
 class SFVec4f : public FieldValue {
@@ -56,32 +53,32 @@ public:
                            }
 
     virtual int         getType() const { return SFVEC4F; }
-    virtual const char *getTypeName() const { return "SFVec4f"; }
-    virtual int         getStride() const { return 4; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFVec4f"; }
+    virtual int         getStride() { return 4; }
+    virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFVec4f(*this); }
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
-    virtual bool        supportAnimation(bool x3d) const { return true; }
-    virtual bool        supportInteraction(void) const { return true; }
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    virtual bool        supportAnimation(bool x3d) { return true; }
+    virtual bool        supportInteraction(void) { return true; }
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
-    virtual bool        isArrayInC(void) const { return true; }
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
+    virtual bool        isArrayInC(void) { return true; }
 
-    virtual int         writeAc3d(int filedes, int indent) const;
+    virtual int         writeAc3d(int filedes, int indent);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 4; }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return 4; }
+    virtual bool        needCheckFloat(void) { return true; }
     
-    const float        *getValue() const { return m_value; }
-    float               getValue(int pos) const { return m_value[pos]; }
+    float              *getValue() { return m_value; }
+    float               getValue(int pos) { return m_value[pos]; }
     void                setValue(int index, float value)
                            {
                            assert(index >= 0 && index < 4);
@@ -94,6 +91,22 @@ public:
                            m_value[2] = v3;
                            m_value[3] = v4;
                            }
+    void                setSFValue(FieldValue *value) 
+                           {
+                           m_value[0] = ((SFVec4f *)value)->getValue()[0];
+                           m_value[1] = ((SFVec4f *)value)->getValue()[1];
+                           m_value[2] = ((SFVec4f *)value)->getValue()[2];
+                           m_value[3] = ((SFVec4f *)value)->getValue()[3];
+                           }
+    Vec4f             getSFValue(int index)
+                           {
+                           static Vec4f vec;
+                           vec.x = getValue(index * 4);
+                           vec.y = getValue(index * 4 + 1);
+                           vec.z = getValue(index * 4 + 2);
+                           vec.w = getValue(index * 4 + 3);
+                           return vec;
+                        }
 
     void                flip(int index) { m_value[index] *= -1.0; }
     void                swap(int fromTo)
@@ -112,10 +125,10 @@ public:
                            }
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
-                           { return new SFVec4f(FLOAT_RAND(), FLOAT_RAND(), 
-                                                FLOAT_RAND(), FLOAT_RAND()); }
+                           { 
+                           return new SFVec4f(FLOAT_RAND(), FLOAT_RAND(), 
+                                              FLOAT_RAND(), FLOAT_RAND());
+                           }
 protected:
     float               m_value[4];
 };
-
-#endif // _SFVEC4F_H

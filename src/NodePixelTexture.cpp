@@ -101,7 +101,7 @@ NodePixelTexture::NodePixelTexture(Scene *scene, Proto *def)
     m_isAlphaNot0Not1 = true;
 }
 
-NodePixelTexture::NodePixelTexture(const NodePixelTexture &node)
+NodePixelTexture::NodePixelTexture(NodePixelTexture &node)
   : Node(node)
 {
     m_image = NULL;

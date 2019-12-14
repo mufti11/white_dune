@@ -19,17 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FIELD_H
-#define _FIELD_H
+#pragma once
 
-#ifndef _ELEMENT_H
-# include "Element.h"
-#endif
-#ifndef _NODE_H   
-# include "Node.h"   
-#endif
+#include "NodeDefinitions.h"
+
+#include "Element.h"   
 
 #include "config.h"
+
+class Proto;
 
 class FieldValue;
 class ExposedField;
@@ -79,4 +77,4 @@ private:
     int             m_nodeType;
     const char    **m_strings;
 };
-#endif // _FIELD_H
+

@@ -19,49 +19,47 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _STACK_H
-#define _STACK_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
+
 
 template<class T> 
 class MyStack {
 public:
                         MyStack()
-                           { m_top = 0; }
+                           { m_top=0; }
 
     void                push(T t)
-                           { m_data[m_top++] = t; }
+                           { m_data[m_top++]=t; }
     T                   pop()
                            { 
-                           if (m_top == 0)
+                           if (m_top<0)
                                return (T)0;
                            else
                                return m_data[--m_top]; 
                            }
-    T                   peek() const
+    T                   peek()
                            { 
+                           static T t;
                            if (m_top == 0)
                                return (T)0;
-                           else
-                               return m_data[m_top-1]; 
+                           else if (m_top > -1)
+                               return m_data[m_top-1];
+                           return t; 
                            }
-    T                   peek(int i) const
+    T                   peek(int i)
                            { 
                            if ((i <= m_top) && (i > 0))
                                return m_data[i-1]; 
                            else 
                                return (T)NULL;
                            }
-    int                 empty() const { return m_top == 0; }
+    int                 empty() const { return m_top== 0;}
 
     int                 getTop() const { return m_top; }
     
-private:
     MyArray<T>          m_data;
     int                 m_top;
 };
 
-#endif // _STACK_H

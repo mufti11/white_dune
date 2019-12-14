@@ -21,8 +21,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _VEC4F_H
-#define _VEC4F_H
+#pragma once
 
 #include <math.h>
 #include "stdafx.h"
@@ -84,4 +83,3 @@ public:
      float x, y, z, w;
 };
 
-#endif // _VEC4F_H

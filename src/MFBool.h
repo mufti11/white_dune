@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFBool_H
-#define _MFBool_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
 
 class MFBool : public MFieldValue {
 public:
@@ -38,35 +33,36 @@ public:
     virtual            ~MFBool();
 
     virtual int         getType() const { return MFBOOL; }
-    virtual const char *getTypeName() const { return "MFBool"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "MFBool"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse) const;
+                                 bool avoidUse);
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const;
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
+    virtual const char *getTypeC(int languageFlag);
 
     virtual bool        readLine(int index, char *line);
-    virtual int         getNumbersPerType(void) const { return getStride(); }
+    virtual int         getNumbersPerType(void) 
+                            { return ((MFBool *)this)->getStride(); }
 
-    virtual bool        equals(const FieldValue *value) const;
-    virtual int         getSFSize() const { return m_value.size(); }
-    virtual FieldValue *getSFValue(int index) const;
+    virtual bool        equals(FieldValue *value);
+    virtual int         getSFSize() { return m_value.size(); }
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const int value);
     virtual FieldValue *copy();
 
-    bool                getValue(int index) const { return m_value[index]; }
-    const bool         *getValues() const { return m_value.getData(); }
-    int                 getSize() const { return m_value.size(); }
+    bool                getValue(int index) { return m_value[index]; }
+    bool               *getValues() { return m_value.getData(); }
+    int                 getSize() { return m_value.size(); }
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const bool value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     virtual bool        isX3DType() { return true; }
 
@@ -75,4 +71,3 @@ protected:
     MyArray<bool>       m_value;
 };
 
-#endif

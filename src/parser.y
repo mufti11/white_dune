@@ -108,7 +108,6 @@ static NodeList commentNodeList;
 
 static List<MyString> commentList;
 
-
 static void    route(const MyString &srcNode, const MyString &srcField,
                      const MyString &dstNode, const MyString &dstField);
 static Node   *addExport(const MyString &srcNode, const MyString &dstNode);
@@ -139,6 +138,7 @@ static void addCommentsToNodeList(NodeList *nodelist);
 static int addDynamicElement(Element *element);
 static int addDynamicExposedElement(Element *element);
 static void illegalX3DV(void);
+static void test(Node *node);
 class nameTranslation {
 public:
     MyString oldName;
@@ -244,8 +244,18 @@ statement:
         | exportStatement       { $$ = $1; }
         ;
 nodeStatement:
-          node         { $$ = $1; }
-        | DEF nodeName { defName = $2; } node { $$ = $4; }
+          node         {
+                         if ($1) 
+                             $$ = $1;
+                         else
+                             $$ = NULL;     
+                       }
+        | DEF nodeName { defName = $2; } node { 
+                                                if ($4)
+                                                    $$ = $4; 
+                                                else
+                                                    $$ = NULL;
+                                              }
         | USE nodeName { $$ = scene->use(checkName(SYMB($2))); }
         ;
 protoStatement:
@@ -397,21 +407,26 @@ empty:
         ;
 node:
           nodeType WING_BRACKET_ON    { 
-                                        $<node>$ = newNode(SYMB($1));
-                                        Node *node = $<node>$;
-                                        if (node != NULL) {
-                                            addCommentsToNode($<node>$);
-                                            nodeStack.push($<node>$);
-                                            if (defName != -1) { 
-                                                scene->def(uniqName(SYMB(
-                                                       defName)), $<node>$);
-                                                defName = -1;
-                                            }
+                                        MyString newName = SYMB($1);
+                                        if (newName.length() > 0) {
+                                            $<node>$ = newNode(newName);
+                                            Node *node = $<node>$;
+                                            if (node != NULL) {
+                                                addCommentsToNode($<node>$);
+                                                nodeStack.push($<node>$);
+                                                if (defName != -1) { 
+                                                    scene->def(uniqName(SYMB(
+                                                        defName)), $<node>$);
+                                                   defName = -1;
+                                                }
+                                            } else
+                                                nodeStack.push(NULL);
                                         }
                                       }
           nodeBody WING_BRACKET_OFF   { $$ = nodeStack.pop(); }
         | dynamicNode WING_BRACKET_ON { 
                                         $<node>$ = $1;
+Node *node = $<node>$;
                                         addCommentsToNode($<node>$); 
                                         nodeStack.push($<node>$);
                                         if (defName != -1) { 
@@ -484,7 +499,8 @@ scriptBodyElement:
                                         }
         ;
 nodeBodyElement:
-          fieldName fieldValue          { setField(nodeStack.peek(),
+          fieldName fieldValue          { 
+                                          setField(nodeStack.peek(),
                                                    $1, $2); 
                                         }
         | id IS id                      { isField(nodeStack.peek(),
@@ -523,10 +539,21 @@ fieldValue:
                                         }
         | BRACKET_ON strings BRACKET_OFF
                                         { $$ = new MFString($2); }
-        | nodeStatement                 { $$ = new SFNode($1); }
+        | nodeStatement                 { 
+                                          if ($1->isValid())
+                                              $$ = new SFNode($1); 
+                                          else
+                                              $$ = NULL;
+                                        }
         | NULL_TOK                      { $$ = emptyMFNodeOrNULL(currentType); }
         | BRACKET_ON nodeStatements BRACKET_OFF
-                                        { $$ = new MFNode($2); }
+                                        {
+                                           NodeList *nodeList = $2;
+                                           if (nodeList->isValid()) 
+                                               $$ = new MFNode(nodeList);
+                                           else
+                                               $$ = NULL;
+                                        }
         | ints                          { $$ = intsToType($1, currentType); }
         | floats                        { $$ = floatsToType($1, currentType); }
         | bools                         { $$ = boolsToType($1, currentType); }
@@ -575,12 +602,13 @@ strings:
         ;
 nodeStatements:
           nodeStatement                 {
+
                                           $$ = new NodeList();
                                           if ($1) 
                                               $1->appendTo($$);
                                         }
         | nodeStatements nodeStatement  { 
-                                          if ($2) 
+                                          if ($1) 
                                               $2->appendTo($1); 
                                           $$ = $1;
                                         }

@@ -23,6 +23,7 @@
 #define _NODE_PROJECTED_TEXTURE_COORDINATE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -58,7 +59,8 @@ class NodeProjectedTextureCoordinate : public Node {
 public:
                     NodeProjectedTextureCoordinate(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeProjectedTextureCoordinate(*this); }
+     virtual Node  *copy() { return new NodeProjectedTextureCoordinate(
+                             m_scene, m_proto); }
 
     kambiCommonFunctions()
 

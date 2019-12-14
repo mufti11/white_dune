@@ -19,20 +19,17 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCRIPT_DIALOG_H
-#define _SCRIPT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
+#include "DynamicFieldsNode.h"
 #include "NodeScript.h"
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
+#include "swttypedef.h"
 
 class ObjectEdit;
-
-#include "swttypedef.h"
 
 class ScriptDialog : public Dialog {
 public:
@@ -74,4 +71,3 @@ private:
     bool               m_shutdown;
 };
 
-#endif

@@ -19,18 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BOOLEAN_SEQUENCER_H
-#define _NODE_BOOLEAN_SEQUENCER_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _INTERPOLATOR_H
 #include "Interpolator.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
 
 #include "SFMFTypes.h"
 
@@ -53,24 +47,23 @@ public:
     virtual        ~NodeBooleanSequencer();
 
     virtual const char* getComponentName(void) const;
-    virtual int         getComponentLevel(void) const;
+    virtual int     getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeBooleanSequencer(*this); }
+    virtual Node   *copy() { return new NodeBooleanSequencer(
+                                    m_scene, m_proto); }
 
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *value, int numKeys) const;
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *value, int numKeys);
 
-    virtual int         getNumChannels() const { return 1; }
+    virtual int         getNumChannels() { return 1; }
 
-    virtual float       getKeyValue(int channel, int index) const;
+    virtual float       getKeyValue(int channel, int index);
 
     virtual FieldValue *getInterpolatedFieldValue(float k);
 
     virtual void        setKeyValue(int channel, int index, float value);
  
-    virtual void        insertKey(int pos, float key, const float *values);
+    virtual void        insertKey(int pos, float key, float *values);
  
     fieldMacros(MFBool, keyValue, ProtoBooleanSequencer)
 };
-
-#endif // _NODE_BOOLEAN_SEQUENCER_H

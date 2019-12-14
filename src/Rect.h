@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _RECT_H
-#define _RECT_H
+#pragma once
 
 class Rect {
 public:
@@ -39,5 +38,3 @@ public:
 public:
     int             left, top, right, bottom;
 };
-
-#endif // _RECT_H

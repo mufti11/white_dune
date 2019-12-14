@@ -19,24 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FIELD_VIEW_ITEM_H
-#define _FIELD_VIEW_ITEM_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-
-#ifndef _RECT_H
 #include "Rect.h"
-#endif
-
-#ifndef _POINT_H
 #include "Point.h"
-#endif
-
-#ifndef STRING_H
 #include "MyString.h"
-#endif
 
 class FieldView;
 class FieldValue;
@@ -152,5 +140,3 @@ public:
 protected:
     MyArray<FieldViewItem *>    m_children;
 };
-
-#endif // _FIELD_VIEW_ITEM_H

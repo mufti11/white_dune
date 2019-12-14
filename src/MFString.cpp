@@ -25,6 +25,7 @@
 #include "MFString.h"
 #include "SFString.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 #include "swt.h"
 
 MFString::MFString()
@@ -42,11 +43,6 @@ MFString::MFString(MyString value)
     m_value.append(value);
 }
 
-MFString::MFString(const MFString &string)
-{
-    m_value.setData(string.getValues(), string.getSize());
-}
-
 MFString::~MFString()
 {
     if (m_value.size() > 0)
@@ -54,7 +50,7 @@ MFString::~MFString()
 }
 
 MyString    
-MFString::getString(int index, int stride) const
+MFString::getString(int index, int stride)
 {    
     MyString ret = "";
     ret += '"';
@@ -75,7 +71,7 @@ MFString::copy()
     return new MFString(value);
 }
 
-int MFString::writeDataC(int f, int i, int languageFlag) const
+int MFString::writeDataC(int f, int i, int languageFlag)
 {
     MyString value = "";
     value += m_value[i];
@@ -87,7 +83,7 @@ int MFString::writeDataC(int f, int i, int languageFlag) const
     return(0);
 }
 
-int MFString::writeData(int f, int i) const
+int MFString::writeData(int f, int i)
 {
     RET_ONERROR( mywritestr(f, "\"") )
     RET_ONERROR( mywritestr(f, m_value[i]) )
@@ -95,7 +91,7 @@ int MFString::writeData(int f, int i) const
     return(0);
 }
 
-int MFString::writeDataXml(int f, int i) const
+int MFString::writeDataXml(int f, int i)
 {
     MyString string = "";
     string += m_value[i];
@@ -110,7 +106,7 @@ int MFString::writeDataXml(int f, int i) const
     return(0);
 }
 
-int MFString::write4FieldPipe(int filedes, int indent) const
+int MFString::write4FieldPipe(int filedes, int indent)
 {
     for (int i = 0; i < getSFSize(); i++) {
         RET_ONERROR( ((FieldValue *)this)->writeDequoted(filedes, m_value[i]) )
@@ -119,7 +115,7 @@ int MFString::write4FieldPipe(int filedes, int indent) const
     return(0);
 }
 
-int MFString::writeRaw(int f, int indent) const
+int MFString::writeRaw(int f, int indent)
 {
     for (int i = 0; i < getSFSize(); i++) {
         RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
@@ -132,7 +128,7 @@ int MFString::writeRaw(int f, int indent) const
 
 int
 MFString::writeCWonderlandArt(int filedes, const char* variableName,
-                              int languageFlag) const
+                              int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") );
     RET_ONERROR( mywritestr(filedes, variableName) );
@@ -151,7 +147,7 @@ MFString::writeCWonderlandArt(int filedes, const char* variableName,
 }
 
 const char *
-MFString::getTypeC(int languageFlag) const
+MFString::getTypeC(int languageFlag)
 { 
     if (languageFlag & JAVA_SOURCE)
         return "String";
@@ -166,20 +162,24 @@ MFString::readLine(int index, char *line)
 }
 
 bool
-MFString::equals(const FieldValue *value) const
+MFString::equals(FieldValue *value)
 {
     if (value->getType() == MFSTRING) {
         MFString *v = (MFString *) value;
-        if (v->getSize() != (int)m_value.size()) return false;
+        if (v->getSize() != (int)m_value.size()) 
+            return false;
         for (long i = 0; i < m_value.size(); i++)
-            if (v->getValue(i) != m_value[i]) return false;
+            if (strcmp(v->getValue(i)->getValue(),
+                       (const char *)
+                       (m_value.getData() + i)) == 0)
+                return false;
         return true;
     }
     return false;
 }
 
 FieldValue *
-MFString::getSFValue(int index) const
+MFString::getSFValue(int index)
 { 
     return new SFString(m_value[index]);
 }
@@ -198,7 +198,7 @@ MFString::setSFValue(int index, const char* value)
 
 
 MyString
-MFString::getEcmaScriptComment(MyString name, int flags) const
+MFString::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

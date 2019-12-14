@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "SFTime.h"
 
@@ -31,7 +32,7 @@ SFTime::SFTime(double value)
 }
 
 MyString    
-SFTime::getString(int index, int stride) const
+SFTime::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -40,7 +41,7 @@ SFTime::getString(int index, int stride) const
     return ret;
 }
 
-int SFTime::writeData(int f, int i) const
+int SFTime::writeData(int f, int i)
 {
     return mywritef(f, "%g", m_value);
 }
@@ -54,7 +55,7 @@ SFTime::readLine(int index, char *line)
 }
 
 bool
-SFTime::equals(const FieldValue *value) const
+SFTime::equals(FieldValue *value)
 {
     return value->getType() == SFTIME
         && ((SFTime *) value)->getValue() == m_value;
@@ -75,7 +76,7 @@ SFTime::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFTime::getEcmaScriptComment(MyString name, int flags) const
+SFTime::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

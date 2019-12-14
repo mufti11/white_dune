@@ -55,24 +55,30 @@ public:
                            }
 
     virtual int         getType() const { return SFVEC3F; }
-    virtual const char *getTypeName() const { return "SFVec3f"; }
-    virtual int         getStride() const { return 3; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFVec3f"; }
+    virtual int         getStride() { return 3; }
+    virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFVec3f(*this); }
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
-    virtual bool        supportAnimation(bool x3d) const { return true; }
-    virtual bool        supportInteraction(void) const { return true; }
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    virtual bool        supportAnimation(bool x3d) { return true; }
+    virtual bool        supportInteraction(void) { return true; }
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
-    virtual bool        isArrayInC(void) const { return true; }
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
+    virtual bool        isArrayInC(void) { return true; }
+    void                setSFValue(FieldValue *value)
+                            {
+                            m_value[0] = ((SFVec3f *)value)->getValue()[0];
+                            m_value[1] = ((SFVec3f *)value)->getValue()[1];
+                            m_value[2] = ((SFVec3f *)value)->getValue()[2];
+                            }
 
-    virtual int         writeAc3d(int filedes, int indent) const;
+    virtual int         writeAc3d(int filedes, int indent);
 
     virtual bool        readLine(int index, char *line);
 

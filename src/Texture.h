@@ -21,8 +21,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 enum {
     IMG_STATUS_UNLOADED,
@@ -30,4 +29,3 @@ enum {
     IMG_STATUS_ERROR
 };
 
-#endif

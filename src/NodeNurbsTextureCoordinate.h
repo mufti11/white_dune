@@ -23,6 +23,7 @@
 #define _NODE_NURBS_TEXTURE_COORDINATE_H
 
 #ifndef NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -71,7 +72,8 @@ protected:
 
 public:
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNurbsTextureCoordinate(*this); }
+    virtual Node *copy() { return new NodeNurbsTextureCoordinate( 
+                           m_scene, m_proto); }
 
     virtual bool    maySetDefault(void) { return false; }
 

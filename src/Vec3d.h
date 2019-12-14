@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _VEC3D_H
-#define _VEC3D_H
+#pragma once
 
 #include "Vec3x.h"
 
 typedef Vec3x<double> Vec3d;
 
-#endif // _VEC3D_H

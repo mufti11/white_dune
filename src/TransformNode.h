@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TRANSFORM_NODE_H
-#define _TRANSFORM_NODE_H
+#pragma once
 
-#ifndef _BASIC_TRANSFORM_NODE_H
 #include "BasicTransformNode.h"
-#endif
 
 class TransformProto : public BasicTransformProto {
 public:
@@ -45,12 +42,12 @@ public:
                      ~TransformNode();
 
 public:
-    virtual int       getChildrenField(void) const = 0;
+    virtual int       getChildrenField(void) = 0;
 
     virtual MFNode   *getChildren(void) 
                          { return (MFNode *)getField(getChildrenField()); }
 
-    virtual int       getBasicChildrenField(void) const 
+    virtual int       getBasicChildrenField(void)
                          { return getChildrenField(); }
 
     // X3D profile changes addChildren, removeChildren
@@ -89,4 +86,3 @@ public:
     fieldMacros(SFBool,     render,           TransformProto)
 };
 
-#endif // _NODE_TRANSFORM_H

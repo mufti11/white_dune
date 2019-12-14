@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _GEO_MACROS_H
-#define _GEO_MACROS_H
+#pragma once
 
 #define addGeoFields() { \
     geoOrigin.set( \
@@ -39,4 +38,3 @@
                           0, systems)); \
 }
 
-#endif

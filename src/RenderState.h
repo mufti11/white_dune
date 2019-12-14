@@ -19,19 +19,17 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _RENDER_STATE_H
-#define _RENDER_STATE_H
+#pragma once
 
-#ifndef _MATRIX_H
-# include "Matrix.h"
-#endif
-
-#define HANDLE_SIZE 1.25f
-
+#include "Matrix.h"
 #include "swttypedef.h"
+
+
 #ifndef INT_MAX
 # include <limits.h>
 #endif
+
+#define HANDLE_SIZE 1.25f
 
 enum {
     NO_HANDLE = 0x8ffe0,
@@ -108,10 +106,10 @@ public:
     void        drawRocketHandles(Node *node, float scale);
     void        drawHoverHandles(Node *node, float scale);
 
-    void        drawJointOrRotationHandles(Node* node, int handle, Matrix m, 
+    void        drawJointOrRotationHandles(Node* node, int handle, Matrixd m, 
                                            float scale);
 
-    void        drawJointHandles(Node* node, Matrix m, float scale, 
+    void        drawJointHandles(Node* node, Matrixd m, float scale, 
                                  int handle = HUMAN_JOINT);
 
     void        drawVectorHandle(int handleName, float x, float y, float z,
@@ -131,4 +129,3 @@ private:
     float       m_vectorStart;
 };
 
-#endif

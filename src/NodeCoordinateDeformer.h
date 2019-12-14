@@ -23,6 +23,7 @@
 #define _NODE_COORDINATE_DEFORMER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -67,7 +68,8 @@ public:
                     NodeCoordinateDeformer(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeCoordinateDeformer(*this); }
+    virtual Node   *copy() { return new NodeCoordinateDeformer(
+                                    m_scene, m_proto); }
 
     virtual int     countPolygons(void)
                        { return children()->countPolygons(); } 

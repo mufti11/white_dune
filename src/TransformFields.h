@@ -19,10 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TRANSFORM_FIELDS_H
-#define _TRANSFORM_FIELDS_H
+#pragma once
 
 #define transformFields()                \
     addEventIn(MFNODE, "addChildren");   \
     addEventIn(MFNODE, "removeChildren");
-#endif

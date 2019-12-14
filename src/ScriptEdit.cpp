@@ -197,7 +197,7 @@ ScriptEdit::writeFile(int f)
     const char* string = "";           
     if (hasUrl) {
         for (int i = 0; i < url->getSize(); i++) {
-            string = url->getValue(i);
+            string = url->getValue(i)->getValue();
             if (!writeSFStringUrl(f, string))
                 writeError = true;
             if (i < url->getSize()-1)
@@ -554,7 +554,7 @@ TextEdit::writeFile(int f)
     const char* string = "";           
     if (hasText) {
         for (int i = 0; i < text->getSize(); i++) {
-            string = text->getValue(i);
+            string = text->getValue(i)->getValue();
             if (!writeSFStringText(f, string))
                 writeError = true;
             if (i < text->getSize()-1)
@@ -954,8 +954,9 @@ ImageTextureEdit::generateFilename(bool secondTry)
 
     MFString *urls = m_imageTextureNode->url();
     for (int i = 0; i < urls->getSize(); i++) {
-        URL url(m_imageTextureNode->getScene()->getURL(), urls->getValue(i));
-        if (urls->getValue(i).length() == 0) continue;
+        URL url(m_imageTextureNode->getScene()->getURL(), 
+                urls->getValue(i)->getValue());
+        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
         m_imageTextureNode->getScene()->Download(url, &path);
         break;
     }
@@ -992,8 +993,9 @@ MovieTextureEdit::generateFilename(bool secondTry)
 
     MFString *urls = m_movieTextureNode->url();
     for (int i = 0; i < urls->getSize(); i++) {
-        URL url(m_movieTextureNode->getScene()->getURL(), urls->getValue(i));
-        if (urls->getValue(i).length() == 0) continue;
+        URL url(m_movieTextureNode->getScene()->getURL(), 
+                urls->getValue(i)->getValue());
+        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
         m_movieTextureNode->getScene()->Download(url, &path);
         break;
     }
@@ -1018,8 +1020,9 @@ AudioClipEdit::generateFilename(bool secondTry)
 
     MFString *urls = m_audioClipNode->url();
     for (int i = 0; i < urls->getSize(); i++) {
-        URL url(m_audioClipNode->getScene()->getURL(), urls->getValue(i));
-        if (urls->getValue(i).length() == 0) continue;
+        URL url(m_audioClipNode->getScene()->getURL(),
+                urls->getValue(i)->getValue());
+        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
         m_audioClipNode->getScene()->Download(url, &path);
         break;
     }

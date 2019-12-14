@@ -23,6 +23,7 @@
 #define _NODE_SCRIPT_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -34,6 +35,8 @@
 #include "SFMFTypes.h"
 #include "CommandList.h"
 #include "DynamicFieldsNode.h"
+#include "MyString.h"
+
 
 class ProtoScript : public WonderlandExportProto {
 public:
@@ -46,8 +49,6 @@ public:
     FieldIndex directOutput;
     FieldIndex mustEvaluate;
 };
-
-class MyString;
 
 class NodeScript : public DynamicFieldsNode {
 public:
@@ -64,7 +65,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeScript(*this); }
+    virtual Node   *copy() { return new NodeScript(this, m_proto); }
 
     virtual bool    showFields() { return true; }
     virtual void    update();

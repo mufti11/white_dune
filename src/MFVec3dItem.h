@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFVEC3D_ITEM_H
-#define _MFVEC3D_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 #include "MFDoubleItem.h"
@@ -40,4 +39,3 @@ public:
     virtual int              GetFieldOffset(int xpos) const;
 };
 
-#endif // _MFVEC3D_ITEM_H

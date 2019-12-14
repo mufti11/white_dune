@@ -33,7 +33,7 @@
 #include "NodeOrientationInterpolator.h"
 
 #include "SFMFTypes.h"
-class Interpolator;
+#include "Interpolator.h"
 
 class ProtoCurveAnimation : public ProtoNurbsCurve {
 public:
@@ -58,9 +58,10 @@ public:
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }  
 
     virtual const char* getComponentName(void) const { return ""; }
-    virtual int       getComponentLevel(void) const { return -1; }
+    virtual int     getComponentLevel(void) const { return -1; }
 
-    virtual Node   *copy() const { return new NodeCurveAnimation(*this); }
+    virtual Node    *copy() { return new NodeCurveAnimation(
+                                     m_scene, m_proto); }
 
     void            createNurbsCurve(void);
 

@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MESH_FLAGS_H
-#define _MESH_FLAGS_H
+#pragma once
 
 enum {
     MESH_WANT_NORMAL    = 1 << 0,
@@ -28,4 +27,3 @@ enum {
     MESH_TARGET_HAS_CCW = 3 << 0
 };
 
-#endif

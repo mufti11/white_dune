@@ -19,18 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFCOLOR_RGBA_H
-#define _MFCOLOR_RGBA_H
+#pragma once
 
-#ifndef _MFFLOAT_H
 #include "MFFloat.h"
-#endif
 
 class MFColorRGBA : public MFFloat {
 public:
                         MFColorRGBA();
                         MFColorRGBA(int size) : MFFloat(size * 4) {}
-                        MFColorRGBA(const MFColorRGBA *values) :
+                        MFColorRGBA(MFColorRGBA *values) :
                               MFFloat(values->getValues(), values->getSize()) {}
                         MFColorRGBA(float *values, int len) :
                                 MFFloat(values, len) {}
@@ -38,33 +35,32 @@ public:
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFCOLORRGBA; }
-    virtual const char *getTypeName() const { return "MFColorRGBA"; }
-    virtual int         getStride() const { return 4; }
+    virtual const char *getTypeName() { return "MFColorRGBA"; }
+    virtual int         getStride() { return 4; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
 
-    const float        *getValue(int index) const 
+    float              *getValue(int index)
                            { return m_value.getData() + index * 3; }
 
-    virtual FieldValue *getSFValue(int index) const;
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, float r, float g, float b, float a);
-    virtual void        setSFValue(int index, const float* values);
+    virtual void        setSFValue(int index, float* values);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, float r, float g, float b, float a);
-    virtual void        insertSFValue(int index, const float *values);
+    virtual void        insertSFValue(int index, float *values);
 
     virtual void        appendSFValue(float r, float g, float b, float a)
                            { insertSFValue(getSFSize(), r, g, b, a); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     randomFunction(MFColorRGBA)                  
 };
 
-#endif

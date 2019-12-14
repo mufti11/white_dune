@@ -30,6 +30,78 @@
 
 #include "MyMesh.h"
 
+template <class X,class MFX,class VEC3X>
+Node * 
+MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
+{
+    bool wantNormal = (meshFlags & MESH_WANT_NORMAL);
+
+    NodeCoordinate *ncoord = (NodeCoordinate *)scene->createNode("Coordinate");
+    MFVec3f *points = new MFVec3f();
+    MFX *vertices = getVertices();
+    for (int i = 0; i < vertices->getSFSize(); i++) {
+        VEC3X vec = vertices->getValue(i);
+        Vec3f point(vec.x, vec.y, vec.z); 
+        points->setVec(i, point);
+    } 
+    ncoord->point(points);
+    NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)
+                               scene->createNode("IndexedFaceSet");
+    node->coord(new SFNode(ncoord));
+    if (wantNormal) {
+        NodeNormal *nnormal = NULL;
+        if (getSmoothNormals()) {
+            nnormal = (NodeNormal *)scene->createNode("Normal");
+            nnormal->vector(getSmoothNormals());
+        }
+        if (nnormal) {
+            node->normal(new SFNode(nnormal));
+            MFInt32 *ni = getSmoothNormalIndex();
+            if (ni != NULL) {
+                node->normalIndex(ni);
+                node->normalIndex()->ref();
+            }
+        } 
+    } 
+    node->colorPerVertex(new SFBool(colorPerVertex()));
+    if (getColorIndex())
+        node->colorIndex(new MFInt32(getColorIndex()));
+    node->normalPerVertex(new SFBool(normalPerVertex()));
+    if (getNormalIndex())
+        node->normalIndex(new MFInt32(getNormalIndex()));
+    node->creaseAngle(new SFFloat(creaseAngle())); 
+    node->coordIndex(new MFInt32(getCoordIndex()));
+    node->solid(new SFBool(solid()));
+    node->ccw(new SFBool(ccw()));
+    node->convex(new SFBool(convex()));
+    NodeColor *nColor = NULL;
+    if (getColors()) {
+        nColor = (NodeColor *)
+                    scene->createNode("Color");
+        nColor->color(new MFColor((float *)getColors()->getValues(), 
+                                  getColors()->getSize()));
+    }
+    if (nColor) {
+        node->color(new SFNode(nColor));
+        node->color()->ref();
+    }
+    NodeTextureCoordinate *ntexCoord = NULL;
+    if (getTexCoords()) {
+        ntexCoord = (NodeTextureCoordinate *)
+                    scene->createNode("TextureCoordinate");
+        ntexCoord->point(getTexCoords());
+    }
+    if (ntexCoord) {
+        node->texCoord(new SFNode(ntexCoord));
+        node->texCoordIndex(getTexCoordIndex());
+        node->texCoordIndex()->ref();
+    }
+
+    node->ref();
+
+    return node;
+}
+
 void MyMesh::drawVertex(float *v)
 {
      glVertex3fv(v);

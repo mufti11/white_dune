@@ -244,7 +244,7 @@ int FieldView::FindField(int field)
 
 void FieldView::OnUpdate(SceneView *sender, int type, Hint *hint) 
 {
-    const Path *sel = m_scene->getSelection();
+    Path *sel = m_scene->getSelection();
     Node *node = sel ? sel->getNode() : NULL;
     int field = sel ? sel->getField() : -1;
     Proto *proto = NULL;

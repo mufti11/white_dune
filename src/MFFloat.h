@@ -19,57 +19,50 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFFLOAT_H
-#define _MFFLOAT_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-#ifndef _FIELD_VALUE_H
 #include "FieldValue.h"
-#endif
-#ifndef _SFFLOAT_H
 #include "SFFloat.h"
-#endif
 
 class MFFloat : public MFieldValue {
 public:
                         MFFloat();
                         MFFloat(int size);
-                        MFFloat(const MFFloat &value);
-                        MFFloat(const MFFloat *values);
-                        MFFloat(const float *values, int len, int stride = 1);
-                        MFFloat(const double *values, int len, int stride = 1);
-                        MFFloat(const float value);
+                        MFFloat(MFFloat &value);
+                        MFFloat(MFFloat *values);
+                        MFFloat(float *values, int len, int stride = 1);
+                        MFFloat(double *values, int len, int stride = 1);
+                        MFFloat(float value);
     virtual            ~MFFloat();
 
     virtual int         getType() const { return MFFLOAT; }
-    virtual int         getStride() const { return 1; }
-    virtual MyString    getString(int index, int stride) const; 
-    virtual const char *getTypeName() const { return "MFFloat"; }
+    virtual int         getStride() { return 1; }
+    virtual MyString    getString(int index, int stride); 
+    virtual const char *getTypeName() { return "MFFloat"; }
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
 
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return getStride(); }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return getStride(); }
+    virtual bool        needCheckFloat(void) { return true; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(MFFloat *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy(); 
 
-    virtual int         getSFSize() const 
+    virtual int         getSFSize()
                            { return m_value.size() / getStride(); }
-    virtual FieldValue *getSFValue(int index) const; 
+    virtual FieldValue *getSFValue(int index); 
     virtual void        setSFValue(int index, FieldValue *value);
     void                setSFValue(int index, const float value);
 
-    const float        *getValues() const { return m_value.getData(); }
-    float               getValue(int i) const { return m_value[i]; }
+    float              *getValues() { return m_value.getData(); }
+    float               getValue(int i) { return m_value[i]; }
     void                setValue(int index, float value) 
                            { m_value[index] = value; }
     int                 getSize() const { return m_value.size(); }
@@ -85,7 +78,7 @@ public:
 
     int                 find(float f) { return m_value.find(f); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     float              *getRandomFloats(int sfsize);
     FieldValue         *getRandom(Scene *scene, int nodeType);
@@ -98,10 +91,6 @@ FieldValue *getRandom(Scene *scene, int nodeType) \
 }
  
 protected:
-    bool                equals(const MFFloat *value) const;
-
-protected:
     MyArray<float>      m_value;
 };
 
-#endif // _MFFLOAT_H

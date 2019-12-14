@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCENE_GRAPH_VIEW_H
-#define _SCENE_GRAPH_VIEW_H
+#pragma once
 
 class NodeList;
 class Node;
@@ -238,4 +237,3 @@ protected:
         bool            m_floodedWarning;
 };
 
-#endif // _SCENE_GRAPH_VIEW_H

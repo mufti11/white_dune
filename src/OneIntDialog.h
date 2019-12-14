@@ -19,14 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ONE_INT_DIALOG_H
-#define _ONE_INT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
+
 #ifndef INT_MAX 
 # include <limits.h>
 #endif
@@ -48,4 +45,3 @@ private:
     int         m_lowerlimit;
 };
 
-#endif

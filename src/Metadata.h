@@ -19,8 +19,6 @@
  * Cambridge, MA 02139, USA.
  */
 
-#include <stdio.h>
-#include "stdafx.h"
 
 #ifndef _NODE_METADATA_H
 #define _NODE_METADATA_H
@@ -52,7 +50,7 @@ public:
                     Metadata(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_CORE; }
-    virtual Node   *copy() const = 0;
+    virtual Node   *copy() = 0;
 
     fieldMacros(SFString, name,      ProtoMetadata)
     fieldMacros(SFString, reference, ProtoMetadata)

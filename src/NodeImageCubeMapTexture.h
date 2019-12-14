@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_IMAGE_CUBE_MAP_TEXTURE_H
-#define _NODE_IMAGE_CUBE_MAP_TEXTURE_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoImageCubeMapTexture : public Proto {
@@ -53,12 +46,12 @@ public:
                     NodeImageCubeMapTexture(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const { return "CubeMapTexturing"; }
-    virtual int         getComponentLevel(void) const { return 2; }
+    virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() const { return new NodeImageCubeMapTexture(*this); }
+    virtual Node   *copy() { return new NodeImageCubeMapTexture( 
+                             m_scene, m_proto); }
 
     fieldMacros(MFString, url, ProtoImageCubeMapTexture);
     fieldMacros(SFNode, textureProperties, ProtoImageCubeMapTexture);
 };
 
-#endif

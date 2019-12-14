@@ -32,6 +32,7 @@ RenderState::RenderState()
 {
     m_axesStart = 0.0f;
     m_vectorStart = 0.0f;
+    m_modelviewMatrix = Matrixd::identity();
 }
 
 Vec3f
@@ -721,12 +722,12 @@ RenderState::drawCylinder(GLUquadricObj *obj, float x, float y, float z,
 void
 RenderState::drawRotationHandles(Node* node, float scale)
 {
-    Matrix m = Matrix::identity();
+    Matrixd m = Matrixd::identity();
     drawJointOrRotationHandles(node, ROTATION, m, scale);
 }
 
 void
-RenderState::drawJointOrRotationHandles(Node* node, int handle, Matrix m, 
+RenderState::drawJointOrRotationHandles(Node* node, int handle, Matrixd m, 
                                         float scale)
 {
     float inc = 2 * M_PI / ROTATION_HANDLE_SEGMENTS;
@@ -744,7 +745,7 @@ RenderState::drawJointOrRotationHandles(Node* node, int handle, Matrix m,
     glEnable(GL_BLEND);
 
     glPushName(handle);
-    glMultMatrixf(m);
+    glMultMatrixd(m);
     node->transformForHandle(handle);
     if (handle != HUMAN_JOINT)
         scale *= autoScale();
@@ -815,7 +816,7 @@ RenderState::drawJointOrRotationHandles(Node* node, int handle, Matrix m,
 }
 
 void
-RenderState::drawJointHandles(Node* node, Matrix m, float scale, int handle)
+RenderState::drawJointHandles(Node* node, Matrixd m, float scale, int handle)
 {
     drawJointOrRotationHandles(node, handle, m, scale);
 }

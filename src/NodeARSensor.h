@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_AR_SENSOR_H
-#define _NODE_AR_SENSOR_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "DuneApp.h"
-
 #include "SFMFTypes.h"
 
 class ProtoARSensor : public Proto {
@@ -68,7 +59,7 @@ public:
                         NodeARSensor(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return -1; }
-    virtual Node       *copy() const { return new NodeARSensor(*this); }
+    virtual Node       *copy() { return new NodeARSensor(m_scene, m_proto); }
 
     fieldMacros(SFBool,    trackObjects,         ProtoARSensor)
     fieldMacros(SFBool,    freeze,               ProtoARSensor)
@@ -85,4 +76,3 @@ public:
     fieldMacros(SFString,  markerName,           ProtoARSensor)
 };
 
-#endif // _NODE_ARSensor_H

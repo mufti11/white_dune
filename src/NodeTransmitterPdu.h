@@ -23,6 +23,7 @@
 #define _NODE_TRANSMITTER_PDU_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -83,7 +84,7 @@ public:
     virtual const char* getComponentName(void) const { return "DIS"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeTransmitterPdu(*this); }
+    virtual Node *copy() { return new NodeTransmitterPdu(m_scene, m_proto); }
 
     fieldMacros(SFVec3f, antennaLocation,              ProtoTransmitterPdu)
     fieldMacros(SFInt32, antennaPatternLength,         ProtoTransmitterPdu)

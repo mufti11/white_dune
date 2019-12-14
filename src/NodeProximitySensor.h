@@ -23,6 +23,7 @@
 #define _NODE_PROXIMITYSENSOR_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -57,7 +58,8 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() const { return new NodeProximitySensor(*this); }
+    virtual Node   *copy() { return new NodeProximitySensor(
+                             m_scene, m_proto); }
 
     virtual void    draw(int pass);
 

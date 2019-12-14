@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _X3D_RIGID_JOINT_NODE_H
-#define _X3D_RIGID_JOINT_NODE_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class X3DRigidJointProto : public Proto {
@@ -52,5 +50,4 @@ public:
     fieldMacros(MFString, forceOutput, X3DRigidJointProto)
 };
 
-#endif
 

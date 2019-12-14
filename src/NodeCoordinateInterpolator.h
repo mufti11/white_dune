@@ -45,14 +45,14 @@ class NodeCoordinateInterpolator : public Interpolator {
 public:
                         NodeCoordinateInterpolator(Scene *scene, Proto *proto);
 
-    virtual Node       *copy() const 
-                           { return new NodeCoordinateInterpolator(*this); }
+    virtual Node *copy() { return new NodeCoordinateInterpolator(
+                           m_scene, m_proto); }
     virtual int         getX3dVersion(void) const { return 0; }
 
-    virtual int         getStride() const { return 3; }
-    virtual int         getNumChannels() const;
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *values, int numKeys) const;
+    virtual int         getStride() { return 3; }
+    virtual int         getNumChannels();
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *values, int numKeys);
     virtual void        recordValue(int key, FieldValue *value);
 
     ADD_FLIP

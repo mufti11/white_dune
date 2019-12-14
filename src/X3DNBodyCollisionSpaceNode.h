@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _X3DN_BODY_COLLISION_SPACE_NODE_H
-#define _X3DN_BODY_COLLISION_SPACE_NODE_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class X3DNBodyCollisionSpaceProto : public Proto {
@@ -51,5 +49,4 @@ public:
     fieldMacros(SFVec3f,    bboxSize,    X3DNBodyCollisionSpaceProto)
 };
 
-#endif
 

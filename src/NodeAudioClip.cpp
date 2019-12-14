@@ -96,8 +96,8 @@ NodeAudioClip::load()
         return;
     for (int i = 0; i < urls->getSize(); i++) {
         MyString path;
-        URL urlI(TheApp->getImportURL(), urls->getValue(i));
-        if (urls->getValue(i).length() == 0) continue;
+        URL urlI(TheApp->getImportURL(), urls->getValue(i)->getValue());
+        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
         m_scene->Download(urlI, &path);
         // download only
     }

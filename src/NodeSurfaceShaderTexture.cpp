@@ -95,7 +95,7 @@ NodeSurfaceShaderTexture::NodeSurfaceShaderTexture(Scene *scene, Proto *def)
     m_baseURL = "";
 }
 
-NodeSurfaceShaderTexture::NodeSurfaceShaderTexture(const NodeSurfaceShaderTexture &node)
+NodeSurfaceShaderTexture::NodeSurfaceShaderTexture(NodeSurfaceShaderTexture &node)
   : Node(node)
 {
 }
@@ -115,8 +115,8 @@ NodeSurfaceShaderTexture::load()
     m_baseURL += TheApp->getImportURL();
     for (int i = 0; i < urls->getSize(); i++) {
         MyString path;
-        URL urlI(m_baseURL, urls->getValue(i));
-        if (urls->getValue(i).length() == 0) continue;
+        URL urlI(m_baseURL, urls->getValue(i)->getValue());
+        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
         m_scene->Download(urlI, &path);
     }
 }

@@ -19,21 +19,17 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _UTIL_H
-#define _UTIL_H
+#pragma once
 
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
 #include "Array.h"
+#include "Scene.h"
 
 class MFVec3f;
 class MFVec2f;
 class Node;
 class MeshBasedNode;
 class NodeIndexedFaceSet;
-class Scene;
 
 extern float boxCorners[8][3];
 extern float boxTexCoords[4][2];
@@ -99,4 +95,3 @@ public:
 #endif
 };
 
-#endif // _UTIL_H

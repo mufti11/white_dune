@@ -23,6 +23,7 @@
 #define _NODE_TEXTURE_COORDINATE_GENERATOR_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -56,13 +57,14 @@ public:
 class NodeTextureCoordinateGenerator : public Node {
 public:
                     NodeTextureCoordinateGenerator(Scene *scene, Proto *proto);
-                    NodeTextureCoordinateGenerator(const NodeTextureCoordinateGenerator &node);
+                    NodeTextureCoordinateGenerator(NodeTextureCoordinateGenerator &node);
     virtual        ~NodeTextureCoordinateGenerator();
 
     virtual const char* getComponentName(void) const { return "Texturing"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeTextureCoordinateGenerator(*this); }
+    virtual Node *copy() { return new NodeTextureCoordinateGenerator(
+                           m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 

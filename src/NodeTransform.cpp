@@ -84,6 +84,8 @@ ProtoTransform::create(Scene *scene)
 NodeTransform::NodeTransform(Scene *scene, Proto *def)
   : TransformNode(scene, def)
 {
+    m_matrixDirty = true;
+    m_matrix = Matrixd::identity();
 }
 
 NodeTransform::~NodeTransform()
@@ -128,9 +130,9 @@ NodeTransform::getAnimationCommentID(void)
 
 int NodeTransform::getProfile(void) const
 { 
-    if (hasInput("addChildren"))
+    if (((NodeTransform *)this)->hasInput("addChildren"))
         return PROFILE_INTERACTIVE;
-    if (hasInput("removeChildren"))
+    if (((NodeTransform *)this)->hasInput("removeChildren"))
         return PROFILE_INTERACTIVE;
     return PROFILE_INTERCHANGE; 
 }

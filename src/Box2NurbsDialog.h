@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef BOX2NURBS_DIALOG_H
-#define BOX2NURBS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
-
 #include "Node.h"
 
 class Box2NurbsDialog : public Dialog 
@@ -58,4 +53,3 @@ private:
     int                 m_vDegree;
 };
 
-#endif

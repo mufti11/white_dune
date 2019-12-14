@@ -49,7 +49,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeUniform(*this); }
+    virtual Node   *copy() { return new NodeUniform(m_scene, m_proto); }
 
     fieldMacros(SFString, name,  ProtoUniform)
     fieldMacros(SFString, type,  ProtoUniform)

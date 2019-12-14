@@ -19,13 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-// define constants for the Ldraw Dat export
+#pragma once
 
-#ifndef _LDRAW_DEFINES_H
-#define _LDRAW_DEFINES_H
+// define constants for the Ldraw Dat export
 
 # define LDRAW_CURRENT_COLOR 16
 # define LDRAW_EDGE_COLOUR 24
 # define LDRAW_SCALE 2500.0f
 
-#endif

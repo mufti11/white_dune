@@ -23,6 +23,7 @@
 #define _NODE_VOLUME_PICK_SENSOR_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,7 +60,8 @@ public:
     virtual const char* getComponentName(void) const { return "Picking"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 2; }    
-    virtual Node   *copy() const { return new NodeVolumePickSensor(*this); }
+    virtual Node   *copy() { return new NodeVolumePickSensor(
+                                    m_scene, m_proto); }
 
     fieldMacros(SFBool, enabled, ProtoVolumePickSensor);
     fieldMacros(MFString, objectType, ProtoVolumePickSensor);

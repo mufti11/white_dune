@@ -23,6 +23,7 @@
 #define _NODE_SWITCH_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,7 +60,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERACTIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeSwitch(*this); }
+    virtual Node   *copy() { return new NodeSwitch( m_scene, m_proto); }
 
     virtual int     countPolygons(void)
                        { return choice()->countPolygons(); } 
@@ -83,7 +84,7 @@ public:
 
     int accountWhich();
 
-    virtual int     getChildrenField(void) const { return choice_Field(); }
+    virtual int     getChildrenField(void) { return choice_Field(); }
 
     fieldMacros(MFNode,  choice,      ProtoSwitch)
     fieldMacros(SFInt32, whichChoice, ProtoSwitch)

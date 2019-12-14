@@ -50,7 +50,7 @@ public:
     FieldIndex geoOrigin;
     FieldIndex geoSystem;
 
-    virtual int     translateField(int field) const;
+    virtual int     translateField(int field);
 };
 
 class NodeGeoViewpoint : public ViewpointNode {
@@ -60,15 +60,15 @@ public:
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual const char* getComponentName(void) const { return "Geospatial"; }
-    virtual int         getComponentLevel(void) const { return 1; }
-    virtual Node   *copy() const { return new NodeGeoViewpoint(*this); }
+    virtual int     getComponentLevel(void) const { return 1; }
+    virtual Node   *copy() { return new NodeGeoViewpoint(m_scene, m_proto); }
 
     void            setField(int index, FieldValue *value, int cf = -1);
     Node           *convert2Vrml(void);
 
     void            apply(bool useStereo = TheApp->useStereo());
 
-    Vec3d           getPosition() const;       
+    Vec3d           getPosition();       
 
     fieldMacros(SFString,   position,    ProtoGeoViewpoint)
     fieldMacros(SFVec3d,    positionX3D, ProtoGeoViewpoint)

@@ -19,13 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCENE_VIEW_H
-#define _SCENE_VIEW_H
+#pragma once
 
+#include "Hint.h"
 #include "DuneApp.h"
-#include "Scene.h"
 
-class Hint;
+class Scene;
 
 #include "swttypedef.h"
 
@@ -47,8 +46,8 @@ public:
     virtual void        OnDraw(int x, int y, int width, int height, 
                                bool update = false) {}
     virtual void        OnSize(int width, int height) {}
-    virtual void        OnMouseEnter() {m_scene->setHasFocus();}
-    virtual void        OnMouseLeave() {m_scene->deleteHasFocus();}
+    virtual void        OnMouseEnter();
+    virtual void        OnMouseLeave();
     virtual void        OnKeyDown(int key, int x, int y, int modifiers) {}
     virtual void        OnKeyUp(int key, int x, int y, int modifiers) {}
     virtual void        OnLButtonDown(int x, int y, int modifiers) {}
@@ -106,4 +105,3 @@ protected:
     bool                m_enabled;
 };
 
-#endif // _SCENE_VIEW_H

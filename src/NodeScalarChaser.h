@@ -23,6 +23,7 @@
 #define _NODE_SCALAR_CHASER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -50,7 +51,7 @@ class NodeScalarChaser : public ChaserNode {
 public:
                     NodeScalarChaser(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeScalarChaser(*this); }
+    virtual Node   *copy() { return new NodeScalarChaser(m_scene, m_proto); }
 
     virtual void    sendChasedEvent(int eventIn, double timestamp, 
                                     FieldValue * value);

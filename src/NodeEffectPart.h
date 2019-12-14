@@ -23,6 +23,7 @@
 #define _NODE_EFFECT_PART_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -51,7 +52,7 @@ public:
                     NodeEffectPart(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeEffectPart(*this); }
+    virtual Node   *copy() { return new NodeEffectPart(m_scene, m_proto); }
 
     fieldMacros(MFString, url, ProtoEffectPart);
     fieldMacros(SFString, type, ProtoEffectPart);

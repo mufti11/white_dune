@@ -58,7 +58,8 @@ class NodeVirtualSoundSource : public CoverNode {
 public:
                     NodeVirtualSoundSource(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeVirtualSoundSource(*this); }
+    virtual Node   *copy() { return new NodeVirtualSoundSource( 
+                             m_scene, m_proto); }
     virtual int     getX3dVersion(void) const { return -1; }    
 
     virtual void    drawHandles(void);

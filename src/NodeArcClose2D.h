@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ARC_CLOSE_2D_H
-#define _NODE_ARC_CLOSE_2D_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
 #include "SFMFTypes.h"
 
 class ProtoArcClose2D : public Proto {
@@ -59,11 +50,11 @@ class NodeArcClose2D : public MeshBasedNode {
 public:
                     NodeArcClose2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeArcClose2D(*this); }
+    virtual Node   *copy() { return new NodeArcClose2D(m_scene, m_proto); }
 
     virtual const char* getComponentName(void) const 
                            { return "Geometry2D"; }
-    virtual int         getComponentLevel(void) const { return 2; }
+    virtual int     getComponentLevel(void) const { return 2; }
 
     virtual int     getX3dVersion(void) const { return 0; }
 
@@ -94,4 +85,3 @@ protected:
 
 };
 
-#endif

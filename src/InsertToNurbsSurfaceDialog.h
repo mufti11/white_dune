@@ -20,13 +20,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef INSERT_TO_NURBS_SURFACE_DIALOG_H
-#define INSERT_TO_NURBS_SURFACE_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class InsertToNurbsSurfaceDialog : public Dialog 
@@ -55,5 +51,3 @@ private:
     int                 m_vTo;
     int                 m_vPoints;
 };
-
-#endif

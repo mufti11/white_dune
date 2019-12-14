@@ -24,13 +24,14 @@
 #include "stdafx.h"
 #include "swt.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "Vec4f.h"
 #include "SFRotation.h"
 #include "EulerAngles.h"
 
 MyString    
-SFRotation::getString(int index, int stride) const
+SFRotation::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -79,14 +80,14 @@ SFRotation::SFRotation(void)
     m_eulerDirty = true;
 }
 
-int SFRotation::writeData(int f, int i) const
+int SFRotation::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g %g", 
                     m_value[0], m_value[1], m_value[2], m_value[3]);
 }
 
 int
-SFRotation::writeAc3d(int filedes, int indent) const
+SFRotation::writeAc3d(int filedes, int indent)
 {
     Matrix m;
     m[0] = m[5] = m[10] = 1.0f;
@@ -110,7 +111,7 @@ SFRotation::writeAc3d(int filedes, int indent) const
 
 int
 SFRotation::writeC(int filedes, const char* variableName, 
-                   int languageFlag) const
+                   int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -218,7 +219,7 @@ SFRotation::SFRotation(const Matrix &mat)
 }
 
 bool
-SFRotation::equals(const FieldValue *value) const
+SFRotation::equals(FieldValue *value)
 {
     if (value->getType() == SFROTATION) {
         for (int i = 0; i < 4; i++)
@@ -244,7 +245,7 @@ Vec3f SFRotation::getEulerAngles(int order)
 }
 
 const Quaternion &
-SFRotation::getQuat() const
+SFRotation::getQuat()
 {
     return m_quaternion;
 }
@@ -273,13 +274,13 @@ SFRotation::setEulerAngles(Vec3f angles, int order)
 }
 
 Vec3f
-SFRotation::operator *(const Vec3f &v) const
+SFRotation::operator *(const Vec3f &v)
 {
     return m_quaternion * v;
 }
 
 MyString
-SFRotation::getEcmaScriptComment(MyString name, int flags) const
+SFRotation::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

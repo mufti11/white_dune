@@ -19,26 +19,16 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_IMAGE_TEXTURE_3D_H
-#define _NODE_IMAGE_TEXTURE_3D_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "KambiTextureCommonFields.h"
-
 #include "SFMFTypes.h"
 
 #include "freewrl_define.h"
 #include "Texture3DNode.h"
-
 
 class NodeVolumeData;
 class MyMesh;
@@ -54,8 +44,6 @@ typedef struct pTextures{
     int currentlyWorkingOn;// = -1;
     int textureInProcess;// = -1;
 }* ppTextures;
-#endif
-
 
 class ProtoImageTexture3D : public Proto {
 public:
@@ -89,8 +77,7 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing3D"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() const 
-                        { return (Node *)new NodeImageTexture3D(*this); }
+    virtual Node   *copy() { return new NodeImageTexture3D(m_scene, m_proto); }
 
     bool            texture_load_from_file(textureTableIndexStruct_s* tti, 
                                            const char*filename);
@@ -164,10 +151,10 @@ typedef struct _s_list_t {
 
 typedef void f_free_t(void *ptr);
 #if defined(DEBUG_MALLOC) && defined(DEBUG_MALLOC_LIST)
-extern s_list_t* _ml_new(const void *elem, int line, char *fi);
+    s_list_t* _ml_new(const void *elem, int line, char *fi);
 #define ml_new(elem) _ml_new(elem,__LINE__,__FILE__)
-#else
-extern s_list_t* ml_new(const void *elem);
+# else
+    s_list_t* ml_new(const void *elem);
 #endif
 
 struct tRenderTextures{

@@ -47,8 +47,7 @@ public:
 
     FieldIndex trimmingContour;
 
-    virtual const MyString &getName(bool x3d) const 
-       { return m_name; }
+    virtual MyString &getName(bool x3d) { return m_name; }
 };
 
 class NodeNurbsTrimmedSurface : public NodeNurbsSurface {
@@ -58,7 +57,8 @@ public:
     // we need the double version of trimming NURBS
     virtual int     getX3dVersion(void) const { return 1; } 
 
-    virtual Node   *copy() const { return new NodeNurbsTrimmedSurface(*this); }
+    virtual Node *copy() { return new NodeNurbsTrimmedSurface(
+                           m_scene, m_proto); }
 
     virtual bool    showFields() { return true; }
 

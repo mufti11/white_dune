@@ -70,10 +70,10 @@ NodeIntegerSequencer::getComponentName(void) const
 }
 
 float
-NodeIntegerSequencer::getKeyValue(int channel, int index) const
+NodeIntegerSequencer::getKeyValue(int channel, int index)
 {
-    MFInt32 *keyValue = (MFInt32 *) getField(m_keyValueField);
-    int i = index * getNumChannels() + channel;
+    MFInt32 *keyValue = (MFInt32 *)getField(m_keyValueField);
+    int i = index * ((NodeIntegerSequencer *)this)->getNumChannels() + channel;
     if (i < keyValue->getSize()) {
         return keyValue->getValue(i);
     } else {
@@ -93,15 +93,18 @@ NodeIntegerSequencer::getInterpolatedFieldValue(float k)
 }
 
 FieldValue *
-NodeIntegerSequencer::createKey(void *value) const
+NodeIntegerSequencer::createKey(void *value)
 {
-    return new MFInt32((int *)value, getNumChannels());
+    return new MFInt32((int *)value, 
+                        ((NodeIntegerSequencer *)this)->getNumChannels());
 }
 
 FieldValue *
-NodeIntegerSequencer::createKeys(void *value, int numKeys) const
+NodeIntegerSequencer::createKeys(void *value, int numKeys)
 {
-    return new MFInt32((int *)value, numKeys * getNumChannels());
+    return new MFInt32((int *)value,
+                        numKeys * 
+                        ((NodeIntegerSequencer *)this)->getNumChannels());
 }
 
 void
@@ -114,7 +117,7 @@ NodeIntegerSequencer::setKeyValue(int channel, int index, float value)
 }
 
 void
-NodeIntegerSequencer::insertKey(int pos, float key, const float *values)
+NodeIntegerSequencer::insertKey(int pos, float key, float *values)
 {
     MFFloat *keys = (MFFloat *) getField(m_keyField);
     MFInt32 *keyValues = (MFInt32 *) getField(m_keyValueField);

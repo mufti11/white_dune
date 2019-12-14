@@ -19,18 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ABOUT_DIALOG_H
-#define _ABOUT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class AboutDialog : public Dialog {
 public:
     AboutDialog(SWND parent);
 };
-
-#endif

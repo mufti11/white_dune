@@ -23,6 +23,7 @@
 #define _NODE_VIEWFRUSTUM_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -54,7 +55,7 @@ public:
                     NodeViewfrustum(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; } 
-    virtual Node   *copy() const { return new NodeViewfrustum(*this); }
+    virtual Node   *copy() { return new NodeViewfrustum(m_scene, m_proto); }
 
     fieldMacros(SFBool,     bind, ProtoViewfrustum)
     fieldMacros(SFString,   description, ProtoViewfrustum)

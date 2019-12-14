@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PREVIEW_SETTINGS_DIALOG_H
-#define _PREVIEW_SETTINGS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
 
 class PreviewSettingsDialog : public Dialog
 {
@@ -46,4 +40,3 @@ protected:
     void                OnSetDefault();
 };
 
-#endif // _PREVIEW_SETTINGS_DIALOG_H

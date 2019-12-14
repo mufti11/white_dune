@@ -66,7 +66,7 @@ public:
                     NodeWave(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeWave(*this); }
+    virtual Node   *copy() { return new NodeWave(m_scene, m_proto); }
 
     fieldMacros(SFFloat,    fraction,   ProtoWave)
     fieldMacros(SFFloat,    freq1,      ProtoWave)

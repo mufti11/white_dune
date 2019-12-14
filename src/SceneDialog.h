@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCENE_DIALOG_H
-#define _SCENE_DIALOG_H
+#pragma once
 
 #include "Dialog.h"
 #include "Scene.h"
@@ -54,4 +53,3 @@ protected:
     int                 m_oldSceneNumber;
 };
 
-#endif

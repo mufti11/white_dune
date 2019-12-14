@@ -59,8 +59,8 @@ public:
                     ~NodeNurbsOrientationInterpolator();
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const 
-                       { return new NodeNurbsOrientationInterpolator(*this); }
+    virtual Node   *copy() { return new NodeNurbsOrientationInterpolator(
+                             m_scene, m_proto); }
 
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
@@ -92,7 +92,7 @@ public:
     virtual bool    maySetDefault(void) { return false; }
 
     MFVec3f        *getControlPoints(void);
-    void            setControlPoints(const MFVec3f *points);
+    void            setControlPoints(MFVec3f *points);
 
     fieldMacros(SFInt32,  dimension,     ProtoNurbsOrientationInterpolator)
     fieldMacros(SFNode,   controlPoint,  ProtoNurbsOrientationInterpolator)

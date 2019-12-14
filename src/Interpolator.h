@@ -19,23 +19,14 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INTERPOLATOR_H
-#define _INTERPOLATOR_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "MFFloat.h"
-
-class FieldValue;
-class CommandList;
+#include "FieldValue.h"
+#include "CommandList.h"
 
 class ProtoInterpolator : public WonderlandExportProto {
 public:
@@ -80,9 +71,9 @@ public:
     virtual FieldValue *getInterpolatedFieldValue(float k);
     virtual void        sendInterpolatedEvent(double timestamp, float k);
     void                sendInterpolatedValue(double, float);
-    virtual int         getNumChannels() const = 0;
-    virtual FieldValue *createKey(void *value) const = 0;
-    virtual FieldValue *createKeys(void *value, int numKeys) const = 0;
+    virtual int         getNumChannels() { return -1; }
+    virtual FieldValue *createKey(void *value) { return NULL; }
+    virtual FieldValue *createKeys(void *value, int numKeys) { return NULL; }
 
     virtual int         getStride() const { return 1; }
 
@@ -124,5 +115,3 @@ Interpolator       *dynamic_cast_Interpolator(Node* node);
 
 #define ADD_FLIP void flip(int index)  { keyValue()->flip(index); }
 #define ADD_SWAP void swap(int fromTo) { keyValue()->swap(fromTo); }
-
-#endif

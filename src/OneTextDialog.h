@@ -18,14 +18,9 @@
  * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
  * Cambridge, MA 02139, USA.
  */
+#pragma once
 
-#ifndef _ONE_TEXT_DIALOG_H
-#define _ONE_TEXT_DIALOG_H
-
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 #include "MyString.h"
 
@@ -46,4 +41,3 @@ private:
     OneTextValidateCallback m_callback;
 };
 
-#endif

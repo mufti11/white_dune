@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _COMMAND_H
-#define _COMMAND_H
+#pragma once
 
 enum {
    FIELD_COMMAND,
@@ -44,5 +43,3 @@ public:
     virtual int         getType() = 0;
     int                 strange_dummy_for_aix_gcc2_95;
 };
-
-#endif // _COMMAND_H

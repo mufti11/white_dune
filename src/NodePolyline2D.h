@@ -62,7 +62,7 @@ public:
                            { return "Geometry2D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() const { return new NodePolyline2D(*this); }
+    virtual Node   *copy() { return new NodePolyline2D(m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return !m_scene->isX3d(); }
     virtual void    setField(int index, FieldValue *value, int cf = -1);

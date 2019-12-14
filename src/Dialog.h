@@ -19,9 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _DIALOG_H
-#define _DIALOG_H
-
+#pragma once
 #include "swttypedef.h"
 
 class Dialog {
@@ -41,5 +39,3 @@ protected:
     SWND                m_parent;
     SWND                m_dlg;
 };
-
-#endif

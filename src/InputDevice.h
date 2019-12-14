@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INPUTDEVICE_H
-#define _INPUTDEVICE_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -740,4 +739,3 @@ public:
 private:
    float maxvalue(int axis) const { return 0.0; }
    };
-#endif

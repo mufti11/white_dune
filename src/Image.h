@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _IMAGE_H
-#define _IMAGE_H
+#pragma once
 
 class Image {
 public:
@@ -46,5 +45,3 @@ private:
     int                 m_height;
     int                 m_components;
 };
-
-#endif // _IMAGE_H

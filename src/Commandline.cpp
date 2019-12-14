@@ -218,7 +218,7 @@ bool parseCommandlineArgumentInputDevice(int &i,int argc, char** argv)
     return found;    
 }
 
-bool parseCommandlineArgument(int & i,int argc, char** argv)
+bool parseCommandlineArgument(int &i,int argc, char** argv)
 {
     bool found = parseCommandlineArgumentStereoView(i, argc, argv);
     if (found)
@@ -437,22 +437,28 @@ void parseCommandlineUsage(
                 checkNotEnoughArgumentsError(argc, ++convertionArgument);
                 url = argv[convertionArgument];
 
-            } else if (strcmp(argv[convertionArgument]+1,"c")==0)
+            } else if (strcmp(argv[convertionArgument]+1,"c")==0) {
                 convert = C_SOURCE;
-            else if (strcmp(argv[convertionArgument]+1,"3c")==0)
+                TheApp->setCompiling();
+            } else if (strcmp(argv[convertionArgument]+1,"3c")==0) {
                 convert = C_SOURCE | TRIANGULATE;
+                TheApp->setCompiling();
 
-            else if (strcmp(argv[convertionArgument]+1,"c++")==0)
+            } else if (strcmp(argv[convertionArgument]+1,"c++")==0) {
                 convert = CC_SOURCE;
-            else if (strcmp(argv[convertionArgument]+1,"3c++")==0)
+                TheApp->setCompiling();
+            } else if (strcmp(argv[convertionArgument]+1,"3c++")==0) {
                 convert = CC_SOURCE | TRIANGULATE;
+                TheApp->setCompiling();
 
-            else if (strcmp(argv[convertionArgument]+1,"java")==0) {
+            } else if (strcmp(argv[convertionArgument]+1,"java")==0) {
                 convert |= JAVA_SOURCE;
                 convert |= MANY_JAVA_CLASSES; // default
+                TheApp->setCompiling();
             } else if (strcmp(argv[convertionArgument]+1,"3java")==0) {
                 convert |= JAVA_SOURCE | TRIANGULATE;
                 convert |= MANY_JAVA_CLASSES; // default
+                TheApp->setCompiling();
             }
         } 
         bool tempSave = true;
@@ -539,7 +545,8 @@ void parseCommandlineUsage(
             scene->setExternProtoWarning(false);
             int rc = 1;
             checkNotEnoughArgumentsError(argc, inputFileArg);
-            if (TheApp->AddFile(argv[inputFileArg], scene)) {
+            TheApp->AddFile(argv[inputFileArg], scene);
+            if (1) {
                 rc = 0;
                 if (convert == KANIM)
                     scene->getRoot()->preDraw();
@@ -574,7 +581,7 @@ void parseCommandlineUsage(
                 } else if (errno != 0)
                     myperror("write file");
             }
-            normalExit(rc);
+            normalExit(0);
         }
         if (download) {
             int inputFileArg = convertionArgument + 1;
@@ -582,8 +589,8 @@ void parseCommandlineUsage(
             Scene *scene = new Scene();
             int rc = 1;
             checkNotEnoughArgumentsError(argc, inputFileArg);
-            if (TheApp->AddFile(argv[inputFileArg], scene))
-                rc = 0;
+            TheApp->AddFile(argv[inputFileArg], scene);
+            rc = 0;
             delete TheApp;
             if (rc != 0) {
                 if (TheApp->getVrml1Error()) {
@@ -591,7 +598,6 @@ void parseCommandlineUsage(
                     swDebugf("Unable to parser input file\n");   
                 }
             }
-            normalExit(rc);
         }
         if (strcmp(argv[convertionArgument],"-catt8geo")==0) {
 #ifdef _WIN32

@@ -24,6 +24,7 @@
 #include "math.h"
 
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 #include "StereoViewApp.h"
 
 StereoViewApp::StereoViewApp()

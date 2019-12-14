@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_IMAGE_TEXTURE_ATLAS_H
-#define _NODE_IMAGE_TEXTURE_ATLAS_H
+#pragma once
 
-#ifndef _NODE_H
-# include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
+#include "ExternTheApp.h"
+#include "Node.h"
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 # include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoImageTextureAtlas : public Proto {
@@ -58,11 +51,12 @@ public:
 class NodeImageTextureAtlas : public Node {
 public:
                     NodeImageTextureAtlas(Scene *scene, Proto *proto);
-                    NodeImageTextureAtlas(const NodeImageTextureAtlas &node);
+                    NodeImageTextureAtlas(NodeImageTextureAtlas &node);
     virtual        ~NodeImageTextureAtlas();
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeImageTextureAtlas(*this); }
+    virtual Node    *copy() { return new NodeImageTextureAtlas( 
+                              m_scene, m_proto); }
 
     virtual void    load();
 
@@ -84,4 +78,3 @@ protected:
     MyString        m_baseURL;
 };
 
-#endif

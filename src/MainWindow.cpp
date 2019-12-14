@@ -38,6 +38,7 @@
 #include "maxpath.h"
 
 #include "Scene.h"
+#include "NodeDefinitions.h"
 #include "Node.h"
 #include "Field.h"
 #include "Proto.h"
@@ -4629,17 +4630,17 @@ MainWindow::setTarget(void)
            nodeStack.push(node);
        node = node->getParent();
     }
-    Matrix matrix = Matrix::identity();
+    Matrixd matrix = Matrixd::identity();
     while (!nodeStack.empty()) {
         NodeTransform *trans = (NodeTransform *)nodeStack.pop();
-        Matrix mat;
+        Matrixd mat;
         trans->getMatrix(mat);
         matrix = matrix * mat;
     }
     Node *viewpoint = m_scene->getCamera();
     float dist = 0;
-    Vec3f vec;
-    float mat[4][4];
+    Vec3d vec;
+    double mat[4][4];
     matrix.getValue(mat);
     vec.x = mat[3][0];
     vec.y = mat[3][1];
@@ -4676,7 +4677,8 @@ void MainWindow::searchInterpolator(void)
     Node *node = m_scene->getSelection()->getNode();
     if (!node->hasInputs())
         return;
-    MyArray<Node *> targets = m_scene->searchInterpolators();
+    MyArray<Node*> *interpolators = m_scene->searchInterpolators();
+    MyArray<Node *> targets(interpolators->getData(), interpolators->size());
     for (long i = 0; i < targets.size(); i++) {
         m_scene->setSelection(targets[i]);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
@@ -4694,15 +4696,15 @@ void MainWindow::searchInterpolator(void)
 
 void MainWindow::searchTimeSensor(void)
 {
-    MyArray<Node *> targets = m_scene->searchTimeSensors();
-    for (long i = 0; i < targets.size(); i++) {
-        m_scene->setSelection(targets[i]);
+    MyArray<Node *> *targets = m_scene->searchTimeSensors();
+    for (long i = 0; i < targets->size(); i++) {
+        m_scene->setSelection(targets->get(i));
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
-        if (i < (targets.size() - 1)) {
+        if (i < (targets->size() - 1)) {
             char str[256], title[256], message[256];
             swLoadString(IDS_DUNE, title, 256);
             swLoadString(IDS_ASK_IF_NEXT_TIME_SENSOR, str, 256);
-            mysnprintf(message, 255, str, targets.size());
+            mysnprintf(message, 255, str, targets->size());
             if (swMessageBox(m_wnd, message, title, SW_MB_YESNO, SW_MB_WARNING)
                 == IDNO) 
                 break;
@@ -5189,7 +5191,7 @@ void MainWindow::UpdateMenuVisible(void)
 }
 
 void
-MainWindow::UpdateObjectEdit(const Path *selection)
+MainWindow::UpdateObjectEdit(Path *selection)
 {
     Node *node = selection->getNode();
     int field = m_selectedField;
@@ -5622,13 +5624,6 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
                 break;
             valid = node->findValidFieldType(X3D_RIGID_BODY) != -1;
             if (!valid) {
-                if (node->matchNodeClass(RIGID_JOINT_NODE)) {
-                    X3DRigidJointNode *joint = (X3DRigidJointNode *)node;
-                    if (joint->body1()->getValue() == NULL)
-                        valid = true;
-                    else if (joint->body2()->getValue() == NULL)
-                        valid = true; 
-                }
                 if (node->getType() == X3D_CONTACT) {
                     NodeContact *contact = (NodeContact *)node;
                     if (contact->body1()->getValue() == NULL)
@@ -5884,7 +5879,7 @@ MainWindow::UpdateToolbar(STOOLBAR toolbar, Node *node, int field,
 
 static Node *searchIdxNode;
 static Node *searchMaterialNode;
-static Matrix searchMeshData;
+static Matrixd searchMeshData;
 
 static bool searchNodes(Node *node, void *data)
 {
@@ -5896,7 +5891,7 @@ static bool searchNodes(Node *node, void *data)
     }
     if (node->getType() == VRML_TRANSFORM) {
         NodeTransform *transform = (NodeTransform *)node;
-        Matrix transformMatrix;
+        Matrixd transformMatrix;
         transform->transform();
         transform->getMatrix(transformMatrix);
         searchMeshData = transformMatrix;
@@ -5907,7 +5902,7 @@ static bool searchNodes(Node *node, void *data)
 void
 MainWindow::UpdateToolbarSelection(void)
 {
-    const Path *selection = m_scene->getSelection();
+    Path *selection = m_scene->getSelection();
     Node *node = selection->getNode();
     int field = selection->getField();
 
@@ -6614,7 +6609,7 @@ void MainWindow::RefreshHelpSelection()
 Node * 
 MainWindow::createNode(Node *node)
 {
-    const Path *selection = m_scene->getSelection();
+    Path *selection = m_scene->getSelection();
     if (selection && selection->isProto(m_scene)) {
         Proto *proto = selection->getProto(m_scene);
         if (node == NULL)
@@ -6625,12 +6620,11 @@ MainWindow::createNode(Node *node)
         return node;
     }
     Node *selectionNode = selection->getNode();
-    int selectionField = selection->getField();
+    int destField = selectionNode->getChildrenField();
 
     Node *targetNode = m_scene->getRoot();
     int targetField = m_scene->getRootField();
 
-    int destField = m_scene->getDestField(node, selectionNode, selectionField);
     if ((node->getType() == VRML_SHAPE) && 
         (selectionNode->getType() == X3D_COLLIDABLE_SHAPE)) {
         NodeCollidableShape *coll = (NodeCollidableShape *)selectionNode;
@@ -6668,7 +6662,7 @@ Node *
 MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor, 
                                bool alignToCamera)
 {
-    const Path *sel = m_scene->getSelection();
+    Path *sel = m_scene->getSelection();
     Node *selection = sel->getNode();
     if (selection->getType() == VRML_SHAPE) {
         NodeShape *shape = (NodeShape *)selection;
@@ -7411,7 +7405,7 @@ MainWindow::EditUrl()
 void
 MainWindow::EditObject()
 {
-    const Path *selection = m_scene->getSelection();
+    Path *selection = m_scene->getSelection();
     Node *node = selection->getNode();
     NodeUpdate *hint = NULL;
     if (selection->isProto(m_scene)) {
@@ -8310,7 +8304,7 @@ MainWindow::createText3D(void)
     m_scene->UpdateViews(NULL, UPDATE_SELECTION);
 }
 
-static Matrix meshDataMatrix;
+static Matrixd meshDataMatrix;
 static MyArray<Vec3f> points;
 static int numNodes;
 
@@ -8319,7 +8313,7 @@ static bool searchMeshDataOrTransform(Node *node, void *data)
     numNodes++;
     if (node->getType() == VRML_TRANSFORM) {
         NodeTransform *transform = (NodeTransform *)node;
-        Matrix transformMatrix;
+        Matrixd transformMatrix;
         transform->transform();
         transform->getMatrix(transformMatrix);
         meshDataMatrix = transformMatrix;
@@ -8377,7 +8371,7 @@ static bool searchMeshDataOrTransform(Node *node, void *data)
 #ifdef HAVE_LIBCGAL
 void MainWindow::convexHull(void)
 {
-    meshDataMatrix = Matrix::identity();
+    meshDataMatrix = Matrixd::identity();
     points.resize(0);
     numNodes = 0;
     Node *node = m_scene->getSelection()->getNode();
@@ -8426,7 +8420,7 @@ void MainWindow::changeOneText(void)
     Node *node = m_scene->getSelection()->getNode();
     if ((node) && (node->getType() == VRML_TEXT)) {
         NodeText *text = (NodeText *) node;
-        MyString s = text->string()->getValue(0);
+        MyString s = text->string()->getValue(0)->getValue();
         OneTextDialog dlg(m_wnd, IDD_TEXT, s, textValidate);
         if (dlg.DoModal() == IDCANCEL)
             return;
@@ -8435,7 +8429,7 @@ void MainWindow::changeOneText(void)
     }
     if ((node) && (node->getType() == KAMBI_TEXT_3D)) {
         NodeText3D *text = (NodeText3D *) node;
-        MyString s = text->string()->getValue(0);
+        MyString s = text->string()->getValue(0)->getValue();
         OneTextDialog dlg(m_wnd, IDD_TEXT, s, textValidate);
         if (dlg.DoModal() == IDCANCEL)
             return;
@@ -9532,23 +9526,23 @@ MainWindow::snapTogether()
 #ifdef HAVE_LIBCGAL
 
 static Node *docsg(int operation, Node *node_1, Node*node_2, Scene *scene,
-                   Matrix *searchMeshData1 = NULL,
-                   Matrix *searchMeshData2 = NULL)
+                   Matrixd *searchMeshData1 = NULL,
+                   Matrixd *searchMeshData2 = NULL)
 {
     searchIdxNode = NULL;
-    searchMeshData = Matrix::identity();
+    searchMeshData = Matrixd::identity();
     node_1->doWithBranch(searchNodes, NULL, false);
     if (searchMeshData1)
         searchMeshData = *searchMeshData1;
-    Matrix matrix1 = searchMeshData;
+    Matrixd matrix1 = searchMeshData;
     Node *node1 = searchIdxNode;  
 
     searchIdxNode = NULL;
-    searchMeshData = Matrix::identity();
+    searchMeshData = Matrixd::identity();
     node_2->doWithBranch(searchNodes, NULL, false);
     if (searchMeshData2)
         searchMeshData = *searchMeshData2;
-    Matrix matrix2 = searchMeshData;
+    Matrixd matrix2 = searchMeshData;
     Node *node2 = searchIdxNode;  
 
     if (node1 && node1->isMeshBasedNode() &&
@@ -9630,19 +9624,19 @@ static Node *docsg(int operation, Node *node_1, Node*node_2, Scene *scene,
 }
 
 Node *unionGeometry = NULL;
-Matrix unionMeshData1;
-Matrix unionMeshData2;
+Matrixd unionMeshData1;
+Matrixd unionMeshData2;
 static bool csgUnion(Node *node, void *data)
 {
     Scene *scene = (Scene *)data;
     if (node->getType() == VRML_TRANSFORM) {
         NodeTransform *transform = (NodeTransform *)node;
-        Matrix transformMatrix;
+        Matrixd transformMatrix;
 
         glPushMatrix();
         glLoadIdentity();
         scene->transform(transform->getPath());
-        glGetFloatv(GL_MODELVIEW_MATRIX, transformMatrix);
+        glGetDoublev(GL_MODELVIEW_MATRIX, transformMatrix);
         glPopMatrix();
         if (unionGeometry == NULL)
             unionMeshData1 = transformMatrix;
@@ -9656,7 +9650,7 @@ static bool csgUnion(Node *node, void *data)
         else {
             Node *face = docsg(UNION, unionGeometry->copy(), node, scene, 
                                &unionMeshData1, &unionMeshData2);
-            unionMeshData1 = Matrix::identity();
+            unionMeshData1 = Matrixd::identity();
             if (face)
                 unionGeometry = face;
             else
@@ -9683,8 +9677,8 @@ MainWindow::branchCSGUnion(void)
 {
     Node *node = m_scene->getSelection()->getNode();
     unionGeometry = NULL;
-    unionMeshData1 = Matrix::identity();
-    unionMeshData2 = Matrix::identity();
+    unionMeshData1 = Matrixd::identity();
+    unionMeshData2 = Matrixd::identity();
 
     node->doWithBranch(csgUnion, m_scene);
     if (unionGeometry != NULL) {
@@ -9735,10 +9729,10 @@ MainWindow::simpleJoin()
         for (int i = 0; i < group->children()->getSize(); i++) {        
             searchIdxNode = NULL;
             searchMaterialNode = NULL;
-            searchMeshData = Matrix::identity();
+            searchMeshData = Matrixd::identity();
             group->children()->getValue(i)->doWithBranch(searchNodes, NULL, 
                                                          false);
-            Matrix matrix = searchMeshData;
+            Matrixd matrix = searchMeshData;
             Node *node = searchIdxNode;  
 
             if (node && node->isMeshBasedNode()) {
@@ -9879,8 +9873,7 @@ static bool createTexture(Node *node, void *data)
         NodeAppearance *appearanceNode = (NodeAppearance *) node;
         // ignore Nodes with already set Texture field
         Node *texture = (Node *)data;
-        if ((appearanceNode->texture()->getValue() == NULL) &&
-            texture->matchNodeClass(TEXTURE_NODE)) {
+        if ((appearanceNode->texture()->getValue() == NULL)) {
             MoveCommand *command = new MoveCommand(texture, NULL, -1,
                   appearanceNode, appearanceNode->texture_Field());
             command->execute();
@@ -11746,13 +11739,6 @@ void MainWindow::insertRigidBody()
        if (!current->validChildType(field, X3D_RIGID_BODY))
            field = -1;
     
-    if (current->matchNodeClass(RIGID_JOINT_NODE)) {
-        X3DRigidJointNode *joint = (X3DRigidJointNode *)current;
-        if (joint->body1()->getValue() == NULL)
-            field = joint->body1_Field();
-        else if (joint->body2()->getValue() == NULL)
-            field = joint->body2_Field();
-    }
     if (current->getType() == X3D_CONTACT) {
         NodeContact *contact = (NodeContact *)current;
         if (contact->body1()->getValue() == NULL)
@@ -12384,8 +12370,7 @@ MainWindow::insertNode(const char *type, Node* current)
         Node *node = m_scene->createNode(type);
         if (node == NULL)
             return NULL;
-        if (node->matchNodeClass(RIGID_JOINT_NODE) ||
-            (node->getType() == X3D_CONTACT))
+        if (node->getType() == X3D_CONTACT)
             if (current->findValidField(node) == -1)
                 return NULL;
         m_scene->execute(new MoveCommand(node, NULL, -1, current, field));
@@ -13700,7 +13685,7 @@ bool MainWindow::OnFileExportCattGeo()
 
 void MainWindow::OnEditCut()
 {
-    const Path *sel = m_scene->getSelection();
+    Path *sel = m_scene->getSelection();
     Node *node = sel->getNode();
     Node *parent = sel->getParent();
     int parentField = sel->getParentField();

@@ -52,7 +52,7 @@ NodeTimeTrigger::NodeTimeTrigger(Scene *scene, Proto *def)
 {
 }
 
-NodeTimeTrigger::NodeTimeTrigger(const NodeTimeTrigger &node)
+NodeTimeTrigger::NodeTimeTrigger(NodeTimeTrigger &node)
   : Node(node)
 {
 }

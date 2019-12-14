@@ -49,11 +49,11 @@ public:
 class NodeLabView : public CoverNode {
 public:
                     NodeLabView(Scene *scene, Proto *proto);
-                    NodeLabView(const NodeLabView &node);
+                    NodeLabView(NodeLabView &node);
     virtual        ~NodeLabView();
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeLabView(*this); }
+    virtual Node *  copy() { return new NodeLabView( m_scene, m_proto); }
 
     fieldMacros(SFBool, enabled, ProtoLabView)
 };

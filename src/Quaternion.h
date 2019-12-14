@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _QUATERNION_H
-#define _QUATERNION_H
+#pragma once
 
 #include "Vec3f.h"
 #include "Matrix.h"
@@ -58,4 +57,3 @@ void       quaternion_slerp(Quaternion *ret,
 inline void printf(Quaternion quat) { printf("%f %f %f %f\n", 
                                              quat.x, quat.y, quat.z, quat.w); }
 
-#endif // _QUATERNION_H

@@ -23,6 +23,7 @@
 #define _NODE_KAMBI_APPEARANCE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -55,7 +56,7 @@ class NodeKambiAppearance : public NodeAppearance {
 public:
                     NodeKambiAppearance(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeKambiAppearance(*this); }
+    virtual Node   *copy() { return new NodeKambiAppearance(m_scene, m_proto); }
 
     virtual bool    showFields() { return true; }
 

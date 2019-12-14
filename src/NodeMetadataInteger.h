@@ -41,7 +41,7 @@ public:
                     NodeMetadataInteger(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeMetadataInteger(*this); }
+    virtual Node   *copy() { return new NodeMetadataInteger(m_scene, m_proto); }
 
     fieldMacros(MFInt32, value, ProtoMetadataInteger)
 };

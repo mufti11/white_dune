@@ -23,6 +23,7 @@
 #define _NODE_HAnim_SEGMENT_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,9 +60,9 @@ public:
                     NodeHAnimSegment(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const;
-    virtual int         getComponentLevel(void) const;
-    virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeHAnimSegment(*this); }
+    virtual int    getComponentLevel(void) const;
+    virtual int    getX3dVersion(void) const { return 0; }
+    virtual Node   *copy() { return new NodeHAnimSegment( m_scene, m_proto); }
 
     fieldMacros(SFVec3f,  centerOfMass,     ProtoHAnimSegment)
     fieldMacros(SFNode,   coord,            ProtoHAnimSegment)

@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef TO_INDEXED_FACE_SET_DIALOG_H
-#define TO_INDEXED_FACE_SET_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class ToIndexedFaceSetDialog : public Dialog 
@@ -41,4 +37,3 @@ private:
     bool                m_triangulate;
 };
 
-#endif

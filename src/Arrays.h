@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef ARRAYS_H
-#define ARRAYS_H 1
+#pragma once
 
 typedef MyArray<bool>   BoolArray;
 typedef MyArray<int>    IntArray;
@@ -28,5 +27,5 @@ typedef MyArray<float>  FloatArray;
 typedef MyArray<double> DoubleArray;
 
 #include "StringArray.h"
-#endif
+
 

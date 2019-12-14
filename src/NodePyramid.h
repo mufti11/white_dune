@@ -58,7 +58,7 @@ public:
                     NodePyramid(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodePyramid(*this); }
+    virtual Node   *copy() { return new NodePyramid(m_scene, m_proto); }
 
     x3domGeometryCommonFieldMacros(ProtoPyramid) 
     fieldMacros(SFBool, ccw, ProtoPyramid)

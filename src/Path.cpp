@@ -114,7 +114,7 @@ Path::~Path()
 }
 
 Node *
-Path::getNextNode(Node *n, int f, int i) const
+Path::getNextNode(Node *n, int f, int i)
 {
     Node* node = n;
     int field = f;
@@ -153,7 +153,7 @@ Path::getNextNode(Node *n, int f, int i) const
 }
 
 Proto *
-Path::getProto(Scene *scene) const
+Path::getProto(Scene *scene)
 {
     if ((m_len > 1) && m_path && (m_path[0] < 0))
         return scene->getProto(-m_path[0] - 1);
@@ -161,7 +161,7 @@ Path::getProto(Scene *scene) const
 }
 
 void
-Path::printStrangePath(Node *node, int field, int depth) const
+Path::printStrangePath(Node *node, int field, int depth)
 {
     Field *protoField = node->getProto()->getField(field);
     FieldValue *value = node->getField(field);
@@ -175,7 +175,7 @@ Path::printStrangePath(Node *node, int field, int depth) const
 #include "swt.h"
 
 void
-Path::dump() const
+Path::dump()
 {
     if (m_node == NULL)
         return;

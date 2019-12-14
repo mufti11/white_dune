@@ -136,7 +136,8 @@ ProtoIndexedFaceSet::create(Scene *scene)
 NodeIndexedFaceSet::NodeIndexedFaceSet(Scene *scene, Proto *def)
   : MeshBasedNode(scene, def)
 {
-    m_numVertices = 0;   
+    m_sumVertices = 0;   
+    m_sumVerticesPerFaces = 0;   
 }
 
 NodeIndexedFaceSet::~NodeIndexedFaceSet()
@@ -185,34 +186,43 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
     m_scene->copyRoutes(node, this);
     if (coord()->getValue() != NULL) {
         Node *target = node->coord()->getValue();
-        m_scene->copyRoutes(target, this->coord()->getValue());
-        target->addParent(node, node->coord_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
-        
+        if (target) {
+            m_scene->copyRoutes(target, this->coord()->getValue());
+            target->addParent(node, node->coord_Field());
+            target->setVariableName(strdup(target->getNameOrNewName()));
+        }
     }
     if (normal()->getValue() != NULL) {
         Node *target = node->normal()->getValue();
-        m_scene->copyRoutes(target, this->normal()->getValue());
-        target->addParent(node,  node->normal_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
+        if (target) {
+            m_scene->copyRoutes(target, this->normal()->getValue());
+            target->addParent(node,  node->normal_Field());
+            target->setVariableName(strdup(target->getNameOrNewName()));
+        }
     }
     if (color()->getValue() != NULL) {
         Node *target = node->color()->getValue();
-        m_scene->copyRoutes(target, this->color()->getValue());
-        target->addParent(node,  node->color_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
+        if (target) {
+            m_scene->copyRoutes(target, this->color()->getValue());
+            target->addParent(node,  node->color_Field());
+            target->setVariableName(strdup(target->getNameOrNewName()));
+        }
     }
     if (texCoord()->getValue() != NULL) {
         Node *target = node->texCoord()->getValue();
-        m_scene->copyRoutes(target, this->texCoord()->getValue());
-        target->addParent(node,  node->texCoord_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
+        if (target) {
+            m_scene->copyRoutes(target, this->texCoord()->getValue());
+            target->addParent(node,  node->texCoord_Field());
+            target->setVariableName(strdup(target->getNameOrNewName()));
+        }
     }
     if (fogCoord()->getValue() != NULL) {
         Node *target = node->fogCoord()->getValue();
-        m_scene->copyRoutes(target, this->fogCoord()->getValue());
-        target->addParent(node,  node->fogCoord_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
+        if (target) {
+            m_scene->copyRoutes(target, this->fogCoord()->getValue());
+            target->addParent(node,  node->fogCoord_Field());
+            target->setVariableName(strdup(target->getNameOrNewName()));
+        }
     }
     if (m_convertedNodes.size() != 0)
         return;
@@ -233,28 +243,33 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
         }
     }
     MyMesh *mesh = node->simpleQuadTriangulateMesh();
-    MFInt32 *mfcoordIndex = mesh->getCoordIndex();
-    if (mfcoordIndex && (mfcoordIndex->getValues() != NULL)) {
-        mfcoordIndex = (MFInt32 *)mfcoordIndex->copy();
-        m_scene->setField(node, coordIndex_Field(), new MFInt32(mfcoordIndex));
-    }
-    MFInt32 *mfnormalIndex = mesh->getNormalIndex();
-    if (mfnormalIndex && (mfnormalIndex->getValues() != NULL)) {
-        mfnormalIndex = (MFInt32 *)mfnormalIndex->copy();
-        m_scene->setField(node, normalIndex_Field(), new MFInt32(mfnormalIndex));
-    }
-    MFInt32 *mfcolorIndex = mesh->getColorIndex();
-    if (mfcolorIndex && (mfcolorIndex->getValues() != NULL) &&
-        (mfcolorIndex != mesh->getCoordIndex())) {
-        mfcolorIndex = (MFInt32 *)mfcolorIndex->copy();
-        m_scene->setField(node, colorIndex_Field(), new MFInt32(mfcolorIndex));
-    }
-    MFInt32 *mftexCoordIndex = mesh->getTexCoordIndex();
-    if (mftexCoordIndex && (mftexCoordIndex->getValues() != NULL) &&
-        (mftexCoordIndex != mesh->getCoordIndex())) {
-        mftexCoordIndex = (MFInt32 *)mftexCoordIndex->copy();
-        m_scene->setField(node, texCoordIndex_Field(), 
-                         new MFInt32(mftexCoordIndex));
+    if (mesh) {
+        MFInt32 *mfcoordIndex = mesh->getCoordIndex();
+        if (mfcoordIndex && (mfcoordIndex->getValues() != NULL)) {
+            mfcoordIndex = (MFInt32 *)mfcoordIndex->copy();
+            m_scene->setField(node, coordIndex_Field(),
+                              new MFInt32(mfcoordIndex));
+        }
+        MFInt32 *mfnormalIndex = mesh->getNormalIndex();
+        if (mfnormalIndex && (mfnormalIndex->getValues() != NULL)) {
+            mfnormalIndex = (MFInt32 *)mfnormalIndex->copy();
+            m_scene->setField(node, normalIndex_Field(), 
+                              new MFInt32(mfnormalIndex));
+        }
+        MFInt32 *mfcolorIndex = mesh->getColorIndex();
+        if (mfcolorIndex && (mfcolorIndex->getValues() != NULL) &&
+            (mfcolorIndex != mesh->getCoordIndex())) {
+            mfcolorIndex = (MFInt32 *)mfcolorIndex->copy();
+            m_scene->setField(node, colorIndex_Field(), 
+                              new MFInt32(mfcolorIndex));
+        }
+        MFInt32 *mftexCoordIndex = mesh->getTexCoordIndex();
+        if (mftexCoordIndex && (mftexCoordIndex->getValues() != NULL) &&
+            (mftexCoordIndex != mesh->getCoordIndex())) {
+            mftexCoordIndex = (MFInt32 *)mftexCoordIndex->copy();
+            m_scene->setField(node, texCoordIndex_Field(), 
+                              new MFInt32(mftexCoordIndex));
+        }
     }
     m_convertedNodes.append(node);
     node->addParent(getParent(), getParentField());
@@ -1824,9 +1839,14 @@ NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
     MFVec3f *vertices = getVertices();
     if (vertices == NULL)
         return;
-    if (normal()->getValue() == NULL)
-        return;
-    MFVec3f *normals = ((NodeNormal *)normal()->getValue())->vector();
+    MFVec3f *normals = NULL;
+    if (normal()->getValue() == NULL) {
+        if (getMesh())
+            normals = getMesh()->getNormals();
+        else
+            return;
+    } else
+        normals = ((NodeNormal *)normal()->getValue())->vector();
     for (int i = 0; i < vertices->getSFSize(); i++) {
         Vec3f vec = normals->getVec(i);
         mywritef(f, "  N %f %f %f", vec.x, vec.y, vec.z);
@@ -1836,7 +1856,7 @@ NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
             if (color() && colorRGBANode->color()) {
                 const float *c = 
                     ((NodeColorRGBA *)color()->getValue())->color()->
-                    getValues() + i  + m_sumNumFaces * 4;
+                    getValues() + i  + m_sumVertices * 4;
                 mywritef(f, " %d %d %d %d\n", (int)(c[0] * 255), 
                                               (int)(c[1] * 255), 
                                               (int)(c[2] * 255), 
@@ -1846,7 +1866,7 @@ NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
                 NodeColor *colorNode = (NodeColor *)color()->getValue();
                 const float *c = 
                     ((NodeColorRGBA *)color()->getValue())->color()->
-                    getValues() + i  + m_sumNumFaces * 3;
+                    getValues() + i  + m_sumVertices * 3;
                 mywritef(f, " %d %d %d\n", (int)(c[0] * 255), 
                                            (int)(c[1] * 255), 
                                            (int)(c[2] * 255));
@@ -1899,9 +1919,9 @@ NodeIndexedFaceSet::getProfile(void) const
     if (m_mesh != NULL)
         if (!(m_mesh->onlyPlanarFaces()))
             return PROFILE_IMMERSIVE;
-    if (hasInput("set_colorIndex"))
+    if (((Node *)this)->hasInput("set_colorIndex"))
         return PROFILE_IMMERSIVE;
-    if (hasInput("set_normalIndex"))
+    if (((Node *)this)->hasInput("set_normalIndex"))
         return PROFILE_IMMERSIVE;
     if (!isDefault(ccw_Field()))
         return PROFILE_IMMERSIVE;
@@ -1941,7 +1961,7 @@ typedef boost::graph_traits<Surface>::halfedge_descriptor halfedge_descriptor;
 namespace params = CGAL::Polygon_mesh_processing::parameters;
 
 static void
-build_mesh(Surface *meshOut, MyMesh *mesh, Matrix matrix)
+build_mesh(Surface *meshOut, MyMesh *mesh, Matrixd matrix)
 {
     MyArray<vertex_index> u;    
     for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
@@ -1979,7 +1999,7 @@ build_mesh(Surface *meshOut, MyMesh *mesh, Matrix matrix)
 
 NodeIndexedFaceSet * 
 NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation, 
-                        Matrix matrix1, Matrix matrix2)
+                        Matrixd matrix1, Matrixd matrix2)
 {
     try {
         MyMesh *mesh = m_mesh;

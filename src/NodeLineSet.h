@@ -68,7 +68,7 @@ public:
                            { return "Rendering"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeLineSet(*this); }
+    virtual Node   *copy() { return new NodeLineSet( m_scene, m_proto); }
 
     virtual void    draw();
 
@@ -95,9 +95,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() const 
+    virtual int     colorPerVertexField()
                        { return -1; }
-    virtual int     colorIndexField() const
+    virtual int     colorIndexField()
                        { return -1; }
 
     fieldMacros(MFNode,  attrib,      ProtoLineSet)

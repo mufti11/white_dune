@@ -82,7 +82,8 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNurbsSweptSurface(*this); }
+    virtual Node   *copy() { return new NodeNurbsSweptSurface(
+                             m_scene, m_proto); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 

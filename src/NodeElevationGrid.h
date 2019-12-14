@@ -74,7 +74,7 @@ protected:
 public:
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeElevationGrid(*this); }
+    virtual Node   *copy() { return new NodeElevationGrid(m_scene, m_proto); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -100,11 +100,6 @@ public:
                        { solid(new SFBool(!solid()->getValue())); }
     virtual int     getSolidField() { return solid_Field(); }
     virtual void    flipSide(void) { ccw(new SFBool(!ccw()->getValue())); }
-
-    virtual NodeColor *getColorNode() 
-                    { return (NodeColor *)color()->getValue(); }
-    virtual NodeColorRGBA *getColorRGBANode() 
-                    { return (NodeColorRGBA *)color()->getValue(); }
 
     virtual bool    shouldConvertToIndexedFaceSet(void) { return false; }
 

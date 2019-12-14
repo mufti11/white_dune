@@ -25,6 +25,7 @@
 #include "MFInt32.h"
 #include "SFInt32.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFInt32::MFInt32()
 {
@@ -41,7 +42,7 @@ MFInt32::MFInt32(MFInt32 *value)
     m_value.setData(value->getValues(), value->getSize());
 }
 
-MFInt32::MFInt32(const int value)
+MFInt32::MFInt32(int value)
 {
     m_value.resize(0);
     m_value[0] = value;
@@ -54,7 +55,7 @@ MFInt32::~MFInt32()
 }
 
 MyString    
-MFInt32::getString(int index, int stride) const
+MFInt32::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -72,13 +73,13 @@ MFInt32::copy()
     return new MFInt32(value, m_value.size());
 }
 
-int MFInt32::writeData(int f, int i) const
+int MFInt32::writeData(int f, int i)
 {
     return mywritef(f, "%d", m_value[i]);
 }
 
 int MFInt32::write(int f, int indent, bool writeBrackets, 
-                   bool compactFormat) const
+                   bool compactFormat)
 {
     if (writeBrackets) {
         if (!TheApp->GetkrFormating()) {
@@ -136,7 +137,7 @@ MFInt32::readLine(int index, char *line)
 }
 
 bool
-MFInt32::equals(const FieldValue *value) const
+MFInt32::equals(FieldValue *value)
 {
     if (value->getType() == MFINT32) {
         MFInt32 *v = (MFInt32 *) value;
@@ -150,7 +151,7 @@ MFInt32::equals(const FieldValue *value) const
 }
 
 FieldValue *
-MFInt32::getSFValue(int index) const
+MFInt32::getSFValue(int index)
 {
     return new SFInt32(m_value[index]);
 }
@@ -162,14 +163,14 @@ MFInt32::setSFValue(int index, FieldValue *value)
 }
 
 void
-MFInt32::setSFValue(int index, const int value)
+MFInt32::setSFValue(int index, int value)
 {
     m_value[index] = value;
 }
 
 
 MyString
-MFInt32::getEcmaScriptComment(MyString name, int flags) const
+MFInt32::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -236,13 +237,13 @@ MFInt32::insertSFValue(int index, FieldValue *value)
 }
 
 void 
-MFInt32::insertSFValue(int index, const int value)
+MFInt32::insertSFValue(int index, int value)
 {
     m_value.insert(value, index);
 }
 
 void 
-MFInt32::appendSFValue(const int value)
+MFInt32::appendSFValue(int value)
 {
     m_value.append(value);
 }

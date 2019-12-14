@@ -24,22 +24,22 @@
 
 #include "swt.h"
 
-#include "DuneApp.h"
-#include "MainWindow.h"
 #include "xerrorhandler.h"
+#include "MainWindow.h"
+#include "DuneApp.h"
+
+#ifdef _WIN32
+extern void parseCommandlineUsage(HINSTANCE hInstance, int argc, char **argv);
+#else
+extern void parseCommandlineUsage(int argc, char **argv);
+#endif
+extern int parseCommandlineArgument(int &i, int argc,char**argv);
 
 #ifdef _WIN32
 #  define errorprintf msgboxprintf
 #else
 #  define errorprintf fprintf   
 #endif
-
-extern bool parseCommandlineArgument(int &i,int argc, char** argv);
-extern void parseCommandlineUsage(
-#ifdef _WIN32
-                                  HINSTANCE hInstance,
-#endif
-                                  int argc, char** argv);
 
 #ifdef _WIN32
 static int testCommandline8Bit(int argc, char** argv)
@@ -238,7 +238,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
     bool fileflag=false;
     bool fileerrorflag=false;
     while (i<argc) {
-       if (!parseCommandlineArgument(i,argc,argv)) {
+       if (!parseCommandlineArgument(&i,argc,argv)) {
           // skip quotes
           if (argv[i][0] == '"')
               argv[i]++;
@@ -279,7 +279,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
               normalExit(97);
           else
               normalExit(1);
-          return 1;
        }
     }
     if (!fileflag)
@@ -338,11 +337,12 @@ int main(int argc, char *argv[])
     bool fileflag=false;
     while (i<argc) {
        files[i]=false;
-       if (!parseCommandlineArgument(i,argc,argv)) {
-          files[i]=true;
+       int arg = i;
+       if (!parseCommandlineArgument(arg, argc,argv)) {
+          files[arg]=true;
           fileflag=true;
        }
-       i++;
+       i = arg + 1;
     }
     TheApp->accoutMaxNumberAxesInputDevices();
     if (i>argc) {
@@ -351,7 +351,7 @@ int main(int argc, char *argv[])
              argv[0]);
        normalExit(1);
        return 1;
-       }
+    }
     for (i=1;i<argc;i++)
        if (files[i]==true)
           if (!TheApp->OpenFile(argv[i])) {
@@ -361,9 +361,6 @@ int main(int argc, char *argv[])
                 errorprintf(stderr,"failed: %s\n",argv[i]); 
              if (TheApp->getVrml1Error())
                  normalExit(97);
-             else
-                 normalExit(1);
-             return 1;
           }
     if (!fileflag)
        TheApp->OnFileNewWindow();
@@ -371,7 +368,6 @@ int main(int argc, char *argv[])
     fpu_enable_interrupts();
 #endif
     swMainLoop();
-//    delete TheApp;
     normalExit(0);
 }
 #endif

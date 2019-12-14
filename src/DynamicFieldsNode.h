@@ -19,19 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _DYNAMIC_FIELDS_NODE_H
-#define _DYNAMIC_FIELDS_NODE_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#include "SFMFTypes.h"
 #include "CommandList.h"
 #include "InterfaceArray.h"
+#include "SFMFTypes.h"
 
 class DynamicFieldsNode : public Node {
 public:
@@ -81,5 +75,3 @@ protected:
 private:
     CommandList    *m_routeList;
 };
-
-#endif // _DYNAMIC_FIELDS_NODE_H

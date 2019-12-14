@@ -24,8 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _DIFONT_VECTORISER_H_
-#define _DIFONT_VECTORISER_H_
+#pragma once
 
 #include "config.h"
 
@@ -133,5 +132,4 @@ class Vectoriser {
 
 #endif
 
-#endif
 

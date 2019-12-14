@@ -23,6 +23,7 @@
 #define _NODE_NURBSGROUP_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -52,7 +53,7 @@ class NodeNurbsGroup : public NodeGroup {
 public:
                     NodeNurbsGroup(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeNurbsGroup(*this); }
+    virtual Node   *copy() { return new NodeNurbsGroup(m_scene, m_proto); }
 
     virtual void    draw(void);
 

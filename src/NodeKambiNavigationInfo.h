@@ -23,6 +23,7 @@
 #define _NODE_KAMBI_NAVIGATION_INFO_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -60,7 +61,8 @@ class NodeKambiNavigationInfo : public NodeNavigationInfo {
 public:
                     NodeKambiNavigationInfo(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeKambiNavigationInfo(*this); }
+    virtual Node   *copy() { return new NodeKambiNavigationInfo( 
+                             m_scene, m_proto); }
 
     kambiCommonFunctions()
 

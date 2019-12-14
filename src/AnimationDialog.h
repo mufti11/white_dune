@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ANIMATION_DIALOG_H
-#define _ANIMATION_DIALOG_H
+#pragma once
 
 #include "Scene.h"
 #include "CheckBoxWindow.h"
@@ -56,6 +55,4 @@ protected:
     MyArray<int>        m_eventInTypes;
     MyArray<bool>       m_eventInIsAnimated;
 };
-
-#endif
 

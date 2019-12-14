@@ -63,7 +63,7 @@ public:
                     NodeMotorJoint(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeMotorJoint(*this); }
+    virtual Node   *copy() { return new NodeMotorJoint(m_scene, m_proto); }
 
     virtual Vec3f   getHandle(int handle, int *constraint, int *field);
     virtual void    setHandle(int handle, const Vec3f &v);

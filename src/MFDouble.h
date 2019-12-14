@@ -19,78 +19,68 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFDOUBLE_H
-#define _MFDOUBLE_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-#ifndef _FIELD_VALUE_H
 #include "FieldValue.h"
-#endif
-#ifndef _SFDOUBLE_H
 #include "SFDouble.h"
-#endif
 
 class MFDouble : public MFieldValue {
 public:
                         MFDouble(int stride = 1);
                         MFDouble(int len, int stride);
-                        MFDouble(const MFDouble &value);
-                        MFDouble(const double *values, int len, int stride = 1);
-                        MFDouble(const float *values, int len, int stride = 1);
-                        MFDouble(const double value);
+                        MFDouble(MFDouble &value);
+                        MFDouble(MFDouble *value);
+                        MFDouble(double *values, int len, int stride = 1);
+                        MFDouble(float *values, int len, int stride = 1);
+                        MFDouble(double value);
     virtual            ~MFDouble();
 
     virtual int         getType() const { return MFDOUBLE; }
-    virtual int         getStride() const { return 1; }
-    virtual MyString    getString(int index, int stride) const;
-    virtual const char *getTypeName() const { return "MFDouble"; }
+    virtual int         getStride() { return 1; }
+    virtual MyString    getString(int index, int stride);
+    virtual const char *getTypeName() { return "MFDouble"; }
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
 
-    virtual const char *getTypeC(int languageFlag) const { return "double"; }
+    virtual const char *getTypeC(int languageFlag) { return "double"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return getStride(); }
-    virtual bool        needCheckFloat(void) const { return true; }
+    virtual int         getNumbersPerType(void) { return getStride(); }
+    virtual bool        needCheckFloat(void) { return true; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(MFDouble *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy(); 
 
-    virtual int         getSFSize() const
+    virtual int         getSFSize()
                            { return m_value.size() / getStride(); }
-    virtual FieldValue *getSFValue(int index) const; 
+    virtual FieldValue *getSFValue(int index); 
     virtual void        setSFValue(int index, FieldValue *value);
-    void                setSFValue(int index, const double value);
+    void                setSFValue(int index, double value);
 
-    const double       *getValues() const { return m_value.getData(); }
-    double              getValue(int i) const { return m_value[i]; }
-    int                 getSize() const { return m_value.size(); }
+    double             *getValues() { return m_value.getData(); }
+    double              getValue(int i) { return m_value[i]; }
+    int                 getSize() { return m_value.size(); }
     void                setValue(int index, double value) 
                            { m_value[index] = value; }
 
     virtual void        insertSFValue(int index, FieldValue *value);
-    void                insertSFValue(int index, const double value);
+    void                insertSFValue(int index, double value);
 
     virtual void        removeSFValue(int index);
 
     double              getMaxValue();
     double              getMinValue();
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     virtual bool        isX3DType() { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
-protected:
-    bool                equals(const MFDouble *value) const;
 
 protected:
     MyArray<double>     m_value;
 };
-
-#endif // _MFDOUBLE_H

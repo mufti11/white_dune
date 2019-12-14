@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _UN_ROUTE_COMMAND_H
-#define _UN_ROUTE_COMMAND_H
+#pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
 
 class Node;
 
@@ -43,4 +40,3 @@ private:
     int             m_eventOut;
 };
 
-#endif // _UN_ROUTE_COMMAND_H

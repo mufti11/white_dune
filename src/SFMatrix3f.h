@@ -60,36 +60,36 @@ public:
                            m_value[8] = 1;
                            }
 
-    const float        *getValue() const { return m_value; }
-    float               getValue(int pos) const { return m_value[pos]; }
+    float              *getValue() { return m_value; }
+    float               getValue(int pos) { return m_value[pos]; }
     void                setValue(int index, float value)
                            {
                            assert(index >= 0 && index < 9);
                            m_value[index] = value;
                            }
     virtual int         getType() const { return SFMATRIX3F; }
-    virtual const char *getTypeName() const { return "SFMatrix3f"; }
-    virtual int         getStride() const { return 9; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFMatrix3f"; }
+    virtual int         getStride() { return 9; }
+    virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFMatrix3f(*this); }
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
-    virtual bool        supportAnimation(bool x3d) const { return false; }
-    virtual bool        supportInteraction(void) const { return true; }
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    virtual bool        supportAnimation(bool x3d) { return false; }
+    virtual bool        supportInteraction(void) { return true; }
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         write(int filedes, int indent) const;
+    virtual int         writeData(int filedes, int i); 
+    virtual int         write(int filedes, int indent);
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const { return "float"; }
-    virtual bool        isArrayInC(void) const { return true; }
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag) { return "float"; }
+    virtual bool        isArrayInC(void) { return true; }
 
-    virtual int         writeAc3d(int filedes, int indent) const;
+    virtual int         writeAc3d(int filedes, int indent);
 
     virtual bool        readLine(int index, char *line);
-    virtual int         getNumbersPerType(void) const { return 9; }
+    virtual int         getNumbersPerType(void) { return 9; }
 
     virtual bool        isX3DType() { return true; }
 

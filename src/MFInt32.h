@@ -19,61 +19,56 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFINT32_H
-#define _MFINT32_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
 
 class MFInt32 : public MFieldValue {
 public:
                         MFInt32();
                         MFInt32(int *values, int len);
                         MFInt32(MFInt32 *value);
-                        MFInt32(const int value);
+                        MFInt32(int value);
     virtual            ~MFInt32();
 
     virtual int         getType() const { return MFINT32; }
-    virtual const char *getTypeName() const { return "MFInt32"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "MFInt32"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
-    virtual int         write(int f, int indent) const
+    virtual int         write(int f, int indent)
                            { 
                            return write(f, indent, writeBrackets(), true); 
                            }
-    virtual int         write4FieldPipe(int f, int indent) const
+    virtual int         write4FieldPipe(int f, int indent)
                            { return write(f, indent, false, false); }
     int                 write(int f, int indent, bool writeBrackets, 
-                              bool compactFormat) const;
+                              bool compactFormat);
 
-    virtual const char *getTypeC(int languageFlag) const { return "int"; }
+    virtual const char *getTypeC(int languageFlag) { return "int"; }
 
     virtual bool        readLine(int index, char *line);
-    virtual int         getNumbersPerType(void) const { return getStride(); }
+    virtual int         getNumbersPerType(void) { return getStride(); }
 
-    virtual bool        equals(const FieldValue *value) const;
-    virtual int         getSFSize() const { return m_value.size(); }
-    virtual FieldValue *getSFValue(int index) const;
+    virtual bool        equals(FieldValue *value);
+    virtual int         getSFSize() { return m_value.size(); }
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const int value);
     virtual FieldValue *copy();
 
-    int                 getValue(int index) const { return m_value[index]; }
-    const int          *getValues() const { return m_value.getData(); }
-    int                 getSize() const { return m_value.size(); }
+    int                 getValue(int index) { return m_value[index]; }
+    const int          *getValues() { return m_value.getData(); }
+    int                 getSize() { return m_value.size(); }
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const int value);
     virtual void        appendSFValue(const int value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 
@@ -81,5 +76,3 @@ public:
 protected:
     MyArray<int>        m_value;
 };
-
-#endif // _MFINT32_H

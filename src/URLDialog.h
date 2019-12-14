@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _URL_DIALOG_H
-#define _URL_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
@@ -47,4 +44,3 @@ private:
     char        m_path[1024];
 };
 
-#endif

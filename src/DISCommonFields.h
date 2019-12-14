@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _DIS_COMMON_FIELDS_H
-#define _DIS_COMMON_FIELDS_H
+#pragma once
 
 #define disCommonBehaviorFieldIndex() \
     FieldIndex enabled; \
@@ -100,5 +99,3 @@
     rtpHeaderExpected.set( \
           addField(SFBOOL, "rtpHeaderExpected", new SFBool(false))); \
     addEventOut(SFBOOL, "isRtpHeaderHeard");
-
-#endif

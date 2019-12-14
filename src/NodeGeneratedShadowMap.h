@@ -23,6 +23,7 @@
 #define _NODE_GENERATED_SHADOW_MAP_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -60,7 +61,8 @@ class NodeGeneratedShadowMap : public Node {
 public:
                     NodeGeneratedShadowMap(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeGeneratedShadowMap(*this); }
+    virtual Node  *copy() 
+                   { return new NodeGeneratedShadowMap(m_scene, m_proto); }
 
     kambiCommonFunctions()
 

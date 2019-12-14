@@ -23,6 +23,7 @@
 #define _NODE_PROJECTION_VOLUME_STYLE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -57,7 +58,8 @@ public:
         { return "VolumeRendering"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node   *copy() const { return new NodeProjectionVolumeStyle(*this); }
+    virtual Node   *copy() { return new NodeProjectionVolumeStyle( 
+                             m_scene, m_proto); }
 
     fieldMacros(SFBool, enabled, ProtoProjectionVolumeStyle);
     fieldMacros(SFFloat, intensityThreshold, ProtoProjectionVolumeStyle);

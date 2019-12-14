@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _COMPOSED_GEOMETRY_MACROS_H
-#define _COMPOSED_GEOMETRY_MACROS_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
 
 #define ComposedGeometryProtoMacro() \
     FieldIndex radianceTransfer; \
@@ -51,5 +46,3 @@
           addExposedField(SFNODE, "fogCoord", new SFNode(NULL), \
                           X3D_FOG_COORDINATE)); \
     setFieldFlags(fogCoord, FF_X3D_ONLY); 
-
-#endif

@@ -36,13 +36,10 @@ InteractionDialog3::InteractionDialog3(SWND parent, Scene *scene,
                                        InteractionRouteData *routeData)
   : Dialog(parent, IDD_INTERACTION3)
 {
-    m_window.initCheckBoxWindow(parent, m_dlg);
     m_scene = scene;
     m_routeData = routeData;
     buildInterfaceData();
     LoadData();
-    m_window.accountYmax();
-    m_window.invalidateWindow();
 }
 
 void
@@ -51,7 +48,6 @@ InteractionDialog3::buildInterfaceData(void)
     Scene *scene = m_scene;
     bool x3d = scene->isX3d();
 
-    m_window.resize0();
     m_eventOuts.resize(0);
     int index = 0;
     if (typeDefaultValue(m_routeData->type)->supportInteraction() &&
@@ -68,8 +64,6 @@ InteractionDialog3::buildInterfaceData(void)
                 MyString string = "";
                 string += outProto->getEventOut(k)->getName(x3d);
                 m_eventOuts.append(k);
-                m_window.setString(index, string);
-                m_window.setInitButtonsPressed(index, false);
                 index++; 
             }
         }
@@ -93,17 +87,6 @@ bool
 InteractionDialog3::Validate()
 {
     bool checked = false;
-    for (long i = 0 ;i < m_eventOuts.size() ;i++)
-        if (m_window.getChecked(i)) {
-            if (checked) {
-                TheApp->MessageBoxId(IDS_NOT_2_INTERACTIVE);
-                return false;
-            }
-            checked = true;
-        }
-    for (long i = 0 ;i < m_eventOuts.size() ;i++)
-        if (m_window.getChecked(i))
-            return true;
     if (m_routeData->node == NULL)
          return false;
     int commentID = m_routeData->node->getInteractionCommentID();
@@ -124,16 +107,4 @@ InteractionDialog3::LoadData()
 void 
 InteractionDialog3::SaveData()
 {
-    for (long i = 0; i < m_eventOuts.size() ;i++)
-        if (m_window.getChecked(i)) {
-            m_routeData->eventOutField = m_eventOuts[i];
-            return;
-        }
 }
-
-void 
-InteractionDialog3::drawInterface(SDC dc)
-{
-    m_window.drawInterface(dc);
-}
-

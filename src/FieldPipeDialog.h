@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FIELD_PIPE_DIALOG_H
-#define _FIELD_PIPE_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 #include "MyString.h"
 
@@ -48,4 +44,3 @@ private:
     MyString                m_command;
 };
 
-#endif

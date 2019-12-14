@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFBOOL_H
-#define _SFBOOL_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
 
 class SFBool : public FieldValue {
 public:
@@ -32,27 +29,27 @@ public:
                         SFBool(void) { m_value = false; } // silly default
 
     virtual int         getType() const { return SFBOOL; }
-    virtual const char *getTypeName() const { return "SFBool"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFBool"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse) const;
+                                 bool avoidUse);
 
     virtual int         writeC(int filedes, const char* variableName, 
-                               int languageFlag) const;
-    virtual const char *getTypeC(int languageFlag) const;
-    virtual const char *getDefaultC(int languageFlag) const;
+                               int languageFlag);
+    virtual const char *getTypeC(int languageFlag);
+    virtual const char *getDefaultC(int languageFlag);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 0; }
+    virtual int         getNumbersPerType(void) { return 0; }
     virtual bool        checkInput(char *line);
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual FieldValue *copy() { return new SFBool(*this); }
 
-    bool                getValue() const 
+    bool                getValue() 
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -61,11 +58,11 @@ public:
                            return m_value; 
                            }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     // VRML 200x BooleanSequencer not implemented yet
-    virtual bool        supportAnimation(bool x3d) const { return false; }
-    virtual bool        supportInteraction(void) const { return true; }
+    virtual bool        supportAnimation(bool x3d) { return false; }
+    virtual bool        supportInteraction(void) { return true; }
 
     virtual bool        isText() { return false; }      
 
@@ -74,4 +71,3 @@ private:
     bool                m_value;
 };
 
-#endif // _SFBOOL_H

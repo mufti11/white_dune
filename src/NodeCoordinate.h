@@ -23,6 +23,7 @@
 #define _NODE_COORDINATE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -58,7 +59,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeCoordinate(*this); }
+    virtual Node   *copy() { return new NodeCoordinate(m_scene, m_proto); }
 
     void            drawHandles(void);
     Vec3f           getHandle(int handle, int *constraint, int *field);
@@ -68,7 +69,7 @@ public:
     void            setHandleLines(int handle, const Vec3f &v);
     void            setHandleFaces(int handle, const Vec3f &v);
     void            setHandleVertices(int handle, const Vec3f &v);
-//    virtual bool    isInvalidChildNode(void) { return true; }
+    virtual bool    isInvalidChildNode(void) { return true; }
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
     virtual int     getNumVertex(void) 
@@ -99,22 +100,9 @@ public:
     virtual void    toggleDoubleSided(void);
     virtual void    flipSide(void);
     
-    virtual NodeColor *getColorNode() { 
-                        if (hasParent())
-                            return getParent()->getColorNode();
-                        return NULL;     
-                    }
-    virtual NodeColorRGBA *getColorRGBANode() { 
-                        if (hasParent())
-                            return getParent()->getColorRGBANode();
-                        return NULL;     
-                    }
-
-
     fieldMacros(MFVec3f,  point, ProtoCoordinate)
 
     void subdivide(void);
-    MyMesh *getMesh(void);
     void draw(Node *node);
     NodeNurbsGroup *findNurbsGroup();
 protected:

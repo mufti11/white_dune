@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef ARRAY_DIALOG_H
-#define ARRAY_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
-
 #include "SFVec3f.h"
 #include "SFRotation.h"
 
@@ -52,5 +47,3 @@ private:
     SFVec3f             m_center;
     SFVec3f             m_scale;
 };
-
-#endif

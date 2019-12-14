@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _CHASER_NODE_H
-#define _CHASER_NODE_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ChaserProto : public Proto {
@@ -68,4 +60,3 @@ protected:
     FieldIndex m_value_changed_Field;
 };
 
-#endif

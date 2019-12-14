@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FONTINFO_H
-#define _FONTINFO_H
+#pragma once
 
-#ifndef _STRING_H
 #include "MyString.h"
-#endif
 
 class FontInfo {
 public:
@@ -34,5 +31,3 @@ public:
     float       kernX[256];
     float       kernY[256];
 };
-
-#endif // _FONTINFO_H

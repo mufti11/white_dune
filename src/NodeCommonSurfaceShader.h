@@ -23,6 +23,7 @@
 #define _NODE_COMMON_SURFACE_SHADER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -121,7 +122,8 @@ class NodeCommonSurfaceShader : public NodeGroup {
 public:
                     NodeCommonSurfaceShader(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeCommonSurfaceShader(*this); }
+    virtual Node *copy() { return new NodeCommonSurfaceShader(
+                                  m_scene, m_proto); }
 
     fieldMacros(SFFloat, alphaFactor, ProtoCommonSurfaceShader)
     fieldMacros(SFNode, alphaTexture, ProtoCommonSurfaceShader)

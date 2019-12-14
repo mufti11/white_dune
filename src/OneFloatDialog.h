@@ -19,14 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ONE_FLOAT_DIALOG_H
+#pragma once
+
 #define _ONE_FLOAT_DIALOG_H
-
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
+
 #ifndef FLT_MAX 
 # include <float.h>
 #endif
@@ -52,4 +50,3 @@ private:
     float               m_lowerlimit;
 };
 
-#endif

@@ -48,32 +48,35 @@ NodeNormalInterpolator::NodeNormalInterpolator(Scene *scene, Proto *def)
 }
 
 int
-NodeNormalInterpolator::getNumChannels() const
+NodeNormalInterpolator::getNumChannels()
 {
     if (m_keySize == 0) {
-        const MFFloat *key = (const MFFloat *) getField(
-               ((NodeNormalInterpolator *)this)->key_Field());
+        MFFloat *key = (MFFloat *)getField(
+                            ((NodeNormalInterpolator *)this)->key_Field());
         int numKeys = key->getSize();
-        const MFVec3f *keyValue = (const MFVec3f *) getField(
+        const MFVec3f *keyValue = (MFVec3f *) getField(
                ((NodeNormalInterpolator *)this)->keyValue_Field());
 
         if (numKeys != 0) {
-            return keyValue->getSize() / numKeys;
+            return ((MFVec3f *)keyValue)->getSize() / numKeys;
         }
     }
     return m_keySize;
 }
 
 FieldValue *
-NodeNormalInterpolator::createKey(void *value) const
+NodeNormalInterpolator::createKey(void *value)
 {
-    return new MFVec3f((float *)value, getNumChannels());
+    return new MFVec3f((float *)value, 
+                       ((NodeNormalInterpolator *)this)->getNumChannels());
 }
 
 FieldValue *
-NodeNormalInterpolator::createKeys(void *value, int numKeys) const
+NodeNormalInterpolator::createKeys(void *value, int numKeys)
 {
-    return new MFVec3f((float *)value, numKeys * getNumChannels());
+    return new MFVec3f((float *)value, 
+                       numKeys * 
+                       ((NodeNormalInterpolator *)this)->getNumChannels());
 }
 
 void 

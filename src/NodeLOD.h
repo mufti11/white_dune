@@ -23,6 +23,7 @@
 #define _NODE_LOD_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -60,7 +61,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeLOD(*this); }
+    virtual Node   *copy() { return new NodeLOD(m_scene, m_proto); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -80,7 +81,7 @@ public:
 
     void accountNodeToDrawIndex();
 
-    virtual int     getChildrenField(void) const { return level_Field(); }
+    virtual int     getChildrenField(void) { return level_Field(); }
 
     fieldMacros(MFNode,  level,            ProtoLOD)
     fieldMacros(SFVec3f, center,           ProtoLOD)

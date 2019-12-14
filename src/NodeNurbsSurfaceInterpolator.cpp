@@ -101,7 +101,7 @@ NodeNurbsSurfaceInterpolator::getControlPoints(void)
 }
 
 void
-NodeNurbsSurfaceInterpolator::setControlPoints(const MFVec3f *points)
+NodeNurbsSurfaceInterpolator::setControlPoints(MFVec3f *points)
 {
     NodeCoordinate *coord = (NodeCoordinate *)controlPoint()->getValue();
     if (coord != NULL)
@@ -109,7 +109,7 @@ NodeNurbsSurfaceInterpolator::setControlPoints(const MFVec3f *points)
 }
 
 void
-NodeNurbsSurfaceInterpolator::createControlPoints(const MFVec3f *points)
+NodeNurbsSurfaceInterpolator::createControlPoints(MFVec3f *points)
 {
     controlPoint(new SFNode(m_scene->createNode("Coordinate"))); 
     setControlPoints(points);

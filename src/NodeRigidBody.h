@@ -68,7 +68,7 @@ public:
                            { return "RigidBodyPhysics"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int         getX3dVersion(void) const { return 2; } 
-    virtual Node       *copy() const { return new NodeRigidBody(*this); }
+    virtual Node       *copy() { return new NodeRigidBody(m_scene, m_proto); }
 
     virtual void       preDraw();
     virtual void       draw(int pass); 

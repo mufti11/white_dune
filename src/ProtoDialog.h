@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PROTO_DIALOG_H
-#define _PROTO_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 #include "NodeScript.h"
 #include "Scene.h"
 #include "Array.h"
@@ -64,4 +61,3 @@ private:
     bool               m_canClick;
 };
 
-#endif

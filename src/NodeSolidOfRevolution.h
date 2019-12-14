@@ -23,6 +23,7 @@
 #define _NODE_SOLID_OF_REVOLUTION_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -58,7 +59,8 @@ public:
                     NodeSolidOfRevolution(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeSolidOfRevolution(*this); }
+    virtual Node *copy() { return new NodeSolidOfRevolution(
+                           m_scene, m_proto); }
 
     fieldMacros(SFFloat,    angle,        ProtoSolidOfRevolution)
     fieldMacros(SFBool,     ccw,          ProtoSolidOfRevolution)

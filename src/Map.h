@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MAP_H
-#define _MAP_H
+#pragma once
 
-#ifndef _LIST_H
 #include "List.h"
-#endif
 
 #include "config.h"
 
@@ -183,6 +180,3 @@ inline void             Map<K, D>::resize(int width) {
                             m_chains = newChains;
                             m_width = width;
                         }
-
-
-#endif // _MAP_H

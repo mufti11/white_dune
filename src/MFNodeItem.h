@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFNODE_ITEM_H
-#define _MFNODE_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 
@@ -30,5 +29,3 @@ public:
     void                     InsertSFValue(int) {}
     virtual FieldViewItem   *CreateSFItem();
 };
-
-#endif // _MFNODE_ITEM_H

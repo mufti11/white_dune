@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NEXT_COMMAND_H
-#define _NEXT_COMMAND_H
+#pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
 
 class Node;
 class FieldValue;
@@ -34,7 +31,5 @@ public:
 
     virtual int         getType() { return NEXT_COMMAND; }
     virtual void        execute(SceneView *sender = NULL) {}
-     virtual void       undo() {}
+    virtual void        undo() {}
 };
-
-#endif // _NEXT_COMMAND_H

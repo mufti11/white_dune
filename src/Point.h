@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _POINT_H
-#define _POINT_H
+#pragma once
 
 class Point {
 public:
@@ -37,4 +36,3 @@ public:
     int x, y;
 };
 
-#endif // _POINT_H

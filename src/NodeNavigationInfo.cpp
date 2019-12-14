@@ -138,7 +138,7 @@ ProtoNavigationInfo::create(Scene *scene)
 }
 
 int 
-ProtoNavigationInfo::translateField(int field) const
+ProtoNavigationInfo::translateField(int field)
 {
     bool x3d = m_scene->isX3d();
     if (x3d && (field == type))
@@ -166,7 +166,7 @@ int NodeNavigationInfo::getProfile(void) const
     if (!isDefault(type_Field()))
         if (type())
             for (int i = 0; i < type()->getSFSize(); i++) {        
-                const char* typeStr = type()->getValue(i);
+                const char* typeStr = type()->getValue(i)->getValue();
                 if (strcmp(typeStr, "ANY") == 0)
                     return PROFILE_INTERACTIVE;
                 if (strcmp(typeStr, "FLY") == 0)

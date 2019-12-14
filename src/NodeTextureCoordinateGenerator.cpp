@@ -52,7 +52,7 @@ NodeTextureCoordinateGenerator::NodeTextureCoordinateGenerator(Scene *scene, Pro
 {
 }
 
-NodeTextureCoordinateGenerator::NodeTextureCoordinateGenerator(const NodeTextureCoordinateGenerator &node)
+NodeTextureCoordinateGenerator::NodeTextureCoordinateGenerator(NodeTextureCoordinateGenerator &node)
   : Node(node)
 {
 }

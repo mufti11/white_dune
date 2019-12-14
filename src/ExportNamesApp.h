@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _EXPORT_NAMES_APP_H
-#define _EXPORT_NAMES_APP_H 1
+#pragma once
 
-#ifndef _DUNE_STRING_H
-# include "MyString.h"
-#endif
+#include "MyString.h"
 
 class ExportNamesApp {
 public:
@@ -58,5 +55,3 @@ protected:
     MyString            m_cSceneGraphName;
     MyString            m_cProcessEventsName;
 };
-
-#endif

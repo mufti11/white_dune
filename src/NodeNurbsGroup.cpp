@@ -45,7 +45,8 @@ ProtoNurbsGroup::ProtoNurbsGroup(Scene *scene)
     tessellationScale.set(
           addExposedField(SFFLOAT, "tessellationScale", new SFFloat(1.0f), 
                           new SFFloat(0.0f), new SFFloat(FLT_MAX)));
-    getField(children)->addToNodeType(PARAMETRIC_GEOMETRY_NODE);
+    if (children > -1)
+        getField(children)->addToNodeType(PARAMETRIC_GEOMETRY_NODE);
 
     addURLs(URL_X3D);
 }

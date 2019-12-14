@@ -54,7 +54,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() const { return new NodePolypoint2D(*this); }
+    virtual Node   *copy() { return new NodePolypoint2D(m_scene, m_proto); }
 
     virtual void    draw();
 

@@ -22,8 +22,7 @@
  * Kambi vrml game engine
  */
 
-#ifndef _KAMBI_COMMON_FUNCTIONS_H
-#define _KAMBI_COMMON_FUNCTIONS_H
+#pragma once
 
 #define kambiCommonFunctions() \
     virtual int writeProto(int filedes) \
@@ -36,7 +35,4 @@
     } \
     virtual bool isKambiNode(void) { return true; } \
     virtual int  getX3dVersion(void) const { return -1; }
-
-
-#endif 
 

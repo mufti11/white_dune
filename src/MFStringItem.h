@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFSTRING_ITEM_H
-#define _MFSTRING_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 
@@ -38,4 +37,3 @@ public:
     virtual void                RemoveSFValue(int index);
 };
 
-#endif // _MFSTRING_ITEM_H

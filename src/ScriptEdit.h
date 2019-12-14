@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ECMA_SCRIPT_EDIT_H
-#define _ECMA_SCRIPT_EDIT_H
+#pragma once
 
 #include "Scene.h"
 #include "Array.h"
@@ -220,5 +219,3 @@ private:
     NodeAudioClip   *m_audioClipNode;
 };
 
-
-#endif

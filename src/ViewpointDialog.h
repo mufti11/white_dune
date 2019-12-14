@@ -19,16 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _VIEWPOINT_DIALOG_H
-#define _VIEWPOINT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
+#include "swttypedef.h"
 
 class Scene;
 
-#include "swttypedef.h"
 
 class ViewpointDialog : public Dialog {
 public:
@@ -48,4 +45,3 @@ private:
     bool                m_validDist;
 };
 
-#endif

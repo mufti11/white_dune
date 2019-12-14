@@ -36,40 +36,41 @@ public:
                         SFImage(void); // silly default
 
     virtual int         getType() const { return SFIMAGE; }
-    virtual const char *getTypeName() const { return "SFImage"; }
+    virtual const char *getTypeName() { return "SFImage"; }
 
-    virtual bool        writeBrackets(void) const { return false; }
-    virtual int         writeData(int filedes, int i) const; 
+    virtual bool        writeBrackets(void) { return false; }
+    virtual int         writeData(int filedes, int i); 
 
-    virtual int         write(int filedes, int indent) const;
+    virtual int         write(int filedes, int indent);
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse) const;
+                                 bool avoidUse);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 1; }
+    virtual int         getNumbersPerType(void) { return 1; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual FieldValue *copy() { return new SFImage(*this); }
 
+    int                 getValue(long index) { return m_value[index]; }
     virtual void        setSFValue(int index, FieldValue *value);
 
-    int                 getWidth(void) const;
+    int                 getWidth(void);
     void                setWidth(int width);
-    int                 getHeight(void) const; 
+    int                 getHeight(void); 
     void                setHeight(int height); 
-    int                 getComponents(void) const; 
+    int                 getComponents(void); 
     void                setComponents(int components); 
-    const int          *getPixels(void) const; 
+    const int          *getPixels(void); 
     void                setPixel(int index, int pixel); 
-    int                 getNumPixels(void) const;
+    int                 getNumPixels(void);
 
 //    void                flip(int index);
 //    void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    bool                supportAnimation(bool x3d) const { return true; }
+    bool                supportAnimation(bool x3d) { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 protected:

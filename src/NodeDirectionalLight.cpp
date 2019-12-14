@@ -152,8 +152,6 @@ NodeDirectionalLight::getComponentName(void) const
 int         
 NodeDirectionalLight::getComponentLevel(void) const
 {
-    if (getParent() != m_scene->getRoot())
-        return 3;
     return -1;
 }
 

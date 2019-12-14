@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BLOCK_H
-#define _NODE_BLOCK_H
-
-#ifndef _NODE_H
+#pragma once
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "NodeGroup.h"
-
 #include "SFMFTypes.h"
 
 class ProtoBlock : public ProtoGroup {
@@ -54,9 +45,8 @@ class NodeBlock : public NodeGroup {
 public:
                     NodeBlock(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeBlock(*this); }
+    virtual Node *copy() { return new NodeBlock(m_scene, m_proto); }
 
     fieldMacros(MFString, nameSpaceName, ProtoBlock)
 };
 
-#endif

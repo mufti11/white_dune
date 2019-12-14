@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_BOUNDED_PHYSICS_MODEL_H
-#define _NODE_BOUNDED_PHYSICS_MODEL_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoBoundedPhysicsModel : public Proto {
@@ -58,10 +51,10 @@ public:
                            { return "ParticleSystems"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeBoundedPhysicsModel(*this); }
+    virtual Node       *copy() { return new NodeBoundedPhysicsModel(
+                                        m_scene, m_proto); }
 
     fieldMacros(SFBool, enabled,  ProtoBoundedPhysicsModel);
     fieldMacros(SFNode, geometry, ProtoBoundedPhysicsModel);
 };
 
-#endif

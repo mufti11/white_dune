@@ -55,7 +55,7 @@ NodeLabView::NodeLabView(Scene *scene, Proto *def)
 {
 }
 
-NodeLabView::NodeLabView(const NodeLabView &node)
+NodeLabView::NodeLabView(NodeLabView &node)
   : CoverNode(node)
 {
 }

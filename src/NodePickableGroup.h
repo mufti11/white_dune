@@ -23,6 +23,7 @@
 #define _NODE_PICKABLE_GROUP_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -55,7 +56,8 @@ public:
 
     virtual const char* getComponentName(void) const { return "Picking"; }
     virtual int         getComponentLevel(void) const { return 1; }
-    virtual Node   *copy() const { return new NodePickableGroup(*this); }
+    virtual Node       *copy() { return new NodePickableGroup(
+                                        m_scene, m_proto); }
 
     fieldMacros(MFString, objectType, ProtoPickableGroup);
     fieldMacros(SFBool,   pickable,   ProtoPickableGroup);

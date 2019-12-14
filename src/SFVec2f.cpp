@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
+#include "SFDouble.h"
 
 #include "SFVec2f.h"
 
@@ -41,7 +43,7 @@ SFVec2f::SFVec2f(void)
 }
 
 MyString    
-SFVec2f::getString(int index, int stride) const
+SFVec2f::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -67,21 +69,39 @@ SFVec2f::setValue(float v1, float v2)
 
 
 bool
-SFVec2f::equals(const FieldValue *value) const
+SFVec2f::equals(FieldValue *value)
 {
     return value->getType() == SFVEC2F
         && ((SFVec2f *) value)->getValue(0) == m_value[0]
         && ((SFVec2f *) value)->getValue(1) == m_value[1];
 }
 
+void
+SFVec2f::clamp(const FieldValue *min, const FieldValue *max)
+{
+    if (min) {
+        double fmin = ((SFDouble *) min)->getValue();
+        for (int i = 0; i < 2; i++) {
+            if (m_value[i] < fmin) m_value[i] = fmin;
+        }
+    }
+
+    if (max) {
+        double fmax = ((SFDouble *) max)->getValue();
+        for (int i = 0; i < 2; i++) {
+            if (m_value[i] > fmax) m_value[i] = fmax;
+        }
+    }
+}
+
 int 
-SFVec2f::writeData(int f, int i) const
+SFVec2f::writeData(int f, int i)
 {
     return mywritef(f, "%g %g", m_value[0], m_value[1]);
 }
 
 int
-SFVec2f::writeC(int filedes, const char* variableName, int languageFlag) const
+SFVec2f::writeC(int filedes, const char* variableName, int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -98,7 +118,7 @@ SFVec2f::writeC(int filedes, const char* variableName, int languageFlag) const
 }
 
 MyString
-SFVec2f::getEcmaScriptComment(MyString name, int flags) const
+SFVec2f::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

@@ -19,22 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TOOLBAR_WINDOW_H
-#define _TOOLBAR_WINDOW_H
+#pragma once
 
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
-
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-
-#ifndef _MAIN_WINDOW_H
-#include "MainWindow.h"
-#endif
-
 #include "swttypedef.h"
+
+class ToolbarWindow;
 
 class ToolbarWindow : public SceneView {
 public:
@@ -61,5 +52,3 @@ private:
     MyArray<STOOLBAR>   m_toolbars;
     MyArray<SBITMAP>    m_bitmaps;
 };
-
-#endif // _TOOLBAR_WINDOW_H

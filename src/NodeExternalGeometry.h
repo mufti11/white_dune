@@ -54,7 +54,8 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeExternalGeometry(*this); }
+    virtual Node   *copy() { return new NodeExternalGeometry(
+                                    m_scene, m_proto); }
 
     virtual void    load();
 

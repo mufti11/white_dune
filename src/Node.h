@@ -19,47 +19,30 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_H
-#define _NODE_H
+#pragma once
 
-#ifndef _STDIO_H
+class Node;
+class Scene;
+
+typedef bool (*DoWithNodeCallback)(Node *node, void *data);
+
 #include <stdio.h>
-#endif
-
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-
-#ifndef _LIST_H
 #include "List.h"
-#endif
-
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
-
-#ifndef _FIELD_INDEX_H
 #include "FieldIndex.h"
-#endif
-#ifndef _ELEMENT_H
 #include "Element.h"
-#endif
-
 #include "NodeFlags.h"
 #include "MeshFlags.h"
-#include "ac3dMaterialCallback.h"
 #include "NodeArray.h"
 #include "Stack.h"
 #include "Matrix.h"
 #include "Quaternion.h"
+//#include "Colored.h"
+#include "ac3dMaterialCallback.h"
 
 class FieldValue;
-class Node;
-class Scene;
 class NodePROTO;
 class Path;
 class NodeList;
@@ -73,6 +56,8 @@ class MFVec2f;
 class NodeHAnimHumanoid;
 class SFFloat; 
 class SFNode;
+
+#include "NodeDefinitions.h"
 
 class RouteSocket {
 public:
@@ -93,8 +78,8 @@ public:
     int         operator!=(const RouteSocket &t)
                     { return t.m_node != m_node || t.m_field != m_field; }
 
-    Node       *getNode(void) const { return m_node; }
-    int         getField(void) const { return m_field; }
+    Node       *getNode(void) { return m_node; }
+    int         getField(void) { return m_field; }
 protected:
     Node       *m_node;
     int         m_field;
@@ -126,10 +111,10 @@ public:
                     m_parentFlag = PARENT_NOT_TOUCHED;
                     }
 
-    int         operator==(const Parent &t)
+    int         operator==(Parent &t)
                     { return t.m_self == m_self; }
 
-    int         operator!=(const Parent &t)
+    int         operator!=(Parent &t)
                     { return t.m_self != m_self; }
 
     Node       *m_node;
@@ -150,416 +135,6 @@ enum Constraint {
     CONSTRAIN_ZX,
     CONSTRAIN_SPHERE
 };
-
-
-// X3D_NODE_TYPE
-enum NodeEnum {
-    VRML_ANCHOR,
-    VRML_APPEARANCE,
-    X3D_ARC_2D,
-    X3D_ARC_CLOSE_2D,
-    COVER_AR_SENSOR,
-    VRML_AUDIO_CLIP,
-    VRML_BACKGROUND,
-    X3D_BALL_JOINT,
-    X3DOM_BINARY_GEOMETRY,
-    VRML_BILLBOARD,
-    X3DOM_BLOCK,
-    KAMBI_BLEND_MODE,
-    X3D_BLENDED_VOLUME_STYLE,
-    X3D_BOOLEAN_FILTER,
-    X3D_BOOLEAN_TOGGLE,
-    X3D_BOOLEAN_TRIGGER,
-    X3D_BOOLEAN_SEQUENCER,
-    X3D_BOUNDARY_ENHANCEMENT_VOLUME_STYLE,
-    X3D_BOUNDED_PHYSICS_MODEL,
-    VRML_BOX,
-    X3D_CAD_ASSEMBLY,
-    X3D_CAD_FACE,
-    X3D_CAD_LAYER,
-    X3D_CAD_PART,
-    X3D_CARTOON_VOLUME_STYLE,
-    DUNE_CATT_EXPORT_REC, // Export container node for CATT 8 file format
-    DUNE_CATT_EXPORT_SRC, // Export container node for CATT 8 file format
-    X3D_CIRCLE_2D,
-    X3D_CLIP_PLANE,
-    X3D_COLLIDABLE_OFFSET,
-    X3D_COLLIDABLE_SHAPE,
-    VRML_COLLISION,
-    X3D_COLLISION_COLLECTION,
-    X3D_COLLISION_SENSOR,
-    X3D_COLLISION_SPACE,
-    VRML_COLOR,
-    X3D_COLOR_CHASER,
-    X3D_COLOR_DAMPER,
-    VRML_COLOR_INTERPOLATOR,
-    X3DOM_COLOR_MASK_MODE,
-    X3D_COLOR_RGBA,
-    KAMBI_COLOR_SET_INTERPOLATOR,
-    X3DOM_COMMON_SURFACE_SHADER,
-    X3D_COMPOSED_CUBE_MAP_TEXTURE,
-    X3D_COMPOSED_SHADER,
-    X3D_COMPOSED_TEXTURE_3D,
-    X3D_COMPOSED_VOLUME_STYLE,
-    VRML_CONE,
-    X3D_CONE_EMITTER,
-    X3D_CONTACT,
-    VRML_CONTOUR_2D,
-    X3D_CONTOUR_POLYLINE_2D,
-    VRML_COORDINATE,
-    X3D_COORDINATE_CHASER,
-    X3D_COORDINATE_DAMPER,
-    VRML_COORDINATE_DEFORMER,
-    X3D_COORDINATE_DOUBLE,
-    VRML_COORDINATE_INTERPOLATOR,
-    X3D_COORDINATE_INTERPOLATOR_2D,
-    COVER_COVER,
-    COVER_CUBE_TEXTURE,
-    KAMBI_CUBIC_BEZIER_2D_ORIENTATION_INTERPOLATOR,
-    KAMBI_CUBIC_BEZIER_POSITION_INTERPOLATOR,
-    DUNE_CURVE_ANIMATION,
-    VRML_CYLINDER,
-    VRML_CYLINDER_SENSOR,
-    X3DOM_DEPTH_MODE,
-    VRML_DIRECTIONAL_LIGHT,
-    X3DOM_DISH,
-    X3D_DIS_ENTITY_MANAGER,
-    X3D_DIS_ENTITY_TYPE_MAPPING,
-    X3D_DISK_2D,
-    X3DOM_DYNAMIC_LOD,
-    X3D_DOUBLE_AXIS_HINGE_JOINT,
-    X3D_EASE_IN_EASE_OUT,
-    KAMBI_EFFECT,
-    KAMBI_EFFECT_PART,
-    X3D_EDGE_ENHANCEMENT_VOLUME_STYLE,
-    VRML_ELEVATION_GRID,
-    X3DOM_ENVIRONMENT,
-    X3D_ESPDU_TRANSFORM,
-    X3D_EXPLOSION_EMITTER,
-    X3DOM_EXTERNAL_GEOMETRY,
-    VRML_EXTRUSION,
-    X3DOM_FIELD,
-    X3D_FILL_PROPERTIES,
-    X3D_FLOAT_VERTEX_ATTRIBUTE,
-    VRML_FOG,
-    X3D_FOG_COORDINATE,
-    VRML_FONT_STYLE,
-    X3D_FORCE_PHYSICS_MODEL,
-    X3D_GENERATED_CUBE_MAP_TEXTURE,
-    KAMBI_GENERATED_SHADOW_MAP,
-    VRML_GEO_COORDINATE,
-    VRML_GEO_ELEVATION_GRID,
-    VRML_GEO_LOCATION,
-    VRML_GEO_LOD,
-    X3D_GEO_METADATA,
-    VRML_GEO_ORIGIN,
-    VRML_GEO_POSITION_INTERPOLATOR,
-    X3D_GEO_PROXIMITY_SENSOR,
-    VRML_GEO_TOUCH_SENSOR,
-    X3D_GEO_TRANSFORM,
-    VRML_GEO_VIEWPOINT,
-    VRML_GROUP,
-    X3D_HANIM_DISPLACER,
-    X3D_HANIM_HUMANOID,
-    X3D_HANIM_JOINT,
-    X3D_HANIM_SEGMENT,
-    X3D_HANIM_SITE,
-    X3D_IMAGE_CUBE_MAP_TEXTURE,
-    X3DOM_IMAGE_GEOMETRY,
-    VRML_IMAGE_TEXTURE,
-    X3D_IMAGE_TEXTURE_3D,
-    X3DOM_IMAGE_TEXTURE_ATLAS,
-    VRML_INDEXED_FACE_SET,
-    VRML_INDEXED_LINE_SET,
-    X3D_INDEXED_QUAD_SET,
-    X3D_INDEXED_TRIANGLE_FAN_SET,
-    X3D_INDEXED_TRIANGLE_SET,
-    X3D_INDEXED_TRIANGLE_STRIP_SET,
-    VRML_INLINE,
-    VRML_INLINE_LOAD_CONTROL,
-    X3D_INTEGER_SEQUENCER,
-    X3D_INTEGER_TRIGGER,
-    X3D_ISO_SURFACE_VOLUME_DATA,
-    COVER_JOYSTICK_SENSOR,
-    KAMBI_KAMBI_APPEARANCE,
-    KAMBI_KAMBI_HEAD_LIGHT,
-    KAMBI_KAMBI_INLINE,
-    KAMBI_KAMBI_NAVIGATION_INFO,
-    KAMBI_KAMBI_OCTREE_PROPERTIES,
-    KAMBI_KAMBI_TRIANGULATION,
-    X3D_KEY_SENSOR,
-    COVER_LAB_VIEW,
-    X3D_LAYER,
-    X3D_LAYER_SET,
-    X3D_LAYOUT,
-    X3D_LAYOUT_GROUP,
-    X3D_LAYOUT_LAYER,
-    DUNE_LDRAW_DAT_EXPORT, // Export container node for ldraw.dat file format
-    X3D_LINE_PICK_SENSOR,
-    X3D_LINE_PROPERTIES,
-    X3D_LINE_SET,
-    X3D_LOAD_SENSOR,
-    X3D_LOCAL_FOG,
-    VRML_LOD,
-    VRML_MATERIAL,
-    X3D_MATRIX_3_VERTEX_ATTRIBUTE,
-    X3D_MATRIX_4_VERTEX_ATTRIBUTE,
-    KAMBI_MATRIX_TRANSFORM,
-    X3DOM_MESH,
-    X3D_METADATA_BOOLEAN,
-    X3D_METADATA_DOUBLE,
-    X3D_METADATA_FLOAT,
-    X3D_METADATA_INTEGER,
-    X3D_METADATA_SET,
-    X3D_METADATA_STRING,
-    X3D_MOTOR_JOINT,
-    VRML_MOVIE_TEXTURE,
-    X3DOM_MPR_VOLUME_STYLE,
-    KAMBI_MULTI_GENERATED_TEXTURE_COORDINATE,
-    X3DOM_MULTI_PART,
-    X3D_MULTI_TEXTURE,
-    X3D_MULTI_TEXTURE_COORDINATE,
-    X3D_MULTI_TEXTURE_TRANSFORM,
-    VRML_NAVIGATION_INFO,
-    VRML_NORMAL,
-    VRML_NORMAL_INTERPOLATOR,
-    X3DOM_NOZZLE,
-    VRML_NURBS_CURVE,
-    VRML_NURBS_CURVE_2D,
-    VRML_NURBS_GROUP,
-    X3D_NURBS_ORIENTATION_INTERPOLATOR,
-    VRML_NURBS_POSITION_INTERPOLATOR,
-    X3D_NURBS_SET,
-    VRML_NURBS_SURFACE,
-    X3D_NURBS_SURFACE_INTERPOLATOR,
-    X3D_NURBS_SWEPT_SURFACE,
-    X3D_NURBS_SWUNG_SURFACE,
-    X3D_NURBS_TEXTURE_COORDINATE,
-    VRML_NURBS_TEXTURE_SURFACE,
-    X3D_NURBS_TRIMMED_SURFACE,
-    X3D_OPACITY_MAP_VOLUME_STYLE,
-    X3D_ORIENTATION_CHASER,
-    X3D_ORIENTATION_DAMPER,
-    VRML_ORIENTATION_INTERPOLATOR,
-    X3D_ORTHO_VIEWPOINT,
-    X3D_PACKAGED_SHADER,
-    X3DOM_PARAM,
-    X3DOM_PARTICLE_SET,
-    X3D_PARTICLE_SYSTEM,
-    X3D_PICKABLE_GROUP,
-    VRML_PIXEL_TEXTURE,
-    X3D_PIXEL_TEXTURE_3D,
-    X3DOM_PLANE,
-    VRML_PLANE_SENSOR,
-    X3D_POINT_EMITTER,
-    VRML_POINT_LIGHT,
-    X3D_POINT_PICK_SENSOR,
-    VRML_POINT_SET,
-    VRML_POLYLINE_2D,
-    X3D_POLYLINE_EMITTER,
-    X3D_POLYPOINT_2D,
-    X3DOM_POP_GEOMETRY,
-    X3DOM_POP_GEOMETRY_LEVEL,
-    X3D_POSITION_CHASER_2D,
-    X3D_POSITION_CHASER,
-    X3D_POSITION_DAMPER_2D,
-    X3D_POSITION_DAMPER,
-    VRML_POSITION_INTERPOLATOR,
-    X3D_POSITION_INTERPOLATOR_2D,
-    X3D_PRIMITIVE_PICK_SENSOR,
-    X3D_PROGRAM_SHADER,
-    KAMBI_PROJECTED_TEXTURE_COORDINATE,
-    X3D_PROJECTION_VOLUME_STYLE,
-    VRML_PROXIMITY_SENSOR,
-    X3DOM_PYRAMID,
-    X3D_QUAD_SET,
-    X3DOM_RADAR_VOLUME_STYLE,
-    X3D_RECEIVER_PDU,
-    X3D_RECTANGLE_2D,
-    X3DOM_RECTANGULAR_TORUS,
-    X3DOM_REFINEMENT_TEXTURE,
-    X3DOM_REMOTE_SELECTION_GROUP,
-    KAMBI_RENDERED_TEXTURE,
-    X3D_RIGID_BODY,
-    X3D_RIGID_BODY_COLLECTION,
-    X3D_SCALAR_CHASER,
-    X3D_SCALAR_DAMPER,
-    VRML_SCALAR_INTERPOLATOR,
-    KAMBI_SCREEN_EFFECT,
-    X3D_SCREEN_FONT_STYLE,
-    X3D_SCREEN_GROUP,
-    VRML_SCRIPT,
-    X3D_SEGMENTED_VOLUME_DATA,
-    X3D_SHADED_VOLUME_STYLE,
-    X3D_SHADER_PART,
-    X3D_SHADER_PROGRAM,
-    KAMBI_SHADER_TEXTURE,
-    VRML_SHAPE,
-    X3D_SIGNAL_PDU,
-    X3D_SINGLE_AXIS_HINGE_JOINT,
-    X3D_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE,
-    COVER_SKY,
-    X3D_SLIDER_JOINT,
-    X3DOM_SLOPED_CYLINDER,
-    X3DOM_SNOUT,
-    X3DOM_SOLID_OF_REVOLUTION,
-    VRML_SOUND,
-    COVER_SPACE_SENSOR,
-    VRML_SPHERE,
-    X3DOM_SPHERE_SEGMENT,
-    VRML_SPHERE_SENSOR,
-    X3D_SPLINE_POSITION_INTERPOLATOR,
-    X3D_SPLINE_POSITION_INTERPOLATOR_2D,
-    X3D_SPLINE_SCALAR_INTERPOLATOR,
-    VRML_SPOT_LIGHT,
-    X3D_SQUAD_ORIENTATION_INTERPOLATOR,
-    X3D_STATIC_GROUP,
-    X3DOM_STIPPLE_VOLUME_STYLE,
-    X3D_STRING_SENSOR,
-    COVER_STEERING_WHEEL,
-    DUNE_SUPER_ELLIPSOID,
-    DUNE_SUPER_EXTRUSION,
-    DUNE_SUPER_REVOLVER,
-    DUNE_SUPER_SHAPE,
-    X3D_SURFACE_EMITTER,
-    X3DOM_SURFACE_SHADER_TEXTURE,
-    VRML_SWITCH,
-    KAMBI_TEAPOT,
-    X3D_TEX_COORD_CHASER_2D,
-    X3D_TEX_COORD_DAMPER_2D,
-    VRML_TEXT,
-    KAMBI_TEXT_3D,
-    X3D_TEXTURE_BACKGROUND,
-    VRML_TEXTURE_COORDINATE,
-    X3D_TEXTURE_COORDINATE_3D,
-    X3D_TEXTURE_COORDINATE_4D,
-    X3D_TEXTURE_COORDINATE_GENERATOR,
-    X3D_TEXTURE_PROPERTIES,
-    VRML_TEXTURE_TRANSFORM,
-    X3D_TEXTURE_TRANSFORM_3D,
-    X3D_TEXTURE_TRANSFORM_MATRIX_3D,
-    VRML_TIME_SENSOR,
-    X3D_TIME_TRIGGER,
-    X3D_TONE_MAPPED_VOLUME_STYLE,
-    X3DOM_TORUS,
-    VRML_TOUCH_SENSOR,
-    VRML_TRANSFORM,
-    X3D_TRANSFORM_SENSOR,
-    X3D_TRANSMITTER_PDU,
-    X3D_TRIANGLE_FAN_SET,
-    X3D_TRIANGLE_SET,
-    X3D_TRIANGLE_SET_2D,
-    X3D_TRIANGLE_STRIP_SET,
-    VRML_TRIMMED_SURFACE,
-    COVER_TUI_BUTTON,
-    COVER_TUI_COMBO_BOX,
-    COVER_TUI_FLOAT_SLIDER,
-    COVER_TUI_FRAME,
-    COVER_TUI_LABEL,
-    COVER_TUI_LIST_BOX,
-    COVER_TUI_MAP,
-    COVER_TUI_PROGRESS_BAR,
-    COVER_TUI_SLIDER,
-    COVER_TUI_SPLITTER,
-    COVER_TUI_TAB,
-    COVER_TUI_TAB_FOLDER,
-    COVER_TUI_TOGGLE_BUTTON,
-    X3D_TWO_SIDED_MATERIAL,
-    X3DOM_UNIFORM,
-    X3D_UNIVERSAL_JOINT,
-    COVER_VEHICLE,
-    KAMBI_VECTOR_INTERPOLATOR,
-    X3DOM_VIEWFRUSTUM,
-    VRML_VIEWPOINT,
-    X3D_VIEWPOINT_GROUP,
-    X3D_VIEWPORT,
-    COVER_VIRTUAL_ACOUSTICS,
-    COVER_VIRTUAL_SOUND_SOURCE,
-    VRML_VISIBILITY_SENSOR,
-    X3D_VOLUME_DATA,
-    X3D_VOLUME_EMITTER,
-    X3D_VOLUME_PICK_SENSOR,
-    DUNE_VRML_CUT,
-    DUNE_VRML_SCENE,
-    COVER_WAVE,
-    X3D_WIND_PHYSICS_MODEL,
-    DUNE_WONDERLAND_IMPORT_JAVA,
-    VRML_WORLD_INFO,
-
-    // fake nodes
-    VRML_COMMENT,
-    X3D_EXPORT,
-    X3D_IMPORT,
-
-    // the following are node "classes", used to validate the
-    // scene graph hierarchy
-
-    ANY_NODE,
-    AUDIO_CLIP_NODE,
-    BODY_COLLIDABLE_NODE,
-    BODY_COLLISION_SPACE_NODE,
-    BOUNDED_OBJECT_NODE,
-    COMPOSABLE_VOLUME_RENDER_STYLE_NODE,
-    COORDINATE_NODE,
-    FONT_STYLE_NODE,
-    HANIM_CHILD_NODE,
-    INLINE_NODE,
-    INTERPOLATOR_NODE,
-    MATERIAL_NODE,
-    METADATA_NODE,
-    MOVIE_TEXTURE_NODE,
-    NURBS_CONTROL_CURVE_NODE,
-    NURBS_TEXTURE_COORDINATE_NODE,
-    LAYER_NODE,
-    LIGHT_NODE,
-    LINE_SET_NODE,
-    LOD_NODE,
-    PARAMETRIC_GEOMETRY_NODE,
-    PARTICLE_EMITTER_NODE,
-    PARTICLE_PHYSICS_MODEL_NODE,
-    PRODUCT_STRUCTURE_CHILD_NODE,
-    PRIMITIVE_GEOMETRY_NODE,
-    RIGID_JOINT_NODE,
-    ROOT_NODE, // still a dummy
-    SHAPE_NODE,
-    SHADER_NODE,
-    TEXTURE_3D_NODE,
-    VERTEX_ATTRIBUTE_NODE,
-    VIEWPOINT_NODE,
-    VIEWPOINT_GROUP_NODE,
-    VOLUME_DATA_NODE,
-
-    // combined types
-    AUDIO_CLIP_OR_MOVIE_TEXTURE_NODE,
-    BODY_COLLIDABLE_OR_BODY_COLLISION_SPACE_NODE,
-    VOLUME_RENDER_STYLE_NODE,
-    GENERATED_TEXTURE_COORDINATE_NODE,
-    NURBS_TEXTURE_COORDINATE_OR_TEXTURE_COORDINATE_NODE,
-    PRIMITIVE_GEOMETRY_OR_MASS_DENSITY_MODEL_NODE,
-    SHAPE_OR_INLINE_NODE,
-    SHAPE_OR_LOD_NODE,
-    SPOTLIGHT_OR_DIRECTIONALLIGHT_OR_VIEWPOINT_NODE,
-    TEXTURE_OR_TEXTURE_3D_NODE,
-    VIEWPOINT_OR_VIEWPOINT_GROUP_NODE,
-    NURBS_CURVE_2D_OR_CONTOUR_POLYLINE_2D_NODE,
-
-    // the nodeclass of the following types can be bitwise OR'ed to any node
-    NOT_SELF_NODE           = 1 << 19,
-    SENSOR_NODE             = 1 << 20,
-    TEXTURE_COORDINATE_NODE = 1 << 21,
-    TEXTURE_TRANSFORM_NODE  = 1 << 22,
-    TEXTURE_NODE            = 1 << 23,
-    TEXTURE_2D_NODE         = 1 << 24,
-    GEOMETRY_NODE           = 1 << 25,
-    COLOR_NODE              = 1 << 26,
-    CHILD_NODE              = 1 << 27,
-    GROUPING_NODE           = 1 << 28,
-    URL_NODE                = 1 << 29,
-    PROTO_NODE              = 1 << 30 
-    // do not use bit 31 (sign bit)
-};
-
-#define LAST_NODE VRML_COMMENT
 
 enum {
     PROFILE_CORE,
@@ -599,14 +174,14 @@ class NodeCoordinate;
 class NodeData {
 public:
                       NodeData(Scene *scene, Proto *proto);
-                      NodeData(const Node &node);
+                      NodeData(Node node);
     virtual          ~NodeData();
 
     void              initIdentifier(void);
 
     void              delete_this(void);
     bool              isClassType(int type) { return type >= ANY_NODE; }
-    bool              matchNodeClass(int childType) const;
+    bool              matchNodeClass(int childType);
 
     virtual int       writeProto(int filedes);
     int               writeProto(int f, const char *urn, 
@@ -626,32 +201,26 @@ public:
     virtual void      handleAc3dMaterial(ac3dMaterialCallback callback, 
                                          Scene* scene);
 
-    virtual int       writeOff(int filedes);
-
     virtual int       writeRib(int filedes, int indent);
 
     virtual bool      canWriteLdrawDat();
     virtual int       writeLdrawDat(int filedes, int indent);
 
-    Scene              *getScene() const { return m_scene; }
-    virtual FieldValue *getField(int index) const;
+    Scene              *getScene() { return m_scene; }
+
     virtual void        setField(int index, FieldValue *value, 
                                  int containerField = -1);
+    virtual FieldValue *getField(int index);
 
-    virtual FieldValue *getField(FieldIndex index) const
-                            { return getField((int) index); }
-    virtual void        setField(FieldIndex index, FieldValue *value)
-                            { setField((int) index, value); }
-
-    virtual FieldValue *getUntranslatedField(int index) const;
+    virtual FieldValue *getUntranslatedField(int index);
 
     const char       *getTreeLabel(void) { return m_treeLabel; }
-    const MyString   &getName(void);
-    const MyString   &getNameOrNewName(void);
+    MyString         &getName(void);
+    MyString         &getNameOrNewName(void);
     // setName should only be called from Scene::def
     void              setName(const char *name);
     bool              hasName(void);
-    bool              needsDEF() const;
+    bool              needsDEF();
 
     virtual void      addToConvertedNodes(int writeFlags) 
                           {} /// add to "m_convertedNodes"
@@ -667,17 +236,21 @@ public:
     void              setConvertedInCurveAnimaton(void)
                           { m_isConvertedInCurveAnimaton = true; }      
 
-    void              getGraphPosition(float *x, float *y) const
+    void              getGraphPosition(float *x, float *y)
                           { *x = m_graphX; *y = m_graphY; }
     void              setGraphPosition(float x, float y)
                           { m_graphX = x; m_graphY = y; }
 
-    void              getGraphSize(int *width, int *height) const
+    void              getGraphSize(int *width, int *height)
                           { *width = m_graphWidth; *height = m_graphHeight; }
     void              setGraphSize(int width, int height)
                           { m_graphWidth = width; m_graphHeight = height; }
 
-    void              ref() { m_refs++; }
+    void              ref() 
+                          { 
+                          m_refs++;
+                          m_needRef = false; 
+                          }
     void              unref() 
                           { 
                           if (--m_refs == 0) 
@@ -696,13 +269,13 @@ public:
 
     int               getMaskedNodeClass(void);
 
-    virtual Node     *copy() const = 0;
-    void              copyData(const NodeData &node);
+    virtual Node     *copy() { return NULL; }
+    void              copyData(NodeData &node);
 
-    int               findChild(Node *child, int field) const;
+    int               findChild(Node *child, int field);
 
-    int               lookupEventIn(const char *name, bool x3d) const;
-    int               lookupEventOut(const char *name, bool x3d) const;
+    int               lookupEventIn(const char *name, bool x3d);
+    int               lookupEventOut(const char *name, bool x3d);
 
     Proto            *getProto() const { return m_proto; }
     void              setProto(Proto *proto) { m_proto = proto; }
@@ -712,8 +285,8 @@ public:
     virtual void      addOutput(int eventOut, Node *dst, int eventIn);
     virtual void      removeInput(int eventIn, Node *src, int eventOut);
     virtual void      removeOutput(int eventOut, Node *dst, int eventIn);
-    const SocketList &getInput(int i) const { return m_inputs[i]; }
-    const SocketList &getOutput(int i) const { return m_outputs[i]; }
+    SocketList        &getInput(int i) { return m_inputs[i]; }
+    SocketList        &getOutput(int i) { return m_outputs[i]; }
 
     virtual void      update();
     virtual void      reInit();
@@ -728,8 +301,8 @@ public:
 
     virtual bool      maySetDefault(void) { return true; }
 
-    int               getNumParents() const { return m_parents.size(); }
-    void              copyParentList(const Node &node);
+    int               getNumParents() { return m_parents.size(); }
+    void              copyParentList(Node &node);
 
     bool              checkValid(Element *field);
     bool              validChild(int field, Node *child);
@@ -741,14 +314,14 @@ public:
                                      bool checkValid = false);
     int               findChildType(int childType);
 
-    bool              getFlag(int flag) const 
+    bool              getFlag(int flag) 
                           { return (m_flags & (1 << flag)) != 0; }
     void              setFlag(int flag) { m_flags |= (1 << flag); }
     void              setFlagRec(int flag);
     void              clearFlag(int flag) { m_flags &= ~(1 << flag); }
     void              clearFlagRec(int flag);
 
-    bool              isCollapsed() const 
+    bool              isCollapsed() 
                           { return getFlag(NODE_FLAG_COLLAPSED); }
 
     virtual void      transform() {}
@@ -930,7 +503,7 @@ public:
     virtual bool      isNodeWithAdditionalEvents(void) 
                           { return isProgrammableShaderObject(); }
 
-    virtual int       getX3dVersion(void) const = 0;
+    virtual int       getX3dVersion(void) { return -1; }
     virtual bool      isCoverNode(void) { return false; }
     virtual bool      hasCoverFields(void) { return false; }
     bool              hasCoverDefault() { return hasDefault(FF_COVER_ONLY); }
@@ -948,12 +521,12 @@ public:
 
     virtual bool      isFlat(void) { return false; }
 
-    virtual NodeCoordinate *getCoordinateNode() { return NULL; }
+    virtual NodeCoordinate *getCoordinateNode(void) { return NULL; }
 
     virtual NodeColor *getColorNode() { return NULL; }
     virtual bool      hasColor(void) { return false; }
     virtual bool      hasColorRGBA(void) { return false; }
-    virtual NodeColorRGBA *getColorRGBANode() { return NULL; }
+    virtual NodeColorRGBA *getColorRGBANode(void) { return NULL; }
 
     virtual bool      hasX3domOnOutputChange(void) { return false; }
     virtual bool      hasX3domOnclick(void) { return false; }
@@ -970,14 +543,14 @@ public:
     void              removeChildren(void);
     bool              isDefault(int field) const;
     bool              isDefaultAngle(int field) const;
-    bool              hasOutput(const char* routename) const;
+    bool              hasOutput(const char* routename);
     bool              hasOutputs(void);
     bool              hasOutputsOrIs(void);
-    bool              hasInput(const char* routename) const;
+    bool              hasInput(const char* routename);
     bool              hasInputs(void);
     bool              hasInputsOrIs(void);
     bool              hasInputsIs(void);
-    int               writeRoutes(int f, int indent) const;
+    int               writeRoutes(int f, int indent);
     void              removeRoutes(void);
 
     void              generateTreeLabel(void);
@@ -990,7 +563,7 @@ public:
 
     virtual void      setupFinished(void) {}
 
-    virtual int       getChildrenField(void) const { return -1; }
+    virtual int       getChildrenField(void) { return -1; }
 
     virtual const char *getVariableName(void);
     void              setVariableName(const char *name);
@@ -1004,7 +577,7 @@ public:
 
     virtual NodeList *getLoadedNodes(void) { return NULL; }
 
-    virtual int       repairField(int field) const;
+    virtual int       repairField(int field);
     virtual int       translateField(int field) const;
 
     int               writeCVariable(int f, int languageFlag);
@@ -1018,10 +591,10 @@ public:
     void              setId(long id);
 
     // for Node*Viewpoint
-    virtual Vec3d     getPosition() const { return Vec3d(); }
-    virtual Quaternion getOrientation() const { return Quaternion(); } 
-    virtual void      setPosition(const Vec3d &pos) {}
-    virtual void      setOrientation(const Quaternion &quat)  {}
+    virtual Vec3d     getPosition() { return Vec3d(); }
+    virtual Quaternion getOrientation() { return Quaternion(); } 
+    virtual void      setPosition(Vec3d pos) {}
+    virtual void      setOrientation(Quaternion quat)  {}
     virtual SFFloat  *fov() { return NULL; };
     virtual void      getMatrix(float* matrix) {}
     void              apply(bool useStereo = false) {}
@@ -1119,6 +692,7 @@ protected:
     MyString          m_variableName;
     NodeArray         m_convertedNodes;
     int               m_refs;
+    bool              m_needRef;
     int               m_flags;
     Proto            *m_proto;
     FieldValue      **m_fields;
@@ -1148,7 +722,6 @@ protected:
 };
    
 
-typedef bool (*DoWithNodeCallback)(Node *node, void *data);
 typedef bool (*DoWithSimilarBranchCallback)(Node *node, Node *similarNode, 
                                             void *data);
 typedef void (*DoWithAllElementsCallback)(Element *element, void *data);
@@ -1157,14 +730,14 @@ class Node : public NodeData
 {
 public:
                       Node(Scene *scene, Proto *proto);
-                      Node(const Node &node);
-                      Node(const Node &node, Proto *proto);
+                      Node(Node &node);
+                      Node(Node node, Proto *proto);
 
     virtual          ~Node();
 
     void              addParent(Node *parent, int index);
     void              removeParent(void);
-    bool              hasParent(void) const
+    bool              hasParent(void)
                           { 
 #ifdef HAVE_NULL_COMPARE
                           if (this == NULL)
@@ -1176,35 +749,38 @@ public:
                               return false;
                           if (m_geometricParentIndex > getNumParents())
                               return false;
-                          return (getParent() != NULL);
+                          return ((Parent *)this)->m_node != NULL;
                           }
-    Node             *getParent(void) const 
+    Node             *getParent(void) 
                           { 
                           if (m_parents.size() == 0)
                               return NULL;
                           return getParent(m_geometricParentIndex);
                           }
-    bool              hasParentOrProtoParent(void) const
+    bool              hasParentOrProtoParent(void)
                           { return (getParentOrProtoParent() != NULL); }
-    Node             *getParentOrProtoParent(void) const;
-    int               getParentField(void) const 
+    Node             *getParentOrProtoParent(void);
+    int               getParentField(void)
                           { return  getParentField(m_geometricParentIndex); }
 
-    Node             *getParent(int index) const 
+    Node             *getParent(int index) 
                           { 
-                          return index == -1 ? NULL : m_parents[index].m_node; 
+                          return index == -1 ? NULL : 
+                                 ((Parent)this->m_parents[index]).m_node; 
                           }
-    int               getParentField(int index) const 
+    int               getParentField(int index)
                           { 
                           return index == -1 ? -1 : m_parents[index].m_field;
                           }
 
-    int               getParentFieldOrProtoParentField(void) const;
-    Node             *searchParent(int nodeType) const; 
-    Node             *searchParentField(int parentfield) const; 
-    int               getParentIndex(void) const;
-    FieldValue       *getParentFieldValue(void) const;
+    int               getParentFieldOrProtoParentField(void);
+    Node             *searchParent(int nodeType); 
+    Node             *searchParentField(int parentfield); 
+    int               getParentIndex(void);
+    FieldValue       *getParentFieldValue(void);
     NodeList          getParents(void);
+
+    virtual FieldValue *getField(int index) const;
 
     bool              hasBranchInputs(void);
 
@@ -1212,10 +788,10 @@ public:
     virtual int       writeXml(int filedes, int indent, 
                                int containerField = -1, bool avoidUse = false);
 
-    bool              isInScene(Scene* scene) const;
+    bool              isInScene(Scene* scene);
     virtual void      addFieldNodeList(int index, NodeList *value,
                                       int containerField = -1);
-    bool              hasAncestor(Node *node) const;
+    bool              hasAncestor(Node *node);
     virtual int       getAnimatedNodeField(int field) { return -1; }
     virtual bool      supportAnimation(void);
     virtual bool      supportCurveAnimation(void) { return false; }
@@ -1267,7 +843,7 @@ public:
     void              doWithAllElements(DoWithAllElementsCallback callback, 
                                         void *data);
 
-    parentFlag        getParentFlag(int index) const 
+    parentFlag        getParentFlag(int index) 
                           { return m_parents.get(index).m_parentFlag; }
 
     void              setParentFlag(int index, parentFlag flag) 
@@ -1332,9 +908,9 @@ public:
 
     virtual bool      canWriteCattGeo();
     virtual int       writeCattGeo(int filedes, int indent);
-    int               getGeometricParentIndex(void) const
+    int               getGeometricParentIndex(void)
                           { return m_geometricParentIndex; }
-    Path             *getPath() const;
+    Path             *getPath();
     bool              isDeepInsideProto(void);
 
     virtual char     *buildExportMaterialName(const char *name)
@@ -1348,6 +924,18 @@ public:
     void              setProtoParent(Node *n) { m_protoParent = n; }
     void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
+    bool              hasNeedRef(void) { return m_needRef; }
+    void              setNeedRef(void) { m_needRef = true; }
+    void              unsetNeedRef(void) { m_needRef = false; }
+
+    // limit USE to 0xffff links to find out invalid nodes
+    bool              isValid(void) 
+                          { 
+                          if (m_refs < 0/* || m_refs > 0xffff*/) 
+                              return false;
+                          return true;
+                          }
+
 protected:
     int               m_geometricParentIndex;
     NodeList         *m_commentsList;
@@ -1357,4 +945,3 @@ protected:
     bool              m_isUse;
 };
 
-#endif // _NODE_H

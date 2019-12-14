@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _ICON_SIZE_H
-#define _ICON_SIZE_H
+#pragma once
 
 #include "config.h"
 
@@ -37,4 +36,3 @@
 #define ICON_SIZE_X (16 * ICON_SCALE)
 #define ICON_SIZE_Y (15 * ICON_SCALE)
 
-#endif

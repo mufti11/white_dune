@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef SPHERE2NURBS_DIALOG_H
-#define SPHERE2NURBS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class Sphere2NurbsDialog : public Dialog 
@@ -52,4 +48,3 @@ private:
     int                 m_vDegree;
 };
 
-#endif

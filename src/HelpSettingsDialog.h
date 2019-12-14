@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _HELP_SETTINGS_DIALOG_H
-#define _HELP_SETTINGS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
 
 class HelpSettingsDialog : public Dialog
 {
@@ -46,5 +40,3 @@ protected:
     void                OnBrowseX3dDirectory();
     void                OnSetDefaults();
 };
-
-#endif // _HELP_SETTINGS_DIALOG_H

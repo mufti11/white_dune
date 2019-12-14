@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _RENDER_APP_H
-#define _RENDER_APP_H
+#pragma once
 
 #include "swttypedef.h"
 #include "MyString.h"
@@ -69,4 +68,3 @@ private:
     bool                m_renderNicerSlower;
 };
 
-#endif

@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _URL_H
-#define _URL_H
+#pragma once
 
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
 
 class URL
 {
@@ -85,4 +82,3 @@ bool mkdir_parents4file(const char *path);
 void myperror(const char *string);
 void toPosixPath(char *target, char *source, unsigned int len);
 
-#endif // _URL_H

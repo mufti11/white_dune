@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _UPLOAD_SETTINGS_DIALOG_H
-#define _UPLOAD_SETTINGS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
 
 class UploadSettingsDialog : public Dialog
 {
@@ -39,4 +33,3 @@ public:
     virtual void        SaveData();
 };
 
-#endif // _PREVIEW_SETTINGS_DIALOG_H

@@ -19,11 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _INTERACTION_DIALOG_H
-#define _INTERACTION_DIALOG_H
+#pragma once
 
 #include "Scene.h"
-#include "CheckBoxWindow.h"
+#include "Dialog.h"
 
 class InteractionRouteData {
 public:
@@ -56,13 +55,9 @@ protected:
     void                SaveData();
     virtual bool        Validate();
     void                OnCommand(void *id);
-    void                drawInterface(SDC dc);
     
 protected:
-    CheckBoxWindow        m_window;
     Node                 *m_interactionNode;
     InteractionRouteData *m_routeData;
     MyArray<int>          m_eventIns;        
 };
-
-#endif

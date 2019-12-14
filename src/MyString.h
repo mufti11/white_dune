@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _DUNE_STRING_H
-#define _DUNE_STRING_H
+#pragma once
 
 #include <stdio.h>
 #ifndef _STRING_H
@@ -99,5 +98,3 @@ protected:
 };
 
 extern int myhash(MyString key);
-
-#endif // _DUNE_STRING_H

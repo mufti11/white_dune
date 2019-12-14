@@ -23,6 +23,7 @@
 #define _NODE_TEX_COORD_CHASER_2D_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -52,7 +53,7 @@ class NodeTexCoordChaser2D : public ChaserNode {
 public:
                     NodeTexCoordChaser2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeTexCoordChaser2D(*this); }
+    virtual Node *copy() { return new NodeTexCoordChaser2D(m_scene, m_proto); }
 
     void            dynamics(MFVec2f *add, MFVec2f *dest, MFVec2f *val, 
                              float mult);

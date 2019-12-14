@@ -19,36 +19,24 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MAIN_WINDOW_H
-#define _MAIN_WINDOW_H
+#pragma once
 
-#ifndef _PANED_WINDOW_H
-#include "PanedWindow.h"
-#endif
 
-#ifndef _SCENE_H
 #include "Scene.h"
-#endif
-
-#ifdef HAVE_SAND
-#include "nebula/ExportNebula.h"
-#endif
-
-class SceneView;
-class ChannelView;
-class ToolbarWindow;
-class StatusBar;
-class ScriptEdit;
-class ObjectEdit;
-class ImageTextureEdit;
-class PixelTextureEdit;
-class MovieTextureEdit;
-class AudioClipEdit;
-class NodeShape;
-
+#include "PanedWindow.h"
+#include "SceneView.h"
+#include "ChannelView.h"
+#include "ToolbarWindow.h"
+#include "StatusBar.h"
+#include "ScriptEdit.h"
+#include "NodeShape.h"
 #include "swttypedef.h"
 #include "ColorConversion.h"
 #include "NodeNurbsCurve.h"
+
+#ifdef HAVE_SAND
+# include "nebula/ExportNebula.h"
+#endif
 
 enum SiblingCommands {
      MOVE_SIBLING_UP,
@@ -198,7 +186,7 @@ public:
     void                UpdateStaticMenuCoverNodes(void);
     void                UpdateStaticMenuKambiNodes(void);
     void                UpdateStaticMenuX3domNodes(void);
-    void                UpdateObjectEdit(const Path *selection);
+    void                UpdateObjectEdit(Path *selection);
     void                OnScriptEditorReadyCallback(void);
     void                OnTextEditorReadyCallback(void);
     void                OnImageTextureEditorReadyCallback(void);
@@ -566,5 +554,3 @@ protected:
     ExportNebula        m_nebulaExporter;
 #endif
 };
-
-#endif /* _MAIN_WINDOW_H */

@@ -71,9 +71,9 @@ protected:
 public:
     virtual int     getProfile(void) const { return PROFILE_CAD_INTERCHANGE; }
     virtual const char* getComponentName(void) const { return "CADGeometry"; }
-    virtual int         getComponentLevel(void) const { return 1; }
+    virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 1; } 
-    virtual Node   *copy() const { return new NodeQuadSet(*this); }
+    virtual Node   *copy() { return new NodeQuadSet(m_scene, m_proto); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -105,9 +105,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() const 
+    virtual int     colorPerVertexField() 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField() const
+    virtual int     colorIndexField()
                        { return -1; }
 
     MFVec3f        *getCoordinates();

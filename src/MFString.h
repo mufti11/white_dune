@@ -19,12 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFSTRING_H
-#define _MFSTRING_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
+#include "SFString.h"
 
 class ElementList;
 
@@ -38,38 +36,44 @@ public:
     virtual            ~MFString();
 
     virtual int         getType() const { return MFSTRING; }
-    virtual const char *getTypeName() const { return "MFString"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "MFString"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         write4FieldPipe(int filedes, int indent) const; 
+    virtual int         write4FieldPipe(int filedes, int indent); 
 
     virtual int         writeCWonderlandArt(int filedes, 
                                             const char* variableName,
-                                            int languageFlag) const;
+                                            int languageFlag);
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
-    virtual int         writeRaw(int filedes, int indent) const;
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
+    virtual int         writeRaw(int filedes, int indent);
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataXml(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataXml(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag) const; 
+    virtual const char *getTypeC(int languageFlag); 
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 0; }
+    virtual int         getNumbersPerType(void) { return 0; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual FieldValue *copy();
 
-    virtual int         getSFSize() const { return m_value.size(); }
-    virtual FieldValue *getSFValue(int index) const;
+    virtual int         getSFSize() { return m_value.size(); }
+    virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const char* value);
 
-    const MyString     *getValues() const { return m_value.getData(); }
-    MyString            getValue(int i) const { return m_value[i]; }
-    int                 getSize() const { return m_value.size(); }
+    const MyString     *getValues() { return m_value.getData(); }
+    virtual SFString *getValue(int i) 
+                            { return new SFString(m_value[i]); }
+    MyString           *getString(int i) 
+                           { 
+                           static MyString s = SFString(m_value[i]).getValue();
+                           return &s;
+                           }
+    int                 getSize() { return m_value.size(); }
     void                setValue(int index, MyString value) 
                            { m_value[index] = value; }
 
@@ -77,11 +81,10 @@ public:
     virtual void        insertSFValue(int index, const char* value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:
     StringArray         m_value;
 };
 
-#endif // _MFSTRING_H

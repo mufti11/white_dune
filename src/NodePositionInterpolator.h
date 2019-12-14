@@ -36,7 +36,7 @@ public:
                     ProtoPositionInterpolator(Scene *scene);
     virtual Node   *create(Scene *scene);
 
-    virtual int         getType() const { return VRML_POSITION_INTERPOLATOR; }
+    virtual int     getType() const { return VRML_POSITION_INTERPOLATOR; }
 };
 
 class NodePositionInterpolator : public Interpolator {
@@ -44,13 +44,13 @@ public:
                         NodePositionInterpolator(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() const 
-                           { return new NodePositionInterpolator(*this); }
+    virtual Node       *copy() { return new NodePositionInterpolator(
+                                 getScene(), getProto()); }
 
-    virtual int         getStride() const { return 3; } 
-    virtual int         getNumChannels() const { return 3; }
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *values, int numKeys) const;
+    virtual int         getStride() { return 3; } 
+    virtual int         getNumChannels() { return 3; }
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *values, int numKeys);
 
     ADD_FLIP
     ADD_SWAP

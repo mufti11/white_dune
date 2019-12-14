@@ -23,6 +23,7 @@
 #define _NODE_WIND_PHYSICS_MODEL_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -61,7 +62,8 @@ public:
                            { return "ParticleSystems"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; }    
-    virtual Node   *copy() const { return new NodeWindPhysicsModel(*this); }
+    virtual Node   *copy() { return new NodeWindPhysicsModel(
+                                    m_scene, m_proto); }
 
     Vec3f getForce(void);
 

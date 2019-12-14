@@ -73,13 +73,14 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_graphWidth = m_graphHeight = 0;
 
     m_refs = 0;
+    m_needRef = true;
     m_flags = 1<<NODE_FLAG_COLLAPSED;
     m_proto = proto;
 
     bool x3d = scene->isX3d();
 
     m_numFields = m_proto->getNumFields();
-    m_fields = new FieldValue *[m_numFields];
+    m_fields = new FieldValue *[m_numFields == 0 ? 1 : m_numFields];
     for (int i = 0; i < m_numFields; i++) {
         if (m_proto->getField(i)) {
             m_fields[i] = m_proto->getField(i)->getDefault(x3d);
@@ -109,14 +110,14 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_scene->addNode((Node*)this);
 }
 
-NodeData::NodeData(const Node &node) {
+NodeData::NodeData(Node node) {
     copyData(node);
     m_written = false;
     m_identifierCopy = node.m_identifier;
 }    
     
 void
-NodeData::copyData(const NodeData &node)
+NodeData::copyData(NodeData &node)
 {
     m_identifier = node.m_identifier;// all IDs are unique, except IDs of copies
 
@@ -153,13 +154,14 @@ NodeData::copyData(const NodeData &node)
     for (long i = 0; i < node.m_convertedNodes.size(); i++)
         m_convertedNodes[i] = node.m_convertedNodes[i];
     for (long i = 0; i < node.m_isEventIns.size(); i++)
-        m_isEventIns[i] = node.m_isEventIns[i];
+        m_isEventIns[i] = ((MyArray<EventIn *>)node.m_isEventIns)[i];
     for (long i = 0; i < node.m_isEventOuts.size(); i++)
-        m_isEventOuts[i] = node.m_isEventOuts[i];
+        m_isEventOuts[i] = ((MyArray<EventOut *>)node.m_isEventOuts)[i];
     for (long i = 0; i < node.m_isFields.size(); i++)
-        m_isFields[i] = node.m_isFields[i];
-    for (long i = 0; i < node.m_isExposedFields.size(); i++)
-        m_isExposedFields[i] = node.m_isExposedFields[i];
+        m_isFields[i] = ((MyArray<Field *>)node.m_isFields)[i];
+    for (long i = 0; i < m_isExposedFields.size(); i++)
+        m_isExposedFields[i] = 
+            ((MyArray<ExposedField *>)node.m_isExposedFields)[i];
     m_x3domId = m_x3domId && node.m_x3domId ? 
                 strdup(node.m_x3domId) : NULL;
     m_x3domOnOutputChange = m_x3domOnOutputChange && 
@@ -196,7 +198,7 @@ NodeData::translateField(int field) const
 }
 
 int                 
-NodeData::repairField(int field) const
+NodeData::repairField(int field)
 { 
     return translateField(field); 
 }
@@ -217,18 +219,20 @@ Node::Node(Scene *scene, Proto *proto) : NodeData(scene,proto)
     m_containerField = -1;
     m_protoParent = NULL;
     m_isUse = false;
+    m_refs = 0;
     ref();
 }
 
-Node::Node(const Node &node) : NodeData(node)
+Node::Node(Node &node) : NodeData(node)
 {
     m_geometricParentIndex = node.getGeometricParentIndex();
     m_commentsList = new NodeList;
-    ref();
     m_numberCDataFunctions = 0;
+    m_refs = 0;
+    ref();
 }
 
-Node::Node(const Node &node, Proto *proto) : NodeData(node)
+Node::Node(Node node, Proto *proto) : NodeData(node)
 { 
     initIdentifier();
     m_geometricParentIndex = node.getGeometricParentIndex();
@@ -236,9 +240,10 @@ Node::Node(const Node &node, Proto *proto) : NodeData(node)
     for (int i = 0; i < proto->getNumEventOuts(); i++)
         m_outputs[i] = node.m_outputs[i];
     m_commentsList = new NodeList;
-    ref();
     m_numberCDataFunctions = 0;
     m_containerField = -1;
+    m_refs = 0;
+    ref();
 }
 
 Node::~Node()
@@ -246,17 +251,11 @@ Node::~Node()
     delete m_commentsList;
 }
 
-bool
-NodeData::matchNodeClass(int childType) const
-{ 
-    return m_proto->matchNodeClass(childType); 
-}
-
 void
-NodeData::copyParentList(const Node &node)
+NodeData::copyParentList(Node &node)
 { 
     for (long i = 0; i < node.m_parents.size(); i++)
-        m_parents.append(node.m_parents[i]);
+        m_parents.append(((ParentArray)node.m_parents)[i]);
 }
 
 int         
@@ -272,9 +271,7 @@ NodeData::getType() const
 int
 NodeData::getNodeClass() const
 { 
-    if (m_proto) 
-        return m_proto->getNodeClass(); 
-    return CHILD_NODE; 
+    return 0; 
 }
 
 int                
@@ -297,7 +294,7 @@ NodeData::hasName(void)
         return true;
 }
 
-const MyString& 
+MyString& 
 NodeData::getName(void)
 {
     if (needsDEF())
@@ -306,7 +303,7 @@ NodeData::getName(void)
     return m_name; 
 }
 
-const MyString& 
+MyString& 
 NodeData::getNameOrNewName(void)
 {
     if (m_name.length() == 0) 
@@ -323,7 +320,7 @@ NodeData::setName(const char *name)
 }
 
 bool
-NodeData::needsDEF() const
+NodeData::needsDEF()
 {
     if (m_name.length() != 0) return true;
 
@@ -484,7 +481,7 @@ NodeData::getClassName(void)
 
 
 FieldValue *
-NodeData::getField(int index) const
+NodeData::getField(int index)
 {
 #ifdef DEBUG
     assert(index >= 0 && index < m_numFields);
@@ -517,8 +514,9 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
     // if field is an SFNode or MFNode type, remove old values from 
     // children's parent list
 
-    bool isNode = false;
-    if (m_fields[index] && m_fields[index]->getType() == SFNODE) {
+/*
+   bool isNode = false;
+   if (m_fields[index] && m_fields[index]->getType() == SFNODE) {
         isNode = true;
         Node *child = ((SFNode *) m_fields[index])->getValue();
         if (child) child->removeParent();
@@ -532,6 +530,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
             }
         }
     }
+*/
 
     if (value && value->getRefs() > -1)
         value->clamp(field->getMin(), field->getMax());
@@ -541,7 +540,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
     m_fields[index] = value;
     if (value)
         m_fields[index]->ref();
-    if (value && isNode) {
+    if (value) {
         if (containerField != -1)
             m_fields[index]->setContainerField(containerField);
     }
@@ -588,7 +587,7 @@ NodeData::setField(int fieldIndex, FieldValue *value, int containerField)
 }
 
 FieldValue *
-NodeData::getUntranslatedField(int index) const
+NodeData::getUntranslatedField(int index)
 {
 #ifdef DEBUG
     assert(index >= 0 && index < m_numFields);
@@ -604,7 +603,8 @@ NodeData::getUntranslatedField(int index) const
 void
 Node::addFieldNodeList(int index, NodeList *childList, int containerField)
 {
-    assert(index >= 0 && index < m_numFields);
+    if (index < 0 || index >= m_numFields)
+        return;
     if (((MFNode*)m_fields[index])->getSize() == 0)
         setField(index, new MFNode(childList), containerField);
     else {
@@ -1191,7 +1191,8 @@ NodeData::writeXmlFields(int f, int indent, int when, int containerField,
                     (hasX3domOnOutputChange() || hasX3domOnclick())) {
                     NodeScript *script = (NodeScript *)dest;
                     for (int n = 0; n < script->url()->getSize(); n++)
-                        if (isX3domscript(script->url()->getValue(n))) {
+                        if (isX3domscript(
+                               script->url()->getValue(n)->getValue())) {
                             RET_ONERROR( mywritestr(f, " ") )
                             if (hasX3domOnclick())
                                 RET_ONERROR( mywritestr(f, "onClick") )
@@ -1311,18 +1312,20 @@ NodeData::writeXmlField(int f, int indent, int i, int when, bool script,
         if (inTag && isScriptUrl) {
             int count = 0;
             for (int j = 0; j < size; j++)
-                if (!isSortOfEcmascript(urls->getValue(j)))
+                if (!isSortOfEcmascript(urls->getValue(j)->getValue()))
                     count++;
             if (count == 0)
                 return 0;
             else if (size > 0) {
                 RET_ONERROR( mywritestr(f ,"url='") )
                 for (int j = 0; j < size; j++) {
-                    if (!isSortOfEcmascript(urls->getValue(j))) {
+                    if (!isSortOfEcmascript(urls->getValue(j)->getValue())) {
                         if (j > 0)
                             RET_ONERROR( mywritestr(f, " ") )
                         RET_ONERROR( mywritestr(f, "\"") )
-                        RET_ONERROR( mywritestr(f, rewriteURL(urls->getValue(j),
+                        RET_ONERROR( mywritestr(f, rewriteURL(
+                                                   urls->getValue(j)->
+                                                                  getValue(),
                                                    oldBase, newBase)) )
                         RET_ONERROR( mywritestr(f, "\"") )
                     }
@@ -1331,10 +1334,10 @@ NodeData::writeXmlField(int f, int indent, int i, int when, bool script,
             }
         } else if (isScriptUrl) {
             for (int j = 0; j < size; j++) {
-                if (isSortOfEcmascript(urls->getValue(j))) {
+                if (isSortOfEcmascript(urls->getValue(j)->getValue())) {
                     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
                     RET_ONERROR( mywritestr(f, "<![CDATA[") )
-                    RET_ONERROR( mywritestr(f, urls->getValue(j)) )
+                    RET_ONERROR( mywritestr(f, urls->getValue(j)->getValue()) )
                     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
                     RET_ONERROR( mywritestr(f, "\n") )
                     TheApp->incSelectionLinenumber();
@@ -1560,7 +1563,7 @@ NodeData::writeXmlEventOut(int f, int indent, int i, int when, bool eventName)
 }
 
 int 
-NodeData::writeRoutes(int f, int indent) const
+NodeData::writeRoutes(int f, int indent)
 {
     if (!m_proto) return(0);
 
@@ -1578,16 +1581,13 @@ NodeData::writeRoutes(int f, int indent) const
                     NodeScript *script = (NodeScript *)j->item().getNode();
                     bool flag = false;
                     for (int i = 0; i < script->url()->getSize(); i++)
-                        if (isX3domscript(script->url()->getValue(i)))
+                        if (isX3domscript(script->url()->getValue(i)->
+                                          getValue()))
                             flag = true;
                     if (flag)
                         continue;
                             
                 }
-                if (m_scene->isPureVRML() &&  
-                    (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
-                     src->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
-                    continue;
                 MyString routeString = m_scene->createRouteString(
                       src->getName(), 
                       src->getProto()->getEventOut(field)->getName(x3d),
@@ -1602,10 +1602,6 @@ NodeData::writeRoutes(int f, int indent) const
             if (j->item().getNode()->getFlag(NODE_FLAG_TOUCHED)) {
                 Node *dst = j->item().getNode();
                 int field = j->item().getField();
-                if (m_scene->isPureVRML() &&  
-                    (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
-                     dst->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
-                    continue;
                 MyString routestring = m_scene->createRouteString(m_name,
                          getProto()->getEventOut(i)->getName(x3d),
                          dst->getName(),
@@ -2801,10 +2797,12 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
     }
 
     SocketList::Iterator *j;
-    for (int i = 0; i < getProto()->getNumEventOuts(); i++) {
+
+    for (int i = 0; i < m_outputs->size(); i++) {
         int numOutput = 0;
         for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
             numOutput++;
+
             RouteSocket s = j->item();
 
             Node *sNode = s.getNode();
@@ -3024,13 +3022,13 @@ Node::writeCInstallDynamicNodeCallback(int f, int languageFlag, Proto *proto)
 }
 
 int
-NodeData::lookupEventIn(const char *name, bool x3d) const
+NodeData::lookupEventIn(const char *name, bool x3d)
 {
     return m_proto ? m_proto->lookupEventIn(name, x3d) : INVALID_INDEX;
 }
 
 int
-NodeData::lookupEventOut(const char *name, bool x3d) const
+NodeData::lookupEventOut(const char *name, bool x3d)
 {
     return m_proto ? m_proto->lookupEventOut(name, x3d) : INVALID_INDEX;
 }
@@ -3189,7 +3187,7 @@ Node::removeParent(void)
 
 
 int
-NodeData::findChild(Node *child, int field) const
+NodeData::findChild(Node *child, int field)
 {
     assert(field >= 0 && field < m_numFields);
 
@@ -3209,7 +3207,7 @@ NodeData::findChild(Node *child, int field) const
 }
 
 bool
-Node::hasAncestor(Node *node) const
+Node::hasAncestor(Node *node)
 {
     if (this != m_scene->getRoot()) {
         if (hasParent()) {
@@ -3328,8 +3326,6 @@ NodeData::checkChildType(int field, int childType, bool checkNewNode)
         } else if ((::getMaskedNodeClass(childType) != 0) &&
                    (::getMaskedNodeClass(childType) == 
                     ::getMaskedNodeClass(nodeType))) {
-            return checkValid(def);
-        } else if (::matchNodeClass(nodeType, childType)) {
             return checkValid(def);
         } else if ((getType() == VRML_CONTOUR_2D) && 
                    (childType == NURBS_CONTROL_CURVE_NODE)) {
@@ -3594,11 +3590,11 @@ NodeData::hasRoute(SocketList socketlist)
 }
 
 Path *
-Node::getPath() const
+Node::getPath()
 {
     int len = 0;
-    const Node *node = this;
-    const Node *protoRoot = node;
+    Node *node = this;
+    Node *protoRoot = node;
 
     for (protoRoot = this; protoRoot->hasParentOrProtoParent(); 
          protoRoot = protoRoot->getParentOrProtoParent())
@@ -3647,7 +3643,7 @@ Node::getPath() const
 }
 
 bool
-Node::isInScene(Scene* scene) const
+Node::isInScene(Scene* scene)
 {
     if (scene != m_scene) 
         return false;
@@ -3751,8 +3747,11 @@ void Node::appendTo(NodeList* nodelist)
 {
     for (long i = 0;i < m_commentsList->size(); i++)
        nodelist->append((*m_commentsList)[i]);
-    nodelist->append(this);
     m_commentsList->resize(0);
+    // invalid node ??? 
+    if ((getRefs() > 0) && hasNeedRef())
+        return;         
+    nodelist->append(this);
 }
 
 void                
@@ -3880,9 +3879,11 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                                   "invalid VRML/X3D file...\n");
                         return false; 
                     }
-                    if (!child->doWithBranch(callback, data, false, 
+                    if (child->isValid() &&
+                        !child->doWithBranch(callback, data, false, 
                                              skipBranch, skipProto, callSelf, 
-                                             skipInline, searchInConvertedNodes)) {
+                                             skipInline, 
+                                             searchInConvertedNodes)) {
                         if (skipBranch)
                             continue;
                         else
@@ -3917,7 +3918,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                                      "invalid VRML/X3D file...\n");
                             return false; 
                         }
-                        if (child) { 
+                        if (child && child->isValid()) { 
                             if (!child->doWithBranch(callback, data, 
                                                      false, skipBranch, 
                                                      skipProto, callSelf, 
@@ -4293,7 +4294,7 @@ NodeData::hasOutputs(void)
 }
 
 bool 
-NodeData::hasInput(const char* routename) const
+NodeData::hasInput(const char* routename) 
 {
     bool x3d = m_scene->isX3d();
     for (int i = 0; i < m_proto->getNumEventIns(); i++)
@@ -4308,7 +4309,7 @@ NodeData::hasInput(const char* routename) const
 }
 
 bool 
-NodeData::hasOutput(const char* routename) const
+NodeData::hasOutput(const char* routename)
 {
     bool x3d = m_scene->isX3d();
     for (int i = 0; i < m_proto->getNumEventOuts(); i++)
@@ -4446,7 +4447,7 @@ NodeData::generateTreeLabel(void)
 }
 
 Node *
-Node::getParentOrProtoParent(void) const
+Node::getParentOrProtoParent(void)
 { 
     Node *parent = getParent();
     if (parent == NULL)
@@ -4456,7 +4457,7 @@ Node::getParentOrProtoParent(void) const
 }
 
 int
-Node::getParentFieldOrProtoParentField(void) const
+Node::getParentFieldOrProtoParentField(void)
 { 
     Node *parent = getParent();
     if (parent == NULL)
@@ -4466,7 +4467,7 @@ Node::getParentFieldOrProtoParentField(void) const
 }
 
 int
-Node::getParentIndex(void) const
+Node::getParentIndex(void)
 {
     FieldValue *value = getParentFieldValue();
     if (value == NULL)
@@ -4484,7 +4485,7 @@ Node::getParentIndex(void) const
 }
 
 Node *
-Node::searchParent(int nodeType) const
+Node::searchParent(int nodeType)
 {
     for (long i = 0; i < m_parents.size(); i++) {
         Node *node = m_parents[i].m_node;
@@ -4495,7 +4496,7 @@ Node::searchParent(int nodeType) const
 }
 
 Node *
-Node::searchParentField(int parentField) const
+Node::searchParentField(int parentField)
 {
     for (long i = 0; i < m_parents.size(); i++) {
         if (m_parents[i].m_field == parentField)
@@ -4505,7 +4506,7 @@ Node::searchParentField(int parentField) const
 }
 
 FieldValue *
-Node::getParentFieldValue(void) const
+Node::getParentFieldValue(void)
 {
     if (!hasParent())
         return NULL;
@@ -4689,11 +4690,10 @@ NodeData::convert2Vrml(void) {
     setFlag(NODE_FLAG_CONVERTED);
     for (int i = 0; i < m_numFields; i++)
         if (m_fields[i] != NULL) {
-           if (((SFNode *) m_fields[i])->getValue())
-               if (m_fields[i]->getType() == SFNODE)
-                   ((SFNode *) m_fields[i])->getValue()->convert2Vrml();
-               else if (m_fields[i]->getType() == MFNODE)
-                   ((MFNode *) m_fields[i])->convert2Vrml();
+           if (m_fields[i]->getType() == SFNODE)
+               ((SFNode *) m_fields[i])->getValue()->convert2Vrml();
+           else if (m_fields[i]->getType() == MFNODE)
+              ((MFNode *) m_fields[i])->convert2Vrml();
         }
     return NULL;
 }
@@ -4730,33 +4730,6 @@ NodeData::writeAc3d(int f, int indent)
            else if (m_fields[i]->getType() == MFNODE)
                RET_ONERROR( ((MFNode *) m_fields[i])->writeAc3d(f, indent) )
         }
-    return 0; 
-}
-
-int
-NodeData::writeOff(int f)
-{ 
-    for (int i = 0; i < m_numFields; i++)
-        if (m_fields[i] != NULL) {
-           if (m_fields[i]->getType() == SFNODE)  {
-               Node *node = ((SFNode *)m_fields[i])->getValue();
-               if (node && node->canConvertToIndexedFaceSet()) {
-                   NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
-                                                 node->toIndexedFaceSet();
-                   faceSet->writeOff(f);
-               } 
-           } else if (m_fields[i]->getType() == MFNODE) {
-               MFNode *mfNode = (MFNode *)m_fields[i];
-               for (int j = 0; j < mfNode->getSize(); j++) {
-                    Node *node = mfNode->getValue(j);
-                    if (node && node->canConvertToIndexedFaceSet()) {
-                        NodeIndexedFaceSet *faceSet = (NodeIndexedFaceSet *)
-                                                      node->toIndexedFaceSet();
-                       faceSet->writeOff(f);
-                    } 
-               }
-           }
-       }
     return 0; 
 }
 
@@ -4802,7 +4775,7 @@ NodeData::setId(long id)
 
 
 bool       
-NodeData::isPROTO(void) const 
+NodeData::isPROTO(void) const
 { 
     return false;
 }
@@ -4921,4 +4894,23 @@ Node::getParents(void)
         ret.append(getParent(i));
     return ret;
 }
+
+FieldValue *
+Node::getField(int index) const
+{
+#ifdef DEBUG
+    assert(index >= 0 && index < m_numFields);
+#else
+    if ((index < 0) && (index >= m_numFields)) {
+        printf("Internal error in Node::getField\n");
+        return NULL;
+    }
+#endif
+    if (m_scene != NULL)
+        if (((m_scene->getWriteFlags() & (CONVERT2VRML | CONVERT2X3D)) != 0) ||
+             m_scene->isX3d())
+            return m_fields[translateField(index)];
+    return m_fields[index];
+}
+
 

@@ -32,23 +32,23 @@ public:
                         SFInt32(void) { m_value = 0; } // silly default
 
     virtual int         getType() const { return SFINT32; }
-    virtual const char *getTypeName() const { return "SFInt32"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFInt32"; }
+    virtual MyString    getString(int index, int stride);
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag) const { return "int"; }
-    virtual const char *getDefaultC(int languageFlag) const { return "0"; }
+    virtual const char *getTypeC(int languageFlag) { return "int"; }
+    virtual const char *getDefaultC(int languageFlag) { return "0"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 1; }
+    virtual int         getNumbersPerType(void) { return 1; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy() { return new SFInt32(*this); }
 
-    int                 getValue() const 
+    int                 getValue() 
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -57,10 +57,10 @@ public:
                            return m_value; 
                            }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     // VRML 200x IntegerSequencer not implemented yet
-    bool                supportAnimation(bool x3d) const { return false; }
+    bool                supportAnimation(bool x3d) { return false; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype) 
                            { return new SFInt32(INT_RAND()); }

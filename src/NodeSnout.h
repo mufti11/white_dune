@@ -61,7 +61,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeSnout(*this); }
+    virtual Node   *copy() { return new NodeSnout(m_scene, m_proto); }
 
     x3domGeometryCommonFieldMacros(ProtoSnout) 
     fieldMacros(SFBool, bottom, ProtoSnout);

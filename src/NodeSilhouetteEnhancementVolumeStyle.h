@@ -23,6 +23,7 @@
 #define _NODE_SILHOUETTE_ENHANCEMENT_VOLUME_STYLE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -59,9 +60,10 @@ public:
 
     virtual const char* getComponentName(void) const
         { return "VolumeRendering"; }
-    virtual int         getComponentLevel(void) const { return 2; }
+    virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node   *copy() const { return new NodeSilhouetteEnhancementVolumeStyle(*this); }
+    virtual Node   *copy() { return new NodeSilhouetteEnhancementVolumeStyle( 
+                             m_scene, m_proto); }
 
     fieldMacros(SFBool, enabled, ProtoSilhouetteEnhancementVolumeStyle);
     fieldMacros(SFFloat, silhouetteBoundaryOpacity, ProtoSilhouetteEnhancementVolumeStyle);

@@ -22,6 +22,7 @@
 #include "stdafx.h"
 #include "RenderSettingsDialog.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 #include "resource.h"
 #include "swt.h"
 

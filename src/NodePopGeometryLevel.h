@@ -49,7 +49,8 @@ public:
                     NodePopGeometryLevel(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodePopGeometryLevel(*this); }
+    virtual Node   *copy() { return new NodePopGeometryLevel(
+                             m_scene, m_proto); }
 
     virtual bool    isX3domProto(void) { return true; }
 

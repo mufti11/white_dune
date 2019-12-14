@@ -19,19 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CAD_FACE_H
-#define _NODE_CAD_FACE_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCADFace : public WonderlandExportProto {
@@ -60,7 +53,7 @@ public:
     virtual const char* getComponentName(void) const { return "CADGeometry"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() const { return new NodeCADFace(*this); }
+    virtual Node   *copy() { return new NodeCADFace(m_scene, m_proto); }
 
     virtual void      preDraw();
     virtual void      draw(int pass);
@@ -81,4 +74,3 @@ public:
     fieldMacros(SFBool,   render,     ProtoCADFace)
 };
 
-#endif

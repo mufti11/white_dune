@@ -127,9 +127,6 @@
 #include "NodeGeoTransform.h"
 #include "NodeGeoViewpoint.h" 
 #include "NodeGroup.h"
-#include "NodeHAnimDisplacer.h"
-#include "NodeHAnimHumanoid.h"
-#include "NodeHAnimJoint.h"
 #include "NodeHAnimSegment.h"
 #include "NodeHAnimSite.h"
 #include "NodeImageCubeMapTexture.h"
@@ -355,6 +352,9 @@
 #include "NodeComment.h"
 #include "NodeImport.h"
 #include "NodeExport.h"
+#include "NodeHAnimDisplacer.h"
+#include "NodeHAnimHumanoid.h"
+#include "NodeHAnimJoint.h"
 
 void
 SceneProtoMap::addOrReplace(ProtoMap *protos, const char *string,
@@ -865,7 +865,7 @@ SceneProtoMap::createProtoMap(ProtoMap *protos, Scene *scene, bool add)
 }
 
 void
-SceneProtoMap::updateProtoMap(ProtoMap* protos, Scene *scene)
+SceneProtoMap::updateProtoMap(ProtoMap* protos, Scene *scene, bool add)
 {
     bool needUpdate = false;
     ProtoMap::Chain::Iterator *j;
@@ -888,7 +888,7 @@ SceneProtoMap::updateProtoMap(ProtoMap* protos, Scene *scene)
     const NodeList *nodes = scene->getNodes();
     for (long i = 0; i < nodes->size(); i++) {
          Node *node = nodes->get(i);
-         if (node->getType() == X3D_CONTOUR_POLYLINE_2D) 
+         if (node && node->getType() == X3D_CONTOUR_POLYLINE_2D) 
              node->setProto((*protos)[contourPolyline2D]);
     }
 }

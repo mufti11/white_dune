@@ -19,20 +19,17 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCENE_TREE_VIEW_H
-#define _SCENE_TREE_VIEW_H
+#pragma once
 
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
+#include "swttypedef.h"
 
 class Node;
 class NodeList;
 class Path;
 class Hint;
 class Scene;
-
-#include "swttypedef.h"
+class RouteUpdate;
 
 class SceneTreeView : public SceneView
 {
@@ -52,7 +49,7 @@ public:
         void            OnSelectionChanged(STREEITEM item);
         void            OnBeginDrag(STREEITEM item);
 
-        void            UpdateNode(const Path *updatePath);
+        void            UpdateNode(Path *updatePath);
 
 protected:
         void            InsertNodeListRec(NodeList *list, int field,
@@ -65,7 +62,7 @@ protected:
         void            UpdateSelection();
         bool            ScrollIsValid(int scrollCode, int which);
         void            DeleteItemRec(STREEITEM item);
-        bool            UpdateNode(STREEITEM item, const Path *updatePath);
+        bool            UpdateNode(STREEITEM item, Path *updatePath);
         bool            UpdateAddNode(STREEITEM item, Node *node,
                                       Node *parent, int field);
         bool            UpdateRemoveNode(STREEITEM, Node *node, Node *parent,
@@ -92,5 +89,3 @@ protected:
         Node           *m_currentDragParent;
         int             m_currentDragField;
 };
-
-#endif

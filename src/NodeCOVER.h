@@ -21,19 +21,11 @@
  * Implements the Cover/Covise COVER node
  */
 
-#ifndef _NODE_COVER_H
-#define _NODE_COVER_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCOVER : public Proto {
@@ -69,7 +61,7 @@ public:
                     NodeCOVER(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeCOVER(*this); }
+    virtual Node   *copy() { return new NodeCOVER(m_scene, m_proto); }
 
     fieldMacros(SFVec3f,    position1,        ProtoCOVER)
     fieldMacros(SFVec3f,    position2,        ProtoCOVER)
@@ -90,4 +82,3 @@ public:
     fieldMacros(SFInt32,    soundEnvironment, ProtoCOVER)
 };
 
-#endif // _NODE_COVER_H

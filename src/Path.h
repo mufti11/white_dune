@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _PATH_H
-#define _PATH_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
-#ifndef _NODELIST_H
 #include "NodeList.h"
-#endif
 
 /*
     A "Path" is a array of Nodes together with a array of fields pointing
@@ -41,20 +36,19 @@ public:
                              bool ignoreStrangePath = false);
                        ~Path();
 
-    const int          *getPath() const { return m_path; }
-    int                 getPathLen() const { return m_len; }
+    const int          *getPath() { return m_path; }
+    int                 getPathLen() { return m_len; }
     const NodeList     *getNodes() const { return &m_nodes; }
-    Node               *getNode() const { return m_node; }
-    Proto              *getProto(Scene *scene) const;
-    Node               *getParent() const { return m_parent; }
-    int                 getField() const { return m_field; }
-    int                 getParentField() const { return m_parentField; }
-    Node               *getNextNode(Node *node, int field, int i) const;
-    void                printStrangePath(Node *node, int field, int depth) 
-                            const;
-    bool                isProto(Scene *scene) const
+    Node               *getNode() { return m_node; }
+    Proto              *getProto(Scene *scene);
+    Node               *getParent() { return m_parent; }
+    int                 getField() { return m_field; }
+    int                 getParentField() { return m_parentField; }
+    Node               *getNextNode(Node *node, int field, int i);
+    void                printStrangePath(Node *node, int field, int depth);
+    bool                isProto(Scene *scene)
                             { return (getProto(scene) && (getPathLen() == 3)); }
-    void                dump() const;
+    void                dump();
     int                *copyPathInt(void);
 protected:
     int                *m_path;
@@ -69,4 +63,3 @@ protected:
     bool                m_needExtraUpdateSelection;
 };
 
-#endif // _PATH_H

@@ -87,24 +87,6 @@ NodeViewpoint::NodeViewpoint(Scene *scene, Proto *def)
     m_matrix[14] = -10.0f;
 }
 
-Vec3d
-NodeViewpoint::getPosition() const
-{
-    if (position() == NULL) {
-        SFVec3f *value = (SFVec3f *)m_fields[position_Field()];
-        const float *v = value->getValue();
-        return Vec3d(v[0], v[1], v[2]);
-                
-    }
-    Vec3f vec(position()->getValue());
-    return Vec3d(vec.x, vec.y, vec.z);
-}
-
-void NodeViewpoint::setPosition(const Vec3d &pos)
-{
-    m_scene->setField(this, position_Field(), new SFVec3f(pos.x, pos.y, pos.z));
-}
-
 void NodeViewpoint::flip(int index)
 {
     position()->flip(index);

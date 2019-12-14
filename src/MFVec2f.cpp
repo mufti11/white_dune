@@ -26,6 +26,7 @@
 #include "SFVec2f.h"
 #include "Vec2f.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFVec2f::MFVec2f() : MFFloat()
 {
@@ -47,14 +48,13 @@ MFVec2f::readLine(int index, char *line)
 }
 
 bool
-MFVec2f::equals(const FieldValue *value) const
+MFVec2f::equals(FieldValue *value) 
 {
-    return value->getType() == MFVEC2F && 
-           MFFloat::equals((const MFFloat *) value);
+    return value->getType() == MFVEC2F && equals((MFFloat *)value);
 }
 
 FieldValue *
-MFVec2f::getSFValue(int index) const
+MFVec2f::getSFValue(int index)
 {
     return new SFVec2f(getValue(index));
 }
@@ -68,21 +68,20 @@ MFVec2f::setSFValue(int index, FieldValue *value)
         return;
     }
 #endif
-
-    setSFValue(index, ((SFVec2f *) value)->getValue());
+    setSFValue(index, (float *)((SFVec2f *)value)->getValue());
 }
 
 void
-MFVec2f::setSFValue(int index, const float *values)
+MFVec2f::setSFValue(int index, float *values)
 {
-    m_value[index * 2    ] = values[0];
+    m_value[index * 2   ] = values[0];
     m_value[index * 2 + 1] = values[1];
 }
 
 void
 MFVec2f::setSFValue(int index, float x, float y)
 {
-    m_value[index * 2    ] = x;
+    m_value[index * 2   ] = x;
     m_value[index * 2 + 1] = y;
 }
 
@@ -101,7 +100,7 @@ MFVec2f::getVec(int index)
 
 
 MyString
-MFVec2f::getEcmaScriptComment(MyString name, int flags) const
+MFVec2f::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -192,11 +191,11 @@ MFVec2f::getEcmaScriptComment(MyString name, int flags) const
 void 
 MFVec2f::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, ((SFVec2f *)value)->getValue()); 
+    insertSFValue(index, (SFVec2f *)value); 
 }
 
 void 
-MFVec2f::insertSFValue(int index, const float *values)
+MFVec2f::insertSFValue(int index, float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);

@@ -26,6 +26,7 @@
 #include "SFMatrix4f.h"
 #include "MFVec2f.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 FieldValue *MFMatrix4f::copy()
 { 
@@ -58,14 +59,13 @@ MFMatrix4f::readLine(int index, char *line)
 }
 
 bool
-MFMatrix4f::equals(const FieldValue *value) const
+MFMatrix4f::equals(FieldValue *value)
 {
-    return value->getType() == MFMATRIX4F && 
-           MFFloat::equals((const MFFloat *) value);
+    return value->getType() == MFMATRIX4F && equals(value);
 }
 
 FieldValue *
-MFMatrix4f::getSFValue(int index) const
+MFMatrix4f::getSFValue(int index)
 {
     return new SFMatrix4f(getValue(index));
 }
@@ -91,7 +91,7 @@ MFMatrix4f::setSFValue(int index, const float *values)
 }
 
 MyString
-MFMatrix4f::getEcmaScriptComment(MyString name, int flags) const
+MFMatrix4f::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

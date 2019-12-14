@@ -72,7 +72,7 @@ public:
     FieldIndex ccw;
     FieldIndex solid;
 
-    virtual const MyString &getName(bool x3d) const 
+    virtual MyString &getName(bool x3d) 
        { 
        if (x3d)
            return m_x3dName;
@@ -93,7 +93,7 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNurbsSurface(*this); }
+    virtual Node   *copy() { return new NodeNurbsSurface(m_scene, m_proto); }
 
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);
@@ -114,7 +114,7 @@ public:
 
     bool            checkXSymetricOrSameHandle(int handle, MFVec3f *points);
 
-    virtual int     repairField(int field) const;
+    virtual int     repairField(int field);
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
     void            repairKnotAndWeight();
@@ -185,7 +185,7 @@ public:
     NodeNurbsSet   *findNurbsSet();
     void            createMesh(bool cleanDoubleVertices = true,
                                bool trianglulate = true);
-    void            createMesh(const Vec3f *controlPoints,
+    void            createMesh(Vec3f *controlPoints,
                                bool cleanDoubleVertices,
                                bool trianglulate);
     void            linearUknot(void);

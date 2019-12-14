@@ -23,6 +23,7 @@
 #define _NODE_COORDINATE_CHASER_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -50,7 +51,8 @@ class NodeCoordinateChaser : public ChaserNode {
 public:
                     NodeCoordinateChaser(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeCoordinateChaser(*this); }
+    virtual Node   *copy() { return new NodeCoordinateChaser(
+                                    m_scene, m_proto); }
 
     void            dynamics(MFVec3f *add, MFVec3f *dest, MFVec3f *val, 
                              float mult);

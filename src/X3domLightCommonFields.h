@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _X3DOM_LIGHT_COMMON_FIELDS_H
-#define _X3DOM_LIGHT_COMMON_FIELDS_H
+#pragma once
 
 #define x3domLightCommonFieldIndex() \
     FieldIndex shadowFilterSize; \
@@ -58,4 +57,3 @@
     zNear.set( \
           addField(SFFLOAT, "zNear", new SFFloat(-1)));  \
     setFieldFlags(zNear, FF_X3DOM_ONLY);
-#endif

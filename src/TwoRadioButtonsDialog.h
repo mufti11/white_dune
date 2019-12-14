@@ -19,13 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TWO_RADIO_BUTTONS_DIALOG_H
-#define _TWO_RADIO_BUTTONS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
 
 class TwoRadioButtonsDialog : public Dialog {
@@ -42,4 +38,3 @@ private:
     bool        m_value;
 };
 
-#endif

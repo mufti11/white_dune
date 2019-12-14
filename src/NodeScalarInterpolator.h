@@ -46,13 +46,13 @@ public:
                         NodeScalarInterpolator(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; } 
-    virtual Node       *copy() const 
-                           { return new NodeScalarInterpolator(*this); }
+    virtual Node       *copy() { return new NodeScalarInterpolator(
+                                 m_scene, m_proto); }
 
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *value, int numKeys) const;
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *value, int numKeys);
 
-    virtual int         getNumChannels() const { return 1; }
+    virtual int         getNumChannels() { return 1; }
 
     fieldMacros(MFFloat, keyValue, ProtoScalarInterpolator)
 };

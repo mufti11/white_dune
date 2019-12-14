@@ -23,6 +23,7 @@
 #define _NODE_TEXTURE_PROPERTIES_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -64,7 +65,8 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() const { return new NodeTextureProperties(*this); }
+    virtual Node *copy() { return new NodeTextureProperties( 
+                           m_scene, m_proto); }
 
     fieldMacros(SFFloat, anisotropicDegree, ProtoTextureProperties);
     fieldMacros(SFColorRGBA, borderColor, ProtoTextureProperties);

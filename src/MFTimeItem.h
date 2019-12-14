@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFTIME_ITEM_H
-#define _MFTIME_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 
@@ -40,5 +39,3 @@ public:
     virtual void                InsertSFValue(int index);
     virtual void                RemoveSFValue(int index);
 };
-
-#endif // _MFTIME_ITEM_H

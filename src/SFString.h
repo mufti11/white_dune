@@ -35,7 +35,7 @@ public:
                         SFString(const char *str);
                         SFString(void) { m_value = ""; } // silly default
 
-    const char         *getValue() const
+    const char         *getValue()
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -44,32 +44,32 @@ public:
                            return m_value; 
                            }
     virtual int         getType() const { return SFSTRING; }
-    virtual const char *getTypeName() const { return "SFString"; }
-    virtual MyString    getString(int index, int stride) const;
+    virtual const char *getTypeName() { return "SFString"; }
+    virtual MyString    getString(int index, int stride);
                         
-    virtual int         write4FieldPipe(int filedes, int indent) const; 
+    virtual int         write4FieldPipe(int filedes, int indent); 
 
     virtual int         writeCWonderlandArt(int filedes, 
                                             const char* variableName,
-                                            int languageFlag) const;
+                                            int languageFlag);
 
-    virtual int         writeRaw(int filedes, int indent) const;
+    virtual int         writeRaw(int filedes, int indent);
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataXml(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataXml(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag) const;
+    virtual const char *getTypeC(int languageFlag);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) const { return 0; }
+    virtual int         getNumbersPerType(void) { return 0; }
 
-    virtual bool        equals(const FieldValue *value) const;
+    virtual bool        equals(FieldValue *value);
     virtual FieldValue *copy() { return new SFString(*this); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual bool        supportAnimation(bool x3d) const { return false; }
+    virtual bool        supportAnimation(bool x3d) { return false; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:

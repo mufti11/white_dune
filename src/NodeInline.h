@@ -19,20 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_INLINE_H
-#define _NODE_INLINE_H
+#pragma once
 
-#ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-class NodeList;
-
+#include "NodeList.h"
 #include "SFMFTypes.h"
 
 class NodeInlineLoadControl;
@@ -70,7 +63,7 @@ public:
     virtual int     getComponentLevel(void) const;
     virtual const char *getComponentName(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeInline(*this); }
+    virtual Node   *copy() { return new NodeInline(m_scene, m_proto); }
     virtual void    addFieldNodeList(int index, NodeList *childList, 
                                      int containerField = -1);
 
@@ -114,5 +107,3 @@ protected:
     NodeList       *m_loadedNodes;
     double          m_unitLength;
 };
-
-#endif // _NODE_INLINE_H

@@ -45,13 +45,13 @@ public:
                         NodeOrientationInterpolator(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() const 
-                           { return new NodeOrientationInterpolator(*this); }
+    virtual Node       *copy() { return new NodeOrientationInterpolator(
+                                        m_scene, m_proto); }
 
-    virtual int         getStride() const { return 4; }
-    virtual int         getNumChannels() const;
-    virtual FieldValue *createKey(void *value) const;
-    virtual FieldValue *createKeys(void *value, int numKeys) const;
+    virtual int         getStride() { return 4; }
+    virtual int         getNumChannels();
+    virtual FieldValue *createKey(void *value);
+    virtual FieldValue *createKeys(void *value, int numKeys);
     virtual void        interpolate(float k, float *values);
 
     ADD_FLIP

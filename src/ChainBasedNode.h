@@ -19,21 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _CHAIN_BASED_NODE_H
-#define _CHAIN_BASED_NODE_H
+#pragma once
 
-#ifndef GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-
-class Scene;
-class MFVec3f;
-class MFInt32;
-class NodePositionInterpolator;
-class NodeOrientationInterpolator;
+#include "Vec3f.h"
+#include "Scene.h"
+#include "MFVec3f.h"
+#include "MFInt32.h"
+#include "NodePositionInterpolator.h"
+#include "NodeOrientationInterpolator.h"
 
 typedef Vec3f (*getNormalCallback)(int index, int indices, void *data);
 
@@ -99,5 +93,5 @@ public:
     GeometryNodeDeclarationMacros()
 
 };
-#endif 
+
 

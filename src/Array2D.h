@@ -18,8 +18,8 @@
  * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
  * Cambridge, MA 02139, USA.
  */
-#ifndef _ARRAY_2D_H
-#define _ARRAY_2D_H
+
+#pragma once
 
 #include <stdlib.h>
 
@@ -27,12 +27,8 @@
 # include "stdlib.h"
 #endif
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-#ifndef _STDAFX_H
 #include "stdafx.h"
-#endif
 
 template<class T> class array2D 
 {
@@ -62,5 +58,3 @@ protected:
                int      m_size_j;
                T        *m_data;
 };
-  
-#endif // _ARRAY_2D_H   

@@ -25,6 +25,7 @@
 #include "MFRotation.h"
 #include "SFRotation.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFRotation::MFRotation() : MFFloat()
 {
@@ -50,9 +51,9 @@ MFRotation::readLine(int index, char *line)
 }
 
 bool
-MFRotation::equals(const FieldValue *value) const
+MFRotation::equals(FieldValue *value)
 {
-    return value->getType() == MFROTATION && MFFloat::equals((const MFFloat *) value);
+    return value->getType() == MFROTATION && MFFloat::equals((MFFloat *) value);
 }
 
 void
@@ -65,7 +66,7 @@ MFRotation::fixAngle(double angleUnit)
 }
 
 FieldValue *
-MFRotation::getSFValue(int index) const
+MFRotation::getSFValue(int index)
 {
     return new SFRotation(getValue(index));
 }
@@ -84,7 +85,7 @@ MFRotation::setSFValue(int index, const float *values)
 }
 
 MyString
-MFRotation::getEcmaScriptComment(MyString name, int flags) const
+MFRotation::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

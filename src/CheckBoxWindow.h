@@ -19,14 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
+#pragma once
+
 #include "swt.h"
 #include "swttypedef.h"
 #include "MyString.h"
 #include "Array.h"
 #include "Dialog.h"
-
-#ifndef _CHECK_BOX_WINDOW_H
-#define _CHECK_BOX_WINDOW_H
 
 class CheckBoxWindow {
 public:
@@ -61,4 +60,4 @@ protected:
     int                 m_fontHeight;
     SWND                m_parent_window;
 };
-#endif
+

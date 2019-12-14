@@ -23,6 +23,7 @@
 #define _NODE_COLOR_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -52,7 +53,7 @@ public:
                     NodeColor(Scene *scene, Proto *proto);
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeColor(*this); }
+    virtual Node   *copy() { return new NodeColor(m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -62,7 +63,8 @@ public:
     Vec3f           getHandle(int handle, int *constraint, int *field);
     void            setHandle(int handle, const Vec3f &v);
 
-    virtual int     writeAc3dMaterial(int filedes, int indent, const char*name);
+    virtual int     writeAc3dMaterial(int filedes, int indent, 
+                                      const char *name);
     virtual void    handleAc3dMaterial(ac3dMaterialCallback callback, 
                                        Scene* scene);
 

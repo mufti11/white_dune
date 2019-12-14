@@ -139,7 +139,7 @@ NodeNurbsSurface::~NodeNurbsSurface()
 }
 
 int 
-NodeNurbsSurface::repairField(int field) const
+NodeNurbsSurface::repairField(int field)
 {
     bool x3d = m_scene->isX3d();
     if (x3d && (field == controlPoint_Field()))
@@ -339,7 +339,7 @@ NodeNurbsSurface::convert2Vrml(void)
 
 
 void
-NodeNurbsSurface::createMesh(const Vec3f *controlPoints, bool cleanVertices,
+NodeNurbsSurface::createMesh(Vec3f *controlPoints, bool cleanVertices,
                              bool triangulate)
 {
     int iuDimension = uDimension()->getValue();
@@ -611,8 +611,7 @@ NodeNurbsSurface::createMesh(bool cleanVertices, bool triangulate)
                                     vDimension()->getValue() * 3)
         return;
     
-    createMesh((const Vec3f *) controlPoints->getValues(), cleanVertices,
-               triangulate);
+    createMesh((Vec3f *)controlPoints->getValues(), cleanVertices, triangulate);
 }
 
 void

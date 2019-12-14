@@ -57,7 +57,7 @@ NodeHAnimDisplacer::NodeHAnimDisplacer(Scene *scene, Proto *def)
 {
 }
 
-NodeHAnimDisplacer::NodeHAnimDisplacer(const NodeHAnimDisplacer &node)
+NodeHAnimDisplacer::NodeHAnimDisplacer(NodeHAnimDisplacer &node)
   : Node(node)
 {
 }

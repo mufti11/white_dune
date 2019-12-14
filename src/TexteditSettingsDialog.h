@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TEXTEDIT_SETTINGS_DIALOG_H
-#define _TEXTEDIT_SETTINGS_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
 
 class TexteditSettingsDialog : public Dialog
 {
@@ -43,4 +37,3 @@ protected:
     void                OnBrowseEditCommand(int idc);
 };
 
-#endif // _HELP_SETTINGS_DIALOG_H

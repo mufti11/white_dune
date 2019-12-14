@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MATRIX_H
-#define _MATRIX_H
+#pragma once
 
 #include "Vec3f.h"
 #include "Vec3d.h"
@@ -47,6 +46,7 @@ public:
     Matrix          invert() const;
 
     static Matrix   identity();
+    bool            isZero(void);
     void            swapRows(int i, int j);
 
 private:
@@ -61,6 +61,7 @@ public:
 
     Matrixd         operator*(const Matrixd &m) const;
     Vec3d           operator*(const Vec3d& v) const;
+    Vec3f           operator*(const Vec3f& v) const;
 
     operator        double *() { return (double *) m_mat; }
     operator        const double *() const { return (const double *) m_mat; }
@@ -71,6 +72,7 @@ public:
     Matrixd         invert() const;
 
     static Matrixd  identity();
+    bool            isZero(void);
     void            swapRows(int i, int j);
 
 private:
@@ -78,5 +80,6 @@ private:
 };
 
 void printf(Matrix mat);
-#endif // _MATRIX_H
+void printf(Matrixd mat);
+
 

@@ -23,6 +23,7 @@
 #define _NODE_EXTRUSION_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -67,7 +68,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeExtrusion(*this); }
+    virtual Node   *copy() { return new NodeExtrusion(m_scene, m_proto); }
 
     void            createMesh(bool cleanDoubleVertices = true,
                                bool triangulate = true);

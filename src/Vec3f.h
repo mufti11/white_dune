@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _VEC3F_H
-#define _VEC3F_H
+#pragma once
 
 #include "Vec3x.h"
 #include "stdio.h"
@@ -29,4 +28,3 @@ typedef Vec3x<float> Vec3f;
 
 inline void printf(Vec3f vec) { printf("%f %f %f\n", vec.x, vec.y, vec.z); }
 
-#endif // _VEC3F_H

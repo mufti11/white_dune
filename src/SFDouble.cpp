@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 #include "SFDouble.h"
 #include "SFString.h"
@@ -38,7 +39,7 @@ SFDouble::SFDouble(SFString *value)
 }
 
 MyString    
-SFDouble::getString(int index, int stride) const
+SFDouble::getString(int index, int stride)
 {
     MyString ret = "";
     char buffer[256];
@@ -47,7 +48,7 @@ SFDouble::getString(int index, int stride) const
     return ret;
 }
 
-int SFDouble::writeData(int f, int i) const
+int SFDouble::writeData(int f, int i)
 {
     return mywritef(f, "%g", m_value);
 }
@@ -61,14 +62,14 @@ SFDouble::readLine(int index, char *line)
 }
 
 bool
-SFDouble::equals(const FieldValue *value) const
+SFDouble::equals(FieldValue *value)
 {
     return value->getType() == SFDOUBLE
             && ((SFDouble *) value)->getValue() == m_value;
 }
 
 bool
-SFDouble::equalsAngle(const FieldValue *value, double angle) const
+SFDouble::equalsAngle(FieldValue *value, double angle)
 {
     return value->getType() == SFFLOAT
             && ((SFDouble *) value)->getValue() * angle == m_value;
@@ -89,7 +90,7 @@ SFDouble::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFDouble::getEcmaScriptComment(MyString name, int flags) const
+SFDouble::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

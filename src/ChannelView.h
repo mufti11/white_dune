@@ -19,24 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _CHANNEL_VIEW_H
-#define _CHANNEL_VIEW_H
+#pragma once
 
 // undefine if you do not need the blinking channelview cursor
 #define BLINKTIMER 1 
 
-#ifndef _RECT_H
 #include "Rect.h"
-#endif
-#ifndef _POINT_H
 #include "Point.h"
-#endif
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
-
-class Node;
-class DuneDoc;
+#include "Node.h"
 
 enum {
     NORMAL,
@@ -46,7 +37,7 @@ enum {
 
 #include "swttypedef.h"
 
-class Interpolator;
+#include "Interpolator.h"
 
 class ChannelView : public SceneView
 {
@@ -124,4 +115,3 @@ private:
     MyArray<float>      m_copiedValues;
     int                 m_copiedChannels;
 };
-#endif

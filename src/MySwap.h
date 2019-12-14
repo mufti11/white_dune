@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MYSWAP_H
-#define _MYSWAP_H
+#pragma once
 
 enum {
     SWAP_XY,
@@ -35,4 +34,3 @@ template<class T> void myswap(T &from, T &to)
     to = tmp;
 }
 
-#endif

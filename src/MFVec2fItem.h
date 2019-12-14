@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFVEC2F_ITEM_H
-#define _MFVEC2F_ITEM_H
+#pragma once
 
 #include "MFFloatItem.h"
 
@@ -39,4 +38,3 @@ public:
     virtual int              GetFieldOffset(int xpos) const;
 };
 
-#endif // _MFVEC2F_ITEM_H

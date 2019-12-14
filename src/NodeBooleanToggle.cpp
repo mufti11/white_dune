@@ -55,7 +55,7 @@ NodeBooleanToggle::NodeBooleanToggle(Scene *scene, Proto *def)
 {
 }
 
-NodeBooleanToggle::NodeBooleanToggle(const NodeBooleanToggle &node)
+NodeBooleanToggle::NodeBooleanToggle(NodeBooleanToggle &node)
   : Node(node)
 {
 }

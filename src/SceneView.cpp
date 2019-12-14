@@ -202,3 +202,16 @@ dropCB(void *data, int type, int x, int y, int modifiers)
     }
     return rc;
 }
+
+void        
+SceneView::OnMouseEnter() 
+{
+    m_scene->setHasFocus();
+}
+
+void
+SceneView::OnMouseLeave() 
+{
+    m_scene->deleteHasFocus();
+}
+

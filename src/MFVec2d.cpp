@@ -22,16 +22,18 @@
 #include <stdio.h> 
 #include "stdafx.h"
 
-#include "MFVec2d.h"
-#include "SFVec2d.h"
 #include "MFString.h"
+#include "MFVec2d.h"
+#include "MFFloat.h"
+#include "SFVec2d.h"
 #include "Vec2d.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 MFVec2d::MFVec2d(MFString *values) : MFDouble(values->getSize(), 2)
 {
     for (int i = 0; i < values->getSize(); i++) {
-        const char *string = values->getValue(i); 
+        const char *string = (const char *)values->getValue(i); 
         sscanf(string, "%lf %lf", &m_value[i * getStride() + 0],
                                   &m_value[i * getStride() + 1]);
     }        
@@ -39,9 +41,6 @@ MFVec2d::MFVec2d(MFString *values) : MFDouble(values->getSize(), 2)
 
 MFVec2d::MFVec2d(MFVec2d *values) : MFDouble(values->getSize(), 2)
 {
-    for (int i = 0; i < values->getSize(); i++) {
-        m_value[i] = ((MFDouble *)values)->getValue(i); 
-    }        
 }
 
 FieldValue *MFVec2d::copy()
@@ -60,14 +59,13 @@ MFVec2d::readLine(int index, char *line)
 }
 
 bool
-MFVec2d::equals(const FieldValue *value) const
+MFVec2d::equals(FieldValue *value)
 {
-    return value->getType() == MFVEC2D && 
-           MFDouble::equals((const MFDouble *) value);
+    return value->getType() == MFVEC2D && equals((MFFloat *)value);
 }
 
 FieldValue *
-MFVec2d::getSFValue(int index) const
+MFVec2d::getSFValue(int index)
 {
     return new SFVec2d(getValue(index));
 }
@@ -81,28 +79,27 @@ MFVec2d::setSFValue(int index, FieldValue *value)
         return;
     }
 #endif
-
-    setSFValue(index, ((SFVec2d *) value)->getValue());
+    setVec(index, ((SFVec2d *)value)->getSFValue(index));
 }
 
 void
-MFVec2d::setSFValue(int index, const double *values)
+MFVec2d::setSFValue(int index, double *values)
 {
-    m_value[index * 2    ] = values[0];
-    m_value[index * 2 + 1] = values[1];
+    m_value[2 * index    ] = values[0];
+    m_value[2 * index + 1] = values[1];
 }
 
 void
 MFVec2d::setSFValue(int index, const char* values)
 {
-    sscanf(values, "%lf %lf", &m_value[index * 2], &m_value[index * 2 + 1]);
+    sscanf(values, "%lf %lf", &m_value[2 * index], &m_value[2 * index+ 1]);
 }
 
 void
 MFVec2d::setSFValue(int index, double x, double y)
 {
-    m_value[index * 2    ] = x;
-    m_value[index * 2 + 1] = y;
+    m_value[2 * index   ] = x;
+    m_value[2 * index + 1] = y;
 }
 
 void
@@ -120,7 +117,7 @@ MFVec2d::getVec(int index)
 }
 
 MyString
-MFVec2d::getEcmaScriptComment(MyString name, int flags) const
+MFVec2d::getEcmaScriptComment(MyString name, int flags)
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -206,11 +203,11 @@ MFVec2d::getEcmaScriptComment(MyString name, int flags) const
 void 
 MFVec2d::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, ((SFVec2d *)value)->getValue()); 
+    insertSFValue(index, (double *)((SFVec2d *)value)->getValue()); 
 }
 
 void 
-MFVec2d::insertSFValue(int index, const double *values)
+MFVec2d::insertSFValue(int index, double *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);

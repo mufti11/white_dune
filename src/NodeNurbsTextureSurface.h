@@ -23,6 +23,7 @@
 #define _NODE_NURBS_TEXTURE_SURFACE_H
 
 #ifndef NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -56,7 +57,8 @@ protected:
 
 public:
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() const { return new NodeNurbsTextureSurface(*this); }
+    virtual Node   *copy() { return new NodeNurbsTextureSurface(
+                             m_scene, m_proto); }
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
     int             writeProto(int filedes);

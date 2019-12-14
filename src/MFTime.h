@@ -19,18 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _MFTIME_H
-#define _MFTIME_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-#ifndef _SFTIME_H
 #include "SFTime.h"
-#endif
 
 class MFTime : public MFieldValue {
 public:
@@ -42,11 +35,11 @@ public:
                         MFTime(MFTime *value);
 
     virtual int         getType() const             { return MFTIME; }
-    virtual MyString    getString(int index, int stride) const;
-    virtual const char *getTypeName() const         { return "MFTime"; }
-    virtual int         getSFSize() const           { return m_value.size(); }
+    virtual MyString    getString(int index, int stride);
+    virtual const char *getTypeName()               { return "MFTime"; }
+    virtual int         getSFSize()                 { return m_value.size(); }
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
 
@@ -59,25 +52,24 @@ public:
     virtual FieldValue *copy();
 
     int                 getSize() const { return m_value.size(); }
-    double              getValue(int i) const { return m_value[i]; }
+    double              getValue(int i) { return m_value[i]; }
     virtual void        setValue(int index, double value);
-    const double       *getValues() const { return m_value.getData(); }
-    virtual FieldValue *getSFValue(int index) const   
+    double             *getValues() const { return m_value.getData(); }
+    virtual FieldValue *getSFValue(int index)
                            { return new SFTime(m_value[index]); }
     virtual void        setSFValue(int index, FieldValue *value);
+    void                setSFValue(int index, const double value);
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const double value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    virtual bool        equals(const FieldValue *value) const;
-    bool                equals(const MFTime *value) const;
+    virtual bool        equals(FieldValue *value);
+    bool                equals(MFTime *value);
 
-    MyString            getEcmaScriptComment(MyString name, int flags) const;
+    MyString            getEcmaScriptComment(MyString name, int flags);
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:
     MyArray<double>     m_value;
 };
-
-#endif // _MFTIME_H

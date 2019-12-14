@@ -19,17 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SLIDER_FLOAT_DIALOG_H
-#define _SLIDER_FLOAT_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
-
 #include "swttypedef.h"
+
 #ifndef FLT_MAX 
 # include <float.h>
 #endif
+
 #ifndef FLT_MIN
 # include <float.h>
 #endif
@@ -53,4 +51,3 @@ private:
     float               m_lowerlimit;
     SWND                m_scrollBar;
 };
-#endif

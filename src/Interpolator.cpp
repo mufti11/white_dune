@@ -79,7 +79,7 @@ float
 Interpolator::getKeyValue(int channel, int index) const
 {
     MFFloat *keyValue = (MFFloat *) getField(m_keyValueField);
-    int i = index * getNumChannels() + channel;
+    int i = index * ((Interpolator *)this)->getNumChannels() + channel;
     if (i < keyValue->getSize()) {
         return keyValue->getValue(i);
     } else {
@@ -254,9 +254,13 @@ Interpolator::receiveEvent(int eventIn, double timestamp, FieldValue *value)
 
 FieldValue *
 Interpolator::getInterpolatedFieldValue(float k)
-{
+{        
     m_fraction = k;
-    float *values = new float[getNumChannels()];
+    float *values;
+    if (getNumChannels() <= 0)
+        values = new float[1];
+    else
+        values = new float[getNumChannels()];
     interpolate(k, values);
     FieldValue *val = createKey(values);
     val->ref();
@@ -449,11 +453,11 @@ Interpolator::removeKeys(float firstFraction, float lastFraction)
 void                
 Interpolator::removeOldKeys(double currentTime, double oldTime)
 {
-    MyArray<Node *> timeSensors = 
-        m_scene->searchTimeSensorInInterpolator(this);
+    NodeList *timeSensors = m_scene->searchTimeSensorInInterpolator(*this).
+                            copy();
     // only handle first timeSensor
-    if (timeSensors.size() > 0) {
-        NodeTimeSensor *timeSensor = (NodeTimeSensor *)timeSensors[0];
+    if (timeSensors->size() > 0) {
+        NodeTimeSensor *timeSensor = (NodeTimeSensor *)timeSensors->get(0);
         float firstFraction = timeSensor->getFraction(oldTime);
         float lastFraction = timeSensor->getFraction(currentTime);
         if (lastFraction < firstFraction) {

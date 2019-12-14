@@ -19,34 +19,20 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FIELD_VIEW_H
-#define _FIELD_VIEW_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
-
-#ifndef _RECT_H
 #include "Rect.h"
-#endif
-
-#ifndef _POINT_H
 #include "Point.h"
-#endif
-
 #include "SFMFTypes.h"
+#include "swttypedef.h"
 
 class FieldViewItem;
 class DuneDoc;
 class Node;
 class FieldValue;
 class Hint;
-
-#include "swttypedef.h"
 
 class FieldView : public SceneView
 {
@@ -174,4 +160,3 @@ protected:
         FieldValue     *m_copiedFieldValue;
 };
 
-#endif // !_FIELD_VIEW_H

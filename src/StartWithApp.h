@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _START_WITH_APP_H
-#define _START_WITH_APP_H
+#pragma once
 
 class StartWithApp {
 public:
@@ -60,5 +59,4 @@ private:
     double              m_defaultSceneLength;
 };
 
-#endif
 

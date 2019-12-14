@@ -23,6 +23,7 @@
 #define _NODE_NAVIGATIONINFO_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -61,7 +62,7 @@ public:
     FieldIndex isActive;
     FieldIndex typeParams;
 
-    virtual int     translateField(int field) const;
+    virtual int     translateField(int field);
 };
 
 class NodeNavigationInfo : public Node {
@@ -70,7 +71,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeNavigationInfo(*this); }
+    virtual Node   *copy() { return new NodeNavigationInfo(m_scene, m_proto); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 

@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _GEO_NODE_H
-#define _GEO_NODE_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class GeoProto : public Proto {
@@ -51,6 +43,4 @@ public:
     fieldMacros(SFNode,   geoOrigin, GeoProto)
     fieldMacros(MFString, geoSystem, GeoProto)
 };
-
-#endif // _GEO_NODE_H
 

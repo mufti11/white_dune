@@ -19,15 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODEARRAY_H
-#define _NODEARRAY_H
+#pragma once
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
 
 class Node;
 
 typedef MyArray<Node *> NodeArray;
 
-#endif // _NODEARRAY_H

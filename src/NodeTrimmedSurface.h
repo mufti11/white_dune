@@ -52,7 +52,7 @@ public:
                     NodeTrimmedSurface(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeTrimmedSurface(*this); }
+    virtual Node *copy() { return new NodeTrimmedSurface(m_scene, m_proto); }
 
     virtual void    draw();
 

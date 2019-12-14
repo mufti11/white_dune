@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _FONTSTYLE_NODE_H
-#define _FONTSTYLE_NODE_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class FontStyleProto : public WonderlandExportProto {
@@ -59,8 +51,8 @@ public:
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
-    virtual float   getSizeX(void) const = 0;
-    virtual float   getSizeY(void) const = 0;
+    virtual float   getSizeX(void) = 0;
+    virtual float   getSizeY(void) = 0;
     virtual bool    isScreenFontStyle(void) { return false; }
 
     void            setField(int index, FieldValue *value, int cf = -1);
@@ -75,5 +67,3 @@ public:
     fieldMacros(SFBool,   topToBottom, FontStyleProto)
     fieldMacros(SFFloat,  quality,     FontStyleProto)
 };
-
-#endif // _NODE_FONTSTYLE_H

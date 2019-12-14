@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _RouteView_DIALOG_H
-#define _RouteView_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 
 class RouteViewSettingsDialog : public Dialog
 {
@@ -36,4 +33,3 @@ public:
     void                SaveData();
     void                OnCommand(void *id);
 };
-#endif

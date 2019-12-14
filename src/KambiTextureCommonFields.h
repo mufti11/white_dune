@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _KAMBI_TEXTURE_COMMON_FIELDS_H
-#define _KAMBI_TEXTURE_COMMON_FIELDS_H
+#pragma once
 
 #define kambiTextureCommonFieldIndex() \
     FieldIndex effects;
@@ -46,5 +45,3 @@
           addField(SFSTRING, "alphaChannel", new SFString(), \
                    new SFString("AUTO"))); \
     setFieldFlags(alphaChannel, FF_KAMBI_ONLY);
-
-#endif

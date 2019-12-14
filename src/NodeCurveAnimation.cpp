@@ -99,14 +99,15 @@ NodeCurveAnimation::copyFromNurbsCurve(Node *curve)
         int dimension = nurbsCurve->knot()->getSize() - order;
         MFFloat *mfknot = (MFFloat *) nurbsCurve->knot()->copy();
         const float *knots = mfknot->getValues();
-        node->knot(new MFFloat(knots, dimension + order));
+        node->knot(new MFFloat((float *)knots, dimension + order));
         MFVec3f *mfControlPoint = (MFVec3f *)
                                   nurbsCurve->getControlPoints()->copy();
         const float *controlPoint = mfControlPoint->getValues();
-        node->createControlPoints(new MFVec3f(controlPoint, dimension * 3));
+        node->createControlPoints(new MFVec3f((float *)controlPoint, 
+                                              dimension * 3));
         MFFloat *mfWeight = (MFFloat *) nurbsCurve->weight()->copy();
         const float *weights = mfWeight->getValues();
-        node->weight(new MFFloat(weights, dimension));
+        node->weight(new MFFloat((float *)weights, dimension));
         return node;
      }
      return NULL;

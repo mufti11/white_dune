@@ -77,7 +77,7 @@ MFStringItem::StartEditing(MyString &str, int offset)
     } else
         str = "";
     InitIndexValue(0, m_value);
-    str = v->getValue(0);
+    str = ((const MyString *)v)->getData();
 }
 
 FieldValue *

@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _EVENTOUT_H
-#define _EVENTOUT_H
+#pragma once
 
-#ifndef _ELEMENT_H
 # include "Element.h"
-#endif
-#ifndef _NODE_H   
 # include "Node.h"   
-#endif
 
 class ExposedField;
 
@@ -48,4 +43,3 @@ private:
     ExposedField   *m_exposedField;
 };
 
-#endif // _EVENTOUT_H

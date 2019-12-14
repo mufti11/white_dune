@@ -19,16 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _DEF_DIALOG_H
-#define _DEF_DIALOG_H
+#pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
-
 #include "swttypedef.h"
 
 class DefDialog : public Dialog {
@@ -48,4 +44,3 @@ private:
 
 };
 
-#endif

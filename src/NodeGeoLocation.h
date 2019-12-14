@@ -49,7 +49,7 @@ public:
     FieldIndex bboxSize;
     FieldIndex render;
 
-    virtual int     translateField(int field) const;
+    virtual int     translateField(int field);
 };
 
 class NodeGeoLocation : public GeoNode {
@@ -58,7 +58,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeGeoLocation(*this); }
+    virtual Node   *copy() { return new NodeGeoLocation(m_scene, m_proto); }
 
     void            setField(int index, FieldValue *value, int cf = -1);
     Node           *convert2Vrml(void);

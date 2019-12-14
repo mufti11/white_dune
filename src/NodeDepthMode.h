@@ -23,6 +23,7 @@
 #define _NODE_DEPTH_MODE_H
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -57,7 +58,7 @@ class NodeDepthMode : public Node {
 public:
                     NodeDepthMode(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() const { return new NodeDepthMode(*this); }
+    virtual Node   *copy() { return new NodeDepthMode(m_scene, m_proto); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 

@@ -24,6 +24,7 @@
 #include "EulerAngles.h"
 #include "ModellingApp.h"
 #include "DuneApp.h"
+#include "ExternTheApp.h"
 
 ModellingApp::ModellingApp()
 {

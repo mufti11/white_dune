@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _KAMBI_Viewpoint_COMMON_FIELDS_H
-#define _KAMBI_Viewpoint_COMMON_FIELDS_H
+#pragma once
 
 #define kambiViewpointCommonFieldIndex() \
     FieldIndex cameraMatrixSendAlsoOnOffscreenRendering;
@@ -38,5 +37,4 @@
     addEventOut(SFMATRIX4F, "cameraInverseMatrix", FF_KAMBI_ONLY); \
     addEventOut(SFMATRIX3F, "cameraRotationMatrix", FF_KAMBI_ONLY); \
     addEventOut(SFMATRIX3F, "cameraRotationInverseMatrix", FF_KAMBI_ONLY);
-#endif
 

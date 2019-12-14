@@ -53,7 +53,8 @@ public:
                     NodeVirtualAcoustics(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() const { return new NodeVirtualAcoustics(*this); }
+    virtual Node   *copy() { return new NodeVirtualAcoustics(
+                                    m_scene, m_proto); }
 
     fieldMacros(MFNode, soundSources, ProtoVirtualAcoustics)
 };

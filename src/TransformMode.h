@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TRANSFORMMODE_H
-#define _TRANSFORMMODE_H
+#pragma once
 
 typedef enum {
     TM_TRANSLATE,
@@ -60,4 +59,3 @@ public:
     bool isLocal(void);
 };
 
-#endif

@@ -19,10 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLOR_RGBA_H
-#define _NODE_COLOR_RGBA_H
+#pragma once
 
 #ifndef _NODE_H
+#include "ExternTheApp.h"
 #include "Node.h"
 #endif
 #ifndef _PROTO_MACROS_H
@@ -55,13 +55,13 @@ public:
     virtual const char* getComponentName(void) const { return "Rendering"; }
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() const { return new NodeColorRGBA(*this); }
+    virtual Node   *copy() { return new NodeColorRGBA(m_scene, m_proto); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
-    virtual NodeColorRGBA *getColorRGBANode() { return this; }
+    virtual NodeColorRGBA *getColorRGBANode(void) { return this; }
 
     void            drawHandles(void);
     Vec3f           getHandle(int handle, int *constraint, int *field);
@@ -72,5 +72,3 @@ public:
     fieldMacros(MFColorRGBA, color, ProtoColorRGBA)
 
 };
-
-#endif
