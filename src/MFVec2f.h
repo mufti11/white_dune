@@ -43,13 +43,13 @@ public:
                              }
 
     virtual int         getType() const { return MFVEC2F; }
-    virtual const char *getTypeName() { return "MFVec2f"; }
-    virtual int         getStride() { return 2; }
+    virtual const char *getTypeName() const { return "MFVec2f"; }
+    virtual int         getStride() const { return 2; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
     float              *getValue(int index)
                            { return m_value.getData() + index * 2; } 

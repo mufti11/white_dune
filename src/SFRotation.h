@@ -46,25 +46,25 @@ public:
 
     void                generateQuaternion();
     virtual int         getType() const { return SFROTATION; }
-    virtual const char *getTypeName() { return "SFRotation"; }
-    virtual int         getStride() { return 4; }
+    virtual const char *getTypeName() const { return "SFRotation"; }
+    virtual int         getStride() const { return 4; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag) { return "float"; }
-    virtual bool        isArrayInC(void) { return true; }
+    virtual const char *getTypeC(int languageFlag) const { return "float"; }
+    virtual bool        isArrayInC(void) const { return true; }
 
     virtual int         writeAc3d(int filedes, int indent);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 4; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 4; }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFRotation(*this); }
 
     virtual void        fixAngle(double angleUnit) 
@@ -79,14 +79,14 @@ public:
                                 m_value[3] /= angleUnit;
                             }
 
-    float              *getValue() { return m_value; }
-    float               getValue(int pos) { return m_value[pos]; }
+    const float        *getValue() const { return m_value; }
+    const float         getValue(int pos) const { return m_value[pos]; }
     void                setValue(int index, float value);
     void                setValue(float v1, float v2, float v3, float v4);
     Vec3f               getEulerAngles(int order);
     void                setEulerAngles(Vec3f angles, int order);
     void                angleMult(float mult);
-    const Quaternion   &getQuat();
+    const Quaternion   &getQuat() const;
     void                normalize();
 
     Vec3f               operator *(const Vec3f &v);

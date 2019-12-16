@@ -63,7 +63,7 @@ SFVec3d::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 bool
-SFVec3d::equals(FieldValue *value)
+SFVec3d::equals(const FieldValue *value) const
 {
     if (value->getType() == SFVEC3D) {
         SFVec3d *v = (SFVec3d *) value;

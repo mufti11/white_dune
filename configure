@@ -8814,28 +8814,6 @@ _ACEOF
 fi
 done
 
-for ac_func in glBindTexture
-do :
-  ac_fn_c_check_func "$LINENO" "glBindTexture" "ac_cv_func_glBindTexture"
-if test "x$ac_cv_func_glBindTexture" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_GLBINDTEXTURE 1
-_ACEOF
-
-fi
-done
-
-for ac_func in glActiveTexture
-do :
-  ac_fn_c_check_func "$LINENO" "glActiveTexture" "ac_cv_func_glActiveTexture"
-if test "x$ac_cv_func_glActiveTexture" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_GLACTIVETEXTURE 1
-_ACEOF
-
-fi
-done
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gluProject  in -lGLU" >&5
 $as_echo_n "checking for gluProject  in -lGLU... " >&6; }
 if ${ac_cv_lib_GLU_gluProject_+:} false; then :
@@ -10500,7 +10478,6 @@ fi
 if test "${with_allow_multiple_definition+set}" = set; then :
   withval=$with_allow_multiple_definition; LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition";export LDFLAGS
 fi
-
 
 
 

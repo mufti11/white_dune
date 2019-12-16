@@ -154,7 +154,7 @@ MFNode::writeXml(int f, int indent, int containerField, bool avoidUse)
 }
 
 const char *
-MFNode::getTypeC(int languageFlag) 
+MFNode::getTypeC(int languageFlag) const
 { 
     if (languageFlag & JAVA_SOURCE)
         return TheApp->getCNodeNameArray(); 
@@ -272,7 +272,7 @@ MFNode::readLine(int index, char *line)
 }
 
 bool
-MFNode::equals(FieldValue *value)
+MFNode::equals(const FieldValue *value) const
 {
     if (((FieldValue *)value)->getType() == MFNODE) {
         NodeList *v = ((MFNode *) value)->getValues();

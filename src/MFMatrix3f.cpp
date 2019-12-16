@@ -52,7 +52,7 @@ MFMatrix3f::readLine(int index, char *line)
 }
 
 bool
-MFMatrix3f::equals(FieldValue *value)
+MFMatrix3f::equals(const FieldValue *value) const
 {
     return value->getType() == MFMATRIX3F && equals(value);
 }

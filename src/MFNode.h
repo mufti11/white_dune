@@ -35,7 +35,7 @@ public:
     virtual            ~MFNode();
 
     virtual int         getType() const { return MFNODE; }
-    virtual const char *getTypeName() { return "MFNode"; }
+    virtual const char *getTypeName() const { return "MFNode"; }
 
     virtual bool        writeBrackets(void);
     virtual int         writeData(int filedes, int i); 
@@ -47,15 +47,15 @@ public:
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag);
+    virtual const char *getTypeC(int languageFlag) const;
     virtual int         writeCDeclaration(int filedes, int languageFlag);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 0; }
+    virtual int         getNumbersPerType(void) const { return 0; }
 
-    virtual bool        equals(FieldValue *value);
-    int                 getSize()
+    virtual bool        equals(const FieldValue *value) const;
+    int                 getSize() const
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -65,7 +65,7 @@ public:
                                return 0;
                            return m_value->size(); 
                            }
-    NodeList           *getValues() 
+    NodeList           *getValues() const
                            { 
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -73,7 +73,7 @@ public:
 #endif
                            return m_value; 
                            }
-    Node               *getValue(long index)
+    Node               *getValue(long index) const
                            { 
                            if (m_value->size() == 0)
                                return NULL;
@@ -86,7 +86,7 @@ public:
                            return m_value->get(index); 
                            }
 
-    virtual int         getSFSize()
+    virtual int         getSFSize() const
                            { 
                            if (m_value == NULL) 
                                return 0;
@@ -122,8 +122,8 @@ public:
     virtual Node       *convert2X3d(void);
     virtual Node       *convert2Vrml(void);
 
-    virtual bool        isNode(void) { return true; } 
-    virtual bool        isMFNode(void) { return true; } 
+    virtual bool        isNode(void) const { return true; } 
+    virtual bool        isMFNode(void) const { return true; } 
 
     virtual int         writeAc3d(int filedes, int indent);
     virtual void        handleAc3dMaterial(ac3dMaterialCallback callback, 

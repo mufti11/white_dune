@@ -137,13 +137,13 @@ MFInt32::readLine(int index, char *line)
 }
 
 bool
-MFInt32::equals(FieldValue *value)
+MFInt32::equals(const FieldValue *value) const
 {
     if (value->getType() == MFINT32) {
-        MFInt32 *v = (MFInt32 *) value;
+        MFInt32 *v = (MFInt32 *)value;
         if (v->getSize() != (int)m_value.size()) return false;
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value[i] != v->getValue(i))
+            if (m_value.getData()[i] != v->getValue(i))
                 return false;
         return true;
     }

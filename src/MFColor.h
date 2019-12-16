@@ -28,22 +28,22 @@ public:
                         MFColor();
                         MFColor(int size) : MFFloat(size * 3) {}
                         MFColor(MFColor *values) :
-                              MFFloat(values->getValues(), values->getSize()) {}
+                            MFFloat(values->getValues(), values->getSize()) {}
                         MFColor(float *values, int len) :
-                                MFFloat(values, len) {}
+                            MFFloat((float *)values, len) {}
                         MFColor(double* values, int len) : 
-                              MFFloat(values, len) {}
+                            MFFloat((double *)values, len) {}
 
     virtual int         getType() const { return MFCOLOR; }
-    virtual const char *getTypeName() { return "MFColor"; }
-    virtual int         getStride() { return 3; }
+    virtual const char *getTypeName() const { return "MFColor"; }
+    virtual int         getStride() const { return 3; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
-    float              *getValue(int index)
+    float              *getValue(int index) const
                            { return m_value.getData() + index * 3; }
 
     virtual FieldValue *getSFValue(int index);

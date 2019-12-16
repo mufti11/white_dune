@@ -37,19 +37,19 @@ public:
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFMATRIX3F; }
-    virtual const char *getTypeName() { return "MFMatrix3f"; }
-    virtual int         getStride() { return 9; }
+    virtual const char *getTypeName() const { return "MFMatrix3f"; }
+    virtual int         getStride() const { return 9; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const float *values);
 
-    float              *getValue(int index)
+    float              *getValue(int index) const
                               { return m_value.getData() + index * 9; } 
 
     virtual void        insertSFValue(int index, FieldValue *value);

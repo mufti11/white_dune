@@ -69,7 +69,7 @@ SFVec2f::setValue(float v1, float v2)
 
 
 bool
-SFVec2f::equals(FieldValue *value)
+SFVec2f::equals(const FieldValue *value) const
 {
     return value->getType() == SFVEC2F
         && ((SFVec2f *) value)->getValue(0) == m_value[0]
@@ -232,7 +232,7 @@ SFVec2f::getEcmaScriptComment(MyString name, int flags)
 }
 
 Vec2f        
-SFVec2f::getVec(void)
+SFVec2f::getVec(void) const
 {
     Vec2f v(m_value[0], m_value[1]);
     return v;

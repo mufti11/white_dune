@@ -181,7 +181,7 @@ FieldValue::writeCSendEventFunction(int filedes, int languageFlag)
 }
 
 const char *
-FieldValue::getDefaultC(int languageFlag)
+FieldValue::getDefaultC(int languageFlag) const
 { 
     return "NULL"; 
 }

@@ -91,21 +91,9 @@ MFTime::readLine(int index, char *line)
 }
 
 bool
-MFTime::equals(FieldValue *value)
+MFTime::equals(const FieldValue *value) const
 {
     return value->getType() == MFTIME && equals(value);
-}
-
-bool
-MFTime::equals(MFTime *value)
-{
-    if ((int)m_value.size() == value->getSize()) {
-        for (long i = 0; i < m_value.size(); i++)
-            if (m_value[i] != value->getValue(i))
-                return false;
-        return true;
-    }
-    return false;
 }
 
 int MFTime::writeData(int f, int i) 

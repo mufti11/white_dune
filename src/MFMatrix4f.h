@@ -36,13 +36,13 @@ public:
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFMATRIX4F; }
-    virtual const char *getTypeName() { return "MFMatrix4f"; }
-    virtual int         getStride() { return 16; }
+    virtual const char *getTypeName() const { return "MFMatrix4f"; }
+    virtual int         getStride() const { return 16; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);

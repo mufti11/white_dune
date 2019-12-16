@@ -38,7 +38,7 @@
 
 #include "AflockSettingsDialog.h"
 
-extern bool parseCommandlineArgumentInputDevice(int & i,int argc, char** argv);
+extern bool parseCommandlineArgumentInputDevice(int i,int argc, char** argv);
 
 
 //////////////////////////////////////////////////////////////////////

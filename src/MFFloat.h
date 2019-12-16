@@ -31,15 +31,15 @@ public:
                         MFFloat(int size);
                         MFFloat(MFFloat &value);
                         MFFloat(MFFloat *values);
-                        MFFloat(float *values, int len, int stride = 1);
-                        MFFloat(double *values, int len, int stride = 1);
+                        MFFloat(const float *values, int len, int stride = 1);
+                        MFFloat(const double *values, int len, int stride = 1);
                         MFFloat(float value);
     virtual            ~MFFloat();
 
     virtual int         getType() const { return MFFLOAT; }
-    virtual int         getStride() { return 1; }
+    virtual int         getStride() const { return 1; }
     virtual MyString    getString(int index, int stride); 
-    virtual const char *getTypeName() { return "MFFloat"; }
+    virtual const char *getTypeName() const { return "MFFloat"; }
 
     virtual int         writeData(int filedes, int i); 
     virtual int         writeDataC(int filedes, int i, int languageFlag);
@@ -48,21 +48,22 @@ public:
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return getStride(); }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return getStride(); }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(MFFloat *value);
+    virtual bool        equals(const MFFloat *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy(); 
 
-    virtual int         getSFSize()
+    virtual int         getSFSize() const
                            { return m_value.size() / getStride(); }
     virtual FieldValue *getSFValue(int index); 
     virtual void        setSFValue(int index, FieldValue *value);
     void                setSFValue(int index, const float value);
 
-    float              *getValues() { return m_value.getData(); }
-    float               getValue(int i) { return m_value[i]; }
+    const float        *getValues() const { return m_value.getData(); }
+    const float         getValue(int i)
+                             { return m_value[i]; }
     void                setValue(int index, float value) 
                            { m_value[index] = value; }
     int                 getSize() const { return m_value.size(); }

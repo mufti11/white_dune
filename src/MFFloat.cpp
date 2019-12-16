@@ -39,12 +39,12 @@ MFFloat::MFFloat(int size)
 
 }
 
-MFFloat::MFFloat(float *values, int len, int /* stride */)
+MFFloat::MFFloat(const float *values, int len, int stride)
 {
     m_value.setData(values, len);
 }
 
-MFFloat::MFFloat(double *values, int len, int /* stride */)
+MFFloat::MFFloat(const double *values, int len, int stride)
 {
     float* floats = new float[len];
     for (int i = 0; i < len; i++)
@@ -116,11 +116,13 @@ MFFloat::readLine(int index, char *line)
 }
 
 bool
-MFFloat::equals(MFFloat *value)
+MFFloat::equals(const MFFloat *value) const
 {
-    if (m_value.size() == value->getSize()) {
+    if (value->getType() == MFFLOAT) {
+        MFFloat *v = (MFFloat *)value;
+        if (v->getSize() != (int)m_value.size()) return false;   
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value[i] != value->getValue(i))
+            if (m_value.getData()[i] != v->getValue(i))
                 return false;
         return true;
     }
@@ -179,7 +181,7 @@ MFFloat::setSFValue(int index, float value)
 FieldValue *
 MFFloat::getSFValue(int index)
 {
-    assert(index<getSFSize());
+    assert(index < getSFSize());
     return new SFFloat(m_value[index]); 
 }
 

@@ -105,7 +105,7 @@ SFColorRGBA::readLine(int index, char *line)
 }
 
 bool
-SFColorRGBA::equals(FieldValue *value)
+SFColorRGBA::equals(const FieldValue *value) const
 {
     if (value->getType() == SFCOLORRGBA) {
         for (int i = 0; i < 4; i++)

@@ -93,24 +93,26 @@ SFImage::readLine(int index, char *line)
 }
 
 bool
-SFImage::equals(FieldValue *value)
+SFImage::equals(const FieldValue *value) const
 {
     if (value->getType() == SFIMAGE) {
-        SFImage *v = (SFImage *) value;
+        SFImage *v = (SFImage *)value;
         bool samePixels = false;
-        if ((v->getPixels() == NULL) && (getPixels() == NULL))
+        if ((v->getPixels() == NULL) && ((SFImage *)this)->getPixels() == NULL)
             samePixels = true;
         else if (v->getPixels() == NULL)
             samePixels = false;
-        else if (getPixels() == NULL)
+        else if (((SFImage *)this)->getPixels() == NULL)
             samePixels = false;
         else
-            samePixels = !memcmp(v->getPixels(), getPixels(), 
-                                 getWidth() * getHeight());
+            samePixels = !memcmp(v->getPixels(), 
+                                 ((SFImage *)this)->getPixels(), 
+                                 ((SFImage *)this)->getWidth() * 
+                                 ((SFImage *)this)->getHeight());
 
-        return v->getWidth() == getWidth()
-            && v->getHeight() == getHeight()
-            && v->getComponents() == getComponents()
+        return v->getWidth() == ((SFImage *)this)->getWidth()
+            && v->getHeight() == ((SFImage *)this)->getHeight()
+            && v->getComponents() == ((SFImage *)this)->getComponents()
             && samePixels;
     }
     return false;
@@ -179,7 +181,7 @@ SFImage::setComponents(int components)
     resizeImage();
 }
 
-const int *
+int *
 SFImage::getPixels()
 {
     if ((getWidth() != 0) && (getHeight() != 0) && (getComponents() != 0))

@@ -39,7 +39,7 @@ SFMatrix4f::getString(int index, int stride)
 }
 
 bool
-SFMatrix4f::equals(FieldValue *value)
+SFMatrix4f::equals(const FieldValue *value) const
 {
     if (value->getType() == SFMATRIX4F) {
         SFMatrix4f *v = (SFMatrix4f *) value;

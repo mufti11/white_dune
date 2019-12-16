@@ -37,21 +37,23 @@ public:
                         MFVec2d(MFVec2d *values);
 
     virtual int         getType() const { return MFVEC2D; }
-    virtual const char *getTypeName() { return "MFVec2d"; }
-    virtual int         getStride() { return 2; }
+    virtual const char *getTypeName() const { return "MFVec2d"; }
+    virtual int         getStride() const { return 2; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
+    virtual int         getSFSize() const 
+                            { return m_value.size() / getStride(); }
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, double *values);
     virtual void        setSFValue(int index, double x, double y);
     virtual void        setSFValue(int index, const char* values);
 
-    double             *getValue(int index)
+    double             *getValue(int index) const
                               { return m_value.getData() + index * 2; } 
 
     void                setVec(int index, Vec2d v);

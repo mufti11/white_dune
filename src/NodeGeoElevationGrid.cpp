@@ -169,9 +169,8 @@ NodeGeoElevationGrid::setField(int index, FieldValue *value, int cf)
     }
 
     if (index == height_Field()) {
-        MFFloat *oldValue = (MFFloat *)value;
-        MFDouble *dvalue = new MFDouble(oldValue->getValues(), 
-                                        oldValue->getSize());
+        MFDouble *dvalue = new MFDouble(((MFDouble *)value)->getValues(), 
+                                        ((MFDouble *)value)->getSize());
         Node::setField(heightX3D_Field(), dvalue, cf);
     }
 

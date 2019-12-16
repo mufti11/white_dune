@@ -37,7 +37,7 @@
 extern int illegal2vrml(int argc, char *argv[]);
 //extern int vrml2dune(int argc, char *argv[]);
 
-bool parseCommandlineArgumentInputDevice(int &i,int argc, char** argv)
+bool parseCommandlineArgumentInputDevice(int i,int argc, char** argv)
 {
     static int currentInputDevice = -1;
     static int currentAflockDevice = -1;
@@ -218,7 +218,11 @@ bool parseCommandlineArgumentInputDevice(int &i,int argc, char** argv)
     return found;    
 }
 
-bool parseCommandlineArgument(int &i,int argc, char** argv)
+#ifdef _WIN32
+bool parseCommandlineArgument(int i,int argc, char** argv)
+#else
+bool parseCommandlineArgument(int i,int argc, char** argv)
+#endif
 {
     bool found = parseCommandlineArgumentStereoView(i, argc, argv);
     if (found)

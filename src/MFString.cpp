@@ -147,7 +147,7 @@ MFString::writeCWonderlandArt(int filedes, const char* variableName,
 }
 
 const char *
-MFString::getTypeC(int languageFlag)
+MFString::getTypeC(int languageFlag) const
 { 
     if (languageFlag & JAVA_SOURCE)
         return "String";
@@ -162,7 +162,7 @@ MFString::readLine(int index, char *line)
 }
 
 bool
-MFString::equals(FieldValue *value)
+MFString::equals(const FieldValue *value) const
 {
     if (value->getType() == MFSTRING) {
         MFString *v = (MFString *) value;

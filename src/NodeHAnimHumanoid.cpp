@@ -775,9 +775,11 @@ NodeHAnimHumanoid::writeRib(int filedes, int indent)
     createMeshes();
     int ret = 0;
     for (int i = 0; i < m_numMeshes; i++) {
+#ifndef MACOSX
         NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)
                                       m_meshes[i]->toIndexedFaceSet(0, m_scene);
         RET_ONERROR( faceset->writeRib(filedes, indent) )
+#endif
     }
     return ret;    
 }

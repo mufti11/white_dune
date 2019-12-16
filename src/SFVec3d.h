@@ -69,11 +69,11 @@ public:
                         SFVec3d(SFString *value);
 
     virtual int         getType() const { return SFVEC3D; }
-    virtual const char *getTypeName() { return "SFVec3d"; }
-    virtual int         getStride() { return 3; }
+    virtual const char *getTypeName() const { return "SFVec3d"; }
+    virtual int         getStride() const { return 3; }
     virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFVec3d(*this); }
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual bool        supportAnimation(bool x3d) { return false; }
     virtual bool        supportInteraction(void) { return false; }
@@ -83,8 +83,8 @@ public:
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag) { return "double"; }
-    virtual bool        isArrayInC(void) { return true; }
+    virtual const char *getTypeC(int languageFlag) const { return "double"; }
+    virtual bool        isArrayInC(void) const { return true; }
 
     virtual bool        readLine(int index, char *line);
 
@@ -107,7 +107,7 @@ public:
                            m_value[1] = ((SFVec3d *)value)->getValue()[1];
                            m_value[2] = ((SFVec3d *)value)->getValue()[2];
                            }
-    Vec3d             gettSFValue(int index)
+    Vec3d             gettSFValue(int index) const
                            {
                            static Vec3d vec;
                            vec.x = getValue(index * 3);
@@ -116,7 +116,7 @@ public:
                            return vec;
                            }
 
-    virtual bool        isX3DType() { return true; }
+    virtual bool        isX3DType() const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
                            { return new SFVec3d(FLOAT_RAND(), FLOAT_RAND(), 

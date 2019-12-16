@@ -53,11 +53,11 @@ public:
                            }
 
     virtual int         getType() const { return SFVEC4F; }
-    virtual const char *getTypeName() { return "SFVec4f"; }
-    virtual int         getStride() { return 4; }
+    virtual const char *getTypeName() const { return "SFVec4f"; }
+    virtual int         getStride() const { return 4; }
     virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFVec4f(*this); }
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual bool        supportAnimation(bool x3d) { return true; }
     virtual bool        supportInteraction(void) { return true; }
@@ -67,18 +67,18 @@ public:
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag) { return "float"; }
-    virtual bool        isArrayInC(void) { return true; }
+    virtual const char *getTypeC(int languageFlag) const { return "float"; }
+    virtual bool        isArrayInC(void) const { return true; }
 
     virtual int         writeAc3d(int filedes, int indent);
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 4; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 4; }
+    virtual bool        needCheckFloat(void) const { return true; }
     
-    float              *getValue() { return m_value; }
-    float               getValue(int pos) { return m_value[pos]; }
+    const float        *getValue() const { return m_value; }
+    float               getValue(int pos) const { return m_value[pos]; }
     void                setValue(int index, float value)
                            {
                            assert(index >= 0 && index < 4);
@@ -98,7 +98,7 @@ public:
                            m_value[2] = ((SFVec4f *)value)->getValue()[2];
                            m_value[3] = ((SFVec4f *)value)->getValue()[3];
                            }
-    Vec4f             getSFValue(int index)
+    Vec4f             getSFValue(int index) const
                            {
                            static Vec4f vec;
                            vec.x = getValue(index * 4);

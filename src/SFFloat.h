@@ -32,14 +32,14 @@ public:
                         SFFloat(void) { m_value = 0.0; } // silly default
 
     virtual int         getType() const { return SFFLOAT; }
-    virtual const char *getTypeName() { return "SFFloat"; }
+    virtual const char *getTypeName() const { return "SFFloat"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
     virtual int         writeDataC(int filedes, int i, int languageFlag); 
 
-    virtual const char *getTypeC(int languageFlag) { return "float"; }
-    virtual const char *getDefaultC(int languageFlag) { return "0.0f"; }
+    virtual const char *getTypeC(int languageFlag) const { return "float"; }
+    virtual const char *getDefaultC(int languageFlag) const { return "0.0f"; }
 
     virtual bool        readLine(int index, char *line);
 
@@ -48,7 +48,7 @@ public:
 
     virtual FieldValue *copy() { return new SFFloat(*this); }
 
-    float               getValue() 
+    float               getValue() const
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -57,7 +57,7 @@ public:
                            return m_value; 
                            }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual bool        equalsAngle(const FieldValue *value, double angleUnit);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 

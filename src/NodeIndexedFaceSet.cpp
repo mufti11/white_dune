@@ -554,11 +554,13 @@ NodeIndexedFaceSet::splitSelectedFaces(void)
         for (int j = 0; j < numVertices; j++) {
             int ci = coordIndex()->getValue(offset + j);
             if (m_scene->isInSelectedHandles(i)) {
-                newVertices->appendSFValue(ncoord->point()->getValue(ci));
+                newVertices->appendSFValue((float *)
+                                           ncoord->point()->getValue(ci));
                 newCoordIndex->appendSFValue(numNewCoordIndex++);
                 addedNew = true;
             } else {
-                splitVertices->appendSFValue(ncoord->point()->getValue(ci));
+                splitVertices->appendSFValue((float *)
+                                             ncoord->point()->getValue(ci));
                 splitCoordIndex->appendSFValue(numSplitCoordIndex++);
                 addedSplit = true;
             }

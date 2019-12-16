@@ -36,7 +36,7 @@ public:
     virtual            ~MFString();
 
     virtual int         getType() const { return MFSTRING; }
-    virtual const char *getTypeName() { return "MFString"; }
+    virtual const char *getTypeName() const { return "MFString"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         write4FieldPipe(int filedes, int indent); 
@@ -51,29 +51,29 @@ public:
     virtual int         writeData(int filedes, int i); 
     virtual int         writeDataXml(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag); 
+    virtual const char *getTypeC(int languageFlag) const; 
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 0; }
+    virtual int         getNumbersPerType(void) const { return 0; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy();
 
-    virtual int         getSFSize() { return m_value.size(); }
+    virtual int         getSFSize() const { return m_value.size(); }
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const char* value);
 
-    const MyString     *getValues() { return m_value.getData(); }
-    virtual SFString *getValue(int i) 
+    const MyString     *getValues() const { return m_value.getData(); }
+    virtual SFString   *getValue(int i) 
                             { return new SFString(m_value[i]); }
-    MyString           *getString(int i) 
+    MyString           *getString(int i)
                            { 
                            static MyString s = SFString(m_value[i]).getValue();
                            return &s;
                            }
-    int                 getSize() { return m_value.size(); }
+    int                 getSize() const { return m_value.size(); }
     void                setValue(int index, MyString value) 
                            { m_value[index] = value; }
 

@@ -219,7 +219,7 @@ SFRotation::SFRotation(const Matrix &mat)
 }
 
 bool
-SFRotation::equals(FieldValue *value)
+SFRotation::equals(const FieldValue *value) const
 {
     if (value->getType() == SFROTATION) {
         for (int i = 0; i < 4; i++)
@@ -245,7 +245,7 @@ Vec3f SFRotation::getEulerAngles(int order)
 }
 
 const Quaternion &
-SFRotation::getQuat()
+SFRotation::getQuat() const
 {
     return m_quaternion;
 }

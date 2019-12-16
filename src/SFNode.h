@@ -47,7 +47,7 @@ public:
                                m_value->ref();
                            return SFNODE; 
                            }
-    virtual const char *getTypeName() 
+    virtual const char *getTypeName() const
                            {
                            if (m_value && m_value->hasNeedRef())
                                m_value->ref();
@@ -61,20 +61,20 @@ public:
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag);
+    virtual const char *getTypeC(int languageFlag) const;
     virtual int         writeCDeclaration(int filedes, 
                                           int languageFlag);  
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 0; }
+    virtual int         getNumbersPerType(void) const { return 0; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy();
 
-    virtual bool        isNull() { return m_value == NULL; }
+    virtual bool        isNull() const { return m_value == NULL; }
 
-    Node               *getValue() { 
+    Node               *getValue() const { 
                                          if (m_value && m_value->hasNeedRef())
                                              m_value->ref();
 #ifdef HAVE_NULL_COMPARE
@@ -93,10 +93,10 @@ public:
 
     MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual bool        isNode(void) { return true; } 
+    virtual bool        isNode(void) const { return true; } 
 
-    virtual bool        isNullNode(void);
-    virtual bool        isUseNode(void);
+    virtual bool        isNullNode(void) const;
+    virtual bool        isUseNode(void) const;
 
     virtual const char *getDefName(void);
 
@@ -114,10 +114,11 @@ public:
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 
-    virtual int         getContainerField(void) { return m_containerField; }
+    virtual int         getContainerField(void) const
+                            { return m_containerField; }
     virtual void        setContainerField(int f) { m_containerField = f; }
 
-    virtual void        ref() 
+    virtual void        ref()
                            {
                            if (m_value && m_value->hasNeedRef()) {
                                m_value->ref();
@@ -126,7 +127,7 @@ public:
                            }
                            FieldValue::ref();
                            } 
-    virtual void        unref() 
+    virtual void        unref()
                            { 
                            if (m_value && m_value->hasNeedRef()) {
                                m_value->ref();

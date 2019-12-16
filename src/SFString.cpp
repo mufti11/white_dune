@@ -57,7 +57,7 @@ SFString::readLine(int index, char *line)
 }
 
 bool
-SFString::equals(FieldValue *value)
+SFString::equals(const FieldValue *value) const
 {
     return value->getType() == SFSTRING &&
       !strcmp(((SFString *) value)->getValue(), (const char *) m_value);
@@ -101,7 +101,7 @@ int SFString::write4FieldPipe(int filedes, int indent)
 }
 
 const char *
-SFString::getTypeC(int languageFlag)
+SFString::getTypeC(int languageFlag) const
 { 
     if (languageFlag & JAVA_SOURCE)
         return "String";

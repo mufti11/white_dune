@@ -38,7 +38,7 @@ SFVec3f::getString(int index, int stride)
 }
 
 bool
-SFVec3f::equals(FieldValue *value)
+SFVec3f::equals(const FieldValue *value) const
 {
     if (value->getType() == SFVEC3F) {
         SFVec3f *v = (SFVec3f *) value;
@@ -252,7 +252,7 @@ SFVec3f::getEcmaScriptComment(MyString name, int flags)
 }
 
 Vec3f        
-SFVec3f::getVec(void)
+SFVec3f::getVec(void) const
 {
     Vec3f v(m_value[0], m_value[1], m_value[2]);
     return v;

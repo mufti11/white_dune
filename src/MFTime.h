@@ -36,8 +36,8 @@ public:
 
     virtual int         getType() const             { return MFTIME; }
     virtual MyString    getString(int index, int stride);
-    virtual const char *getTypeName()               { return "MFTime"; }
-    virtual int         getSFSize()                 { return m_value.size(); }
+    virtual const char *getTypeName() const         { return "MFTime"; }
+    virtual int         getSFSize() const           { return m_value.size(); }
 
     virtual int         writeData(int filedes, int i); 
 
@@ -64,8 +64,7 @@ public:
     virtual void        insertSFValue(int index, const double value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    virtual bool        equals(FieldValue *value);
-    bool                equals(MFTime *value);
+    virtual bool        equals(const FieldValue *value) const;
 
     MyString            getEcmaScriptComment(MyString name, int flags);
 

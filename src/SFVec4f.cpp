@@ -39,7 +39,7 @@ SFVec4f::getString(int index, int stride)
 }
 
 bool
-SFVec4f::equals(FieldValue *value)
+SFVec4f::equals(const FieldValue *value) const
 {
     if (value->getType() == SFVEC4F) {
         SFVec4f *v = (SFVec4f *) value;

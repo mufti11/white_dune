@@ -53,7 +53,7 @@ MFColorRGBA::readLine(int index, char *line)
 }
 
 bool
-MFColorRGBA::equals(FieldValue *value)
+MFColorRGBA::equals(const FieldValue *value) const
 {
     return value->getType() == MFCOLORRGBA && 
            MFFloat::equals((MFFloat *) value);

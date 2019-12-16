@@ -30,6 +30,7 @@
 
 #include "MyMesh.h"
 
+#ifndef MACOSX
 template <class X,class MFX,class VEC3X>
 Node * 
 MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
@@ -101,6 +102,7 @@ MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
 
     return node;
 }
+#endif
 
 void MyMesh::drawVertex(float *v)
 {
@@ -171,7 +173,6 @@ combineVertices(GLdouble coords[3], GLdouble *vertex_data[4],
 
     *dataOut = &vertexInfo->vertex[0];
 }
-
 
 #ifdef _WIN32
 void tesselationError(GLenum error) 

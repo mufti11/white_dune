@@ -31,8 +31,8 @@ public:
                         SFVec2d(void); // silly default
 
     virtual int         getType() const { return SFVEC2D; }
-    virtual int         getStride() { return 2; }
-    virtual const char *getTypeName() { return "SFVec2d"; }
+    virtual int         getStride() const { return 2; }
+    virtual const char *getTypeName() const { return "SFVec2d"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
@@ -44,15 +44,15 @@ public:
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 2; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 2; }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy() { return new SFVec2d(*this); }
 
-    double              getValue(int index) { return m_value[index]; }
-    double             *getValue() { return m_value; }
+    const double        getValue(int index) const { return m_value[index]; }
+    const double       *getValue() const { return m_value; }
     void                setValue(int pos, double value)
                            { m_value[pos] = value; }
     void                setValue(double v1, double v2);
@@ -71,7 +71,7 @@ public:
                            m_value[0] = ((SFVec2d *)value)->getValue()[0];
                            m_value[1] = ((SFVec2d *)value)->getValue()[1];
                            }
-    Vec2d              getSFValue(int index)
+    Vec2d              getSFValue(int index) const
                            {
                            static Vec2d vec;
                            vec.x = getValue(index * 2);

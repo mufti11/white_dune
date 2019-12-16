@@ -33,7 +33,7 @@ public:
     virtual            ~MFInt32();
 
     virtual int         getType() const { return MFINT32; }
-    virtual const char *getTypeName() { return "MFInt32"; }
+    virtual const char *getTypeName() const { return "MFInt32"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
@@ -47,21 +47,23 @@ public:
     int                 write(int f, int indent, bool writeBrackets, 
                               bool compactFormat);
 
-    virtual const char *getTypeC(int languageFlag) { return "int"; }
+    virtual const char *getTypeC(int languageFlag) const { return "int"; }
 
     virtual bool        readLine(int index, char *line);
     virtual int         getNumbersPerType(void) { return getStride(); }
 
-    virtual bool        equals(FieldValue *value);
-    virtual int         getSFSize() { return m_value.size(); }
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const int value);
     virtual FieldValue *copy();
 
-    int                 getValue(int index) { return m_value[index]; }
-    const int          *getValues() { return m_value.getData(); }
-    int                 getSize() { return m_value.size(); }
+    virtual int         getSFSize() const
+                            { return m_value.size() / getStride(); }
+    int                 getValue(int index)
+                            { return m_value[index]; }
+    const int          *getValues() const { return m_value.getData(); }
+    int                 getSize() const { return m_value.size(); }
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const int value);

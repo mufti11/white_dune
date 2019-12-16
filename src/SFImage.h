@@ -36,7 +36,7 @@ public:
                         SFImage(void); // silly default
 
     virtual int         getType() const { return SFIMAGE; }
-    virtual const char *getTypeName() { return "SFImage"; }
+    virtual const char *getTypeName() const { return "SFImage"; }
 
     virtual bool        writeBrackets(void) { return false; }
     virtual int         writeData(int filedes, int i); 
@@ -47,12 +47,13 @@ public:
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 1; }
+    virtual int         getNumbersPerType(void) const { return 1; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFImage(*this); }
 
-    int                 getValue(long index) { return m_value[index]; }
+    const int           getValue(long index)
+                            { return m_value[index]; }
     virtual void        setSFValue(int index, FieldValue *value);
 
     int                 getWidth(void);
@@ -61,7 +62,7 @@ public:
     void                setHeight(int height); 
     int                 getComponents(void); 
     void                setComponents(int components); 
-    const int          *getPixels(void); 
+    int                *getPixels(void); 
     void                setPixel(int index, int pixel); 
     int                 getNumPixels(void);
 

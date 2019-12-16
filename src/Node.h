@@ -846,10 +846,10 @@ public:
     parentFlag        getParentFlag(int index) 
                           { return m_parents.get(index).m_parentFlag; }
 
-    void              setParentFlag(int index, parentFlag flag) 
+    void              setParentFlag(int index, parentFlag flag)
                           { m_parents[index].m_parentFlag = flag; }
 
-    bool              isFirstUSE(void)
+    bool              isFirstUSE(void) const
                           { 
                           if (isPROTO())
                               return m_geometricParentIndex == 1; 

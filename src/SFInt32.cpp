@@ -55,7 +55,7 @@ SFInt32::readLine(int index, char *line)
 }
 
 bool
-SFInt32::equals(FieldValue *value)
+SFInt32::equals(const FieldValue *value) const
 {
     return value->getType() == SFINT32
            && ((SFInt32 *) value)->getValue() == m_value;

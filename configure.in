@@ -1391,8 +1391,6 @@ AC_CHECK_FUNCS(glVertex3f)
 AC_CHECK_FUNCS(glFogCoordf)
 AC_CHECK_FUNCS(glDeleteTextures)
 AC_CHECK_FUNCS(glGenTextures)
-AC_CHECK_FUNCS(glBindTexture)
-AC_CHECK_FUNCS(glActiveTexture)
 AC_CHECK_LIB(GLU, gluProject , , GLU_ERROR=1)
 if test "X_$GLU_ERROR" = "X_1" ; then
    AC_CHECK_LIB(MesaGLU, gluProject , GLU_ERROR=0)
@@ -1848,7 +1846,6 @@ fi
 
 AC_ARG_WITH(allow-multiple-definition,--with-allow-multiple-definition allow multiple linker symbols,
             [LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition"];export LDFLAGS)
-
 
 dnl automatic generate functions/lists for VRML types (e.g. SFBool <=> SFBOOL)
 

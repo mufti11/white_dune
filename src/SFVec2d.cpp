@@ -69,7 +69,7 @@ SFVec2d::setValue(double v1, double v2)
 
 
 bool
-SFVec2d::equals(FieldValue *value)
+SFVec2d::equals(const FieldValue *value) const
 {
     return value->getType() == SFVEC2D
         && ((SFVec2d *) value)->getValue(0) == m_value[0]

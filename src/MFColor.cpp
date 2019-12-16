@@ -52,7 +52,7 @@ MFColor::readLine(int index, char *line)
 }
 
 bool
-MFColor::equals(FieldValue *value)
+MFColor::equals(const FieldValue *value) const
 {
     return value->getType() == MFCOLOR && 
                                MFFloat::equals((MFFloat *) value);

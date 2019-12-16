@@ -113,11 +113,13 @@ MFDouble::readLine(int index, char *line)
 }
 
 bool
-MFDouble::equals(MFDouble *value)
+MFDouble::equals(const MFDouble *value) const
 {
-    if ((int)m_value.size() == value->getSize()) {
+    if (value->getType() == MFDOUBLE) {
+        MFDouble *v = (MFDouble *)value;
+        if (v->getSize() != (int)m_value.size()) return false;  
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value[i] != value->getValue(i))
+            if (m_value.getData()[i] != v->getValue(i))
                 return false;
         return true;
     }

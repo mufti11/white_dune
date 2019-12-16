@@ -55,7 +55,7 @@ SFTime::readLine(int index, char *line)
 }
 
 bool
-SFTime::equals(FieldValue *value)
+SFTime::equals(const FieldValue *value) const
 {
     return value->getType() == SFTIME
         && ((SFTime *) value)->getValue() == m_value;

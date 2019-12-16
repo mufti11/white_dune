@@ -55,11 +55,11 @@ public:
                            }
 
     virtual int         getType() const { return SFVEC3F; }
-    virtual const char *getTypeName() { return "SFVec3f"; }
-    virtual int         getStride() { return 3; }
+    virtual const char *getTypeName() const { return "SFVec3f"; }
+    virtual int         getStride() const { return 3; }
     virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFVec3f(*this); }
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual bool        supportAnimation(bool x3d) { return true; }
     virtual bool        supportInteraction(void) { return true; }
@@ -69,8 +69,8 @@ public:
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag) { return "float"; }
-    virtual bool        isArrayInC(void) { return true; }
+    virtual const char *getTypeC(int languageFlag) const { return "float"; }
+    virtual bool        isArrayInC(void) const { return true; }
     void                setSFValue(FieldValue *value)
                             {
                             m_value[0] = ((SFVec3f *)value)->getValue()[0];
@@ -82,7 +82,7 @@ public:
 
     virtual bool        readLine(int index, char *line);
 
-    Vec3f               getVec(void);
+    Vec3f               getVec(void) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
                            { return new SFVec3f(FLOAT_RAND(), FLOAT_RAND(), 

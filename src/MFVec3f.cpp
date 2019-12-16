@@ -79,7 +79,7 @@ MFVec3f::readLine(int index, char *line)
 }
 
 bool
-MFVec3f::equals(FieldValue *value)
+MFVec3f::equals(const FieldValue *value) const
 {
     return value->getType() == MFVEC3F && equals((MFFloat *)value);
 }

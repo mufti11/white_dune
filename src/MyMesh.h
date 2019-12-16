@@ -224,7 +224,9 @@ public:
     virtual int         countPolygons(void);
     virtual int         countPolygons1Sided(void);
     virtual int         countPolygons2Sided(void);
+#ifndef MACOSX
     Node               *toIndexedFaceSet(int meshFlags, Scene* scene);
+#endif
     MFVec3f            *getSmoothNormals(void);
     MFInt32            *getSmoothNormalIndex(void);
     int                 getTexCoordParameter(long i)

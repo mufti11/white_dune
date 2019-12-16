@@ -37,7 +37,7 @@ EGREP_PROBLEMS = no
 # LFLAGS = -woff 1167 -woff 1110 -woff 3322
 
 # GNU ld linker flags
-GNULDFLAGS = -Wl,--allow-multiple-definition
+GNULDFLAGS = 
 
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
@@ -661,7 +661,7 @@ OBJSC = \
 	jpegLoad.o \
 	pngLoad.o gif.o
 
-OBJS = 	NodeIndexedFaceSet.o $(CLASSES) $(BIGDUNECLASSES) $(OBJSC) 
+OBJS = $(CLASSES) $(BIGDUNECLASSES) $(OBJSC) 
 
 OBJS_LOW_MEM = $(CLASSES) $(OBJSC)
 
@@ -742,6 +742,13 @@ duneLowMem: main.o objc $(CLASSES)
 ../bin/dune: main.o $(OBJS)  
 	(cd swt ; $(MAKE))
 	$(CXX) -Wl,--start-group main.o $(OBJS) $(LIBS) -Wl,--end-group -o $@
+	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
+	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
+	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
+
+mac_dune: main.o $(OBJS)  
+	(cd swt ; $(MAKE))
+	$(CXX) main.o $(OBJS) $(LIBS) -o ../bin/dune
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"

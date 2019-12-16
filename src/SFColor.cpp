@@ -92,7 +92,7 @@ SFColor::readLine(int index, char *line)
 }
 
 bool
-SFColor::equals(FieldValue *value)
+SFColor::equals(const FieldValue *value) const
 {
     if (value->getType() == SFCOLOR) {
         for (int i = 0; i < 3; i++)

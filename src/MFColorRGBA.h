@@ -35,15 +35,15 @@ public:
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFCOLORRGBA; }
-    virtual const char *getTypeName() { return "MFColorRGBA"; }
-    virtual int         getStride() { return 4; }
+    virtual const char *getTypeName() const { return "MFColorRGBA"; }
+    virtual int         getStride() const { return 4; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
-    float              *getValue(int index)
+    float              *getValue(int index) const
                            { return m_value.getData() + index * 3; }
 
     virtual FieldValue *getSFValue(int index);

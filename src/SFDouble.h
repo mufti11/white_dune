@@ -36,13 +36,13 @@ public:
                         SFDouble(void) { m_value = 0.0f; } // silly default
 
     virtual int         getType() const { return SFDOUBLE; }
-    virtual const char *getTypeName() { return "SFDouble"; }
+    virtual const char *getTypeName() const { return "SFDouble"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag) { return "double"; }
-    virtual const char *getDefaultC(int languageFlag) { return "0"; }
+    virtual const char *getTypeC(int languageFlag) const { return "double"; }
+    virtual const char *getDefaultC(int languageFlag) const { return "0"; }
 
     virtual bool        readLine(int index, char *line);
 
@@ -51,9 +51,9 @@ public:
 
     virtual FieldValue *copy() { return new SFDouble(*this); }
 
-    double              getValue() { return m_value; }
+    double              getValue() const { return m_value; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual bool        equalsAngle(FieldValue *value, double angleUnit);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 
@@ -72,7 +72,7 @@ public:
                             return m_value;
                             }
 
-    virtual bool        isX3DType() { return true; }
+    virtual bool        isX3DType() const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype) 
                            { return new SFDouble(FLOAT_RAND()); };

@@ -41,28 +41,28 @@ public:
                             }
 
     virtual int         getType() const { return SFVEC2F; }
-    virtual const char *getTypeName() { return "SFVec2f"; }
-    virtual int         getStride() { return 2; }
+    virtual const char *getTypeName() const { return "SFVec2f"; }
+    virtual int         getStride() const { return 2; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag) { return "float"; }
-    virtual bool        isArrayInC(void) { return true; }
+    virtual const char *getTypeC(int languageFlag) const { return "float"; }
+    virtual bool        isArrayInC(void) const { return true; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 2; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 2; }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy() { return new SFVec2f(*this); }
 
-    float               getValue(int index) { return m_value[index]; }
-    float              *getValue() { return m_value; }
+    const float         getValue(int index) const { return m_value[index]; }
+    const float        *getValue() const { return m_value; }
     void                setValue(int pos, float value)
                            { m_value[pos] = value; }
     void                setValue(float v1, float v2);
@@ -76,7 +76,7 @@ public:
 
     bool                supportAnimation(bool x3d) { return x3d; }
 
-    Vec2f               getVec(void);
+    Vec2f               getVec(void) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
                            { return new SFVec2f(FLOAT_RAND(), FLOAT_RAND()); }

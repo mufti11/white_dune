@@ -60,19 +60,19 @@ public:
                            m_value[8] = 1;
                            }
 
-    float              *getValue() { return m_value; }
-    float               getValue(int pos) { return m_value[pos]; }
+    const float        *getValue() const { return m_value; }
+    const float         getValue(int pos) const { return m_value[pos]; }
     void                setValue(int index, float value)
                            {
                            assert(index >= 0 && index < 9);
                            m_value[index] = value;
                            }
     virtual int         getType() const { return SFMATRIX3F; }
-    virtual const char *getTypeName() { return "SFMatrix3f"; }
-    virtual int         getStride() { return 9; }
+    virtual const char *getTypeName() const { return "SFMatrix3f"; }
+    virtual int         getStride() const { return 9; }
     virtual MyString    getString(int index, int stride);
     virtual FieldValue *copy() { return new SFMatrix3f(*this); }
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual bool        supportAnimation(bool x3d) { return false; }
     virtual bool        supportInteraction(void) { return true; }
@@ -91,7 +91,7 @@ public:
     virtual bool        readLine(int index, char *line);
     virtual int         getNumbersPerType(void) { return 9; }
 
-    virtual bool        isX3DType() { return true; }
+    virtual bool        isX3DType() const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 protected:

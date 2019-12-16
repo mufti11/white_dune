@@ -33,7 +33,11 @@ extern void parseCommandlineUsage(HINSTANCE hInstance, int argc, char **argv);
 #else
 extern void parseCommandlineUsage(int argc, char **argv);
 #endif
-extern int parseCommandlineArgument(int &i, int argc,char**argv);
+#ifdef _WIN32
+extern int parseCommandlineArgument(int i, int argc,char**argv);
+#else
+extern int parseCommandlineArgument(int i, int argc,char**argv);
+#endif
 
 #ifdef _WIN32
 #  define errorprintf msgboxprintf
@@ -238,7 +242,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
     bool fileflag=false;
     bool fileerrorflag=false;
     while (i<argc) {
-       if (!parseCommandlineArgument(&i,argc,argv)) {
+       if (!parseCommandlineArgument(i,argc,argv)) {
           // skip quotes
           if (argv[i][0] == '"')
               argv[i]++;

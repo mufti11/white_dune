@@ -198,7 +198,7 @@ StereoViewApp::StereoViewSavePreferences()
    TheApp->SetPreference("Cursor3dLength", buf); 
    }
 
-bool parseCommandlineArgumentStereoView(int & i,int argc, char** argv)
+bool parseCommandlineArgumentStereoView(int i, int argc, char** argv)
    {
    bool found = true;
    if (strcmp(argv[i],"-nostereo")==0)

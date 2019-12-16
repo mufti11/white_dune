@@ -33,7 +33,7 @@ public:
     virtual            ~MFBool();
 
     virtual int         getType() const { return MFBOOL; }
-    virtual const char *getTypeName() { return "MFBool"; }
+    virtual const char *getTypeName() const { return "MFBool"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
@@ -41,22 +41,23 @@ public:
                                  bool avoidUse);
 
     virtual int         writeDataC(int filedes, int i, int languageFlag);
-    virtual const char *getTypeC(int languageFlag);
+    virtual const char *getTypeC(int languageFlag) const;
 
     virtual bool        readLine(int index, char *line);
-    virtual int         getNumbersPerType(void) 
+    virtual int         getNumbersPerType(void) const
                             { return ((MFBool *)this)->getStride(); }
 
-    virtual bool        equals(FieldValue *value);
-    virtual int         getSFSize() { return m_value.size(); }
+    virtual bool        equals(const FieldValue *value) const;
+    virtual int         getSFSize() const { return m_value.size(); }
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const int value);
     virtual FieldValue *copy();
 
-    bool                getValue(int index) { return m_value[index]; }
-    bool               *getValues() { return m_value.getData(); }
-    int                 getSize() { return m_value.size(); }
+    bool                getValue(int index) 
+                            { return m_value[index]; }
+    const bool         *getValues() const { return m_value.getData(); }
+    int                 getSize() const { return m_value.size(); }
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const bool value);
@@ -64,7 +65,7 @@ public:
 
     MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual bool        isX3DType() { return true; }
+    virtual bool        isX3DType() const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 protected:

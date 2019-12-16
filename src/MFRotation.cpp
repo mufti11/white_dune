@@ -51,7 +51,7 @@ MFRotation::readLine(int index, char *line)
 }
 
 bool
-MFRotation::equals(FieldValue *value)
+MFRotation::equals(const FieldValue *value) const
 {
     return value->getType() == MFROTATION && MFFloat::equals((MFFloat *) value);
 }

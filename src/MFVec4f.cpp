@@ -60,7 +60,7 @@ MFVec4f::readLine(int index, char *line)
 }
 
 bool
-MFVec4f::equals(FieldValue *value)
+MFVec4f::equals(const FieldValue *value) const
 {
     return value->getType() == MFVEC4F && equals((MFFloat *)value);
 }
@@ -81,7 +81,7 @@ MFVec4f::setSFValue(int index, FieldValue *value)
     }
 #endif
 
-    setSFValue(index, ((SFVec4f *) value)->getValue());
+    setSFValue(index, value);
 }
 
 void
@@ -214,7 +214,7 @@ MFVec4f::getEcmaScriptComment(MyString name, int flags)
 void 
 MFVec4f::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, ((SFVec4f *)value)->getValue()); 
+    insertSFValue(index, value); 
 }
 
 void 

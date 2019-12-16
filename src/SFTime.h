@@ -32,23 +32,23 @@ public:
                         SFTime(void) { m_value = 0.0; } // silly default
 
     virtual int         getType() const { return SFTIME; }
-    virtual const char *getTypeName() { return "SFTime"; }
+    virtual const char *getTypeName() const { return "SFTime"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag) { return "double"; }
-    virtual const char *getDefaultC(int languageFlag) { return "0"; }
+    virtual const char *getTypeC(int languageFlag) const { return "double"; }
+    virtual const char *getDefaultC(int languageFlag) const { return "0"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 1; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 1; }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFTime(*this); }
 
-    double              getValue() { return m_value; }
+    double              getValue() const { return m_value; }
 
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     MyString            getEcmaScriptComment(MyString name, int flags);

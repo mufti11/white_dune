@@ -59,7 +59,7 @@ MFVec2d::readLine(int index, char *line)
 }
 
 bool
-MFVec2d::equals(FieldValue *value)
+MFVec2d::equals(const FieldValue *value) const
 {
     return value->getType() == MFVEC2D && equals((MFFloat *)value);
 }

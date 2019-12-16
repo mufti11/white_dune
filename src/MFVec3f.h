@@ -49,21 +49,22 @@ public:
     MFVec3d            *getMFVec3d(void);
 
     virtual int         getType() const { return MFVEC3F; }
-    virtual const char *getTypeName() { return "MFVec3f"; }
-    virtual int         getStride() { return 3; }
+    virtual const char *getTypeName() const { return "MFVec3f"; }
+    virtual int         getStride() const { return 3; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, float *values);
     virtual void        setSFValue(int index, float x, float y, float z);
 
-    float              *getValue(int index)
-                              { return m_value.getData() + index * 3; } 
+    const float        *getValue(int index) const
+                              { return (const float *)
+                                       m_value.getData() + index * 3; } 
 
     void                setVec(int index, Vec3f v);
     Vec3f               getVec(int index);

@@ -47,7 +47,7 @@ public:
     virtual FieldValue *copy() { return NULL; }
     
     const X            *getValue() const { return m_value; }
-    X                   getValue(int pos) { return m_value[pos]; }
+    X                   getValue(int pos) const { return m_value[pos]; }
     void                setValue(int index, X value)
                            {
                            assert(index >= 0 && index < 3);

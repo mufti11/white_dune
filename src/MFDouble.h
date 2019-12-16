@@ -37,33 +37,33 @@ public:
     virtual            ~MFDouble();
 
     virtual int         getType() const { return MFDOUBLE; }
-    virtual int         getStride() { return 1; }
+    virtual int         getStride() const { return 1; }
     virtual MyString    getString(int index, int stride);
-    virtual const char *getTypeName() { return "MFDouble"; }
+    virtual const char *getTypeName() const { return "MFDouble"; }
 
     virtual int         writeData(int filedes, int i); 
     virtual int         writeDataC(int filedes, int i, int languageFlag);
 
-    virtual const char *getTypeC(int languageFlag) { return "double"; }
+    virtual const char *getTypeC(int languageFlag) const { return "double"; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return getStride(); }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return getStride(); }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(MFDouble *value);
+    virtual bool        equals(const MFDouble *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy(); 
 
-    virtual int         getSFSize()
+    virtual int         getSFSize() const
                            { return m_value.size() / getStride(); }
     virtual FieldValue *getSFValue(int index); 
     virtual void        setSFValue(int index, FieldValue *value);
     void                setSFValue(int index, double value);
 
-    double             *getValues() { return m_value.getData(); }
+    double             *getValues() const { return m_value.getData(); }
     double              getValue(int i) { return m_value[i]; }
-    int                 getSize() { return m_value.size(); }
+    int                 getSize() const { return m_value.size(); }
     void                setValue(int index, double value) 
                            { m_value[index] = value; }
 
@@ -77,7 +77,7 @@ public:
 
     MyString            getEcmaScriptComment(MyString name, int flags);
 
-    virtual bool        isX3DType() { return true; }
+    virtual bool        isX3DType() const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 

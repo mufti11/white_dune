@@ -28,7 +28,9 @@
 
 class AflockSettingsDialog : public Dialog  
 {
+#ifndef _WIN32
         AflockDevice *aflockDevice;
+#endif
         char* device_name[16];
         int device_index[16];
         int device_nm[16];
@@ -72,6 +74,8 @@ class AflockSettingsDialog : public Dialog
 
         void SetDefault(void);
 public:
+#ifndef _WIN32
         AflockSettingsDialog(SWND parent, AflockDevice *device);
+#endif
         virtual ~AflockSettingsDialog();
 };

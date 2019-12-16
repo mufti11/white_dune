@@ -59,7 +59,7 @@ MFMatrix4f::readLine(int index, char *line)
 }
 
 bool
-MFMatrix4f::equals(FieldValue *value)
+MFMatrix4f::equals(const FieldValue *value) const
 {
     return value->getType() == MFMATRIX4F && equals(value);
 }

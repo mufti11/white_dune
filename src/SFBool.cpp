@@ -62,7 +62,7 @@ int SFBool::writeC(int f, const char* variableName, int languageFlag)
 }
 
 const char *
-SFBool::getTypeC(int languageFlag)
+SFBool::getTypeC(int languageFlag) const
 { 
     if (languageFlag & C_SOURCE)
         return "short";
@@ -72,7 +72,7 @@ SFBool::getTypeC(int languageFlag)
 }
 
 const char *
-SFBool::getDefaultC(int languageFlag)
+SFBool::getDefaultC(int languageFlag) const
 { 
     if (languageFlag & C_SOURCE)
         return "0";
@@ -104,7 +104,7 @@ SFBool::readLine(int index, char *line)
 }
 
 bool
-SFBool::equals(FieldValue *value)
+SFBool::equals(const FieldValue *value) const
 {
     return value->getType() == SFBOOL 
         && ((SFBool *) value)->getValue() == m_value;

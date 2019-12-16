@@ -857,7 +857,7 @@ NodeSuperExtrusion::degreeElevate(int newDegree)
     node->beginCap(new SFBool(beginCap()->getValue()));
     node->endCap(new SFBool(endCap()->getValue()));
     MFVec2f *s = (MFVec2f *)(scale()->copy());
-    node->scale(new MFVec2f(s->getValues(), s->getSize()));
+    node->scale(new MFVec2f((float *)s->getValues(), s->getSize()));
  
     return node;
 }

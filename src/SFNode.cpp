@@ -97,7 +97,7 @@ SFNode::writeXml(int filedes, int indent, int containerField,
 }
 
 const char *
-SFNode::getTypeC(int languageFlag)
+SFNode::getTypeC(int languageFlag) const
 { 
     if (languageFlag & JAVA_SOURCE)
         return TheApp->getCNodeName();
@@ -147,9 +147,10 @@ SFNode::readLine(int index, char *line)
 }
 
 bool
-SFNode::equals(FieldValue *value)
+SFNode::equals(const FieldValue *value) const
 {
-    return value->getType() == SFNODE && ((SFNode *) value)->getValue() == m_value;
+    return value->getType() == SFNODE && 
+           ((SFNode *) value)->getValue() == m_value;
 }
 
 FieldValue *
@@ -280,13 +281,13 @@ SFNode::convert2Vrml(void)
 }
 
 bool
-SFNode::isNullNode(void)
+SFNode::isNullNode(void) const
 {
     return m_value == NULL;
 }
 
 bool
-SFNode::isUseNode(void)
+SFNode::isUseNode(void) const
 {
     if (m_value != NULL)
         return m_value->getFlag(NODE_FLAG_DEFED);

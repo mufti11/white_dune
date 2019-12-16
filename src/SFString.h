@@ -35,7 +35,7 @@ public:
                         SFString(const char *str);
                         SFString(void) { m_value = ""; } // silly default
 
-    const char         *getValue()
+    const char         *getValue() const
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -44,7 +44,7 @@ public:
                            return m_value; 
                            }
     virtual int         getType() const { return SFSTRING; }
-    virtual const char *getTypeName() { return "SFString"; }
+    virtual const char *getTypeName() const { return "SFString"; }
     virtual MyString    getString(int index, int stride);
                         
     virtual int         write4FieldPipe(int filedes, int indent); 
@@ -58,13 +58,13 @@ public:
     virtual int         writeData(int filedes, int i); 
     virtual int         writeDataXml(int filedes, int i); 
 
-    virtual const char *getTypeC(int languageFlag);
+    virtual const char *getTypeC(int languageFlag) const;
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 0; }
+    virtual int         getNumbersPerType(void) const { return 0; }
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFString(*this); }
 
     MyString            getEcmaScriptComment(MyString name, int flags);

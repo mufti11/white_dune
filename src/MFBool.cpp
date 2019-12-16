@@ -24,7 +24,6 @@
 
 #include "MFBool.h"
 #include "SFBool.h"
-#include "DuneApp.h"
 #include "ExternTheApp.h"
 
 MFBool::MFBool()
@@ -98,7 +97,7 @@ int MFBool::writeDataC(int f, int i, int languageFlag)
 }
 
 const char *
-MFBool::getTypeC(int languageFlag) 
+MFBool::getTypeC(int languageFlag) const 
 { 
     if (languageFlag & C_SOURCE)
         return "short";
@@ -118,13 +117,13 @@ MFBool::readLine(int index, char *line)
 }
 
 bool
-MFBool::equals(FieldValue *value)
+MFBool::equals(const FieldValue *value) const
 {
     if (value->getType() == MFBOOL) {
-        MFBool *v = (MFBool *) value;
+        MFBool *v = (MFBool *)value;
         if (v->getSize() != (int)m_value.size()) return false;
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value[i] != v->getValue(i))
+            if (m_value.getData()[i] != v->getValue(i))
                 return false;
         return true;
     }

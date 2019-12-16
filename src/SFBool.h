@@ -29,7 +29,7 @@ public:
                         SFBool(void) { m_value = false; } // silly default
 
     virtual int         getType() const { return SFBOOL; }
-    virtual const char *getTypeName() { return "SFBool"; }
+    virtual const char *getTypeName() const { return "SFBool"; }
     virtual MyString    getString(int index, int stride);
 
     virtual int         writeData(int filedes, int i); 
@@ -38,18 +38,18 @@ public:
 
     virtual int         writeC(int filedes, const char* variableName, 
                                int languageFlag);
-    virtual const char *getTypeC(int languageFlag);
-    virtual const char *getDefaultC(int languageFlag);
+    virtual const char *getTypeC(int languageFlag) const;
+    virtual const char *getDefaultC(int languageFlag) const;
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 0; }
+    virtual int         getNumbersPerType(void) const { return 0; }
     virtual bool        checkInput(char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFBool(*this); }
 
-    bool                getValue() 
+    bool                getValue() const
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -63,8 +63,6 @@ public:
     // VRML 200x BooleanSequencer not implemented yet
     virtual bool        supportAnimation(bool x3d) { return false; }
     virtual bool        supportInteraction(void) { return true; }
-
-    virtual bool        isText() { return false; }      
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 private:

@@ -32,16 +32,16 @@ public:
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFROTATION; }
-    virtual const char *getTypeName() { return "MFRotation"; }
+    virtual const char *getTypeName() const { return "MFRotation"; }
     virtual int         getStride() { return 4; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        fixAngle(double angleUnit); 
 
-    float              *getValue(int index)
+    float              *getValue(int index) const
                            { return m_value.getData() + index * 4; }
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);

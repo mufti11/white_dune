@@ -62,7 +62,7 @@ SFDouble::readLine(int index, char *line)
 }
 
 bool
-SFDouble::equals(FieldValue *value)
+SFDouble::equals(const FieldValue *value) const
 {
     return value->getType() == SFDOUBLE
             && ((SFDouble *) value)->getValue() == m_value;

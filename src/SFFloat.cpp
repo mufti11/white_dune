@@ -62,7 +62,7 @@ SFFloat::readLine(int index, char *line)
 }
 
 bool
-SFFloat::equals(FieldValue *value)
+SFFloat::equals(const FieldValue *value) const
 {
     return value->getType() == SFFLOAT
             && ((SFFloat *) value)->getValue() == m_value;

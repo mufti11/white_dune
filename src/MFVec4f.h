@@ -40,13 +40,13 @@ public:
                         MFVec4f(MFVec2f *mfVec2f);
 
     virtual int         getType() const { return MFVEC4F; }
-    virtual const char *getTypeName() { return "MFVec4f"; }
-    virtual int         getStride() { return 4; }
+    virtual const char *getTypeName() const { return "MFVec4f"; }
+    virtual int         getStride() const { return 4; }
     virtual FieldValue *copy();
 
     virtual bool        readLine(int index, char *line);
 
-    virtual bool        equals(FieldValue *value);
+    virtual bool        equals(const FieldValue *value) const;
 
     virtual FieldValue *getSFValue(int index);
     virtual void        setSFValue(int index, FieldValue *value);

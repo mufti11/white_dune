@@ -67,7 +67,7 @@ public:
                     m_size = 0;
                 }
 
-    bool        isValid() 
+    const bool  isValid() 
                 {
                     if ((m_size < 0) || (m_size <= m_capacity))
                         return false;
@@ -95,7 +95,7 @@ public:
                     }
                     return m_data[index]; 
                 }
-    T           *getData() const { return m_data; }
+    T          *getData() const { return m_data; }
     void        setData(const T *a, long len)
                 {
                     m_capacity = m_size = len; 
@@ -107,7 +107,7 @@ public:
                     m_data = 0;
                     return data; 
                 }
-    long        size() const
+    const long  size() const
                 { return m_size; }
     void        append(T t)
                 { (*this)[m_size] = t; }
@@ -167,7 +167,7 @@ public:
                     }
                     m_size = size;
                 }
-    long        find(T t) const
+    const long  find(T t) const
                 {
                     long ret = -1;
                     if (m_capacity < m_size)
@@ -185,7 +185,7 @@ public:
                     }
                     return ret;
                 }
-    long        findBackward(T t) const
+    const long  findBackward(T t) const
                 {
                     if (m_size == 0)
                         return -1;
@@ -193,7 +193,7 @@ public:
                         if (m_data[i] == t) return i;
                     return -1;
                 }
-    bool        contains(T t) const
+    const  bool contains(T t) const
                 {
                     if (find(t) == -1)
                         return false;
