@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_METADATA_DOUBLE_H
-#define _NODE_METADATA_DOUBLE_H
+#pragma once
 
 #include "Metadata.h"
 
@@ -41,9 +40,8 @@ public:
                     NodeMetadataDouble(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeMetadataDouble(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMetadataDouble(*this); }
 
     fieldMacros(MFDouble, value, ProtoMetadataDouble)
 };
 
-#endif // _NODE_METADATA_DOUBLE_H

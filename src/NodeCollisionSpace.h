@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLLISION_SPACE_H
-#define _NODE_COLLISION_SPACE_H
+#pragma once
 
 #include "X3DNBodyCollisionSpaceNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoCollisionSpace : public X3DNBodyCollisionSpaceProto {
@@ -45,12 +43,11 @@ public:
                     NodeCollisionSpace(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeCollisionSpace(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCollisionSpace(*this); }
 
-    virtual int     getChildrenField(void) { return collidables_Field(); }
+    virtual int     getChildrenField(void) const { return collidables_Field(); }
 
     fieldMacros(MFNode, collidables, ProtoCollisionSpace)
     fieldMacros(SFBool, useGeometry, ProtoCollisionSpace)
 };
 
-#endif

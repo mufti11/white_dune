@@ -21,13 +21,10 @@
 
 #pragma once
 
-#include "NodeDefinitions.h"
-
-#include "Element.h"   
+# include "Element.h"
+# include "Node.h"   
 
 #include "config.h"
-
-class Proto;
 
 class FieldValue;
 class ExposedField;

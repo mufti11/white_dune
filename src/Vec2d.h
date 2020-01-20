@@ -21,9 +21,7 @@
 
 #pragma once
 
-#ifndef __MATH_H__
 #include <math.h>
-#endif
 
 class Vec2d {
 public:

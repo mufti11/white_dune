@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -47,7 +46,7 @@ public:
                     NodeBillboard(Scene *scene, Proto *proto);
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeBillboard(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBillboard(*this); }
 
     virtual void    transform();
 
@@ -71,7 +70,7 @@ public:
 
     virtual void    writeCWarning(void);
 
-    virtual int     getChildrenField(void) { return children_Field(); }
+    virtual int     getChildrenField(void) const { return children_Field(); }
 
     fieldMacros(SFVec3f, axisOfRotation, ProtoBillboard)
     fieldMacros(MFNode,  children,       ProtoBillboard)

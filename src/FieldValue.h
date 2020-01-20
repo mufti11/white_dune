@@ -49,116 +49,113 @@ public:
     virtual int         getStride() const { return 1; }
 
     // int i argument is used for MFieldValue, otherwise it is a dummy argument
-    virtual int         writeData(int filedes, int i) { return 0; }
+    virtual int         writeData(int filedes, int i) const = 0;
     // write data without quotes to file
-    virtual int         writeRaw(int filedes, int indent) { return 0; }
+    virtual int         writeRaw(int filedes, int indent) const { return 0; }
     virtual int         writeDequoted(int filedes, const char *string);
     // write data in VRML syntax to file
-    virtual int         write(int filedes, int indent);
+    virtual int         write(int filedes, int indent) const;
     // write data in X3D/XML syntax to file
     virtual int         writeXml(int filedes, int indent, 
                                  int containerField = -1,
-                                 bool avoidUse = false);
-    virtual int         writeDataXml(int filedes, int i) 
+                                 bool avoidUse = false) const;
+    virtual int         writeDataXml(int filedes, int i) const 
                             { return writeData(filedes, i); }
     // write data in AC3D b syntax to file
-    virtual int         writeAc3d(int filedes, int indent);
+    virtual int         writeAc3d(int filedes, int indent) const;
     // write data in Catt 8 syntax to file
-    virtual int         writeCattGeo(int filedes, int indent);
+    virtual int         writeCattGeo(int filedes, int indent) const;
     // write data in C++/Java syntax to file
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
-    virtual int         writeCDeclaration(int filedes, int languageFlag) 
+                               int languageFlag) const;
+    virtual int         writeCDeclaration(int filedes, int languageFlag) const 
                            { return 0; }
     virtual int         writeCSendEventFunction(int filedes, int languageFlag);
-    virtual int         writeDataC(int filedes, int i, int languageFlag) 
+    virtual int         writeDataC(int filedes, int i, int languageFlag) const 
                            { return writeData(filedes, i); }
     virtual int         writeCWonderlandArt(int filedes, 
                                             const char* variableName,
-                                            int languageFlag)
+                                            int languageFlag) const 
                            { return writeC(filedes, variableName, 
                                            languageFlag); }
-    virtual const char *getTypeC(int languageFlag) const { return "int"; }
+    virtual const char *getTypeC(int languageFlag) const = 0;
     virtual const char *getDefaultC(int languageFlag) const;
     virtual bool        isArrayInC(void) const { return false; }
 
-    virtual int         write4FieldPipe(int filedes, int indent) 
+    virtual int         write4FieldPipe(int filedes, int indent) const 
                             { return write(filedes, indent); }
 
-    virtual bool        readLine(int index, char *line) { return false; }
+    virtual bool        readLine(int index, char *line) = 0;
 
-    virtual bool        isMFieldValue(void) { return false; }
-    virtual bool        isNode(void) { return false; }
+    virtual bool        isMFieldValue(void) const { return false; }
+    virtual bool        isNode(void) const { return false; }
 
-    virtual bool        isNullNode(void) { return false; }
-    virtual bool        isUseNode(void) { return false; }
+    virtual bool        isNullNode(void) const { return false; }
+    virtual bool        isUseNode(void) const { return false; }
 
-    virtual bool        isNull(void) { return false; }
+    virtual bool        isNull(void) const { return false; }
 
-    virtual const char *getDefName(void) { return ""; }
+    virtual const char *getDefName(void) const { return ""; }
 
     virtual bool        checkInput(char *line);
-    virtual int         getNumbersPerType(void) { return -1; }
-    virtual bool        needCheckFloat(void) { return false; }
+    virtual int         getNumbersPerType(void) const = 0;
+    virtual bool        needCheckFloat(void) const { return false; }
 
-    virtual int         getType() const { return -1; }
-    virtual const char *getTypeName() const { return ""; }
-    virtual MyString    getString(int index = -1, int stride = -1) 
-                           { return "";}
+    virtual int         getType() const = 0;
+    virtual const char *getTypeName() const = 0;
+    virtual MyString    getString(int index = -1, int stride = -1) const 
+                           { return "";};
 
-    virtual bool        equals(FieldValue *value) const { return false; }
+    virtual bool        equals(const FieldValue *value) const = 0;
     virtual bool        equalsAngle(const FieldValue *value, double angleUnit) 
-                            { return false; }
-    virtual FieldValue *addNode(Node *node, int index = -1);
-    virtual FieldValue *removeNode(Node *node, int index = -1);
+                            const { return false; }
+    virtual FieldValue *addNode(Node *node, int index = -1) const;
+    virtual FieldValue *removeNode(Node *node, int index = -1) const;
 
     virtual void        clamp(const FieldValue *min, const FieldValue *max) {}
 
     virtual void        flip(int index) {}
 
-    virtual void        ref() 
-                           {
+    void                ref() 
+                           { 
 #ifdef HAVE_NULL_COMPARE
                            if (this != NULL) 
 #endif
                            m_refs++; 
                            }
-    virtual void        unref() 
+    void                unref() 
                            { 
-/*
 #ifdef HVAVE_NULL_COMPARE
                            if ((this != NULL) && (--m_refs == 0))
 #else
                            if (--m_refs == 0)
 #endif
-                               delete this;
-*/
+                               delete this; 
                            }
-    virtual int         getRefs() const
-                           { return m_refs; }
+    int                 getRefs() { return m_refs; }
 
     virtual FieldValue *copy() = 0;
 
     virtual void        fixAngle(double angleUnit) {}
 
     virtual MyString    getEcmaScriptComment(MyString name, int flags) 
-                            { return "{}\n"; }
+                              const = 0;
 
     const char         *getEcmaScriptIndent(int  flags);
 
-    virtual bool        supportAnimation(bool x3d) = 0;
-    virtual bool        supportInteraction(void) { return false; }
+    virtual bool        supportAnimation(bool x3d) const = 0;
+    virtual bool        supportInteraction(void) const { return false; }
     virtual void        makeEmpty(void) {}
 
-    virtual bool        isX3DType() const { return false; }
+    virtual bool        isX3DType() { return false; }
 
-    bool                writeType(int languageFlag);
+    bool                writeType(int languageFlag) const;
     
-    bool                isDefaultValue(void) const { return m_isDefaultValue; }
+    bool                isDefaultValue(void) { return m_isDefaultValue; }
     void                setIsDefaultValue(void) { m_isDefaultValue = true; }
     void                removeIsDefaultValue(void) { m_isDefaultValue = false; }
 
-    virtual int         getContainerField(void) const { return -1; }
+    virtual int         getContainerField(void) { return -1; }
     virtual void        setContainerField(int f) {}
 
     //only for testing
@@ -172,22 +169,22 @@ class MFieldValue : public FieldValue
 {
 public:
     virtual int         getSFSize() const = 0;
-    virtual FieldValue *getSFValue(int index) = 0;
+    virtual FieldValue *getSFValue(int index) const = 0;
     virtual void        setSFValue(int index, FieldValue *value) = 0;
     virtual bool        isMFNode(void) const { return false; }
     virtual bool        isMFieldValue(void) const { return true; }
-    virtual bool        writeBrackets(void) { return(getSFSize() != 1); }
+    virtual bool        writeBrackets(void) const { return(getSFSize() != 1); }
     virtual int         write(int filedes, int indent, 
-                              bool writeBrackets);
-    virtual int         write(int filedes, int indent) 
+                              bool writeBrackets) const;
+    virtual int         write(int filedes, int indent) const 
                            { return write(filedes, indent, writeBrackets()); }
-    virtual int         write4FieldPipe(int filedes, int indent) 
+    virtual int         write4FieldPipe(int filedes, int indent) const 
                             { return write(filedes, indent, false); } 
     virtual int         writeXml(int filedes, int indent,
                                  int containerField = -1,
-                                 bool avoidUse = false);
+                                 bool avoidUse = false) const;
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
+                               int languageFlag) const;
     virtual int         writeCSendEventFunction(int filedes, int languageFlag);
     virtual bool        isArrayInC(void) const { return true; }
 
@@ -195,7 +192,7 @@ public:
                                            const char* variableName, 
                                            int offset, int length,
                                            bool wonderlandArt,
-                                           const char *sceneUrl);
+                                           const char *sceneUrl) const;
     virtual bool        isNull(void) const { return getSFSize() > 0; }
 
     virtual void        removeSFValue(int index) = 0;
@@ -206,10 +203,9 @@ public:
                            }
     void                getDiff(IntArray *newIndices, IntArray *oldIndices, 
                                 MFieldValue *old);
-    virtual bool        supportAnimation(bool x3d) { return false; }
+    virtual bool        supportAnimation(bool x3d) const {return false; }
 };
 
 extern FieldValue *rewriteField(FieldValue *value, 
                                 const char *oldBase, const char *newBase,
                                 int writeFlags);
-

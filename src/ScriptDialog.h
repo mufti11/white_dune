@@ -22,14 +22,14 @@
 #pragma once
 
 #include "Dialog.h"
-#include "DynamicFieldsNode.h"
 #include "NodeScript.h"
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
-#include "swttypedef.h"
 
 class ObjectEdit;
+
+#include "swttypedef.h"
 
 class ScriptDialog : public Dialog {
 public:

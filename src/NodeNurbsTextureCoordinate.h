@@ -19,25 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_TEXTURE_COORDINATE_H
-#define _NODE_NURBS_TEXTURE_COORDINATE_H
+#pragma once
 
-#ifndef NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-#ifndef _SFMFTYPES_H
-# include "SFMFTypes.h"
-#endif
+#include "Vec3f.h"
+#include "SFMFTypes.h"
 
 class NodeNurbsSurface;
 
@@ -72,8 +60,7 @@ protected:
 
 public:
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node *copy() { return new NodeNurbsTextureCoordinate( 
-                           m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsTextureCoordinate(*this); }
 
     virtual bool    maySetDefault(void) { return false; }
 
@@ -95,6 +82,4 @@ protected:
     MFVec2f *m_points;
     bool m_dirty;
 };
-
-#endif
 

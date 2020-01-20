@@ -19,29 +19,58 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
-
 // data global to the whole application
 
-#include "Node.h"
+#pragma once
 
 // time between 2 frames in best case in milliseconds
 #define FRAME_DELAY 70
 
+#ifndef _LIST_H
 #include "List.h"
+#endif
+#ifndef _ARRAY_H
 #include "Array.h"
+#endif
+#ifndef _DUNE_STRING_H
 #include "MyString.h"
+#endif
+#ifndef _NODE_H
+#include "Node.h"
+#endif
+#ifndef _URL_H
 #include "URL.h"
+#endif
+#ifndef _PREFERENCES_APP_H
 #include "PreferencesApp.h"
+#endif
+#ifndef _ECMASCRIPT_APP_H
 #include "EcmaScriptApp.h"
+#endif
+#ifndef _STEREO_VIEW_APP_H
 #include "StereoViewApp.h"
+#endif
+#ifndef _INPUT_DEVICE_APP_H
 #include "InputDeviceApp.h"
+#endif
+#ifndef _OUTPUT_APP_H
 #include "OutputApp.h"
+#endif
+#ifndef _ROUTE_VIEW_APP_H
 #include "RouteViewApp.h"
+#endif
+#ifndef _START_WITH_APP_H
 #include "StartWithApp.h"
+#endif
+#ifndef _EXPORT_NAMES_APP_H
 #include "ExportNamesApp.h"
+#endif
+#ifndef _MODELLING_APP_H
 #include "ModellingApp.h"
+#endif
+#ifndef _RENDER_APP_H
 #include "RenderApp.h"
+#endif
 
 #include <GL/gl.h>
 
@@ -330,9 +359,6 @@ public:
                            { return m_fullScreenAtBegin; }
     void               setFullScreenAtBegin(void) { m_fullScreenAtBegin = 1; }
 
-    bool               isCompiling(void) { return m_compling; } 
-    void               setCompiling(void) { m_compling = true; } 
-
 protected:
     void                Exit(void);
 
@@ -407,8 +433,8 @@ protected:
     int                 m_exitPid;
 
     int                 m_fullScreenAtBegin;
-
-    int                 m_compling;
 };
+
+extern DuneApp *TheApp;
 
 

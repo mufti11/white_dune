@@ -26,7 +26,6 @@
 #include "swt.h"
 #include "PreferencesApp.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "EulerAngles.h"
 
 #define DEFAULT_NEAR_CLIPPING_PLANE_DIST 0.05f 

@@ -59,3 +59,4 @@ public:
     SWND combo_device_names;
     SWND edit_device_name;
 };
+

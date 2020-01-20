@@ -23,8 +23,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TYPES_H
-#define _TYPES_H
+#pragma once
 
 #include "MyString.h"
 class FieldValue;
@@ -82,6 +81,4 @@ bool isArrayInC(int type);
 int getSFType(int type);
 
 bool isMFType(int type);
-
-#endif // _TYPES_H
 

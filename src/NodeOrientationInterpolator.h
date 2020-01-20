@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ORIENTATIONINTERPOLATOR_H
-#define _NODE_ORIENTATIONINTERPOLATOR_H
+#pragma once
 
-#ifndef _INTERPOLATOR_H
 #include "Interpolator.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoOrientationInterpolator : public ProtoInterpolator {
@@ -45,13 +39,13 @@ public:
                         NodeOrientationInterpolator(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() { return new NodeOrientationInterpolator(
-                                        m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodeOrientationInterpolator(*this); }
 
-    virtual int         getStride() { return 4; }
-    virtual int         getNumChannels();
-    virtual FieldValue *createKey(void *value);
-    virtual FieldValue *createKeys(void *value, int numKeys);
+    virtual int         getStride() const { return 4; }
+    virtual int         getNumChannels() const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
     virtual void        interpolate(float k, float *values);
 
     ADD_FLIP
@@ -60,4 +54,3 @@ public:
     fieldMacros(MFRotation, keyValue, ProtoOrientationInterpolator)
 };
 
-#endif // _NODE_ORIENTATIONINTERPOLATOR_H

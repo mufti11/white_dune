@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ORIENTATION_CHASER_H
-#define _NODE_ORIENTATION_CHASER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "ChaserNode.h"
 
@@ -51,10 +42,9 @@ class NodeOrientationChaser : public ChaserNode {
 public:
                     NodeOrientationChaser(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeOrientationChaser(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeOrientationChaser(*this); }
 
     fieldMacros(SFRotation, initialDestination, ProtoOrientationChaser);
     fieldMacros(SFRotation, initialValue,       ProtoOrientationChaser);
 };
 
-#endif

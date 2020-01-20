@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_RIGID_BODY_COLLECTION_H
-#define _NODE_RIGID_BODY_COLLECTION_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
 #include "Scene.h"
@@ -58,10 +57,9 @@ public:
 
     virtual const char* getComponentName(void) const 
                            { return "RigidBodyPhysics"; }
-    virtual int     getComponentLevel(void) const { return 2; }
+    virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; } 
-    virtual Node   *copy() { return new NodeRigidBodyCollection(
-                                    m_scene, m_proto); }
+    virtual Node       *copy() const { return new NodeRigidBodyCollection(*this); }
 
 //    virtual void        preDraw() 
 //                           { if (!_scene->isRunning()) bodies()->preDraw(); }
@@ -73,7 +71,7 @@ public:
 
     virtual bool        showFields() { return true; }
 
-    virtual int         getChildrenField(void) { return bodies_Field(); }
+    virtual int         getChildrenField(void) const { return bodies_Field(); }
 
     fieldMacros(SFBool,  autoDisable,             ProtoRigidBodyCollection)
     fieldMacros(MFNode,  bodies,                  ProtoRigidBodyCollection)
@@ -92,5 +90,4 @@ public:
     fieldMacros(SFNode,  collider,                ProtoRigidBodyCollection)
 };
 
-#endif
 

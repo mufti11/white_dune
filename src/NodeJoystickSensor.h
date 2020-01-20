@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_JOYSTICK_SENSOR_H
-#define _NODE_JOYSTICK_SENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "CoverNode.h"
 
@@ -60,8 +51,7 @@ public:
                         NodeJoystickSensor(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return -1; }
-    virtual Node       *copy() { return new NodeJoystickSensor( 
-                                 m_scene, m_proto); }
+    virtual Node       *copy() const { return new NodeJoystickSensor(*this); }
 
     fieldMacros(SFBool,  enabled,         ProtoJoystickSensor)
     fieldMacros(SFInt32, joystickNumber,  ProtoJoystickSensor)
@@ -69,5 +59,3 @@ public:
     fieldMacros(MFFloat, axes_changed,    ProtoJoystickSensor)
     fieldMacros(MFInt32, buttons_changed, ProtoJoystickSensor)
 };
-
-#endif // _NODE_JOYSTICK_SENSOR_H

@@ -23,9 +23,9 @@
 
 #pragma once
 
-# include "Node.h"
+#include "Node.h"
 #include "ProtoMacros.h"
-# include "Proto.h"
+#include "Proto.h"
 #include "SFMFTypes.h"
 #include "KambiTextureCommonFields.h"
 
@@ -66,12 +66,12 @@ public:
 class NodeImageTexture : public Node {
 public:
                     NodeImageTexture(Scene *scene, Proto *proto);
-                    NodeImageTexture(NodeImageTexture &node);
+                    NodeImageTexture(const NodeImageTexture &node);
     virtual        ~NodeImageTexture();
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeImageTexture(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeImageTexture(*this); }
     virtual void    setField(int field, FieldValue *value, int cf = -1);
 
     virtual bool    hasNumbers4kids(void) { return true; } 

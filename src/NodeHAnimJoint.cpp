@@ -72,7 +72,7 @@ ProtoHAnimJoint::create(Scene *scene)
 NodeHAnimJoint::NodeHAnimJoint(Scene *scene, Proto *def)
   : NodeTransform(scene, def)
 {
-    m_jointMatrix = Matrixd::identity();
+    m_jointMatrix = Matrix::identity();
     m_coord = NULL;
 }
 
@@ -180,18 +180,18 @@ NodeHAnimJoint::accountJointMatrix(Node *parent)
 {   
     glPushMatrix();
     glLoadIdentity();
-    m_jointMatrix = Matrixd::identity();
-    Matrixd thisMatrix = Matrixd::identity();
+    m_jointMatrix = Matrix::identity();
+    Matrix thisMatrix = Matrix::identity();
     transform();
     if (parent->getType() == X3D_HANIM_JOINT) {
         NodeHAnimJoint *joint = (NodeHAnimJoint *)parent;
-        Matrixd matrix;
+        Matrix matrix;
         joint->getJointMatrix(matrix);
         getMatrix(thisMatrix);  
         m_jointMatrix = matrix * thisMatrix;
     } else if (parent && parent->getType() == X3D_HANIM_HUMANOID) {
         NodeHAnimHumanoid *human = (NodeHAnimHumanoid *)parent;
-        Matrixd matrix;
+        Matrix matrix;
         human->getMatrix(matrix);
         getMatrix(thisMatrix);  
         m_jointMatrix = matrix * thisMatrix;

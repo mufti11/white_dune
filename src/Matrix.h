@@ -46,7 +46,6 @@ public:
     Matrix          invert() const;
 
     static Matrix   identity();
-    bool            isZero(void);
     void            swapRows(int i, int j);
 
 private:
@@ -61,7 +60,6 @@ public:
 
     Matrixd         operator*(const Matrixd &m) const;
     Vec3d           operator*(const Vec3d& v) const;
-    Vec3f           operator*(const Vec3f& v) const;
 
     operator        double *() { return (double *) m_mat; }
     operator        const double *() const { return (const double *) m_mat; }
@@ -72,7 +70,6 @@ public:
     Matrixd         invert() const;
 
     static Matrixd  identity();
-    bool            isZero(void);
     void            swapRows(int i, int j);
 
 private:
@@ -80,6 +77,5 @@ private:
 };
 
 void printf(Matrix mat);
-void printf(Matrixd mat);
 
 

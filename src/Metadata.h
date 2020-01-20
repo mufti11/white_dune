@@ -19,20 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
+#include <stdio.h>
+#include "stdafx.h"
 
-#ifndef _NODE_METADATA_H
-#define _NODE_METADATA_H
+#pragma once
 
-#ifndef _NODE_H
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
-#include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoMetadata : public Proto {
@@ -50,10 +43,8 @@ public:
                     Metadata(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_CORE; }
-    virtual Node   *copy() = 0;
+    virtual Node   *copy() const = 0;
 
     fieldMacros(SFString, name,      ProtoMetadata)
     fieldMacros(SFString, reference, ProtoMetadata)
 };
-
-#endif // _NODE_METADATA_H

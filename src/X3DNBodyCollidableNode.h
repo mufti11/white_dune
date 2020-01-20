@@ -22,7 +22,6 @@
 #pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class X3DNBodyCollidableProto : public Proto {
@@ -71,7 +70,7 @@ public:
     bool              modelViewIsIdentity(void);
 private:
     bool              m_matrixDirty;
-    Matrixd            m_matrix;
+    Matrix            m_matrix;
     float             m_handleScale;
 };
 

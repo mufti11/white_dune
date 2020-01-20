@@ -24,6 +24,7 @@
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
+
 #include "SFMFTypes.h"
 
 class ChaserProto : public Proto {

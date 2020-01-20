@@ -21,19 +21,11 @@
  * Implements the Cover/Covise Wave node
  */
 
-#ifndef _NODE_WAVE_H
-#define _NODE_WAVE_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoWave : public Proto {
@@ -66,7 +58,7 @@ public:
                     NodeWave(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeWave(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeWave(*this); }
 
     fieldMacros(SFFloat,    fraction,   ProtoWave)
     fieldMacros(SFFloat,    freq1,      ProtoWave)
@@ -82,7 +74,5 @@ public:
     fieldMacros(SFRotation, coeffSin,   ProtoWave)
     fieldMacros(SFRotation, coeffCos,   ProtoWave)
     fieldMacros(SFString,   fileName,   ProtoWave)
-
 };
 
-#endif // _NODE_WAVE_H

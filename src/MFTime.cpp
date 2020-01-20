@@ -25,7 +25,6 @@
 #include "MFTime.h"
 #include "SFTime.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFTime::MFTime()
 {
@@ -64,11 +63,11 @@ MFTime::MFTime(MFTime *mValue)
 }
 
 MyString    
-MFTime::getString(int index, int stride)
+MFTime::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
-    mysnprintf(buffer, 255, "%g", ((MyArray<double>)m_value)[index]);
+    mysnprintf(buffer, 255, "%g", m_value[index]);
     ret += buffer;
     return ret;
 }
@@ -93,10 +92,22 @@ MFTime::readLine(int index, char *line)
 bool
 MFTime::equals(const FieldValue *value) const
 {
-    return value->getType() == MFTIME && equals(value);
+    return value->getType() == MFTIME && equals((const MFTime *) value);
 }
 
-int MFTime::writeData(int f, int i) 
+bool
+MFTime::equals(const MFTime *value) const
+{
+    if ((int)m_value.size() == value->getSize()) {
+        for (long i = 0; i < m_value.size(); i++)
+            if (m_value[i] != value->getValue(i))
+                return false;
+        return true;
+    }
+    return false;
+}
+
+int MFTime::writeData(int f, int i) const
 {
     return mywritef(f, "%g", m_value[i]);
 }
@@ -128,7 +139,7 @@ void  MFTime::setValue(int index, double value)
 }
 
 MyString
-MFTime::getEcmaScriptComment(MyString name, int flags)
+MFTime::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -194,7 +205,7 @@ MFTime::insertSFValue(int index, FieldValue *value)
 }
 
 void 
-MFTime::insertSFValue(int index, double value)
+MFTime::insertSFValue(int index, const double value)
 {
     m_value.insert(value, index);
 }

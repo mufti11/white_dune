@@ -22,7 +22,6 @@
 #include "stdafx.h"
 #include "UploadSettingsDialog.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "resource.h"
 #include <swt.h>
 #ifndef _WIN32

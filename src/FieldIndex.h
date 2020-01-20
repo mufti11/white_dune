@@ -35,7 +35,9 @@ public:
     void set(int i)      { 
                          if (m_written == 0) {
                              m_written = 1;
-                             if (i > -1)
+                             if (i < 0) {
+                                 assert(0);
+                             } else 
                                  m_fieldIndex = i;
                          } else 
                              assert(0);
@@ -48,3 +50,4 @@ protected:
     int m_written;
     int m_fieldIndex;
 };
+

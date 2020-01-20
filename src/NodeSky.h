@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SKY_H
-#define _NODE_SKY_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoSky : public Proto {
@@ -62,7 +54,7 @@ public:
                     NodeSky(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; } 
-    virtual Node   *copy() { return new NodeSky( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSky(*this); }
 
     fieldMacros(SFBool,  enabled,     ProtoSky)
     fieldMacros(SFBool,  timeLapse,   ProtoSky)
@@ -78,4 +70,3 @@ public:
     fieldMacros(SFFloat, altitude,    ProtoSky)
 };
 
-#endif // _NODE_SKY_H

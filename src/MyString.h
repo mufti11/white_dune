@@ -22,9 +22,7 @@
 #pragma once
 
 #include <stdio.h>
-#ifndef _STRING_H
 #include <string.h>
-#endif
 #include <stdlib.h>
 #include "mysnprintf.h"
 #include "StringArray.h"
@@ -98,3 +96,4 @@ protected:
 };
 
 extern int myhash(MyString key);
+

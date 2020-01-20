@@ -19,7 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
-#include "ExternTheApp.h"
+#pragma once
+
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -41,13 +42,13 @@ public:
 class NodeBooleanToggle : public Node {
 public:
                     NodeBooleanToggle(Scene *scene, Proto *proto);
-                    NodeBooleanToggle(NodeBooleanToggle &node);
+                    NodeBooleanToggle(const NodeBooleanToggle &node);
     virtual        ~NodeBooleanToggle();
 
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeBooleanToggle(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBooleanToggle(*this); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 

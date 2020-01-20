@@ -19,7 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma one 
+#pragma once
 
 #include "Interpolator.h"
 #include "ProtoMacros.h"
@@ -39,13 +39,12 @@ class NodeColorInterpolator : public Interpolator {
 public:
                         NodeColorInterpolator(Scene *scene, Proto *proto);
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() { return new NodeColorInterpolator(
-                                        m_scene, m_proto); } 
+    virtual Node       *copy() const { return new NodeColorInterpolator(*this);}
 
-    virtual int         getStride() { return 3; }
-    virtual int         getNumChannels() { return 3; }
-    virtual FieldValue *createKey(void *values);
-    virtual FieldValue *createKeys(void *values, int numKeys);
+    virtual int         getStride() const { return 3; }
+    virtual int         getNumChannels() const { return 3; }
+    virtual FieldValue *createKey(void *values) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
     virtual void        setKeyValue(int channel, int index, float value);
 
     fieldMacros(MFColor, keyValue, ProtoColorInterpolator)

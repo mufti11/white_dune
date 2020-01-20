@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PARTICLE_SYSTEM_H
-#define _NODE_PARTICLE_SYSTEM_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 enum {
@@ -82,7 +73,7 @@ public:
                            { return "ParticleSystems"; }
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 2; } 
-    virtual Node   *copy() { return new NodeParticleSystem(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeParticleSystem(*this); }
 
     void            init(void);
     virtual void    draw(int pass);
@@ -124,4 +115,3 @@ protected:
     Node           *m_particleNode;
 };
 
-#endif

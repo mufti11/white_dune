@@ -59,7 +59,7 @@ public:
                         NodeARSensor(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return -1; }
-    virtual Node       *copy() { return new NodeARSensor(m_scene, m_proto); }
+    virtual Node       *copy() const { return new NodeARSensor(*this); }
 
     fieldMacros(SFBool,    trackObjects,         ProtoARSensor)
     fieldMacros(SFBool,    freeze,               ProtoARSensor)

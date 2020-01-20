@@ -24,7 +24,6 @@
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
-
 #include "SFMFTypes.h"
 
 class RigidBodyPhysicsNode : public Node {

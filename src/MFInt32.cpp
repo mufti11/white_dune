@@ -25,7 +25,6 @@
 #include "MFInt32.h"
 #include "SFInt32.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFInt32::MFInt32()
 {
@@ -42,7 +41,7 @@ MFInt32::MFInt32(MFInt32 *value)
     m_value.setData(value->getValues(), value->getSize());
 }
 
-MFInt32::MFInt32(int value)
+MFInt32::MFInt32(const int value)
 {
     m_value.resize(0);
     m_value[0] = value;
@@ -55,7 +54,7 @@ MFInt32::~MFInt32()
 }
 
 MyString    
-MFInt32::getString(int index, int stride)
+MFInt32::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -73,13 +72,13 @@ MFInt32::copy()
     return new MFInt32(value, m_value.size());
 }
 
-int MFInt32::writeData(int f, int i)
+int MFInt32::writeData(int f, int i) const
 {
     return mywritef(f, "%d", m_value[i]);
 }
 
 int MFInt32::write(int f, int indent, bool writeBrackets, 
-                   bool compactFormat)
+                   bool compactFormat) const
 {
     if (writeBrackets) {
         if (!TheApp->GetkrFormating()) {
@@ -140,10 +139,10 @@ bool
 MFInt32::equals(const FieldValue *value) const
 {
     if (value->getType() == MFINT32) {
-        MFInt32 *v = (MFInt32 *)value;
+        MFInt32 *v = (MFInt32 *) value;
         if (v->getSize() != (int)m_value.size()) return false;
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value.getData()[i] != v->getValue(i))
+            if (m_value[i] != v->getValue(i))
                 return false;
         return true;
     }
@@ -151,7 +150,7 @@ MFInt32::equals(const FieldValue *value) const
 }
 
 FieldValue *
-MFInt32::getSFValue(int index)
+MFInt32::getSFValue(int index) const
 {
     return new SFInt32(m_value[index]);
 }
@@ -163,14 +162,14 @@ MFInt32::setSFValue(int index, FieldValue *value)
 }
 
 void
-MFInt32::setSFValue(int index, int value)
+MFInt32::setSFValue(int index, const int value)
 {
     m_value[index] = value;
 }
 
 
 MyString
-MFInt32::getEcmaScriptComment(MyString name, int flags)
+MFInt32::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -237,13 +236,13 @@ MFInt32::insertSFValue(int index, FieldValue *value)
 }
 
 void 
-MFInt32::insertSFValue(int index, int value)
+MFInt32::insertSFValue(int index, const int value)
 {
     m_value.insert(value, index);
 }
 
 void 
-MFInt32::appendSFValue(int value)
+MFInt32::appendSFValue(const int value)
 {
     m_value.append(value);
 }

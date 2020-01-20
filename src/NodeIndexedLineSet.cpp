@@ -291,9 +291,9 @@ NodeIndexedLineSet::swap(int fromTo)
 
 int NodeIndexedLineSet::getProfile(void) const
 { 
-    if (((NodeIndexedLineSet *)this)->hasInput("set_colorIndex"))
+    if (hasInput("set_colorIndex"))
         return PROFILE_IMMERSIVE;
-    if (((NodeIndexedLineSet *)this)->hasInput("set_coordIndex"))
+    if (hasInput("set_coordIndex"))
         return PROFILE_IMMERSIVE;
     return PROFILE_INTERCHANGE; 
 }

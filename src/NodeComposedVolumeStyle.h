@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COMPOSED_VOLUME_STYLE_H
-#define _NODE_COMPOSED_VOLUME_STYLE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoComposedVolumeStyle : public Proto {
@@ -60,8 +51,7 @@ public:
         { return "VolumeRendering"; }
     virtual int     getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node   *copy() { return new NodeComposedVolumeStyle(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeComposedVolumeStyle(*this); }
 
     fieldMacros(SFBool, enabled, ProtoComposedVolumeStyle);
     fieldMacros(MFNode, renderStyle, ProtoComposedVolumeStyle);
@@ -69,4 +59,3 @@ public:
     fieldMacros(SFNode, surfaceNormals, ProtoComposedVolumeStyle);
 };
 
-#endif

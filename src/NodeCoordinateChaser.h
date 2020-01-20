@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COORDINATE_CHASER_H
-#define _NODE_COORDINATE_CHASER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "ChaserNode.h"
 
@@ -51,8 +42,7 @@ class NodeCoordinateChaser : public ChaserNode {
 public:
                     NodeCoordinateChaser(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeCoordinateChaser(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCoordinateChaser(*this); }
 
     void            dynamics(MFVec3f *add, MFVec3f *dest, MFVec3f *val, 
                              float mult);
@@ -75,5 +65,3 @@ protected:
     int m_initialDestination_Field;
     int m_initialValue_Field;
 };
-
-#endif

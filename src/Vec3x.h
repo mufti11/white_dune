@@ -51,11 +51,6 @@
 #include <math.h>
 #include "stdafx.h"
 
-#ifndef FLT_MAX 
-# include <float.h>
-#endif
-#define floatEpsilon() (FLT_MIN * 5)
-
 template<class T> class Vec3x {
 public:
                 Vec3x()
@@ -97,11 +92,7 @@ public:
      void       zero()
                    { x = y = z = 0.0f; }
      bool       isZero()
-                   { 
-                   return (fabs(x) < floatEpsilon()) && 
-                          (fabs(y) < floatEpsilon()) && 
-                          (fabs(z) < floatEpsilon()); 
-                   }
+                   { return (x == 0.0f) && (y == 0.0f) && (z == 0.0f); }
      void       scale(T s)
                    { x *= s; y *= s; z *= s; }
      T          length() const

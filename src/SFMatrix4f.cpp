@@ -22,14 +22,13 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "swt.h"
 #include "SFMatrix4f.h"
 #include "SFFloat.h"
 
 MyString    
-SFMatrix4f::getString(int index, int stride)
+SFMatrix4f::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -84,7 +83,7 @@ SFMatrix4f::readLine(int index, char *line)
 }
 
 int 
-SFMatrix4f::writeData(int f, int i)
+SFMatrix4f::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g %g  %g %g %g %g  %g %g %g %g  %g %g %g %g", 
                        m_value[0], m_value[1], m_value[2], m_value[3], 
@@ -94,7 +93,7 @@ SFMatrix4f::writeData(int f, int i)
 }
 
 int 
-SFMatrix4f::write(int f, int indent)
+SFMatrix4f::write(int f, int indent) const
 {
     RET_ONERROR( mywritef(f, "%g %g %g %g\n  %g %g %g %g\n  %g %g %g %g\n  %g %g %g %g\n", 
                        m_value[0], m_value[1], m_value[2], m_value[3], 
@@ -108,7 +107,7 @@ SFMatrix4f::write(int f, int indent)
 }
 
 int
-SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag)
+SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -129,14 +128,14 @@ SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag)
 }
 
 int
-SFMatrix4f::writeAc3d(int filedes, int indent)
+SFMatrix4f::writeAc3d(int filedes, int indent) const
 {
     // not needed yet
     return 0;
 }
 
 MyString
-SFMatrix4f::getEcmaScriptComment(MyString name, int flags)
+SFMatrix4f::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

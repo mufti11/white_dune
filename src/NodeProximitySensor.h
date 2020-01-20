@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PROXIMITYSENSOR_H
-#define _NODE_PROXIMITYSENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoProximitySensor : public WonderlandExportProto {
@@ -58,8 +49,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodeProximitySensor(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeProximitySensor(*this); }
 
     virtual void    draw(int pass);
 
@@ -82,4 +72,3 @@ protected:
     int               m_handleOffset;
 };
 
-#endif // _NODE_PROXIMITYSENSOR_H

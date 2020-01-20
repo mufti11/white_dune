@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Dialog.h"
+
 #include "swttypedef.h"
 
 class NodeTimeSensor;
@@ -52,5 +53,6 @@ private:
     float               m_newTimeSensorSeconds;
     bool                m_keepDegree;
 };
+
 
 

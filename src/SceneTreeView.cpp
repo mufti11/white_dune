@@ -345,7 +345,7 @@ void SceneTreeView::DeleteItemRec(STREEITEM item)
     swTreeDeleteItem(m_tree, item);
 }
 
-void SceneTreeView::UpdateNode(Path *updatePath)
+void SceneTreeView::UpdateNode(const Path *updatePath)
 {
     Node *node = m_scene->getRoot();
     STREEITEM item = swTreeGetRootItem(m_tree);
@@ -492,7 +492,7 @@ void SceneTreeView::UpdateNode(Path *updatePath)
 
 void SceneTreeView::UpdateSelection()
 {
-    Path *selection = m_scene->getSelection();
+    const Path *selection = m_scene->getSelection();
     UpdateNode(selection);
 }
 

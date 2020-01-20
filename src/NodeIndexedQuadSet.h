@@ -65,7 +65,7 @@ public:
     virtual const char* getComponentName(void) const { return "CADGeometry"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() { return new NodeIndexedQuadSet(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeIndexedQuadSet(*this); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -97,9 +97,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() 
+    virtual int     colorPerVertexField() const 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField() { return index_Field(); }
+    virtual int     colorIndexField() const { return index_Field(); }
 
     MFVec3f        *getCoordinates();
     MFVec2f        *getTextureCoordinates();
@@ -127,4 +127,3 @@ protected:
     MFInt32        *m_coordIndex;
     bool            m_colorPerVertexWarning;
 };
-

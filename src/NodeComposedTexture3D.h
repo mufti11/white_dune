@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COMPOSED_TEXTURE_3D_H
-#define _NODE_COMPOSED_TEXTURE_3D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "KambiTextureCommonFields.h"
 
 class ProtoComposedTexture3D : public Proto {
@@ -67,8 +57,7 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing3D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node *copy() { return new NodeComposedTexture3D(
-                                  m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeComposedTexture3D(*this); }
 
     fieldMacros(MFNode, texture, ProtoComposedTexture3D);
     fieldMacros(SFBool, repeatS, ProtoComposedTexture3D);
@@ -85,5 +74,3 @@ public:
 public:
     int m_textureTableIndex;
 };
-
-#endif

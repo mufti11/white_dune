@@ -26,13 +26,14 @@
 #include "Rect.h"
 #include "Point.h"
 #include "SFMFTypes.h"
-#include "swttypedef.h"
 
 class FieldViewItem;
 class DuneDoc;
 class Node;
 class FieldValue;
 class Hint;
+
+#include "swttypedef.h"
 
 class FieldView : public SceneView
 {

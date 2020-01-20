@@ -22,13 +22,13 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
+#include "swt.h"
 #include "SFVec3f.h"
 #include "SFFloat.h"
 
 MyString    
-SFVec3f::getString(int index, int stride)
+SFVec3f::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -77,13 +77,13 @@ SFVec3f::readLine(int index, char *line)
 }
 
 int 
-SFVec3f::writeData(int f, int i)
+SFVec3f::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g", m_value[0], m_value[1], m_value[2]);
 }
 
 int
-SFVec3f::writeC(int filedes, const char* variableName, int languageFlag)
+SFVec3f::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -103,7 +103,7 @@ SFVec3f::writeC(int filedes, const char* variableName, int languageFlag)
 }
 
 int
-SFVec3f::writeAc3d(int filedes, int indent)
+SFVec3f::writeAc3d(int filedes, int indent) const
 {
     RET_ONERROR( mywritef(filedes, "%f %f %f", m_value[0], m_value[1], m_value[2]) )
     RET_ONERROR( mywritestr(filedes, "\n") )
@@ -111,7 +111,7 @@ SFVec3f::writeAc3d(int filedes, int indent)
 }
 
 MyString
-SFVec3f::getEcmaScriptComment(MyString name, int flags)
+SFVec3f::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -252,7 +252,7 @@ SFVec3f::getEcmaScriptComment(MyString name, int flags)
 }
 
 Vec3f        
-SFVec3f::getVec(void) const
+SFVec3f::getVec(void)
 {
     Vec3f v(m_value[0], m_value[1], m_value[2]);
     return v;

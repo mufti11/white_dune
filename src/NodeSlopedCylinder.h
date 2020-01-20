@@ -20,22 +20,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SlopedCylinder_H
-#define _NODE_SlopedCylinder_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoSlopedCylinder : public Proto {
@@ -65,7 +55,7 @@ class NodeSlopedCylinder : public Node {
 public:
                     NodeSlopedCylinder(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeSlopedCylinder(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSlopedCylinder(*this); }
     virtual int     getX3dVersion(void) const { return -1; }
 
     x3domGeometryCommonFieldMacros(ProtoSlopedCylinder) 
@@ -83,4 +73,3 @@ public:
     fieldMacros(SFFloat, ytshear,     ProtoSlopedCylinder)
 };
 
-#endif

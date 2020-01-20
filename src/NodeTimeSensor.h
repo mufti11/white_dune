@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TIMESENSOR_H
-#define _NODE_TIMESENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTimeSensor : public WonderlandExportProto {
@@ -68,7 +59,7 @@ public:
     virtual int     getComponentLevel(void) const;
     virtual const char *getComponentName(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeTimeSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTimeSensor(*this); }
 
     virtual void    preDraw();
 
@@ -101,4 +92,3 @@ protected:
     double          m_delay;
 };
 
-#endif // _NODE_TIMESENSOR_H

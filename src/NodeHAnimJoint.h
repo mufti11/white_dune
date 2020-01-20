@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_HANIN_JOINT_H
-#define _NODE_HANIN_JOINT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "NodeTransform.h"
 
 class ProtoHAnimJoint : public ProtoTransform {
@@ -64,9 +54,9 @@ public:
                     NodeHAnimJoint(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const;
-    virtual int     getComponentLevel(void) const;
-    virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeHAnimJoint(m_scene, m_proto); }
+    virtual int         getComponentLevel(void) const;
+    virtual int         getX3dVersion(void) const { return 0; }
+    virtual Node   *copy() const { return new NodeHAnimJoint(*this); }
 
     void            setField(int field, FieldValue *value, int cf = -1);
 
@@ -82,7 +72,7 @@ public:
 
     virtual void    setHandle(int handle, const Vec3f &v);
 
-    void            getJointMatrix(Matrixd &matrix) 
+    void            getJointMatrix(Matrix &matrix) 
                         { m_jointMatrix.copyTo(matrix); } 
 
     Node           *getJointParent(Node *node, Node *parent);
@@ -96,8 +86,7 @@ public:
     fieldMacros(MFFloat,    stiffness,        ProtoHAnimJoint)
     fieldMacros(MFFloat,    ulimit,           ProtoHAnimJoint)
 protected:
-    Matrixd m_jointMatrix;
+    Matrix m_jointMatrix;
     NodeCoordinate *m_coord;
 };
 
-#endif

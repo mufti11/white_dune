@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POSITION_CHASER_2D_H
-#define _NODE_POSITION_CHASER_2D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "ChaserNode.h"
 
@@ -51,8 +42,8 @@ class NodePositionChaser2D : public ChaserNode {
 public:
                     NodePositionChaser2D(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodePositionChaser2D(
-                           m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePositionChaser2D(*this); }
+
 
     virtual void    sendChasedEvent(int eventIn, double timestamp, 
                                     FieldValue * value);
@@ -71,4 +62,3 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif

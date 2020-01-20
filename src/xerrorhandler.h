@@ -47,14 +47,15 @@
 
 void init_handlers(void);
 
-extern "C" {
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <errno.h>
-# include <stdlib.h>
-# include <stdio.h>
-}
+extern "C" 
+   {
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <fcntl.h>
+#  include <errno.h>
+#  include <stdlib.h>
+#  include <stdio.h>
+   }
 
 void emergency_rescue(int sig = -1);
 
@@ -63,13 +64,14 @@ void normalExit(int status);
 
 #ifndef _WIN32
 
-extern "C" {
-# include <syslog.h>
-# include <unistd.h>
-# include <signal.h>
-# include <X11/Xlib.h>
-# include <X11/Intrinsic.h>
-}
+extern "C" 
+   {
+#  include <syslog.h>
+#  include <unistd.h>
+#  include <signal.h>
+#  include <X11/Xlib.h>
+#  include <X11/Intrinsic.h>
+   }
 
    int nofatal_handler(Display *display, XErrorEvent *xerrorevent);
    int fatal_handler(Display *display);
@@ -86,3 +88,5 @@ extern "C" {
    void fpu_enable_interrupts(void);
 #  endif 
 #endif
+
+

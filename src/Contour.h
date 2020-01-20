@@ -25,11 +25,11 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
-
 #include "config.h"
 
 #ifdef HAVE_LIBFREETYPE
+
+#pragma once
 
 #include <vector>
 #include <ft2build.h>
@@ -165,4 +165,4 @@
 
 };
 
-#endif 
+#endif

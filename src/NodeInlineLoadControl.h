@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -45,8 +44,7 @@ class NodeInlineLoadControl : public NodeInline {
 public:
                     NodeInlineLoadControl(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeInlineLoadControl( 
-                           m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeInlineLoadControl(*this); }
 
     int             writeProto(int f);
     int             write(int filedes, int indent, bool avoidUse = false);

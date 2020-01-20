@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUIFrame node
  */
 
-#ifndef _NODE_TUI_FRAME_H
-#define _NODE_TUI_FRAME_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 class ProtoTUIFrame : public ProtoTUIElement {
@@ -52,7 +42,6 @@ public:
                     NodeTUIFrame(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node  *copy() { return new NodeTUIFrame(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUIFrame(*this); }
 };
 
-#endif // _NODE_TUI_FRAME_H

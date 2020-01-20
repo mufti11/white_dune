@@ -25,8 +25,9 @@
 #include "ProtoMacros.h"
 #include "Proto.h"
 #include "MFFloat.h"
-#include "FieldValue.h"
-#include "CommandList.h"
+
+class FieldValue;
+class CommandList;
 
 class ProtoInterpolator : public WonderlandExportProto {
 public:
@@ -71,9 +72,9 @@ public:
     virtual FieldValue *getInterpolatedFieldValue(float k);
     virtual void        sendInterpolatedEvent(double timestamp, float k);
     void                sendInterpolatedValue(double, float);
-    virtual int         getNumChannels() { return -1; }
-    virtual FieldValue *createKey(void *value) { return NULL; }
-    virtual FieldValue *createKeys(void *value, int numKeys) { return NULL; }
+    virtual int         getNumChannels() const = 0;
+    virtual FieldValue *createKey(void *value) const = 0;
+    virtual FieldValue *createKeys(void *value, int numKeys) const = 0;
 
     virtual int         getStride() const { return 1; }
 
@@ -115,3 +116,4 @@ Interpolator       *dynamic_cast_Interpolator(Node* node);
 
 #define ADD_FLIP void flip(int index)  { keyValue()->flip(index); }
 #define ADD_SWAP void swap(int fromTo) { keyValue()->swap(fromTo); }
+

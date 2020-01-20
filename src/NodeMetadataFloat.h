@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_METADATA_FLOAT_H
-#define _NODE_METADATA_FLOAT_H
+#pragma once
 
 #include "Metadata.h"
 
@@ -41,9 +40,8 @@ public:
                     NodeMetadataFloat(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeMetadataFloat(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMetadataFloat(*this); }
 
     fieldMacros(MFFloat, value, ProtoMetadataFloat)
 };
 
-#endif // _NODE_METADATA_FLOAT_H

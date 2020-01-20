@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLOR_H
-#define _NODE_COLOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoColor : public WonderlandExportProto {
@@ -53,7 +44,7 @@ public:
                     NodeColor(Scene *scene, Proto *proto);
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeColor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeColor(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -63,8 +54,7 @@ public:
     Vec3f           getHandle(int handle, int *constraint, int *field);
     void            setHandle(int handle, const Vec3f &v);
 
-    virtual int     writeAc3dMaterial(int filedes, int indent, 
-                                      const char *name);
+    virtual int     writeAc3dMaterial(int filedes, int indent, const char*name);
     virtual void    handleAc3dMaterial(ac3dMaterialCallback callback, 
                                        Scene* scene);
 
@@ -93,4 +83,3 @@ protected:
     int             m_ac3dMaterialIndex;
 };
 
-#endif // _NODE_COLOR_H

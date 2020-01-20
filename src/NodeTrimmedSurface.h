@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TRIMMED_SURFACE_H
-#define _NODE_TRIMMED_SURFACE_H
+#pragma once
 
-#ifndef _GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTrimmedSurface : public GeometryProto {
@@ -52,7 +44,7 @@ public:
                     NodeTrimmedSurface(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node *copy() { return new NodeTrimmedSurface(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTrimmedSurface(*this); }
 
     virtual void    draw();
 
@@ -84,4 +76,3 @@ public:
     fieldMacros(SFNode, surface,           ProtoTrimmedSurface)
 };
 
-#endif // _NODE_TRIMMED_SURFACE_H

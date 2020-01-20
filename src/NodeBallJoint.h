@@ -22,7 +22,6 @@
 #pragma once
 
 #include "AnchoredJointNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoBallJoint : public AnchoredJointProto {
@@ -41,7 +40,7 @@ public:
                     NodeBallJoint(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeBallJoint(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBallJoint(*this); }
 
 protected:
     float           m_handleScale;

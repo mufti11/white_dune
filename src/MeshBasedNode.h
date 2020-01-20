@@ -22,8 +22,7 @@
 #pragma once
 
 #include "GeometryNode.h"
-# include "Vec3f.h"
-
+#include "Vec3f.h"
 #include "MeshFlags.h"
 
 class Scene;
@@ -166,5 +165,3 @@ public:
     virtual MyMesh *getMesh(void);
     virtual MyMeshDouble *getMeshDouble(void);
 };
-
-

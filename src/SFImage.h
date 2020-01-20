@@ -19,15 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFIMAGE_H
-#define _SFIMAGE_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
 #include "MFInt32.h"
 
 class SFImage : public MFInt32 {
@@ -38,12 +33,12 @@ public:
     virtual int         getType() const { return SFIMAGE; }
     virtual const char *getTypeName() const { return "SFImage"; }
 
-    virtual bool        writeBrackets(void) { return false; }
-    virtual int         writeData(int filedes, int i); 
+    virtual bool        writeBrackets(void) const { return false; }
+    virtual int         writeData(int filedes, int i) const; 
 
-    virtual int         write(int filedes, int indent);
+    virtual int         write(int filedes, int indent) const;
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse);
+                                 bool avoidUse) const;
 
     virtual bool        readLine(int index, char *line);
 
@@ -52,30 +47,27 @@ public:
     virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFImage(*this); }
 
-    const int           getValue(long index)
-                            { return m_value[index]; }
     virtual void        setSFValue(int index, FieldValue *value);
 
-    int                 getWidth(void);
+    int                 getWidth(void) const;
     void                setWidth(int width);
-    int                 getHeight(void); 
+    int                 getHeight(void) const; 
     void                setHeight(int height); 
-    int                 getComponents(void); 
+    int                 getComponents(void) const; 
     void                setComponents(int components); 
-    int                *getPixels(void); 
+    const int          *getPixels(void) const; 
     void                setPixel(int index, int pixel); 
-    int                 getNumPixels(void);
+    int                 getNumPixels(void) const;
 
 //    void                flip(int index);
 //    void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    bool                supportAnimation(bool x3d) { return true; }
+    bool                supportAnimation(bool x3d) const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 protected:
     void                resizeImage();
 };
 
-#endif // _SFIMAGE_H

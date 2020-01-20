@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_RECTANGLE_2D_H
-#define _NODE_RECTANGLE_2D_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
 #include "SFMFTypes.h"
 
 class ProtoRectangle2D : public Proto {
@@ -63,7 +54,7 @@ public:
                            { return "Geometry2D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodeRectangle2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeRectangle2D(*this); }
 
     virtual void    draw() { meshDraw(); }
 
@@ -89,4 +80,3 @@ protected:
 
 };
 
-#endif

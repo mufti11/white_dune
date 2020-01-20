@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ORTHO_VIEWPOINT_H
-#define _NODE_ORTHO_VIEWPOINT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "DuneApp.h"
 #include "KambiViewpointCommonFields.h"
@@ -71,18 +62,17 @@ public:
     virtual const char* getComponentName(void) const { return "Navigation"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int         getX3dVersion(void) const { return 2; } 
-    virtual Node       *copy() { return new NodeOrthoViewpoint( 
-                                 m_scene, m_proto); }
+    virtual Node       *copy() const { return new NodeOrthoViewpoint(*this); }
 
     virtual void        apply(bool useStereo = TheApp->useStereo());
     virtual void        preDraw() { apply(); }
     void                transformForViewpoint(bool useStereo);
 
-    virtual Vec3d       getPosition();
-    virtual Quaternion  getOrientation();
+    virtual Vec3d       getPosition() const;
+    virtual Quaternion  getOrientation() const;
 
-    virtual void        setPosition(Vec3d pos);
-    virtual void        setOrientation(Quaternion quat);
+    virtual void        setPosition(const Vec3d &pos);
+    virtual void        setOrientation(const Quaternion &quat);
 
     SFFloat            *fov() { static SFFloat f(M_PI / 4); return &f; }
 
@@ -106,4 +96,3 @@ protected:
     float                   m_matrix[16];
 };
 
-#endif

@@ -28,7 +28,6 @@
 #include "MFVec3d.h"
 #include "Vec3f.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFVec3f::MFVec3f(MFVec2f *mfVec2f)
 {
@@ -46,16 +45,6 @@ FieldValue *MFVec3f::copy()
 { 
     const float *values = ((MFFloat *)MFFloat::copy())->getValues();
     return new MFVec3f((float *) values, getSize());
-}
-
-MFVec3f *MFVec3f::getMFVec3f(void)
-{
-    MFVec3f *values = new MFVec3f();
-    for (long i = 0; i < m_value.size(); i += getStride())
-        values->appendSFValue(m_value[i], 
-                              m_value[i + 1],
-                              m_value[i + 2]);  
-    return values;
 }
 
 MFVec3d *MFVec3f::getMFVec3d(void)
@@ -81,11 +70,12 @@ MFVec3f::readLine(int index, char *line)
 bool
 MFVec3f::equals(const FieldValue *value) const
 {
-    return value->getType() == MFVEC3F && equals((MFFloat *)value);
+    return value->getType() == MFVEC3F && 
+           MFFloat::equals((const MFFloat *) value);
 }
 
 FieldValue *
-MFVec3f::getSFValue(int index)
+MFVec3f::getSFValue(int index) const
 {
     return new SFVec3f(getValue(index));
 }
@@ -99,13 +89,14 @@ MFVec3f::setSFValue(int index, FieldValue *value)
         return;
     }
 #endif
-    setSFValue(index, value);
+
+    setSFValue(index, ((SFVec3f *) value)->getValue());
 }
 
 void
-MFVec3f::setSFValue(int index, float *values)
+MFVec3f::setSFValue(int index, const float *values)
 {
-    m_value[index * 3  ] = values[0];
+    m_value[index * 3    ] = values[0];
     m_value[index * 3 + 1] = values[1];
     m_value[index * 3 + 2] = values[2];
 }
@@ -121,7 +112,7 @@ MFVec3f::setSFValue(int index, float x, float y, float z)
 void
 MFVec3f::setVec(int index, Vec3f v)
 {
-    m_value[index * 3   ] = v.x;
+    m_value[index * 3    ] = v.x;
     m_value[index * 3 + 1] = v.y;   
     m_value[index * 3 + 2] = v.z;   
 }
@@ -129,13 +120,13 @@ MFVec3f::setVec(int index, Vec3f v)
 Vec3f
 MFVec3f::getVec(int index)
 {
-    return Vec3f(m_value[index * 3   ],
+    return Vec3f(m_value[index * 3    ],
                  m_value[index * 3 + 1],
                  m_value[index * 3 + 2]);
 }
 
 MyString
-MFVec3f::getEcmaScriptComment(MyString name, int flags)
+MFVec3f::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -228,11 +219,11 @@ MFVec3f::getEcmaScriptComment(MyString name, int flags)
 void 
 MFVec3f::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, value); 
+    insertSFValue(index, ((SFVec3f *)value)->getValue()); 
 }
 
 void 
-MFVec3f::insertSFValue(int index, float *values)
+MFVec3f::insertSFValue(int index, const float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);

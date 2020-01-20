@@ -35,10 +35,13 @@ InteractionDialog::InteractionDialog(SWND parent, Node* oldNode,
                                      InteractionRouteData* routeData)
   : Dialog(parent, IDD_INTERACTION)
 {
+    m_window.initCheckBoxWindow(parent, m_dlg);
     m_interactionNode = oldNode;
     m_routeData = routeData;
     buildInterfaceData();
     LoadData();
+    m_window.accountYmax();
+    m_window.invalidateWindow();
 }
 
 void
@@ -56,6 +59,8 @@ InteractionDialog::buildInterfaceData(void)
             EIF_RECOMMENDED)
             m_eventInHasRecommendedFields = true;
 
+    m_window.resize0();
+    m_eventIns.resize(0);
     int index = 0;
     for (int i = 0; i < inProto->getNumEventIns(); i++) {
         int type = inProto->getEventIn(i)->getType();
@@ -87,6 +92,8 @@ InteractionDialog::buildInterfaceData(void)
             m_eventIns.append(i);
             MyString string = "";
             string += inProto->getEventIn(i)->getName(x3d);
+            m_window.setString(index, string);
+            m_window.setInitButtonsPressed(index, false);
             index++; 
         }
     }
@@ -107,6 +114,8 @@ InteractionDialog::OnCommand(void *vid)
         if (m_routeData->level < 0)
             m_routeData->level = 0;
         buildInterfaceData();
+        m_window.accountYmax();
+        m_window.invalidateWindow();
     } else if (id == IDCANCEL) {
         swEndDialog(IDCANCEL);
     }
@@ -115,13 +124,27 @@ InteractionDialog::OnCommand(void *vid)
 bool
 InteractionDialog::Validate()
 {
+    if (!m_window.isValid())
+        return false;
+    bool checked = false;
+    for (long i = 0 ; i < m_eventIns.size(); i++)
+        if (m_window.getChecked(i)) {
+            if (checked) {
+                TheApp->MessageBoxId(IDS_NOT_2_INTERACTIVE);
+                return false;
+            }
+            checked = true;
+        }
+    for (long i = 0; i < m_eventIns.size(); i++)
+        if (m_window.getChecked(i))
+            return true;
     int commentID = m_interactionNode->getInteractionCommentID();
     if (commentID != -1) {
         TheApp->MessageBoxId(commentID);
         return false;
     } else
         TheApp->MessageBoxId(IDS_MAKE_WHAT_INTERACTIVE);
-    return true;
+    return false;
 }
 
 void
@@ -142,7 +165,20 @@ InteractionDialog::LoadData()
 void 
 InteractionDialog::SaveData()
 {
+    for (long i = 0; i < m_eventIns.size(); i++)
+        if (m_window.getChecked(i)) {
+            Proto* inProto = m_interactionNode->getProto();
+            m_routeData->eventInField =m_eventIns[i];
+            m_routeData->type = inProto->getEventIn(m_eventIns[i])->getType();;
+        }
     m_routeData->level = swComboBoxGetSelection(swGetDialogItem(m_dlg,
-                                                IDC_INTERACTION_LEVEL));
+                                               IDC_INTERACTION_LEVEL));
+    if (m_routeData->level < 0)
+        m_routeData->level = 0;
 }
 
+void 
+InteractionDialog::drawInterface(SDC dc)
+{
+    m_window.drawInterface(dc);
+}

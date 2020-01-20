@@ -66,8 +66,6 @@ extern "C" {
 #include "swt.h"
 
 #include "Scene.h"
-#include "DuneApp.h"
-#include "TheApp.h"
 #include "SceneProtoMap.h"
 #include "SceneView.h"
 #include "WonderlandModuleExport.h"
@@ -215,13 +213,13 @@ Scene::Scene()
 
     m_routeList.Init();
 
-    m_selectlevel=1;
-    m_hasFocus=false;
+    m_selectlevel = 1;
+    m_hasFocus = false;
 
-    m_viewOfLastSelection=NULL;
-    m_selection_is_in_scene=false;
-    m_URL="";
-    m_newURL="";
+    m_viewOfLastSelection = NULL;
+    m_selection_is_in_scene = false;
+    m_URL = "";
+    m_newURL = "";
     m_errorLineNumber = -1;
 
     m_obj3dCursor = gluNewQuadric();
@@ -394,7 +392,7 @@ Scene::updateViewpoint(void)
 
     if (m_currentViewpoint)
         m_currentViewpoint->unref();
-    m_currentViewpoint = m_defaultViewpoint->copy();
+    m_currentViewpoint = m_defaultViewpoint;
     m_currentViewpoint->ref();
 
     m_viewpointUpdated = true;
@@ -552,7 +550,7 @@ Scene::addSymbol(MyString s)
 }
 
 const MyString &
-Scene::getSymbol(int id)
+Scene::getSymbol(int id) const
 {
     return m_symbolList[id];
 }
@@ -737,8 +735,8 @@ Scene::scanForExternProtos(NodeList *nodes)
                     MFString *urls = (MFString *)proto->getUrls();
                     MyString files = "";
                     for (int i = 0; i < urls->getSize(); i++) {
-                         files += urls->getValue(i)->getValue();
-                         static MyString path = urls->getValue(i)->getValue();
+                         files += urls->getValue(i);
+                         static MyString path = urls->getValue(i);
                          if (Download((const char*)getURL(), &path))
                              break;
                          files += " ";
@@ -792,9 +790,9 @@ Scene::readInline(NodeInline *node)
     if (urls == NULL)
         return;
     for (int j = 0; j < urls->getSize(); j++) {
-        if (strlen(urls->getValue(j)->getValue()) == 0) 
+        if (urls->getValue(j).length() == 0) 
             continue;
-        URL url(oldDir, urls->getValue(j)->getValue());
+        URL url(oldDir, urls->getValue(j));
         MyString path;
         if (Download(url, &path)) {
             TheApp->setImportURL(url.GetPath());
@@ -844,9 +842,9 @@ Scene::readExternProto(Proto *proto)
     if (urls == NULL)
         return false;
     for (int j = 0; j < urls->getSize(); j++) {
-        if (strlen(urls->getValue(j)->getValue()) == 0) 
+        if (urls->getValue(j).length() == 0) 
             continue;
-        URL url(oldDir, urls->getValue(j)->getValue());
+        URL url(oldDir, urls->getValue(j));
         url.TrimTopic();
         MyString path;
         if (Download(url, &path)) {
@@ -932,6 +930,17 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
         m_delayedWriteNodes.resize(0);
     alreadyIn = false;
 
+    // sort out multiple ROUTEs
+    if (m_routeList.size() != 0)
+       for (List<MyString>::Iterator* routepointer = m_routeList.first();
+            routepointer != NULL; routepointer = routepointer->next() ) 
+            for (List<MyString>::Iterator* routepointer2 = m_routeList.first();
+                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
+          if (routepointer != routepointer)
+              if (strcmp((const char*) routepointer->item(), 
+                         (const char*) routepointer2->item()) == 0)
+                  m_routeList.remove(routepointer2);
+
     if (m_routeList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_routeList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
@@ -945,6 +954,17 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
        TheApp->incSelectionLinenumber();
        m_routeList.removeAll();
     }
+
+    // sort out multiple ROUTEs
+    if (end && m_endRouteList.size() != 0)
+       for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
+            routepointer != NULL; routepointer = routepointer->next() ) 
+            for (List<MyString>::Iterator* routepointer2 = m_endRouteList.first();
+                routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
+          if (routepointer != routepointer)
+              if (strcmp((const char*) routepointer->item(), 
+                         (const char*) routepointer2->item()) == 0)
+                  m_endRouteList.remove(routepointer2);
 
     if (end && m_endRouteList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
@@ -1631,6 +1651,13 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 
     getNodes()->clearFlag(NODE_FLAG_TOUCHED);
 
+    if (!TheApp->getX3dv() && ::isX3d(m_writeFlags)) {
+        NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
+        if (childList)
+            for (long i = 0; i < childList->size(); i++)
+                childList->get(i)->convert2X3d();
+    }     
+
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
     if (childList)
         for (long i = 0; i < childList->size(); i++) {
@@ -1783,8 +1810,7 @@ Scene::belongsToNodeWithExternProto(const char *protoName)
 {
     bool found = false;
     for (long i = 0; i < m_nodesWithExternProto.size(); i++)
-        if (m_nodesWithExternProto[i] &&
-            strcmp(protoName, m_nodesWithExternProto[i]) == 0) {
+        if (strcmp(protoName, m_nodesWithExternProto[i]) == 0) {
             found = true;
             break;
         }
@@ -2008,73 +2034,59 @@ Scene::writeOff(int f)
     int numFaces = 0;
     int sumVertices = 0;
 
+    Node *selection = getSelection()->getNode();
     RET_ONERROR( mywritestr(f, "OFF\n\n") )
     NodeArray childList;
+    MyArray<NodeIndexedFaceSet *> faces;
     getRoot()->doWithBranch(getAllNodes, &childList, false);
     for (long i = 0; i < childList.size(); i++) {
         Node *node = childList.get(i);
         if (node->isMeshBasedNode()) {
-            Node *selection = getSelection()->getNode();
             MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
             NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
                                        mBasedNode->toIndexedFaceSet();
+            faces.append(face);
             face->ref();
             face->setFlag(NODE_FLAG_CONVERTED);
             MoveCommand *command = new MoveCommand(face, NULL, -1, 
-                node->getParent(), node->getParentField());
+                                                   getRoot(), getRootField());
             command->execute();
             face->writeOffInit();
-            command = new MoveCommand(face, 
-                node->getParent(), node->getParentField(), NULL, -1);
-            command->execute();
-            UpdateViews(NULL, UPDATE_ALL, NULL);
-            setSelection(selection);
-            UpdateViews(NULL, UPDATE_SELECTION);
         }
     }
-    for (long i = 0; i < childList.size(); i++) {
-        Node *node = childList.get(i);
-        if (node->isMeshBasedNode()) {
-            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
-            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
-                                       mBasedNode->toIndexedFaceSet();
-            face->accountOffData(f);
-            sumVerticesPerFace += face->getSumVerticesPerFaces();
-            sumVertices += face->getSumVertices();
-            numFaces += mBasedNode->getMesh()->getNumFaces();
-        }
+    for (int i = 0; i < faces.size(); i++) {
+        NodeIndexedFaceSet *face = faces[i];
+        face->accountOffData(f);
+        sumVerticesPerFace += face->getSumVerticesPerFaces();
+        sumVertices += face->getSumVertices();
+        numFaces += face->getMesh()->getNumFaces();
     }
     mywritef(f, "%d %d %d\n", sumVertices, numFaces, sumVerticesPerFace);
-    for (long i = 0; i < childList.size(); i++) {
-        Node *node = childList.get(i);
-        if (node->isMeshBasedNode()) {
-            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
-            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
-                                       mBasedNode->toIndexedFaceSet();
-            face->writeOffVertices(f, node);
-        }
+    for (int i = 0; i < faces.size(); i++) {
+        NodeIndexedFaceSet *face = faces[i];
+        face->writeOffVertices(f, childList.get(i));
     }
-    for (long i = 0; i < childList.size(); i++) {
-        Node *node = childList.get(i);
-        if (node->isMeshBasedNode()) {
-            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
-            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
-                                       mBasedNode->toIndexedFaceSet();
-            face->writeOffIndices(f, node);
-        }
+    int numIndices = 0;
+    for (int i = 0; i < faces.size(); i++) {
+        NodeIndexedFaceSet *face = faces[i];
+        numIndices += face->getMesh()->getNumFaces();
+        face->writeOffIndices(f, numIndices, childList.get(i));
     }
-    for (long i = 0; i < childList.size(); i++) {
-        Node *node = childList.get(i);
-        if (node->isMeshBasedNode()) {
-            MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
-            NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
-                                       mBasedNode->toIndexedFaceSet();
-            face->writeOffNormalsAndColors(f, node);
-        }
+    for (int i = 0; i < faces.size(); i++) {
+        NodeIndexedFaceSet *face = faces[i];
+        face->writeOffNormalsAndColors(f, childList.get(i));
     }
+    for (int i = 0; i < faces.size(); i++) {
+         MoveCommand *command = new MoveCommand(faces[i], 
+                                                getRoot(), getRootField(), 
+                                                NULL, -1);
+         command->execute();
+    }
+    UpdateViews(NULL, UPDATE_ALL, NULL);
+    setSelection(selection);
+    UpdateViews(NULL, UPDATE_SELECTION);
     return(0);
 }
-
 
 static bool searchLongestTime(Node *node, void *data)
 {
@@ -3584,8 +3596,7 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
         (isInvalidElement(srcProto->getEventOut(eventOut))))
         ret = false; 
     Proto *dstProto = dst->getProto();
-    if ((eventIn != dstProto->getNumEventIns()) &&
-        (isInvalidElement(dstProto->getEventIn(eventIn))))
+    if (isInvalidElement(dstProto->getEventIn(eventIn)))
         ret = false; 
     if (!ret) {
         swDebugf("invalid ROUTE %s.%s To %s.%s\n",
@@ -3910,7 +3921,7 @@ Scene::backupField(Node *node, int field)
 }
 
 Interpolator *
-Scene::findUpstreamInterpolator(Node *node, int field) const
+Scene::findUpstreamInterpolator(const Node *node, int field) const
 {
     // is this field an ExposedField?
     int eventIn = -1;
@@ -3921,14 +3932,14 @@ Scene::findUpstreamInterpolator(Node *node, int field) const
     else if (f->getEventIn() != -1)
         eventIn = f->getEventIn();
     if (eventIn != -1) {
-        SocketList::Iterator *i;
+        const SocketList::Iterator *i;
 
         // check for interpolator routed to the corresponding EventIn;
 
         for (i = node->getInput(eventIn).first(); i != NULL; i = i->next()) {
             if ((i->item().getNode()->getMaskedNodeClass() == 
                  INTERPOLATOR_NODE) && i->item().getNode()->isInterpolator())
-                return (Interpolator *)(i->item().getNode());
+                return ((Interpolator *)i->item().getNode());
         }
     }
     return NULL;
@@ -3971,7 +3982,7 @@ Scene::deleteLastNextCommand(void)
 }
 
 int 
-Scene::canUndo()
+Scene::canUndo() const
 { 
     if (m_undoStack.empty())
         return 0;
@@ -3983,13 +3994,13 @@ Scene::canUndo()
 }
 
 int
-Scene::canRedo()
+Scene::canRedo() const
 { 
     if (m_redoStack.empty())
         return 0;
     int top = m_redoStack.getTop();
     Command *command = m_redoStack.peek(top);
-    if (command && command->getType() == NEXT_COMMAND)
+    if (command->getType() == NEXT_COMMAND)
         return (top > 1);
     return (top > 1);
 }
@@ -4132,6 +4143,7 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
         glScaled(1 / scale, 1 / scale, 1 / scale);
 
     glScalef(scaleX, scaleY, 1.0f);
+
     // first pass:  pre-draw traversal
     // enable PointLights and SpotLights; pick up ViewPoints, Fogs.
     // Backgrounds and TimeSensors
@@ -4150,7 +4162,6 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
 
     m_headlightIsSet = false;
     m_defaultViewpoint->preDraw();
-
     root->preDraw();
 
     if (m_currentFog)
@@ -4177,9 +4188,7 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
     else
         glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
-
     root->draw(RENDER_PASS_NON_TRANSPARENT);
-
     glEnable(GL_BLEND);
     glDepthFunc(GL_LEQUAL);
     root->draw(RENDER_PASS_TRANSPARENT);
@@ -4471,7 +4480,7 @@ Scene::processHits(GLint hits, GLuint *pickBuffer, bool selectMultipleHandles)
             return m_rigidBodyHandleNode->getPath();
         } else if (*pickBuffer == PICKED_HANDLE) {
             bool isCoord = COORDINATE_NODE ==
-                  getSelection()->getNode()->getNodeClass();
+                  getSelection()->getNode()->getProto()->getNodeClass();
                            
             bool isVertices = getSelectionMode() == SELECTION_MODE_VERTICES ||
                               getSelectionMode() == 
@@ -4629,6 +4638,14 @@ Scene::drawHandles(Node *root, bool drawRigidBodyHandles)
                 /* search last transform node in path */
                 if (node->getType() == VRML_TRANSFORM)
                    handlenode = node;
+                // search for a RigidBody node in the Parents of a 
+                // X3DNBodyCollidableNode
+                if (node->matchNodeClass(BODY_COLLIDABLE_NODE)) {
+                    m_rigidBodyHandleNode = NULL;
+                    node->doWithParents(checkHandleParentsForRigidBody, this);
+                    if (m_rigidBodyHandleNode != NULL)
+                        handlenode = node;
+                }
             }
             lastnode = node;
             node = root;
@@ -5263,7 +5280,7 @@ Scene::setSelection(Proto *proto)
 }
 
 bool
-Scene::isModified()
+Scene::isModified() const
 {
     if (!canUndo()) {
         if (m_unmodified != NULL)
@@ -5539,14 +5556,14 @@ BackupRoutesRec(Node *node, CommandList *list)
 
     for (i = 0; i < node->getProto()->getNumEventIns(); i++) {
         for (j = node->getInput(i).first(); j != NULL; j = j->next()) {
-            RouteSocket s = j->item();
+            const RouteSocket &s = j->item();
             list->append(new UnRouteCommand(s.getNode(), s.getField(), 
                                             node, i));
         }
     }
     for (i = 0; i < node->getProto()->getNumEventOuts(); i++) {
         for (j = node->getOutput(i).first(); j != NULL; j = j->next()) {
-            RouteSocket s = j->item();
+            const RouteSocket &s = j->item();
             list->append(new UnRouteCommand(node, i, 
                                             s.getNode(), s.getField()));
         }
@@ -5732,6 +5749,19 @@ static long my_fwrite(void *buffer, long size, long nmemb, void *stream)
   return fwrite(buffer, size, nmemb, out->stream);
 }
 
+class DownloadPathData {
+public:
+    MyString string;
+    bool isRemote;
+};
+
+MyString
+Scene::downloadPath(const URL &url)
+{
+     DownloadPathData data = downloadPathIntern(url);
+     return data.string;
+}
+
 DownloadPathData
 Scene::downloadPathIntern(const URL &url)
 {
@@ -5763,13 +5793,6 @@ Scene::downloadPathIntern(const URL &url)
     }
     ret.string += url.ToPath();
     return ret;
-}
-
-MyString
-Scene::downloadPath(const URL &url)
-{
-     DownloadPathData data = downloadPathIntern(url);
-     return data.string;
 }
 
 bool
@@ -5997,8 +6020,8 @@ Scene::addEndRouteString(MyString string)
 void                
 Scene::setViewOfLastSelection(SceneView* view)
 { 
-   m_viewOfLastSelection=view; 
-   m_selection_is_in_scene=false;
+   m_viewOfLastSelection = view; 
+   m_selection_is_in_scene = false;
 }
 
 SceneView* Scene::getViewOfLastSelection(void)
@@ -6163,7 +6186,7 @@ Scene::setPathAllURL(const char *path)
                     ((field->getFlags() & FF_URL) != 0)) {
                     MFString* urls = (MFString *)node->getField(j);
                     for (int k = 0; k < urls->getSize(); k++) {
-                        const char *urlk = urls->getValue(k)->getValue();
+                        const char *urlk = urls->getValue(k);
                         if (!isSortOfEcmascript(urlk) && notURN(urlk)) {
                             URL url(getURL(), urlk);
                             MyString *newURL = new MyString("");
@@ -7289,7 +7312,8 @@ Scene::branchSetBbox(void)
     m_root->doWithBranch(setBoundingBox, NULL, false);
 }
 
-MyArray<Node *> *
+
+MyArray<Node *>*
 Scene::searchInterpolators(void)
 {
     MyArray<Node *> *targets;
@@ -7312,11 +7336,11 @@ Scene::searchInterpolators(void)
 }
 
 NodeList 
-Scene::searchTimeSensorInInterpolator(Node interpolator) 
+Scene::searchTimeSensorInInterpolator(Node *interpolator) 
 {
     NodeList targets;
-    for (int k = 0; k < interpolator.getProto()->getNumEventIns(); k++) {
-        for (SocketList::Iterator *l = interpolator.getInput(k).first(); 
+    for (int k = 0; k < interpolator->getProto()->getNumEventIns(); k++) {
+        for (SocketList::Iterator *l = interpolator->getInput(k).first(); 
              l != NULL; l = l->next()) {
             Node *targetNode = l->item().getNode();
             if (targetNode->getType() != VRML_TIME_SENSOR)
@@ -7338,7 +7362,7 @@ Scene::searchTimeSensors(void)
     MyArray<Node *> *targets;
     Node *node = getSelection()->getNode();
     if (node->isInterpolator())
-        targets = searchTimeSensorInInterpolator(*node).copy();
+        targets = searchTimeSensorInInterpolator(node).copy();
     else {
         if (!node->hasInputs())
             return targets;
@@ -7349,7 +7373,7 @@ Scene::searchTimeSensors(void)
                 if (!inputNode->isInterpolator())
                     continue;
                 NodeList interpolatorTargets;
-                    searchTimeSensorInInterpolator(*inputNode).copy();
+                    searchTimeSensorInInterpolator(inputNode).copy();
                 for (int i = 0; i < interpolatorTargets.size(); i++)
                      targets->append(interpolatorTargets[i]);
            }

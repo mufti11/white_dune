@@ -28,13 +28,12 @@ class Vec2f;
 class MFVec2f : public MFFloat {
 public:
                         MFVec2f();
-                        MFVec2f(MFVec2f *values) :
-                             MFFloat(((MFVec2f *)values)->getValues(), 
-                                     ((MFVec2f *)values)->getSize()) {}
+                        MFVec2f(const MFVec2f *values) :
+                             MFFloat(values->getValues(), values->getSize()) {}
                         MFVec2f(int len) : MFFloat(len * 2) {}
-                        MFVec2f(float *values, int len) :
+                        MFVec2f(const float *values, int len) :
                              MFFloat(values, len) {}
-                        MFVec2f(double *values, int len) :
+                        MFVec2f(const double *values, int len) :
                              MFFloat(values, len) {}
                         MFVec2f(float x, float y) : MFFloat(2) 
                              {
@@ -51,19 +50,19 @@ public:
 
     virtual bool        equals(const FieldValue *value) const;
 
-    float              *getValue(int index)
+    const float        *getValue(int index) const 
                            { return m_value.getData() + index * 2; } 
 
     void                setVec(int index, Vec2f v);
     Vec2f               getVec(int index);
 
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
-    virtual void        setSFValue(int index, float *values);
+    virtual void        setSFValue(int index, const float *values);
     virtual void        setSFValue(int index, float x, float y);
 
     virtual void        insertSFValue(int index, FieldValue *value);
-    virtual void        insertSFValue(int index, float *values);
+    virtual void        insertSFValue(int index, const float *values);
     virtual void        insertSFValue(int index, float x, float y);
 
     virtual void        appendSFValue(float x, float y) 
@@ -78,9 +77,10 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
-    bool                supportAnimation(bool x3d) { return x3d; }
+    bool                supportAnimation(bool x3d) const { return x3d; }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     randomFunction(MFVec2f)                  
 };
+

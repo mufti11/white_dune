@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_RADAR_VOLUME_STYLE_H
-#define _NODE_RADAR_VOLUME_STYLE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoRadarVolumeStyle : public Proto {
@@ -60,8 +51,7 @@ public:
                     NodeRadarVolumeStyle(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeRadarVolumeStyle( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeRadarVolumeStyle(*this); }
 
     fieldMacros(SFBool, enabled, ProtoRadarVolumeStyle);
     fieldMacros(SFNode, transferFunction, ProtoRadarVolumeStyle);
@@ -71,4 +61,3 @@ public:
     fieldMacros(SFString, type, ProtoRadarVolumeStyle);
 };
 
-#endif

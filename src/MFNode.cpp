@@ -31,13 +31,25 @@
 #include "Node.h"
 #include "Proto.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "NodeCurveAnimation.h"
 
 MFNode::MFNode()
 {
     m_value = new NodeList();
     m_containerField = -1;
+}
+
+MFNode::MFNode(const MFNode &other)
+{
+    m_value = new NodeList();
+    if (other.m_value)
+        for (long i = 0; i < other.m_value->size(); i++) {
+            m_value->set(i, other.m_value->get(i)->copy());
+            m_value->get(i)->ref();
+            if (!m_value->get(i)->isPROTO())
+                m_value->get(i)->reInit();
+        }
+    m_containerField = ((MFNode *)&other)->getContainerField();
 }
 
 MFNode::MFNode(const MFNode *other)
@@ -57,7 +69,7 @@ MFNode::MFNode(const MFNode *other)
 MFNode::MFNode(const Node *other)
 {
     m_value = new NodeList();
-    m_value->set(0, ((Node *)other)->copy());
+    m_value->set(0, other->copy());
     m_value->get(0)->ref();
      if (!m_value->get(0)->isPROTO())
          m_value->get(0)->reInit();
@@ -68,8 +80,6 @@ MFNode::MFNode(NodeList *value)
 {
     m_value = new NodeList();
     if (value == NULL)
-        return;
-    else if (!value->isValid())
         return;
     for (long i = 0; i < value->size(); i++) {
         Node *node = value->get(i);
@@ -92,7 +102,7 @@ MFNode::~MFNode()
 }
 
 bool
-MFNode::writeBrackets(void)
+MFNode::writeBrackets(void) const
 {
     if (m_value->size() == 1) {
         if (m_value->get(0)->getType() == VRML_COMMENT)
@@ -103,12 +113,12 @@ MFNode::writeBrackets(void)
 }
 
 
-int MFNode::writeData(int f, int i)
+int MFNode::writeData(int f, int i) const
 {
     return m_value->get(i)->write(f, 0);
 }
 
-int MFNode::write(int f, int indent, bool writeBrackets)
+int MFNode::write(int f, int indent, bool writeBrackets) const
 { 
     if (writeBrackets) {
         if (!TheApp->GetkrFormating()) {
@@ -142,6 +152,7 @@ int MFNode::write(int f, int indent, bool writeBrackets)
 
 int 
 MFNode::writeXml(int f, int indent, int containerField, bool avoidUse) 
+const
 { 
     for (int i = 0; i < getSFSize(); i++) {
         Node *node = m_value->get(i);
@@ -154,7 +165,7 @@ MFNode::writeXml(int f, int indent, int containerField, bool avoidUse)
 }
 
 const char *
-MFNode::getTypeC(int languageFlag) const
+MFNode::getTypeC(int languageFlag) const 
 { 
     if (languageFlag & JAVA_SOURCE)
         return TheApp->getCNodeNameArray(); 
@@ -162,7 +173,7 @@ MFNode::getTypeC(int languageFlag) const
 }
 
 int         
-MFNode::writeC(int filedes, const char* variableName, int languageFlag)
+MFNode::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     if (languageFlag & C_SOURCE) {
         RET_ONERROR( mywritestr(filedes, "m_") )
@@ -253,7 +264,7 @@ MFNode::writeC(int filedes, const char* variableName, int languageFlag)
 }
 
 int         
-MFNode::writeCDeclaration(int filedes, int languageFlag)
+MFNode::writeCDeclaration(int filedes, int languageFlag) const
 {
     for (int i = 0; i < getSFSize(); i++) {
         Node *node = m_value->get(i);
@@ -274,7 +285,7 @@ MFNode::readLine(int index, char *line)
 bool
 MFNode::equals(const FieldValue *value) const
 {
-    if (((FieldValue *)value)->getType() == MFNODE) {
+    if (value->getType() == MFNODE) {
         NodeList *v = ((MFNode *) value)->getValues();
         if (v->size() != m_value->size()) return false;
         for (long i = 0; i < m_value->size(); i++)
@@ -285,7 +296,7 @@ MFNode::equals(const FieldValue *value) const
 }
 
 FieldValue *
-MFNode::addNode(Node *node, int index)
+MFNode::addNode(Node *node, int index) const
 {
     NodeList *list = new NodeList();
     for (long i = 0; i < m_value->size(); i++) {
@@ -301,7 +312,7 @@ MFNode::addNode(Node *node, int index)
 }
 
 FieldValue *
-MFNode::removeNode(Node *node, int index)
+MFNode::removeNode(Node *node, int index) const
 {
     NodeList *list = new NodeList();
     for (long i = 0; i < m_value->size(); i++) {
@@ -320,7 +331,7 @@ MFNode::removeNode(Node *node, int index)
 }
 
 FieldValue *
-MFNode::getSFValue(int index)
+MFNode::getSFValue(int index) const
 {
     return new SFNode(m_value->get(index));
 }
@@ -338,7 +349,7 @@ MFNode::setSFValue(int index, const Node *value)
 }
 
 MyString
-MFNode::getEcmaScriptComment(MyString name, int flags)
+MFNode::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -447,7 +458,6 @@ MFNode::draw(int pass, int mfNodeField)
         childList->get(i)->bind();
 
     glPushName(0);
-
     for (long i = 0; i < childList->size(); i++) {
         glLoadName(i);
         childList->get(i)->draw(pass);
@@ -608,7 +618,7 @@ MFNode::convert2Vrml(void)
 }
 
 int 
-MFNode::writeAc3d(int f, int indent)
+MFNode::writeAc3d(int f, int indent) const
 {
     RET_ONERROR( getValues()->writeAc3d(f, indent) )
     return 0;
@@ -616,7 +626,7 @@ MFNode::writeAc3d(int f, int indent)
 
 
 int 
-MFNode::writeRib(int f, int indent)
+MFNode::writeRib(int f, int indent) const
 {
     RET_ONERROR( getValues()->writeRib(f, indent) )
     return 0;
@@ -629,14 +639,14 @@ MFNode::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
         getValue(i)->handleAc3dMaterial(callback, scene);
 }
 
-int MFNode::writeCattGeo(Node *node, int f, int indent)
+int MFNode::writeCattGeo(Node *node, int f, int indent) const
 {
     RET_ONERROR( getValues()->writeCattGeo(node, f, indent) )
     return 0;
 }
 
 int 
-MFNode::writeLdrawDat(int f, int indent)
+MFNode::writeLdrawDat(int f, int indent) const
 {
     RET_ONERROR( getValues()->writeLdrawDat(f, indent) )
     return 0;
@@ -731,6 +741,16 @@ MFNode::getRandom(Scene *scene, int nodeType)
     for (int i = 0; i < INT_RAND(); i++) {
         if (nodeType == -1)
             type = (int)(RAND() * LAST_NODE);
+        else if (type >= ANY_NODE)
+            for (int i = 0; i < LAST_NODE; i++) {
+                for (int j = LAST_NODE - i; j >= 0; j--) {
+                   type = i + (int)(RAND() * j);
+                   if (matchNodeClass(type, nodeType))
+                       break;
+                }
+                if (matchNodeClass(type, nodeType))
+                   break;
+            }
         values->append(scene->createNode(type));
     }
     return new MFNode(values);

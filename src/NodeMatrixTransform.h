@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MATRIX_TRANSFORM_H
-#define _NODE_MATRIX_TRANSFORM_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 
@@ -60,7 +51,7 @@ class NodeMatrixTransform : public Node {
 public:
                     NodeMatrixTransform(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeMatrixTransform(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMatrixTransform(*this); }
 
     kambiCommonFunctions()
 
@@ -75,4 +66,3 @@ public:
     fieldMacros(MFString, logFeature, ProtoMatrixTransform);
 };
 
-#endif

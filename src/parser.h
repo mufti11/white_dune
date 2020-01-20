@@ -33,7 +33,6 @@ extern "C" {
 extern int lineno;
 extern void error(const char *s, ...);
 extern int yyparse(void);
-extern void parseInit(void);
 extern void yyerror(const char *s);
 extern int yywrap(void);
 extern int yylex(void);

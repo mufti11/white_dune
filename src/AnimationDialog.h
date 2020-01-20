@@ -56,3 +56,4 @@ protected:
     MyArray<bool>       m_eventInIsAnimated;
 };
 
+

@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LOCAL_FOG_H
-#define _NODE_LOCAL_FOG_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "FogMacros.h"
-
 #include "SFMFTypes.h"
 
 class ProtoLocalFog : public Proto {
@@ -60,7 +51,7 @@ public:
                            { return "EnvironmentalEffects"; }
     virtual int         getComponentLevel(void) const { return 4; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() { return new NodeLocalFog(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeLocalFog(*this); }
 
     fieldMacros(SFColor,  color,           ProtoLocalFog);
     fieldMacros(SFBool,   enabled,         ProtoLocalFog);
@@ -69,4 +60,3 @@ public:
     FogFieldMacros(ProtoLocalFog)
 };
 
-#endif

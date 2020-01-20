@@ -25,6 +25,7 @@
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"
+
 #include "swttypedef.h"
 
 class CoverDefDialog : public Dialog {

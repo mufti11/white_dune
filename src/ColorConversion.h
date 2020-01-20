@@ -19,8 +19,6 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
-
 enum ColorConversion {
     DIFFUSE2EMISSIVE,
     EMISSIVE2DIFFUSE

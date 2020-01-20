@@ -89,3 +89,4 @@ SelfNode::getTextureTransformNode(void) \
                             nappearance->textureTransform()->getValue(); \
     return ntextureTransfrom; \
 }
+

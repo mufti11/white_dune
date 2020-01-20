@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEXT_H
-#define _NODE_TEXT_H
+#pragma once
 
-#ifndef _GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #ifdef HAVE_LIBFREETYPE
 # include "MeshBasedNode.h"
@@ -45,8 +37,6 @@ public:
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_TEXT; }
-
-//    virtual bool    isDeclaredInRwd_h() { return true; } 
 
 #ifdef HAVE_LIBFREETYPE
     virtual bool    isMesh(void) { return true; }
@@ -73,7 +63,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node *copy() { return new NodeText( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeText(*this); }
 
 #ifdef HAVE_LIBFREETYPE
     virtual void    draw() { meshDraw(); }
@@ -114,4 +104,3 @@ protected:
     bool            m_textDirty;
 };
 
-#endif // _NODE_TEXT_H

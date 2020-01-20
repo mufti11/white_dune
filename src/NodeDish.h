@@ -21,19 +21,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_DISH_H
-#define _NODE_DISH_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "GeometryNode.h"
-
-
 #include "SFMFTypes.h"
 
 class ProtoDish : public Proto {
@@ -61,7 +53,7 @@ class NodeDish : public Node {
 public:
                     NodeDish(Scene *scene, Proto *proto);
 
-   virtual Node    *copy() { return new NodeDish(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeDish(*this); }
     virtual int     getX3dVersion(void) const { return -1; }
 
     fieldMacros(SFBool,  bottom,      ProtoDish)
@@ -75,4 +67,3 @@ public:
     x3domGeometryCommonFieldMacros(ProtoDish) 
 };
 
-#endif

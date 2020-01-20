@@ -20,22 +20,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CONE_H
-#define _NODE_CONE_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCone : public Proto {
@@ -69,7 +59,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeCone(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCone(*this); }
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);
@@ -115,4 +105,3 @@ protected:
 
 };
 
-#endif // _NODE_CONE_H

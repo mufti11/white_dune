@@ -145,7 +145,7 @@ NodeShape::draw(int pass)
 }
 
 bool
-NodeShape::isLit()
+NodeShape::isLit() const
 {
     NodeAppearance *appearance = (NodeAppearance *)
                                  ((SFNode *) getField(m_appearance))->getValue();

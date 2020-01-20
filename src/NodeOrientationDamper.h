@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ORIENTATION_DAMPER_H
-#define _NODE_ORIENTATION_DAMPER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "DamperNode.h"
 
@@ -51,8 +42,7 @@ class NodeOrientationDamper : public DamperNode {
 public:
                     NodeOrientationDamper(Scene *scene, Proto *proto);
 
-    virtual Node    *copy() { return new NodeOrientationDamper(
-                                     m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeOrientationDamper(*this); }
 
     virtual void    sendDampedEvent(int eventIn, double timestamp, 
                                     FieldValue * value);
@@ -71,5 +61,4 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif
 

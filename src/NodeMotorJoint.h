@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MOTOR_JOINT_H
-#define _NODE_MOTOR_JOINT_H
+#pragma once
 
 #include "X3DRigidJointNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoMotorJoint : public X3DRigidJointProto {
@@ -63,7 +61,7 @@ public:
                     NodeMotorJoint(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeMotorJoint(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMotorJoint(*this); }
 
     virtual Vec3f   getHandle(int handle, int *constraint, int *field);
     virtual void    setHandle(int handle, const Vec3f &v);
@@ -89,4 +87,3 @@ public:
     fieldMacros(SFBool,  autoCalc,             ProtoMotorJoint)
 };
 
-#endif 

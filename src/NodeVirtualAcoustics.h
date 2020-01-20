@@ -21,19 +21,11 @@
 
 // implements the VirtualAcoustics covise/cover plugin
 
-#ifndef _NODE_VIRTUAL_ACOUSTICS_H
-#define _NODE_VIRTUAL_ACOUSTICS_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoVirtualAcoustics : public Proto {
@@ -53,10 +45,8 @@ public:
                     NodeVirtualAcoustics(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeVirtualAcoustics(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeVirtualAcoustics(*this); }
 
     fieldMacros(MFNode, soundSources, ProtoVirtualAcoustics)
 };
 
-#endif

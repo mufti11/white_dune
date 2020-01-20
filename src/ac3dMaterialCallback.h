@@ -19,7 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
+#ifndef _AC3D_MATERIAL_CALLBACK_H
+#define _AC3D_MATERIAL_CALLBACK_H
+
+class Scene;
+class Node;
 
 typedef void (*ac3dMaterialCallback)(Scene *scene, char *name, Node *node);
 
+#endif

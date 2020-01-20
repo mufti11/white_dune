@@ -19,23 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LINE_PROPERTIES_H
-#define _NODE_LINE_PROPERTIES_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoLineProperties : public Proto {
@@ -58,9 +47,9 @@ public:
                     NodeLineProperties(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const { return "Shape"; }
-    virtual int     getComponentLevel(void) const { return 2; }
+    virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeLineProperties(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeLineProperties(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -70,5 +59,3 @@ public:
     fieldMacros(SFInt32, linetype,             ProtoLineProperties)
     fieldMacros(SFFloat, linewidthScaleFactor, ProtoLineProperties)
 };
-
-#endif // _NODE_LINE_PROPERTIES_H

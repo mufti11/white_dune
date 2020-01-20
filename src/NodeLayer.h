@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LAYER_H
-#define _NODE_LAYER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "GroupNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoLayer : public GroupProto {
@@ -58,14 +48,13 @@ public:
     virtual const char* getComponentName(void) const { return "Layering"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node       *copy() { return new NodeLayer(m_scene, m_proto); }
+    virtual Node       *copy() const { return new NodeLayer(*this); }
 
     virtual bool        showFields() { return true; }
 
-    virtual int         getChildrenField(void) { return -1; }
+    virtual int         getChildrenField(void) const { return -1; }
 
     fieldMacros(SFBool, isPickable, ProtoLayer);
     fieldMacros(SFNode, viewport,   ProtoLayer);
 };
 
-#endif

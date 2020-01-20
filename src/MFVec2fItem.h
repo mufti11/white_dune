@@ -37,4 +37,3 @@ public:
     virtual void             RemoveSFValue(int index);
     virtual int              GetFieldOffset(int xpos) const;
 };
-

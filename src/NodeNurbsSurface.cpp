@@ -139,7 +139,7 @@ NodeNurbsSurface::~NodeNurbsSurface()
 }
 
 int 
-NodeNurbsSurface::repairField(int field)
+NodeNurbsSurface::repairField(int field) const
 {
     bool x3d = m_scene->isX3d();
     if (x3d && (field == controlPoint_Field()))
@@ -196,6 +196,8 @@ NodeNurbsSurface::setField(int index, FieldValue *value, int cf)
 MFVec3f *
 NodeNurbsSurface::getControlPoints(void)
 {
+    if (controlPointX3D() == NULL)
+        return NULL;
     Node *control = controlPointX3D()->getValue();
     if (control && control->getType() == X3D_COORDINATE_DOUBLE) {
         NodeCoordinateDouble *coord = (NodeCoordinateDouble *)
@@ -339,7 +341,7 @@ NodeNurbsSurface::convert2Vrml(void)
 
 
 void
-NodeNurbsSurface::createMesh(Vec3f *controlPoints, bool cleanVertices,
+NodeNurbsSurface::createMesh(const Vec3f *controlPoints, bool cleanVertices,
                              bool triangulate)
 {
     int iuDimension = uDimension()->getValue();
@@ -611,7 +613,8 @@ NodeNurbsSurface::createMesh(bool cleanVertices, bool triangulate)
                                     vDimension()->getValue() * 3)
         return;
     
-    createMesh((Vec3f *)controlPoints->getValues(), cleanVertices, triangulate);
+    createMesh((const Vec3f *) controlPoints->getValues(), cleanVertices,
+               triangulate);
 }
 
 void
@@ -991,7 +994,10 @@ NodeNurbsSurface::writeProto(int f)
     if (m_scene->isX3dXml())
         return writeX3dProto(f);
 
-    RET_ONERROR( mywritestr(f ,"EXTERNPROTO NurbsSurface[\n") )    
+    if (m_scene->isX3d())
+        RET_ONERROR( mywritestr(f ,"EXTERNPROTO NurbsPatchSurface[\n") )    
+    else
+        RET_ONERROR( mywritestr(f ,"EXTERNPROTO NurbsSurface[\n") )    
     TheApp->incSelectionLinenumber();
     RET_ONERROR( writeProtoArguments(f) )
     RET_ONERROR( mywritestr(f ," ]\n") )

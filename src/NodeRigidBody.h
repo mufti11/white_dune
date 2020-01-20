@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_RIGID_BODY_H
-#define _NODE_RIGID_BODY_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoRigidBody : public Proto {
@@ -68,7 +66,7 @@ public:
                            { return "RigidBodyPhysics"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int         getX3dVersion(void) const { return 2; } 
-    virtual Node       *copy() { return new NodeRigidBody(m_scene, m_proto); }
+    virtual Node       *copy() const { return new NodeRigidBody(*this); }
 
     virtual void       preDraw();
     virtual void       draw(int pass); 
@@ -124,5 +122,4 @@ private:
     int               m_handleNameAngularVelocityZ2;
 };
 
-#endif
 

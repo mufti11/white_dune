@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_METADATA_BOOLEAN_H
-#define _NODE_METADATA_BOOLEAN_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoMetadataBoolean : public Proto {
@@ -54,11 +45,10 @@ public:
                     NodeMetadataBoolean(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node *copy() { return new NodeMetadataBoolean(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMetadataBoolean(*this); }
 
     fieldMacros(SFString, name, ProtoMetadataBoolean);
     fieldMacros(SFString, reference, ProtoMetadataBoolean);
     fieldMacros(MFBool, value, ProtoMetadataBoolean);
 };
 
-#endif

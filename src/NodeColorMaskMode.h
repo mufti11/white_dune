@@ -19,23 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLOR_MASK_MODE_H
-#define _NODE_COLOR_MASK_MODE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoColorMaskMode : public Proto {
@@ -57,7 +46,7 @@ class NodeColorMaskMode : public Node {
 public:
                     NodeColorMaskMode(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeColorMaskMode(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeColorMaskMode(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -69,4 +58,3 @@ public:
     fieldMacros(SFBool, maskR, ProtoColorMaskMode)
 };
 
-#endif

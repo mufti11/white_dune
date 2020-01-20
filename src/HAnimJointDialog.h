@@ -23,7 +23,6 @@
 
 #include "Dialog.h"
 #include "swttypedef.h"
-#include "Array.h"
 
 #ifndef FLT_MAX 
 # include <float.h>
@@ -31,6 +30,8 @@
 #ifndef FLT_MIN
 # include <float.h>
 #endif
+
+#include "Array.h"
 
 class Scene;
 class Node;

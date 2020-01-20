@@ -19,12 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma one
+#pragma once
 
 #include "Dialog.h"
 #include "swttypedef.h"
 #include "Vec3f.h"
 #include "MyString.h"
+#include "CheckBoxWindow.h"
 
 class ProtoNameDialog : public Dialog 
 {
@@ -39,6 +40,7 @@ public:
 
     const char         *getName() { return m_name; }
 private:
+    CheckBoxWindow      m_window;
     MyString            m_name;
 };
 

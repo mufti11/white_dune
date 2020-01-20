@@ -22,8 +22,6 @@
 ** Boston, MA  02111-1307, USA.
 ********************************************************************/
 
-#pragma once
-
 void Wgs84LatLonHToWgs84XYZ(double LatN, double LongE, double H,
                             double *xxx, double *yyy, double *zzz );
 

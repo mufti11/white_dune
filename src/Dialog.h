@@ -20,6 +20,7 @@
  */
 
 #pragma once
+
 #include "swttypedef.h"
 
 class Dialog {

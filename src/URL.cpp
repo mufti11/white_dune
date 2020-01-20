@@ -35,7 +35,6 @@
 #include "URL.h"
 #include "maxpath.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "swt.h"
 
 URL::URL(const char *u)

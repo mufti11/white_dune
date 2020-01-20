@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PLANESENSOR_H
-#define _NODE_PLANESENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPlaneSensor : public WonderlandExportProto {
@@ -62,7 +53,7 @@ public:
                     NodePlaneSensor(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodePlaneSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePlaneSensor(*this); }
 
     virtual bool    hasX3domOnOutputChange(void) { return true; } 
 
@@ -75,5 +66,4 @@ public:
     fieldMacros(SFVec3f,    offset,       ProtoPlaneSensor)
 };
 
-#endif // _NODE_PLANESENSOR_H
 

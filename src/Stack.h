@@ -23,42 +23,40 @@
 
 #include "Array.h"
 
-
 template<class T> 
 class MyStack {
 public:
                         MyStack()
-                           { m_top=0; }
+                           { m_top = 0; }
 
     void                push(T t)
-                           { m_data[m_top++]=t; }
+                           { m_data[m_top++] = t; }
     T                   pop()
                            { 
-                           if (m_top<0)
+                           if (m_top == 0)
                                return (T)0;
                            else
                                return m_data[--m_top]; 
                            }
-    T                   peek()
+    T                   peek() const
                            { 
-                           static T t;
                            if (m_top == 0)
                                return (T)0;
-                           else if (m_top > -1)
-                               return m_data[m_top-1];
-                           return t; 
+                           else
+                               return m_data[m_top-1]; 
                            }
-    T                   peek(int i)
+    T                   peek(int i) const
                            { 
                            if ((i <= m_top) && (i > 0))
                                return m_data[i-1]; 
                            else 
                                return (T)NULL;
                            }
-    int                 empty() const { return m_top== 0;}
+    int                 empty() const { return m_top == 0; }
 
     int                 getTop() const { return m_top; }
     
+private:
     MyArray<T>          m_data;
     int                 m_top;
 };

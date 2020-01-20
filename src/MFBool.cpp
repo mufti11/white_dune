@@ -24,7 +24,7 @@
 
 #include "MFBool.h"
 #include "SFBool.h"
-#include "ExternTheApp.h"
+#include "DuneApp.h"
 
 MFBool::MFBool()
 {
@@ -54,7 +54,7 @@ MFBool::~MFBool()
 }
 
 MyString    
-MFBool::getString(int index, int stride)
+MFBool::getString(int index, int stride) const
 {
     MyString ret = "";
     ret +=  m_value[index * getStride() + stride] ? "true" : "false";
@@ -70,12 +70,13 @@ MFBool::copy()
     return new MFBool(value, m_value.size());
 }
 
-int MFBool::writeData(int f, int i)
+int MFBool::writeData(int f, int i) const
 {
     return mywritestr(f, m_value[i] ? "TRUE" : "FALSE");
 }
 
 int MFBool::writeXml(int f, int indent, int containerField, bool avoidUse)
+const
 {
     RET_ONERROR( mywritestr(f, "'") )
     for (int i = 0; i < getSFSize(); i++) { 
@@ -87,7 +88,7 @@ int MFBool::writeXml(int f, int indent, int containerField, bool avoidUse)
     return(0);
 }
 
-int MFBool::writeDataC(int f, int i, int languageFlag)
+int MFBool::writeDataC(int f, int i, int languageFlag) const
 {
     if (languageFlag & C_SOURCE)
         RET_ONERROR( mywritestr(f, m_value[i] ? "-1" : "0") )
@@ -120,10 +121,10 @@ bool
 MFBool::equals(const FieldValue *value) const
 {
     if (value->getType() == MFBOOL) {
-        MFBool *v = (MFBool *)value;
+        MFBool *v = (MFBool *) value;
         if (v->getSize() != (int)m_value.size()) return false;
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value.getData()[i] != v->getValue(i))
+            if (m_value[i] != v->getValue(i))
                 return false;
         return true;
     }
@@ -131,7 +132,7 @@ MFBool::equals(const FieldValue *value) const
 }
 
 FieldValue *
-MFBool::getSFValue(int index)
+MFBool::getSFValue(int index) const
 {
     return new SFBool(m_value[index]);
 }
@@ -150,7 +151,7 @@ MFBool::setSFValue(int index, const int value)
 
 
 MyString
-MFBool::getEcmaScriptComment(MyString name, int flags)
+MFBool::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

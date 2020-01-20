@@ -43,6 +43,14 @@
 
 #include <cstdio>
 
+/*
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+
+#define __BEGIN_DECLS
+#define __END_DECLS
+*/
+
 #include <math.h>
 #include <GL/glut.h>
 extern void reInitSensor(void *);

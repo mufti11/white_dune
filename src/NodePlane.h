@@ -19,26 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PLANE_H
-#define _NODE_PLANE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-#ifndef GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPlane : public Proto {
@@ -62,7 +49,7 @@ class NodePlane : public GeometryNode {
 public:
                     NodePlane(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodePlane(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePlane(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -74,4 +61,3 @@ public:
     fieldMacros(SFBool,   solid,    ProtoPlane)
 };
 
-#endif

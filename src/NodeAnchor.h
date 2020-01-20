@@ -21,12 +21,10 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
 #include "NodeGroup.h"
-
 #include "SFMFTypes.h"
 
 class ProtoAnchor : public ProtoGroup {
@@ -48,7 +46,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERACTIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeAnchor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeAnchor(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; }
 
@@ -60,3 +58,4 @@ public:
     fieldMacros(MFString, url,         ProtoAnchor)
     fieldMacros(SFBool,   render,      ProtoAnchor)
 };
+

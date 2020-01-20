@@ -24,7 +24,6 @@
 #include <math.h>
 
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "StartWithApp.h"
 #include "PreferencesApp.h"
 

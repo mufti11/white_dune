@@ -54,7 +54,7 @@ NodeBooleanTrigger::NodeBooleanTrigger(Scene *scene, Proto *def)
 {
 }
 
-NodeBooleanTrigger::NodeBooleanTrigger(NodeBooleanTrigger &node)
+NodeBooleanTrigger::NodeBooleanTrigger(const NodeBooleanTrigger &node)
   : Node(node)
 {
 }

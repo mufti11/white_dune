@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LOD_H
-#define _NODE_LOD_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoLOD : public WonderlandExportProto {
@@ -61,7 +52,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeLOD(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeLOD(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -81,7 +72,7 @@ public:
 
     void accountNodeToDrawIndex();
 
-    virtual int     getChildrenField(void) { return level_Field(); }
+    virtual int     getChildrenField(void) const { return level_Field(); }
 
     fieldMacros(MFNode,  level,            ProtoLOD)
     fieldMacros(SFVec3f, center,           ProtoLOD)
@@ -94,5 +85,3 @@ public:
 protected:
     int m_nodeToDrawIndex;
 };
-
-#endif // _NODE_LOD_H

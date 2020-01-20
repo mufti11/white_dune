@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_TRIMMED_SURFACE_H
-#define _NODE_NURBS_TRIMMED_SURFACE_H
+#pragma once
 
-#ifndef _NODE_NURBS_SURFACE_H
 #include "NodeNurbsSurface.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoNurbsTrimmedSurface : public ProtoNurbsSurface {
@@ -47,7 +39,8 @@ public:
 
     FieldIndex trimmingContour;
 
-    virtual MyString &getName(bool x3d) { return m_name; }
+    virtual const MyString &getName(bool x3d) const 
+       { return m_name; }
 };
 
 class NodeNurbsTrimmedSurface : public NodeNurbsSurface {
@@ -57,8 +50,7 @@ public:
     // we need the double version of trimming NURBS
     virtual int     getX3dVersion(void) const { return 1; } 
 
-    virtual Node *copy() { return new NodeNurbsTrimmedSurface(
-                           m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsTrimmedSurface(*this); }
 
     virtual bool    showFields() { return true; }
 
@@ -82,4 +74,3 @@ protected:
     GLUnurbsObj *m_theNurb; 
 };
 
-#endif

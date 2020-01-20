@@ -40,7 +40,7 @@ FieldValue *
 SFVec2dItem::OnMouseMove(FieldValue *value, int index, int delta)
 {
     SFVec2d *v = (SFVec2d *) value;
-    SFVec2d *newValue = new SFVec2d(*(double *)v, *(double *)v + 1);
+    SFVec2d *newValue = new SFVec2d(v->getValue());
     newValue->setValue(index, v->getValue(index) + delta * 0.02f);
     return newValue;
 }
@@ -58,14 +58,14 @@ SFVec2dItem::StartEditing(MyString &str, int offset)
 {
     char buf[128];
 
-    mysnprintf(buf, 128, "%g", ((SFVec2d *)m_value)->getValue(offset));
+    mysnprintf(buf, 128, "%g", ((SFVec2d *) m_value)->getValue(offset));
     str = buf;
 }
 
 FieldValue *
 SFVec2dItem::StopEditing(const char *str, int offset)
 {
-    SFVec2d *newValue = new SFVec2d((double *)m_value + offset);
+    SFVec2d *newValue = new SFVec2d(((SFVec2d *) m_value)->getValue());
     newValue->setValue(offset, atof(str));
     return newValue;
 }

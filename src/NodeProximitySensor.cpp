@@ -202,9 +202,9 @@ NodeProximitySensor::setHandle(int handle, const Vec3f &v)
 
 int NodeProximitySensor::getProfile(void) const
 { 
-    if (((NodeProximitySensor *)this)->hasOutput("position_changed"))
+    if (hasOutput("position_changed"))
         return PROFILE_IMMERSIVE;
-    if (((NodeProximitySensor *)this)->hasOutput("orientation_changed"))
+    if (hasOutput("orientation_changed"))
         return PROFILE_IMMERSIVE;
     return PROFILE_INTERACTIVE; 
 }

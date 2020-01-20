@@ -19,7 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
-#include "ExternTheApp.h"
+#pragma once
+
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -51,8 +52,8 @@ public:
         { return "VolumeRendering"; }
     virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node *copy() { return new NodeBoundaryEnhancementVolumeStyle(
-                           m_scene, m_proto); }
+    virtual Node   *copy() const 
+        { return new NodeBoundaryEnhancementVolumeStyle(*this); }
 
     fieldMacros(SFFloat, boundaryOpacity, ProtoBoundaryEnhancementVolumeStyle);
     fieldMacros(SFBool, enabled, ProtoBoundaryEnhancementVolumeStyle);
@@ -60,3 +61,4 @@ public:
     fieldMacros(SFFloat, retainedOpacity, ProtoBoundaryEnhancementVolumeStyle);
     fieldMacros(SFNode, surfaceNormals, ProtoBoundaryEnhancementVolumeStyle);
 };
+

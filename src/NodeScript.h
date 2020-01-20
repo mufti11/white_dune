@@ -19,24 +19,14 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SCRIPT_H
-#define _NODE_SCRIPT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "SFMFTypes.h"
 #include "CommandList.h"
 #include "DynamicFieldsNode.h"
-#include "MyString.h"
-
 
 class ProtoScript : public WonderlandExportProto {
 public:
@@ -49,6 +39,8 @@ public:
     FieldIndex directOutput;
     FieldIndex mustEvaluate;
 };
+
+class MyString;
 
 class NodeScript : public DynamicFieldsNode {
 public:
@@ -65,7 +57,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeScript(this, m_proto); }
+    virtual Node   *copy() const { return new NodeScript(*this); }
 
     virtual bool    showFields() { return true; }
     virtual void    update();
@@ -108,5 +100,3 @@ private:
     bool            m_wantEventsProcessed;
 
 };
-
-#endif // _NODE_SCRIPT_H

@@ -41,3 +41,4 @@ protected:
 extern int       
 writeCellRendererCode(int f, const char *upperName, const char *lowerName,
                       Scene *scene);
+

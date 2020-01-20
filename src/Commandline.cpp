@@ -37,7 +37,7 @@
 extern int illegal2vrml(int argc, char *argv[]);
 //extern int vrml2dune(int argc, char *argv[]);
 
-bool parseCommandlineArgumentInputDevice(int i,int argc, char** argv)
+bool parseCommandlineArgumentInputDevice(int &i,int argc, char** argv)
 {
     static int currentInputDevice = -1;
     static int currentAflockDevice = -1;
@@ -218,11 +218,7 @@ bool parseCommandlineArgumentInputDevice(int i,int argc, char** argv)
     return found;    
 }
 
-#ifdef _WIN32
-bool parseCommandlineArgument(int i,int argc, char** argv)
-#else
-bool parseCommandlineArgument(int i,int argc, char** argv)
-#endif
+bool parseCommandlineArgument(int & i,int argc, char** argv)
 {
     bool found = parseCommandlineArgumentStereoView(i, argc, argv);
     if (found)
@@ -441,28 +437,22 @@ void parseCommandlineUsage(
                 checkNotEnoughArgumentsError(argc, ++convertionArgument);
                 url = argv[convertionArgument];
 
-            } else if (strcmp(argv[convertionArgument]+1,"c")==0) {
+            } else if (strcmp(argv[convertionArgument]+1,"c")==0)
                 convert = C_SOURCE;
-                TheApp->setCompiling();
-            } else if (strcmp(argv[convertionArgument]+1,"3c")==0) {
+            else if (strcmp(argv[convertionArgument]+1,"3c")==0)
                 convert = C_SOURCE | TRIANGULATE;
-                TheApp->setCompiling();
 
-            } else if (strcmp(argv[convertionArgument]+1,"c++")==0) {
+            else if (strcmp(argv[convertionArgument]+1,"c++")==0)
                 convert = CC_SOURCE;
-                TheApp->setCompiling();
-            } else if (strcmp(argv[convertionArgument]+1,"3c++")==0) {
+            else if (strcmp(argv[convertionArgument]+1,"3c++")==0)
                 convert = CC_SOURCE | TRIANGULATE;
-                TheApp->setCompiling();
 
-            } else if (strcmp(argv[convertionArgument]+1,"java")==0) {
+            else if (strcmp(argv[convertionArgument]+1,"java")==0) {
                 convert |= JAVA_SOURCE;
                 convert |= MANY_JAVA_CLASSES; // default
-                TheApp->setCompiling();
             } else if (strcmp(argv[convertionArgument]+1,"3java")==0) {
                 convert |= JAVA_SOURCE | TRIANGULATE;
                 convert |= MANY_JAVA_CLASSES; // default
-                TheApp->setCompiling();
             }
         } 
         bool tempSave = true;
@@ -487,8 +477,7 @@ void parseCommandlineUsage(
             url = argv[convertionArgument];
             if (strlen(TheApp->getCPrefix()) == 0)
                 TheApp->setPrefix("X3d");
-        } else if ((strcmp(argv[convertionArgument],"-off")==0) || 
-                   (strcmp(argv[convertionArgument],"-ac3d")==0) || 
+        } else if ((strcmp(argv[convertionArgument],"-ac3d")==0) || 
                    (strcmp(argv[convertionArgument],"-rib")==0) || 
                    (strcmp(argv[convertionArgument],"-ldraw")==0) || 
                    (convert & TRIANGULATE)) {
@@ -507,9 +496,7 @@ void parseCommandlineUsage(
             swHideWindow(TheApp->mainWnd());
             swIconifyWindow(TheApp->mainWnd());
         } 
-        if (strcmp(argv[convertionArgument],"-off")==0)
-            convert = OFF;
-        else if (strcmp(argv[convertionArgument],"-ac3d")==0)
+        if (strcmp(argv[convertionArgument],"-ac3d")==0)
             convert = AC3D;
         else if (strcmp(argv[convertionArgument],"-rib")==0)
             convert = RIB;
@@ -539,18 +526,16 @@ void parseCommandlineUsage(
                 checkNotEnoughArgumentsError(argc, inputFileArg++);
             }
             Scene *scene = new Scene();
-            if ((strcmp(argv[convertionArgument],"-off")==0) || 
-                (strcmp(argv[convertionArgument],"-ac3d")==0) || 
-                (strcmp(argv[convertionArgument],"-rib")==0) || 
-                (strcmp(argv[convertionArgument],"-ldraw")==0) || 
+            if ((strcmp(argv[convertionArgument],"-ac3d")==0) || 
+                (strcmp(argv[1],"-rib")==0) || 
+                (strcmp(argv[1],"-ldraw")==0) || 
                 (convert & TRIANGULATE)) {
                 scene->drawScene();
             }
             scene->setExternProtoWarning(false);
             int rc = 1;
             checkNotEnoughArgumentsError(argc, inputFileArg);
-            TheApp->AddFile(argv[inputFileArg], scene);
-            if (1) {
+            if (TheApp->AddFile(argv[inputFileArg], scene)) {
                 rc = 0;
                 if (convert == KANIM)
                     scene->getRoot()->preDraw();
@@ -585,7 +570,7 @@ void parseCommandlineUsage(
                 } else if (errno != 0)
                     myperror("write file");
             }
-            normalExit(0);
+            normalExit(rc);
         }
         if (download) {
             int inputFileArg = convertionArgument + 1;
@@ -593,8 +578,8 @@ void parseCommandlineUsage(
             Scene *scene = new Scene();
             int rc = 1;
             checkNotEnoughArgumentsError(argc, inputFileArg);
-            TheApp->AddFile(argv[inputFileArg], scene);
-            rc = 0;
+            if (TheApp->AddFile(argv[inputFileArg], scene))
+                rc = 0;
             delete TheApp;
             if (rc != 0) {
                 if (TheApp->getVrml1Error()) {
@@ -602,6 +587,7 @@ void parseCommandlineUsage(
                     swDebugf("Unable to parser input file\n");   
                 }
             }
+            normalExit(rc);
         }
         if (strcmp(argv[convertionArgument],"-catt8geo")==0) {
 #ifdef _WIN32

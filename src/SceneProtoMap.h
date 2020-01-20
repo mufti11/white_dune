@@ -21,16 +21,15 @@
 
 #pragma once
 
-#include "Scene.h"
 #include "ProtoMap.h"
+
+class Scene;
 
 class SceneProtoMap {
 public:                       
     static void        createProtoMap(ProtoMap *protoMap, Scene *scene, 
                                       bool add = true);
-    static void        updateProtoMap(ProtoMap *protoMap, Scene *scene,
-                                      bool add = true);
+    static void        updateProtoMap(ProtoMap *protoMap, Scene *scene);
     static void        addOrReplace(ProtoMap *protos, const char *string,
                                     Proto *proto, bool add = true);
 };
-

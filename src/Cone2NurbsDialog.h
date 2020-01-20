@@ -22,7 +22,9 @@
 #pragma once
 
 #include "Dialog.h"
+
 #include "swttypedef.h"
+
 #include "Node.h"
 
 class Cone2NurbsDialog : public Dialog 

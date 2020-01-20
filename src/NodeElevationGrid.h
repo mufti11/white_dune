@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ELEVATIONGRID_H
-#define _NODE_ELEVATIONGRID_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoElevationGrid : public GeometryProto {
@@ -74,7 +66,7 @@ protected:
 public:
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeElevationGrid(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeElevationGrid(*this); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -100,6 +92,11 @@ public:
                        { solid(new SFBool(!solid()->getValue())); }
     virtual int     getSolidField() { return solid_Field(); }
     virtual void    flipSide(void) { ccw(new SFBool(!ccw()->getValue())); }
+
+    virtual NodeColor *getColorNode() 
+                    { return (NodeColor *)color()->getValue(); }
+    virtual NodeColorRGBA *getColorRGBANode() 
+                    { return (NodeColorRGBA *)color()->getValue(); }
 
     virtual bool    shouldConvertToIndexedFaceSet(void) { return false; }
 
@@ -127,4 +124,3 @@ protected:
 
 };
 
-#endif // _NODE_ELEVATIONGRID_H

@@ -24,7 +24,6 @@
 #include "stdafx.h"
 #include "CattExportDialog.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "resource.h"
 #include "swt.h"
 

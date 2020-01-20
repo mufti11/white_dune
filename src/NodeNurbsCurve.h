@@ -19,12 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_CURVE_H
-#define _NODE_NURBS_CURVE_H
+#pragma once
 
 #include "NurbsCurve.h"
-#include "Interpolator.h"
 
+class Interpolator;
 class InterpolatorInfo;
 
 typedef enum {
@@ -67,7 +66,7 @@ class NodeNurbsCurve : public ChainBasedGeometryNode, NurbsCurve {
 public:
                     NodeNurbsCurve(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeNurbsCurve(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsCurve(*this); }
 
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
@@ -81,7 +80,7 @@ public:
     virtual Vec3f   getHandle(int handle, int *constraint, int *field);
     virtual void    setHandle(int handle, const Vec3f &v);
 
-    virtual int     repairField(int field);
+    virtual int     repairField(int field) const;
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
     void            repairKnotAndWeight();
@@ -163,4 +162,3 @@ private:
     bool            m_isInternal;
 };
 
-#endif // _NODE_NURBS_CURVE_H

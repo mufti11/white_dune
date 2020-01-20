@@ -36,7 +36,7 @@ typedef enum {
     CM_3DCURSOR_ALWAYS
 } Cursor3dMode;
 
-bool parseCommandlineArgumentStereoView(int i,int argc, char** argv);
+extern bool parseCommandlineArgumentStereoView(int & i,int argc, char** argv);
 
 class StereoViewApp {
 public:

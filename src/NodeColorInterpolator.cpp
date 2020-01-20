@@ -49,14 +49,14 @@ NodeColorInterpolator::NodeColorInterpolator(Scene *scene, Proto *def)
 }
 
 FieldValue *
-NodeColorInterpolator::createKey(void *value)
+NodeColorInterpolator::createKey(void *value) const
 {
     FieldValue *r = new SFColor((float *)value);
     return r;
 }
 
 FieldValue *
-NodeColorInterpolator::createKeys(void *value, int numKeys)
+NodeColorInterpolator::createKeys(void *value, int numKeys) const
 {
     return new MFColor((float *)value, numKeys * 3);
 }

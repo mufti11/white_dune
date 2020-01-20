@@ -36,3 +36,4 @@
     virtual bool isKambiNode(void) { return true; } \
     virtual int  getX3dVersion(void) const { return -1; }
 
+

@@ -22,10 +22,10 @@
 #pragma once
 
 #include "Dialog.h"
-#include "swttypedef.h"
 
 class Scene;
 
+#include "swttypedef.h"
 
 class ViewpointDialog : public Dialog {
 public:

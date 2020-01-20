@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CIRCLE_2D_H
-#define _NODE_CIRCLE_2D_H
+#pragma once
 
-#ifndef _CHAIN_BASED_NODE_H
 #include "ChainBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
 #include "SFMFTypes.h"
 
 class ProtoCircle2D : public Proto {
@@ -54,11 +45,11 @@ class NodeCircle2D : public ChainBasedGeometryNode {
 public:
                     NodeCircle2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeCircle2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCircle2D(*this); }
 
     virtual const char* getComponentName(void) const 
                            { return "Geometry2D"; }
-    virtual int     getComponentLevel(void) const { return 2; }
+    virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 0; }
 
     virtual int     countPrimitives(void) {return 1;}
@@ -72,5 +63,3 @@ protected:
     void            createChain(void);
 
 };
-
-#endif

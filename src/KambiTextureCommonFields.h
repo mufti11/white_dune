@@ -45,3 +45,4 @@
           addField(SFSTRING, "alphaChannel", new SFString(), \
                    new SFString("AUTO"))); \
     setFieldFlags(alphaChannel, FF_KAMBI_ONLY);
+

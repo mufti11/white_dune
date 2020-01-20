@@ -24,17 +24,15 @@
 
 #include "MFVec3d.h"
 #include "SFVec3d.h"
+#include "MFString.h"
 #include "MFVec3f.h"
 #include "Vec3d.h"
-#include "MFString.h"
-#include "SFString.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFVec3d::MFVec3d(MFString *values) : MFDouble(values->getSize(), 3)
 {
     for (int i = 0; i < values->getSize(); i++) {
-        const char *string = (const char *)values->getValue(i); 
+        const char *string = values->getValue(i); 
         sscanf(string, "%lf %lf %lf", &m_value[i * getStride() + 0],
                                       &m_value[i * getStride() + 1],
                                       &m_value[i * getStride() + 2]);
@@ -71,11 +69,12 @@ MFVec3d::readLine(int index, char *line)
 bool
 MFVec3d::equals(const FieldValue *value) const
 {
-    return (value->getType() == MFVEC3D) && equals((MFFloat *)value);
+    return value->getType() == MFVEC3D && 
+           MFDouble::equals((const MFDouble *) value);
 }
 
 FieldValue *
-MFVec3d::getSFValue(int index)
+MFVec3d::getSFValue(int index) const
 {
     return new SFVec3d(getValue(index));
 }
@@ -89,13 +88,14 @@ MFVec3d::setSFValue(int index, FieldValue *value)
         return;
     }
 #endif
-    setSFValue(index, value);
+
+    setSFValue(index, ((SFVec3d *) value)->getValue());
 }
 
 void
-MFVec3d::setSFValue(int index, double *values)
+MFVec3d::setSFValue(int index, const double *values)
 {
-    m_value[index * 3   ] = values[0];
+    m_value[index * 3    ] = values[0];
     m_value[index * 3 + 1] = values[1];
     m_value[index * 3 + 2] = values[2];
 }
@@ -104,9 +104,7 @@ void
 MFVec3d::setSFValue(int index, const char* values)
 {
     sscanf(values, "%lf %lf %lf",
-           &m_value[index * 3], 
-           &m_value[index * 3 + 1], 
-           &m_value[index * 3 + 2]);
+           &m_value[index], &m_value[index + 1], &m_value[index + 2]);
 }
 
 void
@@ -128,13 +126,13 @@ MFVec3d::setVec(int index, Vec3d v)
 Vec3d
 MFVec3d::getVec(int index)
 {
-    return Vec3d(m_value[index    ],
-                 m_value[index + 1],
-                 m_value[index + 2]);
+    return Vec3d(m_value[index * 3    ],
+                 m_value[index * 3 + 1],
+                 m_value[index * 3 + 2]);
 }
 
 MyString
-MFVec3d::getEcmaScriptComment(MyString name, int flags)
+MFVec3d::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

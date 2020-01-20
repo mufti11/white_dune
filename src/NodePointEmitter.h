@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POINT_EMITTER_H
-#define _NODE_POINT_EMITTER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "EmitterNode.h"
 
@@ -57,10 +48,9 @@ public:
 
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; } 
-    virtual Node   *copy() { return new NodePointEmitter(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePointEmitter(*this); }
 
     fieldMacros(SFVec3f, direction, ProtoPointEmitter);
     fieldMacros(SFVec3f, position,  ProtoPointEmitter);
 };
 
-#endif

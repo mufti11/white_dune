@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLLISION_COLLECTION_H
-#define _NODE_COLLISION_COLLECTION_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoCollisionCollection : public Proto {
@@ -55,8 +53,8 @@ public:
                            { return "RigidBodyPhysics"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node *copy() { return new NodeCollisionCollection(
-                           m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodeCollisionCollection(*this); }
     fieldMacros(MFString, appliedParameters,        ProtoCollisionCollection)
     fieldMacros(SFFloat,  bounce,                   ProtoCollisionCollection)
     fieldMacros(MFNode,   collidables,              ProtoCollisionCollection)
@@ -68,6 +66,4 @@ public:
     fieldMacros(SFFloat,  softnessErrorCorrection,  ProtoCollisionCollection)
     fieldMacros(SFVec2f,  surfaceSpeed,             ProtoCollisionCollection)
 };
-
-#endif
 

@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SIGNAL_PDU_H
-#define _NODE_SIGNAL_PDU_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "DISCommonFields.h"
 
 class ProtoSignalPdu : public Proto {
@@ -68,7 +58,7 @@ public:
     virtual const char* getComponentName(void) const { return "DIS"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodeSignalPdu( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSignalPdu(*this); }
 
     disCommonBehaviorFieldMacros(ProtoSignalPdu)
     disCommonIdentificationFieldMacros(ProtoSignalPdu)
@@ -85,6 +75,5 @@ public:
     fieldMacros(SFVec3f, bboxSize,       ProtoSignalPdu)
 };
 
-#endif 
 
 

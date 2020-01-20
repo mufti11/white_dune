@@ -23,11 +23,12 @@
 
 #include "GeometryNode.h"
 #include "Vec3f.h"
-#include "Scene.h"
-#include "MFVec3f.h"
-#include "MFInt32.h"
-#include "NodePositionInterpolator.h"
-#include "NodeOrientationInterpolator.h"
+
+class Scene;
+class MFVec3f;
+class MFInt32;
+class NodePositionInterpolator;
+class NodeOrientationInterpolator;
 
 typedef Vec3f (*getNormalCallback)(int index, int indices, void *data);
 

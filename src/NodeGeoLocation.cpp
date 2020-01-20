@@ -71,7 +71,7 @@ ProtoGeoLocation::create(Scene *scene)
 }
 
 int 
-ProtoGeoLocation::translateField(int field)
+ProtoGeoLocation::translateField(int field) const
 {
     bool x3d = m_scene->isX3d();
     if (x3d && (field == geoCoords))

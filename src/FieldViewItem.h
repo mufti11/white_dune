@@ -25,14 +25,14 @@
 #include "Rect.h"
 #include "Point.h"
 #include "MyString.h"
-
-class FieldView;
-class FieldValue;
-//class Field;
 #include "Field.h"
 #include "Types.h"
 
 #include "swttypedef.h"
+
+class FieldView;
+class FieldValue;
+
 
 #define FVIS_SELECTED  (1<<0)
 #define FVIS_COLLAPSED (1<<1)
@@ -140,3 +140,4 @@ public:
 protected:
     MyArray<FieldViewItem *>    m_children;
 };
+

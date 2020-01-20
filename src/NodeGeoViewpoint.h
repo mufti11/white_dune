@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GEO_VIEWPOINT_H
-#define _NODE_GEO_VIEWPOINT_H
+#pragma once
 
-#ifndef _GEO_NODE_H
 #include "GeoNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "ViewpointNode.h"
 #include "SFMFTypes.h"
 
@@ -50,7 +42,7 @@ public:
     FieldIndex geoOrigin;
     FieldIndex geoSystem;
 
-    virtual int     translateField(int field);
+    virtual int     translateField(int field) const;
 };
 
 class NodeGeoViewpoint : public ViewpointNode {
@@ -60,15 +52,15 @@ public:
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual const char* getComponentName(void) const { return "Geospatial"; }
-    virtual int     getComponentLevel(void) const { return 1; }
-    virtual Node   *copy() { return new NodeGeoViewpoint(m_scene, m_proto); }
+    virtual int         getComponentLevel(void) const { return 1; }
+    virtual Node   *copy() const { return new NodeGeoViewpoint(*this); }
 
     void            setField(int index, FieldValue *value, int cf = -1);
     Node           *convert2Vrml(void);
 
     void            apply(bool useStereo = TheApp->useStereo());
 
-    Vec3d           getPosition();       
+    Vec3d           getPosition() const;       
 
     fieldMacros(SFString,   position,    ProtoGeoViewpoint)
     fieldMacros(SFVec3d,    positionX3D, ProtoGeoViewpoint)
@@ -77,5 +69,4 @@ public:
     fieldMacros(MFString,   geoSystem,   ProtoGeoViewpoint)
 };
 
-#endif // _NODE_GEO_VIEWPOINT_H
 

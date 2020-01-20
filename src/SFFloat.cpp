@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "SFFloat.h"
 
@@ -32,7 +31,7 @@ SFFloat::SFFloat(float value)
 }
 
 MyString    
-SFFloat::getString(int index, int stride)
+SFFloat::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -41,12 +40,12 @@ SFFloat::getString(int index, int stride)
     return ret;
 }
 
-int SFFloat::writeData(int f, int i)
+int SFFloat::writeData(int f, int i) const
 {
     return mywritef(f, "%g", m_value);
 }
 
-int SFFloat::writeDataC(int f, int i, int languageFlag)
+int SFFloat::writeDataC(int f, int i, int languageFlag) const
 {
    if (languageFlag & JAVA_SOURCE)
        return mywritef(f, "%gf", m_value);
@@ -69,7 +68,7 @@ SFFloat::equals(const FieldValue *value) const
 }
 
 bool
-SFFloat::equalsAngle(const FieldValue *value, double angle)
+SFFloat::equalsAngle(const FieldValue *value, double angle) const
 {
     return value->getType() == SFFLOAT
             && (float)(((SFFloat *) value)->getValue() * angle == m_value);
@@ -90,7 +89,7 @@ SFFloat::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFFloat::getEcmaScriptComment(MyString name, int flags)
+SFFloat::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

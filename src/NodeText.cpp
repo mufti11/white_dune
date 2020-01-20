@@ -438,14 +438,12 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
     int triangles = 0;
     for (int j = 0; j < string()->getSize(); j++) {
         tris.resize(0);
-        const char* str = ((SFString *)string()->getValue(j))->getValue();
+        const char* str = string()->getValue(j);
 
         if (fontStyle) {
-            const char *just = ((SFString *)
-                                fontStyle->justify()->getValue(j))->getValue();
-            if (strcmp(just, "MIDDLE") == 0)
+            if (strcmp(fontStyle->justify()->getValue(j), "MIDDLE") == 0)
                 ijustify = JUSTIFY_MIDDLE;
-            if (strcmp(just, "END") == 0)
+            if (strcmp(fontStyle->justify()->getValue(j), "END") == 0)
                 ijustify = JUSTIFY_END;
         }
         float offset = 0; 

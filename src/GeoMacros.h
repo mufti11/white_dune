@@ -37,4 +37,3 @@
           addExposedField(MFSTRING, "geoSystem", new MFString(defaultsystems), \
                           0, systems)); \
 }
-

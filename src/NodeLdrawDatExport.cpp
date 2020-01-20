@@ -140,7 +140,7 @@ NodeLdrawDatExport::checkMissingData(int fieldIndex, unsigned int limit)
             missingData = true;
         else {
             for (int i = 0; i < fieldValue->getSize(); i++)
-                if (strlen(fieldValue->getValue(i)->getValue()) == 0)
+                if (strlen(fieldValue->getValue(i)) == 0)
                     missingData = true;
             if (missingData) {
                 TheApp->MessageBox(IDS_LDRAW_DAT_EXPORT_NEEDS_DATA, 
@@ -205,7 +205,7 @@ NodeLdrawDatExport::writeLdrawDatHeader(int filedes, const char *fileName)
         } else if (field->getType() == MFSTRING) {
             MFString *fieldValue = (MFString *)getField(j);
             for (int i = 0; i < fieldValue->getSize(); i++)
-                if (strlen(fieldValue->getValue(i)->getValue()) > 0) {
+                if (strlen(fieldValue->getValue(i)) > 0) {
                     const char *commandName = field->getName(false);
                     if (j == help_Field())
                          commandName = "0 !HELP "; 
@@ -217,8 +217,7 @@ NodeLdrawDatExport::writeLdrawDatHeader(int filedes, const char *fileName)
                          commandName = ""; 
     
                     RET_ONERROR( mywritestr(filedes, commandName) )
-                    RET_ONERROR( mywritestr(filedes, fieldValue->getValue(i)->
-                                                     getValue()) )
+                    RET_ONERROR( mywritestr(filedes, fieldValue->getValue(i)) )
                     RET_ONERROR( mywritestr(filedes, "\n") )
                 }
         }

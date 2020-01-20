@@ -22,7 +22,6 @@
 #pragma once
 
 #include "FieldValue.h"
-#include "SFString.h"
 
 class ElementList;
 
@@ -37,19 +36,19 @@ public:
 
     virtual int         getType() const { return MFSTRING; }
     virtual const char *getTypeName() const { return "MFString"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         write4FieldPipe(int filedes, int indent); 
+    virtual int         write4FieldPipe(int filedes, int indent) const; 
 
     virtual int         writeCWonderlandArt(int filedes, 
                                             const char* variableName,
-                                            int languageFlag);
+                                            int languageFlag) const;
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag);
-    virtual int         writeRaw(int filedes, int indent);
+    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual int         writeRaw(int filedes, int indent) const;
 
-    virtual int         writeData(int filedes, int i); 
-    virtual int         writeDataXml(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeDataXml(int filedes, int i) const; 
 
     virtual const char *getTypeC(int languageFlag) const; 
 
@@ -61,18 +60,12 @@ public:
     virtual FieldValue *copy();
 
     virtual int         getSFSize() const { return m_value.size(); }
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const char* value);
 
     const MyString     *getValues() const { return m_value.getData(); }
-    virtual SFString   *getValue(int i) 
-                            { return new SFString(m_value[i]); }
-    MyString           *getString(int i)
-                           { 
-                           static MyString s = SFString(m_value[i]).getValue();
-                           return &s;
-                           }
+    MyString            getValue(int i) const { return m_value[i]; }
     int                 getSize() const { return m_value.size(); }
     void                setValue(int index, MyString value) 
                            { m_value[index] = value; }
@@ -81,10 +74,9 @@ public:
     virtual void        insertSFValue(int index, const char* value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:
     StringArray         m_value;
 };
-

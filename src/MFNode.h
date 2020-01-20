@@ -24,12 +24,12 @@
 #include "FieldValue.h"
 #include "Node.h"
 #include "NodeList.h"
-#include "ac3dMaterialCallback.h"
 
 class MFNode : public MFieldValue {
 public:
                         MFNode();
                         MFNode(NodeList *value);
+                        MFNode(const MFNode &other);
                         MFNode(const MFNode *other);
                         MFNode(const Node *other);
     virtual            ~MFNode();
@@ -37,18 +37,21 @@ public:
     virtual int         getType() const { return MFNODE; }
     virtual const char *getTypeName() const { return "MFNode"; }
 
-    virtual bool        writeBrackets(void);
-    virtual int         writeData(int filedes, int i); 
-    virtual int         write(int filedes, int indent, bool writeBrackets);
-    virtual int         write4FieldPipe(int filedes, int indent)
+    virtual bool        writeBrackets(void) const;
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         write(int filedes, int indent, 
+                              bool writeBrackets) const;
+    virtual int         write(int filedes, int indent) const 
+                           { return write(filedes, indent, writeBrackets()); }
+    virtual int         write4FieldPipe(int filedes, int indent) const 
                             { return write(filedes, indent, false); } 
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse);
+                                 bool avoidUse) const;
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
+                               int languageFlag) const;
     virtual const char *getTypeC(int languageFlag) const;
-    virtual int         writeCDeclaration(int filedes, int languageFlag);
+    virtual int         writeCDeclaration(int filedes, int languageFlag) const;
 
     virtual bool        readLine(int index, char *line);
 
@@ -65,7 +68,7 @@ public:
                                return 0;
                            return m_value->size(); 
                            }
-    NodeList           *getValues() const
+    NodeList           *getValues() const 
                            { 
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -73,7 +76,7 @@ public:
 #endif
                            return m_value; 
                            }
-    Node               *getValue(long index) const
+    Node               *getValue(long index) const 
                            { 
                            if (m_value->size() == 0)
                                return NULL;
@@ -86,24 +89,24 @@ public:
                            return m_value->get(index); 
                            }
 
-    virtual int         getSFSize() const
+    virtual int         getSFSize() const 
                            { 
                            if (m_value == NULL) 
                                return 0;
                            return m_value->size(); 
                            }
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const Node* value);
 
     virtual void        removeSFValue(int index) 
                            { removeNode((*m_value)[index]); }
 
-    virtual FieldValue *addNode(Node *node, int index = -1);
-    virtual FieldValue *removeNode(Node *node, int index = -1);
+    virtual FieldValue *addNode(Node *node, int index = -1) const;
+    virtual FieldValue *removeNode(Node *node, int index = -1) const;
     virtual FieldValue *copy() { return new MFNode(*this); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     virtual void        preDraw();
     virtual void        draw(int pass, int mfNodeField);
@@ -125,15 +128,15 @@ public:
     virtual bool        isNode(void) const { return true; } 
     virtual bool        isMFNode(void) const { return true; } 
 
-    virtual int         writeAc3d(int filedes, int indent);
+    virtual int         writeAc3d(int filedes, int indent) const;
     virtual void        handleAc3dMaterial(ac3dMaterialCallback callback, 
                                            Scene* scene);
 
-    virtual int         writeRib(int filedes, int indent);
+    virtual int         writeRib(int filedes, int indent) const;
 
-    virtual int         writeCattGeo(Node *node, int filedes, int indent);
+    virtual int         writeCattGeo(Node *node, int filedes, int indent) const;
 
-    virtual int         writeLdrawDat(int filedes, int indent);
+    virtual int         writeLdrawDat(int filedes, int indent) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 

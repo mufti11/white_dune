@@ -120,7 +120,7 @@ NodeNurbsCurve::NodeNurbsCurve(Scene *scene, Proto *proto)
 
 
 int 
-NodeNurbsCurve::repairField(int field)
+NodeNurbsCurve::repairField(int field) const
 {
     bool x3d = (m_scene->isX3d()) && 
                (m_proto->getType() != DUNE_CURVE_ANIMATION);

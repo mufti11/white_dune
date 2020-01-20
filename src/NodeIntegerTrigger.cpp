@@ -55,7 +55,7 @@ NodeIntegerTrigger::NodeIntegerTrigger(Scene *scene, Proto *def)
 {
 }
 
-NodeIntegerTrigger::NodeIntegerTrigger(NodeIntegerTrigger &node)
+NodeIntegerTrigger::NodeIntegerTrigger(const NodeIntegerTrigger &node)
   : Node(node)
 {
 }

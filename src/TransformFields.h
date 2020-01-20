@@ -24,3 +24,4 @@
 #define transformFields()                \
     addEventIn(MFNODE, "addChildren");   \
     addEventIn(MFNODE, "removeChildren");
+

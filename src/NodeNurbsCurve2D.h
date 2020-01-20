@@ -19,25 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_CURVE_2D_H
-#define _NODE_NURBS_CURVE_2D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC2F_H
 #include "Vec2f.h"
-#endif
-#ifndef _SFMFTYPES_H
 #include "SFMFTypes.h"
-#endif
 
 enum {
     HANDLE_RENDERING_XY,
@@ -68,7 +56,7 @@ public:
                     NodeNurbsCurve2D(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeNurbsCurve2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsCurve2D(*this); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -118,4 +106,3 @@ private:
     int             m_handleRendering;
 };
 
-#endif

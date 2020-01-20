@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -71,7 +70,7 @@ class NodeBinaryGeometry : public GeometryNode {
 public:
                     NodeBinaryGeometry(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeBinaryGeometry(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBinaryGeometry(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -107,4 +106,3 @@ public:
     fieldMacros(SFString, texCoordType,                 ProtoBinaryGeometry)
     fieldMacros(MFInt32,  vertexCount,                  ProtoBinaryGeometry)
 };
-

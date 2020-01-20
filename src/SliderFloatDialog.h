@@ -23,15 +23,12 @@
 
 #include "Dialog.h"
 #include "swttypedef.h"
-
 #ifndef FLT_MAX 
 # include <float.h>
 #endif
-
 #ifndef FLT_MIN
 # include <float.h>
 #endif
-
 
 class SliderFloatDialog : public Dialog {
 public:
@@ -51,3 +48,4 @@ private:
     float               m_lowerlimit;
     SWND                m_scrollBar;
 };
+

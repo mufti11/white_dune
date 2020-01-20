@@ -21,10 +21,9 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
-# include "Proto.h"
+#include "Proto.h"
 #include "SFMFTypes.h"
 
 class ProtoImageTextureAtlas : public Proto {
@@ -51,12 +50,11 @@ public:
 class NodeImageTextureAtlas : public Node {
 public:
                     NodeImageTextureAtlas(Scene *scene, Proto *proto);
-                    NodeImageTextureAtlas(NodeImageTextureAtlas &node);
+                    NodeImageTextureAtlas(const NodeImageTextureAtlas &node);
     virtual        ~NodeImageTextureAtlas();
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node    *copy() { return new NodeImageTextureAtlas( 
-                              m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeImageTextureAtlas(*this); }
 
     virtual void    load();
 

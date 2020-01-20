@@ -19,24 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_SurfaceInterpolator_H
-#define _NODE_NURBS_SurfaceInterpolator_H
+#pragma once
 
-#ifndef _MESH_MORPHING_NODE_H
-# include "MeshMorphingNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
-# include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
-# include "Proto.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-#ifndef _SFMFTYPES_H
-# include "SFMFTypes.h"
-#endif
+#include "MeshMorphingNode.h"
+#include "ProtoMacros.h"
+#include "Proto.h"
+#include "Vec3f.h"
+#include "SFMFTypes.h"
 
 class Mesh;
 class NodeNurbsGroup;
@@ -70,8 +59,7 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeNurbsSurfaceInterpolator( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsSurfaceInterpolator(*this); }
 
     virtual void    drawHandles(void);
 
@@ -108,8 +96,8 @@ public:
     void            linearVknot(void);
 
     MFVec3f        *getControlPoints(void);
-    void            setControlPoints(MFVec3f *points);
-    void            createControlPoints(MFVec3f *points);
+    void            setControlPoints(const MFVec3f *points);
+    void            createControlPoints(const MFVec3f *points);
 
 protected:
     static int      findSpan(int dimension, int order, float u,
@@ -128,5 +116,4 @@ protected:
                                  int c1, int c2, int c3);
 };
 
-#endif
 

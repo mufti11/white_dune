@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_EFFECT_PART_H
-#define _NODE_EFFECT_PART_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoEffectPart : public Proto {
@@ -52,10 +43,9 @@ public:
                     NodeEffectPart(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeEffectPart(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeEffectPart(*this); }
 
     fieldMacros(MFString, url, ProtoEffectPart);
     fieldMacros(SFString, type, ProtoEffectPart);
 };
 
-#endif

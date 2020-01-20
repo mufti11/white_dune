@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SWITCH_H
-#define _NODE_SWITCH_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoSwitch : public WonderlandExportProto {
@@ -60,7 +51,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERACTIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeSwitch( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSwitch(*this); }
 
     virtual int     countPolygons(void)
                        { return choice()->countPolygons(); } 
@@ -84,7 +75,7 @@ public:
 
     int accountWhich();
 
-    virtual int     getChildrenField(void) { return choice_Field(); }
+    virtual int     getChildrenField(void) const { return choice_Field(); }
 
     fieldMacros(MFNode,  choice,      ProtoSwitch)
     fieldMacros(SFInt32, whichChoice, ProtoSwitch)
@@ -93,4 +84,3 @@ public:
     fieldMacros(SFBool,  render,      ProtoSwitch)
 };
 
-#endif // _NODE_SWITCH_H

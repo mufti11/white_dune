@@ -22,7 +22,9 @@
 #pragma once
 
 #include "Dialog.h"
+
 #include "swttypedef.h"
+
 #include "SFVec3f.h"
 #include "SFRotation.h"
 

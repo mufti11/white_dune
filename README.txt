@@ -5495,18 +5495,12 @@ Changed default X3DOM width to 1024 pixels
 
 Fixed bug that stops X3DOM rendering on multiple scenes
 
-Use view3dscene as default preview browser under debian/raspian buster
+Changed #ifdefs of .h files to #pragma one
 
 Added OFF export
 
-Fixed possible crash after OFF export
+Use view3dscene as default preview browser under debian/raspian buster
 
-Enabled OFF color export of objects without normals
-
-Added workaround for HAnimHumanoid smoothNormals() problem
-
-Cleaned up #ifdef/#include using #pragma once
-
-Added workaround to identify invalid nodes by limiting USEs to 65535
+Fixed missing conversion to X3D(V) on preview
 
 Contact: MUFTI <mufti11@web.de>

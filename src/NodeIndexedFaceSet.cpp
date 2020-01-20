@@ -30,7 +30,6 @@
 #include "stdafx.h"
 
 #include "NodeIndexedFaceSet.h"
-#include "Path.h"
 #include "Proto.h"
 #include "Scene.h"
 #include "FieldValue.h"
@@ -51,6 +50,7 @@
 #include "MoveCommand.h"
 #include "Field.h"
 #include "resource.h"
+#include "Path.h"
 
 ProtoIndexedFaceSet::ProtoIndexedFaceSet(Scene *scene)
   : GeometryProto(scene, "IndexedFaceSet")
@@ -136,8 +136,6 @@ ProtoIndexedFaceSet::create(Scene *scene)
 NodeIndexedFaceSet::NodeIndexedFaceSet(Scene *scene, Proto *def)
   : MeshBasedNode(scene, def)
 {
-    m_sumVertices = 0;   
-    m_sumVerticesPerFaces = 0;   
 }
 
 NodeIndexedFaceSet::~NodeIndexedFaceSet()
@@ -186,43 +184,34 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
     m_scene->copyRoutes(node, this);
     if (coord()->getValue() != NULL) {
         Node *target = node->coord()->getValue();
-        if (target) {
-            m_scene->copyRoutes(target, this->coord()->getValue());
-            target->addParent(node, node->coord_Field());
-            target->setVariableName(strdup(target->getNameOrNewName()));
-        }
+        m_scene->copyRoutes(target, this->coord()->getValue());
+        target->addParent(node, node->coord_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
+        
     }
     if (normal()->getValue() != NULL) {
         Node *target = node->normal()->getValue();
-        if (target) {
-            m_scene->copyRoutes(target, this->normal()->getValue());
-            target->addParent(node,  node->normal_Field());
-            target->setVariableName(strdup(target->getNameOrNewName()));
-        }
+        m_scene->copyRoutes(target, this->normal()->getValue());
+        target->addParent(node,  node->normal_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (color()->getValue() != NULL) {
         Node *target = node->color()->getValue();
-        if (target) {
-            m_scene->copyRoutes(target, this->color()->getValue());
-            target->addParent(node,  node->color_Field());
-            target->setVariableName(strdup(target->getNameOrNewName()));
-        }
+        m_scene->copyRoutes(target, this->color()->getValue());
+        target->addParent(node,  node->color_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (texCoord()->getValue() != NULL) {
         Node *target = node->texCoord()->getValue();
-        if (target) {
-            m_scene->copyRoutes(target, this->texCoord()->getValue());
-            target->addParent(node,  node->texCoord_Field());
-            target->setVariableName(strdup(target->getNameOrNewName()));
-        }
+        m_scene->copyRoutes(target, this->texCoord()->getValue());
+        target->addParent(node,  node->texCoord_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (fogCoord()->getValue() != NULL) {
         Node *target = node->fogCoord()->getValue();
-        if (target) {
-            m_scene->copyRoutes(target, this->fogCoord()->getValue());
-            target->addParent(node,  node->fogCoord_Field());
-            target->setVariableName(strdup(target->getNameOrNewName()));
-        }
+        m_scene->copyRoutes(target, this->fogCoord()->getValue());
+        target->addParent(node,  node->fogCoord_Field());
+        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (m_convertedNodes.size() != 0)
         return;
@@ -243,33 +232,28 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
         }
     }
     MyMesh *mesh = node->simpleQuadTriangulateMesh();
-    if (mesh) {
-        MFInt32 *mfcoordIndex = mesh->getCoordIndex();
-        if (mfcoordIndex && (mfcoordIndex->getValues() != NULL)) {
-            mfcoordIndex = (MFInt32 *)mfcoordIndex->copy();
-            m_scene->setField(node, coordIndex_Field(),
-                              new MFInt32(mfcoordIndex));
-        }
-        MFInt32 *mfnormalIndex = mesh->getNormalIndex();
-        if (mfnormalIndex && (mfnormalIndex->getValues() != NULL)) {
-            mfnormalIndex = (MFInt32 *)mfnormalIndex->copy();
-            m_scene->setField(node, normalIndex_Field(), 
-                              new MFInt32(mfnormalIndex));
-        }
-        MFInt32 *mfcolorIndex = mesh->getColorIndex();
-        if (mfcolorIndex && (mfcolorIndex->getValues() != NULL) &&
-            (mfcolorIndex != mesh->getCoordIndex())) {
-            mfcolorIndex = (MFInt32 *)mfcolorIndex->copy();
-            m_scene->setField(node, colorIndex_Field(), 
-                              new MFInt32(mfcolorIndex));
-        }
-        MFInt32 *mftexCoordIndex = mesh->getTexCoordIndex();
-        if (mftexCoordIndex && (mftexCoordIndex->getValues() != NULL) &&
-            (mftexCoordIndex != mesh->getCoordIndex())) {
-            mftexCoordIndex = (MFInt32 *)mftexCoordIndex->copy();
-            m_scene->setField(node, texCoordIndex_Field(), 
-                              new MFInt32(mftexCoordIndex));
-        }
+    MFInt32 *mfcoordIndex = mesh->getCoordIndex();
+    if (mfcoordIndex && (mfcoordIndex->getValues() != NULL)) {
+        mfcoordIndex = (MFInt32 *)mfcoordIndex->copy();
+        m_scene->setField(node, coordIndex_Field(), new MFInt32(mfcoordIndex));
+    }
+    MFInt32 *mfnormalIndex = mesh->getNormalIndex();
+    if (mfnormalIndex && (mfnormalIndex->getValues() != NULL)) {
+        mfnormalIndex = (MFInt32 *)mfnormalIndex->copy();
+        m_scene->setField(node, normalIndex_Field(), new MFInt32(mfnormalIndex));
+    }
+    MFInt32 *mfcolorIndex = mesh->getColorIndex();
+    if (mfcolorIndex && (mfcolorIndex->getValues() != NULL) &&
+        (mfcolorIndex != mesh->getCoordIndex())) {
+        mfcolorIndex = (MFInt32 *)mfcolorIndex->copy();
+        m_scene->setField(node, colorIndex_Field(), new MFInt32(mfcolorIndex));
+    }
+    MFInt32 *mftexCoordIndex = mesh->getTexCoordIndex();
+    if (mftexCoordIndex && (mftexCoordIndex->getValues() != NULL) &&
+        (mftexCoordIndex != mesh->getCoordIndex())) {
+        mftexCoordIndex = (MFInt32 *)mftexCoordIndex->copy();
+        m_scene->setField(node, texCoordIndex_Field(), 
+                         new MFInt32(mftexCoordIndex));
     }
     m_convertedNodes.append(node);
     node->addParent(getParent(), getParentField());
@@ -280,12 +264,11 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
 MFVec3f *
 NodeIndexedFaceSet::getCoordinates() 
 {
-    if (coord() == NULL)
-        return NULL;
     Node *ncoord = coord()->getValue();
-    if (ncoord != NULL)
+    if (ncoord == NULL)
+        return NULL;
+    else
         return ((NodeCoordinate *)ncoord)->point();
-    return NULL;
 }
 
 MFInt32 *
@@ -504,15 +487,13 @@ NodeIndexedFaceSet::optimize(void)
     optimizeMesh(&mfVertices, &mfCoordIndex);
     if (mfVertices && mfCoordIndex) {
         NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
-        if (ncoord) {
-            m_scene->backupFieldsStart();
-            m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
-            m_scene->backupFieldsAppend(this, coordIndex_Field());
-            m_scene->backupFieldsDone();
+        m_scene->backupFieldsStart();
+        m_scene->backupFieldsAppend(ncoord, ncoord->point_Field());
+        m_scene->backupFieldsAppend(this, coordIndex_Field());
+        m_scene->backupFieldsDone();
 
-            ncoord->point(new MFVec3f(*mfVertices));
-            coordIndex(new MFInt32(*mfCoordIndex));
-        }
+        ncoord->point(new MFVec3f(*mfVertices));
+        coordIndex(new MFInt32(*mfCoordIndex));
     }
 }
 
@@ -554,13 +535,11 @@ NodeIndexedFaceSet::splitSelectedFaces(void)
         for (int j = 0; j < numVertices; j++) {
             int ci = coordIndex()->getValue(offset + j);
             if (m_scene->isInSelectedHandles(i)) {
-                newVertices->appendSFValue((float *)
-                                           ncoord->point()->getValue(ci));
+                newVertices->appendSFValue(ncoord->point()->getValue(ci));
                 newCoordIndex->appendSFValue(numNewCoordIndex++);
                 addedNew = true;
             } else {
-                splitVertices->appendSFValue((float *)
-                                             ncoord->point()->getValue(ci));
+                splitVertices->appendSFValue(ncoord->point()->getValue(ci));
                 splitCoordIndex->appendSFValue(numSplitCoordIndex++);
                 addedSplit = true;
             }
@@ -1772,112 +1751,6 @@ NodeIndexedFaceSet::simpleJoin(MyArray<FacesetAndMatrix> data)
     return NULL;
 }
     
-
-void               
-NodeIndexedFaceSet::accountOffData(int f)
-{
-    MFVec3f *vertices = getCoordinates();
-    if (vertices)
-        m_sumVertices += vertices->getSFSize();
-    m_sumVerticesPerFaces += getMesh()->getNumFaces();
-}
-
-void               
-NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
-{
-    if (node == NULL)
-        return;
-    static Matrix transformMatrix = Matrix::identity();
-    node->getScene()->setSelection(node);
-    Path *trans = node->getScene()->searchTransform();
-    Node *transform = NULL;
-    if (trans)
-        transform = trans->getNode();
-    if (transform) {
-        transform->update();
-        transform->transform();
-        transform->getMatrix(transformMatrix);
-    }
-
-    MFVec3f *vertices = getCoordinates();
-    if (vertices)
-        for (int i = 0; i < vertices->getSFSize(); i++) {
-            Vec3f vec = vertices->getVec(i);
-            vec = transformMatrix * vec;
-            mywritef(f, "  %f %f %f\n", vec.x, vec.y, vec.z);
-        }
-}
-
-void               
-NodeIndexedFaceSet::writeOffIndices(int f, Node *node)
-{
-    if (node == NULL)
-        return;
-    MFVec3f *vertices = getCoordinates();
-    if (vertices == NULL)
-        return;
-    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
-        FaceData *face = getMesh()->getFace(i);
-        int offset = face->getOffset();
-        int numVertices = face->getNumVertices();
-
-        mywritef(f, "  %d ", numVertices);
-        for (int j = 0; j < numVertices; j++) {
-            int ci = coordIndex()->getValue(offset + j);
-            mywritef(f, "%d ", ci /* + m_sumNumFaces */);
-        }
-        mywritestr(f, "\n");
-    }
-}
-
-void
-NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
-{
-    if (node == NULL)
-        return;
-    if (normal() == NULL)
-        return;
-
-    MFVec3f *vertices = getVertices();
-    if (vertices == NULL)
-        return;
-    MFVec3f *normals = NULL;
-    if (normal()->getValue() == NULL) {
-        if (getMesh())
-            normals = getMesh()->getNormals();
-        else
-            return;
-    } else
-        normals = ((NodeNormal *)normal()->getValue())->vector();
-    for (int i = 0; i < vertices->getSFSize(); i++) {
-        Vec3f vec = normals->getVec(i);
-        mywritef(f, "  N %f %f %f", vec.x, vec.y, vec.z);
-        if (hasColorRGBA()) {
-            NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)
-                color()->getValue();
-            if (color() && colorRGBANode->color()) {
-                const float *c = 
-                    ((NodeColorRGBA *)color()->getValue())->color()->
-                    getValues() + i  + m_sumVertices * 4;
-                mywritef(f, " %d %d %d %d\n", (int)(c[0] * 255), 
-                                              (int)(c[1] * 255), 
-                                              (int)(c[2] * 255), 
-                                              (int)(c[3] * 255));
-        } else if (color() && 
-                ((NodeColor *)color()->getValue())->color()) {
-                NodeColor *colorNode = (NodeColor *)color()->getValue();
-                const float *c = 
-                    ((NodeColorRGBA *)color()->getValue())->color()->
-                    getValues() + i  + m_sumVertices * 3;
-                mywritef(f, " %d %d %d\n", (int)(c[0] * 255), 
-                                           (int)(c[1] * 255), 
-                                           (int)(c[2] * 255));
-            }
-        } else
-            mywritestr(f, "\n");                 
-    }
-}
-
 int 
 NodeIndexedFaceSet::getProfile(void) const
 { 
@@ -1921,9 +1794,9 @@ NodeIndexedFaceSet::getProfile(void) const
     if (m_mesh != NULL)
         if (!(m_mesh->onlyPlanarFaces()))
             return PROFILE_IMMERSIVE;
-    if (((Node *)this)->hasInput("set_colorIndex"))
+    if (hasInput("set_colorIndex"))
         return PROFILE_IMMERSIVE;
-    if (((Node *)this)->hasInput("set_normalIndex"))
+    if (hasInput("set_normalIndex"))
         return PROFILE_IMMERSIVE;
     if (!isDefault(ccw_Field()))
         return PROFILE_IMMERSIVE;
@@ -1963,7 +1836,7 @@ typedef boost::graph_traits<Surface>::halfedge_descriptor halfedge_descriptor;
 namespace params = CGAL::Polygon_mesh_processing::parameters;
 
 static void
-build_mesh(Surface *meshOut, MyMesh *mesh, Matrixd matrix)
+build_mesh(Surface *meshOut, MyMesh *mesh, Matrix matrix)
 {
     MyArray<vertex_index> u;    
     for (int i = 0; i < mesh->getVertices()->getSFSize(); i++) {
@@ -2001,7 +1874,7 @@ build_mesh(Surface *meshOut, MyMesh *mesh, Matrixd matrix)
 
 NodeIndexedFaceSet * 
 NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation, 
-                        Matrixd matrix1, Matrixd matrix2)
+                        Matrix matrix1, Matrix matrix2)
 {
     try {
         MyMesh *mesh = m_mesh;
@@ -2163,7 +2036,114 @@ NodeIndexedFaceSet::readOff(const char *filename)
     faceSet->coordIndex(new MFInt32(newCoordIndex));
     return faceSet;
 }
+
+
+void               
+NodeIndexedFaceSet::accountOffData(int f)
+{
+    MFVec3f *vertices = getCoordinates();
+    if (vertices)
+        m_sumVertices += vertices->getSFSize();
+    m_sumVerticesPerFaces += getMesh()->getNumFaces();
+}
+
+void               
+NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
+{
+    if (node == NULL)
+        return;
+    static Matrix transformMatrix = Matrix::identity();
+    node->getScene()->setSelection(node);
+    Path *trans = node->getScene()->searchTransform();
+    Node *transform = NULL;
+    if (trans)
+        transform = trans->getNode();
+    if (transform) {
+        transform->update();
+        transform->transform();
+        transform->getMatrix(transformMatrix);
+    }
+
+    MFVec3f *vertices = getCoordinates();
+    if (vertices)
+        for (int i = 0; i < vertices->getSFSize(); i++) {
+            Vec3f vec = vertices->getVec(i);
+            vec = transformMatrix * vec;
+            mywritef(f, "  %f %f %f\n", vec.x, vec.y, vec.z);
+        }
+}
+
+void               
+NodeIndexedFaceSet::writeOffIndices(int f, int startIndex, Node *node)
+{
+    if (node == NULL)
+        return;
+    MFVec3f *vertices = getCoordinates();
+    if (vertices == NULL)
+        return;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        FaceData *face = getMesh()->getFace(i);
+        int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+
+        mywritef(f, "  %d ", numVertices);
+        for (int j = 0; j < numVertices; j++) {
+            int ci = coordIndex()->getValue(offset + j);
+            mywritef(f, "%d ", ci + startIndex);
+        }
+        mywritestr(f, "\n");
+    }
+}
+
+void
+NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
+{
+    if (node == NULL)
+        return;
+    if (normal() == NULL)
+        return;
+
+    MFVec3f *vertices = getVertices();
+    if (vertices == NULL)
+        return;
+    MFVec3f *normals = NULL;
+    if (normal()->getValue() == NULL) {
+        if (getMesh())
+            normals = getMesh()->getNormals();
+        else
+            return;
+    } else
+        normals = ((NodeNormal *)normal()->getValue())->vector();
+    for (int i = 0; i < vertices->getSFSize(); i++) {
+        Vec3f vec = normals->getVec(i);
+        mywritef(f, "  N %f %f %f", vec.x, vec.y, vec.z);
+        if (hasColorRGBA()) {
+            NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)
+                color()->getValue();
+            if (color() && colorRGBANode->color()) {
+                const float *c = 
+                    ((NodeColorRGBA *)color()->getValue())->color()->
+                    getValues() + i  + m_sumVertices * 4;
+                mywritef(f, " %d %d %d %d\n", (int)(c[0] * 255), 
+                                              (int)(c[1] * 255), 
+                                              (int)(c[2] * 255), 
+                                              (int)(c[3] * 255));
+        } else if (color() && 
+                ((NodeColor *)color()->getValue())->color()) {
+                NodeColor *colorNode = (NodeColor *)color()->getValue();
+                const float *c = 
+                    ((NodeColorRGBA *)color()->getValue())->color()->
+                    getValues() + i  + m_sumVertices * 3;
+                mywritef(f, " %d %d %d\n", (int)(c[0] * 255), 
+                                           (int)(c[1] * 255), 
+                                           (int)(c[2] * 255));
+            }
+        } else
+            mywritestr(f, "\n");                 
+    }
+}
 #endif
+    
 #ifdef HAVE_LIBVCG
 #undef max
 #undef min

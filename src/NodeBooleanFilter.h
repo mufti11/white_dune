@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -45,13 +44,14 @@ public:
 class NodeBooleanFilter : public Node {
 public:
                     NodeBooleanFilter(Scene *scene, Proto *proto);
-                    NodeBooleanFilter(NodeBooleanFilter &node);
+                    NodeBooleanFilter(const NodeBooleanFilter &node);
     virtual        ~NodeBooleanFilter();
 
     virtual const char* getComponentName(void) const;
-    virtual int     getComponentLevel(void) const;
+    virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeBooleanFilter(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBooleanFilter(*this); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 };
+

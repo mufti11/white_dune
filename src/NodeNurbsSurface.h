@@ -19,24 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_SURFACE_H
-#define _NODE_NURBS_SURFACE_H
+#pragma once
 
-#ifndef _MESH_MORPHING_NODE_H
-# include "MeshMorphingNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
-# include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
-# include "Proto.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-#ifndef _SFMFTYPES_H
-# include "SFMFTypes.h"
-#endif
+#include "MeshMorphingNode.h"
+#include "ProtoMacros.h"
+#include "Proto.h"
+#include "Vec3f.h"
+#include "SFMFTypes.h"
 
 class MyMesh;
 class NodeNurbsGroup;
@@ -72,7 +61,7 @@ public:
     FieldIndex ccw;
     FieldIndex solid;
 
-    virtual MyString &getName(bool x3d) 
+    virtual const MyString &getName(bool x3d) const 
        { 
        if (x3d)
            return m_x3dName;
@@ -93,7 +82,7 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeNurbsSurface(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsSurface(*this); }
 
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);
@@ -114,7 +103,7 @@ public:
 
     bool            checkXSymetricOrSameHandle(int handle, MFVec3f *points);
 
-    virtual int     repairField(int field);
+    virtual int     repairField(int field) const;
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
     void            repairKnotAndWeight();
@@ -185,7 +174,7 @@ public:
     NodeNurbsSet   *findNurbsSet();
     void            createMesh(bool cleanDoubleVertices = true,
                                bool trianglulate = true);
-    void            createMesh(Vec3f *controlPoints,
+    void            createMesh(const Vec3f *controlPoints,
                                bool cleanDoubleVertices,
                                bool trianglulate);
     void            linearUknot(void);
@@ -230,4 +219,3 @@ protected:
     bool            m_createExtraTess;
 };
 
-#endif // _NODE_NURBS_SURFACE_H

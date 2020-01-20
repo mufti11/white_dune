@@ -19,10 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
+#pragma once 
 
-#include "Dialog.h"
 #include "swttypedef.h"
+#include "Dialog.h"
 
 class AboutDialog : public Dialog {
 public:

@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -62,8 +61,7 @@ public:
         { return "VolumeRendering"; }
     virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node   *copy() { return new NodeIsoSurfaceVolumeData( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeIsoSurfaceVolumeData(*this); }
 
     fieldMacros(SFFloat, contourStepSize, ProtoIsoSurfaceVolumeData);
     fieldMacros(SFVec3f, dimensions, ProtoIsoSurfaceVolumeData);
@@ -80,3 +78,4 @@ public:
     fieldMacros(SFBool, isPickable, ProtoIsoSurfaceVolumeData);
     fieldMacros(SFBool, render, ProtoIsoSurfaceVolumeData);
 };
+

@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NORMALINTERPOLATOR_H
-#define _NODE_NORMALINTERPOLATOR_H
+#pragma once
 
-#ifndef _INTERPOLATOR_H
 #include "Interpolator.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoNormalInterpolator : public ProtoInterpolator {
@@ -46,13 +40,13 @@ public:
                         NodeNormalInterpolator(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy(){ return new NodeNormalInterpolator(
-                                       m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodeNormalInterpolator(*this); }
 
-    virtual int         getStride() { return 3; }
-    virtual int         getNumChannels();
-    virtual FieldValue *createKey(void *value);
-    virtual FieldValue *createKeys(void *value, int numKeys) ;
+    virtual int         getStride() const { return 3; }
+    virtual int         getNumChannels() const;
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
     virtual void        recordValue(int key, FieldValue *value);
 
     ADD_FLIP
@@ -63,4 +57,3 @@ protected:
     int                 m_keySize;
 };
 
-#endif // _NODE_NORMALINTERPOLATOR_H

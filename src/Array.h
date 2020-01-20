@@ -37,16 +37,14 @@
 
 template<class T> class MyArray {
 public:
-                MyArray(long capacity = DEFAULT_CAPACITY )
-                { 
+                MyArray(long capacity = DEFAULT_CAPACITY ) { 
                     if (capacity == 0)
                         capacity = DEFAULT_CAPACITY;
                     m_capacity = capacity; 
                     m_data = new T[capacity]; 
                     m_size = 0;
                 }
-                MyArray(MyArray<T> &a)
-                {
+                MyArray(const MyArray<T> &a) {
                     m_capacity = m_size = a.m_size;
                     if (m_size == 0) 
                         m_capacity = DEFAULT_CAPACITY;
@@ -54,50 +52,34 @@ public:
                     for (long i = 0; i < MIN(m_capacity, m_size); i++) 
                         m_data[i] = a.m_data[i];
                 }
-                MyArray(T *a, long len)
-                {
+                MyArray(const T *a, long len) {
                     m_size = 0;
                     setData(a, len);
                 }
-                ~MyArray()
-                {
+                ~MyArray() {
                     if (m_data)
                         delete[] m_data; 
                     m_data = (T *)NULL;
                     m_size = 0;
                 }
 
-    const bool  isValid() 
-                {
-                    if ((m_size < 0) || (m_size <= m_capacity))
-                        return false;
-                    return true;
-                }
     const T    &get(long index) const
                 { return m_data[index]; }
     void        set(long index, T t)
-                { 
-                    if (index >= m_size)
-                        resize(index + 1);
-                     m_data[index] = t;
-                }
+                { if (index >= m_size) resize(index+1); m_data[index] = t; }
     T          &operator[](long index)
+                { if (index >= m_size) resize(index+1); return m_data[index]; }
+    const T &operator[](long index) const 
                 { 
-                    static T t;
-                    static T last = t;
-                    if (m_size > 0)
-                        last = m_data[m_size - 1];
                     if (index >= m_size) {
-                        resize(index + 1); 
-                        for (long i = 0; i < m_size - 2; i++) {
-                            m_data[index] = t;
-                        }
+                        ((MyArray *)this)->resize(index + 1);
+                        static T t;
+                        return t;
                     }
                     return m_data[index]; 
                 }
-    T          *getData() const { return m_data; }
-    void        setData(const T *a, long len)
-                {
+    const T    *getData() const { return m_data; }
+    void        setData(const T *a, long len) {
                     m_capacity = m_size = len; 
                     m_data = (T*)a;
                 }
@@ -107,19 +89,17 @@ public:
                     m_data = 0;
                     return data; 
                 }
-    const long  size() const
+    long        size() const
                 { return m_size; }
     void        append(T t)
                 { (*this)[m_size] = t; }
-    void        insert(T t, long index)
-                {                   
+    void        insert(T t, long index) {                   
                     resize(m_size + 1);
                     for (long i = (long)m_size - 1; i > (long)index; i--)
                          (*this)[i] = (*this)[i-1];
                     (*this)[index] = t; 
                 }
-    void        remove(long pos)
-                {
+    void        remove(long pos) {
                     if (pos + 1 != m_size)
                         for (long i = pos; i < (long)m_size - 1; i++)
                             m_data[i] = m_data[i + 1];
@@ -130,8 +110,7 @@ public:
                         m_size = 0;
                     }
                 }
-    void        remove(long start, long end)
-                {
+    void        remove(long start, long end) {
                     assert(start >= 0 && start < m_size);
                     assert(end >= 0 && end < m_size);
                     long len = end - start + 1;
@@ -145,8 +124,7 @@ public:
                     if (m_size <= 0)
                         resize(0);
                 }
-    void        resize(long size)
-                {
+    void        resize(long size) {
                     if (size == 0) {
                         if (m_size > 0) {
                             delete[] m_data;
@@ -167,8 +145,7 @@ public:
                     }
                     m_size = size;
                 }
-    const long  find(T t) const
-                {
+    long        find(T t) const {
                     long ret = -1;
                     if (m_capacity < m_size)
                         return -1;
@@ -185,16 +162,14 @@ public:
                     }
                     return ret;
                 }
-    const long  findBackward(T t) const
-                {
+    long        findBackward(T t) const {
                     if (m_size == 0)
                         return -1;
                     for (long i = (long)m_size - 1; i >= 0; i--)
                         if (m_data[i] == t) return i;
                     return -1;
                 }
-    const  bool contains(T t) const
-                {
+    bool        contains(T t) const {
                     if (find(t) == -1)
                         return false;
                     else
@@ -204,7 +179,7 @@ public:
                     
         
 protected:
+    long        m_size;
     long        m_capacity;
     T          *m_data;
-    long        m_size;
 };

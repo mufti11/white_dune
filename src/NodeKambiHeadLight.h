@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KAMBI_HEAD_LIGHT_H
-#define _NODE_KAMBI_HEAD_LIGHT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "KambiCommonFunctions.h"
-
 #include "SFMFTypes.h"
 
 class ProtoKambiHeadLight : public Proto {
@@ -61,7 +51,7 @@ class NodeKambiHeadLight : public Node {
 public:
                     NodeKambiHeadLight(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeKambiHeadLight(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeKambiHeadLight(*this); }
     void            preDraw();
 
     kambiCommonFunctions()
@@ -78,4 +68,3 @@ protected:
     GLenum          m_light;
 };
 
-#endif 

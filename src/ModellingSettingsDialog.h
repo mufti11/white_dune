@@ -21,9 +21,7 @@
 
 #pragma once
 
-#ifndef _DIALOG_H
 #include "Dialog.h"
-#endif
 
 class ModellingSettingsDialog : public Dialog
 {
@@ -36,3 +34,4 @@ public:
     virtual void        SaveData();
     void                shouldBeMoreThanZero(const char *name);
 };
+

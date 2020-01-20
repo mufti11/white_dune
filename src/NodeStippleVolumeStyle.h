@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_STIPPLE_VOLUME_STYLE_H
-#define _NODE_STIPPLE_VOLUME_STYLE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoStippleVolumeStyle : public Proto {
@@ -60,8 +51,7 @@ class NodeStippleVolumeStyle : public Node {
 public:
                     NodeStippleVolumeStyle(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeStippleVolumeStyle(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeStippleVolumeStyle(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -80,4 +70,3 @@ public:
     fieldMacros(SFFloat, silhouetteRetainedOpacity, ProtoStippleVolumeStyle)
 };
 
-#endif

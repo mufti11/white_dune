@@ -57,8 +57,8 @@ protected:
 
 public:
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeIndexedTriangleSet(
-                              m_scene, m_proto); }
+    virtual Node   *copy() const 
+                       { return new NodeIndexedTriangleSet(*this); }
 
     virtual int     getNormalField() { return normal_Field(); }
     virtual int     getTexCoordField() { return texCoord_Field(); }
@@ -77,9 +77,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField()
+    virtual int     colorPerVertexField() const 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField()
+    virtual int     colorIndexField() const
                        { return -1; }
 
     virtual bool    showFields() { return true; } 
@@ -94,3 +94,4 @@ protected:
 protected:
     bool            m_colorPerVertexWarning;
 };
+

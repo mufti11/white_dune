@@ -29,20 +29,19 @@ class MFDouble : public MFieldValue {
 public:
                         MFDouble(int stride = 1);
                         MFDouble(int len, int stride);
-                        MFDouble(MFDouble &value);
-                        MFDouble(MFDouble *value);
-                        MFDouble(double *values, int len, int stride = 1);
-                        MFDouble(float *values, int len, int stride = 1);
-                        MFDouble(double value);
+                        MFDouble(const MFDouble &value);
+                        MFDouble(const double *values, int len, int stride = 1);
+                        MFDouble(const float *values, int len, int stride = 1);
+                        MFDouble(const double value);
     virtual            ~MFDouble();
 
     virtual int         getType() const { return MFDOUBLE; }
     virtual int         getStride() const { return 1; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
     virtual const char *getTypeName() const { return "MFDouble"; }
 
-    virtual int         writeData(int filedes, int i); 
-    virtual int         writeDataC(int filedes, int i, int languageFlag);
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
 
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
 
@@ -51,36 +50,39 @@ public:
     virtual int         getNumbersPerType(void) const { return getStride(); }
     virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual bool        equals(const MFDouble *value) const;
+    virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy(); 
 
     virtual int         getSFSize() const
                            { return m_value.size() / getStride(); }
-    virtual FieldValue *getSFValue(int index); 
+    virtual FieldValue *getSFValue(int index) const; 
     virtual void        setSFValue(int index, FieldValue *value);
-    void                setSFValue(int index, double value);
+    void                setSFValue(int index, const double value);
 
-    double             *getValues() const { return m_value.getData(); }
-    double              getValue(int i) { return m_value[i]; }
+    const double       *getValues() const { return m_value.getData(); }
+    double              getValue(int i) const { return m_value[i]; }
     int                 getSize() const { return m_value.size(); }
     void                setValue(int index, double value) 
                            { m_value[index] = value; }
 
     virtual void        insertSFValue(int index, FieldValue *value);
-    void                insertSFValue(int index, double value);
+    void                insertSFValue(int index, const double value);
 
     virtual void        removeSFValue(int index);
 
     double              getMaxValue();
     double              getMinValue();
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual bool        isX3DType() const { return true; }
+    virtual bool        isX3DType() { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
+protected:
+    bool                equals(const MFDouble *value) const;
 
 protected:
     MyArray<double>     m_value;
 };
+

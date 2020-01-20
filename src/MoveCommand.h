@@ -21,9 +21,7 @@
 
 #pragma once
 
-#ifndef _COMMAND_H
 #include "Command.h"
-#endif
 
 class Node;
 class FieldValue;

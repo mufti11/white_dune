@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TWO_SIDED_MATERIAL_H
-#define _NODE_TWO_SIDED_MATERIAL_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTwoSidedMaterial : public Proto {
@@ -64,7 +55,7 @@ class NodeTwoSidedMaterial : public Node {
 public:
                     NodeTwoSidedMaterial(Scene *scene, Proto *proto);
     virtual int     getX3dVersion(void) const { return 2; }    
-    virtual Node *copy() { return new NodeTwoSidedMaterial(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTwoSidedMaterial(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual int     getAnimationCommentID(void);
@@ -122,4 +113,3 @@ public:
     float *m_verifiedBackColor;
 };
 
-#endif

@@ -27,8 +27,12 @@
 # include "stdlib.h"
 #endif
 
+#ifndef _ARRAY_H
 #include "Array.h"
+#endif
+#ifndef _STDAFX_H
 #include "stdafx.h"
+#endif
 
 template<class T> class array2D 
 {
@@ -58,3 +62,4 @@ protected:
                int      m_size_j;
                T        *m_data;
 };
+

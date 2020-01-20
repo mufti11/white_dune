@@ -37,9 +37,8 @@ $(DLIB):	$(OBJS)
 $(SLIB):	$(OBJS)
 	        rm -f $(SLIB)
 		ar -r $(SLIB) $(OBJS)
-	        $(RANLIB) $(SLIB)
-	        rm -f ../../../bin/dune
-		
+		$(RANLIB) $(SLIB)
+
 clean:
 		rm -f $(OBJS) $(LIB) *.bak core
 

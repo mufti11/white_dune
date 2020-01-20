@@ -21,17 +21,14 @@
 
 #pragma once
 
-#define _ONE_FLOAT_DIALOG_H
 #include "Dialog.h"
 #include "swttypedef.h"
-
 #ifndef FLT_MAX 
 # include <float.h>
 #endif
 #ifndef FLT_MIN
 # include <float.h>
 #endif
-
 
 class OneFloatDialog : public Dialog {
 public:

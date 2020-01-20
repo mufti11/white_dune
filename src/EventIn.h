@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "Element.h"
-#include "Node.h"
+# include "Element.h"
+# include "Node.h"
 
 class ExposedField;
 class Field;
@@ -46,4 +46,5 @@ private:
     ExposedField   *m_exposedField;
     int             m_field;
 };
+
 

@@ -201,9 +201,6 @@ if (echo "$VRMLBROWSER" | grep "freewrl" > /dev/null) ; then
    export VRMLBROWSER
 fi
 
-AC_ARG_WITH(x3dbrowser,--with-x3d-browser        use X3D browser not remote browser,
-            AC_DEFINE(HAVE_X3D_BROWSER))
-
 AC_ARG_WITH(x11-editor,--with-x11-editor=editor  X11 text editor eg. gedit gvim ...,
             X11_EDITOR="$withval";export X11_EDITOR)
 if (echo "$X11_EDITOR" | grep "gvim" > /dev/null) ; then
@@ -844,7 +841,6 @@ if test "X_$AVOID_RANLIB" = "X_yes" ; then
 else
    AC_PATH_PROGS(RANLIB,ranlib,echo)
 fi
-AC_PATH_PROGS(AR,ar,echo)
 
 if test "X_$SDL_JOYSTICK" = "X_yes" ; then
 
@@ -1391,6 +1387,8 @@ AC_CHECK_FUNCS(glVertex3f)
 AC_CHECK_FUNCS(glFogCoordf)
 AC_CHECK_FUNCS(glDeleteTextures)
 AC_CHECK_FUNCS(glGenTextures)
+AC_CHECK_FUNCS(glBindTexture)
+AC_CHECK_FUNCS(glActiveTexture)
 AC_CHECK_LIB(GLU, gluProject , , GLU_ERROR=1)
 if test "X_$GLU_ERROR" = "X_1" ; then
    AC_CHECK_LIB(MesaGLU, gluProject , GLU_ERROR=0)
@@ -1846,6 +1844,7 @@ fi
 
 AC_ARG_WITH(allow-multiple-definition,--with-allow-multiple-definition allow multiple linker symbols,
             [LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition"];export LDFLAGS)
+
 
 dnl automatic generate functions/lists for VRML types (e.g. SFBool <=> SFBOOL)
 

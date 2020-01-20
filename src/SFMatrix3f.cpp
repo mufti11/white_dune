@@ -22,14 +22,13 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "swt.h"
 #include "SFMatrix3f.h"
 #include "SFFloat.h"
 
 MyString    
-SFMatrix3f::getString(int index, int stride)
+SFMatrix3f::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -83,7 +82,7 @@ SFMatrix3f::readLine(int index, char *line)
 }
 
 int 
-SFMatrix3f::writeData(int f, int i)
+SFMatrix3f::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g  %g %g %g  %g %g %g", 
                        m_value[0], m_value[1], m_value[2],
@@ -92,7 +91,7 @@ SFMatrix3f::writeData(int f, int i)
 }
 
 int 
-SFMatrix3f::write(int f, int indent)
+SFMatrix3f::write(int f, int indent) const
 {
     RET_ONERROR( mywritef(f, "%g %g %g\n%g %g %g\n%g %g %g\n", 
                           m_value[0], m_value[1], m_value[2],
@@ -105,7 +104,7 @@ SFMatrix3f::write(int f, int indent)
 }
 
 int
-SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag)
+SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -124,14 +123,14 @@ SFMatrix3f::writeC(int filedes, const char* variableName, int languageFlag)
 }
 
 int
-SFMatrix3f::writeAc3d(int filedes, int indent)
+SFMatrix3f::writeAc3d(int filedes, int indent) const
 {
     // not needed yet
     return 0;
 }
 
 MyString
-SFMatrix3f::getEcmaScriptComment(MyString name, int flags)
+SFMatrix3f::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

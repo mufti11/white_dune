@@ -437,7 +437,7 @@ void SceneGraphView::OnDraw(int x, int y, int width, int height, bool update)
 
     SDC dc, frontDC;
 
-    Path *sel = m_scene->getSelection();
+    const Path *sel = m_scene->getSelection();
     Node *currentNode = sel ? sel->getNode() : NULL;
     Proto *currentProto = NULL;
     if (sel->isProto(m_scene))
@@ -733,7 +733,7 @@ void SceneGraphView::DrawNode(SDC dc, Node *node, int xPos, int yPos)
                      width - i * 2, height - i * 2);
     }
 
-    Path *sel = m_scene->getSelection();
+    const Path *sel = m_scene->getSelection();
     Node *currentNode = sel ? sel->getNode() : NULL;
     if (currentNode == node)
         swSetFGColor(dc, 0xFF0000);
@@ -1079,7 +1079,7 @@ void SceneGraphView::DrawProto(SDC dc, Proto *proto, int xPos, int yPos)
                      width - i * 2, height - i * 2);
     }
 
-    Path *sel = m_scene->getSelection();
+    const Path *sel = m_scene->getSelection();
     Proto *current = NULL;
     if (sel && sel->isProto(m_scene))
         current = sel->getProto(m_scene);
@@ -1535,8 +1535,6 @@ void SceneGraphView::InvalidateNode(Node *node)
         for (SocketList::Iterator *j = node->getInput(i).first(); j != NULL;
              j = j->next()) {
             RouteSocket s = j->item();
-            if (s.getNode() == NULL)
-                continue;
             InvalidateRoute(GetSocketPosition(s.getNode(), s.getField(), 1),
                             GetSocketPosition(node, i, 0) - 
                             Point(SOCKET_WIDTH / 2, 0));
@@ -1738,7 +1736,7 @@ SceneGraphView::SocketHitTestProto(int x, int y, Proto *proto, int *side)
 void SceneGraphView::OnLButtonDown(int x, int y, int modifiers) 
 {
     Node *node = HitTestNode(x, y);
-    Path *sel = m_scene->getSelection();
+    const Path *sel = m_scene->getSelection();
     Node *currentNode = sel ? sel->getNode() : NULL;
 
     Proto *proto = HitTestProto(x, y);
@@ -2317,6 +2315,18 @@ void SceneGraphView::OnUpdate(SceneView *sender, int type, Hint *hint)
         m_scene->getNodes()->clearFlag(NODE_FLAG_TOUCHED);
         InvalidateNodeRec(nodeUpdate->node);
         Initialize();
+        if (!TheApp->GetRouteViewShowAll()) {
+            m_maxYPosition = getFirstYPosition();
+            // automatically show new created event processing nodes on top 
+            if (nodeUpdate->node != NULL) {
+                if ((!nodeUpdate->node->hasInputs()) && 
+                    (!nodeUpdate->node->hasOutputs()))
+                     if ((nodeUpdate->node->getNodeClass() & SENSOR_NODE) ||
+                         nodeUpdate->node->matchNodeClass(INTERPOLATOR_NODE) ||
+                         nodeUpdate->node->isNodeWithAdditionalEvents())
+                          moveToTop(nodeUpdate->node);
+            }
+        }
         SetScrollSizes(m_lastXPosition, m_maxYPosition);
         break;
       CASE_UPDATE(UPDATE_REMOVE_NODE)
@@ -2763,7 +2773,7 @@ SceneGraphView::unZoom(void)
 void
 SceneGraphView::jumpToSelection(void)
 {
-    Path *sel = m_scene->getSelection();
+    const Path *sel = m_scene->getSelection();
     Node *current = sel ? sel->getNode() : NULL;
     if (current == NULL) 
         return;

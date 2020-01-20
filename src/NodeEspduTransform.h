@@ -19,24 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ESPDU_TRANSFORM_H
-#define _NODE_ESPDU_TRANSFORM_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "DISCommonFields.h"
-
 #include "NodeTransform.h"
 
 class ProtoEspduTransform : public ProtoTransform {
@@ -99,9 +88,9 @@ public:
                     NodeEspduTransform(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const { return "DIS"; }
-    virtual int     getComponentLevel(void) const { return 1; }
+    virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeEspduTransform(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeEspduTransform(*this); }
 
     disCommonBehaviorFieldMacros(ProtoEspduTransform)
     disCommonIdentificationFieldMacros(ProtoEspduTransform)
@@ -147,4 +136,3 @@ public:
     fieldMacros(SFInt32,    warhead,                    ProtoEspduTransform)
 };
 
-#endif

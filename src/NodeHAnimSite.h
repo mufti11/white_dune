@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_HANIN_SITE_H
-#define _NODE_HANIN_SITE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "NodeTransform.h"
 
 class ProtoHAnimSite : public ProtoTransform {
@@ -55,11 +45,10 @@ public:
                     NodeHAnimSite(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const;
-    virtual int     getComponentLevel(void) const;
-    virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeHAnimSite(m_scene, m_proto); }
+    virtual int         getComponentLevel(void) const;
+    virtual int         getX3dVersion(void) const { return 0; }
+    virtual Node   *copy() const { return new NodeHAnimSite(*this); }
 
     fieldMacros(SFString,   name,             ProtoHAnimSite)
 };
 
-#endif

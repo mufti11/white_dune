@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MULTI_GENERATED_TEXTURE_COORDINATE_H
-#define _NODE_MULTI_GENERATED_TEXTURE_COORDINATE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoMultiGeneratedTextureCoordinate : public Proto {
@@ -58,9 +49,8 @@ public:
                            { return "Texturing"; }
     virtual int         getComponentLevel(void) const { return -1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy()     
-                    { return new NodeMultiGeneratedTextureCoordinate(
-                      m_scene, m_proto);  }
+    virtual Node   *copy() const 
+                       { return new NodeMultiGeneratedTextureCoordinate(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -69,5 +59,4 @@ public:
     fieldMacros(MFNode, texCoord, ProtoMultiGeneratedTextureCoordinate);
 };
 
-#endif
 

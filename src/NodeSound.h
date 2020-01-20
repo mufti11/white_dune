@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SOUND_H
-#define _NODE_SOUND_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "swt.h"
-
 #include "SFMFTypes.h"
 
 class ProtoSound : public Proto {
@@ -63,7 +53,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodeSound(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSound(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; }
 
@@ -84,4 +74,3 @@ public:
     fieldMacros(SFBool,  doppler,    ProtoSound)
 };
 
-#endif // _NODE_SOUND_H

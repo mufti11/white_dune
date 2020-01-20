@@ -22,7 +22,7 @@
 #pragma once
 
 #include "Scene.h"
-#include "Dialog.h"
+#include "CheckBoxWindow.h"
 
 class InteractionRouteData {
 public:
@@ -55,9 +55,12 @@ protected:
     void                SaveData();
     virtual bool        Validate();
     void                OnCommand(void *id);
+    void                drawInterface(SDC dc);
     
 protected:
+    CheckBoxWindow        m_window;
     Node                 *m_interactionNode;
     InteractionRouteData *m_routeData;
     MyArray<int>          m_eventIns;        
 };
+

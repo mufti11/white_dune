@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUIComboBox node
  */
 
-#ifndef _NODE_TUI_COMBO_BOX_H
-#define _NODE_TUI_COMBO_BOX_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 class ProtoTUIComboBox : public ProtoTUIElement {
@@ -56,11 +46,10 @@ public:
                     NodeTUIComboBox(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeTUIComboBox(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUIComboBox(*this); }
 
     fieldMacros(MFString, items,         ProtoTUIComboBox)
     fieldMacros(SFBool,   withNone,      ProtoTUIComboBox)
     fieldMacros(SFInt32,  defaultChoice, ProtoTUIComboBox)
 };
 
-#endif // _NODE_TUI_COMBO_BOX_H

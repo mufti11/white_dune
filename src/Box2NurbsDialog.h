@@ -22,7 +22,9 @@
 #pragma once
 
 #include "Dialog.h"
+
 #include "swttypedef.h"
+
 #include "Node.h"
 
 class Box2NurbsDialog : public Dialog 
@@ -52,4 +54,3 @@ private:
     int                 m_uDegree;
     int                 m_vDegree;
 };
-

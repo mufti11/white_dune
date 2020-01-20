@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KEY_SENSOR_H
-#define _NODE_KEY_SENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoKeySensor : public WonderlandExportProto {
@@ -53,7 +44,7 @@ public:
                     NodeKeySensor(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeKeySensor( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeKeySensor(*this); }
     virtual const char* getComponentName(void) const;
     virtual int     getComponentLevel(void) const;
 
@@ -62,4 +53,3 @@ public:
     fieldMacros(SFBool, enabled, ProtoKeySensor)
 };
 
-#endif

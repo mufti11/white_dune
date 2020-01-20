@@ -43,3 +43,4 @@ public:
     virtual int         getType() = 0;
     int                 strange_dummy_for_aix_gcc2_95;
 };
+

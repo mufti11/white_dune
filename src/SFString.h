@@ -45,18 +45,18 @@ public:
                            }
     virtual int         getType() const { return SFSTRING; }
     virtual const char *getTypeName() const { return "SFString"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
                         
-    virtual int         write4FieldPipe(int filedes, int indent); 
+    virtual int         write4FieldPipe(int filedes, int indent) const; 
 
     virtual int         writeCWonderlandArt(int filedes, 
                                             const char* variableName,
-                                            int languageFlag);
+                                            int languageFlag) const;
 
-    virtual int         writeRaw(int filedes, int indent);
+    virtual int         writeRaw(int filedes, int indent) const;
 
-    virtual int         writeData(int filedes, int i); 
-    virtual int         writeDataXml(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeDataXml(int filedes, int i) const; 
 
     virtual const char *getTypeC(int languageFlag) const;
 
@@ -67,9 +67,9 @@ public:
     virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFString(*this); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual bool        supportAnimation(bool x3d) { return false; }
+    virtual bool        supportAnimation(bool x3d) const { return false; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:

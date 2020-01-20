@@ -25,7 +25,6 @@
 
 #include "SFImage.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 SFImage::SFImage(int width, int height, int components, const int *pixels)
 {
@@ -45,7 +44,7 @@ SFImage::SFImage(void)
     setComponents(0);
 }
 
-int SFImage::writeData(int f, int i)
+int SFImage::writeData(int f, int i) const
 {
     int number;
     switch (i) {
@@ -64,7 +63,7 @@ int SFImage::writeData(int f, int i)
     return mywritef(f, "0x%x", number);
 }
 
-int SFImage::write(int f, int indent)
+int SFImage::write(int f, int indent) const
 {
     RET_ONERROR( mywritef(f, "%d %d %d\n", getWidth(), getHeight(), 
                           getComponents()) )
@@ -77,6 +76,7 @@ int SFImage::write(int f, int indent)
 }
 
 int SFImage::writeXml(int f, int indent, int containerField, bool avoidUse)
+const
 {
     RET_ONERROR( mywritef(f, "'%d %d %d", getWidth(), getHeight(), 
                           getComponents()) )
@@ -96,30 +96,28 @@ bool
 SFImage::equals(const FieldValue *value) const
 {
     if (value->getType() == SFIMAGE) {
-        SFImage *v = (SFImage *)value;
+        SFImage *v = (SFImage *) value;
         bool samePixels = false;
-        if ((v->getPixels() == NULL) && ((SFImage *)this)->getPixels() == NULL)
+        if ((v->getPixels() == NULL) && (getPixels() == NULL))
             samePixels = true;
         else if (v->getPixels() == NULL)
             samePixels = false;
-        else if (((SFImage *)this)->getPixels() == NULL)
+        else if (getPixels() == NULL)
             samePixels = false;
         else
-            samePixels = !memcmp(v->getPixels(), 
-                                 ((SFImage *)this)->getPixels(), 
-                                 ((SFImage *)this)->getWidth() * 
-                                 ((SFImage *)this)->getHeight());
+            samePixels = !memcmp(v->getPixels(), getPixels(), 
+                                 getWidth() * getHeight());
 
-        return v->getWidth() == ((SFImage *)this)->getWidth()
-            && v->getHeight() == ((SFImage *)this)->getHeight()
-            && v->getComponents() == ((SFImage *)this)->getComponents()
+        return v->getWidth() == getWidth()
+            && v->getHeight() == getHeight()
+            && v->getComponents() == getComponents()
             && samePixels;
     }
     return false;
 }
 
 int
-SFImage::getWidth(void)
+SFImage::getWidth(void) const
 {
     if (m_value.size() > 0)
         return m_value[0];
@@ -140,7 +138,7 @@ SFImage::setWidth(int width)
 }
 
 int
-SFImage::getHeight()
+SFImage::getHeight() const
 {
     if (m_value.size() > 1)
         return m_value[1];
@@ -161,7 +159,7 @@ SFImage::setHeight(int height)
 }
 
 int
-SFImage::getComponents()
+SFImage::getComponents() const
 {
     if ((int)m_value.size() > 2)
         return m_value[2];
@@ -181,8 +179,8 @@ SFImage::setComponents(int components)
     resizeImage();
 }
 
-int *
-SFImage::getPixels()
+const int *
+SFImage::getPixels() const
 {
     if ((getWidth() != 0) && (getHeight() != 0) && (getComponents() != 0))
         return m_value.getData() + 3;
@@ -197,7 +195,7 @@ SFImage::setPixel(int index, int pixel)
 }
  
 int
-SFImage::getNumPixels()
+SFImage::getNumPixels() const
 {
     int pixels = getWidth() * getHeight();
     if (pixels > ((int)m_value.size() - 3))
@@ -219,7 +217,7 @@ SFImage::setSFValue(int index, FieldValue *value)
 
 
 MyString
-SFImage::getEcmaScriptComment(MyString name, int flags)
+SFImage::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

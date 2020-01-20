@@ -325,7 +325,7 @@ NodeCattExportSrc::writeCattGeo(int filedes, int indent)
         RET_ONERROR( mywritef(f, " %f", roll()->getValue()) )
     RET_ONERROR( mywritestr(f, swGetLinefeedString()) )
     for (int i = 0; i < furtherParameters()->getSize(); i++) {
-        const char* parameter = furtherParameters()->getValue(i)->getValue();
+        const char* parameter = furtherParameters()->getValue(i);
         RET_ONERROR( mywritestr(f, parameter) )
         RET_ONERROR( mywritestr(f, swGetLinefeedString()) )
     }

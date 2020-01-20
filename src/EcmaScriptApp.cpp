@@ -23,7 +23,6 @@
 #include "PreferencesApp.h"
 #include "EcmaScriptApp.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 EcmaScriptApp::EcmaScriptApp()
 {

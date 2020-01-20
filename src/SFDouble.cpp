@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "SFDouble.h"
 #include "SFString.h"
@@ -39,7 +38,7 @@ SFDouble::SFDouble(SFString *value)
 }
 
 MyString    
-SFDouble::getString(int index, int stride)
+SFDouble::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -48,7 +47,7 @@ SFDouble::getString(int index, int stride)
     return ret;
 }
 
-int SFDouble::writeData(int f, int i)
+int SFDouble::writeData(int f, int i) const
 {
     return mywritef(f, "%g", m_value);
 }
@@ -69,7 +68,7 @@ SFDouble::equals(const FieldValue *value) const
 }
 
 bool
-SFDouble::equalsAngle(FieldValue *value, double angle)
+SFDouble::equalsAngle(const FieldValue *value, double angle) const
 {
     return value->getType() == SFFLOAT
             && ((SFDouble *) value)->getValue() * angle == m_value;
@@ -90,7 +89,7 @@ SFDouble::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFDouble::getEcmaScriptComment(MyString name, int flags)
+SFDouble::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

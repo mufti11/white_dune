@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFBOOL_ITEM_H
-#define _SFBOOL_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 #include "swt.h"
@@ -46,4 +45,3 @@ private:
     SWND                m_button;
 };
 
-#endif // _SFBOOL_ITEM_H

@@ -19,10 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
-
 // basic class for the Transform node, but without center, scale 
 // and scaleOrientation fields (usefull for nodes like CollidableOffset)
+
+#pragma once
 
 #include "Node.h"
 #include "ProtoMacros.h"
@@ -53,7 +53,7 @@ public:
                      ~BasicTransformNode();
 
 public:
-    virtual int       getBasicChildrenField(void) = 0;
+    virtual int       getBasicChildrenField(void) const = 0;
 
     virtual MFNode   *getBasicChildren(void) 
                          { return (MFNode *)getField(getBasicChildrenField()); }
@@ -85,10 +85,10 @@ public:
 
     virtual void      receiveEvent(int eventIn, double timestamp, FieldValue *value);
 
-    void              getMatrix(double* matrix);
-    void              setMatrix(double* matrix);
-    Quaternion        getQuat(void);
-    void              setQuat(Quaternion quat);    
+    void              getMatrix(float* matrix);
+    void              setMatrix(float* matrix);
+    const Quaternion &getQuat(void);
+    void              setQuat(const Quaternion &quat);    
 
     virtual int       writeAc3d(int filedes, int indent);
     virtual int       writeRib(int filedes, int indent);
@@ -104,6 +104,7 @@ public:
     bool              modelViewIsIdentity(void);
 protected:
     bool              m_matrixDirty;
-    Matrixd           m_matrix;
+    Matrix            m_matrix;
     float             m_handleScale;
 };
+

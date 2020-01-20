@@ -19,17 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_ORIENTATION_INTERPOLATOR_H
-#define _NODE_NURBS_ORIENTATION_INTERPOLATOR_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "NodeNurbsCurve.h"
-
 #include "SFMFTypes.h"
 
 class Mesh;
@@ -59,8 +53,8 @@ public:
                     ~NodeNurbsOrientationInterpolator();
 
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeNurbsOrientationInterpolator(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const 
+                       { return new NodeNurbsOrientationInterpolator(*this); }
 
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 1; }
@@ -92,7 +86,7 @@ public:
     virtual bool    maySetDefault(void) { return false; }
 
     MFVec3f        *getControlPoints(void);
-    void            setControlPoints(MFVec3f *points);
+    void            setControlPoints(const MFVec3f *points);
 
     fieldMacros(SFInt32,  dimension,     ProtoNurbsOrientationInterpolator)
     fieldMacros(SFNode,   controlPoint,  ProtoNurbsOrientationInterpolator)
@@ -108,4 +102,4 @@ protected:
     FieldIndex      m_set_fractionField;
     FieldIndex      m_value_changedField;
 };
-#endif 
+

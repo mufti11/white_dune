@@ -23,7 +23,6 @@
 #include "swt.h"
 #include "RenderApp.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #define DEFAULT_NEAR_CLIPPING_PLANE_DIST 0.05f 
 #define DEFAULT_FAR_CLIPPING_PLANE_DIST 7000.0f

@@ -20,12 +20,11 @@
  */
 
 #pragma once
-#include "ExternTheApp.h"
+
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
 #include "SFMFTypes.h"
-
 
 class ProtoCattExportRec : public Proto {
 public:
@@ -48,7 +47,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeCattExportRec(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCattExportRec(*this); }
     
     virtual int     writeProto(int filedes);
 
@@ -68,4 +67,3 @@ public:
     fieldMacros(SFVec3f,  receiverLocation,  ProtoCattExportRec)
     fieldMacros(SFString, furtherParameters, ProtoCattExportRec)
 };
-

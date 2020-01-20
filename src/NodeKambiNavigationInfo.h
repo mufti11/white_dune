@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KAMBI_NAVIGATION_INFO_H
-#define _NODE_KAMBI_NAVIGATION_INFO_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 #include "NodeNavigationInfo.h"
@@ -61,8 +52,7 @@ class NodeKambiNavigationInfo : public NodeNavigationInfo {
 public:
                     NodeKambiNavigationInfo(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeKambiNavigationInfo( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeKambiNavigationInfo(*this); }
 
     kambiCommonFunctions()
 
@@ -77,4 +67,3 @@ public:
     fieldMacros(SFNode,  headlightNode,             ProtoKambiNavigationInfo);
 };
 
-#endif

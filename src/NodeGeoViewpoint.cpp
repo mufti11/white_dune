@@ -48,7 +48,7 @@ ProtoGeoViewpoint::create(Scene *scene)
 }
 
 int 
-ProtoGeoViewpoint::translateField(int field)
+ProtoGeoViewpoint::translateField(int field) const
 {
     bool x3d = m_scene->isX3d();
     if (x3d) {
@@ -117,7 +117,7 @@ NodeGeoViewpoint::apply(bool useStereo)
 }
 
 Vec3d  
-NodeGeoViewpoint::getPosition()
+NodeGeoViewpoint::getPosition() const
 {
     return Vec3d(positionX3D()->getValue()[0],
                  positionX3D()->getValue()[1],

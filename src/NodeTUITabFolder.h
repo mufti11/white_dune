@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUITabFolder node
  */
 
-#ifndef _NODE_TUI_TAB_FOLDER_H
-#define _NODE_TUI_TAB_FOLDER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 class ProtoTUITabFolder : public ProtoTUIElement {
@@ -52,7 +42,6 @@ public:
                     NodeTUITabFolder(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node *copy() { return new NodeTUITabFolder(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUITabFolder(*this); }
 };
 
-#endif // _NODE_TUI_TAB_FOLDER_H

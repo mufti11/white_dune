@@ -52,3 +52,4 @@ public:
     fieldMacros(SFFloat, surfaceArea, EmitterProto);
 };
 
+

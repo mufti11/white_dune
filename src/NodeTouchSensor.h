@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TOUCHSENSOR_H
-#define _NODE_TOUCHSENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTouchSensor : public WonderlandExportProto {
@@ -57,7 +48,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERACTIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeTouchSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTouchSensor(*this); }
 
     virtual bool    hasX3domOnOutputChange(void) { return true; } 
 
@@ -65,4 +56,3 @@ public:
     fieldMacros(SFBool,   enabled,     ProtoTouchSensor)
 };
 
-#endif // _NODE_TOUCHSENSOR_H

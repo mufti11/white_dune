@@ -24,7 +24,6 @@
 
 #include "MFDouble.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFDouble::MFDouble(int len, int stride)
 {
@@ -33,12 +32,12 @@ MFDouble::MFDouble(int len, int stride)
         m_value.append(0.0);
 }
 
-MFDouble::MFDouble(double *values, int len, int /* stride */)
+MFDouble::MFDouble(const double *values, int len, int /* stride */)
 {
     m_value.setData(values, len);
 }
 
-MFDouble::MFDouble(float *values, int len, int /* stride */)
+MFDouble::MFDouble(const float *values, int len, int /* stride */)
 {
     m_value.resize(0);
     for (int i = 0; i < len; i++)
@@ -50,26 +49,12 @@ MFDouble::MFDouble(int stride)
     m_value.resize(0);
 }
 
-MFDouble::MFDouble(MFDouble *value)
+MFDouble::MFDouble(const MFDouble &value)
 {
-    m_value.setData(((MFDouble *)value)->getValues(), 
-                    ((MFDouble *)value)->getSize());
+    m_value.setData(value.getValues(), value.getSize());
 }
 
-MFDouble::MFDouble(MFDouble &values)
-{
-    int len = values.getSize();
-    if (len == 0) {
-        m_value.resize(0);
-        return;
-    }
-    double* doubles = new double[len];
-    for (int i = 0; i < len; i++)
-         doubles[i] = values.getValue(i);
-    m_value.setData(doubles, len);    
-}
-
-MFDouble::MFDouble(double value)
+MFDouble::MFDouble(const double value)
 {
     m_value.resize(0);
     m_value[0] = value;
@@ -82,7 +67,7 @@ MFDouble::~MFDouble()
 }
 
 MyString    
-MFDouble::getString(int index, int stride)
+MFDouble::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -94,10 +79,6 @@ MFDouble::getString(int index, int stride)
 FieldValue *
 MFDouble::copy()
 {
-    if (m_value.size() == 0) {
-        m_value.resize(0);
-        return new MFDouble(m_value.getData(), 0);
-    }
     double *value = new double[m_value.size()];
     for (long i = 0; i < m_value.size(); i++)
         value[i] = m_value[i];
@@ -113,20 +94,24 @@ MFDouble::readLine(int index, char *line)
 }
 
 bool
+MFDouble::equals(const FieldValue *value) const
+{
+    return value->getType() == MFDOUBLE && equals((const MFDouble *) value);
+}
+
+bool
 MFDouble::equals(const MFDouble *value) const
 {
-    if (value->getType() == MFDOUBLE) {
-        MFDouble *v = (MFDouble *)value;
-        if (v->getSize() != (int)m_value.size()) return false;  
+    if ((int)m_value.size() == value->getSize()) {
         for (long i = 0; i < m_value.size(); i++)
-            if (m_value.getData()[i] != v->getValue(i))
+            if (m_value[i] != value->getValue(i))
                 return false;
         return true;
     }
     return false;
 }
 
-int MFDouble::writeData(int f, int i)
+int MFDouble::writeData(int f, int i) const
 {
    RET_ONERROR( mywritef(f, "%g", m_value[i * getStride()]) )
    if (getStride() > 1)   
@@ -135,7 +120,7 @@ int MFDouble::writeData(int f, int i)
    return 0;
 }
 
-int MFDouble::writeDataC(int f, int i, int languageFlag)
+int MFDouble::writeDataC(int f, int i, int languageFlag) const
 {
    RET_ONERROR( mywritef(f, "%f", m_value[i * getStride()]) )
    if (getStride() > 1)   
@@ -167,21 +152,21 @@ MFDouble::setSFValue(int index, FieldValue *value)
 }
 
 void 
-MFDouble::setSFValue(int index, double value)
+MFDouble::setSFValue(int index, const double value)
 {
     assert(index<getSFSize());
     m_value[index] = value;
 }
 
 FieldValue *
-MFDouble::getSFValue(int index)
+MFDouble::getSFValue(int index) const
 {
     assert(index<getSFSize());
     return new SFDouble(m_value[index]); 
 }
 
 MyString
-MFDouble::getEcmaScriptComment(MyString name, int flags)
+MFDouble::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -258,7 +243,7 @@ MFDouble::insertSFValue(int index, FieldValue *value)
 }
 
 void 
-MFDouble::insertSFValue(int index, double value)
+MFDouble::insertSFValue(int index, const double value)
 {
     m_value.insert(value, index);
 }

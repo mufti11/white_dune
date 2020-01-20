@@ -19,21 +19,16 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CURVE_ANIMATION_H
-#define _NODE_CURVE_ANIMATION_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "NodeNurbsCurve.h"
 #include "NodePositionInterpolator.h"
 #include "NodeOrientationInterpolator.h"
 
 #include "SFMFTypes.h"
-#include "Interpolator.h"
+class Interpolator;
 
 class ProtoCurveAnimation : public ProtoNurbsCurve {
 public:
@@ -58,10 +53,9 @@ public:
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }  
 
     virtual const char* getComponentName(void) const { return ""; }
-    virtual int     getComponentLevel(void) const { return -1; }
+    virtual int       getComponentLevel(void) const { return -1; }
 
-    virtual Node    *copy() { return new NodeCurveAnimation(
-                                     m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCurveAnimation(*this); }
 
     void            createNurbsCurve(void);
 
@@ -145,5 +139,5 @@ protected:
     bool               m_curveDirty;
     MyArray<float>     m_chain;
 };
-#endif 
+
  

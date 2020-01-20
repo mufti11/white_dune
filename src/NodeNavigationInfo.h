@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NAVIGATIONINFO_H
-#define _NODE_NAVIGATIONINFO_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoNavigationInfo : public Proto {
@@ -62,7 +53,7 @@ public:
     FieldIndex isActive;
     FieldIndex typeParams;
 
-    virtual int     translateField(int field);
+    virtual int     translateField(int field) const;
 };
 
 class NodeNavigationInfo : public Node {
@@ -71,7 +62,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeNavigationInfo(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNavigationInfo(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -96,4 +87,3 @@ public:
     fieldMacros(MFFloat,  typeParams,      ProtoNavigationInfo);
 };
 
-#endif // _NODE_NAVIGATIONINFO_H

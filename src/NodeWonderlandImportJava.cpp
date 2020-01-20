@@ -58,7 +58,7 @@ NodeWonderlandImportJava::writeCode(int f)
 {
     for (int i = 0; i < code()->getSize(); i++) {
         MyString string = "";
-        string += code()->getValue(i)->getValue();
+        string += code()->getValue(i);
         string.gsub("\\\"","\""); 
         RET_ONERROR( mywritestr(f, (const char *)string) )
         RET_ONERROR( mywritestr(f, "\n") )

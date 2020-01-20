@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PICKABLE_GROUP_H
-#define _NODE_PICKABLE_GROUP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "StaticGroupNode.h"
 
@@ -56,11 +47,9 @@ public:
 
     virtual const char* getComponentName(void) const { return "Picking"; }
     virtual int         getComponentLevel(void) const { return 1; }
-    virtual Node       *copy() { return new NodePickableGroup(
-                                        m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePickableGroup(*this); }
 
     fieldMacros(MFString, objectType, ProtoPickableGroup);
     fieldMacros(SFBool,   pickable,   ProtoPickableGroup);
 };
 
-#endif

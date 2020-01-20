@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFFLOAT_ITEM_H
-#define _SFFLOAT_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 
@@ -35,5 +34,3 @@ public:
     virtual void        StartEditing(MyString &str, int offset);
     virtual FieldValue *StopEditing(const char *str, int offset);
 };
-
-#endif // _SFFLOAT_ITEM_H

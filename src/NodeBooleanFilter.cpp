@@ -55,7 +55,7 @@ NodeBooleanFilter::NodeBooleanFilter(Scene *scene, Proto *def)
 {
 }
 
-NodeBooleanFilter::NodeBooleanFilter(NodeBooleanFilter &node)
+NodeBooleanFilter::NodeBooleanFilter(const NodeBooleanFilter &node)
   : Node(node)
 {
 }

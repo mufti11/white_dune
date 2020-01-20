@@ -192,7 +192,7 @@ NodeBackground::apply()
 }
 
 void
-NodeBackground::setColor(float *newColor)
+NodeBackground::setColor(const float *newColor)
 {
     Util::myGlMaterial3fv(GL_FRONT, GL_EMISSION, newColor);
     Util::myGlColor3f(newColor[0], newColor[1], newColor[2]);
@@ -200,7 +200,7 @@ NodeBackground::setColor(float *newColor)
 
 void
 NodeBackground::drawQuad(float r, float va1, float va2, float h1, float h2, 
-                         float *newColor)
+                         const float *newColor)
 {
     float ha1 = h1 * 2.0 * M_PI;
     float ha2 = h2 * 2.0 * M_PI;
@@ -238,14 +238,14 @@ NodeBackground::drawSky()
  
         if (skyAngle()->getSFSize() != 0) {
             va2 = skyAngle()->getValue(0) * unitAngle;
-            float black[] = { 0, 0, 0 };
-            float* colors2 = black;
+            const float black[] = { 0, 0, 0 };
+            const float* colors2 = black;
 
             for(int v = 0; v < skyColor()->getSFSize() - 1; v++) {
                 if (v >= skyAngle()->getSFSize())
                     break;
                 va2 = skyAngle()->getValue(v) * unitAngle;
-                float* colors1 = skyColor()->getValue(v);
+                const float* colors1 = skyColor()->getValue(v);
                 colors2 = skyColor()->getValue(v + 1);
 
                 for (float h = 0; h < hdiv; h++) {
@@ -276,15 +276,15 @@ NodeBackground::drawGround()
 
     glBegin(GL_QUADS);
     if (groundColor()->getSFSize() == 1) {
-        float* gcolors1 = groundColor()->getValue(0);
+        const float* gcolors1 = groundColor()->getValue(0);
         setColor(gcolors1);
         for (float h = 0; h < hdiv; h++)
             drawQuad(sc, M_PI / 2.0, M_PI , h / hdiv, (h + 1) / hdiv, NULL);
     } else {
         float va1 = M_PI;
         for (int v = 0; v < groundColor()->getSFSize() - 1; v++) {
-            float* gcolors1 = groundColor()->getValue(v);
-            float* gcolors2 = groundColor()->getValue(v+1);
+            const float* gcolors1 = groundColor()->getValue(v);
+            const float* gcolors2 = groundColor()->getValue(v+1);
 
             float va2;
             if (v >= groundAngle()->getSFSize())

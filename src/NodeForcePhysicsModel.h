@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_FORCE_PHYSICS_MODEL_H
-#define _NODE_FORCE_PHYSICS_MODEL_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoForcePhysicsModel : public Proto {
@@ -56,13 +47,11 @@ public:
 
     virtual const char* getComponentName(void) const 
                            { return "ParticleSystems"; }
-    virtual int     getComponentLevel(void) const { return 1; }
+    virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeForcePhysicsModel(
-                                    m_scene, m_proto); }
- 
+    virtual Node   *copy() const { return new NodeForcePhysicsModel(*this); }
+
     fieldMacros(SFBool, enabled, ProtoForcePhysicsModel);
     fieldMacros(SFVec3f, force, ProtoForcePhysicsModel);
 };
 
-#endif

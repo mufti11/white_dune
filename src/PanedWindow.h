@@ -24,8 +24,6 @@
 #include "SceneView.h"
 #include "List.h"
 #include "swttypedef.h"
-#include "DuneApp.h"
-#include "ExternTheApp.h"
 
 class PanedWindow : public SceneView {
 public:

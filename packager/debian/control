@@ -1,7 +1,7 @@
 Source: whitedune
 Section: graphics
 Priority: optional
-Maintainer: J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>
+Maintainer: J. "MUFTI" Scheurich <mufti11@web.de>
 Build-Depends: debhelper (>= 5), make, bison, flex, gawk, m4, x11proto-core-dev, libexpat1-dev, libxmu-dev, x-dev, libxi-dev, libgl-dev|libgl1-mesa-dev, libglu1-xorg-dev|libglu1-mesa-dev, libmotif-dev|lesstif-dev|lesstif2-dev, libpng-dev|libpng12-dev, libjpeg62-dev, g++, gcc, libusb-devlib, libcurl4-openssl-dev, aqsis, libfreetype6-dev, ttf-bitstream-vera, libcgal-dev, libimlib2-dev
 
 Package: whitedune

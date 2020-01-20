@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LAYOUT_GROUP_H
-#define _NODE_LAYOUT_GROUP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "Scene.h"
 
@@ -58,9 +49,9 @@ public:
                     NodeLayoutGroup(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const { return "Layout"; }
-    virtual int     getComponentLevel(void) const { return 2; }
+    virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeLayoutGroup(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeLayoutGroup(*this); }
 
     virtual void    preDraw(); 
     virtual void    draw(int pass); 
@@ -72,4 +63,3 @@ public:
     fieldMacros(SFVec3f, bboxSize,   ProtoLayoutGroup);
 };
 
-#endif

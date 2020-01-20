@@ -23,6 +23,8 @@
 
 #include "Map.h"
 #include "MyString.h"
-#include "Proto.h"
+
+class Proto;
 
 typedef Map<MyString, Proto *> ProtoMap;
+

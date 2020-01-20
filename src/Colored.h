@@ -25,15 +25,14 @@
 #include "NodeMaterial.h"
 #include "NodeColor.h"
 #include "NodeColorRGBA.h"
-#include "NodeCoordinate.h"
 
 class Colored {
 public:
     virtual NodeColor *getColorNode() = 0;
     virtual NodeColorRGBA *getColorRGBANode() = 0;
     virtual NodeCoordinate *getCoordinateNode(void) = 0;
-    virtual int     colorPerVertexField() = 0;
-    virtual int     colorIndexField() = 0;
+    virtual int     colorPerVertexField() const = 0;
+    virtual int     colorIndexField() const = 0;
 
     NodeMaterial   *getMaterialNode(GeometryNode *node)
                        { return node->getMaterialNode(); }

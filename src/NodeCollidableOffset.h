@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLLIDABLE_OFFSET_H
-#define _NODE_COLLIDABLE_OFFSET_H
+#pragma once
 
 #include "X3DNBodyCollidableNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoCollidableOffset : public X3DNBodyCollidableProto {
@@ -44,8 +42,7 @@ public:
                     NodeCollidableOffset(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeCollidableOffset(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCollidableOffset(*this); }
 
     virtual void    preDraw();
     virtual void    draw(int pass);
@@ -72,4 +69,3 @@ public:
     fieldMacros(SFNode, collidable, ProtoCollidableOffset)
 };
 
-#endif

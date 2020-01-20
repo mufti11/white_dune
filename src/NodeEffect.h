@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_EFFECT_H
-#define _NODE_EFFECT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "DynamicFieldsNode.h"
 
@@ -53,7 +44,7 @@ public:
                     NodeEffect(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeEffect(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeEffect(*this); }
 
     virtual bool    showFields() { return true; }
     virtual void    update();
@@ -63,4 +54,3 @@ public:
     fieldMacros(MFNode,   parts,    ProtoEffect);
 };
 
-#endif

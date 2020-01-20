@@ -22,7 +22,7 @@
 #pragma once
 
 #include "Scene.h"
-#include "Dialog.h"
+#include "CheckBoxWindow.h"
 #include "InteractionDialog.h"
 
 class InteractionDialog2 : public Dialog {
@@ -38,11 +38,14 @@ protected:
     void                SaveData();
     virtual bool        Validate();
     void                OnCommand(int id);
+    void                drawInterface(SDC dc);
     
 protected:
+    CheckBoxWindow        m_window;
     InteractionRouteData *m_routeData;
     MyArray<MyString>     m_sensors;
     MyArray<MyString>     m_protos;
     MyArray<Node *>       m_nodes;
     Scene                *m_scene;
 };
+

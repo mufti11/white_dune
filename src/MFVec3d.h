@@ -23,17 +23,17 @@
 
 #include "MFDouble.h"
 #include "Vec3d.h"
-#include "MFString.h"
 
+class MFString;
 class MFVec3f;
 
 class MFVec3d : public MFDouble {
 public:
                         MFVec3d() : MFDouble(3) {}
                         MFVec3d(int size) : MFDouble(size * 3) {}
-                        MFVec3d(double *values, int len) :
+                        MFVec3d(const double *values, int len) :
                               MFDouble(values, len) {}
-                        MFVec3d(float *values, int len) :
+                        MFVec3d(const float *values, int len) :
                               MFDouble(values, len) {}
                         MFVec3d(MFString *values);
 
@@ -48,15 +48,13 @@ public:
 
     virtual bool        equals(const FieldValue *value) const;
 
-    int                 getSFSize() const 
-                            { return m_value.size() / getStride(); }
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
-    virtual void        setSFValue(int index, double *values);
+    virtual void        setSFValue(int index, const double *values);
     virtual void        setSFValue(int index, double x, double y, double z);
     virtual void        setSFValue(int index, const char* values);
 
-    double             *getValue(int index) const
+    const double       *getValue(int index) const 
                               { return m_value.getData() + index * 3; } 
 
     void                setVec(int index, Vec3d v);
@@ -68,7 +66,7 @@ public:
 
     virtual void        appendSFValue(double x, double y, double z) 
                            { insertSFValue(getSFSize(), x, y, z); }
-    virtual void        appendSFValue(double *values) 
+    virtual void        appendSFValue(const double *values) 
                            { insertSFValue(getSFSize(), values); }
                         
     Vec3d               getMinBoundingBox(void);
@@ -77,8 +75,7 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 };
-

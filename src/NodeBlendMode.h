@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -52,7 +51,7 @@ class NodeBlendMode : public Node {
 public:
                     NodeBlendMode(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeBlendMode(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBlendMode(*this); }
 
     kambiCommonFunctions()
 

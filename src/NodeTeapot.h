@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEAPOT_H
-#define _NODE_TEAPOT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 
@@ -55,7 +46,7 @@ class NodeTeapot : public Node {
 public:
                     NodeTeapot(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeTeapot(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTeapot(*this); }
 
     kambiCommonFunctions()
 
@@ -65,4 +56,3 @@ public:
     fieldMacros(SFNode, texCoord, ProtoTeapot);
 };
 
-#endif

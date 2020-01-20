@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_FONTSTYLE_H
-#define _NODE_FONTSTYLE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "FontStyleNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoFontStyle : public FontStyleProto {
@@ -55,16 +45,15 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeFontStyle(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeFontStyle(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
-    virtual float   getSizeX(void) { return size()->getValue(); }
-    virtual float   getSizeY(void) { return size()->getValue(); }
+    virtual float   getSizeX(void) const { return size()->getValue(); }
+    virtual float   getSizeY(void) const { return size()->getValue(); }
 
     void            setField(int index, FieldValue *value, int cf = -1);
 
     fieldMacros(SFFloat,  size,        ProtoFontStyle)
 };
 
-#endif // _NODE_FONTSTYLE_H

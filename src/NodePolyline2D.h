@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POLYLINE_2D_H
-#define _NODE_POLYLINE_2D_H
+#pragma once
 
-#ifndef _CHAIN_BASED_NODE_H
 #include "ChainBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _SCENE_H
 #include "Scene.h"
-#endif
 
 #include "SFMFTypes.h"
 
@@ -62,7 +53,7 @@ public:
                            { return "Geometry2D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodePolyline2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePolyline2D(*this); }
 
     virtual bool    isInvalidChildNode(void) { return !m_scene->isX3d(); }
     virtual void    setField(int index, FieldValue *value, int cf = -1);
@@ -86,5 +77,3 @@ public:
 protected:
     void            createChain(void);
 };
-
-#endif // _NODE_POLYLINE_2D_H

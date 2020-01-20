@@ -244,7 +244,7 @@ int FieldView::FindField(int field)
 
 void FieldView::OnUpdate(SceneView *sender, int type, Hint *hint) 
 {
-    Path *sel = m_scene->getSelection();
+    const Path *sel = m_scene->getSelection();
     Node *node = sel ? sel->getNode() : NULL;
     int field = sel ? sel->getField() : -1;
     Proto *proto = NULL;
@@ -924,7 +924,7 @@ void FieldView::OnMouseMove(int x, int y, int modifiers)
     UpdateTrackingCursor(x, y);
     if ((m_state == TRACKING) && 
         (m_selectedItem > -1) && (m_selectedItem < (int)m_items.size())) {
-        FieldViewItem  *item = m_items[m_selectedItem];
+        FieldViewItem  *item = m_items[m_selectedItem + 1];
         if (item == NULL)
             return;
         int delta = x - m_trackPoint.x;
@@ -1027,7 +1027,7 @@ void FieldView::StartTracking()
     } else {
         Field *field = m_selectedProto->getField(m_selectedField);
         if (isMFType(field->getType())) {
-            MFieldValue *mvalue = (MFieldValue *) field->getDefault(true);
+            MFieldValue *mvalue = (MFieldValue *)field->getDefault(true);
             mvalue->setSFValue(m_selectedIndex, m_trackValue);
             field->setDefault(mvalue);
         } else 

@@ -19,18 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SUPER_REVOLVER_H
-#define _NODE_SUPER_REVOLVER_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "NodeNurbsCurve.h"
 #include "MeshMorphingNode.h"
-
 #include "SFMFTypes.h"
 
 class SuperRevolverData
@@ -90,7 +84,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }  
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeSuperRevolver( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSuperRevolver(*this); }
 
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);
@@ -152,4 +146,4 @@ protected:
     MyArray<float>     m_chain;
     SuperRevolverData  m_tempStoreData;
 };
-#endif // _NODE_SUPER_REVOLVER_H
+

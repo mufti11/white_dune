@@ -22,7 +22,7 @@
 #pragma once
 
 #include "Node.h"
-#include "ProtoMacros.h" 
+#include "ProtoMacros.h"
 #include "Proto.h"
 #include "GroupNode.h"
 #include "SFMFTypes.h"
@@ -54,7 +54,7 @@ public:
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new StaticGroupNode(*this); }
+    virtual Node   *copy() const { return new StaticGroupNode(*this); }
 
     virtual void    flip(int index);
     virtual void    swap(int fromTo);

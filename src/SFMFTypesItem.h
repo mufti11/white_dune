@@ -23,8 +23,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFMFTYPES_ITEM_H
-#define _SFMFTYPES_ITEM_H
+#pragma once
 
 #include "MFBoolItem.h"
 #include "MFColorItem.h"
@@ -173,6 +172,4 @@
         ret = new FieldViewItem(view); \
         break; \
     }
-
-#endif // _SFMFTYPES_ITEM_H
 

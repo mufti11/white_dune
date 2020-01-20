@@ -21,19 +21,18 @@
 
 #pragma once
 
-# include "MFFloat.h"
+#include "MFFloat.h"
+
 
 class MFMatrix3f : public MFFloat {
 public:
                         MFMatrix3f() : MFFloat() {}
                         MFMatrix3f(int size) : MFFloat(size * 9) {}
-                        MFMatrix3f(MFMatrix3f *values) :
-                                   MFFloat(
-                                    ((MFFloat *)values)->getValues(), 
-                                    ((MFFloat *)values)->getSize()) {}
-                        MFMatrix3f(float *values, int len) :
+                        MFMatrix3f(const MFMatrix3f *values) :
+                              MFFloat(values->getValues(), values->getSize()) {}
+                        MFMatrix3f(const float *values, int len) :
                               MFFloat(values, len) {}
-                        MFMatrix3f(double *values, int len) :
+                        MFMatrix3f(const double *values, int len) :
                               MFFloat(values, len) {}
 
     virtual int         getType() const { return MFMATRIX3F; }
@@ -45,20 +44,19 @@ public:
 
     virtual bool        equals(const FieldValue *value) const;
 
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const float *values);
 
-    float              *getValue(int index) const
+    const float        *getValue(int index) const
                               { return m_value.getData() + index * 9; } 
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const float *values);
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    bool                supportAnimation(bool x3d) { return false; }
+    bool                supportAnimation(bool x3d) const { return false; }
 
     randomFunction(MFMatrix3f)                  
 };
-

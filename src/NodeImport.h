@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -49,7 +48,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_CORE; }
     virtual int     getX3dVersion(void) const { return 0; }    
-    virtual Node   *copy() { return new NodeImport(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeImport(*this); }
 
     virtual int     write(int filedes, int indent, bool avoidUse = false);
     virtual int     writeXml(int filedes, int indent, int containerField = -1, 

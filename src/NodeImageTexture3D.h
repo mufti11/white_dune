@@ -30,6 +30,7 @@
 #include "freewrl_define.h"
 #include "Texture3DNode.h"
 
+
 class NodeVolumeData;
 class MyMesh;
 
@@ -77,7 +78,8 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing3D"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() { return new NodeImageTexture3D(m_scene, m_proto); }
+    virtual Node   *copy() const 
+                        { return (Node *)new NodeImageTexture3D(*this); }
 
     bool            texture_load_from_file(textureTableIndexStruct_s* tti, 
                                            const char*filename);
@@ -151,10 +153,10 @@ typedef struct _s_list_t {
 
 typedef void f_free_t(void *ptr);
 #if defined(DEBUG_MALLOC) && defined(DEBUG_MALLOC_LIST)
-    s_list_t* _ml_new(const void *elem, int line, char *fi);
+extern s_list_t* _ml_new(const void *elem, int line, char *fi);
 #define ml_new(elem) _ml_new(elem,__LINE__,__FILE__)
-# else
-    s_list_t* ml_new(const void *elem);
+#else
+extern s_list_t* ml_new(const void *elem);
 #endif
 
 struct tRenderTextures{

@@ -38,7 +38,7 @@ SFVec3fItem::Draw(SDC dc, int x, int y)
 FieldValue *
 SFVec3fItem::OnMouseMove(FieldValue *value, int index, int delta)
 {
-    SFVec3f *v = (SFVec3f *) value;
+    SFVec3f *v = (SFVec3f *)value;
     SFVec3f *newValue = new SFVec3f(v->getValue());
     newValue->setValue(index, v->getValue(index) + delta * 0.02f);
     return newValue;

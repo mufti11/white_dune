@@ -24,7 +24,6 @@
 
 #include "SFString.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 SFString::SFString(const MyString &value)
   : m_value(value)
@@ -38,7 +37,7 @@ SFString::SFString(const char *str)
 
 
 MyString    
-SFString::getString(int index, int stride)
+SFString::getString(int index, int stride) const
 {    
     MyString ret = "";
     ret += '"';
@@ -63,7 +62,7 @@ SFString::equals(const FieldValue *value) const
       !strcmp(((SFString *) value)->getValue(), (const char *) m_value);
 }
 
-int SFString::writeData(int f, int i)
+int SFString::writeData(int f, int i) const
 {
     RET_ONERROR( mywritestr(f, "\"") )
     RET_ONERROR( mywritestr(f, (const char *)m_value) )
@@ -71,7 +70,7 @@ int SFString::writeData(int f, int i)
     return(0);
 }
 
-int SFString::writeDataXml(int f, int i)
+int SFString::writeDataXml(int f, int i) const
 {
     MyString string = "";
     string += m_value;
@@ -86,7 +85,7 @@ int SFString::writeDataXml(int f, int i)
     return(0);
 }
 
-int SFString::writeRaw(int f, int indent)
+int SFString::writeRaw(int f, int indent) const
 {
     RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
     RET_ONERROR( mywritestr(f, m_value) )
@@ -95,7 +94,7 @@ int SFString::writeRaw(int f, int indent)
     return(0);
 }
 
-int SFString::write4FieldPipe(int filedes, int indent)
+int SFString::write4FieldPipe(int filedes, int indent) const
 {
     return ((FieldValue *)this)->writeDequoted(filedes, m_value);
 }
@@ -110,7 +109,7 @@ SFString::getTypeC(int languageFlag) const
 
 int
 SFString::writeCWonderlandArt(int filedes, const char* variableName,
-                              int languageFlag)
+                              int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, variableName) )
     RET_ONERROR( mywritestr(filedes, " = ") )
@@ -120,7 +119,7 @@ SFString::writeCWonderlandArt(int filedes, const char* variableName,
 }
 
 MyString
-SFString::getEcmaScriptComment(MyString name, int flags)
+SFString::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

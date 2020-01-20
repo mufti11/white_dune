@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_WONDERLAND_IMPORT_JAVA_H
-#define _NODE_WONDERLAND_IMPORT_JAVA_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoWonderlandImportJava : public Proto {
@@ -54,8 +45,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeWonderlandImportJava( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeWonderlandImportJava(*this); }
     
     virtual int     writeProto(int filedes);
     
@@ -64,4 +54,3 @@ public:
     fieldMacros(MFString, code, ProtoWonderlandImportJava)
 };
 
-#endif

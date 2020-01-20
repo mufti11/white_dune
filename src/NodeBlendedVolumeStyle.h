@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -58,8 +57,7 @@ public:
         { return "VolumeRendering"; }
     virtual int     getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node   *copy() { return new NodeBlendedVolumeStyle(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBlendedVolumeStyle(*this); }
 
     fieldMacros(SFBool, enabled, ProtoBlendedVolumeStyle);
     fieldMacros(SFNode, renderStyle, ProtoBlendedVolumeStyle);
@@ -78,4 +76,3 @@ public:
     float m_weightConstant1;
     float m_weightConstant2;
 };
-

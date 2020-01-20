@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GEO_COORDINATE_H
-#define _NODE_GEO_COORDINATE_H
+#pragma once
 
-#ifndef _GEO_NODE_H
 #include "GeoNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class MyMeshDouble;
@@ -47,7 +39,7 @@ public:
     FieldIndex point;
     FieldIndex pointX3D;
 
-    virtual int     translateField(int field);
+    virtual int     translateField(int field) const;
 };
 
 class NodeGeoCoordinate : public GeoNode {
@@ -56,7 +48,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeGeoCoordinate(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeGeoCoordinate(*this); }
 
     Node           *convert2Vrml(void);
 
@@ -91,7 +83,6 @@ public:
 
     virtual bool    canMoveTo(int direction) { return true; }
 
-/*
     virtual NodeColor *getColorNode() { 
                         if (hasParent())
                             return getParent()->getColorNode();
@@ -102,7 +93,7 @@ public:
                             return getParent()->getColorRGBANode();
                         return NULL;     
                     }
-*/
+
     fieldMacros(MFString, point,    ProtoGeoCoordinate)
     fieldMacros(MFVec3d,  pointX3D, ProtoGeoCoordinate)
 protected:
@@ -113,5 +104,4 @@ protected:
     MyArray<int> m_selectedVerticesHandles;
 };
 
-#endif // _NODE_GEO_COORDINATE_H
 

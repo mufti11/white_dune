@@ -23,18 +23,18 @@
 
 #include "MFFloat.h"
 #include "Vec4f.h"
-#include "SFString.h"
+
+class MFVec2f;
 
 class MFVec4f : public MFFloat {
 public:
                         MFVec4f() : MFFloat() {}
                         MFVec4f(int size) : MFFloat(size * 4) {}
-                        MFVec4f(MFVec4f *values) :
-                               MFFloat(((MFVec4f *)values)->getValues(),
-                                       ((MFVec4f *)values)->getSize()) {}
-                        MFVec4f(float *values, int len) :
+                        MFVec4f(const MFVec4f *values) :
+                              MFFloat(values->getValues(), values->getSize()) {}
+                        MFVec4f(const float *values, int len) :
                               MFFloat(values, len) {}
-                        MFVec4f(double *values, int len) :
+                        MFVec4f(const double *values, int len) :
                               MFFloat(values, len) {}
 
                         MFVec4f(MFVec2f *mfVec2f);
@@ -48,20 +48,20 @@ public:
 
     virtual bool        equals(const FieldValue *value) const;
 
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
-    virtual void        setSFValue(int index, float *values);
+    virtual void        setSFValue(int index, const float *values);
     virtual void        setSFValue(int index, float x, float y, float z, 
                                               float w);
 
-    float              *getValue(int index)
+    const float        *getValue(int index) const
                               { return m_value.getData() + index * 4; } 
 
     void                setVec(int index, Vec4f v);
     Vec4f               getVec(int index);
 
     virtual void        insertSFValue(int index, FieldValue *value);
-    virtual void        insertSFValue(int index, float *values);
+    virtual void        insertSFValue(int index, const float *values);
     virtual void        insertSFValue(int index, float x, float y, float z, 
                                                  float w);
 
@@ -74,10 +74,9 @@ public:
     void                flip(int index);
     void                swap(int fromTo);
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    bool                supportAnimation(bool x3d) { return true; }
+    bool                supportAnimation(bool x3d) const { return true; }
 
     randomFunction(MFVec4f)                  
 };
-

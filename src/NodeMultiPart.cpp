@@ -94,8 +94,8 @@ NodeMultiPart::load()
     baseURL += TheApp->getImportURL();
     MyString path;
     for (int i = 0; i < url()->getSize(); i++) {
-        URL url1(baseURL, url()->getValue(i)->getValue());
-        if (strlen(url()->getValue(i)->getValue()) > 0) 
+        URL url1(baseURL, url()->getValue(i));
+        if (strlen(url()->getValue(i)) > 0) 
             m_scene->Download(url1, &path);
     }
 }

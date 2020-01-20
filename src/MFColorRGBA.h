@@ -27,7 +27,7 @@ class MFColorRGBA : public MFFloat {
 public:
                         MFColorRGBA();
                         MFColorRGBA(int size) : MFFloat(size * 4) {}
-                        MFColorRGBA(MFColorRGBA *values) :
+                        MFColorRGBA(const MFColorRGBA *values) :
                               MFFloat(values->getValues(), values->getSize()) {}
                         MFColorRGBA(float *values, int len) :
                                 MFFloat(values, len) {}
@@ -43,23 +43,23 @@ public:
 
     virtual bool        equals(const FieldValue *value) const;
 
-    float              *getValue(int index) const
+    const float        *getValue(int index) const 
                            { return m_value.getData() + index * 3; }
 
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, float r, float g, float b, float a);
-    virtual void        setSFValue(int index, float* values);
+    virtual void        setSFValue(int index, const float* values);
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, float r, float g, float b, float a);
-    virtual void        insertSFValue(int index, float *values);
+    virtual void        insertSFValue(int index, const float *values);
 
     virtual void        appendSFValue(float r, float g, float b, float a)
                            { insertSFValue(getSFSize(), r, g, b, a); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     randomFunction(MFColorRGBA)                  
 };

@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MATERIAL_H
-#define _NODE_MATERIAL_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "swt.h"
-
 #include "SFMFTypes.h"
 
 class ProtoMaterial : public WonderlandExportProto {
@@ -68,7 +58,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeMaterial( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMaterial(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual int     getAnimationCommentID(void);
@@ -123,4 +113,3 @@ public:
     float *m_verifiedColor;
 };
 
-#endif // _NODE_MATERIAL_H

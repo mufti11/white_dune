@@ -21,19 +21,11 @@
  * Implements the Cover/Covise CubeTexture node
  */
 
-#ifndef _NODE_CUBE_TEXTURE_H
-#define _NODE_CUBE_TEXTURE_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCubeTexture : public Proto {
@@ -62,7 +54,7 @@ public:
                     NodeCubeTexture(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeCubeTexture(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCubeTexture(*this); }
 
     fieldMacros(MFString, urlXP,     ProtoCubeTexture)
     fieldMacros(MFString, urlXN,     ProtoCubeTexture)
@@ -74,5 +66,3 @@ public:
     fieldMacros(SFBool,   repeatT,   ProtoCubeTexture)
     fieldMacros(SFInt32,  blendMode, ProtoCubeTexture)
 };
-
-#endif // _NODE_CUBE_TEXTURE_H

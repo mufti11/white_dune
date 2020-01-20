@@ -679,8 +679,8 @@ swInitialize(int *argc, char **argv,int stereotype)
             TheDefaultFont = swFindFont(fontname, SW_PLAIN, fontsize);
         }
 #else
-        fontname = "helvetica";
-        fontsize = 12;
+        fontname = "Fixed";
+        fontsize = 15;
         TheDefaultFont = swFindFont(fontname, SW_PLAIN, fontsize);
 #endif
     }
@@ -4518,7 +4518,7 @@ update()
     for (i = 0; i < NumWindowsToUpdate; i++) {
         SWND w = WindowsToUpdate[i];
 
-        if (w && w->invx1 >= 0 && w->exposeCallback && !w->isHidden) {
+        if (w && w->invx1 >= 0 && w->exposeCallback) {
             w->exposeCallback(w->data, w->invx1, w->invy1,
                               w->invx2 - w->invx1 + 1, 
                               w->invy2 - w->invy1 + 1);

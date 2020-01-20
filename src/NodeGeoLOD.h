@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GEO_LOD_H
-#define _NODE_GEO_LOD_H
+#pragma once
 
-#ifndef _NODE_H
 #include "GeoNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoGeoLOD : public GeoProto {
@@ -55,7 +47,7 @@ public:
     FieldIndex referenceBindableDescription;
     FieldIndex render;
 
-    virtual int     translateField(int field);
+    virtual int     translateField(int field) const;
 };
 
 class NodeGeoLOD : public GeoNode {
@@ -64,7 +56,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeGeoLOD(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeGeoLOD(*this); }
 
     void            setField(int index, FieldValue *value, int cf = -1);
     Node           *convert2Vrml(void);
@@ -100,5 +92,4 @@ protected:
     Node *m_child4;
 };
 
-#endif // _NODE_GEO_LOD_H
 

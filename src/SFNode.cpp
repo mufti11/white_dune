@@ -21,22 +21,24 @@
 
 #include <stdio.h>
 #include "stdafx.h"
-
-#include "SFNode.h"
 #include "Proto.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
+
+#include "SFNode.h"
 #include "Node.h"
-#include "Scene.h"
 
 SFNode::SFNode(Node *value) : FieldValue()
 {
     m_value = value;
+    if (m_value) 
+        m_value->ref();
 }
 
 SFNode::SFNode(Node *value, int containerField) : FieldValue()
 {
     m_value = value;
+    if (m_value) 
+        m_value->ref();
     m_containerField = containerField;
 }
 
@@ -44,6 +46,7 @@ SFNode::SFNode(const SFNode &other) : FieldValue()
 {
     if (other.m_value) {
         m_value = other.m_value->copy();
+        m_value->ref();
         if (!m_value->isPROTO())
             m_value->reInit();
     } else {
@@ -64,8 +67,7 @@ SFNode::copy()
     ref();
     return ret; 
 }
-
-int SFNode::writeData(int f, int i)
+int SFNode::writeData(int f, int i) const
 {
     // hidden by SFNode::write and SFNode::writeXml
     assert(false);
@@ -73,7 +75,7 @@ int SFNode::writeData(int f, int i)
 }
 
 int
-SFNode::write(int filedes, int indent)
+SFNode::write(int filedes, int indent) const
 { 
     if (m_value)
         RET_ONERROR( m_value->write(filedes, indent) )  
@@ -86,7 +88,7 @@ SFNode::write(int filedes, int indent)
 
 int
 SFNode::writeXml(int filedes, int indent, int containerField, 
-                 bool avoidUse)
+                 bool avoidUse) const
 { 
     if (m_value)
         return m_value->writeXml(filedes, indent + TheApp->GetIndent(), 
@@ -97,7 +99,7 @@ SFNode::writeXml(int filedes, int indent, int containerField,
 }
 
 const char *
-SFNode::getTypeC(int languageFlag) const
+SFNode::getTypeC(int languageFlag) const 
 { 
     if (languageFlag & JAVA_SOURCE)
         return TheApp->getCNodeName();
@@ -105,7 +107,7 @@ SFNode::getTypeC(int languageFlag) const
 }
 
 int
-SFNode::writeC(int filedes, const char* variableName, int languageFlag)
+SFNode::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, variableName) )
     RET_ONERROR( mywritestr(filedes, " = ") )
@@ -131,7 +133,7 @@ SFNode::writeC(int filedes, const char* variableName, int languageFlag)
 }
 
 int
-SFNode::writeCDeclaration(int filedes, int languageFlag)
+SFNode::writeCDeclaration(int filedes, int languageFlag) const
 {
     if (m_value)
         RET_ONERROR( m_value->getProto()->writeCDeclaration(filedes,
@@ -149,18 +151,18 @@ SFNode::readLine(int index, char *line)
 bool
 SFNode::equals(const FieldValue *value) const
 {
-    return value->getType() == SFNODE && 
-           ((SFNode *) value)->getValue() == m_value;
+    return value->getType() == SFNODE && ((SFNode *) value)->getValue() == m_value;
 }
 
 FieldValue *
-SFNode::addNode(Node *node, int index)
+SFNode::addNode(Node *node, int index) const
 {
+    assert(m_value == NULL);
     return new SFNode(node);
 }
 
 FieldValue *
-SFNode::removeNode(Node *node, int index)
+SFNode::removeNode(Node *node, int index) const
 {
     if (m_value != node)
         return NULL;
@@ -168,7 +170,7 @@ SFNode::removeNode(Node *node, int index)
 }
 
 MyString
-SFNode::getEcmaScriptComment(MyString name, int flags)
+SFNode::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -295,21 +297,21 @@ SFNode::isUseNode(void) const
 }
 
 const char *
-SFNode::getDefName(void)
+SFNode::getDefName(void) const
 {
     if (m_value != NULL)
         return m_value->getName();
     return "";
 }
 
-int SFNode::writeAc3d(int f, int indent)
+int SFNode::writeAc3d(int f, int indent) const
 {
     if (m_value)
         return m_value->writeAc3d(f, indent);
     return 0;
 }
 
-int SFNode::writeRib(int f, int indent)
+int SFNode::writeRib(int f, int indent) const
 {
     if (m_value)
         return m_value->writeRib(f, indent);
@@ -324,14 +326,14 @@ SFNode::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
         node->handleAc3dMaterial(callback, scene);        
 }
 
-int SFNode::writeCattGeo(int f, int indent)
+int SFNode::writeCattGeo(int f, int indent) const
 {
     if (m_value)
         return m_value->writeCattGeo(f, indent);
     return 0;
 }
 
-int SFNode::writeLdrawDat(int f, int indent)
+int SFNode::writeLdrawDat(int f, int indent) const
 {
     if (m_value)
         return m_value->writeLdrawDat(f, indent);
@@ -346,6 +348,16 @@ SFNode::getRandom(Scene *scene, int nodeType)
     int type = nodeType;
     if (nodeType == -1)
         type = (int)(RAND() * LAST_NODE);
+    else if (type > ANY_NODE)
+        for (int i = 0; i < LAST_NODE; i++) {
+            for (int j = LAST_NODE - i; j >= 0; j--) {
+               type = i + (int)(RAND() * j);
+               if (matchNodeClass(type, nodeType))
+                   break;
+            }
+            if (matchNodeClass(type, nodeType))
+               break;
+        }
     return new SFNode(scene->createNode(type));
 }
 

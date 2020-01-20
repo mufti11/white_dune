@@ -19,18 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GEO_ELEVATION_GRID_H
-#define _NODE_GEO_ELEVATION_GRID_H
+#pragma once
 
-#ifndef _GEO_NODE_H
 #include "GeoNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "NodeAppearance.h"
 #include "NodeMaterial.h"
 #include "NodeImageTexture.h"
@@ -38,7 +31,6 @@
 #include "NodeGeoOrigin.h"
 #include "GeometryNode.h"
 #include "MeshBasedNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoGeoElevationGrid : public GeoProto {
@@ -74,7 +66,7 @@ public:
     FieldIndex zSpacingX3D;
     x3domGeometryCommonFieldIndex()
 
-    virtual int     translateField(int field);
+    virtual int     translateField(int field) const;
 };
 
 class NodeGeoElevationGrid : public MeshBasedNode {
@@ -84,9 +76,8 @@ public:
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual const char* getComponentName(void) const { return "Geospatial"; }
-    virtual int     getComponentLevel(void) const { return 1; }
-    virtual Node   *copy() 
-                    { return new NodeGeoElevationGrid(m_scene, m_proto); }
+    virtual int         getComponentLevel(void) const { return 1; }
+    virtual Node   *copy() const { return new NodeGeoElevationGrid(*this); }
 
     virtual void    draw();
 
@@ -100,6 +91,11 @@ public:
     virtual bool    validHandle(int handle);
     virtual bool    checkHandle(int handle);
     virtual int     getMaxHandle(void);
+
+    virtual NodeColor *getColorNode() 
+                    { return (NodeColor *)color()->getValue(); }
+    virtual NodeColorRGBA *getColorRGBANode() 
+                    { return (NodeColorRGBA *)color()->getValue(); }
 
     GeometryNodeDeclarationMacros()
 
@@ -141,5 +137,4 @@ protected:
                                bool triangulate = true);
 };
 
-#endif // _NODE_GEO_ELEVATION_GRID_H
 

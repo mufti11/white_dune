@@ -97,7 +97,7 @@ ProtoGeoLOD::create(Scene *scene)
 }
 
 int 
-ProtoGeoLOD::translateField(int field)
+ProtoGeoLOD::translateField(int field) const
 {
     bool x3d = m_scene->isX3d();
     if (x3d && (field == center))
@@ -249,8 +249,8 @@ NodeGeoLOD::loadChild(Node *node, MFString *urls)
     m_baseURL += TheApp->getImportURL();
     for (int i = 0; i < urls->getSize(); i++) {
         MyString path;
-        URL urlI(m_baseURL, urls->getValue(i)->getValue());
-        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
+        URL urlI(m_baseURL, urls->getValue(i));
+        if (urls->getValue(i).length() == 0) continue;
         if (m_scene->Download(urlI, &path)) {
             TheApp->setImportURL(urlI.GetPath());
             struct stat fileStat;

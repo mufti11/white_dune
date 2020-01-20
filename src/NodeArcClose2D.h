@@ -50,11 +50,11 @@ class NodeArcClose2D : public MeshBasedNode {
 public:
                     NodeArcClose2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeArcClose2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeArcClose2D(*this); }
 
     virtual const char* getComponentName(void) const 
                            { return "Geometry2D"; }
-    virtual int     getComponentLevel(void) const { return 2; }
+    virtual int         getComponentLevel(void) const { return 2; }
 
     virtual int     getX3dVersion(void) const { return 0; }
 

@@ -44,3 +44,4 @@ private:
     int                 m_to;
     int                 m_points;
 };
+

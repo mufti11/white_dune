@@ -19,26 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_TEXTURE_SURFACE_H
-#define _NODE_NURBS_TEXTURE_SURFACE_H
+#pragma once
 
-#ifndef NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-#ifndef _SFMFTYPES_H
-# include "SFMFTypes.h"
-#endif
-
+#include "Vec3f.h"
+#include "SFMFTypes.h"
 #include "NodeNurbsTextureCoordinate.h"
 
 class ProtoNurbsTextureSurface : public ProtoNurbsTextureCoordinate {
@@ -57,12 +44,10 @@ protected:
 
 public:
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeNurbsTextureSurface(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsTextureSurface(*this); }
 
     virtual bool    avoidProtoOnPureVrml(void) { return true; }
     int             writeProto(int filedes);
     int             write(int filedes, int indent, bool avoidUse = false);
 };
 
-#endif // _NODE_NURBS_TEXTURE_SURFACE_H

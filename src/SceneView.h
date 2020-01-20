@@ -21,12 +21,11 @@
 
 #pragma once
 
-#include "Hint.h"
 #include "DuneApp.h"
-
-class Scene;
-
+#include "Scene.h"
 #include "swttypedef.h"
+
+class Hint;
 
 #ifdef HAVE_UPDATE_DEBUG
 # define CASE_UPDATE(x) case x: \
@@ -46,8 +45,8 @@ public:
     virtual void        OnDraw(int x, int y, int width, int height, 
                                bool update = false) {}
     virtual void        OnSize(int width, int height) {}
-    virtual void        OnMouseEnter();
-    virtual void        OnMouseLeave();
+    virtual void        OnMouseEnter() {m_scene->setHasFocus();}
+    virtual void        OnMouseLeave() {m_scene->deleteHasFocus();}
     virtual void        OnKeyDown(int key, int x, int y, int modifiers) {}
     virtual void        OnKeyUp(int key, int x, int y, int modifiers) {}
     virtual void        OnLButtonDown(int x, int y, int modifiers) {}

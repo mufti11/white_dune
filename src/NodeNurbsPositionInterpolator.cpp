@@ -55,8 +55,7 @@ ProtoNurbsPositionInterpolator::ProtoNurbsPositionInterpolator(Scene *scene)
           addField(MFDOUBLE, "knot", new MFDouble()));
     order.set(
           addField(SFINT32, "order", new SFInt32(4), new SFInt32(2)));
-    if (order > -1)
-        getField(order)->addX3dDefault(new SFInt32(3));
+    getField(order)->addX3dDefault(new SFInt32(3));
     addEventIn(SFFLOAT, "set_fraction", EIF_RECOMMENDED);
     addEventOut(SFVEC3F, "value_changed", EOF_RECOMMENDED);
 
@@ -102,7 +101,7 @@ NodeNurbsPositionInterpolator::getControlPoints(void)
 }
 
 void
-NodeNurbsPositionInterpolator::setControlPoints(MFVec3f *points)
+NodeNurbsPositionInterpolator::setControlPoints(const MFVec3f *points)
 {
     NodeCoordinate *coord = (NodeCoordinate *)controlPoint()->getValue();
     if (!coord)

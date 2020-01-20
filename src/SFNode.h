@@ -28,10 +28,8 @@
 #include "FieldValue.h"
 #endif
 
-#include "Node.h"
-#include "ac3dMaterialCallback.h"
-
 class Element;
+class Node;
 
 class SFNode : public FieldValue {
 public:
@@ -41,29 +39,19 @@ public:
                         SFNode(void) { m_value = NULL; } // silly default
     virtual            ~SFNode();
 
-    virtual int         getType() const 
-                           { 
-                           if (m_value && (Node *)m_value->hasNeedRef())
-                               m_value->ref();
-                           return SFNODE; 
-                           }
-    virtual const char *getTypeName() const
-                           {
-                           if (m_value && m_value->hasNeedRef())
-                               m_value->ref();
-                           return "SFNode"; 
-                           }
+    virtual int         getType() const { return SFNODE; }
+    virtual const char *getTypeName() const { return "SFNode"; }
 
-    virtual int         writeData(int filedes, int i); 
-    virtual int         write(int filedes, int indent);
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         write(int filedes, int indent) const;
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool aviodUse);
+                                 bool aviodUse) const;
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
+                               int languageFlag) const;
     virtual const char *getTypeC(int languageFlag) const;
     virtual int         writeCDeclaration(int filedes, 
-                                          int languageFlag);  
+                                          int languageFlag) const;  
 
     virtual bool        readLine(int index, char *line);
 
@@ -75,8 +63,6 @@ public:
     virtual bool        isNull() const { return m_value == NULL; }
 
     Node               *getValue() const { 
-                                         if (m_value && m_value->hasNeedRef())
-                                             m_value->ref();
 #ifdef HAVE_NULL_COMPARE
                                          // strange fix needed for problem
                                          // incomplete PROTO implementation
@@ -88,62 +74,34 @@ public:
     virtual Node       *convert2X3d(void);
     virtual Node       *convert2Vrml(void);
 
-    virtual FieldValue *addNode(Node *node, int index = -1);
-    virtual FieldValue *removeNode(Node *node, int index = 1);
+    virtual FieldValue *addNode(Node *node, int index = -1) const;
+    virtual FieldValue *removeNode(Node *node, int index = 1) const;
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     virtual bool        isNode(void) const { return true; } 
 
     virtual bool        isNullNode(void) const;
     virtual bool        isUseNode(void) const;
 
-    virtual const char *getDefName(void);
+    virtual const char *getDefName(void) const;
 
-    virtual int         writeAc3d(int filedes, int indent);
+    virtual int         writeAc3d(int filedes, int indent) const;
     virtual void        handleAc3dMaterial(ac3dMaterialCallback callback, 
                                            Scene* scene);
 
-    virtual int         writeRib(int filedes, int indent);
+    virtual int         writeRib(int filedes, int indent) const;
 
-    virtual int         writeCattGeo(int filedes, int indent);
+    virtual int         writeCattGeo(int filedes, int indent) const;
 
-    virtual int         writeLdrawDat(int filedes, int indent);
+    virtual int         writeLdrawDat(int filedes, int indent) const;
 
-    virtual bool        supportAnimation(bool x3d) { return false; }
+    virtual bool        supportAnimation(bool x3d) const { return false; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 
-    virtual int         getContainerField(void) const
-                            { return m_containerField; }
+    virtual int         getContainerField(void) { return m_containerField; }
     virtual void        setContainerField(int f) { m_containerField = f; }
-
-    virtual void        ref()
-                           {
-                           if (m_value && m_value->hasNeedRef()) {
-                               m_value->ref();
-                               m_value->unsetNeedRef();
-                               return;
-                           }
-                           FieldValue::ref();
-                           } 
-    virtual void        unref()
-                           { 
-                           if (m_value && m_value->hasNeedRef()) {
-                               m_value->ref();
-                               m_value->unsetNeedRef();
-                           }
-                           FieldValue::unref();                           
-                           }
-    virtual int         getRefs() 
-                           {
-                           if (m_value && m_value->hasNeedRef()) {
-                               m_value->ref();
-                               m_value->unsetNeedRef();
-                           }
-                           return FieldValue::getRefs();
-                           }
-                            
 
 private:
     Node               *m_value;

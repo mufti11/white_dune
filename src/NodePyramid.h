@@ -20,16 +20,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PYRAMID_H
-#define _NODE_PYRAMID_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "GeometryNode.h"
 #include "SFMFTypes.h"
 
@@ -58,7 +52,7 @@ public:
                     NodePyramid(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodePyramid(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePyramid(*this); }
 
     x3domGeometryCommonFieldMacros(ProtoPyramid) 
     fieldMacros(SFBool, ccw, ProtoPyramid)
@@ -72,4 +66,3 @@ public:
     fieldMacros(SFFloat, ytop, ProtoPyramid)
 };
 
-#endif

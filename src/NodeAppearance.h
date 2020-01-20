@@ -21,13 +21,11 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
 #include "DuneApp.h"
 #include "SFMFTypes.h"
-#include "MFNode.h"
 
 class ProtoAppearance : public WonderlandExportProto {
 public:
@@ -73,7 +71,7 @@ public:
 
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeAppearance(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeAppearance(*this); }
 
     void            bind();
     void            unbind();

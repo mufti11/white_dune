@@ -25,7 +25,6 @@
 #include "MFColor.h"
 #include "SFColor.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFColor::MFColor() : MFFloat()
 {
@@ -54,12 +53,11 @@ MFColor::readLine(int index, char *line)
 bool
 MFColor::equals(const FieldValue *value) const
 {
-    return value->getType() == MFCOLOR && 
-                               MFFloat::equals((MFFloat *) value);
+    return value->getType() == MFCOLOR && MFFloat::equals((const MFFloat *) value);
 }
 
 FieldValue *
-MFColor::getSFValue(int index)
+MFColor::getSFValue(int index) const
 {
     return new SFColor(m_value.getData() + index * 3);
 } 
@@ -67,11 +65,11 @@ MFColor::getSFValue(int index)
 void
 MFColor::setSFValue(int index, FieldValue *value)
 {
-    setSFValue(index, (float *)((SFColor *) value)->getValue());
+    setSFValue(index, ((SFColor *) value)->getValue());
 }
 
 void
-MFColor::setSFValue(int index, float *values)
+MFColor::setSFValue(int index, const float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value[index * getStride() + i] = values[i];
@@ -96,7 +94,7 @@ MFColor::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-MFColor::getEcmaScriptComment(MyString name, int flags)
+MFColor::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -181,11 +179,11 @@ MFColor::getEcmaScriptComment(MyString name, int flags)
 void 
 MFColor::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, (float *)((SFColor *)value)->getValue()); 
+    insertSFValue(index, ((SFColor *)value)->getValue()); 
 }
 
 void 
-MFColor::insertSFValue(int index, float *values)
+MFColor::insertSFValue(int index, const float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);

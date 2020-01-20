@@ -23,7 +23,6 @@
 
 #include "Dialog.h"
 #include "swttypedef.h"
-
 #ifndef INT_MAX 
 # include <limits.h>
 #endif

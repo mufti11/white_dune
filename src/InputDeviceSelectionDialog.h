@@ -65,3 +65,4 @@ public:
     SWND combo_existing_devices;
     SWND button_delete_device;
 };
+

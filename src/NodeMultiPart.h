@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MULTI_PART_H
-#define _NODE_MULTI_PART_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "NodeGroup.h"
-
 #include "SFMFTypes.h"
 
 class ProtoMultiPart : public ProtoGroup {
@@ -65,7 +55,7 @@ class NodeMultiPart : public NodeGroup {
 public:
                     NodeMultiPart(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeMultiPart(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMultiPart(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -84,4 +74,3 @@ public:
     fieldMacros(MFString, urlIDMap, ProtoMultiPart)
 };
 
-#endif

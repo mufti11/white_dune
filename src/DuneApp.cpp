@@ -39,6 +39,7 @@
 
 #include "parser.h"
 #include "DuneApp.h"
+#include "Scene.h"
 #include "Path.h"
 #include "MainWindow.h"
 #include "URL.h"
@@ -47,8 +48,6 @@
 #include "TexteditSettingsDialog.h"
 #include "xerrorhandler.h"
 #include "WriteFlags.h"
-#include "Scene.h"
-#include "StringArray.h"
 
 #ifdef HAVE_OLPC
 #define DEFAULT_WIDTH 1200
@@ -58,6 +57,7 @@
 #define DEFAULT_HEIGHT 700
 #endif
 
+DuneApp *TheApp = NULL;
 extern void setLanguage(char *lang);
 
 void returntracker(void)
@@ -143,7 +143,6 @@ DuneApp::DuneApp() : PreferencesApp(), EcmaScriptApp(), StereoViewApp(),
     m_numExportFiles = 1;
     m_exitPid = 0;
     m_fullScreenAtBegin = 0;
-    m_compling = false;
 }
 
 void DuneApp::initPreferences(void)
@@ -922,6 +921,7 @@ bool
 DuneApp::AddFile(char* openpath, Scene* scene)
 {
     if (!TheApp->ImportFile(openpath, scene)) {
+        delete scene;
         return false;
     }
     return true;
@@ -993,6 +993,7 @@ DuneApp::OpenFile(const char *openpath)
     scene->setPath(url.ToPath());
 
     if (!ImportFile(openpath, scene)) {
+        delete scene;
         return false;
     }
 
@@ -1084,7 +1085,7 @@ DuneApp::GetNumRecentFiles() const
 const MyString &
 DuneApp::GetRecentFile(int index) const
 {
-    return ((DuneApp *)this)->m_recentFiles[index];
+    return m_recentFiles[index];
 }
 
 void

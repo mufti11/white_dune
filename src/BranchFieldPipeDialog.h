@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Dialog.h"
+
 #include "swttypedef.h"
 #include "MyString.h"
 

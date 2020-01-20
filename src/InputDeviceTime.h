@@ -19,7 +19,5 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
-
 #define INPUTDEVICE_TIME 50
 

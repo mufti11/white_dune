@@ -34,28 +34,26 @@ public:
 
     virtual int         getType() const { return MFBOOL; }
     virtual const char *getTypeName() const { return "MFBool"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse);
+                                 bool avoidUse) const;
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag);
+    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
     virtual const char *getTypeC(int languageFlag) const;
 
     virtual bool        readLine(int index, char *line);
-    virtual int         getNumbersPerType(void) const
-                            { return ((MFBool *)this)->getStride(); }
+    virtual int         getNumbersPerType(void) const { return getStride(); }
 
     virtual bool        equals(const FieldValue *value) const;
     virtual int         getSFSize() const { return m_value.size(); }
-    virtual FieldValue *getSFValue(int index);
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const int value);
     virtual FieldValue *copy();
 
-    bool                getValue(int index) 
-                            { return m_value[index]; }
+    bool                getValue(int index) const { return m_value[index]; }
     const bool         *getValues() const { return m_value.getData(); }
     int                 getSize() const { return m_value.size(); }
 
@@ -63,9 +61,9 @@ public:
     virtual void        insertSFValue(int index, const bool value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual bool        isX3DType() const { return true; }
+    virtual bool        isX3DType() { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 protected:

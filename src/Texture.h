@@ -28,4 +28,3 @@ enum {
     IMG_STATUS_LOADED,
     IMG_STATUS_ERROR
 };
-

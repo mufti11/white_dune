@@ -23,9 +23,8 @@
 
 #include "SceneView.h"
 #include "Array.h"
+#include "MainWindow.h"
 #include "swttypedef.h"
-
-class ToolbarWindow;
 
 class ToolbarWindow : public SceneView {
 public:
@@ -52,3 +51,4 @@ private:
     MyArray<STOOLBAR>   m_toolbars;
     MyArray<SBITMAP>    m_bitmaps;
 };
+

@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COORDINATE_DAMPER_H
-#define _NODE_COORDINATE_DAMPER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "DamperNode.h"
 
@@ -51,8 +42,7 @@ class NodeCoordinateDamper : public DamperNode {
 public:
                     NodeCoordinateDamper(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeCoordinateDamper(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCoordinateDamper(*this); }
 
     void            dynamics(MFVec3f *dest, MFVec3f *val, float alpha);
 
@@ -73,4 +63,3 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif

@@ -36,4 +36,3 @@ public:
     virtual void                InsertSFValue(int index);
     virtual void                RemoveSFValue(int index);
 };
-

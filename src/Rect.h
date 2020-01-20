@@ -38,3 +38,4 @@ public:
 public:
     int             left, top, right, bottom;
 };
+

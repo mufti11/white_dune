@@ -70,3 +70,4 @@ protected:
     SWND commandline;
     SWND check_dcfocus;
 };
+

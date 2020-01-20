@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "SFColor.h"
 #include "SFFloat.h"
@@ -41,7 +40,7 @@ SFColor::SFColor(const float *values)
 }
 
 MyString    
-SFColor::getString(int index, int stride)
+SFColor::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -64,13 +63,6 @@ void SFColor::setValue(float v1, float v2, float v3, float v4)
     m_value[1] = v2;
     m_value[2] = v3;
     m_value[3] = v4;
-}
-
-void SFColor::setSFValue(FieldValue *value)
-{
-     m_value[0] = ((SFColor *)value)->getValue()[0];
-     m_value[1] = ((SFColor *)value)->getValue()[1];
-     m_value[2] = ((SFColor *)value)->getValue()[2];
 }
 
 // silly default
@@ -104,13 +96,13 @@ SFColor::equals(const FieldValue *value) const
 }
 
 int 
-SFColor::writeData(int f, int i)
+SFColor::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g", m_value[0], m_value[1], m_value[2]);
 }
 
 int
-SFColor::writeC(int filedes, const char* variableName, int languageFlag)
+SFColor::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -138,7 +130,7 @@ SFColor::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFColor::getEcmaScriptComment(MyString name, int flags)
+SFColor::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

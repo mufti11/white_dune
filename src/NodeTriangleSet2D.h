@@ -19,30 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TRIANGLE_SET_2D_H
-#define _NODE_TRIANGLE_SET_2D_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-#ifndef _MY_MESH_H
 #include "MyMesh.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif 
-#ifndef _NODE_COORDINATE_H
 #include "NodeCoordinate.h"
-#endif
 #include "SFMFTypes.h"
 
 class ProtoTriangleSet2D : public GeometryProto {
@@ -74,7 +59,7 @@ public:
                            { return "Geometry2D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node *copy() { return new NodeTriangleSet2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTriangleSet2D(*this); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -103,4 +88,3 @@ protected:
     bool            m_colorPerVertexWarning;
 };
 
-#endif 

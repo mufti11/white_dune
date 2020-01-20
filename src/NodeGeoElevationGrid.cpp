@@ -121,7 +121,7 @@ ProtoGeoElevationGrid::create(Scene *scene)
 }
 
 int 
-ProtoGeoElevationGrid::translateField(int field)
+ProtoGeoElevationGrid::translateField(int field) const
 {
     bool x3d = m_scene->isX3d();
     if (x3d) {
@@ -169,8 +169,9 @@ NodeGeoElevationGrid::setField(int index, FieldValue *value, int cf)
     }
 
     if (index == height_Field()) {
-        MFDouble *dvalue = new MFDouble(((MFDouble *)value)->getValues(), 
-                                        ((MFDouble *)value)->getSize());
+        MFFloat *oldValue = (MFFloat *)value;
+        MFDouble *dvalue = new MFDouble(oldValue->getValues(), 
+                                        oldValue->getSize());
         Node::setField(heightX3D_Field(), dvalue, cf);
     }
 
@@ -205,7 +206,7 @@ NodeGeoElevationGrid::convert2Vrml(void)
 
     yScale(new SFFloat(fyScale));
 
-    double *dheight = heightX3D()->getValues();
+    const double *dheight = heightX3D()->getValues();
     height(new MFFloat(dheight, heightX3D()->getSize()));
 
     const double fcreaseAngle = creaseAngleX3D()->getValue();

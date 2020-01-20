@@ -33,4 +33,3 @@ public:
     virtual void        SaveData();
     void                OnCommand(void *id);
 };
-

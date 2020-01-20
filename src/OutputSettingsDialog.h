@@ -23,7 +23,6 @@
 
 #include "Dialog.h"
 
-
 class OutputSettingsDialog : public Dialog
 {
 public:

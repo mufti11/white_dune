@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFIMAGE_ITEM_H
-#define _SFIMAGE_ITEM_H
+#pragma once
 
 #include "MFInt32Item.h"
 
@@ -29,4 +28,3 @@ public:
                         SFImageItem(FieldView *view);
 };
 
-#endif // _SFIMAGE_ITEM_H

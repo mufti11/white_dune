@@ -21,9 +21,12 @@
 
 #pragma once
 
-#include "MyString.h"
+# include "MyString.h"
 #include "Array.h"
 #include "x3dFlags.h"
+
+class Node;
+class Proto;
 
 enum {
     EL_UNKNOWN,
@@ -72,11 +75,6 @@ enum {
     EIF_WONDERLAND_SUPPORTED = 1<<30,
     EOF_WONDERLAND_SUPPORTED = 1<<31
 };
-
-class Proto;
-class Element;
-
-#include "Node.h"
 
 class IsElement {
 public:
@@ -178,5 +176,3 @@ protected:
 };
 
 int indentf(int filedes, int indent);
-
-

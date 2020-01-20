@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_WORLDINFO_H
-#define _NODE_WORLDINFO_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoWorldInfo : public Proto {
@@ -54,7 +45,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }    
-    virtual Node   *copy() { return new NodeWorldInfo(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeWorldInfo(*this); }
 
     virtual bool    hasCoverFields(void) { return true; }   
 
@@ -64,4 +55,3 @@ public:
     fieldMacros(SFBool,   correctSpatializedAudio, ProtoWorldInfo)
 };
 
-#endif // _NODE_WORLDINFO_H

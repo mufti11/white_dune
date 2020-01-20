@@ -21,36 +21,29 @@
 
 #pragma once
 
-#ifndef _ARRAY_H
 # include "Array.h"
-#endif
-#ifndef _MAP_H
 # include "Map.h"
-#endif
-#ifndef _DUNE_STRING_H
 # include "MyString.h"
-#endif
-
-#ifndef _NODE_H
-#include "Node.h"
-#define _NODE_H
-#endif
-
-#include "Element.h"
+# include "Node.h"
 
 #define INVALID_INDEX (-1)
 
-#include "EventIn.h"
-#include "EventOut.h"
-#include "Field.h"
-#include "ExposedField.h"
-#include "FieldValue.h"
-#include "Node.h"
+class Element;
+class EventIn;
+class EventOut;
+class Field;
+class ExposedField;
+class FieldValue;
+class Scene;
+class Node;
 
 #include "ProtoMacros.h"
 #include "StringArray.h"
 #include "NodeList.h"
 #include "InterfaceArray.h"
+
+class NodeScript;
+class ScriptDialog;
 
 enum UrlSchemas {
     URL_NULL,
@@ -75,7 +68,6 @@ public:
     int             eventIn;
 };
 
-class Scene;
 
 class Proto {
 public:
@@ -91,7 +83,7 @@ public:
 
     FieldIndex metadata;
 
-    int metadata_Field(void) { return metadata; }
+    int metadata_Field(void) const { return metadata; }
 
     void                  protoInitializer(Scene *scene, const MyString &name);
 
@@ -99,18 +91,21 @@ public:
     bool                  avoidElement(Element *element, int flag);
 
     virtual int           getType() const { return -1; }
+    virtual int           getNodeClass() const { return CHILD_NODE; }
+
+    bool                  matchNodeClass(int childType) const;
 
     virtual Node         *create(Scene *scene);
     virtual bool          needUpdate(void) { return false; }
 
-    EventIn              *getEventIn(int index)
+    EventIn              *getEventIn(int index) const 
                              { return m_eventIns[index]; }
-    EventOut             *getEventOut(int index)
+    EventOut             *getEventOut(int index) const 
                              { return m_eventOuts[index]; }
-    Field                *getField(int index) { return m_fields[index]; }
-    ExposedField         *getExposedField(int index)
+    Field                *getField(int index) const { return m_fields[index]; }
+    ExposedField         *getExposedField(int index) const 
                              { return m_exposedFields[index]; }
-    Element              *getElement(int elementType, int index);
+    Element              *getElement(int elementType, int index) const;
 
     int                   getNumFields() const { return m_fields.size(); }
     int                   getNumEventIns() const { return m_eventIns.size(); }
@@ -122,35 +117,35 @@ public:
     int                   getFieldOfExposed(ExposedField *field);
 
     int                   lookupEventIn(const MyString &name, 
-                                        bool x3d = false);
+                                        bool x3d = false) const;
     int                   lookupEventOut(const MyString &name, 
-                                         bool x3d = false);
+                                         bool x3d = false) const;
     int                   lookupField(const MyString &name, 
-                                      bool x3d = false);
+                                      bool x3d = false) const;
     int                   lookupExposedField(const MyString &name,
-                                             bool x3d = false);
+                                             bool x3d = false) const;
 
     int                   lookupIsEventIn(const char *name, 
-                                          int elementType = -1);
+                                          int elementType = -1) const;
     int                   lookupIsExposedField(const char *name,
-                                               int elementType = -1);
+                                               int elementType = -1) const;
 
     int                   lookupIsEventIn(Node *node, int eventIn,
-                                          int elementType = -1);
+                                          int elementType = -1) const;
     int                   lookupIsEventOut(Node *node, int eventOut,
-                                           int elementType = -1);
-    int                   lookupIsField(Node *node, int field);
-    int                   lookupIsExposedField(Node *node, int field);
+                                           int elementType = -1) const;
+    int                   lookupIsField(Node *node, int field) const;
+    int                   lookupIsExposedField(Node *node, int field) const;
 
-    int                   getNumIsMSNodes(void);
-    Node                 *getIsMSNode(int numNode);
-    int                   getIsMSNodeField(int numNode);
+    int                   getNumIsMSNodes(void) const;
+    Node                 *getIsMSNode(int numNode) const;
+    int                   getIsMSNodeField(int numNode) const;
 
     virtual const MyString &getName(bool x3d) const { return m_name; }
 
-    bool                  canWriteElement(Element *element, bool x3d);
-    int                   write(int filedes, int indent, int flags);
-    int                   writeEvents(int filedes, int indent, int flags);
+    bool                  canWriteElement(Element *element, bool x3d) const;
+    int                   write(int filedes, int indent, int flags) const;
+    int                   writeEvents(int filedes, int indent, int flags) const;
 
     virtual int           writeCDeclaration(int filedes, int languageFlag);
     int                   writeCDeclarationEventIn(int f, int i, 
@@ -271,13 +266,13 @@ public:
 
     bool                  isDefined(void) { return m_defined; } 
 
-    void                  setAppinfo(MyString appinfo) 
+    void                  setAppinfo(const MyString& appinfo) 
                              { m_appinfo = appinfo; } 
     MyString              getAppinfo() const 
                              { return m_appinfo; } 
-    void                  setDocumentation(MyString documentation) 
+    void                  setDocumentation(const MyString& documentation) 
                              { m_documentation = documentation; } 
-    MyString              getDocumentation() 
+    MyString              getDocumentation() const 
                              { return m_documentation; } 
 
     bool                  isDynamicProto(void) { return m_dynamicProto; } 
@@ -379,7 +374,7 @@ public:
                               }
 
 protected:
-    Proto                *copy() { return new Proto(*this); }
+    Proto                *copy() const { return new Proto(*this); }
     int                   addField(int fieldType, const MyString &name,
                                    FieldValue *defaultValue, int nodeType);
     int                   addField(int fieldType, const MyString &name,
@@ -405,14 +400,14 @@ protected:
                                           const char **strings,
                                           const MyString &x3dName);
     int                   lookupSimpleEventIn(const MyString &name, 
-                                              bool x3d);
+                                              bool x3d) const;
     int                   lookupSimpleEventOut(const MyString &name,
-                                               bool x3d);
+                                               bool x3d) const;
     void                  setFieldFlags(int index, int flags);
  
 protected:
-    Scene                  *m_scene;
-    MyString                m_name;
+    Scene                *m_scene;
+    MyString              m_name;
     MyArray<EventIn *>      m_eventIns;
     MyArray<EventOut *>     m_eventOuts;
     MyArray<Field *>        m_fields;
@@ -505,12 +500,12 @@ public:
                                        languageFlag);
                         }
 
-    virtual int         getType(); 
-    virtual int         getNodeClass();
-    virtual int         getProfile(void);
-    virtual Node       *copy() { return new NodePROTO(*this); }
+    virtual int         getType() const; 
+    virtual int         getNodeClass() const;
+    virtual int         getProfile(void) const;
+    virtual Node       *copy() const { return new NodePROTO(*this); }
 
-    virtual Proto      *getPrimaryProto()
+    virtual Proto      *getPrimaryProto() const
                            { return m_indexedNodes[0]->getProto(); }
 
     virtual void        preDraw();
@@ -520,7 +515,7 @@ public:
     virtual void        update();
     virtual void        reInit(void);
 
-    virtual FieldValue *getField(int index);
+    virtual FieldValue *getField(int index) const;
     virtual void        setField(int index, FieldValue *value, int cf = -1);
     void                receiveProtoEvent(int eventOut, double timestamp, 
                                          FieldValue *value);
@@ -577,6 +572,7 @@ protected:
 
 typedef MyArray<Proto *>  ProtoArray;
 int getMaskedNodeClass(int nodeClass);
+bool matchNodeClass(int nodeType, int childType, bool repeat = true);
 
 class WonderlandExportProto : public Proto {
 public:
@@ -585,9 +581,4 @@ public:
 
     virtual bool        isWonderlandExported(void) { return true; }
 };
-
-#ifndef _PROTO_H
-#define _PROTO_H
-#endif
-
 

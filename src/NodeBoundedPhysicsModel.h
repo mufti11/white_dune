@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -51,8 +50,7 @@ public:
                            { return "ParticleSystems"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node       *copy() { return new NodeBoundedPhysicsModel(
-                                        m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBoundedPhysicsModel(*this); }
 
     fieldMacros(SFBool, enabled,  ProtoBoundedPhysicsModel);
     fieldMacros(SFNode, geometry, ProtoBoundedPhysicsModel);

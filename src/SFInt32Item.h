@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFINT32_ITEM_H
-#define _SFINT32_ITEM_H
+#pragma once
     
 #include "FieldViewItem.h"
 
@@ -39,4 +38,3 @@ protected:
     bool                m_hexadezimal;
 };
 
-#endif // _SFINT32_ITEM_H

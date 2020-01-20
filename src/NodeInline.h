@@ -21,12 +21,12 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
-#include "NodeList.h"
 #include "SFMFTypes.h"
+
+class NodeList;
 
 class NodeInlineLoadControl;
 
@@ -63,7 +63,7 @@ public:
     virtual int     getComponentLevel(void) const;
     virtual const char *getComponentName(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeInline(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeInline(*this); }
     virtual void    addFieldNodeList(int index, NodeList *childList, 
                                      int containerField = -1);
 

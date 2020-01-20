@@ -195,16 +195,6 @@ Matrix::identity()
     return r;
 }
 
-bool
-Matrix::isZero(void)
-{
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (m_mat[i][j] != 0)
-                return false;
-    return true;
-}
-
 void printf(Matrix mat)
 {
     printf("%f %f %f %f\n", mat[0], mat[1], mat[2], mat[3]);
@@ -254,20 +244,6 @@ Vec3d
 Matrixd::operator *(const Vec3d &v) const
 {
     Vec3d r;
-    double iw;
-
-    r.x = m_mat[0][0]*v.x + m_mat[1][0]*v.y + m_mat[2][0]*v.z + m_mat[3][0];
-    r.y = m_mat[0][1]*v.x + m_mat[1][1]*v.y + m_mat[2][1]*v.z + m_mat[3][1];
-    r.z = m_mat[0][2]*v.x + m_mat[1][2]*v.y + m_mat[2][2]*v.z + m_mat[3][2];
-    iw = 1.0f / (m_mat[0][3]*v.x + m_mat[1][3]*v.y + m_mat[2][3]*v.z + m_mat[3][3]);
-    
-    return r * iw;
-}
-
-Vec3f
-Matrixd::operator *(const Vec3f &v) const
-{
-    Vec3f r;
     double iw;
 
     r.x = m_mat[0][0]*v.x + m_mat[1][0]*v.y + m_mat[2][0]*v.z + m_mat[3][0];
@@ -371,23 +347,5 @@ Matrixd::identity()
     r.m_mat[0][0] = r.m_mat[1][1] = r.m_mat[2][2] = r.m_mat[3][3] = 1.0f;
 
     return r;
-}
-
-bool
-Matrixd::isZero(void)
-{
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (m_mat[i][j] != 0)
-                return false;
-    return true;
-}
-
-void printf(Matrixd mat)
-{
-    printf("%f %f %f %f\n", mat[0], mat[1], mat[2], mat[3]);
-    printf("%f %f %f %f\n", mat[4], mat[5], mat[6], mat[7]);
-    printf("%f %f %f %f\n", mat[8], mat[9], mat[10], mat[11]);
-    printf("%f %f %f %f\n", mat[12], mat[13], mat[4], mat[15]);
 }
 

@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PRIMITIVE_PICK_SENSOR_H
-#define _NODE_PRIMITIVE_PICK_SENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPrimitivePickSensor : public Proto {
@@ -60,8 +51,7 @@ public:
     virtual const char* getComponentName(void) const { return "Picking"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 2; } 
-    virtual Node   *copy() { return new NodePrimitivePickSensor( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePrimitivePickSensor(*this); }
 
     fieldMacros(SFBool,   enabled,          ProtoPrimitivePickSensor);
     fieldMacros(MFString, objectType,       ProtoPrimitivePickSensor);
@@ -71,4 +61,3 @@ public:
     fieldMacros(SFString, sortOrder,        ProtoPrimitivePickSensor);
 };
 
-#endif

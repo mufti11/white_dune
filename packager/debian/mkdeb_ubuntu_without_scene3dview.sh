@@ -33,7 +33,7 @@ whitedune ($VER-1) experimental; urgency=low
 EOT
 
 DATE=`date -R`
-echo ' -- J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>  '$DATE >> /tmp/$VERSION_DEBIAN/debian/changelog
+echo ' -- J. "MUFTI" Scheurich <mufti11@web.de>  '$DATE >> /tmp/$VERSION_DEBIAN/debian/changelog
 echo >> /tmp/$VERSION_DEBIAN/debian/changelog
 
 cat changelog >> /tmp/$VERSION_DEBIAN/debian/changelog

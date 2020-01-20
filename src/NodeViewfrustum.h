@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_VIEWFRUSTUM_H
-#define _NODE_VIEWFRUSTUM_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiViewpointCommonFields.h"
 
@@ -55,7 +46,7 @@ public:
                     NodeViewfrustum(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; } 
-    virtual Node   *copy() { return new NodeViewfrustum(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeViewfrustum(*this); }
 
     fieldMacros(SFBool,     bind, ProtoViewfrustum)
     fieldMacros(SFString,   description, ProtoViewfrustum)
@@ -64,4 +55,3 @@ public:
     fieldMacros(SFMatrix4f, projection, ProtoViewfrustum)
 };
 
-#endif

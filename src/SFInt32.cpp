@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "SFInt32.h"
 
@@ -32,7 +31,7 @@ SFInt32::SFInt32(int value)
 }
 
 MyString    
-SFInt32::getString(int index, int stride)
+SFInt32::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -41,7 +40,7 @@ SFInt32::getString(int index, int stride)
     return ret;
 }
 
-int SFInt32::writeData(int f, int i)
+int SFInt32::writeData(int f, int i) const
 {
     return mywritef(f, "%d", m_value);
 }
@@ -75,7 +74,7 @@ void SFInt32::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFInt32::getEcmaScriptComment(MyString name, int flags)
+SFInt32::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

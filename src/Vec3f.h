@@ -27,4 +27,4 @@
 typedef Vec3x<float> Vec3f;
 
 inline void printf(Vec3f vec) { printf("%f %f %f\n", vec.x, vec.y, vec.z); }
-
+ 

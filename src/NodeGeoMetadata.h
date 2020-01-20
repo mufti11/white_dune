@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GEO_METADATA_H
-#define _NODE_GEO_METADATA_H
+#pragma once
 
-#ifndef _NODE_H
-# include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
+#include "Node.h"
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoGeoMetadata : public Proto {
@@ -55,12 +47,11 @@ public:
     virtual const char* getComponentName(void) const { return "Geospatial"; }
     virtual int     getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeGeoMetadata(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeGeoMetadata(*this); }
 
     fieldMacros(MFNode,   data,    ProtoGeoMetadata)
     fieldMacros(MFString, summary, ProtoGeoMetadata)
     fieldMacros(MFString, url,     ProtoGeoMetadata)
 };
 
-#endif // _NODE_GEO_METADATA_H
 

@@ -33,9 +33,9 @@ public:
 
     virtual int         getType() const { return SFTIME; }
     virtual const char *getTypeName() const { return "SFTime"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
     virtual const char *getDefaultC(int languageFlag) const { return "0"; }
@@ -51,10 +51,10 @@ public:
     double              getValue() const { return m_value; }
 
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual bool        supportAnimation(bool x3d) { return false; }
-    virtual bool        supportInteraction(void) { return true; }
+    virtual bool        supportAnimation(bool x3d) const { return false; }
+    virtual bool        supportInteraction(void) const { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype) 
                            { return new SFTime(FLOAT_RAND()); }

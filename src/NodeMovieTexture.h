@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MOVIETEXTURE_H
-#define _NODE_MOVIETEXTURE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "KambiTextureCommonFields.h"
-
 #include "SFMFTypes.h"
 
 class ProtoMovieTexture : public Proto {
@@ -77,7 +67,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeMovieTexture(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMovieTexture(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -128,4 +118,3 @@ public:
      int m_sourceNumber;
 };
 
-#endif // _NODE_MOVIETEXTURE_H

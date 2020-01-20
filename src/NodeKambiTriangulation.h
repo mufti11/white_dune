@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KAMBI_TRIANGULATION_H
-#define _NODE_KAMBI_TRIANGULATION_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "KambiCommonFunctions.h"
-
 #include "SFMFTypes.h"
 
 class ProtoKambiTriangulation : public Proto {
@@ -55,8 +45,7 @@ class NodeKambiTriangulation : public Node {
 public:
                     NodeKambiTriangulation(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeKambiTriangulation( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeKambiTriangulation(*this); }
 
     kambiCommonFunctions()
 
@@ -64,5 +53,3 @@ public:
     fieldMacros(SFInt32, quadricStacks, ProtoKambiTriangulation)
     fieldMacros(SFInt32, rectDivisions, ProtoKambiTriangulation)
 };
-
-#endif 

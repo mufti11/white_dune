@@ -19,12 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFCOLOR_RGBA_H
-#define _SFCOLOR_RGBA_H
+#pragma once
 
-#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
-#endif
 
 class SFColorRGBA : public FieldValue {
 public:
@@ -36,19 +33,19 @@ public:
     virtual int         getType() const { return SFCOLORRGBA; }
     virtual const char *getTypeName() const { return "SFColorRGBA"; }
     virtual int         getStride() const { return 3; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
+                               int languageFlag) const;
     virtual const char *getTypeC(int languageFlag) const { return "float"; }
     virtual bool        isArrayInC(void) const { return true; }
 
     virtual bool        readLine(int index, char *line);
 
-    virtual int         getNumbersPerType(void) { return 4; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 4; }
+    virtual bool        needCheckFloat(void) const { return true; }
 
     virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
@@ -60,11 +57,10 @@ public:
                            { m_value[index] = value; }
     void                setValue(float v1, float v2, float v3);
     void                setValue(float v1, float v2, float v3, float v4);
-    void                setSFValue(FieldValue *value);
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    bool                supportAnimation(bool x3d) { return false; }
+    bool                supportAnimation(bool x3d) const { return false; }
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 protected:
@@ -75,5 +71,3 @@ protected:
     // m_value[3] = -1 means no transparency information
     float               m_value[4];
 };
-
-#endif // _SFColorRGBA_H

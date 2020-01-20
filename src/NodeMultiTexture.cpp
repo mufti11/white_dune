@@ -94,22 +94,21 @@ NodeMultiTexture::setField(int index, FieldValue *value, int cf)
     if (index == mode_Field()) {
         m_modeInt.resize(0);
         for (int i = 0; i < mode()->getSize(); i++) {
-            if (strcmp(mode()->getValue(i)->getValue(), "MODULATE") == 0)
+            if (strcmp(mode()->getValue(i), "MODULATE") == 0)
                 m_modeInt[i] = GL_MODULATE;
-            else if (strcmp(mode()->getValue(i)->getValue(), "REPLACE") == 0)
+            else if (strcmp(mode()->getValue(i), "REPLACE") == 0)
                 m_modeInt[i] = GL_REPLACE;
-            else if (strcmp(mode()->getValue(i)->getValue(), "ADD") == 0)
+            else if (strcmp(mode()->getValue(i), "ADD") == 0)
                 m_modeInt[i] = GL_ADD;
-            else if (strcmp(mode()->getValue(i)->getValue(), "ADDSIGNED") == 0)
+            else if (strcmp(mode()->getValue(i), "ADDSIGNED") == 0)
                 m_modeInt[i] = GL_ADD_SIGNED;
-            else if (strcmp(mode()->getValue(i)->getValue(), "SUBTRACT") == 0)
+            else if (strcmp(mode()->getValue(i), "SUBTRACT") == 0)
                 m_modeInt[i] = GL_SUBTRACT;
-            else if (strcmp(mode()->getValue(i)->getValue(), "ADDSIGNED") == 0)
+            else if (strcmp(mode()->getValue(i), "ADDSIGNED") == 0)
                 m_modeInt[i] = GL_ADD_SIGNED;
-            else if (strcmp(mode()->getValue(i)->getValue(), "OFF") == 0)
+            else if (strcmp(mode()->getValue(i), "OFF") == 0)
                 m_modeInt[i] = -1;
-            else if (strcmp(mode()->getValue(i)->getValue(),
-                            "DOTPRODUCT3") == 0)
+            else if (strcmp(mode()->getValue(i), "DOTPRODUCT3") == 0)
                 m_modeInt[i] = GL_DOT3_RGBA;
             else {
                 // unknown mode

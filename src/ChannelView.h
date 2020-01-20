@@ -27,7 +27,9 @@
 #include "Rect.h"
 #include "Point.h"
 #include "SceneView.h"
-#include "Node.h"
+
+class Node;
+class DuneDoc;
 
 enum {
     NORMAL,
@@ -37,7 +39,7 @@ enum {
 
 #include "swttypedef.h"
 
-#include "Interpolator.h"
+class Interpolator;
 
 class ChannelView : public SceneView
 {

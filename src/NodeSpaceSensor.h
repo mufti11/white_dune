@@ -21,19 +21,11 @@
  * Implements the Cover/Covise SpaceSensor node
  */
 
-#ifndef _NODE_SPACESENSOR_H
-#define _NODE_SPACESENSOR_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoSpaceSensor : public Proto {
@@ -59,7 +51,7 @@ public:
                     NodeSpaceSensor(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodeSpaceSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeSpaceSensor(*this); }
 
     fieldMacros(SFBool,  autoOffset,      ProtoSpaceSensor)
     fieldMacros(SFBool,  enabled,         ProtoSpaceSensor)
@@ -69,4 +61,3 @@ public:
     fieldMacros(SFVec3f, offset,          ProtoSpaceSensor)
 };
 
-#endif // _NODE_SPACESENSOR_H

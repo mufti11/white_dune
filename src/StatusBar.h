@@ -42,3 +42,4 @@ private:
     SceneView          *m_parent;
     SSTATUSBAR          m_bar;
 };
+

@@ -108,7 +108,7 @@ MeshMorphingNode::addToConvertedNodes(int flags)
 void 
 MeshMorphingNode::findInterpolators(InterpolatorInfo& info)
 {
-    MyArray<Node *> nodeList;
+    MyArray<const Node *> nodeList;
     MyArray<int> fieldList;
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         int type = m_proto->getField(i)->getType();
@@ -126,7 +126,7 @@ MeshMorphingNode::findInterpolators(InterpolatorInfo& info)
     
     for (long i = 0; i < fieldList.size(); i++) {
         Interpolator *inter = m_scene->findUpstreamInterpolator(nodeList[i], 
-                                                                fieldList[i]);
+                                                               fieldList[i]);
         if (inter != NULL) {
             info.interpolator.append(inter);
             info.node.append(nodeList[i]);

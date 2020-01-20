@@ -21,22 +21,28 @@
 
 #pragma once
 
-
-#include "Scene.h"
 #include "PanedWindow.h"
-#include "SceneView.h"
-#include "ChannelView.h"
-#include "ToolbarWindow.h"
-#include "StatusBar.h"
-#include "ScriptEdit.h"
-#include "NodeShape.h"
+#include "Scene.h"
+
+#ifdef HAVE_SAND
+#include "nebula/ExportNebula.h"
+#endif
+
+class SceneView;
+class ChannelView;
+class ToolbarWindow;
+class StatusBar;
+class ScriptEdit;
+class ObjectEdit;
+class ImageTextureEdit;
+class PixelTextureEdit;
+class MovieTextureEdit;
+class AudioClipEdit;
+class NodeShape;
+
 #include "swttypedef.h"
 #include "ColorConversion.h"
 #include "NodeNurbsCurve.h"
-
-#ifdef HAVE_SAND
-# include "nebula/ExportNebula.h"
-#endif
 
 enum SiblingCommands {
      MOVE_SIBLING_UP,
@@ -154,10 +160,11 @@ public:
     bool                OnFileExportRib();
     bool                OnFileExportCattGeo();
     bool                OnFileExportLdrawDat();
-    void                OnFileExportOff();
 #ifdef HAVE_LIBCGAL
-    void                OnFileImportOff();
+    bool                OnFileImportOff();
 #endif
+    void                OnFileExportOff();
+    int                 writeOff(int filedes);
     int                 OnTimer();
     bool                SaveModified();
     void                setStatusText(const char *str);
@@ -186,7 +193,7 @@ public:
     void                UpdateStaticMenuCoverNodes(void);
     void                UpdateStaticMenuKambiNodes(void);
     void                UpdateStaticMenuX3domNodes(void);
-    void                UpdateObjectEdit(Path *selection);
+    void                UpdateObjectEdit(const Path *selection);
     void                OnScriptEditorReadyCallback(void);
     void                OnTextEditorReadyCallback(void);
     void                OnImageTextureEditorReadyCallback(void);
@@ -554,3 +561,4 @@ protected:
     ExportNebula        m_nebulaExporter;
 #endif
 };
+

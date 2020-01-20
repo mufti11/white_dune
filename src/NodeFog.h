@@ -19,23 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_FOG_H
-#define _NODE_FOG_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "FogMacros.h"
-
 #include "swt.h"
-
 #include "SFMFTypes.h"
 
 class ProtoFog : public Proto {
@@ -58,7 +48,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeFog(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeFog(*this); }
     virtual void    preDraw();
     virtual void    apply();
 
@@ -77,4 +67,3 @@ protected:
     float           m_matrix[16];
 };
 
-#endif // _NODE_FOG_H

@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_DISK_2D_H
-#define _NODE_DISK_2D_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
 #include "SFMFTypes.h"
 
 class ProtoDisk2D : public Proto {
@@ -60,7 +51,7 @@ class NodeDisk2D : public MeshBasedNode {
 public:
                     NodeDisk2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeDisk2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeDisk2D(*this); }
 
     virtual const char* getComponentName(void) const 
                            { return "Geometry2D"; }
@@ -92,4 +83,3 @@ protected:
 
 };
 
-#endif

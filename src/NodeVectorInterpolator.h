@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_VECTOR_INTERPOLATOR_H
-#define _NODE_VECTOR_INTERPOLATOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoVectorInterpolator : public Proto {
@@ -52,12 +43,11 @@ class NodeVectorInterpolator : public Node {
 public:
                     NodeVectorInterpolator(Scene *scene, Proto *proto);
 
-//    virtual int    getProfile(void) const { return PROFILE_; }
+//    virtual int     getProfile(void) const { return PROFILE_; }
 //    virtual const char* getComponentName(void) const { return ""; }
 //    virtual int         getComponentLevel(void) const { return -1; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeVectorInterpolator( 
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeVectorInterpolator(*this); }
 
     virtual bool    isKambiNode(void) { return true; }
 
@@ -65,4 +55,3 @@ public:
     fieldMacros(MFFloat, keyValue, ProtoVectorInterpolator);
 };
 
-#endif

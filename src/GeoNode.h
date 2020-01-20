@@ -24,6 +24,7 @@
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
+
 #include "SFMFTypes.h"
 
 class GeoProto : public Proto {
@@ -43,4 +44,5 @@ public:
     fieldMacros(SFNode,   geoOrigin, GeoProto)
     fieldMacros(MFString, geoSystem, GeoProto)
 };
+
 

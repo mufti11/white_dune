@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LINESET_H
-#define _NODE_LINESET_H
+#pragma once
 
-#ifndef _GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _COLORED_H
 #include "Colored.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoLineSet : public GeometryProto {
@@ -68,7 +58,7 @@ public:
                            { return "Rendering"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeLineSet( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeLineSet(*this); }
 
     virtual void    draw();
 
@@ -95,9 +85,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField()
+    virtual int     colorPerVertexField() const 
                        { return -1; }
-    virtual int     colorIndexField()
+    virtual int     colorIndexField() const
                        { return -1; }
 
     fieldMacros(MFNode,  attrib,      ProtoLineSet)
@@ -111,6 +101,3 @@ public:
 
     void            lineDraw();
 };
-
-
-#endif // _NODE_LINESET_H

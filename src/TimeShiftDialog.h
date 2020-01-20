@@ -44,4 +44,3 @@ private:
     float       m_fraction;
     bool        m_wrapAround;
 };
-

@@ -34,4 +34,3 @@ public:
 
 typedef MyArray<InterfaceData *> InterfaceArray;
 
-

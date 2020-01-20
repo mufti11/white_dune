@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KAMBI_OCTREE_PROPERTIES_H
-#define _NODE_KAMBI_OCTREE_PROPERTIES_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 
@@ -52,9 +43,8 @@ public:
 class NodeKambiOctreeProperties : public Node {
 public:
                     NodeKambiOctreeProperties(Scene *scene, Proto *proto);
- 
-    virtual Node *copy() { return new NodeKambiOctreeProperties( 
-                           m_scene, m_proto); }
+
+    virtual Node   *copy() const { return new NodeKambiOctreeProperties(*this); }
 
     kambiCommonFunctions()
 
@@ -62,4 +52,3 @@ public:
     fieldMacros(SFInt32, leafCapacity, ProtoKambiOctreeProperties);
 };
 
-#endif

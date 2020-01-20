@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -51,7 +50,7 @@ public:
     virtual const char* getComponentName(void) const { return "CADGeometry"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node   *copy() { return new NodeCADLayer(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCADLayer(*this); }
 
     virtual void    preDraw();
     virtual void    draw(int pass);
@@ -60,3 +59,4 @@ public:
     fieldMacros(MFBool,   visible,    ProtoCADLayer)
     fieldMacros(SFBool,   render,     ProtoCADLayer)
 };
+

@@ -36,19 +36,20 @@ public:
                              bool ignoreStrangePath = false);
                        ~Path();
 
-    const int          *getPath() { return m_path; }
-    int                 getPathLen() { return m_len; }
+    const int          *getPath() const { return m_path; }
+    int                 getPathLen() const { return m_len; }
     const NodeList     *getNodes() const { return &m_nodes; }
-    Node               *getNode() { return m_node; }
-    Proto              *getProto(Scene *scene);
-    Node               *getParent() { return m_parent; }
-    int                 getField() { return m_field; }
-    int                 getParentField() { return m_parentField; }
-    Node               *getNextNode(Node *node, int field, int i);
-    void                printStrangePath(Node *node, int field, int depth);
-    bool                isProto(Scene *scene)
+    Node               *getNode() const { return m_node; }
+    Proto              *getProto(Scene *scene) const;
+    Node               *getParent() const { return m_parent; }
+    int                 getField() const { return m_field; }
+    int                 getParentField() const { return m_parentField; }
+    Node               *getNextNode(Node *node, int field, int i) const;
+    void                printStrangePath(Node *node, int field, int depth) 
+                            const;
+    bool                isProto(Scene *scene) const
                             { return (getProto(scene) && (getPathLen() == 3)); }
-    void                dump();
+    void                dump() const;
     int                *copyPathInt(void);
 protected:
     int                *m_path;

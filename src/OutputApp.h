@@ -21,7 +21,7 @@
 
 #pragma once
 
-bool parseCommandlineArgumentOutput(int & i,int argc, char** argv);
+extern bool parseCommandlineArgumentOutput(int & i,int argc, char** argv);
 
 enum {
     MATERIAL_NAME_BEFORE_LAST_UNDERSCORE = 1,

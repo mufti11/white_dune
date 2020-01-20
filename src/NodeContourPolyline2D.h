@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CONTOUR_POLYLINE_2D_H
-#define _NODE_CONTOUR_POLYLINE_2D_H
+#pragma once
 
-#ifndef _CHAIN_BASED_NODE_H
 #include "ChainBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoContourPolyline2D : public Proto {
@@ -49,8 +41,7 @@ class NodeContourPolyline2D : public Node {
 public:
                     NodeContourPolyline2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeContourPolyline2D(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeContourPolyline2D(*this); }
 
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 3; }
@@ -69,4 +60,3 @@ public:
     virtual bool    hasControlPoints(void) { return lineSegments()->getSize(); }
 };
 
-#endif

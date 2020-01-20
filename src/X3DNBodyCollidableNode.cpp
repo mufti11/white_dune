@@ -66,11 +66,11 @@ X3DNBodyCollidableNode::transform()
         glTranslatef(ftranslation[0], ftranslation[1], ftranslation[2]);
         glRotatef(RAD2DEG(frotation[3] * m_scene->getUnitAngle()), 
               frotation[0], frotation[1], frotation[2]);
-        glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+        glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
         glPopMatrix();
         m_matrixDirty = false;
     }
-    glMultMatrixd((GLdouble *) m_matrix);
+    glMultMatrixf((GLfloat *) m_matrix);
 }
 
 void

@@ -25,8 +25,6 @@
 #include "x3dFlags.h"
 #include "DuneApp.h"
 
-class Proto;
-
 Element::Element(const Element *ptr)
 {
     m_type = ptr->m_type;
@@ -34,7 +32,7 @@ Element::Element(const Element *ptr)
     m_x3dName = ptr->m_x3dName;
     m_flags = ptr->m_flags;
     for (long i = 0; i < ptr->m_isArray.size(); i++)
-        m_isArray[i] = ((Element *)ptr)->m_isArray[i];
+        m_isArray[i] = ptr->m_isArray[i];
     m_appinfo = "";
     m_appinfo += ptr->m_appinfo; 
     m_documentation = "";

@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CONTACT_H
-#define _NODE_CONTACT_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoContact : public Proto {
@@ -61,7 +59,8 @@ public:
                            { return "RigidBodyPhysics"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node   *copy() { return new NodeContact(m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodeContact(*this); }
 
     virtual bool        showFields() { return true; }
 
@@ -82,6 +81,4 @@ public:
     fieldMacros(SFFloat,  softnessErrorCorrection,  ProtoContact)
     fieldMacros(SFVec2f,  surfaceSpeed,             ProtoContact)
 };
-
-#endif
 

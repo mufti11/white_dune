@@ -23,8 +23,6 @@
 
 #include "Matrix.h"
 #include "swttypedef.h"
-
-
 #ifndef INT_MAX
 # include <limits.h>
 #endif
@@ -106,10 +104,10 @@ public:
     void        drawRocketHandles(Node *node, float scale);
     void        drawHoverHandles(Node *node, float scale);
 
-    void        drawJointOrRotationHandles(Node* node, int handle, Matrixd m, 
+    void        drawJointOrRotationHandles(Node* node, int handle, Matrix m, 
                                            float scale);
 
-    void        drawJointHandles(Node* node, Matrixd m, float scale, 
+    void        drawJointHandles(Node* node, Matrix m, float scale, 
                                  int handle = HUMAN_JOINT);
 
     void        drawVectorHandle(int handleName, float x, float y, float z,

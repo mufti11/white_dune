@@ -61,7 +61,7 @@ public:
                     NodeCOVER(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeCOVER(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCOVER(*this); }
 
     fieldMacros(SFVec3f,    position1,        ProtoCOVER)
     fieldMacros(SFVec3f,    position2,        ProtoCOVER)

@@ -21,30 +21,29 @@
 
 #pragma once
 
-# include "FieldValue.h"
-# include "Vec3f.h"
-# include "Quaternion.h"
+#include "FieldValue.h"
+#include "Vec3f.h"
+#include "Quaternion.h"
 
 template<class X> class SfVec3x : public FieldValue {
 public:
-    virtual int         getType() { return -1; }
-    virtual const char *getTypeName() { return ""; }
+    virtual int         getType() const=0;
+    virtual const char *getTypeName() const=0;
 
-    virtual int         writeData(int filedes, int i) { return 0;} 
+    virtual int         writeData(int filedes, int i) const = 0; 
 
-    virtual bool        readLine(int index, char *line) { return false; }
+    virtual bool        readLine(int index, char *line)=0;
 
-    virtual bool        equals(const FieldValue *value) { return false; }
+    virtual bool        equals(const FieldValue *value) const=0;
 
-    virtual void        clamp(const FieldValue *min, const FieldValue *max) {}
+    virtual void        clamp(const FieldValue *min, const FieldValue *max)=0;
 
-    virtual MyString    getEcmaScriptComment(MyString name, int flags)
-                            { return "{}\n"; }
+    virtual MyString    getEcmaScriptComment(MyString name, int flags) const=0;
 
-    virtual int         getNumbersPerType(void) { return 3; }
-    virtual bool        needCheckFloat(void) { return true; }
+    virtual int         getNumbersPerType(void) const { return 3; }
+    virtual bool        needCheckFloat(void) const { return true; }
 
-    virtual FieldValue *copy() { return NULL; }
+    virtual FieldValue *copy()=0;
     
     const X            *getValue() const { return m_value; }
     X                   getValue(int pos) const { return m_value[pos]; }

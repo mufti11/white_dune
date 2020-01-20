@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -80,8 +79,8 @@ public:
     virtual const char* getComponentName(void) const 
                            { return "EnvironmentalEffects"; }
     virtual int         getComponentLevel(void) const { return 3; }
-    virtual Node        *copy() { return new NodeTextureBackground( 
-                                  m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodeTextureBackground(*this); }
 
     virtual void        setField(int field, FieldValue *value, int cf = -1);
     virtual void        preDraw();
@@ -93,8 +92,8 @@ public:
     void                drawSky(void);
     void                drawGround(void);
     void                drawQuad(float r, float va1, float va2, 
-                                 float h1, float h2, float *newColor);
-    void                setColor(float *newColor);
+                                 float h1, float h2, const float *newColor);
+    void                setColor(const float *newColor);
 private:
     NodeImageTexture   *m_imageTextures[6];
 };

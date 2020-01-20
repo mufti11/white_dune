@@ -12,13 +12,11 @@
 
    http://www1.acm.org/pubs/tog/GraphicsGems/gemsiv/euler_angle/
 */
+/**** EulerAngles.h - Support for 24 angle schemes ****/
+/* Ken Shoemake, 1993 */
 
 #pragma once
 
-/**** EulerAngles.h - Support for 24 angle schemes ****/
-/* Ken Shoemake, 1993 */
-#ifndef _H_EulerAngles
-#define _H_EulerAngles
 #include "QuatTypes.h"
 /*** Order type constants, constructors, extractors ***/
     /* There are 24 possible conventions, designated by:    */
@@ -84,4 +82,4 @@ Quat Eul_ToQuat(EulerAngles ea);
 void Eul_ToHMatrix(EulerAngles ea, HMatrix M);
 EulerAngles Eul_FromHMatrix(HMatrix M, int order);
 EulerAngles Eul_FromQuat(Quat q, int order);
-#endif
+

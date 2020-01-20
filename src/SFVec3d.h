@@ -71,26 +71,22 @@ public:
     virtual int         getType() const { return SFVEC3D; }
     virtual const char *getTypeName() const { return "SFVec3d"; }
     virtual int         getStride() const { return 3; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
     virtual FieldValue *copy() { return new SFVec3d(*this); }
     virtual bool        equals(const FieldValue *value) const;
     virtual void        clamp(const FieldValue *min, const FieldValue *max);
-    virtual bool        supportAnimation(bool x3d) { return false; }
-    virtual bool        supportInteraction(void) { return false; }
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    virtual bool        supportAnimation(bool x3d) const { return false; }
+    virtual bool        supportInteraction(void) const { return false; }
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
+                               int languageFlag) const;
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
     virtual bool        isArrayInC(void) const { return true; }
 
     virtual bool        readLine(int index, char *line);
-
-    virtual int         getNumbersPerType(void) { return 3; }
-    virtual bool        needCheckFloat(void) { return true; }
-
     virtual void        setValue(int index, double value)
                            {
                            assert(index >= 0 && index < 3);
@@ -101,22 +97,7 @@ public:
                            sscanf(value, "%lf %lf %lf",
                                   &m_value[0], &m_value[1], &m_value[2]);
                            }
-    void                setSFValue(FieldValue *value)
-                           {
-                           m_value[0] = ((SFVec3d *)value)->getValue()[0];
-                           m_value[1] = ((SFVec3d *)value)->getValue()[1];
-                           m_value[2] = ((SFVec3d *)value)->getValue()[2];
-                           }
-    Vec3d             gettSFValue(int index) const
-                           {
-                           static Vec3d vec;
-                           vec.x = getValue(index * 3);
-                           vec.y = getValue(index * 3 + 1);
-                           vec.z = getValue(index * 3 + 2);
-                           return vec;
-                           }
-
-    virtual bool        isX3DType() const { return true; }
+    virtual bool        isX3DType() { return true; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
                            { return new SFVec3d(FLOAT_RAND(), FLOAT_RAND(), 

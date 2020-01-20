@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_STRING_SENSOR_H
-#define _NODE_STRING_SENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoStringSensor : public WonderlandExportProto {
@@ -56,12 +47,10 @@ public:
     virtual const char* getComponentName(void) const;
     virtual int     getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeStringSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeStringSensor(*this); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 
     fieldMacros(SFBool, deletionAllowed, ProtoStringSensor)
     fieldMacros(SFBool, enabled,         ProtoStringSensor)
 };
-
-#endif

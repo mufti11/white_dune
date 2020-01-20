@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POSITION_DAMPER_H
-#define _NODE_POSITION_DAMPER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "DamperNode.h"
 #include "SFMFTypes.h"
 
@@ -51,7 +42,7 @@ class NodePositionDamper : public DamperNode {
 public:
                     NodePositionDamper(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodePositionDamper(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePositionDamper(*this); }
 
     virtual void    sendDampedEvent(int eventIn, double timestamp, 
                                     FieldValue * value);
@@ -70,4 +61,3 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif

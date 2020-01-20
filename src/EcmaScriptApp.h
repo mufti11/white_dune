@@ -78,3 +78,4 @@ private:
     bool                m_ecmaScriptAddMathObject;
     bool                m_ecmaScriptAddBrowserObject;
 };
+

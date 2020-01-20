@@ -110,7 +110,7 @@ NodeCoordinate::drawHandles(void)
     glPushName(0);
 
     int mode = m_scene->getSelectionMode();
-    MyMesh *mesh = ((MeshBasedNode *)getParent())->getMesh();
+    MyMesh *mesh = getMesh();
     if (mode == SELECTION_MODE_VERTICES) {
         state.startDrawHandles();
         for (int ci = 0; ci < point()->getSFSize(); ci++) {
@@ -767,6 +767,19 @@ NodeCoordinate::validHandle(int handle)
             return false;
     }
     return true;
+}
+
+MyMesh *
+NodeCoordinate::getMesh(void)
+{
+    NodeIndexedFaceSet *faceSet = NULL;
+    MyMesh *mesh = NULL;
+    if (hasParent())
+        if (getParent()->getType() == VRML_INDEXED_FACE_SET) {
+            faceSet = (NodeIndexedFaceSet *)getParent();
+            mesh = faceSet->getMesh();
+        }
+    return mesh;
 }
 
 void

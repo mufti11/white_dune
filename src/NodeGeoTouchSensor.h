@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GEO_TOUCH_SENSOR_H
-#define _NODE_GEO_TOUCH_SENSOR_H
+#pragma once
 
-#ifndef _GEO_NODE_H
 #include "GeoNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoGeoTouchSensor : public GeoProto {
@@ -52,11 +44,9 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeGeoTouchSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeGeoTouchSensor(*this); }
 
     fieldMacros(SFString, description, ProtoGeoTouchSensor)
     fieldMacros(SFBool,   enabled,     ProtoGeoTouchSensor)
 };
-
-#endif // _NODE_GEO_TOUCH_SENSOR_H
 

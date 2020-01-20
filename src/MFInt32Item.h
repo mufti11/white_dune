@@ -42,3 +42,4 @@ protected:
     const char                 *getMFormat(void);
     bool                        m_hexadezimal;
 };
+

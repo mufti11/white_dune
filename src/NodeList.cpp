@@ -71,7 +71,7 @@ NodeList::canWriteAc3d()
 }
 
 int 
-NodeList::writeAc3d(int f, int indent)
+NodeList::writeAc3d(int f, int indent) const
 {
     int kids = 0;
     for (long i = 0; i < size(); i++)
@@ -92,7 +92,7 @@ NodeList::writeAc3d(int f, int indent)
 }
 
 int 
-NodeList::writeRib(int f, int indent)
+NodeList::writeRib(int f, int indent) const
 {
     for (long i = 0; i < size(); i++)
         if (get(i))
@@ -195,7 +195,7 @@ NodeList::canWriteLdrawDat()
 }
 
 int 
-NodeList::writeLdrawDat(int f, int indent)
+NodeList::writeLdrawDat(int f, int indent) const
 {
     for (long i = 0; i < size(); i++)
         if (get(i) != NULL)

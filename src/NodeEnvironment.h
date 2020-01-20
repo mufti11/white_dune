@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_ENVIRONMENT_H
-#define _NODE_ENVIRONMENT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoEnvironment : public Proto {
@@ -76,7 +67,7 @@ class NodeEnvironment : public Node {
 public:
                     NodeEnvironment(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeEnvironment(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeEnvironment(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -110,4 +101,3 @@ public:
     fieldMacros(SFFloat, userDataFactor, ProtoEnvironment)
 };
 
-#endif

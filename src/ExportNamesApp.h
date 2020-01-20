@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "MyString.h"
+# include "MyString.h"
 
 class ExportNamesApp {
 public:
@@ -55,3 +55,4 @@ protected:
     MyString            m_cSceneGraphName;
     MyString            m_cProcessEventsName;
 };
+

@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFCOLOR_ITEM_H
-#define _SFCOLOR_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 
@@ -40,4 +39,3 @@ public:
     virtual FieldValue *StopEditing(const char *str, int offset);
 };
 
-#endif // _SFCOLOR_ITEM_H

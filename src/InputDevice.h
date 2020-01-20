@@ -739,3 +739,4 @@ public:
 private:
    float maxvalue(int axis) const { return 0.0; }
    };
+

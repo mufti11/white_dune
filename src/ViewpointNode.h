@@ -21,19 +21,17 @@
 
 #pragma once
 
-#include "swt.h"
-
 #include "Node.h"
 #include "ProtoMacros.h"
+#include "Proto.h"
 #include "Quaternion.h"
 #include "Vec3f.h"
+#include "swt.h"
 #include "SFMFTypes.h"
 #include "SFRotation.h"
 #include "CoverNode.h"
 #include "KambiViewpointCommonFields.h"
 #include "DuneApp.h"
-
-#include "Proto.h"
 
 class ViewpointProto : public Proto {
 public:
@@ -45,7 +43,6 @@ public:
     FieldIndex fieldOfView;
     FieldIndex jump;
     FieldIndex orientation;
-    FieldIndex position;
     FieldIndex retainUserOffsets;
     FieldIndex type;
     FieldIndex direction;
@@ -68,19 +65,18 @@ public:
 
     virtual int         getProfile(void) const;
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() { return new ViewpointNode(*this); }
+    virtual Node       *copy() const { return new ViewpointNode(*this); }
 
     virtual void        preDraw(bool useStereo = TheApp->useStereo());
     void                apply(bool useStereo, Vec3d vec, SFRotation rot);
     void                transformForViewpoint(bool useStereo, Vec3d vec, 
                                               SFRotation rot);
 
+    virtual Vec3d       getPosition() const;
+    
+    virtual Quaternion  getOrientation() const;
 
-    virtual Vec3d       getPosition();
-    virtual Quaternion  getOrientation();
-
-    virtual void        setPosition(Vec3d pos);
-    virtual void        setOrientation(Quaternion quat);
+    virtual void        setOrientation(const Quaternion &quat);
 
     SFFloat            *fov() { return fieldOfView(); };
 
@@ -95,7 +91,6 @@ public:
     fieldMacros(SFFloat,    fieldOfView,       ViewpointProto)
     fieldMacros(SFBool,     jump,              ViewpointProto)
     fieldMacros(SFRotation, orientation,       ViewpointProto)
-    fieldMacros(SFVec3f,    position,          ViewpointProto)
     fieldMacros(SFBool,     retainUserOffsets, ViewpointProto)
     fieldMacros(SFString,   type,              ViewpointProto)
     fieldMacros(MFVec3f,    direction,         ViewpointProto)
@@ -109,6 +104,6 @@ public:
 
     fieldMacros(SFBool,     set_bind,          ViewpointProto)
 protected:
-    double                  m_matrix[16];
+    float                   m_matrix[16];
 };
 

@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COMMON_SURFACE_SHADER_H
-#define _NODE_COMMON_SURFACE_SHADER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "NodeGroup.h"
-
 #include "SFMFTypes.h"
 
 class ProtoCommonSurfaceShader : public ProtoGroup {
@@ -122,8 +112,7 @@ class NodeCommonSurfaceShader : public NodeGroup {
 public:
                     NodeCommonSurfaceShader(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeCommonSurfaceShader(
-                                  m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCommonSurfaceShader(*this); }
 
     fieldMacros(SFFloat, alphaFactor, ProtoCommonSurfaceShader)
     fieldMacros(SFNode, alphaTexture, ProtoCommonSurfaceShader)
@@ -198,4 +187,3 @@ public:
     fieldMacros(SFInt32, transmissionTextureId, ProtoCommonSurfaceShader)
 };
 
-#endif

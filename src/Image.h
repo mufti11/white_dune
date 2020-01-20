@@ -45,3 +45,4 @@ private:
     int                 m_height;
     int                 m_components;
 };
+

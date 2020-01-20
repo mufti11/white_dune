@@ -19,23 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_FILL_PROPERTIES_H
-#define _NODE_FILL_PROPERTIES_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoFillProperties : public Proto {
@@ -59,9 +48,9 @@ public:
                     NodeFillProperties(Scene *scene, Proto *proto);
 
     virtual const char* getComponentName(void) const { return "Shape"; }
-    virtual int     getComponentLevel(void) const { return 3; }
+    virtual int         getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 0; }
-virtual Node *copy() { return new NodeFillProperties(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeFillProperties(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -73,4 +62,3 @@ virtual Node *copy() { return new NodeFillProperties(m_scene, m_proto); }
     fieldMacros(SFInt32, hatchStyle, ProtoFillProperties)
 };
 
-#endif // _NODE_FILL_PROPERTIES_H

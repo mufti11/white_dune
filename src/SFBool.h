@@ -30,14 +30,14 @@ public:
 
     virtual int         getType() const { return SFBOOL; }
     virtual const char *getTypeName() const { return "SFBool"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
     virtual int         writeXml(int filedes, int indent, int containerField,
-                                 bool avoidUse);
+                                 bool avoidUse) const;
 
     virtual int         writeC(int filedes, const char* variableName, 
-                               int languageFlag);
+                               int languageFlag) const;
     virtual const char *getTypeC(int languageFlag) const;
     virtual const char *getDefaultC(int languageFlag) const;
 
@@ -49,7 +49,7 @@ public:
     virtual bool        equals(const FieldValue *value) const;
     virtual FieldValue *copy() { return new SFBool(*this); }
 
-    bool                getValue() const
+    bool                getValue() const 
                            {
 #ifdef HAVE_NULL_COMPARE
                            if (this == NULL)
@@ -58,11 +58,13 @@ public:
                            return m_value; 
                            }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     // VRML 200x BooleanSequencer not implemented yet
-    virtual bool        supportAnimation(bool x3d) { return false; }
-    virtual bool        supportInteraction(void) { return true; }
+    virtual bool        supportAnimation(bool x3d) const { return false; }
+    virtual bool        supportInteraction(void) const { return true; }
+
+    virtual bool        isText() { return false; }      
 
     FieldValue         *getRandom(Scene *scene, int nodetype);
 private:

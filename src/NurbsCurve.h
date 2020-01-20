@@ -42,7 +42,7 @@
 #endif
 #include "ChainBasedNode.h"
 
-#include "MFVec3f.h"
+class MFVec3f;
 
 class NurbsCurve {
 protected:

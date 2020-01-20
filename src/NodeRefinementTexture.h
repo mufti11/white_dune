@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_REFINEMENT_TEXTURE_H
-#define _NODE_REFINEMENT_TEXTURE_H
+#pragma once
 
-#ifndef _NODE_H
-# include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
+#include "Node.h"
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
-# include "Proto.h"
-#endif
-
+#include "Proto.h"
 #include "SFMFTypes.h"
 
 class ProtoRefinementTexture : public Proto {
@@ -75,8 +67,7 @@ public:
     virtual        ~NodeRefinementTexture();
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeRefinementTexture(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeRefinementTexture(*this); }
 
     virtual void    load();
 
@@ -107,4 +98,3 @@ public:
     fieldMacros(SFNode,   viewpoint,         ProtoRefinementTexture);
 };
 
-#endif

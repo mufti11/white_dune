@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SHAPE_H
-#define _NODE_SHAPE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoShape : public WonderlandExportProto {
@@ -62,10 +53,10 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeShape(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeShape(*this); }
 
     virtual void    draw(int pass);
-    virtual bool    isLit();
+    virtual bool    isLit() const;
 
     virtual int     countPolygons(void);
     virtual int     countPrimitives(void);
@@ -148,4 +139,3 @@ protected:
     FieldIndex      m_geometry;
 };
 
-#endif // _NODE_SHAPE_H

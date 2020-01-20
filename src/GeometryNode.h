@@ -59,3 +59,4 @@ public:
           addField(SFBOOL, "useGeoCache", new SFBool(true)));  \
     setFieldFlags(useGeoCache, FF_X3DOM_ONLY);
 
+

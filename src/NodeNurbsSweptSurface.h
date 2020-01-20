@@ -19,24 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBS_SWEPT_SURFACE_H
-#define _NODE_NURBS_SWEPT_SURFACE_H
+#pragma once
 
-#ifndef _MESH_MORPHING_NODE_H
-# include "MeshMorphingNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
-# include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
-# include "Proto.h"
-#endif
-#ifndef _VEC3F
-# include "Vec3f.h"
-#endif
-#ifndef _SFMFTYPES_H
-# include "SFMFTypes.h"
-#endif
+#include "MeshMorphingNode.h"
+#include "ProtoMacros.h"
+#include "Proto.h"
+#include "Vec3f.h"
+#include "SFMFTypes.h"
 #include "NodeExtrusion.h"
 #include "NodeNurbsCurve.h"
 
@@ -82,8 +71,7 @@ public:
     virtual const char* getComponentName(void) const { return "NURBS"; }
     virtual int     getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeNurbsSweptSurface(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsSweptSurface(*this); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -141,5 +129,3 @@ protected:
     MyArray<float>        m_chain;
     NurbsSweptSurfaceData m_tempStoreData;
 };
-
-#endif

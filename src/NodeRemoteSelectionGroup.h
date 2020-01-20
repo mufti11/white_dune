@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_REMOTE_SELECTION_GROUP_H
-#define _NODE_REMOTE_SELECTION_GROUP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "NodeGroup.h"
-
 #include "SFMFTypes.h"
 
 class ProtoRemoteSelectionGroup : public ProtoGroup {
@@ -61,8 +51,7 @@ class NodeRemoteSelectionGroup : public NodeGroup {
 public:
                     NodeRemoteSelectionGroup(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeRemoteSelectionGroup(
-                                  m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeRemoteSelectionGroup(*this); }
 
     fieldMacros(SFBool, enableCulling, ProtoRemoteSelectionGroup)
     fieldMacros(MFString, invisibleNodes, ProtoRemoteSelectionGroup)
@@ -73,5 +62,3 @@ public:
     fieldMacros(SFFloat, scaleRenderedIdsOnMove, ProtoRemoteSelectionGroup)
     fieldMacros(MFString, url, ProtoRemoteSelectionGroup)
 };
-
-#endif

@@ -19,26 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POP_GEOMETRY_H
-#define _NODE_POP_GEOMETRY_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-#ifndef GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPopGeometry : public Proto {
@@ -91,7 +78,7 @@ class NodePopGeometry : public GeometryNode {
 public:
                     NodePopGeometry(Scene *scene, Proto *proto);
 
-   virtual Node    *copy() { return new NodePopGeometry(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePopGeometry(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -133,4 +120,4 @@ public:
     fieldMacros(SFInt32, vertexBufferSize, ProtoPopGeometry)
     fieldMacros(MFInt32, vertexCount, ProtoPopGeometry)
 };
-#endif
+

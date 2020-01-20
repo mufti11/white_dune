@@ -20,22 +20,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CYLINDER_H
-#define _NODE_CYLINDER_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCylinder : public Proto {
@@ -66,7 +56,7 @@ class NodeCylinder : public MeshBasedNode {
 public:
                     NodeCylinder(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeCylinder(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCylinder(*this); }
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual void    draw() { meshDraw(); }
@@ -102,4 +92,3 @@ protected:
 
 };
 
-#endif // _NODE_CYLINDER_H

@@ -53,7 +53,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-virtual Node *copy() { return new NodeBox( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBox(*this); }
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual void    draw() { meshDraw(); }
     virtual void    drawHandles(void);
@@ -107,4 +107,3 @@ protected:
     MyArray<float>  m_vKnots;
     MyArray<Vec3f>  m_rectangle;
 };
-

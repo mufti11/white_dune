@@ -20,16 +20,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_Rectangular_Torus_H
-#define _NODE_Rectangular_Torus_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "GeometryNode.h"
 #include "SFMFTypes.h"
 
@@ -57,7 +51,7 @@ public:
                     NodeRectangularTorus(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeRectangularTorus( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeRectangularTorus(*this); }
 
     x3domGeometryCommonFieldMacros(ProtoRectangularTorus) 
     fieldMacros(SFFloat, angle, ProtoRectangularTorus)
@@ -70,4 +64,3 @@ public:
     fieldMacros(SFBool, solid, ProtoRectangularTorus)
 };
 
-#endif

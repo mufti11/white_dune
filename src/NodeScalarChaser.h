@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SCALAR_CHASER_H
-#define _NODE_SCALAR_CHASER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "ChaserNode.h"
 
@@ -51,7 +42,7 @@ class NodeScalarChaser : public ChaserNode {
 public:
                     NodeScalarChaser(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeScalarChaser(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeScalarChaser(*this); }
 
     virtual void    sendChasedEvent(int eventIn, double timestamp, 
                                     FieldValue * value);
@@ -70,4 +61,3 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif

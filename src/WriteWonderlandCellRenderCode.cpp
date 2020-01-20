@@ -377,10 +377,8 @@ the library, but you are not obligated to do so.  If you do not wish to do
 so, delete this exception statement from your version.
 */
 
-#include "swt.h"
-
 #include "DuneApp.h"
-#include "ExternTheApp.h"
+#include "swt.h"
 
 int 
 writeCellRendererCode(int f, const char *upperName, const char *lowerName,

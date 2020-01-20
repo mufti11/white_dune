@@ -22,10 +22,12 @@
 #pragma once
 
 #include "Node.h"
+
 #include "ProtoMacros.h"
+
+#include "SFMFTypes.h"
 #include "CommandList.h"
 #include "InterfaceArray.h"
-#include "SFMFTypes.h"
 
 class DynamicFieldsNode : public Node {
 public:

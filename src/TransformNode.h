@@ -42,19 +42,18 @@ public:
                      ~TransformNode();
 
 public:
-    virtual int       getChildrenField(void) = 0;
+    virtual int       getChildrenField(void) const = 0;
 
     virtual MFNode   *getChildren(void) 
                          { return (MFNode *)getField(getChildrenField()); }
 
-    virtual int       getBasicChildrenField(void)
+    virtual int       getBasicChildrenField(void) const 
                          { return getChildrenField(); }
 
     // X3D profile changes addChildren, removeChildren
     virtual void      setField(int index, FieldValue *value, int cf = -1);
     virtual void      drawHandles(void);
     virtual void      drawRotationHandles(float scale);
-    virtual void      update(void) { m_matrixDirty = true; }
     virtual void      transform();
     virtual void      transformForHandle(int handle);
 

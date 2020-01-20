@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POLY_POINT_2D_H
-#define _NODE_POLY_POINT_2D_H
+#pragma once
 
-#ifndef _GEOMETRY_NODE_H
 #include "GeometryNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class NodePointSet;
@@ -54,7 +46,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodePolypoint2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePolypoint2D(*this); }
 
     virtual void    draw();
 
@@ -83,4 +75,3 @@ public:
     NodePointSet   *convertToPointSet(void);
 };
 
-#endif

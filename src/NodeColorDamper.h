@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLOR_DAMPER_H
-#define _NODE_COLOR_DAMPER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "DamperNode.h"
 
@@ -51,7 +42,7 @@ class NodeColorDamper : public DamperNode {
 public:
                     NodeColorDamper(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeColorDamper(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeColorDamper(*this); }
 
     Vec3f           dynamics(Vec3f dest, Vec3f val, float alpha);
     float           distanceHSV(Vec3f a, Vec3f b);
@@ -72,4 +63,3 @@ public:
     int m_initialValue_Field;
 };
 
-#endif

@@ -95,3 +95,4 @@ public:
 protected:
     MFInt32        *m_coordIndex;
 };
+

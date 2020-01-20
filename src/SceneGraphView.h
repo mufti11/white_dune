@@ -25,19 +25,9 @@ class NodeList;
 class Node;
 class DuneDoc;
 class FieldValue;
-
-#ifndef _SWT_H
 #include "swt.h"
-#endif
-
-#ifndef _SCENE_VIEW_H
 #include "SceneView.h"
-#endif
-
-#ifndef _POINT_H
 #include "Point.h"
-#endif
-
 #include "Types.h"
 
 class NodeOrProto {

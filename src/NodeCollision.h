@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLLISION_H
-#define _NODE_COLLISION_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCollision : public WonderlandExportProto {
@@ -60,7 +51,7 @@ public:
                     NodeCollision(Scene *scene, Proto *proto);
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeCollision(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCollision(*this); }
 
     virtual void    preDraw() { children()->preDraw(); }
     virtual void    draw(int pass) { children()->draw(pass, children_Field()); }
@@ -89,5 +80,3 @@ public:
     fieldMacros(SFNode,  proxy,      ProtoCollision)
     fieldMacros(SFBool,  render,     ProtoCollision)
 };
-
-#endif // _NODE_COLLISION_H

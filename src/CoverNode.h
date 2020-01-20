@@ -24,10 +24,11 @@
 
 #pragma once
 
+#include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
+
 #include "SFMFTypes.h"
-#include "Node.h"
 
 class CoverNode : public Node {
 public:

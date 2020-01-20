@@ -19,18 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_Nozzle_H
-#define _NODE_Nozzle_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "GeometryNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoNozzle : public Proto {
@@ -57,7 +50,7 @@ public:
                     NodeNozzle(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeNozzle(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNozzle(*this); }
 
     fieldMacros(SFBool,  ccw,          ProtoNozzle)
     fieldMacros(SFFloat, height,       ProtoNozzle)
@@ -70,5 +63,3 @@ public:
     x3domGeometryCommonFieldMacros(ProtoNozzle) 
 };
 
-
-#endif

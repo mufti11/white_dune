@@ -19,11 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_COLLISION_Sensor_H
-#define _NODE_COLLISION_Sensor_H
+#pragma once
 
 #include "RigidBodyPhysicsNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoCollisionSensor : public Proto {
@@ -48,12 +46,11 @@ public:
                            { return "RigidBodyPhysics"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int         getX3dVersion(void) const { return 2; }
-    virtual Node       *copy() { return new NodeCollisionSensor(
-                                        m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodeCollisionSensor(*this); }
 
     fieldMacros(SFNode, collider, ProtoCollisionSensor)
     fieldMacros(SFBool, enabled,     ProtoCollisionSensor)
 };
 
-#endif
 

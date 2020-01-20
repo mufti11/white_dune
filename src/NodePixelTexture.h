@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_PIXELTEXTURE_H
-#define _NODE_PIXELTEXTURE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "KambiTextureCommonFields.h"
-
 #include "SFMFTypes.h"
 
 class ProtoPixelTexture : public Proto {
@@ -66,14 +56,14 @@ public:
 class NodePixelTexture : public Node {
 public:
                     NodePixelTexture(Scene *scene, Proto *proto);
-                    NodePixelTexture(NodePixelTexture &node);
+                    NodePixelTexture(const NodePixelTexture &node);
     virtual        ~NodePixelTexture();
 
     virtual int     getProfile(void) const;
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; } 
-    virtual Node   *copy() { return new NodePixelTexture(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePixelTexture(*this); }
     virtual void    setField(int field, FieldValue *value, int cf = -1);
     void            load();
     int             isLoaded();
@@ -120,4 +110,3 @@ protected:
     bool            m_isAlphaNot0Not1;
 };
 
-#endif // _NODE_PIXELTEXTURE_H

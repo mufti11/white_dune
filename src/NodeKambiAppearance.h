@@ -19,27 +19,14 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KAMBI_APPEARANCE_H
-#define _NODE_KAMBI_APPEARANCE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-
 #include "KambiCommonFunctions.h"
-
 #include "NodeAppearance.h"
-
 #include "SFMFTypes.h"
 
 class ProtoKambiAppearance : public ProtoAppearance {
@@ -56,11 +43,10 @@ class NodeKambiAppearance : public NodeAppearance {
 public:
                     NodeKambiAppearance(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeKambiAppearance(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeKambiAppearance(*this); }
 
     virtual bool    showFields() { return true; }
 
     kambiCommonFunctions()
 };
 
-#endif

@@ -23,13 +23,13 @@
 
 #include "Vec3f.h"
 #include "Array.h"
-#include "Scene.h"
 
 class MFVec3f;
 class MFVec2f;
 class Node;
 class MeshBasedNode;
 class NodeIndexedFaceSet;
+class Scene;
 
 extern float boxCorners[8][3];
 extern float boxTexCoords[4][2];

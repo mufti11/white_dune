@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program (see the file "COPYING" for details); if 
  * not, write to the Free Software Foundation, Inc., 675 Mass Ave, 
-x * Cambridge, MA 02139, USA.
+ * Cambridge, MA 02139, USA.
  */
 
 #pragma once
@@ -31,3 +31,4 @@ public:
     virtual void        LoadData();
     virtual void        SaveData();
 };
+

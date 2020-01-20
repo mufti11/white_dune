@@ -163,6 +163,7 @@ int DuneApp::emergency_rescue(int sig)
       if (x3d)
           ext = "x3dv";
       int flags = TEMP_SAVE | (x3d ? X3DV : 0);
+      int f = -1;
       do {
           filenum++;
           mysnprintf(filename,MY_MAX_PATH,".dune_crash_%d_%d.%s",getpid(),
@@ -173,128 +174,47 @@ int DuneApp::emergency_rescue(int sig)
 #else
           mysnprintf(mypath,MY_MAX_PATH,"%s/%s",home,filename);
 #endif
-          if (stat(mypath, &fileStat) == -1)
-              break;
-      } while (S_ISREG(fileStat.st_mode)); 
-      int f = open(mypath, O_WRONLY | O_CREAT
+          f = open(mypath, O_WRONLY | O_CREAT 
 /* writing with O_SYNC is too slow on most systems... */
 #     ifdef PARANOIA
 #       ifdef O_SYNC
-                                    | O_SYNC
+                                              | O_SYNC
 #       endif 
 #     endif 
 #ifdef _WIN32
-                  ,_S_IREAD | _S_IWRITE);
+                                              ,_S_IREAD | _S_IWRITE);
 #else
-                  ,S_IRUSR | S_IWUSR);
+                                              ,S_IRUSR | S_IWUSR);
 #endif
-      do 
-         {  
-         if (f==-1)
-            {
-#ifndef _WIN32
-            mywritef(2,"%s:  %s\n", mypath, strerror(errno));
-            mywritef(console,"white_dune: %s:  %s\n", mypath, strerror(errno));
-#endif
+      } while (f != -1); 
+      mywritef(console, "%s:  %s\n", mypath, strerror(errno));
+      mywritef(console,"white_dune: %s:  %s\n", mypath, strerror(errno));
+      int writeError = false;
+      if (i->item()->GetScene()->write(f, mypath, flags) < 0)
+         writeError = true;
+      if (!writeError && swTruncateClose(f))
+         writeError = true;
+      if (writeError)
+         {
+         mywritef(console, "write %s:  %s\n", mypath, strerror(errno));
+         mywritef(console," error write white_dune: %s:  %s\n", mypath, 
+                  strerror(errno));
+         }
+      else 
+         {
+         TheApp->AddToRecentFiles(mypath);
+         TheApp->SaveRecentFileList();
+         TheApp->SavePreferences();
 #ifdef _WIN32
-            mystrcpy(mypath,getenv("TEMP"));
+         char message[1024];
+         mysnprintf(message,1023,"file successfully written to %s",mypath);
+         myMessageBox(message);
 #else
-            mystrcpy(mypath,"/tmp/");
+         mywritestr(console,"white_dune: write successful to ");
+         mywritestr(console,mypath);
+         mywritestr(console,"\n");
 #endif
-
-            mystrcat(mypath,filename);
-#ifndef _WIN32
-            mywritef(2,"Now try to save to %s\n", mypath);
-            mywritef(console,"white_dune: Now try to save to %s\n", mypath);
-#endif
-            do 
-               {
-               f = open(mypath, O_WRONLY | O_CREAT
-/* writing with O_SYNC is too slow on most systems... */
-#              ifdef PARANOIA
-#                 ifdef O_SYNC
-                                    | O_SYNC
-#                 endif 
-#              endif 
-#ifdef _WIN32
-                       ,_S_IREAD | _S_IWRITE);
-#else
-                       ,S_IRUSR | S_IWUSR);
-#endif
-               if (f==-1) 
-                  {
-#ifdef _WIN32
-                  myMessageBox("Could not open file %HOMEDRIVE%\\%HOMEPATH% or %TEMP%, contine to try");
-#else
-                  mywritef(2,"open: %s:  %s\n", mypath, strerror(errno));
-                  mywritef(console,"white_dune: open %s:  %s\n", mypath, 
-                           strerror(errno));
-#endif
-                  sleep(10);
-                  }
-               else
-                  { 
-#ifndef _WIN32
-                  mywritef(2,"\aattempt to write file to %s\n",mypath);
-                  mywritef(console,"white_dune: attempt to write file to %s\n",mypath);
-#endif
-                  bool writeError = false;
-                  if (i->item()->GetScene()->write(f, mypath, flags) < 0)
-                     writeError = true;
-                  if (!writeError && swTruncateClose(f))
-                     writeError = true;
-                  if (writeError)
-                     {
-#ifndef _WIN32
-                     mywritef(2,"write %s:  %s\n", mypath, strerror(errno));
-                     mywritef(console,"write white_dune: %s:  %s\n", mypath, 
-                              strerror(errno));
-#endif
-                     sleep(10);
-                     f=-1;
-                     }
-                  }
-               } while (f==-1);         
-            }
-         else 
-            {
-#ifndef _WIN32
-            mywritef(2,"attempt to write file to %s\n",mypath);
-            mywritef(console,"white_dune: attempt to write file to %s\n",
-                     mypath);
-#endif
-            bool writeError = false;
-            if (i->item()->GetScene()->write(f, mypath, flags)<0)
-               writeError = true;
-            if (!writeError && swTruncateClose(f))
-                writeError = true;
-            if (writeError)
-               {
-#ifndef _WIN32
-               mywritef(2,"write %s:  %s\n", mypath, strerror(errno));
-               mywritef(console,"white_dune: write %s:  %s\n", mypath, 
-                        strerror(errno));
-#endif
-               sleep(10);
-               f=-1;
-               }
-            }
-         } while (f==-1);
-      TheApp->AddToRecentFiles(mypath);
-      TheApp->SaveRecentFileList();
-      TheApp->SavePreferences();
-#ifdef _WIN32
-      char message[1024];
-      mysnprintf(message,1023,"file successfully written to %s",mypath);            
-      myMessageBox(message);
-#else
-      mywritestr(console,"white_dune: write successful to ");
-      mywritestr(console,mypath);
-      mywritestr(console,"\n");
-      mywritestr(2,"write successful to ");
-      mywritestr(2,mypath);
-      mywritestr(2,"\n");
-#endif
+      }
       if (TheApp->returnTracker())
          {
 #ifndef _WIN32
@@ -306,7 +226,7 @@ int DuneApp::emergency_rescue(int sig)
 #ifndef _WIN32
    if ((filenum==0) && ((sig != SIGPIPE) && !isatty(0)))
       {
-      mywritestr(console,"white_dune: Nothing to save anymore\n");
+      mywritestr(console, "white_dune: Nothing to save anymore\n");
       mywriteerr("Nothing to save anymore\n");
       }
 #endif

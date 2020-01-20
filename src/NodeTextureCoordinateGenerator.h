@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEXTURE_COORDINATE_GENERATOR_H
-#define _NODE_TEXTURE_COORDINATE_GENERATOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTextureCoordinateGenerator : public Proto {
@@ -57,14 +48,13 @@ public:
 class NodeTextureCoordinateGenerator : public Node {
 public:
                     NodeTextureCoordinateGenerator(Scene *scene, Proto *proto);
-                    NodeTextureCoordinateGenerator(NodeTextureCoordinateGenerator &node);
+                    NodeTextureCoordinateGenerator(const NodeTextureCoordinateGenerator &node);
     virtual        ~NodeTextureCoordinateGenerator();
 
     virtual const char* getComponentName(void) const { return "Texturing"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node *copy() { return new NodeTextureCoordinateGenerator(
-                           m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTextureCoordinateGenerator(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -72,4 +62,3 @@ public:
     fieldMacros(MFFloat,  parameter, ProtoTextureCoordinateGenerator)
 };
 
-#endif // _NODE_TEXTURE_COORDINATE_GENERATOR_H

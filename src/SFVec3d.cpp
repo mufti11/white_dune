@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "SFVec3d.h"
 #include "SFDouble.h"
@@ -34,7 +33,7 @@ SFVec3d::SFVec3d(SFString *value)
 }
 
 MyString    
-SFVec3d::getString(int index, int stride)
+SFVec3d::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -84,13 +83,13 @@ SFVec3d::readLine(int index, char *line)
 }
 
 int 
-SFVec3d::writeData(int f, int i)
+SFVec3d::writeData(int f, int i) const
 {
     return mywritef(f, "%lg %lg %lg", m_value[0], m_value[1], m_value[2]);
 }
 
 int
-SFVec3d::writeC(int filedes, const char* variableName, int languageFlag)
+SFVec3d::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -106,7 +105,7 @@ SFVec3d::writeC(int filedes, const char* variableName, int languageFlag)
 }
 
 MyString
-SFVec3d::getEcmaScriptComment(MyString name, int flags)
+SFVec3d::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

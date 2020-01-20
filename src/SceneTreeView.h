@@ -29,7 +29,6 @@ class NodeList;
 class Path;
 class Hint;
 class Scene;
-class RouteUpdate;
 
 class SceneTreeView : public SceneView
 {
@@ -49,7 +48,7 @@ public:
         void            OnSelectionChanged(STREEITEM item);
         void            OnBeginDrag(STREEITEM item);
 
-        void            UpdateNode(Path *updatePath);
+        void            UpdateNode(const Path *updatePath);
 
 protected:
         void            InsertNodeListRec(NodeList *list, int field,
@@ -62,7 +61,7 @@ protected:
         void            UpdateSelection();
         bool            ScrollIsValid(int scrollCode, int which);
         void            DeleteItemRec(STREEITEM item);
-        bool            UpdateNode(STREEITEM item, Path *updatePath);
+        bool            UpdateNode(STREEITEM item, const Path *updatePath);
         bool            UpdateAddNode(STREEITEM item, Node *node,
                                       Node *parent, int field);
         bool            UpdateRemoveNode(STREEITEM, Node *node, Node *parent,
@@ -89,3 +88,4 @@ protected:
         Node           *m_currentDragParent;
         int             m_currentDragField;
 };
+

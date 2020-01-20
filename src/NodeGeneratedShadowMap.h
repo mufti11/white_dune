@@ -19,22 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GENERATED_SHADOW_MAP_H
-#define _NODE_GENERATED_SHADOW_MAP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "KambiTextureCommonFields.h"
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 
@@ -61,8 +51,7 @@ class NodeGeneratedShadowMap : public Node {
 public:
                     NodeGeneratedShadowMap(Scene *scene, Proto *proto);
 
-    virtual Node  *copy() 
-                   { return new NodeGeneratedShadowMap(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeGeneratedShadowMap(*this); }
 
     kambiCommonFunctions()
 
@@ -75,4 +64,3 @@ public:
     kambiTextureCommonFieldMacros(ProtoGeneratedShadowMap)
 };
 
-#endif

@@ -20,17 +20,18 @@
  */
 
 #pragma once
+
 #include "MeshBasedNode.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
 #include "DuneApp.h"
-#include "MyMesh.h"
 #include "Vec3f.h"
 #include "NodeCoordinate.h"
 #include "Colored.h"
 #include "SFMFTypes.h"
 #include "ComposedGeometryMacros.h"
-#include "Matrix.h"
+
+class Matrix;
 
 enum {
     UNION,
@@ -79,7 +80,7 @@ class FacesetAndMatrix {
 public:
     NodeIndexedFaceSet *node;
     NodeMaterial *material;
-    Matrixd matrix;
+    Matrix matrix;
 };
 
 class NodeIndexedFaceSet : public MeshBasedNode, Colored {
@@ -93,7 +94,7 @@ public:
     virtual int     getProfile(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
     virtual void    setField(int index, FieldValue *value, int cf = -1);
-    virtual Node   *copy() { return new NodeIndexedFaceSet(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeIndexedFaceSet(*this); }
 
     virtual void    draw();
 
@@ -130,9 +131,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() 
+    virtual int     colorPerVertexField() const 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField()
+    virtual int     colorIndexField() const
                        { return colorIndex_Field(); }
 
     MFVec3f        *getCoordinates();
@@ -175,7 +176,7 @@ public:
     void            splitIntoPieces(int piecesU, int piecesV);
 #ifdef HAVE_LIBCGAL
     NodeIndexedFaceSet *csg(NodeIndexedFaceSet *face, int operation,
-                            Matrixd matrix1, Matrixd matrix2);
+                            Matrix matrix1, Matrix matrix2);
     NodeIndexedFaceSet *readOff(const char *filename);
 #endif
     void                writeOffInit(void) 
@@ -185,7 +186,7 @@ public:
                             }
     void                accountOffData(int f);
     void                writeOffVertices(int f, Node *node);
-    void                writeOffIndices(int f, Node *node);
+    void                writeOffIndices(int f, int startIndex, Node *node);
     void                writeOffNormalsAndColors(int f, Node *node);
     int                 getSumVertices(void)
                             { return m_sumVertices; }
@@ -228,7 +229,9 @@ public:
 protected:
     void            createMesh(bool cleanDoubleVertices = true,
                                bool triangulate = true);
+                               
 protected:
     int m_sumVertices; 
     int m_sumVerticesPerFaces ;                           
 };
+

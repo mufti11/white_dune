@@ -19,23 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_DEPTH_MODE_H
-#define _NODE_DEPTH_MODE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoDepthMode : public Proto {
@@ -58,7 +47,7 @@ class NodeDepthMode : public Node {
 public:
                     NodeDepthMode(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeDepthMode(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeDepthMode(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 
@@ -71,4 +60,3 @@ public:
     fieldMacros(SFFloat,  zNearRange,      ProtoDepthMode)
 };
 
-#endif

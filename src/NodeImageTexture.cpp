@@ -144,7 +144,7 @@ NodeImageTexture::NodeImageTexture(Scene *scene, Proto *def)
 #endif
 }
 
-NodeImageTexture::NodeImageTexture(NodeImageTexture &node)
+NodeImageTexture::NodeImageTexture(const NodeImageTexture &node)
   : Node(node)
 {
     m_image = NULL;
@@ -251,8 +251,8 @@ NodeImageTexture::load()
 #endif
     for (int i = 0; i < urls->getSize(); i++) {
         MyString path;
-        URL urlI(m_baseURL, urls->getValue(i)->getValue());
-        if (strlen(urls->getValue(i)->getValue()) == 0) continue;
+        URL urlI(m_baseURL, urls->getValue(i));
+        if (urls->getValue(i).length() == 0) continue;
         m_scene->Download(urlI, &path);
         Image image;
         if (image.Open(path)) {

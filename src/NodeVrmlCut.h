@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_VRML_CUT_H
-#define _NODE_VRML_CUT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "SFMFTypes.h"
 #include "CommandList.h"
 #include "DynamicFieldsNode.h"
@@ -71,7 +63,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeVrmlCut( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeVrmlCut(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -149,4 +141,3 @@ protected:
     bool           m_eventOutsInitialised;
 };
 
-#endif // _NODE_VRML_CUT_H

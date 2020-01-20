@@ -200,15 +200,15 @@ MeshBasedNode::toIndexedFaceSet(int meshFlags, bool cleanVertices,
     bool wantSimpleQuadTriangulate = (meshFlags & MESH_SIMPLE_TRIANGULATE);
     updateMesh(); 
 
-    NodeIndexedFaceSet *ret = NULL;    
-
     if (m_isDoubleMesh) {
        if (!m_meshDouble) return NULL;
 
        if (wantSimpleQuadTriangulate)
-            m_meshDouble->simpleQuadTriangulate();
+           m_meshDouble->simpleQuadTriangulate();
 
        m_meshDirty = true;
+    
+       return m_meshDouble->toIndexedFaceSet(meshFlags, m_scene);
     }
     if (!m_mesh) return NULL;
 
@@ -216,13 +216,8 @@ MeshBasedNode::toIndexedFaceSet(int meshFlags, bool cleanVertices,
         m_mesh->simpleQuadTriangulate();
 
     m_meshDirty = true;
-
-    if (getType() == VRML_INDEXED_FACE_SET)
-        ret = (NodeIndexedFaceSet *)this;
-    else
-        ret =  (NodeIndexedFaceSet *)m_mesh->triangulate(this);
-    ret->writeOffInit();
-    return ret;
+    
+    return m_mesh->toIndexedFaceSet(meshFlags, m_scene);
 }
 
 #define createNormalFromMesh(node) \
@@ -291,22 +286,19 @@ MeshBasedNode::toTriangleSet(int meshFlags)
         for (int i = 0; i < coordIndices->getSize(); i++) {
             int index = coordIndices->getValue(i);
             if (index >= 0) {
-                points->setSFValue(numVertices, 
-                                   (float *)vertices->getValue(index)); 
+                points->setSFValue(numVertices, vertices->getValue(index)); 
                 if (hasNormals)
                     vectors->setSFValue(numVertices, 
-                                        (float *)normals->getValue(index)); 
+                                        normals->getValue(index)); 
                 if (hasColors)
                     colors->setSFValue(numVertices, 
-                                       (float *)mfColors->getValues() + 
-                                                index * 3); 
+                                       mfColors->getValues() + index * 3); 
                 if (hasColorsRGBA)
                     colorsRGBA->setSFValue(numVertices, 
-                                           (float *)mfColors->getValues() + 
-                                                    index * 4); 
+                                           mfColors->getValues() + index * 4); 
                 if (hasTexCoords)
                     coords->setSFValue(numVertices, 
-                                       (float *)texCoords->getValue(index)); 
+                                       texCoords->getValue(index)); 
 
                 numVertices++;
             }
@@ -315,22 +307,19 @@ MeshBasedNode::toTriangleSet(int meshFlags)
         for (int i = coordIndices->getSize() - 1; i > -1; i--) {
             int index = coordIndices->getValue(i);
             if (index >= 0) {
-                points->setSFValue(numVertices, (float *)
-                                                vertices->getValue(index)); 
+                points->setSFValue(numVertices, vertices->getValue(index)); 
                 if (hasNormals)
                     vectors->setSFValue(numVertices, 
-                                        (float *)normals->getValue(index)); 
+                                        normals->getValue(index)); 
                 if (hasColors)
                     colors->setSFValue(numVertices, 
-                                       (float *)mfColors->getValues() + 
-                                                index * 3); 
+                                       mfColors->getValues() + index * 3); 
                 if (hasColorsRGBA)
                     colorsRGBA->setSFValue(numVertices, 
-                                           (float *)mfColors->getValues() + 
-                                                    index * 4); 
+                                           mfColors->getValues() + index * 4); 
                 if (hasTexCoords)
                     coords->setSFValue(numVertices, 
-                                       (float *)texCoords->getValue(index)); 
+                                       texCoords->getValue(index)); 
 
                 numVertices++;
             }
@@ -1083,8 +1072,7 @@ MeshBasedNode::writeAc3d(int f, int indent)
         RET_ONERROR( mywritef(f, "name \"%s\"\n", (const char *)getName()) )
         
     if (nimageTexture) {
-        const char *texture = (const char *)
-                              nimageTexture->url()->getValue(0)->getValue();
+        const char *texture = nimageTexture->url()->getValue(0);
         if (texture) {
             URL url;
             url.FromPath(texture);
@@ -1277,8 +1265,7 @@ MeshBasedNode::writeRib(int f, int indent)
         RET_ONERROR( mywritef(f, "# name \"%s\"\n", (const char *)getName()) )
         
     if (nimageTexture) {
-        const char *texture = (const char *)
-                              nimageTexture->url()->getValue(0)->getValue();
+        const char *texture = nimageTexture->url()->getValue(0);
         if (texture) {
             URL url(TheApp->getImportURL(), texture);
             MyString filename = "";
@@ -2127,7 +2114,4 @@ MeshBasedNode::reInit(void)
     m_meshDirty = true; 
     Node::reInit();
 }
-
-
-
 

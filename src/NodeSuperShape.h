@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_SUPER_SHAPE_H
-#define _NODE_SUPER_SHAPE_H
+#pragma once
 
-#ifndef _MESH_MORPHING_NODE_H
 #include "MeshMorphingNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class SuperShapeData
@@ -105,7 +97,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }  
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeSuperShape(*this); }
+    virtual Node   *copy() const { return new NodeSuperShape(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -171,4 +163,3 @@ protected:
     virtual void    finalizeData(void* data);
 };
 
-#endif // _NODE_SUPER_SHAPE_H

@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUIMap node
  */
 
-#ifndef _NODE_TUI_MAP_H
-#define _NODE_TUI_MAP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 class ProtoTUIMap : public ProtoTUIElement {
@@ -59,7 +49,7 @@ public:
                     NodeTUIMap(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeTUIMap(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUIMap(*this); }
 
     fieldMacros(MFFloat,  ox,     ProtoTUIMap)
     fieldMacros(MFFloat,  oy,     ProtoTUIMap)
@@ -69,4 +59,3 @@ public:
     fieldMacros(MFString, maps,   ProtoTUIMap)
 };
 
-#endif // _NODE_TUI_MAP_H

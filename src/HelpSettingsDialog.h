@@ -40,3 +40,4 @@ protected:
     void                OnBrowseX3dDirectory();
     void                OnSetDefaults();
 };
+

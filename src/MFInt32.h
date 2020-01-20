@@ -29,39 +29,37 @@ public:
                         MFInt32();
                         MFInt32(int *values, int len);
                         MFInt32(MFInt32 *value);
-                        MFInt32(int value);
+                        MFInt32(const int value);
     virtual            ~MFInt32();
 
     virtual int         getType() const { return MFINT32; }
     virtual const char *getTypeName() const { return "MFInt32"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
-    virtual int         write(int f, int indent)
+    virtual int         write(int f, int indent) const
                            { 
                            return write(f, indent, writeBrackets(), true); 
                            }
-    virtual int         write4FieldPipe(int f, int indent)
+    virtual int         write4FieldPipe(int f, int indent) const
                            { return write(f, indent, false, false); }
     int                 write(int f, int indent, bool writeBrackets, 
-                              bool compactFormat);
+                              bool compactFormat) const;
 
     virtual const char *getTypeC(int languageFlag) const { return "int"; }
 
     virtual bool        readLine(int index, char *line);
-    virtual int         getNumbersPerType(void) { return getStride(); }
+    virtual int         getNumbersPerType(void) const { return getStride(); }
 
     virtual bool        equals(const FieldValue *value) const;
-    virtual FieldValue *getSFValue(int index);
+    virtual int         getSFSize() const { return m_value.size(); }
+    virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const int value);
     virtual FieldValue *copy();
 
-    virtual int         getSFSize() const
-                            { return m_value.size() / getStride(); }
-    int                 getValue(int index)
-                            { return m_value[index]; }
+    int                 getValue(int index) const { return m_value[index]; }
     const int          *getValues() const { return m_value.getData(); }
     int                 getSize() const { return m_value.size(); }
 
@@ -70,7 +68,7 @@ public:
     virtual void        appendSFValue(const int value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 
@@ -78,3 +76,4 @@ public:
 protected:
     MyArray<int>        m_value;
 };
+

@@ -19,8 +19,6 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -34,13 +32,11 @@
 #include "swt.h"
 
 #include "stdafx.h"
-
-class Scene;
-class FieldValue;
-class MFieldCommand;
-
-#include "Node.h"
 #include "Scene.h"
+#include "SceneView.h"
+#include "Node.h"
+#include "FieldValue.h"
+#include "MFieldCommand.h"
 
 enum VertexModifierMode {
     VERTEX_MODIFIER_MODE_QUAD,
@@ -48,7 +44,8 @@ enum VertexModifierMode {
     VERTEX_MODIFIER_MODE_PEAK
 };
 
-class VertexModifier : public SceneView {
+class VertexModifier : public SceneView
+   {
 public:   
    VertexModifier(Scene *scene, SWND parent, FieldUpdate *fieldUpdate);
    ~VertexModifier(); 

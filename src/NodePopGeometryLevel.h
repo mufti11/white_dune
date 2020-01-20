@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POP_GEOMETRY_LEVEL_H
-#define _NODE_POP_GEOMETRY_LEVEL_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPopGeometryLevel : public Proto {
@@ -49,8 +43,7 @@ public:
                     NodePopGeometryLevel(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodePopGeometryLevel(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodePopGeometryLevel(*this); }
 
     virtual bool    isX3domProto(void) { return true; }
 
@@ -61,5 +54,3 @@ public:
     fieldMacros(SFInt32, vertexDataBufferOffset, ProtoPopGeometryLevel)
 };
 
-
-#endif

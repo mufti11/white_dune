@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUISlider node
  */
 
-#ifndef _NODE_TUI_SLIDER_H
-#define _NODE_TUI_SLIDER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 #ifdef min
@@ -64,11 +54,10 @@ public:
                     NodeTUISlider(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeTUISlider(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUISlider(*this); }
 
     fieldMacros(SFInt32, min,   ProtoTUISlider)
     fieldMacros(SFInt32, max,   ProtoTUISlider)
     fieldMacros(SFInt32, value, ProtoTUISlider)
 };
 
-#endif // _NODE_TUI_SLIDER_H

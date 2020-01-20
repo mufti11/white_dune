@@ -28,4 +28,3 @@ typedef MyArray<double> DoubleArray;
 
 #include "StringArray.h"
 
-

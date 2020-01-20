@@ -22,8 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 
-class Proto;
-
 #include "EventOut.h"
 #include "Scene.h"
 #include "FieldValue.h"

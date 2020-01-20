@@ -19,18 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_EXTERNAL_GEOMETRY_H
-#define _NODE_EXTERNAL_GEOMETRY_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "GeometryNode.h"
-
 #include "SFMFTypes.h"
 
 class ProtoExternalGeometry : public Proto {
@@ -54,8 +47,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeExternalGeometry(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeExternalGeometry(*this); }
 
     virtual void    load();
 
@@ -65,5 +57,3 @@ public:
     fieldMacros(MFString, url,   ProtoExternalGeometry)
 };
 
-
-#endif

@@ -49,20 +49,13 @@ cat > $OUTPUT1 << EOT
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFMFTYPES_H
-#define _SFMFTYPES_H
+#pragma once
 
 EOT
 
 for i in `ls $EXECDIR/../src/[SM]F[A-Z][a-z]*.h | grep -v Item | grep -v SFMF | grep -v Command` ; do
    echo "#include \"`basename $i .h`.h\"" >> $OUTPUT1
 done
-
-cat >> $OUTPUT1 << EOT
-
-#endif // _SFMFTYPES_H
-
-EOT
 
 OUTPUT2=$EXECDIR/../src/Types.h
 
@@ -92,8 +85,7 @@ cat > $OUTPUT2 << EOT
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _TYPES_H
-#define _TYPES_H
+#pragma once
 
 #include "MyString.h"
 class FieldValue;
@@ -142,8 +134,6 @@ bool isArrayInC(int type);
 int getSFType(int type);
 
 bool isMFType(int type);
-
-#endif // _TYPES_H
 
 EOT
 
@@ -288,8 +278,7 @@ cat > $OUTPUT4 << EOT
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFMFTYPES_ITEM_H
-#define _SFMFTYPES_ITEM_H
+#pragma once
 
 EOT
 
@@ -316,7 +305,5 @@ cat >> $OUTPUT4 << EOT
         ret = new FieldViewItem(view); \\
         break; \\
     }
-
-#endif // _SFMFTYPES_ITEM_H
 
 EOT

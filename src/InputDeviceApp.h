@@ -22,6 +22,7 @@
 #pragma once
 
 #include <string.h>
+
 #include "Array.h"
 #include "TransformMode.h"
 
@@ -102,4 +103,5 @@ private:
     MyArray<AflockDevice*>m_aflockDevices;
 #endif
 };
+
 

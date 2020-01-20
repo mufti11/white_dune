@@ -22,7 +22,6 @@
 #include "stdafx.h"
 #include "ModellingSettingsDialog.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "resource.h"
 #include "swt.h"
 #include "EulerAngles.h"

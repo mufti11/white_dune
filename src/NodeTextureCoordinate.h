@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEXTURECOORDINATE_H
-#define _NODE_TEXTURECOORDINATE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTextureCoordinate : public WonderlandExportProto {
@@ -54,7 +45,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node *copy() { return new NodeTextureCoordinate(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTextureCoordinate(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
 
@@ -67,4 +58,3 @@ public:
     fieldMacros(MFVec2f, point, ProtoTextureCoordinate);
 };
 
-#endif // _NODE_TEXTURECOORDINATE_H

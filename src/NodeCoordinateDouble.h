@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CoordinateDouble_H
-#define _NODE_CoordinateDouble_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class NodeNurbsGroup;
@@ -59,8 +50,7 @@ public:
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 0; }
 
-    virtual Node   *copy() { return new NodeCoordinateDouble(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCoordinateDouble(*this); }
 
     virtual bool    isInvalidChildNode(void) { return true; }
     virtual void    flip(int index);
@@ -69,5 +59,4 @@ public:
     fieldMacros(MFVec3d,  point, ProtoCoordinateDouble)
 };
 
-#endif // _NODE_CoordinateDouble_H
 

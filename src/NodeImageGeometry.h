@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -61,7 +60,7 @@ class NodeImageGeometry : public GeometryNode {
 public:
                     NodeImageGeometry(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeImageGeometry(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeImageGeometry(*this); }
 
     virtual int     getX3dVersion(void) const { return -1; }
 

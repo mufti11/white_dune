@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_FLAGS_H
-#define _NODE_FLAGS_H
+#pragma once
 
 enum flags {
     NODE_FLAG_TOUCHED,
@@ -34,5 +33,4 @@ enum flags {
     NODE_FLAG_HIDDEN
 };
 
-#endif
 

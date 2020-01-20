@@ -72,9 +72,9 @@ BasicTransformProto::BasicTransformProto(Scene *scene, const char *name)
 BasicTransformNode::BasicTransformNode(Scene *scene, Proto *def)
   : Node(scene, def)
 {
-    m_handleScale = 1.0f;
     m_matrixDirty = true;
-    m_matrix = Matrixd::identity();
+    m_handleScale = 1.0f;
+    m_matrix = Matrix::identity();
 }
 
 BasicTransformNode::~BasicTransformNode()
@@ -82,42 +82,33 @@ BasicTransformNode::~BasicTransformNode()
 }
 
 void
-BasicTransformNode::getMatrix(double* matrix)
+BasicTransformNode::getMatrix(float* matrix)
 {
     for (int i = 0; i < 16; i++)
        matrix[i] = m_matrix[i];
 }
 
 void
-BasicTransformNode::setMatrix(double* matrix)
+BasicTransformNode::setMatrix(float* matrix)
 {
     for (int i = 0; i < 16; i++)
        m_matrix[i] = matrix[i];
-    Vec3d t(matrix[12], matrix[13], matrix[14]);
+    Vec3f t(matrix[12], matrix[13], matrix[14]);
     translation(new SFVec3f(t.x, t.y, t.z));
 //    Vec3f s(matrix[0], matrix[5], matrix[10]);
 //    scale(new SFVec3f(s.x, s.y, s.z));
 }
 
-Quaternion
+const Quaternion &
 BasicTransformNode::getQuat(void)
 {
-    return (Quaternion)(rotation()->getQuat());
+    return rotation()->getQuat();
 }
 
 void 
-BasicTransformNode::setQuat(Quaternion quat)
+BasicTransformNode::setQuat(const Quaternion &quat)
 {
     rotation(new SFRotation(quat));
-}
-
-static void printModelView3(void)
-{
-     glMatrixMode(GL_MODELVIEW);
-     Matrixd matrixd;
-     glGetDoublev(GL_MODELVIEW_MATRIX, matrixd);
-     printf(matrixd);
-     printf("\n");
 }
 
 void
@@ -137,11 +128,11 @@ BasicTransformNode::transform()
         glTranslatef(ftranslation[0], ftranslation[1], ftranslation[2]);
         glRotatef(RAD2DEG(angle), 
               frotation[0], frotation[1], frotation[2]);
-        glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+        glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
         glPopMatrix();
         m_matrixDirty = false;
     }
-    glMultMatrixd((GLdouble *)m_matrix);
+    glMultMatrixf((GLfloat *) m_matrix);
 }
 
 void
@@ -280,7 +271,7 @@ BasicTransformNode::setHandle(int handle, const Vec3f &v)
     SFRotation *sfrotation = rotation();
     const float *rot = sfrotation->getValue();
     const float *ftranslation = translation()->getValue();
-    Matrixd mat;
+    Matrix mat;
 
     double angle = rot[3];
     if (m_scene) {
@@ -293,7 +284,7 @@ BasicTransformNode::setHandle(int handle, const Vec3f &v)
     glLoadIdentity();
     glTranslatef(ftranslation[0], ftranslation[1], ftranslation[2]);
     glRotatef(RAD2DEG(angle), rot[0], rot[1], rot[2]);
-    glGetDoublev(GL_MODELVIEW_MATRIX, mat);
+    glGetFloatv(GL_MODELVIEW_MATRIX, mat);
     glPopMatrix();
 
     BasicTransformProto *proto = (BasicTransformProto *)getProto();
@@ -356,8 +347,8 @@ BasicTransformNode::receiveEvent(int eventIn, double timestamp, FieldValue *valu
 void
 BasicTransformNode::setField(int field, FieldValue *value, int cf)
 {
-    if (field != getBasicChildrenField())
-        transform();
+    if (field != getBasicChildrenField()) 
+        m_matrixDirty = true;
     Node::setField(field, value, cf);
 }
 
@@ -385,13 +376,13 @@ BasicTransformNode::swap(int fromTo)
 bool
 BasicTransformNode::modelViewIsIdentity(void)
 {
-    Matrixd modelView;
-    Matrixd identity;
+    Matrix modelView;
+    Matrix identity;
 
     glPushMatrix();
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
+    glGetFloatv(GL_MODELVIEW_MATRIX, modelView);
     glLoadIdentity();
-    glGetDoublev(GL_MODELVIEW_MATRIX, identity);
+    glGetFloatv(GL_MODELVIEW_MATRIX, identity);
     glPopMatrix();
     return modelView == identity;
 }

@@ -21,8 +21,6 @@
 
 #pragma once
 
-class Proto;
-
 #include "Element.h"
 #include "Node.h"   
 
@@ -74,4 +72,3 @@ private:
     int             m_nodeType;
     const char    **m_strings;
 };
-

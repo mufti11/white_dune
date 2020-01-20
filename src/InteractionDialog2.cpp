@@ -35,16 +35,20 @@ InteractionDialog2::InteractionDialog2(SWND parent, Scene *scene,
                                        InteractionRouteData *routeData)
   : Dialog(parent, IDD_INTERACTION2)
 {
+    m_window.initCheckBoxWindow(parent, m_dlg);
     m_scene = scene;
     m_routeData = routeData;
     buildInterfaceData();
     LoadData();
+    m_window.accountYmax();
+    m_window.invalidateWindow();
 }
 
 void
 InteractionDialog2::buildInterfaceData(void)
 {
     m_protos.resize(0);
+    m_window.resize0();
     int index = 0;
     int type = m_routeData->type;
     bool x3d = m_scene->isX3d();
@@ -66,10 +70,14 @@ InteractionDialog2::buildInterfaceData(void)
                     already = true;
                     MyString string = "";
                     string += outProto->getName(x3d);
+                    m_window.setString(index, string);
+                    m_protos.append(string);
                     index++; 
                 }
             }
         }
+        for (int i = 0; i < index; i++)
+            m_window.setInitButtonsPressed(i, false);
         m_sensors.resize(0);
         m_nodes.resize(0);
         char newSensor[256];
@@ -120,6 +128,8 @@ InteractionDialog2::OnCommand(int id)
 #ifndef _WIN32
     } else if (id == IDC_INTERACTION_SENSORS) {
         buildInterfaceData();
+        m_window.accountYmax();
+        m_window.invalidateWindow();
 #endif
     } else if (id == IDCANCEL) {
         swEndDialog(IDCANCEL);
@@ -133,6 +143,17 @@ InteractionDialog2::Validate()
           IDC_INTERACTION_SENSORS));
     if (numSensor <= 0) {
         bool checked = false;
+        for (long i = 0; i < m_protos.size(); i++)
+            if (m_window.getChecked(i)) {
+                if (checked) {
+                    TheApp->MessageBoxId(IDS_NOT_2_INTERACTIVE);
+                    return false;
+                }
+                checked = true;
+            }    
+        for (long i = 0 ; i < m_protos.size(); i++)
+            if (m_window.getChecked(i))
+                return true;
         TheApp->MessageBoxId(IDS_MAKE_WHAT_INTERACTIVE);
         return false;
     }
@@ -156,5 +177,18 @@ InteractionDialog2::SaveData()
 {
     int numSensor = swComboBoxGetSelection(swGetDialogItem(m_dlg,
           IDC_INTERACTION_SENSORS));
-    m_routeData->node = m_nodes[numSensor - 1];
+    if (numSensor <= 0) {
+        for (long i = 0 ; i < m_protos.size(); i++)
+            if (m_window.getChecked(i))
+                m_routeData->nodeProtoName = m_protos[i];
+    } else
+       m_routeData->node = m_nodes[numSensor - 1];
 }
+
+void 
+InteractionDialog2::drawInterface(SDC dc)
+{
+    m_window.drawInterface(dc);
+}
+
+

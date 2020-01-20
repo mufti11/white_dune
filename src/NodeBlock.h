@@ -20,7 +20,7 @@
  */
 
 #pragma once
-#include "ExternTheApp.h"
+
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -45,8 +45,7 @@ class NodeBlock : public NodeGroup {
 public:
                     NodeBlock(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeBlock(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeBlock(*this); }
 
     fieldMacros(MFString, nameSpaceName, ProtoBlock)
 };
-

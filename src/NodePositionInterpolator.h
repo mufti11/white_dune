@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POSITIONINTERPOLATOR_H
-#define _NODE_POSITIONINTERPOLATOR_H
+#pragma once
 
-#ifndef _INTERPOLATOR_H
 #include "Interpolator.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPositionInterpolator : public ProtoInterpolator {
@@ -36,7 +30,7 @@ public:
                     ProtoPositionInterpolator(Scene *scene);
     virtual Node   *create(Scene *scene);
 
-    virtual int     getType() const { return VRML_POSITION_INTERPOLATOR; }
+    virtual int         getType() const { return VRML_POSITION_INTERPOLATOR; }
 };
 
 class NodePositionInterpolator : public Interpolator {
@@ -44,13 +38,13 @@ public:
                         NodePositionInterpolator(Scene *scene, Proto *proto);
 
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node       *copy() { return new NodePositionInterpolator(
-                                 getScene(), getProto()); }
+    virtual Node       *copy() const 
+                           { return new NodePositionInterpolator(*this); }
 
-    virtual int         getStride() { return 3; } 
-    virtual int         getNumChannels() { return 3; }
-    virtual FieldValue *createKey(void *value);
-    virtual FieldValue *createKeys(void *values, int numKeys);
+    virtual int         getStride() const { return 3; } 
+    virtual int         getNumChannels() const { return 3; }
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
 
     ADD_FLIP
     ADD_SWAP
@@ -66,4 +60,3 @@ private:
     bool            m_isInternal;
 };
 
-#endif // _NODE_POSITIONINTERPOLATOR_H

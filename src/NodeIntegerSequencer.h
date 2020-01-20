@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "Interpolator.h"
 #include "ProtoMacros.h"
@@ -48,21 +47,20 @@ public:
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeIntegerSequencer(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeIntegerSequencer(*this); }
 
-    virtual FieldValue *createKey(void *value);
-    virtual FieldValue *createKeys(void *value, int numKeys);
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *value, int numKeys) const;
 
-    virtual int         getNumChannels() { return 1; }
+    virtual int         getNumChannels() const { return 1; }
 
-    virtual float       getKeyValue(int channel, int index);
+    virtual float       getKeyValue(int channel, int index) const;
 
     virtual FieldValue *getInterpolatedFieldValue(float k);
 
     virtual void        setKeyValue(int channel, int index, float value);
 
-    virtual void        insertKey(int pos, float key, float *values);
+    virtual void        insertKey(int pos, float key, const float *values);
  
     fieldMacros(MFInt32, keyValue, ProtoIntegerSequencer)
 };

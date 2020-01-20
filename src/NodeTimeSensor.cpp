@@ -184,7 +184,7 @@ NodeTimeSensor::getProfile(void) const
 int
 NodeTimeSensor::getComponentLevel(void) const
 {
-    if (((NodeTimeSensor *)this)->hasOutput("isPaused"))
+    if (hasOutput("isPaused"))
         return 2;    
     if (!isDefault(pauseTime_Field()))
         return 2;    

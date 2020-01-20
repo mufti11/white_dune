@@ -35,11 +35,11 @@ public:
                         MFTime(MFTime *value);
 
     virtual int         getType() const             { return MFTIME; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
     virtual const char *getTypeName() const         { return "MFTime"; }
     virtual int         getSFSize() const           { return m_value.size(); }
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
 
@@ -52,23 +52,24 @@ public:
     virtual FieldValue *copy();
 
     int                 getSize() const { return m_value.size(); }
-    double              getValue(int i) { return m_value[i]; }
+    double              getValue(int i) const { return m_value[i]; }
     virtual void        setValue(int index, double value);
-    double             *getValues() const { return m_value.getData(); }
-    virtual FieldValue *getSFValue(int index)
+    const double       *getValues() const { return m_value.getData(); }
+    virtual FieldValue *getSFValue(int index) const   
                            { return new SFTime(m_value[index]); }
     virtual void        setSFValue(int index, FieldValue *value);
-    void                setSFValue(int index, const double value);
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const double value);
     virtual void        removeSFValue(int index) { m_value.remove(index); }
 
     virtual bool        equals(const FieldValue *value) const;
+    bool                equals(const MFTime *value) const;
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
     FieldValue         *getRandom(Scene *scene, int nodeType);
 private:
     MyArray<double>     m_value;
 };
+

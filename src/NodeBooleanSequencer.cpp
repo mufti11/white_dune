@@ -69,10 +69,10 @@ NodeBooleanSequencer::getComponentName(void) const
 }
 
 float
-NodeBooleanSequencer::getKeyValue(int channel, int index)
+NodeBooleanSequencer::getKeyValue(int channel, int index) const
 {
     MFBool *keyValue = (MFBool *) getField(m_keyValueField);
-    int i = index * ((NodeBooleanSequencer *)this)->getNumChannels() + channel;
+    int i = index * getNumChannels() + channel;
     if (i < keyValue->getSize()) {
         return keyValue->getValue(i);
     } else {
@@ -92,17 +92,15 @@ NodeBooleanSequencer::getInterpolatedFieldValue(float k)
 }
 
 FieldValue *
-NodeBooleanSequencer::createKey(void *value)
+NodeBooleanSequencer::createKey(void *value) const
 {
-    return new MFBool((bool *)value, 
-                      ((NodeBooleanSequencer *)this)->getNumChannels());
+    return new MFBool((bool *)value, getNumChannels());
 }
 
 FieldValue *
-NodeBooleanSequencer::createKeys(void *value, int numKeys)
+NodeBooleanSequencer::createKeys(void *value, int numKeys) const
 {
-    return new MFBool((bool *)value, numKeys * 
-                      ((NodeBooleanSequencer *)this)->getNumChannels());
+    return new MFBool((bool *)value, numKeys * getNumChannels());
 }
 
 
@@ -119,7 +117,7 @@ NodeBooleanSequencer::setKeyValue(int channel, int index, float value)
 }
 
 void
-NodeBooleanSequencer::insertKey(int pos, float key, float *values)
+NodeBooleanSequencer::insertKey(int pos, float key, const float *values)
 {
     MFFloat *keys = (MFFloat *) getField(m_keyField);
     MFBool *keyValues = (MFBool *) getField(m_keyValueField);

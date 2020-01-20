@@ -131,10 +131,8 @@ TransformNode::transform()
                oriAngle *= angleUnit;
             }
         }
-        glMatrixMode(GL_MODELVIEW);
-        static Matrixd matrix = Matrixd::identity();
-        glLoadMatrixd(matrix);
         glPushMatrix();
+        glLoadIdentity();
         glTranslatef(ftranslation[0], ftranslation[1], ftranslation[2]);
         glTranslatef(fcenter[0], fcenter[1], fcenter[2]);
         glRotatef(RAD2DEG(rotAngle), 
@@ -145,11 +143,11 @@ TransformNode::transform()
         glRotatef(-RAD2DEG(oriAngle), 
               fscaleOrientation[0], fscaleOrientation[1], fscaleOrientation[2]);
         glTranslatef(-fcenter[0], -fcenter[1], -fcenter[2]);
-        glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+        glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
         glPopMatrix();
         m_matrixDirty = false;
     }
-    glMultMatrixd((GLdouble *) m_matrix);
+    glMultMatrixf((GLfloat *) m_matrix);
 }
 
 void
@@ -191,9 +189,9 @@ TransformNode::getInvertMatrix(float* matrix)
     glRotatef(-RAD2DEG(rotAngle), frotation[0], frotation[1], frotation[2]);
     glTranslatef(-fcenter[0], -fcenter[1], -fcenter[2]);
     glTranslatef(-ftranslation[0], -ftranslation[1], -ftranslation[2]);
-    glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+    glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
-    glMultMatrixd((GLdouble *) m_matrix);
+    glMultMatrixf((GLfloat *) m_matrix);
     for (int i = 0; i < 16; i++)
        matrix[i] = m_matrix[i];    
     m_matrixDirty = true;

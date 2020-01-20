@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TRANSFORM_SENSOR_H
-#define _NODE_TRANSFORM_SENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTransformSensor : public Proto {
@@ -59,7 +50,7 @@ public:
                            { return "EnvironmentalSensor"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int     getX3dVersion(void) const { return 2; }
-    virtual Node *copy() { return new NodeTransformSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTransformSensor(*this); }
 
     fieldMacros(SFVec3f, center, ProtoTransformSensor);
     fieldMacros(SFBool, enabled, ProtoTransformSensor);
@@ -67,4 +58,3 @@ public:
     fieldMacros(SFNode, targetObject, ProtoTransformSensor);
 };
 
-#endif

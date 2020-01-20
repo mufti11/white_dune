@@ -23,8 +23,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFMFTYPES_H
-#define _SFMFTYPES_H
+#pragma once
 
 #include "MFBool.h"
 #include "MFColor.h"
@@ -61,6 +60,3 @@
 #include "SFVec3d.h"
 #include "SFVec3f.h"
 #include "SFVec4f.h"
-
-#endif // _SFMFTYPES_H
-

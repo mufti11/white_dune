@@ -44,4 +44,3 @@ private:
     FieldValue         *m_oldValue;      // the old and new values of
     FieldValue         *m_newValue;      // the element (in SFValue form)
 };
-

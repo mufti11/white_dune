@@ -19,8 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFDOUBLE_ITEM_H
-#define _SFDOUBLE_ITEM_H
+#pragma once
 
 #include "FieldViewItem.h"
 
@@ -36,4 +35,3 @@ public:
     virtual FieldValue *StopEditing(const char *str, int offset);
 };
 
-#endif // _SFDOUBLE_ITEM_H

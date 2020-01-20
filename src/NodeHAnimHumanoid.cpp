@@ -430,7 +430,7 @@ NodeHAnimHumanoid::preDraw()
             childList->get(i)->doWithBranch(searchDirty, &matrixDirty,
                                             false, false);
             if (matrixDirty)
-                break;
+               break;
         }
     }
 
@@ -592,7 +592,6 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
          delete [] m_meshes;
          delete [] m_origVertices;
          m_meshNodes.resize(0);
-         m_numMeshes = 0;
      }
 
      MFNode *mfSkin = skin();
@@ -652,19 +651,17 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
      for (int j = 0; j < m_numMeshes; j++)
          for (int i = 0; i < n; i++)
               if (childList->get(i)->getType() == X3D_HANIM_JOINT) {
-
                   NodeHAnimJoint *joint = (NodeHAnimJoint *)childList->get(i);
                   if (m_meshes[j] != NULL)
                       joint->applyJoint(j, m_meshes[j], m_origVertices[j], 
                                         this);
               }
-/*
+
      for (int j = 0; j < m_numMeshes; j++)
          if (m_meshes[j] != NULL) {
              m_meshes[j]->generateFaceNormals();
              m_meshes[j]->smoothNormals();
          }
-*/
 }
 
 class NoWeightData {
@@ -775,11 +772,9 @@ NodeHAnimHumanoid::writeRib(int filedes, int indent)
     createMeshes();
     int ret = 0;
     for (int i = 0; i < m_numMeshes; i++) {
-#ifndef MACOSX
         NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)
                                       m_meshes[i]->toIndexedFaceSet(0, m_scene);
         RET_ONERROR( faceset->writeRib(filedes, indent) )
-#endif
     }
     return ret;    
 }

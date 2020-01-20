@@ -43,3 +43,4 @@ private:
     Vec3f       m_normal;
     float       m_minZ, m_maxZ;
 };
+

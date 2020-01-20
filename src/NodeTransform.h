@@ -19,25 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TRANSFORM_H
-#define _NODE_TRANSFORM_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _MATRIX_H
 #include "Matrix.h"
-#endif
-
 #include "swt.h"
-
 #include "SFMFTypes.h"
 #include "TransformNode.h"
 
@@ -68,13 +56,16 @@ public:
                      ~NodeTransform();
 
 public:
-    virtual int       getChildrenField(void)
+    virtual int       getChildrenField(void) const 
                          { return children_Field(); }
 
     // X3D profile changes addChildren, removeChildren
     virtual int       getProfile(void) const;
     virtual int       getX3dVersion(void) const { return 0; }
-    virtual Node     *copy() { return new NodeTransform(m_scene, m_proto); }
+    virtual Node     *copy() const 
+                          { 
+                          return new NodeTransform(*this); 
+                          }
 
     virtual void      setField(int field, FieldValue *value, int cf = -1);
 
@@ -90,4 +81,3 @@ public:
     fieldMacros(SFBool, render,   ProtoTransform)
 };
 
-#endif // _NODE_TRANSFORM_H

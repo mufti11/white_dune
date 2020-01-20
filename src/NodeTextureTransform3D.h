@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEXTURE_TRANSFORM_3D_H
-#define _NODE_TEXTURE_TRANSFORM_3D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoTextureTransform3D : public Proto {
@@ -58,8 +49,7 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing3D"; }
     virtual int         getComponentLevel(void) const { return 1; }
     virtual int     getX3dVersion(void) const { return 1; }
-    virtual Node *copy() { return new NodeTextureTransform3D( 
-                           m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTextureTransform3D(*this); }
 
     fieldMacros(SFVec3f,    center,      ProtoTextureTransform3D);
     fieldMacros(SFRotation, rotation,    ProtoTextureTransform3D);
@@ -67,4 +57,3 @@ public:
     fieldMacros(SFVec3f,    translation, ProtoTextureTransform3D);
 };
 
-#endif

@@ -19,21 +19,12 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_NURBSGROUP_H
-#define _NODE_NURBSGROUP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
 #include "NodeGroup.h"
-
 #include "SFMFTypes.h"
 
 class ProtoNurbsGroup : public ProtoGroup {
@@ -53,7 +44,7 @@ class NodeNurbsGroup : public NodeGroup {
 public:
                     NodeNurbsGroup(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeNurbsGroup(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeNurbsGroup(*this); }
 
     virtual void    draw(void);
 
@@ -72,5 +63,3 @@ public:
     fieldMacros(SFFloat, tessellationScale, ProtoNurbsGroup)
 };
 
-
-#endif // _NODE_NURBSGROUP_H

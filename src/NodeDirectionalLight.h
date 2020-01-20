@@ -19,24 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_DIRECTIONALLIGHT_H
-#define _NODE_DIRECTIONALLIGHT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "swt.h"
-
 #include "SFMFTypes.h"
-
 #include "KambiLightCommonFields.h"
 #include "X3domLightCommonFields.h"
 
@@ -74,8 +63,7 @@ public:
     virtual const char* getComponentName(void) const;
     virtual int     getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() 
-                    { return new NodeDirectionalLight(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeDirectionalLight(*this); }
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -104,4 +92,3 @@ protected:
     GLenum             m_light;
 };
 
-#endif // _NODE_DIRECTIONALLIGHT_H

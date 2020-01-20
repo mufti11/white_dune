@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_POSITION_INTERPOLATOR_2D_H
-#define _NODE_POSITION_INTERPOLATOR_2D_H
+#pragma once
 
-#ifndef _INTERPOLATOR_H
 #include "Interpolator.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoPositionInterpolator2D : public ProtoInterpolator {
@@ -50,17 +44,16 @@ public:
     virtual const char* getComponentName(void) const { return "Interpolation"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int         getX3dVersion(void) const { return 0; } 
-    virtual Node        *copy() { return new NodePositionInterpolator2D(
-                                         m_scene, m_proto); }
+    virtual Node       *copy() const 
+                           { return new NodePositionInterpolator2D(*this); }
 
-    virtual int         getStride() { return 2; } 
-    virtual int         getNumChannels() { return 2; }
-    virtual FieldValue *createKey(void *value);
-    virtual FieldValue *createKeys(void *values, int numKeys);
+    virtual int         getStride() const { return 2; } 
+    virtual int         getNumChannels() const { return 2; }
+    virtual FieldValue *createKey(void *value) const;
+    virtual FieldValue *createKeys(void *values, int numKeys) const;
 
     virtual int         writeProto(int f) { return writeX3dProto(f); }
 
     fieldMacros(MFVec2f, keyValue, ProtoPositionInterpolator2D)
 };
 
-#endif 

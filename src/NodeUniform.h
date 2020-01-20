@@ -19,16 +19,10 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_UNIFORM_H
-#define _NODE_UNIFORM_H
+#pragma once
 
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoUniform : public Proto {
@@ -49,12 +43,10 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node   *copy() { return new NodeUniform(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeUniform(*this); }
 
     fieldMacros(SFString, name,  ProtoUniform)
     fieldMacros(SFString, type,  ProtoUniform)
     fieldMacros(SFString, value, ProtoUniform)
 };
 
-
-#endif

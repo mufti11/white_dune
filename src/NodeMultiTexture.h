@@ -19,25 +19,15 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_MULTI_TEXTURE_H
-#define _NODE_MULTI_TEXTURE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
+#include "KambiTextureCommonFields.h"
+#include "SFMFTypes.h"
 
 class MeshBasedNode;
-
-#include "KambiTextureCommonFields.h"
-
-#include "SFMFTypes.h"
 
 class ProtoMultiTexture : public Proto {
 public:
@@ -70,7 +60,7 @@ public:
     virtual const char* getComponentName(void) const { return "Texturing"; }
     virtual int         getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node *copy() { return new NodeMultiTexture(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeMultiTexture(*this); }
 
     void            bind();
     void            unbind();
@@ -101,4 +91,3 @@ protected:
     MyArray<int> m_modeInt;
 };
 
-#endif // _NODE_MULTI_TEXTURE_H

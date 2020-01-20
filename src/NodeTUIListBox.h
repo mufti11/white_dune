@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUIListBox node
  */
 
-#ifndef _NODE_TUI_LIST_BOX_H
-#define _NODE_TUI_LIST_BOX_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 class ProtoTUIListBox : public ProtoTUIElement {
@@ -56,11 +46,10 @@ public:
                     NodeTUIListBox(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeTUIListBox(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUIListBox(*this); }
 
     fieldMacros(MFString, items,         ProtoTUIListBox)
     fieldMacros(SFBool,   withNone,      ProtoTUIListBox)
     fieldMacros(SFInt32,  defaultChoice, ProtoTUIListBox)
 };
 
-#endif // _NODE_TUI_LIST_BOX_H

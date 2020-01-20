@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEX_COORD_DAMPER_2D_H
-#define _NODE_TEX_COORD_DAMPER_2D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "DamperNode.h"
 
@@ -51,8 +42,7 @@ class NodeTexCoordDamper2D : public DamperNode {
 public:
                     NodeTexCoordDamper2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeTexCoordDamper2D(
-                             m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTexCoordDamper2D(*this); }
 
 
     void            dynamics(MFVec2f *dest, MFVec2f *val, float alpha);
@@ -74,4 +64,3 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif

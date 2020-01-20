@@ -19,8 +19,6 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
-
 #include "Scene.h"
 #include "Array.h"
 #include "swt.h"

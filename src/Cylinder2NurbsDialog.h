@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Dialog.h"
+
 #include "swttypedef.h"
 #include "Node.h"
 
@@ -52,3 +53,4 @@ private:
     int                 m_bottom;
     int                 m_top;
 };
+

@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include "stdafx.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 #include "Vec4f.h"
 #include "SFColorRGBA.h"
 #include "SFFloat.h"
@@ -49,7 +48,7 @@ SFColorRGBA::SFColorRGBA(const float *values)
 }
 
 MyString    
-SFColorRGBA::getString(int index, int stride)
+SFColorRGBA::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -72,14 +71,6 @@ void SFColorRGBA::setValue(float v1, float v2, float v3, float v4)
     m_value[1] = v2;
     m_value[2] = v3;
     m_value[3] = v4;
-}
-
-void SFColorRGBA::setSFValue(FieldValue *value)
-{
-     m_value[0] = ((SFColorRGBA *)value)->getValue()[0];
-     m_value[1] = ((SFColorRGBA *)value)->getValue()[1];
-     m_value[2] = ((SFColorRGBA *)value)->getValue()[2];
-     m_value[3] = ((SFColorRGBA *)value)->getValue()[3];
 }
 
 // silly default
@@ -116,7 +107,7 @@ SFColorRGBA::equals(const FieldValue *value) const
     return false;
 }
 
-int SFColorRGBA::writeData(int f, int i)
+int SFColorRGBA::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g %g", m_value[0], m_value[1],
                                       m_value[2], m_value[3]);
@@ -124,7 +115,7 @@ int SFColorRGBA::writeData(int f, int i)
 
 int
 SFColorRGBA::writeC(int filedes, const char* variableName, 
-                    int languageFlag)
+                    int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -153,7 +144,7 @@ SFColorRGBA::clamp(const FieldValue *min, const FieldValue *max)
 }
 
 MyString
-SFColorRGBA::getEcmaScriptComment(MyString name, int flags)
+SFColorRGBA::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

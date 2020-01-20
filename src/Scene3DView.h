@@ -26,12 +26,10 @@
 #include "Matrix.h"
 #include "SceneView.h"
 #include "InputDevice.h"
-
-class SFVec3f;
-
 #include "swttypedef.h"
 
 class Scene;
+class SFVec3f;
 
 class Scene3DView : public SceneView
 {
@@ -64,9 +62,9 @@ public:
     int                 walk();
 
     int                 readInputDevice(void);
-    void                Transform3D(Path* path, InputDevice* inputDevice);
+    void                Transform3D(const Path* path, InputDevice* inputDevice);
     void                Navigate3D(InputDevice * inputDevice);
-    void                Handle3D(Path* path,InputDevice* inputDevice, 
+    void                Handle3D(const Path* path,InputDevice* inputDevice, 
                                  int handle);
     void                drawViewPort(Node* viewport, int count, 
                                      bool update = false);

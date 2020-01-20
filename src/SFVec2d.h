@@ -19,28 +19,30 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
+#ifndef _SFVEC2D_H
+#define _SFVEC2D_H
 
-#include "Vec2d.h"
+#ifndef _FIELDVALUE_H
 #include "FieldValue.h"
+#endif
 
 class SFVec2d : public FieldValue {
 public:
                         SFVec2d(double x, double y);
-                        SFVec2d(double *values);
+                        SFVec2d(const double *values);
                         SFVec2d(void); // silly default
 
     virtual int         getType() const { return SFVEC2D; }
     virtual int         getStride() const { return 2; }
     virtual const char *getTypeName() const { return "SFVec2d"; }
-    virtual MyString    getString(int index, int stride);
+    virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag);
-    virtual const char *getTypeC(int languageFlag) { return "double"; }
-    virtual bool        isArrayInC(void) { return true; }
+                               int languageFlag) const;
+    virtual const char *getTypeC(int languageFlag) const { return "double"; }
+    virtual bool        isArrayInC(void) const { return true; }
 
     virtual bool        readLine(int index, char *line);
 
@@ -48,44 +50,22 @@ public:
     virtual bool        needCheckFloat(void) const { return true; }
 
     virtual bool        equals(const FieldValue *value) const;
-    virtual void        clamp(const FieldValue *min, const FieldValue *max);
     virtual FieldValue *copy() { return new SFVec2d(*this); }
 
-    const double        getValue(int index) const { return m_value[index]; }
-    const double       *getValue() const { return m_value; }
+    double               getValue(int index) const { return m_value[index]; }
+    const double        *getValue() const { return m_value; }
     void                setValue(int pos, double value)
                            { m_value[pos] = value; }
     void                setValue(double v1, double v2);
-    void                setValue(int index, float value)
-                           {
-                           assert(index >= 0 && index < 4);
-                           m_value[index] = value;
-                           }
-    void                setValue(float v1, float v2)
-                           {
-                           m_value[0] = v1;
-                           m_value[1] = v2;
-                           }
-    void                setSFValue(FieldValue *value) 
-                           {
-                           m_value[0] = ((SFVec2d *)value)->getValue()[0];
-                           m_value[1] = ((SFVec2d *)value)->getValue()[1];
-                           }
-    Vec2d              getSFValue(int index) const
-                           {
-                           static Vec2d vec;
-                           vec.x = getValue(index * 2);
-                           vec.y = getValue(index * 2 + 1);
-                           return vec;
-                           }
 
+    MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    MyString            getEcmaScriptComment(MyString name, int flags);
-
-    bool                supportAnimation(bool x3d) { return x3d; }
+    bool                supportAnimation(bool x3d) const { return x3d; }
 
     FieldValue         *getRandom(Scene *scene, int nodeType) 
                            { return new SFVec2d(FLOAT_RAND(), FLOAT_RAND()); }
 private:
     double               m_value[2];
 };
+
+#endif // _SFVEC2D_H

@@ -49,12 +49,15 @@ NodeCoordinateInterpolator2D::NodeCoordinateInterpolator2D(Scene *scene, Proto *
 }
 
 int
-NodeCoordinateInterpolator2D::getNumChannels()
+NodeCoordinateInterpolator2D::getNumChannels() const
 {
     if (m_keySize == 0) {
-        MFFloat *key = (MFFloat *)getField(key_Field());
+        const MFFloat *key = (const MFFloat *) getField(
+               ((NodeCoordinateInterpolator2D *)this)->key_Field());
         int numKeys = key->getSize();
-        MFVec2f *keyValue = (MFVec2f *)getField(keyValue_Field());
+        const MFVec2f *keyValue = (const MFVec2f *) getField(
+               ((NodeCoordinateInterpolator2D *)this)->keyValue_Field());
+
         if (numKeys != 0) {
             return keyValue->getSize() / numKeys;
         }
@@ -63,18 +66,15 @@ NodeCoordinateInterpolator2D::getNumChannels()
 }
 
 FieldValue *
-NodeCoordinateInterpolator2D::createKey(void *value)
+NodeCoordinateInterpolator2D::createKey(void *value) const
 {
-    return new MFVec2f((float *)value, ((NodeCoordinateInterpolator2D *)
-                       this)->getNumChannels());
+    return new MFVec2f((float *)value, getNumChannels());
 }
 
 FieldValue *
-NodeCoordinateInterpolator2D::createKeys(void *value, int numKeys)
+NodeCoordinateInterpolator2D::createKeys(void *value, int numKeys) const
 {
-    return new MFVec2f((float *)value, numKeys *
-                       ((NodeCoordinateInterpolator2D *)
-                        this)->getNumChannels());
+    return new MFVec2f((float *)value, numKeys * getNumChannels());
 }
 
 void 

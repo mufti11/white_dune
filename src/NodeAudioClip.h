@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -52,7 +51,7 @@ public:
                     NodeAudioClip(Scene *scene, Proto *proto);
 
     virtual int     getProfile(void) const { return PROFILE_IMMERSIVE; }
-    virtual Node   *copy() { return new NodeAudioClip(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeAudioClip(*this); }
     virtual int     getX3dVersion(void) const { return 0; }
 
     virtual bool    hasNumbers4kids(void) { return true; } 

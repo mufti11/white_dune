@@ -21,7 +21,6 @@
 
 #include "stdafx.h"
 #include "ToolbarWindow.h"
-#include "MainWindow.h"
 #include "IconSize.h"
 
 #include <swt.h>

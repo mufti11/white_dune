@@ -22,8 +22,6 @@
 #include "SFNodeItem.h"
 #include "SFNode.h"
 #include "FieldView.h"
-#include "Scene.h"
-
 #include "swt.h"
 
 SFNodeItem::SFNodeItem(FieldView *view)

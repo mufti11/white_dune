@@ -21,22 +21,12 @@
  * Implements the Cover/Covise TUIProgressBar node
  */
 
-#ifndef _NODE_TUI_PROGRESS_BAR_H
-#define _NODE_TUI_PROGRESS_BAR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
-
 #include "TUIElement.h"
 
 #ifdef max 
@@ -59,10 +49,9 @@ public:
                     NodeTUIProgressBar(Scene *scene, Proto *proto);
 
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeTUIProgressBar(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTUIProgressBar(*this); }
 
     fieldMacros(SFInt32, max,   ProtoTUIProgressBar)
     fieldMacros(SFInt32, value, ProtoTUIProgressBar)
 };
 
-#endif // _NODE_TUI_PROGRESS_BAR_H

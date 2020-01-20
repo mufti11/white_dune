@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_KAMBI_INLINE_H
-#define _NODE_KAMBI_INLINE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "KambiCommonFunctions.h"
 
@@ -57,7 +48,7 @@ class NodeKambiInline : public Node {
 public:
                     NodeKambiInline(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeKambiInline(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeKambiInline(*this); }
 
     kambiCommonFunctions()
 
@@ -69,4 +60,3 @@ public:
     fieldMacros(MFNode, replaceNodes, ProtoKambiInline);
 };
 
-#endif

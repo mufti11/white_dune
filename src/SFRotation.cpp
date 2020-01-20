@@ -24,14 +24,13 @@
 #include "stdafx.h"
 #include "swt.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 #include "Vec4f.h"
 #include "SFRotation.h"
 #include "EulerAngles.h"
 
 MyString    
-SFRotation::getString(int index, int stride)
+SFRotation::getString(int index, int stride) const
 {
     MyString ret = "";
     char buffer[256];
@@ -80,14 +79,14 @@ SFRotation::SFRotation(void)
     m_eulerDirty = true;
 }
 
-int SFRotation::writeData(int f, int i)
+int SFRotation::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g %g", 
                     m_value[0], m_value[1], m_value[2], m_value[3]);
 }
 
 int
-SFRotation::writeAc3d(int filedes, int indent)
+SFRotation::writeAc3d(int filedes, int indent) const
 {
     Matrix m;
     m[0] = m[5] = m[10] = 1.0f;
@@ -111,7 +110,7 @@ SFRotation::writeAc3d(int filedes, int indent)
 
 int
 SFRotation::writeC(int filedes, const char* variableName, 
-                   int languageFlag)
+                   int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )
@@ -274,13 +273,13 @@ SFRotation::setEulerAngles(Vec3f angles, int order)
 }
 
 Vec3f
-SFRotation::operator *(const Vec3f &v)
+SFRotation::operator *(const Vec3f &v) const
 {
     return m_quaternion * v;
 }
 
 MyString
-SFRotation::getEcmaScriptComment(MyString name, int flags)
+SFRotation::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;

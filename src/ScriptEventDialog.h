@@ -41,4 +41,3 @@ private:
     MyString                m_value;
     Node                   *m_node;
 };
-

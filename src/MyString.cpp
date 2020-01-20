@@ -25,8 +25,10 @@
 #include "StringArray.h"
 
 MyString &
-MyString::operator = (const MyString &s)
+MyString::operator=(const MyString &s)
 {
+    if ((!--m_stringBuf->m_refs) && (m_stringBuf->m_len != 0))
+        delete m_stringBuf;
     m_stringBuf = s.m_stringBuf; 
     if (m_stringBuf->m_refs < 0)
         assert(0); 
@@ -72,7 +74,7 @@ MyString::~MyString()
 }
 
 int
-MyString::operator == (const MyString &str) const
+MyString::operator ==(const MyString &str) const
 {
     return m_stringBuf == str.m_stringBuf
                          || !strcmp(m_stringBuf->m_data, 
@@ -80,7 +82,7 @@ MyString::operator == (const MyString &str) const
 }
 
 MyString &
-MyString::operator += (const char *s)
+MyString::operator +=(const char *s)
 {
     if (s == NULL)
         return *this;
@@ -102,7 +104,7 @@ MyString::operator += (const char *s)
 }
 
 MyString &
-MyString::operator += (char c)
+MyString::operator +=(char c)
 {
     char str[2];
 

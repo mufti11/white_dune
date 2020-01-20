@@ -19,22 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_VIEWPORT_H
-#define _NODE_VIEWPORT_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "NodeGroup.h"
-class Scene;
+#include "Scene.h"
 
 #include "SFMFTypes.h"
 
@@ -58,10 +49,18 @@ public:
 
     virtual const char* getComponentName(void) const { return "Layering"; }
     virtual int         getComponentLevel(void) const { return 1; }
-    virtual Node   *copy() { return new NodeViewport(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeViewport(*this); }
 
-    virtual void    preDraw();
-    virtual void    draw(int pass); 
+    virtual void    preDraw() 
+                        { 
+                        if (m_scene->getDrawViewports())
+                            children()->preDraw(); 
+                        }
+    virtual void    draw(int pass) 
+                        { 
+                        if (m_scene->getDrawViewports())
+                            children()->draw(pass, children_Field()); 
+                        }
 
     virtual void    setField(int index, FieldValue *value, 
                              int containerField = -1);
@@ -70,4 +69,3 @@ public:
     fieldMacros(MFFloat, clipBoundary, ProtoViewport);
 };
 
-#endif

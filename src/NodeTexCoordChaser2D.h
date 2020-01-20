@@ -19,23 +19,13 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TEX_COORD_CHASER_2D_H
-#define _NODE_TEX_COORD_CHASER_2D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "ChaserNode.h"
-
 #include "MFVec2f.h"
 
 class ProtoTexCoordChaser2D : public ChaserProto {
@@ -53,7 +43,7 @@ class NodeTexCoordChaser2D : public ChaserNode {
 public:
                     NodeTexCoordChaser2D(Scene *scene, Proto *proto);
 
-    virtual Node *copy() { return new NodeTexCoordChaser2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTexCoordChaser2D(*this); }
 
     void            dynamics(MFVec2f *add, MFVec2f *dest, MFVec2f *val, 
                              float mult);
@@ -77,4 +67,3 @@ protected:
     int m_initialValue_Field;
 };
 
-#endif

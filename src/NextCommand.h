@@ -31,5 +31,6 @@ public:
 
     virtual int         getType() { return NEXT_COMMAND; }
     virtual void        execute(SceneView *sender = NULL) {}
-    virtual void        undo() {}
+     virtual void       undo() {}
 };
+

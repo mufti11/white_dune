@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CYLINDERSENSOR_H
-#define _NODE_CYLINDERSENSOR_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoCylinderSensor : public WonderlandExportProto {
@@ -65,7 +56,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeCylinderSensor(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeCylinderSensor(*this); }
 
     virtual bool    hasX3domOnOutputChange(void) { return true; } 
 
@@ -79,4 +70,3 @@ public:
     fieldMacros(SFFloat,    offset,       ProtoCylinderSensor)
 };
 
-#endif // _NODE_CYLINDERSENSOR_H

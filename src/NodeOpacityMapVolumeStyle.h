@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_OPACITY_MAP_VOLUME_STYLE_H
-#define _NODE_OPACITY_MAP_VOLUME_STYLE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoOpacityMapVolumeStyle : public Proto {
@@ -63,8 +54,7 @@ public:
         { return "VolumeRendering"; }
     virtual int     getComponentLevel(void) const { return 2; }
     virtual int     getX3dVersion(void) const { return 3; }
-    virtual Node   *copy() { return new NodeOpacityMapVolumeStyle(
-                                    m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeOpacityMapVolumeStyle(*this); }
 
     fieldMacros(SFBool, enabled, ProtoOpacityMapVolumeStyle);
     fieldMacros(SFNode, transferFunction, ProtoOpacityMapVolumeStyle);
@@ -73,5 +63,3 @@ public:
     fieldMacros(SFNode, surfaceNormals, ProtoOpacityMapVolumeStyle);
     fieldMacros(SFString, type, ProtoOpacityMapVolumeStyle);
 };
-
-#endif

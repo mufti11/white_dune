@@ -19,33 +19,16 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_TRIANGLE_SET_H
-#define _NODE_TRIANGLE_SET_H
+#pragma once
 
-#ifndef _MESH_BASED_NODE_H
 #include "MeshBasedNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-#ifndef _DUNEAPP_H
 #include "DuneApp.h"
-#endif
-#ifndef _MY_MESH_H
 #include "MyMesh.h"
-#endif
-#ifndef _VEC3F_H
 #include "Vec3f.h"
-#endif 
-#ifndef _NODE_COORDINATE_H
 #include "NodeCoordinate.h"
-#endif
-#ifndef _COLORED_H
 #include "Colored.h"
-#endif
 #include "SFMFTypes.h"
 #include "ComposedGeometryMacros.h"
 
@@ -88,7 +71,7 @@ public:
                            { return "Rendering"; }
     virtual int         getComponentLevel(void) const { return 3; }
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node *copy() { return new NodeTriangleSet(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeTriangleSet(*this); }
 
     virtual void    setField(int index, FieldValue *value, int cf = -1);
 
@@ -123,9 +106,9 @@ public:
                     { return (NodeCoordinate *)coord()->getValue(); }
     virtual Colored *getColored() { return this; }
 
-    virtual int     colorPerVertexField() 
+    virtual int     colorPerVertexField() const 
                        { return colorPerVertex_Field(); }
-    virtual int     colorIndexField()
+    virtual int     colorIndexField() const
                        { return -1; }
 
     MFVec3f        *getCoordinates();
@@ -157,4 +140,3 @@ protected:
     bool            m_colorPerVertexWarning;
 };
 
-#endif 

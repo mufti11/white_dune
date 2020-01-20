@@ -19,7 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
+#ifndef _SFVEC4F_ITEM_H
+#define _SFVEC4F_ITEM_H
 
 #include "FieldViewItem.h"
 
@@ -35,3 +36,5 @@ public:
     virtual void        StartEditing(MyString &str, int offset);
     virtual FieldValue *StopEditing(const char *str, int offset);
 };
+
+#endif // _SFVEC4F_ITEM_H

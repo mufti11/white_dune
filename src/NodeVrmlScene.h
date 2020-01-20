@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_VRML_SCENE_H
-#define _NODE_VRML_SCENE_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoVrmlScene : public Proto {
@@ -59,7 +50,7 @@ public:
 
     virtual int     getProfile(void) const { return PROFILE_INTERCHANGE; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new NodeVrmlScene(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeVrmlScene(*this); }
     
     virtual bool    hasNumbers4kids(void) { return true; } 
 
@@ -91,6 +82,4 @@ public:
     fieldMacros(SFTime, timeOut,  ProtoVrmlScene)
     fieldMacros(SFBool, bindOut,  ProtoVrmlScene)
 };
-
-#endif // _NODE_VRML_SCENE_H
 

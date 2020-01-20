@@ -113,7 +113,7 @@ ViewpointNode::preDraw(bool useStereo)
     if (m_scene->isCurrentViewpoint(this)) 
         transformForViewpoint(useStereo, Vec3d(), SFRotation());
     glMultMatrixf((GLfloat *) matrix2);
-    glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+    glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
 
     m_scene->addViewpoint(this);
@@ -133,7 +133,7 @@ ViewpointNode::apply(bool useStereo, Vec3d vec, SFRotation rot)
         glRotatef(RAD2DEG(-rot[3] * unitAngle), rot[0], rot[1], rot[2]);
         glTranslated(-pos.x, -pos.y, -pos.z);
     }
-    glGetDoublev(GL_MODELVIEW_MATRIX, m_matrix);
+    glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
     transformForViewpoint(useStereo, vec, rot);
 }
@@ -178,38 +178,24 @@ ViewpointNode::transformForViewpoint(bool useStereo, Vec3d vec,
     glTranslated(-vec.x, -vec.y, -vec.z);
 }
 
-int
-ViewpointNode::getAnimationCommentID(void) 
-{ 
-    return IDS_ANIMATION_HELP_VIEWPOINT + swGetLang(); 
-}
-
-Vec3d
-ViewpointNode::getPosition()
-{
-     Vec3f vec(position()->getValue());
-     return Vec3d(vec.x, vec.y, vec.z);
-}
-
-void 
-ViewpointNode::setPosition(Vec3d pos)
-{
-    m_scene->setField(this, position_Field(), 
-                            new SFVec3f(pos.x, pos.y, pos.z));
-}
-
 Quaternion 
-ViewpointNode::getOrientation()
+ViewpointNode::getOrientation() const
 {
-    return orientation()->getQuat();
+    return ((ViewpointNode *)this)->orientation()->getQuat();
 }
 
-void 
-ViewpointNode::setOrientation(Quaternion quat)
+
+void ViewpointNode::setOrientation(const Quaternion &quat)
 {
     SFRotation *rot = new SFRotation(quat);
     rot->reverseFixAngle(m_scene->getUnitAngle());
     m_scene->setField(this, orientation_Field(), rot);
+}
+
+int
+ViewpointNode::getAnimationCommentID(void) 
+{ 
+    return IDS_ANIMATION_HELP_VIEWPOINT + swGetLang(); 
 }
 
 void
@@ -217,6 +203,12 @@ ViewpointNode::getMatrix(float* matrix)
 {
     for (int i = 0; i < 16; i++)
        matrix[i] = m_matrix[i];
+}
+
+Vec3d
+ViewpointNode::getPosition() const
+{
+    return Vec3d();
 }
 
 int ViewpointNode::getProfile(void) const

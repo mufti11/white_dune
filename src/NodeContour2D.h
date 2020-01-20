@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_CONTOUR_2D_H
-#define _NODE_CONTOUR_2D_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoContour2D : public Proto {
@@ -49,7 +40,7 @@ class NodeContour2D : public Node {
 public:
                     NodeContour2D(Scene *scene, Proto *proto);
 
-    virtual Node   *copy() { return new NodeContour2D(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeContour2D(*this); }
     virtual int     getX3dVersion(void) const { return 0; }
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
@@ -81,4 +72,3 @@ public:
     fieldMacros(MFNode, children, ProtoContour2D)
 };
 
-#endif // _NODE_CONTOUR_2D_H

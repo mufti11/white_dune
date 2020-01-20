@@ -51,8 +51,8 @@ public:
 
     virtual bool    hasNumbers4kids(void) { return true; } 
 
-    virtual float   getSizeX(void) = 0;
-    virtual float   getSizeY(void) = 0;
+    virtual float   getSizeX(void) const = 0;
+    virtual float   getSizeY(void) const = 0;
     virtual bool    isScreenFontStyle(void) { return false; }
 
     void            setField(int index, FieldValue *value, int cf = -1);
@@ -67,3 +67,4 @@ public:
     fieldMacros(SFBool,   topToBottom, FontStyleProto)
     fieldMacros(SFFloat,  quality,     FontStyleProto)
 };
+

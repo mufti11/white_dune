@@ -27,7 +27,6 @@
 #include "MFVec2f.h"
 #include "Vec4f.h"
 #include "DuneApp.h"
-#include "ExternTheApp.h"
 
 MFVec4f::MFVec4f(MFVec2f *mfVec2f)
 {
@@ -62,11 +61,12 @@ MFVec4f::readLine(int index, char *line)
 bool
 MFVec4f::equals(const FieldValue *value) const
 {
-    return value->getType() == MFVEC4F && equals((MFFloat *)value);
+    return value->getType() == MFVEC4F && 
+           MFFloat::equals((const MFFloat *) value);
 }
 
 FieldValue *
-MFVec4f::getSFValue(int index)
+MFVec4f::getSFValue(int index) const
 {
     return new SFVec4f(getValue(index));
 }
@@ -81,47 +81,47 @@ MFVec4f::setSFValue(int index, FieldValue *value)
     }
 #endif
 
-    setSFValue(index, value);
+    setSFValue(index, ((SFVec4f *) value)->getValue());
 }
 
 void
-MFVec4f::setSFValue(int index, float *values)
+MFVec4f::setSFValue(int index, const float *values)
 {
-    m_value[index * 4    ] = values[0];
-    m_value[index * 4 + 1] = values[1];
-    m_value[index * 4 + 2] = values[2];
-    m_value[index * 4 + 3] = values[3];
+    m_value[index * 3    ] = values[0];
+    m_value[index * 3 + 1] = values[1];
+    m_value[index * 3 + 2] = values[2];
+    m_value[index * 3 + 3] = values[3];
 }
 
 void
 MFVec4f::setSFValue(int index, float x, float y, float z, float w)
 {
-    m_value[index * 4    ] = x;
-    m_value[index * 4 + 1] = y;
-    m_value[index * 4 + 2] = z;
-    m_value[index * 4 + 3] = w;
+    m_value[index * 3    ] = x;
+    m_value[index * 3 + 1] = y;
+    m_value[index * 3 + 2] = z;
+    m_value[index * 3 + 3] = w;
 }
 
 void
 MFVec4f::setVec(int index, Vec4f v)
 {
-    m_value[index * 4   ] = v.x;
-    m_value[index * 4 + 1] = v.y;   
-    m_value[index * 4 + 2] = v.z;   
-    m_value[index * 4 + 3] = v.w;   
+    m_value[index * 3    ] = v.x;
+    m_value[index * 3 + 1] = v.y;   
+    m_value[index * 3 + 2] = v.z;   
+    m_value[index * 3 + 4] = v.w;   
 }
 
 Vec4f
 MFVec4f::getVec(int index)
 {
-    return Vec4f(m_value[index * 4   ],
+    return Vec4f(m_value[index * 4    ],
                  m_value[index * 4 + 1],
                  m_value[index * 4 + 2],
                  m_value[index * 4 + 3]);
 }
 
 MyString
-MFVec4f::getEcmaScriptComment(MyString name, int flags)
+MFVec4f::getEcmaScriptComment(MyString name, int flags) const
 {
     const char *indent = ((FieldValue *)this)->getEcmaScriptIndent(flags);
     MyString ret;
@@ -214,11 +214,11 @@ MFVec4f::getEcmaScriptComment(MyString name, int flags)
 void 
 MFVec4f::insertSFValue(int index, FieldValue *value)
 {
-    insertSFValue(index, value); 
+    insertSFValue(index, ((SFVec4f *)value)->getValue()); 
 }
 
 void 
-MFVec4f::insertSFValue(int index, float *values)
+MFVec4f::insertSFValue(int index, const float *values)
 {
     for (int i = 0; i < getStride(); i++)
         m_value.insert(values[i], index * getStride() + i);

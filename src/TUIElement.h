@@ -49,7 +49,7 @@ public:
 
     virtual int     getType() const { return -1; }
     virtual int     getX3dVersion(void) const { return -1; }    
-    virtual Node   *copy() { return new TUIElement(*this); }
+    virtual Node   *copy() const { return new TUIElement(*this); }
 
     fieldMacros(SFString, elementName,     ProtoTUIElement)
     fieldMacros(SFString, parent,          ProtoTUIElement)

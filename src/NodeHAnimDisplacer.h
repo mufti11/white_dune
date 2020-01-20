@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_HANIM_DISPLACER_H
-#define _NODE_HANIM_DISPLACER_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoHAnimDisplacer : public Proto {
@@ -53,14 +44,13 @@ public:
 class NodeHAnimDisplacer : public Node {
 public:
                     NodeHAnimDisplacer(Scene *scene, Proto *proto);
-                    NodeHAnimDisplacer(NodeHAnimDisplacer &node);
+                    NodeHAnimDisplacer(const NodeHAnimDisplacer &node);
     virtual        ~NodeHAnimDisplacer();
 
     virtual const char* getComponentName(void) const;
     virtual int         getComponentLevel(void) const;
     virtual int         getX3dVersion(void) const { return 0; }
-    virtual Node        *copy() 
-                         { return new NodeHAnimDisplacer(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeHAnimDisplacer(*this); }
 
     fieldMacros(MFInt32,  coordIndex,    ProtoHAnimDisplacer)
     fieldMacros(MFVec3f,  displacements, ProtoHAnimDisplacer)
@@ -68,4 +58,3 @@ public:
     fieldMacros(SFFloat,  weight,        ProtoHAnimDisplacer)
 };
 
-#endif 

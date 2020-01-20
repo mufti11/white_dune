@@ -19,20 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_GROUP_H
-#define _NODE_GROUP_H
+#pragma once
 
-#ifndef _NODE_H
-#include "ExternTheApp.h"
 #include "Node.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 #include "StaticGroupNode.h"
 
@@ -66,7 +57,7 @@ public:
                     NodeGroup(NodeAnchor *anchor);
 
     virtual int     getProfile(void) const;
-    virtual Node   *copy() { return new NodeGroup(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeGroup(*this); }
 
     virtual bool    hasX3domOnclick(void) { return true; }
 
@@ -82,4 +73,3 @@ public:
     fieldMacros(SFString, shadowObjectIdMapping, ProtoGroup)
 };
 
-#endif // _NODE_GROUP_H

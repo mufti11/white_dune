@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "ExternTheApp.h"
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
@@ -42,15 +41,16 @@ public:
 class NodeIntegerTrigger : public Node {
 public:
                     NodeIntegerTrigger(Scene *scene, Proto *proto);
-                    NodeIntegerTrigger(NodeIntegerTrigger &node);
+                    NodeIntegerTrigger(const NodeIntegerTrigger &node);
     virtual        ~NodeIntegerTrigger();
 
     virtual const char* getComponentName(void) const;
-    virtual int     getComponentLevel(void) const;
+    virtual int         getComponentLevel(void) const;
     virtual int     getX3dVersion(void) const { return 0; }
-    virtual Node   *copy() { return new NodeIntegerTrigger(m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeIntegerTrigger(*this); }
 
     virtual int     writeProto(int f) { return writeX3dProto(f); }
 
     fieldMacros(SFInt32, integerKey, ProtoIntegerTrigger)
 };
+

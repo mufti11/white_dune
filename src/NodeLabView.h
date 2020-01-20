@@ -19,19 +19,11 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _NODE_LAB_VIEW_H
-#define _NODE_LAB_VIEW_H
+#pragma once
 
-#ifndef _COVER_NODE_H
 #include "CoverNode.h"
-#endif
-#ifndef _PROTO_MACROS_H
 #include "ProtoMacros.h"
-#endif
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
 #include "SFMFTypes.h"
 
 class ProtoLabView : public Proto {
@@ -49,13 +41,12 @@ public:
 class NodeLabView : public CoverNode {
 public:
                     NodeLabView(Scene *scene, Proto *proto);
-                    NodeLabView(NodeLabView &node);
+                    NodeLabView(const NodeLabView &node);
     virtual        ~NodeLabView();
 
     virtual int     getX3dVersion(void) const { return -1; }
-    virtual Node *  copy() { return new NodeLabView( m_scene, m_proto); }
+    virtual Node   *copy() const { return new NodeLabView(*this); }
 
     fieldMacros(SFBool, enabled, ProtoLabView)
 };
 
-#endif 

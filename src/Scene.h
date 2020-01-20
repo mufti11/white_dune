@@ -1,7 +1,7 @@
 /*
  * Scene.h
  *
- * Copyright (C) 1999 Stephen F. White, 2019 J. "MUFTI" Scheurich
+ * Copyright (C) 1999 Stephen F. White
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,113 +19,52 @@
  * Cambridge, MA 02139, USA.
  */
 
-#pragma once
+#ifndef _SCENE_H
+#define _SCENE_H
 
-#include "Hint.h"
-
+#ifndef _STDIO_H
 #include <stdio.h>
+#endif
+
+#ifndef _ARRAY_H
 #include "Array.h"
+#endif
+
+#ifndef _MAP_H
 #include "Map.h"
+#endif
+
+#ifndef _STACK_H
 #include "Stack.h"
-#include "Node.h"
-#include "NodeDefinitions.h"
+#endif
+
+#ifndef _COMMAND_LIST_H
+#include "CommandList.h"
+#endif
+
+#ifndef _NODE_LIST_H
 #include "NodeList.h"
+#endif
+
+#ifndef _DUNE_STRING_H
 #include "MyString.h"
+#endif
+
+#ifndef _URL_H
 #include "URL.h"
+#endif
+
+#ifndef _PROTO_H
 #include "Proto.h"
-#include "Quaternion.h"
+#endif
 
-class CommandList;
-class VertexModifier;
-
-enum {
-    UPDATE_ALL = 0,
-    UPDATE_SELECTION,
-    UPDATE_FIELD,
-    UPDATE_ADD_NODE,
-    UPDATE_REMOVE_NODE,
-    UPDATE_CHANGE_INTERFACE_NODE,
-    UPDATE_ADD_ROUTE,
-    UPDATE_DELETE_ROUTE,
-    UPDATE_MODE,
-    UPDATE_PROTO,
-    UPDATE_TIME,
-    UPDATE_START_FIELD_EDIT,
-    UPDATE_STOP_FIELD_EDIT,
-    UPDATE_ENABLE_COLOR_CIRCLE,
-    UPDATE_DISABLE_COLOR_CIRCLE,
-    UPDATE_CLOSE_COLOR_CIRCLE,
-    UPDATE_CLOSE_VERTEX_MODIFIER,
-    UPDATE_SELECTED_FIELD,
-    UPDATE_SELECTION_NAME,
-    UPDATE_NODE_NAME,
-    UPDATE_ADD_NODE_SCENE_GRAPH_VIEW,
-    UPDATE_REDRAW,
-    UPDATE_REDRAW_3D,
-    UPDATE_PREVIEW,
-    UPDATE_SOLID_CHANGED,
-    UPDATE_TOOLBAR,
-    UPDATE_SELF
-};
-
-enum {
-    RENDER_PASS_GEOMETRY,
-    RENDER_PASS_NON_TRANSPARENT,
-    RENDER_PASS_TRANSPARENT
-};
-
-class FieldUpdate : public Hint {
-public:
-                    FieldUpdate(Node *n = NULL, int f = -1, int i = -1);
-
-
-    Node           *node;
-    int             field;
-    int             index;
-};
-
-class NodeUpdate : public Hint {
-public:
-                    NodeUpdate(Node *n, Node *p, int f)
-                    { node = n; parent = p, field = f; }
-
-    Node           *node;
-    Node           *parent;
-    int             field;
-};
-
-class RouteUpdate : public Hint {
-public:
-                    RouteUpdate(Node *s, int out, Node *d, int in)
-                    { src = s; eventOut = out; dest = d; eventIn = in; }
-
-    Node           *src;
-    Node           *dest;
-    int             eventOut;
-    int             eventIn;
-};
-
-class ProtoUpdate : public Hint {
-public:
-                    ProtoUpdate(Proto *p) { proto = p; }
-
-    Proto          *proto;
-};
-
-class DownloadPathData {
-public:
-    MyString string;
-    bool isRemote;
-};
-
-void BackupRoutesRec(Node *node, CommandList *list);
-
+#ifndef _DUNE_APP_H
 #include "DuneApp.h"
+#endif
 
-extern DuneApp *TheApp;
- 
-#include "SceneView.h"
-#include "VertexModifier.h"
+#ifndef _QUATERNION_H
+#include "Quaternion.h"
+#endif
 
 #include "x3dFlags.h"
 
@@ -137,27 +76,31 @@ extern DuneApp *TheApp;
 
 #define MAX_PATH_LEN 1024
 
-#include "FieldValue.h"
-#include "Path.h"
-#include "FontInfo.h"
-#include "NodeViewpoint.h"
-#include "NodeNavigationInfo.h"
-#include "NodeViewport.h"
-#include "NodeFog.h"
-#include "NodeBackground.h"
-#include "SceneView.h"
-#include "NodeInline.h"
+class FieldValue;
+class Node;
+class Path;
+class FontInfo;
+class NodeViewpoint;
+class NodeNavigationInfo;
+class NodeViewport;
+class NodeFog;
+class NodeBackground;
+class SFVec3f;
+class MFVec3f;
+class SceneView;
+class Hint;
+class NodeInline;
+class Element;
+class VertexModifier;
 
-#ifndef _COMMAND_LIST_H
-#include "CommandList.h"
-#endif
+class DownloadPathData;
 
 typedef MyStack<Command *> CommandStack;
 
 typedef Map<MyString, Node *> NodeMap;
 typedef Map<MyString, int> StringMap;
 
-#include "Interpolator.h"
+class Interpolator;
 
 enum {
      HIGHEST_SELECTION_LEVEL = 0,
@@ -206,7 +149,7 @@ public:
     bool                hasAlreadyName(const char *name) { return use(name); }
 
     int                 addSymbol(MyString s);
-    const MyString     &getSymbol(int id);
+    const MyString     &getSymbol(int id) const;
 
     void                setRoot(Node *root) { m_root = root; }
     Node               *getRoot() const { return m_root; }
@@ -341,7 +284,6 @@ public:
     void                setCurrentLdrawColor(int c) 
                            { m_currentLdrawColor = c; }
 
-
     int                 writeOff(int filedes);
 
     void                deleteExtensionProtos(void);
@@ -379,8 +321,8 @@ public:
     void                undo();
     void                redo();
 
-    int                 canUndo();
-    int                 canRedo();
+    int                 canUndo() const;
+    int                 canRedo() const;
 
     int                 getUndoStackTop() { return m_undoStack.getTop(); }
 
@@ -394,7 +336,8 @@ public:
     void                backupFieldsAppend(Node *node, int field);
     void                backupFieldsDone(void);
     void                setField(Node *node, int field, FieldValue *value);
-    Interpolator       *findUpstreamInterpolator(Node *node, int field) const;
+    Interpolator       *findUpstreamInterpolator(const Node *node, 
+                                                 int field) const;
 
     void                drawScene(bool pick = false, int x = 0, int y = 0,
                                   double width = 0, double height = 0,
@@ -463,7 +406,7 @@ public:
     void                restoreSelectedHandles(void);
     int                 getSelectedHandlesSize() const
                            { return m_selectedHandles.size(); }
-    int                 getSelectedHandle(int i)
+    int                 getSelectedHandle(int i) const
                            { return m_selectedHandles[i]; }
     bool                isInSelectedHandles(int handle) 
                            { 
@@ -647,7 +590,7 @@ public:
     void                getProtoList(MyArray<int> *protoList, const Node *node);
     void                setPathAllURL(const char *path);
 
-    bool                isModified();
+    bool                isModified() const;
     bool                isRunning() const { return m_running; }
     bool                isRecording() const { return m_recording; }
     void                setRecording(bool recording) { m_recording = recording; }
@@ -686,7 +629,6 @@ public:
 
     bool                Download(const URL &url, MyString *path);
     MyString            downloadPath(const URL &url);
-    DownloadPathData    downloadPathIntern(const URL&);
     FontInfo           *LoadGLFont(const char *fontName, const char *style);
     int                 getNumProtoNames(void) { return m_numProtoNames; }
     bool                addProtoName(MyString name);
@@ -973,13 +915,14 @@ public:
 
     MyArray<Node *>    *searchTimeSensors(void);
     MyArray<Node *>    *searchInterpolators(void);
-    NodeList            searchTimeSensorInInterpolator(Node interpolator);
+    NodeList            searchTimeSensorInInterpolator(Node *interpolator);
 
 protected:
     int                 writeExtensionProtos(int f, int flag);
     ProtoArray         *getInteractiveProtos(int type); 
     void                buildInteractiveProtos(void);
     void                updateViewpoint(void);
+    DownloadPathData    downloadPathIntern(const URL &url);
 protected:
     NodeMap             m_nodeMap;
     Node               *m_root;
@@ -1222,4 +1165,85 @@ public:
 };
 
 bool writeCNodeData(Node *node, void *data);
+
+enum {
+    UPDATE_ALL = 0,
+    UPDATE_SELECTION,
+    UPDATE_FIELD,
+    UPDATE_ADD_NODE,
+    UPDATE_REMOVE_NODE,
+    UPDATE_CHANGE_INTERFACE_NODE,
+    UPDATE_ADD_ROUTE,
+    UPDATE_DELETE_ROUTE,
+    UPDATE_MODE,
+    UPDATE_PROTO,
+    UPDATE_TIME,
+    UPDATE_START_FIELD_EDIT,
+    UPDATE_STOP_FIELD_EDIT,
+    UPDATE_ENABLE_COLOR_CIRCLE,
+    UPDATE_DISABLE_COLOR_CIRCLE,
+    UPDATE_CLOSE_COLOR_CIRCLE,
+    UPDATE_CLOSE_VERTEX_MODIFIER,
+    UPDATE_SELECTED_FIELD,
+    UPDATE_SELECTION_NAME,
+    UPDATE_NODE_NAME,
+    UPDATE_ADD_NODE_SCENE_GRAPH_VIEW,
+    UPDATE_REDRAW,
+    UPDATE_REDRAW_3D,
+    UPDATE_PREVIEW,
+    UPDATE_SOLID_CHANGED,
+    UPDATE_TOOLBAR,
+    UPDATE_SELF
+};
+
+enum {
+    RENDER_PASS_GEOMETRY,
+    RENDER_PASS_NON_TRANSPARENT,
+    RENDER_PASS_TRANSPARENT
+};
+
+class Hint {
+};
+
+class FieldUpdate : public Hint {
+public:
+                    FieldUpdate(Node *n = NULL, int f = -1, int i = -1);
+
+
+    Node           *node;
+    int             field;
+    int             index;
+};
+
+class NodeUpdate : public Hint {
+public:
+                    NodeUpdate(Node *n, Node *p, int f)
+                    { node = n; parent = p, field = f; }
+
+    Node           *node;
+    Node           *parent;
+    int             field;
+};
+
+class RouteUpdate : public Hint {
+public:
+                    RouteUpdate(Node *s, int out, Node *d, int in)
+                    { src = s; eventOut = out; dest = d; eventIn = in; }
+
+    Node           *src;
+    Node           *dest;
+    int             eventOut;
+    int             eventIn;
+};
+
+class ProtoUpdate : public Hint {
+public:
+                    ProtoUpdate(Proto *p) { proto = p; }
+
+    Proto          *proto;
+};
+
+void BackupRoutesRec(Node *node, CommandList *list);
+
+#endif // _SCENE_H
 

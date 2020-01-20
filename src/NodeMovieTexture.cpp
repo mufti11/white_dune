@@ -128,9 +128,8 @@ NodeMovieTexture::load()
         return;
     for (int i = 0; i < urls->getSize(); i++) {
         MyString path;
-        URL urlI((MyString)TheApp->getImportURL(), 
-                 (const char *)urls->getValue(i));
-        if (strlen((const char *)urls->getValue(i)) == 0) continue;
+        URL urlI(TheApp->getImportURL(), urls->getValue(i));
+        if (urls->getValue(i).length() == 0) continue;
         m_scene->Download(urlI, &path);
         // download only
     }
@@ -369,9 +368,9 @@ bool movie_load(NodeMovieTexture *node){
         if (urls == NULL)
             return false;
         for (int j = 0; j < urls->getSize(); j++) {
-            if (strlen((const char *)urls->getValue(j)) == 0) 
+            if (urls->getValue(j).length() == 0) 
                 continue;
-            URL url(oldDir, ((const char *)urls->getValue(j)));
+            URL url(oldDir, urls->getValue(j));
             MyString path;
             if (node->getScene()->Download(url, &path)) {
                 TheApp->setImportURL(url.GetPath());
@@ -518,9 +517,9 @@ bool  process_res_movie(NodeMovieTexture *node){
     if (urls == NULL)
         return false;
     for (int j = 0; j < urls->getSize(); j++) {
-        if (strlen((const char *)urls->getValue(j)) == 0) 
+        if (urls->getValue(j).length() == 0) 
             continue;
-        URL url(oldDir, ((const char *)urls->getValue(j)));
+        URL url(oldDir, urls->getValue(j));
         MyString path;
         if (node->getScene()->Download(url, &path)) {
             TheApp->setImportURL(url.GetPath());
