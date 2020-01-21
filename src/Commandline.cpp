@@ -502,6 +502,8 @@ void parseCommandlineUsage(
             convert = RIB;
         else if (strcmp(argv[convertionArgument],"-ldraw")==0)
             convert = LDRAW_DAT;
+        else if (strcmp(argv[convertionArgument],"-off")==0)
+            convert = OFF;
         if (convert != 0) {
             if (convertionArgument < (argc - 1)) {
                 if (strcmp(argv[convertionArgument + 1],"-manyclasses")==0) {

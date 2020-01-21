@@ -186,8 +186,9 @@ public:
                             }
     void                accountOffData(int f);
     void                writeOffVertices(int f, Node *node);
-    void                writeOffIndices(int f, int startIndex, Node *node);
-    void                writeOffNormalsAndColors(int f, Node *node);
+    void                writeOffIndicesAndColors(int f, int startIndex, 
+                                                 Node *node);
+    void                writeOffNormals(int f, Node *node);
     int                 getSumVertices(void)
                             { return m_sumVertices; }
     int                 getSumVerticesPerFaces(void) 

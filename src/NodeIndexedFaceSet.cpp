@@ -1824,10 +1824,13 @@ typedef CGAL::Simple_cartesian<double> Kernel;
 #include <CGAL/Polygon_mesh_processing/triangulate_faces.h>
 #include <CGAL/boost/graph/dijkstra_shortest_paths.h>
 #include <CGAL/exceptions.h>
+#include <CGAL/IO/Color.h>
 #include <boost/graph/prim_minimum_spanning_tree.hpp>
 #include <boost/foreach.hpp>
 typedef Kernel::Point_3 Point;
 typedef CGAL::Surface_mesh<Point> Surface;
+typedef CGAL::Surface_mesh<Point> SurfaceMesh;
+typedef CGAL::Color Color;
 typedef Surface::Vertex_index vertex_index;
 typedef boost::graph_traits<Surface>::vertex_descriptor vertex_descriptor;
 typedef boost::graph_traits<Surface>::face_descriptor face_descriptor;
@@ -1997,13 +2000,16 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
     return NULL;
 }
 
+std::vector<Point> verts;
+std::vector<Color> cols;
+
 NodeIndexedFaceSet *
 NodeIndexedFaceSet::readOff(const char *filename)
 {
     std::ifstream input(filename);
-    Surface mesh;
+    SurfaceMesh *mesh = new SurfaceMesh();
 
-    if (!input || !(input >> mesh)) {
+    if (!input || !(input >> *mesh)) {
         myperror(filename);
         return NULL;
     }
@@ -2017,22 +2023,64 @@ NodeIndexedFaceSet::readOff(const char *filename)
     MFVec3f *newVertices = new MFVec3f();
     MFInt32 *newCoordIndex = new MFInt32();
 
-    BOOST_FOREACH(vertex_descriptor vd, vertices(mesh)){
-        newVertices->appendSFValue(mesh.point(vd).x(), 
-                                   mesh.point(vd).y(), 
-                                   mesh.point(vd).z()); 
+    SurfaceMesh::Property_map<SurfaceMesh::Vertex_index, CGAL::Color> vcolors =
+        mesh->property_map<SurfaceMesh::Vertex_index, CGAL::Color >
+        ("v:color").first;
+    
+    bool colorExists = mesh->property_map
+        <SurfaceMesh::Vertex_index, CGAL::Color>("v:color").second;
+
+    MFColorRGBA *newColors = NULL;
+    if (colorExists ) 
+        newColors = new MFColorRGBA();
+
+    for (SurfaceMesh::Vertex_index vi : mesh->vertices()) {
+        verts.push_back(mesh->point(vi));
+        if (colorExists ) 
+            cols.push_back(vcolors[vi]);
     }
-    BOOST_FOREACH(face_descriptor fd, faces(mesh)) {
-        Surface::Halfedge_index hf = mesh.halfedge(fd);
-        BOOST_FOREACH(halfedge_descriptor hi, 
-                      halfedges_around_face(hf, mesh)) {
-            Surface::Vertex_index vi = target(hi, mesh);
-            newCoordIndex->appendSFValue((std::size_t)vi);
-        }
+
+    int sumCount = 0;
+
+    for (SurfaceMesh::Face_index face_index : mesh->faces()) {
+        CGAL::Vertex_around_face_circulator<SurfaceMesh> vcirc( 
+            mesh->halfedge( face_index ), *mesh ), done( vcirc );
+
+        signed char count = 0;
+
+        do
+        {
+            uint32_t vertexI = *vcirc++;
+
+            const Point &pt = verts[vertexI];
+            const Color &col = cols[vertexI];
+
+            newVertices->appendSFValue(pt.x(), pt.y(), pt.z()); 
+            if (colorExists ) 
+                newColors->appendSFValue(col.red(), col.green(), col.blue(), 
+                                         col.alpha());
+            newCoordIndex->appendSFValue(sumCount + count);
+            count++;
+        } while( vcirc != done );
+        sumCount += count;
         newCoordIndex->appendSFValue(-1);
     }
 
+    BOOST_FOREACH(face_descriptor fd, faces(*mesh)) {
+        Surface::Halfedge_index hf = mesh->halfedge(fd);
+        BOOST_FOREACH(halfedge_descriptor hi, 
+                      halfedges_around_face(hf, *mesh)) {
+            Surface::Vertex_index vi = target(hi, *mesh);
+        }
+    }
+
     ncoord->point(new MFVec3f(newVertices));
+    if (colorExists ) {
+        NodeColorRGBA *colorRGBA = (NodeColorRGBA *)
+                                   m_scene->createNode("ColorRGBA");
+        faceSet->color(new SFNode(colorRGBA));
+        colorRGBA->color(new MFColorRGBA(newColors));
+    }
     faceSet->coordIndex(new MFInt32(newCoordIndex));
     return faceSet;
 }
@@ -2053,8 +2101,8 @@ NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
     if (node == NULL)
         return;
     static Matrix transformMatrix = Matrix::identity();
-    node->getScene()->setSelection(node);
-    Path *trans = node->getScene()->searchTransform();
+//    node->getScene()->setSelection(node);
+    Path *trans = node->getScene()->searchTransform(node->getPath());
     Node *transform = NULL;
     if (trans)
         transform = trans->getNode();
@@ -2074,7 +2122,7 @@ NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
 }
 
 void               
-NodeIndexedFaceSet::writeOffIndices(int f, int startIndex, Node *node)
+NodeIndexedFaceSet::writeOffIndicesAndColors(int f, int startIndex, Node *node)
 {
     if (node == NULL)
         return;
@@ -2091,12 +2139,36 @@ NodeIndexedFaceSet::writeOffIndices(int f, int startIndex, Node *node)
             int ci = coordIndex()->getValue(offset + j);
             mywritef(f, "%d ", ci + startIndex);
         }
-        mywritestr(f, "\n");
+        if (hasColorRGBA() && (!colorPerVertex()->getValue()) &&
+            ((NodeColor *)color()->getValue())) {
+            NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)
+                color()->getValue();
+            if (color() && colorRGBANode->color()) {
+                const float *c = 
+                    ((NodeColorRGBA *)color()->getValue())->color()->
+                    getValues() + i * 4;
+                mywritef(f, " %d %d %d %d", (int)(c[0] * 255),
+                                            (int)(c[1] * 255), 
+                                            (int)(c[2] * 255), 
+                                            (int)(c[3] * 255));
+            }
+        } else if (color() && (!colorPerVertex()->getValue()) &&
+            ((NodeColor *)color()->getValue()) &&
+            ((NodeColor *)color()->getValue())->color()) {
+            NodeColor *colorNode = (NodeColor *)color()->getValue();
+            const float *c = 
+                ((NodeColorRGBA *)color()->getValue())->color()->
+                getValues() + i * 3;
+            mywritef(f, " %d %d %d", (int)(c[0] * 255), 
+                                     (int)(c[1] * 255), 
+                                     (int)(c[2] * 255));
+        } 
+        mywritestr(f, "\n");                 
     }
 }
 
 void
-NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
+NodeIndexedFaceSet::writeOffNormals(int f, Node *node)
 {
     if (node == NULL)
         return;
@@ -2117,29 +2189,7 @@ NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
     for (int i = 0; i < vertices->getSFSize(); i++) {
         Vec3f vec = normals->getVec(i);
         mywritef(f, "  N %f %f %f", vec.x, vec.y, vec.z);
-        if (hasColorRGBA()) {
-            NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)
-                color()->getValue();
-            if (color() && colorRGBANode->color()) {
-                const float *c = 
-                    ((NodeColorRGBA *)color()->getValue())->color()->
-                    getValues() + i  + m_sumVertices * 4;
-                mywritef(f, " %d %d %d %d\n", (int)(c[0] * 255), 
-                                              (int)(c[1] * 255), 
-                                              (int)(c[2] * 255), 
-                                              (int)(c[3] * 255));
-        } else if (color() && 
-                ((NodeColor *)color()->getValue())->color()) {
-                NodeColor *colorNode = (NodeColor *)color()->getValue();
-                const float *c = 
-                    ((NodeColorRGBA *)color()->getValue())->color()->
-                    getValues() + i  + m_sumVertices * 3;
-                mywritef(f, " %d %d %d\n", (int)(c[0] * 255), 
-                                           (int)(c[1] * 255), 
-                                           (int)(c[2] * 255));
-            }
-        } else
-            mywritestr(f, "\n");                 
+        mywritestr(f, "\n");
     }
 }
 #endif

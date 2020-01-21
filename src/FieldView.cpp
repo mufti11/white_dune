@@ -924,7 +924,7 @@ void FieldView::OnMouseMove(int x, int y, int modifiers)
     UpdateTrackingCursor(x, y);
     if ((m_state == TRACKING) && 
         (m_selectedItem > -1) && (m_selectedItem < (int)m_items.size())) {
-        FieldViewItem  *item = m_items[m_selectedItem + 1];
+        FieldViewItem  *item = m_items[m_selectedItem];
         if (item == NULL)
             return;
         int delta = x - m_trackPoint.x;

@@ -5503,4 +5503,8 @@ Use view3dscene as default preview browser under debian/raspian buster
 
 Fixed missing conversion to X3D(V) on preview
 
+Fixed crash in FieldView
+
+Changed .OFF color export compatible to "meshlab" (needs "colorPerVertex FALSE")
+
 Contact: MUFTI <mufti11@web.de>

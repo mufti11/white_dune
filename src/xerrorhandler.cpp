@@ -186,7 +186,7 @@ int DuneApp::emergency_rescue(int sig)
 #else
                                               ,S_IRUSR | S_IWUSR);
 #endif
-      } while (f != -1); 
+      } while (f == -1); 
       mywritef(console, "%s:  %s\n", mypath, strerror(errno));
       mywritef(console,"white_dune: %s:  %s\n", mypath, strerror(errno));
       int writeError = false;

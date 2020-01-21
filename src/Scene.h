@@ -348,6 +348,7 @@ public:
 
     Path               *pick(int x, int y, float width = 0, float height = 0);
     Path               *searchTransform(void);
+    Path               *searchTransform(Path *transform);
     void                drawHandles(Node *root, 
                                     bool drawRigidBodyHandles = false);
     void                finishDrawHandles(void);

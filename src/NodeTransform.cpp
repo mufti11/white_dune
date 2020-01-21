@@ -84,6 +84,7 @@ ProtoTransform::create(Scene *scene)
 NodeTransform::NodeTransform(Scene *scene, Proto *def)
   : TransformNode(scene, def)
 {
+     m_matrixDirty = true;
 }
 
 NodeTransform::~NodeTransform()

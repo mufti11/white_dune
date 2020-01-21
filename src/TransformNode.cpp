@@ -131,6 +131,7 @@ TransformNode::transform()
                oriAngle *= angleUnit;
             }
         }
+        glMatrixMode(GL_MODELVIEW);
         glPushMatrix();
         glLoadIdentity();
         glTranslatef(ftranslation[0], ftranslation[1], ftranslation[2]);

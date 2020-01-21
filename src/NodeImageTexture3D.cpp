@@ -914,7 +914,7 @@ int textureIsDDS(textureTableIndexStruct_s* this_tex, char *filename) {
 
     }
     // else {
-    //    //printf ("put in the dummy file here, and call it quits\n");
+    //    //printf ("put in the dummy file here, and call quit\n");
     //}
     FREE_IF_NZ(buffer);
     return FALSE;

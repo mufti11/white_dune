@@ -36,7 +36,7 @@
  * KIND, either express or implied.
  *
  ***************************************************************************/
-
+ 
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -2027,6 +2027,12 @@ static bool getAllNodes(Node *node, void *data)
     return true;     
 }
 
+struct FaceSetAndNode  {
+public:
+    NodeIndexedFaceSet *faceSet;
+    Node *node;
+};
+
 int 
 Scene::writeOff(int f) 
 {
@@ -2037,7 +2043,7 @@ Scene::writeOff(int f)
     Node *selection = getSelection()->getNode();
     RET_ONERROR( mywritestr(f, "OFF\n\n") )
     NodeArray childList;
-    MyArray<NodeIndexedFaceSet *> faces;
+    MyArray<FaceSetAndNode> faces;
     getRoot()->doWithBranch(getAllNodes, &childList, false);
     for (long i = 0; i < childList.size(); i++) {
         Node *node = childList.get(i);
@@ -2045,7 +2051,10 @@ Scene::writeOff(int f)
             MeshBasedNode *mBasedNode = (MeshBasedNode *)node;
             NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
                                        mBasedNode->toIndexedFaceSet();
-            faces.append(face);
+            FaceSetAndNode faceAndNode;
+            faceAndNode.faceSet = face;
+            faceAndNode.node = node->getParent();
+            faces.append(faceAndNode);
             face->ref();
             face->setFlag(NODE_FLAG_CONVERTED);
             MoveCommand *command = new MoveCommand(face, NULL, -1, 
@@ -2055,7 +2064,7 @@ Scene::writeOff(int f)
         }
     }
     for (int i = 0; i < faces.size(); i++) {
-        NodeIndexedFaceSet *face = faces[i];
+        NodeIndexedFaceSet *face = faces[i].faceSet;
         face->accountOffData(f);
         sumVerticesPerFace += face->getSumVerticesPerFaces();
         sumVertices += face->getSumVertices();
@@ -2063,21 +2072,21 @@ Scene::writeOff(int f)
     }
     mywritef(f, "%d %d %d\n", sumVertices, numFaces, sumVerticesPerFace);
     for (int i = 0; i < faces.size(); i++) {
-        NodeIndexedFaceSet *face = faces[i];
-        face->writeOffVertices(f, childList.get(i));
+        NodeIndexedFaceSet *face = faces[i].faceSet;
+        face->writeOffVertices(f, faces[i].node);
     }
     int numIndices = 0;
     for (int i = 0; i < faces.size(); i++) {
-        NodeIndexedFaceSet *face = faces[i];
+        NodeIndexedFaceSet *face = faces[i].faceSet;
+        face->writeOffIndicesAndColors(f, numIndices, childList.get(i));
         numIndices += face->getMesh()->getNumFaces();
-        face->writeOffIndices(f, numIndices, childList.get(i));
     }
     for (int i = 0; i < faces.size(); i++) {
-        NodeIndexedFaceSet *face = faces[i];
-        face->writeOffNormalsAndColors(f, childList.get(i));
+        NodeIndexedFaceSet *face = faces[i].faceSet;
+        face->writeOffNormals(f, faces[i].node);
     }
     for (int i = 0; i < faces.size(); i++) {
-         MoveCommand *command = new MoveCommand(faces[i], 
+         MoveCommand *command = new MoveCommand(faces[i].faceSet, 
                                                 getRoot(), getRootField(), 
                                                 NULL, -1);
          command->execute();
@@ -4542,12 +4551,17 @@ Scene::transform(const Path *path)
     }
 }
 
-// search for a Transform node in a path
-// return new path to Transform node or NULL if not found
-
 Path* Scene::searchTransform(void)
 {
     Path* transform = new Path(*m_selection);
+    return searchTransform(transform);
+}
+
+// search for a Transform node in a path
+// return new path to Transform node or NULL if not found
+
+Path* Scene::searchTransform(Path *transform)
+{
     if (transform != NULL) { 
         if (transform->getNode()->getType() == VRML_TRANSFORM)
             return transform;

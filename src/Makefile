@@ -725,7 +725,7 @@ objc: $(SRCSC)
 	$(CC) $(CFLAGS) -c $(SRCSC)
 
 # special target to compile in low memory/no swap situtations 
-duneLowMem: main.o objc $(CLASSES)  swt/lib/libswt.a
+duneLowMem: main.o objc $(CLASSES) 
 	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
