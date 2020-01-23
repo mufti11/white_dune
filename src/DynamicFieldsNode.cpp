@@ -40,7 +40,6 @@ int DynamicFieldsNode::write(int f, int indent, bool avoidUse)
 {
     int flags = m_scene->getWriteFlags();
     TheApp->checkSelectionLinenumberCounting(m_scene, this);
-//    RET_ONERROR( indentf(f, indent) )
     if (getFlag(NODE_FLAG_DEFED)) {
         RET_ONERROR( mywritestr(f ,"USE ") )
         RET_ONERROR( mywritestr(f ,(const char *) m_name) )
@@ -63,8 +62,8 @@ int DynamicFieldsNode::write(int f, int indent, bool avoidUse)
         }
         RET_ONERROR( mywritestr(f, "{\n") )
         TheApp->incSelectionLinenumber();
-//        RET_ONERROR( writeEvents(f, indent + TheApp->GetIndent()) )
         RET_ONERROR( writeFields(f, indent + TheApp->GetIndent()) )
+        RET_ONERROR( writeEvents(f, indent + TheApp->GetIndent()) )
         if (!TheApp->GetkrFormating())
             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
         else
@@ -77,7 +76,6 @@ int DynamicFieldsNode::write(int f, int indent, bool avoidUse)
         }
         setFlag(NODE_FLAG_TOUCHED);
         RET_ONERROR( writeRoutes(f, indent) )
-//        setFlag(NODE_FLAG_TOUCHED);
     }
     return(0);
 }

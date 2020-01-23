@@ -39,6 +39,9 @@ public:
                     MeshMorphingNode(Scene *scene, Proto *proto) : 
                                     MeshBasedNode (scene, proto) {}
                    ~MeshMorphingNode() {}
+
+    virtual bool    isMeshMorphingNode(void) { return true; }
+
 protected:
     virtual void    findInterpolators(InterpolatorInfo& info);
     bool            addCoordinateInterpolator(Node *node,

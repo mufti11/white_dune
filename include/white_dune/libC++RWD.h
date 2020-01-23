@@ -1612,6 +1612,21 @@ void CPPRWD::SpotLightRender(X3dNode *data, void* extraData)
     }
 }
 
+void CPPRWD::ShapeRender(X3dNode *data, void *dataptr)
+{
+    X3dShape *shape = (X3dShape *)data;
+    if (shape->geometry)
+        shape->geometry->treeRender(dataptr);
+}
+
+void CPPRWD::CoordinateRender(X3dNode *data, void *dataptr)
+{
+/*
+    X3dCoordinate *coord = (X3dCoordinate  *)data;
+    if (coord->m_parent)
+        coord->m_parent->treeRender(dataptr);
+*/
+}
 
 void CPPRWD::MaterialRender(X3dNode *data, void*)
 {
@@ -3161,6 +3176,8 @@ void CPPRWD::init()
     X3dDirectionalLight::renderCallback = DirectionalLightRender;
     X3dSpotLight::renderCallback = SpotLightRender;
     X3dMaterial::renderCallback = MaterialRender;
+    X3dShape::renderCallback = ShapeRender;
+    X3dCoordinate::renderCallback = CoordinateRender;
     X3dViewpoint::renderCallback = ViewpointRender;
     X3dPixelTexture::renderCallback = PixelTextureRender;
     X3dImageTexture::renderCallback = ImageTextureRender;

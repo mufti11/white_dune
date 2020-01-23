@@ -180,38 +180,33 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
     if (getHumanoid() != NULL)
         return;
     NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)this->copy();
-    node->setVariableName(strdup(this->getVariableName()));
+//    node->setVariableName(strdup(this->getVariableName()));
     m_scene->copyRoutes(node, this);
     if (coord()->getValue() != NULL) {
         Node *target = node->coord()->getValue();
         m_scene->copyRoutes(target, this->coord()->getValue());
         target->addParent(node, node->coord_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
         
     }
     if (normal()->getValue() != NULL) {
         Node *target = node->normal()->getValue();
         m_scene->copyRoutes(target, this->normal()->getValue());
         target->addParent(node,  node->normal_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (color()->getValue() != NULL) {
         Node *target = node->color()->getValue();
         m_scene->copyRoutes(target, this->color()->getValue());
         target->addParent(node,  node->color_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (texCoord()->getValue() != NULL) {
         Node *target = node->texCoord()->getValue();
         m_scene->copyRoutes(target, this->texCoord()->getValue());
         target->addParent(node,  node->texCoord_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (fogCoord()->getValue() != NULL) {
         Node *target = node->fogCoord()->getValue();
         m_scene->copyRoutes(target, this->fogCoord()->getValue());
         target->addParent(node,  node->fogCoord_Field());
-        target->setVariableName(strdup(target->getNameOrNewName()));
     }
     if (m_convertedNodes.size() != 0)
         return;
@@ -225,7 +220,6 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
             NodeNormal *normals = (NodeNormal *)m_scene->createNode("Normal");
             normals->vector(new MFVec3f((MFVec3f *)smoothNormals->copy()));
             m_scene->setField(node, normal_Field(), new SFNode(normals));
-            normals->setVariableName(strdup(normals->getVariableName()));
             MFInt32 *smoothNormalIndex = node->getSmoothNormalIndex();
             m_scene->setField(node, normalIndex_Field(), 
                              new MFInt32((MFInt32 *)smoothNormalIndex->copy()));

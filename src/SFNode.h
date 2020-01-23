@@ -19,9 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SFNODE_H
-#define _SFNODE_H
-
+#pragma once 
+ 
 #include "config.h"
 
 #ifndef _FIELDVALUE_H
@@ -108,4 +107,3 @@ private:
     int                 m_containerField;
 };
 
-#endif // _SFNODE_H

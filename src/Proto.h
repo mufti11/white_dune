@@ -87,6 +87,8 @@ public:
 
     void                  protoInitializer(Scene *scene, const MyString &name);
 
+    void                  finishEvents(void);
+
     bool                  avoidElement(Element *element, bool x3d);
     bool                  avoidElement(Element *element, int flag);
 

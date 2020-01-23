@@ -23,6 +23,8 @@
 
 #define DEFAULT_CAPACITY 8
 
+#define NO_RESIZE 1
+
 #ifdef IRIX
 #pragma set woff 3303
 #endif
@@ -43,6 +45,7 @@ public:
                     m_capacity = capacity; 
                     m_data = new T[capacity]; 
                     m_size = 0;
+                    m_flags = 0;
                 }
                 MyArray(const MyArray<T> &a) {
                     m_capacity = m_size = a.m_size;
@@ -51,10 +54,12 @@ public:
                     m_data = new T[m_capacity];
                     for (long i = 0; i < MIN(m_capacity, m_size); i++) 
                         m_data[i] = a.m_data[i];
+                    m_flags = 0;
                 }
                 MyArray(const T *a, long len) {
                     m_size = 0;
                     setData(a, len);
+                    m_flags = 0;
                 }
                 ~MyArray() {
                     if (m_data)
@@ -69,7 +74,7 @@ public:
                 { if (index >= m_size) resize(index+1); m_data[index] = t; }
     T          &operator[](long index)
                 { if (index >= m_size) resize(index+1); return m_data[index]; }
-    const T &operator[](long index) const 
+    const T    &operator[](long index) const 
                 { 
                     if (index >= m_size) {
                         ((MyArray *)this)->resize(index + 1);
@@ -92,7 +97,13 @@ public:
     long        size() const
                 { return m_size; }
     void        append(T t)
-                { (*this)[m_size] = t; }
+                { 
+                    // allow resize for append()
+                    int flags = m_flags;
+                    m_flags = 0;
+                    (*this)[m_size] = t; 
+                    m_flags = flags;
+                }
     void        insert(T t, long index) {                   
                     resize(m_size + 1);
                     for (long i = (long)m_size - 1; i > (long)index; i--)
@@ -124,7 +135,10 @@ public:
                     if (m_size <= 0)
                         resize(0);
                 }
+    void        setNoResize(void) { m_flags = NO_RESIZE; }
     void        resize(long size) {
+                    if (m_flags == NO_RESIZE)
+                        return;
                     if (size == 0) {
                         if (m_size > 0) {
                             delete[] m_data;
@@ -182,4 +196,5 @@ protected:
     long        m_size;
     long        m_capacity;
     T          *m_data;
+    int         m_flags;
 };

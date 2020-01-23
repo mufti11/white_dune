@@ -631,8 +631,8 @@ public:
     bool              hasName(void);
     bool              needsDEF() const;
 
-    virtual void      addToConvertedNodes(int writeFlags) 
-                          {} /// add to "m_convertedNodes"
+    virtual void      addToConvertedNodes(int writeFlags);
+
     int               getNumConvertedNodes() { return m_convertedNodes.size(); }
     Node             *getConvertedNode(int i) { return m_convertedNodes[i]; }
     void              deleteConvertedNodes(void);
@@ -885,6 +885,7 @@ public:
     virtual int       textureGlColorMode(void) { return -1; }
 
     virtual bool      isMeshBasedNode(void) { return false; }
+    virtual bool      isMeshMorphingNode(void) { return false; }
     virtual bool      isChainBasedNode(void) { return false; }
 
     // compare content
@@ -1326,6 +1327,8 @@ public:
     void              setProtoParent(Node *n) { m_protoParent = n; }
     void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
+    virtual Node     *getIndexedFaceSet(void) { return NULL; }
+
 protected:
     int               m_geometricParentIndex;
     NodeList         *m_commentsList;

@@ -1363,9 +1363,11 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         setX3dXml();
     else
         setVrml();
+/*
     if (writeFlags & (C_SOURCE | CC_SOURCE | JAVA_SOURCE)) {
         m_root->doWithBranch(getVariableNames, &writeFlags);
     }
+*/
     if (writeFlags & OFF) {
         ret = writeOff(f);
         done = true;
@@ -2603,9 +2605,17 @@ bool writeCVariableNameLine(Node *node, const char *variableName,
         RET_ONERROR( mywritestr(f, "public static ") ) 
     }
 
-    if (mywritestr(f, node->getClassName()) != 0)
+    bool written = false;
+    if (node->isDynamicFieldsNode() && !node->isPROTO()) {
+        if (mywritestr(f, (const char *)node->getClassName()) != 0)
+            error = -1;
+        else 
+            written = true;
+    } else if ((!written) && mywritef(f, "X3d%s", (const char *)
+                                    node->getProto()->getName(true)) != 0) {
         error = -1;
-    else if (mywritestr(f, " ") != 0)
+    }
+    if (mywritestr(f, " ") != 0)
         error = -1;
     else if (mywritestr(f, variableName) != 0)
         error = -1;

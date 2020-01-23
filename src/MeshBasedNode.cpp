@@ -1009,9 +1009,11 @@ MeshBasedNode::addToConvertedNodes(int flags)
         int meshFlags = MESH_WANT_NORMAL | MESH_WANT_TEX_COORD;
 
         if (shouldBeIndexedFaceSet) {
-            Node *node = (NodeIndexedFaceSet *)toIndexedFaceSet(meshFlags);
+            NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)
+                                       toIndexedFaceSet(meshFlags);
             if (node != NULL) {
-                node->setVariableName(strdup(getVariableName()));
+//                node->setVariableName(strdup(getVariableName()));
+                node->getScene()->generateVariableName(node);
                 node->addParent(getParent(), getParentField());
                 m_convertedNodes.append(node);
             }
@@ -1028,6 +1030,15 @@ MeshBasedNode::addToConvertedNodes(int flags)
     }
     return; 
 }       
+
+Node *
+MeshBasedNode::getIndexedFaceSet(void)
+{
+    for (int i = 0; i < m_convertedNodes.size(); i++)
+         if (m_convertedNodes[i]->getType() == VRML_INDEXED_FACE_SET)
+             return m_convertedNodes[i];
+    return NULL;
+}
 
 #define writeAc3dRef(index) {                                            \
     int offset = face->getOffset() + index;                              \

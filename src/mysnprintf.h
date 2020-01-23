@@ -19,6 +19,7 @@ int mysnprintf(char *str, size_t count, const char *fmt, ...);
 #ifdef _WIN32
 #include <Windows.h>
 #include <stdio.h>
+
 #ifdef MY_CPLUSPLUS 
 extern "C"
 #endif

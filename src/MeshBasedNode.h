@@ -86,6 +86,8 @@ public:
 
     virtual bool    isMeshBasedNode(void) { return true; }
 
+    virtual Node   *getIndexedFaceSet(void);
+
     int             optimizeNormals(int *coordIndex, Vec3f *vertices,
                                     Vec3f *normals, int index, bool ccw, 
                                     bool cleanDoubleVertices = true);

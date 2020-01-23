@@ -25,7 +25,8 @@
 #include "DuneApp.h"
 
 #include "SFNode.h"
-#include "Node.h"
+#include "MeshBasedNode.h"
+#include "Scene.h"
 
 SFNode::SFNode(Node *value) : FieldValue()
 {
@@ -126,7 +127,11 @@ SFNode::writeC(int filedes, const char* variableName, int languageFlag) const
     } else {
         if (languageFlag & (C_SOURCE | CC_SOURCE))
             RET_ONERROR( mywritestr(filedes, "&") )
-        RET_ONERROR( m_value->writeCVariable(filedes, languageFlag) )
+        if (m_value->isMeshBasedNode() && m_value->getIndexedFaceSet())
+            RET_ONERROR( m_value->getIndexedFaceSet()->writeCVariable(
+                filedes, languageFlag))
+        else
+            RET_ONERROR( m_value->writeCVariable(filedes, languageFlag) )
     }
     RET_ONERROR( mywritestr(filedes, ";\n") )
     return 0;

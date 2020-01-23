@@ -5507,4 +5507,6 @@ Fixed crash in FieldView
 
 Changed .OFF color export compatible to "meshlab" (needs "colorPerVertex FALSE")
 
+Fixed crash and problems of the C++ export
+
 Contact: MUFTI <mufti11@web.de>

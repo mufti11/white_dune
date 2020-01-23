@@ -28,7 +28,7 @@
 # include <float.h>
 #endif
 
-#include "Node.h"
+#include "MeshBasedNode.h"
 #include "Scene.h"
 #include "Field.h"
 #include "FieldValue.h"
@@ -47,6 +47,7 @@
 #include "swDebugf.h"
 #include "MoveCommand.h"
 #include "NodeScript.h"
+#include "NodeIndexedFaceSet.h"
 #include "NodeCurveAnimation.h"
 #include "NodePositionInterpolator.h"
 #include "NodeOrientationInterpolator.h"
@@ -417,6 +418,7 @@ static const char *keyWords[] = {
 const char *
 NodeData::getVariableName(void)
 { 
+    bool hasname = hasName();
     bool isRoot = false;
     if (m_variableName.length() == 0) {
         MyString cName = "";
@@ -430,6 +432,7 @@ NodeData::getVariableName(void)
                     cName += m_name[i];
                 else
                     cName += "m_";
+            hasname = true;
         }
 
         if (m_scene != NULL) {
@@ -439,14 +442,15 @@ NodeData::getVariableName(void)
                 m_variableName += "root";
             }
         }
-        if ((!isRoot) && hasName()) {
+        if ((!isRoot) && hasname) {
             m_variableName = "";
             bool isKeyWord = false;
             for (unsigned int i = 0; 
                  i < sizeof(keyWords)/sizeof(const char *); i++)
                 if (strcmp(m_name.getData(), keyWords[i]) == 0) {
                     isKeyWord = true;
-                    m_variableName += m_scene->getUniqueNodeName(cName);
+//                    m_variableName += m_scene->getUniqueNodeName(cName);
+                    m_variableName += cName;
                     swDebugf("Warning: Variablename ");
                     swDebugf("\"%s\"", m_name.getData());
                     swDebugf(" is a C++/java keyword, ");
@@ -458,8 +462,9 @@ NodeData::getVariableName(void)
         }
         if (m_variableName.length() == 0)
             if (m_scene != NULL) {
-                m_variableName = "";
-                m_variableName += m_scene->generateVariableName((Node *)this);
+                m_variableName += m_scene->generateUniqueNodeName((Node *)this);
+                m_name = "";
+                m_name += m_variableName;
             }
     }
 
@@ -1823,10 +1828,12 @@ Node::writeC(int f, int languageFlag)
         return 0;
     }
 
-    if (getType() == VRML_COMMENT)
+    if (getType() == VRML_COMMENT) {
         return 0;
-    if (m_proto->isMismatchingProto())
-        return 0;   
+    }
+    if (m_proto->isMismatchingProto()) {
+        return 0;
+    }
 
     if (isMeshBasedNode()) {
         RET_ONERROR( mywritef(f, "    ") )
@@ -2280,8 +2287,9 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
     if (nodeFlag && (value->getType() == SFNODE)) {
         if (value) {
             Node *node = ((SFNode *)value)->getValue();
-            if (node && (node != this)) // avoid simple cyclic scenegraph
+            if (node && (node != this)) { // avoid simple cyclic scenegraph
                  RET_ONERROR( node->writeC(f, languageFlag) )
+            }
         }
     } else if (nodeFlag && (value->getType() == MFNODE)) {
         if (value) {
@@ -2316,10 +2324,12 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
         }
         if (TheApp->isWonderlandModuleExport() &&
             (element->getFlags() & FF_WONDERLAND_ART)) {
-                 RET_ONERROR( value->writeCWonderlandArt(f, name, languageFlag) 
-                            )
-        } else
-             RET_ONERROR( value->writeC(f, name, languageFlag) )
+            addToConvertedNodes(m_scene->getWriteFlags());   
+            RET_ONERROR( value->writeCWonderlandArt(f, name, languageFlag) )
+        } else {
+            addToConvertedNodes(m_scene->getWriteFlags());
+            RET_ONERROR( value->writeC(f, name, languageFlag) )
+        }
         if (value->isArrayInC()) {
             if (languageFlag & JAVA_SOURCE) {
                 RET_ONERROR( mywritestr(f, "    ") )
@@ -2604,6 +2614,7 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
     RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
     RET_ONERROR( mywritestr(f, typeEnumToString(type)) )
     RET_ONERROR( mywritestr(f, "SendEvent(") )
+    Node *writeNode = sNode;
     if ((languageFlag & (C_SOURCE | CC_SOURCE)) ||
         ((languageFlag & JAVA_SOURCE) && isArray)) {
         bool nurbsSurfaceCorrection = false;
@@ -2616,13 +2627,24 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                 RET_ONERROR( mywritestr(f, "struct ") )
             RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
             RET_ONERROR( mywritestr(f, "Coordinate *)") )
+        } else if (sNode->getType() == VRML_COORDINATE) {
+            if (sNode->getParent()->isMeshBasedNode()) {
+                MeshBasedNode *mesh = (MeshBasedNode *)sNode->getParent();
+                if (mesh->getIndexedFaceSet() &&
+                    mesh->getIndexedFaceSet()->getType() == 
+                    VRML_INDEXED_FACE_SET) {
+                    NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                               mesh->getIndexedFaceSet();
+                    writeNode = face->coord()->getValue();
+                }
+            }
         }
         if (languageFlag & (C_SOURCE | CC_SOURCE)) {
             if (!isArrayInC(type))
                 RET_ONERROR( mywritestr(f, "&(") )
             RET_ONERROR( mywritestr(f, "self->") )
         }
-        RET_ONERROR( mywritestr(f, sNode->getVariableName()) )
+        RET_ONERROR( mywritestr(f, writeNode->getVariableName()) )
         RET_ONERROR( mywritestr(f, ".") )
         if (nurbsSurfaceCorrection)
             RET_ONERROR( mywritestr(f, "coord)->point") )
@@ -2726,7 +2748,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                  EventOut *source = m_proto->getEventOut(i);
                  int isEventOut = event; 
                  if (isEventOut != -1) {
-                     EventOut *protoTarget = isNode->getProto()->getEventOut(isEventOut);
+                     EventOut *protoTarget = isNode->getProto()->getEventOut(
+                         isEventOut);
                      if (isNode->writeCCopyEvent(f, indent, languageFlag, 
                                                  source, protoTarget, this
                                                 ) != 0)
@@ -2813,7 +2836,8 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             EventIn *target = sNode->getProto()->getEventIn(s.getField());
             if (isInAlreadyWrittenEventOuts(i, numOutput, m_nodePROTO))
                 continue;
-            EventOut *source = proto->getEventOut(i);
+//            EventOut *source = proto->getEventOut(i);
+            EventOut *source = getProto()->getEventOut(i);
 
             RET_ONERROR( indentf(f, indent + 8) )
             if ((languageFlag & JAVA_SOURCE) && !isCurveAnimation) {
@@ -2929,12 +2953,14 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 RET_ONERROR( mywritestr(f, "    ") )
             RET_ONERROR( mywritestr(f, "}\n") )
 
-            Field *field = sNode->getProto()->getField(s.getField());
+//            Field *field = sNode->getProto()->getField(s.getField());
+            Field *field = getProto()->getField(s.getField());
             if (field) {
                 ExposedField *expField = field->getExposedField();
                 if (expField) {
                     int eventOut = expField->getEventOut();
-                    EventOut *source = m_proto->getEventOut(eventOut);
+//                    EventOut *source = sNode->getProto()->getEventOut(eventOut);
+                    EventOut *source = getProto()->getEventOut(eventOut);
                     if (source) {
                         SocketList::Iterator *i;
                         for (i = m_outputs[eventOut].first(); i != NULL; 
@@ -4847,6 +4873,15 @@ NodeData::writeLdrawDat(int f, int indent)
                RET_ONERROR( ((MFNode *) m_fields[i])->writeLdrawDat(f, indent) )
         }
     return 0; 
+}
+
+
+void      
+NodeData::addToConvertedNodes(int writeFlags)
+{
+    // add to "m_convertedNodes"
+    if (isMeshBasedNode())
+        ((MeshBasedNode *)this)->addToConvertedNodes(writeFlags);
 }
 
 NodeHAnimHumanoid *

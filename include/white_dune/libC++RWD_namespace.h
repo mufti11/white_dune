@@ -45,6 +45,10 @@ namespace CPPRWD
 
     void MaterialRender(X3dNode *data, void*);
 
+    void ShapeRender(X3dNode *data, void*);
+
+    void CoordinateRender(X3dNode *data, void*);
+
     void TransformTreeRender(X3dNode *data, void *dataptr);
 
     void GroupTreeRender(X3dNode *data, void *dataptr);
@@ -153,3 +157,4 @@ namespace CPPRWD
 
     void orbitCamera(float dtheta, float dphi, float z);
 };
+
