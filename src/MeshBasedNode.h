@@ -77,6 +77,7 @@ protected:
     MyMeshDouble   *m_meshDouble;
     bool            m_isDoubleMesh;  
     bool            m_meshDirty;
+    bool            m_already_converted;
 };
 
 class MeshBasedNode : public GeometryNode , public MeshBased {
@@ -87,6 +88,8 @@ public:
     virtual bool    isMeshBasedNode(void) { return true; }
 
     virtual Node   *getIndexedFaceSet(void);
+
+    virtual void    setAlreadyConverted(void) { m_already_converted = true; }
 
     int             optimizeNormals(int *coordIndex, Vec3f *vertices,
                                     Vec3f *normals, int index, bool ccw, 

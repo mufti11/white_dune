@@ -27,7 +27,7 @@
 #include "SFMFTypes.h"
 #include "DynamicFieldsNode.h"
 
-class ProtoEffect : public Proto {
+class ProtoEffect : public DynamicFieldsProto {
 public:
                     ProtoEffect(Scene *scene);
     virtual Node   *create(Scene *scene);

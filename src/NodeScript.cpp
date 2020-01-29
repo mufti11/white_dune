@@ -39,7 +39,7 @@
 #include "URL.h"
 
 ProtoScript::ProtoScript(Scene *scene)
-  : WonderlandExportProto(scene, "Script")
+  : DynamicFieldsProto(scene, "Script")
 {
     url.set(
           addExposedField(MFSTRING, "url", new MFString(), 

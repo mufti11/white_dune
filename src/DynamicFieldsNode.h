@@ -29,6 +29,12 @@
 #include "CommandList.h"
 #include "InterfaceArray.h"
 
+class DynamicFieldsProto : public Proto {
+public:
+                    DynamicFieldsProto(Scene *scene, const char *name);
+    virtual bool    isDynamicFieldsProto(void) { return true; }    
+};
+
 class DynamicFieldsNode : public Node {
 public:
                     DynamicFieldsNode(Scene *scene, Proto *proto) :
@@ -38,7 +44,6 @@ public:
                                Node(*node, proto)
                        { initialise(); }
     virtual bool    isDynamicFieldsNode(void) { return true; }
-
 
     void            initialise(void);
     virtual int     write(int filedes, int indent, bool avoidUse = false);

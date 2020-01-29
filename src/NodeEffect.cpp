@@ -30,7 +30,7 @@
 #include "DuneApp.h"
 
 ProtoEffect::ProtoEffect(Scene *scene)
-  : Proto(scene, "Effect")
+  : DynamicFieldsProto(scene, "Effect")
 {
     language.set(
         addField(SFSTRING, "language", new SFString("")));

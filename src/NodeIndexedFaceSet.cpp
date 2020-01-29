@@ -170,9 +170,13 @@ NodeIndexedFaceSet::setField(int index, FieldValue *value, int cf)
 void
 NodeIndexedFaceSet::addToConvertedNodes(int flags)
 {
+    if (m_already_converted)
+        return;
+    m_already_converted = true;
     if (flags & TRIANGULATE) {
         if (!canSimpleTriangulate() || !hasBranchInputs()) {
             MeshBasedNode::addToConvertedNodes(flags);
+            setAlreadyConverted();
             m_meshDirty = true;
             return;
         }
@@ -180,7 +184,7 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
     if (getHumanoid() != NULL)
         return;
     NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)this->copy();
-//    node->setVariableName(strdup(this->getVariableName()));
+    node->setVariableName(strdup(this->getVariableName()));
     m_scene->copyRoutes(node, this);
     if (coord()->getValue() != NULL) {
         Node *target = node->coord()->getValue();
@@ -190,6 +194,7 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
     }
     if (normal()->getValue() != NULL) {
         Node *target = node->normal()->getValue();
+        target->setVariableName(strdup(target->getVariableName()));
         m_scene->copyRoutes(target, this->normal()->getValue());
         target->addParent(node,  node->normal_Field());
     }
@@ -208,6 +213,7 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
         m_scene->copyRoutes(target, this->fogCoord()->getValue());
         target->addParent(node,  node->fogCoord_Field());
     }
+    
     if (m_convertedNodes.size() != 0)
         return;
     m_meshDirty = true;
@@ -250,6 +256,7 @@ NodeIndexedFaceSet::addToConvertedNodes(int flags)
                          new MFInt32(mftexCoordIndex));
     }
     m_convertedNodes.append(node);
+    node->setAlreadyConverted();
     node->addParent(getParent(), getParentField());
     return;
 }
@@ -1889,51 +1896,6 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
     
         CGAL::Polygon_mesh_processing::parameters::all_default();
 
-//        CGAL::Polygon_mesh_processing::stitch_borders(surface1);
-//        CGAL::Polygon_mesh_processing::stitch_borders(surface2); 
-
-    /*
-        if (CGAL::Polygon_mesh_processing::does_self_intersect(surface1)) {
-            char str[256], title[256], message[256];
-            swLoadString(IDS_DUNE, title, 255);
-            swLoadString(IDS_MESH_INTERSECT_SELF, str, 255);
-            mysnprintf(message, 255, str, 1);
-            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
-                         SW_MB_ERROR);
-            return NULL;
-        }
-    
-        if (CGAL::Polygon_mesh_processing::does_self_intersect(surface2)) {
-            char str[256], title[256], message[256];
-            swLoadString(IDS_DUNE, title, 255);
-            swLoadString(IDS_MESH_INTERSECT_SELF, str, 255);
-            mysnprintf(message, 255, str, 2);
-            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
-                         SW_MB_ERROR);
-            return NULL;
-        }
-    */
-    /*
-        if (!CGAL::Polygon_mesh_processing::does_bound_a_volume(surface1)) {
-            char str[256], title[256], message[256];
-            swLoadString(IDS_DUNE, title, 255);
-            swLoadString(IDS_NOT_A_VOLUME, str, 255);
-            mysnprintf(message, 255, str, 1);
-            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
-                         SW_MB_ERROR);
-            return NULL;
-        }
-    
-        if (!CGAL::Polygon_mesh_processing::does_bound_a_volume(surface2)) {
-            char str[256], title[256], message[256];
-            swLoadString(IDS_DUNE, title, 255);
-            swLoadString(IDS_NOT_A_VOLUME, str, 255);
-            mysnprintf(message, 255, str, 2);
-            swMessageBox(TheApp->mainWnd(), message, title, SW_MB_OK, 
-                         SW_MB_ERROR);
-            return NULL;
-        }
-    */
         switch (operation) {
           case UNION:
             if (!CGAL::Polygon_mesh_processing::corefine_and_compute_union(
@@ -2078,7 +2040,7 @@ NodeIndexedFaceSet::readOff(const char *filename)
     faceSet->coordIndex(new MFInt32(newCoordIndex));
     return faceSet;
 }
-
+#endif
 
 void               
 NodeIndexedFaceSet::accountOffData(int f)
@@ -2186,7 +2148,6 @@ NodeIndexedFaceSet::writeOffNormals(int f, Node *node)
         mywritestr(f, "\n");
     }
 }
-#endif
     
 #ifdef HAVE_LIBVCG
 #undef max

@@ -30,7 +30,7 @@
 #include "DuneApp.h"
 
 ProtoComposedShader::ProtoComposedShader(Scene *scene)
-  : Proto(scene, "ComposedShader")
+  : DynamicFieldsProto(scene, "ComposedShader")
 {
     addEventIn(SFBOOL, "activate", FF_STATIC);
 

@@ -106,6 +106,8 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_x3domId = "";
     m_x3domOnOutputChange = "";
     m_x3domOnClick = "";
+    m_writtenCompleteCProcessEvent = true;
+    m_alreadyConverted = false;
     m_scene->addNode((Node*)this);
 }
 
@@ -113,6 +115,8 @@ NodeData::NodeData(const Node &node) {
     copyData(node);
     m_written = false;
     m_identifierCopy = node.m_identifier;
+    m_alreadyConverted = false;
+    m_writtenCompleteCProcessEvent = true;
 }    
     
 void
@@ -167,6 +171,7 @@ NodeData::copyData(const NodeData &node)
                             strdup(node.m_x3domOnOutputChange) : NULL;
     m_x3domOnClick = m_x3domOnClick && node.m_x3domOnClick ? 
                      strdup(node.m_x3domOnClick) : NULL;
+    m_writtenCompleteCProcessEvent = true;
     m_scene->addNode((Node*)this);
  }
 
@@ -225,7 +230,7 @@ Node::Node(const Node &node) : NodeData(node)
     m_geometricParentIndex = node.getGeometricParentIndex();
     m_commentsList = new NodeList;
     ref();
-    m_numberCDataFunctions = 0;
+    m_numberCDataFunctions = node.m_numberCDataFunctions;
 }
 
 Node::Node(const Node &node, Proto *proto) : NodeData(node)
@@ -288,6 +293,8 @@ NodeData::getMaskedNodeClass(void)
 bool
 NodeData::hasName(void)
 {
+    if (m_name.length() == 0) 
+        return false;
     if (m_name.length() == 0)
         if (needsDEF())
             m_scene->generateUniqueNodeName((Node *)this);       
@@ -449,7 +456,6 @@ NodeData::getVariableName(void)
                  i < sizeof(keyWords)/sizeof(const char *); i++)
                 if (strcmp(m_name.getData(), keyWords[i]) == 0) {
                     isKeyWord = true;
-//                    m_variableName += m_scene->getUniqueNodeName(cName);
                     m_variableName += cName;
                     swDebugf("Warning: Variablename ");
                     swDebugf("\"%s\"", m_name.getData());
@@ -462,7 +468,8 @@ NodeData::getVariableName(void)
         }
         if (m_variableName.length() == 0)
             if (m_scene != NULL) {
-                m_variableName += m_scene->generateUniqueNodeName((Node *)this);
+                setVariableName(m_scene->generateUniqueNodeName((Node *)this));
+                m_variableName.sub("ColorRGBA", "Color");
                 m_name = "";
                 m_name += m_variableName;
             }
@@ -1730,6 +1737,9 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
         return 0;
     }
 
+    if (!isCWriteable())
+        return 0;
+
     if (forward)
         writeCDataFunctionFields(filedes, languageFlag, forward, cont);
 
@@ -1745,13 +1755,17 @@ Node::writeCDataFunction(int filedes, int languageFlag, bool forward, bool cont)
             }
         }
         m_scene->increaseNumDataFunctions();
-        RET_ONERROR( mywritestr(filedes, "    ") )
-        if (languageFlag & MANY_JAVA_CLASSES)
-            RET_ONERROR( mywritestr(filedes, "    ") )
-        RET_ONERROR( writeCVariable(filedes, languageFlag) )    
-        RET_ONERROR( mywritestr(filedes, " = new ") )
-            RET_ONERROR( mywritestr(filedes, getClassName()) )
-        RET_ONERROR( mywritestr(filedes, "();\n") )    
+        if (languageFlag & MANY_JAVA_CLASSES) {
+            if (!isPROTO()) {
+                RET_ONERROR( mywritestr(filedes, "    ") )
+                if (languageFlag & MANY_JAVA_CLASSES)
+                    RET_ONERROR( mywritestr(filedes, "    ") )
+                RET_ONERROR( writeCVariable(filedes, languageFlag) )    
+                RET_ONERROR( mywritestr(filedes, " = new ") )
+                RET_ONERROR( mywritestr(filedes, getClassName()) )
+                RET_ONERROR( mywritestr(filedes, "();\n") )
+            }
+        }        
 
         if (languageFlag & JAVA_SOURCE) {       
             if (languageFlag & MANY_JAVA_CLASSES)
@@ -1835,7 +1849,7 @@ Node::writeC(int f, int languageFlag)
         return 0;
     }
 
-    if (isMeshBasedNode()) {
+    if (isMeshBasedNode() && (!getIndexedFaceSet())) {
         RET_ONERROR( mywritef(f, "    ") )
         if (languageFlag & C_SOURCE)
             RET_ONERROR( mywritef(f, "%sSetGlName(&self->%s, %d);\n", 
@@ -1844,12 +1858,8 @@ Node::writeC(int f, int languageFlag)
         else {
             if (languageFlag & JAVA_SOURCE) {
                 MyString className = "";
-                if (hasName()) 
-                    className += TheApp->getCSceneGraphName();
-                else {
-                   className += TheApp->getCPrefix();
-                   className += getVariableName();
-                }
+                className += TheApp->getCPrefix();
+                className += getVariableName();
                 RET_ONERROR( mywritef(f, "%s.", (const char *)className) )
             }
             RET_ONERROR( mywritef(f, "%s.setGlName(%d);\n", getVariableName(), 
@@ -1878,12 +1888,8 @@ Node::writeC(int f, int languageFlag)
             RET_ONERROR( mywritestr(f, "self->") )
         MyString className = "";
         if (languageFlag & JAVA_SOURCE) {
-            if (hasName()) 
-                className += TheApp->getCSceneGraphName();
-            else {
-                className += TheApp->getCPrefix();
-                className += getVariableName();
-            }
+            className += TheApp->getCPrefix();
+            className += getVariableName();
             RET_ONERROR( mywritef(f, "%s.", (const char *)className) )
         }
         RET_ONERROR( mywritef(f, "%s.route_sources = ", getVariableName()) )
@@ -1921,8 +1927,9 @@ Node::writeC(int f, int languageFlag)
                     if (languageFlag & (C_SOURCE | CC_SOURCE))
                         RET_ONERROR( mywritestr(f, "&") ) 
                     if (languageFlag & JAVA_SOURCE)
-                        RET_ONERROR( mywritef(f, "%s.", 
-                                                 (const char *)className) )
+                        RET_ONERROR( mywritef(f, "%s%s.", TheApp->getCPrefix(),
+                            j->item().getNode()->getVariableName()) )
+                                                 
                     if (languageFlag & C_SOURCE)
                         RET_ONERROR( mywritestr(f, "self->") )
                     RET_ONERROR( mywritestr(f, 
@@ -1936,12 +1943,8 @@ Node::writeC(int f, int languageFlag)
             RET_ONERROR( mywritestr(f, "self->") )
         if (languageFlag & JAVA_SOURCE) {
             MyString className = "";
-            if (hasName()) 
-                className += TheApp->getCSceneGraphName();
-            else {
-                className += TheApp->getCPrefix();
-                className += getVariableName();
-            }
+            className += TheApp->getCPrefix();
+            className += getVariableName();
             RET_ONERROR( mywritef(f, "        %s.", (const char *)className) )
         }
         RET_ONERROR( mywritef(f, "%s.num_route_source = %d;\n", 
@@ -2193,27 +2196,20 @@ Node::writeCElementFunction(int f, int elementType, int i, int languageFlag,
                                       m_numberCDataFunctions) )    
             m_numberCDataFunctions++; 
             const char *elementName = element->getName(true); 
-            if (i == 0) {
-                RET_ONERROR( mywritestr(f, "        ") )
-                if (languageFlag & MANY_JAVA_CLASSES)
-                    RET_ONERROR( mywritestr(f, "    ") )
-                RET_ONERROR( writeCVariable(f, languageFlag) )    
-                RET_ONERROR( mywritef(f, ".%s = ",
-                                      (const char *)element->getName(true)) )
-                int size = mvalue->getSFSize() * mvalue->getStride();
-                if (size > 0)
-                    RET_ONERROR( mywritef(f, "new %s[%d];\n",
-                                          value->getTypeC(languageFlag), size) )
-                else 
-                    RET_ONERROR( mywritestr(f, "null;\n") )
-            }
             
             RET_ONERROR( mywritestr(f, "        ") )
             if (languageFlag & MANY_JAVA_CLASSES)
                 RET_ONERROR( mywritestr(f, "    ") )
             RET_ONERROR( mywritestr(f, getClassName()) )
             RET_ONERROR( mywritestr(f, " v = ") )
-            RET_ONERROR( writeCVariable(f, languageFlag) )    
+            if (languageFlag & MANY_JAVA_CLASSES) {
+                if (getIndexedFaceSet())
+                     RET_ONERROR(getIndexedFaceSet()->
+                                 writeCVariable(f, languageFlag) )    
+                else  
+                     RET_ONERROR( writeCVariable(f, languageFlag) )    
+            } else
+                RET_ONERROR( writeCVariable(f, languageFlag) )    
             RET_ONERROR( mywritestr(f, ";\n") )
 
             RET_ONERROR( mvalue->writeJavaLongArray(f, languageFlag,
@@ -2288,6 +2284,7 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
         if (value) {
             Node *node = ((SFNode *)value)->getValue();
             if (node && (node != this)) { // avoid simple cyclic scenegraph
+                 node->addToConvertedNodes(m_scene->getWriteFlags()); 
                  RET_ONERROR( node->writeC(f, languageFlag) )
             }
         }
@@ -2297,6 +2294,7 @@ Node::writeCElement(int f, int elementType, int i, int languageFlag,
             for (int i = 0; i < nodes->getSize(); i++) {
                 Node *node = nodes->getValue(i);
                 if (node && (node != this)) { // avoid simple cyclic scenegraph
+                     node->addToConvertedNodes(m_scene->getWriteFlags()); 
                      RET_ONERROR( node->writeC(f, languageFlag) )
                 }
             }
@@ -2445,6 +2443,8 @@ Node::writeCProcessEvent(int f, int indent, int languageFlag,
         RET_ONERROR( indentf(f, indent) )
         RET_ONERROR( mywritestr(f, "{\n") )        
     } else {
+        m_writtenCompleteCProcessEvent = false;
+
         RET_ONERROR( indentf(f, indent) )
         if (languageFlag & JAVA_SOURCE)
             RET_ONERROR( mywritestr(f, "    ") )
@@ -2560,6 +2560,8 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                             const char *sourceVariableName,
                             Node *sNode, bool isArray, int type)
 { 
+    if (!sNode->hasName())
+        return 0;
     if ((languageFlag & JAVA_SOURCE) && isArray) {
         RET_ONERROR( indentf(f, indent + 12) )
         RET_ONERROR( mywritestr(f, "if ((") )
@@ -2619,15 +2621,17 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
         ((languageFlag & JAVA_SOURCE) && isArray)) {
         bool nurbsSurfaceCorrection = false;
         if ((sNode->getType() == VRML_NURBS_SURFACE) && (!m_scene->isX3d()) &&
-            strcmp(targetVariableName, "controlPoint") == 0)
+            strcmp(targetVariableName, "controlPoint") == 0) {
             nurbsSurfaceCorrection = true;
-        if (nurbsSurfaceCorrection) {
-            RET_ONERROR( mywritestr(f, "((") )
-            if (languageFlag & C_SOURCE)
-                RET_ONERROR( mywritestr(f, "struct ") )
-            RET_ONERROR( mywritestr(f, TheApp->getCPrefix()) )
-            RET_ONERROR( mywritestr(f, "Coordinate *)") )
-        } else if (sNode->getType() == VRML_COORDINATE) {
+            MeshBasedNode *mesh = (MeshBasedNode *)sNode;
+            if (mesh->getIndexedFaceSet() &&
+                mesh->getIndexedFaceSet()->getType() == VRML_INDEXED_FACE_SET) {
+                NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                           mesh->getIndexedFaceSet();
+                writeNode = face->coord()->getValue();
+           }
+        }
+        if (sNode->getType() == VRML_COORDINATE) {
             if (sNode->getParent()->isMeshBasedNode()) {
                 MeshBasedNode *mesh = (MeshBasedNode *)sNode->getParent();
                 if (mesh->getIndexedFaceSet() &&
@@ -2644,10 +2648,15 @@ NodeData::writeCDowithEvent(int f, int indent, int languageFlag,
                 RET_ONERROR( mywritestr(f, "&(") )
             RET_ONERROR( mywritestr(f, "self->") )
         }
+        if (languageFlag & JAVA_SOURCE) {
+            RET_ONERROR( mywritestr(f, "X3d") )
+            RET_ONERROR( mywritestr(f, writeNode->getVariableName()) )
+            RET_ONERROR( mywritestr(f, ".") )
+        }
         RET_ONERROR( mywritestr(f, writeNode->getVariableName()) )
         RET_ONERROR( mywritestr(f, ".") )
         if (nurbsSurfaceCorrection)
-            RET_ONERROR( mywritestr(f, "coord)->point") )
+            RET_ONERROR( mywritestr(f, "point") )
         else
             RET_ONERROR( mywritestr(f, targetVariableName) )
         if (languageFlag & (C_SOURCE | CC_SOURCE))
@@ -2711,10 +2720,14 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
 
     int countCloseWings = 0;
 
+    if (!hasName())
+        return 0;
+
     Proto *proto = getProto();
     if (hasRoute && !getProto()->isLoaded()) {
-        RET_ONERROR( writeCProcessEvent(f, indent + 4, languageFlag, eventName) 
-                   )
+        m_writtenCompleteCProcessEvent = true;
+        RET_ONERROR( writeCProcessEvent(f, indent + 4, languageFlag, 
+                                        eventName) )
         RET_ONERROR( indentf(f, indent + 8) )
         RET_ONERROR( mywritestr(f, "}\n") )
         countCloseWings++;
@@ -2836,7 +2849,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             EventIn *target = sNode->getProto()->getEventIn(s.getField());
             if (isInAlreadyWrittenEventOuts(i, numOutput, m_nodePROTO))
                 continue;
-//            EventOut *source = proto->getEventOut(i);
             EventOut *source = getProto()->getEventOut(i);
 
             RET_ONERROR( indentf(f, indent + 8) )
@@ -2851,6 +2863,11 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
             if (isInsideProto()) {
                 sNode = m_scene->searchProtoNodeIdInNode(m_nodePROTO,
                                                          sNode->getId());
+            if (!sNode->hasName())
+                continue;
+
+            bool isCurveAnimation = (sNode->getType() == DUNE_CURVE_ANIMATION);
+
                 if (sNode == NULL) {
                     swDebugf("internal Error: sNode == NULL\n");
                     return -1;
@@ -2880,14 +2897,16 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                         source = timer->getProto()->getEventOut(eventOut);
                     }     
 
-                    if (writeCSendEvent(f, indent, languageFlag, target, 
-                                        source, inter) != 0)
-                        return -1;
+                    int eventWritten = m_writtenCompleteCProcessEvent;
 
-                    RET_ONERROR( indentf(f, indent + 8) )
-                    RET_ONERROR( mywritestr(f, "}\n") )
-                    RET_ONERROR( indentf(f, indent + 4) )
-                    RET_ONERROR( mywritestr(f, "}\n") )
+                    RET_ONERROR(writeCSendEvent(f, indent, languageFlag, 
+                                                target, source, inter) )
+                    if (eventWritten | (!(languageFlag & JAVA_SOURCE))) {
+                        RET_ONERROR( indentf(f, indent + 8) )
+                        RET_ONERROR( mywritestr(f, "}\n") )
+                        RET_ONERROR( indentf(f, indent + 4) )
+                        RET_ONERROR( mywritestr(f, "}\n") )
+                    }
 
                     NodeOrientationInterpolator *inter2 =
                         (NodeOrientationInterpolator *)(curve->
@@ -2953,13 +2972,11 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
                 RET_ONERROR( mywritestr(f, "    ") )
             RET_ONERROR( mywritestr(f, "}\n") )
 
-//            Field *field = sNode->getProto()->getField(s.getField());
             Field *field = getProto()->getField(s.getField());
             if (field) {
                 ExposedField *expField = field->getExposedField();
                 if (expField) {
                     int eventOut = expField->getEventOut();
-//                    EventOut *source = sNode->getProto()->getEventOut(eventOut);
                     EventOut *source = getProto()->getEventOut(eventOut);
                     if (source) {
                         SocketList::Iterator *i;
@@ -2987,22 +3004,6 @@ Node::writeCAndFollowRoutes(int f, int indent, int languageFlag,
     }
     return 0;
 }                                                                
-
-int                 
-Node::writeCEndSendEvent(int f, int indent, int languageFlag)
-{
-    if (getProto()->isLoaded())
-        return 0;
-    RET_ONERROR( indentf(f, indent + 4) )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, "    ") )
-    RET_ONERROR( mywritestr(f, "}\n") )
-    RET_ONERROR( indentf(f, indent) )
-    if (languageFlag & JAVA_SOURCE)
-        RET_ONERROR( mywritestr(f, "    ") )
-    RET_ONERROR( mywritestr(f, "}\n") )
-    return 0;
-}
 
 int                 
 Node::writeCInstallDynamicNodeCallback(int f, int languageFlag, Proto *proto)
@@ -4436,7 +4437,8 @@ NodeData::needExtraJavaClass(void)
         for (long i = 0; i < m_convertedNodes.size(); i++)
             if (m_convertedNodes[i]->needExtraJavaClass())
                 return true;
-    if (hasName() || (m_scene->getRoot() == this))
+//    if (hasName() || (m_scene->getRoot() == this))
+    if ((m_scene->getRoot() == this))
         return false;
     return true;
 }
@@ -4879,9 +4881,12 @@ NodeData::writeLdrawDat(int f, int indent)
 void      
 NodeData::addToConvertedNodes(int writeFlags)
 {
+    if (m_alreadyConverted)
+        return;
     // add to "m_convertedNodes"
     if (isMeshBasedNode())
         ((MeshBasedNode *)this)->addToConvertedNodes(writeFlags);
+    m_alreadyConverted = true;
 }
 
 NodeHAnimHumanoid *
@@ -4926,5 +4931,29 @@ Node::getParents(void)
     for (int i = 0; i < getNumParents(); i++)
         ret.append(getParent(i));
     return ret;
+}
+
+Node *
+Node::getIndexedFaceSet(void) {
+    if (isMeshBasedNode())
+        return ((MeshBasedNode *)this)->getIndexedFaceSet();
+    return NULL;
+}
+
+void
+Node::setAlreadyConverted(void)
+{
+    if (isMeshBasedNode())
+        ((MeshBasedNode *)this)->setAlreadyConverted();
+}
+
+bool 
+Node::isCWriteable()
+{
+    bool x3d = getScene()->isX3d();
+    if (getScene()->belongsToNodeWithExternProto(getProto()->getName(x3d)) || 
+        getType() == VRML_NURBS_SURFACE || getType() == VRML_NURBS_CURVE)
+        return false;
+    return true;
 }
 

@@ -19,6 +19,7 @@
  * Cambridge, MA 02139, USA.
  */
 
+#include "Proto.h"
 #include "DynamicFieldsNode.h"
 #include "DuneApp.h"
 #include "Scene.h"
@@ -29,6 +30,11 @@
 #include "RouteCommand.h"
 #include "UnRouteCommand.h"
 #include "NodeScript.h"
+
+DynamicFieldsProto::DynamicFieldsProto(Scene *scene, const char* name)
+  : Proto(scene, name)
+{
+}
 
 void DynamicFieldsNode::initialise(void)
 {

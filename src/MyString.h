@@ -81,6 +81,7 @@ class MyString {
     int         write(int filedes);
     const char *getData(void) const { return m_stringBuf->m_data; }
 
+    bool        sub(MyString what, MyString with);
     bool        gsub(MyString what, MyString with);
     // replace string "what" with string "with"
     // but do not replace if "with" is found

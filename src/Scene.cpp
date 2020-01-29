@@ -1349,7 +1349,8 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     bool done = false;
     int ret = 0;
     bool x3dv = ::isX3dv(writeFlags);
-    if (writeFlags & (TRIANGULATE | (C_SOURCE | CC_SOURCE | JAVA_SOURCE))) {
+//    if (writeFlags & (TRIANGULATE | (C_SOURCE | CC_SOURCE | JAVA_SOURCE))) {
+    if (writeFlags & (TRIANGULATE | (C_SOURCE | CC_SOURCE))) {
         m_root->doWithBranch(generateConvertedNodes, &writeFlags);
     }
     if (writeFlags & (C_SOURCE | CC_SOURCE | JAVA_SOURCE))
@@ -2385,18 +2386,16 @@ Scene::writeCDeclaration(int f, int languageFlag)
 int
 Scene::writeCDataFunctionsCalls(int f, int languageFlag)
 {
-    for (int i = 0; i < 1; i++) {
-        if (languageFlag & MANY_JAVA_CLASSES) {
-            RET_ONERROR( mywritef(f, "    }\n") )
-            RET_ONERROR( mywritef(f, "}\n") )
-            RET_ONERROR( mywritef(f, "class Data%sFunctionClass_%d {\n",
-                                  TheApp->getCPrefix(), getNumDataClasses()) )
-        }
-        RET_ONERROR( mywritef(f, 
-            "    public static void data%sFunction%d() {\n",
-            TheApp->getCPrefix(), getNumDataClasses() + i) )
-        increaseNumDataClasses();
+    if (languageFlag & MANY_JAVA_CLASSES) {
+        RET_ONERROR( mywritef(f, "    }\n") )
+        RET_ONERROR( mywritef(f, "}\n") )
+        RET_ONERROR( mywritef(f, "class Data%sFunctionClass_%d {\n",
+                              TheApp->getCPrefix(), getNumDataClasses()) )
     }
+    RET_ONERROR( mywritef(f, 
+        "    public static void data%sFunction%d() {\n",
+        TheApp->getCPrefix(), getNumDataClasses()) )
+    increaseNumDataClasses();
 
     return(0);
 }
@@ -2406,6 +2405,7 @@ struct WriteCStruct {
     int ret;
     int languageFlag;
     bool outsideJavaClass;
+    bool writeBracket;
 };
 
 bool writeCVariableNameLine(Node *node, const char *variableName,
@@ -2486,17 +2486,25 @@ bool writeCNodeData(Node *node, void *data)
     if (node == NULL)
         return true;
 
+    struct WriteCStruct *cWrite = (struct WriteCStruct *)data;
+
+    bool writeBracket = cWrite->writeBracket;
+
+    node->addToConvertedNodes(node->getScene()->getWriteFlags());
+
     if (node->getNumConvertedNodes() > 0) {
-        for (int i = 0; i < node->getNumConvertedNodes(); i++)
+        for (int i = 0; i < node->getNumConvertedNodes(); i++) {
             node->getConvertedNode(i)->doWithBranch(writeCNodeData, data,
                                                     false);
-        return true;
+        }
+        writeBracket = false;
     }
+
+    if (!node->isCWriteable())
+        return true;
 
     Proto *proto = node->getProto();
     if (proto->getType() == VRML_COMMENT)
-        return true;
-    if (proto->isMesh() && !proto->isExportTargetMesh())
         return true;
     if (proto->isMismatchingProto())
         return true;   
@@ -2506,7 +2514,6 @@ bool writeCNodeData(Node *node, void *data)
         return true;
     node->setFlag(NODE_FLAG_TOUCHED); 
 
-    struct WriteCStruct *cWrite = (struct WriteCStruct *)data;
     if (node->hasProtoNodes()) {
        NodePROTO *protoNode = (NodePROTO *)node;
        for (int i = 0; i < protoNode->getNumProtoNodes(); i++)
@@ -2528,8 +2535,8 @@ bool writeCNodeData(Node *node, void *data)
                 return true;
         } 
     }
+    bool writeName = true;
     if (node->getType() != DUNE_CURVE_ANIMATION) {
-        bool writeName = true;
         for (int i = 0; i < variableNames.size(); i++)  
             if (strcmp(variableNames[i], node->getVariableName()) == 0) {
                 writeName = false;
@@ -2573,10 +2580,17 @@ bool writeCNodeData(Node *node, void *data)
             variableNames.append(variableName);
         }
     }
+
+    if (node->isMeshBasedNode())
+        if (node->getType() != VRML_INDEXED_FACE_SET)
+            if (writeName)
+                writeBracket = true;
+
     int f = cWrite->filedes;
     if (cWrite->languageFlag & MANY_JAVA_CLASSES) 
-        if (extraJavaClass)
-            RET_ONERROR( mywritestr(f, "}\n") )  
+        if (extraJavaClass && writeBracket) {
+            RET_ONERROR( mywritestr(f, "}\n") )
+        }
 
     return true;
 }
@@ -2596,7 +2610,7 @@ bool writeCVariableNameLine(Node *node, const char *variableName,
             cWrite->ret = -1;
             return false;
         }
-        
+
     if (cWrite->languageFlag & MANY_JAVA_CLASSES) {
         if (extraJavaClass)
             RET_ONERROR( mywritef(f, "class %s%s {\n    ",
@@ -2611,10 +2625,17 @@ bool writeCVariableNameLine(Node *node, const char *variableName,
             error = -1;
         else 
             written = true;
-    } else if ((!written) && mywritef(f, "X3d%s", (const char *)
-                                    node->getProto()->getName(true)) != 0) {
+    } else if ((cWrite->languageFlag & C_SOURCE) && node->isPROTO() &&
+               (!written)) {
+        if (mywritef(f, "X3d%s_%s", (const char *)
+                                    node->getProto()->getName(true),
+                                    variableName) != 0)
+            error = -1;
+        else 
+            written = true;
+    } if ((!written) && mywritef(f, "X3d%s", (const char *)
+                                    node->getProto()->getName(true)) != 0)
         error = -1;
-    }
     if (mywritestr(f, " ") != 0)
         error = -1;
     else if (mywritestr(f, variableName) != 0)
@@ -2642,6 +2663,8 @@ static bool writeCDynamicNodeCallback(Node *node, void *data)
 static bool writeCParentCallback(Node *node, void *data)
 {
     WriteCDynamicNodeData *parameters = (WriteCDynamicNodeData *)data;
+    if (!node->isCWriteable())
+        return true;
     parameters->result = node->writeCGetParent(parameters->filedes, parameters->languageFlag);
     if (parameters->result != 0)
         return false;
@@ -2905,6 +2928,8 @@ Scene::writeC(int f, int languageFlag)
         cWrite.ret = 0;
         cWrite.languageFlag = languageFlag;
         cWrite.outsideJavaClass = true;
+        cWrite.writeBracket = true;
+
         getNodes()->clearFlag(NODE_FLAG_TOUCHED); // to handle DEF/USE
         m_root->doWithBranch(writeCNodeData, &cWrite);
         if (cWrite.ret !=0)
@@ -2992,6 +3017,7 @@ Scene::writeC(int f, int languageFlag)
     cWrite.ret = 0;
     cWrite.languageFlag = languageFlag;
     cWrite.outsideJavaClass = false;
+    cWrite.writeBracket = true;
     getNodes()->clearFlag(NODE_FLAG_TOUCHED); // to handle DEF/USE
     variableNames.resize(0);;
     m_root->doWithBranch(writeCNodeData, &cWrite);
@@ -3198,12 +3224,14 @@ Scene::writeC(int f, int languageFlag)
                                   m_glNameData[i].glName) )
             RET_ONERROR( mywritestr(f, "             return ") )
             MyString className = "";
+/*
             if (m_glNameData[i].node->hasName()) 
                 className += TheApp->getCSceneGraphName();
             else {
+*/
                 className += TheApp->getCPrefix();
                 className += m_glNameData[i].nodeName;
-            }
+//            }
             RET_ONERROR( mywritef(f, "%s.%s;\n", 
                                      (const char *)className,
                                      (const char *)m_glNameData[i].nodeName
@@ -3404,7 +3432,8 @@ Scene::writeCRoutes(int filedes, int languageFlag)
         }
         RET_ONERROR( mywritestr(filedes, "reInitSensor(") )
         if (languageFlag & JAVA_SOURCE) {
-            RET_ONERROR( mywritef(filedes, "%s.", (const char *)className) )
+            RET_ONERROR( mywritef(filedes, "X3d%s.", 
+                                  m_sensorNodes[i]->getVariableName()) )
         } else
             RET_ONERROR( mywritestr(filedes, "&(self->") )
         RET_ONERROR( mywritestr(filedes, m_sensorNodes[i]->getVariableName()) )
@@ -3606,6 +3635,8 @@ bool
 Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn, 
                 SceneView *sender)
 {
+    if (eventIn == -1)
+        return true;
     bool x3d = isX3d();
     bool ret = true;
     if (!validRoute(src, eventOut, dst, eventIn)) 

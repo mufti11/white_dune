@@ -24,6 +24,7 @@
 
 #include "stdafx.h"
 #include "swt.h"
+#include "resource.h"
 #include "PreferencesApp.h"
 #include "DuneApp.h"
 #include "EulerAngles.h"
@@ -47,6 +48,12 @@ PreferencesApp::PreferencesApp()
         m_ttfFile = HAVE_DEFAULT_TTF_FILE;
     else
         close(f);
+    m_crashFile = GetPreference("CrashFile", "");
+    if (strlen(m_crashFile) > 0) {
+        char fmtString[256];
+        swLoadString(IDS_CRASH_MESSAGE, fmtString, 256);
+        swDebugf(fmtString, m_crashFile);        
+    }
 }
 
 void
@@ -63,6 +70,7 @@ void PreferencesApp::SavePreferences()
     SetIntPreference("MouseMode", m_mouseMode);
     SetIntPreference("X11ErrorsLimit", m_X11ErrorsLimit);
     SetPreference("TtfFile", m_ttfFile);
+    SetPreference("CrashFile", m_crashFile);
 
     TheApp->EcmaScriptSavePreferences();
     TheApp->StereoViewSavePreferences();

@@ -31,7 +31,7 @@
 #define BEGIN_VRML_CUT_SCRIPT "BEGIN VrmlCut Script"
 #define END_VRML_CUT_SCRIPT   "END VrmlCut Script"
 
-class ProtoVrmlCut : public Proto {
+class ProtoVrmlCut : public DynamicFieldsProto {
 public:
                     ProtoVrmlCut(Scene *scene);
     virtual Node   *create(Scene *scene);

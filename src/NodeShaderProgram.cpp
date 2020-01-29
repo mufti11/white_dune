@@ -30,7 +30,7 @@
 #include "DuneApp.h"
 
 ProtoShaderProgram::ProtoShaderProgram(Scene *scene)
-  : Proto(scene, "ShaderProgram")
+  : DynamicFieldsProto(scene, "ShaderProgram")
 {
     url.set(
         addExposedField(MFSTRING, "url", new MFString(), FF_STATIC, NULL));

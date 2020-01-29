@@ -48,7 +48,7 @@
 #include "NodeVrmlScene.h"
 
 ProtoVrmlCut::ProtoVrmlCut(Scene *scene)
-  : Proto(scene, "VrmlCut")
+  : DynamicFieldsProto(scene, "VrmlCut")
 {
     sceneLengths.set(
           addField(MFTIME, "sceneLengths", new MFTime(), new SFTime(0)));

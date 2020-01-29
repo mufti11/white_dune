@@ -359,6 +359,9 @@ public:
                            { return m_fullScreenAtBegin; }
     void               setFullScreenAtBegin(void) { m_fullScreenAtBegin = 1; }
 
+    bool               isCExporting(void) { return m_CExporting; }
+    void               setCExporting(bool flag) { m_CExporting = flag; }
+
 protected:
     void                Exit(void);
 
@@ -433,6 +436,8 @@ protected:
     int                 m_exitPid;
 
     int                 m_fullScreenAtBegin;
+
+    bool                m_CExporting;
 };
 
 extern DuneApp *TheApp;

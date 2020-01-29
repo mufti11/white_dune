@@ -72,6 +72,7 @@ MeshBasedNode::MeshBasedNode(Scene *scene, Proto *proto)
     m_meshDouble = NULL;
     m_isDoubleMesh = false;
     m_meshDirty = true;
+    m_already_converted = false;
 }
 
 MeshBasedNode::~MeshBasedNode()
@@ -90,10 +91,12 @@ MeshBased::updateMesh(void)
             delete m_meshDouble;
             m_meshDouble = NULL;
             createMesh();
+            m_already_converted = false;
         } else {
             delete m_mesh;
             m_mesh = NULL;
             createMesh();
+            m_already_converted = false;
         }
         m_meshDirty = false;
     }
@@ -963,8 +966,12 @@ MeshBasedNode::writeXml(int f, int indent, int containerField, bool avoidUse)
 void
 MeshBasedNode::addToConvertedNodes(int flags)
 { 
+    if (m_already_converted)
+        return;
     if (m_convertedNodes.size() > 0)
         return;
+
+    m_already_converted = true;
 
     if (flags & TRIANGULATE) {
         bool shouldBeIndexedTriangleSet = shouldConvertToIndexedTriangleSet();
@@ -977,6 +984,7 @@ MeshBasedNode::addToConvertedNodes(int flags)
             if (node != NULL) {
                 node->setVariableName(strdup(getVariableName()));
                 node->addParent(getParent(), getParentField());
+                node->setAlreadyConverted();
                 m_convertedNodes.append(node);
             }
             return;
@@ -986,6 +994,7 @@ MeshBasedNode::addToConvertedNodes(int flags)
             if (node != NULL) {
                 node->setVariableName(strdup(getVariableName()));
                 node->addParent(getParent(), getParentField());
+                node->setAlreadyConverted();
                 m_convertedNodes.append(node);
             }
             return;
@@ -1012,9 +1021,10 @@ MeshBasedNode::addToConvertedNodes(int flags)
             NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)
                                        toIndexedFaceSet(meshFlags);
             if (node != NULL) {
-//                node->setVariableName(strdup(getVariableName()));
-                node->getScene()->generateVariableName(node);
+                node->setVariableName(strdup(getVariableName()));
+//                node->getScene()->generateVariableName(node);
                 node->addParent(getParent(), getParentField());
+                node->setAlreadyConverted();
                 m_convertedNodes.append(node);
             }
             return;

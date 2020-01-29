@@ -87,6 +87,8 @@ public:
 
     void                  protoInitializer(Scene *scene, const MyString &name);
 
+    virtual bool          isDynamicFieldsProto(void) { return false; }
+
     void                  finishEvents(void);
 
     bool                  avoidElement(Element *element, bool x3d);

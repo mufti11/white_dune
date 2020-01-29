@@ -27,7 +27,7 @@
 #include "SFMFTypes.h"
 #include "DynamicFieldsNode.h"
 
-class ProtoPackagedShader : public Proto {
+class ProtoPackagedShader : public DynamicFieldsProto {
 public:
                     ProtoPackagedShader(Scene *scene);
     virtual Node   *create(Scene *scene);

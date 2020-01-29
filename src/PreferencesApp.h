@@ -87,5 +87,6 @@ private:
     int                 m_X11ErrorsLimit;
     StringArray         m_inputDeviceString;
     MyString            m_ttfFile;
+    MyString            m_crashFile;
 };
 

@@ -4442,6 +4442,11 @@ BEGIN
     IDS_IT_SCENES_LAST                      "Last scene"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_IT_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN

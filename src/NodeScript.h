@@ -28,12 +28,15 @@
 #include "CommandList.h"
 #include "DynamicFieldsNode.h"
 
-class ProtoScript : public WonderlandExportProto {
+class ProtoScript : public DynamicFieldsProto {
 public:
                     ProtoScript(Scene *scene);
     virtual Node   *create(Scene *scene);
 
     virtual int     getType() const { return VRML_SCRIPT; }
+
+    // inserted from WonderlandExportProto
+    virtual bool        isWonderlandExported(void) { return true; }
 
     FieldIndex url;
     FieldIndex directOutput;

@@ -75,6 +75,7 @@ void Proto::protoInitializer(Scene *scene, const MyString &name)
 Proto::Proto(Scene *scene, const MyString &name)
 {
     protoInitializer(scene, name);
+    finishEvents();
 }   
 
 
@@ -191,6 +192,9 @@ Proto::finishEvents(void)
 {
     m_eventIns.setNoResize();
     m_eventOuts.setNoResize();
+    if (!isDynamicFieldsProto())
+        m_fields.setNoResize();
+
 }
 
 bool Proto::avoidElement(Element *element, bool x3d)
@@ -2757,7 +2761,9 @@ static bool buildNodeIndexInBranch(Node *node, void *data)
     for (int i = 0; i < self->getProto()->getNumNodes(); i++)
         self->getProto()->getNode(i)->doWithBranch(fixEventOuts, node, false);
 
-    node->setVariableName(node->getScene()->generateVariableName(node));
+//    if (TheApp->isCExporting())
+//        node->setVariableName(node->getScene()->generateVariableName(node));
+
     self->appendToIndexedNodes(node);
     node->ref();
     node->setNodePROTO(self);

@@ -1124,6 +1124,8 @@ protected:
     const char *      m_x3domId;
     const char *      m_x3domOnOutputChange;
     const char *      m_x3domOnClick;
+    bool              m_alreadyConverted;
+    bool              m_writtenCompleteCProcessEvent;
 };
    
 
@@ -1299,7 +1301,6 @@ public:
                                             const char *eventName);
     int               writeCProcessEvent(int f, int indent, int languageFlag, 
                                          const char *eventName);
-    int               writeCEndSendEvent(int f, int indent, int languageFlag);
     int               writeCProcessEventCallback(int f, int languageFlag);
     virtual int       writeCDynamicNodeCallback(int f, int languageFlag) 
                           { return 0; }
@@ -1327,7 +1328,10 @@ public:
     void              setProtoParent(Node *n) { m_protoParent = n; }
     void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
-    virtual Node     *getIndexedFaceSet(void) { return NULL; }
+    virtual Node     *getIndexedFaceSet(void);
+    virtual void      setAlreadyConverted(void);
+    virtual bool      getAlreadyConverted(void) { return m_alreadyConverted; }
+    bool              isCWriteable();
 
 protected:
     int               m_geometricParentIndex;

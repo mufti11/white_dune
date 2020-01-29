@@ -76,10 +76,13 @@ MeshMorphingNode::write(int f, int indent, bool avoidUse)
 void
 MeshMorphingNode::addToConvertedNodes(int flags)
 {
+    if (m_already_converted)
+        return;
     if (flags & TRIANGULATE) {
         if (!canSimpleTriangulate() || !hasBranchInputs())
             if (shouldConvertToIndexedTriangleSet() || 
                 shouldConvertToTriangleSet()) {
+               setVariableName(strdup(getVariableName()));
                MeshBasedNode::addToConvertedNodes(flags);
                m_meshDirty = true;
                return;
@@ -91,7 +94,7 @@ MeshMorphingNode::addToConvertedNodes(int flags)
 
     int meshFlag = (TheApp->GetNormalsOnMeshCreation() ? MESH_WANT_NORMAL : 0) |
                    (flags & TRIANGULATE ? MESH_SIMPLE_TRIANGULATE : 0);
-                   
+
     NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)
                                toIndexedFaceSet(meshFlag, true);
     if (!addCoordinateInterpolator(node, true, false)) {
@@ -99,10 +102,11 @@ MeshMorphingNode::addToConvertedNodes(int flags)
         addCoordinateInterpolator((Node *)node, false, false);
     }
 
-//    node->setVariableName(strdup(getVariableName()));
+    node->setVariableName(strdup(node->getVariableName()));
     m_convertedNodes.append(node);
     node->addParent(getParent(), getParentField());
     m_meshDirty = true;
+    m_already_converted = true;
     return;
 }
 
@@ -253,13 +257,13 @@ MeshMorphingNode::addCoordinateInterpolator(Node *node,
         m_scene->addDelayedWriteNode(coordInter); 
     else {
         m_convertedNodes.append(coordInter);
-//        coordInter->setVariableName(strdup(coordInter->getName()));
+        coordInter->setVariableName(strdup(coordInter->getName()));
         coordInter->addParent(getParent(), getParentField()); 
     }
 
     // write route
     Node *ncoord = ((NodeIndexedFaceSet *)node)->coord()->getValue();
-//    ncoord->setVariableName(strdup(ncoord->getVariableName()));
+    ncoord->setVariableName(strdup(ncoord->getVariableName()));
     if (appendToScene)
         m_scene->addRouteString(m_scene->createRouteString(
                coordInter->getNameOrNewName(), "value_changed",
@@ -294,7 +298,7 @@ MeshMorphingNode::addCoordinateInterpolator(Node *node,
             m_scene->addDelayedWriteNode(normalInter); 
         else {
             m_convertedNodes.append(normalInter);
-//            normalInter->setVariableName(strdup(normalInter->getName()));
+            normalInter->setVariableName(strdup(normalInter->getName()));
             normalInter->addParent(getParent(), getParentField()); 
         } 
 

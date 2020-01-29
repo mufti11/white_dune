@@ -437,22 +437,26 @@ void parseCommandlineUsage(
                 checkNotEnoughArgumentsError(argc, ++convertionArgument);
                 url = argv[convertionArgument];
 
-            } else if (strcmp(argv[convertionArgument]+1,"c")==0)
+            } else if (strcmp(argv[convertionArgument]+1,"c")==0) {
                 convert = C_SOURCE;
-            else if (strcmp(argv[convertionArgument]+1,"3c")==0)
+                TheApp->setCExporting(true);
+            } else if (strcmp(argv[convertionArgument]+1,"3c")==0) {
                 convert = C_SOURCE | TRIANGULATE;
-
-            else if (strcmp(argv[convertionArgument]+1,"c++")==0)
+                TheApp->setCExporting(true);
+            } else if (strcmp(argv[convertionArgument]+1,"c++")==0) {
                 convert = CC_SOURCE;
-            else if (strcmp(argv[convertionArgument]+1,"3c++")==0)
+                TheApp->setCExporting(true);
+            } else if (strcmp(argv[convertionArgument]+1,"3c++")==0) {
                 convert = CC_SOURCE | TRIANGULATE;
-
-            else if (strcmp(argv[convertionArgument]+1,"java")==0) {
+                TheApp->setCExporting(true);
+            } else if (strcmp(argv[convertionArgument]+1,"java")==0) {
                 convert |= JAVA_SOURCE;
                 convert |= MANY_JAVA_CLASSES; // default
+                TheApp->setCExporting(true);
             } else if (strcmp(argv[convertionArgument]+1,"3java")==0) {
                 convert |= JAVA_SOURCE | TRIANGULATE;
                 convert |= MANY_JAVA_CLASSES; // default
+                TheApp->setCExporting(true);
             }
         } 
         bool tempSave = true;

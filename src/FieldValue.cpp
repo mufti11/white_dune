@@ -439,6 +439,15 @@ MFieldValue::writeJavaLongArray(int filedes, int languageFlag,
         indexName = "m_i";
     RET_ONERROR( mywritef(filedes, "int %s = %d;\n", indexName,
                                                      offset * getStride()) )
+    RET_ONERROR( mywritestr(filedes, "        ") )
+    if (languageFlag & MANY_JAVA_CLASSES)
+        RET_ONERROR( mywritestr(filedes, "    ") )
+    RET_ONERROR( mywritestr(filedes, "v.") )
+    RET_ONERROR( mywritestr(filedes, variableName) )
+    RET_ONERROR( mywritef(filedes, " = new %s[", getTypeC(languageFlag)) )
+    RET_ONERROR( mywritef(filedes, "%d", getSFSize() * getStride()) )
+    RET_ONERROR( mywritestr(filedes, "];\n") )
+
     for (int i = 0; ((i + offset) < getSFSize() && (i < length)); i++) {
         for (int j = 0; j < getStride(); j++) {
              RET_ONERROR( mywritestr(filedes, "        ") )

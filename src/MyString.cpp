@@ -138,6 +138,21 @@ int myhash(MyString key)
     return h;
 }
 
+bool
+MyString::sub(MyString what, MyString with)
+{
+    MyString temp = *this;
+    MyString newString = "";
+    for (int i = 0; i < length(); i++)
+        if (strncmp(&temp[i], what, what.length()) == 0) {
+            newString += with;
+            i += what.length() - 1;
+        } else
+            newString += temp[i];
+    m_stringBuf = new StringBuf((const char *)newString);
+    return true;
+}
+
 // replace string "what" with string "with"
 bool
 MyString::gsub(MyString what, MyString with)

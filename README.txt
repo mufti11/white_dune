@@ -5509,4 +5509,8 @@ Changed .OFF color export compatible to "meshlab" (needs "colorPerVertex FALSE")
 
 Fixed crash and problems of the C++ export
 
+Fixed problems of the C export
+
+Given up java export for now, cause jogl is causing problems
+
 Contact: MUFTI <mufti11@web.de>

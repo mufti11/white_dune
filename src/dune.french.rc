@@ -4435,13 +4435,18 @@ BEGIN
     IDS_FR_SCENES_LAST                      "Last scene"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FR_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
-    ID_SAND_EXPORT          "Export Nebula Device Scene"
-    ID_SAND_WRITEMESHES     "If checked, script file and all mesh files will be exported.  If not checked, only the script file will be exported."
-    ID_SAND_RELPATHS        "If checked, relative paths will be used (for exporting avatars)"
-    ID_SAND_ALPHATEST       "If checked, adds a default alpha test to alpha-mapped materials"
+    ID_FR_SAND_EXPORT          "Export Nebula Device Scene"
+    ID_FR_SAND_WRITEMESHES     "If checked, script file and all mesh files will be exported.  If not checked, only the script file will be exported."
+    ID_FR_SAND_RELPATHS        "If checked, relative paths will be used (for exporting avatars)"
+    ID_FR_SAND_ALPHATEST       "If checked, adds a default alpha test to alpha-mapped materials"
 END
 #endif
 
