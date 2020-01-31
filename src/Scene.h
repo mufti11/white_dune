@@ -917,6 +917,7 @@ public:
     MyArray<Node *>    *searchTimeSensors(void);
     MyArray<Node *>    *searchInterpolators(void);
     NodeList            searchTimeSensorInInterpolator(Node *interpolator);
+    void                makeEmpty();
 
 protected:
     int                 writeExtensionProtos(int f, int flag);

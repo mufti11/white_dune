@@ -1957,6 +1957,7 @@ MainWindow::OnCommand(void *vid)
         if (isEditorInUse(true))
             return;
         m_scene->setUpdateViewsSelection(false);
+        SaveModified();
         TheApp->OnFileExit();
         exitFlag = true;
         break;
@@ -13971,6 +13972,7 @@ bool MainWindow::SaveModified()
             ok = false;
             break;
           case IDNO:
+            m_scene->setSaved();
             if (TheApp->is4Kids()) {
                 swLoadString(IDS_NOT_SAVED, str, 256);
                 switch (swMessageBox(m_wnd, str, title, SW_MB_YESNO,

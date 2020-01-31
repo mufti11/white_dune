@@ -193,6 +193,7 @@ swInitialize(HINSTANCE hInstance, int stereoTypeValue, int want8BitFlag)
 extern int
 swMainLoop(void)
 {
+    initCallback();
     MSG msg;
     while (GetMessage(&msg, (HWND) NULL, 0, 0)) { 
         if (!doAccelerators(&msg)) {
@@ -238,6 +239,19 @@ swGetErrorStr(char *buf, int size)
                   NULL, GetLastError(), 
                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) buf,
                   size, NULL);
+}
+
+static InitCallback initialCallback;
+
+void initCallback(void)
+{
+    initialCallback();
+}
+
+extern void
+swSetInitCallback(InitCallback callback)
+{
+    initialCallback = callback;
 }
 
 extern void

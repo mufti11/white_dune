@@ -1982,9 +1982,14 @@ NodeIndexedFaceSet::readOff(const char *filename)
     SurfaceMesh::Property_map<SurfaceMesh::Vertex_index, CGAL::Color> vcolors =
         mesh->property_map<SurfaceMesh::Vertex_index, CGAL::Color >
         ("v:color").first;
-    
+
     bool colorExists = mesh->property_map
         <SurfaceMesh::Vertex_index, CGAL::Color>("v:color").second;
+
+if (colorExists)
+printf("colorExists\n");
+else
+printf("color do not Exists\n");
 
     MFColorRGBA *newColors = NULL;
     if (colorExists ) 
@@ -2057,7 +2062,6 @@ NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
     if (node == NULL)
         return;
     static Matrix transformMatrix = Matrix::identity();
-//    node->getScene()->setSelection(node);
     Path *trans = node->getScene()->searchTransform(node->getPath());
     Node *transform = NULL;
     if (trans)
@@ -2124,7 +2128,7 @@ NodeIndexedFaceSet::writeOffIndicesAndColors(int f, int startIndex, Node *node)
 }
 
 void
-NodeIndexedFaceSet::writeOffNormals(int f, Node *node)
+NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
 {
     if (node == NULL)
         return;
@@ -2145,7 +2149,29 @@ NodeIndexedFaceSet::writeOffNormals(int f, Node *node)
     for (int i = 0; i < vertices->getSFSize(); i++) {
         Vec3f vec = normals->getVec(i);
         mywritef(f, "  N %f %f %f", vec.x, vec.y, vec.z);
-        mywritestr(f, "\n");
+        if (hasColorRGBA() && colorPerVertex()->getValue() &&
+            ((NodeColor *)color()->getValue())) {
+            NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)color()->getValue();
+            if (color() && colorRGBANode->color()) {
+                const float *c = 
+                     ((NodeColorRGBA *)color()->getValue())->color()->
+                     getValues() + i * 4;
+                mywritef(f, " %d %d %d %d", (int)(c[0] * 255),
+                                            (int)(c[1] * 255), 
+                                            (int)(c[2] * 255), 
+                                            (int)(c[3] * 255));
+            }
+        } else if (color() && colorPerVertex()->getValue() &&
+                   ((NodeColor *)color()->getValue()) &&
+                   ((NodeColor *)color()->getValue())->color()) {
+            NodeColor *colorNode = (NodeColor *)color()->getValue();
+            const float *c = ((NodeColorRGBA *)color()->getValue())->color()->
+                getValues() + i * 3;
+             mywritef(f, " %d %d %d", (int)(c[0] * 255), 
+                                      (int)(c[1] * 255), 
+                                      (int)(c[2] * 255));
+        } 
+    mywritestr(f, "\n");                 
     }
 }
     

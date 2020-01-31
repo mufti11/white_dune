@@ -53,6 +53,14 @@ public:
 
     const char         *getTtfFile(void) { return m_ttfFile; }
 
+    void                setCrashFile(MyString file)
+                             {
+                             m_crashFile = "";
+                             m_crashFile += file;
+                             if (file.length() == 0)
+                                 m_crashFile += "Untitled.x3dv";
+                             }
+
     void                SetInputDeviceString(const char *string);
     int                 GetNumInputDeviceStrings(void)
                            { return m_inputDeviceString.size(); }
@@ -75,6 +83,7 @@ public:
                                            const char *value);
 
     void                unInstall(void);
+    void                initCallback(void);
 
 private: 
 

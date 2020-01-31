@@ -362,6 +362,8 @@ public:
     bool               isCExporting(void) { return m_CExporting; }
     void               setCExporting(bool flag) { m_CExporting = flag; }
 
+    MyString           getCrashedFile(void) { return m_recentFiles[0]; }
+
 protected:
     void                Exit(void);
 

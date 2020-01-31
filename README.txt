@@ -5513,4 +5513,8 @@ Fixed problems of the C export
 
 Given up java export for now, cause jogl is causing problems
 
+Fixed ColorRGBA problem in VRML/X3D compiler
+
+Added better errorhandling after detecing a former crash
+
 Contact: MUFTI <mufti11@web.de>

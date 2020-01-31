@@ -2086,7 +2086,7 @@ Scene::writeOff(int f)
     }
     for (int i = 0; i < faces.size(); i++) {
         NodeIndexedFaceSet *face = faces[i].faceSet;
-        face->writeOffNormals(f, faces[i].node);
+        face->writeOffNormalsAndColors(f, faces[i].node);
     }
     for (int i = 0; i < faces.size(); i++) {
          MoveCommand *command = new MoveCommand(faces[i].faceSet, 
@@ -7443,6 +7443,17 @@ Scene::removeUse(Node *node)
     unuse(node->getName());        
     UpdateViews(NULL, UPDATE_ALL, NULL);
 } 
+
+void
+Scene::makeEmpty(void)
+{
+     NodeGroup *root = (NodeGroup *)getRoot();
+     for (int i = 0; i < root->getChildren()->getSize(); i++) {
+         MoveCommand command(root, root->getChildren()->getValue(i), i, 
+                             NULL, -1);
+         command.execute();
+     }
+}
 
 FieldUpdate::FieldUpdate(Node *n, int f, int i)
 {

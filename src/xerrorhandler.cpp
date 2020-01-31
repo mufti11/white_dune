@@ -202,6 +202,7 @@ int DuneApp::emergency_rescue(int sig)
          }
       else 
          {
+         TheApp->setCrashFile(i->item()->GetScene()->getPath());
          TheApp->AddToRecentFiles(mypath);
          TheApp->SaveRecentFileList();
          TheApp->SavePreferences();

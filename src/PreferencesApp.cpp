@@ -26,6 +26,7 @@
 #include "swt.h"
 #include "resource.h"
 #include "PreferencesApp.h"
+#include "MainWindow.h"
 #include "DuneApp.h"
 #include "EulerAngles.h"
 
@@ -48,12 +49,6 @@ PreferencesApp::PreferencesApp()
         m_ttfFile = HAVE_DEFAULT_TTF_FILE;
     else
         close(f);
-    m_crashFile = GetPreference("CrashFile", "");
-    if (strlen(m_crashFile) > 0) {
-        char fmtString[256];
-        swLoadString(IDS_CRASH_MESSAGE, fmtString, 256);
-        swDebugf(fmtString, m_crashFile);        
-    }
 }
 
 void
@@ -158,3 +153,32 @@ void PreferencesApp::unInstall(void)
 void PreferencesApp::SetInputDeviceString(const char *string)
 {
 }
+
+static void loadCrashFile(void)
+{
+    if (swIsVisible(TheApp->mainWnd())) {
+        MyString crashFile = TheApp->GetPreference("CrashFile", "");
+        if (strlen(crashFile) > 0) {
+            char fmtString[256];
+            swLoadString(IDS_CRASH_MESSAGE, fmtString, 256);
+            char message[256];
+            mysnprintf(message, 255, fmtString, (const char *)crashFile);
+            if (swMessageBox(TheApp->mainWnd(), message, "load crash file ?", 
+                             SW_MB_YESNO, SW_MB_WARNING)) {
+                Scene *scene = TheApp->getWindows().first()->item()->GetScene();
+                scene->makeEmpty();
+                TheApp->ImportFile(TheApp->getCrashedFile(), scene);
+                scene->setPath(crashFile);
+                scene->setNotSaved();
+                TheApp->getWindows().first()->item()->UpdateTitle();
+           }
+        }
+    }
+}
+
+void PreferencesApp::initCallback(void)
+{
+    swSetInitCallback(loadCrashFile);
+}
+
+

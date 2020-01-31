@@ -44,6 +44,7 @@ typedef struct HINSTANCE__ *HINSTANCE;
 
 typedef unsigned char cbyte;
 
+typedef void (*InitCallback)();
 typedef void (*ExposeCallback)(void *data, int x, int y, int width, int height);
 typedef void (*MouseCallback)(void *data, int x, int y, int modifiers);
 typedef void (*KeyCallback)(void *data, int key, int value, int x, int y, 
@@ -64,6 +65,7 @@ typedef int  (*TimerCallback)(void *data);
 
 typedef void (*CleanupCallback)(void);
 
+extern void swSetInitCallback(InitCallback cb );
 extern void swSetExposeCallback(SWND wnd, ExposeCallback cb);
 extern void swSetMouseCallback(SWND wnd, MouseCallback cb);
 extern void swSetKeyCallback(SWND wnd, KeyCallback cb);
@@ -628,6 +630,9 @@ extern void swAddAccelerator(SWND wnd, int key, int modifiers, int id);
 #ifdef MACOSX
 extern void set_start_aqua_X11(void);
 #endif
+
+/* init callback */
+extern void initCallback(void); 
 
 /* Windows SpaceNavigator driver */
 

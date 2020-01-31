@@ -205,6 +205,7 @@ public:
     Node               *createNode(const char *type);
     void                Play();
     void                Stop();
+    void                UpdateTitle();
 
 protected:
     Node               *createNode(Node *node);
@@ -304,7 +305,6 @@ protected:
     void                RefreshRecentFileMenu();
     void                RefreshProtoMenu();
     void                RefreshHelpSelection();
-    void                UpdateTitle();
     void                updateColorCircle(void);
     void                updateVertexModifier(void);
     void                OnHelpOverview();

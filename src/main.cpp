@@ -113,6 +113,7 @@ void startmainloop(void)
 #ifndef HAVE_WANT_CORE
     __try {
 #endif
+       TheApp->initCallback();
        swMainLoop();
 #ifndef HAVE_WANT_CORE
     } __except(EXCEPTION_EXECUTE_HANDLER) {
@@ -370,6 +371,7 @@ int main(int argc, char *argv[])
 #ifdef HAVE_FPU_ENABLE_INTERRUPTS
     fpu_enable_interrupts();
 #endif
+    TheApp->initCallback();
     swMainLoop();
 //    delete TheApp;
     normalExit(0);

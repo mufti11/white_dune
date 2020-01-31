@@ -469,7 +469,7 @@ NodeData::getVariableName(void)
         if (m_variableName.length() == 0)
             if (m_scene != NULL) {
                 setVariableName(m_scene->generateUniqueNodeName((Node *)this));
-                m_variableName.sub("ColorRGBA", "Color");
+//                m_variableName.sub("ColorRGBA", "Color");
                 m_name = "";
                 m_name += m_variableName;
             }
@@ -4951,6 +4951,8 @@ bool
 Node::isCWriteable()
 {
     bool x3d = getScene()->isX3d();
+    if (getProto()->isX3dInternalProto())
+        return true;
     if (getScene()->belongsToNodeWithExternProto(getProto()->getName(x3d)) || 
         getType() == VRML_NURBS_SURFACE || getType() == VRML_NURBS_CURVE)
         return false;

@@ -802,6 +802,7 @@ swInitialize(int *argc, char **argv,int stereotype)
 extern int
 swMainLoop(void)
 {
+    initCallback();
     _running = TRUE;
     while (_running)
     {
@@ -882,6 +883,20 @@ swExitModalLoop(int rc)
 {
     _dialogDepth--;
     _dialogRC = rc;
+}
+
+static InitCallback initialCallback = NULL;
+
+void initCallback(void)
+{
+    if (initialCallback)
+        initialCallback();
+}
+
+extern void
+swSetInitCallback(InitCallback callback)
+{
+    initialCallback = callback;
 }
 
 extern void

@@ -56,6 +56,9 @@ public:
                     NodeGroup(NodeNurbsSet *nurbsSet);
                     NodeGroup(NodeAnchor *anchor);
 
+    virtual MFNode   *getChildren(void) 
+                         { return (MFNode *)getField(getChildrenField()); }
+
     virtual int     getProfile(void) const;
     virtual Node   *copy() const { return new NodeGroup(*this); }
 
