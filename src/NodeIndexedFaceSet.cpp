@@ -2057,7 +2057,7 @@ NodeIndexedFaceSet::accountOffData(int f)
 }
 
 void               
-NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
+NodeIndexedFaceSet::writeOffVerticesAndColors(int f, Node *node)
 {
     if (node == NULL)
         return;
@@ -2077,7 +2077,33 @@ NodeIndexedFaceSet::writeOffVertices(int f, Node *node)
         for (int i = 0; i < vertices->getSFSize(); i++) {
             Vec3f vec = vertices->getVec(i);
             vec = transformMatrix * vec;
-            mywritef(f, "  %f %f %f\n", vec.x, vec.y, vec.z);
+            mywritef(f, "  %f %f %f", vec.x, vec.y, vec.z);
+            if (colorPerVertex()->getValue() &&
+                (NodeColorRGBA *)color()->getValue() &&
+                ((MeshBasedNode *)this)->hasColorRGBA()) {
+                NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)
+                                               color()->getValue();
+                if (color() && colorRGBANode->color()) {
+                    const float *c = 
+                         ((NodeColorRGBA *)color()->getValue())->color()->
+                         getValues() + i * 4;
+                    mywritef(f, " %d %d %d %d", (int)(c[0] * 255),
+                                                (int)(c[1] * 255), 
+                                                (int)(c[2] * 255), 
+                                                (int)(c[3] * 255));
+                }
+            } else if (color() && colorPerVertex()->getValue() &&
+                       ((NodeColor *)color()->getValue()) &&
+                       ((NodeColor *)color()->getValue())->color()) {
+                NodeColor *colorNode = (NodeColor *)color()->getValue();
+                const float *c = ((NodeColorRGBA *)
+                                 color()->getValue())->color()->
+                    getValues() + i * 3;
+                 mywritef(f, " %d %d %d", (int)(c[0] * 255), 
+                                          (int)(c[1] * 255), 
+                                          (int)(c[2] * 255));
+            } 
+            mywritestr(f, "\n");
         }
 }
 
@@ -2099,8 +2125,9 @@ NodeIndexedFaceSet::writeOffIndicesAndColors(int f, int startIndex, Node *node)
             int ci = coordIndex()->getValue(offset + j);
             mywritef(f, "%d ", ci + startIndex);
         }
-        if (hasColorRGBA() && (!colorPerVertex()->getValue()) &&
-            ((NodeColor *)color()->getValue())) {
+        if ((!colorPerVertex()->getValue()) &&
+            (NodeColorRGBA *)color()->getValue() &&
+            getMesh()->hasColorRGBA()) {
             NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)
                 color()->getValue();
             if (color() && colorRGBANode->color()) {
@@ -2128,7 +2155,7 @@ NodeIndexedFaceSet::writeOffIndicesAndColors(int f, int startIndex, Node *node)
 }
 
 void
-NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
+NodeIndexedFaceSet::writeOffNormals(int f, Node *node)
 {
     if (node == NULL)
         return;
@@ -2148,30 +2175,7 @@ NodeIndexedFaceSet::writeOffNormalsAndColors(int f, Node *node)
         normals = ((NodeNormal *)normal()->getValue())->vector();
     for (int i = 0; i < vertices->getSFSize(); i++) {
         Vec3f vec = normals->getVec(i);
-        mywritef(f, "  N %f %f %f", vec.x, vec.y, vec.z);
-        if (hasColorRGBA() && colorPerVertex()->getValue() &&
-            ((NodeColor *)color()->getValue())) {
-            NodeColorRGBA *colorRGBANode = (NodeColorRGBA *)color()->getValue();
-            if (color() && colorRGBANode->color()) {
-                const float *c = 
-                     ((NodeColorRGBA *)color()->getValue())->color()->
-                     getValues() + i * 4;
-                mywritef(f, " %d %d %d %d", (int)(c[0] * 255),
-                                            (int)(c[1] * 255), 
-                                            (int)(c[2] * 255), 
-                                            (int)(c[3] * 255));
-            }
-        } else if (color() && colorPerVertex()->getValue() &&
-                   ((NodeColor *)color()->getValue()) &&
-                   ((NodeColor *)color()->getValue())->color()) {
-            NodeColor *colorNode = (NodeColor *)color()->getValue();
-            const float *c = ((NodeColorRGBA *)color()->getValue())->color()->
-                getValues() + i * 3;
-             mywritef(f, " %d %d %d", (int)(c[0] * 255), 
-                                      (int)(c[1] * 255), 
-                                      (int)(c[2] * 255));
-        } 
-    mywritestr(f, "\n");                 
+        mywritef(f, "  N %f %f %f\n", vec.x, vec.y, vec.z);
     }
 }
     

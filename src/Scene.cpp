@@ -380,6 +380,7 @@ Scene::Scene()
     m_vertexModifier = NULL;
     m_storeAsHtml = false;
     m_similarNameFlag = true; 
+    m_convexHullCounter = 0;
 }
 
 void
@@ -2044,7 +2045,6 @@ Scene::writeOff(int f)
     int sumVertices = 0;
 
     Node *selection = getSelection()->getNode();
-    RET_ONERROR( mywritestr(f, "OFF\n\n") )
     NodeArray childList;
     MyArray<FaceSetAndNode> faces;
     getRoot()->doWithBranch(getAllNodes, &childList, false);
@@ -2066,6 +2066,16 @@ Scene::writeOff(int f)
             face->writeOffInit();
         }
     }
+    bool hasColor = false;
+    for (int i = 0; i < faces.size(); i++) {
+        NodeIndexedFaceSet *face = faces[i].faceSet;
+        if (face->colorPerVertex()->getValue())
+            if (face->color()->getValue())
+                hasColor = true;
+    }
+    if (hasColor)
+        RET_ONERROR( mywritestr(f, "C") )
+    RET_ONERROR( mywritestr(f, "OFF\n") )
     for (int i = 0; i < faces.size(); i++) {
         NodeIndexedFaceSet *face = faces[i].faceSet;
         face->accountOffData(f);
@@ -2076,7 +2086,7 @@ Scene::writeOff(int f)
     mywritef(f, "%d %d %d\n", sumVertices, numFaces, sumVerticesPerFace);
     for (int i = 0; i < faces.size(); i++) {
         NodeIndexedFaceSet *face = faces[i].faceSet;
-        face->writeOffVertices(f, faces[i].node);
+        face->writeOffVerticesAndColors(f, faces[i].node);
     }
     int numIndices = 0;
     for (int i = 0; i < faces.size(); i++) {
@@ -2086,7 +2096,7 @@ Scene::writeOff(int f)
     }
     for (int i = 0; i < faces.size(); i++) {
         NodeIndexedFaceSet *face = faces[i].faceSet;
-        face->writeOffNormalsAndColors(f, faces[i].node);
+        face->writeOffNormals(f, faces[i].node);
     }
     for (int i = 0; i < faces.size(); i++) {
          MoveCommand *command = new MoveCommand(faces[i].faceSet, 
@@ -7257,7 +7267,7 @@ Scene::warning(int id, const char *string)
 }
 
 void                
-Scene::addToStore4Convex_hull(void) 
+Scene::addToStore4ConvexHull(void) 
 {
     if (getSelectionMode() != SELECTION_MODE_VERTICES)
         return;
@@ -7289,12 +7299,12 @@ Scene::addToStore4Convex_hull(void)
                      if ((fabs(vertex.x + vec.x) < eps) &&
                          (fabs(vertex.y - vec.y) < eps) &&
                          (fabs(vertex.x - vec.z) < eps)) {
-                         m_store4convex_hull.append(transformMatrix * vec);
+                         m_store4ConvexHull.append(transformMatrix * vec);
                          break;
                      }   
                  }
              } 
-         m_store4convex_hull.append(transformMatrix * vertex);
+         m_store4ConvexHull.append(transformMatrix * vertex);
     }
 }
 

@@ -785,6 +785,12 @@ Util::getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord)
     }         
 }
 
+Node *
+getNurbsConvexHull(void)
+{
+    
+}
+
 #ifdef HAVE_LIBCGAL
 #undef max
 #include "Scene.h"

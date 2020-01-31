@@ -893,11 +893,14 @@ public:
     void                dynamicNodeCallbackRemove(void)
                             { m_writeCDynamicNodeCallback.resize(0); }
 
-    void                addToStore4Convex_hull(void);
-    MyArray<Vec3f>     *getStore4Convex_hull(void)
-                            { return &m_store4convex_hull; }
-    void                removeStore4Convex_hull(void) 
-                            { m_store4convex_hull.resize(0); }
+    void                addToStore4ConvexHull(void);
+    MyArray<Vec3f>     *getStore4ConvexHull(void)
+                            { return &m_store4ConvexHull; }
+    void                removeStore4ConvexHull(void) 
+                            {
+                            m_convexHullCounter = 0; 
+                            m_store4ConvexHull.resize(0); 
+                            }
 
     VertexModifier     *getVertexModifier(void) { return m_vertexModifier; }
     void                setVertexModifier(VertexModifier *mod) 
@@ -1155,7 +1158,11 @@ protected:
 
     MyArray<const char *> m_writeCDynamicNodeCallback;
 
-    MyArray<Vec3f>      m_store4convex_hull;
+    MyArray<Vec3f>      m_store4ConvexHull;
+    MyArray<Vec3f>      m_store4Nurbs1ConvexHull;
+    MyArray<Vec3f>      m_store4Nurbs2ConvexHull;
+
+    int                 m_convexHullCounter;
 
     VertexModifier     *m_vertexModifier;
  

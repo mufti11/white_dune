@@ -2125,10 +2125,10 @@ MainWindow::OnCommand(void *vid)
         m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);        
         break;
       case ID_DUNE_SELECTION_STORE4CONVEX_HULL:
-        m_scene->addToStore4Convex_hull();
+        m_scene->addToStore4ConvexHull();
         break;
       case ID_DUNE_DELETE_STORE4CONVEX_HULL:
-        m_scene->removeStore4Convex_hull();
+        m_scene->removeStore4ConvexHull();
         break;
 
       case ID_ANIMATION:
@@ -5955,7 +5955,7 @@ MainWindow::UpdateToolbarSelection(void)
 */
     swMenuSetFlags(m_menu, ID_DUNE_DELETE_STORE4CONVEX_HULL,
                    SW_MENU_DISABLED, 
-                   m_scene->getStore4Convex_hull()->size() > 0 ?
+                   m_scene->getStore4ConvexHull()->size() > 0 ?
                    0 : SW_MENU_DISABLED);
 
     swMenuSetFlags(m_menu, ID_INTERACTION, SW_MENU_DISABLED,
@@ -8389,7 +8389,7 @@ void MainWindow::convexHull(void)
         node = node->getParent();
         isCoordinate = true;
     }
-    MyArray<Vec3f> *collectedPoints = m_scene->getStore4Convex_hull();
+    MyArray<Vec3f> *collectedPoints = m_scene->getStore4ConvexHull();
     bool removeNode = false;
     if (collectedPoints->size() == 0) {
         removeNode = true;

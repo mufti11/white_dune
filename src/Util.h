@@ -90,6 +90,9 @@ public:
     static bool     invertMatrix(float out[16], const float in[16]);
     static void     getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord);
 
+    Node *          getNurbsConvexHull(void);
+
+
 #ifdef HAVE_LIBCGAL
     static NodeIndexedFaceSet *convexHull(Scene *scene, MyArray<Vec3f> vec);
 #endif

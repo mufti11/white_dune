@@ -5517,4 +5517,6 @@ Fixed ColorRGBA problem in VRML/X3D compiler
 
 Added better errorhandling after detecing a former crash
 
+Fixed (C)OFF export of colorPerVertex nodes
+
 Contact: MUFTI <mufti11@web.de>

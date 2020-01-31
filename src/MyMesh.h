@@ -177,6 +177,11 @@ public:
     void                addCoords(MFInt32 *coords, float *color, 
                                   MFFloat *colors, bool rgbaColor, 
                                   MFVec3f *normals, MFVec2f *texCoords);
+    void                setColorRGBA()
+                           { 
+                           m_colorRGBA = true;
+                           }
+ 
     void                setRGBAColor(MFColorRGBA *color) 
                            { 
                            if (m_colors != NULL)
@@ -1957,12 +1962,21 @@ MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
     node->solid(new SFBool(solid()));
     node->ccw(new SFBool(ccw()));
     node->convex(new SFBool(convex()));
-    NodeColor *nColor = NULL;
-    if (getColors()) {
-        nColor = (NodeColor *)
-                    scene->createNode("Color");
-        nColor->color(new MFColor((float *)getColors()->getValues(), 
-                                  getColors()->getSize()));
+    Node *nColor = NULL;
+    if (hasColorRGBA()) {
+        if (getColors()) {
+            nColor = (NodeColorRGBA *)scene->createNode("ColorRGBA");
+            ((NodeColorRGBA *)nColor)->color(
+                new MFColorRGBA((float *)getColors()->getValues(), 
+                                 getColors()->getSize()));
+        }
+    } else {
+        if (getColors()) {
+            nColor = (NodeColor *)scene->createNode("Color");
+            ((NodeColor *)nColor)->color(
+                new MFColor((float *)getColors()->getValues(), 
+                            getColors()->getSize()));
+        }
     }
     if (nColor) {
         node->color(new SFNode(nColor));
@@ -1981,6 +1995,9 @@ MyMeshX<X, MFX, VEC3X>::toIndexedFaceSet(int meshFlags, Scene *scene)
     }
 
     node->ref();
+
+    if (hasColorRGBA())
+        node->getMesh()->setColorRGBA();
 
     return node;
 }

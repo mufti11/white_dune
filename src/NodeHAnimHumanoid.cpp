@@ -529,6 +529,7 @@ static bool searchMeshes(Node *node, void *data)
     } else if (node->isMeshBasedNode()) {
         MyMesh **mesh = (MyMesh **)data;
         mesh[numMeshes] = (MyMesh *)node->getMesh()->copy();
+        mesh[numMeshes]->setColorRGBA();
         numMeshes++;
         meshNodes.append((MeshBasedNode *)node);
     }
