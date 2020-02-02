@@ -211,7 +211,11 @@ ChainBasedNode::toPositionInterpolator(NodePositionInterpolator *node)
     if (m_chain.size() == 0) 
         createChain();
 
-    int chainLength = m_chain.size();
+    int chainLength = m_chain.size() - 1;
+
+    if (chainLength < 1)
+        return NULL;
+
     float *chainValues = new float[chainLength * 3];
     for (int i = 0; i < chainLength; i++) {
         chainValues[i * 3    ] = m_chain[i].x;
@@ -300,7 +304,7 @@ ChainBasedNode::toOrientationInterpolator(NodeOrientationInterpolator *
     if (m_chain.size() == 0) 
         createChain();
 
-    int chainLength = m_chain.size();
+    int chainLength = m_chain.size() - 1;
     if (chainLength < 3)
         return;
     float *chainRot = new float[chainLength * 4];
@@ -309,7 +313,7 @@ ChainBasedNode::toOrientationInterpolator(NodeOrientationInterpolator *
     Quaternion correctionX(1, 0, 0, cos(0.5 * M_PI));
     Quaternion correctionY(0, 1, 0, cos(0.5 * M_PI));
     Quaternion climbQuat;
-    for (int j = 0; j < (chainLength - 1); j++) {
+    for (int j = 0; j < chainLength; j++) {
         Vec3f normal(rotationAxis);
         Vec3f vector1(0, 0, 1);
         Vec3f point3(m_chain[j + 1].x,  m_chain[j + 1].y, m_chain[j + 1].z);
@@ -347,7 +351,7 @@ ChainBasedNode::toOrientationInterpolator(NodeOrientationInterpolator *
         }
     }
     
-    if (chainLength > 0) {
+    if ((chainLength > 0) && (m_chain[0] == m_chain[m_chain.size() - 1])) {
         oldQuat.y *= -1;
         SFRotation rot(oldQuat);
         for (int i = 0; i < 4; i++)

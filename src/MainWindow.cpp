@@ -5948,11 +5948,6 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_DUNE_SELECTION_NEIGHBOUR_V, SW_MENU_DISABLED, 
                    (node->getType() == VRML_NURBS_SURFACE) ?
                    0 : SW_MENU_DISABLED);
-/*
-    swMenuSetFlags(m_menu, ID_DUNE_SELECTION_STORE4CONVEX_HULL,
-                   SW_MENU_DISABLED, m_scene->getSelectedHandlesSize() > 0 ?
-                   0 : SW_MENU_DISABLED);
-*/
     swMenuSetFlags(m_menu, ID_DUNE_DELETE_STORE4CONVEX_HULL,
                    SW_MENU_DISABLED, 
                    m_scene->getStore4ConvexHull()->size() > 0 ?
@@ -6946,6 +6941,7 @@ MainWindow::createCurveAnimation(void)
         int degree = dlg.getDegree();
         int dimension = dlg.getnPoints();
         int direction = dlg.getDirection();
+        float minus = dlg.getMinus() ? -1 : 1;
 
         int order = degree + 1;
         
@@ -7028,14 +7024,15 @@ MainWindow::createCurveAnimation(void)
             curve->createControlPoints(new MFVec3f(ring, dimension * 3));
         } else {
             for (int i = 0; i < dimension; i++){
-                float point = ((float) i - 0.5 * (dimension - 1.0)) / 
-                          (dimension - 1.0) * 2.0;
+                float point = (((float) i - 0.5 * (dimension - 1.0)) / 
+                               (dimension - 1.0) * 2.0) * minus;
                 controlPoints[(i*3)]   = (direction == 0 ? point : 0);
                 controlPoints[(i*3)+1] = (direction == 1 ? point : 0);
                 controlPoints[(i*3)+2] = (direction == 2 ? point : 0);
                 weights[i] = 1.0f;
             }
-            curve->createControlPoints(new MFVec3f(controlPoints, dimension * 3));
+            curve->createControlPoints(new MFVec3f(controlPoints, 
+                                                   dimension * 3));
         }    
 
         curve->weight(new MFFloat(weights, dimension));
@@ -8377,7 +8374,8 @@ static bool searchMeshDataOrTransform(Node *node, void *data)
 }
 
 #ifdef HAVE_LIBCGAL
-void MainWindow::convexHull(void)
+void 
+MainWindow::convexHull(void)
 {
     meshDataMatrix = Matrix::identity();
     points.resize(0);
@@ -8414,8 +8412,6 @@ void MainWindow::convexHull(void)
     points.resize(0);
 }
 #endif
-
-//static MyString onetext;
 
 void MainWindow::createOneText(void)
 {

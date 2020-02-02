@@ -41,6 +41,7 @@ CurveAnimationDialog::CurveAnimationDialog(SWND parent, int nPoints, int degree,
     m_scene = scene;
     m_newTimeSensorSeconds = seconds;
     m_timeSensor = NULL;
+    m_minus = false;
     LoadData();
 }
 
@@ -69,6 +70,17 @@ CurveAnimationDialog::SaveData()
         m_direction = 4;
     else 
         m_direction = 2;
+
+    if (swGetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_MINUS_X))) {
+        m_direction = 0;
+        m_minus = true;
+    } else if (swGetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_MINUS_Y))) {
+        m_direction = 1;
+        m_minus = true;
+    } else if (swGetCheck(swGetDialogItem(m_dlg, IDC_NURBS_CURVE_MINUS_Z))) {
+        m_direction = 2;
+        m_minus = true;
+    }
 }
 
 bool

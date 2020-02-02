@@ -1986,11 +1986,6 @@ NodeIndexedFaceSet::readOff(const char *filename)
     bool colorExists = mesh->property_map
         <SurfaceMesh::Vertex_index, CGAL::Color>("v:color").second;
 
-if (colorExists)
-printf("colorExists\n");
-else
-printf("color do not Exists\n");
-
     MFColorRGBA *newColors = NULL;
     if (colorExists ) 
         newColors = new MFColorRGBA();

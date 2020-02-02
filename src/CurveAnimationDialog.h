@@ -43,7 +43,9 @@ public:
     int                 getDegree() {return m_degree;}
     int                 getDirection() {return m_direction; }
     NodeTimeSensor     *getTimeSensor()        { return m_timeSensor; }
-    float               getTimeSensorSeconds() { return m_newTimeSensorSeconds; }
+    float               getTimeSensorSeconds() 
+                            { return m_newTimeSensorSeconds; }
+    bool                getMinus() { return m_minus; }
 private:
     int                 m_nPoints;
     int                 m_degree;
@@ -52,6 +54,7 @@ private:
     NodeTimeSensor     *m_timeSensor;
     float               m_newTimeSensorSeconds;
     bool                m_keepDegree;
+    bool                m_minus;
 };
 
 

@@ -896,10 +896,18 @@ public:
     void                addToStore4ConvexHull(void);
     MyArray<Vec3f>     *getStore4ConvexHull(void)
                             { return &m_store4ConvexHull; }
+    MyArray<Vec3f>     *getStore4NurbsConvexHull(int num)
+                            {
+                            if (num % 2 == 1) 
+                                return &m_store4Nurbs1ConvexHull; 
+                            return &m_store4Nurbs2ConvexHull; 
+                            }
     void                removeStore4ConvexHull(void) 
                             {
                             m_convexHullCounter = 0; 
                             m_store4ConvexHull.resize(0); 
+                            m_store4Nurbs1ConvexHull.resize(0); 
+                            m_store4Nurbs2ConvexHull.resize(0); 
                             }
 
     VertexModifier     *getVertexModifier(void) { return m_vertexModifier; }

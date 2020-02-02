@@ -788,7 +788,7 @@ Util::getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord)
 Node *
 getNurbsConvexHull(void)
 {
-    
+    return NULL;    
 }
 
 #ifdef HAVE_LIBCGAL

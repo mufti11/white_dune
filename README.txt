@@ -5519,4 +5519,6 @@ Added better errorhandling after detecing a former crash
 
 Fixed (C)OFF export of colorPerVertex nodes
 
+Fixed linear CurveAnimation
+
 Contact: MUFTI <mufti11@web.de>

@@ -7027,7 +7027,6 @@ Node *
 Scene::searchProtoNodeIdInNode(Node *node, long id)
 {
     returnNode = NULL;
-//    node->doWithBranch(searchNodeById, &id);
     if (node->isPROTO()) {
         NodePROTO *nodePROTO = (NodePROTO *)node;
         for (int i = 0; i < nodePROTO->getNumIndexedNodes(); i++)
@@ -7274,6 +7273,9 @@ Scene::addToStore4ConvexHull(void)
     Node *node = getSelection()->getNode();
     if (!node->getValidVertex())
         return;
+
+    m_convexHullCounter++;
+
     static Matrix transformMatrix;
     Path *trans = searchTransform();
     Node *transform = NULL;
@@ -7300,11 +7302,21 @@ Scene::addToStore4ConvexHull(void)
                          (fabs(vertex.y - vec.y) < eps) &&
                          (fabs(vertex.x - vec.z) < eps)) {
                          m_store4ConvexHull.append(transformMatrix * vec);
+                         if ((m_convexHullCounter % 2) == 1)
+                             m_store4Nurbs1ConvexHull.append(transformMatrix * 
+                                                             vec);
+                         else
+                             m_store4Nurbs2ConvexHull.append(transformMatrix * 
+                                                             vec);
                          break;
                      }   
                  }
              } 
          m_store4ConvexHull.append(transformMatrix * vertex);
+         if ((m_convexHullCounter % 2) == 1)
+             m_store4Nurbs1ConvexHull.append(transformMatrix * vertex);
+         else
+             m_store4Nurbs2ConvexHull.append(transformMatrix * vertex);
     }
 }
 

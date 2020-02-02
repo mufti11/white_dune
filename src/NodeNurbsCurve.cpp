@@ -306,7 +306,7 @@ NodeNurbsCurve::createChain(void *data)
     if (iTess<=0)
         iTess = TheApp->getTessellation();
 
-    int size = iTess + 1;
+    int size = iTess;
     Vec3f *tess = new Vec3f[size];
     
     if (knot()->getSize() == 0)
@@ -319,13 +319,13 @@ NodeNurbsCurve::createChain(void *data)
     int i;
     float u;
     
-    for (i = 0, u = knots[0]; i <= iTess; i++, u = u + inc) {
+    for (i = 0, u = knots[0]; i < iTess; i++, u = u + inc) {
         tess[i] = curvePoint(iDimension, order()->getValue(), knots, cpoints,
                              w, u);
     }
 
     m_chain.resize(size);  
-    for (int i=0; i<size; i++)
+    for (int i = 0; i < size; i++)
         m_chain[i] = tess[i];
     m_chainDirty = false;
 }

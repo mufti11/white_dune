@@ -510,6 +510,9 @@ M4_IDD(SCENES_MANAGE)
 `#define' IDC_BUTTON_RETURN                   2059
 `#define' IDC_BUTTON_ALTGR                    2060
 `#define' IDC_BUTTON_SHIFT                    2061
+`#define' IDC_NURBS_CURVE_MINUS_X             2062
+`#define' IDC_NURBS_CURVE_MINUS_Y             2063
+`#define' IDC_NURBS_CURVE_MINUS_Z             2064
 
 // still to be done id's
 `#define' ID_INPUT_DEVICE_NEW                 10000
