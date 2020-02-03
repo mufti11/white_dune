@@ -385,6 +385,7 @@ protected:
     void                elongateNurbs();
 #ifdef HAVE_LIBCGAL
     void                convexHull();
+    void                nurbsConvexHull();
 #endif
     void                setViewpoint(void);
     void                setTarget(void);

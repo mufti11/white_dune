@@ -29,6 +29,7 @@ class MFVec2f;
 class Node;
 class MeshBasedNode;
 class NodeIndexedFaceSet;
+class NodeNurbsSurface;
 class Scene;
 
 extern float boxCorners[8][3];
@@ -90,11 +91,11 @@ public:
     static bool     invertMatrix(float out[16], const float in[16]);
     static void     getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord);
 
-    Node *          getNurbsConvexHull(void);
-
+    static bool     hasNurbsConvexHull(Scene *scene);
 
 #ifdef HAVE_LIBCGAL
     static NodeIndexedFaceSet *convexHull(Scene *scene, MyArray<Vec3f> vec);
+    static NodeNurbsSurface   *nurbsConvexHull(Scene *scene);
 #endif
 };
 

@@ -5521,4 +5521,8 @@ Fixed (C)OFF export of colorPerVertex nodes
 
 Fixed linear CurveAnimation
 
+Fixed crash when converting a SuperExtrusion to NURBS
+
+Fixed SuperExtrusion to NURBS convertion parameters
+
 Contact: MUFTI <mufti11@web.de>

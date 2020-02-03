@@ -626,7 +626,6 @@ NodeSuperExtrusion::toNurbs(int uTessel, int vTessel, int uDegree, int vDegree)
         return NULL;
 
     uTess += 1;
-    vTess += 1;
 
     int size = m_mesh->getVertices()->getSize();
     int uDimension = uTess;

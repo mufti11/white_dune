@@ -350,7 +350,7 @@
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/gpaint"
+#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
 
 /* object editor for sound (.wav/.midi) files */
 #define HAVE_SOUND_EDITOR "/usr/bin/audacity"
@@ -371,7 +371,7 @@
 #define HAVE_IMAGE_CONVERTER "/usr/bin/convert"
 
 /* Define if you want to set the URL of the helppages */
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.710/docs/index.html"
+#define HAVE_HELP_URL "/home/mufti/wdune-1.713/docs/index.html"
 
 /* Define if you want to set the URL of the vrml node list */
 /* #undef HAVE_VRML_NODES_URL */
@@ -565,7 +565,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.710"
+#define HAVE_DUNE_VERSION "white_dune 1.713"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

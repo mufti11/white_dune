@@ -41,6 +41,7 @@
 #include "LdrawDefines.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeMultiTextureCoordinate.h"
+#include "NodeNurbsSurface.h"
 
 float boxCorners[8][3] = {
         { -1.0f, -1.0f, -1.0f },
@@ -785,10 +786,16 @@ Util::getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord)
     }         
 }
 
-Node *
-getNurbsConvexHull(void)
+bool
+hasNurbsConvexHull(Scene *scene)
 {
-    return NULL;    
+#ifdef HAVE_LIBCGAL
+    MyArray<Vec3f> *nurbsPoints1 = scene->getStore4NurbsConvexHull(1);
+    MyArray<Vec3f> *nurbsPoints2 = scene->getStore4NurbsConvexHull(2);
+    if ((nurbsPoints1->size() > 1) && (nurbsPoints2->size() > 1))
+        return true;
+#endif
+    return false;
 }
 
 #ifdef HAVE_LIBCGAL
@@ -800,8 +807,12 @@ getNurbsConvexHull(void)
 #include <CGAL/Polyhedron_3.h>
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/convex_hull_3.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/convex_hull_2.h>
 #include <vector>
 
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef K::Point_2 Point_2;
 typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
 typedef CGAL::Polyhedron_3<K>                     Polyhedron_3;
 typedef K::Point_3                                Point_3;
@@ -815,6 +826,101 @@ typedef Surface_mesh::Face_index                  Face_index;
 typedef boost::graph_traits<Surface_mesh>::vertex_descriptor vertex_descriptor;
 typedef boost::graph_traits<Surface_mesh>::face_descriptor face_descriptor;
 typedef boost::graph_traits<Surface_mesh>::halfedge_descriptor halfedge_descriptor;
+
+NodeNurbsSurface *
+Util::nurbsConvexHull(Scene *scene)
+{
+    MyArray<Vec3f> *nurbsPoints1 = scene->getStore4NurbsConvexHull(1);
+    MyArray<Vec3f> *nurbsPoints2 = scene->getStore4NurbsConvexHull(2);
+
+    Vec3f midPoint1;
+    for (int i = 0; i < nurbsPoints1->size(); i++)
+         midPoint1 = midPoint1 + (Vec3f)nurbsPoints1->get(i);
+    midPoint1 =  midPoint1 / nurbsPoints1->size();
+
+    Vec3f midPoint2; 
+    for (int i = 0; i < nurbsPoints2->size(); i++)
+         midPoint2 = midPoint2 + (Vec3f)nurbsPoints2->get(i);
+    midPoint2 = midPoint2 * (1.0f / nurbsPoints2->size());
+
+    MyArray<Vec2f> squareDistance1;
+    for (int i = 0; i < nurbsPoints1->size(); i++) {
+        Vec3f squareDist = nurbsPoints1->get(i).cross(midPoint1) / 
+                           nurbsPoints1->get(i).length();
+        squareDistance1.append(Vec2f(squareDist.x, squareDist.y));
+    }
+
+    MyArray<Vec2f> squareDistance2;
+    for (int i = 0; i < nurbsPoints2->size(); i++) {
+        Vec3f squareDist = nurbsPoints2->get(i).cross(midPoint2) / 
+                           nurbsPoints2->get(i).length();
+        squareDistance2.append(Vec2f(squareDist.x, squareDist.y));
+    }
+
+    MyArray<Point_2> squarePoint1;
+    for (int i = 0; i < nurbsPoints1->size(); i++)
+         squarePoint1.append(Point_2(squareDistance1.get(i).x,
+                                     squareDistance1.get(i).y));
+    Point_2 result1[squarePoint1.size()];
+    CGAL::convex_hull_2(squarePoint1.getData(), 
+                        squarePoint1.getData() + squarePoint1.size(), result1);
+    MyArray<Vec2f> nurbs1;
+    for (int i = 0; i < nurbsPoints1->size(); i++)
+         nurbs1.append(Vec2f(result1[i].x(), result1[i].y()));
+
+    MyArray<Point_2> squarePoint2;
+    for (int i = 0; i < nurbsPoints1->size(); i++)
+         squarePoint1.append(Point_2(squareDistance1.get(i).x,
+                                     squareDistance1.get(i).y));
+    Point_2 result2[squarePoint2.size()];
+    CGAL::convex_hull_2(squarePoint2.getData(), 
+                        squarePoint2.getData() + squarePoint2.size(), result2);
+    MyArray<Vec2f> nurbs2;
+    for (int i = 0; i < nurbsPoints2->size(); i++)
+         nurbs2.append(Vec2f(result2[i].x(), result2[i].y()));
+
+    // make the length of nurbs1 and nurbs2 equal 
+    if (nurbs2.size() > nurbs1.size())
+        for (int i = 0; i < nurbs2.size() - nurbs1.size(); i++) {
+            Vec2f point = nurbs1.get(i);
+            float dist = FLT_MAX;
+            int foundIndex = -1;
+            for (int j = 0; j < nurbs2.size(); j--) {
+                if (nurbs2.get(j).length() < dist) {
+                    dist = nurbs2.get(j).length(); 
+                    foundIndex = j;
+                }
+            foundIndex = foundIndex - 1 > -1 ? foundIndex - 1 : 0;
+            float dist2 = nurbs2.get(foundIndex).length();
+            float foundIndex2 = foundIndex + 1 < nurbs2.size() ? 
+                                foundIndex + 1 : nurbs2.size() - 1;
+            float dist3 = nurbs2.get(foundIndex2).length();
+            if (dist2 < dist3)
+                nurbs2.insert(nurbs2.get(foundIndex2) - 
+                              nurbs2.get(foundIndex) / 2.0f, foundIndex2);
+            else
+                nurbs2.insert(nurbs2.get(foundIndex) - 
+                              nurbs2.get(foundIndex2 / 2.0f), foundIndex);
+            }
+        }
+    MFVec3f *controlPoints = new MFVec3f();
+    for (int i = 0; i < nurbs1.size(); i++) {
+         Vec3f nurbsPoint1(nurbs1.get(i).x, nurbs1.get(i).y, 0);
+Vec3f dump(nurbsPoint1 + midPoint1);
+         controlPoints->appendVec(nurbsPoint1 + midPoint1);
+    }
+    for (int i = 0; i < nurbs1.size(); i++) {
+         Vec3f nurbsPoint2(nurbs2.get(i).x, nurbs2.get(i).y, 0);
+         controlPoints->appendVec(nurbsPoint2 + midPoint2);
+    }
+    NodeNurbsSurface *surface = (NodeNurbsSurface *)
+                               scene->createNode("NurbsSurface");            
+    surface->uDimension(new SFInt32(2));
+    surface->vDimension(new SFInt32(nurbs1.size()));
+    surface->setControlPoints(controlPoints);
+    surface->repairKnotAndWeight();
+    return surface;    
+}
 
 NodeIndexedFaceSet *
 Util::convexHull(Scene *scene, MyArray<Vec3f> vec)

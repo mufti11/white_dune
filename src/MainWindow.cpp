@@ -2581,6 +2581,9 @@ MainWindow::OnCommand(void *vid)
       case ID_CONVEX_HULL:
         convexHull();
         break;
+      case ID_NURBS_CONVEX_HULL:
+        nurbsConvexHull();
+        break;
 #endif
       case ID_VIEWPOINT:
         setViewpoint();
@@ -8411,6 +8414,17 @@ MainWindow::convexHull(void)
     }
     points.resize(0);
 }
+
+void 
+MainWindow::nurbsConvexHull(void)
+{
+    meshDataMatrix = Matrix::identity();
+    Node *node = m_scene->getSelection()->getNode();
+    if (node->hasParent()) {
+        NodeNurbsSurface *surface = Util::nurbsConvexHull(m_scene);
+        createGeometryNode(surface, false, false);
+    }
+}
 #endif
 
 void MainWindow::createOneText(void)
@@ -11063,15 +11077,15 @@ MainWindow::toNurbs()
         int vTess = super->spineTessellation()->getValue();
         if (vTess == 0)
             vTess = 8;
-        Sphere2NurbsDialog dlg(m_wnd, vTess, uTess, 2, 2);
+        OneIntDialog dlg(m_wnd, IDD_SUPER_EXTRUSION_POINTS, vTess, 6, INT_MAX);
         if (dlg.DoModal() == IDOK) {
             super->beginCap(new SFBool(false));
             super->endCap(new SFBool(false));
-            int narcslong = dlg.getNarcslong();
-            int narcslat = dlg.getNarcslat();
+            int narcslong = uTess;
+            int narcslat = dlg.GetValue();
             narcslat = 2 + ((narcslat - 2) / 4) * 4;
-            int uDegree = dlg.getuDegree();
-            int vDegree = dlg.getvDegree();
+            int uDegree = 2;
+            int vDegree = 2;
             nurbsNode = node->toNurbs(narcslat, narcslong, uDegree, vDegree);
         }
     }

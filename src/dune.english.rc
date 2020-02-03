@@ -285,6 +285,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+//        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "Multiply",                            ID_ARRAY
         POPUP "&Set center to (need Transform ->Shape ->geometry)"
@@ -1447,6 +1448,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                          ID_CONVEX_HULL
+//        MENUITEM "NURBS Convex hull",                    ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Set center to (need Transform ->Shape ->geometry)"
         BEGIN
@@ -2879,6 +2881,17 @@ CAPTION "SuperRevolver points"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&points (3...):",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE,15,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
+IDD_SUPER_EXTRUSION_POINTS DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "SuperExtrusion points"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&points longituinal (6...):",IDC_STATIC,15,5,100,8
     EDITTEXT        IDC_VALUE,15,21,40,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
