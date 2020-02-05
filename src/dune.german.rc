@@ -264,6 +264,7 @@ BEGIN
         MENUITEM "Aendere Eckpunkte",                   ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Bauchige Huelle",                     ID_CONVEX_HULL
+        MENUITEM "NURBS Huelle",                        ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Vervielfaeltigen",                   ID_ARRAY
         POPUP "Setze Drehpunkt zu (braucht Transform ->Shape ->geometry)"
@@ -1424,6 +1425,7 @@ BEGIN
         MENUITEM "Aendere Eckpunkte",                   ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Konvexe Huelle",                      ID_CONVEX_HULL
+        MENUITEM "NURBS Konvexe Huelle",                ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Setze Drehpunkt zu (braucht Transform ->Shape ->geometry)"
         BEGIN

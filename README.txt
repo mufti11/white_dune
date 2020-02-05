@@ -5525,4 +5525,6 @@ Fixed crash when converting a SuperExtrusion to NURBS
 
 Fixed SuperExtrusion to NURBS convertion parameters
 
+Added NURBS convex hull and documetation
+
 Contact: MUFTI <mufti11@web.de>

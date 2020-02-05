@@ -962,7 +962,7 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
             routepointer != NULL; routepointer = routepointer->next() ) 
             for (List<MyString>::Iterator* routepointer2 = m_endRouteList.first();
                 routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer != routepointer)
+          if (routepointer2 != routepointer)
               if (strcmp((const char*) routepointer->item(), 
                          (const char*) routepointer2->item()) == 0)
                   m_endRouteList.remove(routepointer2);
@@ -7274,8 +7274,6 @@ Scene::addToStore4ConvexHull(void)
     if (!node->getValidVertex())
         return;
 
-    m_convexHullCounter++;
-
     static Matrix transformMatrix;
     Path *trans = searchTransform();
     Node *transform = NULL;
@@ -7285,6 +7283,7 @@ Scene::addToStore4ConvexHull(void)
         transform->transform();
         transform->getMatrix(transformMatrix);
     }
+    bool changed = false;
     float eps = TheApp->GetHandleEpsilon(); 
     for (int i = 0; i < getSelectedHandlesSize(); i++) {
          int handle = getSelectedHandle(i);
@@ -7317,7 +7316,11 @@ Scene::addToStore4ConvexHull(void)
              m_store4Nurbs1ConvexHull.append(transformMatrix * vertex);
          else
              m_store4Nurbs2ConvexHull.append(transformMatrix * vertex);
+         changed = true;
     }
+    if (changed)
+        m_convexHullCounter++;
+
 }
 
 void                

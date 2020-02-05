@@ -264,6 +264,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Moltiplica",                         ID_ARRAY
         POPUP "Imposta centro su (occorre Transform -> Shape -> geometry)"
@@ -1427,6 +1428,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Imposta centro su (occorre Transform ->Shape ->geometry)"
         BEGIN

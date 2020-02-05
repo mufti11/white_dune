@@ -787,7 +787,7 @@ Util::getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord)
 }
 
 bool
-hasNurbsConvexHull(Scene *scene)
+Util::hasNurbsConvexHull(Scene *scene)
 {
 #ifdef HAVE_LIBCGAL
     MyArray<Vec3f> *nurbsPoints1 = scene->getStore4NurbsConvexHull(1);
@@ -833,6 +833,9 @@ Util::nurbsConvexHull(Scene *scene)
     MyArray<Vec3f> *nurbsPoints1 = scene->getStore4NurbsConvexHull(1);
     MyArray<Vec3f> *nurbsPoints2 = scene->getStore4NurbsConvexHull(2);
 
+    if (nurbsPoints1->size() == 0 || nurbsPoints2->size() == 0)
+        return NULL;
+
     Vec3f midPoint1;
     for (int i = 0; i < nurbsPoints1->size(); i++)
          midPoint1 = midPoint1 + (Vec3f)nurbsPoints1->get(i);
@@ -847,14 +850,14 @@ Util::nurbsConvexHull(Scene *scene)
     for (int i = 0; i < nurbsPoints1->size(); i++) {
         Vec3f squareDist = nurbsPoints1->get(i).cross(midPoint1) / 
                            nurbsPoints1->get(i).length();
-        squareDistance1.append(Vec2f(squareDist.x, squareDist.y));
+        squareDistance1.append(Vec2f(squareDist.y, squareDist.z));
     }
 
     MyArray<Vec2f> squareDistance2;
     for (int i = 0; i < nurbsPoints2->size(); i++) {
         Vec3f squareDist = nurbsPoints2->get(i).cross(midPoint2) / 
                            nurbsPoints2->get(i).length();
-        squareDistance2.append(Vec2f(squareDist.x, squareDist.y));
+        squareDistance2.append(Vec2f(squareDist.y, squareDist.z));
     }
 
     MyArray<Point_2> squarePoint1;
@@ -905,20 +908,22 @@ Util::nurbsConvexHull(Scene *scene)
         }
     MFVec3f *controlPoints = new MFVec3f();
     for (int i = 0; i < nurbs1.size(); i++) {
-         Vec3f nurbsPoint1(nurbs1.get(i).x, nurbs1.get(i).y, 0);
-Vec3f dump(nurbsPoint1 + midPoint1);
+         Vec3f nurbsPoint1(0, nurbs1.get(i).x, nurbs1.get(i).y);
+         Vec3f nurbsPoint2(0, nurbs2.get(i).x, nurbs2.get(i).y);
          controlPoints->appendVec(nurbsPoint1 + midPoint1);
-    }
-    for (int i = 0; i < nurbs1.size(); i++) {
-         Vec3f nurbsPoint2(nurbs2.get(i).x, nurbs2.get(i).y, 0);
          controlPoints->appendVec(nurbsPoint2 + midPoint2);
     }
+    Vec3f nurbsPoint1(0, nurbs1.get(0).x, nurbs1.get(0).y);
+    Vec3f nurbsPoint2(0, nurbs2.get(0).x, nurbs2.get(0).y);
+    controlPoints->appendVec(nurbsPoint1 + midPoint1);
+    controlPoints->appendVec(nurbsPoint2 + midPoint2);
     NodeNurbsSurface *surface = (NodeNurbsSurface *)
                                scene->createNode("NurbsSurface");            
     surface->uDimension(new SFInt32(2));
-    surface->vDimension(new SFInt32(nurbs1.size()));
+    surface->vDimension(new SFInt32(nurbs1.size() + 1));
     surface->setControlPoints(controlPoints);
     surface->repairKnotAndWeight();
+    surface->uTessellation(new SFInt32(16));
     return surface;    
 }
 

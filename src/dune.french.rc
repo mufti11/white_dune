@@ -261,9 +261,10 @@ BEGIN
             MENUITEM "&y (vert)  et z (bleu)",         ID_SWAP_YZ
             MENUITEM "&z (bleu)  et x (rouge)",        ID_SWAP_XZ
         END
-        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
+        MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                  ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Reproduire",                        ID_ARRAY
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
@@ -1424,6 +1425,7 @@ BEGIN
         MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                  ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
         BEGIN

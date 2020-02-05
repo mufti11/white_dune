@@ -2124,12 +2124,16 @@ MainWindow::OnCommand(void *vid)
         m_scene->unHideVertices();
         m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);        
         break;
+#ifdef HAVE_LIBCGAL
       case ID_DUNE_SELECTION_STORE4CONVEX_HULL:
         m_scene->addToStore4ConvexHull();
+        UpdateToolbarSelection();
         break;
       case ID_DUNE_DELETE_STORE4CONVEX_HULL:
         m_scene->removeStore4ConvexHull();
+        UpdateToolbarSelection();
         break;
+#endif
 
       case ID_ANIMATION:
         createAnimation();
@@ -5951,10 +5955,20 @@ MainWindow::UpdateToolbarSelection(void)
     swMenuSetFlags(m_menu, ID_DUNE_SELECTION_NEIGHBOUR_V, SW_MENU_DISABLED, 
                    (node->getType() == VRML_NURBS_SURFACE) ?
                    0 : SW_MENU_DISABLED);
+#ifdef HAVE_LIBCGAL
     swMenuSetFlags(m_menu, ID_DUNE_DELETE_STORE4CONVEX_HULL,
                    SW_MENU_DISABLED, 
                    m_scene->getStore4ConvexHull()->size() > 0 ?
                    0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_CONVEX_HULL,
+                   SW_MENU_DISABLED, 
+                   m_scene->getStore4ConvexHull()->size() > 0 ?
+                   0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_NURBS_CONVEX_HULL,
+                   SW_MENU_DISABLED, 
+                   Util::hasNurbsConvexHull(m_scene) ?
+                   0 : SW_MENU_DISABLED);
+#endif
 
     swMenuSetFlags(m_menu, ID_INTERACTION, SW_MENU_DISABLED,
                    node->supportInteraction() ? 0 : SW_MENU_DISABLED);

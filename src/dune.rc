@@ -335,7 +335,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
-//        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "Multiply",                            ID_ARRAY
         POPUP "&Set center to (need Transform ->Shape ->geometry)"
@@ -1498,7 +1498,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                          ID_CONVEX_HULL
-//        MENUITEM "NURBS Convex hull",                    ID_NURBS_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                    ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Set center to (need Transform ->Shape ->geometry)"
         BEGIN
@@ -4942,9 +4942,10 @@ BEGIN
             MENUITEM "&y (vert)  et z (bleu)",         ID_SWAP_YZ
             MENUITEM "&z (bleu)  et x (rouge)",        ID_SWAP_XZ
         END
-        MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
+        MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                  ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Reproduire",                        ID_ARRAY
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
@@ -6105,6 +6106,7 @@ BEGIN
         MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                  ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
         BEGIN
@@ -9427,6 +9429,7 @@ BEGIN
         MENUITEM "Aendere Eckpunkte",                   ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Bauchige Huelle",                     ID_CONVEX_HULL
+        MENUITEM "NURBS Huelle",                        ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Vervielfaeltigen",                   ID_ARRAY
         POPUP "Setze Drehpunkt zu (braucht Transform ->Shape ->geometry)"
@@ -10587,6 +10590,7 @@ BEGIN
         MENUITEM "Aendere Eckpunkte",                   ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Konvexe Huelle",                      ID_CONVEX_HULL
+        MENUITEM "NURBS Konvexe Huelle",                ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Setze Drehpunkt zu (braucht Transform ->Shape ->geometry)"
         BEGIN
@@ -13906,6 +13910,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Moltiplica",                         ID_ARRAY
         POPUP "Imposta centro su (occorre Transform -> Shape -> geometry)"
@@ -15069,6 +15074,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Imposta centro su (occorre Transform ->Shape ->geometry)"
         BEGIN
@@ -18394,6 +18400,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         MENUITEM "&Multiplicar",                        ID_ARRAY
         POPUP "Define o centre de (necessidade Transform -> Shape -> geometry)"
@@ -19556,6 +19563,7 @@ BEGIN
         MENUITEM "Vertex modifier",                     ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
+        MENUITEM "NURBS Convex hull",                   ID_NURBS_CONVEX_HULL
 #endif
         POPUP "Set center to (need Transform ->Shape ->geometry)"
         BEGIN
