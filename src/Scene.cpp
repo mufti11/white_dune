@@ -937,7 +937,7 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
             routepointer != NULL; routepointer = routepointer->next() ) 
             for (List<MyString>::Iterator* routepointer2 = m_routeList.first();
                 routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer != routepointer)
+          if (routepointer2 != routepointer)
               if (strcmp((const char*) routepointer->item(), 
                          (const char*) routepointer2->item()) == 0)
                   m_routeList.remove(routepointer2);
@@ -7302,20 +7302,20 @@ Scene::addToStore4ConvexHull(void)
                          (fabs(vertex.x - vec.z) < eps)) {
                          m_store4ConvexHull.append(transformMatrix * vec);
                          if ((m_convexHullCounter % 2) == 1)
-                             m_store4Nurbs1ConvexHull.append(transformMatrix * 
-                                                             vec);
+                             m_store4Extrusion1ConvexHull.append(
+                                 transformMatrix * vec);
                          else
-                             m_store4Nurbs2ConvexHull.append(transformMatrix * 
-                                                             vec);
+                             m_store4Extrusion2ConvexHull.append(
+                                 transformMatrix * vec);
                          break;
                      }   
                  }
              } 
          m_store4ConvexHull.append(transformMatrix * vertex);
          if ((m_convexHullCounter % 2) == 1)
-             m_store4Nurbs1ConvexHull.append(transformMatrix * vertex);
+             m_store4Extrusion1ConvexHull.append(transformMatrix * vertex);
          else
-             m_store4Nurbs2ConvexHull.append(transformMatrix * vertex);
+             m_store4Extrusion2ConvexHull.append(transformMatrix * vertex);
          changed = true;
     }
     if (changed)

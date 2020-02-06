@@ -264,7 +264,7 @@ BEGIN
         MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
-        MENUITEM "NURBS Convex hull",                  ID_NURBS_CONVEX_HULL
+        MENUITEM "Extrusion Convex hull",              ID_EXTRUSION_CONVEX_HULL
 #endif
         MENUITEM "&Reproduire",                        ID_ARRAY
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"

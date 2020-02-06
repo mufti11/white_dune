@@ -896,18 +896,18 @@ public:
     void                addToStore4ConvexHull(void);
     MyArray<Vec3f>     *getStore4ConvexHull(void)
                             { return &m_store4ConvexHull; }
-    MyArray<Vec3f>     *getStore4NurbsConvexHull(int num)
+    MyArray<Vec3f>     *getStore4ExtrusionConvexHull(int num)
                             {
                             if (num % 2 == 1) 
-                                return &m_store4Nurbs1ConvexHull; 
-                            return &m_store4Nurbs2ConvexHull; 
+                                return &m_store4Extrusion1ConvexHull; 
+                            return &m_store4Extrusion2ConvexHull; 
                             }
     void                removeStore4ConvexHull(void) 
                             {
                             m_convexHullCounter = 0; 
                             m_store4ConvexHull.resize(0); 
-                            m_store4Nurbs1ConvexHull.resize(0); 
-                            m_store4Nurbs2ConvexHull.resize(0); 
+                            m_store4Extrusion1ConvexHull.resize(0); 
+                            m_store4Extrusion2ConvexHull.resize(0); 
                             }
 
     VertexModifier     *getVertexModifier(void) { return m_vertexModifier; }
@@ -1167,8 +1167,8 @@ protected:
     MyArray<const char *> m_writeCDynamicNodeCallback;
 
     MyArray<Vec3f>      m_store4ConvexHull;
-    MyArray<Vec3f>      m_store4Nurbs1ConvexHull;
-    MyArray<Vec3f>      m_store4Nurbs2ConvexHull;
+    MyArray<Vec3f>      m_store4Extrusion1ConvexHull;
+    MyArray<Vec3f>      m_store4Extrusion2ConvexHull;
 
     int                 m_convexHullCounter;
 

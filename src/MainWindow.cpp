@@ -2585,8 +2585,8 @@ MainWindow::OnCommand(void *vid)
       case ID_CONVEX_HULL:
         convexHull();
         break;
-      case ID_NURBS_CONVEX_HULL:
-        nurbsConvexHull();
+      case ID_EXTRUSION_CONVEX_HULL:
+        extrusionConvexHull();
         break;
 #endif
       case ID_VIEWPOINT:
@@ -5964,9 +5964,9 @@ MainWindow::UpdateToolbarSelection(void)
                    SW_MENU_DISABLED, 
                    m_scene->getStore4ConvexHull()->size() > 0 ?
                    0 : SW_MENU_DISABLED);
-    swMenuSetFlags(m_menu, ID_NURBS_CONVEX_HULL,
+    swMenuSetFlags(m_menu, ID_EXTRUSION_CONVEX_HULL,
                    SW_MENU_DISABLED, 
-                   Util::hasNurbsConvexHull(m_scene) ?
+                   Util::hasExtrusionConvexHull(m_scene) ?
                    0 : SW_MENU_DISABLED);
 #endif
 
@@ -6680,7 +6680,7 @@ MainWindow::createNode(const char *type)
 
 Node *
 MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor, 
-                               bool alignToCamera)
+                               bool alignToCamera, Node *transform)
 {
     const Path *sel = m_scene->getSelection();
     Node *selection = sel->getNode();
@@ -6745,8 +6745,11 @@ MainWindow::createGeometryNode(Node *node, bool emissiveDefaultColor,
             return node;            
         }
     }            
-    NodeTransform *nTransform = (NodeTransform *)
-                                m_scene->createNode("Transform");
+    NodeTransform *nTransform = NULL;
+    if (transform == NULL)
+        nTransform = (NodeTransform *)m_scene->createNode("Transform");
+    else
+        nTransform = (NodeTransform *)transform;
     Node *camera = m_scene->getCamera();
     nTransform->children(new MFNode(new NodeList(nShape)));
     Node *transformNode = createNode(nTransform);
@@ -8430,13 +8433,15 @@ MainWindow::convexHull(void)
 }
 
 void 
-MainWindow::nurbsConvexHull(void)
+MainWindow::extrusionConvexHull(void)
 {
     meshDataMatrix = Matrix::identity();
     Node *node = m_scene->getSelection()->getNode();
     if (node->hasParent()) {
-        NodeNurbsSurface *surface = Util::nurbsConvexHull(m_scene);
-        createGeometryNode(surface, false, false);
+        Node *transform = Util::transform4ExtrusionConvexHull(m_scene);
+        Node *extrusion = Util::extrusionConvexHull(m_scene, 5);
+        Node *insertNode = createGeometryNode(extrusion, false, false,
+                                              transform);
     }
 }
 #endif

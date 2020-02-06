@@ -214,7 +214,8 @@ protected:
                                            bool alignToCamera = true);
     Node               *createGeometryNode(Node *node,
                                            bool emissiveDefaultColor = false,
-                                           bool alignToCamera = true);
+                                           bool alignToCamera = true,
+                                           Node *transform = NULL);
     void                createScript();
     void                createElevationGrid();
     void                createGeoElevationGrid();
@@ -385,7 +386,7 @@ protected:
     void                elongateNurbs();
 #ifdef HAVE_LIBCGAL
     void                convexHull();
-    void                nurbsConvexHull();
+    void                extrusionConvexHull();
 #endif
     void                setViewpoint(void);
     void                setTarget(void);

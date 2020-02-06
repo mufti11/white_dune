@@ -41,7 +41,8 @@
 #include "LdrawDefines.h"
 #include "NodeTextureCoordinate.h"
 #include "NodeMultiTextureCoordinate.h"
-#include "NodeNurbsSurface.h"
+#include "NodeExtrusion.h"
+#include "NodeTransform.h"
 
 float boxCorners[8][3] = {
         { -1.0f, -1.0f, -1.0f },
@@ -787,15 +788,53 @@ Util::getTexCoords(MyArray<MFVec2f *>&texCoords, Node *texCoord)
 }
 
 bool
-Util::hasNurbsConvexHull(Scene *scene)
+Util::hasExtrusionConvexHull(Scene *scene)
 {
 #ifdef HAVE_LIBCGAL
-    MyArray<Vec3f> *nurbsPoints1 = scene->getStore4NurbsConvexHull(1);
-    MyArray<Vec3f> *nurbsPoints2 = scene->getStore4NurbsConvexHull(2);
-    if ((nurbsPoints1->size() > 1) && (nurbsPoints2->size() > 1))
+    MyArray<Vec3f> *exPoints1 = scene->getStore4ExtrusionConvexHull(1);
+    MyArray<Vec3f> *exPoints2 = scene->getStore4ExtrusionConvexHull(2);
+    if ((exPoints1->size() > 1) && (exPoints2->size() > 1))
         return true;
 #endif
     return false;
+}
+
+NodeTransform *
+Util::transform4ExtrusionConvexHull(Scene *scene)
+{
+    Vec3f midPoint = getMidPoint(scene);
+    NodeTransform *transform = (NodeTransform *)
+                               scene->createNode("Transform");
+    transform->translation(new SFVec3f(midPoint.x, midPoint.y, midPoint.z));
+    return transform;
+}
+
+Vec3f
+Util::getMidPoint(Scene *scene)
+{
+    Vec3f midPoint;
+    MyArray<Vec3f> *extrusionPoints1 = scene->getStore4ExtrusionConvexHull(1);
+    MyArray<Vec3f> *extrusionPoints2 = scene->getStore4ExtrusionConvexHull(2);
+
+    if (extrusionPoints1->size() == 0 || extrusionPoints2->size() == 0)
+        return NULL;
+
+    Vec3f midPoint1;
+    for (int i = 0; i < extrusionPoints1->size(); i++)
+         midPoint1 = midPoint1 + (Vec3f)extrusionPoints1->get(i);
+    midPoint1 =  midPoint1 / extrusionPoints1->size();
+
+    Vec3f midPoint2; 
+    for (int i = 0; i < extrusionPoints2->size(); i++)
+         midPoint2 = midPoint2 + (Vec3f)extrusionPoints2->get(i);
+    midPoint2 = midPoint2 * (1.0f / extrusionPoints2->size());
+
+    if (extrusionPoints1->size() > extrusionPoints2->size()) {
+        midPoint = midPoint1;
+    } else {
+        midPoint = midPoint2;
+    }
+    return midPoint;
 }
 
 #ifdef HAVE_LIBCGAL
@@ -827,104 +866,135 @@ typedef boost::graph_traits<Surface_mesh>::vertex_descriptor vertex_descriptor;
 typedef boost::graph_traits<Surface_mesh>::face_descriptor face_descriptor;
 typedef boost::graph_traits<Surface_mesh>::halfedge_descriptor halfedge_descriptor;
 
-NodeNurbsSurface *
-Util::nurbsConvexHull(Scene *scene)
+NodeExtrusion *
+Util::extrusionConvexHull(Scene *scene, int extrusionPoints)
 {
-    MyArray<Vec3f> *nurbsPoints1 = scene->getStore4NurbsConvexHull(1);
-    MyArray<Vec3f> *nurbsPoints2 = scene->getStore4NurbsConvexHull(2);
+    MyArray<Vec3f> *extrusionPoints1 = scene->getStore4ExtrusionConvexHull(1);
+    MyArray<Vec3f> *extrusionPoints2 = scene->getStore4ExtrusionConvexHull(2);
 
-    if (nurbsPoints1->size() == 0 || nurbsPoints2->size() == 0)
+    if (extrusionPoints1->size() == 0 || extrusionPoints2->size() == 0)
         return NULL;
 
     Vec3f midPoint1;
-    for (int i = 0; i < nurbsPoints1->size(); i++)
-         midPoint1 = midPoint1 + (Vec3f)nurbsPoints1->get(i);
-    midPoint1 =  midPoint1 / nurbsPoints1->size();
+    for (int i = 0; i < extrusionPoints1->size(); i++)
+         midPoint1 = midPoint1 + (Vec3f)extrusionPoints1->get(i);
+    midPoint1 =  midPoint1 / extrusionPoints1->size();
 
     Vec3f midPoint2; 
-    for (int i = 0; i < nurbsPoints2->size(); i++)
-         midPoint2 = midPoint2 + (Vec3f)nurbsPoints2->get(i);
-    midPoint2 = midPoint2 * (1.0f / nurbsPoints2->size());
+    for (int i = 0; i < extrusionPoints2->size(); i++)
+         midPoint2 = midPoint2 + (Vec3f)extrusionPoints2->get(i);
+    midPoint2 = midPoint2 * (1.0f / extrusionPoints2->size());
 
     MyArray<Vec2f> squareDistance1;
-    for (int i = 0; i < nurbsPoints1->size(); i++) {
-        Vec3f squareDist = nurbsPoints1->get(i).cross(midPoint1) / 
-                           nurbsPoints1->get(i).length();
+    for (int i = 0; i < extrusionPoints1->size(); i++) {
+        Vec3f squareDist = extrusionPoints1->get(i).cross(midPoint1) / 
+                           extrusionPoints1->get(i).length();
         squareDistance1.append(Vec2f(squareDist.y, squareDist.z));
     }
 
+    float maxX1 = -FLT_MIN;
+    float maxY1 = -FLT_MIN;
+    for (int i = 0; i < squareDistance1.size(); i++) {
+        if (maxX1 < squareDistance1[i].x)
+            maxX1 = squareDistance1[i].x;
+        if (maxY1 < squareDistance1[i].y)
+            maxY1 = squareDistance1[i].y;
+    }
+
     MyArray<Vec2f> squareDistance2;
-    for (int i = 0; i < nurbsPoints2->size(); i++) {
-        Vec3f squareDist = nurbsPoints2->get(i).cross(midPoint2) / 
-                           nurbsPoints2->get(i).length();
+    for (int i = 0; i < extrusionPoints2->size(); i++) {
+        Vec3f squareDist = extrusionPoints2->get(i).cross(midPoint2) / 
+                           extrusionPoints2->get(i).length();
         squareDistance2.append(Vec2f(squareDist.y, squareDist.z));
     }
 
-    MyArray<Point_2> squarePoint1;
-    for (int i = 0; i < nurbsPoints1->size(); i++)
-         squarePoint1.append(Point_2(squareDistance1.get(i).x,
-                                     squareDistance1.get(i).y));
-    Point_2 result1[squarePoint1.size()];
-    CGAL::convex_hull_2(squarePoint1.getData(), 
-                        squarePoint1.getData() + squarePoint1.size(), result1);
-    MyArray<Vec2f> nurbs1;
-    for (int i = 0; i < nurbsPoints1->size(); i++)
-         nurbs1.append(Vec2f(result1[i].x(), result1[i].y()));
-
-    MyArray<Point_2> squarePoint2;
-    for (int i = 0; i < nurbsPoints1->size(); i++)
-         squarePoint1.append(Point_2(squareDistance1.get(i).x,
-                                     squareDistance1.get(i).y));
-    Point_2 result2[squarePoint2.size()];
-    CGAL::convex_hull_2(squarePoint2.getData(), 
-                        squarePoint2.getData() + squarePoint2.size(), result2);
-    MyArray<Vec2f> nurbs2;
-    for (int i = 0; i < nurbsPoints2->size(); i++)
-         nurbs2.append(Vec2f(result2[i].x(), result2[i].y()));
-
-    // make the length of nurbs1 and nurbs2 equal 
-    if (nurbs2.size() > nurbs1.size())
-        for (int i = 0; i < nurbs2.size() - nurbs1.size(); i++) {
-            Vec2f point = nurbs1.get(i);
-            float dist = FLT_MAX;
-            int foundIndex = -1;
-            for (int j = 0; j < nurbs2.size(); j--) {
-                if (nurbs2.get(j).length() < dist) {
-                    dist = nurbs2.get(j).length(); 
-                    foundIndex = j;
-                }
-            foundIndex = foundIndex - 1 > -1 ? foundIndex - 1 : 0;
-            float dist2 = nurbs2.get(foundIndex).length();
-            float foundIndex2 = foundIndex + 1 < nurbs2.size() ? 
-                                foundIndex + 1 : nurbs2.size() - 1;
-            float dist3 = nurbs2.get(foundIndex2).length();
-            if (dist2 < dist3)
-                nurbs2.insert(nurbs2.get(foundIndex2) - 
-                              nurbs2.get(foundIndex) / 2.0f, foundIndex2);
-            else
-                nurbs2.insert(nurbs2.get(foundIndex) - 
-                              nurbs2.get(foundIndex2 / 2.0f), foundIndex);
-            }
-        }
-    MFVec3f *controlPoints = new MFVec3f();
-    for (int i = 0; i < nurbs1.size(); i++) {
-         Vec3f nurbsPoint1(0, nurbs1.get(i).x, nurbs1.get(i).y);
-         Vec3f nurbsPoint2(0, nurbs2.get(i).x, nurbs2.get(i).y);
-         controlPoints->appendVec(nurbsPoint1 + midPoint1);
-         controlPoints->appendVec(nurbsPoint2 + midPoint2);
+    float maxX2 = -FLT_MIN;
+    float maxY2 = -FLT_MIN;
+    for (int i = 0; i < squareDistance2.size(); i++) {
+        if (maxX2 < squareDistance2[i].x)
+            maxX2 = squareDistance2[i].x;
+        if (maxY2 < squareDistance2[i].y)
+            maxY2 = squareDistance2[i].y;
     }
-    Vec3f nurbsPoint1(0, nurbs1.get(0).x, nurbs1.get(0).y);
-    Vec3f nurbsPoint2(0, nurbs2.get(0).x, nurbs2.get(0).y);
-    controlPoints->appendVec(nurbsPoint1 + midPoint1);
-    controlPoints->appendVec(nurbsPoint2 + midPoint2);
-    NodeNurbsSurface *surface = (NodeNurbsSurface *)
-                               scene->createNode("NurbsSurface");            
-    surface->uDimension(new SFInt32(2));
-    surface->vDimension(new SFInt32(nurbs1.size() + 1));
-    surface->setControlPoints(controlPoints);
-    surface->repairKnotAndWeight();
-    surface->uTessellation(new SFInt32(16));
-    return surface;    
+
+    int resultSize = -1;
+    Point_2 *result = NULL;
+    Vec3f midPoint;
+    Vec3f spine;
+    float maxXex;
+    float maxYex;
+    float maxX;
+    float maxY;
+    if (extrusionPoints1->size() > extrusionPoints2->size()) {
+        MyArray<Point_2> squarePoint1;
+        for (int i = 0; i < squareDistance1.size(); i++)
+             squarePoint1.append(Point_2(squareDistance1.get(i).x,
+                                         squareDistance1.get(i).y));
+        result = new Point_2[squarePoint1.size()];
+        Point_2 *ptr = CGAL::convex_hull_2(squarePoint1.getData(), 
+            squarePoint1.getData() + squarePoint1.size(), result);
+        resultSize = ptr - result;
+        midPoint = midPoint1;
+        spine = midPoint2 - midPoint1;
+        spine = spine * 1.2f / (float)extrusionPoints;
+        maxXex = maxX1;
+        maxYex = maxY1;
+        maxX = maxX2;
+        maxY = maxY2;
+    } else {
+        MyArray<Point_2> squarePoint2;
+        for (int i = 0; i < squareDistance2.size(); i++)
+             squarePoint2.append(Point_2(squareDistance2.get(i).x,
+                                         squareDistance2.get(i).y));
+        Point_2 *result = new Point_2[squarePoint2.size()];
+        Point_2 *ptr = CGAL::convex_hull_2(squarePoint2.getData(), 
+            squarePoint2.getData() + squarePoint2.size(), result);
+        resultSize = ptr - result;
+        midPoint = midPoint2;
+        spine = midPoint1 - midPoint2;
+        spine = spine * 1.2f * (float)extrusionPoints;
+        maxXex = maxX2;
+        maxYex = maxY2;
+        maxX = maxX1;
+        maxY = maxY1;
+    }
+
+    if (result == NULL)
+        return NULL;
+
+    MFVec2f *crossPoints = new MFVec2f();
+    crossPoints->appendSFValue(result[0].x(), result[0].y());
+    for (int i = resultSize - 1; i > -1; i--)
+        crossPoints->appendSFValue(result[i].x(), result[i].y());
+
+    delete [] result;
+
+    Quaternion quat(spine, 1.57);
+    MFVec3f *spinePoints = new MFVec3f();
+    for (int i = 0; i < extrusionPoints; i++) {
+        spinePoints->appendVec(spine * quat * i);
+    }
+
+    MFVec2f *scalePoints = new MFVec2f();
+    for (int i = 0; i < extrusionPoints; i++) {
+        scalePoints->appendSFValue(maxXex + (maxXex - maxX) * i,
+                                   maxYex + (maxYex - maxY) * i);
+    }
+
+    MFRotation *rot = new MFRotation();
+    SFRotation val(0, 0, 1, 0);
+    rot->insertSFValue(0, &val);
+
+    NodeExtrusion *extrusion = (NodeExtrusion  *)
+                               scene->createNode("Extrusion");            
+    extrusion->crossSection(crossPoints);
+    extrusion->spine(spinePoints);
+//    extrusion->scale(scalePoints);
+    extrusion->orientation(rot);
+    extrusion->creaseAngle(new SFFloat(1.57));
+    extrusion->solid(new SFBool(false));
+
+    return extrusion;
 }
 
 NodeIndexedFaceSet *
