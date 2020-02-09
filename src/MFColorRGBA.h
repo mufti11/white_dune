@@ -44,7 +44,7 @@ public:
     virtual bool        equals(const FieldValue *value) const;
 
     const float        *getValue(int index) const 
-                           { return m_value.getData() + index * 3; }
+                           { return m_value.getData() + index * 4; }
 
     virtual FieldValue *getSFValue(int index) const;
     virtual void        setSFValue(int index, FieldValue *value);

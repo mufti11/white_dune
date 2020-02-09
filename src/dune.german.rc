@@ -209,7 +209,7 @@ BEGIN
             MENUITEM "&Gluehen",                        ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "G&laenzen",                       ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Farbe fuer angewaehlte Eckpunkte", ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Farbe (braucht Color oder ColorRGBA)", ID_CHANGE_COLOR_PER_VERTEX
         END
         MENUITEM "Durchsichtigkeit (braucht Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Wenig/viel Glanz (braucht Material)", ID_CHANGE_MATERIAL_SHININESS

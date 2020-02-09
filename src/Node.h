@@ -1329,6 +1329,7 @@ public:
     void              setNodePROTO(NodePROTO *node);
     NodeHAnimHumanoid *getHumanoid();
     virtual Node     *getIndexedFaceSet(void);
+    bool              getColorPerVertex(void) { return false; }
     virtual void      setAlreadyConverted(void);
     virtual bool      getAlreadyConverted(void) { return m_alreadyConverted; }
     bool              isCWriteable();

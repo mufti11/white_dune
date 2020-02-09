@@ -230,7 +230,12 @@ BEGIN
             MENUITEM "&Glow",                           ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "G&loss",                          ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Color per selected vertices (need Color or ColorRGBA)", ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Color (need Color or ColorRGBA)", ID_CHANGE_COLOR
+        END
+        POPUP "Set color to (need IndexedFaceSet or Color*)"
+        BEGIN
+            MENUITEM "&Vertices",                       ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Faces",                          ID_TO_COLOR_PER_FACE
         END
         MENUITEM "Change transparency (need Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Change shininess (need Material)",    ID_CHANGE_MATERIAL_SHININESS

@@ -164,7 +164,7 @@ static void loadCrashFile(void)
             char message[256];
             mysnprintf(message, 255, fmtString, (const char *)crashFile);
             if (swMessageBox(TheApp->mainWnd(), message, "load crash file ?", 
-                             SW_MB_YESNO, SW_MB_WARNING)) {
+                             SW_MB_YESNO, SW_MB_WARNING) == IDYES) {
                 Scene *scene = TheApp->getWindows().first()->item()->GetScene();
                 scene->makeEmpty();
                 TheApp->ImportFile(TheApp->getCrashedFile(), scene);

@@ -209,7 +209,7 @@ BEGIN
             MENUITEM "&Luminoso",                       ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "Lu&cido",                         ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Colore per selected vertices",    ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Colore (occorre Color or ColorRGBA", ID_CHANGE_COLOR
         END
         MENUITEM "Cambia transpareza (occorre Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Cambia luminosita' (occorre Material)", ID_CHANGE_MATERIAL_SHININESS

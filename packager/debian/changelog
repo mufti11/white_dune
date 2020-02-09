@@ -3,6 +3,13 @@ whitedune (1.717-1) experimental; urgency=low
   * Version 1.717 debian package
     For details see the README file of the source package
 
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Thu, 06 Feb 2020 09:49:31 +0100
+
+whitedune (1.717-1) experimental; urgency=low
+
+  * Version 1.717 debian package
+    For details see the README file of the source package
+
  -- J. "MUFTI" Scheurich <mufti11@web.de>  Wed, 05 Feb 2020 11:45:11 +0100
 
 whitedune (1.710-1) experimental; urgency=low

@@ -280,7 +280,12 @@ BEGIN
             MENUITEM "&Glow",                           ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "G&loss",                          ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Color per selected vertices (need Color or ColorRGBA)", ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Color (need Color or ColorRGBA)", ID_CHANGE_COLOR
+        END
+        POPUP "Set color to (need IndexedFaceSet or Color*)"
+        BEGIN
+            MENUITEM "&Vertices",                       ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Faces",                          ID_TO_COLOR_PER_FACE
         END
         MENUITEM "Change transparency (need Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Change shininess (need Material)",    ID_CHANGE_MATERIAL_SHININESS
@@ -4890,7 +4895,7 @@ BEGIN
             MENUITEM "&Brasiller",                     ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "&Briller",                       ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Color per selected vertices",    ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Color",                          ID_CHANGE_COLOR
         END
         MENUITEM "Transparence (a besoin de Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Peu/Beaucoup brillant (a besoin de Material)", ID_CHANGE_MATERIAL_SHININESS
@@ -6106,7 +6111,7 @@ BEGIN
         MENUITEM "Vertex modifier",                    ID_VERTEX_MODIFIER
 #ifdef HAVE_LIBCGAL
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
-        MENUITEM "NURBS Convex hull",                  ID_NURBS_CONVEX_HULL
+        MENUITEM "Extrusion Convex hull",              ID_EXTRUSION_CONVEX_HULL
 #endif
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
         BEGIN
@@ -9374,7 +9379,7 @@ BEGIN
             MENUITEM "&Gluehen",                        ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "G&laenzen",                       ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Farbe fuer angewaehlte Eckpunkte", ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Farbe (braucht Color oder ColorRGBA)", ID_CHANGE_COLOR_PER_VERTEX
         END
         MENUITEM "Durchsichtigkeit (braucht Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Wenig/viel Glanz (braucht Material)", ID_CHANGE_MATERIAL_SHININESS
@@ -13855,7 +13860,7 @@ BEGIN
             MENUITEM "&Luminoso",                       ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "Lu&cido",                         ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Colore per selected vertices",    ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Colore (occorre Color or ColorRGBA", ID_CHANGE_COLOR
         END
         MENUITEM "Cambia transpareza (occorre Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Cambia luminosita' (occorre Material)", ID_CHANGE_MATERIAL_SHININESS
@@ -18345,7 +18350,7 @@ BEGIN
             MENUITEM "&Cor brilhante",                  ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "Polido",                          ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Colore per selected vertices",    ID_CHANGE_COLOR_PER_VERTEX
+            MENUITEM "Colore (necessidade Color or ColorRGBA)", ID_CHANGE
         END
         MENUITEM "Alterar transpareza (necessidade Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Alterar polido' (necessidade Material)",  ID_CHANGE_MATERIAL_SHININESS

@@ -826,6 +826,8 @@ static int standardButtons4Kids[] = {
     39, ID_Y_ONLY,
     40, ID_Z_ONLY,
     BS, 0,
+    22, ID_COLOR_CIRCLE,
+    BS, 0,
     28, ID_X_SYMETRIC,
     BS, 0,
     8,  ID_DUNE_VIEW_FULL_SCREEN,
@@ -857,6 +859,8 @@ static int standardButtons4KidsWithInputDevices[] = {
     38, ID_X_ONLY,
     39, ID_Y_ONLY,
     40, ID_Z_ONLY,
+    BS, 0,
+    22, ID_COLOR_CIRCLE,
     BS, 0,
     28, ID_X_SYMETRIC,
     BS, 0,
@@ -2213,8 +2217,14 @@ MainWindow::OnCommand(void *vid)
       case ID_DELETE_ANIMATION_DATA:
         deleteAnimationData();
         break;
-      case ID_CHANGE_COLOR_PER_VERTEX:
-        showColorPerVertexColorCircle();
+      case ID_TO_COLOR_PER_VERTEX:
+        colorPerVertex();
+        break;
+      case ID_TO_COLOR_PER_FACE:
+        colorPerFace();  
+        break;
+      case ID_CHANGE_COLOR:
+        showColorCircle();
         break;
       case ID_CHANGE_MATERIAL_DIFFUSE:
         showDiffuseColorCircle();
@@ -2564,7 +2574,7 @@ MainWindow::OnCommand(void *vid)
         timeShift();
         break;
       case ID_COLOR_CIRCLE:
-        updateColorCircle();
+        showColorCircle();
         break;
       case ID_TOGGLE_XRAY_RENDERING:
         toggleXrayRendering();
@@ -4410,7 +4420,7 @@ void MainWindow::updateColorCircle(void)
           m_colorCircle_active = true;
           m_scene->AddView(m_fieldView); 
           m_innerPane->SetPane(m_fieldView, PW_RIGHT);
-          m_fieldView->setEnabled(false);
+//          m_fieldView->setEnabled(false);
           Layout();
        }
     } else
@@ -4497,10 +4507,43 @@ MainWindow::showVertexModifier(void)
     updateVertexModifier();
 }
 
-void
-MainWindow::showColorPerVertexColorCircle(void)
+void MainWindow::colorPerVertex(void)
 {
     Node *node = m_scene->getSelection()->getNode();
+    if (node->hasParent() && ((node->getType() == VRML_COORDINATE) ||
+                              (node->getType() == VRML_COLOR) || 
+                              (node->getType() == X3D_COLOR_RGBA)))
+        node = node->getParent();
+    if (node->getType() == VRML_INDEXED_FACE_SET) {
+        NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)node;
+        face->changeToColorPerVertex();
+    }
+}
+
+void MainWindow::colorPerFace(void)
+{
+    Node *node = m_scene->getSelection()->getNode();
+    if (node->hasParent() && ((node->getType() == VRML_COORDINATE) ||
+                              (node->getType() == VRML_COLOR) || 
+                              (node->getType() == X3D_COLOR_RGBA)))
+        node = node->getParent();
+    if (node->getType() == VRML_INDEXED_FACE_SET) {
+        NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)node;
+        face->changeToColorPerFace();
+    }
+}
+
+
+void
+MainWindow::showColorCircle(void)
+{
+    Node *node = m_scene->getSelection()->getNode();
+    if (node->hasParent() && node->getType() == VRML_COORDINATE) {
+        node = node->getParent();
+        if (node->getType() == VRML_INDEXED_FACE_SET && 
+            ((NodeIndexedFaceSet *)node)->color())
+            node = ((NodeIndexedFaceSet *)node)->color()->getValue();
+    }
     if ((node->getType() != VRML_COLOR) && (node->getType() != X3D_COLOR_RGBA))
         return;
     Node *color = node;
@@ -6304,6 +6347,20 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getType() == VRML_COORDINATE) ||
                    (node->getType() == VRML_INDEXED_FACE_SET) ? 
                    0 : SW_MENU_DISABLED);
+
+    bool canChangeColorType = false;
+    switch (node->getType()) {
+        case VRML_COORDINATE:
+        case VRML_COLOR:
+        case X3D_COLOR_RGBA:
+        case VRML_INDEXED_FACE_SET:
+            canChangeColorType = true;
+    }
+    swMenuSetFlags(m_menu, ID_TO_COLOR_PER_VERTEX, SW_MENU_DISABLED,
+                   canChangeColorType ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_TO_COLOR_PER_FACE, SW_MENU_DISABLED,
+                   canChangeColorType ? 0 : SW_MENU_DISABLED);
+
     bool canDegreeElevate = false;
     switch (node->getType()) {
       case VRML_NURBS_CURVE:
@@ -8440,8 +8497,8 @@ MainWindow::extrusionConvexHull(void)
     if (node->hasParent()) {
         Node *transform = Util::transform4ExtrusionConvexHull(m_scene);
         Node *extrusion = Util::extrusionConvexHull(m_scene, 5);
-        Node *insertNode = createGeometryNode(extrusion, false, false,
-                                              transform);
+        if (extrusion)
+            createGeometryNode(extrusion, false, false, transform);
     }
 }
 #endif
@@ -12685,6 +12742,13 @@ MainWindow::LoadToolbar(ToolbarWindow *tbWin, int id, int count,
 void MainWindow::setColorCircleIcon()
 {
     Node *current = m_scene->getSelection()->getNode();
+    if (current->hasParent() && (current->getType() == VRML_COORDINATE)) {
+        current = current->getParent();
+        if (current->getType() == VRML_INDEXED_FACE_SET) {
+            NodeIndexedFaceSet *faceset = (NodeIndexedFaceSet *)current;
+            current = faceset->color()->getValue();   
+        }
+    }
     if (current && (current->getType() == VRML_COLOR) && 
         (m_scene->getSelectedHandlesSize() > 0)) {
         m_colorCircle_enabled = true;

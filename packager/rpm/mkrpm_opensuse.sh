@@ -86,7 +86,7 @@ Partitial translations of menus exist for French, Italian and Portuguese.
 
 %build
 ./configure $OPTIMIZE --without-devil --with-vrmlbrowser=firefox --with-helpurl="/usr/share/doc/packages/white_dune/docs/"  --with-protobaseurl="/usr/share/doc/packages/white_dune/docs" --with-checkincommand="ci" --with-x11-editor="gedit" --with-imageeditor="gimp" --with-imageeditor4kids="kolourpaint" --with-soundeditor=audacity
-CXXFLAGS="$CXXFLAGS -Wnoignored-attributes -Wnonnull-compare -Wmaybe-uninitialized"
+CXXFLAGS="$CXXFLAGS -Wno-ignored-attributes -Wnonnull-compare -Wmaybe-uninitialized"
 make -j1 RPM_OPT_FLAGS="$RPM_OPT_FLAGS" 
 
 %if 0%{?suse_version} < 1330

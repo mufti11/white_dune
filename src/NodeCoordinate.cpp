@@ -365,6 +365,7 @@ NodeCoordinate::setEndHandles(void)
 void
 NodeCoordinate::setHandleFaces(int handle, const Vec3f &v)
 {
+    m_scene->addSelectedHandle(handle);
     MyMesh *mesh = getMesh();
     if (mesh == NULL)
         return;
@@ -563,28 +564,62 @@ NodeCoordinate::setHandle(MFVec3f *value, int handle,
 bool
 NodeCoordinate::checkHandle(int handle)
 {
-    MFVec3f *points = point();
-
-    if (points && (points->getSize() > 0) && 
-        m_scene->getXSymetricMode()) {
-        float epsilon = TheApp->GetHandleEpsilon();
-        Vec3f hPoint = point()->getValue(handle);
-        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
-            if (!validHandle(m_scene->getSelectedHandle(i)))
-                continue;
-            if (m_scene->getSelectedHandle(i) == handle) 
-                return true;
-            else {
-                if (m_scene->getSelectedHandle(i) >= point()->getSFSize()) 
+    if (m_scene->getSelectionMode() == SELECTION_MODE_VERTICES) {
+       MFVec3f *points = point();
+       if (points && (points->getSize() > 0) && 
+            m_scene->getXSymetricMode()) {
+            float epsilon = TheApp->GetHandleEpsilon();
+            Vec3f hPoint = point()->getValue(handle);
+            for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+                if (!validHandle(m_scene->getSelectedHandle(i)))
                     continue;
-                Vec3f vPoint = point()->getValue(m_scene->getSelectedHandle(i));
-                if (   (fabsf(vPoint.z - hPoint.z) < epsilon) 
-                    && (fabsf(vPoint.y - hPoint.y) < epsilon)) {
-                    if (fabsf(vPoint.x - hPoint.x) < epsilon)
-                        return true;
-                    else if (fabsf(vPoint.x + hPoint.x) < epsilon)
-                        return true;  
-                }                 
+                if (m_scene->getSelectedHandle(i) == handle) 
+                   return true;
+                else {
+                    if (m_scene->getSelectedHandle(i) >= point()->getSFSize()) 
+                        continue;
+                    Vec3f vPoint = point()->getValue(
+                                       m_scene->getSelectedHandle(i));
+                    if ((fabsf(vPoint.z - hPoint.z) < epsilon) &&
+                        (fabsf(vPoint.y - hPoint.y) < epsilon)) {
+                        if (fabsf(vPoint.x - hPoint.x) < epsilon)
+                            return true;
+                        else if (fabsf(vPoint.x + hPoint.x) < epsilon)
+                            return true;  
+                    }                 
+                }
+            }
+        }
+    } else if (m_scene->getSelectionMode() == SELECTION_MODE_FACES) {
+        if (!m_scene->getXSymetricMode())
+            return false;
+        MyMesh *mesh = getMesh();
+        if (mesh == NULL)
+            return false;
+        float epsilon = TheApp->GetHandleEpsilon();
+        if (handle >= mesh->getNumFaces())
+            return false;
+        MFInt32 *ci = mesh->getCoordIndex();
+        FaceData *hFace = mesh->getFace(handle);
+        int hOffset = hFace->getOffset();
+        for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
+            if (1) { //m_scene->getSelectedHandle(i) != handle) {
+                FaceData *face = mesh->getFace(m_scene->getSelectedHandle(i));
+                int offset = face->getOffset();
+                int vertSym = 0;
+                for (int j = 0; j < face->getNumVertices(); j++) {
+                    Vec3f vPoint = point()->getValue(ci->getValue(offset + j));
+                    for (int n = 0; n < face->getNumVertices(); n++) {
+                        Vec3f hPoint = point()->getValue(
+                                           ci->getValue(hOffset + n));
+                        if ((fabsf(vPoint.z - hPoint.z) < epsilon) &&
+                            (fabsf(vPoint.y - hPoint.y) < epsilon) &&
+                            (fabsf(vPoint.x + hPoint.x) < epsilon))
+                            vertSym++;
+                    }                 
+                if (vertSym == face->getNumVertices())
+                   return true;  
+                }
             }
         }
     }

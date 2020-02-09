@@ -10,7 +10,7 @@ warbird: C++Export.cc warbird.cpp
 
 # set special picture path for Fedora OpenGL example binary
 warbird_with_picture_path: C++Export.cc warbird.cpp
-	g++ -g $(CXXFLAGS) -Wno-unused-variable -Wno-dangling-else \
+	g++ -g -fPIE $(CXXFLAGS) -Wno-unused-variable -Wno-dangling-else \
             -Wno-sign-compare -Wno-narrowing -Wno-unused-but-set-variable \
             $(LDFLAGS) -o $@ -I. -I$(INCLUDE_DIR) warbird.cpp \
             -DPICTURE_PATH=\"/usr/share/white_dune/opengl_example/\" \

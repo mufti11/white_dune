@@ -36,5 +36,7 @@ public:
 
     NodeMaterial   *getMaterialNode(GeometryNode *node)
                        { return node->getMaterialNode(); }
+    bool            getColorPerVertex(GeometryNode *node)
+                       { return node->getColorPerVertex(); }
     bool            hasColor(void) { return true; }
 };

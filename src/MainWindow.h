@@ -444,7 +444,9 @@ protected:
     void                createSpindle(void);
     void                createMushroom(bool sulcate);
     void                createText3D(void);
-    void                showColorPerVertexColorCircle(void);
+    void                colorPerVertex(void);
+    void                colorPerFace(void);
+    void                showColorCircle(void);
     void                showDiffuseColorCircle(void);
     void                showEmissiveColorCircle(void);
     void                showSpecularColorCircle(void);

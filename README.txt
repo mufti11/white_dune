@@ -5525,6 +5525,16 @@ Fixed crash when converting a SuperExtrusion to NURBS
 
 Fixed SuperExtrusion to NURBS convertion parameters
 
-Added NURBS convex hull and documetation
+Added Extrusin convex hull and documetation
+
+Added Color conversion from IndexedFaceSet.colorPerVertex to !IndexedFaceSet.colorPerVertex
+
+Added Color conversion from !IndexedFaceSet.colorPerVertex to IndexedFaceSet.colorPerVertex
+
+Added coloring for !IndexedFaceSet.colorPerVertex
+
+Simplified colorcircle usage
+
+Added fix for problem when selection "no" after a crash
 
 Contact: MUFTI <mufti11@web.de>

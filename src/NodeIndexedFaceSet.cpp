@@ -136,6 +136,7 @@ ProtoIndexedFaceSet::create(Scene *scene)
 NodeIndexedFaceSet::NodeIndexedFaceSet(Scene *scene, Proto *def)
   : MeshBasedNode(scene, def)
 {
+     m_alreadyInChangeColorPerVertex = false;
 }
 
 NodeIndexedFaceSet::~NodeIndexedFaceSet()
@@ -164,6 +165,13 @@ void
 NodeIndexedFaceSet::setField(int index, FieldValue *value, int cf)
 {
     m_meshDirty = true;
+    if (index == colorPerVertexField()) {
+        bool bColorPerVertex = ((SFBool *)value)->getValue();
+        if (bColorPerVertex && !colorPerVertex()->getValue())
+            changeToColorPerVertex();
+        if (!bColorPerVertex && colorPerVertex()->getValue())
+            changeToColorPerFace();
+    }
     Node::setField(index, value, cf);
 }
 
@@ -1750,6 +1758,165 @@ NodeIndexedFaceSet::simpleJoin(MyArray<FacesetAndMatrix> data)
     }
 
     return NULL;
+}
+
+void
+NodeIndexedFaceSet::changeToColorPerVertex(void)
+{
+    if (m_alreadyInChangeColorPerVertex)
+        return;
+    m_alreadyInChangeColorPerVertex = true;
+    if (hasColorRGBA()) {
+        NodeColorRGBA *ncolor = (NodeColorRGBA *)color()->getValue();
+        if (ncolor == NULL)
+            return;
+        MFColorRGBA *colors = ncolor->color(); 
+        MFColorRGBA *newColors = new MFColorRGBA();
+        for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+            FaceData *face = getMesh()->getFace(i);
+            int offset = face->getOffset();
+            int numVertices = face->getNumVertices();
+            float r = 0;
+            float g = 0;
+            float b = 0;
+            float a = 0;
+            for (int j = offset; j < offset + numVertices; j++) {
+                 int ci = coordIndex()->getValue(j);            
+                 r += colors->getValue(ci)[0];
+                 g += colors->getValue(ci)[1];
+                 b += colors->getValue(ci)[2];
+                 a += colors->getValue(ci)[3];
+            }
+            newColors->appendSFValue(r / numVertices, 
+                                     g / numVertices, 
+                                     b / numVertices, 
+                                     a / numVertices);
+        }                
+                
+        m_scene->backupFieldsStart();
+        m_scene->backupFieldsAppend(ncolor, ncolor->color_Field());
+        m_scene->backupFieldsAppend(this, color_Field());
+        m_scene->backupFieldsAppend(this, colorPerVertex_Field());
+        m_scene->backupFieldsDone();
+
+        ncolor->color(newColors);
+        color(new SFNode(ncolor, -1));
+        colorPerVertex(new SFBool(true));
+    } else {
+        NodeColor *ncolor = (NodeColor *)color()->getValue();
+        if (ncolor == NULL)
+            return;
+        MFColor *colors = ncolor->color(); 
+        MFColor *newColors = new MFColor();
+        for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+            FaceData *face = getMesh()->getFace(i);
+            int offset = face->getOffset();
+            int numVertices = face->getNumVertices();
+            float r = 0;
+            float g = 0;
+            float b = 0;
+            for (int j = offset; j < offset + numVertices; j++) {
+                int ci = coordIndex()->getValue(j);            
+                r += colors->getValue(ci)[0];
+                g += colors->getValue(ci)[1];
+                b += colors->getValue(ci)[2];
+            }
+            newColors->appendSFValue(r / numVertices, 
+                                     g / numVertices, 
+                                     b / numVertices);
+        }                
+                
+        m_scene->backupFieldsStart();
+        m_scene->backupFieldsAppend(ncolor, ncolor->color_Field());
+        m_scene->backupFieldsAppend(this, color_Field());
+        m_scene->backupFieldsAppend(this, colorPerVertex_Field());
+        m_scene->backupFieldsDone();
+
+        ncolor->color(newColors);
+        color(new SFNode(ncolor, -1));
+        colorPerVertex(new SFBool(true));
+    }
+    m_alreadyInChangeColorPerVertex = false;
+}
+
+void
+NodeIndexedFaceSet::changeToColorPerFace(void)
+{
+    if (m_alreadyInChangeColorPerVertex)
+        return;
+    m_alreadyInChangeColorPerVertex = true;
+    if (hasColorRGBA()) {
+        NodeColorRGBA *ncolor = (NodeColorRGBA *)color()->getValue();
+        if (ncolor == NULL)
+            return;
+        MFColorRGBA *colors = ncolor->color(); 
+        MFColorRGBA *newColors = new MFColorRGBA();
+        for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+            FaceData *face = getMesh()->getFace(i);
+            int offset = face->getOffset();
+            int numVertices = face->getNumVertices();
+            float r = 0.8; 
+            float g = 0.8;
+            float b = 0.8;
+            float a = 1;
+            for (int j = offset; j < offset + numVertices; j++) {
+                if (i <= colors->getSFSize()) {
+                    r = colors->getValue(i)[0];
+                    g = colors->getValue(i)[1];
+                    b = colors->getValue(i)[2];
+                    a = colors->getValue(i)[3];
+                }
+            }
+            newColors->appendSFValue(r, g, b, a);
+        }
+                
+        if (getMesh()->getNumFaces() > 0) {
+            m_scene->backupFieldsStart();
+            m_scene->backupFieldsAppend(ncolor, ncolor->color_Field());
+            m_scene->backupFieldsAppend(this, color_Field());
+            m_scene->backupFieldsAppend(this, colorPerVertex_Field());
+            m_scene->backupFieldsDone();
+
+            ncolor->color(newColors);
+            color(new SFNode(ncolor, -1));
+            colorPerVertex(new SFBool(false));
+        }
+    } else {
+        NodeColor *ncolor = (NodeColor *)color()->getValue();
+        if (ncolor == NULL)
+            return;
+        MFColor *colors = ncolor->color(); 
+        MFColor *newColors = new MFColor();
+        for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+            FaceData *face = getMesh()->getFace(i);
+            int offset = face->getOffset();
+            int numVertices = face->getNumVertices();
+            float r = 0.8; 
+            float g = 0.8;
+            float b = 0.8;
+            for (int j = offset; j < offset + numVertices; j++) {
+                if (i <= colors->getSFSize()) {
+                    r = colors->getValue(i)[0];
+                    g = colors->getValue(i)[1];
+                    b = colors->getValue(i)[2];
+                }
+            }
+            newColors->appendSFValue(r, g, b);
+        }                
+
+        if (getMesh()->getNumFaces() > 0) {
+            m_scene->backupFieldsStart();
+            m_scene->backupFieldsAppend(ncolor, ncolor->color_Field());
+            m_scene->backupFieldsAppend(this, color_Field());
+            m_scene->backupFieldsAppend(this, colorPerVertex_Field());
+            m_scene->backupFieldsDone();
+
+            ncolor->color(newColors);
+            color(new SFNode(ncolor, -1));
+            colorPerVertex(new SFBool(false));
+      }
+    }                
+    m_alreadyInChangeColorPerVertex = false;
 }
     
 int 

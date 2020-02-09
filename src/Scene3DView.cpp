@@ -481,8 +481,10 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
                 m_scene->removeSelectedHandles();                
             else  {
                 newHandle = m_scene->getLastSelectedHandle();
-                if (m_scene->isNewSelectedHandle())
+                if (m_scene->isNewSelectedHandle()) {
                     m_scene->removeSelectedHandles();
+                    m_scene->addSelectedHandle(newHandle);
+                }
             }
             Node *node = m_scene->getSelection()->getNode();
             if ((node != path->getNode()) && !m_scene->getMouseNavigationMode())

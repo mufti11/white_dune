@@ -29,6 +29,7 @@
 #include "NodeGeoElevationGrid.h"
 #include "MFColor.h"
 #include "MFColorRGBA.h"
+#include "MyMesh.h"
 
 int ColorCircle::SetGetColorPoint(int Color, bool Set)
 {
@@ -1177,66 +1178,110 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
             if (node->getParent()->getColored()) {
                 Node *geometry = node->getParent();
                 Colored *colored = geometry->getColored();
+                GeometryNode *geo = (GeometryNode *)geometry;
                 SFColor *diffuseColor = new SFColor(0.8,0.8,0.8);
-                if (colored->getMaterialNode((GeometryNode *)geometry)) {
+                if (colored->getMaterialNode(geo)) {
                     delete diffuseColor;
                     diffuseColor = colored->getMaterialNode(
                                    (GeometryNode *)geometry)->diffuseColor();
                 }
-                NodeCoordinate *coord = geometry->getCoordinateNode();
-                if (colors && (colors->getSize() == 0)) {
-                    colors = new MFColor();
-                    if (coord->point())
-                        for (int i = 0; 
-                             i < coord->point()->getSFSize();i++)
-                            colors->insertSFValue(i, diffuseColor); 
-                } else if (coord->point() && 
-                           (coord->point()->getSFSize() >
-                            colors->getSFSize())) {
-                        colors = new MFColor((MFColor *)(ncolor->color()->copy()));
-                        for (int i = colors->getSFSize(); 
-                             i < coord->point()->getSFSize();i++)
-                            colors->insertSFValue(i, diffuseColor); 
-                } else if (coord->point() && 
+                if (colored->getColorPerVertex(geo)) { 
+                    NodeCoordinate *coord = geometry->getCoordinateNode();
+                    if (colors && (colors->getSize() == 0)) {
+                        colors = new MFColor();
+                        if (coord->point())
+                            for (int i = 0; 
+                                 i < coord->point()->getSFSize();i++)
+                                colors->insertSFValue(i, diffuseColor); 
+                    } else if (coord->point() && 
+                               (coord->point()->getSFSize() >
+                               colors->getSFSize())) {
+                              colors = new MFColor((MFColor *)
+                                                   (ncolor->color()->copy()));
+                              for (int i = colors->getSFSize(); 
+                                   i < coord->point()->getSFSize();i++)
+                                  colors->insertSFValue(i, diffuseColor); 
+                    } else if (coord->point() && 
                            (coord->point()->getSFSize() < 
                             colors->getSFSize())) {
-                        colors = new MFColor((MFColor *)(ncolor->color()->copy()));
+                        colors = new MFColor((MFColor *)
+                                             (ncolor->color()->copy()));
                         for (int i = coord->point()->getSFSize();
                              i < colors->getSFSize(); i++)
                             colors->removeSFValue(coord->point()->getSFSize()); 
-                } else
-                    colors = new MFColor((MFColor *)(ncolor->color()->copy()));
-                float rgb[] = {r, g, b};
-                bool faces = m_scene->getSelectionMode() == 
-                             SELECTION_MODE_FACES;
-                if (faces)
-                    m_scene->setSelectionMode(SELECTION_MODE_VERTICES);  
-
-                if (coord) {
-                    if (node->getScene()->getXSymetricMode()) {
-                        for (int i = 0; i <= coord->getMaxHandle(); i++)
-                            if (coord->checkHandle(i))
-                                colors->setSFValue(i, rgb);
                     } else
-                        for (int i = 0; i < m_scene->getSelectedHandlesSize(); 
+                        colors = new MFColor((MFColor *)(ncolor->color()->
+                                                         copy()));
+                    float rgb[] = {r, g, b};
+                    bool faces = m_scene->getSelectionMode() == 
+                                 SELECTION_MODE_FACES;
+                    if (faces)
+                        m_scene->setSelectionMode(SELECTION_MODE_VERTICES);  
+
+                    if (coord) {
+                        if (node->getScene()->getXSymetricMode()) {
+                            for (int i = 0; i <= coord->getMaxHandle(); i++)
+                                if (coord->checkHandle(i))
+                                    colors->setSFValue(i, rgb);
+                        }
+                        for (int i = 0; i < m_scene->getSelectedHandlesSize();
                              i++)
-                            if (coord->validHandle(m_scene->getSelectedHandle(i))
-                               )
-                                colors->setSFValue(m_scene->getSelectedHandle(i),
-                                                   rgb);
-                    m_scene->setField(node, m_fieldUpdate.field, colors);
-                    if (colored->colorPerVertexField() != -1)
-                        m_scene->setField(geometry, 
-                                         colored->colorPerVertexField(),
-                                         new SFBool(true));
-                    if (colored->colorIndexField() != -1)
-                        m_scene->setField(geometry, colored->colorIndexField(),
-                                         new MFInt32());
-                }                    
-                if (faces)
-                    m_scene->setSelectionMode(SELECTION_MODE_FACES);  
-            }
-            else if (node->getParent()->getType() == VRML_ELEVATION_GRID) {
+                            if (coord->validHandle(
+                                m_scene->getSelectedHandle(i)))
+                                colors->setSFValue(
+                                    m_scene->getSelectedHandle(i), rgb);
+                        m_scene->setField(node, m_fieldUpdate.field, colors);
+                        if (colored->colorPerVertexField() != -1)
+                            m_scene->setField(geometry, 
+                                              colored->colorPerVertexField(),
+                                              new SFBool(true));
+                        if (colored->colorIndexField() != -1)
+                            m_scene->setField(geometry, 
+                                              colored->colorIndexField(),
+                                              new MFInt32());
+                    }                    
+                    if (faces)
+                        m_scene->setSelectionMode(SELECTION_MODE_FACES);  
+                } else {
+                    NodeCoordinate *coord = geometry->getCoordinateNode();
+                    int numFaces = geo->getMesh()->getNumFaces();
+                    if (colors && (colors->getSize() == 0)) {
+                        colors = new MFColor();
+                        if (colors->getSFSize() == 0)
+                            for (int i = 0; i < numFaces;i++)
+                                colors->insertSFValue(i, diffuseColor); 
+                    } else if (numFaces > colors->getSFSize()) {
+                              colors = new MFColor((MFColor *)
+                                                   (ncolor->color()->copy()));
+                              for (int i = colors->getSFSize(); i < numFaces;
+                                   i++)
+                                  colors->insertSFValue(i, diffuseColor); 
+                    } else if (numFaces < colors->getSFSize()) {
+                        colors = new MFColor((MFColor *)
+                                             (ncolor->color()->copy()));
+                        for (int i = numFaces; i < colors->getSFSize(); i++)
+                            colors->removeSFValue(coord->point()->getSFSize()); 
+                    } else
+                        colors = new MFColor((MFColor *)(ncolor->color()->
+                                                         copy()));
+                    float rgb[] = {r, g, b};
+
+                    if (coord) {
+                        if (node->getScene()->getXSymetricMode()) {
+                            for (int i = 0; i < coord->getMaxHandle(); i++)
+                                if (coord->checkHandle(i))
+                                    colors->setSFValue(i, rgb);
+                        } 
+                        for (int i = 0; i < m_scene->getSelectedHandlesSize();
+                             i++)
+                             if (coord->validHandle(
+                                 m_scene->getSelectedHandle(i)))
+                                 colors->setSFValue(
+                                    m_scene->getSelectedHandle(i), rgb);
+                        m_scene->setField(node, m_fieldUpdate.field, colors);
+                    }                    
+                }
+            } else if (node->getParent()->getType() == VRML_ELEVATION_GRID) {
                 NodeElevationGrid *elevationGrid = (NodeElevationGrid *)
                                                    node->getParent();
                 if (colors && (colors->getSize() == 0)) {
@@ -1305,7 +1350,8 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                 Node *geometry = node->getParent();
                 Colored *colored = geometry->getColored();
                 SFColor *diffuseColor = new SFColor(0.8,0.8,0.8);
-                if (colored->getMaterialNode((GeometryNode *)geometry)) {
+                GeometryNode *geo = (GeometryNode *)geometry;
+                if (colored->getMaterialNode(geo)) {
                     delete diffuseColor;
                     diffuseColor = colored->getMaterialNode(
                                    (GeometryNode *)geometry)->diffuseColor();
@@ -1317,22 +1363,25 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                         for (int i = 0; 
                              i < coord->point()->getSFSize();i++)
                             colors->insertSFValue(i, diffuseColor); 
-                } else if (coord->point() && 
+                } else if (colored->getColorPerVertex(geo) && coord->point() && 
                            (coord->point()->getSFSize() >
                             colors->getSFSize())) {
-                        colors = new MFColorRGBA((MFColorRGBA *)(ncolor->color()->copy()));
+                        colors = new MFColorRGBA((MFColorRGBA *)
+                                                 ncolor->color()->copy());
                         for (int i = colors->getSFSize(); 
                              i < coord->point()->getSFSize();i++)
                             colors->insertSFValue(i, diffuseColor); 
-                } else if (coord->point() && 
+                } else if (colored->getColorPerVertex(geo) && coord->point() && 
                            (coord->point()->getSFSize() < 
                             colors->getSFSize())) {
-                        colors = new MFColorRGBA((MFColorRGBA *)(ncolor->color()->copy()));
+                        colors = new MFColorRGBA((MFColorRGBA *)
+                                                 (ncolor->color()->copy()));
                         for (int i = coord->point()->getSFSize();
                              i < colors->getSFSize(); i++)
                             colors->removeSFValue(coord->point()->getSFSize()); 
                 } else
-                    colors = new MFColorRGBA((MFColorRGBA *)(ncolor->color()->copy()));
+                    colors = new MFColorRGBA((MFColorRGBA *)
+                                             ncolor->color()->copy());
                 float rgba[] = {r, g, b, a};
                 bool faces = m_scene->getSelectionMode() == 
                              SELECTION_MODE_FACES;
@@ -1347,10 +1396,10 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                     } else
                         for (int i = 0; i < m_scene->getSelectedHandlesSize(); 
                              i++)
-                            if (coord->validHandle(m_scene->getSelectedHandle(i))
-                               )
-                                colors->setSFValue(m_scene->getSelectedHandle(i),
-                                                   rgba);
+                            if (coord->validHandle(
+                                m_scene->getSelectedHandle(i)))
+                                colors->setSFValue(m_scene->
+                                                   getSelectedHandle(i), rgba);
                     m_scene->setField(node, m_fieldUpdate.field, colors);
                     if (colored->colorPerVertexField() != -1)
                         m_scene->setField(geometry, 
@@ -1377,7 +1426,8 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                     for (int i = 0; i <= elevationGrid->getMaxHandle(); i++)
                         colors->insertSFValue(i, diffuseColor); 
                 } else
-                    colors = new MFColorRGBA((MFColorRGBA *)(ncolor->color()->copy()));
+                    colors = new MFColorRGBA((MFColorRGBA *)
+                                             ncolor->color()->copy());
                 float rgba[] = {r, g, b, a};
                 if (node->getScene()->getXSymetricMode()) {
                     for (int i = 0; i < elevationGrid->getMaxHandle(); i++)
@@ -1407,7 +1457,8 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                     for (int i = 0; i <= elevationGrid->getMaxHandle(); i++)
                         colors->insertSFValue(i, diffuseColor); 
                 } else
-                    colors = new MFColorRGBA((MFColorRGBA *)(ncolor->color()->copy()));
+                    colors = new MFColorRGBA((MFColorRGBA *)
+                                             ncolor->color()->copy());
                 float rgba[] = {r, g, b, a};
                 if (node->getScene()->getXSymetricMode()) {
                     for (int i = 0; i < elevationGrid->getMaxHandle(); i++)

@@ -203,6 +203,11 @@ public:
     void            deleteFaces(MFInt32 *coordIndex, MyArray<int> *faces);
     void            snapTogether(void);
 
+    void            changeToColorPerVertex(void);
+    void            changeToColorPerFace(void);
+    bool            getColorPerVertex(void) 
+                        { return colorPerVertex()->getValue(); }
+
     fieldMacros(SFNode,   color,            ProtoIndexedFaceSet)
     fieldMacros(SFNode,   coord,            ProtoIndexedFaceSet)
     fieldMacros(SFNode,   normal,           ProtoIndexedFaceSet)
@@ -232,6 +237,7 @@ protected:
                                bool triangulate = true);
                                
 protected:
+    bool m_alreadyInChangeColorPerVertex;
     int m_sumVertices; 
     int m_sumVerticesPerFaces ;                           
 };
