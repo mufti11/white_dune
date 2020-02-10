@@ -217,77 +217,73 @@ void releaseTexture(Node *node) {
 
 void registerTexture0(int iaction, Node *tmp) {
     //iaction =1 add, =0 remove
-    if (1) {
-        ppTextures p = (ppTextures)textures_prv;
-        if(iaction){
-            //ADD
-            // for the index, stored in the X3D node.
-            int textureNumber;
-            // new texture table entry. Zero all data
-            textureTableIndexStruct_s * newTexture = MALLOC (textureTableIndexStruct_s *,sizeof (textureTableIndexStruct_s));
-            memset(newTexture,0,sizeof(textureTableIndexStruct_s));
-            newTexture->z = 1; //just texturing3D is > 1
+    ppTextures p = (ppTextures)textures_prv;
+    if(iaction){
+        //ADD
+        // for the index, stored in the X3D node.
+        int textureNumber;
+        // new texture table entry. Zero all data
+        textureTableIndexStruct_s * newTexture = MALLOC (textureTableIndexStruct_s *,sizeof (textureTableIndexStruct_s));
+        memset(newTexture,0,sizeof(textureTableIndexStruct_s));
+        newTexture->z = 1; //just texturing3D is > 1
 
-            if (p->activeTextureTable == NULL) {
-                p->activeTextureTable =newVector(textureTableIndexStruct_s *, 16);
-            }
+        if (p->activeTextureTable == NULL) {
+            p->activeTextureTable =newVector(textureTableIndexStruct_s *, 16);
+        }
 
-            // keep track of which texture this one is.
-            textureNumber = vectorSize(p->activeTextureTable);
-            //{char line[200]; sprintf (line,"registerTexture textureNumber %d",textureNumber); ConsoleMessage(line);}
+        // keep track of which texture this one is.
+        textureNumber = vectorSize(p->activeTextureTable);
+        //{char line[200]; sprintf (line,"registerTexture textureNumber %d",textureNumber); ConsoleMessage(line);}
 
-            DEBUG_TEX("CREATING TEXTURE NODE: type %d\n", it->_nodeType);
-            /* I need to know the texture "url" here... */
+        DEBUG_TEX("CREATING TEXTURE NODE: type %d\n", it->_nodeType);
+        /* I need to know the texture "url" here... */
 
-            NodeImageTexture3D *pt;
-            pt = (NodeImageTexture3D *) tmp;
-            pt->m_textureTableIndex = textureNumber;
+        NodeImageTexture3D *pt;
+        pt = (NodeImageTexture3D *) tmp;
+        pt->m_textureTableIndex = textureNumber;
 
-            /* set the scenegraphNode here */
-            newTexture->nodeType = tmp->getType();
-            newTexture->scenegraphNode = tmp;
-            newTexture->textureNumber = textureNumber;
-            // save this to our texture table
-            vector_pushBack(textureTableIndexStruct_s *, p->activeTextureTable, newTexture);
-        }else{
-            //REMOVE
-            //we're using int indexes so we can't compact the vector to remove the element
-            //we need to flag it some how, and many functions use tti *getTableIndex(int num)
-            //and check if the returned value is null before trying to use it.
-            //we'll try using NULL as the signal its deleted.
-            textureTableIndexStruct_s * tti = NULL;
-            int *textureNumber = NULL;
+        /* set the scenegraphNode here */
+        newTexture->nodeType = tmp->getType();
+        newTexture->scenegraphNode = tmp;
+        newTexture->textureNumber = textureNumber;
+        // save this to our texture table
+        vector_pushBack(textureTableIndexStruct_s *, p->activeTextureTable, newTexture);
+    }else{
+        //REMOVE
+        //we're using int indexes so we can't compact the vector to remove the element
+        //we need to flag it some how, and many functions use tti *getTableIndex(int num)
+        //and check if the returned value is null before trying to use it.
+        //we'll try using NULL as the signal its deleted.
+        textureTableIndexStruct_s * tti = NULL;
+        int *textureNumber = NULL;
 
-            releaseTexture(tmp); //Mar 23, 2015 added, to zap from gl texture name list (and its texture storage)
-                                //otherwise for geoLOD and inline, the OS MEM usage keeps going up after unload/load cycle
+        releaseTexture(tmp); //Mar 23, 2015 added, to zap from gl texture name list (and its texture storage)
+                            //otherwise for geoLOD and inline, the OS MEM usage keeps going up after unload/load cycle
 
-            NodeImageTexture3D *pt;
-            pt = (NodeImageTexture3D *) tmp;
-            textureNumber = &pt->m_textureTableIndex;
-            if(textureNumber){
-                tti = getTableIndex(*textureNumber);
-                if(tti){
-                    // (*textureNumber) = -1; //is there a better flag?
-                    vector_set(textureTableIndexStruct_s *,p->activeTextureTable,*textureNumber,NULL);
-                    //unregister/unbind/deallocate anything else that was registered/bound/allocated above
+        NodeImageTexture3D *pt;
+        pt = (NodeImageTexture3D *) tmp;
+        textureNumber = &pt->m_textureTableIndex;
+        if(textureNumber){
+            tti = getTableIndex(*textureNumber);
+            if(tti){
+                // (*textureNumber) = -1; //is there a better flag?
+                vector_set(textureTableIndexStruct_s *,p->activeTextureTable,*textureNumber,NULL);
+                //unregister/unbind/deallocate anything else that was registered/bound/allocated above
 
-                    //Problem: when unloading an inline (including geoLOD inlines) with images that haven't yet loaded,
-                    // load_inline > unload_broto > unregister_broto_instance > unRegisterX3DAnyNode > unRegisterTexture > registerTexture0 (here)
-                    // if we zap the tti, then when the resource thread finishes downloading the image and goes to paste
-                    // into wheretoplacedata* which is a tti* that's been zapped, we crash.
-                    //Solution:
-                    // quick fix: don't zap tti here, leave a memory leak TRIED, WORKED AS BANDAID
-                    // proper fix: redesign resource fetch so it has a way to check if tti still exists, IMPLEMENTED Dec5,2014
-                    //  for example, have it use the table index number instead of a pointer directly to *tti,
-                    //  and here leave a NULL in the table at that index so resource thread can check if its been zapped
-                    FREE_IF_NZ(tti->texdata);
-                    //->filename is not strduped, just a pointer to actual_file which is freed in resource
-                    FREE_IF_NZ(tti);
-                }
+                //Problem: when unloading an inline (including geoLOD inlines) with images that haven't yet loaded,
+                // load_inline > unload_broto > unregister_broto_instance > unRegisterX3DAnyNode > unRegisterTexture > registerTexture0 (here)
+                // if we zap the tti, then when the resource thread finishes downloading the image and goes to paste
+                // into wheretoplacedata* which is a tti* that's been zapped, we crash.
+                //Solution:
+                // quick fix: don't zap tti here, leave a memory leak TRIED, WORKED AS BANDAID
+                // proper fix: redesign resource fetch so it has a way to check if tti still exists, IMPLEMENTED Dec5,2014
+                //  for example, have it use the table index number instead of a pointer directly to *tti,
+                //  and here leave a NULL in the table at that index so resource thread can check if its been zapped
+                FREE_IF_NZ(tti->texdata);
+                //->filename is not strduped, just a pointer to actual_file which is freed in resource
+                FREE_IF_NZ(tti);
             }
         }
-    } else {
-        //ConsoleMessage ("registerTexture, ignoring this node");
     }
 }
 void registerTexture(Node *tmp) {

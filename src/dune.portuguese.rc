@@ -210,7 +210,7 @@ BEGIN
             MENUITEM "&Cor brilhante",                  ID_CHANGE_MATERIAL_EMISSIVE
             MENUITEM "Polido",                          ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
-            MENUITEM "Colore (necessidade Color or ColorRGBA)", ID_CHANGE
+            MENUITEM "Colore (necessidade Color or ColorRGBA)", ID_CHANGE_COLOR
         END
         MENUITEM "Alterar transpareza (necessidade Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Alterar polido' (necessidade Material)",  ID_CHANGE_MATERIAL_SHININESS

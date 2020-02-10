@@ -49,9 +49,7 @@ M4_FOR_IN(`M4_COMMANDLINE_OPTION',M4_LANGUAGES)
 void setLanguage(char *lang)
 {
     if (lang && (strlen(lang) >=2)) {
-        if (0) {
 M4_FOR_IN(`M4_ENV_ISO',M4_REVERSE(M4_LANGUAGES_ISO3166))
-        }
     }     
 }
 

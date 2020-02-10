@@ -603,23 +603,20 @@ NodeCoordinate::checkHandle(int handle)
         FaceData *hFace = mesh->getFace(handle);
         int hOffset = hFace->getOffset();
         for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
-            if (1) { //m_scene->getSelectedHandle(i) != handle) {
-                FaceData *face = mesh->getFace(m_scene->getSelectedHandle(i));
-                int offset = face->getOffset();
-                int vertSym = 0;
-                for (int j = 0; j < face->getNumVertices(); j++) {
-                    Vec3f vPoint = point()->getValue(ci->getValue(offset + j));
-                    for (int n = 0; n < face->getNumVertices(); n++) {
-                        Vec3f hPoint = point()->getValue(
-                                           ci->getValue(hOffset + n));
-                        if ((fabsf(vPoint.z - hPoint.z) < epsilon) &&
-                            (fabsf(vPoint.y - hPoint.y) < epsilon) &&
-                            (fabsf(vPoint.x + hPoint.x) < epsilon))
-                            vertSym++;
-                    }                 
-                if (vertSym == face->getNumVertices())
-                   return true;  
-                }
+            FaceData *face = mesh->getFace(m_scene->getSelectedHandle(i));
+            int offset = face->getOffset();
+            int vertSym = 0;
+            for (int j = 0; j < face->getNumVertices(); j++) {
+                Vec3f vPoint = point()->getValue(ci->getValue(offset + j));
+                for (int n = 0; n < face->getNumVertices(); n++) {
+                    Vec3f hPoint = point()->getValue(ci->getValue(hOffset + n));
+                    if ((fabsf(vPoint.z - hPoint.z) < epsilon) &&
+                        (fabsf(vPoint.y - hPoint.y) < epsilon) &&
+                        (fabsf(vPoint.x + hPoint.x) < epsilon))
+                        vertSym++;
+                }                 
+            if (vertSym == face->getNumVertices())
+               return true;  
             }
         }
     }

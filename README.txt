@@ -5537,4 +5537,12 @@ Simplified colorcircle usage
 
 Added fix for problem when selection "no" after a crash
 
+Reinstalled $LANG usage
+
+Removed if(1)/if(0) from source
+
+Restored fieldView after exit in ColorCircle mode
+
+Fixed knot vector creation, when creating a SuperRevolver
+
 Contact: MUFTI <mufti11@web.de>

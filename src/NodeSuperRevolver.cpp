@@ -185,7 +185,7 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
     for (int i = 0; i < knot()->getSize(); i++)
          knots[i] = knot()->getValues()[i];
     m_nurbsCurve->knot(new MFFloat(knots, knot()->getSize()));
-    m_nurbsCurve->tessellation(new SFInt32(nurbsTess - 1));
+    m_nurbsCurve->tessellation(new SFInt32(nurbsTess));
     m_nurbsCurve->order(new SFInt32(order()->getValue()));
     const Vec3f *chain = m_nurbsCurve->getChain();
     int chainLength = m_nurbsCurve->getChainLength();
@@ -266,7 +266,7 @@ NodeSuperRevolver::createMesh(bool cleanDoubleVertices, bool triangulate)
         }
         ci[cindex++] = -1;
         for (int i = chainLength - 1; i >= 0; i--)
-             ci[cindex++] = superTess * i + (superTess - 1);
+             ci[cindex++] = nurbsTess * i + (superTess - 1);
         for (int i = 0; i < chainLength; i++)
              ci[cindex++] = nurbsTess * superTess + i;
         ci[cindex++] = -1;

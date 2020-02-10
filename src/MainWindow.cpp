@@ -1961,6 +1961,7 @@ MainWindow::OnCommand(void *vid)
         if (isEditorInUse(true))
             return;
         m_scene->setUpdateViewsSelection(false);
+        TheApp->SetBoolPreference("ShowFieldView", true);
         SaveModified();
         TheApp->OnFileExit();
         exitFlag = true;
@@ -7854,14 +7855,16 @@ MainWindow::createSuperExtrusion(SuperExtrusionInfo *info)
                 weights[i] = 1.0f;
             }
          
+            for (int i = 0; i < dimension; i++)
+                weights[i] = 1.0f;
             for (int i = 0; i < order; i++) {
                 knots[i] = 0.0f;
                 knots[dimension + i] = (float) (dimension - order + 1);
+             }
+             for (int i = 0; i < dimension - order; i++) {
+                 knots[order + i] = (float) (i + 1);
             }
-            for (int i = 0; i < dimension - order; i++) {
-                knots[order + i] = (float) (i + 1);
-            }
-        
+
             superExtrusion->controlPoint(new MFVec3f(controlPoints, 
                                                      dimension * 3));    
             superExtrusion->weight(new MFFloat(weights, dimension));
@@ -7899,7 +7902,7 @@ MainWindow::createSuperRevolver()
         NodeSuperRevolver *superRevolver = (NodeSuperRevolver *) node;
         float *controlPoints = new float[dimension * 2];
         float *weights = new float[dimension];
-        float *knots = new float[dimension + order]; 
+        float *knots = new float[dimension + 2 * order]; 
         
         for (int i = 0; i < dimension; i++) {
             float y = i / (dimension - 1.0);
@@ -7910,6 +7913,8 @@ MainWindow::createSuperRevolver()
         controlPoints[0] = 0.0f;
         controlPoints[(dimension - 1) * 2] = 0.0f;
      
+        for (int i = 0; i < dimension; i++)
+            weights[i] = 1.0f;
         for (int i = 0; i < order; i++) {
             knots[i] = 0.0f;
             knots[dimension + i] = (float) (dimension - order + 1);
@@ -7917,10 +7922,20 @@ MainWindow::createSuperRevolver()
         for (int i = 0; i < dimension - order; i++) {
             knots[order + i] = (float) (i + 1);
         }
+
+        for (int i = 0; i < dimension; i++)
+            weights[i] = 1.0f;
+        for (int i = 0; i < order; i++) {
+            knots[i] = 0.0f;
+            knots[dimension + order + i] = (float)dimension - 1;
+        }
+        for (int i = 0; i < dimension; i++) {
+            knots[order + i] = (float) (i + 1);
+        }
     
         superRevolver->controlPoint(new MFVec2f(controlPoints, dimension * 2));
         superRevolver->weight(new MFFloat(weights, dimension));
-        superRevolver->knot(new MFFloat(knots, dimension + order));
+        superRevolver->knot(new MFFloat(knots, dimension + 2 * order));
         superRevolver->order(new SFInt32(order));
     }
     m_scene->setSelection(node);
@@ -8039,7 +8054,7 @@ MainWindow::createHeart(void)
     int order = degree + 1;
     float *controlPoints = new float[dimension * 2];
     float *weights = new float[dimension];
-    float *knots = new float[dimension + order]; 
+    float *knots = new float[dimension + 2 * order]; 
     
     controlPoints[0] = 0;
     controlPoints[1] = -0.3;
@@ -8110,7 +8125,7 @@ MainWindow::createSpindle(void)
         int order = degree + 1;
         float *controlPoints = new float[dimension * 2];
         float *weights = new float[dimension];
-        float *knots = new float[dimension + order]; 
+        float *knots = new float[dimension + 2 * order]; 
         
         controlPoints[0] = 0;
         controlPoints[1] = -3;
@@ -8130,22 +8145,22 @@ MainWindow::createSpindle(void)
         controlPoints[10] = 2;
         controlPoints[11] = 2;
 
-        controlPoints[12] = 0;
+        controlPoints[12] = 0.78;
         controlPoints[13] = 3;
 
         for (int i = 0; i < dimension; i++)
             weights[i] = 1.0f;
         for (int i = 0; i < order; i++) {
             knots[i] = 0.0f;
-            knots[dimension + i] = (float) (dimension - order + 1);
+            knots[dimension + order + i - 2] = (float)dimension - 1;
         }
-        for (int i = 0; i < dimension - order; i++) {
+        for (int i = 0; i < dimension - 1; i++) {
             knots[order + i] = (float) (i + 1);
         }
-    
+
         superRevolver->controlPoint(new MFVec2f(controlPoints, dimension * 2));
         superRevolver->weight(new MFFloat(weights, dimension));
-        superRevolver->knot(new MFFloat(knots, dimension + order));
+        superRevolver->knot(new MFFloat(knots, dimension + 2 * order - 2));
         superRevolver->order(new SFInt32(order));
     }
     m_scene->setSelection(node);
@@ -8164,7 +8179,7 @@ MainWindow::createMushroom(bool sulcate)
         int order = degree + 1;
         float *controlPoints = new float[dimension * 2];
         float *weights = new float[dimension];
-        float *knots = new float[dimension + order]; 
+        float *knots = new float[dimension + 2 * order - 2]; 
         
         controlPoints[0] = 0;
         controlPoints[1] = 0;
@@ -8181,7 +8196,7 @@ MainWindow::createMushroom(bool sulcate)
         controlPoints[8] = 1.71;
         controlPoints[9] = 1.21;
 
-        controlPoints[10] = 0.94;
+        controlPoints[10] = 0.7;
         controlPoints[11] = 2.14;
 
         controlPoints[12] = 0;
@@ -8191,15 +8206,15 @@ MainWindow::createMushroom(bool sulcate)
             weights[i] = 1.0f;
         for (int i = 0; i < order; i++) {
             knots[i] = 0.0f;
-            knots[dimension + i] = (float) (dimension - order + 1);
+            knots[dimension + order + i - 2] = (float)dimension - 1;
         }
-        for (int i = 0; i < dimension - order; i++) {
+        for (int i = 0; i < dimension - 1; i++) {
             knots[order + i] = (float) (i + 1);
         }
     
         superRevolver->controlPoint(new MFVec2f(controlPoints, dimension * 2));
         superRevolver->weight(new MFFloat(weights, dimension));
-        superRevolver->knot(new MFFloat(knots, dimension + order));
+        superRevolver->knot(new MFFloat(knots, dimension + 2 * order - 2));
         superRevolver->order(new SFInt32(order));
 
         if (sulcate) {
@@ -8570,15 +8585,6 @@ MainWindow::moveSibling(int command)
             vrmlCut = (NodeVrmlCut *)parent;
             oldSceneLength = vrmlCut->sceneLengths()->getValue(oldIndex);
             newSceneLength = vrmlCut->sceneLengths()->getValue(newIndex);
-        }
-        if (0 && newIndex != oldIndex) {
-            m_scene->execute(new MoveCommand(node, NULL, -1, 
-                                             parent, parentField, newIndex));
-            if (oldIndex < newIndex)
-                oldIndex++;
-
-            m_scene->execute(new MoveCommand(node, parent, parentField, 
-                                             NULL, -1, oldIndex));
         }
         if (parent->getType() == DUNE_VRML_CUT) {
             vrmlCut->sceneLengths()->setValue(newIndex, oldSceneLength);

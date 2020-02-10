@@ -119,7 +119,6 @@ bool parseCommandlineArgumentLanguages(int &i, int argc, char** argv)
 void setLanguage(char *lang)
 {
     if (lang && (strlen(lang) >=2)) {
-        if (0) {
 
         } else if ((toupper(lang[0])=="PT"[0]) && 
                    (toupper(lang[1])=="PT"[1])) {
@@ -137,7 +136,6 @@ void setLanguage(char *lang)
                    (toupper(lang[1])=="FR"[1])) {
            swSetLang(SW_LANG_FR);   
 
-        }
     }     
 }
 
