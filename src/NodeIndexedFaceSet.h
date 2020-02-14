@@ -178,6 +178,8 @@ public:
     NodeIndexedFaceSet *csg(NodeIndexedFaceSet *face, int operation,
                             Matrix matrix1, Matrix matrix2);
 #endif
+    float               getOffFactor(int tabCount, MyArray<char *> strings,
+                                     int beginData, int endData);
     NodeIndexedFaceSet *readOff(const char *filename);
     void                accountOffData(int f);
     void                writeOffInit(void) 

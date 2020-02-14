@@ -2128,6 +2128,22 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
 }
 #endif
 
+float               
+NodeIndexedFaceSet::getOffFactor(int tabCount, MyArray<char *> strings, 
+                                 int beginData, int endData)
+{
+    // check if color data is integer or float, return factor 1.0/255.0 or 1.0  
+    for (int i = beginData; i < endData; i++) {
+        MyArray<MyString> numbers;
+        MyString splitString(strings[i]);
+        splitString.split(&numbers, " ");
+        for (int j = tabCount; j < numbers.size(); j++)
+            if (!numbers[j].isInt())
+                return 1.0f; 
+    }
+    return 1.0f/255.0f;
+}
+
 
 NodeIndexedFaceSet *
 NodeIndexedFaceSet::readOff(const char *filename)
@@ -2167,8 +2183,9 @@ NodeIndexedFaceSet::readOff(const char *filename)
         if (*(newLine - 1) == '\r')
             *(newLine - 1) = 0;
         newLine[0] = 0;
-        lines.append(fileData);
         newLine++;
+        if (fileData[0] != '#')
+            lines.append(fileData);
     }
 
     while (newLine != NULL) {
@@ -2179,7 +2196,8 @@ NodeIndexedFaceSet::readOff(const char *filename)
                 *(newLine - 1) = 0;
             newLine[0] = 0;
             newLine++;
-            lines.append(oldLine);
+            if (oldLine[0] != '#')
+                lines.append(oldLine);
         }
     }
 
@@ -2213,6 +2231,8 @@ NodeIndexedFaceSet::readOff(const char *filename)
     int numFaces           = atoi(intStrings[1]); 
     int numVerticesPerFace = atoi(intStrings[2]);
 
+    float verticesFactor = getOffFactor(3, lines, 2, numVertices + 2);
+
     for (int i = 0; i < numVertices; i++) {
         MyString dataString = lines[i + 2];
         MyArray<MyString> floatStrings;
@@ -2241,7 +2261,8 @@ NodeIndexedFaceSet::readOff(const char *filename)
         if (floatStrings.size() == numCi + 3) {
             float c[3];
             for (int j = numCi; j < floatStrings.size(); j++) {
-                c[j - (numCi)] = atof(floatStrings[j].getData());
+                c[j - (numCi)] = atof(floatStrings[j].getData()) * 
+                                      verticesFactor;
             }
             newColor->appendSFValue(c[0], c[1], c[2]);
             faceSet->colorPerVertex(new SFBool(true));
@@ -2249,13 +2270,17 @@ NodeIndexedFaceSet::readOff(const char *filename)
         } else if (floatStrings.size() == numCi + 4) {
             float c[4];
             for (int j = numCi; j < floatStrings.size(); j++) {
-                c[j - (numCi)] = atof(floatStrings[j].getData());
+                c[j - (numCi)] = atof(floatStrings[j].getData()) *
+                                      verticesFactor;
             }
             isColorRGBA = true;
             faceSet->colorPerVertex(new SFBool(true));
             newColorRGBA->appendSFValue(c[0], c[1], c[2], c[3]);
         }
     }
+
+    float facesFactor = getOffFactor(3, lines, numVertices + 2, 
+                                               numVertices + numFaces + 2);
 
     for (int i = numVertices; i < numVertices + numFaces; i++) {
         MyString dataString = lines[i + 2];
@@ -2279,7 +2304,8 @@ NodeIndexedFaceSet::readOff(const char *filename)
         if (floatStrings.size() == numCi + 1 + 3) {
             float c[3];
             for (int j = numCi + 1; j < floatStrings.size(); j++) {
-                c[j - (numCi + 1)] = atof(floatStrings[j].getData());
+                c[j - (numCi + 1)] = atof(floatStrings[j].getData()) *
+                                          facesFactor;
             }
             newColor->appendSFValue(c[0], c[1], c[2]);
             faceSet->colorPerVertex(new SFBool(false));
@@ -2287,7 +2313,8 @@ NodeIndexedFaceSet::readOff(const char *filename)
         } else if (floatStrings.size() == numCi + 1 + 4) {
             float c[4];
             for (int j = numCi + 1; j < floatStrings.size(); j++) {
-                c[j - (numCi + 1)] = atof(floatStrings[j].getData());
+                c[j - (numCi + 1)] = atof(floatStrings[j].getData()) *
+                                          facesFactor;
             }
             isColorRGBA = true;
             faceSet->colorPerVertex(new SFBool(false));

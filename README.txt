@@ -5547,4 +5547,6 @@ Fixed knot vector creation, when creating a SuperRevolver
 
 Deleted usage of CGALs .OFF reader, wrote own .OFF reader
 
+Added comments and integer color handling to .OFF reader
+
 Contact: MUFTI <mufti11@web.de>
