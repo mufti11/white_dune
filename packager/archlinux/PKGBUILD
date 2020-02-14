@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.717
+pkgver=1.734
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -63,7 +63,7 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('8d3af31a3f96987d70f2dad55db23c1a')
+md5sums=('a6b680b6a0788c1f1f23fa07be70a040')
 validpgpkeys=()
 
 build() {

@@ -19,6 +19,9 @@
  * Cambridge, MA 02139, USA.
  */
 
+#include <ctype.h>
+#include <math.h>
+
 #include "stdafx.h"
 
 #include "MyString.h"
@@ -204,11 +207,19 @@ MyString::split(StringArray *array, MyString seperator)
        if (strncmp(foundPointer, seperator, seperatorSize) == 0) {
            // found
            (*array)[parts] = "";
-           for (const char *ptr = searchPointer; ptr < foundPointer; ptr++)
+           bool found = false;
+           for (const char *ptr = searchPointer; ptr < foundPointer; ptr++) {
                (*array)[parts] += *ptr;
-           parts++;
+               found = true;
+           }
+           if (found)
+               parts++;
        }
        searchPointer = foundPointer + 1;
+    }
+    if (searchPointer < *this + length()) {
+        (*array)[parts] += searchPointer;
+        parts ++;
     }
     return parts; 
 }
@@ -235,5 +246,41 @@ MyString::catDouble(double number)
     char buf[128];
     mysnprintf(buf, 127, "%lf", number);
     *this += buf;
+}
+
+
+bool
+MyString::isInt(void)
+{
+    const char *textPointer = *this;
+    int start = 0;
+    if (textPointer[0] == '-')
+        start = 1;
+    for (size_t i = start; i < strlen(textPointer); i++)
+        if (!isdigit(textPointer[i]))
+            return false;
+    return true;            
+}
+
+int
+MyString::parseInt(void)
+{
+    const char *textPointer = *this;
+    int skipped = 0;
+    for (size_t i = 0; i < strlen(textPointer); i++)
+        if (textPointer[i] == ' ')
+            skipped++;
+   return atoi(textPointer + skipped);
+}
+
+float
+MyString::parseFloat(void)
+{
+    const char *textPointer = *this;
+    int skipped = 0;
+    for (size_t i = 0; i < strlen(textPointer); i++)
+        if (textPointer[i] == ' ')
+            skipped++;
+   return atof(textPointer + skipped);
 }
 

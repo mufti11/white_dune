@@ -4608,6 +4608,14 @@ BEGIN
     IDS_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_WRONG_INTEGER                    "wrong integer in line %d"
+    IDS_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
+    IDS_WRONG_OFF_HEADER                 "wrong header in .OFF file"
+    IDS_WRONG_OFF_DATA                   "wrong data in .OFF file"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -4896,6 +4904,11 @@ BEGIN
             MENUITEM "&Briller",                       ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
             MENUITEM "Color",                          ID_CHANGE_COLOR
+        END
+        POPUP "Set color to (need IndexedFaceSet or Color*)"
+        BEGIN
+            MENUITEM "&Vertices",                       ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Faces",                          ID_TO_COLOR_PER_FACE
         END
         MENUITEM "Transparence (a besoin de Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Peu/Beaucoup brillant (a besoin de Material)", ID_CHANGE_MATERIAL_SHININESS
@@ -5537,7 +5550,7 @@ BEGIN
            END
        END
        POPUP "&Materiel/Texture"
-                                                   BEGIN
+           BEGIN
            MENUITEM "&Appearance (a besoin de Shape)",  ID_NEW_APPEARANCE
            MENUITEM "&Material (a besoin d' Appearance)", ID_NEW_MATERIAL
            MENUITEM "&ImageTexture (a besoin d' Appearance)", ID_NEW_IMAGE_TEXTURE
@@ -9142,6 +9155,14 @@ BEGIN
     IDS_FR_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FR_WRONG_INTEGER                    "wrong integer in line %d"
+    IDS_FR_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
+    IDS_FR_WRONG_OFF_HEADER                 "wrong header line in .OFF file"
+    IDS_FR_WRONG_OFF_DATA                   "wrong data in .OFF file"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -9380,6 +9401,11 @@ BEGIN
             MENUITEM "G&laenzen",                       ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
             MENUITEM "Farbe (braucht Color oder ColorRGBA)", ID_CHANGE_COLOR
+        END
+        POPUP "Setzte Farbe auf die ... (braucht IndexedFaceSet oder Color*)"
+        BEGIN
+            MENUITEM "&Eckpunkte",                      ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Flaechen",                       ID_TO_COLOR_PER_FACE
         END
         MENUITEM "Durchsichtigkeit (braucht Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Wenig/viel Glanz (braucht Material)", ID_CHANGE_MATERIAL_SHININESS
@@ -13625,6 +13651,14 @@ BEGIN
     IDS_DE_CRASH_MESSAGE                    "white_dune hat einen vorhergehenden Absturz festgestellt, aber konnte die Daten retten. Lade die Daten als %s ?"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_DE_WRONG_INTEGER                    "Falscher Integer in Zeile %d"
+    IDS_DE_NOT_ENOUGH_LINES                 "nicht genug Zeilen in der .OFF Datei"
+    IDS_DE_WRONG_OFF_HEADER                 "Falsche erste Zeile in der .OFF Datei"
+    IDS_DE_WRONG_OFF_DATA                   "Falsche Daten in der .OFF Datei"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -13861,6 +13895,11 @@ BEGIN
             MENUITEM "Lu&cido",                         ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
             MENUITEM "Colore (occorre Color or ColorRGBA", ID_CHANGE_COLOR
+        END
+        POPUP "Set color to (need IndexedFaceSet or Color*)"
+        BEGIN
+            MENUITEM "&Vertices",                       ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Faces",                          ID_TO_COLOR_PER_FACE
         END
         MENUITEM "Cambia transpareza (occorre Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Cambia luminosita' (occorre Material)", ID_CHANGE_MATERIAL_SHININESS
@@ -18114,6 +18153,14 @@ BEGIN
     IDS_IT_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_IT_WRONG_INTEGER                    "wrong integer in line %d"
+    IDS_IT_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
+    IDS_IT_WRONG_OFF_HEADER                 "wrong header line in .OFF file"
+    IDS_IT_WRONG_OFF_DATA                   "wrong data in .OFF file"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -18351,6 +18398,11 @@ BEGIN
             MENUITEM "Polido",                          ID_CHANGE_MATERIAL_SPECULAR
             MENUITEM SEPARATOR
             MENUITEM "Colore (necessidade Color or ColorRGBA)", ID_CHANGE_COLOR
+        END
+        POPUP "Set color to (need IndexedFaceSet or Color*)"
+        BEGIN
+            MENUITEM "&Vertices",                       ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Faces",                          ID_TO_COLOR_PER_FACE
         END
         MENUITEM "Alterar transpareza (necessidade Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Alterar polido' (necessidade Material)",  ID_CHANGE_MATERIAL_SHININESS
@@ -22602,6 +22654,14 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_PT_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_PT_WRONG_INTEGER                    "wrong integer in line %d"
+    IDS_PT_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
+    IDS_PT_WRONG_OFF_HEADER                 "wrong header line in .OFF file"
+    IDS_PT_WRONG_OFF_DATA                   "wrong data in .OFF file"
 END
 
 #ifdef HAVE_SAND

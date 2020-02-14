@@ -27,6 +27,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "stdafx.h"
 
 #include "NodeIndexedFaceSet.h"
@@ -51,6 +55,7 @@
 #include "Field.h"
 #include "resource.h"
 #include "Path.h"
+#include "MyString.h"
 
 ProtoIndexedFaceSet::ProtoIndexedFaceSet(Scene *scene)
   : GeometryProto(scene, "IndexedFaceSet")
@@ -1918,7 +1923,6 @@ NodeIndexedFaceSet::changeToColorPerFace(void)
     }                
     m_alreadyInChangeColorPerVertex = false;
 }
-    
 int 
 NodeIndexedFaceSet::getProfile(void) const
 { 
@@ -2122,20 +2126,15 @@ NodeIndexedFaceSet::csg(NodeIndexedFaceSet *face, int operation,
     }    
     return NULL;
 }
+#endif
 
-std::vector<Point> verts;
-std::vector<Color> cols;
 
 NodeIndexedFaceSet *
 NodeIndexedFaceSet::readOff(const char *filename)
 {
-    std::ifstream input(filename);
-    SurfaceMesh *mesh = new SurfaceMesh();
-
-    if (!input || !(input >> *mesh)) {
-        myperror(filename);
+    int f = open(filename, O_RDONLY);
+    if (f == -1)
         return NULL;
-    }
 
     NodeCoordinate *ncoord = (NodeCoordinate *)
                              m_scene->createNode("Coordinate");
@@ -2146,69 +2145,178 @@ NodeIndexedFaceSet::readOff(const char *filename)
     MFVec3f *newVertices = new MFVec3f();
     MFInt32 *newCoordIndex = new MFInt32();
 
-    SurfaceMesh::Property_map<SurfaceMesh::Vertex_index, CGAL::Color> vcolors =
-        mesh->property_map<SurfaceMesh::Vertex_index, CGAL::Color >
-        ("v:color").first;
+    bool isColor = false;
+    bool isColorRGBA = false;
+    MFColor *newColor = new MFColor();
+    MFColorRGBA *newColorRGBA = new MFColorRGBA();
 
-    bool colorExists = mesh->property_map
-        <SurfaceMesh::Vertex_index, CGAL::Color>("v:color").second;
+    int fileLen = lseek(f, SEEK_SET, SEEK_END);
+    lseek(f, SEEK_SET, 0);
+   
+    char *fileData = new char[fileLen + 2];
+    if (read(f, fileData, fileLen) == -1) {
+        swDebugf("%s", strerror(errno));
+        return NULL;
+    }
+    fileData[fileLen] = 0;
+    fileData[fileLen + 1] = 0;
 
-    MFColorRGBA *newColors = NULL;
-    if (colorExists ) 
-        newColors = new MFColorRGBA();
-
-    for (SurfaceMesh::Vertex_index vi : mesh->vertices()) {
-        verts.push_back(mesh->point(vi));
-        if (colorExists ) 
-            cols.push_back(vcolors[vi]);
+    MyArray<char *> lines;
+    char *newLine = strchr(fileData, '\n');
+    if (newLine != NULL) {
+        if (*(newLine - 1) == '\r')
+            *(newLine - 1) = 0;
+        newLine[0] = 0;
+        lines.append(fileData);
+        newLine++;
     }
 
-    int sumCount = 0;
-
-    for (SurfaceMesh::Face_index face_index : mesh->faces()) {
-        CGAL::Vertex_around_face_circulator<SurfaceMesh> vcirc( 
-            mesh->halfedge( face_index ), *mesh ), done( vcirc );
-
-        signed char count = 0;
-
-        do
-        {
-            uint32_t vertexI = *vcirc++;
-
-            const Point &pt = verts[vertexI];
-            const Color &col = cols[vertexI];
-
-            newVertices->appendSFValue(pt.x(), pt.y(), pt.z()); 
-            if (colorExists ) 
-                newColors->appendSFValue(col.red(), col.green(), col.blue(), 
-                                         col.alpha());
-            newCoordIndex->appendSFValue(sumCount + count);
-            count++;
-        } while( vcirc != done );
-        sumCount += count;
-        newCoordIndex->appendSFValue(-1);
-    }
-
-    BOOST_FOREACH(face_descriptor fd, faces(*mesh)) {
-        Surface::Halfedge_index hf = mesh->halfedge(fd);
-        BOOST_FOREACH(halfedge_descriptor hi, 
-                      halfedges_around_face(hf, *mesh)) {
-            Surface::Vertex_index vi = target(hi, *mesh);
+    while (newLine != NULL) {
+        char *oldLine = newLine;
+        newLine = strchr(newLine, '\n');
+        if (newLine != NULL) {
+            if (*(newLine - 1) == '\r')
+                *(newLine - 1) = 0;
+            newLine[0] = 0;
+            newLine++;
+            lines.append(oldLine);
         }
     }
 
-    ncoord->point(new MFVec3f(newVertices));
-    if (colorExists ) {
-        NodeColorRGBA *colorRGBA = (NodeColorRGBA *)
-                                   m_scene->createNode("ColorRGBA");
-        faceSet->color(new SFNode(colorRGBA));
-        colorRGBA->color(new MFColorRGBA(newColors));
+    if (lines.size() < 2) {
+        char message[256];
+        swLoadString(IDS_NOT_ENOUGH_LINES + swGetLang(), message, 255);
+        swDebugf(message);
+        return NULL;
     }
+    
+    MyString header = lines[0];
+    if ((strcmp(header.getData(), "OFF") != 0) &&
+        (strcmp(header.getData(), "COFF") != 0) &&
+        (strcmp(header.getData(), "CNOFF") != 0)) {
+        char message[256];
+        swLoadString(IDS_WRONG_OFF_HEADER + swGetLang(), message, 255);
+        swDebugf(message);
+    }
+
+    MyString headerData = lines[1];
+    MyArray<MyString> intStrings;
+    headerData.split(&intStrings, " ");
+    if (intStrings.size() != 3) { 
+        char message[256];
+        swLoadString(IDS_WRONG_OFF_HEADER + swGetLang(), message, 255);
+        swDebugf(message);
+        return NULL;
+    }
+
+    int numVertices        = atoi(intStrings[0]);
+    int numFaces           = atoi(intStrings[1]); 
+    int numVerticesPerFace = atoi(intStrings[2]);
+
+    for (int i = 0; i < numVertices; i++) {
+        MyString dataString = lines[i + 2];
+        MyArray<MyString> floatStrings;
+        dataString.split(&floatStrings, " ");
+        if (floatStrings.size() < 3) { 
+            char message[256];
+            swLoadString(IDS_WRONG_OFF_DATA + swGetLang(), message, 255);
+            swDebugf(message);
+            return NULL;
+        }
+        newVertices->appendSFValue(atof((const char *)floatStrings[0]),
+                                   atof((const char *)floatStrings[1]), 
+                                   atof((const char *)floatStrings[2]));
+        int numCi = 3;
+        if ((floatStrings.size() < 3) ||
+            ((floatStrings.size() != numCi) && 
+            (floatStrings.size() != numCi + 3) &&  // 3 color values
+            (floatStrings.size() != numCi + 4)) || // 4 color values
+            (isColor && (floatStrings.size() == numCi + 4)) || 
+            (isColorRGBA && (floatStrings.size() == numCi + 3))) { 
+            char message[256];
+            swLoadString(IDS_WRONG_OFF_DATA + swGetLang(), message, 255);
+            swDebugf(message);
+            return NULL;
+        }
+        if (floatStrings.size() == numCi + 3) {
+            float c[3];
+            for (int j = numCi; j < floatStrings.size(); j++) {
+                c[j - (numCi)] = atof(floatStrings[j].getData());
+            }
+            newColor->appendSFValue(c[0], c[1], c[2]);
+            faceSet->colorPerVertex(new SFBool(true));
+            isColor = true;
+        } else if (floatStrings.size() == numCi + 4) {
+            float c[4];
+            for (int j = numCi; j < floatStrings.size(); j++) {
+                c[j - (numCi)] = atof(floatStrings[j].getData());
+            }
+            isColorRGBA = true;
+            faceSet->colorPerVertex(new SFBool(true));
+            newColorRGBA->appendSFValue(c[0], c[1], c[2], c[3]);
+        }
+    }
+
+    for (int i = numVertices; i < numVertices + numFaces; i++) {
+        MyString dataString = lines[i + 2];
+        MyArray<MyString> floatStrings;
+        dataString.split(&floatStrings, " ");
+        int numCi = atoi((const char *)floatStrings[0]);
+        if ((floatStrings.size() < 3) ||
+             ((floatStrings.size() != numCi + 1) && 
+              (floatStrings.size() != numCi + 1 + 3) &&  // 3 color values
+              (floatStrings.size() != numCi + 1 + 4)) || // 4 color values
+             (isColor && (floatStrings.size() == numCi + 1 + 4)) || 
+             (isColorRGBA && (floatStrings.size() == numCi + 1 + 3))) { 
+            char message[256];
+            swLoadString(IDS_WRONG_OFF_DATA + swGetLang(), message, 255);
+            swDebugf(message);
+            return NULL;
+        }
+        for (int j = 1; j < numCi + 1; j++)
+            newCoordIndex->appendSFValue(atoi(floatStrings[j]));
+        newCoordIndex->appendSFValue(-1);
+        if (floatStrings.size() == numCi + 1 + 3) {
+            float c[3];
+            for (int j = numCi + 1; j < floatStrings.size(); j++) {
+                c[j - (numCi + 1)] = atof(floatStrings[j].getData());
+            }
+            newColor->appendSFValue(c[0], c[1], c[2]);
+            faceSet->colorPerVertex(new SFBool(false));
+            isColor = true;
+        } else if (floatStrings.size() == numCi + 1 + 4) {
+            float c[4];
+            for (int j = numCi + 1; j < floatStrings.size(); j++) {
+                c[j - (numCi + 1)] = atof(floatStrings[j].getData());
+            }
+            isColorRGBA = true;
+            faceSet->colorPerVertex(new SFBool(false));
+            newColorRGBA->appendSFValue(c[0], c[1], c[2], c[3]);
+        }
+    }
+
+    delete [] fileData;
+
+    ncoord->point(new MFVec3f(newVertices));
     faceSet->coordIndex(new MFInt32(newCoordIndex));
+    if (isColor) {
+        NodeColor *ncolor = (NodeColor *)m_scene->createNode("Color");
+        faceSet->color(new SFNode(ncolor)); 
+        ((NodeColor *)faceSet->color()->getValue())->color(
+            new MFColor(newColor));
+    } else
+        delete newColor;
+    if (isColorRGBA) {
+        NodeColorRGBA *ncolor = (NodeColorRGBA *)
+                                m_scene->createNode("ColorRGBA");
+        faceSet->color(new SFNode(ncolor)); 
+        ((NodeColorRGBA *)faceSet->color()->getValue())->color(
+            new MFColorRGBA(newColorRGBA));
+    } else
+        delete newColorRGBA;
     return faceSet;
 }
-#endif
-
+    
 void               
 NodeIndexedFaceSet::accountOffData(int f)
 {
@@ -2249,10 +2357,7 @@ NodeIndexedFaceSet::writeOffVerticesAndColors(int f, Node *node)
                     const float *c = 
                          ((NodeColorRGBA *)color()->getValue())->color()->
                          getValues() + i * 4;
-                    mywritef(f, " %d %d %d %d", (int)(c[0] * 255),
-                                                (int)(c[1] * 255), 
-                                                (int)(c[2] * 255), 
-                                                (int)(c[3] * 255));
+                     mywritef(f, " %f %f %f %f", c[0], c[1], c[2], c[3]);
                 }
             } else if (color() && colorPerVertex()->getValue() &&
                        ((NodeColor *)color()->getValue()) &&
@@ -2261,9 +2366,7 @@ NodeIndexedFaceSet::writeOffVerticesAndColors(int f, Node *node)
                 const float *c = ((NodeColorRGBA *)
                                  color()->getValue())->color()->
                     getValues() + i * 3;
-                 mywritef(f, " %d %d %d", (int)(c[0] * 255), 
-                                          (int)(c[1] * 255), 
-                                          (int)(c[2] * 255));
+                 mywritef(f, " %f %f %f", c[0], c[1], c[2]);
             } 
             mywritestr(f, "\n");
         }
@@ -2296,10 +2399,7 @@ NodeIndexedFaceSet::writeOffIndicesAndColors(int f, int startIndex, Node *node)
                 const float *c = 
                     ((NodeColorRGBA *)color()->getValue())->color()->
                     getValues() + i * 4;
-                mywritef(f, " %d %d %d %d", (int)(c[0] * 255),
-                                            (int)(c[1] * 255), 
-                                            (int)(c[2] * 255), 
-                                            (int)(c[3] * 255));
+                mywritef(f, " %f %f %f %f", c[0], c[1], c[2], c[3]);
             }
         } else if (color() && (!colorPerVertex()->getValue()) &&
             ((NodeColor *)color()->getValue()) &&
@@ -2308,9 +2408,7 @@ NodeIndexedFaceSet::writeOffIndicesAndColors(int f, int startIndex, Node *node)
             const float *c = 
                 ((NodeColorRGBA *)color()->getValue())->color()->
                 getValues() + i * 3;
-            mywritef(f, " %d %d %d", (int)(c[0] * 255), 
-                                     (int)(c[1] * 255), 
-                                     (int)(c[2] * 255));
+                mywritef(f, " %f %f %f", c[0], c[1], c[2]);
         } 
         mywritestr(f, "\n");                 
     }

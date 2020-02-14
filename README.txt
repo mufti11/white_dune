@@ -5545,4 +5545,6 @@ Restored fieldView after exit in ColorCircle mode
 
 Fixed knot vector creation, when creating a SuperRevolver
 
+Deleted usage of CGALs .OFF reader, wrote own .OFF reader
+
 Contact: MUFTI <mufti11@web.de>

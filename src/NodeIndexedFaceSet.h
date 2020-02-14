@@ -177,14 +177,14 @@ public:
 #ifdef HAVE_LIBCGAL
     NodeIndexedFaceSet *csg(NodeIndexedFaceSet *face, int operation,
                             Matrix matrix1, Matrix matrix2);
-    NodeIndexedFaceSet *readOff(const char *filename);
 #endif
+    NodeIndexedFaceSet *readOff(const char *filename);
+    void                accountOffData(int f);
     void                writeOffInit(void) 
                             {
                             m_sumVertices = 0; 
                             m_sumVerticesPerFaces = 0;
                             }
-    void                accountOffData(int f);
     void                writeOffVerticesAndColors(int f, Node *node);
     void                writeOffIndicesAndColors(int f, int startIndex, 
                                                  Node *node);

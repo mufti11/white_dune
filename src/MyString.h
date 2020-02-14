@@ -92,6 +92,10 @@ class MyString {
     void        catInt(int number);
     void        catFloat(float number);
     void        catDouble(double number);
+
+    bool        isInt(void);
+    int         parseInt(void);
+    float       parseFloat(void);
 protected:
     StringBuf  *m_stringBuf;
 };

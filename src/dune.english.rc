@@ -4558,6 +4558,14 @@ BEGIN
     IDS_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
 END
 
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_WRONG_INTEGER                    "wrong integer in line %d"
+    IDS_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
+    IDS_WRONG_OFF_HEADER                 "wrong header in .OFF file"
+    IDS_WRONG_OFF_DATA                   "wrong data in .OFF file"
+END
+
 #ifdef HAVE_SAND
 STRINGTABLE DISCARDABLE
 BEGIN

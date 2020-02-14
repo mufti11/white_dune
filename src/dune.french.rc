@@ -211,6 +211,11 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "Color",                          ID_CHANGE_COLOR
         END
+        POPUP "Set color to (need IndexedFaceSet or Color*)"
+        BEGIN
+            MENUITEM "&Vertices",                       ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Faces",                          ID_TO_COLOR_PER_FACE
+        END
         MENUITEM "Transparence (a besoin de Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Peu/Beaucoup brillant (a besoin de Material)", ID_CHANGE_MATERIAL_SHININESS
         MENUITEM "Texte (a besoin de Text)",            ID_CHANGE_ONE_TEXT
@@ -851,7 +856,7 @@ BEGIN
            END
        END
        POPUP "&Materiel/Texture"
-                                                   BEGIN
+           BEGIN
            MENUITEM "&Appearance (a besoin de Shape)",  ID_NEW_APPEARANCE
            MENUITEM "&Material (a besoin d' Appearance)", ID_NEW_MATERIAL
            MENUITEM "&ImageTexture (a besoin d' Appearance)", ID_NEW_IMAGE_TEXTURE
@@ -4454,6 +4459,14 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_FR_CRASH_MESSAGE                    "white_dune detected a former crash, but has sucessfully saved the data. Load data as %s ?"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FR_WRONG_INTEGER                    "wrong integer in line %d"
+    IDS_FR_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
+    IDS_FR_WRONG_OFF_HEADER                 "wrong header line in .OFF file"
+    IDS_FR_WRONG_OFF_DATA                   "wrong data in .OFF file"
 END
 
 #ifdef HAVE_SAND

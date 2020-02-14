@@ -211,6 +211,11 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "Farbe (braucht Color oder ColorRGBA)", ID_CHANGE_COLOR
         END
+        POPUP "Setzte Farbe auf die ... (braucht IndexedFaceSet oder Color*)"
+        BEGIN
+            MENUITEM "&Eckpunkte",                      ID_TO_COLOR_PER_VERTEX
+            MENUITEM "&Flaechen",                       ID_TO_COLOR_PER_FACE
+        END
         MENUITEM "Durchsichtigkeit (braucht Material)", ID_CHANGE_MATERIAL_TRANSPARENCY
         MENUITEM "Wenig/viel Glanz (braucht Material)", ID_CHANGE_MATERIAL_SHININESS
         MENUITEM "Text (braucht Text)",                 ID_CHANGE_ONE_TEXT
@@ -4453,6 +4458,14 @@ END
 STRINGTABLE DISCARDABLE
 BEGIN
     IDS_DE_CRASH_MESSAGE                    "white_dune hat einen vorhergehenden Absturz festgestellt, aber konnte die Daten retten. Lade die Daten als %s ?"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_DE_WRONG_INTEGER                    "Falscher Integer in Zeile %d"
+    IDS_DE_NOT_ENOUGH_LINES                 "nicht genug Zeilen in der .OFF Datei"
+    IDS_DE_WRONG_OFF_HEADER                 "Falsche erste Zeile in der .OFF Datei"
+    IDS_DE_WRONG_OFF_DATA                   "Falsche Daten in der .OFF Datei"
 END
 
 #ifdef HAVE_SAND
