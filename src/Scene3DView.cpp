@@ -587,7 +587,7 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
 
             Vec3f hit;
 
-            unsigned int depth = getHit(x, y);
+            unsigned int depth = getHit(x, height - y);
             glPushMatrix();
             glLoadIdentity();
             m_scene->unProjectPoint((float) x, (float) height - (float) y, 
@@ -597,7 +597,6 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
 
             Vec3f view(0, 0, viewPos.length());
             view = view * viewQuat;
-            hit.y = -hit.y; // ???
             Vec3f compareVec = (hit * viewQuat + view);
             compareVec = transformMatrix.invert() * compareVec;
             float eps = TheApp->GetHandleEpsilon();

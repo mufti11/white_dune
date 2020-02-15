@@ -4227,8 +4227,8 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
     if (m_currentFog)
         m_currentFog->apply();
 
-     if (useUpdate)
-         updateTime();
+    if (useUpdate)
+        updateTime();
 
     // second pass:  main drawing traversal
 

@@ -5549,4 +5549,6 @@ Deleted usage of CGALs .OFF reader, wrote own .OFF reader
 
 Added comments and integer color handling to .OFF reader
 
+Solved problem with SuperRevolver converted to NurbSurface and VertexModifier
+
 Contact: MUFTI <mufti11@web.de>

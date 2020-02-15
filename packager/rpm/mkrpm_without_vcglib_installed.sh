@@ -152,6 +152,7 @@ Documentation for white_dune
     --with-x11-editor="gedit" \\
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
+    --with-cgalheaders \\
     --with-soundeditor=audacity
 %make_build 
 pushd docs/export_example_c++/opengl_example
