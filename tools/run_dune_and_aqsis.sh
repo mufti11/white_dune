@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 if test X_$# = X_0 ; then 

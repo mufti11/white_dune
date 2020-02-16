@@ -5551,4 +5551,8 @@ Added comments and integer color handling to .OFF reader
 
 Solved problem with SuperRevolver converted to NurbSurface and VertexModifier
 
+Fixed missing dialog after attaching a new ROUTE to a Script node
+
+Fixed ecmascript URL editing
+
 Contact: MUFTI <mufti11@web.de>

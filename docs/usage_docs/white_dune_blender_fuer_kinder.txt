@@ -1,0 +1,103 @@
+White_dune: Blender fuer Kinder
+
+White_dune (https://wdune.ourproject.org/) ist ein Cross-Plattform 
+(Linux, FreeBSD, MacOSX, Microsoft Windows, Rasberry PI) 
+3D-Modeller und Animationswerkzeug.
+
+Mit white_dune kann man 3D Objekte basteln/aendern und animieren, die man auch 
+ueber WebGL direkt im Webbrowser laufen lassen oder ins RIB renderman Format 
+(fuer die Film-Erzeugung) wandeln kann. Man kann das Ergebnis auch in 
+C oder C++ uebersetzen, so dass ein "normales" OpenGL-Programm entsteht.
+Intern benutzt white_dune das ISO-Format X3D/VRML97 als internes 
+Speicherformat.
+
+Unter Linux kommt white_dune mit 2 Icons:
+- Das 4kids Icon startet ein GUI, das fuer Anfaenger und Kinder geeignet ist.
+- Das normale Icon startet ein GUI, das fuer die Benutzer von VRML97/X3D
+  Spezialbefehlen gedacht ist.
+Ueber Options laesst sich white_dune von der englischen Sprache in die
+deutsche Sprache umstellen.
+Mit der 4kids-Version laesst sich zum Beispiel mit etwas Uebung in 
+20 Minuten die Animation von Bild1 erzeugen. 
+Man started mit einem Pilz (Bild2) und verschiebt mit der Maus die weissen 
+Punkte (Bild3 und Bild4). Mit "Aendern -> mache verformbar" laesst sich
+das Ergbebnis in ein NURBS Objekt verwandeln (Bild5). 
+Unter https://wdune.ourproject.org/docs/index.html finden sich Tutorials,
+wie white_dune beim 3D Modelling und bei der Animation eingesetzt werden kann.
+
+White_dune hat zur Zeit 7 Haupt-Modelling-Moeglichkeiten:
+- NURBS
+  NURBS beschreibt eine Formel mit deren Hilfe man mit wenigen 
+  Konstrollpunkten, viele Meshpunkte beschrieben kann.
+  Eine NURBS-Kugel braucht z.B. nur 20 Kontollpunkte und kann dann mit dem
+  Verschieben der Kontollpunkte leicht in ein NURBS-Herz veraendert werden
+  (siehe Bild 8 und 9).
+  Mit der 2D-NURBS-Formel lassen sich alle mathematischen Kurven beschreiben,
+  auch mit Ecken und Spritzen.   
+  In white_dune koennen alle Primitive (Box, Kugel, Zylinder und Kegel),
+  sowie alle Superformel-basierten Oberflaechen in NURBS-Objekte 
+  umgewandelt werden.
+- Superformel
+  Die Superformel basiert auf einem aehnlichen Konzept wie NURBS:
+  Mit nur 12 (in white_dune 24) Parametern lassen sich die Meshpunkte 
+  vieler symetrischer Oberflaechen erzeugen (siehe Bild 10)
+  So lassen sich zum Beispiel bei einem Superformel-Seestern-3D-Modell
+  die Anzahl der Seestern-Arme mit nur einem Parameter kontrollieren.
+  white_dune kennt die folgenden Superformel-basierten Objekte:
+  - SuperShape: benutzt die Superformel in zwei Dimensionen
+  - Superformel in einer Dimension:
+    - SuperExtrusinon: Torus und Roehren/Hoerner
+    - SuperRevolver: Drehkoerper (z.B. Pilz)
+    - SuperEllisoid: Ein Spezialfall der Superformel: mit nur 2 
+                     (in white_dune 12) Parametern lassen sich 
+                     Kugel, Oktaeder, Box und Zwischenformen beschreiben   
+- Extrusion:
+  Mit dem Extrude-Befehl lassen sich aus einer Mesh bestimmte Polygone 
+  herausziehen (siehe Bild 11 und Bild 12).
+- Subdivision
+  Der Subdivide-Befehl Wird haeufig nach dem Extrude-Befehl eingesetzt.
+  Damit koenne (moeglichst geschlossene) Mesh-Objekt runder gemacht werden.
+  Siehe Bild 13 und Bild14.
+- Boolean Operationen
+  Mit Boolean Operationen koennen 3D-Objekte vereinigt oder voneinander
+  abgezogen werden (Siehe Bild 16 und 17).
+- Mesh-Reducer
+  Es gibt zwar den Parameter "creaseAngle" bei der Mesh (IndexedFaceSet in 
+  X3D), der die Flaechennormalen so beeinflusst, dass die Kanten nicht mehr 
+  auffallen (siehe Bild 18), aber der Subdive-Befehl laesst die Polygonzahl 
+  der Mesh quadradrisch expoldieren.
+  Deswegen ist es fuer ein Echzeit-3D-Format wie X3D oder OpenGL wichtig,
+  einen leistungsfaehigen Mesh-Reduce zur Verfuegung zu haben, der die
+  grobe Form der Mesh moeglichst wenig veraendert (Siehe Bild 19).
+  Nach dem Mesh-Reducer Befehl wird haeufig wieder der Extrude-Befehl 
+  benutzt.
+- VertexModifier
+  Damit lassen sich Beulen aus Mesh- oder NURBS-Objekte herausziehen oder 
+  Beulen hineindruecken.
+  Allerdings erfordert diese Modellierungs-Moeglichkeit, dass viele Mesh- oder 
+  NURBS-Kontollpunkte zur Verfuegung stehen (siehe Bild 21 und 22).
+  
+White_dune hat zur Zeit 2 Animations-Moeglichkeiten:
+- Normale Animation:
+  Damit laesst sich alles animieren, das in X3D animierbar ist.
+  Dabei kann in einem eigenen "ChannelView" Fenster die Animation
+  beeiflussen oder eine Animation (z.B. Farbe mit dem Farb-Rad)
+  mit den "Record und Play" Buttons aufgenommen werden.
+- Kurven-Animation:
+  Damit laesst sich nur die Knoten "Transform" (Verschieben und Drehen) 
+  und "Viewpoint" (Kamera Verschieben und Drehen) beeiflussen.
+  Dabei folgt eine Objektgruppe oder die Kamera einem Pfad
+  (Siehe Bild20).  
+
+White_dune "4kids" wurde auch schon bei Kinderprojekten eingesetzt.
+Zum Beispiel entstand bei der Stadtranderholung Leonberg 2006/2007 ein kleiner
+Trickfilm einer Alien-Landung von Kindern im Alter zwischen 7 und 13 
+(Bild6).
+
+White_dune unterstuetzt als X3D Editor alle sichtbaren X3D Befehle,
+einschliesslich "HAnim" (menschliche Animation, siehe Bild 7).
+Mit dem "makehuman"-Programm (http://www.makehumancommunity.org/), einer
+Blender-Weiterentwickling laesst sich die Mesh eines Menschen erzeugen
+und in white_dune animieren, allerdings ist das sehr aufwendig. 
+
+Im Dezember 2019 wurde white_dune in Fedora Linux 32 aufgenommen.

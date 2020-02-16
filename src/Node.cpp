@@ -758,6 +758,7 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
 #else 
             RET_ONERROR( mywritestr(f, (const char *) m_proto->getName(x3d)) )
 #endif
+/*
             if (hasParent()) {
                 if ((getParent()->showFields()) && 
                     (getParent()->getType() != VRML_SCRIPT)) {
@@ -770,14 +771,10 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                     }              
                     const char *name = parent->getProto()->getField(
                                            cField)->getName(x3d);
-/*
-                    RET_ONERROR( mywritestr(f, " containerField='") )
-                    RET_ONERROR( mywritestr(f, name) )
-                    RET_ONERROR( mywritestr(f, "'") )
-*/
                     containerFieldWritten = true;
                 }
             }
+*/
         } else {
             RET_ONERROR( mywritestr(f, "ProtoInstance name='") )
             RET_ONERROR( mywritestr(f, protoToWrite->getName(x3d)) )
@@ -1178,7 +1175,7 @@ NodeData::writeXmlFields(int f, int indent, int when, int containerField,
     for (int i = 0; i < m_numFields; i++)
         if ((i != scriptUrlField) && (i != scriptMetadataField))
             RET_ONERROR( writeXmlField(f, indent, i, when, isScript, 
-                                           containerField, avoidUse) )
+                                       containerField, avoidUse) )
 
     if (!avoidUse) {
         for (int i = 0; i < m_numEventIns; i++)

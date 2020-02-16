@@ -3648,6 +3648,12 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
     if (eventIn == -1)
         return true;
     bool x3d = isX3d();
+
+    RouteUpdate hint(src, eventOut, dst, eventIn);
+
+    src->addOutput(eventOut, dst, eventIn);
+    dst->addInput(eventIn, src, eventOut);
+
     bool ret = true;
     if (!validRoute(src, eventOut, dst, eventIn)) 
         ret = false;
@@ -3666,11 +3672,6 @@ Scene::addRoute(Node *src, int eventOut, Node *dst, int eventIn,
                  (const char *)dst->getProto()->getEventIn(eventIn)->getName(x3d));
         return false;
     }
-
-    RouteUpdate hint(src, eventOut, dst, eventIn);
-
-    src->addOutput(eventOut, dst, eventIn);
-    dst->addInput(eventIn, src, eventOut);
 
     // try to copy a exposedField value or field of a eventIn
     // to the first value of a Interpolator

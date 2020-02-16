@@ -198,11 +198,12 @@ ScriptEdit::writeFile(int f)
     if (hasUrl) {
         for (int i = 0; i < url->getSize(); i++) {
             string = url->getValue(i);
-            if (!writeSFStringUrl(f, string))
-                writeError = true;
-            if (i < url->getSize()-1)
-                if (!write2file(f, ",\n")) 
+            if (strlen(string) > 0) {
+                if (!writeSFStringUrl(f, string))
                     writeError = true;
+                if (!writeSFStringUrl(f, "\n"))
+                    writeError = true;
+            }
         }
     } else {
         if (!writeSFStringUrl(f, ""))
@@ -245,14 +246,12 @@ ScriptEdit::writeSFStringUrl(int f, const char* string)
      if (proto == NULL)
          return false;
  
-    if (!write2file(f, "\""))
-        return false;
     if (strlen(string) == 0) {
         if (m_scriptNode->getScene()->isX3d()) {
-            if (!write2file(f, "ecmascript:\n\n"))
+            if (!write2file(f, "\"ecmascript:\n\n"))
                  return false;        
         } else {
-            if (!write2file(f, "javascript:\n\n"))
+            if (!write2file(f, "\"javascript:\n\n"))
                  return false;        
         }
         if (!write2file(f, "// insert program code only into functions\n\n"))
@@ -260,13 +259,13 @@ ScriptEdit::writeSFStringUrl(int f, const char* string)
         hasJavascript = true;
     } else if (isSortOfEcmascript(string)) {
         if (isJavascript(string)) {
-            if (!write2file(f, "javascript:\n\n"))
+            if (!write2file(f, "\"javascript:\n\n"))
                 return false;        
-            string += strlen("javascript:");
+            string += strlen("\"javascript:");
         } else if (isEcmascript(string)) {
-            if (!write2file(f, "ecmascript:\n\n"))
+            if (!write2file(f, "\"ecmascript:\n\n"))
                 return false;        
-            string += strlen("ecmascript:");
+            string += strlen("\"ecmascript:");
         }
         hasJavascript = true;
         if (string[0] == '\n')
@@ -400,12 +399,7 @@ ScriptEdit::writeSFStringUrl(int f, const char* string)
             javascript += extratext;
         }
     }
-    if (hasJavascript)
-        if (!write2file(f, javascript))
-            return false;        
     if (!write2file(f, string))
-        return false;
-    if (!write2file(f, "\""))
         return false;
     return true;
 }
@@ -478,8 +472,10 @@ ScriptEdit::writeSFStringX3domUrl(int f, const char* string)
 bool
 ScriptEdit::ecmaScriptReadEditorfile(char *fileName)
 {
+    return ObjectEdit::readEditorFile(fileName, m_scriptNode, 
+                                      m_scriptNode->url_Field());
     return readQuotedEditorFile(fileName, m_scriptNode,
-                                 m_scriptNode->url_Field());
+                                m_scriptNode->url_Field());
 }
 
 
@@ -675,6 +671,7 @@ ObjectEdit::readQuotedEditorFile(char *fileName, Node *node, int field)
         m_urlData[m_urlEndData[i]] = '\0';
         MyString urlString = "";
         urlString += (&m_urlData[m_urlStartData[i]+1]);
+        urlString += "\n";
         newUrl->setSFValue(i, new SFString(urlString));
     }       
     node->setField(field, newUrl);     
@@ -740,17 +737,13 @@ ObjectEdit::checkEditorData(void)
         } else if (mode == blankOrTabMode) {
             bool invalidChar = false;
             if (!isBlankOrTab(m_urlData,offset)) {
-                if (m_urlData[offset] == ',') { 
-                    if (beforeFirstDoubleQuoute)
-                        invalidChar = true;
-                } else 
+                if (m_urlData[offset] != ',') { 
                     if (isDoubleQuoute(m_urlData,offset)) {
                         mode = someTextMode;
                         m_urlStartData.append(offset);
                         }
-                    else 
-                       invalidChar = true;
                 }
+            }
             if (invalidChar) {        
                 char format[256];
                 swLoadString(IDS_MISSING_CLOSING_QUOTE, format, 255);
@@ -773,8 +766,8 @@ ObjectEdit::checkEditorData(void)
         mysnprintf(msg, 1023, format, lineCount, charsPerLine, m_editorFile);
         TheApp->MessageBox(msg);
         return false;
-    } else
-        return true;   
+    } 
+    return true;   
 }
 
 

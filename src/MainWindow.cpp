@@ -7419,7 +7419,7 @@ MainWindow::EditUrl()
             m_scene->setSelection(node);
             m_scene->UpdateViews(NULL, UPDATE_SELECTION);
         } else 
-            m_scriptEditorInUse = false;
+           m_scriptEditorInUse = false;
         break;
       case X3D_SHADER_PROGRAM:
       case X3D_PACKAGED_SHADER:
