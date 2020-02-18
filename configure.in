@@ -655,9 +655,9 @@ elif test "X_$OS" = "X_Darwin" ; then
     (DUNE=$SELFDIR/bin/dune && cd desktop/macosx/white_dune.app/Contents/MacOS && rm -f dune && ln -s $DUNE .) 
     if test -d "/Applications/X11.app" ; then    
        if test -x "/usr/bin/open" ; then    
-          AC_DEFINE_UNQUOTED(HAVE_X11STARTCOMMAND,"/usr/bin/open -a /Applications/X11.app/Contents/MacOS/X11")
+          AC_DEFINE_UNQUOTED(HAVE_X11STARTCOMMAND,"/usr/bin/open -a /Applications/Utilities/XQuartz.app/Contents/MacOS/X11")
        else
-          AC_DEFINE_UNQUOTED(HAVE_X11STARTCOMMAND,"/Applications/X11.app/Contents/MacOS/X11")
+          AC_DEFINE_UNQUOTED(HAVE_X11STARTCOMMAND,"/Applications/Utilities/XQuartz.app/Contents/MacOS/X11")
        fi
     else 
        if test -d "/Applications/Utilities/X11.app" ; then

@@ -131,10 +131,15 @@ int DynamicFieldsNode::writeField(int f, int indent, int fieldIndex)
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f, (const char *) field->getName(x3d)) )
             RET_ONERROR( mywritestr(f, " ") )
-            if ((field->getFlags() & FF_URL) && (!TheApp->GetKeepURLs())) {
+            if ((field->getFlags() & FF_URL)) {
                 value = rewriteField(value, oldBase, newBase, 
                                      m_scene->getWriteFlags());
-                RET_ONERROR( value->write(f, indent) )
+//                RET_ONERROR( indentf(f, indent) );
+                RET_ONERROR( mywritestr(f, "\"") );
+                RET_ONERROR( value->writeRaw(f, 0) )
+                RET_ONERROR( mywritestr(f, "\n") );
+                RET_ONERROR( indentf(f, indent) );
+                RET_ONERROR( mywritestr(f, "\"\n") );
                 if (!tempSave) {
                     setField(fieldIndex, value);
                 } else {

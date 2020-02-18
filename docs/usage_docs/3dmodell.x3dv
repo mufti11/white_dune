@@ -489,7 +489,7 @@ Viewpoint {
 }
 
 DEF TimeSensor2 TimeSensor {
-  cycleInterval 20
+  cycleInterval 200
   loop TRUE
 }
 
@@ -1626,21 +1626,26 @@ DEF Switch2 Switch {
 
 DEF Script1 Script {
   url "ecmascript:
-function transform_in(value)
-{
-   transform_in = value;
-}
-function proximity_in(value)
-{
-   if (abs(transform_in.x < value.x) < 2) &&
-       abs(transform_in.y < value.y) < 3) &&
-       abs(transform_in.z < value.z) < 2)) {
-       out_text = 0; // Text anzeigen
-       out_tux = -1; // TUX ausblenden
-       }
-}
-"
+    
+        function transform_in(value)
+        {
+           transform_in = value;
+        }
+        function proximity_in(value)
+        {
+           if (!(game_over) &&
+               (Math.abs(transform_in.x - value.x) < 2) &&
+               (Math.abs(transform_in.y - value.y) < 3) &&
+               (Math.abs(transform_in.z - value.z) < 2)) {
+               game_over = true;
+               out_text = 0; // Text anzeigen
+               out_tux = -1; // TUX ausblenden
+               }
+        }
+        
+    "
   initializeOnly SFVec3f   transfom_data 0 0 0
+  initializeOnly SFBool   game_over FALSE
   inputOnly SFVec3f transform_in
   inputOnly SFVec3f proximity_in
   outputOnly SFInt32 out_text

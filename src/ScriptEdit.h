@@ -98,6 +98,7 @@ protected:
 private:
 
     NodeScript         *m_scriptNode;
+    bool                m_alreadyWritten; 
 };
 
 class TextEdit : public ObjectEdit {

@@ -187,6 +187,7 @@ ScriptEdit::generateFilename(bool secondTry)
 bool
 ScriptEdit::writeFile(int f)
 {
+    m_alreadyWritten = false;
     bool writeError = false;
     MFString *url = (MFString *)m_scriptNode->url();
     bool hasUrl = true;
@@ -205,6 +206,8 @@ ScriptEdit::writeFile(int f)
                     writeError = true;
             }
         }
+        if (!writeSFStringUrl(f, "\""))
+            writeError = true;
     } else {
         if (!writeSFStringUrl(f, ""))
             writeError = true;
@@ -399,8 +402,16 @@ ScriptEdit::writeSFStringUrl(int f, const char* string)
             javascript += extratext;
         }
     }
-    if (!write2file(f, string))
-        return false;
+    if (strlen(string) > 0) {
+        if (!write2file(f, string))
+            return false;
+        m_alreadyWritten = true;
+    }
+    if (!m_alreadyWritten)  
+        if (javascript.length() > 0)
+            if (!write2file(f, javascript))
+                return false;
+    m_alreadyWritten = true;
     return true;
 }
 

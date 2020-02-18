@@ -87,7 +87,7 @@ int SFString::writeDataXml(int f, int i) const
 
 int SFString::writeRaw(int f, int indent) const
 {
-    RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
+    RET_ONERROR( indentf(f, indent) )
     RET_ONERROR( mywritestr(f, m_value) )
     RET_ONERROR( mywritestr(f, "\n") )
     TheApp->incSelectionLinenumber();

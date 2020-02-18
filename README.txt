@@ -5555,4 +5555,8 @@ Fixed missing dialog after attaching a new ROUTE to a Script node
 
 Fixed ecmascript URL editing
 
+Fixed bug in File->Textedit of Script
+
+Fixed changed path of XQuartz X11.app
+
 Contact: MUFTI <mufti11@web.de>
