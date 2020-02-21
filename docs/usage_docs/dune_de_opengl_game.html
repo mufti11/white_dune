@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * Copyright (C) 2020 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<head>
+ <title>Einfaches OpenGL/C++-Spiel mit white_dune erzeugen</title> 
+</head> 
+<body>
+<h2>Einfaches OpenGL/C++-Spiel mit white_dune erzeugen</h2> 
+<p> 
+Mit white_dune lassen sich in der Programmiersprache C++ geschriebene
+OpenGL-Programme erzeugen.<br>
+Hier wird ein einfaches Beispiel vorgestellt, dass nur wenige Zeilen
+Programmcode ben&ouml;tigt.<br>
+Im ersten Schritt wird ein Prototyp in X3D/javascript erstellt, das
+sp&auml;ter mit C++ erweitert wird.
+</p>
+<h3>javascript/X3D Prototyp</h3> 
+Als Basis wird das in X3D verf&uuml;gbare white_dune-Logo benutzt.<br>
+Dabei steht ein 3D-Modell eines Pinguins zur Verf&uuml;gung, das auf
+einer D&uuml;nen-Landschaft mit einer Pyramide steht.<br>
+<img src=game1.png>
+<br>
+F&uuml;r die Programmierung macht es aber keinen Unterschied, wenn man
+statt des Pinguins eine Box und statt der D&uuml;nen-Landschaft eine
+d&uuml;nne und breite/lange Box benutzt.<br>
+Im ersten Schritt wird das Ziel (Pinguin oder Box) so animiert, so dass es
+sich entlang eines Pfades bewegt (Kurven-Animation).<br>
+<img src=game2.png>
+<br>
+Als n&auml;chstes wird ein Text-Knoten mit "Game over" eingef&uumlgt.<br>
+<img src=game3.png>
+<br>
+Als n&auml;chstes wird ein Switch-Noten einf&uuml;gt und das Ziel
+in ihn verschoben.<br>
+Damit das Ziel sichtbar ist, muss Switch.whichChoice auf 0 gestellt werden.<br>
+Als n&auml;chstes wird ein Switch-Noten einf&uuml;gt und der Text wird
+in ihn verschoben.<br>
+<img src=game4.png>
+<br>
+Als n&auml;chstes wird ein Script-Noten einf&uuml;gt.<br>
+Dann wird <em>Routes/IS -&gt; Neu aufbauen</em> benutzt. Dabei wird
+ein neues Fenster aufgeklappt, das die Pfad-Animation zeigt.<br>
+<img src=game5.png>
+<br>
+Als n&auml;chstes wird der Script-Noten angeklickt.<br>
+Dann wird eine SFVec3f-Eingangs-Funktion "transform_in" angelegt<br>
+<img src=game6.png>
+<br>
+Genauso wird eine SFVec3f-Eingangs-Funktion "proximity_in" angelegt<br>
+<img src=game8.png>
+<br>
+Dann wird eine SFInt32-Ausgangs-Varible "out_text" angelegt<br>
+<img src=game9.png>
+<br>
+Dann wird eine SFInt32-Ausgangs-Varible "out_tux" angelegt<br>
+<img src=game10.png>
+<br>
+Jetzt wird ein Proximity-Sensor-Knoten erzeugt und 
+<em>Routes/IS -&gt; Zeige Knoten ganz oben</em> bentzt.<br>
+Jetzt wird der Script-Knoten angeklick und 
+<em>Routes/IS -&gt; Zeige Knoten ganz oben</em> bentzt.<br>
+Danach verschiebt man die Knoten passend und verbindet
+ProxomitySensor.position_changed und Script.proximity_in
+<img src=game11.png>
+<br>
+Danach verbindet man CurveAnimation1.position_changed 
+und Script.translation_in
+<br>
+<img src=game12.png>
+<br>
+Danach verbindet man Script.out_text und Switch.set_whichChoice vom Switch des
+Textes.
+<br>
+<img src=game14.png>
+<br>
+Danach verbindet man Script.out_tux und Switch.set_whichChoice vom Switch des
+Ziels.
+<br>
+<img src=game15.png>
+<br>
+Jetzt wird der Script-Knoten angeklickt und eine SFVec3f-Daten-Variable 
+transfrom_data angelegt. 
+<br>
+<img src=game16.png>
+<br>
+Danach wird eine SFBool-Daten-Variable game_over angelegt.
+<br>
+<img src=game17.png>
+<br>
+Jetzt wird der Script-Knoten angeklickt und <em>Edit -&gt; URL edit</em>
+benutzt.<br>
+Das folgende javascript-Programm muss eingef&uuml;gt werden:<br>
+<pre>
+"ecmascript:
+
+        function transform_in(value)
+        {
+           transform_data = value;
+        }
+
+        function proximity_in(value)
+        {
+           if (!(game_over) &&
+               (Math.abs(transform_data.x - value.x) < 2) &&
+               (Math.abs(transform_data.y - value.y) < 3) &&
+               (Math.abs(transform_data.z - value.z) < 2)) {
+               game_over = true;
+               out_text = 0; // Text anzeigen
+               out_tux = -1; // TUX ausblenden
+               }
+        }
+"
+</pre>
+<br>
+Damit das X3D-Spiel angezeigt werden kann, muss der X3D-Broswer "FreeWRL"
+installiert werden und mit <em>Optionen -&gt; Vorschau Einstellungen</em>
+f&uuml;r <em>Datei -&gt; Vorschau</em> eingerichtet werden.
+<br>
+<img src=game19.png>
+<br>
+Jezt wird <em>Datei -&gt; Vorschau</em> gedr&uuml;ckt und es muss mit
+der FreeWRL-Navigation dem Ziel nahe gekommen werden, so dass der 
+"Text anzeigen/TUX ausblenden" Code erreicht wird.<br>
+Screenshots aus dem Spiel:<br>
+Vor dem Nahekommen ans Ziel:  
+<br>
+<img src=game20.png>
+<br>
+Nach dem Nahekommen ans Ziel:  
+<br>
+<img src=game21.png>
+<br>
+<br>
+<p>
+</p>
+<h3>Erweiterung mit C++</h3> 
+<p>
+Jetzt wird der Script-Knoten angeklickt und <em>Edit -&gt; URL edit</em>
+benutzt.<br>
+Der Programm-Code wird um einen C++-Teil erweitert:<br>
+<br>
+<pre>
+"ecmascript:
+
+        function transform_in(value)
+        {
+           transform_data = value;
+        }
+
+        function proximity_in(value)
+        {
+           if (!(game_over) &&
+               (Math.abs(transform_data.x - value.x) < 2) &&
+               (Math.abs(transform_data.y - value.y) < 3) &&
+               (Math.abs(transform_data.z - value.z) < 2)) {
+               game_over = true;
+               out_text = 0; // Text anzeigen
+               out_tux = -1; // TUX ausblenden
+               }
+        }
+"
+"c++:
+
+   X3dScript_Script1 *self = (X3dScript_Script1 *)node;
+   self->transform_data[0] = self->transform_in[0];
+   self->transform_data[1] = self->transform_in[1];
+   self->transform_data[2] = self->transform_in[2];
+   if (!(self->game_over) &&
+       (fabsf(self->transform_data[0] - self->proximity_in[0]) < 2) &&
+       (fabsf(self->transform_data[1] - self->proximity_in[1]) < 3) &&
+       (fabsf(self->transform_data[2] - self->proximity_in[2]) < 2)) {
+       self->game_over = true;
+       self->out_text = 0; // Text anzeigen
+       self->out_tux = -1; // TUX ausblenden
+   }
+"
+</pre>
+Jetzt muss das C++-Export-Verzeichnis von white_dune ins HOME-Verzeichnis
+kopiert werden:
+<br>
+<pre>
+$ cp -r wdune-*/docs/export_example_c++/opengl_example/ $HOME
+</pre>
+<br>
+Jetzt muss die entstande X3D-Datei nach $HOME/opengl_example/robot.x3dv
+abgespeichert werden.
+<br>
+Wechseln sie in das Verzeichnis
+<br>
+<pre>  
+$ cd $HOME/opengl_example/                              
+</pre> 
+<br>
+Und bentzen Sie 
+<br>
+<pre>  
+$ make && ./render
+</pre> 
+<br>
+um das Programm zu kompilieren und auszuf&uuml;hren.
+<br>
+<br>
+</p>
+</body>
+

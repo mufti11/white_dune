@@ -694,6 +694,9 @@ target: mysnprintf.o
 install: target
 	install -m 755 -p ../bin/dune /usr/bin
 	install -m 755 -p ../tools/run_dune_and_aqsis.sh /usr/bin
+	install -m 644 -p ../include/white_dune/libC++RWD.h /usr/include/white_dune/libC++RWD.h
+	install -m 644 -p ../include/white_dune/libC++RWD_namespace.h /usr/include/white_dune/libC++RWD_namespace.h
+	install -m 644 -p ../include/white_dune/libCRWD.h /usr/include/white_dune/libCRWD.h
 	install -m 644 -p ../man/dune.1 /usr/share/man/man1
 	install -m 644 -p ../desktop/kde/dune.desktop /usr/share/applications/dune.desktop
 	install -m 644 -p ../desktop/kde/dune.png /usr/share/pixmaps/dune.png

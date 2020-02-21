@@ -100,7 +100,11 @@ Transform {
                                   specularColor 0.200000 0.200000 0.200000
                                 }
                                 texture ImageTexture {
-                                  url "../../logo/whitesand.jpg"
+                                  url 
+[
+"../../logo/whitesand.jpg"
+
+]
                                 }
                                 textureTransform TextureTransform {
                                   scale 20 20
@@ -363,7 +367,11 @@ Transform {
                             material Material {
                             }
                             texture ImageTexture {
-                              url "../../logo/flow2.jpg"
+                              url 
+[
+"../../logo/flow2.jpg"
+
+]
                             }
                           }
                           geometry NurbsPatchSurface {
@@ -1625,26 +1633,43 @@ DEF Switch2 Switch {
 }
 
 DEF Script1 Script {
-  url "ecmascript:
-    
+  url [
+
+"ecmascript:
+
         function transform_in(value)
         {
-           transform_in = value;
+           transform_data = value;
         }
+
         function proximity_in(value)
         {
            if (!(game_over) &&
-               (Math.abs(transform_in.x - value.x) < 2) &&
-               (Math.abs(transform_in.y - value.y) < 3) &&
-               (Math.abs(transform_in.z - value.z) < 2)) {
+               (Math.abs(transform_data.x - value.x) < 2) &&
+               (Math.abs(transform_data.y - value.y) < 3) &&
+               (Math.abs(transform_data.z - value.z) < 2)) {
                game_over = true;
                out_text = 0; // Text anzeigen
                out_tux = -1; // TUX ausblenden
                }
         }
-        
-    "
-  initializeOnly SFVec3f   transfom_data 0 0 0
+"
+"c++:
+   X3dScript_Script1 *self = (X3dScript_Script1 *)node;
+   self->transform_data[0] = self->transform_in[0];
+   self->transform_data[1] = self->transform_in[1];
+   self->transform_data[2] = self->transform_in[2];
+   if (!(self->game_over) &&
+       (fabsf(self->transform_data[0] - self->proximity_in[0]) < 2) &&
+       (fabsf(self->transform_data[1] - self->proximity_in[1]) < 3) &&
+       (fabsf(self->transform_data[2] - self->proximity_in[2]) < 2)) {
+       self->game_over = true;
+       self->out_text = 0; // Text anzeigen
+       self->out_tux = -1; // TUX ausblenden
+   }
+"
+]
+  initializeOnly SFVec3f   transform_data 0 0 0
   initializeOnly SFBool   game_over FALSE
   inputOnly SFVec3f transform_in
   inputOnly SFVec3f proximity_in

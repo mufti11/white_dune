@@ -1,5 +1,8 @@
 bin/dune
 bin/dune4kids
+include/white_dune/libC++RWD_namespace.h 
+include/white_dune/libC++RWD.h
+include/white_dune/libCRWD.h 
 %%PORTDOCS%%share/doc/white_dune/developer_docs/dune.jpg
 %%PORTDOCS%%share/doc/white_dune/developer_docs/dune.png
 %%PORTDOCS%%share/doc/white_dune/developer_docs/dune_developer.html

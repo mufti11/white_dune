@@ -49,6 +49,9 @@ binary-arch: checkroot build
 	cp -a packager/debian/control_buster debian/${package}/DEBIAN/control
 	dpkg-shlibdeps bin/dune
 	install tools/run_dune_and_aqsis.sh ${DESTDIR}/bin/ 
+	install -m 644 -p include/white_dune/libC++RWD.h  debian/tmp/usr/include/white_dune/libC++RWD.h
+	install -m 644 -p include/white_dune/libC++RWD_namespace.h  debian/tmp/usr/include/white_dune/libC++RWD_namespace.h
+	install -m 644 -p include/white_dune/libCRWD.h  debian/tmp/usr/include/white_dune/libCRWD.h
 #	chown -R root.root debian/wdune
 	chmod -R g-ws debian/wdune
 

@@ -55,6 +55,9 @@ binary-arch:	checkroot build
 	cp -a packager/debian/menu debian/tmp/usr/lib/menu/white_dune
 	dpkg-shlibdeps bin/dune
 	install tools/run_dune_and_aqsis.sh debian/tmp/usr/bin/  
+	install -m 644 -p include/white_dune/libC++RWD.h  debian/tmp/usr/include/white_dune/libC++RWD.h
+	install -m 644 -p include/white_dune/libC++RWD_namespace.h  debian/tmp/usr/include/white_dune/libC++RWD_namespace.h
+	install -m 644 -p include/white_dune/libCRWD.h  debian/tmp/usr/include/white_dune/libCRWD.h
 	dpkg-gencontrol -pwdune
 	chown -R root.root debian/tmp
 	chmod -R g-ws debian/tmp

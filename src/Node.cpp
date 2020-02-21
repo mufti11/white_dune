@@ -1123,8 +1123,11 @@ NodeData::writeFields(int f, int indent)
     for (int i = 0; i < m_numEventOuts; i++)
         RET_ONERROR( writeEventOut(f, indent, i) )
 
-    if ((scriptUrlField != -1) && (!isPROTO()))
+    if ((scriptUrlField != -1) && (!isPROTO())) {
+        RET_ONERROR( mywritestr(f, "\n[\n") )
         RET_ONERROR( writeField(f, indent, scriptUrlField) )
+        RET_ONERROR( mywritestr(f, "\n]\n") )
+    }
 
     return(0);
 }
@@ -1259,7 +1262,9 @@ NodeData::writeField(int f, int indent, int i, bool script)
             if ((field->getFlags() & FF_URL) && (!TheApp->GetKeepURLs())) {
                 value = rewriteField(value, oldBase, newBase,
                                      m_scene->getWriteFlags());
+                RET_ONERROR( mywritef(f, "\n[\n") )
                 RET_ONERROR( value->write(f, indent) )
+                RET_ONERROR( mywritef(f, "\n]\n") )
                 if (!tempSave) {
                     setField(i, value);
                     FieldUpdate* fieldUpdate=new FieldUpdate((Node*)this, i);

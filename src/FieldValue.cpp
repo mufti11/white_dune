@@ -319,7 +319,7 @@ rewriteField(FieldValue *value, const char *oldBase, const char *newBase,
             bool flag = false;
             flag = !isSortOfEcmascript(((MFString *) value)->getValue(i));
             const char* url = (const char*) ((MFString *) value)->getValue(i);
-            if (notURN(url) && flag) {
+            if (notURN(url) && !flag) {
                (*a)[i] = rewriteURL(url, oldBase, newBase);
 #ifdef _WIN32
                // handle invalid paths like c:/something

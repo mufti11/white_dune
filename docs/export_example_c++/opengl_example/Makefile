@@ -9,7 +9,7 @@ render: C++Export.cc main.cpp
 render_with_picture_path: C++Export.cc main.cpp
 	g++ -g -fPIE $(CXXFLAGS) -Wno-unused-variable -Wno-dangling-else \
             -Wno-sign-compare -Wno-narrowing -Wno-unused-but-set-variable \
-            $(LDFLAGS) -o $@ -I. -I../../../include main.cpp \
+            $(LDFLAGS) -o $@ -I. -I../../../include -I/usr/include main.cpp \
             -DPICTURE_PATH=\"/usr/share/white_dune/opengl_example/\" \
             -lglut -lGLU -lGL -lXmu -lX11 -ljpeg -lpng -lm -lc
 

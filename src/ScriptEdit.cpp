@@ -204,6 +204,11 @@ ScriptEdit::writeFile(int f)
                     writeError = true;
                 if (!writeSFStringUrl(f, "\n"))
                     writeError = true;
+                if ((i != url->getSize() - 1) && (url->getSize() > 1))
+                    if (strchr(string, '\n') != NULL) {
+                        if (!writeSFStringUrl(f, "\"\n\""))
+                            writeError = true;
+                    }
             }
         }
         if (!writeSFStringUrl(f, "\""))
@@ -483,8 +488,6 @@ ScriptEdit::writeSFStringX3domUrl(int f, const char* string)
 bool
 ScriptEdit::ecmaScriptReadEditorfile(char *fileName)
 {
-    return ObjectEdit::readEditorFile(fileName, m_scriptNode, 
-                                      m_scriptNode->url_Field());
     return readQuotedEditorFile(fileName, m_scriptNode,
                                 m_scriptNode->url_Field());
 }
@@ -656,6 +659,7 @@ ObjectEdit::readQuotedEditorFile(char *fileName, Node *node, int field)
     m_urlDataLength = lseek(f, 0, SEEK_END);
     lseek(f,0,SEEK_SET);
     m_urlData = new char[m_urlDataLength + 1];
+    m_urlData[m_urlDataLength] = 0;
     int offset = 0;
     do {
         int bytes = read(f, m_urlData + offset, m_urlDataLength - offset);
@@ -672,18 +676,22 @@ ObjectEdit::readQuotedEditorFile(char *fileName, Node *node, int field)
         offset += bytes;
     } while (offset < m_urlDataLength);  
 
+    for (long i = 0; i < m_urlDataLength; i++)
+        if (m_urlData[i] == '"')
+            m_urlData[i] = 0; 
+
+    int urls = 0;
+
     MFString* newUrl = new MFString();
-    if (m_urlStartData.size() != m_urlEndData.size()) {
-        TheApp->MessageBox(IDS_MISSING_QUOTE_PAIR, m_editorFile);
-        edit(false);
-        return false;
-    } 
-    for (long i = 0 ; i < m_urlStartData.size(); i++) {
-        m_urlData[m_urlEndData[i]] = '\0';
-        MyString urlString = "";
-        urlString += (&m_urlData[m_urlStartData[i]+1]);
-        urlString += "\n";
-        newUrl->setSFValue(i, new SFString(urlString));
+    for (long i = 0; i < m_urlDataLength; i++) {
+        if ((m_urlData[i] == 0) && (strlen(m_urlData + i + 1) > 0)) {
+            if ((m_urlData[i + 1] == '\n') && (strlen(m_urlData + i + 1) == 1))
+                continue;
+            MyString urlString = "\"";
+            urlString += m_urlData + i + 1;
+            urlString += "\"";
+            newUrl->setSFValue(urls++, new SFString(urlString));
+        }       
     }       
     node->setField(field, newUrl);     
     return true;

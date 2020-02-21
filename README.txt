@@ -5557,6 +5557,10 @@ Fixed ecmascript URL editing
 
 Fixed bug in File->Textedit of Script
 
-Fixed changed path of XQuartz X11.app
+Fixed changed path of MacOSX XQuartz X11.app
+
+Fixed URL editing
+
+Fixed layout error in ScriptEventDialog
 
 Contact: MUFTI <mufti11@web.de>

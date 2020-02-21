@@ -101,6 +101,9 @@ package() {
 	install -Dm644 desktop/kde/dune.png \$pkgdir/usr/share/pixmaps/dune.png
 	install -Dm644 desktop/kde/dune4kids.desktop \$pkgdir/usr/share/applications/dune4kids.desktop
 	install -Dm644 desktop/kde/dune4kids.png \$pkgdir/usr/share/pixmaps/dune4kids.png
+	install -m 644 -p include/white_dune/libC++RWD_namespace.h \$pkgdir/usr/include/white_dune/libC++RWD_namespace.h
+	install -m 644 -p include/white_dune/libC++RWD.h \$pkgdir/usr/include/white_dune/libC++RWD.h
+	install -m 644 -p include/white_dune/libCRWD.h \$pkgdir/usr/include/white_dune/libCRWD.h
 }
 EOT
 
