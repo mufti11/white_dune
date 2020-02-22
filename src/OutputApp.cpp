@@ -130,10 +130,7 @@ OutputApp::OutputSetDefaults()
         free(m_defaultCattMaterialName);
     m_defaultCattMaterialName = strdup(DEFAULT_CATT_MATERIAL_NAME);
 
-    m_revisionControlCheckinFlag = CHECK_IN_COMMAND_ENABLED;
-    if (m_revisionControlCheckinCommand != NULL)
-        free(m_revisionControlCheckinCommand);
-    m_revisionControlCheckinCommand = strdup(HAVE_CHECK_IN_COMMAND);
+    m_revisionControlCheckinCommand = strdup("");
 
     if (m_xitePath != NULL)
         free(m_xitePath);
@@ -186,7 +183,7 @@ OutputApp::OutputSetDefaults()
     m_imageConverter = "";
 #endif
 
-
+    m_git = true;
 }
 
 void
@@ -235,16 +232,19 @@ OutputApp::OutputLoadPreferences()
     m_defaultCattMaterialName = strdup(TheApp->GetPreference(
                                        "DefaultCattMaterialName",
                                        DEFAULT_CATT_MATERIAL_NAME));
-    m_cattExportSrcRec = TheApp->GetBoolPreference("CattExportSrcRec", true);    
+    m_cattExportSrcRec = TheApp->GetBoolPreference("CattExportSrcRec", true);
 
-    m_revisionControlCheckinFlag = TheApp->GetBoolPreference(
-                                   "UseRevisionControl",
-                                   CHECK_IN_COMMAND_ENABLED); 
     if (m_revisionControlCheckinCommand != NULL)
         free(m_revisionControlCheckinCommand);
     m_revisionControlCheckinCommand = strdup(TheApp->GetPreference(
                                              "RevisionControlCheckInCommand",
                                              HAVE_CHECK_IN_COMMAND));
+    m_git = TheApp->GetBoolPreference("UseGit", true);
+    char message[256];
+    if (strlen(m_revisionControlCheckinCommand) > 0 && m_git)
+        if (swMessageBox(TheApp->mainWnd(), message, "use git ?", 
+                         SW_MB_YESNO, SW_MB_WARNING) == IDYES)
+            m_revisionControlCheckinCommand[0] = 0;
 
     if (m_xitePath != NULL)
         free(m_xitePath);
@@ -342,7 +342,7 @@ OutputApp::OutputSavePreferences()
     TheApp->SetBoolPreference("CattExportSrcRec", m_cattExportSrcRec);
     TheApp->SetPreference("CattExportPath", m_cattExportPath);
 
-    TheApp->SetBoolPreference("UseRevisionControl", m_revisionControlCheckinFlag);
+    TheApp->SetBoolPreference("UseGit", m_git);
     TheApp->SetPreference("RevisionControlCheckInCommand", 
                           m_revisionControlCheckinCommand);
 

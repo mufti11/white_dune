@@ -546,9 +546,18 @@ void parseCommandlineUsage(
                 if (convert == KANIM)
                     scene->getRoot()->preDraw();
                 int fileDescriptor = 1;
+                if (convert == RIB) {
+                    URL x3dFile(argv[inputFileArg]);
+                    MyString file = "";
+                    file += x3dFile.GetFileNameWithoutExtension();
+                    file += ".rib";
+                    url = strdup(file);
+                }
                 if (!tempSave && 
                     (!((convert == RIB) && (TheApp->getNumExportFiles() > 1))))
+                    {
                     fileDescriptor = open(url, O_WRONLY | O_CREAT, 00666);
+                }
                 if (fileDescriptor == -1) {
                     myperror(url);
                     exit(1);

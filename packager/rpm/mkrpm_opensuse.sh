@@ -44,7 +44,7 @@ URL: http://wdune.ourproject.org/
 Source: ftp://ftp.ourproject.org/pub/wdune/$VERSION3.tar.bz2
 BuildRoot: /var/tmp/%{name}buildroot
 BuildRequires: gcc-c++, gawk, make, bash, fileutils, motif-devel, libXi-devel, libXmu-devel, libpng-devel, libjpeg-devel, glu-devel, libexpat-devel, flex, bison, libusb-devel, update-desktop-files, fdupes, libcgal-devel, libcurl-devel, ImageMagick, freetype2-devel, bitstream-vera-fonts, libavcodec-devel libavutil-devel libavformat-devel libavresample-devel libswscale-devel libswresample-devel
-Requires: rcs, firefox, gedit, gimp, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, xorg-x11-fonts-core
+Requires: git, firefox, gedit, gimp, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, xorg-x11-fonts-core
 
 %description
 white_dune is a graphical X3D/VRML97 editor, 3D modeler and animation tool.
@@ -102,6 +102,7 @@ make -j1 RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/bin
+mkdir -p $RPM_BUILD_ROOT/usr/include/white_dune
 mkdir -p $RPM_BUILD_ROOT/usr/share/man/man1
 mkdir -p $RPM_BUILD_ROOT/usr/share/misc/white_dune
 mkdir -p $RPM_BUILD_ROOT/usr/share/applications

@@ -13283,11 +13283,22 @@ MainWindow::ImportFileCheck(const char *path, Node *node, int field)
 void 
 MainWindow::checkInFile(const char *path)
 { 
-    char cmd[2048];
-    mysnprintf(cmd, 2047, TheApp->GetRevisionControlCheckinCommand(), path);
-    setStatusText(cmd);
-    if (system(cmd) != 0)
-        TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
+    if (strlen(TheApp->GetRevisionControlCheckinCommand()) > 0) {
+        char cmd[2048];
+        mysnprintf(cmd, 2047, TheApp->GetRevisionControlCheckinCommand(), path);
+        setStatusText(cmd);
+        if (system(cmd) != 0)
+            TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
+    } else {
+        // use git
+        system("git init");
+        MyString gitCmd = "";
+        gitCmd += "git add ";
+        gitCmd += path;
+        if (system(gitCmd) != 0)
+            TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
+        system("git commit -sm \"new version\"");
+    }
 }
 
 
@@ -13307,8 +13318,7 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
     int f = open(path, O_WRONLY | O_CREAT, 00664);
    
     if (f != -1) {
-        if (!(writeFlags & TEMP_EXPORT) && 
-            TheApp->GetRevisionControlCheckinFlag())
+        if (!(writeFlags & TEMP_EXPORT)) 
             checkInFile(path);
 
         writeError = false;
@@ -13356,8 +13366,7 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
             else if (swTruncateClose(f))
                 writeError = true;
         }
-        if (!(writeFlags & TEMP_EXPORT) && 
-            TheApp->GetRevisionControlCheckinFlag())
+        if (!(writeFlags & TEMP_EXPORT))
             checkInFile(path);
     }
     if (writeError) {

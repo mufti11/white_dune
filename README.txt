@@ -5563,4 +5563,10 @@ Fixed URL editing
 
 Fixed layout error in ScriptEventDialog
 
+Changed rcs usage to git usage
+
+Changed -rib option and run_dune_and_aqsis to use the input filename    
+
+run_dune_and_aqsis creates a movie, if mencoder is available
+
 Contact: MUFTI <mufti11@web.de>

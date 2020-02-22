@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.758
+pkgver=1.765
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -34,7 +34,7 @@ makedepends=(gcc
              gawk
              m4
              make
-             rcs
+             git
              xdg-utils
              gedit
              lxterminal
@@ -63,7 +63,7 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('679995439654f9126c8231dece3e4157')
+md5sums=('2c7360c565c499d4d6b2928d45f45999')
 validpgpkeys=()
 
 build() {
@@ -82,4 +82,7 @@ package() {
 	install -Dm644 desktop/kde/dune.png $pkgdir/usr/share/pixmaps/dune.png
 	install -Dm644 desktop/kde/dune4kids.desktop $pkgdir/usr/share/applications/dune4kids.desktop
 	install -Dm644 desktop/kde/dune4kids.png $pkgdir/usr/share/pixmaps/dune4kids.png
+	install -Dm644 include/white_dune/libC++RWD_namespace.h $pkgdir/usr/include/white_dune/libC++RWD_namespace.h
+	install -Dm644 include/white_dune/libC++RWD.h $pkgdir/usr/include/white_dune/libC++RWD.h
+	install -Dm644 include/white_dune/libCRWD.h $pkgdir/usr/include/white_dune/libCRWD.h
 }

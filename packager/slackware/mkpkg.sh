@@ -132,11 +132,11 @@ install -D -m 0644 desktop/kde/dune.desktop \\
         \$PKG/usr/share/applications/dune.desktop
 install -D -m 0644 desktop/kde/dune.png \\
         \$PKG/usr/share/pixmaps/dune.png
-install -D -m 644 -p include/white_dune/libC++RWD_namespace.h 
+install -D -m 644 -p include/white_dune/libC++RWD_namespace.h \\
         \$PKG/usr/include/white_dune/libC++RWD_namespace.h
-install -D -m 644 -p include/white_dune/libC++RWD.h 
+install -D -m 644 -p include/white_dune/libC++RWD.h \\
         \$PKG/usr/include/white_dune/libC++RWD.h
-install -D -m 644 -p include/white_dune/libCRWD.h
+install -D -m 644 -p include/white_dune/libCRWD.h \\
         \$PKG/usr/include/white_dune/libCRWD.h
 
 find \$PKG/usr/man -type f -exec gzip -9 {} \;

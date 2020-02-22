@@ -2051,10 +2051,10 @@ BEGIN
     LTEXT           "Default Material Name for Catt export",
                     IDC_STATIC,19,254,200,10
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
-    AUTOCHECKBOX    "use revision control on save",
-                    IDC_REVISION_CONTROL_ENABLED,19,285,152,10
+    AUTOCHECKBOX    "use git revision control system",
+                    IDC_USE_GIT,19,285,152,10
     LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,170,10
+                    IDC_STATIC,19,294,200,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL
@@ -4467,6 +4467,12 @@ BEGIN
     IDS_FR_NOT_ENOUGH_LINES                 "not enough lines in .OFF file"
     IDS_FR_WRONG_OFF_HEADER                 "wrong header line in .OFF file"
     IDS_FR_WRONG_OFF_DATA                   "wrong data in .OFF file"
+END
+
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FR_GIT_OR_OWN_COMMAND               "use git or own RCS command ?"
 END
 
 #ifdef HAVE_SAND

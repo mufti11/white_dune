@@ -200,6 +200,9 @@ public:
     bool                 GetRunAnt(void) { return m_runAnt; }
     void                 SetRunAnt(bool flag) { m_runAnt = flag; }
 
+    bool                 GetGit(void) { return m_git; }
+    void                 SetGit(bool flag) { m_git = flag; }
+
     void                 runAnt(Scene *scene);
                          
     const char          *GetRibTexturer(void) { return m_ribTexturer; }
@@ -256,6 +259,7 @@ private:
     bool                    m_runAnt;
     char                   *m_ribTexturer;
     char                   *m_imageConverter;
+    bool                    m_git;
 };
 
 

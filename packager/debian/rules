@@ -32,6 +32,7 @@ binary-arch: checkroot build
 	rm -rf debian/tmp
 	install -d debian/tmp/DEBIAN \
                 -d debian/tmp/usr/bin/ \
+		-d debian/tmp/usr/include/white_dune \
 		-d debian/tmp/usr/share/doc/$(package) \
 		-d debian/tmp/usr/share/applications \
 		-d debian/tmp/usr/share/pixmaps \

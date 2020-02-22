@@ -66,8 +66,8 @@ void OutputSettingsDialog::LoadData()
     swSetCheck(swGetDialogItem(m_dlg, IDC_NORMALS_ON_MESH_CREATION), 
        TheApp->OutputApp::GetNormalsOnMeshCreation());
 
-    swSetCheck(swGetDialogItem(m_dlg, IDC_REVISION_CONTROL_ENABLED), 
-                               TheApp->GetRevisionControlCheckinFlag() ? 
+    swSetCheck(swGetDialogItem(m_dlg, IDC_USE_GIT), 
+                               TheApp->GetGit() ? 
                                1 : 0);
     swSetText(swGetDialogItem(m_dlg, IDC_REVISION_CONTROL_COMMAND), 
                               TheApp->GetRevisionControlCheckinCommand());
@@ -139,6 +139,14 @@ OutputSettingsDialog::Validate()
     dir += '/';
     if (!mkdir_parents4file(dir))
         return false;
+     swGetText(swGetDialogItem(m_dlg, IDC_REVISION_CONTROL_COMMAND), temp, 
+                               1023);
+    if (swGetCheck(swGetDialogItem(m_dlg, IDC_USE_GIT))!=0 && 
+                   strlen(temp) > 0) {
+        TheApp->MessageBox("use git for revision control ?", SW_MB_WARNING);
+        return false;
+    }
+   
     return true;
 }
 
@@ -170,8 +178,7 @@ OutputSettingsDialog::SaveData()
     swGetText(swGetDialogItem(m_dlg, IDC_X3DOM_PARAMETER), temp, 1023);
     TheApp->SetX3domParameter(temp);
 
-    TheApp->SetRevisionControlCheckinFlag(swGetCheck(
-          swGetDialogItem(m_dlg, IDC_REVISION_CONTROL_ENABLED))!=0);
+    TheApp->SetGit(swGetCheck(swGetDialogItem(m_dlg, IDC_USE_GIT)) != 0);
 
     swGetText(swGetDialogItem(m_dlg, IDC_REVISION_CONTROL_COMMAND), temp, 1023);
     TheApp->SetRevisionControlCheckinCommand(temp);

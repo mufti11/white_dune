@@ -979,7 +979,7 @@ configure: configure.in
 clean:
 	cd swt ; $(MAKE) clean
 	cd SDLjoystick ; $(MAKE) clean
-	rm -rf y.tab.c $(OBJS) main.o $(TESTOJBS) *.bak \
+	rm -rf .git y.tab.c $(OBJS) main.o $(TESTOJBS) *.bak \
         gmon.out config.cache config.log core iifiles ii_files \
 	mysnprintftest joysticktest spaceballtest aflocktest \
 	Makefile.depend_* cxx_repository allNodesTest*.o 

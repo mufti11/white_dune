@@ -88,7 +88,7 @@ BuildRequires: grep
 BuildRequires: pkg-config
 BuildRequires: pkgconfig(eigen3) pkgconfig(vcglib)
 BuildRequires: freeglut-devel
-Requires: rcs
+Requires: git
 Requires: gedit
 Requires: ImageMagick
 Requires: aqsis-core
@@ -132,7 +132,6 @@ Compiled OpenGL examples for white_dune
 
 %package docs
 License: GPLv2+ and BSD and MIT
-BuildArch: noarch
 Summary: Documentation for white_dune
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description docs
@@ -154,7 +153,8 @@ Documentation for white_dune
     --with-imageeditor="kolourpaint" \\
     --with-imageeditor4kids="kolourpaint" \\
     --with-soundeditor=audacity \\
-    --with-cgalheaders
+    --with-cgalheaders \\
+    --with-allow-multiple-definition
 
 CXXFLAGS="$CXXFLAGS -Wno-ignored-attributes -Wnonnull-compare -Wmaybe-uninitialized"
 %make_build 
