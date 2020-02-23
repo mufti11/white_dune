@@ -1778,6 +1778,8 @@ NodeIndexedFaceSet::changeToColorPerVertex(void)
             return;
         MFColorRGBA *colors = ncolor->color(); 
         MFColorRGBA *newColors = new MFColorRGBA();
+        if (getMesh() == NULL)
+            return;
         for (int i = 0; i < getMesh()->getNumFaces(); i++) {
             FaceData *face = getMesh()->getFace(i);
             int offset = face->getOffset();
@@ -1814,6 +1816,8 @@ NodeIndexedFaceSet::changeToColorPerVertex(void)
             return;
         MFColor *colors = ncolor->color(); 
         MFColor *newColors = new MFColor();
+        if (getMesh() == NULL)
+            return;
         for (int i = 0; i < getMesh()->getNumFaces(); i++) {
             FaceData *face = getMesh()->getFace(i);
             int offset = face->getOffset();
@@ -1857,6 +1861,8 @@ NodeIndexedFaceSet::changeToColorPerFace(void)
             return;
         MFColorRGBA *colors = ncolor->color(); 
         MFColorRGBA *newColors = new MFColorRGBA();
+        if (getMesh() == NULL)
+            return;
         for (int i = 0; i < getMesh()->getNumFaces(); i++) {
             FaceData *face = getMesh()->getFace(i);
             int offset = face->getOffset();
@@ -1893,6 +1899,8 @@ NodeIndexedFaceSet::changeToColorPerFace(void)
             return;
         MFColor *colors = ncolor->color(); 
         MFColor *newColors = new MFColor();
+        if (getMesh() == NULL)
+            return;
         for (int i = 0; i < getMesh()->getNumFaces(); i++) {
             FaceData *face = getMesh()->getFace(i);
             int offset = face->getOffset();

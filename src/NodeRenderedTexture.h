@@ -19,6 +19,8 @@
  * Cambridge, MA 02139, USA.
  */
 
+#pragma once
+
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"

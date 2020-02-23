@@ -350,7 +350,8 @@ int MFieldValue::write(int f, int indent, bool writeBrackets) const
             RET_ONERROR( mywritestr(f, "\n") )
             TheApp->incSelectionLinenumber();
             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
-        }
+        } else
+            RET_ONERROR( indentf(f, indent) )
         RET_ONERROR( mywritestr(f, "[\n") )
         TheApp->incSelectionLinenumber();
     } else if (isMFNode()) {

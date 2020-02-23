@@ -214,6 +214,8 @@ DynamicFieldsNode::writeEvents(int f, int indent)
 
     for (int i = 0; i < m_numEventOuts; i++) {
         EventOut *eventOut = m_proto->getEventOut(i);
+        if (eventOut == NULL)
+            continue; 
         if (eventOut->getFlags() & (FF_STATIC | FF_HIDDEN))
             continue; 
         ExposedField *exposedField = eventOut->getExposedField();

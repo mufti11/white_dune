@@ -18,7 +18,7 @@ rm -rf /tmp/$VERSION_DEBIAN /tmp/$VERSION_ORIG
 (cd ../../.. && cp -r $VERSION /tmp/$VERSION_ORIG) &&
 (cd /tmp/$VERSION_ORIG && make realclean) &&
 (cd .. && tar -cf - debian) | (cd /tmp/$VERSION_DEBIAN && tar -xf -) &&
-cp control_stretch /tmp/$VERSION_DEBIAN/debian/control
+cp control_raspian /tmp/$VERSION_DEBIAN/debian/control
 cp rules_rasbian /tmp/$VERSION_DEBIAN/debian/rules
 
 chmod a+x /tmp/$VERSION_DEBIAN/debian/mkinstalldirs

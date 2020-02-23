@@ -2637,13 +2637,13 @@ bool writeCVariableNameLine(Node *node, const char *variableName,
             written = true;
     } else if ((cWrite->languageFlag & C_SOURCE) && node->isPROTO() &&
                (!written)) {
-        if (mywritef(f, "X3d%s_%s", (const char *)
-                                    node->getProto()->getName(true),
-                                    variableName) != 0)
+        if (mywritef(f, "%s%s_%s", TheApp->getCPrefix(), (const char *)
+                                   node->getProto()->getName(true),
+                                   variableName) != 0)
             error = -1;
         else 
             written = true;
-    } if ((!written) && mywritef(f, "X3d%s", (const char *)
+    } if ((!written) && mywritef(f, "%s%s", TheApp->getCPrefix(), (const char *)
                                     node->getProto()->getName(true)) != 0)
         error = -1;
     if (mywritestr(f, " ") != 0)

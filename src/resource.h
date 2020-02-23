@@ -840,7 +840,7 @@
 #define IDC_BROWSE_REMOTE                   1337
 #define IDC_SCENE_NUMBER                    1338
 #define IDC_DEFAULT_SCENE_LENGTH            1339
-#define IDC_SCENES_FIRST                    1440
+#define IDC_SCENES_FIRST                    1340
 #define IDC_SCENES_LAST                     1341
 #define IDC_SCENES_NUMBER                   1342
 #define IDC_SCENES_LENGTH                   1343

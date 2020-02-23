@@ -1262,9 +1262,9 @@ NodeData::writeField(int f, int indent, int i, bool script)
             if ((field->getFlags() & FF_URL) && (!TheApp->GetKeepURLs())) {
                 value = rewriteField(value, oldBase, newBase,
                                      m_scene->getWriteFlags());
-                RET_ONERROR( mywritef(f, "\n[\n") )
-                RET_ONERROR( value->write(f, indent) )
-                RET_ONERROR( mywritef(f, "\n]\n") )
+                RET_ONERROR( mywritef(f, "\n[\n\"") )
+                RET_ONERROR( value->writeRaw(f, 0) )
+                RET_ONERROR( mywritef(f, "\"\n]\n") )
                 if (!tempSave) {
                     setField(i, value);
                     FieldUpdate* fieldUpdate=new FieldUpdate((Node*)this, i);
@@ -1619,6 +1619,8 @@ NodeData::writeRoutes(int f, int indent) const
                     (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
                      dst->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
                     continue;
+                if (getProto()->getEventOut(i)->getName(x3d).length() == 0)
+                    continue;     
                 MyString routestring = m_scene->createRouteString(m_name,
                          getProto()->getEventOut(i)->getName(x3d),
                          dst->getName(),

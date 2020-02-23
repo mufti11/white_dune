@@ -5567,6 +5567,8 @@ Changed rcs usage to git usage
 
 Changed -rib option and run_dune_and_aqsis to use the input filename    
 
-run_dune_and_aqsis creates a movie, if mencoder is available
+run_dune_and_aqsis.sh creates a movie, if mencoder is available
+
+Fixed problems in "make test"
 
 Contact: MUFTI <mufti11@web.de>
