@@ -19,7 +19,7 @@ for j in $FILE*.rib ; do (aqsis $j &); done
 while test "X_`ps -ef | grep aqsis | grep -v grep | grep -v run_dune_and_aqsis.sh`" != "X_" ; 
 do sleep 1; done
 for j in $FILE*.rib; do rm $j; done
-if test -x mencoder ; then
+if test -x /usr/bin/mencoder ; then
     # if mencoder is available, create movie and delete the .tif files 
     mencoder -o $FILE.mp4 "mf://$FILE*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -mf type=tif:fps=24 &&
     rm $FILE*.tif
