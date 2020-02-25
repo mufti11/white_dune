@@ -174,8 +174,8 @@ BEGIN
         MENUITEM "'Super&ovo'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Visual",                              ID_NEW_VIEWPOINT
-        MENUITEM "Color",                               ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Color (necessidade IndexedFaceSet)",  ID_NEW_COLOR
+        MENUITEM "ColorRGBA (necessidade IndexedFaceSet)", ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vazio",                         ID_NEW_GROUP

@@ -32,6 +32,8 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include <algorithm>
+
 #include "stdafx.h"
 
 #include "NodeIndexedFaceSet.h"
@@ -688,51 +690,91 @@ NodeIndexedFaceSet::checkBorderFace(MyArray<int> innerBorder,
     return true;
 }
 
+static bool compareVectors(Vec3f vec, Vec3f vec2)
+{
+     bool ret = true;
+     float epsilon = TheApp->GetHandleEpsilon();
+     if ((fabs(vec.x + vec2.x) > epsilon) ||
+         (fabs(vec.y - vec2.y) > epsilon) ||
+         (fabs(vec.z - vec2.z) > epsilon)) {
+         return false;
+     }
+     return ret;
+}
+
+
+static bool comparePermutation(MyArray<int> intArrayCi,
+                               MyArray<int> intArrayPerm, MFVec3f *mfvec)
+{
+    bool ret = true;
+    int *arr = new int[intArrayPerm.size()];
+    for (int i = 0; i < intArrayPerm.size(); i++)
+        arr[i] = intArrayPerm[i]; 
+    std::sort(arr, arr + intArrayPerm.size());   
+    do {
+        bool vectorsEqual = true;
+        for (int i = 0; i < intArrayPerm.size(); i++)
+        for (int i = 0; i < intArrayPerm.size(); i++) {
+             if (!compareVectors(mfvec->getValue(intArrayCi[i]), 
+                                 mfvec->getValue(arr[i]))) {
+                 vectorsEqual = false;
+                 break;
+             }
+        }
+        if (vectorsEqual) {
+            delete [] arr;
+            return true;
+        }
+    } while (std::next_permutation(arr, arr + intArrayPerm.size()));
+    bool vectorsEqual = true;
+        for (int i = 0; i < intArrayPerm.size(); i++)
+    for (int i = 0; i < intArrayPerm.size(); i++) {
+         if (!compareVectors(mfvec->getValue(intArrayCi[i]), 
+                             mfvec->getValue(arr[i]))) {
+             vectorsEqual = false;
+             break;
+        }
+    }
+    if (vectorsEqual) {
+        delete [] arr;
+        return true;
+    }
+    delete [] arr;
+    return false;
+}
+
 int
-NodeIndexedFaceSet::symetricFace(int iface, bool sameFace)
+NodeIndexedFaceSet::symetricFace(int iface)
 {
     NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
     if (ncoord == NULL)
         return -1;
-    float epsilon = TheApp->GetHandleEpsilon();
     FaceData *face = getMesh()->getFace(iface);
     int offset = face->getOffset();
     int numVertices = face->getNumVertices();
-    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+    int numFaces = getMesh()->getNumFaces();
+    for (int i = 0; i < numFaces; i++) {
         if (i == iface)
             continue;
         FaceData *face2 = getMesh()->getFace(i);
         int offset2 = face2->getOffset();
         int numVertices2 = face2->getNumVertices();
-        bool iSymetric2 = (numVertices2 > 0);
-        for (int j = 0; j < numVertices2; j++) {
-             int ci = coordIndex()->getValue(offset2 + j);
-             Vec3f vec = ncoord->point()->getValue(ci);
-             bool iSymetric = false;
-             for (int n = 0; n < numVertices; n++) {
-                 int ci2 = coordIndex()->getValue(offset + n);
-                 Vec3f vec2 = ncoord->point()->getValue(ci2);
-                 bool sameX;
-                 if (sameFace)
-                     sameX = (fabs(vec.x - vec2.x) < epsilon);
-                 else
-                     sameX = (fabs(vec.x + vec2.x) < epsilon);
-                 if ( sameX &&
-                     (fabs(vec.y - vec2.y) < epsilon) &&
-                     (fabs(vec.z - vec2.z) < epsilon)) {
-                     iSymetric = true;    
-                     break;
-                 }
-             } 
-             if (!iSymetric) {
-                 iSymetric2 = false;
-                 break;
-             }                 
-         }
-         if (iSymetric2)
-             return i;
-    }    
-    return -1;
+        if (numVertices != numVertices2)
+            continue;
+        MyArray<int> intArrayCi;
+        for (int j = 0; j < numVertices; j++) {
+             int ci = coordIndex()->getValue(offset + j);
+             intArrayCi.append(ci);
+        }
+        MyArray<int> intArrayPerm;
+        for (int n = 0; n < numVertices; n++) {
+            int ci2 = coordIndex()->getValue(offset2 + n);
+            intArrayPerm.append(ci2);
+        }                 
+        if (comparePermutation(intArrayCi, intArrayPerm, ncoord->point()))
+            return i;
+     }    
+     return -1;
 }
 
 void

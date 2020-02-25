@@ -244,8 +244,8 @@ BEGIN
         MENUITEM "'Super&Egg'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Came&ra",                             ID_NEW_VIEWPOINT
-        MENUITEM "Color",                               ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Color (need IndexedFaceSet)",         ID_NEW_COLOR
+        MENUITEM "ColorRGBA (need IndexedFaceSet)",     ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Empt&y Group",                        ID_NEW_GROUP
@@ -4872,8 +4872,8 @@ BEGIN
         MENUITEM "'Super&Egg'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Camera",                              ID_NEW_VIEWPOINT
-        MENUITEM "Color",                               ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Color (a besoin d' IndexedFaceSet)",   ID_NEW_COLOR
+        MENUITEM "ColorRGBA (a besoin d' IndexedFaceSet)", ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vide",                          ID_NEW_GROUP
@@ -9375,8 +9375,8 @@ BEGIN
         MENUITEM "'Super&Egg'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Kamera",                              ID_NEW_VIEWPOINT
-        MENUITEM "Color",                               ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Color (braucht IndexedFaceSet)",      ID_NEW_COLOR
+        MENUITEM "ColorRGBA (braucht IndexedFaceSet)",  ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Leere Group",                         ID_NEW_GROUP
@@ -13875,10 +13875,10 @@ BEGIN
         MENUITEM "'Super&Uovo'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Visuale",                              ID_NEW_VIEWPOINT
-        MENUITEM "Color",                                ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                            ID_NEW_COLOR_RGBA
+        MENUITEM "Color (occorre IndexedFaceSet)",       ID_NEW_COLOR
+        MENUITEM "ColorRGBA (occorre IndexedFaceSet)",   ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                               ID_NEW_TEXT_3D
-        MENUITEM "Billboard",                           ID_NEW_BILLBOARD
+        MENUITEM "Billboard",                            ID_NEW_BILLBOARD
         MENUITEM "Group vuoto",                          ID_NEW_GROUP
         MENUITEM "Transform vuoto",                      ID_NEW_TRANSFORM
         MENUITEM "New node by name",                     ID_NEW_NODE_BY_NAME
@@ -18384,8 +18384,8 @@ BEGIN
         MENUITEM "'Super&ovo'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Visual",                              ID_NEW_VIEWPOINT
-        MENUITEM "Color",                               ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Color (necessidade IndexedFaceSet)",  ID_NEW_COLOR
+        MENUITEM "ColorRGBA (necessidade IndexedFaceSet)", ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vazio",                         ID_NEW_GROUP

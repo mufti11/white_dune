@@ -173,8 +173,8 @@ BEGIN
         MENUITEM "'Super&Egg'",                         ID_NEW_SUPER_ELLIPSOID
         MENUITEM SEPARATOR
         MENUITEM "Camera",                              ID_NEW_VIEWPOINT
-        MENUITEM "Color",                               ID_NEW_COLOR
-        MENUITEM "ColorRGBA",                           ID_NEW_COLOR_RGBA
+        MENUITEM "Color (a besoin d' IndexedFaceSet)",   ID_NEW_COLOR
+        MENUITEM "ColorRGBA (a besoin d' IndexedFaceSet)", ID_NEW_COLOR_RGBA
         MENUITEM "Text3D",                              ID_NEW_TEXT_3D
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vide",                          ID_NEW_GROUP

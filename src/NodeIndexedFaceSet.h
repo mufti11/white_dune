@@ -151,7 +151,7 @@ public:
     void            extrudeFaces(float dist);
     void            insetFace(float factor);
     int             symetricPointIndex(int ci, int iface);
-    int             symetricFace(int iface, bool sameFace = false);
+    int             symetricFace(int iface);
     bool            checkBorderMidPoint(int icoordIndex, MyArray<int> symFaces);
     bool            checkBorderFace(MyArray<int> innerBorder, 
                                     MyArray<int> outerBorder, 

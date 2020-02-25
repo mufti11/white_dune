@@ -13290,14 +13290,41 @@ MainWindow::checkInFile(const char *path)
         if (system(cmd) != 0)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
     } else {
+        bool relativ = strchr(path, '/') == NULL;
+
         // use git
-        system("git init");
+        if (relativ)
+            system("git init");
+        else {
+            MyString initString = "";
+            initString += "(cd `dirname ";
+            initString += path;
+            initString += "` && git init)";
+            system(initString);
+        }
+        
         MyString gitCmd = "";
+        if (!relativ) {
+            gitCmd += "(cd `dirname ";
+            gitCmd += path;
+            gitCmd += "` && ";
+        }
         gitCmd += "git add ";
         gitCmd += path;
+        if (!relativ)
+            gitCmd += ")";
         if (system(gitCmd) != 0)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
-        system("git commit -sm \"new version\"");
+
+        if (relativ)
+            system("git commit -uno -qsm \"new version\"");
+        else {
+            MyString commitString = "";
+            commitString += "(cd `dirname ";
+            commitString += path;
+            commitString += "` && git commit -uno -qsm \"new version\")";
+            system(commitString);
+        }
     }
 }
 

@@ -59,7 +59,6 @@ makedepends=(gcc
              lxterminal
              gimp
              audacity
-             cinelerra-cv
              kolourpaint
              imagemagick
              netpbm

@@ -139,14 +139,7 @@ public:
     void        resize(long size) {
                     if (m_flags == NO_RESIZE)
                         return;
-                    if (size == 0) {
-                        if (m_size > 0) {
-                            delete[] m_data;
-                            m_capacity = DEFAULT_CAPACITY; 
-                            m_data = new T[m_capacity]; 
-                        }
-                        m_size = 0;
-                    } else if (m_capacity < size) {
+                    else if ((size >= 0) && (m_capacity < size)) {
                         if (m_capacity < DEFAULT_CAPACITY)
                             m_capacity = DEFAULT_CAPACITY;
                         while (m_capacity < size)

@@ -5571,4 +5571,8 @@ run_dune_and_aqsis.sh creates a movie, if mencoder is available
 
 Fixed problems in "make test"
 
+Fixed git checkin problem
+
+Fixed !IndexedFaceSet.colorPerVertex paint
+
 Contact: MUFTI <mufti11@web.de>

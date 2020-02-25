@@ -1,7 +1,7 @@
 /*
  * ColorCircle.cpp
  *
- * Copyright (C) 2002 Christian Hanisch
+ * Copyright (C) 2002 Christian Hanisch, 2020 J. "MUFTI" Scheurich
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1185,7 +1185,13 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                     diffuseColor = colored->getMaterialNode(
                                    (GeometryNode *)geometry)->diffuseColor();
                 }
-                if (colored->getColorPerVertex(geo)) { 
+                NodeIndexedFaceSet *face = NULL;
+                if (m_scene->getSelectionMode() == SELECTION_MODE_FACES) {
+                    if (geometry->getType() == VRML_INDEXED_FACE_SET) {
+                        face = (NodeIndexedFaceSet *)geometry;
+                        if (face->colorPerVertex()->getValue())
+                            face->changeToColorPerFace();
+                    }    
                     NodeCoordinate *coord = geometry->getCoordinateNode();
                     if (colors && (colors->getSize() == 0)) {
                         colors = new MFColor();
@@ -1213,37 +1219,32 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                         colors = new MFColor((MFColor *)(ncolor->color()->
                                                          copy()));
                     float rgb[] = {r, g, b};
-                    bool faces = m_scene->getSelectionMode() == 
-                                 SELECTION_MODE_FACES;
-                    if (faces)
-                        m_scene->setSelectionMode(SELECTION_MODE_VERTICES);  
-
                     if (coord) {
-                        if (node->getScene()->getXSymetricMode()) {
-                            for (int i = 0; i <= coord->getMaxHandle(); i++)
-                                if (coord->checkHandle(i))
-                                    colors->setSFValue(i, rgb);
-                        }
                         for (int i = 0; i < m_scene->getSelectedHandlesSize();
-                             i++)
-                            if (coord->validHandle(
-                                m_scene->getSelectedHandle(i)))
+                             i++) {
+                            if (face) {
                                 colors->setSFValue(
                                     m_scene->getSelectedHandle(i), rgb);
+                                int j = face->symetricFace(
+                                            m_scene->getSelectedHandle(i));
+                                if (j != -1)
+                                     colors->setSFValue(j, rgb);
+                            }
+                        }
                         m_scene->setField(node, m_fieldUpdate.field, colors);
-                        if (colored->colorPerVertexField() != -1)
-                            m_scene->setField(geometry, 
-                                              colored->colorPerVertexField(),
-                                              new SFBool(true));
                         if (colored->colorIndexField() != -1)
                             m_scene->setField(geometry, 
                                               colored->colorIndexField(),
                                               new MFInt32());
                     }                    
-                    if (faces)
-                        m_scene->setSelectionMode(SELECTION_MODE_FACES);  
                 } else {
                     NodeCoordinate *coord = geometry->getCoordinateNode();
+                    if (geometry->getType() == VRML_INDEXED_FACE_SET) {
+                        NodeIndexedFaceSet *face = (NodeIndexedFaceSet *)
+                                                   geometry;
+                        if (face->colorPerVertex()->getValue())
+                            face->changeToColorPerVertex();
+                    }    
                     int numFaces = geo->getMesh()->getNumFaces();
                     if (colors && (colors->getSize() == 0)) {
                         colors = new MFColor();
