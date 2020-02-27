@@ -433,7 +433,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/home/mufti/wdune-1.770'
+ac_pwd='/home/mufti/wdune-1.804'
 srcdir='.'
 AWK='gawk'
 test -n "$AWK" || AWK=awk
@@ -768,8 +768,8 @@ D["PACKAGE_VERSION"]=" \"\""
 D["PACKAGE_STRING"]=" \"\""
 D["PACKAGE_BUGREPORT"]=" \"\""
 D["PACKAGE_URL"]=" \"\""
-D["HAVE_DUNE_VERSION"]=" \"white_dune 1.770\""
-D["HAVE_HELP_URL"]=" \"/home/home/mufti/wdune-1.770/docs/index.html\""
+D["HAVE_DUNE_VERSION"]=" \"white_dune 1.804\""
+D["HAVE_HELP_URL"]=" \"/home/mufti/wdune-1.804/docs/index.html\""
 D["HAVE_VRML97_AMENDMENT1_PROTO_URL"]=" \".//docs/vrml97Amendment1\""
 D["HAVE_X3D_PROTO_URL"]=" \".//docs/x3d\""
 D["HAVE_SCRIPTED_NODES_PROTO_URL"]=" \".//docs/scripted_Nodes\""

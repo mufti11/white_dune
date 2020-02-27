@@ -5585,4 +5585,8 @@ Fixed colorwheel for material.*Color FieldView selection
 
 Added PointSet support to 4kids GUI
 
+Fixed setFaceHandle in NodeCoordinate
+
+Added invalid childnode deletion after 4kids PoimtSet creation.
+
 Contact: MUFTI <mufti11@web.de>

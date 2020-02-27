@@ -52,6 +52,8 @@ public:
     virtual int     getX3dVersion(void) const { return 0; }
     virtual Node   *copy() const { return new NodeCoordinate(*this); }
 
+    virtual bool    isInvalidChildNode(void) { return true; }
+
     void            drawHandles(void);
     Vec3f           getHandle(int handle, int *constraint, int *field);
     void            setHandle(int handle, const Vec3f &v);

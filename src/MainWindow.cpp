@@ -2617,6 +2617,12 @@ MainWindow::OnCommand(void *vid)
             mfVec->appendSFValue(0, 0, 0);
             ((NodeCoordinate *)set->coord()->getValue())->point(mfVec);
             createGeometryNode(set, true);
+            MFNode * children = ((NodeGroup *)m_scene->getRoot())->children();
+            for (int i = 0; i < children->getSize(); i++)
+                if (children->getValue(i)->isInvalidChildNode()) 
+                    m_scene->execute(new MoveCommand(children->getValue(i),
+                        m_scene->getRoot(),  m_scene->getRootField(),
+                        NULL, -1));
         } 
         }
         break;

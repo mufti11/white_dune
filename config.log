@@ -163,7 +163,7 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:3672: result: g++ -E
@@ -183,7 +183,7 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:4443: checking for gawk
@@ -201,11 +201,11 @@ configure:4606: checking lex output file root
 configure:4620: result: lex.yy
 configure:4625: checking lex library
 configure:4639: gcc -o conftest   -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   conftest.c    >&5
-/tmp/ccqzfjAr.o: In function `yylex':
+/tmp/cc6J3ZXi.o: In function `yylex':
 conftest.c:(.text+0x768): undefined reference to `yywrap'
-/tmp/ccqzfjAr.o: In function `input':
+/tmp/cc6J3ZXi.o: In function `input':
 conftest.c:(.text+0x1292): undefined reference to `yywrap'
-/tmp/ccqzfjAr.o: In function `main':
+/tmp/cc6J3ZXi.o: In function `main':
 conftest.c:(.text+0x1f69): undefined reference to `yywrap'
 collect2: error: ld returned 1 exit status
 configure:4639: $? = 1
@@ -217,8 +217,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -2067,8 +2067,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -2103,8 +2103,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -2190,8 +2190,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -2266,8 +2266,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -2454,8 +2454,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -3008,8 +3008,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -3133,8 +3133,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -3241,8 +3241,8 @@ configure: failed program was:
 | #define PACKAGE_STRING ""
 | #define PACKAGE_BUGREPORT ""
 | #define PACKAGE_URL ""
-| #define HAVE_DUNE_VERSION "white_dune 1.770"
-| #define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+| #define HAVE_DUNE_VERSION "white_dune 1.804"
+| #define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 | #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 | #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 | #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
@@ -3370,6 +3370,7 @@ config.status:937: creating .//docs/export_example_c/simple_example/Makefile
 config.status:937: creating .//docs/export_example_c++/simple_example/Makefile
 config.status:937: creating .//docs/export_example_java/simple_example/Makefile
 config.status:937: creating .//src/config.h
+config.status:1107: .//src/config.h is unchanged
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -3630,8 +3631,8 @@ target_alias=''
 #define PACKAGE_STRING ""
 #define PACKAGE_BUGREPORT ""
 #define PACKAGE_URL ""
-#define HAVE_DUNE_VERSION "white_dune 1.770"
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.770/docs/index.html"
+#define HAVE_DUNE_VERSION "white_dune 1.804"
+#define HAVE_HELP_URL "/home/mufti/wdune-1.804/docs/index.html"
 #define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
 #define HAVE_X3D_PROTO_URL ".//docs/x3d"
 #define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
