@@ -1,3 +1,17 @@
+whitedune (1.790-1) experimental; urgency=low
+
+  * Version 1.790 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Tue, 25 Feb 2020 22:13:21 +0100
+
+whitedune (1.789-1) experimental; urgency=low
+
+  * Version 1.789 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Tue, 25 Feb 2020 09:33:12 +0100
+
 whitedune (1.777-1) experimental; urgency=low
 
   * Version 1.777 debian package

@@ -348,7 +348,6 @@ Scene::Scene()
     m_rigidBodyHandleNode = NULL;
     m_writeKanimNow = false;
     m_ac3dEmptyMaterial = 0;
-    m_selectionLevel = 1;
     m_canUpdateViewsSelection = true;
     m_variableCounter = 0;
     m_deselect = false;

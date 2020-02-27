@@ -119,6 +119,7 @@ M4_IDD(NURBS_SURFACE_SYMETRIC_Y)
 M4_IDD(NURBS_SURFACE_SYMETRIC_Z) 
 M4_IDD(SELECT_NEIGHBOUR)
 M4_IDD(SCENES_MANAGE)
+M4_IDD(ONE_VEC3F)
 
 `#define' IDC_SPIN1                           1000
 `#define' IDC_EDIT1                           1001
@@ -515,6 +516,9 @@ M4_IDD(SCENES_MANAGE)
 `#define' IDC_NURBS_CURVE_MINUS_Y             2063
 `#define' IDC_NURBS_CURVE_MINUS_Z             2064
 `#define' IDC_USE_GIT                         2065
+`#define' IDC_VALUE_X                         2066
+`#define' IDC_VALUE_Y                         2067
+`#define' IDC_VALUE_Z                         2068
 
 // still to be done id's
 `#define' ID_INPUT_DEVICE_NEW                 10000
@@ -992,6 +996,7 @@ M4_ID(SWAP_YZ)
 M4_ID(PIPE)
 M4_ID(CONVEX_HULL)
 M4_ID(EXTRUSION_CONVEX_HULL)
+M4_ID(ADD_TO_POINT_SET)
 M4_ID(HANIM_JOINT_WEIGHT_SET)
 M4_ID(HANIM_JOINT_WEIGHT_REMOVE)
 M4_ID(TO_COLOR_PER_VERTEX)

@@ -388,6 +388,7 @@ protected:
     void                convexHull();
     void                extrusionConvexHull();
 #endif
+    void                addToPointSet(void);
     void                setViewpoint(void);
     void                setTarget(void);
     void                insetFace();

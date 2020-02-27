@@ -1,6 +1,6 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.782
+pkgver=1.793
 pkgrel=1
 epoch=
 pkgdesc="white_dune X3D/VRML97 tool"
@@ -40,6 +40,7 @@ makedepends=(gcc
              lxterminal
              gimp
              audacity
+#             cinelerra-cv #not available under ArchLinuxARM
              kolourpaint
              imagemagick
              netpbm
@@ -50,6 +51,8 @@ makedepends=(gcc
              curl
              freetype2
              ttf-bitstream-vera             
+             xorg-fonts-misc
+             xorg-fonts-alias
 )
 checkdepends=()
 optdepends=()
@@ -62,13 +65,13 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.bz2")
 noextract=()
-md5sums=('7709f95794954d2ceb243fd5f7712362')
+md5sums=('c26ea779e4bf234fa62c4596ce0190f5')
 validpgpkeys=()
 
 build() {
 	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" 
-        make
+	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" --with-partial-fortify 
+        (cd src && make duneLowMem)
 }
 
 package() {

@@ -529,10 +529,6 @@ public:
     void                setSelection(Node *node);
     void                setSelection(Proto *proto);
 
-    int                 getSelectionLevel(void) { return m_selectionLevel; }
-    void                setSelectionLevel(int level) 
-                           { m_selectionLevel = level; }
-
     Path               *newPath(Node *node);
 
     void                setURL(const char *url) { m_URL = ""; m_URL += url; }
@@ -991,8 +987,6 @@ protected:
     int                 m_selectionMode;
 
     TransformMode      *m_transformMode;
-
-    int                 m_selectionLevel;
 
     MyString            m_URL;
     const char         *m_newURL;

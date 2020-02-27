@@ -179,6 +179,7 @@ BEGIN
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vide",                          ID_NEW_GROUP
         MENUITEM "Transform vide",                      ID_NEW_TRANSFORM
+        MENUITEM "PointSet",                            ID_NEW_POINT_SET
         MENUITEM "Nouveau noeud par dessus le texte",   ID_NEW_NODE_BY_NAME
     END
     POPUP "&Animation"
@@ -271,6 +272,7 @@ BEGIN
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
         MENUITEM "Extrusion Convex hull",              ID_EXTRUSION_CONVEX_HULL
 #endif
+        MENUITEM "Add point to PointSet (requires PointSet)", ID_ADD_TO_POINT_SET
         MENUITEM "&Reproduire",                        ID_ARRAY
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
         BEGIN
@@ -2813,6 +2815,19 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&tesselation (4...64):",IDC_STATIC,15,5,100,8
     EDITTEXT        IDC_VALUE,15,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
+IDD_FR_ONE_VEC3F DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "add point to PointSet"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Point:",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE_X,15,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Y,60,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Z,105,21,40,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END

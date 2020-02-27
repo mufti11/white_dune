@@ -1222,12 +1222,12 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                     if (coord) {
                         for (int i = 0; i < m_scene->getSelectedHandlesSize();
                              i++) {
-                            if (face) {
+                            if (face && m_scene->getSelectedHandle(i) > -1) {
                                 colors->setSFValue(
                                     m_scene->getSelectedHandle(i), rgb);
                                 int j = face->symetricFace(
                                             m_scene->getSelectedHandle(i));
-                                if (j != -1)
+                                if (j > -1)
                                      colors->setSFValue(j, rgb);
                             }
                         }
@@ -1309,8 +1309,8 @@ void ColorCircle::setColorsViaFieldUpdate(float& r, float& g, float &b,
                                            rgb);
                 m_scene->setField(node, m_fieldUpdate.field, colors);
                 m_scene->setField(elevationGrid, 
-                                 elevationGrid->colorPerVertex_Field(),
-                                 new SFBool(true));
+                                  elevationGrid->colorPerVertex_Field(),
+                                  new SFBool(true));
             } else if (node->getParent()->getType() == 
                        VRML_GEO_ELEVATION_GRID) {
                 NodeGeoElevationGrid *elevationGrid = (NodeGeoElevationGrid *)

@@ -203,6 +203,7 @@
 #include "OneBoolDialog.h"
 #include "OneIntDialog.h"
 #include "OneFloatDialog.h"
+#include "OneVec3fDialog.h"
 #include "SliderFloatDialog.h"
 #include "OneTextDialog.h"
 #include "TwoRadioButtonsDialog.h"
@@ -2580,6 +2581,9 @@ MainWindow::OnCommand(void *vid)
       case ID_TOGGLE_XRAY_RENDERING:
         toggleXrayRendering();
         break;
+      case ID_ADD_TO_POINT_SET:
+        addToPointSet();
+        break;
       case ID_SET_URL:
         setPathAllURLs();
         break;
@@ -2600,6 +2604,23 @@ MainWindow::OnCommand(void *vid)
         extrusionConvexHull();
         break;
 #endif
+      case ID_NEW_POINT_SET:
+        {
+        if (TheApp->is4Kids()) {
+            NodePointSet *set = (NodePointSet *)createNode("PointSet");
+            NodeCoordinate *coord = (NodeCoordinate *)createNode("Coordinate");
+            m_scene->execute(new MoveCommand(coord, set, set->coord_Field(),
+                                                    NULL, -1));
+            m_scene->execute(new MoveCommand(coord, NULL, -1, 
+                                                    set, set->coord_Field()));
+            MFVec3f *mfVec = new MFVec3f();
+            mfVec->appendSFValue(0, 0, 0);
+            ((NodeCoordinate *)set->coord()->getValue())->point(mfVec);
+            createGeometryNode(set, true);
+        } 
+        }
+        break;
+
       case ID_VIEWPOINT:
         setViewpoint();
         break;
@@ -3427,9 +3448,6 @@ MainWindow::OnCommand(void *vid)
       case ID_NEW_POINT_PICK_SENSOR:
         createNode("PointPickSensor");
         break;
-      case ID_NEW_POINT_SET:
-        createGeometryNode("PointSet");
-        break;
       case ID_NEW_POLYLINE_2D:
         if (m_scene->isX3d())
             createGeometryNode("Polyline2D", true);
@@ -3789,7 +3807,8 @@ MainWindow::OnCommand(void *vid)
         insertNode(VRML_APPEARANCE, "KambiAppearance");
         break;
       case ID_NEW_KAMBI_BLEND_MODE:
-        if (m_scene->getSelection()->getNode()->getType() == KAMBI_KAMBI_APPEARANCE)
+        if (m_scene->getSelection()->getNode()->getType() == 
+            KAMBI_KAMBI_APPEARANCE)
             insertNode(KAMBI_BLEND_MODE, "BlendMode");
         break;
       case ID_NEW_KAMBI_OCTREE_PROPERTIES:
@@ -4544,6 +4563,18 @@ MainWindow::showColorCircle(void)
         if (node->getType() == VRML_INDEXED_FACE_SET && 
             ((NodeIndexedFaceSet *)node)->color())
             node = ((NodeIndexedFaceSet *)node)->color()->getValue();
+    }
+    if (node->getType() == VRML_MATERIAL) {
+        NodeMaterial *material = (NodeMaterial *)node;
+        int field = -1;
+        if (m_fieldView->isFieldView() && m_fieldView)
+            field = ((FieldView *)m_fieldView)->getSelectedField();
+        if (field == material->diffuseColor_Field())
+            showDiffuseColorCircle();
+        else if (field == material->emissiveColor_Field())
+            showEmissiveColorCircle();
+        else if (field == material->specularColor_Field())
+            showSpecularColorCircle();
     }
     if ((node->getType() != VRML_COLOR) && (node->getType() != X3D_COLOR_RGBA))
         return;
@@ -6247,6 +6278,17 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getParent()->getType() == VRML_GROUP ||
                     node->getParent()->getType() == VRML_TRANSFORM) ? 
                    0 : SW_MENU_DISABLED);
+
+    swMenuSetFlags(m_menu, ID_CONVEX_HULL, SW_MENU_DISABLED, 
+                   m_scene->getStore4ConvexHull()->size() >= 3
+                   ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_CONVEX_HULL, SW_MENU_DISABLED, 
+                   m_scene->getStore4ExtrusionConvexHull(0)->size() >= 3 &&
+                   m_scene->getStore4ExtrusionConvexHull(1)->size() >= 3
+                   ? 0 : SW_MENU_DISABLED);
+    swMenuSetFlags(m_menu, ID_ADD_TO_POINT_SET, SW_MENU_DISABLED, 
+                   node->getType() == VRML_POINT_SET
+                   ? 0 : SW_MENU_DISABLED);
 
     bool canCenter = false;
     if (node->hasBoundingBox())
@@ -8517,6 +8559,24 @@ MainWindow::extrusionConvexHull(void)
     }
 }
 #endif
+
+void
+MainWindow::addToPointSet(void)
+{
+   Node *node = m_scene->getSelection()->getNode();
+   if (node->getType() == VRML_POINT_SET) {
+       NodePointSet *set = (NodePointSet *)node; 
+       Vec3f vec;
+       OneVec3fDialog dlg(m_wnd, IDD_ONE_VEC3F, vec, 1, 0);
+       if (dlg.DoModal() == IDCANCEL)
+           return;
+       vec = dlg.GetValue();
+       ((NodeCoordinate *)set->coord()->getValue())->point()->
+           appendSFValue(vec.x, vec.y, vec.z);
+       m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
+   }
+}
+
 
 void MainWindow::createOneText(void)
 {
@@ -12801,9 +12861,7 @@ void MainWindow::setVertexModifierIcon()
         m_vertexModifier_enabled = true;
     }
     swMenuSetFlags(m_menu, ID_VERTEX_MODIFIER, SW_MENU_CHECKED, 
-                          m_vertexModifier_enabled ? SW_MENU_CHECKED : 0);
-    swMenuSetFlags(m_menu, ID_VERTEX_MODIFIER, SW_MENU_DISABLED, 
-                          m_vertexModifier_enabled ? 0 : SW_MENU_DISABLED);
+                   m_vertexModifier_enabled ? SW_MENU_CHECKED : 0);
     if (m_vertexModifier_enabled)
        {
        swToolbarSetButtonFlags(m_standardToolbar, m_vertexModifierIconPos, 
@@ -13283,6 +13341,8 @@ MainWindow::ImportFileCheck(const char *path, Node *node, int field)
 void 
 MainWindow::checkInFile(const char *path)
 { 
+    bool error = false;
+
     if (strlen(TheApp->GetRevisionControlCheckinCommand()) > 0) {
         char cmd[2048];
         mysnprintf(cmd, 2047, TheApp->GetRevisionControlCheckinCommand(), path);
@@ -13294,7 +13354,7 @@ MainWindow::checkInFile(const char *path)
 
         // use git
         if (relativ)
-            system("git init");
+            error = system("git init") != 0;
         else {
             MyString initString = "";
             initString += "(cd `dirname ";
@@ -13317,7 +13377,7 @@ MainWindow::checkInFile(const char *path)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
 
         if (relativ)
-            system("git commit -uno -qsm \"new version\"");
+            error = system("git commit -uno -qsm \"new version\"") != 0;
         else {
             MyString commitString = "";
             commitString += "(cd `dirname ";
@@ -13325,6 +13385,8 @@ MainWindow::checkInFile(const char *path)
             commitString += "` && git commit -uno -qsm \"new version\")";
             system(commitString);
         }
+        if (error)
+            TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
     }
 }
 
@@ -13716,7 +13778,7 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
 #ifdef _WIN32
                              "rib (.rib)\0*.rib;*.RIB\0All Files (*.*)\0*.*\0\0",
 #else
-                            "*.ib", 
+                            "*.rib", 
 #endif
                              path, 1024, ".rib"))
             save = true; 

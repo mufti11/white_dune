@@ -85,7 +85,6 @@ Path::Path(const int *path, int len, Scene *scene, bool protoInTree,
                     m_len = len;
                 }
             } else {
-                m_field = field;
                 break;
             }
             Node *newNode = getNextNode(node, field, i++);

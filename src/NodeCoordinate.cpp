@@ -58,6 +58,12 @@
 #include "NodeHAnimHumanoid.h"
 #include "NodeHAnimJoint.h"
 
+enum {
+     SIDE_RIGHT = 0,
+     SIDE_LEFT = 1,
+     SIDE_NONE = 2
+};
+
 ProtoCoordinate::ProtoCoordinate(Scene *scene)
   : WonderlandExportProto(scene, "Coordinate")
 {
@@ -352,13 +358,8 @@ NodeCoordinate::setEndHandles(void)
     if ((m_scene->getSelectionMode() == SELECTION_MODE_FACES) ||
         (m_scene->getSelectionMode() == SELECTION_MODE_LINES)) {
         for (long i = 0; i < m_selectedVerticesHandles.size(); i++)
-            if (m_validSymVerticesHandles[i]) {
-                setHandleVertices(m_selectedVerticesHandles[i], 
-                                  m_selectedVerticesWithoutX[i]);
-            } else {
-                setHandleVertices(m_selectedVerticesHandles[i], 
-                                  m_selectedVertices2[i]);
-            }
+            setHandleVertices(m_selectedVerticesHandles[i], 
+                              m_selectedVertices2[i]);
     }
 }
 
@@ -378,11 +379,46 @@ NodeCoordinate::setHandleFaces(int handle, const Vec3f &v)
     Vec3f first;
     if (face->getNumVertices() > 0)
         first = point()->getValue(ci->getValue(offset));
+    int side = SIDE_NONE;
+    bool allLeft = true;
     for (int j = offset; j < offset + face->getNumVertices(); j++) {
         Vec3f vec = point()->getValue(ci->getValue(j));
-        Vec3f vec2 = vec - first + v;
+        if (vec.x <= 0) {
+            allLeft = false;
+            break;
+        }
+    }
+    bool allRight = true;
+    for (int j = offset; j < offset + face->getNumVertices(); j++) {
+        Vec3f vec = point()->getValue(ci->getValue(j));
+        if (vec.x >= 0) {
+            allRight = false;
+            break;
+        }
+    }
+    if (allRight && !allLeft)
+        side = SIDE_RIGHT;
+    if (allLeft && !allRight)
+        side = SIDE_LEFT;
+    for (int j = offset; j < offset + face->getNumVertices(); j++) {
+        Vec3f vec = point()->getValue(ci->getValue(j));
+        Vec3f yzFirst (0, first.y, first.z);
+        Vec3f vec2 = vec - yzFirst;
+        switch (side) {
+          case SIDE_RIGHT:
+            vec2.x += v.x;
+            vec2.y += v.y;
+            vec2.y += v.y;
+          case SIDE_LEFT:
+            vec2.x -= v.x;
+            vec2.y += v.y;
+            vec2.y += v.y;
+          case SIDE_NONE:
+            vec2.y += v.y;
+            vec2.z += v.z;
+        }
         Vec3f vecWithoutX = vec2;
-        vecWithoutX.x = vec.x;
+        vecWithoutX.x = 0;
         bool validSymVerticesHandles = false;
         bool isInSelectedVertices = false;
         for (long n = 0; n < m_selectedVertices.size(); n++) {
@@ -493,11 +529,13 @@ NodeCoordinate::setHandleVertices(int handle, const Vec3f &v)
     if (handle >= 0 && handle < numPoints) {
         Vec3f oldV = point()->getValue(handle);
         Vec3f newV = v;
+/*
         if ((v.x == - oldV.x) && (v.x != 0.0f))
             return;
         if (m_scene->getXSymetricMode() && (fabsf(oldV.x) < epsilon))
             newValue->setValue(handle * 3, 0);
         else
+*/
             newValue->setValue(handle * 3, newV.x);
         newValue->setValue(handle * 3 + 1, newV.y);
         newValue->setValue(handle * 3 + 2, newV.z);

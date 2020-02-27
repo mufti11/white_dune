@@ -387,8 +387,10 @@ void FieldView::UpdateAll(bool resetSelection)
     if ((m_selectedNode == m_scene->getRoot()) && (m_selectedProto == NULL))
         m_isRoot = true;    
 
+/*
     if (resetSelection)
         m_selectedItem = m_selectedField = -1;
+*/
 
     RefreshItemList();
     swInvalidateWindow(m_window);
@@ -761,20 +763,18 @@ void FieldView::OnLButtonDown(int x, int y, int modifiers)
         StopEditing();
     } else if ((hit >= 0) && (hit < (int)m_items.size())) {
         FieldViewItem *item = m_items[hit];
-//        if (m_selectedItem != hit) {
-            // unhighlight old selection, if any
-            if ((m_selectedItem > 0) && (m_selectedItem < (int)m_items.size()))
-            { 
-                if (m_items[m_selectedItem] != NULL)
-                    m_items[m_selectedItem]->ClearFlag(FVIS_SELECTED);
-                swInvalidateWindow(m_window);
-            }
-
-            // highlight new selection
-            item->SetFlag(FVIS_SELECTED);
-            m_selectedItem = hit;
+        // unhighlight old selection, if any
+        if ((m_selectedItem > 0) && (m_selectedItem < (int)m_items.size()))
+        { 
+            if (m_items[m_selectedItem] != NULL)
+                m_items[m_selectedItem]->ClearFlag(FVIS_SELECTED);
             swInvalidateWindow(m_window);
-//        }
+        }
+
+        // highlight new selection
+        item->SetFlag(FVIS_SELECTED);
+        m_selectedItem = hit;
+        swInvalidateWindow(m_window);
 
         bool colorcircle_flag=false;
         if (item->GetParent()) {

@@ -1286,12 +1286,17 @@ MeshBasedNode::writeRib(int f, int indent)
         RET_ONERROR( mywritef(f, "# name \"%s\"\n", (const char *)getName()) )
         
     if (nimageTexture) {
-        const char *texture = nimageTexture->url()->getValue(0);
+        char *texture = strdup(nimageTexture->url()->getValue(0).getData());
         if (texture) {
+            for (int i = 0; i < strlen(texture); i++)
+                if (texture[i] < ' ')
+                    texture[i] = 0;
             URL url(TheApp->getImportURL(), texture);
             MyString filename = "";
             filename += url.ToPath();
             
+            free(texture);
+
             URL writeURL(TheApp->getWriteUrl());
 
             bool validTexturer = false;

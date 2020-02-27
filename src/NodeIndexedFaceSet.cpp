@@ -846,7 +846,9 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
             int ci = coordIndex()->getValue(j);
             if (m_scene->isInSelectedHandles(i)) {
                 Vec3f vec = ncoord->point()->getValue(ci);
-                vec.x = vec.x + dist;
+                vec.x = vec.x;
+                if (!sym)
+                    vec.x += dist;
                 vec.z = vec.z + dist;
                 newVertices->appendSFValue(vec.x, vec.y, vec.z);
                 if (j == offset)

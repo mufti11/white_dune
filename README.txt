@@ -5575,4 +5575,14 @@ Fixed git checkin problem
 
 Fixed !IndexedFaceSet.colorPerVertex paint
 
+Advanced setHandle after symetric face extrusion
+
+Fixed .rib export file dialog
+
+Fixed .rib texture handling
+
+Fixed colorwheel for material.*Color FieldView selection
+
+Added PointSet support to 4kids GUI
+
 Contact: MUFTI <mufti11@web.de>

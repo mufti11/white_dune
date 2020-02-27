@@ -250,6 +250,7 @@ BEGIN
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Empt&y Group",                        ID_NEW_GROUP
         MENUITEM "Empt&y Transform",                    ID_NEW_TRANSFORM
+        MENUITEM "PointSet",                            ID_NEW_POINT_SET
         MENUITEM "New node by name",                    ID_NEW_NODE_BY_NAME
     END
     POPUP "&Animation"
@@ -342,6 +343,7 @@ BEGIN
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
         MENUITEM "Extrusion Convex hull",               ID_EXTRUSION_CONVEX_HULL
 #endif
+        MENUITEM "Add point to PointSet (requires PointSet)", ID_ADD_TO_POINT_SET
         MENUITEM "Multiply",                            ID_ARRAY
         POPUP "&Set center to (need Transform ->Shape ->geometry)"
         BEGIN
@@ -2963,6 +2965,19 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
 
+IDD_ONE_VEC3F DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "add point to PointSet"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Point:",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE_X,15,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Y,60,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Z,105,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
 IDD_MESH_REDUCE DIALOG DISCARDABLE  0, 0, 197, 50
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Remaining faces"
@@ -4878,6 +4893,7 @@ BEGIN
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vide",                          ID_NEW_GROUP
         MENUITEM "Transform vide",                      ID_NEW_TRANSFORM
+        MENUITEM "PointSet",                            ID_NEW_POINT_SET
         MENUITEM "Nouveau noeud par dessus le texte",   ID_NEW_NODE_BY_NAME
     END
     POPUP "&Animation"
@@ -4970,6 +4986,7 @@ BEGIN
         MENUITEM "Convex hull",                        ID_CONVEX_HULL
         MENUITEM "Extrusion Convex hull",              ID_EXTRUSION_CONVEX_HULL
 #endif
+        MENUITEM "Add point to PointSet (requires PointSet)", ID_ADD_TO_POINT_SET
         MENUITEM "&Reproduire",                        ID_ARRAY
         POPUP "Placer le centre de rotation au (a besoin de Transform ->Shape ->geometry)"
         BEGIN
@@ -7516,6 +7533,19 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
 
+IDD_FR_ONE_VEC3F DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "add point to PointSet"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Point:",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE_X,15,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Y,60,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Z,105,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
 IDD_FR_MESH_REDUCE DIALOG DISCARDABLE  0, 0, 197, 50
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Remaining faces"
@@ -9381,6 +9411,7 @@ BEGIN
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Leere Group",                         ID_NEW_GROUP
         MENUITEM "Leerer Transform",                    ID_NEW_TRANSFORM
+        MENUITEM "Punkte",                              ID_NEW_POINT_SET
         MENUITEM "Alles ueber Namenseingabe",           ID_NEW_NODE_BY_NAME
     END
     POPUP "Animation"
@@ -9473,6 +9504,7 @@ BEGIN
         MENUITEM "Bauchige Huelle",                     ID_CONVEX_HULL
         MENUITEM "Extrusion Huelle",                    ID_EXTRUSION_CONVEX_HULL
 #endif
+        MENUITEM "Fuege Punkt zu Punkte hinzu (braucht PointSet)", ID_ADD_TO_POINT_SET
         MENUITEM "&Vervielfaeltigen",                   ID_ARRAY
         POPUP "Setze Drehpunkt zu (braucht Transform ->Shape ->geometry)"
         BEGIN
@@ -12022,7 +12054,20 @@ BEGIN
     LTEXT           "&tesselation (4...64):",IDC_STATIC,15,5,100,8
     EDITTEXT        IDC_VALUE,15,21,40,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,140,25,50,14
+END
+
+IDD_DE_ONE_VEC3F DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "fuege Punkt zu PointSet hinzu"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Punkt:",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE_X,15,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Y,60,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Z,105,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,140,25,50,14
 END
 
 IDD_DE_MESH_REDUCE DIALOG DISCARDABLE  0, 0, 197, 50
@@ -13881,6 +13926,7 @@ BEGIN
         MENUITEM "Billboard",                            ID_NEW_BILLBOARD
         MENUITEM "Group vuoto",                          ID_NEW_GROUP
         MENUITEM "Transform vuoto",                      ID_NEW_TRANSFORM
+        MENUITEM "PointSet",                             ID_NEW_POINT_SET
         MENUITEM "New node by name",                     ID_NEW_NODE_BY_NAME
     END
     POPUP "&Animazione"
@@ -13973,6 +14019,7 @@ BEGIN
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
         MENUITEM "Extrusion Convex hull",               ID_EXTRUSION_CONVEX_HULL
 #endif
+        MENUITEM "Add point to PointSet (requires PointSet)", ID_ADD_TO_POINT_SET
         MENUITEM "&Moltiplica",                         ID_ARRAY
         POPUP "Imposta centro su (occorre Transform -> Shape -> geometry)"
         BEGIN
@@ -16526,6 +16573,20 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
 
+
+IDD_IT_ONE_VEC3F DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "add point to PointSet"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Point:",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE_X,15,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Y,60,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Z,105,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
 IDD_IT_MESH_REDUCE DIALOG DISCARDABLE  0, 0, 197, 50
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Remaining faces"
@@ -18390,6 +18451,7 @@ BEGIN
         MENUITEM "Billboard",                           ID_NEW_BILLBOARD
         MENUITEM "Group vazio",                         ID_NEW_GROUP
         MENUITEM "Transform vazio",                     ID_NEW_TRANSFORM
+        MENUITEM "PointSet",                            ID_NEW_POINT_SET
         MENUITEM "Novo no por nome",                    ID_NEW_NODE_BY_NAME
     END
     POPUP "&Animacao"
@@ -18482,6 +18544,7 @@ BEGIN
         MENUITEM "Convex hull",                         ID_CONVEX_HULL
         MENUITEM "Extrusion Convex hull",               ID_EXTRUSION_CONVEX_HULL
 #endif
+        MENUITEM "Add point to PointSet (requires PointSet)", ID_ADD_TO_POINT_SET
         MENUITEM "&Multiplicar",                        ID_ARRAY
         POPUP "Define o centre de (necessidade Transform -> Shape -> geometry)"
         BEGIN
@@ -21032,6 +21095,19 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&tesselation (4...64):",IDC_STATIC,15,5,100,8
     EDITTEXT        IDC_VALUE,15,21,40,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
+END
+
+IDD_PT_ONE_VEC3F DIALOG DISCARDABLE  0, 0, 197, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "add point to PointSet"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Point:",IDC_STATIC,15,5,100,8
+    EDITTEXT        IDC_VALUE_X,15,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Y,60,21,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VALUE_Z,105,21,40,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END

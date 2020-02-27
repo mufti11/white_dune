@@ -105,6 +105,8 @@ public:
 
         void            UpdateTrackingCursor(int x, int y);
 
+        int             getSelectedField(void) { return m_selectedField; }
+
 protected:
 
         enum            FVState { 

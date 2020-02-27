@@ -509,6 +509,7 @@ DIALOGCLASSES = \
         FieldPipeDialog.o \
         OneBoolDialog.o \
         OneFloatDialog.o \
+        OneVec3fDialog.o \
         OneIntDialog.o \
         OneTextDialog.o \
         TwoRadioButtonsDialog.o \
@@ -694,6 +695,7 @@ target: mysnprintf.o
 install: target
 	install -m 755 -p ../bin/dune /usr/bin
 	install -m 755 -p ../tools/run_dune_and_aqsis.sh /usr/bin
+	mkdir /usr/include/white_dune	
 	install -m 644 -p ../include/white_dune/libC++RWD.h /usr/include/white_dune/libC++RWD.h
 	install -m 644 -p ../include/white_dune/libC++RWD_namespace.h /usr/include/white_dune/libC++RWD_namespace.h
 	install -m 644 -p ../include/white_dune/libCRWD.h /usr/include/white_dune/libCRWD.h
