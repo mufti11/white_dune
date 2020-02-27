@@ -837,9 +837,6 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
         int offset = face->getOffset();
         int numVertices = face->getNumVertices();
         bool sym = m_scene->getXSymetricMode();
-        if (sym)
-            if (!symFaces.contains(i))
-                sym = false;
         int ci2 = -1;
         int oldBorderCount = borderCount;        
         for (int j = offset; j < offset + numVertices; j++) {
@@ -880,41 +877,6 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
             symBorder[borderCount] = false;
             validBorder[borderCount] = true;
             borderCount++;
-        }
-
-        if (sym) {
-            oldBorderCount = borderCount;        
-            for (int j = offset; j < offset + numVertices; j++) {
-                int ci = coordIndex()->getValue(j);
-                Vec3f vec = ncoord->point()->getValue(ci);
-                vec.x = vec.x - dist;
-                vec.z = vec.z + dist;
-                newVertices->appendSFValue(vec.x, vec.y, vec.z);
-                if (j == offset)
-                    ci2 = numNewCoordIndex;
-                innerBorder[borderCount] = numNewCoordIndex++;
-                outerBorder[borderCount] = ci;
-                symBorder[borderCount] = true;
-                validBorder[borderCount] = true;
-                borderCount++;
-            }
-            int ci5 = coordIndex()->getValue(offset + numVertices - 1);
-            int ci6 = coordIndex()->getValue(offset);
-            if ((ncoord->point()->getVec(ci5) -
-                 ncoord->point()->getVec(ci6)).length() != 0) {
-                innerBorder[borderCount] = ci2;
-                outerBorder[borderCount] = ci6;
-                symBorder[borderCount] = true;
-                validBorder[borderCount] = false;
-                borderCount++;
-            }
-            if (borderCount > oldBorderCount) {        
-                innerBorder[borderCount] = -1;
-                outerBorder[borderCount] = -1;
-                symBorder[borderCount] = true;
-                validBorder[borderCount] = true;
-                borderCount++;
-            }
         }
     }
 

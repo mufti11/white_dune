@@ -61,7 +61,8 @@
 enum {
      SIDE_RIGHT = 0,
      SIDE_LEFT = 1,
-     SIDE_NONE = 2
+     SIDE_NONE = 2,
+     SIDE_BOTH = 3
 };
 
 ProtoCoordinate::ProtoCoordinate(Scene *scene)
@@ -379,7 +380,7 @@ NodeCoordinate::setHandleFaces(int handle, const Vec3f &v)
     Vec3f first;
     if (face->getNumVertices() > 0)
         first = point()->getValue(ci->getValue(offset));
-    int side = SIDE_NONE;
+    int side = SIDE_BOTH;
     bool allLeft = true;
     for (int j = offset; j < offset + face->getNumVertices(); j++) {
         Vec3f vec = point()->getValue(ci->getValue(j));
@@ -400,20 +401,23 @@ NodeCoordinate::setHandleFaces(int handle, const Vec3f &v)
         side = SIDE_RIGHT;
     if (allLeft && !allRight)
         side = SIDE_LEFT;
+    if (v.z > v.x && v.z > v.y)
+        side = SIDE_NONE;
     for (int j = offset; j < offset + face->getNumVertices(); j++) {
         Vec3f vec = point()->getValue(ci->getValue(j));
         Vec3f yzFirst (0, first.y, first.z);
-        Vec3f vec2 = vec - yzFirst;
+        Vec3f vec2 = vec;
         switch (side) {
+          case SIDE_BOTH:
           case SIDE_RIGHT:
+          case SIDE_LEFT:
+            vec2 = vec2 - first;;
             vec2.x += v.x;
             vec2.y += v.y;
-            vec2.y += v.y;
-          case SIDE_LEFT:
-            vec2.x -= v.x;
-            vec2.y += v.y;
-            vec2.y += v.y;
+            vec2.z += v.z;
+            break;
           case SIDE_NONE:
+            vec2 = vec2 - yzFirst;;
             vec2.y += v.y;
             vec2.z += v.z;
         }
