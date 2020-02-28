@@ -34,7 +34,7 @@ rm -rf /tmp/white_dune-$VERSION
 cd /tmp/wdune-$VERSION && 
 sh batch/fix_not_translated_rcfiles.sh &&
 make realclean && \
-(cd desktop/macosx && tar -xf white_dune_tiger.app.tar) &&
+(cd desktop/macosx && tar -xf white_dune_high_sierra.app.tar) &&
 ./configure --with-uninstallcomment="find and remove directory/application white_dune.app" --with-optimization --without-devil --with-helpurl="http://wdune.ourproject.org/docs" && make &&
 rm -f desktop/macosx/white_dune.app/Contents/MacOS/dune &&
 cp bin/dune desktop/macosx/white_dune.app/Contents/MacOS &&

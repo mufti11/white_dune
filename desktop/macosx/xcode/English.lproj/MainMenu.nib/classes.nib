@@ -1,19 +1,4 @@
 {
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {myAction = id; }; 
-            CLASS = NSApplication; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSResponder; 
-        }, 
-        {
-            ACTIONS = {"restore_set" = id; }; 
-            CLASS = "add_menu_item"; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"dock_sets" = NSMenu; }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
+    IBClasses = ({CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }); 
     IBVersion = 1; 
 }

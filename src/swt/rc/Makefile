@@ -2,15 +2,15 @@
 # gives unlimited permission to copy, distribute and modify it.
 
 CC = gcc
-AWK = gawk
+AWK = awk
 LEX = flex --nounistd
 YACC = bison -y
 
-LIBS = -lfl
+LIBS = -ll
 LIBDIRS =
 INCDIRS = -I../include
 # WARNINGS = -Wall -Wwrite-strings
-CFLAGS = -g $(WARNINGS) $(INCDIRS)  -fopenmp
+CFLAGS = -g $(WARNINGS) $(INCDIRS)  
 MAKEDEPEND=gcc -MM
 YFLAGS = -d
 

@@ -1,6 +1,6 @@
-wdune (1.434-1) experimental; urgency=low
+wdune (1.804-1) experimental; urgency=low
 
-  * Version 1.434 debian package
+  * Version 1.804 debian package
     For details see the README.txt file of the source archive
 
- -- J. "MUFTI" Scheurich <mufti11@web.de>  Sat, 28 Sep 2019 22:57:12 +0200
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Thu, 27 Feb 2020 23:02:25 +0100

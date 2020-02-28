@@ -8,13 +8,13 @@
 # This file may have to be extensively modified
 
 package=wdune
-DESTDIR?=$$pwd/debian/${package}/usr
+DESTDIR?=debian/${package}/usr
 package_docs=wdune-docs
 DOCDIR?=debian/${package_docs}/usr
 
 build:
 	$(checkdir)
-	./configure --with-debian --with-optimization --prefix=/usr --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
+	./configure --with-debian --with-optimization --prefix=/usr --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-x3dbrowser --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
 	$(MAKE) -j4
 	touch build
 
@@ -32,6 +32,13 @@ binary-indep: checkroot build
 
 binary-arch: checkroot build
 	$(checkdir)
+	mkdir -p $(DESTDIR)/share/applications
+	mkdir -p $(DESTDIR)/share/pixmap
+	mkdir -p $(DESTDIR)/include/white_dune \
+	mkdir -p $(DESTDIR)/lib/menu/white_dune
+	mkdir -p $(DESTDIR)/man/man.1
+	mkdir -p $(DESTDIR)/bin
+	mkdir -p debian/${package}/DEBIAN/
 	install -m 755 debian/postinst debian/prerm $(DESTDIR)
 	cp -a desktop/kde/dune.desktop $(DESTDIR)/share/applications
 	cp -a desktop/kde/dune.png $(DESTDIR)/share/pixmaps
@@ -39,9 +46,14 @@ binary-arch: checkroot build
 	cp -a desktop/kde/dune4kids.png $(DESTDIR)/share/pixmaps
 	cp -a desktop/debian/dune.xpm $(DESTDIR)/share/pixmaps
 	cp -a packager/debian/menu $(DESTDIR)/lib/menu/white_dune
-	install bin/dune ${DESTDIR}/bin/
-	dpkg-shlibdeps $(DESTDIR)/bin/dune
-	chown -R root.root debian/wdune
+	cp -a man/dune.1 $(DESTDIR)/man/man.1
+	cp -a packager/debian/control_buster debian/${package}/DEBIAN/control
+	dpkg-shlibdeps bin/dune
+	install tools/run_dune_and_aqsis.sh ${DESTDIR}/bin/ 
+	install -m 644 -p include/white_dune/libC++RWD.h ${DESTDIR}/include/white_dune/libC++RWD.h
+	install -m 644 -p include/white_dune/libC++RWD_namespace.h ${DESTDIR}/include/white_dune/libC++RWD_namespace.h
+	install -m 644 -p include/white_dune/libCRWD.h ${DESTDIR}//include/white_dune/libCRWD.h
+#	chown -R root.root debian/wdune
 	chmod -R g-ws debian/wdune
 
 define checkdir
@@ -54,7 +66,6 @@ binary:		binary-indep binary-arch
 
 checkroot:
 	$(checkdir)
-	test $$(id -u) = 0
 
 wdune-docs: 
 	install -d $(DOCDIR) \
@@ -82,7 +93,6 @@ wdune-docs:
 
 wdune: binary-arch
 	dh_testdir -p$@
-	dh_testroot -p$@
 	dh_prep  -p$@
 	dh_installdirs  -p$@
 	dh_install -p$@

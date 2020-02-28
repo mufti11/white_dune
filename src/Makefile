@@ -7,7 +7,7 @@ RANLIB = /usr/bin/ranlib
 CXXCPP = g++ -E
 YACC = bison -y
 LEX = flex --nounistd
-AWK = gawk
+AWK = awk
 PREFIX = /usr/local
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
@@ -22,7 +22,7 @@ DUMA_EXTRA_LIBS =
 
 LD_OPTIONS = 
 
-EGREP_PROBLEMS = no
+EGREP_PROBLEMS = yes
 
 # gcc Warning flags (a lot of -Wno- comes from vcglib usage)
 # WARNINGS = -Wall -D_FORTIFY_SOURCE=2 -Werror -Wno-error=strict-overflow \
@@ -39,12 +39,12 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
-CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
-CFLAGS = $(COMMON_FLAGS)  -fopenmp
-CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU 
+CPPFLAGS= -I. -Iswt/include -I/Users/j.scheurich/include -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/Users/j.scheurich/vcglib -I.//../vcglib -I/Users/j.scheurich/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/ -I/usr/include/ffmpeg/   -I/usr/X11/include -I/usr/X11R6/include -DMACOSX=1 -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include -I/Users/j.scheurich/include -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/Users/j.scheurich/vcglib -I.//../vcglib -I/Users/j.scheurich/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/ -I/usr/include/ffmpeg/   -I/usr/X11/include -I/usr/X11R6/include -DMACOSX=1 -I/usr/local/include -I/usr/local/include 
+CFLAGS_BIG = -g $(COMMON_FLAGS)    -Wno-c++11-extensions -Wno-tautological-undefined-compare -Wno-tautological-pointer-compare 
+CFLAGS = $(COMMON_FLAGS)  
+CXXFLAGS = -g $(COMMON_FLAGS)  -Wno-c++11-extensions -Wno-tautological-undefined-compare -Wno-tautological-pointer-compare 
+LIBS =  -L/Users/j.scheurich/lib/ -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick SDLjoystick/libSDLjoystick.a -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -L/usr/X11R6/lib     -L/usr/X11/lib -multiply_defined warning -lXft -lXrender -lfontconfig   -framework IOKit -lCGAL -lboost_thread -lboost_system -losdCPU /usr/lib/libcrypto.dylib /usr/lib/libssl.dylib 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 
@@ -686,7 +686,7 @@ TESTOJBS = selftest.o allNodesTest.o allNodesTestX3d.o \
 YFLAGS = -d
 
 target: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 #	$(MAKE) ../bin/png2PixelTexture
@@ -730,8 +730,8 @@ objc: $(SRCSC)
 	$(CC) $(CFLAGS) -c $(SRCSC)
 
 # special target to compile in low memory/no swap situtations 
-duneLowMem: main.o objc $(CLASSES) 
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+duneLowMem: main.o objc $(CLASSES) SDLjoystick/libSDLjoystick.a
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 	make -j2 $(BIGDUNECLASSES)
@@ -740,19 +740,19 @@ duneLowMem: main.o objc $(CLASSES)
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 ../bin/dune ; fi"
 	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
-../bin/dune: main.o $(OBJS)  swt/lib/libswt.a
+../bin/dune: main.o $(OBJS) SDLjoystick/libSDLjoystick.a swt/lib/libswt.a
 	(cd swt ; $(MAKE))
 	$(CXX) main.o $(OBJS) $(LIBS) -o $@
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_tiger.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
-../bin/efencedune:  main.o $(OBJS) 
+../bin/efencedune:  main.o $(OBJS) SDLjoystick/libSDLjoystick.a
 	(cd swt ; $(MAKE))
 	(cd swt ; $(MAKE) efence)
 	rm -f /tmp/efencedune.o
 	echo no way to extract strdup efence may fail in strdup
-	ld $(LD_OPTIONS) -r -o /tmp/efencedune.o  main.o $(OBJS)  $(LIBEFENCE_A)
+	ld $(LD_OPTIONS) -r -o /tmp/efencedune.o  main.o $(OBJS) SDLjoystick/libSDLjoystick.a $(LIBEFENCE_A)
 	perl ../batch/bin_gsub.pl /tmp/efencedune.o malloc madune
 	perl ../batch/bin_gsub.pl /tmp/efencedune.o calloc cadune
 	perl ../batch/bin_gsub.pl /tmp/efencedune.o valloc vadune
@@ -762,11 +762,11 @@ duneLowMem: main.o objc $(CLASSES)
 	$(CXX) $(CXXFLAGS) /tmp/efencedune.o $(LIBS) $(EFENCE_EXTRA_LIBS) -o $@
 	rm -f /tmp/efencedune.o
 
-../bin/dumadune:  main.o $(OBJS) 
+../bin/dumadune:  main.o $(OBJS) SDLjoystick/libSDLjoystick.a
 	(cd swt ; $(MAKE) efence)
 	rm -f /tmp/dumadune.o
 	echo no way to extract strdup efence may fail in strdup
-	ld $(LD_OPTIONS) -r -o /tmp/dumadune.o  main.o $(OBJS) swt/lib/libswt.a  $(LIBDUMA_A)
+	ld $(LD_OPTIONS) -r -o /tmp/dumadune.o  main.o $(OBJS) swt/lib/libswt.a SDLjoystick/libSDLjoystick.a $(LIBDUMA_A)
 	perl ../batch/bin_gsub.pl /tmp/dumadune.o malloc madune
 	perl ../batch/bin_gsub.pl /tmp/dumadune.o calloc cadune
 	perl ../batch/bin_gsub.pl /tmp/dumadune.o valloc vadune
@@ -813,7 +813,7 @@ catt_test/material.geo:
 	echo 'ABS unknown = <15 13 10 9 9 7 > L <30 30 30 30 30 30> { 255 255 0 }' >> $@
 
 selftest: mysnprintf.o 
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_selftest
 
@@ -824,7 +824,7 @@ selftest.o: ../test/selftest.cpp
 	$(CXX) $(CXXFLAGS) selftest.o $(OBJS) $(LIBS)  -o $@
 
 allNodesTest: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_allNodesTest
@@ -836,7 +836,7 @@ allNodesTest.o: ../test/allNodesTest.cpp
 	$(CXX) $(CXXFLAGS) allNodesTest.o $(OBJS) $(LIBS)  -o $@
 
 allNodesTestX3d: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_allNodesTestX3d
@@ -848,7 +848,7 @@ allNodesTestX3d.o: ../test/allNodesTestX3d.cpp
 	$(CXX) $(CXXFLAGS) allNodesTestX3d.o $(OBJS) $(LIBS)  -o $@
 
 allNodesTestCover: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_allNodesTestCover
@@ -860,7 +860,7 @@ allNodesTestCover.o: ../test/allNodesTestCover.cpp
 	$(CXX) $(CXXFLAGS) allNodesTestCover.o $(OBJS) $(LIBS)  -o $@
 
 allNodesTestKambi: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_allNodesTestKambi
@@ -872,7 +872,7 @@ allNodesTestKambi.o: ../test/allNodesTestKambi.cpp
 	$(CXX) $(CXXFLAGS) allNodesTestKambi.o $(OBJS) $(LIBS)  -o $@
 
 allNodesTestX3dom: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	$(MAKE) SFMFTypes.h
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_allNodesTestX3dom
@@ -886,26 +886,26 @@ allNodesTestX3dom.o: ../test/allNodesTestX3dom.cpp
 printFieldType.o: ../test/printFieldType.cpp
 	$(CXX) $(CXXFLAGS) -c ../test/printFieldType.cpp -o $@
 
-../test/printFieldType: printFieldType.o $(OBJS) swt/lib/libswt.a 
+../test/printFieldType: printFieldType.o $(OBJS) swt/lib/libswt.a SDLjoystick/libSDLjoystick.a
 	$(CXX) $(CXXFLAGS) printFieldType.o $(OBJS) $(LIBS) -o $@
 
 printNodeType.o: ../test/printNodeType.cpp
 	$(CXX) $(CXXFLAGS) -c ../test/printNodeType.cpp -o $@
 
-../test/printNodeType: printNodeType.o $(OBJS) swt/lib/libswt.a 
+../test/printNodeType: printNodeType.o $(OBJS) swt/lib/libswt.a SDLjoystick/libSDLjoystick.a
 	$(CXX) $(CXXFLAGS) printNodeType.o $(OBJS) $(LIBS) -o $@
 
 printFieldNumber.o: ../test/printFieldNumber.cpp
 	$(CXX) $(CXXFLAGS) -c ../test/printFieldNumber.cpp -o $@
 
-../test/printFieldNumber: printFieldNumber.o $(OBJS) swt/lib/libswt.a 
+../test/printFieldNumber: printFieldNumber.o $(OBJS) swt/lib/libswt.a SDLjoystick/libSDLjoystick.a
 	$(CXX) $(CXXFLAGS) printFieldNumber.o $(OBJS) $(LIBS) -o $@
 
 testzeroclass.o: ../test/testzeroclass.cpp
 	$(CXX) $(CXXFLAGS) -c ../test/testzeroclass.cpp -o $@
 
 testzeroclass: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/testzeroclass
 
@@ -913,7 +913,7 @@ testzeroclass: mysnprintf.o
 	$(CXX) $(CXXFLAGS) testzeroclass.o $(OBJS) $(LIBS)  -o $@
 
 testprotos: mysnprintf.o
-	if test "X_" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
+	if test "X_SDLjoystick/libSDLjoystick.a" = "X_SDLjoystick/libSDLjoystick.a" ;then cd SDLjoystick;$(MAKE); fi
 	(cd swt ; $(MAKE))
 	$(MAKE) ../test/dune_testprotos
 

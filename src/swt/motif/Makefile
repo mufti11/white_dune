@@ -2,13 +2,13 @@
 # gives unlimited permission to copy, distribute and modify it.
 
 CC = gcc
-AWK = gawk
+AWK = awk
 RANLIB = /usr/bin/ranlib 
 
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -lXpm -lXm -lXt -lX11
-INCDIRS = -I../.. -I../include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+LIBS =  -L/Users/j.scheurich/lib/ -L/usr/local/lib -L/usr/local/lib -g -lXpm -lXm -lXt -lX11
+INCDIRS = -I../.. -I../include -I/Users/j.scheurich/include -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/Users/j.scheurich/vcglib -I.//../vcglib -I/Users/j.scheurich/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2/ -I/opt/X11/include/freetype2/ -I/usr/include/ffmpeg/   -I/usr/X11/include -I/usr/X11R6/include -DMACOSX=1 -I/usr/local/include -I/usr/local/include
 # WARNINGS = -Wall -Wwrite-strings
-CFLAGS =  -g $(WARNINGS) $(INCDIRS)  -fopenmp
+CFLAGS =  -g $(WARNINGS) $(INCDIRS)  
 DLIB = ../lib/libswt.so.0.1
 SLIB = ../lib/libswt.a
 

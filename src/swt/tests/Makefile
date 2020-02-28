@@ -3,16 +3,16 @@
 
 CPP = gcc -E
 CC = gcc
-AWK = gawk
+AWK = awk
 CXXCPP = g++ -E
 CXX = g++
 
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g ../../mysnprintf.o ../lib/libswt.a -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -lboost_thread -lboost_system -losdCPU  
+LIBS =  -L/Users/j.scheurich/lib/ -L/usr/local/lib -L/usr/local/lib -g ../../mysnprintf.o ../lib/libswt.a -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -L/usr/X11R6/lib     -L/usr/X11/lib -multiply_defined warning -lXft -lXrender -lfontconfig   -framework IOKit -lCGAL -lboost_thread -lboost_system -losdCPU /usr/lib/libcrypto.dylib /usr/lib/libssl.dylib  
 
 INCDIRS = -I../include
 
 # WARNINGS = -Wall -Wwrite-strings
-CFLAGS = -g $(WARNINGS) $(INCDIRS)   -fopenmp 
+CFLAGS = -g $(WARNINGS) $(INCDIRS)    
 CXXFLAGS = $(CFLAGS)
 
 TARGETS = swTest text buttons doodle drawing tree restest draw1

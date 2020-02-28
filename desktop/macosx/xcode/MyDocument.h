@@ -11,13 +11,5 @@
 
 @interface MyDocument : NSDocument
 {
-    IBOutlet NSMenu *dockMenu;
-    IBOutlet id menuRadio;
-    IBOutlet NSColorWell *colorWell;
 }
-
-- (IBAction)setRed:(id)sender;
-- (IBAction)setGreen:(id)sender;
-- (IBAction)setBlue:(id)sender;
-
 @end

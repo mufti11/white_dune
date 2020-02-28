@@ -1,58 +1,22 @@
 // !$*UTF8*$!
 {
-	089C1660FE840EACC02AAC07 /* English */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {692, 430}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 319}";
-			sepNavVisRect = "{{0, 0}, {711, 429}}";
-			sepNavWindowFrame = "{{15, 465}, {750, 558}}";
-		};
-	};
 	2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
-		activeArchitecture = i386;
-		activeBuildConfigurationName = Deployment;
+		activeBuildConfigurationName = Development;
+		activeBuildStyle = 4A9504D0FFE6A4CB11CA0CBA /* Development */;
 		activeExecutable = 93A0105707FB22DE003B7272 /* white_dune */;
 		activeTarget = 8D15AC270486D014006FF6A4 /* white_dune */;
+		breakpointsGroup = 930DDCD20B84FAA400273599 /* XCBreakpointsBucket */;
 		codeSenseManager = 93A0106307FB22E0003B7272 /* Code sense */;
 		executables = (
 			93A0105707FB22DE003B7272 /* white_dune */,
 		);
 		perUserDictionary = {
-			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
-				PBXFileTableDataSourceColumnWidthsKey = (
-					20,
-					1172,
-					237,
-				);
-				PBXFileTableDataSourceColumnsKey = (
-					PBXErrorsWarningsDataSource_TypeID,
-					PBXErrorsWarningsDataSource_MessageID,
-					PBXErrorsWarningsDataSource_LocationID,
-				);
-			};
-			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
-				PBXFileTableDataSourceColumnWidthsKey = (
-					22,
-					300,
-					1107,
-				);
-				PBXFileTableDataSourceColumnsKey = (
-					PBXExecutablesDataSource_ActiveFlagID,
-					PBXExecutablesDataSource_NameID,
-					PBXExecutablesDataSource_CommentsID,
-				);
-			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					1228,
+					252,
 					20,
 					39,
 					43,
@@ -69,81 +33,7 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXConfiguration.PBXFileTableDataSource3.PBXFindDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXFindDataSource_LocationID;
-				PBXFileTableDataSourceColumnWidthsKey = (
-					200,
-					1233,
-				);
-				PBXFileTableDataSourceColumnsKey = (
-					PBXFindDataSource_MessageID,
-					PBXFindDataSource_LocationID,
-				);
-			};
-			PBXConfiguration.PBXFileTableDataSource3.PBXSymbolsDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXSymbolsDataSource_SymbolNameID;
-				PBXFileTableDataSourceColumnWidthsKey = (
-					16,
-					200,
-					50,
-					1159,
-				);
-				PBXFileTableDataSourceColumnsKey = (
-					PBXSymbolsDataSource_SymbolTypeIconID,
-					PBXSymbolsDataSource_SymbolNameID,
-					PBXSymbolsDataSource_SymbolTypeID,
-					PBXSymbolsDataSource_ReferenceNameID,
-				);
-			};
-			PBXConfiguration.PBXFileTableDataSource3.XCSCMDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
-				PBXFileTableDataSourceColumnWidthsKey = (
-					20,
-					20,
-					1103,
-					20,
-					48,
-					43,
-					43,
-					20,
-				);
-				PBXFileTableDataSourceColumnsKey = (
-					PBXFileDataSource_SCM_ColumnID,
-					PBXFileDataSource_FiletypeID,
-					PBXFileDataSource_Filename_ColumnID,
-					PBXFileDataSource_Built_ColumnID,
-					PBXFileDataSource_ObjectSize_ColumnID,
-					PBXFileDataSource_Errors_ColumnID,
-					PBXFileDataSource_Warnings_ColumnID,
-					PBXFileDataSource_Target_ColumnID,
-				);
-			};
-			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
-				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
-				PBXFileTableDataSourceColumnWidthsKey = (
-					20,
-					1087,
-					60,
-					20,
-					48,
-					43,
-					43,
-				);
-				PBXFileTableDataSourceColumnsKey = (
-					PBXFileDataSource_FiletypeID,
-					PBXFileDataSource_Filename_ColumnID,
-					PBXTargetDataSource_PrimaryAttribute,
-					PBXFileDataSource_Built_ColumnID,
-					PBXFileDataSource_ObjectSize_ColumnID,
-					PBXFileDataSource_Errors_ColumnID,
-					PBXFileDataSource_Warnings_ColumnID,
-				);
-			};
-			PBXPerProjectTemplateStateSaveDate = 253141593;
+			PBXPerProjectTemplateStateSaveDate = 193264357;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -450,33 +340,10 @@
 				};
 				RubberWindowFrame = "50 595 600 343 0 0 1280 938 ";
 			};
-			PBXWorkspaceStateSaveDate = 253141593;
+			PBXWorkspaceStateSaveDate = 193264357;
 		};
 		sourceControlManager = 93A0106207FB22E0003B7272 /* Source Control */;
 		userBuildSettings = {
-			SYMROOT = "/Network/Servers/onkel.casino.uni-stuttgart.de/home/mufti/white_dune-0.29beta1146/desktop/macosx/xcode";
-		};
-	};
-	2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {3356, 2044}}";
-			sepNavSelRange = "{5179, 0}";
-			sepNavVisRect = "{{0, 1601}, {711, 429}}";
-		};
-	};
-	2A37F4AEFDCFA73011CA2CEA /* MyDocument.h */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {711, 429}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 0}, {711, 429}}";
-		};
-	};
-	32DBCF750370BD2300C91783 /* white_dune_Prefix.pch */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {691, 407}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 151}";
-			sepNavWindowFrame = "{{38, 444}, {750, 558}}";
 		};
 	};
 	8D15AC270486D014006FF6A4 /* white_dune */ = {
@@ -485,27 +352,25 @@
 			93A0105707FB22DE003B7272 /* white_dune */,
 		);
 	};
-	8D15AC360486D014006FF6A4 /* Info.plist */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {711, 700}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 0}, {711, 429}}";
-		};
+	930DDCD20B84FAA400273599 /* XCBreakpointsBucket */ = {
+		isa = XCBreakpointsBucket;
+		name = "Project Breakpoints";
+		objects = (
+		);
 	};
 	93A0105707FB22DE003B7272 /* white_dune */ = {
 		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
 		activeArgIndices = (
 		);
 		argumentStrings = (
 		);
 		autoAttachOnCrash = 1;
-		breakpointsEnabled = 0;
 		configStateDict = {
 		};
 		customDataFormattersEnabled = 1;
 		debuggerPlugin = GDBDebugging;
 		disassemblyDisplayState = 0;
-		dylibVariantSuffix = "";
 		enableDebugStr = 1;
 		environmentEntries = (
 		);
