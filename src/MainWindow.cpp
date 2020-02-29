@@ -2606,7 +2606,6 @@ MainWindow::OnCommand(void *vid)
 #endif
       case ID_NEW_POINT_SET:
         {
-        if (TheApp->is4Kids()) {
             NodePointSet *set = (NodePointSet *)createNode("PointSet");
             NodeCoordinate *coord = (NodeCoordinate *)createNode("Coordinate");
             m_scene->execute(new MoveCommand(coord, set, set->coord_Field(),
@@ -2623,7 +2622,6 @@ MainWindow::OnCommand(void *vid)
                     m_scene->execute(new MoveCommand(children->getValue(i),
                         m_scene->getRoot(),  m_scene->getRootField(),
                         NULL, -1));
-        } 
         }
         break;
 

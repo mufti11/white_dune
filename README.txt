@@ -5589,4 +5589,8 @@ Fixed setFaceHandle in NodeCoordinate
 
 Added invalid childnode deletion after 4kids PoimtSet creation.
 
+Fixed missing PointSet creation, if not in 4kids GUI
+
+Added point handle selection to point/lines if in select faces mode
+
 Contact: MUFTI <mufti11@web.de>

@@ -28,6 +28,7 @@
 #endif
 
 #include "NodeCoordinate.h"
+#include "Node.h"
 #include "Proto.h"
 #include "MFVec3f.h"
 #include "ExposedField.h"
@@ -116,9 +117,20 @@ NodeCoordinate::drawHandles(void)
     glDisable(GL_LIGHTING);
     glPushName(0);
 
+    bool showPoints = false;
+    if (hasParent()) {
+        if (getParent()->getType() == VRML_NURBS_CURVE)
+            showPoints = true;
+        if (getParent()->getType() == VRML_NURBS_CURVE_2D)
+            showPoints = true;
+        if (getParent()->getType() == VRML_INDEXED_LINE_SET)
+            showPoints = true;
+        if (getParent()->getType() == VRML_POINT_SET)
+            showPoints = true;
+    }
     int mode = m_scene->getSelectionMode();
     MyMesh *mesh = getMesh();
-    if (mode == SELECTION_MODE_VERTICES) {
+    if ((mode == SELECTION_MODE_VERTICES) || showPoints) {
         state.startDrawHandles();
         for (int ci = 0; ci < point()->getSFSize(); ci++) {
             bool hidden = false;

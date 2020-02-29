@@ -74,6 +74,12 @@ public:
     virtual int     colorIndexField() const
                        { return -1; }
 
+    void            drawHandles(void)
+                        {
+                        if (coord()->getValue())
+                           coord()->getValue()->drawHandles();
+                        }
+
     fieldMacros(MFNode, attrib,   ProtoPointSet)
     fieldMacros(SFNode, color,    ProtoPointSet)
     fieldMacros(SFNode, coord,    ProtoPointSet)
