@@ -2232,6 +2232,11 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
         RET_ONERROR( mywritestr(f, "\"from\" [0 0 -10] ") )
         RET_ONERROR( mywritestr(f, "\"intensity\" [100] ") )
         RET_ONERROR( mywritestr(f, "\"lightcolor\" [0.8 0.8 0.8]\n") )
+
+        RET_ONERROR( mywritestr(f, "LightSource \"distantlight\" 3 ") )
+        RET_ONERROR( mywritestr(f, "\"intensity\" [1.5 ] ") )
+        RET_ONERROR( mywritestr(f, "\"from\" [0 100 100] ") )
+        RET_ONERROR( mywritestr(f, "\"to\" [0 0 0]\n") )
     }
 
     RET_ONERROR( mywritef(f, "Rotate 0 0 1 0\n") ) 

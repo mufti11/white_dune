@@ -1395,9 +1395,11 @@ MeshBasedNode::writeRib(int f, int indent)
                 RET_ONERROR( mywritestr(f, "# warning: TextureTransfrom unsupported\n") )
         }
     } else {
+       float intensity = sqrt(specularColor[0] * specularColor[0] +
+                              specularColor[1] * specularColor[1] +
+                              specularColor[2] * specularColor[2]);
        RET_ONERROR( mywritestr(f, "Surface \"plastic\" ") )
-       RET_ONERROR( mywritestr(f, " \"Ks\" [1]  \"Ka\" [0.92]") )
-
+       RET_ONERROR( mywritef(f, " \"Ks\" [%f]  \"Ka\" [0.75]", intensity) )
        RET_ONERROR( mywritestr(f, "\n") )
     }
     MFVec3f *vertices = getVertices();
