@@ -6283,10 +6283,7 @@ MainWindow::UpdateToolbarSelection(void)
                     node->getParent()->getType() == VRML_TRANSFORM) ? 
                    0 : SW_MENU_DISABLED);
 
-    swMenuSetFlags(m_menu, ID_CONVEX_HULL, SW_MENU_DISABLED, 
-                   m_scene->getStore4ConvexHull()->size() >= 3
-                   ? 0 : SW_MENU_DISABLED);
-    swMenuSetFlags(m_menu, ID_CONVEX_HULL, SW_MENU_DISABLED, 
+    swMenuSetFlags(m_menu, ID_EXTRUSION_CONVEX_HULL, SW_MENU_DISABLED, 
                    m_scene->getStore4ExtrusionConvexHull(0)->size() >= 3 &&
                    m_scene->getStore4ExtrusionConvexHull(1)->size() >= 3
                    ? 0 : SW_MENU_DISABLED);

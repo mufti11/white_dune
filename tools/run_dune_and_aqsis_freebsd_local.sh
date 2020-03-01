@@ -13,7 +13,7 @@ else
    exit 1
 fi
 
-dune -files `sysctl hw.model hw.machine hw.ncpu | \
+`dirname $0`/../bin/dune -files `sysctl hw.model hw.machine hw.ncpu | \
 awk '/hw.ncpu/ { print $2 * <system("sysctl -n hw.ncpu")}'` -rib  $1
 FILE=`awk -v file=$1 'BEGIN { split(file, a, "."); print a[1]; }'`
 for j in $FILE*.rib ; do (aqsis $j &); done

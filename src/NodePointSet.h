@@ -74,6 +74,8 @@ public:
     virtual int     colorIndexField() const
                        { return -1; }
 
+    virtual bool    getValidVertex(void) { return true; }
+
     void            drawHandles(void)
                         {
                         if (coord()->getValue())

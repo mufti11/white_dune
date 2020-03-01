@@ -22,5 +22,6 @@ for j in $FILE*.rib; do rm $j; done
 if test -x /usr/bin/mencoder ; then
     # if mencoder is available, create movie and delete the .tif files 
     mencoder -o $FILE.mp4 "mf://$FILE*.tif" -nosound -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 -mf type=tif:fps=24 &&
+    rm divx2pass.log divx2pass.log.mbtree
     rm $FILE*.tif
 fi

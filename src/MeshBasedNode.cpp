@@ -1394,6 +1394,11 @@ MeshBasedNode::writeRib(int f, int indent)
             if (ntextureTransfrom)
                 RET_ONERROR( mywritestr(f, "# warning: TextureTransfrom unsupported\n") )
         }
+    } else {
+       RET_ONERROR( mywritestr(f, "Surface \"plastic\" ") )
+       RET_ONERROR( mywritestr(f, " \"Ks\" [1]  \"Ka\" [0.92]") )
+
+       RET_ONERROR( mywritestr(f, "\n") )
     }
     MFVec3f *vertices = getVertices();
     if (vertices == NULL) // bug in mesh hidden in internal node ? 

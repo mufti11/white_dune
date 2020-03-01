@@ -2225,13 +2225,29 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
     RET_ONERROR( mywritestr(f, "Identity\n") ) 
 
     if (m_currentNavigationInfo && 
-        m_currentNavigationInfo->headlight()->getValue())
+        m_currentNavigationInfo->headlight()->getValue()) {
         RET_ONERROR( mywritestr(f, "LightSource \"ambientlight\" 1\n") )
+
+        RET_ONERROR( mywritestr(f, "LightSource \"pointlight\" 2 ") )
+        RET_ONERROR( mywritestr(f, "\"from\" [0 0 -10] ") )
+        RET_ONERROR( mywritestr(f, "\"intensity\" [100] ") )
+        RET_ONERROR( mywritestr(f, "\"lightcolor\" [0.8 0.8 0.8]\n") )
+    }
 
     RET_ONERROR( mywritef(f, "Rotate 0 0 1 0\n") ) 
     RET_ONERROR( mywritef(f ,"Translate 0 0 0\n") )
 
+    RET_ONERROR( mywritef(f, "\n") ) 
 
+    RET_ONERROR( mywritestr(f, "Attribute \"visibility\" \"int diffuse\" [0]") )
+    RET_ONERROR( mywritestr(f, "\n") )
+    RET_ONERROR( mywritestr(f, "Attribute \"visibility\" \"int specular\" [1]")
+                           )
+    RET_ONERROR( mywritestr(f, "\n") )
+    RET_ONERROR( mywritestr(f, "Attribute \"visibility\" ") ) 
+    RET_ONERROR( mywritestr(f, "\"int transmission\" [0]\n") )
+    RET_ONERROR( mywritestr(f, "Attribute \"trace\" ") )
+    RET_ONERROR( mywritestr(f, "\"int maxspeculardepth\" [4]\n") )
     RET_ONERROR( mywritestr(f, "\n") )
     RET_ONERROR( mywritestr(f, "WorldBegin\n\n") )
     RET_ONERROR( mywritestr(f, "Identity\n\n") )

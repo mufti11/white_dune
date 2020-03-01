@@ -5593,4 +5593,8 @@ Fixed missing PointSet creation, if not in 4kids GUI
 
 Added point handle selection to point/lines if in select faces mode
 
+Fixed convex hull menupoint update
+
+Advanced specular .rib output
+
 Contact: MUFTI <mufti11@web.de>

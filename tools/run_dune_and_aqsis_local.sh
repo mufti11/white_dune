@@ -13,11 +13,10 @@ else
    exit 1
 fi
 
-dune -files `sysctl hw.model hw.machine hw.ncpu | \
-awk '/hw.ncpu/ { print $2 * <system("sysctl -n hw.ncpu")}'` -rib  $1
+`dirname $0`/../bin/dune -files `grep processor /proc/cpuinfo | wc -l` -rib  $1
 FILE=`awk -v file=$1 'BEGIN { split(file, a, "."); print a[1]; }'`
 for j in $FILE*.rib ; do (aqsis $j &); done
-while test "X_`ps -ef | grep aqsis | grep -v grep | grep -v run_dune_and_aqsis.sh`" != "X_" ; 
+while test "X_`ps -ef | awk '{print $4}' | grep aqsis | grep -v grep | grep -v run_dune_and_aqsis.sh`" != "X_" ; 
 do sleep 1; done
 for j in $FILE*.rib; do rm $j; done
 if test -x /usr/bin/mencoder ; then
@@ -26,4 +25,3 @@ if test -x /usr/bin/mencoder ; then
     rm divx2pass.log divx2pass.log.mbtree
     rm $FILE*.tif
 fi
-
