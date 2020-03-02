@@ -998,14 +998,14 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
         if (!inserted)
             facesToDelete.append(symFaces[i]);    
     }
-
+/*
     int facesToDeleteSize = facesToDelete.size();
     for (int i = 0; i < facesToDeleteSize; i++) {
         for (long j = 0; j < newFaces.size(); j++)
             newFaces[j] = newFaces[j] - 1;
     }
     deleteFaces(newCoordIndex, &facesToDelete);
-
+*/
     int face1[4];
     int face1Count = 0;
     int face2[4];

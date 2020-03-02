@@ -5597,4 +5597,6 @@ Fixed convex hull menupoint update
 
 Advanced specular .rib output
 
+Fixed wrong face deletion on extrude
+
 Contact: MUFTI <mufti11@web.de>

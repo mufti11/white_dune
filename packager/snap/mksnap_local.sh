@@ -79,6 +79,8 @@ build-packages:
     - rcs
 EOT
 
+rm -rf /usr/include/white_dune
+
 cp meta/snap.yaml snap/snapcraft.yaml
 
 cp ../../desktop/kde/dune.desktop meta
