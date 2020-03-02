@@ -152,6 +152,7 @@ public:
     void            insetFace(float factor);
     int             symetricPointIndex(int ci, int iface);
     int             symetricFace(int iface);
+    bool            isSymetricFace(int iface);
     bool            checkBorderMidPoint(int icoordIndex, MyArray<int> symFaces);
     bool            checkBorderFace(MyArray<int> innerBorder, 
                                     MyArray<int> outerBorder, 

@@ -74,7 +74,7 @@
 #define HAVE_OMP 1
 
 /* define if you use the spaceball library */
-/* #undef HAVE_LIBSBALL */
+#define HAVE_LIBSBALL 1
 
 /* define if you have the libusb library */
 #ifndef __CYGWIN__
@@ -332,7 +332,7 @@
 #define HAVE_WWW_BROWSER "/usr/bin/xdg-open %s &"
 
 /* vrml browser to view vrml files*/
-#define HAVE_VRML_BROWSER "/usr/bin/view3dscene %s"
+#define HAVE_VRML_BROWSER "view3dscene %s"
 
 /* vrml browser to view vrml files with a remote command*/
 #define HAVE_VRML_REMOTE_BROWSER "/usr/bin/xdg-open %s"
@@ -341,19 +341,19 @@
 #define HAVE_X11_EDITOR "/usr/bin/gedit"
 
 /* object editor for bitmap (.png/.jpg/.gif) files */
-#define HAVE_IMAGE_EDITOR "/usr/bin/gimp"
+#define HAVE_IMAGE_EDITOR "pinta"
 
 /* (path to) ant (apache ant: "Another Neat Tool") */
-/* #undef HAVE_ANT */
+#define HAVE_ANT "/usr/bin/ant"
 
 /* (path to) graphical commandline terminal (e.g. xterm) */
 /* #undef HAVE_TERM */
 
 /* easy object editor for bitmap (.png/.jpg/.gif) files for beginners */
-#define HAVE_IMAGE_EDITOR4KIDS "/usr/bin/kolourpaint"
+#define HAVE_IMAGE_EDITOR4KIDS "gpaint"
 
 /* object editor for sound (.wav/.midi) files */
-#define HAVE_SOUND_EDITOR "/usr/bin/audacity"
+#define HAVE_SOUND_EDITOR "audacity"
 
 /* object editor for movie (.mpeg) files */
 #define HAVE_MOVIE_EDITOR ""
@@ -371,7 +371,7 @@
 #define HAVE_IMAGE_CONVERTER "/usr/bin/convert"
 
 /* Define if you want to set the URL of the helppages */
-#define HAVE_HELP_URL "/home/home/mufti/wdune-1.817/docs/index.html"
+#define HAVE_HELP_URL "/usr/share/doc/wdune-docs/docs"
 
 /* Define if you want to set the URL of the vrml node list */
 /* #undef HAVE_VRML_NODES_URL */
@@ -405,32 +405,32 @@
    Define if you want to set the location where to find the PROTOs of the 
    VRML97 Amendment1 nodes 
 */
-#define HAVE_VRML97_AMENDMENT1_PROTO_URL ".//docs/vrml97Amendment1"
+#define HAVE_VRML97_AMENDMENT1_PROTO_URL "/usr/share/doc/wdune-docs/docs/vrml97Amendment1"
 
 /*  
    Define if you want to set the location where to find the PROTOs of the 
    X3D nodes 
 */
-#define HAVE_X3D_PROTO_URL ".//docs/x3d"
+#define HAVE_X3D_PROTO_URL "/usr/share/doc/wdune-docs/docs/x3d"
 
 /*  
    Define if you want to set the location where to find the PROTOs of the 
    nodes, which are implemented only via scripts
 */
-#define HAVE_SCRIPTED_NODES_PROTO_URL ".//docs/scripted_Nodes"
+#define HAVE_SCRIPTED_NODES_PROTO_URL "/usr/share/doc/wdune-docs/docs/scripted_Nodes"
 
 /*  
    Define if you want to set the location where to find the PROTOs of the 
    nodes, which are placeholders for unportable Cover/Covise nodes
 */
-#define HAVE_COVER_NODES_PROTO_URL ".//docs/coverNodes"
+#define HAVE_COVER_NODES_PROTO_URL "/usr/share/doc/wdune-docs/docs/coverNodes"
 
 /*
    Define if you want to set the location where to find the PROTOs of the
    nodes, which are placeholders for nodes used as container for data of
    exportable fileformat
 */
-/* #undef HAVE_EXPORT_CONTAINER_PROTO_URL */
+#define HAVE_EXPORT_CONTAINER_PROTO_URL "/usr/share/doc/wdune-docs/docs/exportContainers"
 
 /*
    Define if you want to set the location of the X_ITE support files
@@ -452,7 +452,7 @@
 /* 
    Define if you want to document the method to uninstall white_dune
 */
-#define HAVE_UNINSTALL_COMMENT "no information how to uninstall white_dune: possibly it has been installed from source"
+#define HAVE_UNINSTALL_COMMENT "dpkg -P wdune"
 
 /* 
    Define command to start X11 (only important on the MacOS X desktop)
@@ -565,7 +565,7 @@
 # define HAS_MLOCK 1
 #endif
 
-#define HAVE_DUNE_VERSION "white_dune 1.817"
+#define HAVE_DUNE_VERSION "white_dune 1.820"
 
 /*
    Define if you need compatibility to the deprecated NurbsCurveAnimation (now CurveAnimation) node (not implemented yet)

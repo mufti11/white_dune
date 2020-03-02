@@ -7,8 +7,8 @@ Standards-Version: 3.5.6.1
 
 Package: whitedune
 Architecture: any
-Depends: ${shlibs:Depends}, git, gedit, gimp, gpaint, audacity, lxterminal, imagemagick, aqsis, ttf-bitstream-vera, xfonts-base, view3dscene
-Suggests: freeglut3-dev, freewrl, admesh, wings3d, fluid, blender
+Depends: gimp, gpaint, audacity, gedit, git, lxterminal, imagemagick, aqsis, ttf-bitstream-vera, xfonts-base, mencoder, freeglut3-dev
+Suggests: freewrl, meshlab, wings3d
 Description: Graphical X3DV/VRML97 editor, simple NURBS/Superformula 3D modeller and  animation tool
  white_dune is:
  - a graphical editor to load/create/store X3D/VRML97 files

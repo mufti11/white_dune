@@ -807,6 +807,37 @@ NodeIndexedFaceSet::deleteFaces(MFInt32 *coordIndex,
     }
 }
 
+bool
+NodeIndexedFaceSet::isSymetricFace(int iface)
+{
+    FaceData *face = getMesh()->getFace(iface);
+    int offset = face->getOffset();
+    int numVertices = face->getNumVertices();
+    bool sym = false;
+    float fepsilon = TheApp->GetHandleEpsilon();
+    NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
+    if (ncoord == NULL)
+        return false;
+    for (int i = offset; i < offset + numVertices; i++) {
+        int ci = coordIndex()->getValue(i);
+        Vec3f vec = ncoord->point()->getValue(ci);
+        sym = false;
+        for (int j = offset; j < offset + numVertices; j++) {
+            if (i == j)
+                continue;
+            int ci2 = coordIndex()->getValue(j);
+            Vec3f vec2 = ncoord->point()->getValue(ci2);
+            if (((vec2.x + vec.x) < fepsilon) &&
+                ((vec2.y - vec.y) < fepsilon) &&
+                ((vec2.z - vec.z) < fepsilon))
+                sym = true;
+        }
+        if (!sym)
+            return false;
+    }
+    return sym;   
+}
+
 void
 NodeIndexedFaceSet::extrudeFaces(float dist)
 {
@@ -826,20 +857,31 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
     int numFaces = 0;
     MyArray<int> newFaces;
     MyArray<int> symFaces;
+    MyArray<int> bothSidesSymFaces;
     for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
-        int iface = symetricFace(m_scene->getSelectedHandle(i));
-        if (iface > -1)
-            if (!m_scene->isInSelectedHandles(iface))
-                symFaces.append(iface);
+        int iface = m_scene->getSelectedHandle(i);
+        if (isSymetricFace(iface))
+            symFaces.append(iface);
+        int symFace = symetricFace(iface);
+        if (symFace > 0)
+            bothSidesSymFaces.append(symFace);
+    }
+    bool sym = m_scene->getXSymetricMode();
+    bool symFace = sym;
+    for (int i = 0; i < getMesh()->getNumFaces(); i++) {
+        FaceData *face = getMesh()->getFace(i);
+       int offset = face->getOffset();
+        int numVertices = face->getNumVertices();
+        if (m_scene->isInSelectedHandles(i))
+            if (sym)
+                if (!symFaces.contains(i)) {
+                    symFace = false;
+                }
     }
     for (int i = 0; i < getMesh()->getNumFaces(); i++) {
         FaceData *face = getMesh()->getFace(i);
         int offset = face->getOffset();
         int numVertices = face->getNumVertices();
-        bool sym = m_scene->getXSymetricMode();
-        if (sym)
-            if (!symFaces.contains(i))
-                sym = false;
         int ci2 = -1;
         int oldBorderCount = borderCount;        
         for (int j = offset; j < offset + numVertices; j++) {
@@ -847,7 +889,7 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
             if (m_scene->isInSelectedHandles(i)) {
                 Vec3f vec = ncoord->point()->getValue(ci);
                 vec.x = vec.x;
-                if (!sym)
+                if (!symFace)
                     vec.x += dist;
                 vec.z = vec.z + dist;
                 newVertices->appendSFValue(vec.x, vec.y, vec.z);
@@ -882,12 +924,13 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
             borderCount++;
         }
 
-        if (sym) {
+        if (sym && (bothSidesSymFaces.contains(i))) {
             oldBorderCount = borderCount;        
             for (int j = offset; j < offset + numVertices; j++) {
                 int ci = coordIndex()->getValue(j);
                 Vec3f vec = ncoord->point()->getValue(ci);
-                vec.x = vec.x - dist;
+                if (!symFace)
+                    vec.x = vec.x - dist;
                 vec.z = vec.z + dist;
                 newVertices->appendSFValue(vec.x, vec.y, vec.z);
                 if (j == offset)
