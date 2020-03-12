@@ -313,6 +313,26 @@ NodeCoordinate::getHandle(int handle, int *constraint, int *field)
         if (handle >= 0 && handle < mesh->getNumFaces()) {
             FaceData *face = mesh->getFace(handle);
             int offset = face->getOffset();
+            int numVertices = face->getNumVertices();
+            MyString status = "";
+            if (handle >= 0) {
+                status.catInt(handle);
+                status += ": ";
+                for (int i = offset; i < offset + numVertices; i++) {
+                    Vec3f vec = point()->getVec(ci->getValue(i));
+                    status.catFloat(vec.x);
+                    status += ",";
+                    status.catFloat(vec.y);
+                    status += ",";
+                    status.catFloat(vec.z);
+                    status += " (";
+                    status.catInt(ci->getValue(i));
+                    status += ")";
+                    status += " ";
+                }
+                TheApp->PrintMessageWindowsString(IDS_FACE_SELECTED, 
+                                                  (const char *)status);
+            }
             Vec3f first;
             if (face->getNumVertices() > 0)
                 first = point()->getValue(ci->getValue(offset));

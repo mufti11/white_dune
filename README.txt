@@ -5599,4 +5599,8 @@ Advanced specular .rib output
 
 Fixed wrong face deletion on extrude
 
+Fixed wrong "git commit" errormessage
+
+Fixed crash in MainWindow::showColorCircle
+
 Contact: MUFTI <mufti11@web.de>

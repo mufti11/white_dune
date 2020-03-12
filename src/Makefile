@@ -538,7 +538,8 @@ DIALOGCLASSES = \
         InsertToNurbsCurveDialog.o \
         InsertToNurbsSurfaceDialog.o \
         SliderFloatDialog.o \
-        SceneDialog.o
+        SceneDialog.o \
+	QuadInsetDialog.o
 
 APPCLASSES = \
 	DuneApp.o \

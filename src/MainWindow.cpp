@@ -206,6 +206,7 @@
 #include "OneVec3fDialog.h"
 #include "SliderFloatDialog.h"
 #include "OneTextDialog.h"
+#include "QuadInsetDialog.h"
 #include "TwoRadioButtonsDialog.h"
 #include "WonderlandModuleExportDialog.h"
 #include "CattExportDialog.h"
@@ -4568,7 +4569,7 @@ MainWindow::showColorCircle(void)
             ((NodeIndexedFaceSet *)node)->color())
             node = ((NodeIndexedFaceSet *)node)->color()->getValue();
     }
-    if (node->getType() == VRML_MATERIAL) {
+    if (node && node->getType() == VRML_MATERIAL) {
         NodeMaterial *material = (NodeMaterial *)node;
         int field = -1;
         if (m_fieldView->isFieldView() && m_fieldView)
@@ -4580,7 +4581,8 @@ MainWindow::showColorCircle(void)
         else if (field == material->specularColor_Field())
             showSpecularColorCircle();
     }
-    if ((node->getType() != VRML_COLOR) && (node->getType() != X3D_COLOR_RGBA))
+    if (node && (node->getType() != VRML_COLOR) && 
+        (node->getType() != X3D_COLOR_RGBA))
         return;
     Node *color = node;
     if (color && color->getType() == VRML_COLOR) {
@@ -6379,13 +6381,16 @@ MainWindow::UpdateToolbarSelection(void)
                    (node->getType() == VRML_COORDINATE) ?
                    0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_INSET_FACE, SW_MENU_DISABLED,
-                   (node->getType() == VRML_COORDINATE) ?
+                   (node->getType() == VRML_COORDINATE) &&
+                   (m_scene->getSelectedHandlesSize() > 0) ?
                    0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_EXTRUDE, SW_MENU_DISABLED,
-                   (node->getType() == VRML_COORDINATE) ?
+                   (node->getType() == VRML_COORDINATE) &&
+                   (m_scene->getSelectedHandlesSize() > 0) ?
                    0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_SPLIT_INTO_PIECES, SW_MENU_DISABLED,
-                   (node->getType() == VRML_COORDINATE) ?
+                   (node->getType() == VRML_COORDINATE) &&
+                   (m_scene->getSelectedHandlesSize() > 0) ?
                    0 : SW_MENU_DISABLED);
     swMenuSetFlags(m_menu, ID_MESH_REDUCE, SW_MENU_DISABLED,
                    (node->getType() == VRML_COORDINATE) ||
@@ -9623,11 +9628,32 @@ MainWindow::insetFace() {
     }
     if ((node->getType() == VRML_INDEXED_FACE_SET) && 
         (m_scene->getSelectionMode() == SELECTION_MODE_FACES)){
-        SliderFloatDialog dlg(m_wnd, IDD_INSET, 0.5, 0, FLT_MAX);
-        if (dlg.DoModal() == IDCANCEL)
-            return;
+        int numVertices = 0;
         NodeIndexedFaceSet *faceset  = (NodeIndexedFaceSet *)node;
-        faceset->insetFace(dlg.GetValue());
+        if (m_scene->getSelectedHandlesSize() == 0)
+            return;
+        if (m_scene->getSelectedHandlesSize() == 1) {
+            int handle = m_scene->getSelectedHandle(0);
+            if (faceset->getMesh()) {
+                FaceData *face = faceset->getMesh()->getFace(handle);
+                numVertices = face->getNumVertices();
+            }
+        }
+        int numX = 1;
+        int numY = 1;
+/*
+        if (numVertices == 4) {
+            QuadInsetDialog dlg(m_wnd, IDD_QUAD_INSET, 0.5, 0, FLT_MAX);
+            if (dlg.DoModal() == IDCANCEL)
+                return;
+            faceset->insetFace(dlg.GetValue(), dlg.GetNumX(), dlg.GetNumY());
+        } else {
+*/
+            SliderFloatDialog dlg(m_wnd, IDD_INSET, 0.5, 0, FLT_MAX);
+            if (dlg.DoModal() == IDCANCEL)
+                return;
+            faceset->insetFace(dlg.GetValue(), 1, 1);
+//        }
         m_scene->UpdateViews(NULL, UPDATE_ALL);        
         if (updateCoord)
             m_scene->setSelection(faceset->coord()->getValue()->getPath());
@@ -13355,13 +13381,13 @@ MainWindow::checkInFile(const char *path)
 
         // use git
         if (relativ)
-            error = system("git init") != 0;
+            error = system("git init -q") != 0;
         else {
             MyString initString = "";
             initString += "(cd `dirname ";
             initString += path;
-            initString += "` && git init)";
-            system(initString);
+            initString += "` && git init -q)";
+            error = system(initString);
         }
         
         MyString gitCmd = "";
@@ -13374,18 +13400,21 @@ MainWindow::checkInFile(const char *path)
         gitCmd += path;
         if (!relativ)
             gitCmd += ")";
-        if (system(gitCmd) != 0)
-            TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
-
-        if (relativ)
-            error = system("git commit -uno -qsm \"new version\"") != 0;
-        else {
-            MyString commitString = "";
+        error = system(gitCmd);
+            
+        MyString commitString = "";
+        if (!relativ) {
             commitString += "(cd `dirname ";
             commitString += path;
-            commitString += "` && git commit -uno -qsm \"new version\")";
-            system(commitString);
+            commitString += "` && ";
         }
+        commitString += "git commit --allow-empty -uno -qsm \"";
+        commitString += path;
+        commitString += "\"";
+        if (!relativ)
+            commitString += ")";
+        error = system(commitString);
+
         if (error)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
     }

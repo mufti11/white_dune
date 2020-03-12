@@ -579,14 +579,14 @@ void
 MyMeshX<X, MFX, VEC3X>::buildFaces(void)
 {
     int start = 0;
-    int n = m_coordIndex->getSize();
+    int nci = m_coordIndex->getSize();
     const int *c = m_coordIndex->getValues();
     int numFaces = 0;
 
     int i;
     int lines = 0;
     m_lines.resize(0);
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < nci; i++) {
         if (c[i] < -1) {
             swDebugf("silently ignoring coordIndex < -1, assuming -1\n");
             m_coordIndex->setSFValue(i,-1);
@@ -626,21 +626,23 @@ MyMeshX<X, MFX, VEC3X>::buildFaces(void)
     else
        m_faces = new FaceData *[1];
     m_numFaces = numFaces;
-    numFaces = 0;
+    int newNumFaces = 0;
     start = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < nci; i++) {
         if (c[i] == -1) {
             if (i - start > 0) {
-                m_faces[numFaces] = new FaceData(i - start, start);
-                numFaces++;
+                m_faces[newNumFaces] = new FaceData(i - start, start);
+                newNumFaces++;
             }
             start = i + 1;
         } 
     }
     // handle last face if coordIndex array do not end with -1
-    if (numFaces < m_numFaces) {
-        m_faces[m_numFaces - 1] = new FaceData(n - start, start);
+    if (newNumFaces < m_numFaces) {
+        m_faces[newNumFaces] = new FaceData(nci - start, start);
+       newNumFaces++;
     }
+    m_numFaces = newNumFaces;
 }
 
 #define NUMBER_OF_DRAWS_BEFORE_TRYING_GL_LIST 5
@@ -1036,27 +1038,33 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             MyEdge *e = j->item();
             if (e->face >= m_numFaces)
                 continue;
-            const Vec3f &refNormal = m_faces[e->face]->getNormal();
+            const Vec3f *refNormal = NULL;
+            bool validRefNormal = false;
+            if (m_faces[e->face]) {
+                refNormal = &m_faces[e->face]->getNormal();
+                validRefNormal = true;
+            }
             if (e->pos2 >= (int)nCoords)
                 continue;
             long v2 = coordIndex[e->pos2];
             if (v2 >= (long)nVerts)
                 continue;
             MyEdge *f = findEdge(coordIndex, edgeLists[v2].first(), i);
-            if (f && (f->face < m_numFaces)) {
+            if (f && (f->face < m_numFaces) && m_faces[f->face] && 
+                validRefNormal) {
                 const Vec3f &otherNormal = m_faces[f->face]->getNormal();
-                float dotNormals = refNormal.dot(otherNormal);
+                float dotNormals = refNormal->dot(otherNormal);
                 if (dotNormals > cosAngle) {
                     // this edge is smooth
                     int i1 = normalIndex[e->pos1];
                     int i2 = normalIndex[f->pos2];
                     if (i1 == -1 && i2 == -1) {
                         // create a new normal
-                        normals[i1] = (refNormal + otherNormal);
-                        normals[i2] = (refNormal + otherNormal);
+                        normals[i1] = (*refNormal + otherNormal);
+                        normals[i2] = (*refNormal + otherNormal);
                     } else if (i1 == -1 && i2 != -1) {
                         // use v2's normal
-                        normals[i2] += refNormal;
+                        normals[i2] += *refNormal;
                     } else if (i1 != -1 && i2 == -1) {
                         // use v1's normal
                         normals[i1] += otherNormal;

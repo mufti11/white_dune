@@ -1687,6 +1687,7 @@
     <ClInclude Include="Previewer.h" />
     <ClInclude Include="PreviewSettingsDialog.h" />
     <ClInclude Include="Proto.h" />
+    <ClInclude Include="QuadInsetDialog.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="QuatTypes.h" />
     <ClInclude Include="Rect.h" />

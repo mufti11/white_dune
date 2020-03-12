@@ -149,7 +149,7 @@ public:
 
     NodeIndexedFaceSet *splitSelectedFaces(void);
     void            extrudeFaces(float dist);
-    void            insetFace(float factor);
+    void            insetFace(float factor, int numX, int numY);
     int             symetricPointIndex(int ci, int iface);
     int             symetricFace(int iface);
     bool            isSymetricFace(int iface);
