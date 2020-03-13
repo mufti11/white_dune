@@ -60,11 +60,14 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <wait.h>
+#include <string.h>
 
 #include <GL/gl.h>
 #include <GL/glx.h>
 
 #include "config.h"
+#include "maxpath.h"
 
 #ifdef HAVE_XKBKEYCODETOKEYSYM
 # include <X11/XKBlib.h>
@@ -431,6 +434,8 @@ swInitialize(int *argc, char **argv,int stereotype)
     int errorflag = 0;
     const char *fontname = NULL;
     int fontsize = -1;
+
+    XInitThreads();
 
     XtToolkitInitialize ();
     TheAppContext = XtCreateApplicationContext();
@@ -803,6 +808,7 @@ extern int
 swMainLoop(void)
 {
     initCallback();
+
     _running = TRUE;
     while (_running)
     {
@@ -5515,3 +5521,62 @@ int swHasVisual(void)
         return 0;
     return -1;
 }
+
+int swSystem(const char *command)
+{
+    return system(command);
+/*
+    int ret = 0;
+    char *ptr = strchr((char *)command, ' ');
+    int argc = 0;
+    while (ptr != NULL) {
+        argc++;
+        ptr = strchr(ptr + 1, ' ');
+    }
+    char **argv = malloc(argc * sizeof(int));
+    ptr = strchr((char *)command, ' ');
+    argc = 0;
+    while (ptr != NULL) {
+        argv[argc] = ptr;
+        argc++;
+        ptr = strchr(ptr + 1, ' ');
+    }
+    int len = strlen(argv[0]) + 1;
+    char *path = (char *)malloc(len);
+    strcpy(path, argv[0]);
+    int pid = fork();
+    if (pid == 0) {
+        ret = execv(path, argv + 1);
+        free(path);
+        free(argv);
+    } else {
+       int status;
+       waitpid(-1, &status, 0);
+    }
+    return ret;
+*/
+}
+
+int swSystemInDir(const char *command, const char *path)
+{
+    char cpath[MY_MAX_PATH];
+    char *currentPath = getcwd(cpath, MY_MAX_PATH - 1);
+    char dir[MY_MAX_PATH];
+    char readDir[MY_MAX_PATH];
+    strcpy(readDir, "dirname ");
+    strcpy(readDir + strlen(readDir), path);
+    FILE *filedes = popen(readDir, "r");
+    if (fread(dir, MY_MAX_PATH - 1, 1, filedes) != 1) {
+      // ??
+      //    perror(path);
+      //    return -1;
+    }
+    char *ptrN = strchr(dir, '\n');
+    if (ptrN != NULL)
+        *ptrN = 0;
+    if (chdir(dir) != 0)
+        return -1;
+    int ret = swSystem(command);
+    chdir(cpath);
+    return ret;
+}    

@@ -54,8 +54,8 @@ class MyString {
     protected:
         char   *m_data;
         int     m_refs;
-        int     m_len;
-        int     m_capacity;
+        long    m_len;
+        long    m_capacity;
     };
 
     public:
@@ -77,8 +77,8 @@ class MyString {
                    }
     int         operator ==(const MyString &str) const;
     MyString   &copy(void);
-    int         length() const { return m_stringBuf->m_len; }
-    int         write(int filedes);
+    long        length() const { return strlen(m_stringBuf->m_data); }
+    long        write(int filedes);
     const char *getData(void) const { return m_stringBuf->m_data; }
 
     bool        sub(MyString what, MyString with);

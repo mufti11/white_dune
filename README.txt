@@ -5603,4 +5603,6 @@ Fixed wrong "git commit" errormessage
 
 Fixed crash in MainWindow::showColorCircle
 
+Added swSystem*
+
 Contact: MUFTI <mufti11@web.de>

@@ -46,6 +46,9 @@
 
 #include <sys/types.h>
 #include <fcntl.h>
+#include <wait.h>
+
+#include <string.h>
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -4569,4 +4572,62 @@ int swHasVisual(void)
         return 0;
     return 1;
 }
+
+int swSystem(const char *command)
+{
+    int ret = 0;
+    int pid = fork();
+    if (pid == 0) {
+        char *ptr = strtok((char *)command, " ");
+        int argc = 0;
+        while (ptr != NULL) {
+            argc++;
+            ptr = strtok(ptr + 1, " ");
+        }
+        char **argv = malloc(argc * sizeof(int));
+        ptr = strtok((char *)command, " ");
+        argc = 0;
+        while (ptr != NULL) {
+            argv[argc] = ptr;
+            argc++;
+            ptr = strtok(ptr + 1, " ");
+        }
+        int len = strlen(argv[0]) + strlen("`which `") + 2;
+        char *path = (char *)malloc(len);
+        strcpy(path, "`which ");
+        strcpy(path + strlen(path), argv[0]);
+        strcpy(path + strlen(path), "`");
+        ret = execv(path, argv + 1);
+        free(path);
+        free(argv);
+    } else {
+       int status;
+       waitpid(-1, &status, 0);
+    }
+    return ret;
+}
+
+int swSystemInDir(const char *command, const char *path)
+{
+    char cpath[MY_MAX_PATH];
+    char *currentPath = getcwd(cpath, MY_MAX_PATH - 1);
+    char dir[MY_MAX_PATH];
+    char readDir[MY_MAX_PATH];
+    strcpy(readDir, "dirname ");
+    strcpy(readDir + strlen(readDir), path);
+    FILE *filedes = popen(readDir, "r");
+    if (fread(dir, MY_MAX_PATH - 1, 1, filedes) != 1) {
+      // ??
+      //    perror(path);
+      //    return -1;
+    }
+    char *ptrN = strchr(dir, '\n');
+    if (ptrN != NULL)
+        *ptrN = 0;
+    if (chdir(dir) != 0)
+        return -1;
+    int ret = system(command); // swSystem(command);
+    chdir(cpath);
+    return ret;
+}    
 

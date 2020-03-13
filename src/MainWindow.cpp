@@ -13380,40 +13380,48 @@ MainWindow::checkInFile(const char *path)
         bool relativ = strchr(path, '/') == NULL;
 
         // use git
+        MyString initString = "git init -q"; 
         if (relativ)
-            error = system("git init -q") != 0;
-        else {
-            MyString initString = "";
-            initString += "(cd `dirname ";
-            initString += path;
-            initString += "` && git init -q)";
-            error = system(initString);
-        }
+            error = swSystem(initString) != 0;
+        else 
+            error = swSystemInDir(initString, path) != 0;
         
-        MyString gitCmd = "";
-        if (!relativ) {
-            gitCmd += "(cd `dirname ";
-            gitCmd += path;
-            gitCmd += "` && ";
-        }
-        gitCmd += "git add ";
-        gitCmd += path;
-        if (!relativ)
-            gitCmd += ")";
-        error = system(gitCmd);
+        bool user_email = true;
+        char buf[256];
+        FILE *filedes = popen("git config --global user.email", "r");
+        if (fread(buf, 255, 1, filedes) != 1) 
+            error = true;
+        else
+            if (strcmp(buf, "you@example.com") != 0)
+                user_email = false;
+        pclose(filedes);
+
+        if (user_email) {
+            MyString gitConfig1 = "";
+            gitConfig1 += "git config --local user.email you@example.com ";
+            gitConfig1 += path;
+            if (relativ)
+                error = swSystem(gitConfig1) != 0;
+            else 
+                error = swSystemInDir(gitConfig1, path) != 0;
             
-        MyString commitString = "";
-        if (!relativ) {
-            commitString += "(cd `dirname ";
-            commitString += path;
-            commitString += "` && ";
-        }
-        commitString += "git commit --allow-empty -uno -qsm \"";
-        commitString += path;
-        commitString += "\"";
-        if (!relativ)
-            commitString += ")";
-        error = system(commitString);
+            MyString gitConfig2 = "";
+            gitConfig2 += "git config --local user.name \"Your Name\" ";
+            gitConfig2 += path;
+            if (relativ)
+                error = swSystem(gitConfig2) != 0;
+            else 
+                error = swSystemInDir(gitConfig2, path) != 0;
+        }            
+
+        MyString gitCommit = "";
+        gitCommit += "git commit --allow-empty -uno -qsm \"";
+        gitCommit += path;
+        gitCommit += "\"";
+        if (relativ)
+            error = swSystem(gitCommit) != 0;
+        else 
+            error = swSystemInDir(gitCommit, path) != 0;
 
         if (error)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);

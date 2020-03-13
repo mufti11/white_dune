@@ -88,6 +88,9 @@ extern void swOpenGLStartup(SWND wnd);
 extern int swInitialize( int *argc, char **argv, int stereotype);
 #endif
 
+int swSystem(const char *command);
+int swSystemInDir(const char *command, const char *dir);
+
 int swHasVisual(void);
 
 extern int swMainLoop(void);

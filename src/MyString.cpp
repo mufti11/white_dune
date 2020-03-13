@@ -46,7 +46,12 @@ MyString::MyString()
 
 MyString::MyString(const char *str)
 {
-    m_stringBuf = new StringBuf(str); 
+    if (strlen(str) == 0) {
+        m_stringBuf = new StringBuf(" ");
+        m_stringBuf->m_data[0] = 0;  
+    } else
+        m_stringBuf = new StringBuf(str);
+    m_stringBuf->m_refs++; 
 }
 
 MyString::MyString(char c)
@@ -56,6 +61,7 @@ MyString::MyString(char c)
     str[0] = c;  
     str[1] = '\0';
     m_stringBuf = new StringBuf(str);
+    m_stringBuf->m_refs++; 
 }
 
 MyString::MyString(const MyString &s)
@@ -67,8 +73,8 @@ MyString::MyString(const MyString &s)
 MyString::MyString(int i)
 {
     m_stringBuf = new StringBuf(""); 
+    m_stringBuf->m_refs++; 
 }
-
 
 MyString::~MyString()
 {
@@ -89,8 +95,9 @@ MyString::operator +=(const char *s)
 {
     if (s == NULL)
         return *this;
-    int len = strlen(s);
-    int newLen = m_stringBuf->m_len + len;
+    long len = strlen(s);
+    long oldLen = m_stringBuf->m_len;
+    long newLen = m_stringBuf->m_len + len;
 
     if (m_stringBuf->m_capacity == 0)
         m_stringBuf->m_capacity = 1;
@@ -98,10 +105,13 @@ MyString::operator +=(const char *s)
         while (newLen >= m_stringBuf->m_capacity) {
             m_stringBuf->m_capacity <<= 1;
         }
-        m_stringBuf->m_data = (char *) realloc(m_stringBuf->m_data, 
-                                               m_stringBuf->m_capacity);
+        if (oldLen == 0)
+            m_stringBuf->m_data = (char *) malloc(m_stringBuf->m_capacity);
+        else
+            m_stringBuf->m_data = (char *) realloc(m_stringBuf->m_data, 
+                                                   m_stringBuf->m_capacity);
     }
-    strcpy(m_stringBuf->m_data + m_stringBuf->m_len, s);
+    strcpy(m_stringBuf->m_data + strlen(m_stringBuf->m_data), s);
     m_stringBuf->m_len = newLen;
     return *this;
 }
@@ -121,7 +131,7 @@ MyString::copy(void)
     return *(new MyString(mystrdup(getData())));
 }
  
-int MyString::write(int f)
+long MyString::write(int f)
 {
    return mywritestr(f, m_stringBuf->m_data);
 }
