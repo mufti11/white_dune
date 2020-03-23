@@ -1136,6 +1136,9 @@ int
 NodeData::writeXmlFields(int f, int indent, int when, int containerField,
                          bool avoidUse)
 {
+    if (isDynamicFieldsNode())
+        TheApp->setDynamicFieldsNode();
+
     if (!m_proto) return(0);
 
     if (isPROTO() || (getType() == DUNE_VRML_CUT) || 
@@ -1225,12 +1228,18 @@ NodeData::writeXmlFields(int f, int indent, int when, int containerField,
         TheApp->incSelectionLinenumber();                
     }
 
+    if (isDynamicFieldsNode())
+        TheApp->unsetDynamicFieldsNode();
+
     return 0;
 }
 
 int 
 NodeData::writeField(int f, int indent, int i, bool script)
 {
+    if (isDynamicFieldsNode())
+        TheApp->setDynamicFieldsNode();
+
     if (!m_proto) return(0);
     bool x3d = m_scene->isX3d();
     const char *oldBase = m_scene->getURL();
@@ -1279,6 +1288,8 @@ NodeData::writeField(int f, int indent, int i, bool script)
             }
         }
     }
+    if (isDynamicFieldsNode())
+        TheApp->unsetDynamicFieldsNode();
     return(0);
 }
  

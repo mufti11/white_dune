@@ -70,7 +70,7 @@ MFBool::copy()
     return new MFBool(value, m_value.size());
 }
 
-int MFBool::writeData(int f, int i) const
+int MFBool::writeData(int f, int i)
 {
     return mywritestr(f, m_value[i] ? "TRUE" : "FALSE");
 }
@@ -88,7 +88,7 @@ const
     return(0);
 }
 
-int MFBool::writeDataC(int f, int i, int languageFlag) const
+int MFBool::writeDataC(int f, int i, int languageFlag)
 {
     if (languageFlag & C_SOURCE)
         RET_ONERROR( mywritestr(f, m_value[i] ? "-1" : "0") )

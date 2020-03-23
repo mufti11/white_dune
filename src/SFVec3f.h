@@ -65,7 +65,7 @@ public:
     virtual bool        supportInteraction(void) const { return true; }
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag) const;

@@ -5605,4 +5605,8 @@ Fixed crash in MainWindow::showColorCircle
 
 Added swSystem*
 
+Added multiple insets into a face
+
+Added delete of multiple -1 in usual node write
+
 Contact: MUFTI <mufti11@web.de>

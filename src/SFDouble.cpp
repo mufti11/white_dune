@@ -47,7 +47,7 @@ SFDouble::getString(int index, int stride) const
     return ret;
 }
 
-int SFDouble::writeData(int f, int i) const
+int SFDouble::writeData(int f, int i)
 {
     return mywritef(f, "%g", m_value);
 }

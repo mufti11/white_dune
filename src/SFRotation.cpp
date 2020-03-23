@@ -79,7 +79,7 @@ SFRotation::SFRotation(void)
     m_eulerDirty = true;
 }
 
-int SFRotation::writeData(int f, int i) const
+int SFRotation::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g %g", 
                     m_value[0], m_value[1], m_value[2], m_value[3]);
@@ -110,7 +110,7 @@ SFRotation::writeAc3d(int filedes, int indent) const
 
 int
 SFRotation::writeC(int filedes, const char* variableName, 
-                   int languageFlag) const
+                   int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )

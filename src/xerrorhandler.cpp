@@ -187,8 +187,10 @@ int DuneApp::emergency_rescue(int sig)
                                               ,S_IRUSR | S_IWUSR);
 #endif
       } while (f == -1); 
+#ifndef _WIN32
       mywritef(console, "%s:  %s\n", mypath, strerror(errno));
       mywritef(console,"white_dune: %s:  %s\n", mypath, strerror(errno));
+#endif
       int writeError = false;
       if (i->item()->GetScene()->write(f, mypath, flags) < 0)
          writeError = true;

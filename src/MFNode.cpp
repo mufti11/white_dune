@@ -113,7 +113,7 @@ MFNode::writeBrackets(void) const
 }
 
 
-int MFNode::writeData(int f, int i) const
+int MFNode::writeData(int f, int i)
 {
     return m_value->get(i)->write(f, 0);
 }

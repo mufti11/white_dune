@@ -75,7 +75,7 @@ MFString::copy()
     return new MFString(value);
 }
 
-int MFString::writeDataC(int f, int i, int languageFlag) const
+int MFString::writeDataC(int f, int i, int languageFlag)
 {
     MyString value = "";
     value += m_value[i];
@@ -87,7 +87,7 @@ int MFString::writeDataC(int f, int i, int languageFlag) const
     return(0);
 }
 
-int MFString::writeData(int f, int i) const
+int MFString::writeData(int f, int i)
 {
     RET_ONERROR( mywritestr(f, "\"") )
     RET_ONERROR( mywritestr(f, m_value[i]) )
@@ -95,7 +95,7 @@ int MFString::writeData(int f, int i) const
     return(0);
 }
 
-int MFString::writeDataXml(int f, int i) const
+int MFString::writeDataXml(int f, int i)
 {
     MyString string = "";
     string += m_value[i];

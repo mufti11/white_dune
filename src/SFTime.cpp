@@ -40,7 +40,7 @@ SFTime::getString(int index, int stride) const
     return ret;
 }
 
-int SFTime::writeData(int f, int i) const
+int SFTime::writeData(int f, int i)
 {
     return mywritef(f, "%g", m_value);
 }

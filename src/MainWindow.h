@@ -391,7 +391,7 @@ protected:
     void                addToPointSet(void);
     void                setViewpoint(void);
     void                setTarget(void);
-    void                insetFace();
+    void                insetFaces();
     void                extrude();
     void                triangulate(void);
     void                optimizeSet(void);

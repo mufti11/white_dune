@@ -36,16 +36,16 @@ public:
     virtual const char *getTypeName() const { return "MFInt32"; }
     virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
-    virtual int         write(int f, int indent) const
+    virtual int         write(int f, int indent)
                            { 
                            return write(f, indent, writeBrackets(), true); 
                            }
-    virtual int         write4FieldPipe(int f, int indent) const
+    virtual int         write4FieldPipe(int f, int indent)
                            { return write(f, indent, false, false); }
     int                 write(int f, int indent, bool writeBrackets, 
-                              bool compactFormat) const;
+                              bool compactFormat);
 
     virtual const char *getTypeC(int languageFlag) const { return "int"; }
 
@@ -75,5 +75,6 @@ public:
     int                 find(int i) { return m_value.find(i); }
 protected:
     MyArray<int>        m_value;
+    bool                m_lastMinus1;
 };
 

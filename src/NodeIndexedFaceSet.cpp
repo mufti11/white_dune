@@ -998,14 +998,6 @@ NodeIndexedFaceSet::extrudeFaces(float dist)
         if (!inserted)
             facesToDelete.append(symFaces[i]);    
     }
-/*
-    int facesToDeleteSize = facesToDelete.size();
-    for (int i = 0; i < facesToDeleteSize; i++) {
-        for (long j = 0; j < newFaces.size(); j++)
-            newFaces[j] = newFaces[j] - 1;
-    }
-    deleteFaces(newCoordIndex, &facesToDelete);
-*/
     int face1[4];
     int face1Count = 0;
     int face2[4];
@@ -1692,8 +1684,144 @@ NodeIndexedFaceSet::makeSymetric(int direction, bool plus)
     m_meshDirty = true;
 }
 
+static float midOffset(int count, int numCount, float sign, float offset)
+{
+    if (numCount == 1)
+        return 0;
+    float ret = -1.0f + 0.5f / (float)numCount;
+    return ret + 0.5f / (float)numCount + 2.0f * (float)count / (float)numCount;
+}
+
+static float borderBegin(int count, int numCount, float sign, float offset)
+{
+    return midOffset(count,  numCount, sign, offset) +
+           1.0f / (float)numCount / 2.0f - offset;
+}
+
+static float borderSecond(int count, int numCount, float sign, float offset)
+{
+    return midOffset(count,  numCount, sign, offset) + 
+           3.0f / (float)numCount / 2.0f - offset;
+}
+
+static float borderEnd(int count, float offset)
+{
+    return (float)count + 1.0f + offset; 
+}
+
+static void storeVertex(MFVec3f *vertices, Vec3f newVertex, bool zDirection,
+                        float xOffset, int face)
+{
+    if (zDirection) {
+        Vec3f vec(-newVertex.z, newVertex.y, -newVertex.x);
+        if (face == 3) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+            vec.y -= 2.0f;
+            vec.z += 2.0f;
+            vec.x *= -1.0f;
+        }
+        if (face == 4 || face == 5) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+        }
+        if (face == 5) {
+            vec.x += 2.0f;
+            vec.z -= 2.0f;
+        }
+        if (xOffset > 0) {
+            vec.z += 2.0f;              
+        } else  {
+            vec.x -= 2.0f;
+            vec.z *= -1.0f;
+        }
+        vertices->setVec(vertices->getSFSize(), vec);
+    } else {
+        Vec3f vec(newVertex.x, newVertex.y, newVertex.z);
+        if (xOffset == 0)
+            vec.x *= -1.0f;
+        if (face == 2) {
+            vec = Vec3f(newVertex.y, newVertex.z, newVertex.x);
+            vec.y += 2.0f;
+        }
+        if (face == 3) {
+            float temp = vec.z;
+            vec.z = vec.y;
+            vec.y = temp;
+            vec.y -= 2.0f;
+            vec.z += 2.0f;
+            vec.x *= -1.0f;
+        }
+        if (face == 4 || face == 5) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+        }
+        if (face == 5) {
+            vec.x += 2.0f;
+            vec.z -= 2.0f;
+            vec.z *= -1;
+        }
+        vertices->setVec(vertices->getSFSize(), vec);
+    }
+}
+
+static void storeVertexMid(MFVec3f *vertices, Vec3f newVertex, bool zDirection,
+                           float xOffset, int face)
+{
+    if (zDirection) {
+        Vec3f vec(-newVertex.z, newVertex.y, -newVertex.x);
+        if (xOffset > 0) {
+            vec.z += 2.0f;
+        } else  {
+            vec.x -= 2.0f;
+            vec.z *= -1.0f;
+        }
+        if (face == 3) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+
+            vec.y -= 2.0f;
+//            vec.z -= 4.0f;
+            vec.z *= -1.0f;
+        }
+        vertices->setVec(vertices->getSFSize(), vec);
+    } else {
+        Vec3f vec(newVertex.x, newVertex.y, newVertex.z);
+        if (xOffset == 0)
+            vec.x *= -1.0f;
+        if (face == 3) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+
+            vec.y -= 2.0f;
+//            vec.z -= 4.0f;
+            vec.z *= -1.0f;
+        }
+        vertices->setVec(vertices->getSFSize(), vec);
+    }
+}
+
+static void storeVertexYX(MFVec3f *vertices, Vec3f newVertex, bool zDirection,
+                        float xOffset, int face)
+{
+    Vec3f vec(newVertex.y, newVertex.z, newVertex.x);
+    if (face == 3) {
+        float temp = vec.x;
+        vec.x = vec.z;
+        vec.z = temp;
+//        vec.x += -4.0f;
+        vec.z -= -2.0f;
+    }
+    vertices->setVec(vertices->getSFSize(), vec);
+}
+
 void            
-NodeIndexedFaceSet::insetFace(float factor, int numX, int numY)
+NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
 {
     if (m_mesh == NULL)
         return;
@@ -1713,483 +1841,404 @@ NodeIndexedFaceSet::insetFace(float factor, int numX, int numY)
                 if (!m_scene->isInSelectedHandles(iface))
                     facesToDelete.append(iface);
     }
-    int inc = m_scene->getSelectedHandlesSize();
-    int numFace = m_mesh->getNumFaces() - 1;
-    m_scene->removeSelectedHandles();
-    for (long i = 0; i < facesToDelete.size(); i++) {
-        FaceData *face = getMesh()->getFace(facesToDelete[i]);
-        int offset = face->getOffset();
-        int numVertices = face->getNumVertices();
-        Vec3f mid(0, 0, 0);
-        for (int j = offset; j < offset + numVertices; j++) {
-            mid += vertices->getVec(ci->getValue(j));
-        }
-        mid /= numVertices;
-        int start = vertices->getSFSize();
-        for (int j = offset; j < offset + numVertices; j++) {
-            Vec3f newVertex = mid + (vertices->getVec(ci->getValue(j)) - mid) * 
-                                    factor;
-            vertices->setVec(vertices->getSFSize(), newVertex);
-        }
-        for (int j = offset; j < offset + numVertices; j++) {
-            int k = j - offset;
-            ci->appendSFValue(ci->getValue(j));
-            if (j + 1 >= offset + numVertices)
-                ci->appendSFValue(ci->getValue(offset));
-            else
-                ci->appendSFValue(ci->getValue(j + 1));
-            if (k + 1 >= numVertices)
-                ci->appendSFValue(start);
-            else
-                ci->appendSFValue(start + k + 1);
-            ci->appendSFValue(start + k);
+    if (numX == 1  && numY == 1) {
+        int numFace = m_mesh->getNumFaces() - 1;
+        int inc = m_scene->getSelectedHandlesSize();
+        for (long i = 0; i < facesToDelete.size(); i++) {
+            FaceData *face = getMesh()->getFace(facesToDelete[i]);
+            int offset = face->getOffset();
+            int numVertices = face->getNumVertices();
+            Vec3f mid(0, 0, 0);
+            for (int j = offset; j < offset + numVertices; j++) {
+                mid += vertices->getVec(ci->getValue(j));
+            }
+            mid /= numVertices;
+            int start = vertices->getSFSize();
+            for (int j = offset; j < offset + numVertices; j++) {
+                Vec3f newVertex = mid + 
+                                  (vertices->getVec(ci->getValue(j)) - mid) * 
+                                  factor;
+                vertices->setVec(vertices->getSFSize(), newVertex);
+            }
+            for (int j = offset; j < offset + numVertices; j++) {
+                int k = j - offset;
+                ci->appendSFValue(ci->getValue(j));
+                if (j + 1 >= offset + numVertices)
+                    ci->appendSFValue(ci->getValue(offset));
+                else
+                    ci->appendSFValue(ci->getValue(j + 1));
+                if (k + 1 >= numVertices)
+                    ci->appendSFValue(start);
+                else
+                    ci->appendSFValue(start + k + 1);
+                ci->appendSFValue(start + k);
+                ci->appendSFValue(-1);
+                numFace++;
+            }
+            for (int j = offset; j < offset + numVertices; j++)
+                ci->appendSFValue(start + j - offset);
             ci->appendSFValue(-1);
             numFace++;
+            if (inc == 1)
+                m_scene->addSelectedHandle(numFace - 1);
+            else
+                m_scene->addSelectedHandle(numFace - 2 * inc);
         }
-        for (int j = offset; j < offset + numVertices; j++)
-            ci->appendSFValue(start + j - offset);
-        ci->appendSFValue(-1);
-        numFace++;
-        if (inc == 1)
-            m_scene->addSelectedHandle(numFace - 1);
-        else
-            m_scene->addSelectedHandle(numFace - 2 * inc);
-    }
-/*
-    Vec3f vecMax(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-    Vec3f vecMin(FLT_MAX, FLT_MAX, FLT_MAX);
-    for (long i = 0; i < facesToDelete.size(); i++) {
-         FaceData *face = getMesh()->getFace(facesToDelete[i]);
-         int offset = face->getOffset();
-         int numVertices = face->getNumVertices();
-         for (int j = offset; j < offset + numVertices; j++) {
-             Vec3f val = vertices->getVec(ci->getValue(j));
-             if (val.x > vecMax.x)
-                 vecMax.x = val.x;
-             if (val.y > vecMax.y)
-                 vecMax.y = val.y;
-             if (val.z > vecMax.z)
-                 vecMax.z = val.z;
-             if (val.x < vecMin.x)
-                 vecMin.x = val.x;
-             if (val.y < vecMin.y)
-                 vecMin.y = val.y;
-             if (val.z < vecMin.z)
-                 vecMin.z = val.z;
-         }
-    }
-    float f = (1.0f - factor);
-    Vec3f lenX((vecMax.x - vecMin.x) * f / numX, 0.0f, 
-               (vecMax.z - vecMin.z) * f / numX);
-    Vec3f lenY(0.0f, (vecMax.y - vecMin.y) * f / numY, 0.0f);
-    for (int n = 0; n < numX; n++) {
-        Vec3f halfN(n * 0.5f - 0.25f, 0, n * 0.5f - 0.25f);
-        Vec3f offX(lenX * (((1 - factor)) * n) + halfN);
-        for (int m = 0; m < numY; m++) {
-            Vec3f offY(lenY * ((1 - factor) / 4 + m));
-            for (long i = 0; i < facesToDelete.size(); i++) {
-                FaceData *face = getMesh()->getFace(facesToDelete[i]);
-                int offset = face->getOffset();
-                int numVertices = face->getNumVertices();
-                Vec3f mid(0, 0, 0);
-                int start = vertices->getSFSize();
-                for (int j = offset; j < offset + numVertices; j++) {
-                    mid += vertices->getVec(ci->getValue(j));
-                }
-                mid /= numVertices;
-                for (int j = offset; j < offset + numVertices; j++) {
-                    Vec3f vec = vertices->getVec(ci->getValue(j));
-                    Vec3f newVertex = offY * 1.0 / 8 -
-                                      mid + (vec - mid) * factor;
-                    newVertex.x *= lenX.x; 
-                    if (n < numX / 2.0f)
-                        newVertex.x += 2 * offX.x; 
-                    else
-                        newVertex.x += 1 * offX.x; 
-                    newVertex.y *= lenY.y; 
-                    newVertex.z *= -1;
-                    vertices->setVec(vertices->getSFSize(), newVertex);
-                }
-                for (int j = offset + numVertices - 1; j >= offset; j--) {
-                    ci->appendSFValue(ci->getValue(j));
-                    if (j + 1 >= offset + numVertices)
-                        ci->appendSFValue(ci->getValue(offset));
-                    else
-                        ci->appendSFValue(ci->getValue(j + 1));
+    } else {
+        int inc = m_scene->getSelectedHandlesSize();
+        Vec3f vecMax(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+        Vec3f vecMin(FLT_MAX, FLT_MAX, FLT_MAX);
+        for (long i = 0; i < facesToDelete.size(); i++) {
+             FaceData *face = getMesh()->getFace(facesToDelete[i]);
+             int offset = face->getOffset();
+             int numVertices = face->getNumVertices();
+             for (int j = offset; j < offset + numVertices; j++) {
+                 Vec3f val = vertices->getVec(ci->getValue(j));
+                 if (val.x > vecMax.x)
+                     vecMax.x = val.x;
+                 if (val.y > vecMax.y)
+                     vecMax.y = val.y;
+                 if (val.z > vecMax.z)
+                     vecMax.z = val.z;
+                 if (val.x < vecMin.x)
+                     vecMin.x = val.x;
+                 if (val.y < vecMin.y)
+                     vecMin.y = val.y;
+                 if (val.z < vecMin.z)
+                     vecMin.z = val.z;
+             }
+        }
+        float f = (1.0f - factor);
+        Vec3f lenX((vecMax.x - vecMin.x) * f / numX, 0.0f, 
+                   (vecMax.z - vecMin.z) * f / numX);
+        bool zDirection = false;
+        if (lenX.z > lenX.x)
+            zDirection = true;
+        float xOffset = 0;
+        Vec3f lenY(0.0f, (vecMax.y - vecMin.y) * f / numY, 0.0f);
+        for (int n = 0; n < numX; n++) 
+            for (int m = 0; m < numY; m++) 
+                for (long i = 0; i < facesToDelete.size(); i++) {
+                    FaceData *face = getMesh()->getFace(facesToDelete[i]);
+                    int offset = face->getOffset();
+                    int numVertices = face->getNumVertices();
+                    Vec3f mid(0, 0, 0);
+                    for (int j = offset; j < offset + numVertices; j++) {
+                        mid += vertices->getVec(ci->getValue(j));
+                    }
+                    mid /= numVertices;
+                    int midstart = vertices->getSFSize();
+                    if (facesToDelete[i] == 2 || facesToDelete[i] == 3) {
+                        Vec3f mid(0, 0, 0);
+                        for (int j = offset; j < offset + numVertices; j++) {
+                            Vec3f vec(vertices->getVec(ci->getValue(j)));
+                            float temp = vec.x;
+                            vec.x = vec.y;
+                            vec.y = temp;
+                            mid += vec;
+                        }
+                        mid /= numVertices;
+                        int midstart = vertices->getSFSize();
+                        for (int j = offset + numVertices - 1; j >= offset; 
+                             j--) {
+                            Vec3f vec(vertices->getVec(ci->getValue(j)));
+                            float temp = vec.x;
+                            vec.x = vec.y;
+                            vec.y = temp;
+                            Vec3f newVertex = mid + (vec - mid) * factor;
+                            newVertex.y *= lenX.x;
+                            newVertex.x *= lenY.y;
+                            newVertex.y -= midOffset(n, numX, 1, 0);
+                            newVertex.x += midOffset(m, numY, -1,
+                                                     - 1.0f / numY); 
+                            if (zDirection) {
+                                newVertex.z *= -1.0f;
+                                newVertex.y += vecMin.x;
+                            }
+                            newVertex.y /= 2.0f;
+                            newVertex.y += (1 + m) / numY + 4.0f / numY - 2.5f;
+                            newVertex.x += (1 + n) / numX / 2.0;
+                            if (m == 0)
+                                newVertex.x += 1.0f;
+                            temp = newVertex.x;
+                            newVertex.x = newVertex.y;
+                            newVertex.y = temp;
+                            storeVertexMid(vertices, newVertex, false, 0, 
+                                           facesToDelete[i]);
+                        }
+                    }
+                    if (zDirection) {
+                        for (int j = offset + numVertices - 1; j >= offset; 
+                             j--) {
+                            Vec3f newVertex = mid + 
+                                              (vertices->getVec(ci->getValue(j))
+                                              - mid) * factor;
+                            newVertex.x *= lenX.x;
+                            newVertex.y *= lenY.y;
+                            newVertex.x += midOffset(n, numX, 1, 0);
+                            newVertex.y -= midOffset(m, numY, -1,
+                                                     - 1.0f / numY);
+                            if (zDirection) {
+                                newVertex.z *= -1.0f;
+                                newVertex.x += vecMin.x;
+                            }
+                            if (facesToDelete[i] == 4 || facesToDelete[i] == 5)
+                                newVertex.z *= -1.0f;
+                            storeVertexMid(vertices, newVertex, false, 0, 
+                                           facesToDelete[i]);
+                        }
+                    } else {
+                        for (int j = offset; j < offset + numVertices; j++) {
+                            Vec3f newVertex = mid + 
+                                              (vertices->getVec(ci->getValue(j))
+                                            - mid) * factor;
+                            newVertex.x *= lenX.x;
+                            newVertex.y *= lenY.y;
+                            newVertex.x += midOffset(n, numX, 1, 0);
+                            newVertex.y -= midOffset(m, numY, -1,
+                                                     - 1.0f / numY);
+                            if (zDirection)
+                                newVertex.z *= -1.0f;
+                            if (facesToDelete[i] == 4 || facesToDelete[i] == 5)
+                                newVertex.z *= -1.0f;
+                            storeVertexMid(vertices, newVertex, false, 0, 
+                                           facesToDelete[i]);
+                        }
+                    }
+                    for (int j = offset; j < offset + numVertices; j++)
+                        ci->appendSFValue(midstart + j - offset);
                     ci->appendSFValue(-1);
-                    numFace++;
-                }
-                for (int j = offset; j < offset + numVertices; j++)
-                    ci->appendSFValue(start + j - offset);
-                ci->appendSFValue(-1);
-                
-                if ((numX > 1) || (numY > 1)) {
-                    Vec3f startVertex = vertices->getVec(ci->getValue(offset));
                     for (int j = offset + numVertices - 1; j >= offset; j--) {
-                         // 4 vertices
-                         int x = 0;
-                         int y = 0;
-                         switch (j) {
-                           case 0:
-                             break;
-                           case 1:
-                             x = 1;
-                             break;
-                           case 2:
-                             y = 1;
-                             break;
-                           case 3:
-                             x = 1;
-                             y = 1;
-                             break;
-                         }
-                         Vec3f newVertex = startVertex +
-                                           lenX * (n +1) / numX * 0.5 * x -
-                                           lenY * (m +1) / numY * 0.5 * y;
-printf("%d\n",m);
-printf(newVertex);
-                         vertices->setVec(vertices->getSFSize(), newVertex);
-                         ci->appendSFValue(vertices->getSFSize());
-                    }
-                    ci->appendSFValue(-1);
-                    start = vertices->getSFSize();
-                    if (n == 0) {
-                        for (int j = offset; j < offset + numVertices; j++) {
-                            if (j == offset) {
-                                float x = (n - 0.0f) / numX;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 0.0f) / numX + 2 * offX.x;
-                                float y = (m - 1.0f) / numY + 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 0.0f) / numX + 2 * offX.x;
-                                float y = (m + 1.0f) / numY - 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 0.0f) / numX;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
+                        int k = j - offset;
+                        if (j == offset) {
+                            Vec3f startVertex = 
+                                 vertices->getVec(ci->getValue(j));
+    
+                            if (facesToDelete[i] == 1)
+                                startVertex.x -= 2.0f;
+    
+                            Vec3f newVertex = startVertex;
+    
+                            newVertex.y -= borderBegin(m, numY, -1, 
+                                                       -1.0f / numY / 2.0f);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, xOffset,
+                                        facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderBegin(n, numX, 1, 0);
+                            newVertex.y -= borderBegin(m, numY, -1,
+                                                       -1.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderSecond(n, numX, 1, 0);
+                            newVertex.y -= borderBegin(m, numY, -1,
+                                                       -1.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderEnd(n, 1);
+                            newVertex.y -= borderBegin(m, numY, -1,
+                                                       -1.0f / numY / 2.0f);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
                         }
                         ci->appendSFValue(-1);
-                        for (int j = offset; j < offset + numVertices; j++) {
-                            if (j == offset) {
-                                float x = (n - 5.0f) / numX + 0.5;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 5.0f) / numX + 2 * offX.x + 0.5;
-                                float y = (m - 1.0f) / numY + 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 5.0f) / numX + 2 * offX.x + 0.5;
-                                float y = (m + 1.0f) / numY - 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 5.0f) / numX + 0.5;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
+                        if (j == offset + 1) {
+                            Vec3f startVertex = vertices->getVec(
+                                 ci->getValue(j - 1));
+    
+                            if (facesToDelete[i] == 1)
+                                startVertex.x -= 2.0f;
+    
+                            Vec3f newVertex = startVertex;
+    
+                            newVertex.y -= borderEnd(m, 0);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection,
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderBegin(n, numX, 1, 0);
+                            newVertex.y -= borderSecond(m, numY, -1, 0 / numY - 
+                                                                 1.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection,
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderBegin(n, numX, 1, 0);
+                            newVertex.y -= borderBegin(m, numY, -1,
+                                                       -1.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection,
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.y -= borderBegin(m, numY, -1, 
+                                                       -1.0f / numY / 2.0f);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
                         }
                         ci->appendSFValue(-1);
-                        for (int j = offset; j < offset + numVertices; j++) {
-                            if (j == offset) {
-                                float x = (n - 0.0f) / numX;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 0.0f) / numX + 2 * offX.x;
-                                float y = (m + 1.0f) / numY - 2 * offY.y/numX - 2/numX;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 5.0f) / numX - 2 * offX.x + 0.5;
-                                float y = (m + 1.0f) / numY - 2 * offY.y/numX - 2/numX;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 5.0f) / numX + 0.5;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
+                        if (j == offset + 2) {
+                            Vec3f startVertex = 
+                                 vertices->getVec(ci->getValue(j));
+                            startVertex.z -= 2.0f;
+                            startVertex.x += 2.0f;
+    
+                            if (facesToDelete[i] == 0) {
+                                startVertex.x -= 2.0f;
+                                startVertex.z += 2.0f;
+                            }
+                            if (facesToDelete[i] == 1)
+                                startVertex.z += 2.0f;
+                            if (facesToDelete[i] == 2) {
+                                startVertex.x -= 2.0f;
+                                startVertex.y -= 2.0f;
+                                startVertex.z += 2.0f;
+                            }
+                            if (facesToDelete[i] == 3) {
+                                startVertex.x -= 2.0f;
+                                startVertex.y -= 2.0f;
+                                startVertex.z += 2.0f;
+                            }
+    
+                            Vec3f newVertex = startVertex;
+    
+                            newVertex.x += borderEnd(n, -1);
+                            newVertex.y -= borderBegin(m, numY, -1,
+                                                       1.0f / numY / 2.0f + 
+                                                       1.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            if ((facesToDelete[i] == 2) || 
+                                (facesToDelete[i] == 3))
+                                storeVertexYX(vertices, newVertex, zDirection,
+                                              xOffset, facesToDelete[i]);
+                            else
+                                storeVertex(vertices, newVertex, zDirection, 
+                                            xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderSecond(n, numX, 1, 
+                                                        -2.0f * numX);
+                            newVertex.y -= borderBegin(m, numY,
+                                                       -1.0f, 2.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            if ((facesToDelete[i] == 2) || 
+                                (facesToDelete[i] == 3))
+                                storeVertexYX(vertices, newVertex, zDirection, 
+                                              xOffset, facesToDelete[i]);
+                            else
+                                storeVertex(vertices, newVertex, zDirection, 
+                                            xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderBegin(n, numX, 1, 0) - 
+                                           2 * numX;
+                            newVertex.y -= borderBegin(m, numY, 
+                                                       -1, 2.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            if ((facesToDelete[i] == 2) || 
+                                (facesToDelete[i] == 3))
+                                storeVertexYX(vertices, newVertex, zDirection, 
+                                              xOffset, facesToDelete[i]);
+                            else
+                                storeVertex(vertices, newVertex, zDirection, 
+                                            xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += - 2 * numX;
+                            newVertex.y -= borderBegin(m, numY, -1, 
+                                                       1.0f / numY / 2.0f + 
+                                                       1.0f / numY);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            if ((facesToDelete[i] == 2) || 
+                                (facesToDelete[i] == 3))
+                                storeVertexYX(vertices, newVertex, zDirection, 
+                                              xOffset, facesToDelete[i]);
+                            else
+                                storeVertex(vertices, newVertex, zDirection, 
+                                            xOffset, facesToDelete[i]);
                         }
                         ci->appendSFValue(-1);
-                        for (int j = offset + numVertices -1; j >= offset; j--) 
-                            {
-                            if (j == offset) {
-                                float x = (n - 0.0f) / numX;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 0.0f) / numX + 2 * offX.x;
-                                float y = (m - 1.0f) / numY + 2 * offY.y/numX - 2/numX;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 5.0f) / numX + 2 * offX.x + 1.5;
-                                float y = (m - 1.0f) / numY - 2 * offY.y/numX - 2/numX;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 5.0f) / numX + 0.5;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
-                        }
-                        ci->appendSFValue(-1);
-                    } else if (n == numX - 1) {
-                        for (int j = offset + numVertices -1; j >= offset; j--) 
-                            {
-                            if (j == offset) {
-                                float x = (n - 10.0f) / numX + 0.5;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 10.0f) / numX + 2 * offX.x;
-                                float y = (m - 1.0f) / numY + 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 10.0f) / numX + 2 * offX.x;
-                                float y = (m + 1.0f) / numY - 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 10.0f) / numX + 0.5;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
-                        }
-                        ci->appendSFValue(-1);
-                        for (int j = offset + numVertices -1; j >= offset; j--) 
-                            {
-                            if (j == offset) {
-                                float x = (n - 5.0f) / numX;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 5.0f) / numX + 2 * offX.x - 0.5;
-                                float y = (m - 1.0f) / numY + 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 5.0f) / numX + 2 * offX.x - 0.5;
-                                float y = (m + 1.0f) / numY - 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 5.0f) / numX;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
-                        }
-                        ci->appendSFValue(-1);
-                        for (int j = offset; j < offset + numVertices; j++) {
-                            if (j == offset) {
-                                float x = (n - 5.0f) / numX;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 5.0f) / numX + 2 * offX.x - 1.5;
-                                float y = (m + 1.0f) / numY - 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 10.0f) / numX + 2 * offX.x;
-                                float y = (m + 1.0f) / numY - 4 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 10.0f) / numX + 0.5;
-                                float y = (m + 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
-                        }
-                        ci->appendSFValue(-1);
-                        for (int j = offset + numVertices -1; j >= offset; j--) 
-                            {
-                            if (j == offset) {
-                                float x = (n - 5.0f) / numX;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 1) {
-                                float x = (n - 5.0f) / numX - 2 * offX.x + 0.5;
-                                float y = (m - 1.0f) / numY + 4.5 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 2) {
-                                float x = (n - 10.0f) / numX + 2 * offX.x;;
-                                float y = (m - 1.0f) / numY + 4.5 * offY.y - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } else if (j == offset + 3) {
-                                float x = (n - 10.0f) / numX + 0.5;
-                                float y = (m - 1.0f) / numY - 1;
-                                y *= -1;
-                                Vec3f newVertex = startVertex - lenX * x -
-                                                                lenY * y;
-                                ci->appendSFValue(vertices->getSFSize());
-                                vertices->setVec(vertices->getSFSize(), 
-                                                 newVertex);
-                            } 
+                        if (j == offset + 3) {
+                            Vec3f startVertex = vertices->getVec(
+                                 ci->getValue(j - 3));
+    
+                            if (facesToDelete[i] == 4 || facesToDelete[i] == 5)
+                                xOffset = startVertex.x;
+                            if (facesToDelete[i] == 1)
+                                startVertex.x -= 2.0f;
+    
+                            Vec3f newVertex = startVertex;
+    
+                            newVertex.x += borderEnd(n, 1);
+                            newVertex.y -= borderEnd(m, -1);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderSecond(n, numX, 1, 0);
+                            newVertex.y -= borderSecond(m, numY, -1, 0);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderSecond(n, numX, 1, 0);
+                            newVertex.y -= borderBegin(m, numY, -1, -1);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x += borderEnd(n, 1);
+                            newVertex.y -= borderEnd(m, 0);
+    
+                            ci->appendSFValue(vertices->getSFSize());
+                            storeVertex(vertices, newVertex, zDirection, 
+                                        xOffset, facesToDelete[i]);
                         }
                         ci->appendSFValue(-1);
                     }
-                    numFace++;
-                    if (inc == 1)
-                        m_scene->addSelectedHandle(numFace - 1);
-                    else
-                        m_scene->addSelectedHandle(numFace - 2 * inc);
-                }                 
-            }
-        }
+                }
     }
-*/
     deleteFaces(ci, &facesToDelete);
 
     m_scene->backupFieldsStart();

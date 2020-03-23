@@ -96,7 +96,7 @@ SFColor::equals(const FieldValue *value) const
 }
 
 int 
-SFColor::writeData(int f, int i) const
+SFColor::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g", m_value[0], m_value[1], m_value[2]);
 }

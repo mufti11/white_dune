@@ -68,10 +68,10 @@ SFNode::copy()
     ref();
     return ret; 
 }
-int SFNode::writeData(int f, int i) const
+
+int SFNode::writeData(int f, int i)
 {
-    // hidden by SFNode::write and SFNode::writeXml
-    assert(false);
+    write(f, i);
     return 0;
 }
 

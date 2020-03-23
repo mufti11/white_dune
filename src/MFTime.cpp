@@ -107,7 +107,7 @@ MFTime::equals(const MFTime *value) const
     return false;
 }
 
-int MFTime::writeData(int f, int i) const
+int MFTime::writeData(int f, int i)
 {
     return mywritef(f, "%g", m_value[i]);
 }

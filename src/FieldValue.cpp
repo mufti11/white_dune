@@ -34,7 +34,7 @@ FieldValue::FieldValue() {
 }
 
 int
-FieldValue::write(int filedes, int indent) const
+FieldValue::write(int filedes, int indent)
 { 
     RET_ONERROR( writeData(filedes, indent) )
     RET_ONERROR( mywritestr(filedes, "\n") )
@@ -44,7 +44,7 @@ FieldValue::write(int filedes, int indent) const
 
 int
 FieldValue::writeXml(int filedes, int indent, int containerField,
-                     bool avoidUse) const
+                     bool avoidUse)
 { 
     RET_ONERROR( mywritestr(filedes, "'") )
     RET_ONERROR( writeDataXml(filedes, 0) )
@@ -79,7 +79,7 @@ FieldValue::writeDequoted(int filedes, const char *string)
 
 int
 FieldValue::writeC(int filedes, const char* variableName, 
-                   int languageFlag) const
+                   int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, variableName) )
     RET_ONERROR( mywritestr(filedes, " = ") )
@@ -342,7 +342,7 @@ rewriteField(FieldValue *value, const char *oldBase, const char *newBase,
     }
 }
 
-int MFieldValue::write(int f, int indent, bool writeBrackets) const
+int MFieldValue::write(int f, int indent, bool writeBrackets)
 { 
     // SFImage is not a real MFType, it may not use brackets
     if (writeBrackets) {
@@ -383,7 +383,7 @@ int MFieldValue::write(int f, int indent, bool writeBrackets) const
 }
 
 int MFieldValue::writeXml(int f, int indent, int containterField,
-                          bool avoidUse) const
+                          bool avoidUse)
 {
     RET_ONERROR( mywritestr(f, "'") )
     for (int i = 0; i < getSFSize(); i++) { 
@@ -406,7 +406,7 @@ FieldValue::writeType(int languageFlag) const
 
 int
 MFieldValue::writeC(int filedes, const char* variableName, 
-                    int languageFlag) const
+                    int languageFlag)
 {
     RET_ONERROR( mywritestr(filedes, "m_") );
     RET_ONERROR( mywritestr(filedes, variableName) );
@@ -579,7 +579,7 @@ MFieldValue::getDiff(IntArray *newIndices, IntArray *deleteIndices,
 }
 
 int
-FieldValue::writeAc3d(int filedes, int indent) const
+FieldValue::writeAc3d(int filedes, int indent)
 {
     int appIndent = TheApp->GetIndent();
     TheApp->SetIndent(0);
@@ -589,7 +589,7 @@ FieldValue::writeAc3d(int filedes, int indent) const
 }
 
 int
-FieldValue::writeCattGeo(int filedes, int indent) const
+FieldValue::writeCattGeo(int filedes, int indent)
 {
     int appIndent = TheApp->GetIndent();
     TheApp->SetIndent(0);

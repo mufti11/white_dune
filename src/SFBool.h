@@ -32,7 +32,7 @@ public:
     virtual const char *getTypeName() const { return "SFBool"; }
     virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
     virtual int         writeXml(int filedes, int indent, int containerField,
                                  bool avoidUse) const;
 

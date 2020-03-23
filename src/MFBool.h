@@ -36,11 +36,11 @@ public:
     virtual const char *getTypeName() const { return "MFBool"; }
     virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
     virtual int         writeXml(int filedes, int indent, int containerField,
                                  bool avoidUse) const;
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
     virtual const char *getTypeC(int languageFlag) const;
 
     virtual bool        readLine(int index, char *line);

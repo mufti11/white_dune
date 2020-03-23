@@ -29,22 +29,26 @@
 MFInt32::MFInt32()
 {
     m_value.resize(0);
+    m_lastMinus1 = false;
 }
 
 MFInt32::MFInt32(int *values, int len)
 {
     m_value.setData(values, len);
+    m_lastMinus1 = false;
 }
 
 MFInt32::MFInt32(MFInt32 *value)
 {
     m_value.setData(value->getValues(), value->getSize());
+    m_lastMinus1 = false;
 }
 
 MFInt32::MFInt32(const int value)
 {
     m_value.resize(0);
     m_value[0] = value;
+    m_lastMinus1 = false;
 }
 
 MFInt32::~MFInt32()
@@ -72,14 +76,21 @@ MFInt32::copy()
     return new MFInt32(value, m_value.size());
 }
 
-int MFInt32::writeData(int f, int i) const
+int MFInt32::writeData(int f, int i)
 {
-    return mywritef(f, "%d", m_value[i]);
+    bool isDynamicFieldsNode = TheApp->getDynamicFieldsNode();
+    int ret = 0;
+    if (i != -1 || (!m_lastMinus1) || isDynamicFieldsNode)
+        ret = mywritef(f, "%d", m_value[i]);
+    if (i == -1)
+        m_lastMinus1 = true;
+    return ret;
 }
 
 int MFInt32::write(int f, int indent, bool writeBrackets, 
-                   bool compactFormat) const
+                   bool compactFormat)
 {
+    bool isDynamicFieldsNode = TheApp->getDynamicFieldsNode();
     if (writeBrackets) {
         if (!TheApp->GetkrFormating()) {
             RET_ONERROR( mywritestr(f, "\n") )
@@ -104,8 +115,14 @@ int MFInt32::write(int f, int indent, bool writeBrackets,
     for (long i = 0; i < m_value.size(); i++) {
         if (indentflag) 
             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
-        RET_ONERROR( mywritef(f, "%d ", m_value[i]) )
-        indentflag = noMinus1;
+        if (m_value[i] != -1 || (!m_lastMinus1) || isDynamicFieldsNode)
+            RET_ONERROR( mywritef(f, "%d ", m_value[i]) )
+        if (m_value[i] == -1)
+            m_lastMinus1 = true;
+        else
+            m_lastMinus1 = false;
+        if (m_value[i] == -1)
+            indentflag = noMinus1;
         if (!compactFormat)
             indentflag = true;
         if (m_value[i] == -1) 

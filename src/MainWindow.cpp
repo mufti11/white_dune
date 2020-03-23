@@ -2649,7 +2649,7 @@ MainWindow::OnCommand(void *vid)
         extrude();
         break;
       case ID_INSET_FACE:
-        insetFace();
+        insetFaces();
         break;
       case ID_SPLIT_INTO_PIECES:
         splitIntoPieces();
@@ -9619,7 +9619,7 @@ MainWindow::splitFaces(void) {
 }
 
 void
-MainWindow::insetFace() {
+MainWindow::insetFaces() {
     Node *node = m_scene->getSelection()->getNode(); 
     bool updateCoord = false;
     if (node->getType() == VRML_COORDINATE) {
@@ -9641,19 +9641,17 @@ MainWindow::insetFace() {
         }
         int numX = 1;
         int numY = 1;
-/*
         if (numVertices == 4) {
             QuadInsetDialog dlg(m_wnd, IDD_QUAD_INSET, 0.5, 0, FLT_MAX);
             if (dlg.DoModal() == IDCANCEL)
                 return;
-            faceset->insetFace(dlg.GetValue(), dlg.GetNumX(), dlg.GetNumY());
+            faceset->insetFaces(dlg.GetValue(), dlg.GetNumX(), dlg.GetNumY());
         } else {
-*/
             SliderFloatDialog dlg(m_wnd, IDD_INSET, 0.5, 0, FLT_MAX);
             if (dlg.DoModal() == IDCANCEL)
                 return;
-            faceset->insetFace(dlg.GetValue(), 1, 1);
-//        }
+            faceset->insetFaces(dlg.GetValue(), 1, 1);
+        }
         m_scene->UpdateViews(NULL, UPDATE_ALL);        
         if (updateCoord)
             m_scene->setSelection(faceset->coord()->getValue()->getPath());
@@ -13376,7 +13374,9 @@ MainWindow::checkInFile(const char *path)
         setStatusText(cmd);
         if (system(cmd) != 0)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
-    } else {
+    }
+#ifndef _WIN32
+    else {
         bool relativ = strchr(path, '/') == NULL;
 
         // use git
@@ -13426,6 +13426,7 @@ MainWindow::checkInFile(const char *path)
         if (error)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
     }
+#endif
 }
 
 

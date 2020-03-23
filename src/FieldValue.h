@@ -49,40 +49,40 @@ public:
     virtual int         getStride() const { return 1; }
 
     // int i argument is used for MFieldValue, otherwise it is a dummy argument
-    virtual int         writeData(int filedes, int i) const = 0;
+    virtual int         writeData(int filedes, int i) = 0;
     // write data without quotes to file
     virtual int         writeRaw(int filedes, int indent) const { return 0; }
     virtual int         writeDequoted(int filedes, const char *string);
     // write data in VRML syntax to file
-    virtual int         write(int filedes, int indent) const;
+    virtual int         write(int filedes, int indent);
     // write data in X3D/XML syntax to file
     virtual int         writeXml(int filedes, int indent, 
                                  int containerField = -1,
-                                 bool avoidUse = false) const;
-    virtual int         writeDataXml(int filedes, int i) const 
+                                 bool avoidUse = false);
+    virtual int         writeDataXml(int filedes, int i)
                             { return writeData(filedes, i); }
     // write data in AC3D b syntax to file
-    virtual int         writeAc3d(int filedes, int indent) const;
+    virtual int         writeAc3d(int filedes, int indent);
     // write data in Catt 8 syntax to file
-    virtual int         writeCattGeo(int filedes, int indent) const;
+    virtual int         writeCattGeo(int filedes, int indent);
     // write data in C++/Java syntax to file
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
+                               int languageFlag);
     virtual int         writeCDeclaration(int filedes, int languageFlag) const 
                            { return 0; }
     virtual int         writeCSendEventFunction(int filedes, int languageFlag);
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const 
+    virtual int         writeDataC(int filedes, int i, int languageFlag)
                            { return writeData(filedes, i); }
     virtual int         writeCWonderlandArt(int filedes, 
                                             const char* variableName,
-                                            int languageFlag) const 
+                                            int languageFlag)
                            { return writeC(filedes, variableName, 
                                            languageFlag); }
     virtual const char *getTypeC(int languageFlag) const = 0;
     virtual const char *getDefaultC(int languageFlag) const;
     virtual bool        isArrayInC(void) const { return false; }
 
-    virtual int         write4FieldPipe(int filedes, int indent) const 
+    virtual int         write4FieldPipe(int filedes, int indent)
                             { return write(filedes, indent); }
 
     virtual bool        readLine(int index, char *line) = 0;
@@ -175,16 +175,16 @@ public:
     virtual bool        isMFieldValue(void) const { return true; }
     virtual bool        writeBrackets(void) const { return(getSFSize() != 1); }
     virtual int         write(int filedes, int indent, 
-                              bool writeBrackets) const;
-    virtual int         write(int filedes, int indent) const 
+                              bool writeBrackets);
+    virtual int         write(int filedes, int indent) 
                            { return write(filedes, indent, writeBrackets()); }
-    virtual int         write4FieldPipe(int filedes, int indent) const 
+    virtual int         write4FieldPipe(int filedes, int indent)
                             { return write(filedes, indent, false); } 
     virtual int         writeXml(int filedes, int indent,
                                  int containerField = -1,
-                                 bool avoidUse = false) const;
+                                 bool avoidUse = false);
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
+                               int languageFlag);
     virtual int         writeCSendEventFunction(int filedes, int languageFlag);
     virtual bool        isArrayInC(void) const { return true; }
 

@@ -39,7 +39,7 @@ public:
     virtual const char *getTypeName() const         { return "MFTime"; }
     virtual int         getSFSize() const           { return m_value.size(); }
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
 

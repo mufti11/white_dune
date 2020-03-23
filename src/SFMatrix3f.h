@@ -78,11 +78,11 @@ public:
     virtual bool        supportInteraction(void) const { return true; }
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         write(int filedes, int indent) const;
+    virtual int         writeData(int filedes, int i); 
+    virtual int         write(int filedes, int indent);
 
     virtual int         writeC(int filedes, const char* variableName,
-                               int languageFlag) const;
+                               int languageFlag);
     virtual const char *getTypeC(int languageFlag) const { return "float"; }
     virtual bool        isArrayInC(void) const { return true; }
 

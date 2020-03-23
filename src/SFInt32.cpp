@@ -40,7 +40,7 @@ SFInt32::getString(int index, int stride) const
     return ret;
 }
 
-int SFInt32::writeData(int f, int i) const
+int SFInt32::writeData(int f, int i)
 {
     return mywritef(f, "%d", m_value);
 }

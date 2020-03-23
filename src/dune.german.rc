@@ -338,7 +338,7 @@ BEGIN
     BEGIN
         MENUITEM "Umwandeln in &IndexedFaceSet",         ID_TO_INDEXED_FACESET_4KIDS
         MENUITEM "Subdivide\ts",                         ID_SUBDIVIDE
-        MENUITEM "Flaeche einfuegen",                    ID_INSET_FACE
+        MENUITEM "Flaeche(n) einfuegen",                 ID_INSET_FACE
         MENUITEM "Flaeche herausziehen",                 ID_EXTRUDE
         MENUITEM "Triangulate",                          ID_TRIANGULATE
         MENUITEM "Optimize",                             ID_SET_OPTIMIZE
@@ -1476,7 +1476,7 @@ BEGIN
     POPUP "(IndexedFace)Set"
     BEGIN
         MENUITEM "Subdivide\ts",                         ID_SUBDIVIDE
-        MENUITEM "Flaeche einfuegen",                    ID_INSET_FACE
+        MENUITEM "Flaeche(n) einfuegen",                 ID_INSET_FACE
         MENUITEM "Flaeche herausziehen",                 ID_EXTRUDE
         MENUITEM "Triangulate",                          ID_TRIANGULATE
         MENUITEM "Optimize",                             ID_SET_OPTIMIZE

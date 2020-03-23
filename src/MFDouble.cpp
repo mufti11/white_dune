@@ -111,7 +111,7 @@ MFDouble::equals(const MFDouble *value) const
     return false;
 }
 
-int MFDouble::writeData(int f, int i) const
+int MFDouble::writeData(int f, int i)
 {
    RET_ONERROR( mywritef(f, "%g", m_value[i * getStride()]) )
    if (getStride() > 1)   
@@ -120,7 +120,7 @@ int MFDouble::writeData(int f, int i) const
    return 0;
 }
 
-int MFDouble::writeDataC(int f, int i, int languageFlag) const
+int MFDouble::writeDataC(int f, int i, int languageFlag)
 {
    RET_ONERROR( mywritef(f, "%f", m_value[i * getStride()]) )
    if (getStride() > 1)   

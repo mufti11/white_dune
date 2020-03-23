@@ -41,7 +41,7 @@ public:
     virtual int         getType() const { return SFNODE; }
     virtual const char *getTypeName() const { return "SFNode"; }
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
     virtual int         write(int filedes, int indent) const;
     virtual int         writeXml(int filedes, int indent, int containerField,
                                  bool aviodUse) const;

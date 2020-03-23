@@ -38,7 +38,7 @@ SFBool::getString(int index, int stride) const
     return ret;
 }
 
-int SFBool::writeData(int f, int i) const
+int SFBool::writeData(int f, int i)
 {
     return mywritestr(f, m_value ? "TRUE" : "FALSE");
 }

@@ -36,7 +36,7 @@ public:
     virtual const char *getTypeName() const { return "SFDouble"; }
     virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
 
     virtual const char *getTypeC(int languageFlag) const { return "double"; }
     virtual const char *getDefaultC(int languageFlag) const { return "0"; }

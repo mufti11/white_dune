@@ -1,5 +1,4 @@
-- add PointSet.coord on creation
-- add to 4kids
+
 - feature:  scrolling in sceneview when moving nodes under M$Windows
 - feature:  multiple selection of nodes
 ------------------------------------------------------

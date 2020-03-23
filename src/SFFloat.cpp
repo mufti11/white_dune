@@ -40,12 +40,12 @@ SFFloat::getString(int index, int stride) const
     return ret;
 }
 
-int SFFloat::writeData(int f, int i) const
+int SFFloat::writeData(int f, int i)
 {
     return mywritef(f, "%g", m_value);
 }
 
-int SFFloat::writeDataC(int f, int i, int languageFlag) const
+int SFFloat::writeDataC(int f, int i, int languageFlag)
 {
    if (languageFlag & JAVA_SOURCE)
        return mywritef(f, "%gf", m_value);

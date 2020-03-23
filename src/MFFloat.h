@@ -41,8 +41,8 @@ public:
     virtual MyString    getString(int index, int stride) const; 
     virtual const char *getTypeName() const { return "MFFloat"; }
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
 
     virtual const char *getTypeC(int languageFlag) const { return "float"; }
 

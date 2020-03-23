@@ -79,7 +79,7 @@ SFVec4f::readLine(int index, char *line)
 }
 
 int 
-SFVec4f::writeData(int f, int i) const
+SFVec4f::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g %g", m_value[0], m_value[1], m_value[2], 
                     m_value[3]);

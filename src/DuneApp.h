@@ -364,6 +364,12 @@ public:
 
     MyString           getCrashedFile(void) { return m_recentFiles[0]; }
 
+    void               setDynamicFieldsNode(void) 
+                           { m_dynamicFieldsNode = true; }
+    bool               getDynamicFieldsNode(void) 
+                           { return m_dynamicFieldsNode; }
+    void               unsetDynamicFieldsNode(void) 
+                           { m_dynamicFieldsNode = false; }
 protected:
     void                Exit(void);
 
@@ -440,6 +446,8 @@ protected:
     int                 m_fullScreenAtBegin;
 
     bool                m_CExporting;
+
+    bool                m_dynamicFieldsNode;
 };
 
 extern DuneApp *TheApp;

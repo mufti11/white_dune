@@ -77,7 +77,7 @@ SFVec3f::readLine(int index, char *line)
 }
 
 int 
-SFVec3f::writeData(int f, int i) const
+SFVec3f::writeData(int f, int i)
 {
     return mywritef(f, "%g %g %g", m_value[0], m_value[1], m_value[2]);
 }

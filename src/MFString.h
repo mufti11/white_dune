@@ -44,11 +44,11 @@ public:
                                             const char* variableName,
                                             int languageFlag) const;
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
+    virtual int         writeDataC(int filedes, int i, int languageFlag);
     virtual int         writeRaw(int filedes, int indent) const;
 
-    virtual int         writeData(int filedes, int i) const; 
-    virtual int         writeDataXml(int filedes, int i) const; 
+    virtual int         writeData(int filedes, int i); 
+    virtual int         writeDataXml(int filedes, int i); 
 
     virtual const char *getTypeC(int languageFlag) const; 
 
