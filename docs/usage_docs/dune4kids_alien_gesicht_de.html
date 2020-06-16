@@ -1,0 +1,271 @@
+<!--
+/*
+ * Copyright (C) 2018, 2020 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h1>Wie baut man ein Alien-Gesicht (nicht schwer) ?</h1>
+<br>
+<h2>Erst einmal ein paar Informationen zum lesen</h2>
+<br>
+Auf manchen Systemen (Linux KDE/Gnome und SGI IRIX 4dwm) gibt es ein eigenes 
+Programmicon fuer "dune4kids", es sieht dann irgendwie so aus:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+Auf Systemen wie Micro$oft Windows oder MacOSX ist aber nur ein 
+(anderes) Programmicon vorhanden:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normalerweise startet das Programm dieses Icons beim ersten Mal 
+in der englischen Vollversion, in der Regel mit sehr vielen Icons 
+und zu vielen Menues.<br>
+<a href="dune4kids_start_de.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+Es muss dann zuerst einmal auf Deutsch und dann auf dune4kids umgestellt 
+werden.<br> Man muss <a href="dune4kids_start_de.html" target="_blank"> 
+hier draufklicken</a> um auf die richtige Version umschalten zu 
+k&ouml;nnen.<br>
+<img src="frog01.png">
+<br><br>
+<h2>Was tun, wenn das Programm abst&uuml;rtzt ?</h2>
+Mit etwas Gl&uuml;ck kann man den letzten Stand neu laden, wenn man bei
+den aktuellen Dateien eine neue ".dune_crash" Datei findet.
+<br>
+<img src="frog00.png">
+<br>
+<h1>Navigation</h1>
+Navigation bedeutet das Herumbewegen im 3D-Modell.<br>
+Das ist wichtig, denn es kann sehr leicht passieren, dass man vor oder in 
+sein Werkstueck ger&auml;t und deswegen ueberhaupt nichts mehr sieht.<br><br>
+Wenn man nichts mehr sieht, gibt es zwei Vorgehensweisen, die man meistens
+gemeinsam anwendet:
+<ul>
+<li> <b>Man geht nach hinten</b><br>
+     Vorw&auml;rts und Rueckw&auml;rts geht man, indem man gemeinsam die linke 
+     Maustaste und die "Shift"-Taste (deutsche Tastatur: "Leerer-Pfeil-hoch-Taste") 
+     gedr&uuml;ckt h&auml;lt.
+     In der Einstellung "Examine" (wenn das Icon <img src="examine.png"> gedrueckt 
+     ist) funktioniert das auch mit der mittleren Taste einer 3-Tasten-Maus.
+     Bei einer Maus mit Scrollrad muss man das mittlere Scrollrad
+     dr&uuml;cken.
+</li>
+<li> <b>Man dreht die 3D-Welt</b><br>
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Zus&auml;tzlich gibt es noch die M&ouml;glichkeit, die linke Maustaste,
+die "Shift"-Taste und die "Control"-Taste gleichzeitig gedr&uuml;ckt
+zu halten (oder das Icon <img src="move_along_screen.png"> benutzen).
+Damit kann man sich in Richtung der Bildschirmfl&auml;che, also nach 
+oben, unten, links oder rechts bewegen.
+<br>
+<br>
+Nachdem man sein Objekt wieder gefunden hat, sollte man wieder das 
+"Examine"-Icon <img src="examine.png"> dr&uuml;cken, damit man wieder
+wie gewohnt arbeiten kann.
+<br>
+Gleichzeitig sollte man sein Objekt anw&auml;hlen und dieses Icon
+<img src="icon_turnpoint.png"> dr&uuml;cken, damit man es wie gewohnt
+drehen kann.
+<br>
+<h1>Icons f&uuml;r Ver&auml;nderungen</h1>
+Um zu zeigen, wie man Dinge ver&auml;ndern kann, wird einfach mal ein
+Quader erzeugt.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, um ganze Objekte zu ver&auml;ndern:
+<ul>
+<li>Verschieben: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Drehen: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Vergr&ouml;ssern/verkleinern: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>Gleichartig vergr&ouml;ssern/verkleinern: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>Drehpunkt verschieben: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+Mit weissen K&auml;stchen kann man Objekte selber ver&auml;ndern.
+Mit den einzelnen Pfeilicons <img src="xyz.png"> kann man die Richtung
+steuern. <br>
+Wird zum Beispiel nur der gr&uuml;ne Pfeil hereingedr&uuml;ckt, 
+<img src="y_only.jpg"> kann bei<br> 
+<img src="yonly_1.jpg"> 
+<br><br> 
+ein K&auml;stchen nur in Richtung des gr&uuml;ne Pfeils geschoben werden.<br>
+<img src="yonly_2.jpg">. 
+<br><br>
+Genau wie man Pfeile auch an den Sch&auml;ften statt an den Spitzen
+packen kann, um in einer Ebene verschieben zu k&ouml;nnen, kann man
+auch zwei Pfeile gleichzeitig hereingedr&uuml;cken <img src="xz_only.jpg">, 
+um ein K&auml;stchen in einer Ebene verschieben zu k&ouml;nnen.
+<br>
+<h1>Wie baut man ein Alien-Gesicht (nicht schwer) ?</h1>
+<br>
+Die folgende Beschreibung sollte man eher als Vorschlag betrachten und 
+nicht als Kochrezept, das man sklavisch befolgen muss.<br>
+<br>
+ <em> Veraendern -&gt; X gespiegelted Veraendern</em> muss immer 
+hereingedr&uuml;ckt sein.<br>
+<br>
+Starten Sie mit einem Pilz: <em> Neu -&gt; Pilz -&gt; rund</em>
+<br>
+<img src="alien1.png"/>
+<br>
+Verschieben Sie die weissen K&auml;stchen (das K&auml;stchen mit der Maus
+anklicken und mit gedr&uuml;ckter linker Maustaste verschieben)
+bis etwas Kopf-&auml;hnliches xentsteht.<br>
+Benutzen Sie <em>Bwewegungsart -&gt; Vergroessern/Verkleinern</em> und
+verschieben Sie das rote K&auml;stchen um den Kopf etwas shmaller zu
+kriegen.
+<br>
+<img src="alien2.png"/>
+<br>
+Jetzt muss das Modell verformbar gemacht werden.<br>
+Das geht mit dem entsprechenden Icon oder im Men&uuml; mit
+<em> Veraendern -&gt; Umwandeln in -&gt; Nurbs(Patch)Surface</em>.
+<br>
+<img src="alien3.png"/>
+<br>
+Tragen Sie im Dialog die Anzahl der (Kontroll-)Punkte in den zwei Richtungen
+(12 und 12) ein und dr&uuml;cken Sie OK.
+<br>
+<img src="alien4.png"/>
+<br>
+Navigieren Sie n&auml;her an das Objekt heran, um mit der gedr&uuml;ckten
+rechten Maustaste zwei (Kontroll-)Punkte an der Vorderseite auszuw&auml;hlen.
+<br>
+<img src="alien5.png"/>
+<br>
+Klicken Sie auf ein gr&uuml;nes K&auml;stchen und verschieben Sie die 
+Maus mit festgehaltener linker Maustaste. Die gr&uuml;nen K&auml;stchen 
+(Kontroll-)Punkte verschieben sich und das Objekt ver&auml;ndert sich.
+<br>
+<img src="alien6.png"/>
+<br>
+W&auml:hlen Sie zwei (Kontroll-)Punkte der Oberlippe an.
+<br>
+<img src="alien7.png"/>
+<br>
+Und verschieben Sie sie nach unten.
+<br>
+<img src="alien8.png"/>
+<br>
+<br>
+<img src="alien9.png"/>
+<br>
+Bentutzen Sie <em> Animation -&gt; Animation erzeugen</em>
+<br>
+<img src="alien10.png"/>
+<br>
+&Auml;ndern Sie die L&auml;nge der Animation auf 1 Sekunde.
+<br>
+<img src="alien11.png"/>
+<br>
+Klicken Sie im Animations-Daten-Fenster das Ende der Line an, damit
+die Animation an dieser Stelle nachlos weitergeht.<br>
+Klicken Sie das Animations-Daten-Fenster in der Mitte an und dr&uuml;cken 
+Sie das Record-Icon in der untersten Zaile hinein.
+<br>
+<img src="alien12.png"/>
+<br>
+W&auml;hlen Sie 2 (Kontroll-)Punkte der Unterlippe an und verschieben Sie sie
+nach oben.
+<br>
+<img src="alien13.png"/>
+<br>
+Klicken Sie auf Transform und benutzen Sie <em> Neu -&gt; kugel </em>
+<br>
+<img src="alien14.png"/>
+<br>
+Verschieben Sie die Kugel an eine passende Stelle 
+<br>
+<img src="alien15.png"/>
+<br>
+und machen Sie die Kugel kleiner
+<br>
+<img src="alien16.png"/>
+<br>
+Klicken Sie auf Transform der Kugel 
+<br>
+<img src="alien17.png"/>
+<br>
+und benutzen Sie <em> Neu -&gt; kugel </em>
+<br>
+<img src="alien18.png"/>
+<br>
+Machen Sie die neue Kugel kleiner, sie verschwindet jetzt in der alten Kugel.
+<br>
+<img src="alien19.png"/>
+<br>
+Verschieben Sie die neue Kugel nach vorne.
+<br>
+<img src="alien20.png"/>
+<br>
+W&auml;hlen Sie Material der neuen Kugel an (sie m&uuml;ssen wahrscheinlich
+das +-Icon von Appearance anklicken)
+<br>
+<img src="alien21.png"/>
+<br>
+Bentzen Sie 
+<em> Veraendern -&gt; Farbe (braucht Material oder ... -&gt; Normal </em>
+<br>
+<img src="alien22.png"/>
+<br>
+Klicken Sie im Farbrad eine blaue Farbe an.
+<br>
+<img src="alien23.png"/>
+<br>
+Bentzen Sie 
+<em> Veraendern -&gt; Farbe (braucht Material oder ... -&gt; Glaenzen </em>
+und klicken Sie im Farbrad eine weisse Farbe an.
+<br>
+<img src="alien24.png"/>
+<br>
+Klicken Sie auf den Transform der ersten Kugel.
+<br>
+<img src="alien25.png"/>
+<br>
+Benutzen Sie <em> Bearbeiten -&gt; kopieren</em> und
+<em> Bearbeiten -&gt; symetrisch einf&uuml;gen -&gt; x</em>, um aus einem Auge
+zwei Augen zu machen.<br>
+

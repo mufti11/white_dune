@@ -1568,6 +1568,7 @@ MainWindow::destroyMainWindow(void) // but keep scene
     m_nodeToolbarScripted = NULL;
     swDestroyToolbar(m_vcrToolbar);
     m_vcrToolbar = NULL;
+    closeCallback();
 }
 
 
@@ -5282,6 +5283,8 @@ void
 MainWindow::UpdateObjectEdit(const Path *selection)
 {
     Node *node = selection->getNode();
+    if (node == NULL)
+        return;
     int field = m_selectedField;
     bool editObject_flag = false;
     bool editUrl_flag = false;
@@ -12235,7 +12238,7 @@ MainWindow::insertHAnimJoint()
                 int handle = handles[i];
                 if (handle >= NO_HANDLE)
                     continue;
-                int f = indices->find(handle);
+                long f = indices->find(handle);
                 if (f < 0) {
                     indices->appendSFValue(handle);
                     weights->appendSFValue(weight);
@@ -12250,7 +12253,7 @@ MainWindow::insertHAnimJoint()
                 MFInt32 *indices = (MFInt32 *)parent->skinCoordIndex()->copy();
                 for (long i = 0; i < handles.size(); i++) {
                     int handle = m_scene->getSelectedHandle(i);
-                    int f = indices->find(handle);
+                    long f = indices->find(handle);
                     if (f < 0) {
                         indices->appendSFValue(handle);
                         weights->appendSFValue(1 - weight);
@@ -12329,7 +12332,7 @@ MainWindow::setHAnimJointWeight()
             MFInt32 *newIndices = (MFInt32 *)oldJoint->skinCoordIndex()->copy();
             for (long i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
-                int index = newIndices->find(handle);
+                long index = newIndices->find(handle);
                 if (index > -1) {
                     newIndices->removeSFValue(index);
                     newWeights->removeSFValue(index);
@@ -12339,7 +12342,7 @@ MainWindow::setHAnimJointWeight()
             oldJoint->skinCoordWeight(newWeights);
             for (long j = 0; j < handles.size(); j++) {
                 int handle = handles[j];
-                int index = oldIndices->find(handle);
+                long index = oldIndices->find(handle);
                 if (index > -1) {
                     indices->appendSFValue(handle);
                     weights->appendSFValue(weight);
@@ -12348,7 +12351,7 @@ MainWindow::setHAnimJointWeight()
         } else {
             for (long i = 0; i < handles.size(); i++) {
                 int handle = handles[i];
-                int f = indices->find(handle);
+                long f = indices->find(handle);
                 if (f < 0) {
                     indices->appendSFValue(handle);
                     weights->appendSFValue(weight);
@@ -12367,7 +12370,7 @@ MainWindow::setHAnimJointWeight()
                 int handle = m_scene->getSelectedHandle(i);
                 if ((handle < 0) || (handle >= NO_HANDLE))
                     continue;
-                int f = indices->find(handle);
+                long f = indices->find(handle);
                 if (f < 0) {
                     indices->appendSFValue(handle);
                     weights->appendSFValue(1 - weight);
@@ -12427,7 +12430,7 @@ MainWindow::removeHAnimJointWeight()
                         int handle = handles[i];
                         if (handle >= NO_HANDLE)
                             continue;
-                        int f = indices->find(handle);
+                        long f = indices->find(handle);
                         if (f > -1) {
                             indices->removeSFValue(f);
                             weights->removeSFValue(f);
@@ -14775,6 +14778,19 @@ MainWindow::toogleMaterialName(int id)
     }
     UpdateToolbar(id);        
 }
+
+int 
+MainWindow::getWidth(void) 
+{
+    if (this == NULL)
+        return -1;
+    int width = 0;
+    int height = 0;
+    swGetSize(m_parentWindow, &width, &height);
+    return width;
+}
+
+
 
 void
 MainWindow::testInMenu()

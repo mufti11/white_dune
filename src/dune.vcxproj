@@ -304,6 +304,7 @@
     <ClCompile Include="InsertToNurbsCurveDialog.cpp" />
     <ClCompile Include="InsertToNurbsSurfaceDialog.cpp" />
     <ClCompile Include="PointFtgl.cpp" />
+    <ClCompile Include="QuadInsetDialog.cpp" />
     <ClCompile Include="quadric_simp.cpp" />
     <ClCompile Include="SceneDialog.cpp" />
     <ClCompile Include="shapes.cpp" />

@@ -444,6 +444,7 @@ Matias Duarte             (bill.jpg for Tux warbird from xbill)
 Pixar                     (code from OpenSubdiv tutorial)
 Dipl. Ing. Andreas Quiring(raspian hosting) 
 Andreas Plesch            (debugging of X3DOM VrmlCut scripting)
+Bernd Rosenkraenzer       (mageia Linux port tips)
 ==========================================================================
 
 Changed in white_dune Version 0.16:
@@ -5608,5 +5609,21 @@ Added swSystem*
 Added multiple insets into a face
 
 Added delete of multiple -1 in usual node write
+
+Fixed bug with missing setUpdateViewsSelection()
+
+Added HAnimMotion node
+
+Fixed X3D path: changed http:// to https:// in x3DOM path in .dunerc
+
+Fixed direction bug in symetric quad split
+
+Added documentation about "cut windows in a box"
+
+Changed X3DOM PROTO writing 
+
+Translated plane tutorial to german
+
+Added mageia 7 mkrpm packager script
 
 Contact: MUFTI <mufti11@web.de>

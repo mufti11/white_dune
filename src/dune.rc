@@ -3242,10 +3242,10 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&inset factor:",IDC_STATIC,15,22,62,8
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
-    LTEXT           "&x:",IDC_STATIC,15,65,14,8
-    EDITTEXT        IDC_NUM_X,29,65,28,14,ES_AUTOHSCROLL
-    LTEXT           "&y:",IDC_STATIC,68,65,14,8
-    EDITTEXT        IDC_NUM_Y,82,65,28,14,ES_AUTOHSCROLL
+    LTEXT           "&x:(1...3)",IDC_STATIC,20,62,42,8
+    EDITTEXT        IDC_NUM_X,60,60,20,14,ES_AUTOHSCROLL
+    LTEXT           "&y(1...3):",IDC_STATIC,85,62,36,8
+    EDITTEXT        IDC_NUM_Y,120,60,20,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
@@ -3584,6 +3584,7 @@ BEGIN
     IDS_SAVE_CHANGES        "Save changes to %s ?"
     IDS_VERTEX_SELECTED     "selected: %s[%d] %f %f %f"
     IDS_FACE_SELECTED       "selected: %s"
+    IDS_LINES_SELECTED       "selected: %s"
 END
 
 STRINGTABLE DISCARDABLE
@@ -7827,10 +7828,10 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&inset factor:",IDC_STATIC,15,22,62,8
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
-    LTEXT           "&x:",IDC_STATIC,15,65,14,8
-    EDITTEXT        IDC_NUM_X,29,65,28,14,ES_AUTOHSCROLL
-    LTEXT           "&y:",IDC_STATIC,68,65,14,8
-    EDITTEXT        IDC_NUM_Y,82,65,28,14,ES_AUTOHSCROLL
+    LTEXT           "&x:(1...3)",IDC_STATIC,20,62,42,8
+    EDITTEXT        IDC_NUM_X,60,60,20,14,ES_AUTOHSCROLL
+    LTEXT           "&y(1...3):",IDC_STATIC,85,62,36,8
+    EDITTEXT        IDC_NUM_Y,120,60,20,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
@@ -8167,7 +8168,8 @@ BEGIN
     IDS_FR_LOADING_FILE        "Charger fichier.. (%d%%)"
     IDS_FR_SAVE_CHANGES        "Sauvegarder changement dans %s ?"
     IDS_FR_VERTEX_SELECTED     "selectionne: %s[%d] %f %f %f"
-    IDS_FR_FACE_SELECTED      "selectionne: %s"
+    IDS_FR_FACE_SELECTED       "selectionne: %s"
+    IDS_FR_LINES_SELECTED      "selectionne: %s"
 END
 
 STRINGTABLE DISCARDABLE
@@ -12368,10 +12370,10 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&Einfuege Faktor:",IDC_STATIC,15,22,62,8
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
-    LTEXT           "&X:",IDC_STATIC,15,65,14,8
-    EDITTEXT        IDC_NUM_X,29,65,28,14,ES_AUTOHSCROLL
-    LTEXT           "&Y:",IDC_STATIC,68,65,14,8
-    EDITTEXT        IDC_NUM_Y,82,65,28,14,ES_AUTOHSCROLL
+    LTEXT           "&x:(1...3)",IDC_STATIC,20,62,42,8
+    EDITTEXT        IDC_NUM_X,60,60,20,14,ES_AUTOHSCROLL
+    LTEXT           "&y(1...3):",IDC_STATIC,85,62,36,8
+    EDITTEXT        IDC_NUM_Y,120,60,20,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,140,25,50,14
 END
@@ -12709,7 +12711,8 @@ BEGIN
     IDS_DE_LOADING_FILE     "Lade Datei... (%d%%)"
     IDS_DE_SAVE_CHANGES     "Speichere Aenderungen nach %s?"
     IDS_DE_VERTEX_SELECTED  "ausgewaehlt: %s[%d] %f %f %f"
-    IDS_DE_FACE_SELECTED   "ausgewaehlt: %s"
+    IDS_DE_FACE_SELECTED    "ausgewaehlt: %s"
+    IDS_DE_LINES_SELECTED   "ausgewaehlt: %s"
 END
 
 
@@ -13007,7 +13010,8 @@ BEGIN
     ID_DE_NEW_PIXEL_TEXTURE    "Fuege einen neuen PixelTexture Knoten ein (braucht Appearance)\nPixelTexture (braucht Appearance)"
     ID_DE_NEW_MOVIE_TEXTURE    "Fuege einen neuen MovieTexture Knoten ein (braucht Appearance)\nMovieTexture (braucht Appearance)"
     ID_DE_NEW_TEXTURE_TRANSFORM "Fuege einen neuen TextureTransform Knoten ein (braucht Appearance)\nTextureTransform (braucht Appearance)"
-    ID_DE_NEW_TEXTURE_PROPERTIES "Fuege einen neuen X3D TextureProperties Knoten ein\nX3D TextureProperties"END
+    ID_DE_NEW_TEXTURE_PROPERTIES "Fuege einen neuen X3D TextureProperties Knoten ein\nX3D TextureProperties"
+END
 
 STRINGTABLE DISCARDABLE
 BEGIN
@@ -16899,10 +16903,10 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&inset factor:",IDC_STATIC,15,22,62,8
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
-    LTEXT           "&x:",IDC_STATIC,15,65,14,8
-    EDITTEXT        IDC_NUM_X,29,65,28,14,ES_AUTOHSCROLL
-    LTEXT           "&y:",IDC_STATIC,68,65,14,8
-    EDITTEXT        IDC_NUM_Y,82,65,28,14,ES_AUTOHSCROLL
+    LTEXT           "&x:(1...3)",IDC_STATIC,20,62,42,8
+    EDITTEXT        IDC_NUM_X,60,60,20,14,ES_AUTOHSCROLL
+    LTEXT           "&y(1...3):",IDC_STATIC,85,62,36,8
+    EDITTEXT        IDC_NUM_Y,120,60,20,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
@@ -17239,7 +17243,8 @@ BEGIN
     IDS_IT_LOADING_FILE        "Caricamento file.. (%d%%)"
     IDS_IT_SAVE_CHANGES        "Salvare le modifiche a %s?"
     IDS_IT_VERTEX_SELECTED     "selected: %s[%d] %f %f %f"
-    IDS_IT_FACE_SELECTED      "selected: %s"
+    IDS_IT_FACE_SELECTED       "selected: %s"
+    IDS_IT_LINES_SELECTED      "selected: %s"
 END
 
 
@@ -21440,10 +21445,10 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&inset factor:",IDC_STATIC,15,22,62,8
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
-    LTEXT           "&x:",IDC_STATIC,15,65,14,8
-    EDITTEXT        IDC_NUM_X,29,65,28,14,ES_AUTOHSCROLL
-    LTEXT           "&y:",IDC_STATIC,68,65,14,8
-    EDITTEXT        IDC_NUM_Y,82,65,28,14,ES_AUTOHSCROLL
+    LTEXT           "&x:(1...3)",IDC_STATIC,20,62,42,8
+    EDITTEXT        IDC_NUM_X,60,60,20,14,ES_AUTOHSCROLL
+    LTEXT           "&y(1...3):",IDC_STATIC,85,62,36,8
+    EDITTEXT        IDC_NUM_Y,120,60,20,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
@@ -21780,7 +21785,8 @@ BEGIN
     IDS_PT_LOADING_FILE        "Loading file.. (%d%%)"
     IDS_PT_SAVE_CHANGES        "Save changes to %s ?"
     IDS_PT_VERTEX_SELECTED     "selected: %s[%d] %f %f %f"
-    IDS_PT_FACE_SELECTED      "selected: %s"
+    IDS_PT_FACE_SELECTED       "selected: %s"
+    IDS_PT_LINES_SELECTED      "selected: %s"
 END
 
 STRINGTABLE DISCARDABLE

@@ -164,6 +164,10 @@ static int          want8Bit = FALSE;
 # define GWL_USERDATA GWLP_USERDATA
 #endif
 
+void closeCallback(void)
+{
+}
+
 void 
 swInitialize(HINSTANCE hInstance, int stereoTypeValue, int want8BitFlag)
 {

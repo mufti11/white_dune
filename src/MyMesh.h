@@ -579,20 +579,24 @@ void
 MyMeshX<X, MFX, VEC3X>::buildFaces(void)
 {
     int start = 0;
-    int nci = m_coordIndex->getSize();
+    long nci = m_coordIndex->getSize();
     const int *c = m_coordIndex->getValues();
-    int numFaces = 0;
+    long numFaces = 0;
 
-    int i;
-    int lines = 0;
+    long i;
+    long lines = 0;
     m_lines.resize(0);
+    long maxci = 0;
+    for (i = 0; i < nci; i++)
+         if (c[i] > maxci)
+             maxci = c[i];
     for (i = 0; i < nci; i++) {
         if (c[i] < -1) {
             swDebugf("silently ignoring coordIndex < -1, assuming -1\n");
             m_coordIndex->setSFValue(i,-1);
             c = m_coordIndex->getValues();
         }
-        if (c[i] == -1) {
+        if (c[i] <= -1) {
             if (i - start > 0) {
                 numFaces++;
             }
@@ -601,17 +605,20 @@ MyMeshX<X, MFX, VEC3X>::buildFaces(void)
             bool validLine = false;
             MyLine line;
             line.begin = i;
-            if (c[i + 1] < 0) {
-                if (i != start) {
-                    line.end = start;
-                    validLine = true;
-                }
-            } else {
+            if (c[i + 1] > -1) {
                 line.end = i + 1;
                 validLine = true;
             }
-            if (validLine)
-                m_lines[lines++] = line;
+            if (validLine && 
+                line.begin != line.end && 
+                line.begin <= nci && 
+                line.begin > -1 &&
+                line.end <= nci && 
+                line.end > -1
+               ) {
+                m_lines[lines] = line;
+                lines++;
+            }
         }
     }
     if ((i != 0) && (i != 1))
@@ -628,7 +635,7 @@ MyMeshX<X, MFX, VEC3X>::buildFaces(void)
     m_numFaces = numFaces;
     int newNumFaces = 0;
     start = 0;
-    for (int i = 0; i < nci; i++) {
+    for (long i = 0; i < nci; i++) {
         if (c[i] == -1) {
             if (i - start > 0) {
                 m_faces[newNumFaces] = new FaceData(i - start, start);
@@ -688,7 +695,6 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
     const X *vertices = m_vertices->getValues();
     const int *coordIndex = m_coordIndex->getValues();
     const float *normals = m_normals ? m_normals->getValues() : NULL;
-//    const int *normalIndex = m_normalIndex ? m_normalIndex->getValues() : NULL;
     const float *texCoords = (m_texCoords.size() > 0) ? 
                               m_texCoords[0] ? m_texCoords[0]->getValues() 
                               : NULL

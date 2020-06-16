@@ -1,0 +1,399 @@
+<!--
+/*
+ * Copyright (C) 2018, 2020 J. "MUFTI" Scheurich
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+-->
+<h1>Wie baut man ein Flugzug-Modell (nicht schwer) ?</h1>
+<br>
+<h2>Erst einmal ein paar Informationen zum lesen</h2>
+<br>
+Auf manchen Systemen (Linux KDE/Gnome und SGI IRIX 4dwm) gibt es ein eigenes 
+Programmicon fuer "dune4kids", es sieht dann irgendwie so aus:<br>
+<img src="dune4kids2.png">
+<img src="dune4kids.png">
+<img src="dune4kids3.png">
+<img src="dune4kids4.png">
+<br><br>
+Auf Systemen wie Micro$oft Windows oder MacOSX ist aber nur ein 
+(anderes) Programmicon vorhanden:<br>
+<img src="dune.png">
+<img src="dune2.png">
+<img src="dune4.png">
+<img src="dune5.png">
+<img src="dune3.png">
+<!-- <img src="dune6.png"> -->
+<img src="dune7.png">
+<br><br>
+Normalerweise startet das Programm dieses Icons beim ersten Mal 
+in der englischen Vollversion, in der Regel mit sehr vielen Icons 
+und zu vielen Menues.<br>
+<a href="dune4kids_start_de.html" target="_blank">
+  <img src="dune_start_en.png"><br><br>
+</a>
+Es muss dann zuerst einmal auf Deutsch und dann auf dune4kids umgestellt 
+werden.<br> Man muss <a href="dune4kids_start_de.html" target="_blank"> 
+hier draufklicken</a> um auf die richtige Version umschalten zu 
+k&ouml;nnen.<br>
+<img src="frog01.png">
+<br><br>
+<h2>Was tun, wenn das Programm abst&uuml;rtzt ?</h2>
+Mit etwas Gl&uuml;ck kann man den letzten Stand neu laden, wenn man bei
+den aktuellen Dateien eine neue ".dune_crash" Datei findet.
+<br>
+<img src="frog00.png">
+<br>
+<h1>Navigation</h1>
+Navigation bedeutet das Herumbewegen im 3D-Modell.<br>
+Das ist wichtig, denn es kann sehr leicht passieren, dass man vor oder in 
+sein Werkstueck ger&auml;t und deswegen ueberhaupt nichts mehr sieht.<br><br>
+Wenn man nichts mehr sieht, gibt es zwei Vorgehensweisen, die man meistens
+gemeinsam anwendet:
+<ul>
+<li> <b>Man geht nach hinten</b><br>
+     Vorw&auml;rts und Rueckw&auml;rts geht man, indem man gemeinsam die linke 
+     Maustaste und die "Shift"-Taste (deutsche Tastatur: "Leerer-Pfeil-hoch-Taste") 
+     gedr&uuml;ckt h&auml;lt.
+     In der Einstellung "Examine" (wenn das Icon <img src="examine.png"> gedrueckt 
+     ist) funktioniert das auch mit der mittleren Taste einer 3-Tasten-Maus.
+     Bei einer Maus mit Scrollrad muss man das mittlere Scrollrad
+     dr&uuml;cken.
+</li>
+<li> <b>Man dreht die 3D-Welt</b><br>
+     Dr&uuml;ckt man gemeinsam die linke Maustaste und die "Control"-Taste 
+     ("strg" auf der deutschen Tastatur) dann dreht sich die ganze 
+     3D-Welt vor einem, wenn man die Maus bewegt. Das wird normalerweise 
+     dazu benutzt, um ein neu erzeugtes Objekt von allen Seiten betrachten 
+     zu koennen, hilft aber auch dann, wenn man im Nichts steht.<br>
+     Man muss aber daran denken, dass der Inhalt nicht nur hinter einem
+     versteckt sein kann, sondern auch oben, unten, links oder rechts.<br>
+     Das bedeutet, dass man oft ganz sch&ouml;n "kurbeln" muss, bis man
+     sein Objekt wiederfindet.
+</li>
+</ul>
+Zus&auml;tzlich gibt es noch die M&ouml;glichkeit, die linke Maustaste,
+die "Shift"-Taste und die "Control"-Taste gleichzeitig gedr&uuml;ckt
+zu halten (oder das Icon <img src="move_along_screen.png"> benutzen).
+Damit kann man sich in Richtung der Bildschirmfl&auml;che, also nach 
+oben, unten, links oder rechts bewegen.
+<br>
+<br>
+Nachdem man sein Objekt wieder gefunden hat, sollte man wieder das 
+"Examine"-Icon <img src="examine.png"> dr&uuml;cken, damit man wieder
+wie gewohnt arbeiten kann.
+<br>
+Gleichzeitig sollte man sein Objekt anw&auml;hlen und dieses Icon
+<img src="icon_turnpoint.png"> dr&uuml;cken, damit man es wie gewohnt
+drehen kann.
+<br>
+<h1>Icons f&uuml;r Ver&auml;nderungen</h1>
+Um zu zeigen, wie man Dinge ver&auml;ndern kann, wird einfach mal ein
+Quader erzeugt.
+<br>
+<img src="new_box.png">
+<br><br>
+Icons, um ganze Objekte zu ver&auml;ndern:
+<ul>
+<li>Verschieben: <img src="schieb.png"><br>
+<img src="translate_icon.png">
+</li>
+<li>Drehen: <img src="rot.png"><br>
+<img src="rotate_icon.png">
+</li>
+<li>Vergr&ouml;ssern/verkleinern: <img src="scale.jpg"><br>
+<img src="scale_icon.png">
+</li>
+<li>Gleichartig vergr&ouml;ssern/verkleinern: <img src="uniform_scale.png"><br>
+<img src="uniform_scale_icon.png">
+</li>
+<li>Drehpunkt verschieben: <img src="center.jpg"><br>
+<img src="turnpoint_icon.png">
+</li>
+</ul>
+Mit weissen K&auml;stchen kann man Objekte selber ver&auml;ndern.
+Mit den einzelnen Pfeilicons <img src="xyz.png"> kann man die Richtung
+steuern. <br>
+Wird zum Beispiel nur der gr&uuml;ne Pfeil hereingedr&uuml;ckt, 
+<img src="y_only.jpg"> kann bei<br> 
+<img src="yonly_1.jpg"> 
+<br><br> 
+ein K&auml;stchen nur in Richtung des gr&uuml;ne Pfeils geschoben werden.<br>
+<img src="yonly_2.jpg">. 
+<br><br>
+Genau wie man Pfeile auch an den Sch&auml;ften statt an den Spitzen
+packen kann, um in einer Ebene verschieben zu k&ouml;nnen, kann man
+auch zwei Pfeile gleichzeitig hereingedr&uuml;cken <img src="xz_only.jpg">, 
+um ein K&auml;stchen in einer Ebene verschieben zu k&ouml;nnen.
+<br>
+<h1>Wie baut man ein Flugzug-Modell (nicht schwer) ?</h1>
+<br>
+Die folgende Beschreibung sollte man eher als Vorschlag betrachten und 
+nicht als Kochrezept, das man sklavisch befolgen muss.<br>
+<br>
+ <em> Veraendern -&gt; X gespiegelted Veraendern</em> muss immer 
+hereingedr&uuml;ckt sein.<br>
+Starten Sie mit einem Quader <em> Neu -&gt; Quader</em>
+<br>
+<img src="plane1.png"/>
+<br>
+Navigieren Sie in der 3D-Welt, um mehr Fl&auml;chen zu sehen.
+<br>
+<img src="plane2.png"/>
+<br>
+Benutzen Sie <em> (IndexFace)Set -&gt; Umwandln in IndexedFaceSet</em>
+<br>
+<img src="plane3.png"/>
+<br>
+Benutzen sie <em> Auswahl -&gt; Flaechen </em> 
+und w&auml;hlen sie die Fl&auml;che in z (blauer) Richtung.
+<br>
+<img src="plane4.png"/>
+<br>
+Bentzen Sie <em> (IndexedFace)Set -> Flaeche einfuegen </em> und dr&uuml;cken
+Sie  OK;
+<br>
+<img src="plane5a.png"/>
+<br>
+W&auml;hlen sie die neue Fl&auml;che in der Mitte der Fl&auml;che...
+<br>
+<img src="plane6.png"/>
+<br>
+... und ziehen Sie die Fl&auml;ch (mit der linken Maustaste gedr&uuml;ckt)
+vorw&auml;rts 
+<br>
+<img src="plane7.png"/>
+<br>
+W&auml;hlen Sie hintere Fl&auml;che auf der Seite.
+<br>
+<img src="plane8.png"/>
+<br>
+Bentzen Sie <em> (IndexedFace)Set -> Flaeche einfuegen </em> und dr&uuml;cken
+Sie  OK;
+<br>
+<img src="plane9.png"/>
+<br>
+W&auml;hlen Sie die untere Fl&uml;che aus.
+<br>
+<img src="plane10.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -> Flaechen herausziehen</em>.
+<br>
+<img src="plane11.png"/>
+<br>
+Ziehen Sie die herausgekommene Fl&auml;che in die x (rote) Richtung.
+<br>
+<img src="plane12.png"/>
+<br>
+Navigieren Sie, um das Ganze von hinten zu sehen und w&auml;hlen Sie die
+hintere Fl&uml;che an.
+<br>
+<img src="plane13.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -> Flaeche einfuegen</em> und 
+geben Sie 0.3 ein, dann klicken sie auf OK.
+<br>
+<img src="plane14.png"/>
+<br>W&auml;hlen sie die mittlere Fl&aumlche an.
+<br>
+<img src="plane15.png"/>
+<br>
+Ziehen Sie die mittlere Fl&aumlche nach hinten. 
+<br>
+<img src="plane16.png"/>
+<br>
+W&auml;hlen sie die hintere Fl&auml;che an.
+<br>
+<img src="plane17.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -> Flaeche einfuegen</em> und ...
+<br>
+<img src="plane18.png"/>
+<br>
+...geben Sie 0.2 ein, dann klicken sie auf OK.
+<br>
+<img src="plane19.png"/>
+<br>
+BenutzenSie 
+Use <em> Bewegungsart -&gt; nur z (blau) </em> um die Fl&auml;che in die
+z-Richtung zu verschieben.
+<br>
+<img src="plane20.png"/>
+<br>
+Bentzen Sie <em>(IndexedFace)Set -> Flaechen herausziehen</em>.
+<br>
+<img src="plane21.png"/>
+<br>
+Setzen Sie  <em> Bwegungsart -&gt; nur z (blau) </em> zur&uuml;ck
+und benutzen Sie em> Bewegungsart -&gt; nur x (rot) </em>
+Reset <em> Movement -&gt; z only (blue) </em> and um die Fl&auml;chen
+in x Richtung herauszuziehen.
+<br>
+<img src="plane22.png"/>
+<br>
+W&auml;len Sie die obere, hintere Fl&aul;che an und bentzen Sie
+<em>(IndexedFace)Set -> Flaeche einfuegen</em> tippem sie 0.2 
+und dr&uuml;cken Sie OK.
+<br>
+<img src="plane23.png"/>
+<br>
+Setzen Sie  <em> Bewegungsart -&gt; nur x (rot) </em> zur&uuml;ck
+und benutzen Sie em> Bwegungsart -&gt; nur z (blau) </em>
+und ziehen Sie die Flaeche in die z Richtung,
+<br>
+<img src="plane24.png"/>
+<br>
+Bentzen Sie <em>(IndexedFace)Set -> Flaechen herausziehen</em>.
+<br>
+<img src="plane25.png"/>
+<br>
+Navigieren Sie um die neue Fl&auml;che besser zu sehen.
+Setzen Sie  <em> Bwegungsart -&gt; nur z (blau) </em> zur&uuml;ck
+und benutzen Sie em> Bewegungsart -&gt; nur y (gruen) </em>
+und ziehen Sie die Fl&auml;che in die y Richtung,
+<br>
+<img src="plane26.png"/>
+<br>
+Ziehen Sie die Fl&auml;che in die y Richtung.
+<br>
+<img src="plane27.png"/>
+<br>
+Setzen Sie  <em> Bewegungsart -&gt; nur y (gruen) </em> zur&uuml;ck
+und benutzen Sie <em> Auswahl -&gt; Linien </em>. W&auml;hlen Sie
+eine Linie an...
+<br>
+<img src="plane28.png"/>
+<br>
+und ziehen Sie in die richtige Richtung. Sie k&ouml;nnen
+<em> Bewegungsart -&gt; nur x/y/z </em> benutzen.
+<br>
+<img src="plane29.png"/>
+<br>
+Andere Linie...
+<br>
+<img src="plane30.png"/>
+<br>
+Andere Linie...
+<br>
+<img src="plane31.png"/>
+<br>
+<br>
+<img src="plane32.png"/>
+<br>
+Navigieren Sie um das Objekt von hinten zu sehen und w&auml;hlen Sie
+die passende Fl&auml;che an.
+<br>
+<img src="plane33.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -> Flaechen herausziehen</em>
+und ziehen Sie die Fl&auml;che in das Objekt.
+Benutzen 
+<br>
+<img src="plane34.png"/>
+<br>
+Navigieren Sie um das Objekt von vorne zu sehen und w&auml;hlen Sie
+die passende Fl&auml;che an.
+<br>
+<img src="plane35.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -> Flaechen herausziehen</em>
+und ziehen Sie die Fl&auml;che in das Objekt.
+<br>
+<img src="plane36.png"/>
+<br>
+<br>
+<img src="plane37.png"/>
+<br>
+Navigieren Sie und klicken Sie das Objekt an.<br>
+<img src="plane38.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -&gt; Subdivide</em>.
+<br>
+<img src="plane39.png"/>
+<br>
+Benutzen Sie <em>(IndexedFace)Set -&gt; Subdivide</em>.
+<br>
+<img src="plane41.png"/>
+<br>
+W&auml;hlen Sie IndexedFaceSet an
+<br>
+<img src="plane42.png"/>
+<br>
+Benutzen Sie <em> Aendern -&gt; Zeige (manchmal) Zahlen</em>
+und erh&ouml;hen Sie creaseAngle. Die Ecken des K&ouml;rpers werden versteckt.
+<br>
+<img src="plane43.png"/>
+<br>
+W&auml;hlen Sie den Transform an
+<br>
+<img src="plane44.png"/>
+<br>
+Benutzen Sie <em>Neu -&gt; Kugel</em>.
+<br>
+<img src="plane45.png"/>
+<br>
+Verschieben Sie den gr&uuml;nen Pfeil, um die Kugel zu verschieben.
+<br>
+<img src="plane46.png"/>
+<br>
+W&auml;hen Sie Material (in Appearance) der Kugel.
+<br>
+<img src="plane47.png"/>
+<br>
+Benutzen Sie <em>Veraendern -&gt Farbe (braucht Material oder ...) -&gt; Normal </em>
+und w&auml;hlen Sie eine blaue Farbe.
+<br>
+<img src="plane48.png"/>
+<br>
+Use <em>Veraendern -&gt Durchsichtigkeit</em>.
+<br>
+<img src="plane49.png"/>
+<br>
+Dr&uuml;cken Sie OK.
+<br>
+<img src="plane50.png"/>
+<br>
+W&auml;hlen Sie Material von IndexedFaceSet.
+<br>
+<img src="plane51.png"/>
+<br>
+Benutzen Sie <em>Veraendern -&gt 'Farbe (braucht Material oder ...) -&gt; glaenzen </em>
+und clicken Sie auf eine weisse Farbe.
+<br>
+<img src="plane52.png"/>
+<br>
+W6aul;hlen Sie Transform des IndexedFaceSet.
+<br>
+<img src="plane53.png"/>
+<br>
+Benutzen Sie <em>Bewegungsart -&gt; nur x </em>.<br>
+Benutzen Sie <em>Bewegungsart -&gt; nur z </em>.<br>
+Benutzen Sie <em>Animation -&gt Erzeuge Kurven Animation (braucht Transform)</em>.
+<br>
+<img src="plane54.png"/>
+<br>
+Klicken Sie auf "entlang Z-Achse" und klicken Sie OK.<br>
+Ein Pfad des Objekts wurde erzeugt
+W&auml;hlen sie CurveAnimation1 an.
+<br>
+<img src="plane55.png"/>
+<br>
+Verschieben Sie die Punkte des Pfads und dr&uuml;cken Sie das Dreieck
+(play) im unteren Icon-Balken.
+<br>
+<img src="plane56.png"/>
+<br>
+

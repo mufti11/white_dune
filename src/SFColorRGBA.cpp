@@ -107,7 +107,7 @@ SFColorRGBA::equals(const FieldValue *value) const
     return false;
 }
 
-int SFColorRGBA::writeData(int f, int i)
+int SFColorRGBA::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g %g", m_value[0], m_value[1],
                                       m_value[2], m_value[3]);

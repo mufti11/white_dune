@@ -123,11 +123,16 @@ Systems supported by "packager" directory
  For Ubuntu Linux (LTS) use:
      (cd packager/debian && sh mkdeb_ubuntu.sh)
 
- For Slackware Linux use:
-     (cd packager/slackware && sh mkpkg.sh)
-
  For Arch Linux use:
      (cd packager/archlinux && mkpacman.sh)
+
+ For Mageia Linux use:
+     (cd packager/rpm && sh mkrpm_mageia.sh)
+
+ For Slackware Linux:
+     (cd packager/slackware && sh mkpkg.sh)
+     it produces a package for slackbuild, but also needs some packages
+     (like ffmeg) from slackbuild
 
  For AIX 4.3 (RS/6000) you need mklpp from the bull freeware collection 
     http://www.bullfreeware.com/download/aix43/bull.mklpp-1.2.9.0.exe

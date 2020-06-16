@@ -739,14 +739,14 @@ duneLowMem: main.o objc $(CLASSES) @SDL_JOYSTICK_LIBS@
 	$(CXX) main.o @OBJS@ $(LIBS) -o ../bin/dune
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 ../bin/dune ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 ../bin/dune ; fi"
-	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_high_sierra.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
+	sh -c "if test `uname` = Darwin ; then (if test -d ../desktop/macosx; then cd ../desktop/macosx/ && tar -xf white_dune_high_sierra.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
 ../bin/dune: main.o @OBJS@ @SDL_JOYSTICK_LIBS@ swt/lib/libswt.a
 	(cd swt ; $(MAKE))
 	$(CXX) main.o @OBJS@ $(LIBS) -o $@
 	sh -c "if test `uname` = IRIX64 ; then tag 0x00ff1a00 $@ ; fi"
 	sh -c "if test `uname` = IRIX   ; then tag 0x00ff1a00 $@ ; fi"
-	sh -c "if test `uname` = Darwin ; then (if test -d ./desktop/macosx; then cd ../desktop/macosx/ && tar -xvf white_dune_high_sierra.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
+	sh -c "if test `uname` = Darwin ; then (if test -d ../desktop/macosx; then cd ../desktop/macosx/ && tar -xf white_dune_high_sierra.app.tar && cd white_dune.app/Contents/MacOS && ln -sf ../../../../../bin/dune . ; fi) ; fi"
 
 ../bin/efencedune:  main.o $(OBJS) @SDL_JOYSTICK_LIBS@
 	(cd swt ; $(MAKE))

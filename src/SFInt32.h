@@ -32,7 +32,7 @@ public:
     virtual const char *getTypeName() const { return "SFInt32"; }
     virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual const char *getTypeC(int languageFlag) const { return "int"; }
     virtual const char *getDefaultC(int languageFlag) const { return "0"; }

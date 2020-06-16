@@ -38,6 +38,8 @@
 #include "ExposedField.h"
 #include "DynamicFieldsNode.h"
 #include "NodeTransform.h"
+#include "NodeGroup.h"
+#include "NodeScript.h"
 
 // code for a resuable constructor
 void Proto::protoInitializer(Scene *scene, const MyString &name)
@@ -627,7 +629,7 @@ Proto::lookupSimpleEventIn(const MyString &name, bool x3d) const
     for (long i = 0; i < m_eventIns.size(); i++)
         if (m_eventIns[i]->getName(x3d) == name) return i;
     if (m_protoNodes.size() > 0)
-        m_protoNodes[0]->getProto()->lookupSimpleEventIn(name, x3d);
+        return m_protoNodes[0]->getProto()->lookupSimpleEventIn(name, x3d);
     return INVALID_INDEX;
 }
 
@@ -638,9 +640,8 @@ Proto::lookupEventIn(const MyString &name, bool x3d) const
 
     if ((index = lookupSimpleEventIn(name, x3d)) == INVALID_INDEX)
     {
-        // simple search failed; look for an exposedField
+        // simple search failed; look for an exposed Field
         if ((index = lookupExposedField(name, x3d)) != INVALID_INDEX) {
-
             // now look up the corresponding eventIn
             char buf[1024];
             mysnprintf(buf, 1024, "set_%s", (const char *) name);
@@ -657,7 +658,7 @@ Proto::lookupSimpleEventOut(const MyString &name, bool x3d) const
         if (m_eventOuts[i]->getName(x3d) == name)
             return i;
     if (m_protoNodes.size() > 0)
-        m_protoNodes[0]->getProto()->lookupSimpleEventOut(name, x3d);
+        return m_protoNodes[0]->getProto()->lookupSimpleEventOut(name, x3d);
     return INVALID_INDEX;
 }
 
@@ -694,9 +695,10 @@ Proto::lookupField(const MyString &name, bool x3d) const
 int
 Proto::lookupExposedField(const MyString &name, bool x3d) const
 {
-    for (long i = 0; i < m_exposedFields.size(); i++)
+    for (long i = 0; i < m_exposedFields.size(); i++) {
         if (m_exposedFields[i]->getName(x3d) == name)
             return i;
+    }
 
     return INVALID_INDEX;
 }
@@ -757,10 +759,25 @@ Proto::define(Node *primaryNode, NodeList *nodes)
 {
     if (primaryNode == NULL)
         return; 
-    m_protoNodes[0] = primaryNode;
-    for (long i = 0; i < (nodes->size() + 1); i++) {
-        if (i > 0)
-            m_protoNodes[i] = nodes->get(i - 1);
+    int numProtos = 0;
+    int ichild = primaryNode->getChildrenField();
+    if (ichild > -1) {
+        m_protoNodes[0] = primaryNode;
+    } else if (primaryNode->getType() == VRML_GROUP) {
+        MFNode *children = ((NodeGroup *)primaryNode)->children();
+        for (long i = 0; i < children->getSize(); i++) {
+            m_protoNodes[i] = children->getValue(i);
+            if (m_protoNodes[i] != NULL)
+                m_protoNodes[i]->doWithBranch(setIsProtoToBranch, this);
+        }
+    } else {
+        m_protoNodes[0] = primaryNode;
+        numProtos++;
+        if (m_protoNodes[0] != NULL)
+            m_protoNodes[0]->doWithBranch(setIsProtoToBranch, this);
+    }    
+    for (long i = numProtos; i < numProtos + nodes->size(); i++) {
+        m_protoNodes[i] = nodes->get(i - numProtos);
         if (m_protoNodes[i] != NULL)
             m_protoNodes[i]->doWithBranch(setIsProtoToBranch, this);
     }
@@ -991,14 +1008,27 @@ Proto::lookupIsEventIn(const char *name, int elementType) const
 int
 Proto::lookupIsExposedField(const char *name, int elementType) const
 {
+    bool x3d = m_scene->isX3d();
     for (long i = 0; i < m_exposedFields.size(); i++)
-        for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++)
-            if (strcmp(m_exposedFields[i]->getName(true), name) == 0) {
-                if ((elementType != -1) && 
-                    (m_exposedFields[i]->getIsElementType(j) != elementType))
-                    continue;
+        for (int j = 0; j < m_exposedFields[i]->getNumIs(); j++) {
+            if ((elementType != -1) && 
+                (m_exposedFields[i]->getIsElementType(j) != elementType))
+                continue;
+            if (strcmp(m_exposedFields[i]->getName(x3d), name) == 0) {
                 return i;
             }
+            if (strlen(name) > 4) { 
+                char *setPart = strdup(name);
+                setPart[4] = 0;
+                bool flag = false;
+                if (strcmp(setPart, "set_") == 0) 
+                    flag = true;
+                free(setPart);
+                MyString compName(name + 4);
+                if (flag && m_exposedFields[i]->getName(x3d) == compName)
+                    return i;
+           }
+        }
     return -1;
 }
 
@@ -2631,18 +2661,6 @@ static bool writeRoutesPerNode(Node *node, void *data)
 int         
 NodePROTO::write(int filedes, int indent, bool avoidUse)
 { 
-#if HAVE_NO_PROTOS_X3DOM
-    if ((m_scene->getWriteFlags() & X3DOM) && (getProto()->getNumNodes() > 0)) {
-        for (int k = 0; k < getProto()->getNumNodes(); k++)
-            RET_ONERROR( getProto()->getNode(k)->write(filedes, indent,  true) )
-        FiledesAndIndent fid;
-        fid.filedes = filedes;
-        fid.indent = indent;
-        for (int i = 0; i < getProto()->getNumNodes(); i++) 
-            getProto()->getNode(i)->doWithBranch(writeRoutesPerNode, &fid);
-        return 0;
-    }    
-#endif
     return Node::write(filedes, indent); 
 }
 
@@ -2650,15 +2668,23 @@ int
 NodePROTO::writeXml(int filedes, int indent, int containerField, bool avoidUse)
 { 
 #if HAVE_NO_PROTOS_X3DOM
-    if ((m_scene->getWriteFlags() & X3DOM) && (getProto()->getNumNodes() > 0)) {
-        for (int k = 0; k < getProto()->getNumNodes(); k++)
-            RET_ONERROR( getProto()->getNode(k)->writeXml(filedes, indent, 
-                                                          containerField, true)
-                       )
+    bool x3d = m_scene->isX3d();
 
+    if ((m_scene->getWriteFlags() & X3DOM) && (getProto()->getNumNodes() > 0)) {
+        RET_ONERROR( getProto()->getNode(0)->writeXml(filedes, indent,
+                                                      containerField, true) )
+        // write rest of PROTO hidden in a Switch
+        RET_ONERROR( indentf(filedes, indent) )
+        RET_ONERROR( mywritestr(filedes, "<Switch whichChoice='"))
+        RET_ONERROR( mywritef(filedes, "%d'>\n", getProto()->getNumNodes()))
+        for (int k = 1; k < getProto()->getNumNodes(); k++)
+            RET_ONERROR( getProto()->getNode(k)->writeXml(filedes, 
+                             TheApp->GetIndent() + indent, containerField, true)
+                       )
+        RET_ONERROR( indentf(filedes, indent) )
+        RET_ONERROR( mywritestr(filedes, "</Switch>\n") )       
         Node *node = this;
         Proto *fromProto = node->getProto();
-
         for (int j = 0; j < fromProto->getNumEventOuts(); j++)
             for (int n = 0; n < fromProto->getEventOut(j)->getNumIs(); n++)
                 if (fromProto->getEventOut(j)->getIsElementType(n) == 
@@ -2688,6 +2714,83 @@ NodePROTO::writeXml(int filedes, int indent, int containerField, bool avoidUse)
                             (const char *)dstEvent->getName(true)) )
                     }
                 }
+
+        for (int j = 0; j < fromProto->getNumEventIns(); j++)
+            for (int n = 0; n < fromProto->getEventIn(j)->getNumIs(); n++)
+                if (fromProto->getEventOut(j)->getIsElementType(n) == 
+                    EL_EVENT_IN) {
+                    const char *srcName =
+                        fromProto->getEventIn(j)->getIsNode(n)->getName();
+                    int field = fromProto->getEventIn(j)->getIsField(n);
+                    EventIn *srcEvent = fromProto->getEventIn(j)->
+                                            getIsNode(n)->
+                                            getProto()->getEventIn(field);
+
+                    SocketList::Iterator *i = NULL;
+
+                    for (i = node->getInput(j).first(); i != NULL; 
+                         i = i->next()) {
+                         Node *dstNode = i->item().getNode();
+                         int dstEventOut = i->item().getField();
+                         EventOut *dstEvent = 
+                             dstNode->getProto()->getEventOut(dstEventOut);
+                        indentf(filedes, 3 * TheApp->GetIndent());
+                        RET_ONERROR( mywritef(filedes, 
+                            "<ROUTE fromNode='%s' fromField='%s' ",
+                            srcName, (const char *)srcEvent->getName(true)) )
+                        RET_ONERROR( mywritef(filedes, 
+                            "toNode='%s' toField='%s'></ROUTE>\n",
+                            (const char *)dstNode->getName(), 
+                            (const char *)dstEvent->getName(true)) )
+                    }
+                }
+
+
+        for (int i = 0; i < m_numEventIns; i++) {
+            SocketList::Iterator *j;
+            for (j = m_inputs[i].first(); j != NULL; j = j->next()) {
+                Node *src = j->item().getNode();
+                int field = j->item().getField();
+                if ((m_scene->getWriteFlags() & X3DOM) && 
+                    (j->item().getNode()->getType() == VRML_SCRIPT)) {
+                    NodeScript *script = (NodeScript *)j->item().getNode();
+                    bool flag = false;
+                    for (int i = 0; i < script->url()->getSize(); i++)
+                        if (isX3domscript(script->url()->getValue(i)))
+                            flag = true;
+                    if (flag)
+                        continue;
+                            
+                }
+                if (m_scene->isPureVRML() &&  
+                    (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
+                     src->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
+                    continue;
+                MyString eventInName = getProto()->getEventIn(i)->getName(x3d);
+                EventIn *ev = NULL;
+                int ev1 = getProto()->lookupIsEventIn(eventInName);
+                Node *dst = NULL;
+                if (ev1 == -1) {
+                    int ev2 = getProto()->lookupIsExposedField(eventInName);
+                    if (ev2 > -1) {
+                        dst = getProto()->getExposedField(ev2)->getIsNode(ev2);
+                        int ev3 = getProto()->getExposedField(ev2)->getIsField(ev2);
+                        if (dst)
+                            ev = dst->getProto()->getEventIn(ev3);
+                    }
+                } else 
+                    ev = getProto()->getEventIn(ev1);
+
+                if (ev == NULL)
+                    continue;
+                MyString routeString = m_scene->createRouteString(
+                      src->getName(), 
+                      src->getProto()->getEventOut(field)->getName(x3d),
+                      dst->getName(), 
+                      ev->getName(x3d));
+                      m_scene->addRouteString(routeString);
+            }
+        }
 
         FiledesAndIndent fid;
         fid.filedes = filedes;
@@ -2859,6 +2962,8 @@ NodePROTO::createPROTO(bool bcopy)
                 FieldValue *value = field->getValue()->copy();
                 if (value && isNode) {
                     int isField = field->getIsField(j);
+                    if (isField < 0)
+                        continue;
                     isNode->setField(isField, value);
                 }
             }

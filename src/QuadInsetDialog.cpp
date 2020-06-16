@@ -65,7 +65,7 @@ bool
 QuadInsetDialog::Validate()
 {
     return (m_value >= m_lowerlimit) && (m_value <= m_upperlimit) &&
-           (m_numX > 0) && (m_numY > 0);
+           (m_numX > 0) && (m_numY > 0) && (m_numX < 4) && (m_numY < 4);
 }
 
 

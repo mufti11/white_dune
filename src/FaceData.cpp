@@ -27,4 +27,5 @@ FaceData::FaceData(int numVertices, int offset)
 {
     m_numVertices = numVertices;
     m_offset = offset;
+    m_type = -1;
 }

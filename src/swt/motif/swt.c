@@ -45,7 +45,9 @@
 #include <Xm/Text.h>
 #include <Xm/TextF.h>
 #include <Xm/ToggleB.h>
-#include <X11/Xmu/StdCmap.h>
+#ifdef HAVE_INCLUDE_X11_XMU
+# include <X11/Xmu/StdCmap.h>
+#endif
 #include <X11/keysym.h>
 #include <X11/IntrinsicP.h>
 #include <X11/cursorfont.h>
@@ -60,8 +62,13 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <wait.h>
 #include <string.h>
+
+#ifdef MACOSX
+# include <sys/stat.h>
+#else
+# include <wait.h>
+#endif
 
 #include <GL/gl.h>
 #include <GL/glx.h>
@@ -106,6 +113,12 @@ static SFont       *TheDefaultFont = NULL;
 static int          WindowCapacity;
 static SWND        *WindowsToUpdate;
 static int          NumWindowsToUpdate = 0;
+
+void closeCallback(void)
+{
+    NumWindowsToUpdate = 0;
+}
+
 static int          InDragNDrop = FALSE;
 #ifdef MOTIF_DRAGNDROP
 static XEvent       TheLastButtonPress;
@@ -434,6 +447,12 @@ swInitialize(int *argc, char **argv,int stereotype)
     int errorflag = 0;
     const char *fontname = NULL;
     int fontsize = -1;
+#ifdef HAVE_X11STARTCOMMAND
+    struct stat fstat;
+
+    if (lstat("/opt/X11/bin/Xquartz", &fstat) != 0)
+        system("osascript -e 'display dialog \"you need to install (free) XQuartz (https://www.xquartz.org/)\"'");
+#endif
 
     XInitThreads();
 
@@ -445,6 +464,7 @@ swInitialize(int *argc, char **argv,int stereotype)
             fprintf(stderr,"$DISPLAY unset, using \":0\"\n");
             putenv("DISPLAY=:0");
         } else {
+            system("osascript -e 'display dialog \"you need to install (free) XQuartz (https://www.xquartz.org/)\"'");
             fprintf(stderr,"$DISPLAY unset, unable to start X11 application\n");
             fprintf(stderr,"either use the \"-startX11aqua\" option\n");
             fprintf(stderr,"or ");
@@ -489,8 +509,10 @@ swInitialize(int *argc, char **argv,int stereotype)
                                 startcommand[i]);
                         if (system(startcommand[i]) == 0)
                             exit(0);
-                        else
-                            perror(startcommand[i]); 
+                        else {
+                            system("osascript -e 'display dialog \"you need to install (free) XQuartz (https://www.xquartz.org/)\"'");
+                            perror(startcommand[i]);
+                        } 
                    }
                 exit(11);  
             } else {
@@ -503,9 +525,10 @@ swInitialize(int *argc, char **argv,int stereotype)
                     TheDisplay = XtOpenDisplay(TheAppContext, NULL, NULL,
                                                "ProgramClass", NULL, 0, 
                                                argc, argv);
-                    if (!TheDisplay)
+                    if (!TheDisplay) {
+                        system("osascript -e 'display dialog \"you need to install (free) XQuartz (https://www.xquartz.org/)\"'");
                         errorflag = 1;
-                    else
+                    } else
                         break;
                 }
                 if (errorflag == 1) {
@@ -513,6 +536,7 @@ swInitialize(int *argc, char **argv,int stereotype)
                     fprintf(stderr, "after trying to start X11.app and wait %d seconds\n",
                             seconds),
                     swCleanup();
+                    system("osascript -e 'display dialog \"you need to install (free) XQuartz (https://www.xquartz.org/)\"'");
                     exit(11);
                 }
             }
@@ -638,10 +662,12 @@ swInitialize(int *argc, char **argv,int stereotype)
        XStandardColormap *stdColorMap = NULL;
        int i, numCmaps = 0;
        truecolor_mode=0;
-       
+
+#ifdef HAVE_INCLUDE_X11_XMU       
        if (XmuLookupStandardColormap(TheDisplay, TheVisual->screen, 
                                      TheVisual->visualid, TheVisual->depth, 
                                      XA_RGB_DEFAULT_MAP, False, True) !=0) 
+#endif
           if (XGetRGBColormaps(TheDisplay, DefaultRootWindow(TheDisplay),
                                     &stdColorMap, &numCmaps, 
                                     XA_RGB_DEFAULT_MAP) != 0) 
@@ -661,7 +687,7 @@ swInitialize(int *argc, char **argv,int stereotype)
        if (truecolor_mode==0)
           fprintf(stderr,"no true/directcolor visual, %s\n",
                          "fall back to slow color modus 8-(");
-       }
+    }
     if (truecolor_mode==0)
         TheColormap = XCreateColormap(TheDisplay,
                                       DefaultRootWindow(TheDisplay),
@@ -5344,7 +5370,9 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/keysym.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
-#include <X11/Xmu/Error.h>
+#ifdef HAVE_INCLUDE_X11_XMU
+# include <X11/Xmu/Error.h>
+#endif
 
 /*
  * Set, add, or subtract the path according to before and after flags:

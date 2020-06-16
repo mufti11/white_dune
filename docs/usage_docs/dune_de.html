@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- last update: white_dune-1.717
+ last update: white_dune-1.876
 -->
 <head>
  <title>"white_dune" Dokumentation</title> 
@@ -194,6 +194,9 @@
    <ul>
     <li>
      <h4><a href="#coordinate">&Auml;ndern von Coordinate basierten Knoten</a></h4>
+    </li>
+    <li>
+     <h4><a href="#insets">"Fenster" in W&uuml;rfel schneiden</a></h4>
     </li>
     <li>
      <h4><a href="#convexhull">Konvexe H&uuml;lle</a> 
@@ -3259,6 +3262,33 @@ Es gibt einige n&uuml;tzliche modelling Aktionen im <em>Aktion</em> Men&uuml;:
  </li>
 </ul>
 </p>
+<h4><a name="insets">"Fenster" in W&uuml;rfel schneiden</a>
+<small>(neu in Version 1.876)</small></h4>
+<p>
+In white_dune besteht die M&&ouml;glichkeit, aus einer Fl&auml;che eine
+kleinere Fl&aumlche auszuschneiden ("inset").<br>
+Bei einem W&uuml;rfel konvertiert zu IndexedFaceSet besteht auch die 
+M&ouml;glichkeit, mehrere "Fenster" auszuschneiden.<br>
+Dazu muss eine Fl&auml;che des W&uuml;rfels angew&auml;hlt werden.<br>
+<img src="insets1.png"><br>
+Benutzen Sie <em> (IndexedFace)Set -&gt; Flaeche(n) einfuegen</em><br>
+<img src="insets2.png"><br>
+Es erscheint ein Dialog, bei dem Sie x und y innerhalt gewisser Grenzen
+bestimmen k&ouml;nnen.<br>
+In der n&auml;chsten Darstellung sind alle Fl&auml;chen dieser Seite 
+angew&auml;hlt. <br>
+<img src="insets3.png"><br>
+In der n&auml;chsten Darstellung sind alle "Fenster" dieser Seite 
+angew&auml;hlt.<br> 
+<img src="insets4.png"><br>
+Benutzen Sie <em> (IndexedFace)Set -&gt; Flaechen abspalten </em>, 
+w&auml;hlen Sie den 2. Shape<br> 
+<img src="insets5.png"><br>
+und benutzen Sie 
+<em>Bearbeiten -&gt; loeschen </em>
+um die Fenster auszuschneiden.<br>
+<img src="insets6.png"><br>
+</p>
 <h4><a name="convexhull">Konvexe H&uuml;lle</a><small>(neu in Version 1.256)</small></h4>
 <p>
 <em>Aktion -&gt; Konvexe Huelle</em> erzeugt ein bauchiges IndexedFaceSet
@@ -3947,3 +3977,4 @@ die
 Kurve ist, so kann man, wie im Bild zu sehen, eine Ecke in der Kurve erzeugen.
 </small>
 </body>
+

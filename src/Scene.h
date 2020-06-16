@@ -379,8 +379,6 @@ public:
                            }
     void                removeSelectedHandle(int handle)
                            {
-                           if (m_firstSelectionRangeHandle > -1)
-                               return; 
                            if (m_lastSelectedHandle == handle)
                                m_lastSelectedHandle = -1;
                            int index = m_selectedHandles.find(handle);
@@ -391,8 +389,6 @@ public:
                            {
                            if (m_selectedHandles.size() == 0)
                                return;
-                           if (m_firstSelectionRangeHandle > -1)
-                               return; 
                            m_oldSelectedHandles.resize(0); 
                            for (long i = 0; i < m_selectedHandles.size(); 
                                 i++)

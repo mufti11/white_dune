@@ -83,7 +83,7 @@ SFVec3d::readLine(int index, char *line)
 }
 
 int 
-SFVec3d::writeData(int f, int i)
+SFVec3d::writeData(int f, int i) const
 {
     return mywritef(f, "%lg %lg %lg", m_value[0], m_value[1], m_value[2]);
 }

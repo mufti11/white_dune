@@ -861,8 +861,9 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
             RET_ONERROR( writeXmlFields(f, indent + TheApp->GetIndent(), 
                                         XML_PROTO_INSTANCE_FIELD,
                                         containerField, avoidUse) )
-            RET_ONERROR( writeXmlFields(f, indent + TheApp->GetIndent(), 
-                                        XML_IS, containerField, avoidUse) )
+            if (getProto()->getNumNodes() > 0)
+                RET_ONERROR( writeXmlFields(f, indent + TheApp->GetIndent(), 
+                                            XML_IS, containerField, avoidUse) )
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f, "</") )
             if (protoToWrite == NULL) {
@@ -1616,7 +1617,7 @@ NodeData::writeRoutes(int f, int indent) const
                       src->getName(), 
                       src->getProto()->getEventOut(field)->getName(x3d),
                       m_name, getProto()->getEventIn(i)->getName(x3d));
-                      m_scene->addRouteString(routeString);
+                m_scene->addRouteString(routeString);
             }
         }
     }
@@ -4171,6 +4172,8 @@ NodeData::handleIs(void)
                 if (field->getFlags() & FF_IS) {
                     Node *isNode = field->getIsNode(j);
                     Proto *proto = isNode->getProto();
+                    if (field->getIsField(j) < 0)
+                        continue;
                     FieldValue *value = field->getValue()->copy();
                     if ((isNode != NULL))
                         isNode->setField(field->getIsField(j), value);
@@ -4209,6 +4212,8 @@ NodeData::handleIs(void)
                     Node *isNode = eventOut->getIsNode(j); 
                     Proto *proto = isNode->getProto();
                     int evOut = eventOut->getIsField(j);
+                    if (evOut < 0)
+                        continue;                    
                     m_isEventOuts[i] = new EventOut(eventOut);
                     isNode->addIsElement((Node *)this, i, EL_EVENT_OUT, 
                                          proto, evOut, EOF_IS_HIDDEN);

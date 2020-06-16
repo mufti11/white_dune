@@ -1,0 +1,1191 @@
+Return-Path: <bounce-19_HTML-704107480-311971-7237825-83@bounce.email2.microsoft.com>
+Received: from mta22.email2.microsoft.com ([136.147.186.22]) by mx-ha.web.de
+ (mxweb010 [212.227.15.17]) with ESMTPS (Nemesis) id 1M6EWq-1jAap119zs-006eE4
+ for <mufti11@web.de>; Wed, 25 Mar 2020 20:13:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=200608; d=email2.microsoft.com;
+ h=From:To:Subject:Date:MIME-Version:Reply-To:List-ID:X-CSA-Complaints:
+ Message-ID:Content-Type; i=VSDE@email2.microsoft.com;
+ bh=dZV0liRYAgR7+rniOiCi4fCGl0I6Zab/QJyGAglap7M=;
+ b=F15xtjusaPIbkMgVQNq0SUfnhdaxzFxFrE8JMw+M6maEFXB/etm453jLfYMSghHAahMDTRPdQbPl
+   cFnwAmsa8prweWedT9yqQTEqgbJ0CNfQP161A4RdBOUU9kCsvNWkFaygYdhTT0IblJSzMY65lhxo
+   qhuCxfnY+n2DuZ0SAuE=
+Received: by mta22.email2.microsoft.com id hfeml62fmd47 for <mufti11@web.de>; Wed, 25 Mar 2020 19:13:22 +0000 (envelope-from <bounce-19_HTML-704107480-311971-7237825-83@bounce.email2.microsoft.com>)
+From: "Visual Studio Dev Essentials" <VSDE@email2.microsoft.com>
+To: <mufti11@web.de>
+Subject: March developer resources
+Date: Wed, 25 Mar 2020 13:13:20 -0600
+MIME-Version: 1.0
+Reply-To: "VSDE" <reply-fec91771746d037c-19_HTML-704107480-7237825-83@email2.microsoft.com>
+List-ID: <7227040.xt.local>
+X-CSA-Complaints: whitelist-complaints@eco.de
+x-job: 7237825_311971
+Message-ID: <a328d736-a6d0-4d6f-bf00-6beb0ef0f921@atl1s07mta675.xt.local>
+Content-Type: multipart/alternative;
+	boundary="1Hhf2TM3fIyU=_?:"
+Envelope-To: <mufti11@web.de>
+X-UI-Filterresults: unknown:2;V03:K0:a5Oqsbgan7c=:RKD7gXjbFX0JqhOyOTiBSVqtK6
+ XNjsrDg5kmxIoTaqGd0nOXrJYdGGDKFrGCZQFgJR0EZnSfAyoJbUMglzm6SLVflaJXgm36mtU
+ vPp9bN9sKaJoiSFeNQ7k0KiWJbFxGdU5PRVQZQw8L7wuoA/a6ohXosbmNqGvRo7NgmhdweSpO
+ aWPlBVrg3XYBYqegv6DvmpzvDfVKTugjjCi0SnFKYPHXFaRMtqSR7WGJw4noj/w0OAX0O1gxf
+ pMccCsusgKIvJyCDgHsKNs/IMvwcpgmyccOOvvzUyt3HDkvzDLMk/L545ViXepoJc1fuT4LGB
+ MzuWStPuzfgKIcRFe9MYvkTCJDdB5cvVcqCcw8zIFgYEkuSPelhi/JaHjr3kV85iC6fpoBuTL
+ 1BgSwbdER3tXutfTp8RcXUx/5TgtDIpuqup2P41i9XL6GwTiNxmkuCptk8t+YLgsLwb9cPrfe
+ P8zy/zM0R4QwvX/MaZEqp2yNWPvCcFCy+bJurl4k/5h1aF8uezav9UmKJfwO0f/OxJzkWaAGu
+ RMGzvC1dIU/cGmKfY+TBo7fcllKDqG2ohKjXDTB+OQO2TxIdkTZZlvQaOe8OdX465iH1uZirU
+ X77polQ0baCi31xONFvnVrzwxYbggocxlRecdbTlaS0HwSn6zLabZtwO1QGG/ae2fuR5+3++Z
+ MS8CPW4c7N7QdOhpmvrhzxGy7vWlTouJnH/p1vIGGh41YhvlmqflYvxKafkCNGS4pjcexrMQV
+ /T1hW3N00WXzrbvd3SJ2WVVTgBHhU/LcSTh0QRpxVh+I9JQvrmUBnOdgU1QsTOe9M8ZNX20kp
+ S4MmwfBTEK5HEtTjYpa4fYATffa7VEMfERRSKJjahntyTlVoaBV5IFztly3IwpZpSmL31+JRW
+ rzbuOTqxFFCSSlI93I2r3+KbCxBxwm0F51OcT7zWhT9hndzi0W3R62FZcZtJqKqI/CDMbbST5
+ UsAXJHy8Bhtjp8v4JiwBdsS9pd7iJFxrj2ot6QM/IPrhxmrtX6n1MtTWmNDmUQ9l2LOBAkQaZ
+ Zk06HU9qgqodSIfpe5+S5O3efGfGjp8q/ve2zH6ZL2Tn/TRrAyvzIhjYJg4A7ztks9G1RCild
+ /gShQL5rECnSRrioHNHhe8zg1kn6gC06F9zjGwLxtOjFwv6YGWjpF2jtV4+aLe/ptgWToxQ6j
+ Z1yaf1o/heDA7x38qbz4tUom0bhQW0wIm6smhOzkMsGww0bZ20ABVdRrCusNkc9lz0VXQzoE5
+ JOoG6D0U6W2yU5/q+Ui8xnMJRiDlyvS2con7PLw/4D9Xr55P1vO0Cq9D8a7OtaEPR7HSv3mFp
+ yi8aP0aCvGfj4cDnTu32fVkMtC2SCb3T/+HFix0JY8q7orc9S1ZOlpkvK9WOH8V2FjvHOJMaN
+ r4/yVx6suwaHFOulBO7asmHND9qRdKZWIs5rDmLJYp6li4/8HMngHs4Q6NMEQOSdaDfgGTO9m
+ HkUF3WVntWmzyXcnnfedEodUn5O3SbpW1SXfthhMU+32mXhRc2ZHff23cIhBUdM1OOgdIvbG7
+ YUqy4JZ1Vrb8wRQHNNrRSoRzx1q5eU5lbzUeqphjh3uysxG5uMSIxVdxA3XVylFxuFiCe04um
+ kWcHZXFCwX3G0zg2h1WNzq9VO57OsR1eluUi42gG9LMPe8B346idzMDYfD+caW/paiZb7UUrU
+ +BGA1yHbWvdeghb3KyA9AsAACtf69wWCpPgxXfW1YVlqf2ao2L40gdPOgerxnD1rYHdZS3wUV
+ 3SUQ/bt5OFZ7MLJhAhDLF9nD+w4X4/32gQ+dvJRBJH/9o+VhHWTtkDLM1nmRUwOCO9z0Gq6XZ
+ EpvgcNLvTDHMpkrAhzs8xl2mofSUfrWXPZ41Ac66/NHz9ZiF0qXKQq7288Sso2IjDKvgXam75
+ j8KtA3xKf+vEoEHnQReMaK/KnBwil3pN1MSt9SWtPm5N6AsObijR9hQpH928gHqUtk5dlLqVT
+ yTaY/l45GHSleVPppvIbkbhTI+lNwVCrLyNfaKoOi9YA9CltAxWn3kq8czk0o7hrwmzhVUhxH
+ OkJ57xlYnvY8GFFQvKRwHJzVqY9sBeCLLt9ogomycgsfMhEYy4knc4A4lOvPZYkaDDIg/Y70P
+ AxA1lBN3+yEhxPiUlZiIzsdPtiC8aeQwWVcBVlCWqeD0l4wT3F38Hwn7AKnoAHoeg5u2gt6M0
+ 9EmLPomMUJ/7qUlvx12wznvLXVbDlpHrAO2trEYSwa3Mz1P7UxhMOVSxN7qdd0IGsz60xojGK
+ 942r7ywDGw6wljSbhAoyftOXpn8YF95vcdCkPcEI/mEZLRBSBDAL2hZa2MhaKXaMENwJ8uSzw
+ kxGylCxUXV2ctqJEs7z4OTgOIV9rmzUwpCKhDliL7CE7/EPYb3qJeDFEzU3waGRRQbzd/t3rV
+ rgxvSfD4P6Ydyj29uBg==
+
+This is a multi-part message in MIME format.
+
+--1Hhf2TM3fIyU=_?:
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stay up to date with developer announcements, news, and training resources for Dev Essentials members.
+
+
+ Read it online | 
+https://view.email2.office.com/?qs=32dfb9965e441b1d3624d5af87cb58e56ef8c54ebdb581fbd9005d72c14376036c43ec975fcce34106834cbf4048c64e23a52c9e7f56e876ee160018bdfb0fbb1a1a8d45ff9a42d0e990b3b0f5e802f3 
+View in browser
+ 
+
+Visual Studio
+
+Visual Studio Dev Essentials
+
+Developer news, updates, and training resources
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3eb1399370fdb27277e0a5b45f01ba04d30292a034f5e8fa6ad79965b4d4f4ad71287f18829b2f65821b81198fcc13af3e1f05308f4a945b3 
+ 
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3eb1399370fdb27277e0a5b45f01ba04d30292a034f5e8fa6ad79965b4d4f4ad71287f18829b2f65821b81198fcc13af3e1f05308f4a945b3 
+Dev Essentials portal
+
+ 
+
+https://click.email2.office.com/?qs=db576fc91cac4fb337a6f37db6bcb65b0649e7120341a423ec2490b47eb6884814039716f8e9a33d3405f7c3fadf62c35780c242e59ddcb86c893822a3af2e52 
+
+This month, youâ€™ll find resources to stay up to date, connect with the dev community, and explore topics in depth. Machine learning is in high demandâ€”find out how you can make the most of it to power your apps. See whatâ€™s happening at Microsoft Build, start learning C#, and get the latest on Xamarin.
+
+Microsoft ML.NET: Machine learning for .NET developers
+
+Machine learning doesnâ€™t have to be intimidating. Check out this CODE Magazine article on how ML.NET lets you design your own models specific to your deployment context and needs, even if youâ€™ve never used machine learning before. Youâ€™ll start with a basic overview, move into a tutorial, and then get resources for learning more advanced scenarios to enhance your machine learning experience. Dev Essentials members receive a one-year subscription to the digital edition of the magazine. Activate your benefit by clicking on the CODE Magazine tile in the
+https://click.email2.office.com/?qs=db576fc91cac4fb3c7a078e5e5fe3314a912dd0de7c2fc860e09e9d83d88bae749d89e394089885718a86a760ba47bc54a81d37d0d9ee356c3b6cf9cc0a1443e 
+Dev Essentials portal.
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3a33312ab5573be5f27a92ea8bce7b66d4f867cc296c203ee3404947f8c28a39359848ac8877590129024cc6d4308d422ac993bde9cc197cb 
+Read the article
+https://click.email2.office.com/?qs=db576fc91cac4fb3a33312ab5573be5f27a92ea8bce7b66d4f867cc296c203ee3404947f8c28a39359848ac8877590129024cc6d4308d422ac993bde9cc197cb 
+
+â€Œ
+
+Dive deep into machine learning
+
+Microsoftâ€™s Seth Juarez explains the differences between AI, machine learning, and deep learningâ€”and shows when machine learning is the right tool to solve problems. Check out his talk, â€œAn Intuitive Approach to Machine Learning Modelsâ€â€”the first installment in a four-part video series.
+
+https://click.email2.office.com/?qs=db576fc91cac4fb39522fe9f6d3008912dfcfb459ae2e782e790fb2ebdf2da8c475ef5f9841323a419d5745a22737478d666eef4365da168ac4bdce40341230f 
+Watch now
+https://click.email2.office.com/?qs=db576fc91cac4fb39522fe9f6d3008912dfcfb459ae2e782e790fb2ebdf2da8c475ef5f9841323a419d5745a22737478d666eef4365da168ac4bdce40341230f 
+
+â€Œ
+
+Get started with C#
+
+Interested in learning C#, but not sure where to start? Check out â€œTake your first steps with C#â€ from Microsoft Learn. See how to write basic C# code, store data, and execute built-in functionality, along with other vital skills. The coursework and coding practice all take place onlineâ€”no download required.
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3fa1cd6c59c5438962cc1231c3af6173a54c6de01ce2eceb9a0d9a05172f75ff31ee4dff02f45e7f1779421c516dc0cc83cf2cc9b46879e63 
+Start now
+https://click.email2.office.com/?qs=db576fc91cac4fb3fa1cd6c59c5438962cc1231c3af6173a54c6de01ce2eceb9a0d9a05172f75ff31ee4dff02f45e7f1779421c516dc0cc83cf2cc9b46879e63 
+
+â€Œ
+
+Catch up on the .NET Conf: Focus on Xamarin event
+
+This one-day event featuring speakers from the community and .NET teams who are building mobile apps with C# and Xamarin, is now available on demand. Catch up on the exciting sessions and demos to see how to use your existing .NET skills with Xamarin to build native, cross-platform mobile apps for iOS and Android.
+
+https://click.email2.office.com/?qs=db576fc91cac4fb395790724e10b2123b60545688a7cf0e2c772c719f358f24c4f24e20bf09df8a0e74a5ac1a77d64cf02ddab53315c578cb8a31a551b5b0d78 
+Explore on-demand content
+https://click.email2.office.com/?qs=db576fc91cac4fb395790724e10b2123b60545688a7cf0e2c772c719f358f24c4f24e20bf09df8a0e74a5ac1a77d64cf02ddab53315c578cb8a31a551b5b0d78 
+
+â€Œ
+
+Microsoft Build: Learn. Connect. Code.
+
+In light of global health concerns, Microsoftâ€™s premier developer conference will be presented digitally. We look forward to bringing together our community of developers in this new digital format. Stay tuned for more details to come.
+
+https://click.email2.office.com/?qs=db576fc91cac4fb338d3e008d115d75764b83742376b298336ad1de8de958c885ac7d31aa0efefcce51bdc2b80852c60ee1fabe49db29261edfb6a054ee41996 
+Learn more
+https://click.email2.office.com/?qs=db576fc91cac4fb338d3e008d115d75764b83742376b298336ad1de8de958c885ac7d31aa0efefcce51bdc2b80852c60ee1fabe49db29261edfb6a054ee41996 
+
+Explore Azure with $200 in credits
+
+Start building your next great idea in the cloud with $200 in Azure credits for 30 days. Keep going with access to virtual machines, SQL Database, and more popular app development services for the next 12 months.
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3c0727c258107dad06e62deee639b629927d9619c9e5bc3b5a028d340dce4ad37b0f7c7bcbd90d07a3f638522cfe3c8b09a9f81c7efbd044e 
+ 
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3c0727c258107dad06e62deee639b629927d9619c9e5bc3b5a028d340dce4ad37b0f7c7bcbd90d07a3f638522cfe3c8b09a9f81c7efbd044e 
+Activate your Azure free account
+
+ 
+
+Quick links
+  
+-
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3fd4897f4c9800bb67776446eaaf1aa5a163bd6d20cc2f252ddb102404047766af08a9eb378f94ac99076db4a3a95e3e68dd52ada908815d8 
+Dev Essentials portal
+
+  
+-
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3125cd8a192709c3137b439abdfa6fa891ecf261f014124be725faea4d6875ebaddb8c0bb1768b3ce8a4a5432d4d4a08c4b4a366ef79c1f26 
+Getting started with Visual Studio
+
+  
+-
+
+https://click.email2.office.com/?qs=db576fc91cac4fb39fff9ee5bccfce5e6bc7219346d492578f72cc2c43aa7e29477d60f3d7ac434c220018f16198877d1e7f25e19c86a7ab16ebcfea14eac3e9 
+Getting started with Azure
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ This email was sent to you as part of your Visual Studio Dev Essentials membership. If you wish to opt out of this program, please go to your 
+https://click.email2.office.com/?qs=db576fc91cac4fb39c54894c9d59866ac9f1e92be9b5ef56e6d9046b60ecd53f1c49189965ca193d1c17cc505d019a1f06dfc0c445c546935f7ef94f1ebc3bcc 
+subscriptionspage and click on the "Leave program" link. 
+https://click.email2.office.com/?qs=db576fc91cac4fb34fac72e2bf1d2e9bded5593159944e64bdd141d8606b37b913fa744eb721148f05571e05677776d33e15c0f69eba42a4a862d61b86895401 
+Terms and conditions
+
+
+
+
+
+
+
+
+
+
+
+https://click.email2.office.com/?qs=db576fc91cac4fb3fe21eedfe4b0d9e00bde7722a7a157810784ea14698dc4dc4a65825962a4726ddbc834544d1857f315f954aef551f1c2adf1e3d58f991f59 
+Datenschutzbestimmungen
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Microsoft Corporation, One Microsoft Way, Redmond, WA 98052 USA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--1Hhf2TM3fIyU=_?:
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+
+
+
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="format-detection" content="date=no" />
+  <meta name="format-detection" content="address=no" />
+  <meta name="format-detection" content="email=no" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title></title>
+
+<link href="http://image.email.office.com/lib/fe9815707264017b71/m/1/fontface2.css" rel='stylesheet' type='text/css'>
+<style media="all" type="text/css">
+  @import url(http://image.email.office.com/lib/fe9815707264017b71/m/1/fontface2.css);
+</style>
+
+
+<style media="all" type="text/css">
+  @-ms-viewport{ width: device-width;}
+</style>
+
+
+<style media="all" type="text/css">
+  
+  #outlook a {padding:0;}
+  .ReadMsgBody {width:100%;} .ExternalClass{width:100%;}
+  .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;}
+  body, table, td, a {-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;}
+  table, td {mso-table-lspace:0pt; mso-table-rspace:0pt; border-collapse: collapse;}
+  img {-ms-interpolation-mode:bicubic !important;}
+  .ExternalClass img[class^=Emoji] {width: 10px !important; height: 10px !important; display: inline !important;}
+  .ExternalClass .ecxhm {display: none !important;}
+  .ExternalClass .ecxhm2 {display: inline !important;}
+  
+  .appleBody a {color:#68440a; text-decoration: none;}
+  .appleFooter a {color:#999999; text-decoration: none;}
+  * [OWA] .outlookLink505050 span {color:#505050 !important; border-bottom-width:0 !important; border-bottom-style:none !important; cursor: default !important;}
+  * [OWA] .outlookLinkFFFFFF span {color:#ffffff !important; border-bottom-width:0 !important; border-bottom-style:none !important; cursor: default !important;}
+  .contextualExtensionHighlight, .ms-font-color-themePrimary, .ms-border-color-themePrimary {border-bottom-width:0 !important; border-bottom-style:none !important;}
+  a[x-apple-data-detectors] {color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important;}
+  a, a span, a.span:hover {color: #3d3d3d; background-color: none !important; border: none !important; }
+  
+  body { margin:0 !important; }
+  div[style*="margin: 16px 0"] { margin:0 !important; }
+  th { font-weight:normal; padding:0 }
+  body, div, span, td, p {Margin:0; padding:0;}
+  h1,h2,h3,h4,h5 {display:block; Margin: 0; padding: 0; font-size: inherit; font-weight: normal; color: inherit;}
+  img {border:0; height:auto; line-height:100%; outline:none; text-decoration:none; image-rendering: auto;}
+  table {border-collapse:collapse !important;}
+  table, th, td { font-weight:normal; }
+  body {height:100% !important; margin:0; padding:0; width:100% !important;}
+  a.tel, a.tel: link, a.tel:visited, a.tel:hover, a.tel:active {text-decoration: none !important; background-color: none !important; border: none !important; }
+  a.addr, a.addr: link, a.addr:visited, a.addr:hover, a.addr:active {text-decoration: none !important; background-color: none !important; border: none !important; }
+  a img {border:none;}
+  sup, sub { vertical-align: baseline; position: relative; top: -0.4em; }
+  sub { top: 0.4em; }
+  table[DIR="rtl"], table td[DIR="rtl"], table th[DIR="rtl"], span[DIR="rtl"], div[DIR="rtl"] {direction:RTL !important; unicode-bidi:embed !important;}
+  
+  #MessageViewBody, #MessageWebViewDiv { margin: 0 !important;  padding:0 !important; width:100% !important; }
+  
+</style>
+
+
+<style media="screen" type="text/css">
+  @media screen and (max-width: 497px)  {
+    .container {width:100% !important; min-width:300px !important; max-width:480px !important; margin: 0; padding:0; word-wrap:normal;}
+    .container table {width:100% !important;}
+    .mobile-full-width {width: 100% !important; min-width: 300px !important;}
+    .hide {display:none !important; width: 0px; min-width: 0px; height: 0px; line-height: 0px;}
+    .heightauto { height:auto !important;}
+    .height1 { height:1px;}
+    .mobile-shown, .mobile-shown div {display: block !important; overflow: visible !important; width: auto !important; max-height:inherit !important; height:auto !important; visibility: visible !important;}
+    .drop {display:block !important; width: 100% !important;}
+    .photo img {width:100% !important; height:auto !important;}
+    .photo80 img {width:80% !important; height:auto !important;}
+    .photo50 img {width:50% !important; height:auto !important;}
+    .photo35 img {width:35% !important; height:auto !important;}
+    .buttonblck table {width:auto !important;}
+    .mobile-center table, .mobile-center, .mobile-center img {text-align: center !important; margin: 0 auto !important;}
+    .mobile-left table, .mobile-left, .mobile-left img {text-align: left !important;}
+    .mobile-no-padding {padding: 0px !important;}
+    .mobile-no-side-padding, .mobile-side-padding-0 {padding-left: 0px !important; padding-right: 0px !important;}
+    .mobile-no-top-padding {padding-top: 0px !important;}
+    .mobile-no-bottom-padding, .mobile-bottom-padding-0 {padding-bottom: 0px !important;}
+    .mobile-side-padding-5 {padding-left: 5px !important; padding-right: 5px !important;}
+    .mobile-side-padding-10 {padding-left: 10px !important; padding-right: 10px !important;}
+    .mobile-side-padding-15 {padding-left: 15px !important; padding-right: 15px !important;}
+    .mobile-side-padding-20 {padding-left: 20px !important; padding-right: 20px !important;}
+    .mobile-side-padding-25 {padding-left: 25px !important; padding-right: 25px !important;}
+    .mobile-side-padding-30 {padding-left: 30px !important; padding-right: 30px !important;}
+    .mobile-side-padding-35 {padding-left: 35px !important; padding-right: 35px !important;}
+    .mobile-side-padding-40 {padding-left: 40px !important; padding-right: 40px !important;}
+    .mobile-side-padding-45 {padding-left: 45px !important; padding-right: 45px !important;}
+    .mobile-side-padding-50 {padding-left: 50px !important; padding-right: 50px !important;}
+    .mobile-left-padding-10 {padding-left: 10px !important;}
+    .mobile-left-padding-20 {padding-left: 20px !important;}
+    .mobile-left-padding-30 {padding-left: 30px !important;}
+    .mobile-left-padding-40 {padding-left: 40px !important;}
+    .mobile-left-padding-50 {padding-left: 50px !important;}
+    .mobile-right-padding-10 {padding-right: 10px !important;}
+    .mobile-right-padding-20 {padding-right: 20px !important;}
+    .mobile-right-padding-30 {padding-right: 30px !important;}
+    .mobile-right-padding-40 {padding-right: 40px !important;}
+    .mobile-right-padding-50 {padding-right: 50px !important;}
+    .mobile-top-padding-10 {padding-top: 10px !important;}
+    .mobile-top-padding-20 {padding-top: 20px !important;}
+    .mobile-top-padding-21 {padding-top: 21px !important;}
+    .mobile-top-padding-30 {padding-top: 30px !important;}
+    .mobile-top-padding-40 {padding-top: 40px !important;}
+    .mobile-top-padding-50 {padding-top: 50px !important;}
+    .mobile-bottom-padding-10 {padding-bottom: 10px !important;}
+    .mobile-bottom-padding-15, .mobile-padding-bottom-15 {padding-bottom: 15px !important;}
+    .mobile-bottom-padding-20, .mobileimagepaddingbottom20 {padding-bottom: 20px !important;}
+    .mobile-bottom-padding-30 {padding-bottom: 30px !important;}
+    .mobile-bottom-padding-40 {padding-bottom: 40px !important;}
+    .mobile-bottom-padding-50 {padding-bottom: 50px !important;}
+    .mobile-font-56 {font-size: 56px !important; line-height: 61px !important;}
+    .mobile-font-40 {font-size: 40px !important; line-height: 45px !important;}
+    .mobile-font-37 {font-size: 37px !important; line-height: 47px !important;}
+    .mobile-width-156 { width: 156px !important; height:auto !important}
+    .mobile-width-129 { width: 129px !important; height:auto !important}
+    .mobile-width-118 { width: 118px !important; height:auto !important}
+    .mobile-width-117 { width: 117px !important; height:auto !important}
+    .mobile-width-110 { width: 110px !important; height:auto !important}
+    .mobile-width-103 { width: 103px !important; height:auto !important}
+    .mobile-width-87 { width: 87px !important; height:auto !important}
+    .mobile-width-86 { width: 86px !important; height:auto !important}
+    .mobile-width-85 { width: 85px !important; height:auto !important}
+    .mobile-width-79 { width: 79px !important; height:auto !important}
+    .mobile-width-75 { width: 75px !important; height:auto !important}
+    .mobile-width-58 { width: 58px !important; height:auto !important}
+    .mobile-width-53 { width: 53px !important; height:auto !important}
+    .mobile-width-52 { width: 52px !important; height:auto !important}
+    .mobile-width-20 { width: 20px !important; height:auto !important}
+  }
+</style>
+  <!--[if gte mso 9]><xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml><![endif]-->
+</head>
+<body bgcolor="" topmargin="0" leftmargin="0" style="margin:0; padding:0; -webkit-font-smoothing:antialiased !important; width:100%; -webkit-text-size-adjust:none;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container" role="presentation">
+  <tr>
+    
+    <td bgcolor="" align="center" style="font-size:0px; line-height:1px; display:none;"><div style="display:none; width:0px; max-height:0px; overflow:hidden;">Stay up to date with developer announcements, news, and training resources for Dev Essentials members.<img src="https://click.email2.office.com/open.aspx?ffcb10-fec91771746d037c-fe2b107071660579731378-fe8d137276630c7f70-ff951579-fe3013707165047a711c70-ff941c73&d=70128" width="1" height="1"></div></td>
+  </tr>
+  <tr>
+    <td align="center" bgcolor="">
+      <table border="0" cellpadding="0" cellspacing="0" width="660" align="center" class="mobile-full-width" style="width: 660px; min-width: 660px; margin:0 auto;" role="presentation">
+	  
+	  <!-- pre header start -->
+	  <tr>
+	  <td>
+	  
+	  
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation" class="hide">
+  <tbody><tr>
+    <td bgcolor="#ffffff">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        
+        <tbody><tr>
+          <td align="center"  bgcolor="#ffffff" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#505050; padding-top:10px; padding-left: 20px; padding-right: 20px; text-align:center;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#505050; text-align:center; letter-spacing:-0.02em;">
+               Read it online | <a  style="color:#505050; text-decoration:underline;" href="https://view.email2.office.com/?qs=32dfb9965e441b1d3624d5af87cb58e56ef8c54ebdb581fbd9005d72c14376036c43ec975fcce34106834cbf4048c64e23a52c9e7f56e876ee160018bdfb0fbb24434a704f75da792e2353768c7e2f66">View in browser
+            </p>
+          </td>
+        </tr>
+       
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+	  
+	    </td>
+	  
+	  
+	  </tr>
+	  <!-- pre header End -->
+	  <!-- brand bar Start -->
+	  	    <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+  <tbody><tr>
+    <td align="left" bgcolor="#FFFFFF" style="vertical-align:top;" valign="top">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        <tbody><tr>
+          <td  align="left" bgcolor="#FFFFFF" style="padding-top:10px; padding-bottom:10px;" class="mobile-top-padding-20 mobile-bottom-padding-20">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+              <tbody><tr>
+                <td align="left" bgcolor="#FFFFFF" style="padding-left: 20px;"><img alt="Microsoft" src="https://asgcdn.azureedge.net/sfdc/FY19-office-email-templates/logo_microsoft.png" width="100" style="display:block; outline:none; -ms-interpolation-mode:bicubic; border:none;" align="left" class="mobile-width-85"></td>
+              </tr>
+            </tbody></table>
+          </td>
+          
+          <td  align="right" bgcolor="#FFFFFF" style="padding-top:0px; padding-bottom:0px;" class="mobile-top-padding-20 mobile-bottom-padding-20">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+              <tbody><tr>
+                <td align="right" bgcolor="#FFFFFF" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:22px; line-height:38px;  color:#000000; padding-right: 20px;">Visual Studio</td>
+              </tr>
+            </tbody></table>
+          </td>
+          
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+	  
+	  
+	  </td>
+	  
+	  
+	  </tr>
+	  <!-- brand bar End -->
+	  
+	  	  <!-- H6 header Image start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+<tbody><tr>
+   <td bgcolor="#F3F3F3" align="center" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:38px; mso-line-height-rule:exactly; line-height:44px; color:#000000; padding-top:55px; padding-left: 50px; padding-right: 50px; text-align:center; letter-spacing:-0.02em;" class="mobile-side-padding-20">
+   <h2 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:38px; mso-line-height-rule:exactly; line-height:44px; color:#000000; text-align:center; letter-spacing:-0.02em; font-weight:normal;">Visual Studio Dev Essentials</h2>
+   </td>
+</tr>
+        <tr>
+          <td bgcolor="#F3F3F3" align="center" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:27px; padding-left: 50px; padding-right: 50px; text-align:center; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:center; letter-spacing:0.0em;">Developer news, updates, and training resources</p>
+          </td>
+        </tr>
+        
+<tr>
+  <td bgcolor="#F3F3F3" align="center" style="padding-top:33px; padding-left: 50px; padding-right: 50px;" class="mobile-side-padding-20 buttonblck">
+	<a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb3b7bf0043a56d5937ef927f6c85795ed8dea5331cac38f84f2b10410aadf4657b5605df8b40f630ef743364fa3e331f8e0166aca360abd42c" style="display:inline-block; text-decoration:none;color:#ffffff;">
+		<table cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;" role="presentation">
+		  <tbody><tr>
+			<td>
+			 <table border="0" cellspacing="0" cellpadding="0" role="presentation">
+			  <tbody><tr>
+				<td bgcolor="#5C2D91" style="border-radius:2px;">
+				<table cellspacing="0" cellpadding="0" border="0" role="presentation">
+				  <tbody><tr>
+					<td height="2" style="mso-line-height-rule:exactly; line-height:2; font-size:2px; border-radius:2px;"><div style=" height:2px; mso-line-height-rule:exactly; line-height:2px">&nbsp;</div></td>
+				  </tr>
+				  <tr>
+					<td>
+						<table cellspacing="0" cellpadding="0" border="0" role="presentation">
+						<tbody><tr>
+						  <td width="2"></td>
+						  <td>
+							<table border="0" role="presentation" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto;">
+							  <tbody><tr>
+								  <td align="center" style=" padding:11px 50px 11px 50px; mso-padding-alt:11px 50px 11px 50px; background-color:#5C2D91; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; text-align:center; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb3b7bf0043a56d5937ef927f6c85795ed8dea5331cac38f84f2b10410aadf4657b5605df8b40f630ef743364fa3e331f8e0166aca360abd42c" style="display:inline-block; text-decoration:none;color:#ffffff;"><strong style="font-weight:normal; text-decoration:none;color:#ffffff;">Dev Essentials portal</strong></a></td>
+							  </tr>
+							</tbody></table>         
+						  </td>
+						  <td width="2"></td>
+						</tr>
+					  </tbody></table>   
+					</td>
+				  </tr>
+				  <tr>
+					<td height="2" style="mso-line-height-rule:exactly; line-height:2; font-size:2px; border-radius:2px;"><div style=" height:2px; mso-line-height-rule:exactly; line-height:2px">&nbsp;</div></td>
+				  </tr>
+				</tbody></table>
+				</td>
+			  </tr>
+			</tbody></table>  
+		  </td></tr>
+		</tbody></table>
+	</a>
+  </td>
+</tr>
+
+
+
+
+
+
+
+
+      
+      
+      
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  </td>
+	  </tr>
+	  <!-- H6 header Image end -->
+	  
+	  <!-- H3 header Image start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3" style="padding-top:0px; padding-bottom:0px">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+      
+      <tbody><tr>
+        <td align="center" bgcolor="#F3F3F3" style="padding-top:0; padding-left: 0px; padding-right: 0px;" class="photo"><div style="display:block; Margin:0; padding:0;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb35d12cf1675b70852274920f8af38a0544b442ffcadb626dd2a1c67132bd55a3f63c378febd506137a6990432b7deba40586b02e272bfce6b"><img title="Row of icons that includes tools, a cloud, an arrow, hands shaking, a graduation hat, and a person with a headset" alt="Dev Essentials portal" src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/H3_Dev-Essencials.png" width="660" style="display:block; outline:none; -ms-interpolation-mode:bicubic; border:none;"></a></div></td>
+      </tr>
+      
+    </tbody></table>
+  </td>
+ </tr>
+</tbody></table>
+	  </td>
+	  </tr>
+	  <!-- H3 header Image end -->
+	  
+	  <!-- S2 intro text Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#ffffff" style="padding-bottom:33px; padding-top:33px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody>
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:0px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:left; letter-spacing:0.0em;">This month, youâ€™ll find resources to stay up to date, connect with the dev community, and explore topics in depth. Machine learning is in high demandâ€”find out how you can make the most of it to power your apps. See whatâ€™s happening at Microsoft Build, start learning C#, and get the latest on Xamarin.</p>
+          </td>
+        </tr>
+
+
+
+
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  
+	  </td>
+	  </tr>
+	  <!-- S2 intro text end -->
+	  
+	  <!-- S2 Story1 Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3" style="padding-bottom:36px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody><tr>
+   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; padding-top:33px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:-0.01" class="mobile-side-padding-20">
+   <h3 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; text-align:left; letter-spacing:-0.01em; font-weight:normal;">Microsoft ML.NET: Machine learning for .NET developers</h3>
+   </td>
+</tr>
+        <tr>
+          <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:18px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:left; letter-spacing:0.0em;">Machine learning doesnâ€™t have to be intimidating. Check out this CODE Magazine article on how ML.NET lets you design your own models specific to your deployment context and needs, even if youâ€™ve never used machine learning before. Youâ€™ll start with a basic overview, move into a tutorial, and then get resources for learning more advanced scenarios to enhance your machine learning experience. Dev Essentials members receive a one-year subscription to the digital edition of the magazine. Activate your benefit by clicking on the CODE Magazine tile in the <a
+				href="https://click.email2.office.com/?qs=db576fc91cac4fb32a7f0c2fb9f0984a65fc444ebf051e8b8de04447f2c41aad9116edbb7baa25c7799814c36aae9eaee37dc4178a8142c7aae86267858cb337"  target="_blank" style="color:#5C2D91;text-decoration:underline;"><strong style="font-weight:normal;color:#5C2D91;text-decoration:underline;">Dev Essentials portal</strong></a>.</p>
+          </td>
+        </tr>
+
+<tr>
+   <td bgcolor="#F3F3F3" align="left" style="padding-bottom:0px;padding-top:18px; padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20 buttonblck">
+	   <table cellpadding="0" cellspacing="0" border="0" align="left" role="presentation">
+		   <tbody><tr>
+			   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; text-align:left; font-size:16px; mso-line-height-rule:exactly; line-height:24px; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb386d28ddc9face7dfaad4bd61bc656ac4b4fd0004bdf44e1de5f4bea831e3c1920e20b8639defe4c8f7dafdd988b6d60e3dcbfe4318f79ec6" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#5C2D91;">Read the article</strong></a>
+			   </td>
+			   <td valign="middle" bgcolor="#F3F3F3" align="left" style="vertical-align:middle; mso-line-height-rule:exactly; line-height:24px; padding-left: 10px; padding-right: 5px;"><a  href="https://click.email2.office.com/?qs=db576fc91cac4fb386d28ddc9face7dfaad4bd61bc656ac4b4fd0004bdf44e1de5f4bea831e3c1920e20b8639defe4c8f7dafdd988b6d60e3dcbfe4318f79ec6" target="_blank"><img border="0" alt="" src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/Caret_purple_left.png" width="10" style="display:block; position:relative; top:1px; outline:none; -ms-interpolation-mode:bicubic; border:none;"></a>
+			   </td>
+			</tr>
+		</tbody></table>
+	</td>
+</tr>
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  
+	  </td>
+	  </tr>
+	  <!-- S2 Story1 end -->
+<tr>
+   <td valign="top" bgcolor="#F3F3F3">
+      
+      
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td bgcolor="#F3F3F3" style="padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+          <td height="1" bgcolor="#5C2D91" style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px;  padding-top:0px; padding-bottom:0px; padding-left: px; padding-right: px; " class="mobile-side-padding-10">â€Œ</td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+
+
+   </td>
+</tr>
+	  	  <!-- S2 Story2 Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3" style="padding-bottom:36px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody><tr>
+   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; padding-top:33px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:-0.01" class="mobile-side-padding-20">
+   <h3 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; text-align:left; letter-spacing:-0.01em; font-weight:normal;">Dive deep into machine learning</h3>
+   </td>
+</tr>
+        <tr>
+          <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:18px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:left; letter-spacing:0.0em;">Microsoftâ€™s Seth Juarez explains the differences between AI, machine learning, and deep learningâ€”and shows when machine learning is the right tool to solve problems. Check out his talk, â€œAn Intuitive Approach to Machine Learning Modelsâ€â€”the first installment in a four-part video series.</p>
+          </td>
+        </tr>
+
+<tr>
+   <td bgcolor="#F3F3F3" align="left" style="padding-bottom:0px;padding-top:18px; padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20 buttonblck">
+	   <table cellpadding="0" cellspacing="0" border="0" align="left" role="presentation">
+		   <tbody><tr>
+			   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; text-align:left; font-size:16px; mso-line-height-rule:exactly; line-height:24px; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb3ab6dc62689bd2250cc5f9d7dab2ea07c7d2fe694be4a2fa8bd6861a2c364d3e777a76a930b9d5757001a4269f2b67518236582c63603ba97" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#5C2D91;">Watch now</strong></a>
+			   </td>
+			   <td valign="middle" bgcolor="#F3F3F3" align="left" style="vertical-align:middle; mso-line-height-rule:exactly; line-height:24px; padding-left: 10px; padding-right: 5px;"><a  href="https://click.email2.office.com/?qs=db576fc91cac4fb3ab6dc62689bd2250cc5f9d7dab2ea07c7d2fe694be4a2fa8bd6861a2c364d3e777a76a930b9d5757001a4269f2b67518236582c63603ba97" target="_blank"><img border="0" alt="" src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/Caret_purple_left.png" width="10" style="display:block; position:relative; top:1px; outline:none; -ms-interpolation-mode:bicubic; border:none;"></a>
+			   </td>
+			</tr>
+		</tbody></table>
+	</td>
+</tr>
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  
+	  </td>
+	  </tr>
+	  <!-- S2 Story2 end -->
+	   <tr>
+   <td valign="top" bgcolor="#F3F3F3">
+      
+      
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td bgcolor="#F3F3F3" style="padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+          <td height="1" bgcolor="#5C2D91" style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px;  padding-top:0px; padding-bottom:0px; padding-left: px; padding-right: px; " class="mobile-side-padding-10">â€Œ</td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+
+
+   </td>
+</tr>
+<!-- S2 Story1 Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3" style="padding-bottom:36px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody><tr>
+   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; padding-top:33px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:-0.01" class="mobile-side-padding-20">
+   <h3 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; text-align:left; letter-spacing:-0.01em; font-weight:normal;">Get started with C#</h3>
+   </td>
+</tr>
+        <tr>
+          <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:18px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:left; letter-spacing:0.0em;">Interested in learning C#, but not sure where to start? Check out â€œTake your first steps with C#â€ from Microsoft Learn. See how to write basic C# code, store data, and execute built-in functionality, along with other vital skills. The coursework and coding practice all take place onlineâ€”no download required.</p>
+          </td>
+        </tr>
+
+<tr>
+   <td bgcolor="#F3F3F3" align="left" style="padding-bottom:0px;padding-top:18px; padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20 buttonblck">
+	   <table cellpadding="0" cellspacing="0" border="0" align="left" role="presentation">
+		   <tbody><tr>
+			   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; text-align:left; font-size:16px; mso-line-height-rule:exactly; line-height:24px; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb35e914c7a12cf5fed97dfb3a545bb6247f0a1921599ff210c731dee24a331521b3df9829d53d6a7633fb81d28b993f5df642eb11f52b4ced5" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#5C2D91;">Start now</strong></a>
+			   </td>
+			   <td valign="middle" bgcolor="#F3F3F3" align="left" style="vertical-align:middle; mso-line-height-rule:exactly; line-height:24px; padding-left: 10px; padding-right: 5px;"><a  href="https://click.email2.office.com/?qs=db576fc91cac4fb35e914c7a12cf5fed97dfb3a545bb6247f0a1921599ff210c731dee24a331521b3df9829d53d6a7633fb81d28b993f5df642eb11f52b4ced5" target="_blank"><img border="0" alt="" src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/Caret_purple_left.png" width="10" style="display:block; position:relative; top:1px; outline:none; -ms-interpolation-mode:bicubic; border:none;"></a>
+			   </td>
+			</tr>
+		</tbody></table>
+	</td>
+</tr>
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  
+	  </td>
+	  </tr>
+	  <!-- S3 Story1 end -->
+	  
+	  
+	   <tr>
+   <td valign="top" bgcolor="#F3F3F3">
+      
+      
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td bgcolor="#F3F3F3" style="padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+          <td height="1" bgcolor="#5C2D91" style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px;  padding-top:0px; padding-bottom:0px; padding-left: px; padding-right: px; " class="mobile-side-padding-10">â€Œ</td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+
+
+   </td>
+</tr>
+<!-- S4 Story1 Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3" style="padding-bottom:36px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody><tr>
+   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; padding-top:33px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:-0.01" class="mobile-side-padding-20">
+   <h3 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; text-align:left; letter-spacing:-0.01em; font-weight:normal;">Catch up on the .NET Conf: Focus on Xamarin event</h3>
+   </td>
+</tr>
+        <tr>
+          <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:18px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:left; letter-spacing:0.0em;">This one-day event featuring speakers from the community and .NET teams who are building mobile apps with C# and Xamarin, is now available on demand. Catch up on the exciting sessions and demos to see how to use your existing .NET skills with Xamarin to build native, cross-platform mobile apps for iOS and Android.</p>
+          </td>
+        </tr>
+
+<tr>
+   <td bgcolor="#F3F3F3" align="left" style="padding-bottom:0px;padding-top:18px; padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20 buttonblck">
+	   <table cellpadding="0" cellspacing="0" border="0" align="left" role="presentation">
+		   <tbody><tr>
+			   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; text-align:left; font-size:16px; mso-line-height-rule:exactly; line-height:24px; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb3103fefcc66ac2808de85c86163757c40f4bd42e5785bbf3d82197875cc34b2c75228b78ec6c9109d25b078e7492bfcfdca11eed1cadccf54" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#5C2D91;">Explore on-demand content</strong></a>
+			   </td>
+			   <td valign="middle" bgcolor="#F3F3F3" align="left" style="vertical-align:middle; mso-line-height-rule:exactly; line-height:24px; padding-left: 10px; padding-right: 5px;"><a  href="https://click.email2.office.com/?qs=db576fc91cac4fb3103fefcc66ac2808de85c86163757c40f4bd42e5785bbf3d82197875cc34b2c75228b78ec6c9109d25b078e7492bfcfdca11eed1cadccf54" target="_blank"><img border="0" alt="" src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/Caret_purple_left.png" width="10" style="display:block; position:relative; top:1px; outline:none; -ms-interpolation-mode:bicubic; border:none;"></a>
+			   </td>
+			</tr>
+		</tbody></table>
+	</td>
+</tr>
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  
+	  </td>
+	  </tr>
+	   <!-- S4 Story End -->
+	   <tr>
+   <td valign="top" bgcolor="#F3F3F3">
+      
+      
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td bgcolor="#F3F3F3" style="padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+          <td height="1" bgcolor="#5C2D91" style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px;  padding-top:0px; padding-bottom:0px; padding-left: px; padding-right: px; " class="mobile-side-padding-10">â€Œ</td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+
+
+   </td>
+</tr>
+<!-- S5 Story1 Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#F3F3F3" style="padding-bottom:36px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody><tr>
+   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; padding-top:33px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:-0.01" class="mobile-side-padding-20">
+   <h3 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; text-align:left; letter-spacing:-0.01em; font-weight:normal;">Microsoft Build: Learn. Connect. Code.</h3>
+   </td>
+</tr>
+        <tr>
+          <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:18px; padding-left: 30px; padding-right: 30px; text-align:left; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000;  text-align:left; letter-spacing:0.0em;">In light of global health concerns, Microsoftâ€™s premier developer conference will be presented digitally. We look forward to bringing together our community of developers in this new digital format. Stay tuned for more details to come.</p>
+          </td>
+        </tr>
+
+<tr>
+   <td bgcolor="#F3F3F3" align="left" style="padding-bottom:0px;padding-top:18px; padding-left: 30px; padding-right: 30px;" class="mobile-side-padding-20 buttonblck">
+	   <table cellpadding="0" cellspacing="0" border="0" align="left" role="presentation">
+		   <tbody><tr>
+			   <td bgcolor="#F3F3F3" align="left" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; text-align:left; font-size:16px; mso-line-height-rule:exactly; line-height:24px; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb3a7a5717ccae5cb8bcf194b471577b6c0b32947ee30827860d09f9f137e130f21f2bf18368f5897cfef779eff67815a98c6af87f855d2ccaf" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#5C2D91;">Learn more</strong></a>
+			   </td>
+			   <td valign="middle" bgcolor="#F3F3F3" align="left" style="vertical-align:middle; mso-line-height-rule:exactly; line-height:24px; padding-left: 10px; padding-right: 5px;"><a  href="https://click.email2.office.com/?qs=db576fc91cac4fb3a7a5717ccae5cb8bcf194b471577b6c0b32947ee30827860d09f9f137e130f21f2bf18368f5897cfef779eff67815a98c6af87f855d2ccaf" target="_blank"><img border="0" alt="" src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/Caret_purple_left.png" width="10" style="display:block; position:relative; top:1px; outline:none; -ms-interpolation-mode:bicubic; border:none;"></a>
+			   </td>
+			</tr>
+		</tbody></table>
+	</td>
+</tr>
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  
+	  </td>
+	  </tr>
+	   <!-- S5 Story End -->
+	  	  	   <!-- P1 Azure Start -->
+	  
+	  <tr>
+	  <td>
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#000000">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+
+<tbody><tr>
+   <td bgcolor="#000000" align="center" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:32px; mso-line-height-rule:exactly; line-height:38px; color:#000000; padding-top:30px; padding-left: 50px; padding-right: 50px; text-align:center; letter-spacing:-0.02em;" class="mobile-side-padding-20">
+   <h2 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:32px; mso-line-height-rule:exactly; line-height:38px; color:#ffffff; text-align:center; letter-spacing:-0.02em; font-weight:normal;">Explore Azure with $200 in credits</h2>
+   </td>
+</tr>
+ 
+        <tr>
+          <td bgcolor="#000000" align="center" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#000000; padding-top:30px; padding-left: 50px; padding-right: 50px;padding-bottom:40px; text-align:center; letter-spacing:0.0em;" class="mobile-side-padding-20">
+            <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:24px; color:#ffffff;  text-align:center; letter-spacing:0.0em;">Start building your next great idea in the cloud with $200 in Azure credits for 30 days. Keep going with access to virtual machines, SQL Database, and more popular app development services for the next 12 months.</p>
+          </td>
+        </tr>
+<tr>
+  <!--[if gte mso 9]>
+<v:image xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"  style=" border: 0;display: inline-block; width:660px;  height:87px;"  src="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/P1-bottom_Background1.jpg" />                <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style=" border: 0;display: inline-block;position: absolute; width:660px; ">
+<v:fill  opacity="0%" color="#000000â€  />
+<v:textbox inset="0,0,40,0">
+<![endif]-->
+  <td bgcolor="#000000" align="center" background="http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/P1_bottom_Background.png"  valign="top" style="background: url('http://image.email2.office.com/lib/fe8d137276630c7f70/m/1/P1_bottom_Background.png') center / cover no-repeat #000000; padding: 0px 50px 38px 50px;" class="mobile-side-padding-20 buttonblck">
+<div>
+	<a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb302ca4cf5cac8b0eaf318930cd84be45abf759aa35859261de225217484e280ea35b9693453c8b54f2e8081f67ec2f6fd4233778782a934b5" style="display:inline-block; text-decoration:none;color:#ffffff;">
+		<table cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;" role="presentation">
+		  <tbody><tr>
+			<td>
+			 <table border="0" cellspacing="0" cellpadding="0" role="presentation">
+			  <tbody><tr>
+				<td bgcolor="#0078D4 " style="border-radius:2px;">
+				<table cellspacing="0" cellpadding="0" border="0" role="presentation">
+				  <tbody><tr>
+					<td height="2" style="mso-line-height-rule:exactly; line-height:2; font-size:2px; border-radius:2px;"><div style=" height:2px; mso-line-height-rule:exactly; line-height:2px">&nbsp;</div></td>
+				  </tr>
+				  <tr>
+					<td>
+						<table cellspacing="0" cellpadding="0" border="0" role="presentation">
+						<tbody><tr>
+						  <td width="2"></td>
+						  <td>
+							<table border="0" role="presentation" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto;">
+							  <tbody><tr>
+								  <td align="center" style=" padding:11px 50px 11px 50px; mso-padding-alt:11px 50px 11px 50px; background-color:#0078D4 ; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; text-align:center; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb302ca4cf5cac8b0eaf318930cd84be45abf759aa35859261de225217484e280ea35b9693453c8b54f2e8081f67ec2f6fd4233778782a934b5" style="display:inline-block; text-decoration:none;color:#ffffff;"><strong style="font-weight:normal; text-decoration:none;color:#ffffff;">Activate your Azure free account</strong></a></td>
+							  </tr>
+							</tbody></table>         
+						  </td>
+						  <td width="2"></td>
+						</tr>
+					  </tbody></table>   
+					</td>
+				  </tr>
+				  <tr>
+					<td height="2" style="mso-line-height-rule:exactly; line-height:2; font-size:2px; border-radius:2px;"><div style=" height:2px; mso-line-height-rule:exactly; line-height:2px">&nbsp;</div></td>
+				  </tr>
+				</tbody></table>
+				</td>
+			  </tr>
+			</tbody></table>  
+		  </td></tr>
+		</tbody></table>
+	</a>
+	
+	</div>
+  </td>
+    <!--[if gte mso 9]>
+</v:textbox>
+</v:fill>
+</v:rect>
+</v:image>
+<![endif]--> 
+  
+</tr>
+
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>  
+	  </td>
+	  </tr>
+	  <!-- P1 Azure end -->
+	   <!-- Quick Link Start -->
+	  
+	  <tr>
+	  <td>
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+ <tbody><tr>
+  <td bgcolor="#32145A" style="padding-bottom:40px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+       
+      
+
+<tbody><tr>
+   <td bgcolor=" #32145A " align="center" style="font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#000000; padding-top:33px; padding-left: 30px; padding-right: 50px; text-align:center; letter-spacing:-0.01" class="mobile-side-padding-20">
+   <h3 style="Margin:0; padding:0; font-family:'Segoe UI Semibold','Segoe UI',SUWSB,Arial,sans-serif; font-size:26px; mso-line-height-rule:exactly; line-height:34px; color:#ffffff; text-align:left; letter-spacing:-0.01em; font-weight:normal;">Quick links</h3>
+   </td>
+</tr>
+		
+
+        
+    <tr>
+          <td bgcolor="#32145A" align="center" style="text-align:center; padding-left:30px; padding-right:30px;" class="buttonblck">
+            <table cellspacing="0" cellpadding="0" border="0" align="left" style="margin:0 auto" role="presentation">
+                            
+              <tbody><tr>
+                <td bgcolor="#32145A" align="left" style="font-size: 1px; line-height: 1px; padding-top:20px; padding-left:0px; padding-left:10px; text-align:left" class="mobile-left-padding-0">&nbsp;</td>
+                <td bgcolor="#32145A" align="left" style="font-size: 1px; line-height: 1px; padding-top:10px; padding-right: 50px; text-align:left;" class="mobile-right-padding-20">&nbsp;</td>
+              </tr>
+              <tr>
+                <td bgcolor="#32145A" align="left" style="padding-left: 0px; padding-right: 10px; text-align:left; vertical-align:top; padding-top:0px; font-size:16px; mso-line-height-rule:exactly; line-height:20px;" valign="top" class="mobile-left-padding-0"><span style="color: #ffffff; font-size: 20px;">&bull;</span></td>
+                <td bgcolor="#32145A" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; color:#000000; padding-right: 50px; text-align:left; letter-spacing:0.0em;" class="mobile-right-padding-20">
+                  <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; color:#000000;  text-align:left; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb31a50e20ee17082d973c42ce0f5ebc92f5502719323c096ffacd03a68a67580a9265536fb9da1c1e39139f8450906e9275445a766c630f8a4" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#ffffff;">Dev Essentials portal</strong></a></p>
+                </td>
+              </tr>
+              
+              
+                           
+              <tr>
+                <td bgcolor="#32145A" align="left" style="font-size: 1px; line-height: 1px; padding-top:3px; padding-left: 0px; padding-right: 10px; text-align:left" class="mobile-left-padding-0">&nbsp;</td>
+                <td bgcolor="#32145A" align="left" style="font-size: 1px; line-height: 1px; padding-top:3px; padding-right: 50px; text-align:left;" class="mobile-right-padding-20">&nbsp;</td>
+              </tr>
+              <tr>
+                <td bgcolor="#32145A" align="left" style="padding-left: 0px; padding-right: 10px; text-align:left; vertical-align:top; padding-top:0px; font-size:16px; mso-line-height-rule:exactly; line-height:20px;" valign="top" class="mobile-left-padding-0"><span style="color: #ffffff; font-size: 20px;">&bull;</span></td>
+                <td bgcolor="#32145A" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; color:#000000; padding-right: 50px; text-align:left; letter-spacing:0.0em;" class="mobile-right-padding-20">
+                  <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; color:#000000;  text-align:left; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb39e796cbef5a76308b02d02bbc3509aaffc80ff2b64346bc143f00da44800dbf1a4e4411fcfda04c8648773191ec62006d0c57d8cdb9d93ec" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#ffffff;">Getting started with Visual Studio</strong></a></p>
+                </td>
+              </tr>
+              
+              
+                            
+              <tr>
+                <td bgcolor="#32145A" align="left" style="font-size: 1px; line-height: 1px; padding-top:3px; padding-left: 0px; padding-right: 10px; text-align:left" class="mobile-left-padding-0">&nbsp;</td>
+                <td bgcolor="#32145A" align="left" style="font-size: 1px; line-height: 1px; padding-top:3px; padding-right: 50px; text-align:left;" class="mobile-right-padding-20">&nbsp;</td>
+              </tr>
+              <tr>
+                <td bgcolor="#32145A" align="left" style="padding-left: 0px; padding-right: 10px; text-align:left; vertical-align:top; padding-top:0px; font-size:16px; mso-line-height-rule:exactly; line-height:20px;" valign="top" class="mobile-left-padding-0"><span style="color: #ffffff; font-size: 20px;">&bull;</span></td>
+                <td bgcolor="#32145A" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; color:#000000; padding-right: 50px; text-align:left; letter-spacing:0.0em;" class="mobile-right-padding-20">
+                  <p style="Margin:0; padding:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:16px; mso-line-height-rule:exactly; line-height:20px; color:#000000;  text-align:left; letter-spacing:0.0em;"><a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb3c4d8a6ea69332f36faa2fd795e19e4f0cbb6ccba4229787ed7f734af72b49a65e7ec980c17b863edbc963a992411eeef2aa5870f3845a594" style="text-decoration:underline; color:#5C2D91;"><strong style="font-weight:normal; text-decoration:underline; color:#ffffff;">Getting started with Azure</strong></a></p>
+                </td>
+              </tr>
+              
+  
+              
+
+			  
+			  
+			  
+            </tbody></table>
+          </td>
+        </tr>
+        
+      
+    </tbody></table>
+  </td>
+</tr>
+</tbody></table>
+	  </td>
+	  </tr>
+	  <!-- Quick Link end -->
+		
+	       <!-- BEGIN: FOOTER -->
+                        <tr>
+                        <td style="padding: 0px 20px 0px 20px; background-color: #f0f0f0;" class="mobile-side-padding-10">
+
+                        <div style="background-color: #f0f0f0;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+						
+                        <tr>
+                        <td align="left" width="100%" valign="top" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; background:#f0f0f0; color:#505050; font-size:10px; ">
+						
+						<p style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; padding:0; margin:0; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; letter-spacing:-0.01em;">
+						
+                      	</p>
+						
+                        
+
+
+                        <!-- // FOOTER OVERRIDE -->
+
+
+                        
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+  <tr>
+    <td bgcolor="#F0F0F0" style="vertical-align:top; padding-top:20px;" valign="top">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        
+        
+        
+        
+        <tr>
+          <td bgcolor="#F0F0F0" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; padding-top:0px; padding-left:0px; padding-right:0px; text-align:left; letter-spacing:-0.01em;" class="mobile-side-padding-20">
+            <p style="padding:0; margin:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; letter-spacing:-0.01em;">
+            
+            
+               This email was sent to you as part of your Visual Studio Dev Essentials membership. If you wish to opt out of this program, please go to your <a alias="CTA-subscriptions" style="color: #6b6b6b; text-decoration:underline;" href="https://my.visualstudio.com/subscriptions">subscriptions</a> page and click on the "Leave program" link. <a alias="CTA-Terms and conditions" style="color: #6b6b6b;  text-decoration:underline;" href="https://go.microsoft.com/fwlink/?linkid=2093141">Terms and conditions</a>
+            
+            </p>
+          </td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td bgcolor="#F0F0F0" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; padding-top:18px; padding-left:0px; padding-right:0px; text-align:left; letter-spacing:-0.01em;" class="mobile-side-padding-20">
+            <p style="padding:0; margin:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; letter-spacing:-0.01em;">
+            
+            
+               <a  target="_blank" href="https://click.email2.office.com/?qs=db576fc91cac4fb32ece606a8902c2fa65ca3793b29076d4ea229b851df3ab3d17eeae7ddd659cc20f64cafe8527cf2f506a8eadae951c97188e6ad0c66e16fa" style="color:#6b6b6c; text-decoration:underline;"><strong style="font-weight:normal; color:#6b6b6c; text-decoration:underline;">Datenschutzbestimmungen</strong></a>
+            
+            </p>
+          </td>
+        </tr>
+        
+        
+        
+        
+        
+        <tr>
+          <td bgcolor="#F0F0F0" align="left" style="font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; padding-top:18px; padding-left:0px; padding-right:0px; text-align:left; letter-spacing:-0.01em;" class="mobile-side-padding-20">
+            <p style="padding:0; margin:0; font-family:'Segoe UI','Segoe UI Regular',SUWR,Arial,sans-serif; font-size:10px; mso-line-height-rule:exactly; line-height:14px; color:#6b6b6b; letter-spacing:-0.01em;">
+            
+            
+               Microsoft Corporation, One Microsoft Way, Redmond, WA 98052 USA
+            
+            </p>
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="left" bgcolor="#F0F0F0" style="padding-top:20px; padding-bottom:30px; padding-left:0px; padding-right:0px;" class="mobile-side-padding-20">
+            <table cellspacing="0" cellpadding="0" border="0" role="presentation">
+              <tr>
+                <td align="left" bgcolor="#F0F0F0" ><img alt="Microsoft" src="https://asgcdn.azureedge.net/sfdc/Logos/logo_microsoft.png" width="99" style="display:block; outline:none; -ms-interpolation-mode:bicubic; border:none;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+                        	
+
+                        </td>	
+                        </tr>				  
+
+                        </table>
+                        </div>
+
+                        </td>
+                        </tr>
+        <!-- END: FOOTER -->
+	       </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
+
+--1Hhf2TM3fIyU=_?:--
+
+

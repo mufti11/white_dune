@@ -156,6 +156,7 @@ public:
                     long ret = -1;
                     if (m_capacity < m_size)
                         return -1;
+                    bool stopped = false;
                     #pragma omp parallel
                     {
                         #pragma omp for
@@ -164,9 +165,12 @@ public:
                                ret = i;
                                #pragma omp cancel for
                                i = m_size; // break
+                               stopped = true;
                            }
                         #pragma omp barrier
                     }
+                    if (!stopped)
+                        return -1; // not found
                     return ret;
                 }
     long        findBackward(T t) const {
@@ -175,6 +179,12 @@ public:
                     for (long i = (long)m_size - 1; i >= 0; i--)
                         if (m_data[i] == t) return i;
                     return -1;
+                }
+    long        findNumItems(T t) const {
+                    long items = 0;
+                    for (long i = (long)m_size - 1; i >= 0; i--)
+                        if (m_data[i] == t) items++;
+                    return items;
                 }
     bool        contains(T t) const {
                     if (find(t) == -1)

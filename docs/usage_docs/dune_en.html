@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */  
   
- last update: white_dune-1.717
+ last update: white_dune-1.876
 -->   
 <head>
  <title>"White_dune" documentation</title> 
@@ -195,6 +195,9 @@
    <ul>
     <li>
      <h4><a href="#coordinate">Changing coordinate based nodes</a></h4>
+    </li>
+    <li>
+     <h4><a href="#insets">Cut "Windows" in a box</a></h4>
     </li>
     <li>
      <h4><a href="#convexhull">Convex hull</a> 
@@ -2960,6 +2963,29 @@ There are a few handy modelling actions in the <em>Action</em> menu:
  </li>
 </ul>
 </p>
+<h4><a name="insets">Cut "windows" in a Box</a>
+<small>(new in Version 1.876)</small></h4>
+<p>
+In white_dune there is the possibility, to cut out a small surface out
+of a surface ("inset").<br>
+With a box converted to IndexedFaceSet, there is also the possibility to cut out
+multiple "windows".<br>
+To do this, a face of the box need to be selected.<br>
+<img src="insets1.png"><br>
+Use <em> (IndexedFace)Set -&gt; inset(s)</em><br>
+<img src="insets2.png"><br>
+There is a dialog, you can input x and y (there are some limits).<br>
+In the next image, all faces of this sode are selected<br>
+<img src="insets3.png"><br>
+In the next image, all "windows" are selected.<br>
+<img src="insets4.png"><br>
+Use <em> (IndexedFace)Set -&gt; split away selected faces </em>,
+select, the 2. Shape<br> 
+<img src="insets5.png"><br>
+and use <em> edit -&gt; delete </em>
+to cut out the windows.<br>
+<img src="insets6.png"><br>
+</p>
 <h4><a name="convexhull">Convex hull</a><small>(new in Version 1.256)</small></h4>
 <p>
 <em>Actions -&gt; Convex hull</em> creates a convex IndexedFaceSet from
@@ -3568,5 +3594,6 @@ this feature without knowing exactly what you are doing !
 </p>
 </body>
 
- 
+
+
 

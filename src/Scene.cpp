@@ -6707,7 +6707,8 @@ Scene::copyRoutesToScene(Node *node) {
              i = i->next()) {
             if (list == NULL) 
                 list = new CommandList();
-            list->append(new RouteCommand(i->item().getNode(), i->item().getField(),
+            list->append(new RouteCommand(i->item().getNode(), 
+                                          i->item().getField(),
                                           node, j));
         }                                        
     for (j = 0; j < fromProto->getNumEventOuts(); j++)

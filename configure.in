@@ -6,6 +6,8 @@ AC_INIT()
 
 SELFDIR=`dirname $0`/
 
+echo '#define FFMPEG 0' > $SELFDIR/src/config.h
+
 AC_CONFIG_HEADER($SELFDIR/src/config.h)
 
 OS=`uname`
@@ -48,9 +50,14 @@ else
 fi
 export CPPFLAGS
 
-dnl guess ffmeg flags 
-CPPFLAGS="$CPPFLAGS -I/usr/include/ffmpeg/ "
-export CPPFLAGS
+if test "X_'ls -d I/usr/include/ffmpeg/ 2>/dev/null" != "X_" ; then
+   dnl guess ffmeg flags 
+   CPPFLAGS="$CPPFLAGS -I/usr/include/ffmpeg/ "
+   export CPPFLAGS
+else
+   # avoid ffmpget check for mageia Linux which misses something in /usr/include
+   FFMPEG=no
+fi
 
 dnl Check for compiler programs
 
@@ -113,6 +120,7 @@ AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use c
 
 AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version of the CGAL library,
             CGALHEADERS=yes)
+CGALHEADERS=yes
 
 AC_ARG_WITH(omp,--without-omp             do not use OpenMP,
             OMP=no)
@@ -392,7 +400,12 @@ export RC_YACC
 AC_SUBST(RC_YACC)
 AC_PROG_LEX
 
-RC_LIBS=$LEXLIB
+if test "X_$LEX" = "X_lex" ; then
+    RC_LIBS=-ll
+else
+    RC_LIBS=-lfl
+fi
+
 export RC_LIBS
 AC_SUBST(RC_LIBS)
 
@@ -1604,6 +1617,7 @@ libavcodec libavutil libavformat libswscale libswresample
 
 EOF
          FFMPEG_WARNING="no usable ffmpeg libraries: no rendering of MovieTexture"
+         AC_DEFINE_UNQUOTED(HAVE_FFMPEG,0)
    else
       AC_DEFINE(HAVE_FFMPEG)
    fi
@@ -1916,6 +1930,11 @@ fi
 if test "X_$ANT" != "X_" ; then
    AC_DEFINE_UNQUOTED(HAVE_ANT,"${ANT}")
 fi
+
+if test X_`ls -d /usr/include/X11/Xmu 2>/dev/null` != X_ ; then
+    AC_DEFINE_UNQUOTED(HAVE_INCLUDE_X11_XMU,"1")
+fi
+
 
 LIBS="$LIBS $EXTRA_LIBS"
 

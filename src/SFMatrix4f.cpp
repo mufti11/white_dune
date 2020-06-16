@@ -83,7 +83,7 @@ SFMatrix4f::readLine(int index, char *line)
 }
 
 int 
-SFMatrix4f::writeData(int f, int i)
+SFMatrix4f::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g %g %g  %g %g %g %g  %g %g %g %g  %g %g %g %g", 
                        m_value[0], m_value[1], m_value[2], m_value[3], 
@@ -93,7 +93,7 @@ SFMatrix4f::writeData(int f, int i)
 }
 
 int 
-SFMatrix4f::write(int f, int indent)
+SFMatrix4f::write(int f, int indent) const
 {
     RET_ONERROR( mywritef(f, "%g %g %g %g\n  %g %g %g %g\n  %g %g %g %g\n  %g %g %g %g\n", 
                        m_value[0], m_value[1], m_value[2], m_value[3], 
@@ -107,7 +107,7 @@ SFMatrix4f::write(int f, int indent)
 }
 
 int
-SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag)
+SFMatrix4f::writeC(int filedes, const char* variableName, int languageFlag) const
 {
     RET_ONERROR( mywritestr(filedes, "m_") )
     RET_ONERROR( mywritestr(filedes, variableName) )

@@ -30,7 +30,7 @@ public:
     virtual int         getType() const=0;
     virtual const char *getTypeName() const=0;
 
-    virtual int         writeData(int filedes, int i) = 0; 
+    virtual int         writeData(int filedes, int i) const = 0; 
 
     virtual bool        readLine(int index, char *line)=0;
 

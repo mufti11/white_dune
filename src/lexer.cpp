@@ -2,7 +2,7 @@
 #include "unistd.h"
 #endif
 
-#line 3 "<stdout>"
+#line 2 "<stdout>"
 
 #define  YY_INT_ALIGNED short int
 
@@ -778,8 +778,8 @@ void toComment(char* string)
         addToCurrentComment(string);
 }
 #define YY_NO_UNISTD_H 1
+#line 778 "<stdout>"
 #line 779 "<stdout>"
-#line 780 "<stdout>"
 
 #define INITIAL 0
 
@@ -994,7 +994,7 @@ YY_DECL
 #line 105 "lexer.l"
 
 
-#line 995 "<stdout>"
+#line 994 "<stdout>"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1532,7 +1532,7 @@ YY_RULE_SETUP
 #line 429 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1533 "<stdout>"
+#line 1532 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

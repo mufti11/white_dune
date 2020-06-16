@@ -3105,10 +3105,10 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&inset factor:",IDC_STATIC,15,22,62,8
     EDITTEXT        IDC_VALUE,85,20,40,14,ES_AUTOHSCROLL
-    LTEXT           "&x:",IDC_STATIC,15,65,14,8
-    EDITTEXT        IDC_NUM_X,29,65,28,14,ES_AUTOHSCROLL
-    LTEXT           "&y:",IDC_STATIC,68,65,14,8
-    EDITTEXT        IDC_NUM_Y,82,65,28,14,ES_AUTOHSCROLL
+    LTEXT           "&x:(1...3)",IDC_STATIC,20,62,42,8
+    EDITTEXT        IDC_NUM_X,60,60,20,14,ES_AUTOHSCROLL
+    LTEXT           "&y(1...3):",IDC_STATIC,85,62,36,8
+    EDITTEXT        IDC_NUM_Y,120,60,20,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,140,5,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,140,25,50,14
 END
@@ -3445,7 +3445,8 @@ BEGIN
     IDS_PT_LOADING_FILE        "Loading file.. (%d%%)"
     IDS_PT_SAVE_CHANGES        "Save changes to %s ?"
     IDS_PT_VERTEX_SELECTED     "selected: %s[%d] %f %f %f"
-    IDS_PT_FACE_SELECTED      "selected: %s"
+    IDS_PT_FACE_SELECTED       "selected: %s"
+    IDS_PT_LINES_SELECTED      "selected: %s"
 END
 
 STRINGTABLE DISCARDABLE

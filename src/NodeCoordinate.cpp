@@ -235,9 +235,25 @@ NodeCoordinate::drawHandles(void)
 
             glLoadName(numLine);
             glBegin(GL_LINES);
-            Vec3f vec = point()->getValue(ci->getValue(numLine));
+            if (numLine >= ci->getSFSize()) {
+                glEnd();                
+                continue;
+            }
+            if (ci->getValue(numLine) >= point()->getSize()) {
+                glEnd();                
+                continue;
+            }
+           Vec3f vec = point()->getValue(ci->getValue(numLine));
             Vec3f w = state.project(vec);
             glVertex3f(w.x, w.y, w.z);
+            if (mesh->getLine(i).end >= ci->getSFSize()) {
+                glEnd();                
+                continue;
+            }
+            if (ci->getValue(mesh->getLine(i).end) >= point()->getSize()) {
+                glEnd();                
+                continue;
+            }
             vec = point()->getValue(ci->getValue(mesh->getLine(i).end));
             w = state.project(vec);
             glVertex3f(w.x, w.y, w.z);
@@ -344,6 +360,40 @@ NodeCoordinate::getHandle(int handle, int *constraint, int *field)
             return Vec3f(0.0f, 0.0f, 0.0f);
         MFInt32 *ci = mesh->getCoordIndex();
         if (handle >= 0 && handle < ci->getSFSize()) {
+            MyString status = "";
+            if (handle >= 0) {
+                status.catInt(handle);
+                status += ": ";
+                status += " (";
+                int h1 = handle;
+                if (h1 >= point()->getSize()) {
+                   Vec3f first = point()->getValue(ci->getValue(handle));
+                   return first;
+                }
+                Vec3f vec = point()->getValue(ci->getValue(h1));
+                status.catFloat(vec.x);
+                status += ",";
+                status.catFloat(vec.y);
+                status += ",";
+                status.catFloat(vec.z);
+                status += ")";
+                status += " ";
+                int h2 = mesh->getLine(handle).end;
+                if (h2 >= point()->getSize()) {
+                    Vec3f first = point()->getValue(ci->getValue(handle));
+                    return first;
+                }
+                vec = point()->getValue(ci->getValue(h2));
+                status += "(";
+                status.catFloat(vec.x);
+                status += ",";
+                status.catFloat(vec.y);
+                status += ",";
+                status.catFloat(vec.z);
+                status += ")";
+                TheApp->PrintMessageWindowsString(IDS_LINES_SELECTED, 
+                                                  (const char *)status);
+            }
             Vec3f first = point()->getValue(ci->getValue(handle));
             return first;
         }

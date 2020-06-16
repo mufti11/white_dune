@@ -1,0 +1,442 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * dune_overview_de.html 
+ *
+ * Copyright (C) 2020 J. "MUFTI" Scheurich
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,  
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ -->
+<head>
+ <title>"white_dune" Overview</title> 
+</head> 
+<body>
+<H1>White_dune</H1>
+<p>
+<a href="https://wdune.ourproject.org/">White_dune</a> is a free (GPL)
+Cross-Plattform (Linux, FreeBSD, MacOSX, Microsoft Windows, Rasberry PI) 
+3D-modeller and animationtool.
+</p>
+<p>
+
+With white_dune you can create/change 3D objects and animate them.
+The result can be shown in any webgl enabled web browser or can be 
+converted to the RIB format for movie creation or can be complied to a 
+usual C or C++ OpenGL-rogram.
+</p>
+<p>
+<H2>Installation and configuration</H2>
+In Dezember 2019 white_dune was included into Fedora Linux 32
+(Installation with "dnf install wdune wdune-docs").<br>
+For Ubunutu Linux-Distributionen there is a "snap" Package.<br>
+In Debian und Ubuntu there is a white_dune-Package available, 
+that is totally deprecated.<br>
+There are packages with installation instructions on the white_dune homepage
+available for the following Linux distributions:
+<ul>
+ <li>
+  OpenSUSE LEAP 15.2 Linux<br> 
+  Installation with zypper and rpm
+ </li>
+ <li>
+  Debian Buster Linux<br>
+  Installation with dpkg and apt
+ </li>
+ <li>
+  Ubuntu 18.04 LTS Linux<br>
+  Installation with dpkg and apt
+ </li>
+ <li>
+  Rasbian 10 Linux for the Rasberry PI<br>
+  Installation with dpkg and apt
+ </li>
+ <li>
+  Arch Linux for ARM-Rechner<br>
+  Installation with pacman
+ </li>
+ <li>
+  Arch Linux for PCs<br>
+  Installation with pacman
+ </li>
+</ul>
+The configuration in white_dune takes place via dialogs in the "Options"-menu,
+which end up in Linux in the text file $HOME/.dunerc after the end of the
+ program.
+<br>
+<br>
+Internally, white_dune uses the ISO standard X3D/VRML97 as the storage format.
+Via Options white_dune can be changed from the English language into the
+German (or Italian or French) language
+<br>
+Under Linux white_dune comes with 2 Icons:<br>
+<ul>
+ <li> 
+  The 4kids icon starts a GUI, that is suitable for Beginners and children.
+ </li>
+ <li>
+  The usual icon starts a GUI, that is made for X3D/VRML97 users
+  (e.g. to add interaktion r scripting to a Architectur-3D-Modell). 
+ </li>
+</ul> 
+With the 4kids-version let you generate (with some practice)
+the animation of the following screenshot in 15 minutes.
+<br><img src="bild1.png"><br> 
+There are <a href="https://wdune.ourproject.org/docs/index.html">Tutorials</a>, 
+hoe white_dune can be used in 3D modeling and animation.
+</p>
+<H2>History</H2>
+<p>
+
+White_dune  did not start with the claim to be a tool for 3D modeling
+and animation, but was initially a special tool for
+VRML97 3D files. <br>
+In 1999 the Canadian Stephan F. White laid the most important foundations
+of the program, but gave up in 2000. <br>
+On May 31, 2000 it was decided to fork the project under the name "white_dune".
+<br>
+Since then, it has been massively expanded.
+</p>
+<H2>Modelling</H2>
+<p>
+White_dune has 8 main modelling features:
+<ul>
+ <li>
+  NURBS<br>
+  NURBS describes a formula that can be used with just a few
+  control-points, that describe many mesh-points.<br>
+  A NURBS ball needs e.g. only 20 control points and can then with the
+  By moving the control points, it can easily be changed to a NURBS heart.
+<br><img src="bild8.png"><img src="bild9.png">).<br> 
+  With the 2D-NURBS formula all mathematical curves can be described,
+  also curves with corners and tips. <br>
+  In white_dune all primitives (box, ball, cylinder and cone),
+  as well as all super formula-based surfaces can be transformed into 
+  NURBS objects
+ </li>
+ <li>
+  Superformula<br>
+  The superformula is based on a concept similar to NURBS: <br>
+  With only 12 (in white_dune 24) parameters, the mesh-points can be
+  created for many symmetrical surfaces:
+<br><img src="bild10.png"><br> 
+  For example, with a super formula starfish 3D model
+  control the number of starfish arms with just one parameter.
+  white_dune knows the following super formula-based objects:
+  <ul>
+   <li>
+    SuperShape: the Superformel is used in two dimensionens
+   </li>
+   <li>
+    Superformula in one dimension:
+    <ul>
+     <li>
+      SuperExtrusinon: <br>Torus and tube/horn
+     </li>
+     <li>
+      SuperRevolver: <br>Revolving shape (e.g. mushroom)
+     </li>
+     <li>
+      SuperEllisoid: <br>A special case of the superformula: 
+                         with only 2 (in white_dune 12) parameters
+                         a sphere, octraeder and box and all intermediate
+                         forms can be described
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li>
+  Extrusion:<br>
+  The extrude command can be used to pull out certain polygons from a mesh
+  (basics: box converted to a mesh (IndexedFaceSet) and "inset" command)
+  <br><img src="bild11.png"><img src="bild12.png">
+ </li>
+ <li>
+  Subdivision<br>
+  The Subdivide command is often used after the Extrude command. <br>
+  It can be used to make the (closed if possible) mesh object more rounded.
+  <br><img src="bild13.png"><img src="bild14.png">
+ </li>
+ <li>
+  Boolean Operations<br>
+  With Boolean operations, 3D objects can be combined or subtraced
+  from each other.
+  <br><img src="bild15.png"><img src="bild16.png">
+ </li>
+ <li>
+  Mesh-Reducer<br>
+  There is a parameter "creaseAngle" for Mesh (IndexedFaceSet in X3D), 
+  to influcence face normals in a way so the edges are hidden,
+  ,<br><img src="bild18.png"><br>
+  but the subdivide command let explode the number of Polygons in a quadratic
+  way.<br>
+  For a real-time 3D format like X3D or OpenGL it is important
+  to have a powerful mesh reducer available that
+  decreases the number of polygons, but the rough shape of the mesh is 
+  changed as little as possible
+  <br><img src="bild19.png"><br>
+  After the mesh reducer command, the extrude command is often used.
+  benutzt.
+ </li>
+ <li>
+  Vertex-Modifier<br>
+  It can be used to pull dents out or push in dents of mesh or NURBS objects.
+  This modeling ability requires that many mesh-points
+  or NURBS control-points are available.
+  <br><img src="bild21.png"><img src="bild22.png"><br>
+  There is a command for NURBS objects in white_dune that specifies the number of
+  NURBS control points.
+ </li>
+ <li>
+  Convex hull<br>
+  Many different objects can be created with the convex hull.
+  Select points (e.g. mesh-points or
+  NURBS control-points) two times and create a mesh with an enclosing hull.
+  <br><img src="bild25.png"><img src="bild26.png">
+ </li>
+</ul>
+</p>
+<h2>Animation</h2>
+<p>
+White_dune has 2 Animation-Possibilities:
+<ul>
+ <li>
+ Normal animation:<br>
+  This can animate everything that can be animated in X3D.
+  The animation can be influenced in a "ChannelView" window
+  or an animation (e.g. color with the color wheel) can be recorded
+  with the "Record and Play" buttons.
+ </li>
+ <li>
+  curven-animation:<br>
+  This is only allowed for the "Transform" node (move and rotate objects)
+  and "Viewpoint" (moving and rotating the camera).
+  An object group or the camera follows a path.
+  <br><img src="bild23.png"><br>
+ </li>
+</ul>
+</p>
+<h2>Movie creation</h2>
+When there is a X3D-Datei with a animation, you can use<br>
+<br>
+$ run_dune_and_aqsis.sh datei.x3dv<br>
+<br>
+to call white_dune and the free Renderman movierenderer "aqsis" in a way,
+that the pictures are accounted in paralell.<br>
+<br>
+If the program "mencoder" is available (e.g. under Ubuntu oder Debian Linux),
+a movie-file "datei.mp4" would be created.<br>
+<br>
+If not, "aqsis" creates many picure files, which an be viewed
+with imagemagicks "animate":<br>
+<br>
+$ animate -alpha off datei*.tiff<br>
+</p>
+<h2>Comparision with Blender</h2>
+<p>
+ <ul>
+  <li>
+   Blender has an important 3D object "Metaballs". Is can easily be used to
+   create interconnected 3D objects.
+  </li>
+  <li>
+   Blender has more tools to change mesh-objects.
+  </li>
+  <li>
+   With Blender you can control the material properties (e.g. reflection) for
+   the individual images better than in white_dune, which is made for    
+   real-time 3D graphics
+  </li>
+  <li>
+   Blender has material collections available for download
+  </li>
+  <li>
+   The vertex modifier in Blender can do not only dents and bumps, but
+   also painting related bulges with the mouse  </li>
+  </li>
+  <li>
+   The Vertex modifier in Blender cannot edit NURBS objects.
+  </li>
+  <li>
+   There are some NURBS operations in white_dune that are not available
+   in Blender.
+  </li>
+  <li>
+   Bender has tools for hair, white_dune doesn't
+  </li>
+  <li>
+   Blender is far more difficult to use than white_dune 4kids
+  </li>
+ </ul>
+</p>
+<h2>white_dune and the graphics performance of a system</h2>
+<p>
+White_dune is a real-time 3D program.<br>
+The ease of use depends on the graphics card and the number of
+used objects. If the graphics card is overloaded, the objects are jerky
+in animation and it becomes difficult to edit, move or rotate an object.<br>
+A (NURBS) object in white_dune has 3658 polygons.
+<br>
+Unfortunately there is a problem with the open source driver for Linux
+NVIDIA graphics cards (noveau driver): certain graphics card models
+sometimes freeze hard. Then you have to use the special Nvidia driver to
+install the graphics card. <br>
+<br>
+The following table shows the limit up to how many objects
+(without morphing) can still be represented as reasonably runny:<br>
+<br>
+<table>
+ <thead>
+  <tr>
+   <th>Graphicscard</th><th>Class</th><th>System</th><th>System-frequency</th><th>NURBS-Objects</th>
+  </tr>
+ </thead>   
+ </tbody>   
+  <tr>            
+  <td>PowerVR GX6250</td><td>1</td><td>ARM Chromebook</td><td>4x2.0 GHz</td><td>1</td>
+ </tr>
+ <tr>
+  <td>ATI Radeon HD 6290</td><td>2</td><td>ADM C-60 Netbook</td><td>2x1.0 GHz</td><td>1</td>
+ </tr>
+ <tr>
+  <td>Intel HD Graphics 3000</td><td>2</td><td>Intel I5 Laptop</td><td>4x2.5 GHz</td><td>11
+ </tr>
+ <tr>
+  <td>VideoCore VI</td><td>2</td><td>Raspberry PI 4</td><td>4x1.5 GHz</td><td>10</td>
+ </tr>
+ <tr>
+  <td>Nvidia NVS 5200M</td><td>3</td><td>Intel I7 Laptop</td><td>8x2.2 GHz</td><td>16</td>
+ </tr>
+ <tr>
+  <td>Nvidia GT 320</td><td>3</td><td>Core2Duo Macbook</td><td>4x2.4 GHz</td><td>24</td>
+ </tr>
+ </tbody>   
+</table>
+There are faster Systems...<br>
+<br>
+Class:
+<table>
+ <tr>
+  <td>1:</td><td>no 3D-Graphics-driver</td><td>(anything has to be accounted by 
+                                               the CPU)</td>
+ </tr>
+ <tr>
+  <td>2:</td><td>Integrated Graphics</td><td>(Shared Memory Graphics)</td>     
+ </tr>
+ <tr>
+  <td>3:</td><td>Dedicated Graphics</td><td>(memory on the graphicscard
+                                         is only used by the graphicscard)</td>
+</tr>
+</table>
+Obviously, a better graphics card is for graphics performance
+more important than the CPU.<br>
+<br>
+What to do if it stutters because the graphics performance is insufficient ?
+<br>
+<br>
+Start white_dune with the option "-tessellation"<br>
+e.g. "$ dune -tessellation 16 -4kids datei.x3dv" 
+<ul>
+ <li>
+  1 (NURBS-)Objekt has now 480 Polygons, but do not look strongly differently
+  from the default (-tessellation 32)
+ </li>
+ <li>
+  4 times more (NURBS) objects possible or less jerky
+ </li>
+ <li>
+  Only the display has "more edges", not the (NURBS-)object data
+ </li>
+ <li>
+   The display becomes more smooth again when the file (without 
+   "-tessellation") runs on a faster computer with a better graphics card
+ </li>
+ <li>
+  Rendering with aqsis (for movie creation) is not affected
+ </li>
+ <li>
+  X3D problem: <br>
+  (NURBS) objects cannot be painted <br>
+  As an alternative, images/textures (e.g. * .PNG files) can be placed on the
+  3D objects
+ </li>
+</ul>
+</p>
+<h2>white_dune for children</h2>
+<p>
+White_dune "4kids" was used for children's computer animation projects. <br>
+For example, a small animation of an alien spaceship landing was made on two 
+afternoons in the Leonberg "Stadtranderholung" in 2006/2007.
+<br><img src="bild6.png"><br>
+The children were between 7 and 13 years old.
+</p>
+<h2>white_dune and human animation</h2>
+<p>
+White_dune supports as X3D Editor all visible X3D Befehle
+including "HAnim" (human animation).<br>
+<br><img src="bild7.png"><br>
+With <a href=http://www.makehumancommunity.org/>the "makehuman"-program</a>
+(a Blender-enhencement) a configurable mesh of a human can be created.
+You have to take care, that only relative few Mesh-points are exported.<br>
+The mapping of single meshpoints to body-parts (e.g. arm or feet)
+is made in white_dune, but this alot of work.
+At the end, the single joints can be rotated, so you can create an animation.
+</p>
+<h2>How can i support the development of white_dune ?</h2>
+<p>
+The white_dune menues are available in englisch, french, italian and german
+Into portugenese only the "4kids"-menue has been translated.
+The Dialogs are partitialy translated, only the german and english dialogs
+and error-messages has been full translated.
+<br>
+<br> 
+For the translation, you need not to be a programmer, cause
+Micro$oft Resource-Files are used.
+This means, that Words/Sentences a enclosed in "double quotes".<br>
+<br>
+If you have a problem with white_dune (or a new idea), you can send a email
+to:<br>
+mufti11@web.de<br>
+<br>
+white_dune has ca. 300 000 Lines in C++/C/.h/.m4-file, it is a
+relativ big program.<br>
+<br>
+Intern white_dune uses a 2D-GUI-API in the Programmierlanguage C namend
+"libswt" (i think it should mean "Stephan White Toolkit").<br>
+Under Linux, motif and OpenGL 2 is used.<br>
+This is a bit oldfashioned.<br>
+The big advance of it, is that only one patch has been need to written
+cause of a API change.<br> 
+The Patch was cause of lesstif, a Open-Source-clone of motif.
+Now is motif for Linux available under a open-source-licence, so
+lesstif is not developed anymore.
+<br>
+<br>
+When white_dune crashes, it trys to rescue the X3D-data in a file.
+<br>
+This only works, if the internal datastructure is still intact,
+e.g. at a crash in the graphics code.
+<br>
+white_dune under Linux usually calls a "rcs" 
+(newer versions: "git") revision-contol-system-command.
+Afterwards, all changes to an X3D file can be made understood and a specific 
+version from the repository can be restored.
+<br>
+This is a very important feature, if you work with children.
+</p>

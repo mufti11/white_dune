@@ -225,5 +225,6 @@ protected:
         STIMER          m_timer;
         float           m_zoom;
         bool            m_floodedWarning;
+        int             m_width;
 };
 

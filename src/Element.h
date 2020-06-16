@@ -86,19 +86,12 @@ public:
              m_elementType = EL_UNKNOWN;
              m_originalProto = NULL;
              m_originalField = -1;
+             m_id = 0;
              }
           IsElement(Node *node, int field, int elementType, 
-                    Proto *origProto, int origField) 
-             { 
-             m_nodeIndex = -1; 
-             m_node = node; 
-             m_field = field; 
-             m_elementType = elementType;
-             m_originalProto = origProto;
-             m_originalField = origField;
-             }
+                    Proto *origProto, int origField); 
     Node* getNode(void)  { return m_node; }
-    int   getField(void) { return m_field; }
+    int   getField(void);
     int   getElementType(void) { return m_elementType; }
     int   getNodeIndex(void) { return m_nodeIndex; }
     void  setNodeIndex(int nodeIndex) { m_nodeIndex = nodeIndex; } 
@@ -109,11 +102,12 @@ protected:
     Proto *m_originalProto;
     int    m_originalField;
     int    m_elementType;
+    long   m_id;
 };
 
 class Element {
 public:
-                        Element() {}
+                        Element() {m_x3dName = "";m_validNumIs = 0;}
                         Element(const Element *ptr);
     virtual            ~Element() {}
     virtual int         getElementType() const = 0;
@@ -133,7 +127,7 @@ public:
 
     void                addIs(Node *node, int field, int elementType,
                               Proto *origProto, int origField, int flags = 0);
-    int                 getNumIs(void) { return m_isArray.size(); }
+    long                getNumIs(void) const { return m_validNumIs; }
     Node               *getIsNode(int i) 
                             { 
                                 if (m_isArray[i])
@@ -142,6 +136,8 @@ public:
                             }
     int                 getIsField(int i) 
                             { 
+                            if (i > m_validNumIs - 1)
+                                return -1;
                             int ret = -1;
                             if (m_isArray[i] != NULL)
                                 ret = m_isArray[i]->getField();
@@ -170,6 +166,7 @@ protected:
     MyString            m_x3dName;
     int                 m_flags;
     MyArray<IsElement *> m_isArray;
+    long                m_validNumIs;
 
     MyString            m_appinfo;
     MyString            m_documentation;

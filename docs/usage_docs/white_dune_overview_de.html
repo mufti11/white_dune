@@ -1,0 +1,454 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+   "http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html> 
+<!--
+/*
+ * dune_overview_de.html 
+ *
+ * Copyright (C) 2020 J. "MUFTI" Scheurich
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file "COPYING" for details); if 
+ * not, write to the Free Software Foundation, Inc.,  
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ -->
+<head>
+ <title>"white_dune" &Uml;berlick</title> 
+</head> 
+<body>
+<H1>White_dune</H1>
+<p>
+<a href="https://wdune.ourproject.org/">White_dune</a> ist ein freier(GPL)
+Cross-Plattform (Linux, FreeBSD, MacOSX, Microsoft Windows, Rasberry PI) 
+3D-Modeller und Animationswerkzeug.
+</p>
+<p>
+Mit white_dune kann man 3D Objekte basteln/&auml;ndern und animieren, die man 
+auch &uuml;ber WebGL direkt im Webbrowser laufen lassen oder ins RIB renderman 
+Format (f&uuml;r die Film-Erzeugung) wandeln kann. Man kann das Ergebnis auch 
+in C oder C++ &uuml;bersetzen, so dass ein "normales" OpenGL-Programm entsteht.
+</p>
+<p>
+<H2>Installation und Konfiguration</H2>
+Im Dezember 2019 wurde white_dune in Fedora Linux 32 aufgenommen 
+(Installation mit "dnf install wdune wdune-docs").<br>
+F&uuml;r Ubunutu Linux-Distributionen steht ein "snap" Packet zur 
+Verf&uuml;gung.<br>
+In Debian und Ubuntu steht ein white_dune-Packet zur Verf&uuml;gung, das
+jedoch v&ouml;llig veraltet ist.<br>
+Auf der Homepage von white_dune stehen Pakete mit Installationsanleitungen
+f&uuml;r folgende Linux-Distibutionen zur Verf&uuml;gung:<br>
+<ul>
+ <li>
+  OpenSUSE LEAP 15.2 Linux<br> 
+  Installation mit zypper und rpm
+ </li>
+ <li>
+  Debian Buster Linux<br>
+  Installation mit dpkg und apt
+ </li>
+ <li>
+  Ubuntu 18.04 LTS Linux<br>
+  Installation mit dpkg und apt
+ </li>
+ <li>
+  Rasbian 10 Linux f&uuml;r den Rasberry PI<br>
+  Installation mit dpkg und apt
+ </li>
+ <li>
+  Arch Linux f&uuml;r ARM-Rechner<br>
+  Installation mit pacman
+ </li>
+ <li>
+  Arch Linux f&uuml;r PCs<br>
+  Installation mit pacman
+ </li>
+</ul>
+Die Konfiguration in white_dune erfolgt &uuml;ber Dialoge im Options-Men&uuml;, 
+die nach dem Programm-Ende unter Linux in der Textdatei $HOME/.dunerc landet.
+<br>
+<br>
+Intern benutzt white_dune den ISO-Standart X3D/VRML97 als Speicherformat.<br>
+<br>
+&Uuml;ber Options l&auml;sst sich white_dune von der englischen Sprache in die
+deutsche (oder italienische oder franz&ouml;siche) Sprache umstellen.<br>
+<br>
+Unter Linux kommt white_dune mit 2 Icons:<br>
+<ul>
+ <li> 
+  Das 4kids Icon startet ein GUI, das f&uuml;r Anf&auml;nger und Kinder 
+  geeignet ist.
+ </li>
+ <li>
+  Das normale Icon startet ein GUI, das f&uuml;r Benutzer, die X3D/VRML97 
+  einsetzen
+  (z.B. um Interaktion oder Scripting zu einem Architektur-3D-Modell 
+  hinzuzuf&uuml;gen), 
+  gedacht ist.
+ </li>
+</ul> 
+Mit der 4kids-Version l&auml;sst sich zum Beispiel mit etwas &Uuml;bung in 
+15 Minuten die Animation des folgenden Screenshots erzeugen.
+<br><img src="bild1.png"><br> 
+Es git <a href="https://wdune.ourproject.org/docs/index.html">Tutorials</a>, 
+wie white_dune bei,der 3D Modelling und bei der Animation eingesetzt werden 
+kann.
+</p>
+<H2>Geschichte</H2>
+<p>
+White_dune startete nicht mit dem Anspruch, ein Werkzeug für 3D Modellierung
+und Animation zu schaffen, sondern war am Anfang ein Spezialwerkzeug f&uuml;r
+VRML97 3D-Dateien.<br> 
+Im Jahr 1999 schuf der Kanadier Stephan F. White die wichtigsten Grundlagen 
+des Programms, gab aber im Jahr 2000 schon wieder auf.<br> 
+Am 31. Mai 2000 wurde entschieden, das Projekt unter dem Namen "white_dune" 
+weiterzuf&uuml;hren.<br>
+Seitdem wurde es massiv ausgebaut.<br>
+</p>
+<H2>Modellierung</H2>
+<p>
+White_dune hat zur Zeit 8 Haupt-Modelling-M&ouml;glichkeiten:
+<ul>
+ <li>
+  NURBS<br>
+  NURBS beschreibt eine Formel mit deren Hilfe man mit wenigen 
+  Konstrollpunkten viele Meshpunkte beschreiben kann.<br>
+  Eine NURBS-Kugel braucht z.B. nur 20 Kontollpunkte und kann dann mit dem
+  Verschieben der Kontollpunkte leicht in ein NURBS-Herz ver&auml;ndert werden
+<br><img src="bild8.png"><img src="bild9.png">).<br> 
+
+  Mit der 2D-NURBS-Formel lassen sich alle mathematischen Kurven beschreiben,
+  auch Kurven mit Ecken und Spitzen.<br>
+  In white_dune k&ouml;nnen alle Primitive (Box, Kugel, Zylinder und Kegel),
+  sowie alle Superformel-basierten Oberfl&auml;chen in NURBS-Objekte 
+  umgewandelt werden.
+ </li>
+ <li>
+  Superformel<br>
+  Die Superformel basiert auf einem &auml;hnlichen Konzept wie NURBS:<br>
+  Mit nur 12 (in white_dune 24) Parametern lassen sich die Meshpunkte 
+  vieler symetrischer Oberfl&auml;chen erzeugen:
+<br><img src="bild10.png"> 
+  So lassen sich zum Beispiel bei einem Superformel-Seestern-3D-Modell
+  die Anzahl der Seestern-Arme mit nur einem Parameter kontrollieren.
+  white_dune kennt die folgenden Superformel-basierten Objekte:
+  <ul>
+   <li>
+    SuperShape: benutzt die Superformel in zwei Dimensionen
+   </li>
+   <li>
+    Superformel in einer Dimension:
+    <ul>
+     <li>
+      SuperExtrusinon: <br>Torus und R&ouml;hre/H&ouml;rn
+     </li>
+     <li>
+      SuperRevolver: <br>Drehk&ouml;rper (z.B. Pilz)
+     </li>
+     <li>
+      SuperEllisoid: <br>Ein Spezialfall der Superformel: mit nur 2 
+                     (in white_dune 12) Parametern lassen sich 
+                      Kugel, Oktraeder, Box und Zwischenformen beschreiben   
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li>
+  Extrusion:<br>
+  Mit dem Extrude-Befehl lassen sich aus einer Mesh (Grundlage: Box konvertiert
+  zu Mesh/IndexedFaceSet und "inset" Befehl) bestimmte Polygone 
+  herausziehen.
+  <br><img src="bild11.png"><img src="bild12.png">
+ </li>
+ <li>
+  Subdivision<br>
+  Der Subdivide-Befehl wird h&auml;ufig nach dem Extrude-Befehl eingesetzt.<br>
+  Damit k&ouml;nnen (m&ouml;glichst geschlossene) Mesh-Objekt runder gemacht
+  werden.
+  <br><img src="bild13.png"><img src="bild14.png">
+ </li>
+ <li>
+  Boolean Operationen<br>
+  Mit Boolean Operationen k&ouml;nnen 3D-Objekte vereinigt oder voneinander
+  abgezogen werden.
+  <br><img src="bild15.png"><img src="bild16.png">
+ </li>
+ <li>
+  Mesh-Reducer<br>
+  Es gibt zwar den Parameter "creaseAngle" bei der eine Mesh (IndexedFaceSet 
+  in X3D), die Fl&auml;chennormalen so beeinflusst, dass die Kanten nicht mehr 
+  auffallen,<br><img src="bild18.png"><br>
+  aber der Subdivide-Befehl lässt die Polygonzal
+  der Mesh quadradrisch expoldieren.<br>
+  Deswegen ist es für ein Echzeit-3D-Format wie X3D oder OpenGL wichtig,
+  einen leistungsf&auml;higen Mesh-Reducer zur Verf&uuml;gung zu haben, der 
+  die Anzahl
+  der Polygone verringert, aber die grobe Form der Mesh m&ouml;glichst wenig 
+  ver&auml;ndert  <br><img src="bild19.png"><br>
+  Nach dem Mesh-Reducer Befehl wird h&auml;ufig wieder der Extrude-Befehl 
+  benutzt.
+ </li>
+ <li>
+  Vertex-Modifier<br>
+  Damit lassen sich Beulen aus Mesh- oder NURBS-Objekten herausziehen oder 
+  Beulen hineindr&uuml;cken.
+  Allerdings erfordert diese Modellierungs-M&ouml;glichkeit, dass viele Mesh- 
+  oder NURBS-Kontollpunkte zur Verf&uuml;gung stehen
+  <br><img src="bild21.png"><img src="bild22.png"><br>
+  Es gibt in white_dune einen Befehl f&uuml;r NURBS-Objekte, der die Anzahl der 
+  NURBS-Kontollpunkte ver&auuml;ndert.
+ </li>
+ <li>
+  Convex hull<br>
+  Mit der convex hull lassen sich viele verschiedene Objekte erzeugen.
+  Dabei werden 2 mal Punkte (z.B Mesh-Punke oder 
+  NURBS-Kontrol-Punkte) ausgew&auml;hlt und in einer Mesh so miteinenander 
+  verbunden, dass eine umschliessende H&uuml;lle ensteht).
+  <br><img src="bild25.png"><img src="bild26.png">
+ </li>
+</ul>
+</p>
+<h2>Animation</h2>
+<p>
+White_dune hat zur Zeit 2 Animations-M&oouml;glichkeiten:
+<ul>
+ <li>
+ Normale Animation:<br>
+  Damit l&auml;sst sich alles animieren, das in X3D animierbar ist.
+  Dabei kann in einem "ChannelView"-Fenster die Animation
+  beeinflussen oder eine Animation (z.B. Farbe mit dem Farb-Rad)
+  mit den "Record und Play" Buttons aufgenommen werden.
+ </li>
+ <li>
+  Kurven-Animation:<br>
+  Damit lässt sich nur die Knoten "Transform" (Verschieben und Drehen) 
+  und "Viewpoint" (Kamera Verschieben und Drehen) beeinflussen.
+  Dabei folgt eine Objektgruppe oder die Kamera einem Pfad.
+  <br><img src="bild23.png"><br>
+ </li>
+</ul>
+</p>
+<h2>Filmerzeugung</h2>
+Steht eine X3D-Datei mit einer Animation zur Verf&umml;gung, kann mit<br>
+<br>
+$ run_dune_and_aqsis.sh datei.x3dv<br>
+<br>
+dune und der freie Renderman Filmrenderer "aqsis" so aufgerufen werden,
+dass paralell an den Bildern gerechnet wird.<br>
+<br>
+Steht das Programm "mencoder" zur Verf&uuml;gung (z.B unter Ubuntu oder 
+Debian Linux),
+wird eine Film-Datei "datei.mp4" erzeugt.<br>
+<br>
+Ansonsten erzeugt "aqsis" viele Einzelbilder, die mit imagemagicks "animate"
+betrachtet werden k&oml;nnen:<br>
+<br>
+$ animate -alpha off datei*.tiff<br>
+</p>
+<h2>Vergleich mit Blender</h2>
+<p>
+ <ul>
+  <li>
+   Blender hat ein wichtiges 3D-Objekt "Metaballs" mit dem man auf einfachem 
+   Weg miteinander verbundene 3D-Objekte erzeugen kann
+  </li>
+  <li>
+   Blender hat mehr Werkzeuge um Mesh-Objekte zu ver&auml;ndern
+  </li>
+  <li>
+   Mit Blender kann man die Materialeigenschaften (z.B Spiegelung) f&uuml;r 
+   die einzelnen Bilder besser kontrollieren als in white_dune, das f&uuml;r 
+   Echtzeit-3D-Graphik gemacht ist
+  </li>
+  <li>
+  F&uuml;r Blender gibt es Materialien-Sammlungen zum Herunterladen
+  </li>
+  <li>
+   Der Vertex-Modifier in Blender kann nicht nur Dellen und Beulen, sondern
+   auch das Malen von zusammenh&auml;ngenden Ausbeulungen mit der Maus
+  </li>
+  <li>
+  Der Vertex-Modifier in Blender kann keine NURBS-Objekte bearbeiten.
+  </li>
+  <li>
+   Es gibt einige NURBS-Operationen in white_dune, die in Blender nicht 
+   vorhanden sind 
+  </li>
+  <li>
+   Blender hat Werkzeuge für Haare, white_dune nicht
+  </li>
+  <li>
+   Blender ist weitaus schwieriger zu bedienen als white_dune 4kids
+  </li>
+ </ul>
+</p>
+<h2>white_dune und die Grapikleistung eines Systems </h2>
+<p>
+white_dune ist ein Echtzeit-3D-Programm.<br>
+Die gute Bedienbarkeit h&auml;ngt von der Graphikkarte und der Anzahl der 
+benutzten Objekte ab. Ist die Graphikkarte &uuml;berlastet, ruckeln die Objekte
+bei der Animation und es wird schwierig, ein Objekt zu bearbeiten, zu 
+verschieben oder zu drehen.<br>
+Ein (NURBS-)Objekt in white_dune hat ca. 3000 Polygone.<br>
+<br>
+Leider gibt es unter Linux ein Problem mit dem quelloffenenen Treiber fuer
+NVIDIA Graphikkarten (noveau-Treiber): bestimmte Graphikkarten-Modelle 
+frieren manchmal hart ein. Dann muss man den speziellen Nvidia-Treiber fuer
+die Graphikkarte installieren. <br>
+<br>
+Die folgende Tabelle zeigt die Grenze, bis zu wieviele Objekte
+(ohne Morphing) noch halbwegs fl&uuml;ssig dargestellt werden:<br>
+<br>
+<table>
+ <thead>
+  <tr>
+   <th>Graphikkarte</th><th>Klasse</th><th>System</th><th>System-Takt</th><th>NurbsObjekte</th>
+  </tr>
+ </thead>   
+ </tbody>   
+  <tr>            
+  <td>PowerVR GX6250</td><td>1</td><td>ARM Chromebook</td><td>4x2.0 GHz</td><td>1</td>
+ </tr>
+ <tr>
+  <td>ATI Radeon HD 6290</td><td>2</td><td>ADM C-60 Netbook</td><td>2x1.0 GHz</td><td>1</td>
+ </tr>
+ <tr>
+  <td>Intel HD Graphics 3000</td><td>2</td><td>Intel I5 Laptop</td><td>4x2.5 GHz</td><td>11
+ </tr>
+ <tr>
+  <td>VideoCore VI</td><td>2</td><td>Raspberry PI 4</td><td>4x1.5 GHz</td><td>10</td>
+ </tr>
+ <tr>
+  <td>Nvidia NVS 5200M</td><td>3</td><td>Intel I7 Laptop</td><td>8x2.2 GHz</td><td>16</td>
+ </tr>
+ <tr>
+  <td>Nvidia GT 320</td><td>3</td><td>Core2Duo Macbook</td><td>4x2.4 GHz</td><td>24</td>
+ </tr>
+ </tbody>   
+</table>
+Es gibt noch schnellere Systeme...<br>
+<br>
+Klasse bedeutet:
+<table>
+ <tr>
+  <td>1:</td><td>kein 3D-Graphik-Treiber</td><td>(alles wird mit der CPU 
+                                                  berechnet)</td>
+ </tr>
+ <tr>
+  <td>2:</td><td>Integrierte Graphik</td><td>(Shared Memory Graphik)</td>     
+ </tr>
+ <tr>
+  <td>3:</td><td>Dezidierte Graphik</td><td>(Der Speicher auf der Graphikkarte
+                                    wird nur von der Graphikkarte benutzt)</td>
+</tr>
+</table>
+Offensichtlich ist eine bessere Graphikkarte f&uuml;r die Graphikleistung
+wichtiger als die CPU.<br>
+<br>
+Was tun, wenn es ruckelt, weil die Graphikleistung nicht ausreicht ?<br>
+<br>
+white_dune mit der Option "-tessellation" starten<br>
+Zum Beispiel "$ dune -tessellation 16 -4kids datei.x3dv" 
+<ul>
+ <li>
+  1 (NURBS-)Objekt hat jetzt 480 Polygone, unterscheidet sich aber nicht
+  stark vom Default (-tessellation 0 bzw. 32)
+ </li>
+ <li>
+  4 mal mehr (NURBS-)Objekte m&ouml;glich bzw. es ruckelt weniger
+ </li>
+ <li>
+  Nur die Darstellung wird "kantiger", nicht die (NURBS-)Objekt-Daten 
+ </li>
+ <li>
+  Die Darstellung wird wieder "weicher" wenn die Datei (ohne "-tessellation")
+  auf einem schnelleren Rechner mit besserer Graphikkarte l&auml;uft
+ </li>
+ <li>
+  Das Rendering mit aqsis (f&uuml;r die Filmerzeung) ist nicht betroffen
+ </li>
+ <li>
+  X3D Problem: <br>
+  (NURBS-)Objekte lassen sich nicht anmalen<br>
+  Als Alternative kann man Bilder/Texturen (z.B. *.PNG Dateien) auf die 
+  3D-Objekte kleben
+ </li>
+</ul>
+</p>
+<h2>white_dune f&uuml;r Kinder</h2>
+<p>
+White_dune "4kids" wurde bei Kinder-Computer-Trickfilm-Projekten eingesetzt.<br>
+Zum Beispiel entstand bei der Stadtranderholung Leonberg 2006/2007 an jeweils
+einem Nachmiitag ein kleiner Trickfilm einer Alien-Raumschiff-Landung. 
+<br><img src="bild6.png"><br>
+Die Kindern waren zwischen 7 Jahre und 13 Jahre alt.
+</p>
+<h2>white_dune und meschliche Animation</h2>
+<p>
+White_dune unterst&uuml;tzt als X3D Editor alle sichtbaren X3D Befehle
+einschliesslich "HAnim" (menschliche Animation).<br>
+<br><img src="bild7.png"><br>
+Mit dem <a href=http://www.makehumancommunity.org/>"makehuman"-Programm</a>
+(einer
+Blender-Weiterentwicklung) l&auml;sst sich die Mesh eines Menschen erzeugen.
+Dabei sollte darauf geachtet werden, dass nur relativ wenige Mesh-Punkte
+exportiert werden.<br>
+Die Zuordnung der einzelnen Meshpunkte auf K&ouml;rperteile (wie Arm oder Fuss)
+erfolgt in white_dune, allerdings ist das sehr aufwendig.
+Im Endergebnis k&ouml;nnen die einzelnen Gelenke gedreht werden, so dass man
+eine Animation erstellen kann. 
+</p>
+<h2>Wie kann ich die Weiterentwicklung von white_dune unterst&uuml;zen ?</h2>
+<p>
+Die white_dune Men&uuml;s stehen in Englisch, Franz&ouml;sisch, Italienisch 
+und Deutsch zur Verf&uuml;gung. 
+Ins Portugisische wurde nur das "4kids"-Men&uuml; &uuml;bersetzt.
+Die Dialoge sind nur teilweise &uuml;bersetzt, nur die deutschen und englischen
+Dialoge und Fehlermeldungen sind vollst&auml;ndig &uuml;bersetzt.<br>
+<br> 
+F&uuml;r die &Uuml;bersetzung braucht man keine Programmierkenntnisse, 
+da Micro$oft Resource-Files verwendet werden. 
+Dabei sind die einzelnen Worte/S&auml;tze in 
+"doppelten G&auml;nsef&uuml;sschen" eingeschlossen.<br>
+<br>
+Bei Problemen mit white_dune und Ideen zu neuen Features kann sich jeder per 
+E-mail wenden an:<br>
+mufti11@web.de<br>
+<br>
+white_dune hat ca. 300 000 Zeilen in C++/C/.h/.m4-Dateien, es ist also ein 
+relativ grosses Programm.<br>
+<br>
+Intern bentzt white_dune ein 2D-GUI-API in der Programmiersprache C namens 
+"libswt" (das heisst wohl "Stephan White Toolkit").<br>
+Unter Linux wird motif und OpenGL 2 benutzt.<br>
+Das ist etwas altmodisch.<br> 
+Der grosse Vorteil daran ist, dass in 20 Jahren nur ein Patch wegen einer 
+API-&Auml;nderung geschrieben werden muste.<br>
+Der Patch hatte mit lesstif zu tun, einem Open-Source-Nachbau von motif.
+Inzwischen steht auch motif f&uuml;r Linux unter einer Open-Source-Lizenz zur 
+Verf&uuml;gung, so dass die lesstif-Programmierung eingestellt wurde.<br>
+<br>
+Wenn white_abst&uuml;rtzt, versucht es noch, die X3D-Daten in eine Datei zu 
+retten.<br>
+Das funktioniert nur dann, wenn die interne Datenstruktur noch intakt ist,
+zum Beispiel bei einem Absturz im Graphik-Code.<br>
+<br>
+white_dune ruft normalerweise unter Linux bei jedem Speichern einen "rcs" 
+(oder seit Neuestem "git") revision-contol-system-Befehl auf.
+Damit lassen sich im Nachhinein alle &Auml;nderungen an einer X3D-Datei
+nachvollziehen und eine bestimmte Version aus dem repository
+restaurieren. <br>
+Das ist ein sehr wichtiges Feature beim Arbeiten mit Kindern...
+</p>

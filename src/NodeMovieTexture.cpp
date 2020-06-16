@@ -139,6 +139,7 @@ NodeMovieTexture::load()
 #include "freewrl_define.h"
 
 #ifdef HAVE_FFMPEG
+#if HAVE_FFMPEG
 
 /****************************************************************************
     ... is part of the FreeWRL/FreeX3D Distribution.
@@ -1240,4 +1241,5 @@ NodeMovieTexture::unbind()
     glDisable(GL_TEXTURE_2D);
 }
 
+#endif
 #endif

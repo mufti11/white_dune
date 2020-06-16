@@ -75,7 +75,7 @@ SFVec2f::equals(const FieldValue *value) const
 }
 
 int 
-SFVec2f::writeData(int f, int i)
+SFVec2f::writeData(int f, int i) const
 {
     return mywritef(f, "%g %g", m_value[0], m_value[1]);
 }

@@ -135,6 +135,11 @@ static void dune_new_handler(void)
 char* home;
 
 int DuneApp::emergency_rescue(int sig)
+#ifdef  __clang__
+# if __MAGEIA__
+ __attribute__((noreturn))
+# endif
+#endif
    {
    int filenum=0;
 

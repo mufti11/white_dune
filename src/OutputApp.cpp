@@ -58,7 +58,7 @@
 #ifdef HAVE_X3DOM_PATH
 # define DEFAULT_X3DOM_PATH HAVE_X3DOM_PATH
 #else
-# define DEFAULT_X3DOM_PATH "http://x3dom.org/download/dev/"
+# define DEFAULT_X3DOM_PATH "https://x3dom.org/download/dev/"
 #endif
 
 #define DEFAULT_X3DOM_PARAMETER "xmlns=\"http://www.web3d.org/specifications/x3d-namespace\"  showStat=\"false\" showLog=\"false\" x=\"0px\" y=\"0px\" width=\"1024px\" height=\"512px\""
@@ -300,7 +300,7 @@ OutputApp::OutputLoadPreferences()
 #ifndef _WIN32
     if (m_imageConverter != NULL)
         if (strlen(m_imageConverter) != 0)
-            free(m_imageConverter);
+            free((void*)m_imageConverter);
 #endif
 
 #ifdef HAVE_IMAGE_CONVERTER

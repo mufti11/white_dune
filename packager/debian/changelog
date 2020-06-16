@@ -1,3 +1,10 @@
+whitedune (1.876-1) experimental; urgency=low
+
+  * Version 1.876 debian package
+    For details see the README file of the source package
+
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Fri, 01 May 2020 04:06:24 +0200
+
 whitedune (1.874-1) experimental; urgency=low
 
   * Version 1.874 debian package

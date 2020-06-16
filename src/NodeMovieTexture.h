@@ -76,11 +76,13 @@ public:
     virtual void    load();  
 
 #ifdef HAVE_FFMPEG
+#if HAVE_FFMPEG
     virtual void    bind();
     virtual void    unbind();
 
     virtual bool    isTransparent(void) { return m_isTransparent; }
     virtual int     textureGlColorMode(void) { return m_glColorMode; }
+#endif
 #endif
 
     fieldMacros(SFString, description,       ProtoMovieTexture)

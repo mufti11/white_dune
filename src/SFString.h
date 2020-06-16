@@ -55,8 +55,8 @@ public:
 
     virtual int         writeRaw(int filedes, int indent) const;
 
-    virtual int         writeData(int filedes, int i); 
-    virtual int         writeDataXml(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
+    virtual int         writeDataXml(int filedes, int i) const; 
 
     virtual const char *getTypeC(int languageFlag) const;
 

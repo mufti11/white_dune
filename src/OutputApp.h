@@ -217,7 +217,7 @@ public:
     void                 SetImageConverter(const char *converter)
                            {
                            if (m_imageConverter != NULL)
-                               free(m_imageConverter);
+                               free((void*)m_imageConverter);
                            m_imageConverter = strdup(converter);
                            }   
 
@@ -258,7 +258,7 @@ private:
     char                   *m_defaultAntCommand;
     bool                    m_runAnt;
     char                   *m_ribTexturer;
-    char                   *m_imageConverter;
+    const char             *m_imageConverter;
     bool                    m_git;
 };
 

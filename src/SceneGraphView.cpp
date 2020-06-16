@@ -39,6 +39,7 @@
 #include "CommandList.h"
 #include "resource.h"
 #include "Util.h"
+#include "MainWindow.h"
 
 #include "IconSize.h"
 
@@ -135,6 +136,7 @@ SceneGraphView::SceneGraphView(Scene *scene, SWND parent)
 
     m_lastXPosition = 0;
     m_lastYPosition = 0;
+    m_width = width;
     m_maxYPosition = 0;
     m_mode = NONE;
     m_currentProto = NULL;
@@ -436,6 +438,8 @@ void SceneGraphView::OnDraw(int x, int y, int width, int height, bool update)
         return;
 
     SDC dc, frontDC;
+
+    m_width = width;
 
     const Path *sel = m_scene->getSelection();
     Node *currentNode = sel ? sel->getNode() : NULL;
@@ -2806,7 +2810,8 @@ void
 SceneGraphView::setLastXPosition(int x)
 {
     if (x < MAX_X)
-        m_lastXPosition = x;
+        if (m_width < TheApp->getCurrentMainWindow()->getWidth())
+            m_lastXPosition = x;
 }
 
 void
@@ -2826,6 +2831,7 @@ void
 SceneGraphView::SetScrollSizes(int width, int height) 
 {
     int x = MAX(width, m_XNodesOnlyEventIns + NODE_WIDTH);
+    x = MIN(x, TheApp->getCurrentMainWindow()->getWidth());
     swSetScrollSizes(m_scroller, x, height);
 }
         

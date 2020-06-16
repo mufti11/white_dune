@@ -76,7 +76,7 @@ MFInt32::copy()
     return new MFInt32(value, m_value.size());
 }
 
-int MFInt32::writeData(int f, int i)
+int MFInt32::writeData(int f, int i) const
 {
     bool isDynamicFieldsNode = TheApp->getDynamicFieldsNode();
     int ret = 0;
@@ -88,7 +88,7 @@ int MFInt32::writeData(int f, int i)
 }
 
 int MFInt32::write(int f, int indent, bool writeBrackets, 
-                   bool compactFormat)
+                   bool compactFormat) const
 {
     bool isDynamicFieldsNode = TheApp->getDynamicFieldsNode();
     if (writeBrackets) {

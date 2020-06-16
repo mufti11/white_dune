@@ -24,15 +24,39 @@
 #include "Types.h"
 #include "x3dFlags.h"
 #include "DuneApp.h"
+#include "Node.h"
+
+IsElement::IsElement(Node *node, int field, int elementType, 
+                     Proto *origProto, int origField) 
+{ 
+    m_nodeIndex = -1; 
+    m_node = node; 
+    m_id = -1;
+    m_field = field; 
+    m_elementType = elementType;
+    m_originalProto = origProto;
+    m_originalField = origField;
+}
+
+int 
+IsElement::getField(void) 
+{
+    if (m_id != -1)
+        return -1;
+    return m_field;
+}
 
 Element::Element(const Element *ptr)
 {
+    m_validNumIs = 0;
     m_type = ptr->m_type;
     m_name = ptr->m_name;
     m_x3dName = ptr->m_x3dName;
     m_flags = ptr->m_flags;
-    for (long i = 0; i < ptr->m_isArray.size(); i++)
+    for (long i = 0; i < ptr->getNumIs(); i++) {
         m_isArray[i] = ptr->m_isArray[i];
+        m_validNumIs++;
+    }
     m_appinfo = "";
     m_appinfo += ptr->m_appinfo; 
     m_documentation = "";
@@ -72,6 +96,7 @@ Element::addIs(Node *node, int field, int elementType,
 {
     m_isArray.append(new IsElement(node, field, elementType,
                                    origProto, origField));
+    m_validNumIs++;
     m_flags |= FF_IS | flags;
 }
 
@@ -134,25 +159,6 @@ int Element::writeElementPart(int f, int indent, int flags) const
 
 int indentf(int f, int indent)
 {
-/*
-    int tabs = indent / 8;
-    int spaces = indent % 8;
-    char *buf = new char[tabs + spaces + 1];
-    char *b = buf;
-    int ret;
-
-    for (int i = 0; i < tabs; i++)
-        *b++ = '\t';
-
-    for (int j = 0; j < spaces; j++)
-        *b++ = ' ';
-
-    *b = '\0';
-    ret= mywritestr(f , buf);
-    delete[] buf;
-    return(ret);
-*/
-
     for (int i = 0; i < indent && i < MAX_INDENT; i++)
         if (mywritestr(f , " ") != 0)
             return -1;

@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -x
 
-export DUNEMAKEFLAGS=-j4
+export DUNEMAKEFLAGS=-j8
 export CPPFLAGS=-std=gnu++11
 
 RPM_SRC_LIST="/usr/src/rpm /usr/src/RPM /usr/src/redhat /usr/src/packages"

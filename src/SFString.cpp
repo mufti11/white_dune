@@ -62,7 +62,7 @@ SFString::equals(const FieldValue *value) const
       !strcmp(((SFString *) value)->getValue(), (const char *) m_value);
 }
 
-int SFString::writeData(int f, int i)
+int SFString::writeData(int f, int i) const
 {
     RET_ONERROR( mywritestr(f, "\"") )
     RET_ONERROR( mywritestr(f, (const char *)m_value) )
@@ -70,7 +70,7 @@ int SFString::writeData(int f, int i)
     return(0);
 }
 
-int SFString::writeDataXml(int f, int i)
+int SFString::writeDataXml(int f, int i) const
 {
     MyString string = "";
     string += m_value;

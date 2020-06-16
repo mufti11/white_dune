@@ -45,7 +45,7 @@ public:
     virtual int         getStride() const { return 2; }
     virtual MyString    getString(int index, int stride) const;
 
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
 
     virtual int         writeC(int filedes, const char* variableName,
                                int languageFlag) const;

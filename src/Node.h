@@ -940,7 +940,8 @@ public:
     void              handleIs(void);
     Node             *getIsNode(int nodeIndex);
     void              setScene(Scene *scene) { m_scene = scene; }
-    bool              isInsideProto(void) { return m_insideProto != NULL; }
+    bool              isInsideProto(void) 
+                          { return m_insideProto != NULL; }
     void              setOutsideProto(Proto *proto) { m_insideProto = proto; }
     Proto            *getOutsideProto(void) { return m_insideProto; }
 

@@ -38,7 +38,7 @@ public:
     virtual const char *getTypeName() const { return "MFNode"; }
 
     virtual bool        writeBrackets(void) const;
-    virtual int         writeData(int filedes, int i); 
+    virtual int         writeData(int filedes, int i) const; 
     virtual int         write(int filedes, int indent, 
                               bool writeBrackets) const;
     virtual int         write(int filedes, int indent) const 

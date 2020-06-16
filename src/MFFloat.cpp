@@ -118,7 +118,7 @@ MFFloat::equals(const MFFloat *value) const
     return false;
 }
 
-int MFFloat::writeData(int f, int i)
+int MFFloat::writeData(int f, int i) const
 {
    RET_ONERROR( mywritef(f, "%f", m_value[i * getStride()]) )
    if (getStride() > 1)   
@@ -127,7 +127,7 @@ int MFFloat::writeData(int f, int i)
    return 0;
 }
 
-int MFFloat::writeDataC(int f, int i, int languageFlag)
+int MFFloat::writeDataC(int f, int i, int languageFlag) const
 {
    bool java = (languageFlag & JAVA_SOURCE);
    RET_ONERROR( mywritef(f, java ? "%ff" : "%f", m_value[i * getStride()]) )

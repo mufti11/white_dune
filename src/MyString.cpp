@@ -46,7 +46,7 @@ MyString::MyString()
 
 MyString::MyString(const char *str)
 {
-    if (strlen(str) == 0) {
+    if (str == NULL || strlen(str) == 0) {
         m_stringBuf = new StringBuf(" ");
         m_stringBuf->m_data[0] = 0;  
     } else

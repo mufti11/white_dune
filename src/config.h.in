@@ -378,6 +378,9 @@
 /* Define if you want to set the URL of the x3d standard (base url) */
 #undef HAVE_X3D_URL 
 
+/* Define if your system support /usr/include/X11/Xmu */
+#undef HAVE_INCLUDE_X11_XMU
+
 /* Define if you want to try to get "edit -> cut" working */
 #undef HAVE_CUT
 

@@ -60,6 +60,20 @@
 #include "Path.h"
 #include "MyString.h"
 
+class FaceVec {
+    int m_face;
+    Vec3f m_vec;
+public:
+    FaceVec(int face, Vec3f vec) {
+        m_face = face;
+        m_vec = vec;
+    }
+    int getFace(void) { return m_face; }
+    Vec3f getVec(void) { return m_vec; }
+};
+
+MyArray<FaceVec *> m_faces;
+
 ProtoIndexedFaceSet::ProtoIndexedFaceSet(Scene *scene)
   : GeometryProto(scene, "IndexedFaceSet")
 {
@@ -1346,10 +1360,6 @@ NodeIndexedFaceSet::splitIntoPieces(int u, int v)
         if (canSplitFace(i)) {
             int piecesU = u; 
             int piecesV = v;
-            if (symFaces.contains(i)) {
-                piecesV = u;
-                piecesU = v;
-            }
             int off = newCoordIndex->getValue(offset);
             Vec3f vec = newVertices->getValue(off);
             int off1 = newCoordIndex->getValue(offset + 1);
@@ -1684,151 +1694,753 @@ NodeIndexedFaceSet::makeSymetric(int direction, bool plus)
     m_meshDirty = true;
 }
 
-static float midOffset(int count, int numCount, float sign, float offset)
+static float midOffset(int count, int numCount)
 {
-    if (numCount == 1)
+    if (count == 0)
         return 0;
-    float ret = -1.0f + 0.5f / (float)numCount;
-    return ret + 0.5f / (float)numCount + 2.0f * (float)count / (float)numCount;
+    return count - 1;
 }
 
-static float borderBegin(int count, int numCount, float sign, float offset)
+static float border1(int count, int numCount)
 {
-    return midOffset(count,  numCount, sign, offset) +
-           1.0f / (float)numCount / 2.0f - offset;
+    if (count == 0)
+        return -1.0f;
+    return (float)count - 1.0f;
 }
 
-static float borderSecond(int count, int numCount, float sign, float offset)
+static float border2(int count, int numCount)
 {
-    return midOffset(count,  numCount, sign, offset) + 
-           3.0f / (float)numCount / 2.0f - offset;
+    return border1(count,  numCount) + 0.25f;
 }
 
-static float borderEnd(int count, float offset)
+static float border3(int count, int numCount)
 {
-    return (float)count + 1.0f + offset; 
+    return border1(count,  numCount) + 0.75f;
 }
 
-static void storeVertex(MFVec3f *vertices, Vec3f newVertex, bool zDirection,
-                        float xOffset, int face)
+static float border4(int count, int numCount)
 {
-    if (zDirection) {
-        Vec3f vec(-newVertex.z, newVertex.y, -newVertex.x);
-        if (face == 3) {
+    return border1(count,  numCount) + 1.0f;
+}
+
+static void storeVertexN(MFVec3f *vertices, MFInt32 *ci, Vec3f vertex, 
+                         int face, int countX, int numX, int numY)
+{
+    Vec3f vec(vertex.x, vertex.y, vertex.z);
+
+    if (numY == 2 && numX == 3) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= 1.0f / (float)numX;
+            vec.x += 1.0f;
+            vec.x -= 1.0f / (float)numX;
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            vec.z /= (float)numX;
+        }
+    }
+    if (numY == 3 && numX == 2) {
+        if (face == FACE_BACK) {
+            vec.y += 1.0f;
+        }
+        if (face == FACE_FRONT) {
+            vec.x += 1.0f;
+            vec.y += 1.0f;
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            vec.z /= (float)numX;
+        }
+    }
+    if (numX == 3 && numY == 3) {
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+           vec.z /= (float)numX;
+        }
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x /= (float)numX;
+            vec.x += 1.0f - 1.0f / (float)numX;
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            vec.y /= (float)numX;
+        }
+    }
+    ci->appendSFValue(vertices->getSFSize());
+    vertices->setVec(vertices->getSFSize(), vec);
+}
+
+static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex, 
+                        int face, int countX, int countY, int numX, int numY)
+{
+    Vec3f vec(newVertex.x, newVertex.y, newVertex.z);
+    if (numY == 1 && numX == 2) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.y *= 2.0;
+            vec.x += 1.0f;
+            vec.y -= 1.0f;
+            if (face == FACE_BACK) {
+                vec.x *= -1.0f;
+                vec.x += 2.0f;
+            }
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
             float temp = vec.y;
             vec.y = vec.z;
             vec.z = temp;
-            vec.y -= 2.0f;
-            vec.z += 2.0f;
-            vec.x *= -1.0f;
+
+            if (face == FACE_TOP) {
+                vec.y = 1.0f;
+                vec.x *= -1.0f; 
+                vec.x -= 1.0f; 
+                vec.z -= 1.0f;                 
+            } else {
+                vec.y = -1.0f; 
+                vec.x += 1.0f; 
+                vec.z += 1.0f; 
+            }                
+            vec.z *= 2.0f;
+            vec.z += 1.0f;
         }
-        if (face == 4 || face == 5) {
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
             float temp = vec.x;
             vec.x = vec.z;
             vec.z = temp;
+
+            if (face == FACE_RIGHT) {
+                vec.x = 1.0f;
+                vec.y *= -1.0f; 
+                vec.z -= 1.0f;                 
+            } else {
+                vec.x = -1.0f; 
+                vec.y -= 1.0f; 
+                vec.z += 1.0f; 
+            }    
+            vec.y *= 2.0f;            
+            vec.y += 1.0f;
         }
-        if (face == 5) {
-            vec.x += 2.0f;
+    }
+    if (numY == 1 && numX == 3) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.y *= 2.0f; 
+            vec.y += 1.0f; 
+            vec.x *= 2.0f / (float)numX; 
+            vec.x += 1.0f / (float)numX; 
+        }       
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            vec.x *= 2.0f / (float)numX; 
+            vec.z *= 2.0f; 
+            if (face == FACE_TOP)
+                vec.z *= -1.0f;
+            vec.x += 1.0f;
+            if (face == FACE_TOP)
+                vec.y += 2.0f;
+            else
+                vec.y -= 2.0f;
+            vec.z += 1.0f;
+            if (face == FACE_BOTTOM)
+                vec.z += 2.0f;
+        }
+        if (face == FACE_LEFT || face == FACE_RIGHT) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+
+            vec.z *= 2.0f * (float)numY / (float)numX;
+
+            if (face == FACE_RIGHT) {
+                vec.x = 1.0f;
+                vec.z *= -1.0f;
+                vec.z += 1.0f / (float)numX;
+            } else {
+                vec.x = -1.0f;
+                vec.z += 1.0f;
+            }
+            vec.y *= 2.0f;
+            vec.y -= 1.0f;
+        }
+    }
+    if (numY == 2 && numX == 1) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= 2.0f;
+            if (face == FACE_FRONT)
+                vec.x += 1.0f;
+            else {
+                vec.x *= -1.0f;
+                vec.x += 3.0f;
+            }
+            vec.y -= 1.0f;
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+
+            if (face == FACE_RIGHT) {
+                vec.z *= -2.0f; 
+                vec.x = 1;
+                vec.y -= 1.0f;
+                vec.z += 3.0f;
+            } else {
+                vec.x = -1;
+                vec.z *= 2.0f; 
+                vec.y -= 1.0f; 
+                vec.z += 1.0f;
+            }
+        }
+    }
+    if (numY == 2 && numX == 2) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x += 1.0f;
+            vec.y -= 1.0f;
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+
+            if (face == FACE_TOP)
+                vec.z *= -1.0f;
+            else            
+                vec.z *= +1.0f;
+            if (face == FACE_TOP)
+                vec.y = 1.0f;
+            else
+                vec.y = -1.0f;
+            vec.x += 1.0;
+            vec.z += 1.0;
+        }
+        if (face == FACE_LEFT || face == FACE_RIGHT) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+            if (face == FACE_LEFT) {
+                vec.x = -1.0f;
+                vec.y -= 1.0f;
+                vec.z += 1.0f;
+            } else {
+                vec.x = 1.0f;
+                vec.y *= -1.0f;
+                vec.y += 1.0f;
+                vec.z -= 1.0f;
+            }
+        }
+    }
+    if (numX == 2 && numY == 3) {
+        if (face == FACE_FRONT) {
+            vec.x *= 2.0f;
+            vec.x -= 1.0f + 0.05;
+            vec.y -= 1.0f;
+        }
+        if (face == FACE_BACK) {
+            vec.x *= 2.0f;
+            vec.x -= 1.0f - 0.05;
+            vec.x *= -1.0f;
+            vec.y -= 1.0f;
+        }
+    }
+    if (numY == 3 && numX == 1) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= 2.0f;
+            vec.x += 1.0f;
+            vec.y *= 0.6666f;
+            vec.y -= 1.0f;
+        }
+        if (face == FACE_TOP) {
+            float temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            vec.y += 2.0f;            
+            vec.x += 1.0f / (float)numY;            
+            vec.z -= 1.0f / (float)numY;            
+    
+            vec.x *= 2.0f; // - 2.0f / (float)numY; 
+    
+            vec.x += -2.0f + 0.45;
+    
+            vec.z *= 2.0f;
+            vec.z += 2.0f;
+        }
+        if (face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            vec.y -= 2.0f;            
+            vec.x += 1.0f / (float)numY;            
+            vec.z -= 1.0f / (float)numY;            
+    
+            vec.x *= 2.0f - 2.0f / (float)numY; 
+    
+            vec.x += 0.5;
+    
+            vec.z *= -2.0f;
             vec.z -= 2.0f;
         }
-        if (xOffset > 0) {
-            vec.z += 2.0f;              
-        } else  {
-            vec.x -= 2.0f;
-            vec.z *= -1.0f;
+    }
+    if (numX == 3 && numY == 2) {
+        if (face == FACE_FRONT) {
+            vec.x *= 2.0f;
+            vec.x -= 1.0f - 0.025;
+            vec.y -= 1.0f;
         }
-        vertices->setVec(vertices->getSFSize(), vec);
-    } else {
-        Vec3f vec(newVertex.x, newVertex.y, newVertex.z);
-        if (xOffset == 0)
+        if (face == FACE_BACK) {
+            vec.x *= 2.05f;
+            vec.x -= 1.0f - 0.025;
             vec.x *= -1.0f;
-        if (face == 2) {
-            vec = Vec3f(newVertex.y, newVertex.z, newVertex.x);
-            vec.y += 2.0f;
+            vec.y -= 1.0f;
         }
-        if (face == 3) {
-            float temp = vec.z;
-            vec.z = vec.y;
-            vec.y = temp;
-            vec.y -= 2.0f;
-            vec.z += 2.0f;
-            vec.x *= -1.0f;
-        }
-        if (face == 4 || face == 5) {
-            float temp = vec.x;
-            vec.x = vec.z;
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            temp = vec.y;
+            vec.y = vec.z;
             vec.z = temp;
-        }
-        if (face == 5) {
-            vec.x += 2.0f;
+    
+            if (face == FACE_BOTTOM) {
+                vec.y = -1.0f;            
+                vec.z *= -1;
+            } else
+                vec.y = 1.0f;            
+
+            vec.x += 1.0f / (float)numY;            
+            vec.z -= 1.0f / (float)numY;            
+    
+            vec.x *= 2.0f - 2.0f / (float)numY; 
+    
+            vec.x += 0.5;
+    
+            vec.z *= -2.0f;
             vec.z -= 2.0f;
-            vec.z *= -1;
         }
-        vertices->setVec(vertices->getSFSize(), vec);
-    }
-}
-
-static void storeVertexMid(MFVec3f *vertices, Vec3f newVertex, bool zDirection,
-                           float xOffset, int face)
-{
-    if (zDirection) {
-        Vec3f vec(-newVertex.z, newVertex.y, -newVertex.x);
-        if (xOffset > 0) {
-            vec.z += 2.0f;
-        } else  {
-            vec.x -= 2.0f;
-            vec.z *= -1.0f;
-        }
-        if (face == 3) {
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
             float temp = vec.x;
             vec.x = vec.z;
             vec.z = temp;
 
-            vec.y -= 2.0f;
-//            vec.z -= 4.0f;
-            vec.z *= -1.0f;
+            vec.z *= (float)numY / (float)numX;
+            if (face == FACE_RIGHT) {
+                vec.x = 1.0f;
+            } else {
+                vec.x = -1.0f;
+                vec.z -= 0.5f + 0.5 / (float)numX;
+            }
+            vec.y += - 1.27;
+            vec.y += 0.75f / (float)numX;
+            vec.z += 1.0f;
+        }    
+    }
+    if (numY == 3 && numX == 2) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= 0.5f;
+            vec.x += 1.5f / (float)numY;
+            vec.y *= (float)numX / (float)numY;
+            vec.y += 0.5f / (float)numY;
+            vec.y -= 1.5f;
         }
-        vertices->setVec(vertices->getSFSize(), vec);
-    } else {
-        Vec3f vec(newVertex.x, newVertex.y, newVertex.z);
-        if (xOffset == 0)
+        if (face == FACE_TOP) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+
+            vec.y = 1.0f;
+            vec.z *= (float)numX / (float)numY;
+
+            vec.x += 3.0f / (float)numY;            
+    
             vec.x *= -1.0f;
-        if (face == 3) {
+    
+            vec.z *= 2.0f;
+            vec.z += 2.0f - 4.0f;
+        }
+        if (face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+
+            vec.y = -1.0f;
+            vec.z *= -(float)numX / (float)numY;
+
+            vec.x += 3.0f / (float)numY;            
+            vec.z += 2.0f / (float)numY;            
+    
+            vec.x *= -1.0f;
+    
+            vec.z *= 2.0f;
+            vec.z += 2.0f - 4.0f;
+        }
+        if (face == FACE_RIGHT) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+
+            vec.x *= -1.0f;
+            vec.z *= ((float)numY - 1) / (float)numY;
+
+            vec.x += 2.0f;
+            vec.y -= 1.0f;
+            vec.y *= 2.0f;
+            vec.z -= 1.0f;
+            vec.y += 1.0f;
+        }
+        if (face == FACE_LEFT) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            vec.x *= -1.0f;
+            vec.z *= ((float)numY - 1) / (float)numY;
+
+            vec.x += 2.0f;
+            vec.y += 1.0f;
+            vec.y *= 2.0f;
+            vec.y += 1.0f;
+            vec.z *= -1.0f;
+        }
+    }
+    if (numX == numY && numX == 3) {
+        if (face == FACE_TOP) {
+            float temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            vec.y += 2.0f;            
+            vec.x += 1.0f / (float)numY;            
+            vec.z -= 1.0f / (float)numY / 4.0f;            
+    
+            vec.x *= 1.0f - 1.0f / (float)numY;     
+            vec.x -= 1.5 + 1.0f / 24.0f - 0.035f;
+    
+            vec.z *= 2.0f;
+            vec.z += 3.25f - 1.0f / 24.0f - 1.0f / 48.0f;
+        }
+        if (face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            vec.y -= 2.0f;            
+            vec.x += 1.0f / (float)numY;            
+            vec.z -= 1.0f / (float)numY / 4.0f;            
+    
+            vec.x *= 1.0f - 1.0f / (float)numY;     
+            vec.x -= 1.5f + 1.0f / 24.0f;
+            vec.x += 1.0f;            
+    
+            vec.z *= -1.0f;
+            vec.z += 3.25f - 1.0f / 24.0f - 1.0f / 48.0f;
+        }
+        if (face == FACE_FRONT) {
+            vec.x -= 0.5f;
+            vec.x *= 2.0f;
+            if (numY > 1) 
+                vec.y *= ((float)numY - 1.0f) / (float)numY;
+            vec.y -= 1.0f;
+        }
+        if (face == FACE_BACK) {
+            vec.x -= 0.5f;
+            vec.x *= -2.0f;
+            if (numY > 1) 
+                vec.y *= ((float)numY - 1.0f) / (float)numY;
+            vec.y -= 1.0f;
+        }
+        if (face == FACE_RIGHT) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            vec.x += 2.0f;
+            vec.y -= 1.0f;
+            vec.y *= 2.0f;
+            vec.z -= 1.0f;
+            vec.y += 1.0f;
+            vec.z *= ((float)numY - 1) / (float)numY;
+        }
+        if (face == FACE_LEFT) {
+            float temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            vec.y += 1.0f;
+            vec.y *= 2.0f;
+            vec.z *= ((float)numY - 1) / (float)numY;
+            vec.y += 1.0f;
+            vec.z *= -1.0f;
+        }
+    }
+    storeVertexN(vertices, ci, vec, face, countX, numX, numY);
+}
+
+static void storeVertexMid(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex, 
+                           int face, int countX, int countY, 
+                           int numX, int numY, bool first)
+{
+    Vec3f vec(newVertex.x, newVertex.y, newVertex.z);
+    if (numY == 1 && numX == 2) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0;
+            vec.x += -1.0f / (float)numX;
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            if (face == FACE_TOP)
+                vec.y = 1.0;
+            else {
+                vec.y = -1.0;
+            }
+            vec.x *= -1.0;
+            vec.x += 1.0;
+            vec.x += -1.0f / (float)numX;
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            vec.z *= -1.0f / (float)numX;             
+            if (face == FACE_LEFT) {
+                vec.x = -1.0f;
+            } else {
+                vec.x = 1.0f;
+            }
+            vec.y -= 0.5f;
+            vec.z -= 0.8f;        
+        }
+    } 
+    if (numY == 1 && numX == 3) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0;
+            vec.x += -2.0f / (float)numX;
+        }       
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            vec.x *= -1.0f;             
+            vec.x -= 1.0f / (float)numX - 1.0f;
+            if (face == FACE_TOP)
+                vec.y = 1.0f;
+            else
+                vec.y = -1.0f;
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            vec.z *= -1.0f / (float)numX;             
+            vec.z += -0.25f / (float)numX;             
+            vec.z += -0.01;             
+            vec.y -= 0.75f - 0.25f / (float)numX;
+            if (face == FACE_LEFT) {
+                vec.x = -1.0f;
+            } else {
+                vec.x = 1.0f;
+            }
+        }
+    }
+    if (numY == 2 && numX == 1) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0f; 
+            vec.x += 0.75f; 
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            vec.x *= -1.0f; 
+            vec.z *= 0.5f;
+            if (face == FACE_TOP)
+                vec.y = 1.0f;
+            else
+                vec.y = -1.0f;
+            vec.x -= 0.75f;
+            vec.z -= 0.25f;
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            if (face == FACE_RIGHT) {
+                vec.x = -1;
+            } else {
+                vec.x = 1;
+            }
+            vec.y -= 0.5f; 
+            vec.z += 3.625f;
+        }
+    }
+    if (numY == 2 && numX == 2) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0f; 
+            vec.x += 0.25f; 
+        }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            vec.x *= -1.0f;            
+            vec.z *=  0.5f;            
+
+            if (face == FACE_TOP)
+                vec.y = 1.0f;
+            else
+                vec.y = -1.0f;
+            vec.x -= 0.25f;
+            vec.z -= 0.25f;
+        }
+        if (face == FACE_LEFT || face == FACE_RIGHT) {
+            vec.z *= 0.51f;
+            if (face == FACE_RIGHT) {
+                vec.x = -1.0f;
+                vec.y -= 0.5f;
+                vec.z += 2.15;
+            } else {
+                vec.x = 1.0f;
+                vec.y -= 0.5f;
+                vec.z += 2.15f;
+            }
+        }
+    } 
+    if (numY == 2 && numX == 3) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0f; 
+            vec.x += 0.08f;
+        }       
+        if (face == FACE_TOP) {
             float temp = vec.x;
             vec.x = vec.z;
             vec.z = temp;
 
-            vec.y -= 2.0f;
-//            vec.z -= 4.0f;
-            vec.z *= -1.0f;
+            vec.x *= 1.0f / (float)numY;
+            vec.x -= 2.235f;
+            vec.y = 1.0f;
+            vec.z += 0.0965f;
         }
-        vertices->setVec(vertices->getSFSize(), vec);
-    }
-}
+        if (face == FACE_BOTTOM) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
 
-static void storeVertexYX(MFVec3f *vertices, Vec3f newVertex, bool zDirection,
-                        float xOffset, int face)
-{
-    Vec3f vec(newVertex.y, newVertex.z, newVertex.x);
-    if (face == 3) {
-        float temp = vec.x;
-        vec.x = vec.z;
-        vec.z = temp;
-//        vec.x += -4.0f;
-        vec.z -= -2.0f;
+            vec.x *= 1.0f / (float)numY;
+            vec.x -= 0.235f;
+            vec.y = -1.0f;
+            vec.z += 0.0965f;
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            vec.z *= -1.0f / (float)numY;
+            if (face == FACE_RIGHT)
+                vec.x = 1.0f;
+            if (face == FACE_LEFT)
+                vec.x = -1.0f;
+            vec.y -= 1.17f;
+            vec.z -= 0.5f;
+        }
     }
+    if (numY == 3 && numX== 1) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0f; 
+            vec.x += 1.716666f; 
+            vec.y -= 1.1f; 
+        }
+    }
+    if (numY == 3 && numX== 2) {
+        if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= -1.0f; 
+            vec.x += 1.0f - 0.025; 
+            vec.x += 0.5f / (float)numY;
+            vec.y -= 1.0f; 
+        }
+        if (face == FACE_TOP) {
+            vec.z *= -1.0f /numY; 
+            vec.z += -1.0f / numY;
+            vec.x += 1.5f - 1.0f / numY;
+            vec.y = 1.0f;
+            vec.z += 1.10285f;
+        }
+        if (face == FACE_BOTTOM) {
+            vec.z *= -1.0f / numY;
+            vec.z += -1.0f / numY;
+            vec.x += 1.5f - 1.0f / numY;;
+            vec.y = -1.0f;
+            vec.z += 1.10285f;
+        }
+        if (face == FACE_RIGHT) {
+        }
+    }
+    if (numX == 3 && numY == 3) {
+        if (face == FACE_TOP) {
+            vec.z *= -1.0f / numY;
+            vec.z += -1.0f / numY;
+            vec.x += 1.05f;
+            vec.y = 1.0f;
+            vec.z += 1.11f;
+        }
+        if (face == FACE_BOTTOM) {
+            vec.z *= -1.0f / numY;
+            vec.z += -1.0f / numY;
+            vec.x += 1.05f;
+            vec.y = -1.0f;
+            vec.z += 1.11f;
+        }
+        if (face == FACE_FRONT) {
+            vec.x *= -1.0f;
+            vec.x += 1.0f;
+            vec.y -= 1.0f;
+            vec.y *= 1.0f + 0.01f;
+        }
+        if (face == FACE_BACK) {
+            vec.x *= -1.0f;
+            vec.x += 1.05f;
+            vec.y -= 1.0f;
+            vec.y *= 1.0f + 0.01f;
+        }
+        if (face == FACE_RIGHT) {
+            vec.x = 1.0f;
+            vec.z *= -1.0f / numY;
+            vec.z -= 0.5f / numY;
+            vec.y -= 1.0f;
+            vec.z += 1.0f;
+            vec.z -= 0.05f;
+        }
+        if (face == FACE_LEFT) {
+            vec.x = -1.0f;
+            vec.z *= -1.0f / numY;
+            vec.z -= 0.5f / numY;
+            vec.y -= 1.0f;
+            vec.z += 0.95f;
+            vec.z -= 0.05f;
+        }
+    }
+    ci->appendSFValue(vertices->getSFSize());
     vertices->setVec(vertices->getSFSize(), vec);
 }
 
 void            
 NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
 {
+    m_faces.resize(0);
     if (m_mesh == NULL)
         return;
     NodeCoordinate *ncoord = (NodeCoordinate *)coord()->getValue();
     if (ncoord == NULL)
         return;
     MFVec3f *vertices = new MFVec3f((MFVec3f *)ncoord->point()->copy());
+    MFVec3f *vertices2 = new MFVec3f((MFVec3f *)ncoord->point()->copy());
     MFInt32 *ci = (MFInt32 *)coordIndex()->copy();
     MyArray<int> facesToDelete;
     for (int i = 0; i < m_scene->getSelectedHandlesSize(); i++) {
@@ -1842,47 +2454,46 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
                     facesToDelete.append(iface);
     }
     if (numX == 1  && numY == 1) {
-        int numFace = m_mesh->getNumFaces() - 1;
         int inc = m_scene->getSelectedHandlesSize();
+        int numFace = m_mesh->getNumFaces() - 1;
         for (long i = 0; i < facesToDelete.size(); i++) {
-            FaceData *face = getMesh()->getFace(facesToDelete[i]);
-            int offset = face->getOffset();
-            int numVertices = face->getNumVertices();
-            Vec3f mid(0, 0, 0);
-            for (int j = offset; j < offset + numVertices; j++) {
-                mid += vertices->getVec(ci->getValue(j));
+             FaceData *face = getMesh()->getFace(facesToDelete[i]);
+             int offset = face->getOffset();
+             int numVertices = face->getNumVertices();
+             Vec3f mid(0, 0, 0);
+             for (int j = offset; j < offset + numVertices; j++) {
+                 mid += vertices->getVec(ci->getValue(j));
+             }
+             mid /= numVertices;
+             int start = vertices->getSFSize();
+             for (int j = offset; j < offset + numVertices; j++) {
+                  Vec3f newVertex = mid + (vertices->getVec(ci->getValue(j)) - 
+                                          mid) *factor;
+                  vertices->setVec(vertices->getSFSize(), newVertex);
             }
-            mid /= numVertices;
-            int start = vertices->getSFSize();
             for (int j = offset; j < offset + numVertices; j++) {
-                Vec3f newVertex = mid + 
-                                  (vertices->getVec(ci->getValue(j)) - mid) * 
-                                  factor;
-                vertices->setVec(vertices->getSFSize(), newVertex);
-            }
-            for (int j = offset; j < offset + numVertices; j++) {
-                int k = j - offset;
-                ci->appendSFValue(ci->getValue(j));
-                if (j + 1 >= offset + numVertices)
-                    ci->appendSFValue(ci->getValue(offset));
-                else
-                    ci->appendSFValue(ci->getValue(j + 1));
-                if (k + 1 >= numVertices)
-                    ci->appendSFValue(start);
-                else
-                    ci->appendSFValue(start + k + 1);
-                ci->appendSFValue(start + k);
-                ci->appendSFValue(-1);
-                numFace++;
-            }
-            for (int j = offset; j < offset + numVertices; j++)
-                ci->appendSFValue(start + j - offset);
-            ci->appendSFValue(-1);
-            numFace++;
-            if (inc == 1)
-                m_scene->addSelectedHandle(numFace - 1);
-            else
-                m_scene->addSelectedHandle(numFace - 2 * inc);
+                 int k = j - offset;
+                 ci->appendSFValue(ci->getValue(j));
+                 if (j + 1 >= offset + numVertices)
+                     ci->appendSFValue(ci->getValue(offset));
+                 else
+                     ci->appendSFValue(ci->getValue(j + 1));
+                 if (k + 1 >= numVertices)
+                     ci->appendSFValue(start);
+                 else
+                     ci->appendSFValue(start + k + 1);
+                 ci->appendSFValue(start + k);
+                 ci->appendSFValue(-1);
+                 numFace++;
+             }
+             for (int j = offset; j < offset + numVertices; j++)
+                 ci->appendSFValue(start + j - offset);
+             ci->appendSFValue(-1);
+             numFace++;
+             if (inc == 1)
+                 m_scene->addSelectedHandle(numFace - 1);
+             else
+                 m_scene->addSelectedHandle(numFace - 2 * inc);
         }
     } else {
         int inc = m_scene->getSelectedHandlesSize();
@@ -1892,8 +2503,27 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
              FaceData *face = getMesh()->getFace(facesToDelete[i]);
              int offset = face->getOffset();
              int numVertices = face->getNumVertices();
+             int numYGreater0 = 0;
+             int numYLess0 = 0;
+             int numXGreater0 = 0;
+             int numXLess0 = 0;
+             int numZGreater0 = 0;
+             int numZLess0 = 0;
              for (int j = offset; j < offset + numVertices; j++) {
                  Vec3f val = vertices->getVec(ci->getValue(j));
+                 if (val.y > 0) 
+                     numYGreater0++;
+                 if (val.y < 0) 
+                     numYLess0++;
+                 if (val.x > 0) 
+                     numXGreater0++;
+                 if (val.x < 0) 
+                     numXLess0++;
+                 if (val.z > 0) 
+                     numZGreater0++;
+                 if (val.z < 0) 
+                     numZLess0++;
+                 
                  if (val.x > vecMax.x)
                      vecMax.x = val.x;
                  if (val.y > vecMax.y)
@@ -1907,6 +2537,42 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
                  if (val.z < vecMin.z)
                      vecMin.z = val.z;
              }
+             if (numYGreater0 > numYLess0 && 
+                 numYGreater0 > numXLess0 && 
+                 numYGreater0 > numYLess0 && 
+                 numYGreater0 > numXGreater0 &&
+                 numYGreater0 > numZGreater0)
+                 face->setType(FACE_TOP); 
+             if (numYLess0 > numYGreater0 && 
+                 numYLess0 > numXGreater0 && 
+                 numYLess0 > numZGreater0 &&
+                 numYLess0 > numXLess0 &&
+                 numYLess0 > numZLess0)
+                 face->setType(FACE_BOTTOM); 
+             if (numXGreater0 > numYLess0 && 
+                 numXGreater0 > numXLess0 && 
+                 numXGreater0 > numYLess0 && 
+                 numXGreater0 > numYGreater0 &&
+                 numXGreater0 > numZGreater0)
+                 face->setType(FACE_RIGHT); 
+             if (numXLess0 > numYGreater0 && 
+                 numXLess0 > numXGreater0 && 
+                 numXLess0 > numZGreater0 &&
+                 numXLess0 > numYLess0 &&
+                 numXLess0 > numZLess0)
+                 face->setType(FACE_LEFT); 
+             if (numZGreater0 > numYLess0 && 
+                 numZGreater0 > numXLess0 && 
+                 numZGreater0 > numYLess0 && 
+                 numZGreater0 > numXGreater0 &&
+                 numZGreater0 > numYGreater0)
+                 face->setType(FACE_FRONT); 
+             if (numZLess0 > numYGreater0 && 
+                 numZLess0 > numXGreater0 && 
+                 numZLess0 > numZGreater0 &&
+                 numZLess0 > numXLess0 &&
+                 numZLess0 > numYLess0)
+                 face->setType(FACE_BACK);  
         }
         float f = (1.0f - factor);
         Vec3f lenX((vecMax.x - vecMin.x) * f / numX, 0.0f, 
@@ -1914,7 +2580,6 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
         bool zDirection = false;
         if (lenX.z > lenX.x)
             zDirection = true;
-        float xOffset = 0;
         Vec3f lenY(0.0f, (vecMax.y - vecMin.y) * f / numY, 0.0f);
         for (int n = 0; n < numX; n++) 
             for (int m = 0; m < numY; m++) 
@@ -1924,318 +2589,529 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
                     int numVertices = face->getNumVertices();
                     Vec3f mid(0, 0, 0);
                     for (int j = offset; j < offset + numVertices; j++) {
-                        mid += vertices->getVec(ci->getValue(j));
+                        mid += vertices2->getVec(ci->getValue(j));
                     }
                     mid /= numVertices;
                     int midstart = vertices->getSFSize();
-                    if (facesToDelete[i] == 2 || facesToDelete[i] == 3) {
-                        Vec3f mid(0, 0, 0);
-                        for (int j = offset; j < offset + numVertices; j++) {
-                            Vec3f vec(vertices->getVec(ci->getValue(j)));
-                            float temp = vec.x;
-                            vec.x = vec.y;
-                            vec.y = temp;
-                            mid += vec;
-                        }
-                        mid /= numVertices;
-                        int midstart = vertices->getSFSize();
-                        for (int j = offset + numVertices - 1; j >= offset; 
-                             j--) {
-                            Vec3f vec(vertices->getVec(ci->getValue(j)));
-                            float temp = vec.x;
-                            vec.x = vec.y;
-                            vec.y = temp;
-                            Vec3f newVertex = mid + (vec - mid) * factor;
-                            newVertex.y *= lenX.x;
-                            newVertex.x *= lenY.y;
-                            newVertex.y -= midOffset(n, numX, 1, 0);
-                            newVertex.x += midOffset(m, numY, -1,
-                                                     - 1.0f / numY); 
-                            if (zDirection) {
-                                newVertex.z *= -1.0f;
-                                newVertex.y += vecMin.x;
-                            }
-                            newVertex.y /= 2.0f;
-                            newVertex.y += (1 + m) / numY + 4.0f / numY - 2.5f;
-                            newVertex.x += (1 + n) / numX / 2.0;
-                            if (m == 0)
-                                newVertex.x += 1.0f;
-                            temp = newVertex.x;
-                            newVertex.x = newVertex.y;
-                            newVertex.y = temp;
-                            storeVertexMid(vertices, newVertex, false, 0, 
-                                           facesToDelete[i]);
-                        }
-                    }
-                    if (zDirection) {
-                        for (int j = offset + numVertices - 1; j >= offset; 
-                             j--) {
-                            Vec3f newVertex = mid + 
-                                              (vertices->getVec(ci->getValue(j))
-                                              - mid) * factor;
-                            newVertex.x *= lenX.x;
-                            newVertex.y *= lenY.y;
-                            newVertex.x += midOffset(n, numX, 1, 0);
-                            newVertex.y -= midOffset(m, numY, -1,
-                                                     - 1.0f / numY);
-                            if (zDirection) {
-                                newVertex.z *= -1.0f;
-                                newVertex.x += vecMin.x;
-                            }
-                            if (facesToDelete[i] == 4 || facesToDelete[i] == 5)
-                                newVertex.z *= -1.0f;
-                            storeVertexMid(vertices, newVertex, false, 0, 
-                                           facesToDelete[i]);
-                        }
-                    } else {
-                        for (int j = offset; j < offset + numVertices; j++) {
-                            Vec3f newVertex = mid + 
-                                              (vertices->getVec(ci->getValue(j))
-                                            - mid) * factor;
-                            newVertex.x *= lenX.x;
-                            newVertex.y *= lenY.y;
-                            newVertex.x += midOffset(n, numX, 1, 0);
-                            newVertex.y -= midOffset(m, numY, -1,
-                                                     - 1.0f / numY);
-                            if (zDirection)
-                                newVertex.z *= -1.0f;
-                            if (facesToDelete[i] == 4 || facesToDelete[i] == 5)
-                                newVertex.z *= -1.0f;
-                            storeVertexMid(vertices, newVertex, false, 0, 
-                                           facesToDelete[i]);
-                        }
-                    }
-                    for (int j = offset; j < offset + numVertices; j++)
-                        ci->appendSFValue(midstart + j - offset);
-                    ci->appendSFValue(-1);
                     for (int j = offset + numVertices - 1; j >= offset; j--) {
-                        int k = j - offset;
+                        Vec3f newVertex = mid + 
+                                          (vertices2->getVec(ci->getValue(j))
+                                          - mid) * factor;
+
+                        newVertex.x *= lenX.x;
+                        newVertex.y *= lenY.y;
+                        float xoffset = 0.0f;
+                        float yoffset = 0.0f;
+                        if (numY == 2) {
+                            xoffset -= 1.0f / (float)numY + 0.5f / (float)numY;
+                            yoffset -= 1.0f / (float)numY;
+                        }
+                        if (numY == 3) {
+                            xoffset = 1.0f / (float)numY - 2.0f;
+                            yoffset = 1.0f / (float)numY;
+                        }
+                        if (face->getType() == FACE_FRONT ||
+                            face->getType() == FACE_BACK) {
+                            newVertex.x -= xoffset +
+                                           2.0f * (float)n / (float)numX;
+                            newVertex.y += yoffset + 
+                                            2.0f * (float)m / (float)numY;
+                        }
+                        if (face->getType() == FACE_TOP ||
+                            face->getType() == FACE_BOTTOM) {
+                             newVertex.x += xoffset +
+                                            (2.0f * (float)n) / (float)numX;
+                             if (numY == 2) {
+                                 if (numX == 1) {
+                                     newVertex.z += yoffset + 
+                                                    4.0f * (float)m / 
+                                                        (float)numY;
+                                 } else if (numX == 2) {
+                                     newVertex.z += yoffset + 
+                                                    4.0f * (float)m / 
+                                                        (float)numY;
+                                 } else 
+                                     newVertex.z += yoffset + 
+                                                    2.0f * (float)m / 
+                                                        (float)numY;
+                             }
+                             if (numY == 3)
+                                 newVertex.z += yoffset + 
+                                                6.0f * (float)m / (float)numY;
+                        }
+                        if (face->getType() == FACE_RIGHT ||
+                            face->getType() == FACE_LEFT) {
+                             if (numY == 1) {
+                                 yoffset = 1.0f;
+                                 newVertex.z += -0.12f + 1.5f - 3.0f -
+                                                 2.0f / (float)numX +
+                                                 2.0f * (float)numY * (float)n;
+                                 newVertex.y += yoffset - 1.0f / (float)numX +
+                                                1.0f * (float)m;
+                             }
+                             if (numY == 2) {
+                                 yoffset = 1.0f;
+                                 newVertex.z += -0.12f + 1.5f - 3.0f -
+                                                 2.0f / (float)numX +
+                                                 0.66f * (float)numY * (float)n;
+                                 if (numX == 2) {
+                                      newVertex.z += -0.12f + 1.5f - 3.0f -
+                                                     2.0f / (float)numX +
+                                                     0.36f * (float)numY * 
+                                                         (float)n;
+                                      newVertex.y += yoffset 
+                                                     - 2.0f / (float)numX +
+                                                     1.0f * (float)m;
+                                 } else
+                                      newVertex.y += yoffset 
+                                                     - 1.0f / (float)numX +
+                                                     1.0f * (float)m;
+                             }
+                             if (numY == 3) {
+                                 newVertex.y += 1.0f / (float)numY +
+                                                2.0f * (float)n / (float) numX;
+                                 newVertex.z += yoffset + 
+                                                6.0f * (float)m / (float)numY;
+                            }
+                        }
+                        storeVertexMid(vertices, ci, newVertex, face->getType(),
+                                       n, m, numX, numY, false);
+                    }
+                    ci->appendSFValue(-1);
+                }
+        for (int n = 0; n < numX; n++) 
+            for (int m = 0; m < numY; m++) 
+                for (long i = 0; i < facesToDelete.size(); i++) {
+                    FaceData *face = getMesh()->getFace(facesToDelete[i]);
+                    int offset = face->getOffset();
+                    int numVertices = face->getNumVertices();
+                    for (int j = offset; j < offset + numVertices; j++) {
                         if (j == offset) {
+                            // right limiter
                             Vec3f startVertex = 
                                  vertices->getVec(ci->getValue(j));
+
+                            if (numY == 1 && numX == 2) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y -= 1.0;
+                                }
+                                if (face->getType() == FACE_TOP ||
+                                    face->getType() == FACE_BOTTOM) {
+                                    startVertex.y -= 1.0;
+                                }
+                                if (face->getType() == FACE_RIGHT || 
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.y -= 1.0;
+                                }
+                            } 
+                            if (numY == 1 && numX == 3) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.x += 3.0f / (float)numX;
+                                    startVertex.y -= 2.0f;
+                                }
+                                if (face->getType() == FACE_TOP || 
+                                    face->getType() == FACE_BOTTOM) {
+                                    startVertex.y -= 3.5f;
+                                }
+                                if (face->getType() == FACE_RIGHT) {
+                                    startVertex.y -= 2.0f;
+                                }
+                                if (face->getType() == FACE_LEFT) {
+                                    startVertex.y += 0.5f;
+                                }
+                            }
+                            if (numY == 2 && numX == 3) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.x -= 1.0f / (float)numX;
+                                    startVertex.y += 2.0f / (float)numX;
+                                }
+                                if (face->getType() == FACE_TOP || 
+                                    face->getType() == FACE_BOTTOM) {       
+                                    startVertex.x += 1.0f;
+                                    startVertex.y += 1.0f + 
+                                                     2.25f / (float)numX;
+                                }
+                                if (face->getType() == FACE_RIGHT ||
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.x += 1.0f;
+                                    startVertex.y += 2.0f - 0.5f / numX - 0.1;
+                                }
+                                startVertex.y += - 2.0f + 0.25f; 
+                            }
+                            if (numY == 3 && numX == 1) {
+                                if (face->getType() == FACE_FRONT || 
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y += 1.0f;
+                                }
+                            }
+                            if (numY == 3 && numX == 2) {
+                                if (face->getType() == FACE_FRONT || 
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y += 1.0f; 
+                                }
+                                if (face->getType() == FACE_TOP || 
+                                    face->getType() == FACE_BOTTOM) {
+                                    startVertex.y += 1.0f; 
+                                }
+                                if (face->getType() == FACE_RIGHT || 
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.y -= 3.0f; 
+                                }
+                            } 
+                            if (numY == 3 && numX == 3) {
+                                if (face->getType() == FACE_TOP)    
+                                    startVertex.y += 1.0f + 
+                                                     1.0f / (float)numY +
+                                                     0.5f / (float)numY;
     
-                            if (facesToDelete[i] == 1)
-                                startVertex.x -= 2.0f;
+                                if (face->getType() == FACE_BOTTOM)    
+                                    startVertex.y += 1.0f + 
+                                                     1.0f / (float)numY +
+                                                     0.5f / (float)numY;
     
+                                if (face->getType() == FACE_FRONT)    
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 2.0f / (float)numY;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 1.0f / (float)numY;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY -
+                                                     0.125f / 4.0f;
+    
+                                if (face->getType() == FACE_BACK)    
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 2.0f / (float)numY;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 1.0f / (float)numY;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY -
+                                                     0.125f / 4.0f;
+    
+                                if (face->getType() == FACE_RIGHT)
+                                    startVertex.y += 1.0f / (float)numY -
+                                                     0.25f / (float)numY + 0.25;
+                                if (face->getType() == FACE_LEFT)
+                                    startVertex.y -= 1.5 / (float)numY;
+                            }
+
                             Vec3f newVertex = startVertex;
     
-                            newVertex.y -= borderBegin(m, numY, -1, 
-                                                       -1.0f / numY / 2.0f);
+                            newVertex.x -= border1(n, numX);
+                            newVertex.y -= border1(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, xOffset,
-                                        facesToDelete[i]);
-    
-                            newVertex = startVertex;
-    
-                            newVertex.x += borderBegin(n, numX, 1, 0);
-                            newVertex.y -= borderBegin(m, numY, -1,
-                                                       -1.0f / numY);
-    
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n,m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderSecond(n, numX, 1, 0);
-                            newVertex.y -= borderBegin(m, numY, -1,
-                                                       -1.0f / numY);
+                            newVertex.x -= border2(n, numX);
+                            newVertex.y -= border2(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex,
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderEnd(n, 1);
-                            newVertex.y -= borderBegin(m, numY, -1,
-                                                       -1.0f / numY / 2.0f);
+                            newVertex.x -= border2(n, numX);
+                            newVertex.y -= border3(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex,
+                                        face->getType(), n, m, numX, numY);
+    
+                            newVertex = startVertex;
+    
+                            newVertex.x -= border1(n, numX);
+                            newVertex.y -= border4(m, numY);
+    
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n ,m,numX, numY);
+                            ci->appendSFValue(-1);
                         }
-                        ci->appendSFValue(-1);
                         if (j == offset + 1) {
+                            // top limiter
                             Vec3f startVertex = vertices->getVec(
                                  ci->getValue(j - 1));
+
+                            if (numY == 1 && numX == 2) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y += 1.0;
+                                }
+                                if (face->getType() == FACE_TOP ||
+                                    face->getType() == FACE_BOTTOM) {
+                                    startVertex.y -= 1.0;
+                                }
+                                if (face->getType() == FACE_RIGHT || 
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.y -= 1.0;
+                                }
+                            } 
+                            if (numY == 1 && numX == 3) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y -= 2.0f;
+                                    startVertex.x += 3.0f / numX;
+                                }
+                                if (face->getType() == FACE_TOP ||
+                                    face->getType() == FACE_BOTTOM) {
+                                    startVertex.y -= 1.0f;
+                                }
+                                if (face->getType() == FACE_RIGHT ||
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.y -= 1.0f;
+                                }
+                            }
+                            if (numY == 2 && numX == 3) {
+                                startVertex.x += 1.0f;
+                            }
+                            if (numY == 3 && numX == 1) {
+                                if (face->getType() == FACE_FRONT || 
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y += 1.0f;
+                                }
+                            }
+                            if (numY == 3 && numX == 2) {
+                                startVertex.y += 1.0f;
+                            }
+                            if (numY == 3 && numX == 3) { 
+                                if (face->getType() == FACE_TOP) {
+                                    startVertex.y += 4.5f /(float)numY;
+                                }
+                                if (face->getType() == FACE_BOTTOM) {
+                                    startVertex.y += 4.5f /(float)numY;
+                                }
     
-                            if (facesToDelete[i] == 1)
-                                startVertex.x -= 2.0f;
+                                if (face->getType() == FACE_FRONT)    
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 1.5f; 
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y -= 1.0f / (float)numY +
+                                                     0.5f / (float)numY;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY;
     
+                                if (face->getType() == FACE_BACK)    
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 1.5f; 
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y -= 1.0f / (float)numY +
+                                                     0.5f / (float)numY;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY;
+    
+                                if (face->getType() == FACE_RIGHT)
+                                    startVertex.y += 1.5f / (float)numY;
+                                if (face->getType() == FACE_LEFT)
+                                    startVertex.y -= 1.5f / (float)numY;
+                            }
+
                             Vec3f newVertex = startVertex;
     
-                            newVertex.y -= borderEnd(m, 0);
+                            newVertex.x -= border4(n, numX);
+                            newVertex.y -= border1(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection,
-                                        xOffset, facesToDelete[i]);
-    
-                            newVertex = startVertex;
-    
-                            newVertex.x += borderBegin(n, numX, 1, 0);
-                            newVertex.y -= borderSecond(m, numY, -1, 0 / numY - 
-                                                                 1.0f / numY);
-    
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection,
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n,m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderBegin(n, numX, 1, 0);
-                            newVertex.y -= borderBegin(m, numY, -1,
-                                                       -1.0f / numY);
+                            newVertex.x -= border3(n, numX);
+                            newVertex.y -= border2(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection,
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.y -= borderBegin(m, numY, -1, 
-                                                       -1.0f / numY / 2.0f);
+                            newVertex.x -= border2(n, numX);
+                            newVertex.y -= border2(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
+    
+                            newVertex = startVertex;
+        
+                            newVertex.x -= border1(n, numX);
+                            newVertex.y -= border1(m, numY);
+
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
+                             ci->appendSFValue(-1);
                         }
-                        ci->appendSFValue(-1);
                         if (j == offset + 2) {
+                            // bottom limiter
                             Vec3f startVertex = 
-                                 vertices->getVec(ci->getValue(j));
-                            startVertex.z -= 2.0f;
-                            startVertex.x += 2.0f;
+                                 vertices->getVec(ci->getValue(j - 2));
+
+                            if (numY == 1 && numX == 3) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.y -= 1.0f;
+                                    startVertex.x += 1.00f;
+                                }
+                            }
+                            if (numY == 2 && numX == 3) {
+                                startVertex.x += 1.0f; 
+                            }
+                            if (numY == 3 && numX == 3) {
+                                if (face->getType() == FACE_TOP) {
+                                    startVertex.y += 4.0f / (float)numY -
+                                                     2.5f / (float)numY;
+                                }
+                                if (face->getType() == FACE_BOTTOM) {
+                                    startVertex.y += 4.0f / (float)numY -
+                                                     2.5f / (float)numY;
+                                }
     
-                            if (facesToDelete[i] == 0) {
-                                startVertex.x -= 2.0f;
-                                startVertex.z += 2.0f;
-                            }
-                            if (facesToDelete[i] == 1)
-                                startVertex.z += 2.0f;
-                            if (facesToDelete[i] == 2) {
-                                startVertex.x -= 2.0f;
-                                startVertex.y -= 2.0f;
-                                startVertex.z += 2.0f;
-                            }
-                            if (facesToDelete[i] == 3) {
-                                startVertex.x -= 2.0f;
-                                startVertex.y -= 2.0f;
-                                startVertex.z += 2.0f;
-                            }
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y -= - 0.5f / (float)numY + 0.25f; 
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 0.125f / 4.0f;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY;
     
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y -= - 0.5f / (float)numY + 0.25f; 
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 0.125f / 4.0f;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY;
+    
+                                if (face->getType() == FACE_RIGHT)
+                                    startVertex.y -= 1.0f / (float)numY +
+                                                 0.5f / (float)numY;
+                                if (face->getType() == FACE_LEFT)
+                                    startVertex.y -= 4.5f / (float)numY;
+
+                            }
+ 
                             Vec3f newVertex = startVertex;
     
-                            newVertex.x += borderEnd(n, -1);
-                            newVertex.y -= borderBegin(m, numY, -1,
-                                                       1.0f / numY / 2.0f + 
-                                                       1.0f / numY);
+                            newVertex.x -= border1(n, numX);
+                            newVertex.y += border1(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            if ((facesToDelete[i] == 2) || 
-                                (facesToDelete[i] == 3))
-                                storeVertexYX(vertices, newVertex, zDirection,
-                                              xOffset, facesToDelete[i]);
-                            else
-                                storeVertex(vertices, newVertex, zDirection, 
-                                            xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderSecond(n, numX, 1, 
-                                                        -2.0f * numX);
-                            newVertex.y -= borderBegin(m, numY,
-                                                       -1.0f, 2.0f / numY);
+                            newVertex.x -= border2(n, numX);
+                            newVertex.y += border2(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            if ((facesToDelete[i] == 2) || 
-                                (facesToDelete[i] == 3))
-                                storeVertexYX(vertices, newVertex, zDirection, 
-                                              xOffset, facesToDelete[i]);
-                            else
-                                storeVertex(vertices, newVertex, zDirection, 
-                                            xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderBegin(n, numX, 1, 0) - 
-                                           2 * numX;
-                            newVertex.y -= borderBegin(m, numY, 
-                                                       -1, 2.0f / numY);
+                            newVertex.x -= border3(n, numX);
+                            newVertex.y += border2(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            if ((facesToDelete[i] == 2) || 
-                                (facesToDelete[i] == 3))
-                                storeVertexYX(vertices, newVertex, zDirection, 
-                                              xOffset, facesToDelete[i]);
-                            else
-                                storeVertex(vertices, newVertex, zDirection, 
-                                            xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
+ 
+                            newVertex.x -= border4(n, numX);
+                            newVertex.y += border1(m, numY);
     
-                            newVertex.x += - 2 * numX;
-                            newVertex.y -= borderBegin(m, numY, -1, 
-                                                       1.0f / numY / 2.0f + 
-                                                       1.0f / numY);
-    
-                            ci->appendSFValue(vertices->getSFSize());
-                            if ((facesToDelete[i] == 2) || 
-                                (facesToDelete[i] == 3))
-                                storeVertexYX(vertices, newVertex, zDirection, 
-                                              xOffset, facesToDelete[i]);
-                            else
-                                storeVertex(vertices, newVertex, zDirection, 
-                                            xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
+                            ci->appendSFValue(-1);
                         }
-                        ci->appendSFValue(-1);
                         if (j == offset + 3) {
+                            // left limiter
                             Vec3f startVertex = vertices->getVec(
                                  ci->getValue(j - 3));
+                          
+                            if (numY == 1 && numX == 3) {
+                                if (face->getType() == FACE_FRONT ||
+                                    face->getType() == FACE_BACK) {
+                                    startVertex.x += 3.0f / (float)numX;
+                                    startVertex.y *= 2.0f;  
+                                    startVertex.y -= 2.0f;  
+                                }
+                            }
+                            if (numX == 2 && numY == 2) { 
+                                if (face->getType() == FACE_RIGHT ||
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.x += 2.0f / (float)numY;
+                                }
+                                if (face->getType() == FACE_RIGHT ||
+                                    face->getType() == FACE_LEFT) {
+                                    startVertex.x -= 1.0;
+                                }
+                            }
+                            if (numY == 2 && numX == 3) {
+                                startVertex.x += 1.0f; 
+                            }
+                            if (numX == 3 && numY == 3) { 
+                                if (face->getType() == FACE_FRONT)    
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_FRONT)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY;
     
-                            if (facesToDelete[i] == 4 || facesToDelete[i] == 5)
-                                xOffset = startVertex.x;
-                            if (facesToDelete[i] == 1)
-                                startVertex.x -= 2.0f;
+                                if (face->getType() == FACE_BACK)    
+                                    startVertex.x += 1.0f;
+                                if (face->getType() == FACE_BACK)
+                                    startVertex.y += 0.5f / 3.0f / (float)numY;
     
+                                if (face->getType() == FACE_TOP) {
+                                    startVertex.y += 1.5f / numY;
+                                }
+                                if (face->getType() == FACE_BOTTOM) {
+                                    startVertex.y += 1.5f / numY;
+                                }
+                                if (face->getType() == FACE_RIGHT)
+                                    startVertex.y -= 1.0f / (float)numY +
+                                                     0.5f / (float)numY;
+                                if (face->getType() == FACE_LEFT)
+                                    startVertex.y -= 4.5f / (float)numY;
+                            }
                             Vec3f newVertex = startVertex;
+
+                            newVertex.x -= border4(n, numX);
+                            newVertex.y += border1(m, numY);
     
-                            newVertex.x += borderEnd(n, 1);
-                            newVertex.y -= borderEnd(m, -1);
-    
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
-    
-                            newVertex = startVertex;
-    
-                            newVertex.x += borderSecond(n, numX, 1, 0);
-                            newVertex.y -= borderSecond(m, numY, -1, 0);
-    
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderSecond(n, numX, 1, 0);
-                            newVertex.y -= borderBegin(m, numY, -1, -1);
+                            newVertex.x -= border3(n, numX);
+                            newVertex.y += border2(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
     
                             newVertex = startVertex;
     
-                            newVertex.x += borderEnd(n, 1);
-                            newVertex.y -= borderEnd(m, 0);
+                            newVertex.x -= border3(n, numX);
+                            newVertex.y += border3(m, numY);
     
-                            ci->appendSFValue(vertices->getSFSize());
-                            storeVertex(vertices, newVertex, zDirection, 
-                                        xOffset, facesToDelete[i]);
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
+    
+                            newVertex = startVertex;
+ 
+                            newVertex.x -= border4(n, numX);
+                            newVertex.y += border4(m, numY);
+    
+                            storeVertex(vertices, ci, newVertex, 
+                                        face->getType(), n, m, numX, numY);
+
+                            ci->appendSFValue(-1);
                         }
-                        ci->appendSFValue(-1);
                     }
                 }
     }

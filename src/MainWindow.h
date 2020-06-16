@@ -206,6 +206,7 @@ public:
     void                Play();
     void                Stop();
     void                UpdateTitle();
+    int                 getWidth(void);
 
 protected:
     Node               *createNode(Node *node);

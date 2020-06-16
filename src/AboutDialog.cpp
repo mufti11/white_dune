@@ -35,7 +35,7 @@ AboutDialog::AboutDialog(SWND parent)
     swLabelSetText(swGetDialogItem(m_dlg, IDC_GL_VENDOR), vendor);
     swLabelSetText(swGetDialogItem(m_dlg, IDC_GL_RENDERER), renderer);
     swLabelSetText(swGetDialogItem(m_dlg, IDC_GL_VERSION), version);
-    MyString ext;
+    MyString ext = "";
     for (const char *e = extensions; *e; e++) {
         if (*e == ' ')
             ext += swGetPathSeperator();
