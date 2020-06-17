@@ -80,6 +80,7 @@ class MyString {
     long        length() const { return strlen(m_stringBuf->m_data); }
     long        write(int filedes);
     const char *getData(void) const { return m_stringBuf->m_data; }
+    void        setChar(int i, char c) { m_stringBuf->m_data[i] = c; }
 
     bool        sub(MyString what, MyString with);
     bool        gsub(MyString what, MyString with);

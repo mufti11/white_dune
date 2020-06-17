@@ -5626,4 +5626,6 @@ Translated plane tutorial to german
 
 Added mageia 7 mkrpm packager script
 
+Fixed warbird/MFstring multiline C writing
+
 Contact: MUFTI <mufti11@web.de>

@@ -75,11 +75,17 @@ MFString::copy()
     return new MFString(value);
 }
 
-int MFString::writeDataC(int f, int i, int languageFlag)
+int MFString::writeDataC(int f, int i, int languageFlag) const
 {
     MyString value = "";
     value += m_value[i];
-    value.gsub("\n", "\\n");
+    bool hasEndN = false;
+    if (value.length() > 0  && value[value.length() - 1] == '\n')
+        hasEndN = true;
+    value.gsub("\n", " \\");
+//    if (hasEndN)
+//        value.setChar(value.length() - 1, '\n');
+    value.gsub("\\", " \\\n");
     value.gsub("\r", "\\r");
     RET_ONERROR( mywritestr(f, "\"") )
     RET_ONERROR( mywritestr(f, value) )

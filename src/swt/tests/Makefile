@@ -7,7 +7,7 @@ AWK = gawk
 CXXCPP = g++ -E
 CXX = g++
 
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g ../../mysnprintf.o ../lib/libswt.a -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -losdCPU  
+LIBS =   -L/usr/local/lib -L/usr/local/lib -g ../../mysnprintf.o ../lib/libswt.a -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -losdCPU  
 
 INCDIRS = -I../include
 

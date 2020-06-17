@@ -2714,7 +2714,7 @@ NodePROTO::writeXml(int filedes, int indent, int containerField, bool avoidUse)
                             (const char *)dstEvent->getName(true)) )
                     }
                 }
-
+/*
         for (int j = 0; j < fromProto->getNumEventIns(); j++)
             for (int n = 0; n < fromProto->getEventIn(j)->getNumIs(); n++)
                 if (fromProto->getEventOut(j)->getIsElementType(n) == 
@@ -2744,7 +2744,7 @@ NodePROTO::writeXml(int filedes, int indent, int containerField, bool avoidUse)
                             (const char *)dstEvent->getName(true)) )
                     }
                 }
-
+*/
 
         for (int i = 0; i < m_numEventIns; i++) {
             SocketList::Iterator *j;

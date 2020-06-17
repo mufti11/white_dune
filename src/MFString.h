@@ -44,7 +44,7 @@ public:
                                             const char* variableName,
                                             int languageFlag) const;
 
-    virtual int         writeDataC(int filedes, int i, int languageFlag);
+    virtual int         writeDataC(int filedes, int i, int languageFlag) const;
     virtual int         writeRaw(int filedes, int indent) const;
 
     virtual int         writeData(int filedes, int i) const; 
