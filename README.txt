@@ -5628,4 +5628,12 @@ Added mageia 7 mkrpm packager script
 
 Fixed warbird/MFstring multiline C writing
 
+Fixed inset X 2 Y 3
+
+Fixed inset X 3 Y 2
+
+Fixed inset X 3 Y 1
+
+Added current X3DV4 draft nodes and fields
+
 Contact: MUFTI <mufti11@web.de>

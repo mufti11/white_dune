@@ -139,6 +139,7 @@ NODECLASSES = \
         NodeHAnimDisplacer.o \
         NodeHAnimHumanoid.o \
         NodeHAnimJoint.o \
+        NodeHAnimMotion.o \
         NodeHAnimSegment.o \
         NodeHAnimSite.o \
         NodeImageCubeMapTexture.o \
@@ -207,6 +208,7 @@ NODECLASSES = \
         NodePointEmitter.o \
 	NodePointLight.o \
         NodePointPickSensor.o \
+        NodePointProperties.o \
 	NodePointSet.o \
 	NodePolyline2D.o \
         NodePolylineEmitter.o \

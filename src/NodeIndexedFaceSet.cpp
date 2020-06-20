@@ -1740,6 +1740,9 @@ static void storeVertexN(MFVec3f *vertices, MFInt32 *ci, Vec3f vertex,
     }
     if (numY == 3 && numX == 2) {
         if (face == FACE_BACK) {
+            vec.x *= -1.0f;
+
+            vec.x += 1.0f;
             vec.y += 1.0f;
         }
         if (face == FACE_FRONT) {
@@ -1821,7 +1824,11 @@ static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.y *= 2.0f; 
             vec.y += 1.0f; 
             vec.x *= 2.0f / (float)numX; 
-            vec.x += 1.0f / (float)numX; 
+            vec.x += 1.0f / (float)numX;
+            if (face == FACE_BACK) {
+                vec.x *= -1.0f;
+                vec.x -= -4.0f / (float)numX;
+            }
         }       
         if (face == FACE_TOP || face == FACE_BOTTOM) {
             float temp = vec.y;
@@ -1840,6 +1847,7 @@ static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.z += 1.0f;
             if (face == FACE_BOTTOM)
                 vec.z += 2.0f;
+          
         }
         if (face == FACE_LEFT || face == FACE_RIGHT) {
             float temp = vec.x;
@@ -1926,18 +1934,65 @@ static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             }
         }
     }
-    if (numX == 2 && numY == 3) {
+    if (numY == 2 && numX == 3) {
         if (face == FACE_FRONT) {
             vec.x *= 2.0f;
-            vec.x -= 1.0f + 0.05;
+            vec.x -= 1.0f - 0.025;
             vec.y -= 1.0f;
         }
         if (face == FACE_BACK) {
-            vec.x *= 2.0f;
-            vec.x -= 1.0f - 0.05;
+            vec.x *= 2.05f;
+            vec.x -= 1.0f - 0.025;
             vec.x *= -1.0f;
             vec.y -= 1.0f;
         }
+        if (face == FACE_TOP || face == FACE_BOTTOM) {
+            float temp = vec.y;
+            vec.y = vec.x;
+            vec.x = temp;
+    
+            temp = vec.y;
+            vec.y = vec.z;
+            vec.z = temp;
+    
+            if (face == FACE_BOTTOM) {
+                vec.y = -1.0f;            
+                vec.z *= -2.0f;
+            } else
+                vec.y = 1.0f;            
+
+            vec.x += 1.0f / (float)numY;            
+            vec.z -= 1.0f / (float)numY;            
+    
+            vec.x *= 2.0f - 2.0f / (float)numY; 
+    
+            vec.x -= 1.5;
+    
+            if (face == FACE_TOP) {
+                vec.z *= 2.0f;
+                vec.z += 2.0f;
+            } else {
+                vec.x += 2.0f;            
+                vec.z -= 0.333;
+            }
+        }
+        if (face == FACE_RIGHT || face == FACE_LEFT) {
+            float temp = vec.x;
+            vec.x = vec.z;
+            vec.z = temp;
+
+            vec.z *= -(float)numY / (float)numX;
+            if (face == FACE_RIGHT) {
+                vec.x = 1.0f;
+            } else {
+                vec.x = -1.0f;
+                vec.z *= -1.0f;
+                vec.z += 0.05f - 2 / (float)numX;
+            }
+            vec.y += - 1.27;
+            vec.y += 0.75f / (float)numX;
+            vec.z += 1.0f;
+        }    
     }
     if (numY == 3 && numX == 1) {
         if (face == FACE_FRONT || face == FACE_BACK) {
@@ -1987,62 +2042,15 @@ static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.z -= 2.0f;
         }
     }
-    if (numX == 3 && numY == 2) {
-        if (face == FACE_FRONT) {
-            vec.x *= 2.0f;
-            vec.x -= 1.0f - 0.025;
-            vec.y -= 1.0f;
-        }
-        if (face == FACE_BACK) {
-            vec.x *= 2.05f;
-            vec.x -= 1.0f - 0.025;
-            vec.x *= -1.0f;
-            vec.y -= 1.0f;
-        }
-        if (face == FACE_TOP || face == FACE_BOTTOM) {
-            float temp = vec.y;
-            vec.y = vec.x;
-            vec.x = temp;
-    
-            temp = vec.y;
-            vec.y = vec.z;
-            vec.z = temp;
-    
-            if (face == FACE_BOTTOM) {
-                vec.y = -1.0f;            
-                vec.z *= -1;
-            } else
-                vec.y = 1.0f;            
-
-            vec.x += 1.0f / (float)numY;            
-            vec.z -= 1.0f / (float)numY;            
-    
-            vec.x *= 2.0f - 2.0f / (float)numY; 
-    
-            vec.x += 0.5;
-    
-            vec.z *= -2.0f;
-            vec.z -= 2.0f;
-        }
-        if (face == FACE_RIGHT || face == FACE_LEFT) {
-            float temp = vec.x;
-            vec.x = vec.z;
-            vec.z = temp;
-
-            vec.z *= (float)numY / (float)numX;
-            if (face == FACE_RIGHT) {
-                vec.x = 1.0f;
-            } else {
-                vec.x = -1.0f;
-                vec.z -= 0.5f + 0.5 / (float)numX;
-            }
-            vec.y += - 1.27;
-            vec.y += 0.75f / (float)numX;
-            vec.z += 1.0f;
-        }    
-    }
     if (numY == 3 && numX == 2) {
         if (face == FACE_FRONT || face == FACE_BACK) {
+            vec.x *= 2.0f;
+            if (face == FACE_FRONT) {
+                vec.y -= 1.0f;
+            } else {
+                vec.y -= 1.0f;
+            }
+            vec.x -= 1.0f;
             vec.x *= 0.5f;
             vec.x += 1.5f / (float)numY;
             vec.y *= (float)numX / (float)numY;
@@ -2070,7 +2078,7 @@ static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.z = temp;
 
             vec.y = -1.0f;
-            vec.z *= -(float)numX / (float)numY;
+            vec.z *= (float)numX / (float)numY;
 
             vec.x += 3.0f / (float)numY;            
             vec.z += 2.0f / (float)numY;            
@@ -2089,8 +2097,7 @@ static void storeVertex(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.y = vec.x;
             vec.x = temp;
 
-            vec.x *= -1.0f;
-            vec.z *= ((float)numY - 1) / (float)numY;
+            vec.z *= -((float)numY - 1) / (float)numY;
 
             vec.x += 2.0f;
             vec.y -= 1.0f;
@@ -2327,9 +2334,9 @@ static void storeVertexMid(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.z = temp;
 
             vec.x *= 1.0f / (float)numY;
-            vec.x -= 2.235f;
+            vec.x -= 0.235f;
             vec.y = 1.0f;
-            vec.z += 0.0965f;
+            vec.z += 0.0815f;
         }
         if (face == FACE_BOTTOM) {
             float temp = vec.x;
@@ -2339,15 +2346,16 @@ static void storeVertexMid(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.x *= 1.0f / (float)numY;
             vec.x -= 0.235f;
             vec.y = -1.0f;
-            vec.z += 0.0965f;
+            vec.z += 0.1365f;
         }
         if (face == FACE_RIGHT || face == FACE_LEFT) {
             vec.z *= -1.0f / (float)numY;
-            if (face == FACE_RIGHT)
+            if (face == FACE_RIGHT) {
                 vec.x = 1.0f;
+            }
             if (face == FACE_LEFT)
                 vec.x = -1.0f;
-            vec.y -= 1.17f;
+            vec.y -= 1.189f;
             vec.z -= 0.5f;
         }
     }
@@ -2358,26 +2366,26 @@ static void storeVertexMid(MFVec3f *vertices, MFInt32 *ci, Vec3f newVertex,
             vec.y -= 1.1f; 
         }
     }
-    if (numY == 3 && numX== 2) {
+    if (numY == 3 && numX == 2) {
         if (face == FACE_FRONT || face == FACE_BACK) {
             vec.x *= -1.0f; 
-            vec.x += 1.0f - 0.025; 
+            vec.x += 1.0f; 
             vec.x += 0.5f / (float)numY;
             vec.y -= 1.0f; 
         }
         if (face == FACE_TOP) {
             vec.z *= -1.0f /numY; 
             vec.z += -1.0f / numY;
-            vec.x += 1.5f - 1.0f / numY;
+            vec.x += 2.002f - 1.0f / numY;
             vec.y = 1.0f;
             vec.z += 1.10285f;
         }
         if (face == FACE_BOTTOM) {
             vec.z *= -1.0f / numY;
             vec.z += -1.0f / numY;
-            vec.x += 1.5f - 1.0f / numY;;
+            vec.x += 1.972f - 1.0f / numY;;
             vec.y = -1.0f;
-            vec.z += 1.10285f;
+            vec.z += 1.12585f;
         }
         if (face == FACE_RIGHT) {
         }
@@ -2632,7 +2640,7 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
                                                         (float)numY;
                                  } else 
                                      newVertex.z += yoffset + 
-                                                    2.0f * (float)m / 
+                                                    4.0f * (float)m / 
                                                         (float)numY;
                              }
                              if (numY == 3)
@@ -2713,20 +2721,20 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
                                 }
                                 if (face->getType() == FACE_TOP || 
                                     face->getType() == FACE_BOTTOM) {
-                                    startVertex.y -= 3.5f;
+                                    startVertex.y -= 1.0f;
                                 }
                                 if (face->getType() == FACE_RIGHT) {
-                                    startVertex.y -= 2.0f;
+                                    startVertex.y -= 1.0f;
                                 }
                                 if (face->getType() == FACE_LEFT) {
-                                    startVertex.y += 0.5f;
+                                    startVertex.y -= 1.0f;
                                 }
                             }
                             if (numY == 2 && numX == 3) {
                                 if (face->getType() == FACE_FRONT ||
                                     face->getType() == FACE_BACK) {
-                                    startVertex.x -= 1.0f / (float)numX;
-                                    startVertex.y += 2.0f / (float)numX;
+                                    startVertex.x += 1.09f;// - 1.0f / (float)numX;
+                                    startVertex.y += 1.0f + 2.25f / (float)numX;
                                 }
                                 if (face->getType() == FACE_TOP || 
                                     face->getType() == FACE_BOTTOM) {       
@@ -2744,6 +2752,14 @@ NodeIndexedFaceSet::insetFaces(float factor, int numX, int numY)
                             if (numY == 3 && numX == 1) {
                                 if (face->getType() == FACE_FRONT || 
                                     face->getType() == FACE_BACK) {
+                                    startVertex.y += 1.0f;
+                                }
+                                if (face->getType() == FACE_TOP || 
+                                    face->getType() == FACE_BOTTOM) {
+                                    startVertex.y += 3.0f;
+                                }
+                                if (face->getType() == FACE_RIGHT || 
+                                    face->getType() == FACE_LEFT) {
                                     startVertex.y += 1.0f;
                                 }
                             }

@@ -47,7 +47,13 @@ public:
     virtual bool    isX3dInternalProto(void) { return true; }
 
     FieldIndex      info;
+    FieldIndex      jointBindingPositions;
+    FieldIndex      jointBindingRotations;
+    FieldIndex      jointBindingScales;
     FieldIndex      joints;
+    FieldIndex      loa;
+    FieldIndex      motions;
+    FieldIndex      motionsEnabled;    
     FieldIndex      name;
     FieldIndex      segments;
     FieldIndex      sites;
@@ -109,17 +115,23 @@ public:
 
     virtual int       writeRib(int filedes, int indent);
 
-    fieldMacros(MFString, info,        ProtoHAnimHumanoid)
-    fieldMacros(MFNode,   joints,      ProtoHAnimHumanoid)
-    fieldMacros(SFString, name,        ProtoHAnimHumanoid)
-    fieldMacros(MFNode,   segments,    ProtoHAnimHumanoid)
-    fieldMacros(MFNode,   sites,       ProtoHAnimHumanoid)
-    fieldMacros(MFNode,   skeleton,    ProtoHAnimHumanoid)
-    fieldMacros(MFNode,   skin,        ProtoHAnimHumanoid)
-    fieldMacros(SFNode,   skinCoord,   ProtoHAnimHumanoid)
-    fieldMacros(SFNode,   skinNormal,  ProtoHAnimHumanoid)
-    fieldMacros(SFString, version,     ProtoHAnimHumanoid)
-    fieldMacros(MFNode,   viewpoints,  ProtoHAnimHumanoid)
+    fieldMacros(MFString,   info,                  ProtoHAnimHumanoid)
+    fieldMacros(MFVec3f,    jointBindingPositions, ProtoHAnimHumanoid)
+    fieldMacros(MFRotation, jointBindingRotations, ProtoHAnimHumanoid)
+    fieldMacros(MFVec3f,    jointBindingScales,    ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     joints,                ProtoHAnimHumanoid)
+    fieldMacros(SFInt32,    loa,                   ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     motions,               ProtoHAnimHumanoid)
+    fieldMacros(MFBool,     motionsEnabled,        ProtoHAnimHumanoid)
+    fieldMacros(SFString,   name,                  ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     segments,              ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     sites,                 ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     skeleton,              ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     skin,                  ProtoHAnimHumanoid)
+    fieldMacros(SFNode,     skinCoord,             ProtoHAnimHumanoid)
+    fieldMacros(SFNode,     skinNormal,            ProtoHAnimHumanoid)
+    fieldMacros(SFString,   version,               ProtoHAnimHumanoid)
+    fieldMacros(MFNode,     viewpoints,            ProtoHAnimHumanoid)
 
 public:
     MyArray<NodeMaterial *> m_materials;

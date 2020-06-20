@@ -67,6 +67,11 @@ ProtoAppearance::addElements(void)
                           X3D_LINE_PROPERTIES));
     setFieldFlags(lineProperties, FF_X3D_ONLY);    
 
+    pointProperties.set(
+          addExposedField(SFNODE, "pointProperties", new SFNode(NULL), 
+                          X3D_POINT_PROPERTIES));
+    setFieldFlags(pointProperties, FF_X3D_ONLY);    
+
     shaders.set(
           addExposedField(MFNODE, "shaders", new MFNode(), SHADER_NODE));
     setFieldFlags(shaders, FF_X3D_ONLY);    

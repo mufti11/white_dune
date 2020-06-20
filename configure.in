@@ -61,12 +61,14 @@ fi
 
 dnl Check for compiler programs
 
+dnl fix wrong "-g -O2" flags settings by some autoconf versions when
+dnl detecting gcc/g++
+export CFLAGS="-g -O0"
+export CXXFLAGS="-g -O0"
+
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CXXCPP
-
-dnl fix wrong "-g -O2" flags settings by some autoconf versions when
-dnl detecting gcc/g++
 
 if test "$CFLAGS" != "$OLD_CFLAGS"; then
  CFLAGS="$OLD_CFLAGS"
@@ -403,7 +405,9 @@ AC_PROG_LEX
 if test "X_$LEX" = "X_lex" ; then
     RC_LIBS=-ll
 else
-    RC_LIBS=-lfl
+    if ls /usr/lib*/libfl.* /usr/local/lib*/libfl.* >/dev/null 2>/dev/null; then
+       RC_LIBS=-lfl
+    fi
 fi
 
 export RC_LIBS

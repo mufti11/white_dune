@@ -55,13 +55,27 @@ void ProtoHAnimHumanoid::addElements(void)
 {
     info.set (
            addExposedField(MFSTRING, "info", new MFString()));
-    joints.set (
+    jointBindingPositions.set(
+           addExposedField(MFVEC3F, "jointBindingPositions", new MFVec3f()));
+    jointBindingRotations.set(
+           addExposedField(MFROTATION, "jointBindingRotations", 
+                           new MFRotation()));
+    jointBindingScales.set(
+           addExposedField(MFVEC3F, "jointBindingScales", new MFVec3f()));
+    joints.set(
            addExposedField(MFNODE, "joints", new MFNode(), X3D_HANIM_JOINT));
+    loa.set(
+           addExposedField(SFINT32, "loa", new SFInt32(-1)));
+    motions.set(
+           addExposedField(MFNODE, "motions", new MFNode(), X3D_HANIM_MOTION));
+    motionsEnabled.set(
+           addExposedField(MFBOOL, "motionsEnabled", new MFBool()));
     name.set(
            addExposedField(SFSTRING, "name", new SFString()));
-    segments.set (
-           addExposedField(MFNODE, "segments", new MFNode(), X3D_HANIM_SEGMENT));
-    sites.set (
+    segments.set(
+           addExposedField(MFNODE, "segments", new MFNode(), 
+                           X3D_HANIM_SEGMENT));
+    sites.set(
            addExposedField(MFNODE, "sites", new MFNode(), X3D_HANIM_SITE));
     skeleton.set(
            addExposedField(MFNODE, "skeleton", new MFNode(), X3D_HANIM_JOINT));

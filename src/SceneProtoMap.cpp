@@ -129,6 +129,7 @@
 #include "NodeGroup.h"
 #include "NodeHAnimDisplacer.h"
 #include "NodeHAnimHumanoid.h"
+#include "NodeHAnimMotion.h"
 #include "NodeHAnimJoint.h"
 #include "NodeHAnimSegment.h"
 #include "NodeHAnimSite.h"
@@ -221,6 +222,7 @@
 #include "NodePlaneSensor.h"
 #include "NodePointEmitter.h"
 #include "NodePointLight.h"
+#include "NodePointProperties.h"
 #include "NodePointPickSensor.h"
 #include "NodePointSet.h"
 #include "NodePolyline2D.h"
@@ -524,6 +526,7 @@ SceneProtoMap::createProtoMap(ProtoMap *protos, Scene *scene, bool add)
     addOrReplace(protos, "HAnimDisplacer", 
                  new ProtoHAnimDisplacer(scene), add);
     addOrReplace(protos, "HAnimHumanoid", new ProtoHAnimHumanoid(scene), add);
+    addOrReplace(protos, "HAnimMotion", new ProtoHAnimMotion(scene), add);
     addOrReplace(protos, "HAnimJoint", new ProtoHAnimJoint(scene), add);
     addOrReplace(protos, "HAnimSegment", new ProtoHAnimSegment(scene), add);
     addOrReplace(protos, "HAnimSite", new ProtoHAnimSite(scene), add);
@@ -666,6 +669,8 @@ SceneProtoMap::createProtoMap(ProtoMap *protos, Scene *scene, bool add)
     addOrReplace(protos, "PlaneSensor", new ProtoPlaneSensor(scene), add);
     addOrReplace(protos, "PointEmitter", new ProtoPointEmitter(scene), add);
     addOrReplace(protos, "PointLight", new ProtoPointLight(scene), add);
+    addOrReplace(protos, "PointProperties", 
+                 new ProtoPointProperties(scene), add);
     addOrReplace(protos, "PointPickSensor", 
                  new ProtoPointPickSensor(scene), add);
     addOrReplace(protos, "PointSet", new ProtoPointSet(scene), add);

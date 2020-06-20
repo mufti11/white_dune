@@ -2781,7 +2781,7 @@ NodePROTO::writeXml(int filedes, int indent, int containerField, bool avoidUse)
                 } else 
                     ev = getProto()->getEventIn(ev1);
 
-                if (ev == NULL)
+                if (ev == NULL || dst == NULL)
                     continue;
                 MyString routeString = m_scene->createRouteString(
                       src->getName(), 

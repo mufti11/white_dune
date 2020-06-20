@@ -40,6 +40,7 @@ public:
 
     FieldIndex fillProperties;
     FieldIndex lineProperties;
+    FieldIndex pointProperties;
     FieldIndex material;
     FieldIndex texture;
     FieldIndex textureTransform;
@@ -90,6 +91,7 @@ public:
 
     fieldMacros(SFNode,   fillProperties,     ProtoAppearance)
     fieldMacros(SFNode,   lineProperties,     ProtoAppearance)
+    fieldMacros(SFNode,   pointProperties,    ProtoAppearance)
     fieldMacros(SFNode,   material,           ProtoAppearance)
     fieldMacros(SFNode,   texture,            ProtoAppearance)
     fieldMacros(SFNode,   textureTransform,   ProtoAppearance)
