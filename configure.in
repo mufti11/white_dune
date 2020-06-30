@@ -121,8 +121,7 @@ AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use c
             CGAL=no)
 
 AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version of the CGAL library,
-            CGALHEADERS=yes)
-CGALHEADERS=yes
+            AC_DEFINE(HAVE_LIBCGAL) CGALHEADERS=yes)
 
 AC_ARG_WITH(omp,--without-omp             do not use OpenMP,
             OMP=no)
@@ -1205,11 +1204,13 @@ EOF
       echo yes
       AC_CHECK_LIB(gmp, __gmpn_sub_1, , GMP_ERROR=1)
       if test "X_$GMP_ERROR" = "X_1" ; then
-          echo CGAL requires libgmp 1>&2
+         echo CGAL requires libgmp 1>&2
+         exit 1
       fi
       AC_CHECK_LIB(mpfr, mpfr_set, , MPFR_ERROR=1)
-      if test "X_$GMP_ERROR" = "X_1" ; then
+      if test "X_$MPFR_ERROR" = "X_1" ; then
         echo CGAL requires libmpfr 1>&2
+        exit 1
       fi
       if test "X_$DEBIAN" = "X_" ; then 
         AC_MSG_CHECKING([for libboost_thread])
@@ -1246,7 +1247,18 @@ EOF
         fi
       fi
     fi
-  fi 
+  fi
+else
+  AC_CHECK_LIB(gmp, __gmpn_sub_1, , GMP_ERROR=1)
+  if test "X_$GMP_ERROR" = "X_1" ; then
+    echo CGAL requires libgmp 1>&2
+    exit 1
+  fi
+  AC_CHECK_LIB(mpfr, mpfr_set, , MPFR_ERROR=1)
+  if test "X_$MPFR_ERROR" = "X_1" ; then
+     echo CGAL requires libmpfr 1>&2
+     exit 1
+  fi
 fi
 
 AC_LANG_PUSH(C++)

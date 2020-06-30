@@ -92,6 +92,7 @@ public:
 
     virtual int       writeAc3d(int filedes, int indent);
     virtual int       writeRib(int filedes, int indent);
+    virtual int       writePovray(int filedes, int indent);
     virtual int       writeCattGeo(int filedes, int indent);
     virtual int       writeLdrawDat(int filedes, int indent);
 

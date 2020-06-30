@@ -5636,4 +5636,10 @@ Fixed inset X 3 Y 1
 
 Added current X3DV4 draft nodes and fields
 
+Deleted -wonderland export option
+
+Added workaround for ugly freeze after File->Open usage under Linux
+
+Fixed freeze after pressing play button
+
 Contact: MUFTI <mufti11@web.de>

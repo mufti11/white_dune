@@ -791,7 +791,6 @@ writeCellRendererX3dData(int f, const char *upperName, const char *lowerName,
     RET_ONERROR( mywritestr(f, "}\n") )
     RET_ONERROR( mywritestr(f, "\n") )
     RET_ONERROR( scene->write(f, "./export.x3dv", TEMP_SAVE | JAVA_SOURCE | 
-                                                 WONDERLAND |
                               (manyClasses ? MANY_JAVA_CLASSES : 0)) )
     RET_ONERROR( mywritestr(f, "\n") )
     return 0;

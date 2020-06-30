@@ -429,14 +429,10 @@ void parseCommandlineUsage(
                 convert = X3D_XML;
             else if (strcmp(argv[convertionArgument],"-X3DOM")==0)
                 convert = X3DOM | X3D_XML;
-            else if (strcmp(argv[convertionArgument],"-x3d4wonderland")==0) {
-                TheApp->forbidEFloatWriteFormat();
-                convert = X3D_XML | X3D_4_WONDERLAND;
-            } else if (strcmp(argv[convertionArgument],"-kanim")==0) {
+            else if (strcmp(argv[convertionArgument],"-kanim")==0) {
                 convert = KANIM;
                 checkNotEnoughArgumentsError(argc, ++convertionArgument);
                 url = argv[convertionArgument];
-
             } else if (strcmp(argv[convertionArgument]+1,"c")==0) {
                 convert = C_SOURCE;
                 TheApp->setCExporting(true);
@@ -474,15 +470,9 @@ void parseCommandlineUsage(
             } else
                 TheApp->setNumExportFiles(files);
         }
-        if (strcmp(argv[convertionArgument],"-wonderland")==0) {
-            convert |= WONDERLAND | TRIANGULATE;
-            convert |= MANY_JAVA_CLASSES; // default
-            checkNotEnoughArgumentsError(argc, ++convertionArgument);
-            url = argv[convertionArgument];
-            if (strlen(TheApp->getCPrefix()) == 0)
-                TheApp->setPrefix("X3d");
-        } else if ((strcmp(argv[convertionArgument],"-ac3d")==0) || 
+        if ((strcmp(argv[convertionArgument],"-ac3d")==0) || 
                    (strcmp(argv[convertionArgument],"-rib")==0) || 
+                   (strcmp(argv[convertionArgument],"-povray")==0) || 
                    (strcmp(argv[convertionArgument],"-ldraw")==0) || 
                    (convert & TRIANGULATE)) {
 # ifdef _WIN32
@@ -504,6 +494,8 @@ void parseCommandlineUsage(
             convert = AC3D;
         else if (strcmp(argv[convertionArgument],"-rib")==0)
             convert = RIB;
+        else if (strcmp(argv[convertionArgument],"-povray")==0)
+            convert = POVRAY;
         else if (strcmp(argv[convertionArgument],"-ldraw")==0)
             convert = LDRAW_DAT;
         else if (strcmp(argv[convertionArgument],"-off")==0)

@@ -50,7 +50,7 @@ WonderlandModuleExportDialog::OnCommand(void *vid)
         if (Validate()) {
             swEndDialog(IDOK);
             m_success = m_scene->write(1, TheApp->GetWonderlandModuleExportPath(),
-                         TEMP_SAVE | TRIANGULATE | WONDERLAND |
+                         TEMP_SAVE | TRIANGULATE | JAVA_SOURCE |
                          (TheApp->GetWonderlandModuleExportManyClasses() ?
                           MANY_JAVA_CLASSES : 0));
             if (TheApp->GetRunAnt())

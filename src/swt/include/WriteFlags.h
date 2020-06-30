@@ -50,10 +50,10 @@ enum {
     C_SOURCE           = 1<<24,
     CC_SOURCE          = 1<<25,
     JAVA_SOURCE        = 1<<26,
-    WONDERLAND         = 1<<27,
-    MANY_JAVA_CLASSES  = 1<<28,
-    OUTSIDE_JAVA_CLASS = 1<<29,
-    RIB                = 1<<30,
+    MANY_JAVA_CLASSES  = 1<<27,
+    OUTSIDE_JAVA_CLASS = 1<<28,
+    RIB                = 1<<29,
+    POVRAY             = 1<<30,
     SKIP_SAVED_TEST    = 1<<31,
 };
 

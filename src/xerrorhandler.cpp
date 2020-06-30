@@ -139,6 +139,12 @@ int DuneApp::emergency_rescue(int sig)
 # if __MAGEIA__
  __attribute__((noreturn))
 # endif
+# ifdef __FreeBSD__
+ __attribute__((noreturn))
+# endif
+# ifdef MACOSX
+ __attribute__((noreturn))
+# endif
 #endif
    {
    int filenum=0;

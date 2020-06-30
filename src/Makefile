@@ -3,12 +3,12 @@
 
 CC = gcc
 CXX = g++
-RANLIB = /bin/ranlib 
+RANLIB = /usr/bin/ranlib 
 CXXCPP = g++ -E
 YACC = bison -y
 LEX = flex --nounistd
 AWK = gawk
-PREFIX = /usr/local
+PREFIX = /usr
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
 
@@ -39,12 +39,12 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home//home/mufti/vcglib -I.//../vcglib -I/home//home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16  -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home//home/mufti/vcglib -I.//../vcglib -I/home//home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16  -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
-CFLAGS_BIG = -g $(COMMON_FLAGS)  -fopenmp  -fopenmp
+CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/root/vcglib -I.//../vcglib -I/root/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/root/vcglib -I.//../vcglib -I/root/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
+CFLAGS_BIG = -O2 -g $(COMMON_FLAGS)  -fopenmp -g -O0 -fopenmp
 CFLAGS = $(COMMON_FLAGS)  -fopenmp
-CXXFLAGS = -g $(COMMON_FLAGS)  -fopenmp
-LIBS =   -L/usr/local/lib -L/usr/local/lib -g -Lswt/lib -lswt -LSDLjoystick  -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -losdCPU 
+CXXFLAGS = -O2 -g $(COMMON_FLAGS) -g -O0 -fopenmp
+LIBS =   -L/usr/local/lib -L/usr/local/lib -O2 -g -Lswt/lib -lswt -LSDLjoystick  -lusb -lsball -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lmpfr -lgmp -lfreetype -lXm -lXt -lXmu -lX11 -lm -lgomp   -L/usr/local/lib  -L/usr/X11R6/LessTif/Motif1.2/lib -lCGAL -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 

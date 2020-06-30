@@ -731,6 +731,10 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
     return 0;
 }
 
+extern void SDL_PrivateJoystickAxis(SDL_Joystick *joystick, int i, SInt32 value);
+extern void SDL_PrivateJoystickButton(SDL_Joystick *joystick, int i, SInt32 value);
+extern void SDL_PrivateJoystickHat(SDL_Joystick *joystick, int i, SInt32 value);
+
 /* Function to update the state of a joystick - called as a device poll.
  * This function shouldn't update the joystick structure directly,
  * but instead should call SDL_PrivateJoystick*() to deliver events

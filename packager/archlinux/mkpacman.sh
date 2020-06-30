@@ -2,6 +2,10 @@
 
 set -x
 
+# currently white_dune compiles only with clang, exacute before this scrpt:
+# export CC=clang
+# export CXX=clang++
+
 cd `dirname $0`
 
 make clean

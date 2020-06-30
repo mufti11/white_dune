@@ -450,6 +450,24 @@ BasicTransformNode::writeRib(int f, int indent)
 }
 
 int
+BasicTransformNode::writePovray(int f, int indent)
+{ 
+    NodeList *childList = getBasicChildren()->getValues();
+    bool matrixIdentity = modelViewIsIdentity();
+    if (!matrixIdentity) {
+        glPushMatrix();
+        transform();
+    }
+
+    for (long i = 0; i < childList->size(); i++)
+        childList->get(i)->writePovray(f, indent);
+
+    if (!matrixIdentity)
+        glPopMatrix();
+    return 0; 
+}
+
+int
 BasicTransformNode::writeCattGeo(int filedes, int indent)
 { 
     glPushMatrix();

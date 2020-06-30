@@ -1713,6 +1713,301 @@ MeshBasedNode::writeRib(int f, int indent)
     return 0;
 }
 
+float *
+MeshBasedNode::getTriangleColor(int face, Node* oldNode)
+{
+   static float c[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
+   if (hasColorRGBA()) {
+       MFFloat *colors = NULL;
+       if (m_isDoubleMesh)
+           colors = m_meshDouble->getColors();
+       else
+           colors = m_mesh->getColors();
+       for (int i = 0; i < 3; i++)
+           c[i] = colors->getValue(face *3 + i);
+   }
+   return c;
+}
+
+int
+MeshBasedNode::writePovray(int f, int indent)
+{
+    NodeTriangleSet *tris = (NodeTriangleSet *) toTriangleSet(0);
+    return tris->writePovrayTriangles(f, indent, this);
+}
+
+int
+MeshBasedNode::writePovrayTriangles(int f, int indent, GeometryNode* oldNode)
+{
+    updateMesh(); 
+
+    if (m_isDoubleMesh) {
+        if (m_meshDouble == NULL)
+            return 0;
+        if (!m_meshDouble->validMesh())
+            return 0;
+        if (m_meshDouble->getNumFaces() == 0)
+            return 0;
+    } else {
+        if (m_mesh == NULL)
+            return 0;
+        if (!m_mesh->validMesh())
+            return 0;
+        if (m_mesh->getNumFaces() == 0)
+            return 0;
+    }
+
+    MFVec3f *vertices = getVertices();
+    if (vertices == NULL) // bug in mesh hidden in internal node ? 
+        return 0;
+    MFInt32 *coordIndex = getCoordIndexFromMesh();
+    const int *ci = coordIndex->getValues();
+    const float *colors = NULL;
+    int numColors = 0;
+    MFInt32 *colorIndex;
+    bool colorPerVertex;
+    MFInt32 *texCoordIndex;
+    if (m_isDoubleMesh) {
+        if (m_mesh->getColors()) {
+            colors = m_meshDouble->getColors()->getValues();
+            numColors = m_meshDouble->getColors()->getSFSize();
+        }
+        colorIndex = m_meshDouble->getColorIndex();
+        colorPerVertex = m_meshDouble->colorPerVertex();
+        texCoordIndex = m_meshDouble->getTexCoordIndex();
+    } else {
+        if (m_mesh->getColors()) {
+            colors = m_mesh->getColors()->getValues();
+            numColors = m_mesh->getColors()->getSFSize();
+        }
+        colorIndex = m_mesh->getColorIndex();
+        colorPerVertex = m_mesh->colorPerVertex();
+        texCoordIndex = m_mesh->getTexCoordIndex();
+    }
+    if ((colorIndex == NULL) || (colorIndex->getSize() == 0))
+        colorIndex = coordIndex;
+    if (texCoordIndex == NULL)
+        texCoordIndex = coordIndex;
+
+    MyArray<int> indexArray;
+    // search longest *Index
+    int numIndex = COORD_INDEX;
+    int numCoordIndices = 0;
+    MFInt32 *normalIndex = m_mesh->getNormalIndex();
+    if ((normalIndex == NULL) || (normalIndex->getSize() == 0))
+        normalIndex = coordIndex;
+    bool normalPerVertex;
+    if (m_isDoubleMesh)
+        normalPerVertex = m_meshDouble->normalPerVertex();
+    else
+        normalPerVertex = m_mesh->normalPerVertex();
+    int numNormalIndices = 0;
+    for (int i = 0; i < normalIndex->getSize(); i++)
+        if (normalIndex->getValue(i) > -1)
+            numNormalIndices++;
+    if (numNormalIndices > numCoordIndices)
+        numIndex = NORMAL_INDEX;
+    int numColorIndices = 0;
+    for (int i = 0; i < colorIndex->getSize(); i++)
+        if (colorIndex->getValue(i) > -1)
+            numColorIndices++;
+    if ((numColorIndices > numCoordIndices) &&
+        (numColorIndices > numNormalIndices))
+        numIndex = COLOR_INDEX;
+    int numTexCoordIndices = 0;
+    for (int i = 0; i < texCoordIndex->getSize(); i++)
+        if (texCoordIndex->getValue(i) > -1)
+            numTexCoordIndices++;
+    if ((numTexCoordIndices > numCoordIndices) &&
+        (numTexCoordIndices > numNormalIndices) &&
+        (numTexCoordIndices > numColorIndices))
+        numIndex = TEX_COORD_INDEX;
+    switch (numIndex) {
+      case COLOR_INDEX:
+        for (int i = 0; i < colorIndex->getSize(); i++)
+            indexArray.append(colorIndex->getValue(i));
+        break;
+      case NORMAL_INDEX:
+        for (int i = 0; i < normalIndex->getSize(); i++)
+            indexArray.append(normalIndex->getValue(i));
+        break;
+      case TEX_COORD_INDEX:
+        for (int i = 0; i < texCoordIndex->getSize(); i++)
+            indexArray.append(texCoordIndex->getValue(i));
+        break;
+      default:
+        for (int i = 0; i < coordIndex->getSize(); i++)
+            indexArray.append(coordIndex->getValue(i));
+    }
+
+    Matrix transformMatrix;
+    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat *) transformMatrix);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    Matrix matrix;
+    Matrix viewpointMatrix;
+    Node *viewpoint = m_scene->getCamera();
+    viewpoint->apply();
+    viewpoint->getMatrix(viewpointMatrix);
+    matrix = viewpointMatrix * transformMatrix;
+    glPopMatrix();
+
+    int numFaces = 0;
+    if (m_isDoubleMesh)
+        numFaces = m_meshDouble->getNumFaces();
+    else
+        numFaces = m_mesh->getNumFaces();
+    MFVec2f* texCoords;
+    if (m_isDoubleMesh)
+        texCoords = m_meshDouble->getTexCoords();
+    else
+        texCoords = m_mesh->getTexCoords();
+/* phong is more important then vertex color
+    int declareNum = 0;
+    for (int i = 0; i < numFaces; i++) {
+        float *c =  getTriangleColor(i, oldNode);
+        RET_ONERROR( mywritef(f, "#declare declare_%d=",declareNum++) )
+        RET_ONERROR( mywritef(f, "texture { pigment { color rgb<%f,%f,%f> } }\n",
+                              c[0], c[1], c[2]) )
+    }
+    declareNum = 0;
+*/
+    MFVec3f *normals = NULL;
+    if (m_isDoubleMesh)
+        normals = m_meshDouble->getNormals();
+    else
+        normals = m_mesh->getNormals();
+    RET_ONERROR( mywritestr(f, "mesh {\n") )
+    for (int i = 0; i < numFaces; i++) {
+        FaceData *face;
+        if (m_isDoubleMesh)
+            face = m_meshDouble->getFace(i);
+        else
+            face = m_mesh->getFace(i);
+        int numVertices = face->getNumVertices();
+        int offset = face->getOffset();
+        if (normals->getSFSize() >= i * 3)
+            RET_ONERROR( mywritestr(f, "smooth_triangle {\n") )
+        else
+            RET_ONERROR( mywritestr(f, "triangle {\n") )
+        for (int j = offset; j < offset + numVertices; j++) {
+            int k = ci[j];
+            if (k > -1) {
+                Vec3f v = vertices->getVec(k);
+                v = matrix * v;
+                RET_ONERROR( mywritef(f, "<%f,%f,%f>", v.x, v.y, -v.z) )
+                if (normals->getSFSize() >= i * 3) {
+                    Vec3f n = normals->getVec(k);
+                    RET_ONERROR( mywritef(f, ",<%f,%f,%f>", n.x, n.y, -n.z) )
+                }
+                if (j < offset + numVertices -1)
+                    RET_ONERROR( mywritef(f, ",") )
+            }
+            RET_ONERROR( mywritef(f, "\n") )
+        }
+        RET_ONERROR( mywritestr(f, "uv_vectors\n") )
+        for (int j = offset; j < offset + numVertices; j++) {
+            int k = ci[j];
+            if (k > -1) {
+                float texCoordX = texCoords->getValue(k)[0];
+                float texCoordY = texCoords->getValue(k)[1];
+                RET_ONERROR( mywritef(f, "<%f,%f>", texCoordX, texCoordY) )
+                if (j < offset + numVertices -1)
+                    RET_ONERROR( mywritef(f, ",\n") )
+            }
+        }
+        RET_ONERROR( mywritef(f, "\n") )
+/* phong is more important then vertex color
+        RET_ONERROR( mywritef(f, "texture { declare_%d }\n", declareNum++) )
+*/
+        RET_ONERROR( mywritestr(f, "}\n") )
+    }
+
+    NodeImageTexture *nimageTexture = oldNode->getImageTextureNode();
+
+    if (nimageTexture) {
+    }
+    NodeMaterial *nmaterial = oldNode->getMaterialNode();
+    NodeTextureTransform *ntextureTransfrom = getTextureTransformNode();
+
+    float specDefault[3] = { 0, 0, 0 };
+    float *specularColor = specDefault;
+
+    if (!nimageTexture)
+        if (nmaterial) {
+            const float *c = nmaterial->diffuseColor()->getValue();
+            specularColor = (float *)nmaterial->specularColor()->getValue();
+            RET_ONERROR(mywritef(f, "texture{  finish { phong %f } }\n",
+                        (specularColor[0] + specularColor[1] + specularColor[2])
+                        / 3.0f) )
+            RET_ONERROR( mywritef(f, "pigment { rgb <%f %f %f>}\n", 
+                                  c[0], c[1], c[2]) )
+        } else 
+            RET_ONERROR( mywritestr(f, "pigment { rgb<0.8 0.8 0.8>}\n") )
+
+    if (nimageTexture) {
+        char *texture = strdup(nimageTexture->url()->getValue(0).getData());
+        if (texture) {
+            for (int i = 0; i < strlen(texture); i++)
+                if (texture[i] < ' ')
+                    texture[i] = 0;
+            URL url(TheApp->getImportURL(), texture);
+            MyString filename = "";
+            filename += url.ToPath();
+            
+            free(texture);
+
+            URL writeURL(TheApp->getWriteUrl());
+
+            bool validTexturer = false;
+            MyString texfile = "";
+#ifdef _WIN32
+            texfile += "c:\\windows\\temp\\";
+#else
+            if (writeURL.GetDir().length() > 0) {
+                texfile += writeURL.GetDir();
+                texfile += "/";
+            }
+#endif
+            texfile += url.GetFileNameWithoutExtension();
+            texfile += ".png";
+
+            MyString converterCommand = "";
+            converterCommand += TheApp->GetImageConverter();
+            bool validConverter = converterCommand.length() > 0;
+            converterCommand += " ";
+            converterCommand += filename;
+            converterCommand += " ";
+            converterCommand += texfile;
+            if (strchr(converterCommand, '`') != NULL)
+                validConverter = false;
+            if (validConverter)
+                if (system(converterCommand) != 0)
+                    validConverter = false;
+            if (validConverter) {
+                RET_ONERROR( mywritestr(f, "pigment { image_map {") )
+                RET_ONERROR( mywritef(f, "png \"%s\" } }\n", 
+                                      (const char *)texfile) ) 
+            } else
+                swDebugf("texture url invalid\n");
+            if (ntextureTransfrom) {
+                RET_ONERROR( mywritef(f, "scale %f %f\n", 
+                                      ntextureTransfrom->scale()->getValue(0),
+                                      ntextureTransfrom->scale()->getValue(1)) )
+                RET_ONERROR( mywritef(f, "translate %f %f\n", 
+                      ntextureTransfrom->translation()->getValue(0),
+                      ntextureTransfrom->translation()->getValue(1)) )
+                RET_ONERROR( mywritef(f, "rotate %f\n", 
+                      ntextureTransfrom->rotation()->getValue()) )
+            }
+        }
+    } 
+
+    RET_ONERROR( mywritestr(f, "}\n") )
+    return 0;
+}
+
 #define UNKNOWN_MATERIAL "TOTREF"
 
 int

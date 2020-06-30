@@ -743,6 +743,7 @@ void FieldView::StopEditing()
             RefreshItemList();
     if (m_selectedProto != NULL)
          UpdateAll(false);
+    m_scene->UpdateViews(this, UPDATE_REDRAW_3D, NULL);
     swInvalidateWindow(m_window);
 }
 
@@ -995,6 +996,7 @@ void FieldView::ChangeValue(FieldViewItem *item, FieldValue *newValue)
     } else {
         delete newValue;
     }
+    m_scene->UpdateViews(this, UPDATE_REDRAW_3D, NULL);
 }
 
 void FieldView::OnLButtonUp(int x, int y, int modifiers) 

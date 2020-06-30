@@ -247,6 +247,16 @@ invalidateItem(STree *tree, STreeItem *item)
         swInvalidateRect(tree->wnd, 0, item->index * tree->itemHeight,
                          500, tree->itemHeight);
     }
+    if (tree->root != NULL) {
+        int maxWidth = 0;
+        int newHeight = 0;
+
+        SDC dc = swCreateDC(tree->wnd);
+        maxWidth = 0;
+        newHeight = drawTreeRec(tree, dc, tree->root, LEFT_MARGIN, 0);
+        swSetScrollSizes(tree->scroller, maxWidth, newHeight);
+        swDestroyDC(dc);
+    }
 }
 
 static void
@@ -256,6 +266,7 @@ invalidateItemToEnd(STree *tree, STreeItem *item)
         swInvalidateRect(tree->wnd, 0, item->index * tree->itemHeight,
                          500, (tree->nItems - item->index) * tree->itemHeight);
     }
+    invalidateItem(tree, item); 
 }
 
 static void

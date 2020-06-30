@@ -44,7 +44,7 @@ URL: http://wdune.ourproject.org/
 Source: ftp://ftp.ourproject.org/pub/wdune/$VERSION3.tar.bz2
 BuildRoot: /var/tmp/%{name}buildroot
 BuildRequires: gcc-c++, gawk, make, bash, fileutils, motif-devel, libXi-devel, libXmu-devel, libpng-devel, libjpeg-devel, glu-devel, libexpat-devel, flex, bison, libusb-devel, update-desktop-files, fdupes, libcgal-devel, libcurl-devel, ImageMagick, freetype2-devel, bitstream-vera-fonts, libavcodec-devel libavutil-devel libavformat-devel libavresample-devel libswscale-devel libswresample-devel
-Requires: git, firefox, gedit, gimp, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, xorg-x11-fonts-core
+Requires: git, firefox, gedit, gimp, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, xorg-x11-fonts-core, povray, awk
 
 %description
 white_dune is a graphical X3D/VRML97 editor, 3D modeler and animation tool.
@@ -114,6 +114,7 @@ install -m 755 bin/dune $RPM_BUILD_ROOT/usr/bin/dune
 install -m 755 bin/dune4kids $RPM_BUILD_ROOT/usr/bin/dune4kids
 install -m 755 bin/illegal2vrml $RPM_BUILD_ROOT/usr/bin/illegal2vrml
 install -m 755 tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
+install -m 755 tools/run_dune_and_povray.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_povray.sh
 install -m 644 include/white_dune/libC++RWD_namespace.h $RPM_BUILD_ROOT/usr/include/white_dune/libC++RWD_namespace.h
 install -m 644 include/white_dune/libC++RWD.h $RPM_BUILD_ROOT/usr/include/white_dune/libC++RWD.h
 install -m 644 include/white_dune/libCRWD.h $RPM_BUILD_ROOT/usr/include/white_dune/libCRWD.h
@@ -141,6 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/dune
 /usr/bin/dune4kids
 /usr/bin/run_dune_and_aqsis.sh
+/usr/bin/run_dune_and_povray.sh
 /usr/bin/illegal2vrml
 /usr/include/white_dune/libC++RWD.h
 /usr/include/white_dune/libCRWD.h

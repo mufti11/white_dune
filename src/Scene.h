@@ -255,6 +255,10 @@ public:
     int                 writeRib(int f, const char *url); 
     int                 writeRibNextFrame(int f, const char *url, int frame); 
 
+    int                 writePovray(int f, const char *url); 
+    int                 writePovrayNextFrame(int f, const char *url, 
+                                             int frame); 
+
     int                 writeCattGeo(void);
     int                 getCattGeoFileCounter(void) 
                            { return m_cattGeoFileCounter; }
@@ -826,15 +830,17 @@ public:
                             else 
                                 m_ribTexureFiles.add(file, txFile); 
                             }
-     bool               getSavedVrml(void) { return m_saved_vrml; }
-     bool               getSavedX3dv(void) { return m_saved_x3dv; }
-     bool               getSavedX3dXml(void) { return m_saved_x3dxml; }
-     void               setSaved(void) {
-                            m_saved_vrml = true;
-                            m_saved_x3dv = true;
-                            m_saved_x3dxml = true;
-                        }
-     void               setNotSaved(void) {
+    MyString            getTexureFile(MyString file)
+                            { return file; }
+    bool               getSavedVrml(void) { return m_saved_vrml; }
+    bool               getSavedX3dv(void) { return m_saved_x3dv; }
+    bool               getSavedX3dXml(void) { return m_saved_x3dxml; }
+    void               setSaved(void) {
+                           m_saved_vrml = true;
+                           m_saved_x3dv = true;
+                           m_saved_x3dxml = true;
+                       }
+    void               setNotSaved(void) {
                             m_saved_vrml = false;
                             m_saved_x3dv = false;
                             m_saved_x3dxml = false;
@@ -1131,6 +1137,7 @@ protected:
     bool                m_downloaded;
 
     Map<MyString, MyString> m_ribTexureFiles;
+    Map<MyString, MyString> m_povrayTexureFiles;
     
     bool                m_saved_vrml;
     bool                m_saved_x3dv;
@@ -1200,6 +1207,7 @@ enum {
     UPDATE_PREVIEW,
     UPDATE_SOLID_CHANGED,
     UPDATE_TOOLBAR,
+    UPDATE_TOOLBARS,
     UPDATE_SELF
 };
 

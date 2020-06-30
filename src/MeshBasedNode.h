@@ -119,6 +119,8 @@ public:
     virtual bool    hasColorRGBA(void);
     virtual bool    hasColorPerVertex(void);
 
+    float *         getTriangleColor(int face, Node* oldNode);
+
     virtual Node   *toTriangleSet(int meshFlags = MESH_TARGET_HAS_CCW);
     virtual bool    canConvertToTriangleSet(void);
 
@@ -149,6 +151,9 @@ public:
     virtual int     writeAc3d(int filedes, int indent);
 
     virtual int     writeRib(int filedes, int indent);
+    virtual int     writePovray(int filedes, int indent);
+    int             writePovrayTriangles(int f, int indent, 
+                                         GeometryNode* oldNode);
 
     virtual bool    canWriteCattGeo() { return true; }
     virtual int     writeCattGeo(int filedes, int indent);

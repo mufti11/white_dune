@@ -636,6 +636,7 @@ extern void set_start_aqua_X11(void);
 
 /* init callback */
 extern void initCallback(void); 
+extern void startCallback(void);
 extern void closeCallback(void);
 
 /* Windows SpaceNavigator driver */

@@ -632,6 +632,13 @@ MFNode::writeRib(int f, int indent) const
     return 0;
 }
 
+int 
+MFNode::writePovray(int f, int indent) const
+{
+    RET_ONERROR( getValues()->writePovray(f, indent) )
+    return 0;
+}
+
 void
 MFNode::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
 {

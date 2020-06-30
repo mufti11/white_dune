@@ -14,7 +14,7 @@ DOCDIR?=debian/${package_docs}/usr
 
 build:
 	$(checkdir)
-	./configure --with-debian --with-optimization --prefix=/usr --with-cgalheaders --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-x3dbrowser --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
+	./configure --with-debian --with-optimization --prefix=/usr --with-cgal-headers --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-x3dbrowser --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
 	$(MAKE) -j4
 	touch build
 
@@ -50,6 +50,7 @@ binary-arch: checkroot build
 	cp -a packager/debian/control_buster debian/${package}/DEBIAN/control
 	dpkg-shlibdeps bin/dune
 	install tools/run_dune_and_aqsis.sh ${DESTDIR}/bin/ 
+	install tools/run_dune_and_povray.sh ${DESTDIR}/bin/ 
 	install -m 644 -p include/white_dune/libC++RWD.h ${DESTDIR}/include/white_dune/libC++RWD.h
 	install -m 644 -p include/white_dune/libC++RWD_namespace.h ${DESTDIR}/include/white_dune/libC++RWD_namespace.h
 	install -m 644 -p include/white_dune/libCRWD.h ${DESTDIR}//include/white_dune/libCRWD.h

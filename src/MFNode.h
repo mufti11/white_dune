@@ -133,6 +133,7 @@ public:
                                            Scene* scene);
 
     virtual int         writeRib(int filedes, int indent) const;
+    virtual int         writePovray(int filedes, int indent) const;
 
     virtual int         writeCattGeo(Node *node, int filedes, int indent) const;
 

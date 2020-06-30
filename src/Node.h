@@ -609,6 +609,7 @@ public:
                                          Scene* scene);
 
     virtual int       writeRib(int filedes, int indent);
+    virtual int       writePovray(int filedes, int indent);
 
     virtual bool      canWriteLdrawDat();
     virtual int       writeLdrawDat(int filedes, int indent);

@@ -73,6 +73,7 @@ build-packages:
     - gedit
     - xdg-utils
     - aqsis
+    - povray
     - imagemagick
     - kolourpaint
     - audacity

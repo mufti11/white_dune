@@ -1377,6 +1377,8 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         done = true;
     } else if (writeFlags & RIB) {
         ret = writeRib(f, url);
+    } else if (writeFlags & POVRAY) {
+        ret = writePovray(f, url);
         done = true;
     } else if (writeFlags & KANIM) {
         ret = writeKanim(f, url);
@@ -1393,13 +1395,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     } else if (writeFlags & JAVA_SOURCE) {
         ret = writeC(f, writeFlags);
         done = true;
-    } else if (writeFlags & WONDERLAND) {
-        URL *fileUrl = new URL(getURL());
-        const char *fileName = fileUrl->GetFileNameWithoutExtension();
-        ret = TheApp->writeWonderlandModule(url, fileName, this, 
-                                            writeFlags & MANY_JAVA_CLASSES);
-        done = true;
-    }
+    } 
     if (done) {
         m_writeFlags = oldWriteFlags;
         m_root->doWithBranch(convertBackAndDeleteConvertedNodes, this);
@@ -2271,6 +2267,95 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
     return(0);
 }
 
+
+int 
+Scene::writePovray(int filedes, const char *file) 
+{
+    const char *url = file;
+    int f = filedes;
+
+    m_povrayTexureFiles.removeAll();
+
+    double longestTime = 0;
+    getRoot()->doWithBranch(searchLongestTime, &longestTime);
+
+    m_viewpoints.resize(0);
+
+    findBindableNodes();
+
+    int frames = longestTime * FRAME_RATE;
+    if (longestTime == 0)
+        frames = 1;
+
+    bool running = isRunning();
+    start();
+    m_currentTime = 0;
+   
+    int framesPerFile = frames / TheApp->getNumExportFiles();
+    if (framesPerFile == 0) {
+        fprintf(stderr, "Warning: only %d frames, not all files are written\n", 
+               frames); 
+        framesPerFile = 1;
+    }
+        
+    char filename[4096];
+    snprintf(filename, 4095, "%s", url); 
+    int numFramesPerFile = 0;
+    int currentfile = 0;
+    for (int j = 0; j < frames; j++) {
+        if (((numFramesPerFile >= framesPerFile) && (framesPerFile > 0)) || 
+            (((currentfile == 0) && (frames > 1)) && 
+             (TheApp->getNumExportFiles() > 1)))  {
+            URL file(url);
+            snprintf(filename, 4095, "%s%d.pov", 
+                     file.GetFileNameWithoutExtension(), ++currentfile);
+            if ((TheApp->getNumExportFiles() > 1) || 
+                ((TheApp->getNumExportFiles() == 1) && (f != 1))) {
+                swTruncateClose(f);
+                f = open(filename, O_WRONLY | O_CREAT,00666);
+            }
+            numFramesPerFile = 0;
+        }
+        if (numFramesPerFile == 0) {
+            RET_ONERROR( mywritestr(f, "// Povray output of white_dune\n") ) 
+            RET_ONERROR( mywritestr(f, "#version 3.7;\n\n") ) 
+            RET_ONERROR( mywritef(f, "// number_of_frames %d\n\n", frames) )
+            RET_ONERROR( mywritestr(f, 
+                             "global_settings { assumed_gamma 1.0}\n\n") )
+            RET_ONERROR( mywritef(f, "light_source{ <0, 0, -10>  %s",
+                                     "color rgb<1,1,1> }\n\n") ) 
+        }
+        RET_ONERROR( writePovrayNextFrame(f, file, j) )
+        numFramesPerFile++;
+    }
+        
+    swTruncateClose(f);
+
+    if (!running)
+        stop();
+    updateTime();
+  
+    return(0);
+}
+
+int                 
+Scene::writePovrayNextFrame(int f, const char *url, int frame)
+{
+    RET_ONERROR( mywritef(f, "#if(frame_number=%d)\n", frame) )
+
+    m_currentTime = (double)frame / FRAME_RATE;  
+
+    updateTimeAt(m_currentTime);
+    
+    NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
+
+    for (long i = 0; i < childList->size(); i++)
+        RET_ONERROR( childList->get(i)->writePovray(f, 0) )
+
+    RET_ONERROR( mywritef(f, "#end\n") )
+    return(0);
+}
+
 static bool collectCattExportRecNodes(Node *node, void *data)
 {
     if (node->getType() == DUNE_CATT_EXPORT_REC) {
@@ -2397,10 +2482,6 @@ Scene::writeCDeclaration(int f, int languageFlag)
                 continue;
             if (proto->isMismatchingProto())
                 continue;   
-            if ((languageFlag & WONDERLAND) && 
-                !TheApp->GetWonderlandModuleExportAllX3dClasses())
-                if ((!proto->isWonderlandExported()) && (!proto->isInUse()))
-                    continue;   
             if (proto->isInUse())
                 if (proto->writeCDeclaration(f, languageFlag) != 0)
                     return -1;
@@ -5511,6 +5592,7 @@ Scene::updateTime()
                                 false, false, false, true, false);
     }
     UpdateViews(NULL, UPDATE_TIME);
+    UpdateViews(NULL, UPDATE_TOOLBARS);
 }
 
 Node *

@@ -140,6 +140,7 @@ void Scene3DView::OnUpdate(SceneView *sender, int type, Hint *hint)
         if (nodeUpdate->node != NULL)
             nodeUpdate->node->update();
         }
+        OnDraw(0, 0, 0, 0, false);
         swInvalidateWindow(m_wnd);
         break;
       CASE_UPDATE(UPDATE_MODE)
@@ -1168,6 +1169,7 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
             swInvalidateWindow(m_wnd);
         }
     }
+    OnDraw(0, 0, 0, 0, false);
 }
 
 Quaternion &Scene3DView::getQuat(const Path* path)

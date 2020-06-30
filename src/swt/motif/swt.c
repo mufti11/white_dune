@@ -67,7 +67,9 @@
 #ifdef MACOSX
 # include <sys/stat.h>
 #else
-# include <wait.h>
+# ifndef __FreeBSD__
+#  include <wait.h>
+# endif
 #endif
 
 #include <GL/gl.h>
@@ -113,10 +115,18 @@ static SFont       *TheDefaultFont = NULL;
 static int          WindowCapacity;
 static SWND        *WindowsToUpdate;
 static int          NumWindowsToUpdate = 0;
+static int          oldNumWindowsToUpdate = 0;
 
 void closeCallback(void)
 {
+    oldNumWindowsToUpdate = NumWindowsToUpdate;
     NumWindowsToUpdate = 0;
+}
+
+void startCallback(void)
+{
+    if (oldNumWindowsToUpdate > 0)
+        NumWindowsToUpdate = oldNumWindowsToUpdate;
 }
 
 static int          InDragNDrop = FALSE;
@@ -838,9 +848,11 @@ swMainLoop(void)
     _running = TRUE;
     while (_running)
     {
-         XtAppProcessEvent(TheAppContext, XtIMAll);
-         if (XtAppPending(TheAppContext) == 0) {
-             update();
+         if (NumWindowsToUpdate >= 0) {
+             XtAppProcessEvent(TheAppContext, XtIMAll);
+             if (XtAppPending(TheAppContext)) {
+                 update();
+             }
          }
     }
     return 0;
@@ -4572,7 +4584,7 @@ update()
             w->invx1 = w->invx2 = w->invy1 = w->invy2 = -1;
         }
     }
-    NumWindowsToUpdate = 0;
+//    NumWindowsToUpdate = 0;
 }
 
 void swUpdate(void)

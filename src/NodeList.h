@@ -42,6 +42,7 @@ public:
     virtual bool    canWriteAc3d();
     virtual int     writeAc3d(int filedes, int indent) const;
     virtual int     writeRib(int filedes, int indent) const;
+    virtual int     writePovray(int filedes, int indent) const;
     virtual bool    canWriteCattGeo();
     virtual int     writeCattGeo(Node *node, int filedes, int indent);
     virtual bool    canWriteLdrawDat();

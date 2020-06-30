@@ -323,6 +323,13 @@ int SFNode::writeRib(int f, int indent) const
     return 0;
 }
 
+int SFNode::writePovray(int f, int indent) const
+{
+    if (m_value)
+        return m_value->writePovray(f, indent);
+    return 0;
+}
+
 void
 SFNode::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
 {

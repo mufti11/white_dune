@@ -163,9 +163,10 @@ public:
                         for (long i = 0; i < m_size; i++)
                             if (m_data[i] == t) {
                                ret = i;
-                               #pragma omp cancel for
-                               i = m_size; // break
                                stopped = true;
+                               // break;
+                               #pragma omp cancel for
+                               i = m_size; 
                            }
                         #pragma omp barrier
                     }

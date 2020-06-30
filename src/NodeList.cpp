@@ -101,6 +101,16 @@ NodeList::writeRib(int f, int indent) const
     return 0; 
 }
 
+int 
+NodeList::writePovray(int f, int indent) const
+{
+    for (long i = 0; i < size(); i++)
+        if (get(i))
+            RET_ONERROR( get(i)->writePovray(f, indent) )
+
+    return 0; 
+}
+
 bool    
 NodeList::canWriteCattGeo()
 {

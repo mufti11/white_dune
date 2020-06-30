@@ -4394,6 +4394,7 @@ MainWindow::OnCommand(void *vid)
             if (OpenFileCheck(TheApp->GetRecentFile(fileId))) {
 #ifndef HAVE_OPEN_IN_NEW_WINDOW
                 TheApp->deleteOldWindow();
+                startCallback();
                 exitFlag = true;
 #endif
             }
@@ -5031,6 +5032,9 @@ MainWindow::OnUpdate(SceneView *sender, int type, Hint *hint)
         setColorCircleIcon();
         UpdateToolbarSelection();
         UpdateMenuVisible();
+        break;
+      CASE_UPDATE(UPDATE_TOOLBARS)
+        UpdateToolbars();
         break;
     }
 }

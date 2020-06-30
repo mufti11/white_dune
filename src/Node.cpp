@@ -4792,6 +4792,20 @@ NodeData::writeRib(int f, int indent)
     return 0; 
 }
 
+
+int
+NodeData::writePovray(int f, int indent)
+{ 
+    for (int i = 0; i < m_numFields; i++)
+        if (m_fields[i] != NULL) {
+           if (m_fields[i]->getType() == SFNODE)
+               RET_ONERROR( ((SFNode *) m_fields[i])->writePovray(f, indent) )
+           else if (m_fields[i]->getType() == MFNODE)
+               RET_ONERROR( ((MFNode *) m_fields[i])->writePovray(f, indent) )
+        }
+    return 0; 
+}
+
 void 
 NodeData::handleAc3dMaterial(ac3dMaterialCallback callback, Scene* scene)
 {
