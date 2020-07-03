@@ -226,7 +226,9 @@ bool parseCommandlineArgument(int & i,int argc, char** argv)
     found = parseCommandlineArgumentOutput(i, argc, argv);
     if (found)
        return true;
-    else if (strcmp(argv[i],"-4kids")==0) {
+    else if (strcmp(argv[i],"-skipchecks")==0) {
+        TheApp->setSkipChecks(true);
+    } else if (strcmp(argv[i],"-4kids")==0) {
        TheApp->set4Kids();
     } else if (strcmp(argv[i],"-4catt")==0) {
        TheApp->set4Catt();
@@ -475,6 +477,7 @@ void parseCommandlineUsage(
                    (strcmp(argv[convertionArgument],"-povray")==0) || 
                    (strcmp(argv[convertionArgument],"-ldraw")==0) || 
                    (convert & TRIANGULATE)) {
+            TheApp->SetX11ErrorsLimit(0);
 # ifdef _WIN32
             swInitialize(hInstance, 0, 0);
             TheApp->OnFileNewWindow();

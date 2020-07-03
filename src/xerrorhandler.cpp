@@ -284,7 +284,7 @@ int DuneApp::emergency_rescue(int sig)
          mywriteerr(errortext);
          mywriteerr("\n");
          } 
-      else if (numberX11Errors == (limit + 1))
+      else if (numberX11Errors == (limit + 1) && limit != 0)
          mywriteerr("X11ErrorsLimit (see $HOME/.dunerc) exceeded\n");
       return(1);
       }
@@ -296,7 +296,7 @@ int DuneApp::emergency_rescue(int sig)
    int fatal_handler(Display *display)
       {
       TheApp->emergency_rescue();
-//      normalExit(2);
+      normalExit(2);
       return(0);
       }
 
@@ -319,7 +319,7 @@ int DuneApp::emergency_rescue(int sig)
          {
          mywriteerr(message);
          mywriteerr("\n");
-//         normalExit(2);
+         normalExit(2);
          }
       }
 
@@ -379,9 +379,6 @@ volatile int fatal_error_in_progress = 0;
 #ifdef EXIT_HANDLER
       atexit(&exit_handler);
 #endif
-#ifdef HAVE_WANT_CORE
-      return;
-#else
 # ifdef HAVE_NEW_HANDLER
   # ifdef HAVE_NEW_NEW_HANDLER
       std::set_new_handler(dune_new_handler);
@@ -436,17 +433,17 @@ volatile int fatal_error_in_progress = 0;
 #  endif
 # endif
 #endif
-      }
+   }
 
 #ifdef HAVE_FPU_ENABLE_INTERRUPTS
 
-#  ifdef HAVE_FPU_SETCW
-#     include <fpu_control.h>
-#   endif
+# ifdef HAVE_FPU_SETCW
+#  include <fpu_control.h>
+# endif
 
-#  ifdef HAVE_HANDLE_SIGFPES
-#     include <sigfpe.h>
-#  endif
+# ifdef HAVE_HANDLE_SIGFPES
+#  include <sigfpe.h>
+# endif
 
 void fpu_enable_interrupts(void)
    {
@@ -462,7 +459,7 @@ _FPU_MASK_UM |
    _FPU_SETCW(mask);  
 #  endif
 
-#  ifdef HAVE_HANDLE_SIGFPES
+# ifdef HAVE_HANDLE_SIGFPES
    sigfpe_[_UNDERFL].abort   =1;
    sigfpe_[_OVERFL].abort    =1;
    sigfpe_[_INVALID].abort   =1;
@@ -475,10 +472,11 @@ _FPU_MASK_UM |
                        _EN_INVALID | 
                        _EN_INT_OVERFL;
    handle_sigfpes(_ON,mask,0,0,0);
-#  endif
+
+
+# endif
 
    }
-#endif
 
 #endif
 

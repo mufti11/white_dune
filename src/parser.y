@@ -587,10 +587,6 @@ nodeStatements:
         ;
 id:     ID_X3D                          { $$ = $1; }
         | ID                            {  
-                                          if (x3d)
-                                              scene->warning(
-                                                    IDS_ILLEGAL_X3D_CHARACTER,
-                                                    (const char *)SYMB($1));
                                           $$ = $1; 
                                         }
         ;

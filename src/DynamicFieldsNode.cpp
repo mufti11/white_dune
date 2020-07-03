@@ -69,7 +69,8 @@ int DynamicFieldsNode::write(int f, int indent, bool avoidUse)
         RET_ONERROR( mywritestr(f, "{\n") )
         TheApp->incSelectionLinenumber();
         RET_ONERROR( writeFields(f, indent + TheApp->GetIndent()) )
-        RET_ONERROR( writeEvents(f, indent + TheApp->GetIndent()) )
+        if (getType() != DUNE_VRML_CUT && getType() != DUNE_VRML_SCENE)
+             RET_ONERROR( writeEvents(f, indent + TheApp->GetIndent()) )
         if (!TheApp->GetkrFormating())
             RET_ONERROR( indentf(f, indent + TheApp->GetIndent()) )
         else

@@ -812,6 +812,7 @@ Scene::readInline(NodeInline *node)
                     pushUnitLength();
                     TheApp->setImportFile(filename);
                     parse(file, node, -1, SCAN_FOR_BOTH);
+                    TheApp->setSkipChecks(false);
                     node->setUnitLength(oldUnitLength / getUnitLength());
                     popUnitLength();
                     fclose(file);
@@ -1377,6 +1378,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         done = true;
     } else if (writeFlags & RIB) {
         ret = writeRib(f, url);
+        done = true;
     } else if (writeFlags & POVRAY) {
         ret = writePovray(f, url);
         done = true;
@@ -2222,16 +2224,9 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
 
     if (m_currentNavigationInfo && 
         m_currentNavigationInfo->headlight()->getValue()) {
-        RET_ONERROR( mywritestr(f, "LightSource \"ambientlight\" 1\n") )
-
-        RET_ONERROR( mywritestr(f, "LightSource \"pointlight\" 2 ") )
-        RET_ONERROR( mywritestr(f, "\"from\" [0 0 -10] ") )
-        RET_ONERROR( mywritestr(f, "\"intensity\" [100] ") )
-        RET_ONERROR( mywritestr(f, "\"lightcolor\" [0.8 0.8 0.8]\n") )
-
-        RET_ONERROR( mywritestr(f, "LightSource \"distantlight\" 3 ") )
-        RET_ONERROR( mywritestr(f, "\"intensity\" [1.5 ] ") )
-        RET_ONERROR( mywritestr(f, "\"from\" [0 100 100] ") )
+        RET_ONERROR( mywritestr(f, "LightSource \"distantlight\" 1 ") )
+        RET_ONERROR( mywritestr(f, "\"intensity\" [1] ") )
+        RET_ONERROR( mywritestr(f, "\"from\" [200 300 100] ") ) //light 0,0,10?
         RET_ONERROR( mywritestr(f, "\"to\" [0 0 0]\n") )
     }
 
@@ -2240,16 +2235,6 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
 
     RET_ONERROR( mywritef(f, "\n") ) 
 
-    RET_ONERROR( mywritestr(f, "Attribute \"visibility\" \"int diffuse\" [0]") )
-    RET_ONERROR( mywritestr(f, "\n") )
-    RET_ONERROR( mywritestr(f, "Attribute \"visibility\" \"int specular\" [1]")
-                           )
-    RET_ONERROR( mywritestr(f, "\n") )
-    RET_ONERROR( mywritestr(f, "Attribute \"visibility\" ") ) 
-    RET_ONERROR( mywritestr(f, "\"int transmission\" [0]\n") )
-    RET_ONERROR( mywritestr(f, "Attribute \"trace\" ") )
-    RET_ONERROR( mywritestr(f, "\"int maxspeculardepth\" [4]\n") )
-    RET_ONERROR( mywritestr(f, "\n") )
     RET_ONERROR( mywritestr(f, "WorldBegin\n\n") )
     RET_ONERROR( mywritestr(f, "Identity\n\n") )
 
@@ -7160,14 +7145,13 @@ Scene::getProtoType(Proto *proto)
 {
     int lastNodeType = LAST_NODE;
     ProtoMap::Chain::Iterator *j;
-    for (int i = 0; i < m_protos.width(); i++)
-        for (j = m_protos.chain(i).first(); j != NULL; j = j->next()) {
-            Proto *jproto = j->item()->getData();
-            lastNodeType++;
-            if (jproto == proto) {
-                return lastNodeType;
-            }        
-        }
+    for (j = m_protos.getExtraData(); j != NULL; j = j->next()) {
+        Proto *jproto = j->item()->getData();
+        lastNodeType++;
+        if (jproto == proto) {
+            return lastNodeType;
+        }        
+    }
     return -1;
 }
 

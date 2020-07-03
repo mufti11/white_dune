@@ -1371,8 +1371,9 @@ MeshBasedNode::writeRib(int f, int indent)
              if (validTexturer) {
                  m_scene->addRibTexureFile(url.GetPath(), texfile);
 
-                 RET_ONERROR( mywritestr(f, "Surface \"paintedplastic\" ") )
-                 RET_ONERROR( mywritestr(f, "\"Kd\" [ 1 ] \"Ks\" [ 1 ]") )
+                 RET_ONERROR( mywritestr(f, "Surface \"phong\" ") )
+                 RET_ONERROR( mywritestr(f, "\"Kd\" [ 0.5 ] \"Ka\" [ 0.5 ]") )
+                 RET_ONERROR( mywritestr(f, "\"Ks\" [ 1]") )
                  RET_ONERROR( mywritef(f, " \"specularcolor\" [%f %f %f] ",
                                        specularColor[0],
                                        specularColor[1],
@@ -1395,11 +1396,11 @@ MeshBasedNode::writeRib(int f, int indent)
                 RET_ONERROR( mywritestr(f, "# warning: TextureTransfrom unsupported\n") )
         }
     } else {
-       float intensity = sqrt(specularColor[0] * specularColor[0] +
-                              specularColor[1] * specularColor[1] +
-                              specularColor[2] * specularColor[2]);
-       RET_ONERROR( mywritestr(f, "Surface \"plastic\" ") )
-       RET_ONERROR( mywritef(f, " \"Ks\" [%f]  \"Ka\" [0.75]", intensity) )
+       float intensity = (specularColor[0] + specularColor[1] + 
+                         specularColor[2]) / 3.0f;
+       RET_ONERROR( mywritestr(f, "Surface \"phong\" ") )
+       RET_ONERROR( mywritef(f, " \"Ks\" [%f]  \"Ka\" [0.5]  \"Kd\" [0.5]", 
+                             intensity) )
        RET_ONERROR( mywritestr(f, "\n") )
     }
     MFVec3f *vertices = getVertices();

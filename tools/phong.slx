@@ -1,0 +1,109 @@
+surface
+AQSIS_V 2
+
+
+segment Data
+
+USES 198949
+
+param uniform  float Ka
+param uniform  float Kd
+param uniform  float Ks
+param uniform  float roughness
+param uniform  color specularcolor
+varying  normal Nf
+varying  vector V
+varying  color C
+varying  vector b0::R
+
+
+segment Init
+	pushif 0.5
+	pop Ka
+	pushif 0.5
+	pop Kd
+	pushif 1
+	pop Ks
+	pushif 0.100000001
+	pop roughness
+	pushif 1
+	setfc
+	pop specularcolor
+
+
+segment Code
+	pushv I
+	pushv N
+	normalize
+	faceforward
+	pop Nf
+	pushv I
+	normalize
+	negp
+	pop V
+	pushif 0
+	setfc
+	pop C
+	pushv P
+	init_illuminance
+	jz 1
+:0
+	S_CLEAR
+	pushv P
+	pushis ""
+	illuminance
+	S_JZ 2
+	RS_PUSH
+	RS_GET
+	pushv L
+	normalize
+	pushv L
+	normalize
+	pushv N
+	normalize
+	dotpp
+	setfp
+	pushv N
+	normalize
+	pushif 2
+	mulfp
+	mulpp
+	subpp
+	pop b0::R
+	pushif 10
+	pushv V
+	pushv b0::R
+	dotpp
+	pow
+	setfc
+	pushv specularcolor
+	pushv Ks
+	mulfc
+	mulcc
+	pushv L
+	normalize
+	pushv N
+	normalize
+	dotpp
+	setfc
+	pushv Cs
+	pushv Kd
+	mulfc
+	mulcc
+	pushv Cs
+	pushv Ka
+	mulfc
+	addcc
+	addcc
+	pushv C
+	addcc
+	pop C
+	RS_POP
+:2
+	advance_illuminance
+	jnz 0
+:1
+	pushv Cs
+	pushv C
+	mulcc
+	pop Ci

@@ -15,7 +15,7 @@ DOCDIR?=debian/${package_docs}/usr
 build:
 	$(checkdir)
 	./configure --with-debian --with-optimization --prefix=/usr --with-cgal-headers --with-uninstallcomment="dpkg -P wdune" --without-devil --with-helpurl="/usr/share/doc/$(package)-docs/docs" --with-protobaseurl="/usr/share/doc/$(package)-docs/docs" --with-vrmlbrowser=view3dscene --with-x3dbrowser --with-checkincommand="ci" --with-imageeditor="pinta" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
-	$(MAKE) -j4
+	$(MAKE) -j`grep processor /proc/cpuinfo | wc -l`
 	touch build
 
 clean:

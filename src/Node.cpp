@@ -3879,6 +3879,8 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
     if (this == NULL)
         return false;
 #endif
+    if (TheApp->getSkipChecks())
+        return false;
     bool searchOn = true;
     bool handleInline = !skipInline;
     if (searchOn && (!skipProto) && hasProtoNodes()) {

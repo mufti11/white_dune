@@ -5642,4 +5642,14 @@ Added workaround for ugly freeze after File->Open usage under Linux
 
 Fixed freeze after pressing play button
 
+Add "phong" shader to .rib output
+ 
+Skipped writing of X3DV file after .rib export
+
+Dropped console output of run_dune_and_* commands  
+
+Added -skipchecks option to load complex worlds
+
+Fixed bug in run_dune_and* scripts
+
 Contact: MUFTI <mufti11@web.de>

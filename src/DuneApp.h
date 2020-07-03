@@ -370,6 +370,11 @@ public:
                            { return m_dynamicFieldsNode; }
     void               unsetDynamicFieldsNode(void) 
                            { m_dynamicFieldsNode = false; }
+
+    bool               getSkipChecks(void)
+                           { return m_skipChecks; }
+    void               setSkipChecks(bool flag)
+                           { m_skipChecks = flag; }
 protected:
     void                Exit(void);
 
@@ -448,6 +453,8 @@ protected:
     bool                m_CExporting;
 
     bool                m_dynamicFieldsNode;
+
+    bool                m_skipChecks;
 };
 
 extern DuneApp *TheApp;

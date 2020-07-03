@@ -151,15 +151,24 @@ public:
     int                 width() { return m_width; }
     const Chain        &chain(int num) const { return m_chains[num]; }
     int                 size(void) { return m_size; }
+    TYPENAME Chain::Iterator *getExtraData(void)
+                                { return m_extraData; } 
+    void                setExtraData(TYPENAME Chain::Iterator* extraData)
+                            { 
+                            m_extraData = extraData;
+                            }        
 
 private:
     void                resize(int width);
+
+
 
 private:
     int                 m_size;
     int                 m_width;
     int                 m_maxLoad;
     Chain              *m_chains;
+    TYPENAME Chain::Iterator *m_extraData;
 };
 
 template<class K, class D>

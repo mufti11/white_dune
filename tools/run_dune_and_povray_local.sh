@@ -16,7 +16,21 @@ fi
 
 DUNE=`dirname $0`/../bin/dune
 NPROC=`grep processor /proc/cpuinfo | wc -l`
-FILE=`awk -v file=$1 'BEGIN { split(file, a, "."); print a[1] "_0"; }'`
+FILE=`awk -v fn=$1 'BEGIN { 
+     for (i = length(fn); i > 0; i--) { 
+         if (substr(fn, i, 1) == ".") {
+             fn = substr(fn, 1, i - 1);
+             break
+         } 
+     } 
+     for (i = length(fn); i > 0; i--) { 
+         if (substr(fn, i, 1) == "/") {
+             print substr(fn, i + 1);
+             exit
+         } 
+      } 
+      print fn;
+}'`
 $DUNE -povray  $1 > $FILE.pov
 FRAMES=`awk '($1~/\/\// && $2~/number_of_frames/) { print $3 }' $FILE.pov`
 awk -v file=$FILE.pov -v nproc=$NPROC -v frames=$FRAMES 'BEGIN { 
@@ -31,10 +45,10 @@ system("povray -D +KFI" beginFrame " " file " 2>/dev/null & ");}
 '
 while test "X_`ps -ef | grep povray | grep -v grep | grep -v run_dune_and_povray_local.sh`" != "X_" ; 
 do sleep 1; done
-#for j in $FILE*.pov; do rm $j; done
-if test -x /usr/bin/mencoder ; then
+for j in $FILE*.pov; do rm $j; done
+if test -x "`which mencoder`" ; then
     # if mencoder is available, create movie and delete the .png files 
-    mencoder "mf://`ls $FILE*.png | sort -V | awk '{printf $0 ","}' `" -o $FILE.mp4 -nosound -mf type=png:fps=24 -of lavf -lavfopts format=mp4 -ovc x264 -x264encopts pass=1:bitrate=2000:crf=24 &&
-#    rm divx2pass.log divx2pass.log.mbtree
+    mencoder -quiet "mf://`ls $FILE*.tif | sort -V | awk '{printf $0 ","}' `"  -mf type=tif:fps=24  -ovc x264 -oac lavc -lavcopts acodec=libfaac:abitrate=56 -srate 48000 -af channels=2 -of lavf -ofps 25 -lavfopts format=mp4 -o $FILE.mp4 2>/dev/null > /dev/null &&
     rm $FILE*.png
+    rm -f divx2pass.log divx2pass.log.mbtree
 fi
