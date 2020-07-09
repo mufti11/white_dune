@@ -1852,6 +1852,7 @@ MainWindow::OnCommand(void *vid)
         UpdateToolbars();
         TheApp->OnFileNew();
         exitFlag = true;
+        startCallback();
         break;
       case ID_DUNE_FILE_NEW_X3DV:
         if (isEditorInUse(true))
@@ -1860,6 +1861,7 @@ MainWindow::OnCommand(void *vid)
         UpdateToolbars();
         TheApp->OnFileNew(ID_DUNE_FILE_NEW_X3DV);
         exitFlag = true;
+        startCallback();
         break;
       case ID_DUNE_FILE_NEW_X3D_XML:
         if (isEditorInUse(true))
@@ -1868,6 +1870,7 @@ MainWindow::OnCommand(void *vid)
         UpdateToolbars();
         TheApp->OnFileNew(ID_DUNE_FILE_NEW_X3D_XML);
         exitFlag = true;
+        startCallback();
         break;
       case ID_DUNE_FILE_NEW_WINDOW:
         TheApp->OnFileNewWindow();
@@ -1926,6 +1929,9 @@ MainWindow::OnCommand(void *vid)
         break;
       case ID_DUNE_FILE_EXPORT_RIB:
         OnFileExportRib();
+        break;
+      case ID_DUNE_FILE_EXPORT_POVRAY:
+        OnFileExportPovray();
         break;
       case ID_DUNE_FILE_EXPORT_GEO_CATT:
         OnFileExportCattGeo();
@@ -13470,6 +13476,8 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
             flags = flags & AC3D;
         else if (strstr(filepath, ".rib") != NULL)
             flags = flags & RIB;
+        else if (strstr(filepath, ".pov") != NULL)
+            flags = flags & POVRAY;
         else if (strstr(filepath, ".dat") != NULL)
             flags = flags & LDRAW_DAT;
         if (writeFlags & KANIM) {
@@ -13485,22 +13493,21 @@ MainWindow::SaveFile(const char *filepath, const char *url, int writeFlags,
         } else if (flags & AC3D) {
             if (m_scene->writeAc3d(f, writeFlags & AC3D_4_RAVEN) != 0)
                 writeError = true;
-            else if (swTruncateClose(f))
-                writeError = true;
         } else if (flags & RIB) {
             if (m_scene->writeRib(f, path) != 0)
+                writeError = true;
+        } else if (flags & POVRAY) {
+            if (m_scene->writePovray(f, path) != 0)
                 writeError = true;
         } else if (flags & LDRAW_DAT) {
             if (m_scene->writeLdrawDat(f, path) != 0)
                 writeError = true;
-            else if (swTruncateClose(f))
-                writeError = true;
         } else {
             if (m_scene->write(f, url, flags, x3dPath) != 0)
                 writeError = true;
-            else if (swTruncateClose(f))
-                writeError = true;
         }
+        if (swTruncateClose(f))
+            writeError = true;
         if (!(writeFlags & TEMP_EXPORT))
             checkInFile(path);
     }
@@ -13624,6 +13631,11 @@ bool MainWindow::OnFileExportRib()
     return OnFileSaveAs(RIB | TEMP_EXPORT);
 }
 
+bool MainWindow::OnFileExportPovray()
+{
+    return OnFileSaveAs(POVRAY | TEMP_EXPORT);
+}
+
 bool MainWindow::OnFileExportLdrawDat()
 {
     return OnFileSaveAs(LDRAW_DAT | TEMP_EXPORT);
@@ -13698,6 +13710,8 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
         strcpy(path,"Ac3dExport.ac");
     else if (writeFlags & RIB) 
         strcpy(path,"RibExport.rib");
+    else if (writeFlags & POVRAY) 
+        strcpy(path,"PovrayExport.pov");
     else if (writeFlags & LDRAW_DAT)
         strcpy(path,"LdrawExport.dat");
     else if (writeFlags & X3D_XML)
@@ -13726,6 +13740,8 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
            mysnprintf(path, 1023, "Ac3dExport%d.ac", numberfile++);
        else if (writeFlags & RIB)
            mysnprintf(path, 1023, "RibExport%d.rib", numberfile++);
+      else if (writeFlags & POVRAY)
+           mysnprintf(path, 1023, "PovrayExport%d.pov", numberfile++);
        else if (writeFlags & LDRAW_DAT)
            mysnprintf(path, 1023, "LdrawExport%d.dat", numberfile++);
        else if (writeFlags & X3D_XML)
@@ -13824,9 +13840,18 @@ bool MainWindow::OnFileSaveAs(int writeFlags)
 #ifdef _WIN32
                              "rib (.rib)\0*.rib;*.RIB\0All Files (*.*)\0*.*\0\0",
 #else
-                            "*.rib", 
+                             "*.rib", 
 #endif
                              path, 1024, ".rib"))
+            save = true; 
+    } else if (writeFlags & POVRAY) {   
+        if (swSaveFileDialog(m_wnd, "Save As",
+#ifdef _WIN32
+                             "pov (.pov)\0*.pov;*.POV\0All Files (*.*)\0*.*\0\0",
+#else
+                             "*.pov", 
+#endif
+                             path, 1024, ".pov"))
             save = true; 
     } else if (writeFlags & LDRAW_DAT) {   
         if (m_scene->validateLdrawExport())

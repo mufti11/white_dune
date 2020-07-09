@@ -157,6 +157,9 @@ public:
                     if (m_capacity < m_size)
                         return -1;
                     bool stopped = false;
+                    // buggy OMP in mageia 7 ?
+                    if (m_size > 0 && m_data[0] == t)
+                        return 0;
                     #pragma omp parallel
                     {
                         #pragma omp for

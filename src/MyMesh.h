@@ -161,7 +161,12 @@ public:
     MFInt32            *getColorIndex(void)    { return m_colorIndex; }
     MFVec3f            *getNormals(void)       { return m_normals; }
     MFInt32            *getNormalIndex(void)   { return m_normalIndex; }
-    MFVec2f            *getTexCoords(void)     { return m_texCoords[0]; }
+    MFVec2f            *getTexCoords(void)     
+                           {
+                           if (m_texCoords.size() > 0)
+                               return m_texCoords[0]; 
+                            return NULL;
+                            }
     MFInt32            *getTexCoordIndex(void) { return m_texCoordIndex; }
     int                 getTexCoordsSize(void) { return m_texCoords.size(); }
     MFVec2f            *getTexCoords(int i)    { return m_texCoords[i]; }
@@ -280,7 +285,7 @@ protected:
 
     bool                m_isTriangulated;
 
-    long              m_tessellationStart;
+    long                m_tessellationStart;
     GLenum              m_tessellationType;
     bool                m_evenTriangleStrip;
     int                 m_drawCounter;
@@ -309,6 +314,8 @@ protected:
 
     List<VertexInfo *>  m_newMemory4VerticesInfo;
 #endif 
+
+    MFVec2f            *m_texCoordsToFree;
 };
 
 
@@ -358,6 +365,10 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
 {
     m_node = node;
 
+    m_listIndex = 0;
+
+    m_texCoordsToFree = NULL;
+
     setMeshFlags(meshFlags);
 
     m_creaseAngle = creaseAngle;
@@ -394,8 +405,11 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
 
     m_texCoords.resize(0);
     for (long i = 0; i < texCoords.size(); i++) {
-        m_texCoords[i] = texCoords[i];
-        m_texCoords[i]->ref();
+        if (texCoords[i]->getSize() > 0 && 
+            texCoords[i]->getSize() / 2 == m_vertices->getSFSize()) {
+            m_texCoords.append(texCoords[i]);
+            m_texCoords[m_texCoords.size() - 1]->ref();
+        }
     }
 
     if (m_texCoords.size() == 0) {
@@ -461,6 +475,8 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
 
     m_faces = NULL;
     m_numFaces = 0;
+    if (TheApp->getDrawAvoided() && !m_node->getScene()->isTranslation())
+        return; 
     buildFaces();
     generateFaceNormals();
     if (!m_normals)
@@ -538,6 +554,8 @@ MyMeshX<X, MFX, VEC3X>::~MyMeshX()
         delete m_faces[i];
     }
     delete [] m_faces;
+    if (m_texCoordsToFree)
+        delete m_texCoordsToFree;
     if (m_listIndex != 0)
         glDeleteLists(m_listIndex, 1);
 }
@@ -658,6 +676,8 @@ template <class X,class MFX,class VEC3X>
 void
 MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
 {
+    if (TheApp->getDrawAvoided() && !m_node->getScene()->isTranslation())
+        return;
     if ((pass == 1) && m_colorRGBA)
         return;
     if ((pass == 2) && !m_colorRGBA)
@@ -743,7 +763,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
                 continue;
             if ((m_validVertices.size() > 0) && !m_validVertices[coordIndex[j]])
                 continue;
-            if (texCoords && texCoordIndex &&
+            if (texCoords && texCoordIndex && m_texCoords.size() > 0 &&
                 (j < m_texCoordIndex->getSFSize()) &&
                 (texCoordIndex[j] < m_texCoords[0]->getSFSize()) &&
                 (texCoordIndex[j] >= 0)) {
@@ -1273,7 +1293,7 @@ template <typename X, typename MFX>
 MFVec2f* 
 generateTextureCoordinates(MFX *points, MFInt32* cindex, X dummy)
 {
-    MFVec2f *texcoords = NULL;
+    MFVec2f *texcoords = new MFVec2f();
     if (!points)
         return texcoords;
     int npoints = points->getSFSize(); 
@@ -1403,7 +1423,9 @@ MFVec2f*
 MyMeshX<X, MFX, VEC3X>::generateTextureCoordinates()
 {
     m_texcoords_generated = true;
-    return ::generateTextureCoordinates(m_vertices, m_coordIndex, (X)0.0f); 
+    m_texCoordsToFree = ::generateTextureCoordinates(m_vertices, m_coordIndex, 
+                                                     (X)0.0f); 
+    return m_texCoordsToFree;
 }
 
 #define VEC3F(x,y) VEC3X((*x).getValue(y))
@@ -1813,7 +1835,7 @@ MyMeshX<X, MFX, VEC3X>::addCoords(MFInt32 *coords, float *color,
                     m_normals->setSFValue(coords->getValue(i), 
                                           normals->getSFValue(numThings));
                 }
-                if (texCoords && texCoords->getSize() > 0) {
+                if (texCoords && m_texCoords.size() > 0) {
                     m_texCoords[0]->setSFValue(coords->getValue(i), 
                                                texCoords->getSFValue(numThings)
                                               );
@@ -2333,7 +2355,7 @@ MyMeshX<X, MFX, VEC3X>::triangulate(MeshBasedNode *that)
                 }
             }
 
-            if (texCoords && texCoordIndex &&
+            if (texCoords && texCoordIndex && m_texCoords.size() > 0 &&
                 (j < m_texCoordIndex->getSFSize()) &&
                 (texCoordIndex[j] < m_texCoords[0]->getSFSize())) {
                  vertexInfo.texCoord[0] = texCoords[texCoordIndex[j] * 2];

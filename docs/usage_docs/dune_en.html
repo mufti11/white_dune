@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */  
   
- last update: white_dune-1.876
+ last update: white_dune-1.902
 -->   
 <head>
  <title>"White_dune" documentation</title> 
@@ -256,6 +256,9 @@
   </li>
   <li>
    <h3><a href="#xite">Using X_ITE X3D browser</a></h3>
+  </li>
+  <li>
+   <h3><a href="#movie">movie creation</a></h3>
   </li>
   <li>
    <h3><a href="#upload">File -&gt; upload</a></h3>
@@ -2922,7 +2925,9 @@ Since version 0.29beta also Coordinate based nodes
 can be changed interactivly in the 3D preview window in the same way
 as changing the controlpoints of a NURBS shape.<br>
 For nodes with very much vertices, this is (still) only usefull to 
-change small details.
+change small details.<br>
+There is also a way to scale or rotate vertices (take care of the 
+"center"-position), this is done by selecting the scale or rotation icon.
 </p>
 <h3><a name="flip">Flip/swap and set center actions</a></h3>
 <p>
@@ -3539,6 +3544,15 @@ Export as X_ITE html/X3DV...</em> to write a .html and .x3dv file.
 Then the .html file and the .x3dv file has to be uploaded to a webserver
 to the same directory and the .html file can be loaded in the webbrowser. 
 </p>
+   <h4><a name="movie">Movie-Creation</a></h4>
+<p>
+To create a movie with white_dune, there is a script
+run_dune_and_aqsis.sh or run_dune_povray.sh.<br>
+In this scripts, white_dune creates .RIB files or a povray file.
+This files will be converted with aqsis or povray (runnung on all processors)
+into image-files, which will be converted with installed mencoder to a
+.mp4 file (or with installed png2vuv and vpxenc to a .webm file).
+</p>
 <h4><a name="upload"><em>File -&gt; upload</em></a> </h4>
 <p>
 White_dune has a command (menuitem <em>File -&gt; Upload</em>) to upload a VRML 
@@ -3593,7 +3607,3 @@ This is a very high security risk, do not use
 this feature without knowing exactly what you are doing !
 </p>
 </body>
-
-
-
-

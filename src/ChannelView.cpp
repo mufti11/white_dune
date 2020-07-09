@@ -111,8 +111,8 @@ void ChannelView::OnSize(int width, int height)
 
 void ChannelView::OnDraw(int x, int y, int width, int height, bool update)
 {
-    SDC dc = swCreateDC(m_wnd);
-//    swSetClipRect(dc, x, y, width, height);
+    SDC dc = CreateDC(m_wnd);
+    swSetClipRect(dc, x, y, width, height);
     swSetFGColor(dc, swGetWindowColor(m_wnd, SW_COLOR_WINDOW_BG));
     swFillRect(dc, x, y, width, height);
 

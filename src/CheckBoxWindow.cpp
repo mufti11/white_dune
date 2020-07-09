@@ -20,6 +20,7 @@
  */
 
 #include "CheckBoxWindow.h"
+#include "Scene.h"
 #include "stdafx.h"
 #include <ctype.h>
 
@@ -49,7 +50,7 @@ static int ymax;
 static void
 CheckBoxWindowRedraw(void* data)
 {
-    SDC dc = swCreateDC(canvas);
+    SDC dc = CreateDC(canvas);
     swSetFGColor(dc, swGetWindowColor(parent_window, SW_COLOR_WINDOW_BG));
     CheckBoxWindow* window = (CheckBoxWindow *) data;
     window->accountYmax();

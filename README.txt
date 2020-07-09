@@ -403,6 +403,7 @@ Free Software Foundation  (gcc (lex string parsing rule))
 orbisnap                  (patches to NodeExtrusion::createMesh)
 Dr. Guido Kramann         (free human animation motion capture VRML files)
 Alan Bleasby/JEEPS        (functions for geospatial component)
+Cindy Ballreich           (nancy animation data modifed for human.x3dv)
 Philippe Coval            (debian packaging and related bugfixes)
 Pawel W. Olszta           (openglutfont.c/h)
 The OpenGLUT contributors (openglutfont.c/h)
@@ -5651,5 +5652,15 @@ Dropped console output of run_dune_and_* commands
 Added -skipchecks option to load complex worlds
 
 Fixed bug in run_dune_and* scripts
+
+Added --with-clang to configure
+
+Update documention about movie creation
+
+Fixed draw of rotationhandles
+
+Fixed crash in texCoord drawing
+
+Fixed crash/memory error in texCoord generation
 
 Contact: MUFTI <mufti11@web.de>

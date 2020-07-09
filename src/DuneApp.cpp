@@ -145,6 +145,7 @@ DuneApp::DuneApp() : PreferencesApp(), EcmaScriptApp(), StereoViewApp(),
     m_fullScreenAtBegin = 0;
     m_CExporting = false;
     m_skipChecks = false;
+    enableDraw();
 }
 
 void DuneApp::initPreferences(void)

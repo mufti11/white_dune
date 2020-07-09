@@ -631,6 +631,7 @@ BEGIN
            MENUITEM "Esporta come OFF",                 ID_DUNE_FILE_EXPORT_OFF
            MENUITEM "Esporta come AC3D b...",           ID_DUNE_FILE_EXPORT_AC3D
            MENUITEM "Esporta come RIB...",              ID_DUNE_FILE_EXPORT_RIB
+           MENUITEM "Esporta come povray...",           ID_DUNE_FILE_EXPORT_POVRAY
            MENUITEM "Esporta come Catt 8 GEO...",       ID_DUNE_FILE_EXPORT_GEO_CATT
            MENUITEM "Esporta come Ldraw DAT...",        ID_DUNE_FILE_EXPORT_LDRAW_DAT
         END

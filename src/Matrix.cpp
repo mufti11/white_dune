@@ -195,6 +195,19 @@ Matrix::identity()
     return r;
 }
 
+bool            
+Matrix::isValid(void)
+{
+#ifdef HAVE_FPCLASSIFY 
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (fpclassify(m_mat[i][j]) != FP_NORMAL && 
+                fpclassify(m_mat[i][j]) != FP_ZERO)
+                return false;
+#endif
+    return true;
+}
+
 void printf(Matrix mat)
 {
     printf("%f %f %f %f\n", mat[0], mat[1], mat[2], mat[3]);
@@ -333,6 +346,19 @@ Matrixd::invert() const        // Gauss-Jordan elimination with partial pivoting
         }
     }
     return b;
+}
+
+bool            
+Matrixd::isValid(void)
+{
+#ifdef HAVE_FPCLASSIFY 
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (fpclassify(m_mat[i][j]) != FP_NORMAL && 
+                fpclassify(m_mat[i][j]) != FP_ZERO)
+                return false;
+#endif
+    return true;
 }
 
 Matrixd

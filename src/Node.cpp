@@ -1264,8 +1264,7 @@ NodeData::writeField(int f, int indent, int i, bool script)
     if (hasIsName)
         RET_ONERROR( writeIs(f, indent, name, isName) )
     else if (value) {
-        if (script || (value->getRefs() &&
-                       !value->equals(field->getDefault(x3d)))) {
+        if (script || (value->getRefs() && !value->isDefaultValue())) {
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f , name) )
             RET_ONERROR( mywritestr(f ," ") )

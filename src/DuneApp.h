@@ -375,6 +375,13 @@ public:
                            { return m_skipChecks; }
     void               setSkipChecks(bool flag)
                            { m_skipChecks = flag; }
+
+    void                disableDraw(void) 
+                           { m_avoidDraw = true; }
+    void                enableDraw(void) 
+                           { m_avoidDraw = false; }
+    bool                getDrawAvoided(void) { return m_avoidDraw; }
+
 protected:
     void                Exit(void);
 
@@ -455,6 +462,8 @@ protected:
     bool                m_dynamicFieldsNode;
 
     bool                m_skipChecks;
+
+    bool                m_avoidDraw;
 };
 
 extern DuneApp *TheApp;

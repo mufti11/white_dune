@@ -174,9 +174,11 @@ mkdir -p $RPM_BUILD_ROOT/%{_includedir}/white_dune
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/white_dune/opengl_example
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/pixmaps/
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/white_dune/shaders
 
 install -m 755 -p bin/dune $RPM_BUILD_ROOT/%{_bindir}/dune
 install -m 755 -p bin/dune4kids $RPM_BUILD_ROOT/%{_bindir}/dune4kids
+install -m 644 -p tools/phong.slx $RPM_BUILD_ROOT/%{_datadir}/white_dune/shaders/phong.slx
 install -m 755 -p tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
 install -m 755 -p tools/run_dune_and_povray.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_povray.sh
 install -m 755 -p bin/illegal2vrml $RPM_BUILD_ROOT/%{_bindir}/illegal2vrml
@@ -217,6 +219,7 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %license COPYING
 %{_bindir}/dune
 %{_bindir}/dune4kids
+%{_datadir}/white_dune/shaders/phong.slx
 %{_bindir}/run_dune_and_aqsis.sh
 %{_bindir}/run_dune_and_povray.sh
 %{_bindir}/illegal2vrml

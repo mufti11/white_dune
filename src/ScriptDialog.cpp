@@ -91,7 +91,7 @@ static int ymax;
 static void
 ScriptDialogRedraw(void* data)
 {
-    SDC dc = swCreateDC(canvas);
+    SDC dc = CreateDC(canvas);
     swSetFGColor(dc, 0xffffff);
     ScriptDialog* dialog = (ScriptDialog*) data;
     dialog->accountYmax();
@@ -572,7 +572,7 @@ void
 ScriptDialog::drawInterface()
 {
     InterfaceArray *interfaceData = m_node->getInterfaceData();
-    SDC dc = swCreateDC(canvas);
+    SDC dc = CreateDC(canvas);
     if (!m_canClick) {
         swSetFGColor(dc, SW_RED(0xFFFFFF));
         swDrawText(dc, X_SPACING, Y_SPACING + fontHeight, "editor is running");

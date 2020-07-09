@@ -451,7 +451,7 @@ void SceneGraphView::OnDraw(int x, int y, int width, int height, bool update)
         swGetSize(m_window, &width, &height);
     }
 
-    frontDC = swCreateDC(m_window);
+    frontDC = CreateDC(m_window);
     dc = swCreateBitmapDC(frontDC, x + width, y + height);
 
     if (dc == NULL) {

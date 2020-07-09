@@ -697,11 +697,8 @@ target: mysnprintf.o
 
 install: target
 	install -m 755 -p ../bin/dune /usr/bin
-	mkdir -p /usr/share/white_dune/shaders
 	install -m 755 -p ../tools/run_dune_and_aqsis.sh /usr/bin
-	install -m 644 -p ../tools/phong.slx /usr/share/white_dune/shaders
-	install -m 755 -p ../tools/run_dune_and_povray.sh /usr/bin
-	mkdir -p /usr/include/white_dune	
+	mkdir /usr/include/white_dune	
 	install -m 644 -p ../include/white_dune/libC++RWD.h /usr/include/white_dune/libC++RWD.h
 	install -m 644 -p ../include/white_dune/libC++RWD_namespace.h /usr/include/white_dune/libC++RWD_namespace.h
 	install -m 644 -p ../include/white_dune/libCRWD.h /usr/include/white_dune/libCRWD.h

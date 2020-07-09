@@ -3,7 +3,7 @@ gives unlimited permission to copy, distribute and modify it.
 
 white_dune do not have a installation procedure. 
 
-I you compile white_dune with 32 bit support, gt should run on all 32 bit
+If you compile white_dune with 32 bit support, it should run on all 32 bit
 windows versions from scratch (except early versions of Windows 95, which 
 requires the installation of OpenGL first). 
 

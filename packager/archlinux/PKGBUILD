@@ -1,15 +1,16 @@
 # Maintainer: J. Scheurich <mufti11@web.de>
 pkgname=wdune
-pkgver=1.890
+pkgver=1.908
 pkgrel=1
 epoch=
-pkgdesc="white_dune X3D/VRML97 tool"
-arch=()
-url="ftp://ftp.ourproject.org/pub/wdune/$pkgname-$pkgver.tar.bz2"
+pkgdesc="white_dune X3D/VRML97 tool, 3D modeller and animation-tool"
+arch=('x64_86')
+url="http://wdune.ourproject.org/"
 license=('GPL')
 groups=()
 depends=(xorg-fonts-misc
-         xorg-fonts-alias
+         xorg-fonts-alias-misc
+         povray
 )
 makedepends=(gcc
              fakeroot
@@ -21,6 +22,7 @@ makedepends=(gcc
              libxext
              libxi
              libxp
+             openmp
              openmotif
              libpng 
              libjpeg-turbo
@@ -60,15 +62,15 @@ backup=()
 options=()
 install=
 changelog=
-source=("$pkgname-$pkgver.tar.bz2")
+source=("ftp://ftp.ourproject.org/pub/wdune/wdune-$pkgver.tar.bz2")
 noextract=()
-md5sums=('0e06ebbc5bb917a3f17e179df3cd2aba')
+md5sums=('30c754ef03858b0152001d16c4527c9a')
 validpgpkeys=()
 
 build() {
-	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" 
-        make
+	cd "wdune-$pkgver"
+	./configure --with-clang --with-optimization --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/$name/docs" --with-protobaseurl="/usr/share/doc/$name/docs" --with-checkincommand="ci" 
+        make -j4
 }
 
 package() {

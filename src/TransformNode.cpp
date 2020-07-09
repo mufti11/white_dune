@@ -421,6 +421,28 @@ TransformNode::setHandle(int handle, const Vec3f &v)
 
     TransformProto *proto = (TransformProto *)getProto();
 
+
+    Vec3f vec = v;
+    if (m_scene->getXonly() &&
+        m_scene->getYonly()) {
+        vec.z = 0;
+    } else if (m_scene->getXonly() &&
+               m_scene->getZonly()) {
+        vec.y = 0;
+    } else if (m_scene->getZonly() &&
+               m_scene->getYonly()) {
+        vec.x = 0;
+    } else if (m_scene->getYonly()) {
+        vec.x = 0;
+        vec.z = 0;
+    } else if (m_scene->getZonly()) {
+        vec.y = 0;
+        vec.x = 0;
+    } else if (m_scene->getXonly()) {
+        vec.y = 0;
+        vec.z = 0;
+    } 
+
     switch (handle) {
       case TRANSLATION:
         {
@@ -443,7 +465,7 @@ TransformNode::setHandle(int handle, const Vec3f &v)
       case ROTATION:
       case HUMAN_JOINT:
         {
-        SFRotation rot2(v, 0);
+        SFRotation rot2(vec, 0);
         rot2.reverseFixAngle(m_scene->getUnitAngle());
         m_scene->setField(this, proto->rotation, new SFRotation(rot2));
         }
@@ -515,10 +537,11 @@ TransformNode::setHandle(int handle, const Vec3f &v)
         }
         break;
       case SCALE:
-        if ((v.x > 0.0f) && (v.y > 0.0f) && (v.z > 0.0f)) {
-            m_scene->setField(this, proto->scale, 
-                              new SFVec3f(Vec3f(v.x,v.y,v.z)));
-        }
+         m_scene->setField(this, proto->scale, 
+                           new SFVec3f(Vec3f(vec.x == 0 ? 1 : 1 + fabs(vec.x),
+                                             vec.y == 0 ? 1 : 1 + fabs(vec.y),
+                                             vec.z == 0 ? 1 : 1 + fabs(vec.z)
+                                      )));
         break;
       case CENTER:
         m_scene->setField(this, proto->center, new SFVec3f(mat * v));
@@ -539,6 +562,8 @@ TransformNode::setHandle(int handle, const Vec3f &v)
         assert(0);
         break;
     }
+    m_matrixDirty = true;
+    transform();
 }
 
 void
@@ -660,5 +685,14 @@ TransformNode::writeLdrawDat(int filedes, int indent)
     int ret = getChildren()->writeLdrawDat(filedes, indent);
     glPopMatrix();
     return ret;
+}
+
+void
+TransformNode::getMatrix(float* matrix)
+{
+    m_matrixDirty = true;
+    transform();
+    for (int i = 0; i < 16; i++)
+       matrix[i] = m_matrix[i];
 }
 

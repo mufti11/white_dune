@@ -2,6 +2,8 @@
 
 set -x
 
+export NPROC=`grep processor /proc/cpuinfo | wc -l`
+
 # currently white_dune compiles only with clang, exacute before this scrpt:
 # export CC=clang
 # export CXX=clang++
@@ -26,13 +28,14 @@ pkgname=$pkgname
 pkgver=$pkgver
 pkgrel=1
 epoch=
-pkgdesc="white_dune X3D/VRML97 tool"
-arch=()
-url="ftp://ftp.ourproject.org/pub/wdune/\$pkgname-\$pkgver.tar.bz2"
+pkgdesc="white_dune X3D/VRML97 tool, 3D modeller and animation-tool"
+arch=('x64_86')
+url="http://wdune.ourproject.org/"
 license=('GPL')
 groups=()
 depends=(xorg-fonts-misc
-         xorg-fonts-alias
+         xorg-fonts-alias-misc
+         povray
 )
 makedepends=(gcc
              fakeroot
@@ -44,6 +47,7 @@ makedepends=(gcc
              libxext
              libxi
              libxp
+             openmp
              openmotif
              libpng 
              libjpeg-turbo
@@ -83,15 +87,15 @@ backup=()
 options=()
 install=
 changelog=
-source=("\$pkgname-\$pkgver.tar.bz2")
+source=("ftp://ftp.ourproject.org/pub/wdune/wdune-\$pkgver.tar.bz2")
 noextract=()
 md5sums=($MD5SUM)
 validpgpkeys=()
 
 build() {
-	cd "\$pkgname-\$pkgver"
-	./configure --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" 
-        make
+	cd "wdune-\$pkgver"
+	./configure --with-clang --with-optimization --prefix=/usr --without-devil --with-uninstallcomment="pacman -R white_dune" --with-optimization --with-helpurl="/usr/share/doc/\$name/docs" --with-protobaseurl="/usr/share/doc/\$name/docs" --with-checkincommand="ci" 
+        make -j$NPROC
 }
 
 package() {

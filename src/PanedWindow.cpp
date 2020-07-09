@@ -258,7 +258,7 @@ PanedWindow::OnDraw(int x, int y, int width, int height, bool update)
     if (!m_sashes) return;
 
     int top = 0;
-    SDC dc = swCreateDC(m_wnd);
+    SDC dc = CreateDC(m_wnd);
 
     swGetSize(m_wnd, &width, &height);
     if (m_top && swIsVisible(m_top->GetWindow())) {

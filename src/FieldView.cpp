@@ -211,7 +211,7 @@ void FieldView::OnDraw(int x, int y, int width, int height, bool update)
 {
     int n = m_items.size();
     
-    SDC dc = swCreateDC(m_window);
+    SDC dc = CreateDC(m_window);
     SDC bdc = swCreateBitmapDC(dc, x + width, y + height);
     if (bdc == NULL) {
         swDestroyDC(dc);

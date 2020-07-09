@@ -107,12 +107,14 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/man/man1
 mkdir -p $RPM_BUILD_ROOT/usr/share/misc/white_dune
 mkdir -p $RPM_BUILD_ROOT/usr/share/applications
 mkdir -p $RPM_BUILD_ROOT/usr/share/pixmaps/
+mkdir -p $RPM_BUILD_ROOT/usr/share/white_dune/shaders
 mkdir -p $RPM_BUILD_ROOT/usr/src/debug/$VERSION3
 mkdir -p $RPM_BUILD_ROOT/usr/lib/debug/usr/bin/
 
 install -m 755 bin/dune $RPM_BUILD_ROOT/usr/bin/dune
 install -m 755 bin/dune4kids $RPM_BUILD_ROOT/usr/bin/dune4kids
 install -m 755 bin/illegal2vrml $RPM_BUILD_ROOT/usr/bin/illegal2vrml
+install -m 644 tools/phong.slx $RPM_BUILD_ROOT/usr/share/white_dune/shaders/phong.slx
 install -m 755 tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
 install -m 755 tools/run_dune_and_povray.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_povray.sh
 install -m 644 include/white_dune/libC++RWD_namespace.h $RPM_BUILD_ROOT/usr/include/white_dune/libC++RWD_namespace.h
@@ -141,6 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 
 /usr/bin/dune
 /usr/bin/dune4kids
+/usr/share/white_dune/shaders/phong.slx
 /usr/bin/run_dune_and_aqsis.sh
 /usr/bin/run_dune_and_povray.sh
 /usr/bin/illegal2vrml

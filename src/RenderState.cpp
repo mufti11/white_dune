@@ -776,38 +776,44 @@ RenderState::drawJointOrRotationHandles(Node* node, int handle, Matrix m,
     }
     glScalef(HANDLE_SIZE * scale, HANDLE_SIZE * scale, HANDLE_SIZE * scale);
 
-    glLoadName(handle);
-    Util::myGlColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_LINE_LOOP);
+    Scene *scene = node->getScene();
 
-    for (i = 0.0f; i < 2 * M_PI; i += inc) {
-        float s = (float) sin(i);
-        float c = (float) cos(i);
-        glVertex3f(0.0f, c, s);
+    if (scene->getXonly() || (scene->getConstrain() == CONSTRAIN_NONE)) {
+        glLoadName(handle);
+        Util::myGlColor3f(1.0f, 0.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
+
+        for (i = 0.0f; i < 2 * M_PI; i += inc) {
+            float s = (float) sin(i);
+            float c = (float) cos(i);
+            glVertex3f(0.0f, c, s);
+       } 
+       glEnd();
     }
-    glEnd();
+    if (scene->getYonly() || (scene->getConstrain() == CONSTRAIN_NONE)) {
+        glLoadName(handle);
+        Util::myGlColor3f(0.0f, 1.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
 
-    glLoadName(handle);
-    Util::myGlColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_LINE_LOOP);
-
-    for (i = 0.0f; i < 2 * M_PI; i += inc) {
-        float s = (float) sin(i);
-        float c = (float) cos(i);
-        glVertex3f(s, 0.0f, c);
+        for (i = 0.0f; i < 2 * M_PI; i += inc) {
+            float s = (float) sin(i);
+            float c = (float) cos(i);
+            glVertex3f(s, 0.0f, c);
+        }
+        glEnd();
     }
-    glEnd();
+    if (scene->getZonly() || (scene->getConstrain() == CONSTRAIN_NONE)) {
+        glLoadName(handle);
+        Util::myGlColor3f(0.0f, 0.0f, 1.0f);
+        glBegin(GL_LINE_LOOP);
 
-    glLoadName(handle);
-    Util::myGlColor3f(0.0f, 0.0f, 1.0f);
-    glBegin(GL_LINE_LOOP);
-
-    for (i = 0.0f; i < 2 * M_PI; i += inc) {
-        float s = (float) sin(i);
-        float c = (float) cos(i);
-        glVertex3f(c, s, 0.0f);
+        for (i = 0.0f; i < 2 * M_PI; i += inc) {
+             float s = (float) sin(i);
+             float c = (float) cos(i);
+             glVertex3f(c, s, 0.0f);
+        }
+        glEnd();
     }
-    glEnd();
 
     glPopMatrix();
     glPopName();

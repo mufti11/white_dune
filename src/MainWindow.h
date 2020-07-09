@@ -158,6 +158,7 @@ public:
     bool                OnFileExportAc3d();
     bool                OnFileExportAc3d4Raven();
     bool                OnFileExportRib();
+    bool                OnFileExportPovray();
     bool                OnFileExportCattGeo();
     bool                OnFileExportLdrawDat();
 #ifdef HAVE_LIBCGAL

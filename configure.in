@@ -63,8 +63,8 @@ dnl Check for compiler programs
 
 dnl fix wrong "-g -O2" flags settings by some autoconf versions when
 dnl detecting gcc/g++
-export CFLAGS="-g -O0"
-export CXXFLAGS="-g -O0"
+export OLD_CFLAGS="-g -O0"
+export OLD_CXXFLAGS="-g -O0 $CXXFLAGS"
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -92,6 +92,9 @@ if test "X_$OS" = "X_Linux" ; then
 fi
 
 dnl Checks for special options.
+
+AC_ARG_WITH(clang,--with-clang              use clang complier: detects gcc/g++ but uses clang,
+            export CLANG=1;export CC=clang;export CXX=clang++;export CXXFLAGS=-Wno-tautological-undefined-compare)
 
 AC_ARG_WITH(oldmotif,--with-oldmotif           used for compatibility with old motif/lesstif versions,
             AC_DEFINE(HAVE_OLD_MOTIF))
@@ -567,10 +570,12 @@ LD_OPTIONS=
 COMMONFLAGS=
 PARSER_CPP_CFLAG=
 export PARSER_CPP_CFLAG
+X_LIBS="$X_LIBS -L/usr/lib/X11 -L/usr/lib"
 if test "X_$OS" = "X_Linux" ; then
     CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include"
     LIBS="$LIBS -L/usr/local/lib $X_LIBS -L/usr/X11R6/LessTif/Motif1.2/lib"
     SDL_JOYSTICK_LINUX="yes"
+    export LDFLAGS="$LIBS"
 elif test "X_$OS" = "X_IRIX" ; then
     LD_OPTIONS="-n32"
     CPPFLAGS="$CPPFLAGS -I/usr/freeware/include $X_CFLAGS"
@@ -1089,11 +1094,16 @@ if test "X_$OMP" != "X_no" ; then
  if test "X_$HAVE_OMP_FLAGS" != ""; then
      CFLAGS="$CFLAGS $HAVE_OMP_FLAGS"
      CXXFLAGS="$CXXFLAGS $HAVE_OMP_FLAGS"
-     AC_HAVE_LIBRARY(gomp)
+     if test "X_$CLANG" != "X_"; then
+        export LIBS="$LIBS -fopenmp"
+     else
+        AC_HAVE_LIBRARY(gomp)
+     fi
  fi
 fi
 
 dnl Checks for libraries.
+LDFLAGS="$LDFLAGS -L/usr/lib/X11"
 if test "X_$DEBIAN" = "X_" ; then 
    AC_HAVE_LIBRARY(dl)
 fi

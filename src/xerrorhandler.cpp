@@ -296,7 +296,7 @@ int DuneApp::emergency_rescue(int sig)
    int fatal_handler(Display *display)
       {
       TheApp->emergency_rescue();
-      normalExit(2);
+//      normalExit(2);
       return(0);
       }
 
@@ -319,7 +319,7 @@ int DuneApp::emergency_rescue(int sig)
          {
          mywriteerr(message);
          mywriteerr("\n");
-         normalExit(2);
+//         normalExit(2);
          }
       }
 
@@ -388,7 +388,7 @@ volatile int fatal_error_in_progress = 0;
 # endif
       XSetErrorHandler(&nofatal_handler);
       XSetIOErrorHandler(&fatal_handler);
-      XtSetErrorHandler(&fatal_xthandler);   
+//      XtSetErrorHandler(&fatal_xthandler);   
       for (int i=1;i<=32;i++)
          dangerous_signals[i]=TRUE;
    
@@ -432,18 +432,18 @@ volatile int fatal_error_in_progress = 0;
     signal(SIGRTMAX,&signal_fatal_handler);
 #  endif
 # endif
+      }
 #endif
-   }
 
 #ifdef HAVE_FPU_ENABLE_INTERRUPTS
 
-# ifdef HAVE_FPU_SETCW
-#  include <fpu_control.h>
-# endif
+#  ifdef HAVE_FPU_SETCW
+#     include <fpu_control.h>
+#   endif
 
-# ifdef HAVE_HANDLE_SIGFPES
-#  include <sigfpe.h>
-# endif
+#  ifdef HAVE_HANDLE_SIGFPES
+#     include <sigfpe.h>
+#  endif
 
 void fpu_enable_interrupts(void)
    {
@@ -459,7 +459,7 @@ _FPU_MASK_UM |
    _FPU_SETCW(mask);  
 #  endif
 
-# ifdef HAVE_HANDLE_SIGFPES
+#  ifdef HAVE_HANDLE_SIGFPES
    sigfpe_[_UNDERFL].abort   =1;
    sigfpe_[_OVERFL].abort    =1;
    sigfpe_[_INVALID].abort   =1;
@@ -473,10 +473,9 @@ _FPU_MASK_UM |
                        _EN_INT_OVERFL;
    handle_sigfpes(_ON,mask,0,0,0);
 
+   }
 
 # endif
-
-   }
 
 #endif
 

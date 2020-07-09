@@ -461,6 +461,11 @@ public:
                            { m_transformMode->t2axes = t2; }
     TransformMode      *getTransformMode()
                            { return m_transformMode; }
+    bool                isTranslation(void)
+                           {
+                           TransformMode *tm = getTransformMode();
+                           return tm->hasTranslation();
+                           }
 
     void                transform(const Path *path);
     void                projectPoint(float x, float y, float z,
@@ -1259,6 +1264,8 @@ public:
 };
 
 void BackupRoutesRec(Node *node, CommandList *list);
+
+SDC CreateDC(SWND canvas);
 
 #endif // _SCENE_H
 

@@ -23,7 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
- last update: white_dune-1.876
+ last update: white_dune-1.902
 -->
 <head>
  <title>"white_dune" Dokumentation</title> 
@@ -255,6 +255,9 @@
   </li>
   <li>
    <h3><a href="#xite">Benutzung des X_ITE X3D browsers</a></h3>
+  </li>
+  <li>
+   <h3><a href="#movie">Film-Erzeugung</a></h3>
   </li>
   <li>
    <h3><a href="#upload">Datei -&gt; upload</a></h3>
@@ -3215,7 +3218,10 @@ Seit Version 0.29beta k&ouml;nnen auch Coordinate basierte Knoten
 genauso im 3D Preview Fenster interaktiv ver&auml;ndert werden wie die 
 Kontrollpunkte eines NURBS K&ouml;rpers.<br>
 Bei Knoten mit sehr vielen Punkten, ist das (noch) nur sinnvoll um kleinere
-Details zu ver&auml;ndern.
+Details zu ver&auml;ndern.<br>
+Es ist auch m&ouml;glich die Punkte zu skalieren und zu drehen (beachten sie
+dabei die "center"-Position) in dem man das Scale oder Rotation-Icon
+ausw&auml;hlt.
 </p>
 <h3><a name="flip">Umklappen/austauschen und Setze Drehpunkt Aktionen</a></h3>
 <p>
@@ -3901,6 +3907,17 @@ eine .x3dv Datei zu exportieren.
 Dann muss die .html Datei und die .x3dv Datei auf einen webserver
 ins gleiche Verzeichnis hochgeladen werden, damit die .html Datei in
 den Webbrowser geladen werden kann.
+</p>
+   <h4><a name="movie">Film-Erzeugung</a></h4>
+<p>
+Um mit white->dune einen .mp4 oder .webm Film zu erzeugen, steht unter
+UNIX/Linux das scipt run_dune_and_aqsis.sh bzw. run_dune_povray.sh
+zur Verf&uuml;gung.<br>
+Dabei werden mit white_dune .RIB Dateien oder eine 
+povray Datei erzeugt. Diese Dateien werden mit aqsis oder povray auf allen
+Prozessoren in Bild-Dateien umgewandelt, die bei installiertem mencoder
+in ein .mp4 File (oder bei installierten yuv2png und installiertem
+vpxenc in ein .webm File) umgwandelt wird.
 </p>
 <h4><a name="upload"><em>Datei -&gt; Upload</em></a> </h4>
 <p>

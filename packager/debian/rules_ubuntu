@@ -11,7 +11,7 @@ package=whitedune
 
 build:
 	$(checkdir)
-	CXXFLAGS="-std=gnu++11" ./configure --prefix=/usr --with-cgal-headers --with-uninstallcomment="dpkg -P whitedune" --without-devil --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-vrmlbrowser=view3dscene --with-x11-editor="gedit" --with-imageeditor="gimp" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
+	CXXFLAGS="-std=gnu++11" ./configure --prefix=/usr --without-cgal --with-uninstallcomment="dpkg -P whitedune" --without-devil --with-helpurl="/usr/share/doc/$(package)/docs" --with-protobaseurl="/usr/share/doc/$(package)/docs" --with-vrmlbrowser=view3dscene --with-x11-editor="gedit" --with-imageeditor="gimp" --with-imageeditor4kids="gpaint" --with-soundeditor=audacity
 	$(MAKE) -j`grep processor /proc/cpuinfo | wc -l`
 	touch build
 

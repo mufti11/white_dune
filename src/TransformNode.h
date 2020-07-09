@@ -57,6 +57,8 @@ public:
     virtual void      transform();
     virtual void      transformForHandle(int handle);
 
+    void              getMatrix(float* matrix);
+
     virtual void      preDraw();
     virtual void      draw(int pass); 
 

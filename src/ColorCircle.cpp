@@ -1128,7 +1128,7 @@ ColorCircle::ColorCircle(Scene *scene, SWND parent, FieldUpdate* fieldUpdate)
     SetGetColorPoint(Color, true);    
 
     if (m_dc==NULL) 
-       m_dc = swCreateDC(m_wnd);
+       m_dc = CreateDC(m_wnd);
     swSetFGColor(m_dc, swGetWindowColor(canvas, SW_COLOR_WINDOW_BG));
     swFillRect(m_dc, 0, 0, width, height);
 }

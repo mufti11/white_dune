@@ -95,8 +95,6 @@ BasicTransformNode::setMatrix(float* matrix)
        m_matrix[i] = matrix[i];
     Vec3f t(matrix[12], matrix[13], matrix[14]);
     translation(new SFVec3f(t.x, t.y, t.z));
-//    Vec3f s(matrix[0], matrix[5], matrix[10]);
-//    scale(new SFVec3f(s.x, s.y, s.z));
 }
 
 const Quaternion &

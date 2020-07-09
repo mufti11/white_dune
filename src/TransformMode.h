@@ -49,7 +49,7 @@ public:
     TMode tmode;
     TDimension tdimension;
     T2axes t2axes;  
-    TransformMode(TMode tm,TDimension td, T2axes t2) {
+    TransformMode(TMode tm, TDimension td, T2axes t2) {
        tmode=tm;
        tdimension=td;
        t2axes=t2;
@@ -57,5 +57,6 @@ public:
     bool hasRotation(void);
     bool hasTranslation(void);
     bool isLocal(void);
+    int getMode(void)  { return tmode; }
 };
 

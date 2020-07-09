@@ -9,5 +9,6 @@ if test -x /proc/cpuinfo; then
 fi
 cd `dirname $0`
 make realclean
-./configure --without-devil --without-cgal && make -j$NPROC
+# ubunutu has currently a non working CGAL, mageia 7 fail with OMP
+./configure --without-devil --without-cgal --without-omp && make -j$NPROC
 cd -

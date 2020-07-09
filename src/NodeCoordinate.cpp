@@ -58,6 +58,7 @@
 #include "NodeNurbsTrimmedSurface.h"
 #include "NodeHAnimHumanoid.h"
 #include "NodeHAnimJoint.h"
+#include "Path.h"
 
 enum {
      SIDE_RIGHT = 0,
@@ -83,6 +84,7 @@ ProtoCoordinate::create(Scene *scene)
 NodeCoordinate::NodeCoordinate(Scene *scene, Proto *def)
   : Node(scene, def)
 {
+    m_matrix = Matrix::identity();
 }
 
 void
@@ -109,6 +111,8 @@ void
 NodeCoordinate::drawHandles(void)
 {
     if (m_scene->getVertexModifier())
+        return;
+    if (TheApp->getDrawAvoided() && !m_scene->isTranslation())
         return;
 
     RenderState state;
@@ -411,6 +415,34 @@ NodeCoordinate::getHandle(int handle, int *constraint, int *field)
 }
 
 void
+NodeCoordinate::setMatrix(const Vec3f &v)
+{
+    TransformMode *tm = m_scene->getTransformMode();
+    m_matrix = Matrix::identity();
+    if (tm->getMode() == TM_TRANSLATE)
+        return;
+    NodeTransform *trans = (NodeTransform *)
+                           m_scene->searchTransform()->getNode();
+    if (trans) {
+         trans = (NodeTransform *)trans->copy();
+         switch (tm->getMode()) {
+           case TM_ROTATE:
+             trans->setHandle(ROTATION, v * 5);
+             trans->getMatrix(m_matrix);
+             if (!m_matrix.isValid())
+                 m_matrix = Matrix::identity();
+             break;
+           case TM_SCALE:
+             trans->setHandle(SCALE, v * 0.2);
+             trans->getMatrix(m_matrix);
+             if (!m_matrix.isValid())
+                 m_matrix = Matrix::identity();
+             break;
+         }
+    }
+}
+
+void
 NodeCoordinate::setHandle(int handle, const Vec3f &v)
 {
     int mode = m_scene->getSelectionMode();
@@ -425,6 +457,9 @@ NodeCoordinate::setHandle(int handle, const Vec3f &v)
 void
 NodeCoordinate::setBeginHandles(void)
 {
+    if (!m_scene->isTranslation())
+        TheApp->disableDraw();;
+
     m_selectedVerticesHandles.resize(0);
     m_selectedVertices.resize(0);
     m_selectedVertices2.resize(0);
@@ -438,12 +473,16 @@ NodeCoordinate::setEndHandles(void)
     MyMesh *mesh = getMesh();
     if (mesh == NULL)
         return;
+    if (!m_scene->isTranslation())
+        TheApp->enableDraw();
     if ((m_scene->getSelectionMode() == SELECTION_MODE_FACES) ||
         (m_scene->getSelectionMode() == SELECTION_MODE_LINES)) {
         for (long i = 0; i < m_selectedVerticesHandles.size(); i++)
             setHandleVertices(m_selectedVerticesHandles[i], 
                               m_selectedVertices2[i]);
     }
+    if (!m_scene->isTranslation())
+        update();
 }
 
 void
@@ -614,7 +653,10 @@ NodeCoordinate::setHandleVertices(int handle, const Vec3f &v)
     int numPoints = point()->getSFSize();
     if (handle >= 0 && handle < numPoints) {
         Vec3f oldV = point()->getValue(handle);
+        TransformMode *tm = m_scene->getTransformMode();
         Vec3f newV = v;
+        if (!tm->hasTranslation())
+            newV = m_matrix * oldV;
 /*
         if ((v.x == - oldV.x) && (v.x != 0.0f))
             return;
@@ -622,12 +664,12 @@ NodeCoordinate::setHandleVertices(int handle, const Vec3f &v)
             newValue->setValue(handle * 3, 0);
         else
 */
-            newValue->setValue(handle * 3, newV.x);
+        newValue->setValue(handle * 3, newV.x);
         newValue->setValue(handle * 3 + 1, newV.y);
         newValue->setValue(handle * 3 + 2, newV.z);
         // set other handles for symetric modelling
         // which also snap handles at the same place
-        setHandle(newValue, handle, newV, oldV, true);
+        setHandle(newValue, handle, newV, oldV, true, true);
         if (m_scene->getXSymetricMode()) {
             NodeNurbsGroup *nurbsGroup = findNurbsGroup();
             if (nurbsGroup)

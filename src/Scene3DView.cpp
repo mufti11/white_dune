@@ -163,7 +163,7 @@ void
 Scene3DView::drawViewPort(Node *root, int count, bool update)
 {
     int width, height;
-    if (!m_dc) m_dc = swCreateDC(m_wnd);
+    if (!m_dc) m_dc = CreateDC(m_wnd);
     if (!m_glc) m_glc = swCreateGLContext(m_dc);
     swMakeCurrent(m_dc, m_glc);
     swGetSize(m_wnd, &width, &height);
@@ -319,7 +319,7 @@ void Scene3DView::OnDraw(int /* x */, int /* y */,
             drawViewPort(viewports->get(i), i);
     if (viewports->size() > 0) {
         int width, height;
-        if (!m_dc) m_dc = swCreateDC(m_wnd);
+        if (!m_dc) m_dc = CreateDC(m_wnd);
         if (!m_glc) m_glc = swCreateGLContext(m_dc);
             swMakeCurrent(m_dc, m_glc);
         swGetSize(m_wnd, &width, &height);
@@ -579,8 +579,9 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
             glLoadIdentity();
             Matrix transformMatrix;
             transformMatrix = Matrix::identity();
-            Node *trans = m_scene->searchTransform()->getNode();
-            trans->getMatrix(transformMatrix);
+            Path *trans = m_scene->searchTransform();
+            if (trans && trans->getNode()) 
+                trans->getNode()->getMatrix(transformMatrix);
             glPopMatrix();
 
             Quaternion viewQuat = m_scene->getCamera()->getOrientation();
@@ -1073,6 +1074,8 @@ void Scene3DView::OnMouseMove(int x, int y, int modifiers)
                         m_scene->backupFieldsDone();
                         m_backedUp = true;
                     }
+                    if (node->getType() == VRML_COORDINATE)
+                        ((NodeCoordinate *)node)->setMatrix(oldv + diff);
                     if (m_scene->getXSymetricMode()) {
                         float eps = TheApp->GetHandleEpsilon();
                         bool alreadyHandled = false;

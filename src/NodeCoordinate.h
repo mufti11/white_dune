@@ -56,6 +56,7 @@ public:
 
     void            drawHandles(void);
     Vec3f           getHandle(int handle, int *constraint, int *field);
+    void            setMatrix(const Vec3f &v);
     void            setHandle(int handle, const Vec3f &v);
     void            setBeginHandles(void);
     void            setEndHandles(void);
@@ -117,6 +118,7 @@ protected:
     MyArray<Vec3f> m_selectedVerticesWithoutX;
     MyArray<bool> m_validSymVerticesHandles;
     MyArray<int> m_selectedVerticesHandles;
+    Matrix       m_matrix;
 };
 
 

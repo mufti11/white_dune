@@ -2211,7 +2211,8 @@ Scene::writeRibNextFrame(int f, const char *url, int frame)
     RET_ONERROR( mywritef(f, "FrameBegin %d\n", frame) )
     URL file(url);
     RET_ONERROR( mywritef(f, "Display \"%s%06d.tif\" \"file\" \"rgba\"\n",
-                          file.GetFileNameWithoutExtension(), frame) )
+                          file.GetFileNameWithoutExtension(), frame + 1) )
+                                                // png2yuv begins to count at 1
 
     float fov = 30;
     if (m_currentViewpoint)
@@ -4115,7 +4116,8 @@ Scene::setField(Node *node, int field, FieldValue *value)
        NodeTimeSensor *nodeTimeSensor = (NodeTimeSensor *) node;
        nodeTimeSensor->updateStart(field, value, m_currentTime);
     }
-    OnFieldChange(node, field);
+    if (!TheApp->getDrawAvoided())
+        OnFieldChange(node, field);
 }
 
 void 
@@ -4692,7 +4694,13 @@ Scene::transform(const Path *path)
 Path* Scene::searchTransform(void)
 {
     Path* transform = new Path(*m_selection);
-    return searchTransform(transform);
+    Node *trans = transform->getNode();
+    while (trans->getType() != VRML_TRANSFORM && trans->hasParent()) {
+           trans = trans->getParent();
+           if (trans == getRoot())
+               return NULL;
+    }
+    return searchTransform(trans->getPath());
 }
 
 // search for a Transform node in a path
@@ -7575,3 +7583,12 @@ FieldUpdate::FieldUpdate(Node *n, int f, int i)
     index = i;
 }
 
+#include "MainWindow.h"
+
+SDC CreateDC(SWND canvas)
+{
+    if (swFromPtr(canvas) == 0) {
+        return swCreateDC(TheApp->getCurrentMainWindow()->getParentWindow());
+    }
+    return swCreateDC(canvas);
+}

@@ -400,15 +400,13 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         meshFlags |= MESH_COLOR_PER_VERTEX;
     if (bnormalPerVertex)
         meshFlags |= MESH_NORMAL_PER_VERTEX;
-
     if (coord->getType() == VRML_COORDINATE) {
         MFVec3f *coords = ((NodeCoordinate *)coord)->point();
         m_mesh = new MyMesh(this, coords, coordIndex, normals, normalIndex, 
                             colors, colorIndex, texCoords, texCoordIndex,
                             creaseAngle()->getFixedAngle(
                                 m_scene->getUnitAngle()), 
-                            meshFlags, transparency, fogCoords, 
-                            texCoord() ? texCoord()->getValue() : NULL);
+                            meshFlags, transparency, fogCoords);
         m_isDoubleMesh = false;
     } else if (coord->getType() == VRML_GEO_COORDINATE) {
         MFVec3d *coords = ((NodeGeoCoordinate *)coord)->pointX3D();
@@ -417,9 +415,7 @@ NodeIndexedFaceSet::createMesh(bool cleanDoubleVertices, bool triangulate)
                                         texCoords, texCoordIndex, 
                                         creaseAngle()->getFixedAngle(
                                             m_scene->getUnitAngle()), 
-                                        meshFlags, transparency, fogCoords,
-                                        texCoord() ? texCoord()->getValue() :
-                                        NULL);
+                                        meshFlags, transparency, fogCoords);
         m_isDoubleMesh = true;
     }
 }

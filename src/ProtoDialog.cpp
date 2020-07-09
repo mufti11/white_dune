@@ -88,7 +88,7 @@ static int ymax;
 static void
 ProtoDialogRedraw(void* data)
 {
-    SDC dc = swCreateDC(canvas);
+    SDC dc = CreateDC(canvas);
     swSetFGColor(dc, 0xffffff);
     ProtoDialog* dialog = (ProtoDialog*) data;
     dialog->accountYmax();
@@ -466,7 +466,7 @@ void
 ProtoDialog::drawInterface()
 {
     InterfaceArray *interfaceData = m_proto->getInterfaceData(true);
-    SDC dc = swCreateDC(canvas);
+    SDC dc = CreateDC(canvas);
     if (!m_canClick) {
         swSetFGColor(dc, SW_RED(0xFFFFFF));
         swDrawText(dc, X_SPACING, Y_SPACING + fontHeight, "editor is running");

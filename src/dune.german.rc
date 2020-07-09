@@ -630,6 +630,7 @@ BEGIN
            MENUITEM "Exportiere als OFF",               ID_DUNE_FILE_EXPORT_OFF
            MENUITEM "Exportiere als AC3D b...",         ID_DUNE_FILE_EXPORT_AC3D
            MENUITEM "Exportiere als RIB...",            ID_DUNE_FILE_EXPORT_RIB
+           MENUITEM "Exportiere als povray...",         ID_DUNE_FILE_EXPORT_POVRAY
            MENUITEM "Exportiere als Catt 8 GEO...",     ID_DUNE_FILE_EXPORT_GEO_CATT
            MENUITEM "Exportiere als Ldraw DAT...",      ID_DUNE_FILE_EXPORT_LDRAW_DAT
         END

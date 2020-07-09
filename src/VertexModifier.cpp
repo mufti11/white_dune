@@ -113,7 +113,7 @@ VertexModifier::VertexModifier(Scene *scene, SWND parent,
                               : SceneView(scene, parent)
 {
     m_canvas = parent;
-    m_dc = swCreateDC(GetWindow());
+    m_dc = CreateDC(GetWindow());
     m_fieldUpdate = fieldUpdate;
 
     swSetClientData(m_canvas, this);

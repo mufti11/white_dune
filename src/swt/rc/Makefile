@@ -10,7 +10,7 @@ LIBS =
 LIBDIRS =
 INCDIRS = -I../include
 # WARNINGS = -Wall -Wwrite-strings
-CFLAGS = -g $(WARNINGS) $(INCDIRS)  -fopenmp
+CFLAGS = -g $(WARNINGS) $(INCDIRS) -g -O0
 MAKEDEPEND=gcc -MM
 YFLAGS = -d
 

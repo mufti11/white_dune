@@ -47,6 +47,7 @@ public:
 
     static Matrix   identity();
     void            swapRows(int i, int j);
+    bool            isValid(void);
 
 private:
     float           m_mat[4][4];
@@ -71,6 +72,7 @@ public:
 
     static Matrixd  identity();
     void            swapRows(int i, int j);
+    bool            isValid(void);
 
 private:
     double          m_mat[4][4];
