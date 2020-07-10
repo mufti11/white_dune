@@ -5663,4 +5663,6 @@ Fixed crash in texCoord drawing
 
 Fixed crash/memory error in texCoord generation
 
+Added OMP direction for Matrix * vec3f multplication
+
 Contact: MUFTI <mufti11@web.de>

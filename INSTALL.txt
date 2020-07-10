@@ -126,6 +126,9 @@ Systems supported by "packager" directory
  For Arch Linux use:
      (cd packager/archlinux && mkpacman.sh)
 
+ For Manjaro Linux use:
+     (cd packager/archlinux && mkpacman_manjaro.sh)
+
  For Mageia Linux use:
      (cd packager/rpm && sh mkrpm_mageia.sh)
 

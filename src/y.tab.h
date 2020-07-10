@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.6.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,10 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -40,52 +45,60 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    BRACKET_ON = 258,
-    BRACKET_OFF = 259,
-    WING_BRACKET_ON = 260,
-    WING_BRACKET_OFF = 261,
-    SCRIPT = 262,
-    COMPOSED_SHADER = 263,
-    PACKAGED_SHADER = 264,
-    SHADER_PROGRAM = 265,
-    VRML_CUT = 266,
-    EXPORT = 267,
-    IMPORT = 268,
-    AS = 269,
-    ID = 270,
-    ID_X3D = 271,
-    STRING = 272,
-    INT_NUM = 273,
-    FLOAT_NUM = 274,
-    DEF = 275,
-    EXTERNPROTO = 276,
-    FALSE_TOK = 277,
-    IS = 278,
-    NULL_TOK = 279,
-    PROTO = 280,
-    ROUTE = 281,
-    TO = 282,
-    TRUE_TOK = 283,
-    USE = 284,
-    EVENT_IN = 285,
-    EVENT_OUT = 286,
-    EXPOSED_FIELD = 287,
-    INPUT_OUTPUT = 288,
-    FIELD = 289,
-    X3D = 290,
-    PROFILE = 291,
-    COMPONENT = 292,
-    UNIT = 293,
-    META = 294,
-    VRML1 = 295
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    BRACKET_ON = 258,              /* BRACKET_ON  */
+    BRACKET_OFF = 259,             /* BRACKET_OFF  */
+    WING_BRACKET_ON = 260,         /* WING_BRACKET_ON  */
+    WING_BRACKET_OFF = 261,        /* WING_BRACKET_OFF  */
+    SCRIPT = 262,                  /* SCRIPT  */
+    COMPOSED_SHADER = 263,         /* COMPOSED_SHADER  */
+    PACKAGED_SHADER = 264,         /* PACKAGED_SHADER  */
+    SHADER_PROGRAM = 265,          /* SHADER_PROGRAM  */
+    VRML_CUT = 266,                /* VRML_CUT  */
+    EXPORT = 267,                  /* EXPORT  */
+    IMPORT = 268,                  /* IMPORT  */
+    AS = 269,                      /* AS  */
+    ID = 270,                      /* ID  */
+    ID_X3D = 271,                  /* ID_X3D  */
+    STRING = 272,                  /* STRING  */
+    INT_NUM = 273,                 /* INT_NUM  */
+    FLOAT_NUM = 274,               /* FLOAT_NUM  */
+    DEF = 275,                     /* DEF  */
+    EXTERNPROTO = 276,             /* EXTERNPROTO  */
+    FALSE_TOK = 277,               /* FALSE_TOK  */
+    IS = 278,                      /* IS  */
+    NULL_TOK = 279,                /* NULL_TOK  */
+    PROTO = 280,                   /* PROTO  */
+    ROUTE = 281,                   /* ROUTE  */
+    TO = 282,                      /* TO  */
+    TRUE_TOK = 283,                /* TRUE_TOK  */
+    USE = 284,                     /* USE  */
+    EVENT_IN = 285,                /* EVENT_IN  */
+    EVENT_OUT = 286,               /* EVENT_OUT  */
+    EXPOSED_FIELD = 287,           /* EXPOSED_FIELD  */
+    INPUT_OUTPUT = 288,            /* INPUT_OUTPUT  */
+    FIELD = 289,                   /* FIELD  */
+    X3D = 290,                     /* X3D  */
+    PROFILE = 291,                 /* PROFILE  */
+    COMPONENT = 292,               /* COMPONENT  */
+    UNIT = 293,                    /* UNIT  */
+    META = 294,                    /* META  */
+    VRML1 = 295                    /* VRML1  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define BRACKET_ON 258
 #define BRACKET_OFF 259
 #define WING_BRACKET_ON 260
@@ -127,10 +140,9 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 170 "parser.y" /* yacc.c:1909  */
+#line 170 "parser.y"
 
     int                  int32;
     int                  id;
@@ -144,9 +156,9 @@ union YYSTYPE
     IntArray            *intArray;
     DoubleArray         *doubleArray;
 
-#line 148 "y.tab.h" /* yacc.c:1909  */
-};
+#line 160 "y.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

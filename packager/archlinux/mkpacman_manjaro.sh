@@ -34,7 +34,7 @@ url="http://wdune.ourproject.org/"
 license=('GPL')
 groups=()
 depends=(xorg-fonts-misc
-         xorg-fonts-alias-misc
+         xorg-fonts-alias
          povray
          mencoder
 )

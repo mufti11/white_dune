@@ -427,13 +427,13 @@ NodeCoordinate::setMatrix(const Vec3f &v)
          trans = (NodeTransform *)trans->copy();
          switch (tm->getMode()) {
            case TM_ROTATE:
-             trans->setHandle(ROTATION, v * 5);
+             trans->setHandle(ROTATION, v * 10);
              trans->getMatrix(m_matrix);
              if (!m_matrix.isValid())
                  m_matrix = Matrix::identity();
              break;
            case TM_SCALE:
-             trans->setHandle(SCALE, v * 0.2);
+             trans->setHandle(SCALE, v * 0.1);
              trans->getMatrix(m_matrix);
              if (!m_matrix.isValid())
                  m_matrix = Matrix::identity();
