@@ -107,7 +107,6 @@ public:
                           { return &m_hasNoWeightArray; }
 
     bool              jointHasNoWeight(int vertex);
-    Node             *getJointParent(Node *node);
 
     virtual int       countPolygons(void);
     virtual int       countPolygons1Sided(void);

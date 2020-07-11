@@ -40,19 +40,16 @@ HAnimJointDialog::HAnimJointDialog(SWND parent, int idd, Scene *scene,
     m_lowerlimit = 0.0f;
     m_upperlimit = 1.0f;
     m_scene = scene;
-    Node *nparent = NULL;
     if (nodesFromScene) {
         Node *current = m_scene->getSelection()->getNode();
         NodeHAnimHumanoid *human = current->getHumanoid();
         if (human) {
             m_node = m_scene->getLastSelectedHAnimJoint();
-            nparent = human->getJointParent(m_node);
         } else
             m_node = NULL;
     } else {
         m_node = NULL;
     }
-    m_parent = nparent;
     m_newJoint = newJoint;
     LoadData();
 }
@@ -78,12 +75,7 @@ HAnimJointDialog::SaveData()
     else if (nodeIndex > 1)
         m_node = m_scene->use(m_joints[nodeIndex]);
 
-    SWND comboParent = swGetDialogItem(m_dlg, IDC_JOINT_PARENT);
-    int parentIndex = swComboBoxGetSelection(comboParent);
-    if ((parentIndex == 0) && (m_parent == NULL))
-        m_parent = NULL;
-    else if (parentIndex > -1)
-        m_parent =  m_scene->use(m_joints[parentIndex]);
+    m_parent = NULL;
 }
 
 bool
@@ -93,21 +85,11 @@ HAnimJointDialog::Validate()
     int nodeIndex = swComboBoxGetSelection(comboNode);
     if (nodeIndex < 0)
         return false;
-    SWND comboParent = swGetDialogItem(m_dlg, IDC_JOINT_PARENT);
-    int parentIndex = swComboBoxGetSelection(comboParent);
-    if (parentIndex < 0)
-        return false;
     if ((m_weight <= m_lowerlimit) && (m_weight > m_upperlimit)) {
         char str[256], title[256];
         swLoadString(IDS_DUNE, title, 256);
         swLoadString(IDS_WEIGHT_0_1, str, 256);
         swMessageBox(TheApp->mainWnd(), str, title, SW_MB_OK, SW_MB_ERROR);
-        return false;
-    } else if ((m_weight < m_upperlimit) && (m_parent == NULL)) {
-        char str[256], title[256];            
-        swLoadString(IDS_DUNE, title, 256);            
-        swLoadString(IDS_NOT_1_REQUIRES_PARENT, str, 256);                        
-        swMessageBox(TheApp->mainWnd(), str, title, SW_MB_OK, SW_MB_ERROR);    
         return false;
     }
     return true;
@@ -151,12 +133,9 @@ HAnimJointDialog::LoadData()
     for (long i = 0;i < m_joints.size(); i++)
         swComboBoxAppendItem(comboNode, m_joints[i]);
 
-    if (m_parent != NULL) {
-        m_joints[0] = m_parent->getNameOrNewName();
-    } else
-        m_joints[0] = "NULL";
+    m_joints[0] = "NULL";
      
-    for (long i = 0; i < m_joints.size(); i++)
+    for (long i = 1; i < m_joints.size(); i++)
         swComboBoxAppendItem(comboParent, m_joints[i]);
 }
 

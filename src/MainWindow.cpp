@@ -12258,9 +12258,6 @@ MainWindow::insertHAnimJoint()
             joint->skinCoordIndex(indices);
             joint->skinCoordWeight(weights);
             if (weight < 1) {
-                NodeHAnimJoint *parent = (NodeHAnimJoint *)dlg.GetParent();
-                MFFloat *weights = (MFFloat *)parent->skinCoordWeight()->copy();
-                MFInt32 *indices = (MFInt32 *)parent->skinCoordIndex()->copy();
                 for (long i = 0; i < handles.size(); i++) {
                     int handle = m_scene->getSelectedHandle(i);
                     long f = indices->find(handle);
@@ -12270,8 +12267,6 @@ MainWindow::insertHAnimJoint()
                     } else
                         weights->setSFValue(f, 1 - weight);
                 }
-                parent->skinCoordIndex(indices);
-                parent->skinCoordWeight(weights);
             }    
             m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
         }
@@ -12373,9 +12368,6 @@ MainWindow::setHAnimJointWeight()
         joint->skinCoordIndex(indices);
         joint->skinCoordWeight(weights);
         if (weight < 1) {
-            NodeHAnimJoint *parent = (NodeHAnimJoint *)dlg.GetParent();
-            MFFloat *weights = (MFFloat *)parent->skinCoordWeight()->copy();
-            MFInt32 *indices = (MFInt32 *)parent->skinCoordIndex()->copy();
             for (long i = 0; i < handles.size(); i++) {
                 int handle = m_scene->getSelectedHandle(i);
                 if ((handle < 0) || (handle >= NO_HANDLE))
@@ -12387,8 +12379,6 @@ MainWindow::setHAnimJointWeight()
                 } else
                     weights->setSFValue(f, 1 - weight);
             }
-            parent->skinCoordIndex(indices);
-            parent->skinCoordWeight(weights);
         }    
         m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
     }

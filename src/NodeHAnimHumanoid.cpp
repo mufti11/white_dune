@@ -663,14 +663,29 @@ NodeHAnimHumanoid::createMeshes(bool cleanDoubleVertices, bool triangulateMesh)
              m_meshes[i]->setVerticesZero();
          }
 
-     for (int j = 0; j < m_numMeshes; j++)
+     for (int j = 0; j < m_numMeshes; j++) {
+         MyArray<JointAndParent *> jointseri;
          for (int i = 0; i < n; i++)
               if (childList->get(i)->getType() == X3D_HANIM_JOINT) {
                   NodeHAnimJoint *joint = (NodeHAnimJoint *)childList->get(i);
-                  if (m_meshes[j] != NULL)
-                      joint->applyJoint(j, m_meshes[j], m_origVertices[j], 
-                                        this);
+                  if (m_meshes[j] != NULL) {
+                      MyArray<JointAndParent *>jointin;
+                      joint->getJoints(&jointin, this);
+                      for (long n = 0; n < jointin.size(); n++)
+                           jointseri.append(jointin[n]); 
+                  }
               }
+
+//         TheApp->disableMatrixParallel(); // there is also omp in matrix::*Vec3f
+//         #pragma omp parallel
+//         #pragma omp for
+         for (long i = 0; i < jointseri.size(); i++)
+              jointseri[i]->joint->applyJoint(j, m_meshes[j], m_origVertices[j],
+                                              jointseri[i]->parent);
+//         TheApp->enableMatrixParallel();
+         
+
+     }
 
      for (int j = 0; j < m_numMeshes; j++)
          if (m_meshes[j] != NULL) {
@@ -762,23 +777,6 @@ NodeHAnimHumanoid::countPolygons2Sided(void)
     for (int i = 0; i < m_numMeshes; i++)
         ret += m_meshes[i]->countPolygons2Sided();
     return ret;
-}
-
-Node *
-NodeHAnimHumanoid::getJointParent(Node *node)
-{
-    Node *ret = NULL;
-
-    NodeList *childList = skeleton()->getValues();
-
-    for (long i = 0; i < childList->size(); i++)
-        if (childList->get(i)->getType() == X3D_HANIM_JOINT) {
-            NodeHAnimJoint *joint = (NodeHAnimJoint *)childList->get(i);
-            ret = joint->getJointParent(node, this);
-            if (ret != NULL)
-                return ret;    
-        }
-    return ret;    
 }
 
 int     

@@ -382,6 +382,15 @@ public:
                            { m_avoidDraw = false; }
     bool                getDrawAvoided(void) { return m_avoidDraw; }
 
+    void                disableMatrixParallel()
+                           { m_matrixParallel = false; }
+
+    void                enableMatrixParallel()
+                           { m_matrixParallel = true; }
+
+    bool                getMatrixParallel()
+                           { return m_matrixParallel; }
+
 protected:
     void                Exit(void);
 
@@ -464,6 +473,8 @@ protected:
     bool                m_skipChecks;
 
     bool                m_avoidDraw;
+
+    bool                m_matrixParallel;
 };
 
 extern DuneApp *TheApp;

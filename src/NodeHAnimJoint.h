@@ -26,6 +26,9 @@
 #include "Proto.h"
 #include "SFMFTypes.h"
 #include "NodeTransform.h"
+#include "Array.h"
+
+class JointAndParent;
 
 class ProtoHAnimJoint : public ProtoTransform {
 public:
@@ -63,6 +66,8 @@ public:
     virtual bool    showFields() { return true; }
     virtual void    applyJoint(int skinNum, MyMesh *mesh, 
                                MFVec3f *origVertices, Node *parent);
+    void            getJoints(MyArray<JointAndParent *> *outputJoints,
+                                      Node* parent);
     void            accountJointMatrix(Node *parent);
     virtual void    drawHandles(void);
     virtual void    drawJointHandles(float scale, Node *parent, Node *that);
@@ -74,8 +79,6 @@ public:
 
     void            getJointMatrix(Matrix &matrix) 
                         { m_jointMatrix.copyTo(matrix); } 
-
-    Node           *getJointParent(Node *node, Node *parent);
 
     fieldMacros(MFNode,     displacers,       ProtoHAnimJoint)
     fieldMacros(SFRotation, limitOrientation, ProtoHAnimJoint)
@@ -89,4 +92,11 @@ protected:
     Matrix m_jointMatrix;
     NodeCoordinate *m_coord;
 };
+
+class JointAndParent {
+public:
+    NodeHAnimJoint *joint;
+    Node           *parent;
+};
+
 

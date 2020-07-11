@@ -26,6 +26,7 @@
 
 #include "Matrix.h"
 #include "EulerAngles.h"
+#include "DuneApp.h"
 
 Matrix::Matrix()
 {
@@ -78,6 +79,7 @@ Matrix::operator *(const Vec3f &v) const
     Vec3f r;
     float iw;
 
+    if (TheApp->getMatrixParallel()) {
 #pragma omp parallel sections
     {
     #pragma omp section
@@ -97,6 +99,13 @@ Matrix::operator *(const Vec3f &v) const
     iw = 1.0f / (m_mat[0][3]*v.x + m_mat[1][3]*v.y + m_mat[2][3]*v.z + m_mat[3][3]);
     }
     }
+    } else {
+        r.x = m_mat[0][0]*v.x + m_mat[1][0]*v.y + m_mat[2][0]*v.z + m_mat[3][0];
+        r.y = m_mat[0][1]*v.x + m_mat[1][1]*v.y + m_mat[2][1]*v.z + m_mat[3][1];
+        r.z = m_mat[0][2]*v.x + m_mat[1][2]*v.y + m_mat[2][2]*v.z + m_mat[3][2];
+        iw = 1.0f / (m_mat[0][3]*v.x + m_mat[1][3]*v.y + m_mat[2][3]*v.z + m_mat[3][3]);
+    }
+
     return r * iw;
 }
 
@@ -273,10 +282,32 @@ Matrixd::operator *(const Vec3d &v) const
     Vec3d r;
     double iw;
 
+    if (TheApp->getMatrixParallel()) {
+#pragma omp parallel sections
+    {
+    #pragma omp section
+    {
     r.x = m_mat[0][0]*v.x + m_mat[1][0]*v.y + m_mat[2][0]*v.z + m_mat[3][0];
+    }
+    #pragma omp section
+    {
     r.y = m_mat[0][1]*v.x + m_mat[1][1]*v.y + m_mat[2][1]*v.z + m_mat[3][1];
+    }
+    #pragma omp section
+    {
     r.z = m_mat[0][2]*v.x + m_mat[1][2]*v.y + m_mat[2][2]*v.z + m_mat[3][2];
+    }
+    #pragma omp section
+    {
     iw = 1.0f / (m_mat[0][3]*v.x + m_mat[1][3]*v.y + m_mat[2][3]*v.z + m_mat[3][3]);
+    }
+    }
+    } else {
+        r.x = m_mat[0][0]*v.x + m_mat[1][0]*v.y + m_mat[2][0]*v.z + m_mat[3][0];
+        r.y = m_mat[0][1]*v.x + m_mat[1][1]*v.y + m_mat[2][1]*v.z + m_mat[3][1];
+        r.z = m_mat[0][2]*v.x + m_mat[1][2]*v.y + m_mat[2][2]*v.z + m_mat[3][2];
+        iw = 1.0f / (m_mat[0][3]*v.x + m_mat[1][3]*v.y + m_mat[2][3]*v.z + m_mat[3][3]);
+    }
     
     return r * iw;
 }

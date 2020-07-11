@@ -37,6 +37,7 @@
 #include "Scene.h"
 #include "RenderState.h"
 #include "Path.h"
+#include "Array.h"
 
 
 ProtoHAnimJoint::ProtoHAnimJoint(Scene *scene)
@@ -178,12 +179,12 @@ NodeHAnimJoint::drawJointHandles(float scale, Node *parent, Node *that)
 void 
 NodeHAnimJoint::accountJointMatrix(Node *parent)
 {   
-    glPushMatrix();
-    glLoadIdentity();
+//    glPushMatrix();
+//    glLoadIdentity();
     m_jointMatrix = Matrix::identity();
     Matrix thisMatrix = Matrix::identity();
-    transform();
-    if (parent->getType() == X3D_HANIM_JOINT) {
+//    transform();
+    if (parent && parent->getType() == X3D_HANIM_JOINT) {
         NodeHAnimJoint *joint = (NodeHAnimJoint *)parent;
         Matrix matrix;
         joint->getJointMatrix(matrix);
@@ -196,7 +197,7 @@ NodeHAnimJoint::accountJointMatrix(Node *parent)
         getMatrix(thisMatrix);  
         m_jointMatrix = matrix * thisMatrix;
     }
-    glPopMatrix();
+//    glPopMatrix();
 }   
 
 void
@@ -210,6 +211,11 @@ NodeHAnimJoint::applyJoint(int skinNum, MyMesh *mesh, MFVec3f *origVertices,
     for (int i = 0; i < mfskinCoordIndex->getSize(); i++) {
         if (mfskinCoordIndex->getValue(i) > -1) {
             int index = mfskinCoordIndex->getValue(i);
+       }
+    }
+    for (int i = 0; i < mfskinCoordIndex->getSize(); i++) {
+        if (mfskinCoordIndex->getValue(i) > -1) {
+            int index = mfskinCoordIndex->getValue(i);
             if (index >= origVertices->getSFSize())
                 continue;
             mesh->setValidVertex(index);
@@ -218,7 +224,7 @@ NodeHAnimJoint::applyJoint(int skinNum, MyMesh *mesh, MFVec3f *origVertices,
             int sCwI = MIN(i, mfskinCoordWeight->getSize() - 1);
             float weight = mfskinCoordWeight->getValue(sCwI);
             if (weight == 1)
-                point = m_jointMatrix * point ;
+                point = m_jointMatrix * point;
             else {
                 point =  (m_jointMatrix * point) * weight;
             }
@@ -226,23 +232,18 @@ NodeHAnimJoint::applyJoint(int skinNum, MyMesh *mesh, MFVec3f *origVertices,
             vertices->setVec(index, newpoint);
         }
     }
-   
-    for (int i = 0; i < children()->getSize(); i++) {
-        children()->getValue(i)->applyJoint(skinNum, mesh, origVertices, this
-                                           );
-    }
 }
 
-Node *
-NodeHAnimJoint::getJointParent(Node *node, Node *parent)
-{
-    if (node == this)
-        return parent;
-    for (int i = 0; i < children()->getSize(); i++) {
-        if (children()->getValue(i)->getType()  == X3D_HANIM_JOINT) {
-            NodeHAnimJoint *joint = (NodeHAnimJoint *)children()->getValue(i);
-            return joint->getJointParent(node, this);
-        }      
-    }
-    return NULL;
+void  
+NodeHAnimJoint::getJoints(MyArray<JointAndParent *> *outputJoints, Node* parent)
+{  
+    JointAndParent *jp = new JointAndParent();
+    jp->joint = this;
+    jp->parent = parent;
+    outputJoints->append(jp);
+
+    for (int i = 0; i < children()->getSize(); i++)
+        if (children()->getValue(i)->getType() == X3D_HANIM_JOINT)
+            ((NodeHAnimJoint *)children()->getValue(i))->getJoints(outputJoints,
+                                                                   this);
 }

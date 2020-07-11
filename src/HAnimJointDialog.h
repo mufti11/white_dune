@@ -50,12 +50,10 @@ public:
     virtual bool        Validate();
     float               GetWeight() const { return m_weight; }
     Node               *GetNode() const { return m_node; }
-    Node               *GetParent() const { return m_parent; }
 private:
     Scene              *m_scene;
     float               m_weight;
     Node               *m_node;
-    Node               *m_parent;
     float               m_upperlimit;
     float               m_lowerlimit;
     MyArray<MyString>   m_joints;

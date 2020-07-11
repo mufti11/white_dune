@@ -1,9 +1,9 @@
-whitedune (1.910-1) experimental; urgency=low
+whitedune (1.912-1) experimental; urgency=low
 
-  * Version 1.910 debian package
+  * Version 1.912 debian package
     For details see the README file of the source package
 
- -- J. "MUFTI" Scheurich <mufti11@web.de>  Fri, 10 Jul 2020 18:30:05 +0200
+ -- J. "MUFTI" Scheurich <mufti11@web.de>  Sat, 11 Jul 2020 21:20:18 +0200
 
 whitedune (1.910-1) experimental; urgency=low
 

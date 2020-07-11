@@ -832,7 +832,7 @@ MyMeshX<X, MFX, VEC3X>::draw(int pass, void (*drawVert)(X *v))
                         fogIndex = coordIndex[j];
                     if (fogIndex > -1)
                         glFogCoordf(fogDepth[fogIndex]);
-               }
+            }
 #endif
 
             drawVert((X *)(vertices + coordIndex[j] * 3));            
