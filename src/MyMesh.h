@@ -653,6 +653,7 @@ MyMeshX<X, MFX, VEC3X>::buildFaces(void)
     m_numFaces = numFaces;
     int newNumFaces = 0;
     start = 0;
+    # pragma parallel for
     for (long i = 0; i < nci; i++) {
         if (c[i] == -1) {
             if (i - start > 0) {
@@ -1015,6 +1016,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
     int start = 0;
     MyArray<int> normalIndex;
 
+    # pragma parallel for
     for (long i = 0; i < nCoords; i++) {
         long v = coordIndex[i];
         if ((v == -1) || (v >= (long)nVerts)) {
@@ -1034,6 +1036,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
         normalIndex[i] = -1;
     }
     // vertices without normals get the face normal
+    # pragma parallel for
     for (long n = 0; n < nCoords; n++) {
         long i = coordIndex[n];
         if ((i == -1) || (i >= (long)nVerts))
@@ -1056,6 +1059,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
             }
         }
     }
+    # pragma parallel for
     for (long n = 0; n < nCoords; n++) {
         long i = coordIndex[n];
         if ((i == -1) || (i >= (long)nVerts))
@@ -1124,6 +1128,7 @@ MyMeshX<X, MFX, VEC3X>::smoothNormals()
                 smoothNormalIndices[i]->append(e->pos1);
         }
     }
+    # pragma parallel for
     for (long n = 0; n < nCoords; n++) {
         long i = coordIndex[n];
         if ((i == -1) || (i >= (long)nVerts))

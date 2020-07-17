@@ -1264,7 +1264,8 @@ NodeData::writeField(int f, int indent, int i, bool script)
     if (hasIsName)
         RET_ONERROR( writeIs(f, indent, name, isName) )
     else if (value) {
-        if (script || (value->getRefs() && !value->isDefaultValue())) {
+        if (script || (value->getRefs() && 
+                        (!value->equals(field->getDefault(x3d))))) {
             RET_ONERROR( indentf(f, indent) )
             RET_ONERROR( mywritestr(f , name) )
             RET_ONERROR( mywritestr(f ," ") )
@@ -4559,6 +4560,17 @@ Node::getParentFieldValue(void) const
     Node *parent = getParent();
     int parentField = getParentField();
     return parentField == -1 ? NULL : parent->getField(parentField);
+}
+
+void
+Node::setParentFieldValue(FieldValue *value) 
+{
+    if (!hasParent())
+        return;
+    Node *parent = getParent();
+    int parentField = getParentField();
+    if (parentField > -1)
+        parent->setField(parentField, value);
 }
 
 int

@@ -68,7 +68,7 @@ public:
     virtual void        appendSFValue(float x, float y) 
                             { insertSFValue(getSFSize(), x, y); }
                         
-    virtual void        removeSFValue(int index) 
+    virtual void        removeSFValue(long index) 
                             { 
                             m_value.remove(2 * index); 
                             m_value.remove(2 * index); 

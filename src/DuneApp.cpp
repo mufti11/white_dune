@@ -1008,7 +1008,7 @@ DuneApp::OpenFile(const char *openpath)
     scene->UpdateViews(NULL, UPDATE_ALL);
     AddToRecentFiles(openpath);
 
-    startCallback();
+//    startCallback();
 
     // create a new window for our new scene
     newMainWnd(m_mainWnd);

@@ -72,7 +72,7 @@ public:
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const int value);
     virtual void        appendSFValue(const int value);
-    virtual void        removeSFValue(int index) { m_value.remove(index); }
+    virtual void        removeSFValue(long index) { m_value.remove(index); }
 
     MyString            getEcmaScriptComment(MyString name, int flags) const;
 

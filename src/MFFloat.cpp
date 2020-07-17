@@ -175,11 +175,11 @@ MFFloat::getSFValue(int index) const
 }
 
 void        
-MFFloat::removeSFValue(int index) 
+MFFloat::removeSFValue(long index) 
 { 
     int stride = getStride();
     for (int i = 0; i < stride; i++)
-        m_value.remove(index * stride + i); 
+        m_value.remove(index * stride); 
 }
 
 

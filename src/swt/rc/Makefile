@@ -4,7 +4,7 @@
 CC = gcc
 AWK = gawk
 LEX = flex --nounistd
-YACC = bison -y
+YACC = bison -o y.tab.c
 
 LIBS = 
 LIBDIRS =

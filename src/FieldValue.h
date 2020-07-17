@@ -195,7 +195,7 @@ public:
                                            const char *sceneUrl) const;
     virtual bool        isNull(void) const { return getSFSize() > 0; }
 
-    virtual void        removeSFValue(int index) = 0;
+    virtual void        removeSFValue(long index) = 0;
     virtual void        makeEmpty(void) 
                            { 
                            for (int i = getSFSize() - 1; i >= 0; i--)

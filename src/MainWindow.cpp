@@ -1516,6 +1516,7 @@ MainWindow::destroyMainWindow(void) // but keep scene
 #ifndef _WIN32 
     swDestroyWindow(m_wnd);
 #endif
+    swDestroyWindow(getScene3DWindow());
     delete m_treeView;
     m_treeView = NULL;
     delete m_S3DView;
@@ -1568,7 +1569,6 @@ MainWindow::destroyMainWindow(void) // but keep scene
     m_nodeToolbarScripted = NULL;
     swDestroyToolbar(m_vcrToolbar);
     m_vcrToolbar = NULL;
-    closeCallback();
 }
 
 
@@ -1852,7 +1852,6 @@ MainWindow::OnCommand(void *vid)
         UpdateToolbars();
         TheApp->OnFileNew();
         exitFlag = true;
-        startCallback();
         break;
       case ID_DUNE_FILE_NEW_X3DV:
         if (isEditorInUse(true))
@@ -1861,7 +1860,6 @@ MainWindow::OnCommand(void *vid)
         UpdateToolbars();
         TheApp->OnFileNew(ID_DUNE_FILE_NEW_X3DV);
         exitFlag = true;
-        startCallback();
         break;
       case ID_DUNE_FILE_NEW_X3D_XML:
         if (isEditorInUse(true))
@@ -1870,7 +1868,6 @@ MainWindow::OnCommand(void *vid)
         UpdateToolbars();
         TheApp->OnFileNew(ID_DUNE_FILE_NEW_X3D_XML);
         exitFlag = true;
-        startCallback();
         break;
       case ID_DUNE_FILE_NEW_WINDOW:
         TheApp->OnFileNewWindow();
@@ -2525,6 +2522,9 @@ MainWindow::OnCommand(void *vid)
         break;
       case ID_REMOVE_ILLEGAL_NODES:
         removeIllegalNodes();
+        break;
+      case ID_NEXT_VIEWPOINT:
+        nextViewpoint();
         break;
       case ID_REBUILD_NURBS_CONTROL_POINTS:
         rebuildControlPoints();
@@ -4400,7 +4400,6 @@ MainWindow::OnCommand(void *vid)
             if (OpenFileCheck(TheApp->GetRecentFile(fileId))) {
 #ifndef HAVE_OPEN_IN_NEW_WINDOW
                 TheApp->deleteOldWindow();
-                startCallback();
                 exitFlag = true;
 #endif
             }
@@ -8633,8 +8632,8 @@ MainWindow::moveSibling(int command)
 {
     Node *node = m_scene->getSelection()->getNode();
     MFNode *mfNode = (MFNode *)node->getParentFieldValue();
-    int newIndex = -1;
-    int oldIndex = -1;
+    long newIndex = -1;
+    long oldIndex = -1;
     switch (command) {
       case MOVE_SIBLING_UP:
         newIndex = node->getPrevSiblingIndex();
@@ -8646,7 +8645,7 @@ MainWindow::moveSibling(int command)
         break;
       case MOVE_SIBLING_FIRST:
         newIndex = 0;
-        oldIndex = node->getSiblingIndex() + 1;
+        oldIndex = node->getSiblingIndex();
         break;
       case MOVE_SIBLING_LAST:
         newIndex = mfNode->getSize() - 1;
@@ -8670,10 +8669,20 @@ MainWindow::moveSibling(int command)
             vrmlCut->sceneLengths()->setValue(oldIndex, newSceneLength);
         }
         MFNode *mfNode = (MFNode *)node->getParentFieldValue();
-        if (mfNode)
+        if (mfNode) {
+            Node *oldNode = mfNode->getValue(oldIndex)->copy();
+            Node *newNode = mfNode->getValue(newIndex)->copy();
+            mfNode->removeSFValue(oldIndex);
+            mfNode = (MFNode *)mfNode->addNode(newNode, oldIndex);  
+            if (mfNode == NULL)
+                return;
+            mfNode->removeSFValue(newIndex);
+            mfNode = (MFNode *)mfNode->addNode(oldNode, newIndex);  
+            node->setParentFieldValue(mfNode);
             m_scene->setSelection(mfNode->getValue(newIndex));
-        else
+        } else
             m_scene->setSelection(node);
+        m_scene->UpdateViews(NULL, UPDATE_ALL);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }       
 }
@@ -13060,6 +13069,7 @@ void MainWindow::setT2axes(T2axes axes)
     m_scene->UpdateViews(NULL, UPDATE_MODE);
 }
 
+static Node* viewpointFound = NULL;
 
 int MainWindow::OnTimer()
 {
@@ -13069,6 +13079,12 @@ int MainWindow::OnTimer()
         m_scene->enableMakeSimilarName();
         if (m_vrmlCutNode != NULL)
             ((NodeVrmlCut *)m_vrmlCutNode)->updateTime();
+         if (viewpointFound != NULL) {
+             NodeViewpoint *vp = (NodeViewpoint *)viewpointFound;
+             m_scene->setCamera(vp);
+             m_scene->applyCamera();
+        }
+
         return TRUE;
     } else {
         return FALSE;
@@ -14809,6 +14825,36 @@ MainWindow::getWidth(void)
     return width;
 }
 
+static bool searchNextViewpoint(Node *node, void *data)
+{
+    if (node->getType() == VRML_VIEWPOINT) {
+        viewpointFound = node;
+        return false;
+    }
+    return true;     
+}
+
+
+void 
+MainWindow::nextViewpoint()
+{
+     Node *selectionNode = NULL;
+     if (viewpointFound)
+         selectionNode = viewpointFound;
+     else
+         selectionNode = m_scene->getSelection()->getNode();
+     selectionNode = selectionNode->getNextSibling();
+     if (selectionNode == NULL)
+         selectionNode = m_scene->getRoot();
+     viewpointFound = NULL;
+     selectionNode->doWithBranch(searchNextViewpoint, NULL, false, false, false,
+                                                            true, false, false);
+     if (viewpointFound != NULL) {
+         NodeViewpoint *vp = (NodeViewpoint *)viewpointFound;
+         m_scene->setCamera(vp);
+         m_scene->applyCamera();
+     }
+}
 
 
 void

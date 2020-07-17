@@ -5,12 +5,13 @@ CC = gcc
 CXX = g++
 RANLIB = /usr/bin/ranlib 
 CXXCPP = g++ -E
-YACC = bison -y
+YACC = bison -o y.tab.c
 LEX = flex --nounistd
 AWK = gawk
 PREFIX = /usr/local
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
+HELPURL=/home/mufti/wdune-1.922/docs/index.html
 
 RESOURCE_FILES = dune.english.rc singleResources.rc dune.french.rc dune.german.rc dune.italian.rc dune.portuguese.rc
 
@@ -696,17 +697,20 @@ target: mysnprintf.o
 	$(MAKE) ../bin/dune
 
 install: target
-	install -m 755 -p ../bin/dune /usr/bin
-	install -m 755 -p ../tools/run_dune_and_aqsis.sh /usr/bin
-	mkdir /usr/include/white_dune	
-	install -m 644 -p ../include/white_dune/libC++RWD.h /usr/include/white_dune/libC++RWD.h
-	install -m 644 -p ../include/white_dune/libC++RWD_namespace.h /usr/include/white_dune/libC++RWD_namespace.h
-	install -m 644 -p ../include/white_dune/libCRWD.h /usr/include/white_dune/libCRWD.h
-	install -m 644 -p ../man/dune.1 /usr/share/man/man1
-	install -m 644 -p ../desktop/kde/dune.desktop /usr/share/applications/dune.desktop
-	install -m 644 -p ../desktop/kde/dune.png /usr/share/pixmaps/dune.png
-	install -m 644 -p ../desktop/kde/dune4kids.desktop /usr/share/applications/dune4kids.desktop
-	install -m 644 -p ../desktop/kde/dune4kids.png /usr/share/pixmaps/dune4kids.png
+	install -m 755 -p ../bin/dune $(PREFIX)/bin
+	install -m 755 -p ../tools/run_dune_and_aqsis_freebsd.sh $(PREFIX)/bin/run_dune_and_aqsis.sh
+	install -m 755 -p ../tools/run_dune_and_povray_freebsd.sh $(PREFIX)/bin/run_dune_and_povray.sh
+	mkdir -p $(PREFIX)/include/white_dune	
+	install -m 644 -p ../include/white_dune/libC++RWD.h $(PREFIX)/include/white_dune/libC++RWD.h
+	install -m 644 -p ../include/white_dune/libC++RWD_namespace.h $(PREFIX)/include/white_dune/libC++RWD_namespace.h
+	install -m 644 -p ../include/white_dune/libCRWD.h $(PREFIX)/include/white_dune/libCRWD.h
+	install -m 644 -p ../man/dune.1 $(PREFIX)/share/man/man1
+	install -m 644 -p ../desktop/kde/dune.desktop $(PREFIX)/share/applications/dune.desktop
+	install -m 644 -p ../desktop/kde/dune.png $(PREFIX)/share/pixmaps/dune.png
+	install -m 644 -p ../desktop/kde/dune4kids.desktop $(PREFIX)/share/applications/dune4kids.desktop
+	install -m 644 -p ../desktop/kde/dune4kids.png $(PREFIX)/share/pixmaps/dune4kids.png
+	mkdir -p `dirname $(HELPURL)`	
+	cp -rn ../docs/* `dirname $(HELPURL)`
 
 mysnprintf.o: mysnprintf.c
 	$(CC) -g $(CFLAGS) -std=c99 -c -o $@ mysnprintf.c

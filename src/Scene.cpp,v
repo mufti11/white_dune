@@ -1,4 +1,27 @@
-/*
+head	1.1;
+access;
+symbols;
+locks
+	mufti:1.1; strict;
+comment	@// @;
+
+
+1.1
+date	2020.07.14.14.21.08;	author mufti;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/*
  * Scene.cpp
  *
  * Copyright (C) 1999 Stephen F. White
@@ -22,7 +45,7 @@
 /***************************************************************************
  * Scene::Download() based on ftpget example of Curl library
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -122,6 +145,8 @@ extern "C" {
 #include "NodeLdrawDatExport.h"
 #include "NodeViewport.h"
 #include "NodeTransform.h"
+
+#include "MainWindow.h"
 
 #define ARRAY_SIZE(v)  ((int) (sizeof(v) / sizeof(v[0])))
 
@@ -4218,6 +4243,7 @@ void
 Scene::drawScene(bool pick, int x, int y, double width, double height, 
                  Node *root, bool useUpdate, float scaleX, float scaleY)
 {
+    m_alreadyPredrawed = false;
     m_width = width;
     m_height = height;
 
@@ -4311,6 +4337,7 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
     m_timeSensors.resize(0);
 
     m_headlightIsSet = false;
+    m_alreadyPredrawed = true;
     m_defaultViewpoint->preDraw();
     root->preDraw();
 
@@ -4333,6 +4360,7 @@ Scene::drawScene(bool pick, int x, int y, double width, double height,
 //        glPopName();
     }
     applyCamera();
+    m_alreadyPredrawed = false;
     if (m_xrayRendering)
         glDepthMask(GL_FALSE);
     else
@@ -5462,19 +5490,20 @@ Scene::applyCamera()
     else if (m_currentViewpoint->getType() == VRML_GEO_VIEWPOINT)
         ((NodeGeoViewpoint *)m_currentViewpoint)->apply();
     else if (m_currentViewpoint->getType() == VRML_VIEWPOINT) {
-        glPushMatrix();
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        Matrix matrix = Matrix::identity();;
-        Path *trans = searchTransform(m_currentViewpoint->getPath());
-        if (trans)
-            ((NodeTransform *)trans->getNode())->getMatrix(matrix);
-        glLoadMatrixf(matrix);
-        ((NodeViewpoint *)m_currentViewpoint)->preDraw();
-        glPopMatrix();
- 
-        ((NodeViewpoint *)m_currentViewpoint)->apply(TheApp->useStereo(),
-                                                     Vec3d(), SFRotation());
+/*
+         glPushMatrix();
+         glMatrixMode(GL_MODELVIEW);
+         glLoadIdentity();
+         Matrix invertMatrix = Matrix::identity();;
+         Path *trans = searchTransform(m_currentViewpoint->getPath());
+         if (trans && !m_alreadyPredrawed)
+             ((NodeTransform *)trans->getNode())->getInvertMatrix(invertMatrix);
+//         glLoadMatrixf(invertMatrix);
+//         ((NodeViewpoint *)m_currentViewpoint)->preDraw();
+*/
+         ((NodeViewpoint *)m_currentViewpoint)->apply(TheApp->useStereo(),
+                                                      Vec3d(), SFRotation());
+         glPopMatrix();
     }
     m_viewpointUpdated = false;
 }
@@ -5513,11 +5542,11 @@ Scene::start()
     m_running = true;
     if (!m_setViewpoint) {
         m_setViewpoint = true;
-       if (m_viewpoints.size() > 0) {
-           m_currentViewpoint = (NodeViewpoint *) m_viewpoints[0];
-       } else {
+        if (m_viewpoints.size() > 0) {
+            m_currentViewpoint = (NodeViewpoint *) m_viewpoints[0];
+        } else {
             m_currentViewpoint = m_defaultViewpoint;
-       }
+        }
     }
 
     double t = swGetCurrentTime();
@@ -5586,9 +5615,9 @@ Scene::updateTime()
 {
     m_oldTime = m_currentTime;
     m_currentTime = swGetCurrentTime();
-    updateTimeAt(m_currentTime);
     getRoot()->doWithBranch(timeUpdateNodePROTO, NULL,
                             false, false, false, true, false);
+    updateTimeAt(m_currentTime);
     if (isRunning() && isRecording()) {
         TimeStep timeStep;
         timeStep.currentTime = m_currentTime;
@@ -5596,6 +5625,8 @@ Scene::updateTime()
         getRoot()->doWithBranch(timeUpdateInterpolator, &timeStep,
                                 false, false, false, true, false);
     }
+    if (TheApp->getCurrentMainWindow())
+        swInvalidateWindow(TheApp->getCurrentMainWindow()->getParentWindow());
     UpdateViews(NULL, UPDATE_TIME);
     UpdateViews(NULL, UPDATE_TOOLBARS);
 }
@@ -7604,3 +7635,4 @@ SDC CreateDC(SWND canvas)
     }
     return swCreateDC(canvas);
 }
+@

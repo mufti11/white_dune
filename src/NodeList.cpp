@@ -36,7 +36,9 @@
 void
 NodeList::clearFlag(int flag) const
 {
-    for (long i = 0; i < size(); i++)
+    long lsize = size();
+    #pragma parallel for
+    for (long i = 0; i < lsize; i++)
         if (m_data[i] != NULL)
             m_data[i]->clearFlag(flag);
 }

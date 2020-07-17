@@ -324,16 +324,16 @@ int DuneApp::emergency_rescue(int sig)
       }
 
 
-#ifndef HAVE_WANT_CORE
 /* 
  *  Handler for dangerous Unix Signals: try to save files
  */ 
 
 volatile int fatal_error_in_progress = 0;   
 
-# ifdef  HAVE_SIGNAL_INT
+#ifdef  HAVE_SIGNAL_INT
    void signal_fatal_handler(int sig)
       {
+# ifndef HAVE_WANT_CORE
       signal (sig, SIG_IGN);  
       if (!fatal_error_in_progress)
          {
@@ -343,10 +343,12 @@ volatile int fatal_error_in_progress = 0;
          mywritef(2,"killed by signal %d\n",sig);
          raise (sig);
          }
+# endif
       }
 # else
    void signal_fatal_handler()
       {
+# ifndef HAVE_WANT_CORE
       for (int i=1;i<=64;i++)
          signal (i, SIG_IGN);  
       if (!fatal_error_in_progress) 
@@ -356,8 +358,8 @@ volatile int fatal_error_in_progress = 0;
          signal (SIGTERM, SIG_DFL);
          raise (SIGTERM);
          }
-      }
 # endif
+      }
 #endif
 
 /*

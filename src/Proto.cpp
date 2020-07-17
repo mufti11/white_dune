@@ -378,6 +378,7 @@ Proto::addOrUpdateElement(Element *element)
 int
 Proto::addElement(Element *element)
 {
+    bool x3d = m_scene->isX3d();
     switch( element->getElementType() ) {
       case EL_FIELD:
         {
@@ -388,7 +389,7 @@ Proto::addElement(Element *element)
         }
         for (long i = 0; i < m_nameOfFieldsWithDefaultValue.size(); i++)
             if (field->getName(false) == m_nameOfFieldsWithDefaultValue[i])
-                field->getDefault(false)->setIsDefaultValue();
+                field->getDefault(x3d)->setIsDefaultValue();
         m_fields.append(field);
         }
         return m_fields.size() - 1;
@@ -2919,6 +2920,7 @@ NodePROTO::createPROTO(bool bcopy)
     m_isHumanoid = false;
     if (bcopy) {
         m_nodes.resize(0);
+        #pragma parallel for
         for (int i = 0; i < m_proto->getNumNodes(); i++) {
             if (m_proto->getNode(i)) {
                 long id = m_proto->getNode(i)->getId();
@@ -2943,17 +2945,21 @@ NodePROTO::createPROTO(bool bcopy)
                 m_proto->getNode(i)->copyChildrenTo(m_nodes[i], true);
             }
         }
+        #pragma parallel for
         for (int i = 0; i < routeInfo.size(); i++)
             m_scene->deleteRoute(routeInfo[i].src, routeInfo[i].eventOut,
                                  routeInfo[i].dest, routeInfo[i].eventIn);
         routeInfo.resize(0);
         m_indexedNodes.resize(0);
+        #pragma parallel for
         for (int i = 0; i < m_proto->getNumNodes(); i++)
             m_nodes[i]->doWithBranch(buildNodeIndexInBranch, this, false);
+        #pragma parallel for
         for (long i = 0; i < m_indexedNodes.size(); i++)
             if (m_indexedNodes[i])
                m_indexedNodes[i]->setScene(m_scene);
     }
+    #pragma parallel for
     for (int i = 0; i < m_proto->getNumExposedFields(); i++) {
         ExposedField *field = m_proto->getExposedField(i);
         if (field && field->getFlags() & FF_IS)
@@ -2968,6 +2974,7 @@ NodePROTO::createPROTO(bool bcopy)
                 }
             }
     }
+    #pragma parallel for
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         Field *field = m_proto->getField(i);
         if (field && field->getFlags() & FF_IS)
@@ -2992,6 +2999,7 @@ NodePROTO::createPROTO(bool bcopy)
             if (m_nodes[0] != NULL)
                 if (m_nodes[0]->getType() == VRML_TRANSFORM)
                     m_isHumanoid = true;
+    #pragma parallel for
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         Field *field = m_proto->getField(i);
         if (field && field->getFlags() & FF_IS)

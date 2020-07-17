@@ -109,9 +109,8 @@ ViewpointNode::preDraw(bool useStereo)
     glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
     Util::invertMatrix(matrix2, matrix);
     glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    if (m_scene->isCurrentViewpoint(this)) 
-        transformForViewpoint(useStereo, Vec3d(), SFRotation());
     glMultMatrixf((GLfloat *) matrix2);
     glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
@@ -133,7 +132,6 @@ ViewpointNode::apply(bool useStereo, Vec3d vec, SFRotation rot)
         glRotatef(RAD2DEG(-rot[3] * unitAngle), rot[0], rot[1], rot[2]);
         glTranslated(-pos.x, -pos.y, -pos.z);
     }
-    glGetFloatv(GL_MODELVIEW_MATRIX, m_matrix);
     glPopMatrix();
     transformForViewpoint(useStereo, vec, rot);
 }
@@ -163,6 +161,9 @@ ViewpointNode::transformForViewpoint(bool useStereo, Vec3d vec,
           eyeangle= + TheApp->getEyeAngle();
           }
        }
+    glMatrixMode(GL_MODELVIEW);
+    Matrix m;
+
     glTranslatef(eyeposition, 0, 0);
     glRotatef(eyeangle, 0,1,0);
     glRotatef(-RAD2DEG(rot[3] * unitAngle), rot[0], rot[1], rot[2]);
@@ -176,6 +177,8 @@ ViewpointNode::transformForViewpoint(bool useStereo, Vec3d vec,
     }
     glTranslated(-pos.x, -pos.y, -pos.z);
     glTranslated(-vec.x, -vec.y, -vec.z);
+
+    glMultMatrixf((GLfloat *) m_matrix);    
 }
 
 Quaternion 

@@ -67,7 +67,8 @@
 #ifdef MACOSX
 # include <sys/stat.h>
 #else
-# ifndef __FreeBSD__
+# include <sys/param.h>
+# ifndef __FreeBSD__ 
 #  include <wait.h>
 # endif
 #endif
@@ -115,18 +116,10 @@ static SFont       *TheDefaultFont = NULL;
 static int          WindowCapacity;
 static SWND        *WindowsToUpdate;
 static int          NumWindowsToUpdate = 0;
-static int          oldNumWindowsToUpdate = 0;
 
 void closeCallback(void)
 {
-    oldNumWindowsToUpdate = NumWindowsToUpdate;
     NumWindowsToUpdate = 0;
-}
-
-void startCallback(void)
-{
-    if (oldNumWindowsToUpdate > 0)
-        NumWindowsToUpdate = oldNumWindowsToUpdate;
 }
 
 static int          InDragNDrop = FALSE;
@@ -848,11 +841,9 @@ swMainLoop(void)
     _running = TRUE;
     while (_running)
     {
-         if (NumWindowsToUpdate >= 0) {
-             XtAppProcessEvent(TheAppContext, XtIMAll);
-             if (XtAppPending(TheAppContext)) {
-                 update();
-             }
+         XtAppProcessEvent(TheAppContext, XtIMAll);
+         if (XtAppPending(TheAppContext) == 0) {
+             update();
          }
     }
     return 0;
@@ -2061,7 +2052,7 @@ swCreateDC(SWND wnd)
     SDContext *dc;
     char dash_list[2] = { 5, 5};
     
-    if (swFromPtr(wnd) == 0|| !wnd || !wnd->widget) return NULL;
+    if (!wnd || !wnd->widget) return NULL;
 
     dc = newSDContext();
 
@@ -4577,15 +4568,14 @@ update()
     for (i = 0; i < NumWindowsToUpdate; i++) {
         SWND w = WindowsToUpdate[i];
 
-        if (w && w->invx1 >= 0 && w->widget != w->exposeCallback &&
-            w->exposeCallback) {
+        if (w && w->invx1 >= 0 && w->exposeCallback) {
             w->exposeCallback(w->data, w->invx1, w->invy1,
                               w->invx2 - w->invx1 + 1, 
                               w->invy2 - w->invy1 + 1);
             w->invx1 = w->invx2 = w->invy1 = w->invy2 = -1;
         }
     }
-//    NumWindowsToUpdate = 0;
+    NumWindowsToUpdate = 0;
 }
 
 void swUpdate(void)

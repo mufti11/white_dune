@@ -377,6 +377,7 @@ protected:
     void                scaleBy(int direction);
     void                same(int direction, int whichSame);
     void                setDefault();
+    void                nextViewpoint();
     void                rebuildControlPoints();
     void                makeNurbSurfaceSymetric(int direction);
     void                insertToNurbsCurve();

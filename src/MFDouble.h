@@ -69,7 +69,7 @@ public:
     virtual void        insertSFValue(int index, FieldValue *value);
     void                insertSFValue(int index, const double value);
 
-    virtual void        removeSFValue(int index);
+    virtual void        removeSFValue(long index);
 
     double              getMaxValue();
     double              getMinValue();

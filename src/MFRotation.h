@@ -49,7 +49,7 @@ public:
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const float *values);
-    virtual void        removeSFValue(int index) { m_value.remove(index); }
+    virtual void        removeSFValue(long index) { m_value.remove(index); }
 
     void                flip(int index);
     void                swap(int fromTo);

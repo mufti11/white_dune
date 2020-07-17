@@ -322,8 +322,9 @@ MFNode::removeNode(Node *node, int index) const
         if (list->get(i) == node) {
             if (index == -1)
                 list->remove(i);
-            else
+            else 
                 list->remove(index);
+            break;
         }
     }
     MFNode *ret = new MFNode(list);

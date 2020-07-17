@@ -1189,6 +1189,8 @@ public:
     Node             *searchParentField(int parentfield) const; 
     int               getParentIndex(void) const;
     FieldValue       *getParentFieldValue(void) const;
+    void              setParentFieldValue(FieldValue *value);
+
     NodeList          getParents(void);
 
     bool              hasBranchInputs(void);

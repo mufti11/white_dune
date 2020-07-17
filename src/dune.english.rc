@@ -1468,6 +1468,7 @@ BEGIN
             MENUITEM "Minimal y of boundingBox",         ID_CENTER_TO_MINY
             MENUITEM "Minimal z of boundingBox",         ID_CENTER_TO_MINZ
         END
+        MENUITEM "Goto next viewpoint",                  ID_NEXT_VIEWPOINT
         POPUP "NURBS operations"
         BEGIN
             MENUITEM "Rebuild controlpoints",            ID_REBUILD_NURBS_CONTROL_POINTS

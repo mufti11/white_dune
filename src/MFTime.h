@@ -61,7 +61,7 @@ public:
 
     virtual void        insertSFValue(int index, FieldValue *value);
     virtual void        insertSFValue(int index, const double value);
-    virtual void        removeSFValue(int index) { m_value.remove(index); }
+    virtual void        removeSFValue(long index) { m_value.remove(index); }
 
     virtual bool        equals(const FieldValue *value) const;
     bool                equals(const MFTime *value) const;

@@ -73,6 +73,8 @@ public:
     virtual Vec3d       getPosition() const;
     virtual void        setPosition(const Vec3d &pos);
 
+    virtual void        setField(int index, FieldValue *value, int cf = -1)
+                            { Node::setField(index, value, cf); }
     virtual void        flip(int index);
     virtual void        swap(int fromTo);
 

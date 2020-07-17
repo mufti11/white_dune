@@ -1179,6 +1179,9 @@ protected:
     bool                m_storeAsHtml;
 
     bool                m_similarNameFlag; 
+
+    bool                m_alreadyPredrawed;
+
 public:
     MyArray<CGlNameData> m_glNameData;               
 };

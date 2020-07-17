@@ -99,8 +99,8 @@ public:
     virtual void        setSFValue(int index, FieldValue *value);
     virtual void        setSFValue(int index, const Node* value);
 
-    virtual void        removeSFValue(int index) 
-                           { removeNode((*m_value)[index]); }
+    virtual void        removeSFValue(long index) 
+                           { m_value->remove(index); }
 
     virtual FieldValue *addNode(Node *node, int index = -1) const;
     virtual FieldValue *removeNode(Node *node, int index = -1) const;

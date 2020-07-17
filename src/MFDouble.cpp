@@ -249,11 +249,11 @@ MFDouble::insertSFValue(int index, const double value)
 }
 
 void        
-MFDouble::removeSFValue(int index) 
+MFDouble::removeSFValue(long index) 
 { 
     int stride = getStride();
     for (int i = 0; i < stride; i++)
-        m_value.remove(index * stride + i); 
+        m_value.remove(index * stride); 
 }
 
 // search for biggest value

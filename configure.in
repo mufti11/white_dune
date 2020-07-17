@@ -145,9 +145,13 @@ AC_ARG_WITH(helpurl,--with-helpurl=\"helpurl\"  URL of the \"docs\" directory,
             HELPURL="$withval";export HELPURL)
 if test "X_$HELPURL" != "X_" ; then
    AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"${HELPURL}")
+   AC_SUBST(HELPURL)
 else 
    if test -d docs ; then
       AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"${WHITE_DUNE_PATH}/docs/index.html")
+      HELPURL="${WHITE_DUNE_PATH}/docs/index.html"
+      export HELPURL
+      AC_SUBST(HELPURL)
    fi
    if test X_`basename $PWD` = X_build ; then
       AC_DEFINE_UNQUOTED(HAVE_HELP_URL,"http://wdune.ourproject.org/docs/index.html")

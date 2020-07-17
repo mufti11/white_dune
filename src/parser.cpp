@@ -300,45 +300,6 @@ extern int yydebug;
     VRML1 = 295
   };
 #endif
-/* Tokens.  */
-#define BRACKET_ON 258
-#define BRACKET_OFF 259
-#define WING_BRACKET_ON 260
-#define WING_BRACKET_OFF 261
-#define SCRIPT 262
-#define COMPOSED_SHADER 263
-#define PACKAGED_SHADER 264
-#define SHADER_PROGRAM 265
-#define VRML_CUT 266
-#define EXPORT 267
-#define IMPORT 268
-#define AS 269
-#define ID 270
-#define ID_X3D 271
-#define STRING 272
-#define INT_NUM 273
-#define FLOAT_NUM 274
-#define DEF 275
-#define EXTERNPROTO 276
-#define FALSE_TOK 277
-#define IS 278
-#define NULL_TOK 279
-#define PROTO 280
-#define ROUTE 281
-#define TO 282
-#define TRUE_TOK 283
-#define USE 284
-#define EVENT_IN 285
-#define EVENT_OUT 286
-#define EXPOSED_FIELD 287
-#define INPUT_OUTPUT 288
-#define FIELD 289
-#define X3D 290
-#define PROFILE 291
-#define COMPONENT 292
-#define UNIT 293
-#define META 294
-#define VRML1 295
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -358,7 +319,7 @@ union YYSTYPE
     IntArray            *intArray;
     DoubleArray         *doubleArray;
 
-#line 362 "y.tab.c"
+#line 323 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -1744,7 +1705,7 @@ yyreduce:
                                   scene->addNodes(targetNode, targetField, (yyvsp[0].nodeList),
                                                   scanFor); 
                                  }
-#line 1748 "y.tab.c"
+#line 1709 "y.tab.c"
     break;
 
   case 3:
@@ -1755,7 +1716,7 @@ yyreduce:
                                   scene->addNodes(targetNode, targetField, (yyvsp[0].nodeList),
                                                   scanFor); 
                                 }
-#line 1759 "y.tab.c"
+#line 1720 "y.tab.c"
     break;
 
   case 6:
@@ -1765,67 +1726,67 @@ yyreduce:
                                       (yyvsp[0].node)->appendTo((yyvsp[-1].nodeList)); 
                                   (yyval.nodeList) = (yyvsp[-1].nodeList); 
                                 }
-#line 1769 "y.tab.c"
+#line 1730 "y.tab.c"
     break;
 
   case 7:
 #line 237 "parser.y"
                                 { (yyval.nodeList) = new NodeList(); }
-#line 1775 "y.tab.c"
+#line 1736 "y.tab.c"
     break;
 
   case 8:
 #line 240 "parser.y"
                                 { (yyval.node) = (yyvsp[0].node); }
-#line 1781 "y.tab.c"
+#line 1742 "y.tab.c"
     break;
 
   case 9:
 #line 241 "parser.y"
                                 { (yyval.node) = NULL; }
-#line 1787 "y.tab.c"
+#line 1748 "y.tab.c"
     break;
 
   case 10:
 #line 242 "parser.y"
                                 { (yyval.node) = NULL; }
-#line 1793 "y.tab.c"
+#line 1754 "y.tab.c"
     break;
 
   case 11:
 #line 243 "parser.y"
                                 { (yyval.node) = (yyvsp[0].node); }
-#line 1799 "y.tab.c"
+#line 1760 "y.tab.c"
     break;
 
   case 12:
 #line 244 "parser.y"
                                 { (yyval.node) = (yyvsp[0].node); }
-#line 1805 "y.tab.c"
+#line 1766 "y.tab.c"
     break;
 
   case 13:
 #line 247 "parser.y"
                        { (yyval.node) = (yyvsp[0].node); }
-#line 1811 "y.tab.c"
+#line 1772 "y.tab.c"
     break;
 
   case 14:
 #line 248 "parser.y"
                        { defName = (yyvsp[0].id); }
-#line 1817 "y.tab.c"
+#line 1778 "y.tab.c"
     break;
 
   case 15:
 #line 248 "parser.y"
                                               { (yyval.node) = (yyvsp[0].node); }
-#line 1823 "y.tab.c"
+#line 1784 "y.tab.c"
     break;
 
   case 16:
 #line 249 "parser.y"
                        { (yyval.node) = scene->use(checkName(SYMB((yyvsp[0].id)))); }
-#line 1829 "y.tab.c"
+#line 1790 "y.tab.c"
     break;
 
   case 21:
@@ -1843,7 +1804,7 @@ yyreduce:
                                    if (TheApp->isImportingProtoLibrary())
                                        proto->setFromProtoLibrary();
                                  }
-#line 1847 "y.tab.c"
+#line 1808 "y.tab.c"
     break;
 
   case 22:
@@ -1852,7 +1813,7 @@ yyreduce:
                                    scene->addProto(SYMB((yyvsp[-7].id)), protoStack.pop());
                                    stopProto();
                                  }
-#line 1856 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 23:
@@ -1861,7 +1822,7 @@ yyreduce:
                                  protoStack.peek()->define((yyvsp[-1].node), (yyvsp[0].nodeList)); 
                                  protoStack.peek()->setLoaded(true);
                                  }
-#line 1865 "y.tab.c"
+#line 1826 "y.tab.c"
     break;
 
   case 25:
@@ -1872,43 +1833,43 @@ yyreduce:
             else 
                 protoStack.peek()->addOrUpdateElement((yyvsp[0].element));
           }
-#line 1876 "y.tab.c"
+#line 1837 "y.tab.c"
     break;
 
   case 27:
 #line 299 "parser.y"
                         { currentType = (yyvsp[0].int32); }
-#line 1882 "y.tab.c"
+#line 1843 "y.tab.c"
     break;
 
   case 28:
 #line 300 "parser.y"
                 { (yyval.element) = createField((yyvsp[-2].int32), SYMB((yyvsp[0].id))); }
-#line 1888 "y.tab.c"
+#line 1849 "y.tab.c"
     break;
 
   case 29:
 #line 303 "parser.y"
                                { currentType = (yyvsp[0].int32); }
-#line 1894 "y.tab.c"
+#line 1855 "y.tab.c"
     break;
 
   case 30:
 #line 304 "parser.y"
                 { (yyval.element) = createField((yyvsp[-2].int32), SYMB((yyvsp[0].id))); }
-#line 1900 "y.tab.c"
+#line 1861 "y.tab.c"
     break;
 
   case 31:
 #line 307 "parser.y"
                                         { (yyval.element) = new EventIn((yyvsp[-1].int32), SYMB((yyvsp[0].id))); }
-#line 1906 "y.tab.c"
+#line 1867 "y.tab.c"
     break;
 
   case 32:
 #line 308 "parser.y"
                                         { (yyval.element) = new EventOut((yyvsp[-1].int32), SYMB((yyvsp[0].id))); }
-#line 1912 "y.tab.c"
+#line 1873 "y.tab.c"
     break;
 
   case 33:
@@ -1916,7 +1877,7 @@ yyreduce:
                                         { (yyval.element) = new Field((yyvsp[-1].element)->getType(), 
                                                          (yyvsp[-1].element)->getName(x3d), (yyvsp[0].value)); 
                                         }
-#line 1920 "y.tab.c"
+#line 1881 "y.tab.c"
     break;
 
   case 34:
@@ -1924,19 +1885,19 @@ yyreduce:
                                         { (yyval.element) = new ExposedField((yyvsp[-1].element)->getType(), 
                                                      (yyvsp[-1].element)->getName(x3d), (yyvsp[0].value)); 
                                         }
-#line 1928 "y.tab.c"
+#line 1889 "y.tab.c"
     break;
 
   case 36:
 #line 319 "parser.y"
                                   { currentType = (yyvsp[0].int32); }
-#line 1934 "y.tab.c"
+#line 1895 "y.tab.c"
     break;
 
   case 37:
 #line 320 "parser.y"
                 { (yyval.element) = new ExposedField((yyvsp[-3].int32), SYMB((yyvsp[-1].id)), (yyvsp[0].value)); }
-#line 1940 "y.tab.c"
+#line 1901 "y.tab.c"
     break;
 
   case 38:
@@ -1953,7 +1914,7 @@ yyreduce:
                                           proto->setFromProtoLibrary();
                                   }
                                 }
-#line 1957 "y.tab.c"
+#line 1918 "y.tab.c"
     break;
 
   case 39:
@@ -1968,7 +1929,7 @@ yyreduce:
                                   if (!scene->hasProtoName(SYMB((yyvsp[-5].id))))
                                       stopProto();
                                 }
-#line 1972 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 40:
@@ -1979,19 +1940,19 @@ yyreduce:
             else 
                 protoStack.peek()->addElement((yyvsp[0].element));
           }
-#line 1983 "y.tab.c"
+#line 1944 "y.tab.c"
     break;
 
   case 42:
 #line 359 "parser.y"
                                         { (yyval.element) = new EventIn((yyvsp[-1].int32), SYMB((yyvsp[0].id))); }
-#line 1989 "y.tab.c"
+#line 1950 "y.tab.c"
     break;
 
   case 43:
 #line 360 "parser.y"
                                         { (yyval.element) = new EventOut((yyvsp[-1].int32), SYMB((yyvsp[0].id))); }
-#line 1995 "y.tab.c"
+#line 1956 "y.tab.c"
     break;
 
   case 44:
@@ -2000,7 +1961,7 @@ yyreduce:
                                           (yyval.element) = new Field((yyvsp[-1].int32), SYMB((yyvsp[0].id)),
                                                          SillyDefaultValue((yyvsp[-1].int32)));
                                         }
-#line 2004 "y.tab.c"
+#line 1965 "y.tab.c"
     break;
 
   case 45:
@@ -2009,7 +1970,7 @@ yyreduce:
                                           (yyval.element) = new ExposedField((yyvsp[-1].int32), SYMB((yyvsp[0].id)),
                                                 SillyDefaultValue((yyvsp[-1].int32)));
                                         }
-#line 2013 "y.tab.c"
+#line 1974 "y.tab.c"
     break;
 
   case 46:
@@ -2018,7 +1979,7 @@ yyreduce:
                                           (yyval.element) = new ExposedField((yyvsp[-1].int32), SYMB((yyvsp[0].id)),
                                                 SillyDefaultValue((yyvsp[-1].int32)));
                                         }
-#line 2022 "y.tab.c"
+#line 1983 "y.tab.c"
     break;
 
   case 47:
@@ -2027,31 +1988,31 @@ yyreduce:
                route(checkName(SYMB((yyvsp[-6].id))), SYMB((yyvsp[-4].id)), 
                      checkName(SYMB((yyvsp[-2].id))), SYMB((yyvsp[0].id))); 
              }
-#line 2031 "y.tab.c"
+#line 1992 "y.tab.c"
     break;
 
   case 48:
 #line 383 "parser.y"
              { (yyval.node) = addExport(checkName(SYMB((yyvsp[0].id))), ""); }
-#line 2037 "y.tab.c"
+#line 1998 "y.tab.c"
     break;
 
   case 49:
 #line 385 "parser.y"
              { (yyval.node) = addExport(checkName(SYMB((yyvsp[-2].id))), SYMB((yyvsp[0].id))); }
-#line 2043 "y.tab.c"
+#line 2004 "y.tab.c"
     break;
 
   case 50:
 #line 389 "parser.y"
              { (yyval.node) = addImport(checkName(SYMB((yyvsp[-2].id))), SYMB((yyvsp[0].id)), ""); }
-#line 2049 "y.tab.c"
+#line 2010 "y.tab.c"
     break;
 
   case 51:
 #line 391 "parser.y"
              { (yyval.node) = addImport(checkName(SYMB((yyvsp[-4].id))), SYMB((yyvsp[-2].id)), SYMB((yyvsp[0].id))); }
-#line 2055 "y.tab.c"
+#line 2016 "y.tab.c"
     break;
 
   case 54:
@@ -2069,13 +2030,13 @@ yyreduce:
                                             }
                                         }
                                       }
-#line 2073 "y.tab.c"
+#line 2034 "y.tab.c"
     break;
 
   case 55:
 #line 412 "parser.y"
                                       { (yyval.node) = nodeStack.pop(); }
-#line 2079 "y.tab.c"
+#line 2040 "y.tab.c"
     break;
 
   case 56:
@@ -2090,7 +2051,7 @@ yyreduce:
                                             defName = -1;
                                         }
                                       }
-#line 2094 "y.tab.c"
+#line 2055 "y.tab.c"
     break;
 
   case 57:
@@ -2099,19 +2060,19 @@ yyreduce:
                                         (yyval.node) = nodeStack.pop(); 
                                         ((NodeScript *) (yyval.node))->update(); 
                                       }
-#line 2103 "y.tab.c"
+#line 2064 "y.tab.c"
     break;
 
   case 60:
 #line 434 "parser.y"
                                         { (yyval.node) = new NodeScript(scene); }
-#line 2109 "y.tab.c"
+#line 2070 "y.tab.c"
     break;
 
   case 61:
 #line 435 "parser.y"
                                         { (yyval.node) = (yyvsp[0].node); }
-#line 2115 "y.tab.c"
+#line 2076 "y.tab.c"
     break;
 
   case 62:
@@ -2120,37 +2081,37 @@ yyreduce:
                                         (yyval.node) = scene->createDynamicFieldsNode(
                                             "VrmlCut"); 
                                         }
-#line 2124 "y.tab.c"
+#line 2085 "y.tab.c"
     break;
 
   case 63:
 #line 444 "parser.y"
                                         { (yyval.node) = newNode("ComposedShader"); }
-#line 2130 "y.tab.c"
+#line 2091 "y.tab.c"
     break;
 
   case 64:
 #line 445 "parser.y"
                                         { (yyval.node) = newNode("ShaderProgram"); }
-#line 2136 "y.tab.c"
+#line 2097 "y.tab.c"
     break;
 
   case 65:
 #line 446 "parser.y"
                                         { (yyval.node) = newNode("PackagedShader"); }
-#line 2142 "y.tab.c"
+#line 2103 "y.tab.c"
     break;
 
   case 68:
 #line 454 "parser.y"
                                         { (yyval.element) = NULL; }
-#line 2148 "y.tab.c"
+#line 2109 "y.tab.c"
     break;
 
   case 69:
 #line 455 "parser.y"
                                          { addDynamicElement((yyvsp[0].element)); }
-#line 2154 "y.tab.c"
+#line 2115 "y.tab.c"
     break;
 
   case 70:
@@ -2162,7 +2123,7 @@ yyreduce:
                                           isField(nodeStack.peek(),
                                                   SYMB((yyvsp[-2].id)), SYMB((yyvsp[0].id))); 
                                         }
-#line 2166 "y.tab.c"
+#line 2127 "y.tab.c"
     break;
 
   case 71:
@@ -2174,7 +2135,7 @@ yyreduce:
                                           isField(nodeStack.peek(),
                                                   SYMB((yyvsp[-2].id)), SYMB((yyvsp[0].id))); 
                                         }
-#line 2178 "y.tab.c"
+#line 2139 "y.tab.c"
     break;
 
   case 72:
@@ -2186,7 +2147,7 @@ yyreduce:
                                           isField(nodeStack.peek(), 
                                                   (yyvsp[-2].element)->getName(x3d), SYMB((yyvsp[0].id)));
                                         }
-#line 2190 "y.tab.c"
+#line 2151 "y.tab.c"
     break;
 
   case 73:
@@ -2198,7 +2159,7 @@ yyreduce:
                                           isField(nodeStack.peek(),
                                                   (yyvsp[-2].element)->getName(x3d), SYMB((yyvsp[0].id))); 
                                         }
-#line 2202 "y.tab.c"
+#line 2163 "y.tab.c"
     break;
 
   case 74:
@@ -2206,7 +2167,7 @@ yyreduce:
                                         { setField(nodeStack.peek(),
                                                    (yyvsp[-1].int32), (yyvsp[0].value)); 
                                         }
-#line 2210 "y.tab.c"
+#line 2171 "y.tab.c"
     break;
 
   case 75:
@@ -2214,7 +2175,7 @@ yyreduce:
                                         { isField(nodeStack.peek(),
                                                   SYMB((yyvsp[-2].id)), SYMB((yyvsp[0].id))); 
                                         }
-#line 2218 "y.tab.c"
+#line 2179 "y.tab.c"
     break;
 
   case 78:
@@ -2222,13 +2183,13 @@ yyreduce:
                                         { (yyval.int32) = checkField(nodeStack.peek(),
                                                           SYMB((yyvsp[0].id))); 
                                         }
-#line 2226 "y.tab.c"
+#line 2187 "y.tab.c"
     break;
 
   case 81:
 #line 509 "parser.y"
                                         { (yyval.int32) = fieldTypeToEnum(SYMB((yyvsp[0].id))); }
-#line 2232 "y.tab.c"
+#line 2193 "y.tab.c"
     break;
 
   case 84:
@@ -2236,73 +2197,73 @@ yyreduce:
                                         { (yyval.value) = stringToType(SYMB((yyvsp[0].id)),
                                                             currentType); 
                                         }
-#line 2240 "y.tab.c"
+#line 2201 "y.tab.c"
     break;
 
   case 85:
 #line 525 "parser.y"
                                         { (yyval.value) = new MFString((yyvsp[-1].stringArray)); }
-#line 2246 "y.tab.c"
+#line 2207 "y.tab.c"
     break;
 
   case 86:
 #line 526 "parser.y"
                                         { (yyval.value) = new SFNode((yyvsp[0].node)); }
-#line 2252 "y.tab.c"
+#line 2213 "y.tab.c"
     break;
 
   case 87:
 #line 527 "parser.y"
                                         { (yyval.value) = emptyMFNodeOrNULL(currentType); }
-#line 2258 "y.tab.c"
+#line 2219 "y.tab.c"
     break;
 
   case 88:
 #line 529 "parser.y"
                                         { (yyval.value) = new MFNode((yyvsp[-1].nodeList)); }
-#line 2264 "y.tab.c"
+#line 2225 "y.tab.c"
     break;
 
   case 89:
 #line 530 "parser.y"
                                         { (yyval.value) = intsToType((yyvsp[0].intArray), currentType); }
-#line 2270 "y.tab.c"
+#line 2231 "y.tab.c"
     break;
 
   case 90:
 #line 531 "parser.y"
                                         { (yyval.value) = floatsToType((yyvsp[0].doubleArray), currentType); }
-#line 2276 "y.tab.c"
+#line 2237 "y.tab.c"
     break;
 
   case 91:
 #line 532 "parser.y"
                                         { (yyval.value) = boolsToType((yyvsp[0].boolArray), currentType); }
-#line 2282 "y.tab.c"
+#line 2243 "y.tab.c"
     break;
 
   case 92:
 #line 533 "parser.y"
                                         { (yyval.value) = intsToType((yyvsp[-1].intArray), currentType); }
-#line 2288 "y.tab.c"
+#line 2249 "y.tab.c"
     break;
 
   case 93:
 #line 534 "parser.y"
                                         { (yyval.value) = floatsToType((yyvsp[-1].doubleArray), currentType); }
-#line 2294 "y.tab.c"
+#line 2255 "y.tab.c"
     break;
 
   case 94:
 #line 535 "parser.y"
                                         { (yyval.value) = boolsToType((yyvsp[-1].boolArray), currentType); }
-#line 2300 "y.tab.c"
+#line 2261 "y.tab.c"
     break;
 
   case 95:
 #line 536 "parser.y"
                                         { (yyval.value) = emptyMF(currentType); }
-#line 2306 "y.tab.c"
+#line 2267 "y.tab.c"
     break;
 
   case 96:
@@ -2311,7 +2272,7 @@ yyreduce:
                                 (yyvsp[-1].boolArray)->append(((SFBool *)(yyvsp[0].value))->getValue()); 
                                 (yyval.boolArray) = (yyvsp[-1].boolArray); 
                                 }
-#line 2315 "y.tab.c"
+#line 2276 "y.tab.c"
     break;
 
   case 97:
@@ -2320,43 +2281,43 @@ yyreduce:
                                 (yyval.boolArray) = new BoolArray(); 
                                 (yyval.boolArray)->append(((SFBool *)(yyvsp[0].value))->getValue()); 
                                 }
-#line 2324 "y.tab.c"
+#line 2285 "y.tab.c"
     break;
 
   case 98:
 #line 551 "parser.y"
                                 { (yyval.value) = new SFBool(true); }
-#line 2330 "y.tab.c"
+#line 2291 "y.tab.c"
     break;
 
   case 99:
 #line 552 "parser.y"
                                 { (yyval.value) = new SFBool(false); }
-#line 2336 "y.tab.c"
+#line 2297 "y.tab.c"
     break;
 
   case 100:
 #line 555 "parser.y"
                                 { (yyvsp[-1].intArray)->append((yyvsp[0].int32)); (yyval.intArray) = (yyvsp[-1].intArray); }
-#line 2342 "y.tab.c"
+#line 2303 "y.tab.c"
     break;
 
   case 101:
 #line 556 "parser.y"
                                 { (yyval.intArray) = new IntArray(); (yyval.intArray)->append((yyvsp[0].int32)); }
-#line 2348 "y.tab.c"
+#line 2309 "y.tab.c"
     break;
 
   case 102:
 #line 559 "parser.y"
                                 { (yyvsp[-1].doubleArray)->append((yyvsp[0].sffloat)); (yyval.doubleArray) = (yyvsp[-1].doubleArray); }
-#line 2354 "y.tab.c"
+#line 2315 "y.tab.c"
     break;
 
   case 103:
 #line 560 "parser.y"
                                 { (yyvsp[-1].doubleArray)->append((float) (yyvsp[0].int32)); (yyval.doubleArray) = (yyvsp[-1].doubleArray); }
-#line 2360 "y.tab.c"
+#line 2321 "y.tab.c"
     break;
 
   case 104:
@@ -2364,38 +2325,38 @@ yyreduce:
                                 { (yyval.doubleArray) = intsToFloats((yyvsp[-1].intArray)); (yyval.doubleArray)->append((yyvsp[0].sffloat)); 
                                   delete (yyvsp[-1].intArray); 
                                 }
-#line 2368 "y.tab.c"
+#line 2329 "y.tab.c"
     break;
 
   case 105:
 #line 564 "parser.y"
                                 { (yyval.doubleArray) = new DoubleArray(); (yyval.doubleArray)->append((yyvsp[0].sffloat)); }
-#line 2374 "y.tab.c"
+#line 2335 "y.tab.c"
     break;
 
   case 106:
 #line 567 "parser.y"
                                 { (yyval.value) = new MFString(SYMB((yyvsp[0].id))); }
-#line 2380 "y.tab.c"
+#line 2341 "y.tab.c"
     break;
 
   case 107:
 #line 569 "parser.y"
                                 { (yyval.value) = new MFString((yyvsp[-1].stringArray)); }
-#line 2386 "y.tab.c"
+#line 2347 "y.tab.c"
     break;
 
   case 108:
 #line 572 "parser.y"
                                 { (yyval.stringArray) = new StringArray();
                                   (yyval.stringArray)->append(SYMB((yyvsp[0].id))); }
-#line 2393 "y.tab.c"
+#line 2354 "y.tab.c"
     break;
 
   case 109:
 #line 574 "parser.y"
                                 { (yyvsp[-1].stringArray)->append(SYMB((yyvsp[0].id))); (yyval.stringArray) = (yyvsp[-1].stringArray); }
-#line 2399 "y.tab.c"
+#line 2360 "y.tab.c"
     break;
 
   case 110:
@@ -2405,7 +2366,7 @@ yyreduce:
                                           if ((yyvsp[0].node)) 
                                               (yyvsp[0].node)->appendTo((yyval.nodeList));
                                         }
-#line 2409 "y.tab.c"
+#line 2370 "y.tab.c"
     break;
 
   case 111:
@@ -2415,13 +2376,13 @@ yyreduce:
                                               (yyvsp[0].node)->appendTo((yyvsp[-1].nodeList)); 
                                           (yyval.nodeList) = (yyvsp[-1].nodeList);
                                         }
-#line 2419 "y.tab.c"
+#line 2380 "y.tab.c"
     break;
 
   case 112:
 #line 588 "parser.y"
                                         { (yyval.id) = (yyvsp[0].id); }
-#line 2425 "y.tab.c"
+#line 2386 "y.tab.c"
     break;
 
   case 113:
@@ -2429,19 +2390,19 @@ yyreduce:
                                         {  
                                           (yyval.id) = (yyvsp[0].id); 
                                         }
-#line 2433 "y.tab.c"
+#line 2394 "y.tab.c"
     break;
 
   case 114:
 #line 594 "parser.y"
                                         { illegalX3DV(); }
-#line 2439 "y.tab.c"
+#line 2400 "y.tab.c"
     break;
 
   case 131:
 #line 623 "parser.y"
                                         { scene->addMeta(SYMB((yyvsp[-1].id)), SYMB((yyvsp[0].id))); }
-#line 2445 "y.tab.c"
+#line 2406 "y.tab.c"
     break;
 
   case 134:
@@ -2449,7 +2410,7 @@ yyreduce:
                                         { scene->addUnit(SYMB((yyvsp[-2].id)), SYMB((yyvsp[-1].id)), 
                                                          (yyvsp[0].sffloat)); 
                                         }
-#line 2453 "y.tab.c"
+#line 2414 "y.tab.c"
     break;
 
   case 135:
@@ -2457,11 +2418,11 @@ yyreduce:
                                         { scene->addUnit(SYMB((yyvsp[-2].id)), SYMB((yyvsp[-1].id)), 
                                                          (yyvsp[0].int32)); 
                                         }
-#line 2461 "y.tab.c"
+#line 2422 "y.tab.c"
     break;
 
 
-#line 2465 "y.tab.c"
+#line 2426 "y.tab.c"
 
       default: break;
     }

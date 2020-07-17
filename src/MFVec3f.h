@@ -81,7 +81,7 @@ public:
     Vec3f               getMinBoundingBox(void);
     Vec3f               getMaxBoundingBox(void);
 
-    virtual void        removeSFValue(int index) 
+    virtual void        removeSFValue(long index) 
                             { 
                             m_value.remove(3 * index); 
                             m_value.remove(3 * index); 

@@ -70,7 +70,7 @@ public:
     virtual void        insertSFValue(int index, FieldValue *value);
     void                insertSFValue(int index, const float value);
     virtual void        appendSFValue(const float value);
-    virtual void        removeSFValue(int index);
+    virtual void        removeSFValue(long index);
     void                removeMFFloatSFValue(int index);
 
     float               getMaxValue();

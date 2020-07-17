@@ -77,6 +77,7 @@ ProtoTimeSensor::ProtoTimeSensor(Scene *scene)
     addEventOut(SFTIME, "elapsedTime", FF_X3D_ONLY);
     fraction_changed.set(addEventOut(SFFLOAT, "fraction_changed", 
                          EOF_RECOMMENDED | EOF_WONDERLAND_SUPPORTED));
+
     addEventOut(SFBOOL, "isActive", EOF_WONDERLAND_SUPPORTED);
     addEventOut(SFBOOL, "isPaused", FF_X3D_ONLY);
     time.set(addEventOut(SFTIME, "time", EOF_WONDERLAND_SUPPORTED));

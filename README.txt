@@ -5663,6 +5663,14 @@ Fixed crash in texCoord drawing
 
 Fixed crash/memory error in texCoord generation
 
-Added OMP direction for Matrix * vec3f multplication
+Added OMP directive for Matrix * vec3f multplication
+
+Fixed freeze problems by reusing a old version of motif/swt.c
+
+Fixed problem of writing default values
+
+Restored transformed Viewpoint handling
+
+Restored move sibling
 
 Contact: MUFTI <mufti11@web.de>

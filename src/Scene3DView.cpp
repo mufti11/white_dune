@@ -445,6 +445,7 @@ void Scene3DView::OnLButtonDown(int x, int y, int modifiers)
     swSetFocus(m_wnd);
 
     m_hitHandle = false;
+
     bool cursorChanged = false;
 
     if ((modifiers & SW_CONTROL)) {
