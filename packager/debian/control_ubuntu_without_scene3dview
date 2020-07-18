@@ -2,7 +2,7 @@ Source: whitedune
 Section: graphics
 Priority: optional
 Maintainer: J. "MUFTI" Scheurich <mufti@csv.ica.uni-stuttgart.de>
-Build-Depends: bison, flex, gawk, m4, xbase-clients, libexpat1-dev, libxmu-dev, libxi-dev, libgl-dev|libgl1-mesa-dev, libglu-dev|libglu1-mesa-dev, libmotif-dev|lesstif-dev|lesstif2-dev, libpng-dev|libpng12-dev, libjpeg-dev, g++, gcc, libusb-dev, libcurl4-openssl-dev, aqsis, libfreetype6-dev, ttf-bitstream-vera, libcgal-dev, libavcodec-dev, libavutil-dev, libavformat-dev, libavresample-dev, libswscale-dev, libswresample-dev, imagemagick, view3dscene
+Build-Depends: bison, flex, gawk, m4, xbase-clients, libexpat1-dev, libxmu-dev, libxi-dev, libgl-dev|libgl1-mesa-dev, libglu-dev|libglu1-mesa-dev, libmotif-dev|lesstif-dev|lesstif2-dev, libpng-dev|libpng12-dev, libjpeg-dev, g++, gcc, libusb-dev, libcurl4-openssl-dev, aqsis, libfreetype6-dev, ttf-bitstream-vera, libcgal-dev, libavcodec-dev, libavutil-dev, libavformat-dev, libavresample-dev, libswscale-dev, libswresample-dev, imagemagick
 Standards-Version: 3.5.6.1
 
 Package: whitedune

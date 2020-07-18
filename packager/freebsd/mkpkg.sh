@@ -14,9 +14,9 @@ VERSION=`sh ../../batch/getversion.sh`
 export VERSION
 
 export CC=clang
-export CFLAGS="-Wno-unused-command-line-argument -L/usr/local/lib"
+export CFLAGS="-O2 -Wno-unused-command-line-argument -L/usr/local/lib"
 export CXX=clang++
-export CXXFLAGS="-Wno-tautological-undefined-compare \
+export CXXFLAGS="-O2 -Wno-tautological-undefined-compare \
                  -Wno-tautological-pointer-compare \
                  -Wno-deprecated-declarations"
 export CPPFLAGS=-I/usr/local/include/freetype2
@@ -27,10 +27,10 @@ export LIBS=-lstdc++
  sh batch/fix_not_translated_rcfiles.sh &&
  make realclean && 
  ./configure --with-optimization --without-devil \
- --with-vrmlbrowser=firefox \
+ --with-vrmlbrowser=firefox --with-cgalheaders \
  --with-helpurl="$PREFIX/share/doc/white_dune/index.html" \
  --with-protobaseurl="$PREFIX/share/doc/wdune" \
- --with-prefix=$PREFIX && 
+ --prefix=$PREFIX && 
 make -j8 && make install) || exit 1
 
 mkdir -p $PREFIX/bin/ &&
@@ -82,10 +82,13 @@ fi
 if sh -c "ldd $PREFIX/bin/dune | grep png > /dev/null" ; then
    echo @pkgdep `pkg info | egrep ^png- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 fi
+echo @pkgdep `pkg info | egrep ^rcs- | awk '{print $1}'` >> $WDUNETMP/pkg-list
+echo @pkgdep `pkg info | egrep ^cgal- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^mesa-libs- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^libGLU- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^xorgproto- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^povray37- | awk '{print $1}'` >> $WDUNETMP/pkg-list
+echo @pkgdep `pkg info | egrep ^mencoder- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 
 mkdir $WDUNETMP/manifest
 

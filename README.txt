@@ -5673,4 +5673,6 @@ Restored transformed Viewpoint handling
 
 Restored move sibling
 
+Fixed wrong hexnumber output in mysnprintf.c
+
 Contact: MUFTI <mufti11@web.de>
