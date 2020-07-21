@@ -11842,10 +11842,39 @@ MainWindow::insertImageTexture()
 
     if (field != -1) {
         char buf[MY_MAX_PATH];
-
+        bool bufvalid = false;
+#if !defined(WIN32) && defined(HAVE_YAD)
+        if (system("which yad") == 0) {
+            char img[MY_MAX_PATH + 64];
+            char sys[MY_MAX_PATH + 64];
+            char rm[MY_MAX_PATH + 68];
+            strcpy(img, "/tmp/image_");
+            mysnprintf(img + strlen(img), MY_MAX_PATH + 64, "%d", getpid());
+            mysnprintf(sys, MY_MAX_PATH + 64,
+                       "yad --file-selection --file-filter '*.png *.jpg' > %s",
+                       img);
+            if (system(sys) == 0) {
+                off_t size = 0;
+                int filedes = -1;
+                do {
+                    usleep(10000);
+                    filedes = open(img, O_RDONLY);
+                    size = lseek(filedes, 0, SEEK_END);
+                    lseek(filedes, 0, SEEK_SET);
+                } while (size < 2);
+                if (size < MY_MAX_PATH) { 
+                    read(filedes, buf, size - 1); // do not read \n
+                    snprintf(rm, MY_MAX_PATH + 68, "rm %s", img);
+                    system(rm);    
+                    bufvalid = true;
+                }
+            }
+        } else
+#endif
+        {
         buf[0] = '\0';
-       if (TheApp->getFileDialogDir())
-           while (chdir(TheApp->getFileDialogDir()) == -2);
+        if (TheApp->getFileDialogDir())
+            while (chdir(TheApp->getFileDialogDir()) == -2);
         if (swOpenFileDialog(m_wnd, "Select Image (*.jpg, *.png)",
 #ifdef HAVE_LIBDEVIL
 #ifdef _WIN32
@@ -11854,19 +11883,23 @@ MainWindow::insertImageTexture()
             "*.*",
 # endif
 #else
-#ifdef _WIN32
+# ifdef _WIN32
             "Image Files (*.gif, *.jpg, *.png)\0*.gif;*.jpg;*.png\0All Files (*.*)\0*.*\0\0",
 # else
             "*.[gjp][ipn][fgg]",
-# endif
 #endif
-                             buf, MY_MAX_PATH)) {
+#endif
+
+            buf, MY_MAX_PATH))
+                bufvalid = true;
+        }
+        if (bufvalid) {
             NodeImageTexture *node = (NodeImageTexture *)
                                      m_scene->createNode("ImageTexture");
             URL url;
             url.FromPath(buf);
-            node->url(new 
-                      MFString(rewriteURL(url,url.GetDir(),m_scene->getURL())));
+            node->url(new MFString(rewriteURL(url, url.GetDir(), 
+                                              m_scene->getURL() )));
             m_scene->execute(new MoveCommand(node, NULL, -1, current, field));
             m_scene->setSelection(node);
             m_scene->UpdateViews(NULL, UPDATE_SELECTION);

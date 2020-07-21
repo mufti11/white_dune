@@ -3,6 +3,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
+/* define this to 1 if yad do not freeze anymore */
+#undef HAVE_YAD
+
 /* Define to test "this" against NULL. Almost! impossible, but needed... */
 #define HAVE_NULL_COMPARE 1
 

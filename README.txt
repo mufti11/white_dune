@@ -5675,4 +5675,6 @@ Restored move sibling
 
 Fixed wrong hexnumber output in mysnprintf.c
 
+Advanced OMP directives
+
 Contact: MUFTI <mufti11@web.de>

@@ -2920,7 +2920,7 @@ NodePROTO::createPROTO(bool bcopy)
     m_isHumanoid = false;
     if (bcopy) {
         m_nodes.resize(0);
-        #pragma parallel for
+        #pragma omp parallel for
         for (int i = 0; i < m_proto->getNumNodes(); i++) {
             if (m_proto->getNode(i)) {
                 long id = m_proto->getNode(i)->getId();
@@ -2945,21 +2945,21 @@ NodePROTO::createPROTO(bool bcopy)
                 m_proto->getNode(i)->copyChildrenTo(m_nodes[i], true);
             }
         }
-        #pragma parallel for
+        #pragma omp parallel for
         for (int i = 0; i < routeInfo.size(); i++)
             m_scene->deleteRoute(routeInfo[i].src, routeInfo[i].eventOut,
                                  routeInfo[i].dest, routeInfo[i].eventIn);
         routeInfo.resize(0);
         m_indexedNodes.resize(0);
-        #pragma parallel for
+        #pragma omp parallel for
         for (int i = 0; i < m_proto->getNumNodes(); i++)
             m_nodes[i]->doWithBranch(buildNodeIndexInBranch, this, false);
-        #pragma parallel for
+        #pragma omp parallel for
         for (long i = 0; i < m_indexedNodes.size(); i++)
             if (m_indexedNodes[i])
                m_indexedNodes[i]->setScene(m_scene);
     }
-    #pragma parallel for
+    #pragma omp parallel for
     for (int i = 0; i < m_proto->getNumExposedFields(); i++) {
         ExposedField *field = m_proto->getExposedField(i);
         if (field && field->getFlags() & FF_IS)
@@ -2974,7 +2974,7 @@ NodePROTO::createPROTO(bool bcopy)
                 }
             }
     }
-    #pragma parallel for
+    #pragma omp parallel for
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         Field *field = m_proto->getField(i);
         if (field && field->getFlags() & FF_IS)
@@ -2999,7 +2999,6 @@ NodePROTO::createPROTO(bool bcopy)
             if (m_nodes[0] != NULL)
                 if (m_nodes[0]->getType() == VRML_TRANSFORM)
                     m_isHumanoid = true;
-    #pragma parallel for
     for (int i = 0; i < m_proto->getNumFields(); i++) {
         Field *field = m_proto->getField(i);
         if (field && field->getFlags() & FF_IS)
@@ -3048,6 +3047,7 @@ static bool updateNode(Node *node, void *data)
 void
 NodePROTO::update()
 {
+    #pragma omp parallel for
     for (int i = 0; i < m_proto->getNumNodes(); i++) {
         if (m_proto->getNode(i) != NULL)
             m_proto->getNode(i)->doWithBranch(updateNode, NULL, true, false, 
@@ -3191,7 +3191,9 @@ NodePROTO::setField(int index, FieldValue *value, int cf)
 void
 NodePROTO::receiveProtoEvent(int eventOut, double timestamp, FieldValue *value)
 {
-    for (int j = 0; j < m_proto->getNumEventOuts(); j++) {
+    int numEventOut = m_proto->getNumEventOuts();
+    #pragma omp parallel for
+    for (int j = 0; j < numEventOut; j++) {
         SocketList::Iterator *i;
         for (i = m_outputs[j].first(); 
              i != NULL; i = i->next()) {
@@ -3538,10 +3540,12 @@ Proto::hasNumbers4kids(void)
     if (m_numbers4KidsInit == false) {
         m_numbers4KidsInit = true;
         m_numbers4Kids = false;
-        for (long i = 0; i < m_fields.size(); i++)
+        int size = m_fields.size();
+        #pragma omp parallel for
+        for (long i = 0; i < size; i++)
            if (m_fields[i]->getFlags() & FF_4KIDS) {
                m_numbers4Kids = true;
-               break;
+               i = size; // break;
            }
     }
     return m_numbers4Kids;

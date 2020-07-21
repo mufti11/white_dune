@@ -80,6 +80,7 @@ NodeData::NodeData(Scene *scene, Proto *proto)
 
     m_numFields = m_proto->getNumFields();
     m_fields = new FieldValue *[m_numFields];
+    #pragma omp parallel for
     for (int i = 0; i < m_numFields; i++) {
         if (m_proto->getField(i)) {
             m_fields[i] = m_proto->getField(i)->getDefault(x3d);
@@ -138,6 +139,7 @@ NodeData::copyData(const NodeData &node)
         else
             m_scene->makeSimilarName((Node *)this, node.m_name);
     }
+    #pragma omp parallel for
     for (int i = 0; i < m_numFields; i++)
         if (node.m_fields[i]) {
             m_fields[i] = node.m_fields[i]->copy();
@@ -469,7 +471,6 @@ NodeData::getVariableName(void)
         if (m_variableName.length() == 0)
             if (m_scene != NULL) {
                 setVariableName(m_scene->generateUniqueNodeName((Node *)this));
-//                m_variableName.sub("ColorRGBA", "Color");
                 m_name = "";
                 m_name += m_variableName;
             }
@@ -3901,7 +3902,7 @@ bool Node::doWithBranch(DoWithNodeCallback callback, void *data,
                 break;
         }
     if (searchOn) {
-        // search in children of of current node
+        // search in children of current node
         for (int i = 0; i < m_proto->getNumFields(); i++) {
             if (m_scene->isInvalidElement(m_proto->getField(i)))
                 continue;
