@@ -1,8 +1,0 @@
-?package(whitedune):\
-   needs="x11" \
-   section="Apps/Graphics"\
-   title="white_dune" \
-   command="/usr/bin/dune" \
-   icon="/usr/share/pixmaps/dune.xpm"
-#   hints="VRML97"
-
