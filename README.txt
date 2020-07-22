@@ -5677,4 +5677,8 @@ Fixed wrong hexnumber output in mysnprintf.c
 
 Advanced OMP directives
 
+Added small optimization by isolating NodeData::clearFlag(NODE_FLAG_TOUCHED)
+
+Added -readfromdownloads option
+
 Contact: MUFTI <mufti11@web.de>

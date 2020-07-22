@@ -5974,7 +5974,7 @@ Scene::Download(const URL &url, MyString *path)
 #ifdef HAVE_LIBCURL
     DownloadPathData data = downloadPathIntern(url);
 
-    if (data.isRemote) {
+    if (data.isRemote && !TheApp->getReadFromDownloads()) {
         MyString filename = "";
         filename += data.string;
         CURL *curl;

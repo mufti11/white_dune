@@ -165,6 +165,10 @@ Convert file to X3DOM html, write it to standard output and exit.
 .TP
 .BI \-download
 Download file from the internet, write filenames to standard error and exit.
+.br
+This makes sense when using a VRML/X3D browser or the 
+.BI -readfromdownloads
+option later.
 .TP
 .BI "\-kanim filenamepattern"
 Convert file to the kanim fileformat and write it to standard output.
@@ -756,6 +760,12 @@ PROTOs in the create => proto menu in the \fBcategory\fP submenu and exit.
 .TP
 .B \-renderslower
 This option uses a slower render mode.
+.TP
+.B \-readfromdownloads
+This option let white_dune read from the download directory instead of 
+a internet URL,
+.br
+Usefull when working offline after working online.
 .TP
 .B \--version
 Print out version information and exit.

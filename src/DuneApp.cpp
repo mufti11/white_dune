@@ -147,6 +147,7 @@ DuneApp::DuneApp() : PreferencesApp(), EcmaScriptApp(), StereoViewApp(),
     m_skipChecks = false;
     enableDraw();
     enableMatrixParallel();
+    m_readFromDownloads = false;
 }
 
 void DuneApp::initPreferences(void)

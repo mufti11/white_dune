@@ -713,7 +713,7 @@ install: target
 	install -m 644 -p ../desktop/kde/dune4kids.desktop $(PREFIX)/share/applications/dune4kids.desktop
 	install -m 644 -p ../desktop/kde/dune4kids.png $(PREFIX)/share/pixmaps/dune4kids.png
 	mkdir -p `dirname $(HELPURL)`	
-	cp -rn ../docs/* `dirname $(HELPURL)`
+	cp -rf ../docs/* `dirname $(HELPURL)`
 
 mysnprintf.o: mysnprintf.c
 	$(CC) -g $(CFLAGS) @C99@ -c -o $@ mysnprintf.c

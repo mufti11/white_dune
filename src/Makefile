@@ -11,7 +11,7 @@ AWK = gawk
 PREFIX = /usr/local
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
-HELPURL=/home/mufti/wdune-1.928/docs/index.html
+HELPURL=/home/home/mufti/wdune-1.930/docs/index.html
 
 RESOURCE_FILES = dune.english.rc singleResources.rc dune.french.rc dune.german.rc dune.italian.rc dune.portuguese.rc
 
@@ -713,7 +713,7 @@ install: target
 	install -m 644 -p ../desktop/kde/dune4kids.desktop $(PREFIX)/share/applications/dune4kids.desktop
 	install -m 644 -p ../desktop/kde/dune4kids.png $(PREFIX)/share/pixmaps/dune4kids.png
 	mkdir -p `dirname $(HELPURL)`	
-	cp -rn ../docs/* `dirname $(HELPURL)`
+	cp -rf ../docs/* `dirname $(HELPURL)`
 
 mysnprintf.o: mysnprintf.c
 	$(CC) -g $(CFLAGS) -std=c99 -c -o $@ mysnprintf.c

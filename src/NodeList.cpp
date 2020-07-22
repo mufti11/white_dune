@@ -40,7 +40,10 @@ NodeList::clearFlag(int flag) const
     #pragma parallel for
     for (long i = 0; i < lsize; i++)
         if (m_data[i] != NULL)
-            m_data[i]->clearFlag(flag);
+            if (flag == NODE_FLAG_TOUCHED)
+                m_data[i]->clearTouchFlag();
+            else
+                m_data[i]->clearFlag(flag);
 }
 
 void
@@ -48,7 +51,10 @@ NodeList::setFlag(int flag) const
 {
     for (long i = 0; i < size(); i++)
         if (m_data[i] != NULL)
-            m_data[i]->setFlag(flag);
+            if (flag == NODE_FLAG_TOUCHED)
+                m_data[i]->setTouchFlag();
+            else
+                m_data[i]->setFlag(flag);
 }
 
 void            

@@ -241,6 +241,8 @@ bool parseCommandlineArgument(int & i,int argc, char** argv)
     } else if (strcmp(argv[i],"-uninstall")==0) {
        TheApp->unInstall();
        exit(0);
+    } else if (strcmp(argv[i],"-readfromdownloads")==0) {
+        TheApp->setReadFromDownloads(true);
     } else if (strcmp(argv[i],"-prefix")==0) {
        if (++i >= argc) return found;
        found=true;

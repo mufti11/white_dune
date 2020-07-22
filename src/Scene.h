@@ -19,52 +19,24 @@
  * Cambridge, MA 02139, USA.
  */
 
-#ifndef _SCENE_H
-#define _SCENE_H
+#pragma once
 
 #ifndef _STDIO_H
 #include <stdio.h>
 #endif
 
-#ifndef _ARRAY_H
 #include "Array.h"
-#endif
-
-#ifndef _MAP_H
 #include "Map.h"
-#endif
-
-#ifndef _STACK_H
 #include "Stack.h"
-#endif
-
-#ifndef _COMMAND_LIST_H
 #include "CommandList.h"
-#endif
-
-#ifndef _NODE_LIST_H
 #include "NodeList.h"
-#endif
-
-#ifndef _DUNE_STRING_H
 #include "MyString.h"
-#endif
-
-#ifndef _URL_H
 #include "URL.h"
-#endif
-
-#ifndef _PROTO_H
 #include "Proto.h"
-#endif
-
-#ifndef _DUNE_APP_H
 #include "DuneApp.h"
-#endif
-
-#ifndef _QUATERNION_H
 #include "Quaternion.h"
-#endif
+
+#include "config.h"
 
 #include "x3dFlags.h"
 
@@ -1270,5 +1242,4 @@ void BackupRoutesRec(Node *node, CommandList *list);
 
 SDC CreateDC(SWND canvas);
 
-#endif // _SCENE_H
 

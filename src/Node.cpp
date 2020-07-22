@@ -110,6 +110,7 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_writtenCompleteCProcessEvent = true;
     m_alreadyConverted = false;
     m_scene->addNode((Node*)this);
+    m_touchflag = false;
 }
 
 NodeData::NodeData(const Node &node) {
@@ -174,8 +175,9 @@ NodeData::copyData(const NodeData &node)
     m_x3domOnClick = m_x3domOnClick && node.m_x3domOnClick ? 
                      strdup(node.m_x3domOnClick) : NULL;
     m_writtenCompleteCProcessEvent = true;
+    m_touchflag = node.m_touchflag;
     m_scene->addNode((Node*)this);
- }
+}
 
 NodeData::~NodeData()
 {

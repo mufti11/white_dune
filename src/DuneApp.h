@@ -391,6 +391,10 @@ public:
     bool                getMatrixParallel()
                            { return m_matrixParallel; }
 
+    void                setReadFromDownloads(bool flag)
+                            { m_readFromDownloads = flag; }
+    bool                getReadFromDownloads(void)
+                            { return m_readFromDownloads; }
 protected:
     void                Exit(void);
 
@@ -475,6 +479,8 @@ protected:
     bool                m_avoidDraw;
 
     bool                m_matrixParallel;
+
+    bool                m_readFromDownloads;
 };
 
 extern DuneApp *TheApp;

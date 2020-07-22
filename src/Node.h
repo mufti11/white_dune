@@ -723,11 +723,18 @@ public:
     int               findChildType(int childType);
 
     bool              getFlag(int flag) const 
-                          { return (m_flags & (1 << flag)) != 0; }
+                          {
+                          if (flag == NODE_FLAG_TOUCHED)
+                              return m_touchflag; 
+                          return (m_flags & (1 << flag)) != 0; 
+                          }
     void              setFlag(int flag) { m_flags |= (1 << flag); }
     void              setFlagRec(int flag);
     void              clearFlag(int flag) { m_flags &= ~(1 << flag); }
     void              clearFlagRec(int flag);
+    void              clearTouchFlag() { m_touchflag = false; }
+    void              setTouchFlag() { m_touchflag = true; }
+    
 
     bool              isCollapsed() const 
                           { return getFlag(NODE_FLAG_COLLAPSED); }
@@ -1130,6 +1137,7 @@ protected:
     const char *      m_x3domOnClick;
     bool              m_alreadyConverted;
     bool              m_writtenCompleteCProcessEvent;
+    bool              m_touchflag;
 };
    
 
