@@ -1,4 +1,8 @@
 bin/dune /usr/bin
+bin/gitview.sh /usr/bin
+tools/phong.slx /usr/share/white_dune/shaders
+tools/run_dune_and_aqsis.sh /usr/bin
+tools/run_dune_and_povray.sh /usr/bin
 desktop/kde/dune.png /usr/share/pixmaps
 desktop/kde/dune.desktop /usr/share/applications
 desktop/kde/dune4kids.png /usr/share/pixmaps

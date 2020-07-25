@@ -44,7 +44,7 @@ URL: http://wdune.ourproject.org/
 Source: ftp://ftp.ourproject.org/pub/wdune/$VERSION3.tar.bz2
 BuildRoot: /var/tmp/%{name}buildroot
 BuildRequires: gcc-c++, gawk, make, bash, fileutils, motif-devel, libXi-devel, libXmu-devel, libpng-devel, libjpeg-devel, glu-devel, libexpat-devel, flex, bison, libusb-devel, update-desktop-files, fdupes, libcgal-devel, libcurl-devel, ImageMagick, freetype2-devel, bitstream-vera-fonts, libavcodec-devel libavutil-devel libavformat-devel libavresample-devel libswscale-devel libswresample-devel
-Requires: git, firefox, gedit, gimp, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, xorg-x11-fonts-core, povray, awk
+Requires: git, firefox, gedit, gimp, kolourpaint, audacity, lxterminal, ImageMagick, bitstream-vera-fonts, xorg-x11-fonts-core, povray, awk, kdialog, bash
 
 %description
 white_dune is a graphical X3D/VRML97 editor, 3D modeler and animation tool.
@@ -114,6 +114,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/lib/debug/usr/bin/
 install -m 755 bin/dune $RPM_BUILD_ROOT/usr/bin/dune
 install -m 755 bin/dune4kids $RPM_BUILD_ROOT/usr/bin/dune4kids
 install -m 755 bin/illegal2vrml $RPM_BUILD_ROOT/usr/bin/illegal2vrml
+install -m 755 bin/gitview.sh $RPM_BUILD_ROOT/usr/bin/gitview.sh
 install -m 644 tools/phong.slx $RPM_BUILD_ROOT/usr/share/white_dune/shaders/phong.slx
 install -m 755 tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
 install -m 755 tools/run_dune_and_povray.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_povray.sh
@@ -126,6 +127,7 @@ install -m 644 desktop/kde/dune4kids.desktop $RPM_BUILD_ROOT/usr/share/applicati
 install -m 644 desktop/kde/dune4kids.png $RPM_BUILD_ROOT/usr/share/pixmaps/dune4kids.png
 install -m 644 man/dune.1 $RPM_BUILD_ROOT/usr/share/man/man1/dune.1
 install -m 644 man/dune4kids.1 $RPM_BUILD_ROOT/usr/share/man/man1/dune4kids.1
+install -m 644 man/gitview.1 $RPM_BUILD_ROOT/usr/share/man/man1/gitview.1
 install -m 644 man/illegal2vrml.1 $RPM_BUILD_ROOT/usr/share/man/man1/illegal2vrml.1
 
 /usr/lib/rpm/find-debuginfo.sh
@@ -143,6 +145,7 @@ rm -rf $RPM_BUILD_ROOT
 
 /usr/bin/dune
 /usr/bin/dune4kids
+/usr/bin/gitview.sh
 /usr/share/white_dune/shaders/phong.slx
 /usr/bin/run_dune_and_aqsis.sh
 /usr/bin/run_dune_and_povray.sh
@@ -157,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/man/man1/dune.1*
 /usr/share/man/man1/dune4kids.1*
 /usr/share/man/man1/illegal2vrml.1*
+/usr/share/man/man1/gitview.1*
 /usr/src/debug/$VERSION3
 /usr/lib/debug/usr/bin/dune.debug
 EOT

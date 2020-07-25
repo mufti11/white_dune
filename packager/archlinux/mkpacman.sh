@@ -37,6 +37,9 @@ depends=(xorg-fonts-misc
          xorg-fonts-alias-misc
          povray
          mencoder
+         awk
+         git
+         kdialog
 )
 makedepends=(gcc
              fakeroot

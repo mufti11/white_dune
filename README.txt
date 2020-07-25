@@ -5681,4 +5681,8 @@ Added small optimization by isolating NodeData::clearFlag(NODE_FLAG_TOUCHED)
 
 Added -readfromdownloads option
 
+Added gitview.sh script (using kdialog) for UNIX/Linux
+
+Fixed missing "git add" command
+
 Contact: MUFTI <mufti11@web.de>

@@ -88,6 +88,9 @@ BuildRequires: grep
 BuildRequires: pkg-config
 BuildRequires: pkgconfig(eigen3) pkgconfig(vcglib)
 BuildRequires: freeglut-devel
+Requires: bash
+Requires: kdialog
+Requires: git
 Requires: povray
 Requires: gawk
 Requires: git
@@ -178,6 +181,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/white_dune/shaders
 
 install -m 755 -p bin/dune $RPM_BUILD_ROOT/%{_bindir}/dune
 install -m 755 -p bin/dune4kids $RPM_BUILD_ROOT/%{_bindir}/dune4kids
+install -m 755 -p bin/gitview.sh $RPM_BUILD_ROOT/%{_bindir}/gitview.sh
 install -m 644 -p tools/phong.slx $RPM_BUILD_ROOT/%{_datadir}/white_dune/shaders/phong.slx
 install -m 755 -p tools/run_dune_and_aqsis.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_aqsis.sh
 install -m 755 -p tools/run_dune_and_povray.sh $RPM_BUILD_ROOT/usr/bin/run_dune_and_povray.sh
@@ -189,6 +193,7 @@ install -m 644 -p desktop/kde/dune4kids.png $RPM_BUILD_ROOT/%{_datadir}/pixmaps/
 install -m 644 -p man/dune.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune.1
 install -m 644 -p man/dune4kids.1 $RPM_BUILD_ROOT/%{_mandir}/man1/dune4kids.1
 install -m 644 -p man/illegal2vrml.1 $RPM_BUILD_ROOT/%{_mandir}/man1/illegal2vrml.1
+install -m 644 -p man/gitview.1 $RPM_BUILD_ROOT/%{_mandir}/man1/gitview.1
 install -m 644 -p include/white_dune/libC++RWD.h $RPM_BUILD_ROOT/%{_includedir}/white_dune/libC++RWD.h
 install -m 644 -p include/white_dune/libCRWD.h $RPM_BUILD_ROOT/%{_includedir}/white_dune/libCRWD.h
 install -m 644 -p include/white_dune/libC++RWD_namespace.h $RPM_BUILD_ROOT/%{_includedir}/white_dune/libC++RWD_namespace.h
@@ -219,6 +224,7 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %license COPYING
 %{_bindir}/dune
 %{_bindir}/dune4kids
+%{_bindir}/gitview.sh
 %{_datadir}/white_dune/shaders/phong.slx
 %{_bindir}/run_dune_and_aqsis.sh
 %{_bindir}/run_dune_and_povray.sh
@@ -230,6 +236,7 @@ $RPM_BUILD_ROOT/%{_datadir}/applications/dune4kids.desktop
 %{_mandir}/man1/dune.1*
 %{_mandir}/man1/dune4kids.1*
 %{_mandir}/man1/illegal2vrml.1*
+%{_mandir}/man1/gitview.1*
 
 %files devel
 %{_includedir}/white_dune/libC++RWD.h

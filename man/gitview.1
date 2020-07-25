@@ -1,0 +1,57 @@
+.\" See section COPYING for conditions for redistribution
+.\"
+.de URL
+\\$2 \(laURL: \\$1 \(ra\\$3 
+..
+.TH gitview.sh 1 2020-07-24 "white_dune 1.931"
+.SH NAME
+gitview.sh \- repository restorer for white_dune (graphical vrml97/x3d editor 
+and animation tool)
+.SH SYNOPSIS
+.br
+.B gitview.sh viewercommand file
+.SH DESCRIPTION
+.B gitview.sh
+is a tool to restore git revision control files
+(usually built while using "File->save" in white_dune).
+.br
+/ white_dune is a graphical editor for the Virtual Reality Modeling Language 
+(VRML97), ISO/IEC 14772-1:1997 and X3D.
+.br
+.B gitview.sh
+is similar to 
+.I gitk
+, but shows the restored files, not the output of the
+"diff" command (which are rather useless for VRML97/x3D files (or 
+other 3D data, images or videos, if this files are stored in a git 
+repository)).
+.br
+When used with a viewercommand and a file,
+.B gitview.sh
+opens a X11 window and shows the available revisions of the file.
+If a revision is selected and OK is pressed, this revision is restored
+(overwriting the file) and the viewercommand is used for the restored file.
+.SH REQUIREMENTS
+.B gitview.sh
+uses 
+.B sh
+shell,
+.B awk
+and 
+.B kdialog
+to work
+.br
+.SH EXAMPLE
+.B gitview.sh
+dune something_stored_in_dune.wrl
+.SH DIAGNOSTICS
+Exit status is 1 for wrong parameters
+.br
+.SH "SEE ALSO"
+git(1),
+gitk(1),
+kdialog(1),
+awk(1),
+dune(1)
+.SH AUTHORS
+J. "MUFTI" Scheurich

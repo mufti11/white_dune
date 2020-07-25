@@ -13466,6 +13466,15 @@ MainWindow::checkInFile(const char *path)
                 error = swSystemInDir(gitConfig2, path) != 0;
         }            
 
+        MyString gitAdd = "";
+        gitAdd += "git add \"";
+        gitAdd += path;
+        gitAdd += "\"";
+        if (relativ)
+            error = swSystem(gitAdd) != 0;
+        else 
+            error = swSystemInDir(gitAdd, path) != 0;
+
         MyString gitCommit = "";
         gitCommit += "git commit --allow-empty -uno -qsm \"";
         gitCommit += path;

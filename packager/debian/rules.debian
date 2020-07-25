@@ -49,6 +49,7 @@ binary-arch: checkroot build
 	cp -a man/dune.1 $(DESTDIR)/man/man.1
 	cp -a packager/debian/control_buster debian/${package}/DEBIAN/control
 	dpkg-shlibdeps bin/dune
+	install -m 755 -p bin/gitview.sh ${DESTDIR}/bin/ 
 	install tools/run_dune_and_aqsis.sh ${DESTDIR}/bin/ 
 	install tools/run_dune_and_povray.sh ${DESTDIR}/bin/ 
 	install -m 644 -p include/white_dune/libC++RWD.h ${DESTDIR}/include/white_dune/libC++RWD.h

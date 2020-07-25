@@ -56,6 +56,7 @@ binary-arch:	checkroot build
 	cp -a desktop/debian/dune.xpm debian/tmp/usr/share/pixmaps
 	cp -a packager/debian/menu debian/tmp/usr/lib/menu/white_dune
 	dpkg-shlibdeps bin/dune
+	install -m 755 -p bin/gitview.sh debian/tmp/usr/bin/ 
 	install -m 644 -p tools/phong.slx debian/tmp/usr/share/white_dune/shaders
 	install -m 755 -p tools/run_dune_and_aqsis.sh debian/tmp/usr/bin/ 
 	install -m 755 -p tools/run_dune_and_povray.sh debian/tmp/usr/bin/ 

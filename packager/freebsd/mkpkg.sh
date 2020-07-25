@@ -36,10 +36,12 @@ make -j8 && make install) || exit 1
 mkdir -p $PREFIX/bin/ &&
 cp $WDUNETMP/wdune-$VERSION/bin/dune $PREFIX/bin/ &&
 cp $WDUNETMP/wdune-$VERSION/bin/dune4kids $PREFIX/bin/ &&
+cp $WDUNETMP/wdune-$VERSION/bin/gitview.sh $PREFIX/bin/ &&
 cp $WDUNETMP/wdune-$VERSION/bin/illegal2vrml $PREFIX/bin/ &&
 cp $WDUNETMP/wdune-$VERSION/tools/run_dune_and_povray_freebsd.sh $PREFIX/bin/run_dune_and_aqsis.sh &&
 chmod 755 $PREFIX/bin/dune &&
 chmod 755 $PREFIX/bin/dune4kids &&
+chmod 755 $PREFIX/bin/gitview &&
 chmod 755 $PREFIX/bin/illegal2vrml &&
 chmod 755 $PREFIX/bin/run_dune_and_povray.sh &&
 
@@ -48,9 +50,12 @@ cp $WDUNETMP/wdune-$VERSION/man/dune.1 $PREFIX/man/man1 &&
 gzip -9f $PREFIX/man/man1/dune.1 &&
 cp $WDUNETMP/wdune-$VERSION/man/illegal2vrml.1 $PREFIX/man/man1 &&
 gzip -9f $PREFIX/man/man1/illegal2vrml.1
+cp $WDUNETMP/wdune-$VERSION/man/gitview.1 $PREFIX/man/man1 &&
+gzip -9f $PREFIX/man/man1/gitview.1
 
 chmod 644 $PREFIX/man/man1/dune.1.gz
 chmod 644 $PREFIX/man/man1/illegal2vrml.1.gz
+chmod 644 $PREFIX/man/man1/gitview.1.gz
 
 (cd $WDUNETMP/wdune-$VERSION && rm -r vcglib)
 
@@ -82,7 +87,10 @@ fi
 if sh -c "ldd $PREFIX/bin/dune | grep png > /dev/null" ; then
    echo @pkgdep `pkg info | egrep ^png- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 fi
-echo @pkgdep `pkg info | egrep ^rcs- | awk '{print $1}'` >> $WDUNETMP/pkg-list
+echo @pkgdep `pkg info | egrep ^git- | awk '{print $1}'` >> $WDUNETMP/pkg-list
+echo @pkgdep `pkg info | egrep ^bash- | awk '{print $1}'` >> $WDUNETMP/pkg-list
+echo @pkgdep `pkg info | egrep ^awk- | awk '{print $1}'` >> $WDUNETMP/pkg-list
+echo @pkgdep `pkg info | egrep ^kdialog- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^cgal- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^mesa-libs- | awk '{print $1}'` >> $WDUNETMP/pkg-list
 echo @pkgdep `pkg info | egrep ^libGLU- | awk '{print $1}'` >> $WDUNETMP/pkg-list
