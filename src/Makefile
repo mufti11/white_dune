@@ -11,7 +11,7 @@ AWK = gawk
 PREFIX = /usr/local
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
-HELPURL=/home/mufti/wdune-1.932/docs/index.html
+HELPURL=/home/home/mufti/wdune-1.934/docs/index.html
 
 RESOURCE_FILES = dune.english.rc singleResources.rc dune.french.rc dune.german.rc dune.italian.rc dune.portuguese.rc
 

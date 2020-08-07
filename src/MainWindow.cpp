@@ -9617,7 +9617,8 @@ MainWindow::subdivide(void)
         m_scene->setSelection(m_scene->replaceNode(node, faceset));
         if (ccwResult)
             faceset->ccw(new SFBool(false));
-        optimizeSet();
+        faceset->optimize();
+        m_scene->UpdateViews(NULL, UPDATE_REDRAW_3D);
         m_scene->UpdateViews(NULL, UPDATE_SELECTION);
     }
 }

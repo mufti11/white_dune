@@ -735,7 +735,16 @@ static void fmtfp (char *buffer, size_t *currlen, size_t maxlen,
   if (flags & DP_F_UP) caps = 1; /* Should characters be upper case? */
 #endif
 
-  intpart = lrint(ufvalue);
+  intpart = 
+#ifdef _WIN32
+// the free Micro$oft express compiler do some strange float -> int conversions
+            floor(
+#endif
+                  ufvalue
+#ifdef _WIN32
+                  )
+#endif
+;
 
   /* 
    * Sorry, we only support 9 digits past the decimal because of our 
@@ -748,7 +757,11 @@ static void fmtfp (char *buffer, size_t *currlen, size_t maxlen,
    * multiplying by a factor of 10
    */
 
+#ifdef _WIN32
   fracpart = rint((mypow10(max)) * (ufvalue - intpart));
+#else
+  fracpart = round((mypow10(max)) * (ufvalue - intpart));  
+#endif  
 
   if (fracpart>0)
      {
@@ -776,7 +789,7 @@ static void fmtfp (char *buffer, size_t *currlen, size_t maxlen,
   /* Convert integer part */
   do {
     iconvert[iplace++] = intpart < 0 ? '0' :
-      (caps ? "0123456789ABCDEF0" : "0123456789abcdef0")[(intpart % 10)];
+      (caps ? "0123456789ABCDEF0" : "0123456789abcdef0")[intpart % 10];
     intpart = (intpart / 10);
   } while(intpart && (iplace < 20));
   if (iplace == 20) iplace--;

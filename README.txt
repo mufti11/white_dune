@@ -5685,4 +5685,6 @@ Added gitview.sh script (using kdialog) for UNIX/Linux
 
 Fixed missing "git add" command
 
+Fixed strange float rounding error 
+
 Contact: MUFTI <mufti11@web.de>

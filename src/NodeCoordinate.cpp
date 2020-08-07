@@ -813,6 +813,7 @@ NodeCoordinate::draw(Node *node)
     switch (node->getType()) {
       case VRML_INDEXED_FACE_SET:
         ((NodeIndexedFaceSet *)node)->meshDraw();
+printf("coord %f %f %f\n",point()->getVec(0).x,  point()->getVec(0).y, point()->getVec(0).z);
         break;
       case VRML_INDEXED_LINE_SET:
         ((NodeIndexedLineSet *)node)->lineDraw();

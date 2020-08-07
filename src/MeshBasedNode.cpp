@@ -857,11 +857,15 @@ MeshBasedNode::write(int f, int indent, bool avoidUse)
                shouldConvertToIndexedFaceSet()) {
         NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)toIndexedFaceSet();
         node->setVariableName(strdup(getVariableName()));
-        int ret = node->write(f, indent, avoidUse);
+        int ret = (node->Node::write)(f, indent, avoidUse);
         node->unref();
         return ret;
     }
-    return Node::write(f, indent, avoidUse);
+    NodeIndexedFaceSet *node = (NodeIndexedFaceSet *)toIndexedFaceSet();
+    node->setVariableName(strdup(getVariableName()));
+    int ret = (node->Node::write)(f, indent, avoidUse);
+    node->unref();
+    return 0;
 }
 
 int             
