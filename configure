@@ -709,6 +709,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -854,6 +855,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1106,6 +1108,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1243,7 +1254,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1396,6 +1407,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1513,8 +1525,8 @@ Some influential environment variables:
   CXXFLAGS    C++ compiler flags
   CXXCPP      C++ preprocessor
   YACC        The `Yet Another Compiler Compiler' implementation to use.
-              Defaults to the first program found out of: `bison -o y.tab.c',
-              `byacc', `yacc'.
+              Defaults to the first program found out of: `bison -y', `byacc',
+              `yacc'.
   YFLAGS      The list of arguments that will be passed by default to $YACC.
               This script will default YFLAGS to the empty string to avoid a
               default value of `-d' given by some make applications.
@@ -4502,7 +4514,7 @@ fi
   test -n "$AWK" && break
 done
 
-for ac_prog in 'bison -o y.tab.c' byacc
+for ac_prog in 'bison -y' byacc
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5167,7 +5179,7 @@ _ACEOF
 
 
 if test "X_$CHECK_IN_COMMAND" = "X_" ; then
-   for ac_prog in ci
+   for ac_prog in git ci
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5214,6 +5226,7 @@ done
 
 fi
 if test "X_$CHECK_IN_COMMAND" != "X_" ; then
+echo $CHECK_IN_COMMAND
    if test "X_`basename $CHECK_IN_COMMAND`" = "X_ci" ; then
       CHECK_IN_COMMAND="ci -l -q -f \\\"%s\\\" < /dev/null"
       echo using ${CHECK_IN_COMMAND} as revision control checkin command
@@ -5222,6 +5235,12 @@ if test "X_$CHECK_IN_COMMAND" != "X_" ; then
 #define HAVE_CHECK_IN_COMMAND "${CHECK_IN_COMMAND}"
 _ACEOF
 
+   if test "X_`basename $CHECK_IN_COMMAND`" = "X_git" ; then
+       cat >>confdefs.h <<_ACEOF
+#define HAVE_CHECK_IN_COMMAND "`basename $CHECK_IN_COMMAND`"
+_ACEOF
+
+   fi
 fi
 
 if test "X_$IMAGECONVERTER" = "X_" ; then
@@ -6225,7 +6244,7 @@ elif test "X_$OS" = "X_Darwin" ; then
         LIBS="$FAT_LIBS $LIBS $X_LIBS -L/usr/X11R6/lib -multiply_defined warning -lXft -lXrender -lfontconfig"
         COMMONFLAGS="$FAT_COMMONFLAGS"
     else
-        CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include -DMACOSX=1"
+                CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include -DMACOSX=1 -I/usr/local/Cellar/boost/1.73.0/include/ -I/usr/local/Cellar/cgal/5.0.3_1/include"
         export CPPFLAGS
         CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions -Wno-tautological-undefined-compare -Wno-tautological-pointer-compare"
         export CXXFLAGS
@@ -8082,7 +8101,9 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
  *** couldn't find a working CGAL development system ***
 
  if CGAL is not available, the convex hull and CSG functions are not available
-
+ CGAL is available from https://www.cgal.org/
+ You can also try the configure option --with-cgalheaders for newer CGAL
+ versions
 EOF
     else
       $as_echo "#define HAVE_LIBCGAL 1" >>confdefs.h
@@ -12256,6 +12277,9 @@ if test "X_$CGAL_ERROR" = "X_1" ; then
     echo "Warning:" 1>&2
     echo "  couldn't find a working CGAL development system" 1>&2
     echo "  if CGAL is not available, the convex hull and CSG functions are not available" 1>&2
+    echo "  CGAL is available from https://www.cgal.org/" 1>&2
+    echo "  You can also try the configure option --with-cgalheaders for newer CGAL" 1>&2
+    echo "  Cversions" 1>&2
 fi
 
 if test "X_$VCG_ERROR" = "X_1" ; then

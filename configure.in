@@ -537,14 +537,18 @@ fi
 AC_DEFINE_UNQUOTED(HAVE_MOVIE_EDITOR,"${MOVIEEDITOR}")
 
 if test "X_$CHECK_IN_COMMAND" = "X_" ; then
-   AC_PATH_PROGS(CHECK_IN_COMMAND,[ci])
+   AC_PATH_PROGS(CHECK_IN_COMMAND,[git ci])
 fi
 if test "X_$CHECK_IN_COMMAND" != "X_" ; then
+echo $CHECK_IN_COMMAND
    if test "X_`basename $CHECK_IN_COMMAND`" = "X_ci" ; then
       CHECK_IN_COMMAND="ci -l -q -f \\\"%s\\\" < /dev/null"
       echo using ${CHECK_IN_COMMAND} as revision control checkin command
    fi
    AC_DEFINE_UNQUOTED(HAVE_CHECK_IN_COMMAND, "${CHECK_IN_COMMAND}")
+   if test "X_`basename $CHECK_IN_COMMAND`" = "X_git" ; then
+       AC_DEFINE_UNQUOTED(HAVE_CHECK_IN_COMMAND, "`basename $CHECK_IN_COMMAND`")
+   fi
 fi
 
 if test "X_$IMAGECONVERTER" = "X_" ; then
@@ -639,7 +643,8 @@ elif test "X_$OS" = "X_Darwin" ; then
         LIBS="$FAT_LIBS $LIBS $X_LIBS -L/usr/X11R6/lib -multiply_defined warning -lXft -lXrender -lfontconfig"
         COMMONFLAGS="$FAT_COMMONFLAGS"
     else
-        CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include -DMACOSX=1"
+        dnl MACOSX 10.15 (catalina) homebrew
+        CPPFLAGS="$CPPFLAGS $X_CFLAGS -I/usr/X11R6/include -DMACOSX=1 -I/usr/local/Cellar/boost/1.73.0/include/ -I/usr/local/Cellar/cgal/5.0.3_1/include"
         export CPPFLAGS
         CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions -Wno-tautological-undefined-compare -Wno-tautological-pointer-compare"
         export CXXFLAGS
@@ -1211,7 +1216,9 @@ if test "X_$CGALHEADERS" != "X_yes" ; then
  *** couldn't find a working CGAL development system ***
 
  if CGAL is not available, the convex hull and CSG functions are not available 
-
+ CGAL is available from https://www.cgal.org/
+ You can also try the configure option --with-cgalheaders for newer CGAL 
+ versions
 EOF
     else
       AC_DEFINE(HAVE_LIBCGAL)
@@ -2075,6 +2082,9 @@ if test "X_$CGAL_ERROR" = "X_1" ; then
     echo "Warning:" 1>&2
     echo "  couldn't find a working CGAL development system" 1>&2
     echo "  if CGAL is not available, the convex hull and CSG functions are not available" 1>&2 
+    echo "  CGAL is available from https://www.cgal.org/" 1>&2 
+    echo "  You can also try the configure option --with-cgalheaders for newer CGAL" 1>&2  
+    echo "  Cversions" 1>&2 
 fi
 
 if test "X_$VCG_ERROR" = "X_1" ; then

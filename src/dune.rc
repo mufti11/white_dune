@@ -370,7 +370,6 @@ BEGIN
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
         MENUITEM "Rebuild controlpoints",               ID_REBUILD_NURBS_CONTROL_POINTS
         POPUP "Make NURBS symetric"
         BEGIN
@@ -2164,18 +2163,18 @@ BEGIN
     LTEXT           "fix Field Of View  (Degree 18 ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_OUTPUT DIALOG DISCARDABLE  0, 0, 220, 388
+IDD_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Output Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,370,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,153,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
-                    IDC_KEEP_URLS,19,9,196,12
+                    IDC_KEEP_URLS,220,9,196,12
     AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
-                    19,24,152,12
+                    220,39,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
     LTEXT           "number of floating point digits",IDC_STATIC,19,56,100,12
@@ -2203,8 +2202,8 @@ BEGIN
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
     AUTOCHECKBOX    "use git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (none for git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL
@@ -5032,7 +5031,6 @@ BEGIN
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
         MENUITEM "Rebuild de controlpoints",            ID_REBUILD_NURBS_CONTROL_POINTS
         POPUP "Make NURBS symetric"
         BEGIN
@@ -6178,24 +6176,22 @@ BEGIN
             MENUITEM "Minimum y de la BoundingBox",  ID_CENTER_TO_MINY
             MENUITEM "Minimum z de la BoundingBox",  ID_CENTER_TO_MINZ
         END
-        POPUP "Changer NURBS"
+        MENUITEM "Goto next viewpoint",                  ID_NEXT_VIEWPOINT 
+        MENUITEM "Rebuild controlpoints",     ID_REBUILD_NURBS_CONTROL_POINTS
+        POPUP "Make symetric"
         BEGIN
-            MENUITEM "Rebuild controlpoints",     ID_REBUILD_NURBS_CONTROL_POINTS
-            POPUP "Make symetric"
-            BEGIN
-                 MENUITEM "x",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_X
-                 MENUITEM "y",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
-//                 MENUITEM "z",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
-            END
-            MENUITEM "Extrude NurbsCurve",        ID_INSERT_TO_NURBS_CURVE
-            MENUITEM "Extrude NurbsSurface",      ID_INSERT_TO_NURBS_SURFACE
-            MENUITEM "Augmentation de grade",     ID_DEGREE_ELEVATE_UP
-            MENUITEM "Augmentation de grade U",   ID_U_DEGREE_ELEVATE_UP
-            MENUITEM "Augmentation de grade V",   ID_V_DEGREE_ELEVATE_UP
-            MENUITEM "Placer Uknot linéaire ",    ID_LINEAR_UKNOT
-            MENUITEM "Placer Vknot linéaire ",    ID_LINEAR_VKNOT
-            MENUITEM "Set weights to 1",          ID_SET_WEIGHTS_TO_1
+            MENUITEM "x",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+            MENUITEM "y",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
+//          MENUITEM "z",                           ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
         END
+        MENUITEM "Extrude NurbsCurve",        ID_INSERT_TO_NURBS_CURVE
+        MENUITEM "Extrude NurbsSurface",      ID_INSERT_TO_NURBS_SURFACE
+        MENUITEM "Augmentation de grade",     ID_DEGREE_ELEVATE_UP
+        MENUITEM "Augmentation de grade U",   ID_U_DEGREE_ELEVATE_UP
+        MENUITEM "Augmentation de grade V",   ID_V_DEGREE_ELEVATE_UP
+        MENUITEM "Placer Uknot linéaire ",    ID_LINEAR_UKNOT
+        MENUITEM "Placer Vknot linéaire ",    ID_LINEAR_VKNOT
+        MENUITEM "Set weights to 1",          ID_SET_WEIGHTS_TO_1
 //        MENUITEM "Interpolator time shift",      ID_TIME_SHIFT
         MENUITEM "Field pipe",                     ID_PIPE
         POPUP "HanimJoint weight"
@@ -6750,18 +6746,18 @@ BEGIN
     LTEXT           "fix Field Of View  (Degree 18 ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_FR_OUTPUT DIALOG DISCARDABLE  0, 0, 220, 388
+IDD_FR_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Output Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,370,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,153,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
-                    IDC_KEEP_URLS,19,9,196,12
+                    IDC_KEEP_URLS,220,9,196,12
     AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
-                    19,24,152,12
+                    220,39,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
     LTEXT           "number of floating point digits",IDC_STATIC,19,56,100,12
@@ -6789,8 +6785,8 @@ BEGIN
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
     AUTOCHECKBOX    "use git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (none for git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL
@@ -9568,19 +9564,21 @@ BEGIN
             MENUITEM "Boolean Operation Zusammenbauen", ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
-        MENUITEM "Neue Kontrollpunkte",                 ID_REBUILD_NURBS_CONTROL_POINTS
-        POPUP "Mache NURBS symetrisch"
+        POPUP "NURBS"
         BEGIN
-            MENUITEM "x",                               ID_MAKE_NURBS_SURFACE_SYMETRIC_X
-            MENUITEM "y",                               ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
-//            MENUITEM "z",                             ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
+            MENUITEM "Neue Kontrollpunkte",                 ID_REBUILD_NURBS_CONTROL_POINTS
+            POPUP "Mache NURBS symetrisch"
+            BEGIN
+                MENUITEM "x",                               ID_MAKE_NURBS_SURFACE_SYMETRIC_X
+                MENUITEM "y",                               ID_MAKE_NURBS_SURFACE_SYMETRIC_Y
+//                MENUITEM "z",                             ID_MAKE_NURBS_SURFACE_SYMETRIC_Z
+            END
+            MENUITEM "Extrude NurbsSurface",                ID_INSERT_TO_NURBS_SURFACE
+            MENUITEM "Mehr Punkte",                         ID_DEGREE_ELEVATE_UP
+            MENUITEM "Mehr Punkte U",                       ID_U_DEGREE_ELEVATE_UP
+            MENUITEM "Mehr Punkte V",                       ID_V_DEGREE_ELEVATE_UP
+            MENUITEM SEPARATOR
         END
-        MENUITEM "Extrude NurbsSurface",                ID_INSERT_TO_NURBS_SURFACE
-        MENUITEM "Mehr Punkte",                         ID_DEGREE_ELEVATE_UP
-        MENUITEM "Mehr Punkte U",                       ID_U_DEGREE_ELEVATE_UP
-        MENUITEM "Mehr Punkte V",                       ID_V_DEGREE_ELEVATE_UP
-        MENUITEM SEPARATOR
         POPUP "Umwandeln in"
         BEGIN
             MENUITEM "Nur&bs(Patch)Surface",            ID_TO_NURBS
@@ -10714,6 +10712,7 @@ BEGIN
             MENUITEM "Minimum y der BoundingBox",       ID_CENTER_TO_MINY
             MENUITEM "Minimum z der BoundingBox",       ID_CENTER_TO_MINZ
         END
+        MENUITEM "Goto next viewpoint",                  ID_NEXT_VIEWPOINT
         POPUP "NURBS aendern"
         BEGIN
             MENUITEM "Neue Kontrollpunkte",             ID_REBUILD_NURBS_CONTROL_POINTS
@@ -11287,57 +11286,55 @@ BEGIN
     LTEXT           "fester Field Of View  (18 Grad ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_DE_OUTPUT DIALOG DISCARDABLE  0, 0, 225, 388
+IDD_DE_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ausgabe Einstellungen"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,370,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,167,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,87,370,50,14
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
     AUTOCHECKBOX    "Behalte URLs beim speichern in ein anderes Verzeichnis",
-                    IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "Benutze Kernighan/Ritchie Formatierung",IDC_K_AND_R,
-                    19,24,152,12
-    LTEXT           "Zahl der eingefuegten Leerzeichen",IDC_STATIC,
-                    19,39,114,12
-    EDITTEXT        IDC_INDENT,147,37,45,14,ES_AUTOHSCROLL
-    LTEXT           "Zahl der floating point Ziffern",IDC_STATIC,
-                    19,56,114,12
-    EDITTEXT        IDC_FLOAT_DIGITS,147,53,45,14,ES_AUTOHSCROLL
-    AUTOCHECKBOX    "Erzeuge Normalen beim Mesh-Export",
+                    IDC_KEEP_URLS,220,9,196,12
+    AUTOCHECKBOX    "Benutze Kernighan/Ritchie formating",IDC_K_AND_R,
+                    220,39,152,12
+    LTEXT           "Zahl der Leerzeichen",IDC_STATIC,19,39,100,12
+    EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
+    LTEXT           "Zahl der floating point Ziffern",IDC_STATIC,19,56,100,12
+    EDITTEXT        IDC_FLOAT_DIGITS,125,53,45,12,ES_AUTOHSCROLL
+    AUTOCHECKBOX    "erzuge Normalen beim Mesh-export",
                     IDC_NORMALS_ON_MESH_CREATION,19,67,200,12
     AUTOCHECKBOX    "Ignoriere den Teil vor dem ersten Unterstrich",
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
-    AUTOCHECKBOX    "Ignoriere den Teil nach dem letzten Unterstrich",
+    AUTOCHECKBOX    "Ignoriere den Teil vor dem letzten Unterstrich",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
-    GROUPBOX        "Erzeugung des Material Namens bei nicht VRML/X3D       Export",
+    GROUPBOX        "Material Name Erzeugung beim Ac3d Export",
                     IDC_STATIC,13,149,200,39
-    LTEXT           "Download Pfad",
+    LTEXT           "Download Verzichnis",
                     IDC_STATIC,19,190,65,10
     EDITTEXT        IDC_DOWNLOAD_DIR,84,190,95,12,ES_AUTOHSCROLL
-    LTEXT           "Default Materialname fuer Ac3d Export",
+    LTEXT           "Default Material Name fuer Ac3d export",
                     IDC_STATIC,19,205,200,10
     EDITTEXT        IDC_DEFAULT_AC3D_MATERIAL_NAME,19,215,170,12,ES_AUTOHSCROLL
-    AUTOCHECKBOX    "Exportiere Ac3d Format fuer RWTH ITA RAVEN",
+    AUTOCHECKBOX    "Export ac3d format for RWTH ITA RAVEN",
                     IDC_AC3D_EXPORT_4_RAVEN,19,228,180,12
-    AUTOCHECKBOX    "Konvertiere Texturen ins GIF Format beim Ac3d Export",
+    AUTOCHECKBOX    "Convert textures to GIF format on Ac3d export",
                     IDC_AC3D_EXPORT_CONVERT_2_GIF,19,240,200,12
     LTEXT           "Default Material Name fuer Catt Export",
                     IDC_STATIC,19,254,200,10
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
-    AUTOCHECKBOX    "Benutze git fuer die Versionskontrolle",
+    AUTOCHECKBOX    "Benutze git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "Revisionskontroll checkin Kommando (%s = Datei)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (nichts fuer git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
-    LTEXT           "X3DOM Pfad ",IDC_STATIC,19,84,170,10
+    LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL
-    LTEXT           "X3DOM Parameter",IDC_STATIC,19,109,170,10
+    LTEXT           "X3DOM parameters",IDC_STATIC,19,109,170,10
     EDITTEXT        IDC_X3DOM_PARAMETER,19,119,170,12,ES_AUTOHSCROLL
     LTEXT           "X_ITE Path",IDC_STATIC,19,134,50,10
     EDITTEXT        IDC_XITE_PATH,70,134,120,12,ES_AUTOHSCROLL
-//    AUTOCHECKBOX    "Ausgabenkompression",IDC_COMPRESS,19,135,152,10
+//    AUTOCHECKBOX    "compress output",IDC_COMPRESS,19,135,152,10
     LTEXT           "RIB texturer",IDC_STATIC,19,324,170,10
     EDITTEXT        IDC_RIB_TEXTURER,19,334,170,12,ES_AUTOHSCROLL
     LTEXT           "image converter",IDC_STATIC,19,344,170,10
@@ -14102,7 +14099,6 @@ BEGIN
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
         MENUITEM "Rebuild controlpoints",               ID_REBUILD_NURBS_CONTROL_POINTS
         POPUP "Make NURBS symetric"
         BEGIN
@@ -15251,6 +15247,7 @@ BEGIN
             MENUITEM "Minima y del contorno",           ID_CENTER_TO_MINY
             MENUITEM "Minima z del contorno",           ID_CENTER_TO_MINZ
         END
+        MENUITEM "Goto next viewpoint",                  ID_NEXT_VIEWPOINT
         POPUP "Operazioni NURBS"
         BEGIN
             MENUITEM "Rebuild controlpoints",           ID_REBUILD_NURBS_CONTROL_POINTS
@@ -15824,27 +15821,27 @@ BEGIN
     LTEXT           "Angolo fisso di vista (18 gradi ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_IT_OUTPUT DIALOG DISCARDABLE  0, 0, 220, 388
+IDD_IT_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Settaggi di Output"
+CAPTION "Output Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Accetta",IDOK,7,370,50,14
-    PUSHBUTTON      "Annulla",IDCANCEL,133,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,68,370,50,14
-    AUTOCHECKBOX    "Prendi URL quando salva in un'altra directory",
-                    IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "usa formattazione Kernighan/Ritchie",IDC_K_AND_R,
-                    19,24,152,12
-    LTEXT           "numero spazi di indentazione",IDC_STATIC,19,39,100,12
-    EDITTEXT        IDC_INDENT,125,37,45,14,ES_AUTOHSCROLL
-    LTEXT           "numero di cifre decimali",IDC_STATIC,19,56,100,12
-    EDITTEXT        IDC_FLOAT_DIGITS,125,53,45,14,ES_AUTOHSCROLL
-    AUTOCHECKBOX    "genera normali su mesh export",
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
+    AUTOCHECKBOX    "Keep URLs when saving to other directory",
+                    IDC_KEEP_URLS,220,9,196,12
+    AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
+                    220,39,152,12
+    LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
+    EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
+    LTEXT           "number of floating point digits",IDC_STATIC,19,56,100,12
+    EDITTEXT        IDC_FLOAT_DIGITS,125,53,45,12,ES_AUTOHSCROLL
+    AUTOCHECKBOX    "generate normals on mesh export",
                     IDC_NORMALS_ON_MESH_CREATION,19,67,200,12
-    AUTOCHECKBOX    "skip part of name before first underscore",
+    AUTOCHECKBOX    "skip first part of name before first underscore",
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
-    AUTOCHECKBOX    "skip part of name after last underscore",
+    AUTOCHECKBOX    "skip last part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
     GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
@@ -15863,8 +15860,8 @@ BEGIN
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
     AUTOCHECKBOX    "use git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (none for git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL
@@ -15872,7 +15869,7 @@ BEGIN
     EDITTEXT        IDC_X3DOM_PARAMETER,19,119,170,12,ES_AUTOHSCROLL
     LTEXT           "X_ITE Path",IDC_STATIC,19,134,50,10
     EDITTEXT        IDC_XITE_PATH,70,134,120,12,ES_AUTOHSCROLL
-//    AUTOCHECKBOX    "comprimi output",IDC_COMPRESS,19,135,152,10
+//    AUTOCHECKBOX    "compress output",IDC_COMPRESS,19,135,152,10
     LTEXT           "RIB texturer",IDC_STATIC,19,324,170,10
     EDITTEXT        IDC_RIB_TEXTURER,19,334,170,12,ES_AUTOHSCROLL
     LTEXT           "image converter",IDC_STATIC,19,344,170,10
@@ -18645,7 +18642,6 @@ BEGIN
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
         MENUITEM "Rebuild controlpoints",               ID_REBUILD_NURBS_CONTROL_POINTS
         POPUP "Make NURBS symetric"
         BEGIN
@@ -19793,6 +19789,7 @@ BEGIN
             MENUITEM "Minimal y of boundingBox",         ID_CENTER_TO_MINY
             MENUITEM "Minimal z of boundingBox",         ID_CENTER_TO_MINZ
         END
+        MENUITEM "Goto next viewpoint",                  ID_NEXT_VIEWPOINT
         POPUP "NURBS operations"
         BEGIN
             MENUITEM "Rebuild controlpoints",            ID_REBUILD_NURBS_CONTROL_POINTS
@@ -20368,18 +20365,18 @@ BEGIN
     LTEXT           "fix Field Of View  (Degree 18 ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_PT_OUTPUT DIALOG DISCARDABLE  0, 0, 220, 388
+IDD_PT_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Output Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,370,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,153,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
-                    IDC_KEEP_URLS,19,9,196,12
+                    IDC_KEEP_URLS,220,9,196,12
     AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
-                    19,24,152,12
+                    220,39,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
     LTEXT           "number of floating point digits",IDC_STATIC,19,56,100,12
@@ -20407,8 +20404,8 @@ BEGIN
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
     AUTOCHECKBOX    "use git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (none for git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL

@@ -32,10 +32,44 @@
 #include "Field.h"
 
 ProtoFontStyle::ProtoFontStyle(Scene *scene)
-  : FontStyleProto(scene, "FontStyle")
+  : Proto(scene, "FontStyle")
 {
+    static const char *families[] = { "SERIF", "SANS", "TYPEWRITER", NULL};
+    family.set(
+          addField(MFSTRING, "family", new MFString("SERIF"), 0, families));
+
+    horizontal.set(
+          addField(SFBOOL, "horizontal", new SFBool(true)));
+
+    static const char *justifies[] = { "FIRST", "BEGIN", "MIDDLE", "END", NULL};
+    justify.set(
+          addField(MFSTRING, "justify", new MFString("BEGIN"), 
+                   FF_FIXEDSTRINGS, justifies));
+
+    language.set(
+          addField(SFSTRING, "language", new SFString("")));
+
+    leftToRight.set(
+          addField(SFBOOL, "leftToRight", new SFBool(true)));
+
     size.set(
           addField(SFFLOAT, "size", new SFFloat(1.0f), new SFFloat(0.0f)));
+
+    spacing.set(
+          addField(SFFLOAT, "spacing", new SFFloat(1.0f), new SFFloat(0.0f)));
+
+    static const char *styles[] = { "PLAIN", "BOLD", "ITALIC", "BOLDITALIC", 
+                                    NULL};
+    style.set(
+          addField(SFSTRING, "style", new SFString("PLAIN"), FF_FIXEDSTRINGS, 
+                   styles));
+
+    topToBottom.set(
+          addField(SFBOOL, "topToBottom", new SFBool(true)));
+
+    quality.set(
+          addExposedField(SFFLOAT, "quality", new SFFloat(0)));
+    setFieldFlags(quality, FF_X3DOM_ONLY);
 }
 
 Node *
@@ -45,7 +79,7 @@ ProtoFontStyle::create(Scene *scene)
 }
 
 NodeFontStyle::NodeFontStyle(Scene *scene, Proto *def)
-  : FontStyleNode(scene, def)
+    : Node(scene, def)
 {
 }
 

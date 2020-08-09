@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +30,9 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
@@ -85,13 +89,52 @@ extern int yydebug;
     VRML1 = 295
   };
 #endif
+/* Tokens.  */
+#define BRACKET_ON 258
+#define BRACKET_OFF 259
+#define WING_BRACKET_ON 260
+#define WING_BRACKET_OFF 261
+#define SCRIPT 262
+#define COMPOSED_SHADER 263
+#define PACKAGED_SHADER 264
+#define SHADER_PROGRAM 265
+#define VRML_CUT 266
+#define EXPORT 267
+#define IMPORT 268
+#define AS 269
+#define ID 270
+#define ID_X3D 271
+#define STRING 272
+#define INT_NUM 273
+#define FLOAT_NUM 274
+#define DEF 275
+#define EXTERNPROTO 276
+#define FALSE_TOK 277
+#define IS 278
+#define NULL_TOK 279
+#define PROTO 280
+#define ROUTE 281
+#define TO 282
+#define TRUE_TOK 283
+#define USE 284
+#define EVENT_IN 285
+#define EVENT_OUT 286
+#define EXPOSED_FIELD 287
+#define INPUT_OUTPUT 288
+#define FIELD 289
+#define X3D 290
+#define PROFILE 291
+#define COMPONENT 292
+#define UNIT 293
+#define META 294
+#define VRML1 295
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 170 "parser.y" /* yacc.c:1909  */
+#line 170 "parser.y" /* yacc.c:1921  */
 
     int                  int32;
     int                  id;
@@ -105,7 +148,7 @@ union YYSTYPE
     IntArray            *intArray;
     DoubleArray         *doubleArray;
 
-#line 109 "y.tab.h" /* yacc.c:1909  */
+#line 152 "y.tab.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;

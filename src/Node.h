@@ -661,6 +661,8 @@ public:
     void              ref() { m_refs++; }
     void              unref() 
                           { 
+                          if (this == NULL)
+                              return; 
                           if (--m_refs == 0) 
                               delete_this(); 
                           }

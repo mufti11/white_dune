@@ -320,7 +320,6 @@ BEGIN
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
         MENUITEM "Rebuild controlpoints",               ID_REBUILD_NURBS_CONTROL_POINTS
         POPUP "Make NURBS symetric"
         BEGIN
@@ -2114,18 +2113,18 @@ BEGIN
     LTEXT           "fix Field Of View  (Degree 18 ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_OUTPUT DIALOG DISCARDABLE  0, 0, 220, 388
+IDD_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Output Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,370,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,153,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,370,50,14
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
     AUTOCHECKBOX    "Keep URLs when saving to other directory",
-                    IDC_KEEP_URLS,19,9,196,12
+                    IDC_KEEP_URLS,220,9,196,12
     AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
-                    19,24,152,12
+                    220,39,152,12
     LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
     EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
     LTEXT           "number of floating point digits",IDC_STATIC,19,56,100,12
@@ -2153,8 +2152,8 @@ BEGIN
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
     AUTOCHECKBOX    "use git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (none for git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL

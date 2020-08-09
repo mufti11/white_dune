@@ -6,9 +6,9 @@ if test $# = 0 ; then
   echo usage: bash $0 \'install command\' package-suffix 1>&2
   echo example: bash install_build_requirements.sh \'pacman -S --noconfirm\' 1>&2
   echo example: bash install_build_requirements.sh \'apt install\' -dev 1>&2
-  echo example: baash install_build_requirements.sh \'yum install -y\' -devel 1>&2
-  echo example: baash install_build_requirements.sh \'pacman -S\' 1>&2
-  echo example: baash install_build_requirements.sh \'pkg install\' 1>&2
+  echo example: bash install_build_requirements.sh \'yum install -y\' -devel 1>&2
+  echo example: bash install_build_requirements.sh \'pacman -S\' 1>&2
+  echo example: bash install_build_requirements.sh \'pkg install\' 1>&2
   exit 1  
 fi
 

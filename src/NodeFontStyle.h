@@ -24,10 +24,9 @@
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
-#include "FontStyleNode.h"
 #include "SFMFTypes.h"
 
-class ProtoFontStyle : public FontStyleProto {
+class ProtoFontStyle : public Proto {
 public:
                     ProtoFontStyle(Scene *scene);
     virtual Node   *create(Scene *scene);
@@ -36,10 +35,19 @@ public:
 
     virtual bool    isDeclaredInRwd_h() { return true; }      
 
+    FieldIndex family;
+    FieldIndex horizontal;
+    FieldIndex justify;
+    FieldIndex language;
+    FieldIndex leftToRight;
     FieldIndex size;
+    FieldIndex spacing;
+    FieldIndex style;
+    FieldIndex topToBottom;
+    FieldIndex quality;
 };
 
-class NodeFontStyle : public FontStyleNode {
+class NodeFontStyle : public Node{
 public:
                     NodeFontStyle(Scene *scene, Proto *proto);
 
@@ -54,6 +62,15 @@ public:
 
     void            setField(int index, FieldValue *value, int cf = -1);
 
+    fieldMacros(MFString, family,      ProtoFontStyle)
+    fieldMacros(SFBool,   horizontal,  ProtoFontStyle)
+    fieldMacros(MFString, justify,     ProtoFontStyle)
+    fieldMacros(SFString, language,    ProtoFontStyle)
+    fieldMacros(SFBool,   leftToRight, ProtoFontStyle)
     fieldMacros(SFFloat,  size,        ProtoFontStyle)
+    fieldMacros(SFFloat,  spacing,     ProtoFontStyle)
+    fieldMacros(SFString, style,       ProtoFontStyle)
+    fieldMacros(SFBool,   topToBottom, ProtoFontStyle)
+    fieldMacros(SFFloat,  quality,     ProtoFontStyle)
 };
 

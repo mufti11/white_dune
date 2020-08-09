@@ -9,7 +9,7 @@ if test -f /proc/cpuinfo; then
 fi
 cd `dirname $0`
 make realclean
-# ubunutu has currently a non working CGAL, mageia 7 fail with OMP
+# ubunutu and MACOSX homebrew has currently a non working CGAL, mageia 7 fail with OMP
 ./configure --without-devil --without-cgal && 
 make -j$NPROC
 cd -

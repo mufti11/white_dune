@@ -163,6 +163,17 @@ To compile under Unix, you need at least to the development versions of
 
 - OpenGL/Mesa3D 
 - Motif/OpenMotif/Lesstif 
+- libjpeg
+- libpng
+
+Under severel Linuxes there is a batch/install_build_requirements.sh script to 
+help you to install the requried develpment tools:
+- Usage under debian like Linuxes:
+  bash install_build_requirements.sh 'apt install' -dev 
+- Usage under fedora like Linuxes:
+  bash install_build_requirements.sh 'yum_or_zypper install -y' -devel
+- Usage under arch Linux
+  bash install_build_requirements.sh 'pacman -S'
 
 There is a minor difference between some older versions of motif and modern 
 versions of openmotif and lesstif.
@@ -270,6 +281,12 @@ to click to the "UNIX Development Support" button during the installation
 of the MacOSX development/Xcode package. Otherwise it gets difficult to
 compile even simple things with gcc/g++ on the commandline.
 Modern MacOSX Versions use clang/clang++ instead of gcc/g++.
+
+under MACOSX you may need to run
+
+$ sudo xcode-select --install
+
+to install tools like 'make'
 
 UNIX/Linux compile procedure
 ============================

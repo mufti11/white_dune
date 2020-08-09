@@ -1197,8 +1197,7 @@ enum {
     RENDER_PASS_TRANSPARENT
 };
 
-class Hint {
-};
+#include "Hint.h"
 
 class FieldUpdate : public Hint {
 public:

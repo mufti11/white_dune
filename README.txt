@@ -5687,4 +5687,6 @@ Fixed missing "git add" command
 
 Fixed strange float rounding error 
 
+Added pass of self test
+
 Contact: MUFTI <mufti11@web.de>

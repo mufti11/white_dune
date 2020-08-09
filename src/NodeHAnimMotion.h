@@ -84,6 +84,6 @@ public:
     fieldMacros(MFString,   joints,          ProtoHAnimMotion)
     fieldMacros(SFInt32,    loa,             ProtoHAnimMotion)
     fieldMacros(SFBool,     loop,            ProtoHAnimMotion)
-    fieldMacros(SFFloat,    values,          ProtoHAnimMotion)
+    fieldMacros(MFFloat,    values,          ProtoHAnimMotion)
 };
 

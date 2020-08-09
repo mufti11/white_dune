@@ -79,7 +79,7 @@ NodeIndexedTriangleStripSet::createMesh(bool cleanDoubleVertices,
     MFVec3d *coordsDouble = NULL;
     if (coord->getType() == VRML_COORDINATE)
         coords = ((NodeCoordinate *)coord)->point();
-    else
+    else if (coord->getType() == VRML_GEO_COORDINATE)
         coordsDouble = ((NodeGeoCoordinate *)coord)->pointX3D();
 
     MFVec3f *normals = NULL;
@@ -106,7 +106,7 @@ NodeIndexedTriangleStripSet::createMesh(bool cleanDoubleVertices,
     m_coordIndex = new MFInt32();    
     m_coordIndex->ref();
 
-    if (coords->getSFSize() > 0) {
+    if (coords && coords->getSFSize() > 0) {
         bool flip = false;
         int stripFirst = -1;
         int stripSecond = -1;
@@ -144,7 +144,7 @@ NodeIndexedTriangleStripSet::createMesh(bool cleanDoubleVertices,
     }
 
     MFFloat *fogCoords = NULL;
-    if (fogCoord()->getValue())
+    if (m_scene->isX3d() && fogCoord()->getValue())
         if (fogCoord()->getValue()->getType() == X3D_FOG_COORDINATE)
             fogCoords = ((NodeFogCoordinate *) 
                          (fogCoord()->getValue()))->depth();

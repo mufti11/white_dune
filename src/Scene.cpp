@@ -2686,7 +2686,7 @@ bool writeCNodeData(Node *node, void *data)
 
     int f = cWrite->filedes;
     if (cWrite->languageFlag & MANY_JAVA_CLASSES) 
-        if (extraJavaClass && writeBracket) {
+        if (writeName && extraJavaClass && writeBracket) {
             RET_ONERROR( mywritestr(f, "}\n") )
         }
 

@@ -1,3 +1,4 @@
+#if 0
 /*
  * NodeDefinitions.h
  *
@@ -431,3 +432,4 @@ enum NodeEnum {
 #define LAST_NODE VRML_COMMENT
 
 
+#endif

@@ -40,7 +40,7 @@ ProtoPointProperties::ProtoPointProperties(Scene *scene)
           addExposedField(SFFLOAT, "pointSizeMaxValue", new SFFloat(1.0f)));
     static float att[3] = { 1, 0, 0 };
     pointSizeAttenuation.set(
-          addExposedField(SFFLOAT, "pointSizeAttenuation", 
+          addExposedField(MFFLOAT, "pointSizeAttenuation", 
                           new MFFloat(att, 3)));
     colorMode.set(
           addExposedField(SFSTRING, "colorMode", 

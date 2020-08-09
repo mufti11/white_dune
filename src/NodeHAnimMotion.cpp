@@ -71,7 +71,7 @@ void ProtoHAnimMotion::addElements(void)
            addExposedField(SFINT32, "frameIndex", new SFInt32(1),
                            new SFInt32(0)));
     joints.set(
-           addExposedField(MFNODE, "joints", new MFNode(), X3D_HANIM_JOINT));
+           addExposedField(MFSTRING, "joints", new MFString()));
     loa.set(
            addExposedField(SFINT32, "loa", new SFInt32(-1), new SFInt32(-1),
                            new SFInt32(4)));

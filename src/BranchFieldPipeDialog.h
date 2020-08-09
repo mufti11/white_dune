@@ -25,20 +25,4 @@
 
 #include "swttypedef.h"
 #include "MyString.h"
-
-class FieldPipeDialog : public Dialog {
-public:
-                            FieldPipeDialog(SWND parent, MyString filter,
-                                            MyString command);
-    virtual                ~FieldPipeDialog();
-
-    void                    LoadData();
-    virtual void            SaveData();
-    virtual bool            Validate();
-    MyString                GetFilter() const { return m_filter; }
-    MyString                GetCommand() const { return m_command; }
-private:
-    MyString                m_filter;
-    MyString                m_command;
-};
-
+#include "FieldPipeDialog.h"

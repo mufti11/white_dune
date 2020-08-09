@@ -425,8 +425,8 @@ NodeText::createMesh(bool cleanDoubleVertices, bool triangulateMesh)
 
     int ijustify = JUSTIFY_BEGIN;
     if (fontStyle) {
-        fsizeX = fontStyle->getSizeX() * SPACING;
-        fsizeY = fontStyle->getSizeY() * SPACING;
+        fsizeX = fontStyle->size()->getValue() * SPACING;
+        fsizeY = fontStyle->size()->getValue() * SPACING;
         fspacing = fontStyle->spacing()->getValue() * 
                    fontStyle->size()->getValue();
         bleftToRight = fontStyle->leftToRight()->getValue();
@@ -582,7 +582,7 @@ NodeText::draw()
     MFString *mfstring = m_deBackslashedStrings;
     if (mfstring == NULL)
         return;
-    FontStyleNode *fontStyle = (FontStyleNode *) 
+    NodeFontStyle *fontStyle = (NodeFontStyle *) 
                     ((SFNode *) getField(fontStyle_Field()))->getValue();
 
     float fsizeX = 1;

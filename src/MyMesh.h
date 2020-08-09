@@ -405,7 +405,7 @@ MyMeshX<X, MFX,VEC3X>::MyMeshX(
 
     m_texCoords.resize(0);
     for (long i = 0; i < texCoords.size(); i++) {
-        if (texCoords[i]->getSize() > 0 && 
+        if (texCoords[i] && texCoords[i]->getSize() > 0 && 
             texCoords[i]->getSize() / 2 == m_vertices->getSFSize()) {
             m_texCoords.append(texCoords[i]);
             m_texCoords[m_texCoords.size() - 1]->ref();
@@ -928,6 +928,8 @@ template <class X,class MFX,class VEC3X>
 void
 MyMeshX<X, MFX, VEC3X>::generateFaceNormals()
 {
+    if (m_vertices == NULL)
+        return;
     int n = m_coordIndex->getSize();
     const int *coordIndex = m_coordIndex->getValues();
     const X *vertices = m_vertices->getValues();
@@ -997,6 +999,8 @@ template <class X,class MFX,class VEC3X>
 void
 MyMeshX<X, MFX, VEC3X>::smoothNormals()
 {
+    if (m_vertices == NULL)
+        return;
     if ((m_normalIndex != NULL) && (m_normalIndex->getSize() > 0))
         m_normalIndex->unref();
 

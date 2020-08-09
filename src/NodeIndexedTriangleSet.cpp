@@ -81,7 +81,7 @@ NodeIndexedTriangleSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     MFVec3d *coordsDouble = NULL;
     if (coord->getType() == VRML_COORDINATE)
         coords = ((NodeCoordinate *)coord)->point();
-    else
+    else if (coord->getType() == VRML_GEO_COORDINATE)
         coordsDouble = ((NodeGeoCoordinate *)coord)->pointX3D();
 
     MyArray<MFVec2f *> texCoords;

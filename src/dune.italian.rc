@@ -299,7 +299,6 @@ BEGIN
             MENUITEM "Boolean Operation union",         ID_BRANCH_CSG_UNION
 #endif
         END
-        MENUITEM SEPARATOR
         MENUITEM "Rebuild controlpoints",               ID_REBUILD_NURBS_CONTROL_POINTS
         POPUP "Make NURBS symetric"
         BEGIN
@@ -1448,6 +1447,7 @@ BEGIN
             MENUITEM "Minima y del contorno",           ID_CENTER_TO_MINY
             MENUITEM "Minima z del contorno",           ID_CENTER_TO_MINZ
         END
+        MENUITEM "Goto next viewpoint",                  ID_NEXT_VIEWPOINT
         POPUP "Operazioni NURBS"
         BEGIN
             MENUITEM "Rebuild controlpoints",           ID_REBUILD_NURBS_CONTROL_POINTS
@@ -2021,27 +2021,27 @@ BEGIN
     LTEXT           "Angolo fisso di vista (18 gradi ?)",IDC_STATIC,13,73,103,8
 END
 
-IDD_IT_OUTPUT DIALOG DISCARDABLE  0, 0, 220, 388
+IDD_IT_OUTPUT DIALOG DISCARDABLE  0, 0, 440, 380
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Settaggi di Output"
+CAPTION "Output Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Accetta",IDOK,7,370,50,14
-    PUSHBUTTON      "Annulla",IDCANCEL,133,370,50,14
-    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,68,370,50,14
-    AUTOCHECKBOX    "Prendi URL quando salva in un'altra directory",
-                    IDC_KEEP_URLS,19,9,196,12
-    AUTOCHECKBOX    "usa formattazione Kernighan/Ritchie",IDC_K_AND_R,
-                    19,24,152,12
-    LTEXT           "numero spazi di indentazione",IDC_STATIC,19,39,100,12
-    EDITTEXT        IDC_INDENT,125,37,45,14,ES_AUTOHSCROLL
-    LTEXT           "numero di cifre decimali",IDC_STATIC,19,56,100,12
-    EDITTEXT        IDC_FLOAT_DIGITS,125,53,45,14,ES_AUTOHSCROLL
-    AUTOCHECKBOX    "genera normali su mesh export",
+    DEFPUSHBUTTON   "OK",IDOK,7,5,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,5,50,14
+    PUSHBUTTON      "Default",IDC_OUTPUT_DEFAULTS,83,5,50,14
+    AUTOCHECKBOX    "Keep URLs when saving to other directory",
+                    IDC_KEEP_URLS,220,9,196,12
+    AUTOCHECKBOX    "use Kernighan/Ritchie formating",IDC_K_AND_R,
+                    220,39,152,12
+    LTEXT           "number of indentation spaces",IDC_STATIC,19,39,100,12
+    EDITTEXT        IDC_INDENT,125,37,45,12,ES_AUTOHSCROLL
+    LTEXT           "number of floating point digits",IDC_STATIC,19,56,100,12
+    EDITTEXT        IDC_FLOAT_DIGITS,125,53,45,12,ES_AUTOHSCROLL
+    AUTOCHECKBOX    "generate normals on mesh export",
                     IDC_NORMALS_ON_MESH_CREATION,19,67,200,12
-    AUTOCHECKBOX    "skip part of name before first underscore",
+    AUTOCHECKBOX    "skip first part of name before first underscore",
                     IDC_SKIP_MATERIAL_NAME_BEFORE_FIRST_UNDERSCORE,19,158,200,12
-    AUTOCHECKBOX    "skip part of name after last underscore",
+    AUTOCHECKBOX    "skip last part of name after last underscore",
                     IDC_SKIP_MATERIAL_NAME_AFTER_LAST_UNDERSCORE,19,173,200,12
     GROUPBOX        "Material name generation on non VRML/X3D export",
                     IDC_STATIC,13,149,200,39
@@ -2060,8 +2060,8 @@ BEGIN
     EDITTEXT        IDC_DEFAULT_CATT_MATERIAL_NAME,19,264,170,12,ES_AUTOHSCROLL
     AUTOCHECKBOX    "use git revision control system",
                     IDC_USE_GIT,19,285,152,10
-    LTEXT           "revision control checkin command (%s = file)",
-                    IDC_STATIC,19,294,200,10
+    LTEXT           "revision control checkin command (%s = file) (none for git)",
+                    IDC_STATIC,19,320,250,10
     EDITTEXT        IDC_REVISION_CONTROL_COMMAND,19,304,170,12,ES_AUTOHSCROLL
     LTEXT           "X3DOM Path ",IDC_STATIC,19,84,170,10
     EDITTEXT        IDC_X3DOM_PATH,19,94,170,12,ES_AUTOHSCROLL
@@ -2069,7 +2069,7 @@ BEGIN
     EDITTEXT        IDC_X3DOM_PARAMETER,19,119,170,12,ES_AUTOHSCROLL
     LTEXT           "X_ITE Path",IDC_STATIC,19,134,50,10
     EDITTEXT        IDC_XITE_PATH,70,134,120,12,ES_AUTOHSCROLL
-//    AUTOCHECKBOX    "comprimi output",IDC_COMPRESS,19,135,152,10
+//    AUTOCHECKBOX    "compress output",IDC_COMPRESS,19,135,152,10
     LTEXT           "RIB texturer",IDC_STATIC,19,324,170,10
     EDITTEXT        IDC_RIB_TEXTURER,19,334,170,12,ES_AUTOHSCROLL
     LTEXT           "image converter",IDC_STATIC,19,344,170,10

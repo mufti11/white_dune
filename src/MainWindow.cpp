@@ -13421,15 +13421,8 @@ MainWindow::checkInFile(const char *path)
 { 
     bool error = false;
 
-    if (strlen(TheApp->GetRevisionControlCheckinCommand()) > 0) {
-        char cmd[2048];
-        mysnprintf(cmd, 2047, TheApp->GetRevisionControlCheckinCommand(), path);
-        setStatusText(cmd);
-        if (system(cmd) != 0)
-            TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
-    }
-#ifndef _WIN32
-    else {
+#ifdef HAVE_CHECK_IN_COMMAND
+    if (strcmp(HAVE_CHECK_IN_COMMAND, "git") == 0) {
         bool relativ = strchr(path, '/') == NULL;
 
         // use git
@@ -13486,6 +13479,13 @@ MainWindow::checkInFile(const char *path)
             error = swSystemInDir(gitCommit, path) != 0;
 
         if (error)
+            TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
+    }
+    else if (strlen(TheApp->GetRevisionControlCheckinCommand()) > 0) {
+        char cmd[2048];
+        mysnprintf(cmd, 2047, TheApp->GetRevisionControlCheckinCommand(), path);
+        setStatusText(cmd);
+        if (system(cmd) != 0)
             TheApp->MessageBox(IDS_REVISION_CONTROL_COMMAND_FAILED, path);
     }
 #endif

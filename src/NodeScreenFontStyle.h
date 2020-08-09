@@ -24,10 +24,9 @@
 #include "Node.h"
 #include "ProtoMacros.h"
 #include "Proto.h"
-#include "FontStyleNode.h"
 #include "SFMFTypes.h"
 
-class ProtoScreenFontStyle : public FontStyleProto {
+class ProtoScreenFontStyle : public Proto {
 public:
                     ProtoScreenFontStyle(Scene *scene);
     virtual Node   *create(Scene *scene);
@@ -36,10 +35,19 @@ public:
 
     virtual bool    isDeclaredInRwd_h() { return true; }      
 
+    FieldIndex family;
+    FieldIndex horizontal;
+    FieldIndex justify;
+    FieldIndex language;
+    FieldIndex leftToRight;
     FieldIndex pointSize;
+    FieldIndex spacing;
+    FieldIndex style;
+    FieldIndex topToBottom;
+    FieldIndex quality;
 };
 
-class NodeScreenFontStyle : public FontStyleNode {
+class NodeScreenFontStyle  : public Node {
 public:
                     NodeScreenFontStyle(Scene *scene, Proto *proto);
 
@@ -55,6 +63,15 @@ public:
 
     void            setField(int index, FieldValue *value, int cf = -1);
 
-    fieldMacros(SFFloat,  pointSize, ProtoScreenFontStyle)
+    fieldMacros(MFString, family,      ProtoScreenFontStyle)
+    fieldMacros(SFBool,   horizontal,  ProtoScreenFontStyle)
+    fieldMacros(MFString, justify,     ProtoScreenFontStyle)
+    fieldMacros(SFString, language,    ProtoScreenFontStyle)
+    fieldMacros(SFBool,   leftToRight, ProtoScreenFontStyle)
+    fieldMacros(SFFloat,  pointSize,   ProtoScreenFontStyle)
+    fieldMacros(SFFloat,  spacing,     ProtoScreenFontStyle)
+    fieldMacros(SFString, style,       ProtoScreenFontStyle)
+    fieldMacros(SFBool,   topToBottom, ProtoScreenFontStyle)
+    fieldMacros(SFFloat,  quality,     ProtoScreenFontStyle)
 };
 

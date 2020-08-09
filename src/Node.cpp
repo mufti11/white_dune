@@ -111,6 +111,7 @@ NodeData::NodeData(Scene *scene, Proto *proto)
     m_alreadyConverted = false;
     m_scene->addNode((Node*)this);
     m_touchflag = false;
+    m_variableName = "";
 }
 
 NodeData::NodeData(const Node &node) {
@@ -484,8 +485,10 @@ NodeData::getVariableName(void)
 void                
 NodeData::setVariableName(const char *name)
 {
-    m_variableName = "";
-    m_variableName += name;
+    if (this) {
+        m_variableName = "";
+        m_variableName += name;
+    }
 }
 
 const char *
@@ -643,6 +646,8 @@ Node::addFieldNodeList(int index, NodeList *childList, int containerField)
 int 
 Node::write(int f, int indent, bool avoidUse)
 {
+    if (this == NULL)
+        return 0;
     bool x3d = m_scene->isX3dv();
     if (m_proto) {
         TheApp->checkSelectionLinenumberCounting(m_scene, (Node*) this);
@@ -4462,8 +4467,7 @@ NodeData::needExtraJavaClass(void)
         for (long i = 0; i < m_convertedNodes.size(); i++)
             if (m_convertedNodes[i]->needExtraJavaClass())
                 return true;
-//    if (hasName() || (m_scene->getRoot() == this))
-    if ((m_scene->getRoot() == this))
+   if (hasName() || (m_scene->getRoot() == this))
         return false;
     return true;
 }

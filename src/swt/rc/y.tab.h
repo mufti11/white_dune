@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +30,9 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
@@ -137,19 +141,110 @@ extern int yydebug;
     NEGATE = 347
   };
 #endif
+/* Tokens.  */
+#define BEG 258
+#define END 259
+#define ACCELERATORS 260
+#define VIRTKEY 261
+#define ASCII 262
+#define NOINVERT 263
+#define SHIFT 264
+#define CONTROL 265
+#define ALT 266
+#define BITMAP 267
+#define CURSOR 268
+#define DIALOG 269
+#define DIALOGEX 270
+#define EXSTYLE 271
+#define CAPTION 272
+#define CLASS 273
+#define STYLE 274
+#define AUTO3STATE 275
+#define AUTOCHECKBOX 276
+#define AUTORADIOBUTTON 277
+#define CHECKBOX 278
+#define COMBOBOX 279
+#define CTEXT 280
+#define DEFPUSHBUTTON 281
+#define EDITTEXT 282
+#define GROUPBOX 283
+#define LISTBOX 284
+#define LTEXT 285
+#define PUSHBOX 286
+#define PUSHBUTTON 287
+#define RADIOBUTTON 288
+#define RTEXT 289
+#define SCROLLBAR 290
+#define STATE3 291
+#define USERBUTTON 292
+#define BEDIT 293
+#define HEDIT 294
+#define IEDIT 295
+#define FONT 296
+#define ICON 297
+#define LANGUAGE 298
+#define CHARACTERISTICS 299
+#define VERSIONK 300
+#define MENU 301
+#define MENUEX 302
+#define MENUITEM 303
+#define SEPARATOR 304
+#define POPUP 305
+#define CHECKED 306
+#define GRAYED 307
+#define HELP 308
+#define INACTIVE 309
+#define MENUBARBREAK 310
+#define MENUBREAK 311
+#define ES_READONLY 312
+#define ES_MULTILINE 313
+#define ES_PASSWORD 314
+#define BS_AUTOCHECKBOX 315
+#define BS_AUTORADIOBUTTON 316
+#define TOOLBAR 317
+#define BUTTON 318
+#define MESSAGETABLE 319
+#define RCDATA 320
+#define STRINGTABLE 321
+#define VERSIONINFO 322
+#define FILEVERSION 323
+#define PRODUCTVERSION 324
+#define FILEFLAGSMASK 325
+#define FILEFLAGS 326
+#define FILEOS 327
+#define FILETYPE 328
+#define FILESUBTYPE 329
+#define BLOCKSTRINGFILEINFO 330
+#define BLOCKVARFILEINFO 331
+#define VALUE 332
+#define BLOCK 333
+#define MOVEABLE 334
+#define FIXED 335
+#define PURE 336
+#define IMPURE 337
+#define PRELOAD 338
+#define LOADONCALL 339
+#define DISCARDABLE 340
+#define NOT 341
+#define QUOTEDSTRING 342
+#define STRING 343
+#define NUMBER 344
+#define SIZEDSTRING 345
+#define DLGINIT 346
+#define NEGATE 347
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 59 "rcparse.y" /* yacc.c:1909  */
+#line 59 "rcparse.y" /* yacc.c:1921  */
 
     RCNode *node;
     int i;
     const char *s;
 
-#line 153 "y.tab.h" /* yacc.c:1909  */
+#line 248 "y.tab.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;

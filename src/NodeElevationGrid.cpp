@@ -149,7 +149,7 @@ NodeElevationGrid::createMesh(bool cleanDoubleVertices, bool triangulate)
             meshFlags |= MESH_COLOR_RGBA;
             numColorComponents = 4;
         }
-        if (colorPerVertex()->getValue()) 
+        if (colors && colorPerVertex()->getValue()) 
             localColors = new MFFloat(colors->getValues(), colors->getSize());
         else {
             localColors = new MFFloat();

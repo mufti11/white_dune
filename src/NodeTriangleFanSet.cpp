@@ -141,7 +141,7 @@ NodeTriangleFanSet::createMesh(bool cleanDoubleVertices, bool triangulate)
     MFVec3d *coordsDouble = NULL;
     if (coord->getType() == VRML_COORDINATE)
         coords = ((NodeCoordinate *)coord)->point();
-    else
+    else if (coord->getType() == VRML_GEO_COORDINATE)
         coordsDouble = ((NodeGeoCoordinate *)coord)->pointX3D();
 
     MFVec3f *normals = NULL;
@@ -161,7 +161,7 @@ NodeTriangleFanSet::createMesh(bool cleanDoubleVertices, bool triangulate)
         }
     }    
 
-    if (coords->getSFSize() > 0) {
+    if (coords && coords->getSFSize() > 0) {
         MFInt32 *mffanCount = fanCount();
         int numFaces = 0;
         for (int i = 0; i < mffanCount->getSize(); i++)

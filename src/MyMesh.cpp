@@ -31,7 +31,6 @@
 
 void MyMesh::drawVertex(float *v)
 {
-printf("%f %f %f\n", v[0], v[1], v[2]);
      glVertex3fv(v);
 }
 

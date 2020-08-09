@@ -318,7 +318,6 @@
     <ClCompile Include="AnchoredJointNode.cpp" />
     <ClCompile Include="AnimationDialog.cpp" />
     <ClCompile Include="HAnimJointDialog.cpp" />
-    <ClCompile Include="FontStyleNode.cpp" />
     <ClCompile Include="ArrayDialog.cpp" />
     <ClCompile Include="BasicTransformNode.cpp" />
     <ClCompile Include="Box2NurbsDialog.cpp" />
