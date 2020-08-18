@@ -55,14 +55,16 @@ Path::Path(const int *path, int len, Scene *scene, bool protoInTree,
     swDebugf("\n");
 #endif
 
+    int protoIndex = -1;
     if (len > 0) {
         m_path = new int[m_len];
         memcpy(m_path, path, m_len * sizeof(int));
 
         int start = 0;
+        Proto *proto = NULL;
         if ((m_len >= 3) && (path[0] < 0)) {
             start = 4;
-            Proto *proto = scene->getProto(-path[0] - 1); 
+            proto = scene->getProto(-path[0] - 1); 
             if (proto != NULL) {
                 if (path[1] != -1)
                     node = proto->getNode(path[1]);
@@ -74,6 +76,7 @@ Path::Path(const int *path, int len, Scene *scene, bool protoInTree,
         }
         for (int i = start; i < m_len;) {
             field = path[i++];
+            protoIndex++;
             // shorten path for inlined nodes
             if (node->getType() == VRML_INLINE) {
                  m_len = i - 1;
@@ -87,7 +90,7 @@ Path::Path(const int *path, int len, Scene *scene, bool protoInTree,
             } else {
                 break;
             }
-            Node *newNode = getNextNode(node, field, i++);
+            Node *newNode = getNextNode(node, field, i++, proto, protoIndex);
             if (newNode != NULL) {
                 parent = node;
                 parentField = field;
@@ -113,7 +116,7 @@ Path::~Path()
 }
 
 Node *
-Path::getNextNode(Node *n, int f, int i) const
+Path::getNextNode(Node *n, int f, int i, Proto *proto, int protoIndex) const
 {
     Node* node = n;
     int field = f;
@@ -127,10 +130,12 @@ Path::getNextNode(Node *n, int f, int i) const
     FieldValue *value = NULL;
     if ((field < 0) || (field >= node->getProto()->getNumFields()))
         return NULL;
+/*
     if (node->getScene() && (node != node->getScene()->getRoot()) &&
         (node->getOutsideProto() == NULL))
         if (node->getNumParents() == 0)
             return NULL;
+*/
     if (node->getProto()->getField(field) == NULL)
         return NULL;
     value = node->getField(field);

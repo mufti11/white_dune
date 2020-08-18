@@ -1,7 +1,7 @@
 # This Makefile is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-JAVA=/bin/java
+JAVA=echo
 
 tests: dune slowtests testzeroclass fasttests
 
@@ -16,9 +16,9 @@ fasttests: dune
 	sh testtabs.sh
 	sh testresourcenumbers.sh
 	sh testmenus.sh
-	@echo no bmptopnm: can not compare iconsize of  node_icons.bmp node_icons2.bmp
-	@echo no bmptopnm: can not compare iconsize of  standard_toolbar.bmp standard_toolbar2.bmp
-	@echo no bmptopnm: can not compare iconsize of  vcr.bmp vcr2.bmp
+	../batch/testiconsize2.sh /usr/bin/bmptopnm node_icons.bmp node_icons2.bmp
+	../batch/testiconsize2.sh /usr/bin/bmptopnm standard_toolbar.bmp standard_toolbar2.bmp
+	../batch/testiconsize2.sh /usr/bin/bmptopnm vcr.bmp vcr2.bmp
 	sh testprotos.sh > testprotos.cpp
 	cd ../src && $(MAKE) $$DUNEMAKEFLAGS testprotos
 	./dune_testprotos
@@ -65,6 +65,7 @@ export_source_test: dune
 	../docs/export_example_c++/simple_example/helloWorld
 	cd ../docs/export_example_c++/simple_example && $(MAKE) clean
 	cd ../docs/export_example_java/simple_example && $(MAKE)
+	cd ../docs/export_example_java/simple_example && $(JAVA) -cp classes helloWorld
 	cd ../docs/export_example_java/simple_example && $(MAKE) clean
 
 realclean: clean

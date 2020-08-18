@@ -89,6 +89,14 @@ static bool searchTimeSensor(Node *node, void *data)
     return true;
 }
 
+static bool setOutsideProto(Node *node, void *data)
+{
+    Proto *thisProto= (Proto *)data;
+
+    node->setOutsideProto(thisProto);
+    return true;
+}
+
 Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
 {
     bool x3d = false;
@@ -117,7 +125,7 @@ Proto::Proto(Scene *scene, Proto *proto, int extensionFlag)
     protoInitializer(scene, protoName);
     m_loaded = proto->isLoaded();
     m_protoNodes[0] = proto->create(scene);
-    m_protoNodes[0]->setOutsideProto(this);
+    m_protoNodes[0]->doWithBranch(setOutsideProto, this);
     for (int i = 0; i < m_protoNodes[0]->getProto()->getNumEventIns(); i++) {
         EventIn *eventIn = m_protoNodes[0]->getProto()->getEventIn(i);
         if (eventIn->getExposedField() == NULL) {
@@ -764,6 +772,7 @@ Proto::define(Node *primaryNode, NodeList *nodes)
     int ichild = primaryNode->getChildrenField();
     if (ichild > -1) {
         m_protoNodes[0] = primaryNode;
+        m_protoNodes[0]->doWithBranch(setOutsideProto, this);
     } else if (primaryNode->getType() == VRML_GROUP) {
         MFNode *children = ((NodeGroup *)primaryNode)->children();
         for (long i = 0; i < children->getSize(); i++) {
@@ -774,13 +783,17 @@ Proto::define(Node *primaryNode, NodeList *nodes)
     } else {
         m_protoNodes[0] = primaryNode;
         numProtos++;
-        if (m_protoNodes[0] != NULL)
+        if (m_protoNodes[0] != NULL) {
             m_protoNodes[0]->doWithBranch(setIsProtoToBranch, this);
+            m_protoNodes[0]->doWithBranch(setOutsideProto, this);
+        }
     }    
     for (long i = numProtos; i < numProtos + nodes->size(); i++) {
         m_protoNodes[i] = nodes->get(i - numProtos);
-        if (m_protoNodes[i] != NULL)
+        if (m_protoNodes[i] != NULL) {
             m_protoNodes[i]->doWithBranch(setIsProtoToBranch, this);
+            m_protoNodes[i]->doWithBranch(setOutsideProto, this);
+        }
     }
     setIsNodeIndex();
 }

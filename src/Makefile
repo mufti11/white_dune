@@ -3,7 +3,7 @@
 
 CC = gcc
 CXX = g++
-RANLIB = /bin/ranlib 
+RANLIB = /usr/bin/ranlib 
 CXXCPP = g++ -E
 YACC = bison -y
 LEX = flex --nounistd
@@ -11,7 +11,7 @@ AWK = gawk
 PREFIX = /usr/local
 EXEC_PREFIX = ${prefix}
 GREP_FLAGS = --binary-files=text
-HELPURL=/home/home/mufti/wdune-1.938/docs/index.html
+HELPURL=/home/home/mufti/wdune-1.942/docs/index.html
 
 RESOURCE_FILES = dune.english.rc singleResources.rc dune.french.rc dune.german.rc dune.italian.rc dune.portuguese.rc
 
@@ -40,12 +40,12 @@ EGREP_PROBLEMS = no
 # use -DYYDEBUG=1 for yacc/bison debugging 
 #(also change int yydebug = 1; in parser.cpp)
 
-CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home//home/mufti/vcglib -I.//../vcglib -I/home//home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16  -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
-COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home//home/mufti/vcglib -I.//../vcglib -I/home//home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16  -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
+CPPFLAGS= -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include
+COMMON_FLAGS = $(WARNINGS) -I. -Iswt/include  -I/usr/local/include -I/usr/local/include/eigenlib -I/usr/include/vcglib -I.//src -I.//vcglib -I.//vcglib/eigenlib -I/home/mufti/vcglib -I.//../vcglib -I/home/mufti/vcglib/eigenlib -I.//../vcglib/eigenlib -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/ffmpeg/   -I/usr/X11R6/include/ -I/usr/X11R6/LessTif/Motif1.2/include -I/usr/local/include -I/usr/local/include 
 CFLAGS_BIG = -g $(COMMON_FLAGS) -g -O0 -fopenmp -g -O0  -fopenmp
 CFLAGS = $(COMMON_FLAGS) -g -O0 -fopenmp
 CXXFLAGS = -g $(COMMON_FLAGS) -g -O0  -fopenmp
-LIBS =    -L/usr/local/lib  -L/usr/lib/X11 -L/usr/lib -L/usr/X11R6/LessTif/Motif1.2/lib -L/usr/local/lib -L/usr/local/lib -g -L/usr/lib/X11 -Lswt/lib -lswt -LSDLjoystick  -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lfreetype -lXm -lXp -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/lib/X11 -L/usr/lib -L/usr/X11R6/LessTif/Motif1.2/lib -losdCPU 
+LIBS =    -L/usr/local/lib  -L/usr/lib/X11 -L/usr/lib -L/usr/X11R6/LessTif/Motif1.2/lib -L/usr/local/lib -L/usr/local/lib -g -L/usr/lib/X11 -Lswt/lib -lswt -LSDLjoystick  -lusb -lswresample -lswscale -lavformat -lavutil -lavcodec -ljpeg -lpng -lz -lexpat -lGLU -lGL -lcurl -lXi -lfreetype -lXm -lXext -lXt -lXmu -lX11 -lm -ldl -lgomp   -L/usr/local/lib  -L/usr/lib/X11 -L/usr/lib -L/usr/X11R6/LessTif/Motif1.2/lib -losdCPU 
 NEBULA = 
 PARSER_CPP_CFLAG = 
 

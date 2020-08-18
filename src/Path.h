@@ -44,7 +44,9 @@ public:
     Node               *getParent() const { return m_parent; }
     int                 getField() const { return m_field; }
     int                 getParentField() const { return m_parentField; }
-    Node               *getNextNode(Node *node, int field, int i) const;
+    Node               *getNextNode(Node *node, int field, int i,
+                                    Proto *proto = NULL, int protoIndex = -1) 
+                        const;
     void                printStrangePath(Node *node, int field, int depth) 
                             const;
     bool                isProto(Scene *scene) const

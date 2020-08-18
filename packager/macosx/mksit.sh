@@ -34,8 +34,9 @@ rm -rf /tmp/white_dune-$VERSION
 cd /tmp/wdune-$VERSION && 
 sh batch/fix_not_translated_rcfiles.sh &&
 make realclean && \
+export CXXFLAGS="--std=c++14" &&
 (cd desktop/macosx && tar -xf white_dune_high_sierra.app.tar) &&
-./configure --without-cgal --with-uninstallcomment="find and remove directory/application white_dune.app" --with-optimization --without-devil --with-helpurl="http://wdune.ourproject.org/docs" && make -j4 &&
+./configure ABI:64 --with-cgalheaders --with-clangs --with-uninstallcomment="find and remove directory/application white_dune.app" --with-optimization --without-devil --with-helpurl="http://wdune.ourproject.org/docs" && make -j4 &&
 rm -f desktop/macosx/white_dune.app/Contents/MacOS/dune &&
 cp bin/dune desktop/macosx/white_dune.app/Contents/MacOS &&
 strip desktop/macosx/white_dune.app/Contents/MacOS/dune &&

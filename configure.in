@@ -124,7 +124,7 @@ AC_ARG_WITH(cgal,--without-cgal            do not use CGAL library e.g. to use c
             CGAL=no)
 
 AC_ARG_WITH(cgalheaders,--with-cgalheaders        use the headers only version of the CGAL library,
-            AC_DEFINE(HAVE_LIBCGAL) CGALHEADERS=yes)
+            AC_DEFINE(HAVE_LIBCGAL) CGALHEADERS=yes;export CXXFLAGS="$CXXFLAGS --std=c++14")
 
 AC_ARG_WITH(omp,--without-omp             do not use OpenMP,
             OMP=no)
