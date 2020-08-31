@@ -23,10 +23,10 @@
 
 #include "WriteFlags.h"
 
-inline bool isX3dv(const int flags)   
+inline bool isX3dv(const long flags)   
     { return flags & (X3DV | PURE_X3DV); }
-inline bool isX3dXml(const int flags) 
+inline bool isX3dXml(const long flags) 
     { return flags & (X3D_XML | X3DOM); }
-inline bool isX3d(const int flags)   
+inline bool isX3d(const long flags)   
     { return isX3dv(flags) || isX3dXml(flags); }
 

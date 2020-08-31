@@ -5689,6 +5689,6 @@ Fixed strange float rounding error
 
 Added pass of self test
 
-Fixed IS creation
+Fixed missing ROUTE write
 
 Contact: MUFTI <mufti11@web.de>

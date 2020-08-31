@@ -933,7 +933,7 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
     alreadyIn = false;
 
     // sort out multiple ROUTEs
-    if (m_routeList.size() != 0)
+    if (m_routeList.size() != 0) {
        for (List<MyString>::Iterator* routepointer = m_routeList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
             for (List<MyString>::Iterator* routepointer2 = m_routeList.first();
@@ -942,33 +942,49 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
               if (strcmp((const char*) routepointer->item(), 
                          (const char*) routepointer2->item()) == 0)
                   m_routeList.remove(routepointer2);
-
-    if (m_routeList.size() != 0) {
-       for (List<MyString>::Iterator* routepointer = m_routeList.first();
-            routepointer != NULL; routepointer = routepointer->next() ) 
-          {
-          RET_ONERROR( indentf(filedes, indent) )
-          RET_ONERROR( mywritestr(filedes, (const char*) routepointer->item()) )
-          RET_ONERROR( mywritestr(filedes, "\n") )
-          TheApp->incSelectionLinenumber();
-          }
-       RET_ONERROR( mywritestr(filedes, "\n") )
-       TheApp->incSelectionLinenumber();
-       m_routeList.removeAll();
+//       m_routeList.removeAll();
     }
-
-    // sort out multiple ROUTEs
-    if (end && m_endRouteList.size() != 0)
-       for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
+    bool written = false;
+    if ((!end) && m_routeList.size() != 0) {
+        for (List<MyString>::Iterator* routepointer = m_routeList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
             for (List<MyString>::Iterator* routepointer2 = m_endRouteList.first();
                 routepointer2 != NULL; routepointer2 = routepointer2->next() ) 
-          if (routepointer2 != routepointer)
-              if (strcmp((const char*) routepointer->item(), 
+                if (routepointer2 != routepointer)
+                   if (strcmp((const char*) routepointer->item(), 
                          (const char*) routepointer2->item()) == 0)
-                  m_endRouteList.remove(routepointer2);
+                         m_endRouteList.remove(routepointer2);
+    }     
 
-    if (end && m_endRouteList.size() != 0) {
+    // write out ROUTEs
+    if ((!end) && (m_routeList.size()) != 0) {
+        for (List<MyString>::Iterator* routepointer = m_routeList.first();
+            routepointer != NULL; routepointer = routepointer->next() ) {
+             RET_ONERROR( indentf(filedes, indent) )
+             RET_ONERROR( mywritestr(filedes, (const char*) routepointer->item()) )
+             RET_ONERROR( mywritestr(filedes, "\n") )
+             TheApp->incSelectionLinenumber();
+       }
+       RET_ONERROR( mywritestr(filedes, "\n") )
+       TheApp->incSelectionLinenumber();
+//       m_endRouteList.removeAll();
+      written = true; 
+    }
+
+    if ((!written) && (m_routeList.size()) != 0) {
+        for (List<MyString>::Iterator* routepointer = m_routeList.first();
+            routepointer != NULL; routepointer = routepointer->next() ) {
+             RET_ONERROR( indentf(filedes, indent) )
+             RET_ONERROR( mywritestr(filedes, (const char*) routepointer->item()) )
+             RET_ONERROR( mywritestr(filedes, "\n") )
+             TheApp->incSelectionLinenumber();
+       }
+       RET_ONERROR( mywritestr(filedes, "\n") )
+       TheApp->incSelectionLinenumber();
+//       m_endRouteList.removeAll();
+      written = true; 
+    }
+    if ((!written) && (m_endRouteList.size() != 0)) {
        for (List<MyString>::Iterator* routepointer = m_endRouteList.first();
             routepointer != NULL; routepointer = routepointer->next() ) 
           {
@@ -979,7 +995,7 @@ Scene::writeRouteStrings(int filedes, int indent, bool end)
           }
        RET_ONERROR( mywritestr(filedes, "\n") )
        TheApp->incSelectionLinenumber();
-       m_endRouteList.removeAll();
+//       m_endRouteList.removeAll();
     }
     return 0;
 }
@@ -1298,7 +1314,7 @@ static bool markUsedProto(Node *node, void *data)
 
     return true;
 }
-
+ 
 static NodeVrmlCut *vrmlCut = NULL;
 
 static bool searchVrmlCut(Node *node, void *data)
@@ -1317,14 +1333,22 @@ static bool searchVrmlScene(Node *node, void *data)
 {
     if (node == NULL)
         return true;
-    if (node->getType() == DUNE_VRML_SCENE) {
-        vrmlScene = (NodeVrmlScene *)node;;
-        return false;
-    }
+    if (node->getType() == DUNE_VRML_SCENE)
+        vrmlScene = (NodeVrmlScene *)node;
+
     return true;
 }
 
-int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
+static bool setNodeTouched(Node *node, void *data)
+{
+    if (node == NULL)
+        return true;
+     node->setFlag(NODE_FLAG_TOUCHED);
+
+    return true;
+}
+
+int Scene::write(int f, const char *url, long writeFlags, char *wrlFile)
 {
     if (!(writeFlags & SKIP_SAVED_TEST)) {
         if (writeFlags & X3DV)
@@ -1337,6 +1361,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 
     if (getStoreAsHtml())
         writeFlags |= (X3DOM | X3D_XML);
+    m_writeFlags =writeFlags;
 
     TheApp->setWriteUrl(url);
     ProtoMap::Chain::Iterator *j;
@@ -1653,11 +1678,21 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
 
     getNodes()->clearFlag(NODE_FLAG_TOUCHED);
 
+
     if (!TheApp->getX3dv() && ::isX3d(m_writeFlags)) {
         NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
         if (childList)
             for (long i = 0; i < childList->size(); i++)
                 childList->get(i)->convert2X3d();
+         
+    }     
+
+    if (::isX3d(m_writeFlags)) {
+        NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
+        if (childList)
+            for (long i = 0; i < childList->size(); i++)
+                childList->get(i)->addToConvertedNodes(m_writeFlags);
+         
     }     
 
     NodeList *childList = ((NodeGroup *)getRoot())->children()->getValues();
@@ -1680,6 +1715,7 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
         m_URL = newURL;
     }
 
+    getRoot()->doWithBranch(setNodeTouched, NULL, false);
     RET_RESET_FLAGS_ONERROR( writeRouteStrings(f, indent + TheApp->GetIndent(),
                                                true) )
 
@@ -1731,9 +1767,9 @@ int Scene::write(int f, const char *url, int writeFlags, char *wrlFile)
     return 0;
 }
 
-int Scene::writeHead(int f, int writeFlags)
+int Scene::writeHead(int f, long writeFlags)
 {
-    int oldWriteFlags = m_writeFlags;
+    long oldWriteFlags = m_writeFlags;
     long maxMetas = m_metaKeys.size();
     if (m_metaValues.size() < maxMetas)
         maxMetas = m_metaValues.size(); 
@@ -6667,7 +6703,7 @@ Scene::isValidElement(Element *element, bool x3d)
 
 
 void
-Scene::resetWriteFlags(int flags)
+Scene::resetWriteFlags(long flags)
 {
     if (::isX3d(m_writeFlags) && (!::isX3d(flags)) && (m_root != NULL)) {
         m_writeFlags = flags & ~(CONVERT2X3D); 

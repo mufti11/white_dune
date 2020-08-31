@@ -889,10 +889,9 @@ Node::writeXml(int f, int indent, int containerField, bool avoidUse)
                 RET_ONERROR( mywritestr(f, "ProtoInstance") )
             RET_ONERROR( mywritestr(f, ">\n") )
             TheApp->incSelectionLinenumber();
-            if (!avoidUse) {
-                RET_ONERROR( writeRoutes(f, indent) )
-                setFlag(NODE_FLAG_TOUCHED);
-            } else 
+            setFlag(NODE_FLAG_TOUCHED);
+            RET_ONERROR( writeRoutes(f, indent) )
+            if (avoidUse)
                 m_scene->copyRoutesToScene(this);
         }
     }
@@ -1603,57 +1602,40 @@ NodeData::writeRoutes(int f, int indent) const
 
     for (int i = 0; i < m_numEventIns; i++) {
         for (j = m_inputs[i].first(); j != NULL; j = j->next()) {
-            if (j->item().getNode()->getFlag(NODE_FLAG_TOUCHED)) {
-                Node *src = j->item().getNode();
-                int field = j->item().getField();
-                if ((m_scene->getWriteFlags() & X3DOM) && 
-                    (j->item().getNode()->getType() == VRML_SCRIPT)) {
-                    NodeScript *script = (NodeScript *)j->item().getNode();
-                    bool flag = false;
-                    for (int i = 0; i < script->url()->getSize(); i++)
-                        if (isX3domscript(script->url()->getValue(i)))
-                            flag = true;
+            Node *src = j->item().getNode();
+            int field = j->item().getField();
+            if ((m_scene->getWriteFlags() & X3DOM) && 
+                (j->item().getNode()->getType() == VRML_SCRIPT)) {
+                NodeScript *script = (NodeScript *)j->item().getNode();
+                bool flag = false;
+                for (int i = 0; i < script->url()->getSize(); i++)
+                    if (isX3domscript(script->url()->getValue(i)))
+                    flag = true;
                     if (flag)
                         continue;
                             
-                }
-                if (m_scene->isPureVRML() &&  
-                    (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
-                     src->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
-                    continue;
-                MyString routeString = m_scene->createRouteString(
-                      src->getName(), 
-                      src->getProto()->getEventOut(field)->getName(x3d),
-                      m_name, getProto()->getEventIn(i)->getName(x3d));
-                m_scene->addRouteString(routeString);
-            }
+           }
+           if (m_scene->isPureVRML() &&  
+              (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
+               src->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
+                  continue;
+
+            MyString routeString = "";
+//            if (m_scene->isX3dXml()) {
+                routeString +=m_scene->createRouteString(src->getName(), 
+                    src->getProto()->getEventOut(field)->getName(x3d),
+                    m_name, getProto()->getEventIn(i)->getName(x3d));
+                m_scene->addEndRouteString(routeString);
+//            }
         }
     }
-
-    for (int i = 0; i < m_numEventOuts; i++) {
-        for (j = m_outputs[i].first(); j != NULL; j = j->next()) {
-            if (j->item().getNode()->getFlag(NODE_FLAG_TOUCHED)) {
-                Node *dst = j->item().getNode();
-                int field = j->item().getField();
-                if (m_scene->isPureVRML() &&  
-                    (matchNodeClass(PARAMETRIC_GEOMETRY_NODE) || 
-                     dst->matchNodeClass(PARAMETRIC_GEOMETRY_NODE)))
-                    continue;
-                if (getProto()->getEventOut(i)->getName(x3d).length() == 0)
-                    continue;     
-                MyString routestring = m_scene->createRouteString(m_name,
-                         getProto()->getEventOut(i)->getName(x3d),
-                         dst->getName(),
-                         dst->getProto()->getEventIn(field)->getName(x3d));
-                m_scene->addRouteString(routestring);
-            }
-        }
-    }
-
+/*
 #ifndef HAVE_ROUTE_AT_END
-    if (indent==0)
-       RET_ONERROR( m_scene->writeRouteStrings(f, indent, true) )
+    if (((indent==6) && (m_scene->isX3dXml())) || 
+        ((indent==0) && (!m_scene->isX3dXml()))) 
+       RET_ONERROR( m_scene->writeRouteStrings(f, 0, false) )
 #endif
+*/
     return 0;
 }
 
@@ -4933,7 +4915,7 @@ NodeData::writeLdrawDat(int f, int indent)
 
 
 void      
-NodeData::addToConvertedNodes(int writeFlags)
+NodeData::addToConvertedNodes(long writeFlags)
 {
     if (m_alreadyConverted)
         return;
@@ -5012,4 +4994,5 @@ Node::isCWriteable()
         return false;
     return true;
 }
+
 

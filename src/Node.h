@@ -634,7 +634,7 @@ public:
     bool              hasName(void);
     bool              needsDEF() const;
 
-    virtual void      addToConvertedNodes(int writeFlags);
+    virtual void      addToConvertedNodes(long writeFlags);
 
     int               getNumConvertedNodes() { return m_convertedNodes.size(); }
     Node             *getConvertedNode(int i) { return m_convertedNodes[i]; }

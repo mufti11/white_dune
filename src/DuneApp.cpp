@@ -749,6 +749,8 @@ DuneApp::saveTempFiles(MainWindow *currentWindow, int useExtensionTxt)
         int writeFlags = TEMP_SAVE | SKIP_SAVED_TEST;
         if (scene->getStoreAsHtml())
             writeFlags |= X3D_XML | X3DOM;            
+        else if (scene->isX3dXml())
+            writeFlags |= X3D_XML;
         else if (scene->isX3d())
             writeFlags |= X3DV;
         const char *file = url.GetPath();

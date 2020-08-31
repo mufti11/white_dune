@@ -180,9 +180,9 @@ public:
     DynamicFieldsNode  *createDynamicFieldsNode(const char *nodeType, 
                             int flags = NODE_FLAG_COLLAPSED);
 
-    int                 write(int filedes, const char *url, int writeFlags = 0,
+    int                 write(int filedes, const char *url, long writeFlags = 0,
                               char *wrlFile = NULL);
-    int                 writeHead(int f, int writeFlags);
+    int                 writeHead(int f, long writeFlags);
     int                 writeExtensionProtos(void);
 
     bool                getWriteKanimNow(void) { return m_writeKanimNow; }
@@ -512,7 +512,7 @@ public:
     const char         *getURL(void) const { return m_URL; }
     const char         *getNewURL(void) const { return m_newURL; }
 
-    void                resetWriteFlags(int flags);
+    void                resetWriteFlags(long flags);
     bool                isTempSave(void) const 
                            { return m_writeFlags & TEMP_SAVE; }
     bool                isPureVRML97(void) const 
@@ -533,8 +533,8 @@ public:
                            { return m_writeFlags & CONVERT2VRML; }
     bool                isX3dom(void) const
                            { return m_writeFlags & X3DOM; }
-    int                 getWriteFlags(void) { return m_writeFlags; }
-    void                setWriteFlags(int flags) { m_writeFlags = flags; }
+    long                getWriteFlags(void) { return m_writeFlags; }
+    void                setWriteFlags(long flags) { m_writeFlags = flags; }
     void                setX3d(void);
     void                setX3dv(void);
     void                setX3dXml(void);
@@ -624,8 +624,7 @@ public:
                                           const char *toFieldName);
     void                addRouteString(MyString string);
     void                addEndRouteString(MyString string);
-    int                 writeRouteStrings(int filedes, int indent, 
-                                          bool end = false);
+    int                 writeRouteStrings(int filedes, int indent, bool end);
     void                copyRoutes(Node *toNode, Node *fromNode);
     void                copyRoutesToScene(Node *node);
     void                changeRoutes(Node *toNode, int toField,
@@ -969,7 +968,7 @@ protected:
 
     MyString            m_URL;
     const char         *m_newURL;
-    int                 m_writeFlags;
+    long                 m_writeFlags;
     int                 m_x3dVersion;
 
     int                 m_numSymbols;

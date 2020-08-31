@@ -177,9 +177,94 @@ NodeCurveAnimation::createRoutes(Interpolator *node, bool appendToScene)
             else
                m_scene->addRoute(interOutput, interOutputEvent,
                                  node, node->set_fraction_Field());
+
+        }
+    }
+    if (node->getType() == VRML_POSITION_INTERPOLATOR) {
+        NodePositionInterpolator *pos = (NodePositionInterpolator *)node;       
+        int eventOut = node->lookupEventOut("value_changed", false);
+        if (eventOut == INVALID_INDEX)
+           return;
+
+        Node* posOut = NULL;
+        SocketList::Iterator *iter;
+        for (iter = node->getOutput(eventOut).first(); iter != NULL;
+            iter = iter->next()) {
+            if (iter->item().getNode()) {
+                eventOut = iter->item().getField();
+                posOut = iter->item().getNode();
+                break;
+            }
+        }
+        if (posOut) {
+            if (appendToScene)
+                m_scene->addRouteString(m_scene->createRouteString(
+                                       node->getNameOrNewName(), 
+                                       "value_changed",
+                                       posOut->getNameOrNewName(), 
+                   posOut->getProto()->getEventOut(eventOut)->getName(true)));
+        else
+            m_scene->addRoute(node, pos->value_changed_Field(),
+                              posOut, eventOut);
+        }
+    }
+    if (node->getType() == VRML_ORIENTATION_INTERPOLATOR) {
+        NodeOrientationInterpolator *ori = (NodeOrientationInterpolator *)node;
+
+        int eventOut = node->lookupEventOut("value_changed", false);
+        if (eventOut == INVALID_INDEX)
+           return;
+
+        Node* oriOut = NULL;
+        SocketList::Iterator *iter;
+        for (iter = node->getOutput(eventOut).first(); iter != NULL;
+            iter = iter->next()) {
+            if (iter->item().getNode()) {
+                eventOut = iter->item().getField();
+                oriOut = iter->item().getNode();
+                break;
+            }
+        }
+        if (oriOut) {
+            if (appendToScene )
+                m_scene->addRouteString(m_scene->createRouteString(
+                                        node->getNameOrNewName(), 
+                                        "value_changed",
+                                        oriOut->getNameOrNewName(), 
+                   oriOut->getProto()->getEventOut(eventOut)->getName(true)));
+           else
+               m_scene->addRoute(node, ori->value_changed_Field(),
+                              oriOut, eventOut);
         }
     }
 }
+
+int             
+NodeCurveAnimation::writeXml(int f, int indent, int containerField,
+                             bool avoidUse) 
+{
+    int flags = m_scene->getWriteFlags();
+    if (flags & (PURE_VRML97 | PURE_X3DV | X3DOM)) {
+        if (isX3dXml(flags)) {
+            RET_ONERROR( m_positionInterpolator->writeXml(f, indent, -1, 
+                                                          true) )
+            RET_ONERROR( m_orientationInterpolator->writeXml(f, indent, -1, 
+                                                            true) )
+        } else {
+            RET_ONERROR( m_positionInterpolator->write(f, indent, avoidUse) )
+            RET_ONERROR( m_orientationInterpolator->write(f, indent, avoidUse) )
+        }
+        createRoutes(m_positionInterpolator, true);
+        createRoutes(m_orientationInterpolator, true);
+    } else {
+        if (isX3dXml(flags))
+            RET_ONERROR( Node::writeXml(f, indent, -1, avoidUse) )
+        else
+            RET_ONERROR( Node::write(f, indent, avoidUse) )
+    }
+    return 0;
+}
+
 
 int             
 NodeCurveAnimation::write(int f, int indent, bool avoidUse) 
@@ -188,9 +273,9 @@ NodeCurveAnimation::write(int f, int indent, bool avoidUse)
     if (flags & (PURE_VRML97 | PURE_X3DV | X3DOM)) {
         if (isX3dXml(flags)) {
             RET_ONERROR( m_positionInterpolator->writeXml(f, indent, -1, 
-                                                          avoidUse) )
+                                                          true) )
             RET_ONERROR( m_orientationInterpolator->writeXml(f, indent, -1, 
-                                                            avoidUse) )
+                                                            true) )
         } else {
             RET_ONERROR( m_positionInterpolator->write(f, indent, avoidUse) )
             RET_ONERROR( m_orientationInterpolator->write(f, indent, avoidUse) )
