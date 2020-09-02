@@ -100,7 +100,7 @@ public:
 
     virtual bool    shouldConvertToIndexedFaceSet(void) { return false; }
 
-    virtual void    addToConvertedNodes(int writeFlags);
+    virtual void    addToConvertedNodes(long writeFlags);
 
     virtual void    flip(int index);
     virtual void    swap(int fromTo);

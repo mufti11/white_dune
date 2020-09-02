@@ -92,7 +92,7 @@ public:
     bool            alreadyLoaded(void) { return m_loadedNodes != NULL; }
     virtual NodeList *getLoadedNodes(void) { return m_loadedNodes; }
 
-    virtual void    addToConvertedNodes(int writeFlags);
+    virtual void    addToConvertedNodes(long writeFlags);
 
     fieldMacros(SFBool,   load,          ProtoInline)
     fieldMacros(MFString, url,           ProtoInline)

@@ -446,6 +446,7 @@ Pixar                     (code from OpenSubdiv tutorial)
 Dipl. Ing. Andreas Quiring(raspian hosting) 
 Andreas Plesch            (debugging of X3DOM VrmlCut scripting)
 Bernd Rosenkraenzer       (mageia Linux port tips)
+Holger Seelig             (debugging of human.x3dv for X_ITE/titania)
 ==========================================================================
 
 Changed in white_dune Version 0.16:
@@ -5690,5 +5691,9 @@ Fixed strange float rounding error
 Added pass of self test
 
 Fixed missing ROUTE write
+
+Fixed jointlist of human.x3dv
+
+Fixed X3Dcompiling to C++
 
 Contact: MUFTI <mufti11@web.de>

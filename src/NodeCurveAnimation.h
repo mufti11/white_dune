@@ -97,7 +97,7 @@ public:
     virtual int     writeC(int filedes, int languageFlag);
     virtual int     writeCDeclaration(int filedes, int languageFlag);
 
-    virtual void    addToConvertedNodes(int writeFlags);
+    virtual void    addToConvertedNodes(long writeFlags);
 
     Node           *getPositionInterpolator() 
                        { return m_positionInterpolator;  }

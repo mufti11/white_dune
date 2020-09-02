@@ -371,8 +371,9 @@ SceneProtoMap::addOrReplace(ProtoMap *protos, const char *string,
 
     for (int i = 0; i < protos->width(); i++) 
         for (j = protos->chain(i).first(); j != NULL; j = j->next())
-             if (j->item()->getData()->getType() >= VRML_COMMENT) 
-                 protos->setExtraData(j);
+             if (j->item()->getData())
+                 if (j->item()->getData()->getType() >= VRML_COMMENT) 
+                    protos->setExtraData(j);
 }
 
 

@@ -92,7 +92,7 @@ public:
     Node           *convert2Vrml(void);
 
     virtual void    createChain(void *nurbsCurveData);
-    virtual void    addToConvertedNodes(int writeFlags);
+    virtual void    addToConvertedNodes(long writeFlags);
     bool            addCoordinateInterpolator(Node *node, bool appendToScene);
     void            findInterpolators(InterpolatorInfo& info);
     void           *initializeData(void);

@@ -145,7 +145,7 @@ public:
     virtual int     writeXml(int filedes, int indent, int containerField = -1,
                              bool avoidUse = false);
 
-    virtual void    addToConvertedNodes(int writeFlags);
+    virtual void    addToConvertedNodes(long writeFlags);
 
     virtual bool    canWriteAc3d() { return true; }
     virtual int     writeAc3d(int filedes, int indent);

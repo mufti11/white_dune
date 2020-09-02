@@ -53,7 +53,7 @@ protected:
                              bool avoidUse = false) 
                         { return write(filedes, indent, avoidUse); }
 
-    virtual void    addToConvertedNodes(int writeFlags);
+    virtual void    addToConvertedNodes(long writeFlags);
 
     virtual Vec3f   getMinBoundingBox(void);
     virtual Vec3f   getMaxBoundingBox(void);

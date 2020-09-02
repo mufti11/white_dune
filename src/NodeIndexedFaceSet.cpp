@@ -198,7 +198,7 @@ NodeIndexedFaceSet::setField(int index, FieldValue *value, int cf)
 }
 
 void
-NodeIndexedFaceSet::addToConvertedNodes(int flags)
+NodeIndexedFaceSet::addToConvertedNodes(long flags)
 {
     if (m_already_converted)
         return;

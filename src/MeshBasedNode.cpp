@@ -862,6 +862,7 @@ MeshBasedNode::write(int f, int indent, bool avoidUse)
         return ret;
     } else
         return Node::write(f, indent, avoidUse);
+    return 0;
 }
 
 int             
@@ -964,7 +965,7 @@ MeshBasedNode::writeXml(int f, int indent, int containerField, bool avoidUse)
 }
 
 void
-MeshBasedNode::addToConvertedNodes(int flags)
+MeshBasedNode::addToConvertedNodes(long flags)
 { 
     if (m_already_converted)
         return;

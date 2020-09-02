@@ -1053,7 +1053,7 @@ NodeNurbsCurve::extrudePoints(int from, int to, int points, bool xSymetric)
 }
 
 void      
-NodeNurbsCurve::addToConvertedNodes(int writeFlags)
+NodeNurbsCurve::addToConvertedNodes(long writeFlags)
 {
     Node *node = toIndexedLineSet();
     if (node != NULL) {

@@ -20747,6 +20747,7 @@ Transform {
         USE hanim_l_knee
         USE hanim_l_ankle
         USE hanim_vk5
+        USE hanim_skulbase
         USE hanim_r_shoulder
         USE hanim_r_elbow
         USE hanim_r_wrist

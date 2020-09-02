@@ -300,14 +300,14 @@ NodeInline::writeCattGeo(int filedes, int indent)
 
 static bool generateConvertedNodes(Node *node, void *data)
 {
-    int *writeFlags = (int *)data;               
+    long *writeFlags = (long *)data;               
     if (node != NULL)
         node->addToConvertedNodes(*writeFlags);
     return true;
 }
 
 void
-NodeInline::addToConvertedNodes(int flags)
+NodeInline::addToConvertedNodes(long flags)
 { 
     if (m_convertedNodes.size() > 0)
         return;

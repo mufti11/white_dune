@@ -74,7 +74,7 @@ MeshMorphingNode::write(int f, int indent, bool avoidUse)
 }
 
 void
-MeshMorphingNode::addToConvertedNodes(int flags)
+MeshMorphingNode::addToConvertedNodes(long flags)
 {
     if (m_already_converted)
         return;

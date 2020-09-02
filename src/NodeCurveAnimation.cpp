@@ -317,7 +317,7 @@ NodeCurveAnimation::writeC(int filedes, int languageFlag)
 }
 
 void
-NodeCurveAnimation::addToConvertedNodes(int flags)
+NodeCurveAnimation::addToConvertedNodes(long flags)
 { 
     if (m_convertedNodes.size() > 0)
         return;

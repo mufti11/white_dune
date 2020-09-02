@@ -136,7 +136,11 @@ int DynamicFieldsNode::writeField(int f, int indent, int fieldIndex)
                 value = rewriteField(value, oldBase, newBase, 
                                      m_scene->getWriteFlags());
                 RET_ONERROR( mywritestr(f, "[\n") );
+                if (field->getType() == MFSTRING)
+                    RET_ONERROR( mywritestr(f, "\"") );
                 RET_ONERROR( value->writeRaw(f, 0) )
+                if (field->getType() == MFSTRING)
+                    RET_ONERROR( mywritestr(f, "\"") );
                 RET_ONERROR( mywritestr(f, "]\n") );
                 if (!tempSave) {
                     setField(fieldIndex, value);

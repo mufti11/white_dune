@@ -130,8 +130,6 @@ int MFString::writeRaw(int f, int indent) const
     for (int i = 0; i < getSFSize(); i++) {
         RET_ONERROR( indentf(f, indent) )
         RET_ONERROR( mywritestr(f, m_value[i]) )
-        RET_ONERROR( mywritestr(f, "\n") )
-        TheApp->incSelectionLinenumber();
         if (i != 0 && i != getSFSize() - 1) {
             RET_ONERROR( mywritestr(f, "\"\n\"") )
             TheApp->incSelectionLinenumber();
